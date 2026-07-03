@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 60 \u2014 net platelet accumulation rate from four stated quantities (a NEW panel: transfusion medicine / apheresis). From a collected count and its collection minutes (their ratio is the collection rate) and a returned count and its return minutes (their ratio is the return rate), compute the net rate (collected_count/collect_minutes - returned_count/return_minutes), the collection rate (collected_count/collect_minutes), or the return rate (returned_count/return_minutes). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DIFFERENCE OF TWO RATIOS a/b - c/d, the first on the ladder to subtract one independent quotient from another (distinct from rung-57 sum-of-two-ratios a/b + c/d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via / and - \u2014 no constant leaks, and neither the collection rate, the return rate, nor any net-rate figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: POOLING the count difference over the pooled minutes ((a-c)/(b+d), a difference of totals, not a difference of rates), and SWAPPING the denominators (a/d - c/b). The core confusion tested is that a/b - c/d is not (a-c)/(b+d).",
+  "items": [
+    {
+      "id": "r60rate-01",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 300 platelets over 60 min and returns 80 platelets over 40 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(300)\nobserve collect_minutes(60)\nobserve returned_count(80)\nobserve return_minutes(40)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r60rate-02",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 300 platelets over 60 min and returns 80 platelets over 40 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(300)\nobserve collect_minutes(60)\nobserve returned_count(80)\nobserve return_minutes(40)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r60rate-03",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 300 platelets over 60 min and returns 80 platelets over 40 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(300)\nobserve collect_minutes(60)\nobserve returned_count(80)\nobserve return_minutes(40)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r60rate-04",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 400 platelets over 80 min and returns 90 platelets over 30 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(400)\nobserve collect_minutes(80)\nobserve returned_count(90)\nobserve return_minutes(30)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.8181818181818183,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.208333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r60rate-05",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 400 platelets over 80 min and returns 90 platelets over 30 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(400)\nobserve collect_minutes(80)\nobserve returned_count(90)\nobserve return_minutes(30)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.8181818181818183,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.208333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r60rate-06",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 400 platelets over 80 min and returns 90 platelets over 30 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(400)\nobserve collect_minutes(80)\nobserve returned_count(90)\nobserve return_minutes(30)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.8181818181818183,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.208333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r60rate-07",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 360 platelets over 60 min and returns 100 platelets over 50 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(360)\nobserve collect_minutes(60)\nobserve returned_count(100)\nobserve return_minutes(50)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3636363636363638,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.533333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r60rate-08",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 360 platelets over 60 min and returns 100 platelets over 50 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(360)\nobserve collect_minutes(60)\nobserve returned_count(100)\nobserve return_minutes(50)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3636363636363638,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.533333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r60rate-09",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 360 platelets over 60 min and returns 100 platelets over 50 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(360)\nobserve collect_minutes(60)\nobserve returned_count(100)\nobserve return_minutes(50)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3636363636363638,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.533333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r60rate-10",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 280 platelets over 70 min and returns 60 platelets over 40 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(280)\nobserve collect_minutes(70)\nobserve returned_count(60)\nobserve return_minutes(40)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r60rate-11",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 280 platelets over 70 min and returns 60 platelets over 40 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(280)\nobserve collect_minutes(70)\nobserve returned_count(60)\nobserve return_minutes(40)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.142857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r60rate-12",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 280 platelets over 70 min and returns 60 platelets over 40 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(280)\nobserve collect_minutes(70)\nobserve returned_count(60)\nobserve return_minutes(40)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.142857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r60rate-13",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 420 platelets over 60 min and returns 150 platelets over 50 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(420)\nobserve collect_minutes(60)\nobserve returned_count(150)\nobserve return_minutes(50)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4545454545454546,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r60rate-14",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 420 platelets over 60 min and returns 150 platelets over 50 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(420)\nobserve collect_minutes(60)\nobserve returned_count(150)\nobserve return_minutes(50)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4545454545454546,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r60rate-15",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 420 platelets over 60 min and returns 150 platelets over 50 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(420)\nobserve collect_minutes(60)\nobserve returned_count(150)\nobserve return_minutes(50)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4545454545454546,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.9,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r60rate-16",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 240 platelets over 80 min and returns 60 platelets over 60 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(240)\nobserve collect_minutes(80)\nobserve returned_count(60)\nobserve return_minutes(60)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r60rate-17",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 240 platelets over 80 min and returns 60 platelets over 60 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(240)\nobserve collect_minutes(80)\nobserve returned_count(60)\nobserve return_minutes(60)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r60rate-18",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 240 platelets over 80 min and returns 60 platelets over 60 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(240)\nobserve collect_minutes(80)\nobserve returned_count(60)\nobserve return_minutes(60)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r60rate-19",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 600 platelets over 120 min and returns 90 platelets over 45 min. What is the net platelet accumulation rate (the collection rate minus the return rate)?",
+      "program": "observe collected_count(600)\nobserve collect_minutes(120)\nobserve returned_count(90)\nobserve return_minutes(45)\nlet answer = collected_count / collect_minutes - returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.090909090909091,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.583333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r60rate-20",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 600 platelets over 120 min and returns 90 platelets over 45 min. What is the the collection rate (collected platelets per collection minute)?",
+      "program": "observe collected_count(600)\nobserve collect_minutes(120)\nobserve returned_count(90)\nobserve return_minutes(45)\nlet answer = collected_count / collect_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.090909090909091,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.583333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r60rate-21",
+      "qtype": "apheresis_net_rate",
+      "stem": "A platelet apheresis run collects 600 platelets over 120 min and returns 90 platelets over 45 min. What is the the return rate (returned platelets per return minute)?",
+      "program": "observe collected_count(600)\nobserve collect_minutes(120)\nobserve returned_count(90)\nobserve return_minutes(45)\nlet answer = returned_count / return_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.090909090909091,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.583333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

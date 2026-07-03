@@ -97,6 +97,7 @@ SELF_CONTAINED_RUNGS = (
     "rung57_renal_count_rate",
     "rung58_pressor_concentration",
     "rung59_reconstituted_concentration",
+    "rung60_apheresis_net_rate",
 )
 
 
