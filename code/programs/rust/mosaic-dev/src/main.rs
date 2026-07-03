@@ -178,6 +178,7 @@ fn build_and_wrap(
             // its dummy-props preview; it doesn't care about the
             // UI32-M project shell.
             emit_project: false,
+            theme: None,
         };
         build_package(&opts).map_err(|e| e.to_string())?;
     } else {

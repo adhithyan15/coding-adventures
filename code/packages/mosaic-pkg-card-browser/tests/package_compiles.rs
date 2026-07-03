@@ -273,6 +273,7 @@ fn card_browser_package_emitters_all_accept_nested_toolkit_controls() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: false,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should build CardBrowser: {e}"));
 

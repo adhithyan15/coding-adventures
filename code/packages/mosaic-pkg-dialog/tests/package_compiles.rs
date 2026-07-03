@@ -396,6 +396,8 @@ fn artifact_backends_either_build_or_defer_on_hostdialog() {
             package_root: package_root(),
             output_root: out_root.clone(),
             backend: *backend,
+            emit_project: false,
+            theme: None,
         };
 
         match build_package(&opts) {

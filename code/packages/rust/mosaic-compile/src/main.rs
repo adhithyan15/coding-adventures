@@ -1314,6 +1314,33 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
 
+    // Theme selector for style (`.msl`) resolution — the style analogue of
+    // the layout `--variant` flag. `--theme light` makes the builder read
+    // each component's `<Component>.light.msl` (with fallback to the bare
+    // `.msl`). Omitted → theme-agnostic resolution (historical dark default).
+    //
+    // The theme string is interpolated into a filename
+    // (`<Component>.<theme>.msl`) that is then joined onto the package src
+    // directory, so — exactly like `--variant` — it must be a single safe
+    // path segment. Without this guard a value like `../../etc/passwd` could
+    // escape `src/` and coax the compiler into reading an arbitrary file.
+    let theme = flags.get("theme").and_then(|v| v.as_str());
+    if let Some(t) = theme {
+        // Same safe-segment rule the layout resolver applies to component
+        // names and `--variant`: ASCII alphanumeric / `_` / `-`, non-empty.
+        // No `/`, `.`, `..`, or null bytes — so the value cannot escape `src/`.
+        let safe = !t.is_empty()
+            && t.chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-');
+        if !safe {
+            eprintln!(
+                "mosaic-compile pkg: --theme '{t}' contains characters outside \
+                 the allowed ASCII alphanumeric / _ / - set"
+            );
+            process::exit(1);
+        }
+    }
+
     // Map the string to the typed `Backend`.
     let backend = pkg_backend_from_str(backend_str).unwrap_or_else(|| {
         eprintln!(
@@ -1331,6 +1358,7 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         // backend project shell mounting the first component
         // alongside the per-component artifacts.
         emit_project,
+        theme: theme.map(|s| s.to_string()),
     };
 
     match build_package(&opts) {

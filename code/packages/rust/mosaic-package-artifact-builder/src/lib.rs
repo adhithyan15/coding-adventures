@@ -76,6 +76,7 @@
 //!     output_root:  PathBuf::from("/tmp/mosaic-pkg-grid-dist"),
 //!     backend:      Backend::React,
 //!     emit_project: false,
+//!     theme:        None, // or Some("light".into()) to build the light theme
 //! };
 //! let result = build_package(&opts).expect("package compiles");
 //! for path in &result.artifacts {
@@ -204,6 +205,19 @@ pub struct BuildOptions {
     /// open question 1). Documented as a deviation in the L8
     /// CHANGELOG.
     pub emit_project: bool,
+    /// Theme selector for style (`.msl`) resolution. When `Some("light")`,
+    /// each component's style is read from `<Component>.light.msl` (falling
+    /// back to the bare `<Component>.msl` if no light-specific stylesheet is
+    /// authored, then to any themed stylesheet as a last resort). When `None`,
+    /// resolution is theme-agnostic: the bare `<Component>.msl` first, else the
+    /// alphabetically-first `<Component>.*.msl` (back-compat — this is how the
+    /// dark theme was implicitly selected before the theme axis existed).
+    ///
+    /// This is the *style* analogue of the UI30 layout `variant` axis: `variant`
+    /// selects the `.mll` (desktop vs touch), `theme` selects the `.msl` (dark
+    /// vs light). Before this field the packager had no theme axis at all, and
+    /// authored `.light.msl` files were dead code — never emitted.
+    pub theme: Option<String>,
 }
 
 /// What a successful build produced.
@@ -396,6 +410,12 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     for component in &manifest.components.exports {
         validate_component_name(component)?;
     }
+    // The theme selector is interpolated into a stylesheet filename and joined
+    // onto `src/`, so validate it as a safe path segment before any I/O — the
+    // library enforces this itself, not just the CLI (see `validate_theme_name`).
+    if let Some(theme) = &opts.theme {
+        validate_theme_name(theme)?;
+    }
 
     // ----- 3. Prepare the output directory ---------------------------------
     //
@@ -430,6 +450,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
             let component_artifacts = compile_one_component(
                 component,
                 variant.as_deref(),
+                opts.theme.as_deref(),
                 &src_dir,
                 &backend_dir,
                 opts.backend,
@@ -486,6 +507,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
                 opts.backend,
                 &manifest.package.name,
                 &package_search_paths,
+                opts.theme.as_deref(),
             )?;
             artifacts.extend(shell_artifacts);
         }
@@ -695,16 +717,19 @@ fn emit_project_shell(
     backend: Backend,
     package_name: &str,
     package_search_paths: &[PathBuf],
+    theme: Option<&str>,
 ) -> Result<Vec<PathBuf>, BuildError> {
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
     // emission lives outside the per-component compile loop and we'd
     // rather not thread the parsed IRs through. The triple is small
     // (typically < 1 KiB total), so reading + parsing again is
-    // cheap.
+    // cheap. The `theme` selector reaches the shell's own style the same
+    // way it reaches every component's style (via `resolve_style_path`),
+    // so an `--emit-project --theme light` build gets a light-styled shell.
     let mil_path = src_dir.join(format!("{component}.mil"));
     let mll_path = src_dir.join(format!("{component}.mll"));
-    let msl_path = resolve_style_path(src_dir, component)?;
+    let msl_path = resolve_style_path(src_dir, component, theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(BuildError::SourceNotFound {
@@ -729,6 +754,7 @@ fn emit_project_shell(
         component,
         &layout_out.def,
         package_search_paths,
+        theme,
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
@@ -1421,6 +1447,7 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 fn compile_one_component(
     component: &str,
     variant: Option<&str>,
+    theme: Option<&str>,
     src_dir: &Path,
     out_dir: &Path,
     backend: Backend,
@@ -1428,11 +1455,12 @@ fn compile_one_component(
 ) -> Result<Vec<PathBuf>, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
-    // `.mil` and `.mll` are required; `.msl` is optional. If the user has
-    // multiple `.msl` variants (e.g. `Grid.dark.msl`), we pick `<Component>.msl`
-    // first and fall back to *any* `.msl` whose stem begins with `<Component>.`.
-    // For the v1 packager we keep this simple: only the un-themed `.msl`
-    // matters. Theme handling is a follow-up.
+    // `.mil` and `.mll` are required; `.msl` is optional. Style resolution
+    // honours the `theme` selector via `resolve_style_path`: a `light` build
+    // prefers `<Component>.light.msl`, falling back to the bare
+    // `<Component>.msl` and then any themed stylesheet. A theme-agnostic
+    // (`None`) build reads the bare `.msl` first, else the alphabetically-first
+    // themed stylesheet (historical dark-wins default).
     //
     // UI30 multi-layout: the `.mll` resolution honours the `variant`
     // argument. When `Some("touch")`, we look for `<Component>.touch.mll`
@@ -1445,7 +1473,7 @@ fn compile_one_component(
         Some(v) => src_dir.join(format!("{component}.{v}.mll")),
         None => src_dir.join(format!("{component}.mll")),
     };
-    let msl_path = resolve_style_path(src_dir, component)?;
+    let msl_path = resolve_style_path(src_dir, component, theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(BuildError::SourceNotFound {
@@ -1481,6 +1509,7 @@ fn compile_one_component(
         component,
         &layout_out.def,
         package_search_paths,
+        theme,
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
@@ -1695,6 +1724,7 @@ fn collect_dependency_style_parts(
     owner_component: &str,
     layout: &moslayout_compiler::LayoutDef,
     package_search_paths: &[PathBuf],
+    theme: Option<&str>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -1702,6 +1732,7 @@ fn collect_dependency_style_parts(
         owner_component,
         &layout.root,
         package_search_paths,
+        theme,
         visiting,
         collected,
     )
@@ -1711,6 +1742,7 @@ fn collect_dependency_style_parts_from_node(
     owner_component: &str,
     node: &moslayout_compiler::LayoutNode,
     package_search_paths: &[PathBuf],
+    theme: Option<&str>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -1722,6 +1754,7 @@ fn collect_dependency_style_parts_from_node(
             package,
             component,
             package_search_paths,
+            theme,
             visiting,
             collected,
         )?);
@@ -1732,6 +1765,7 @@ fn collect_dependency_style_parts_from_node(
             owner_component,
             child,
             package_search_paths,
+            theme,
             visiting,
             collected,
         )?);
@@ -1745,6 +1779,7 @@ fn collect_dependency_component_style_parts(
     package: &str,
     component: &str,
     package_search_paths: &[PathBuf],
+    theme: Option<&str>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -1783,7 +1818,7 @@ fn collect_dependency_component_style_parts(
     let src_dir = package_root.join("src");
     let mil_path = src_dir.join(format!("{component}.mil"));
     let mll_path = src_dir.join(format!("{component}.mll"));
-    let msl_path = resolve_style_path(&src_dir, component)?;
+    let msl_path = resolve_style_path(&src_dir, component, theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(package_reference_err(
@@ -1813,6 +1848,7 @@ fn collect_dependency_component_style_parts(
         owner_component,
         &layout_out.def,
         package_search_paths,
+        theme,
         visiting,
         collected,
     )?;
@@ -1879,12 +1915,53 @@ fn package_reference_err(component: &str, error: impl Into<String>) -> BuildErro
     }
 }
 
-fn resolve_style_path(src_dir: &Path, component: &str) -> Result<Option<PathBuf>, BuildError> {
+/// Resolve which `.msl` stylesheet to compile for `component`, honouring the
+/// optional `theme` selector.
+///
+/// Resolution order:
+///
+/// | `theme`         | preference order                                             |
+/// |-----------------|--------------------------------------------------------------|
+/// | `Some("light")` | `Component.light.msl` → `Component.msl` → alphabetically-first `Component.*.msl` |
+/// | `None`          | `Component.msl` → alphabetically-first `Component.*.msl`      |
+///
+/// **Why the exact-theme file wins first.** A `light` build must pick up the
+/// component's light stylesheet when one exists — the whole point of the theme
+/// axis. Before this parameter, resolution was theme-blind (bare, else
+/// alphabetically-first), so `Component.dark.msl` always beat
+/// `Component.light.msl` and the light file was never emitted.
+///
+/// **Why we fall back rather than error on a missing theme file.** During the
+/// migration to dual-theme sources, some components are authored dark-only. A
+/// `light` build of such a component degrades to the bare/first stylesheet so
+/// the build still succeeds with *some* styling rather than an unstyled or
+/// failed component. Once every component ships a `.light.msl`, the exact match
+/// always wins and the fallback is never taken. This mirrors the UI30 layout
+/// `variant` fallback (missing `.<variant>.mll` → bare `.mll`).
+fn resolve_style_path(
+    src_dir: &Path,
+    component: &str,
+    theme: Option<&str>,
+) -> Result<Option<PathBuf>, BuildError> {
+    // 1. Exact theme match: `<Component>.<theme>.msl`.
+    if let Some(theme) = theme {
+        let themed = src_dir.join(format!("{component}.{theme}.msl"));
+        if themed.exists() {
+            return Ok(Some(themed));
+        }
+    }
+
+    // 2. Bare, theme-neutral `<Component>.msl`.
     let default = src_dir.join(format!("{component}.msl"));
     if default.exists() {
         return Ok(Some(default));
     }
 
+    // 3. Fallback: alphabetically-first `<Component>.*.msl`. With no bare
+    // stylesheet and no exact theme match, we still emit *a* style rather
+    // than nothing. Alphabetical order makes this deterministic (and, by
+    // coincidence of naming, keeps `dark` winning over `light` for the
+    // theme-agnostic `None` path — the historical default).
     let prefix = format!("{component}.");
     let mut themed = Vec::new();
     for entry in fs::read_dir(src_dir).map_err(|e| BuildError::Io(e.to_string()))? {
@@ -2453,6 +2530,37 @@ fn validate_package_name(name: &str) -> Result<(), BuildError> {
     Ok(())
 }
 
+/// Validate the `theme` selector from [`BuildOptions::theme`].
+///
+/// Required shape: non-empty ASCII alphanumeric / `_` / `-`. The theme string
+/// is interpolated into a filename (`<Component>.<theme>.msl`) that is joined
+/// onto the package `src/` directory, so — exactly like `variant` — it must be
+/// a single safe path segment. Rejecting `/`, `\`, `.`, `..`, and null bytes
+/// keeps a hostile or typo'd theme from escaping `src/` and coaxing the
+/// compiler into reading an arbitrary `.msl`-suffixed file.
+///
+/// This is enforced HERE, in the library, rather than only in the
+/// `mosaic-compile` CLI shell: `build_package` is a public entry point that
+/// downstream tooling (IDE plugins, test harnesses) calls directly, so the
+/// library must not trust its caller to have pre-validated the theme — the same
+/// reason `component`/`package` names are validated in `build_package` above.
+fn validate_theme_name(name: &str) -> Result<(), BuildError> {
+    let unsafe_err = || BuildError::UnsafeName {
+        kind: "theme",
+        name: name.to_string(),
+        reason: "must be non-empty ASCII alphanumeric / _ / - (a single path segment)",
+    };
+    if name.is_empty() {
+        return Err(unsafe_err());
+    }
+    for c in name.chars() {
+        if !(c.is_ascii_alphanumeric() || c == '_' || c == '-') {
+            return Err(unsafe_err());
+        }
+    }
+    Ok(())
+}
+
 // ===========================================================================
 // Tests
 // ===========================================================================
@@ -2599,6 +2707,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         };
         let result = build_package(&opts).expect("empty package should build");
         assert!(result.components_built.is_empty(), "no components expected");
@@ -2624,6 +2733,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("react build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2672,6 +2782,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: true,
+            theme: None,
         })
         .expect("react build");
 
@@ -2716,6 +2827,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
             emit_project: true,
+            theme: None,
         })
         .expect("html build");
 
@@ -2762,6 +2874,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap_err();
         assert!(
@@ -2785,6 +2898,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::SwiftUI,
             emit_project: false,
+            theme: None,
         })
         .expect("swiftui build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2801,6 +2915,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Qt,
             emit_project: false,
+            theme: None,
         })
         .expect("qt build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2836,6 +2951,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
             emit_project: false,
+            theme: None,
         })
         .expect("html build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2875,6 +2991,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
             emit_project: false,
+            theme: None,
         })
         .expect("html build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2921,6 +3038,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::WebComponent,
             emit_project: false,
+            theme: None,
         })
         .expect("webcomponent build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2944,6 +3062,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Xaml,
             emit_project: false,
+            theme: None,
         })
         .expect("xaml build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -2980,6 +3099,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Flutter,
             emit_project: false,
+            theme: None,
         })
         .expect("flutter build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -3052,6 +3172,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
             emit_project: false,
+            theme: None,
         })
         .expect("parent package should build with dependency styles");
 
@@ -3117,6 +3238,7 @@ files = [
             output_root: out.path().to_path_buf(),
             backend: Backend::Html,
             emit_project: false,
+            theme: None,
         })
         .expect("parent package should build with a dependency style override");
 
@@ -3187,6 +3309,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap_err();
         assert!(
@@ -3208,6 +3331,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap_err();
         // The manifest parser may catch some of these earlier as a
@@ -3251,6 +3375,7 @@ version = "1"
                 output_root: out.path().to_path_buf(),
                 backend: Backend::Html,
                 emit_project: false,
+                theme: None,
             })
             .unwrap_err();
             assert!(
@@ -3286,6 +3411,7 @@ version = "1"
                 output_root: out.path().to_path_buf(),
                 backend: Backend::React,
                 emit_project: false,
+                theme: None,
             })
             .unwrap_err();
             assert!(
@@ -3336,6 +3462,7 @@ version = "1"
                 output_root: out.path().to_path_buf(),
                 backend,
                 emit_project: false,
+                theme: None,
             })
             .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
             assert_eq!(result.components_built.len(), 2);
@@ -3367,6 +3494,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap_err();
         match err {
@@ -3394,6 +3522,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap_err();
         match err {
@@ -3415,6 +3544,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("multi-component build");
         assert_eq!(result.components_built.len(), 3);
@@ -3436,6 +3566,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("build without .msl");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
@@ -3458,6 +3589,7 @@ version = "1"
             output_root: out.clone(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("build should create the output dir");
         assert!(out.join("react").join("Grid.tsx").exists());
@@ -3476,6 +3608,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap();
         let body = fs::read_to_string(out.path().join("react").join("index.ts")).unwrap();
@@ -3492,6 +3625,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::Qt,
             emit_project: false,
+            theme: None,
         })
         .unwrap();
         let body = fs::read_to_string(out.path().join("qt").join("qmldir")).unwrap();
@@ -3512,6 +3646,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .unwrap_err();
         assert!(matches!(err, BuildError::Manifest(_)));
@@ -3622,6 +3757,131 @@ version = "1"
         );
     }
 
+    // -----------------------------------------------------------------------
+    // Theme axis — resolve_style_path honours the `theme` selector, the
+    // style (`.msl`) analogue of the layout (`.mll`) `variant` axis.
+    // -----------------------------------------------------------------------
+
+    /// A themed style file wins when it exists; otherwise resolution falls
+    /// back to the bare `.msl`, then to the alphabetically-first stylesheet.
+    /// This is the unit-level contract that keeps `.light.msl` from being the
+    /// dead code it was before the theme axis existed.
+    #[test]
+    fn resolve_style_path_honours_theme_selector() {
+        let tmp = TempDir::new().unwrap();
+        let src = tmp.path();
+        fs::write(src.join("Grid.dark.msl"), minimal_msl("Grid")).unwrap();
+        fs::write(src.join("Grid.light.msl"), minimal_msl("Grid")).unwrap();
+
+        // Exact theme match wins for each theme.
+        let light = resolve_style_path(src, "Grid", Some("light")).unwrap().unwrap();
+        assert_eq!(light.file_name().unwrap(), "Grid.light.msl");
+        let dark = resolve_style_path(src, "Grid", Some("dark")).unwrap().unwrap();
+        assert_eq!(dark.file_name().unwrap(), "Grid.dark.msl");
+
+        // Theme-agnostic (None) resolution keeps the historical
+        // alphabetically-first default → `dark` beats `light`.
+        let none = resolve_style_path(src, "Grid", None).unwrap().unwrap();
+        assert_eq!(
+            none.file_name().unwrap(),
+            "Grid.dark.msl",
+            "None must preserve the pre-theme-axis dark-wins default"
+        );
+
+        // A requested theme with no matching file, and no bare `.msl`,
+        // degrades to the alphabetically-first stylesheet rather than
+        // erroring or producing nothing (migration-friendly fallback).
+        let sepia = resolve_style_path(src, "Grid", Some("sepia")).unwrap().unwrap();
+        assert_eq!(sepia.file_name().unwrap(), "Grid.dark.msl");
+
+        // A bare `.msl` is the theme-neutral fallback ahead of the
+        // alphabetical scan: adding it makes an unknown theme resolve to
+        // the bare file, and the None path prefer it too.
+        fs::write(src.join("Grid.msl"), minimal_msl("Grid")).unwrap();
+        let bare_fallback = resolve_style_path(src, "Grid", Some("sepia")).unwrap().unwrap();
+        assert_eq!(bare_fallback.file_name().unwrap(), "Grid.msl");
+        let none_bare = resolve_style_path(src, "Grid", None).unwrap().unwrap();
+        assert_eq!(none_bare.file_name().unwrap(), "Grid.msl");
+        // But the exact theme file still wins over the bare file.
+        let light_over_bare = resolve_style_path(src, "Grid", Some("light")).unwrap().unwrap();
+        assert_eq!(light_over_bare.file_name().unwrap(), "Grid.light.msl");
+    }
+
+    /// End-to-end: `build_package` with `theme: Some("light")` emits the
+    /// LIGHT stylesheet's declarations, not the dark ones. Proves the theme
+    /// selector reaches the emitted artifact (the React `.lattice` sidecar).
+    #[test]
+    fn build_package_theme_selects_light_style() {
+        // Component authored with two distinct themed stylesheets and no
+        // bare `.msl` — exactly how the Engram components are shaped.
+        let pkg = make_package_with("mosaic-pkg-grid", &["Grid"], /* write_msl = */ false);
+        let src = pkg.path().join("src");
+        fs::write(
+            src.join("Grid.dark.msl"),
+            "style Grid { part root { width: 11% ; } }\n",
+        )
+        .unwrap();
+        fs::write(
+            src.join("Grid.light.msl"),
+            "style Grid { part root { width: 22% ; } }\n",
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+            theme: Some("light".to_string()),
+        })
+        .expect("light-theme react build");
+
+        let lattice =
+            fs::read_to_string(out.path().join("react").join("Grid.lattice")).unwrap();
+        assert!(
+            lattice.contains("width: 22%"),
+            "light build must emit the LIGHT stylesheet's declarations"
+        );
+        assert!(
+            !lattice.contains("width: 11%"),
+            "light build must NOT emit the dark stylesheet's declarations"
+        );
+    }
+
+    /// `build_package` — the public library entry point — rejects a
+    /// path-traversing `theme` itself, without relying on the CLI guard. This
+    /// is the defense-in-depth contract for programmatic callers.
+    #[test]
+    fn build_package_rejects_unsafe_theme() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        for bad in ["../../../etc/passwd", "a/b", "a.b", "", "x\0y"] {
+            let err = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::React,
+                emit_project: false,
+                theme: Some(bad.to_string()),
+            })
+            .unwrap_err();
+            assert!(
+                matches!(&err, BuildError::UnsafeName { kind, .. } if *kind == "theme"),
+                "theme {bad:?} must be rejected as UnsafeName(theme), got {err:?}"
+            );
+        }
+        // A safe theme name is accepted (no themed file exists, so it falls
+        // back to the bare stylesheet — the point is validation lets it through).
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+            theme: Some("light".to_string()),
+        })
+        .expect("a safe theme name must pass validation");
+    }
+
     /// End-to-end: a package with one component + one named variant
     /// builds BOTH artifacts under their UI30 filenames. `Grid.tsx`
     /// (default) and `Grid.touch.tsx` (variant) coexist in the same
@@ -3639,6 +3899,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("multi-variant build");
 
@@ -3679,6 +3940,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("single-variant build");
 
@@ -3714,6 +3976,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: false,
+            theme: None,
         })
         .expect("react build with emit_project: false");
         assert!(out.path().join("react").join("Grid.tsx").exists());
@@ -3743,6 +4006,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::React,
             emit_project: true,
+            theme: None,
         })
         .expect("react build with emit_project: true");
 
@@ -3876,6 +4140,7 @@ version = "1"
                 output_root: out.path().to_path_buf(),
                 backend,
                 emit_project: true,
+                theme: None,
             })
             .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
             let dir = out.path().join(backend.dir_name());
@@ -3897,6 +4162,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::Flutter,
             emit_project: true,
+            theme: None,
         })
         .expect("flutter package build");
 
@@ -3925,6 +4191,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::Compose,
             emit_project: true,
+            theme: None,
         })
         .expect("compose package build");
 
@@ -3977,6 +4244,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::Electron,
             emit_project: true,
+            theme: None,
         })
         .expect("electron build with emit_project: true");
 
@@ -4029,6 +4297,7 @@ version = "1"
             output_root: out.path().to_path_buf(),
             backend: Backend::Xaml,
             emit_project: true,
+            theme: None,
         })
         .expect("xaml build with emit_project: true");
         let dir = out.path().join("xaml");
@@ -4054,6 +4323,7 @@ version = "1"
                 output_root: out.path().to_path_buf(),
                 backend: Backend::React,
                 emit_project: true,
+                theme: None,
             })
             .expect("react build");
         }

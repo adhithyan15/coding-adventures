@@ -316,6 +316,7 @@ fn deck_options_package_emitters_accept_settings_surface() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: false,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should build DeckOptionsPanel: {e}"));
 

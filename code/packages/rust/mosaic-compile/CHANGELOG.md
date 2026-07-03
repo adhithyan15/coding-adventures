@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added - `--theme` selector for the `pkg` subcommand
+
+`mosaic-compile pkg <ROOT> --backend <b> --output <dir> --theme <name>` selects
+which style (`.msl`) each component compiles with — the style analogue of the
+layout `--variant` flag. `--theme light` reads each component's
+`<Component>.light.msl` (falling back to the bare `<Component>.msl`), so a
+package's authored light stylesheets are emitted instead of ignored. Omitting
+`--theme` keeps the prior theme-agnostic behaviour (implicit dark). Forwarded
+into `mosaic_package_artifact_builder::BuildOptions.theme`.
+
 ### Added - warn on style parts that match no layout part (`--strict-style`)
 
 After compiling the `.msl`, mosaic-compile now checks it against the resolved
