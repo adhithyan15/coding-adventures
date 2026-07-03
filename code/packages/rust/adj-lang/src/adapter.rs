@@ -1279,6 +1279,15 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
             upper,
             body,
         } => lower_bigop(op, lower.as_deref(), upper.as_deref(), body, source),
+        // `\binom{n}{k}` / `\dbinom{n}{k}` / `\tbinom{n}{k}` — a binomial coefficient "n choose k"
+        // (the frontend lowers all three spellings to `MathExpr::Binom`). This is DISTINCT from
+        // `\frac{n}{k}`: it denotes the COUNT C(n, k) = n! / (k!·(n−k)!), not the ratio n/k. A
+        // binomial is not a single arithmetic op, so — mirroring the finite-`\sum`/`\prod` arm above
+        // — we evaluate the decidable case (both arguments CONCRETE non-negative integers with
+        // k ≤ n ≤ cap) to its exact integer value via a bounded product loop, and reject a symbolic,
+        // negative, out-of-order, oversized, or too-large-to-represent binomial as an explicit
+        // `UnsupportedLatexMath`. See `lower_binom`.
+        MathExpr::Binom(n, k) => lower_binom(n, k, source),
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),
@@ -1364,6 +1373,13 @@ const BIGOP_UNROLL_CAP: i64 = 256;
 /// and overflowing the stack. 96 comfortably covers any realistic summation body.
 const SUBST_DEPTH_BUDGET: u32 = 96;
 
+/// Cap on a binomial's upper argument `n` in `\binom{n}{k}`. The evaluation loop runs at most
+/// `min(k, n-k) <= n/2 <= BINOM_N_CAP/2` steps, so this bounds the work; a binomial with `n` beyond
+/// the cap is rejected as `UnsupportedLatexMath` rather than looped over. 1000 comfortably covers any
+/// realistic combinatorial expression while keeping the exact-value guard (below) the effective
+/// limit — most binomials overflow the f64 exact-integer range long before `n` reaches 1000.
+const BINOM_N_CAP: i64 = 1000;
+
 /// A short constructor for the adapter's catch-all "not supported" error.
 fn unsupported_latex(source: &str, detail: &str) -> AdapterError {
     AdapterError::UnsupportedLatexMath {
@@ -1389,6 +1405,86 @@ fn number_as_i64(expr: &MathExpr) -> Option<i64> {
         MathExpr::Group(inner) | MathExpr::Fenced { body: inner, .. } => number_as_i64(inner),
         _ => None,
     }
+}
+
+/// Evaluate a binomial coefficient `\binom{n}{k}` = "n choose k" to its concrete integer value.
+///
+/// A binomial is not a single arithmetic op — it is the COUNT
+///
+/// ```text
+/// C(n, k) = n! / (k! * (n - k)!)      ("n choose k")
+/// ```
+///
+/// We handle the decidable case — both arguments CONCRETE non-negative integers with `k <= n <= cap`
+/// — by evaluating the **multiplicative product formula**
+///
+/// ```text
+/// C(n, k) = product over i in 1..=k of (n - k + i) / i
+/// ```
+///
+/// which needs only `k` multiply/divide steps and is exact: after step `i` the running value equals
+/// `C(n−k+i, i)`, an integer (the product of any `i` consecutive integers is divisible by `i!`), so
+/// no rounding accumulates while the result stays within the f64 exact-integer range. We iterate over
+/// `min(k, n−k)` — using the symmetry `C(n, k) = C(n, n−k)` — so the loop is at most `n/2` steps.
+///
+/// A symbolic argument (`\binom{n}{k}` with variables), a negative argument, `k > n`, an `n` beyond
+/// `BINOM_N_CAP`, or a result too large to represent exactly as an f64 integer is an explicit
+/// `UnsupportedLatexMath` — never a guess, an approximation, or a silently-rounded literal.
+///
+/// SAFETY / no new deep walk: both arguments are read with the NON-recursive [`number_as_i64`], which
+/// unwraps only `Group`/`Fenced` (nesting the parser bounds by `MAX_DEPTH`) and returns `None` on any
+/// other shape WITHOUT descending into it. A pathological argument like `\binom{aaaa…}{2}` — a long
+/// juxtaposition that parses as a deep left-associative `Bin(Mul)` spine in the `n` slot — makes
+/// `number_as_i64` return `None` on the outermost `Bin`, so we reject immediately and NEVER recurse
+/// into the spine (and never hand it to `latex_math_to_expr_ast`). The bounded loop is the only
+/// iteration, so this arm adds no new unbounded tree-walk.
+fn lower_binom(n_expr: &MathExpr, k_expr: &MathExpr, source: &str) -> Result<ExprAst, AdapterError> {
+    let n = number_as_i64(n_expr).ok_or_else(|| {
+        unsupported_latex(
+            source,
+            "binomial upper argument must be a concrete non-negative integer",
+        )
+    })?;
+    let k = number_as_i64(k_expr).ok_or_else(|| {
+        unsupported_latex(
+            source,
+            "binomial lower argument must be a concrete non-negative integer",
+        )
+    })?;
+    if n < 0 || k < 0 {
+        return Err(unsupported_latex(
+            source,
+            "binomial arguments must be non-negative",
+        ));
+    }
+    if k > n {
+        return Err(unsupported_latex(
+            source,
+            "binomial lower argument exceeds the upper argument",
+        ));
+    }
+    if n > BINOM_N_CAP {
+        return Err(unsupported_latex(
+            source,
+            "binomial upper argument is too large to expand",
+        ));
+    }
+    // Symmetry C(n, k) = C(n, n−k): iterate over the smaller of `k` and `n−k` so the loop is ≤ n/2.
+    let kk = k.min(n - k);
+    let mut result: f64 = 1.0;
+    for i in 1..=kk {
+        result = result * (n - kk + i) as f64 / i as f64;
+    }
+    // The exact integer C(n, k) can exceed the f64 exact-integer range even for modest `n` (e.g.
+    // C(60, 30) ≈ 1.18e17). Beyond that range a literal would silently lose precision, so we reject
+    // rather than emit an inexact value — mirroring `number_as_i64`'s own 9.0e15 exact-integer bound.
+    if !result.is_finite() || result.abs() >= 9.0e15 {
+        return Err(unsupported_latex(
+            source,
+            "binomial coefficient is too large to represent exactly",
+        ));
+    }
+    Ok(ExprAst::Lit(result))
 }
 
 /// Lower a big operator (`\sum`/`\prod`) with CONCRETE finite integer bounds by unrolling. The lower
