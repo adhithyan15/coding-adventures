@@ -1573,6 +1573,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *2-D array with arbitrary lower bounds* (LANG-FULL
+    // AL-multidim-bounds).  Unlike BASIC's fixed 0-based arrays, ALGOL arrays
+    // carry an explicit lower bound per dimension (`[lo:hi]`), so each subscript
+    // is translated to `sub − lower` *before* the row-major stride is applied:
+    // `flat = Σ_d (sub[d] − lower[d]) * stride[d]`.  This cell uses a **negative**
+    // lower bound on one axis and a non-zero one on the other: `M[-1:1, 2:3]` has
+    // sizes `(3, 2)`, strides `[2, 1]`, so `M[i,j]` → `(i−(−1))*2 + (j−2)`.
+    // Stores `M[-1,2]=40` (flat `0*2+0 = 0`) and `M[1,3]=2` (flat `2*2+1 = 5`,
+    // the last of 6 cells — proving both the lower-bound subtraction and the
+    // stride), then `M[-1,2] + M[1,3]` = 42.  The negative bound is written
+    // `0-1` since ALGOL number literals are unsigned.  Still only `alloc_array`/
+    // `array_set`/`array_get` with a flat index — **no backend change** — so it
+    // runs on **all 7 backends**.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array M[0-1:1, 2:3]; integer result; \
+               M[0-1, 2] := 40; M[1, 3] := 2; \
+               result := M[0-1, 2] + M[1, 3] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)

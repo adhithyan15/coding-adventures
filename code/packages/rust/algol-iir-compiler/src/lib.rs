@@ -4682,6 +4682,33 @@ mod tests {
         assert_eq!(run_i64(src), 42);
     }
 
+    /// A 2-D array with **arbitrary (non-1) lower bounds** per dimension
+    /// (AL-multidim-bounds).  ALGOL arrays carry an explicit lower bound
+    /// `[lo:hi]`, so each subscript is translated to `sub − lower` before the
+    /// row-major stride is applied: `flat = Σ_d (sub[d] − lower[d]) * stride[d]`.
+    /// For `M[0:1, 2:4]` the sizes are `(2, 3)`, strides `[3, 1]`, and the flat
+    /// index of `M[i,j]` is `(i−0)*3 + (j−2)`.  `M[1,4]` is the last cell:
+    /// `1*3 + 2 = 5`.  Proves the per-dimension lower-bound subtraction composes
+    /// with multidim strides (the 1:N cells never exercised `lower ≠ 1`).
+    #[test]
+    fn two_d_array_arbitrary_lower_bounds() {
+        let src = "begin integer array M[0:1, 2:4]; integer result; \
+                   M[0,2] := 100; M[1,4] := 42; result := M[1,4] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// A 2-D array with **negative** lower bounds.  `M[-1:0, 0:1]` has sizes
+    /// `(2, 2)`, strides `[2, 1]`; `M[i,j]` → `(i−(−1))*2 + (j−0) = (i+1)*2 + j`.
+    /// `M[-1,0]` is flat 0, `M[0,1]` is flat `1*2 + 1 = 3`; storing 40 and 2 and
+    /// summing gives 42.
+    #[test]
+    fn two_d_array_negative_lower_bounds() {
+        let src = "begin integer array M[0-2 : 0-1, 0:1]; integer result; \
+                   M[0-2, 0] := 40; M[0-1, 1] := 2; \
+                   result := M[0-2, 0] + M[0-1, 1] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
     /// Wrong number of subscripts for a 2-D array is a type error.
     #[test]
     fn rejects_wrong_subscript_count_for_2d_array() {
