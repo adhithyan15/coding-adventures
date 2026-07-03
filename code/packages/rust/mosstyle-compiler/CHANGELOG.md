@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added - `unmatched_parts()` to catch style parts that match no layout part
+
+New public `unmatched_parts(&StyleDef, part_map_json) -> Vec<UnmatchedPart>`.
+Unlike `validate` — which accepts a sub-path `a/b` as long as its top-level `a`
+exists — this reports style parts whose FULL name is not an exact member of the
+layout's part map, with a `suggestion` when the sub-path tail is itself an
+exported part (the classic stale-naming typo). This is what mosaic-compile uses
+to warn when e.g. `Grid.light.msl` writes `sheet/cell` while the composition
+exports a flat `cell`: `validate` passed it, but the emitter styled `cell`, so
+the light-theme grid rendered with no gridlines and nobody noticed until the web
+switcher first rendered the light theme.
+
 ### Added - Lattice style emission
 
 - `CompileOutput` now includes `lattice`, a first-class scoped Lattice source

@@ -211,6 +211,13 @@ fn run(result: cli_builder::types::ParseResult) {
         .get("emit-project")
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
+    // --strict-style: escalate the "style part matches no layout part" warning
+    // (emitted for every build) into a hard error — for CI that wants to fail on
+    // stale stylesheets. Off by default.
+    let strict_style = flags
+        .get("strict-style")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
     // --package-manifest: when set, the .mll's component-reference
     // resolver auto-registers every name in [components].exports so
     // intra-package references work (e.g. Field → Input in
@@ -252,6 +259,7 @@ fn run(result: cli_builder::types::ParseResult) {
             variant,
             output_path,
             emit_project,
+            strict_style,
             package_manifest_path.as_deref(),
             package_search_path.as_deref(),
         );
@@ -603,6 +611,7 @@ fn run_pipeline(
     variant: Option<&str>,
     output_path: Option<&str>,
     emit_project: bool,
+    strict_style: bool,
     package_manifest_path: Option<&str>,
     package_search_path: Option<&str>,
 ) {
@@ -737,6 +746,43 @@ fn run_pipeline(
             }
             process::exit(1);
         });
+
+    // -- 3b. Warn on style parts that match no layout part ------------------
+    //
+    // `mosstyle_compiler::validate` (run inside `compile` above) is deliberately
+    // lenient about sub-path part names: it only checks the top-level segment,
+    // so a stylesheet that writes `sheet/cell` when the resolved composition
+    // exports a flat `cell` compiles cleanly — yet the emitter styles `cell`, so
+    // `sheet/cell` targets nothing and the element renders UNSTYLED. That is
+    // exactly how the VisiCalc light-theme grid silently lost its gridlines
+    // (Grid.light.msl used the legacy `sheet/cell` naming). Surface it here so
+    // the typo can't hide: a warning by default, a hard error under
+    // --strict-style for CI that wants to fail on stale stylesheets.
+    let unmatched =
+        mosstyle_compiler::unmatched_parts(&style_out.def, Some(&layout_out.part_map_json));
+    if !unmatched.is_empty() {
+        let component = &layout_out.def.component_name;
+        for u in &unmatched {
+            let hint = match &u.suggestion {
+                Some(s) => format!(
+                    " — did you mean `{s}`? (`{s}` is an exported part; the emitter targets flat part names)"
+                ),
+                None => String::new(),
+            };
+            eprintln!(
+                "mosaic-compile: warning: style part `{}` in {style_path} matches no part \
+                 exported by component `{component}` — it will not be styled{hint}",
+                u.name
+            );
+        }
+        if strict_style {
+            eprintln!(
+                "mosaic-compile: --strict-style: {} unmatched style part(s) — failing.",
+                unmatched.len()
+            );
+            process::exit(1);
+        }
+    }
 
     // -- 4. Branch on backend. React emits one .tsx file; XAML emits a
     // triple (.xaml, .xaml.cs, .Event.cs) plus zero-or-more RowVm .cs

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Added - warn on style parts that match no layout part (`--strict-style`)
+
+After compiling the `.msl`, mosaic-compile now checks it against the resolved
+layout's part map via `mosstyle_compiler::unmatched_parts` and prints a warning
+for every style `part` whose name matches no exported part — with a
+`did you mean` suggestion when a sub-path tail (`sheet/cell` → `cell`) is itself
+an exported part. The mosstyle `validate` step is deliberately lenient about
+sub-path names (it only checks the top-level segment), so a stale `sheet/cell`
+that the emitter silently ignores used to compile clean and render unstyled —
+that is how the VisiCalc light-theme grid lost its gridlines. The new `--strict-style`
+flag escalates the warning into a hard error (exit 1) for CI that wants to fail
+on stale stylesheets. Default behavior is unchanged (warning only, exit 0).
+
 ### Changed - shared package-reference resolver
 
 Pipeline mode now uses `mosaic-package-resolver::LayoutPackageResolver` for
