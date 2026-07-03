@@ -840,6 +840,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the exponentiation operator `↑` (§3.3.4, spelled `^`; LANG-FULL
+    // AL-pow).  A **nonnegative integer-literal exponent** unrolls to repeated
+    // multiplication and keeps the base's type, so `2 ^ 5` is the *integer* 32 —
+    // exactly `mul`/`imul` the code-gen backends already run (no new IIR op).
+    // `↑` binds tighter than `*`, so `10 + 2 ^ 5` = `10 + 32` = 42.  (The
+    // `real ↑ real` shape lowers to the `f64_pow` op BASIC's BA-pow already
+    // proved on every backend; this cell exercises the integer-unroll path,
+    // which stays i64 end-to-end.)  Runs on **all 7 backends**.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := 10 + 2 ^ 5 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
     // implementation-defined, so this frontend recognises undeclared statement
     // calls named `print`/`output` as standard output procedures. The narrow

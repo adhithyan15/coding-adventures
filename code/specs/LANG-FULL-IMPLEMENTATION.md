@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -737,6 +737,15 @@ backend immediately) come before the enabler-dependent items.
   `entier(sqrt(49.0))`⇒7, `entier(cos(0.0))+41`⇒42, `entier(exp(0.0))+41`⇒42,
   `entier(sin(0.0)+42.0)`⇒42, `entier(ln(1.0)+42.0)`⇒42,
   `entier(arctan(0.0)+42.0)`⇒42 on all 7 backends.
+- ✅ **AL-pow** — the `↑` exponentiation operator (§3.3.4; spelled `^`/`**`).
+  A **nonnegative integer-literal exponent** unrolls to repeated multiply
+  (`k−1` `mul`s; `x↑0=1`, `x↑1=x`), **keeping the base's type** — `2↑10` is the
+  *integer* 1024, unlike BASIC's always-`real` BA-pow. A **`real↑real`** exponent
+  lowers to the `f64_pow` op (libm `pow`) BA-pow already proved on every backend.
+  No new IIR op, no backend change. An `integer` base with a `real`/runtime/negative
+  exponent is a clean `Unsupported` (needs int→real coercion / reciprocals — a later
+  slice). Verified by RUNNING `10 + 2 ^ 5` ⇒ 42 (integer unroll) on all 7 backends
+  (`algol-iir-compiler` 0.27.0 / `lang-aot` 0.170.0).
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
