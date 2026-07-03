@@ -166,12 +166,13 @@ import AppKit
 
             persistSnapshot()
             var refreshed = applyProps() as? [String: Any] ?? [:]
-            refreshed["hostIntent"] = hostIntent
-            refreshed["hostResult"] = [
+            let hostResult: [String: Any] = [
                 "status": "imported",
                 "path": url.path,
             ]
-            return refreshed as NSDictionary
+            refreshed["hostIntent"] = hostIntent
+            refreshed["hostResult"] = hostResult
+            return withHostStatusProps(refreshed, hostResult: hostResult)
         } catch {
             print("Engram could not import Anki package: \(error)")
             return hostResultResponse(
@@ -251,7 +252,88 @@ import AppKit
             hostResult["path"] = path
         }
         out["hostResult"] = hostResult
+        return withHostStatusProps(out, hostResult: hostResult)
+    }
+
+    private func withHostStatusProps(
+        _ response: [String: Any],
+        hostResult: [String: Any]
+    ) -> NSDictionary {
+        let statusProps = hostStatusProps(hostResult)
+        if statusProps.isEmpty {
+            return response as NSDictionary
+        }
+        var out = response
+        var props = out["props"] as? [String: Any] ?? [:]
+        for (key, value) in statusProps {
+            props[key] = value
+        }
+        out["props"] = props
         return out as NSDictionary
+    }
+
+    private func hostStatusProps(_ hostResult: [String: Any]) -> [String: Any] {
+        guard let status = hostResult["status"] as? String, !status.isEmpty else {
+            return [:]
+        }
+        return [
+            "host-status-visible": true,
+            "host-status-kind": status,
+            "host-status-label": hostStatusLabel(status),
+            "host-status-message": hostStatusMessage(hostResult, status: status),
+        ]
+    }
+
+    private func hostStatusLabel(_ status: String) -> String {
+        switch status {
+        case "imported":
+            return "Import complete"
+        case "exported":
+            return "Export complete"
+        case "cancelled":
+            return "Import cancelled"
+        case "read-error", "import-error":
+            return "Import failed"
+        case "export-error", "write-error":
+            return "Export failed"
+        case "unavailable", "unsupported":
+            return "Host unavailable"
+        default:
+            return "Host status"
+        }
+    }
+
+    private func hostStatusMessage(_ hostResult: [String: Any], status: String) -> String {
+        let file = hostResultFile(hostResult)
+        switch status {
+        case "imported":
+            return file.isEmpty ? "Anki package imported." : "Imported \(file)."
+        case "exported":
+            return file.isEmpty ? "Anki package exported." : "Saved \(file)."
+        case "cancelled":
+            return "No Anki package was selected."
+        case "read-error":
+            return file.isEmpty ? "Could not read the selected file." : "Could not read \(file)."
+        case "import-error":
+            return file.isEmpty ? "Could not import the selected package." : "Could not import \(file)."
+        case "export-error":
+            return "Could not export Anki package."
+        case "write-error":
+            return file.isEmpty ? "Could not save the Anki package." : "Could not save \(file)."
+        case "unavailable":
+            return "Engram native host is unavailable."
+        case "unsupported":
+            return "This host does not support native Anki file dialogs yet."
+        default:
+            return file.isEmpty ? status : file
+        }
+    }
+
+    private func hostResultFile(_ hostResult: [String: Any]) -> String {
+        guard let path = hostResult["path"] as? String, !path.isEmpty else {
+            return ""
+        }
+        return URL(fileURLWithPath: path).lastPathComponent
     }
 
     private func hostIntentExtensions(

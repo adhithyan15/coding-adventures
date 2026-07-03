@@ -104,6 +104,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_JOURNAL_SUMMARY_HANDOFF_RECEIPT_ACKNOWLEDGEMENT_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_JOURNAL_SUMMARY_HANDOFF_RECEIPT_ACKNOWLEDGEMENT_RECORD_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -12186,6 +12188,279 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_id:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_kind:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_status:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_outcome:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_message:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_id: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_kind: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_status: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_outcome: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_disposition:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_id: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_status: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_outcome: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_disposition: String,
+    pub runtime_activation_receipt_journal_summary_handoff_id: String,
+    pub runtime_activation_receipt_journal_summary_handoff_status: String,
+    pub runtime_activation_receipt_journal_summary_handoff_outcome: String,
+    pub runtime_activation_receipt_journal_summary_id: String,
+    pub runtime_activation_receipt_journal_summary_status: String,
+    pub latest_runtime_activation_receipt_id: String,
+    pub latest_runtime_activation_receipt_status: String,
+    pub latest_runtime_activation_receipt_outcome: String,
+    pub delivery_package_id: String,
+    pub delivery_route: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_action: String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_action:
+        String,
+    pub runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_disposition:
+        String,
+    pub activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_steps:
+        Vec<String>,
+    pub activation_receipt_journal_summary_handoff_receipt_acknowledgement_steps: Vec<String>,
+    pub journal_entry_count: usize,
+    pub committed_journal_entry_count: usize,
+    pub deferred_journal_entry_count: usize,
+    pub should_record_summary_handoff_receipt_acknowledgement: bool,
+    pub should_defer_summary_handoff_receipt_acknowledgement_record: bool,
+    pub should_acknowledge_summary_handoff_receipt_acknowledgement: bool,
+    pub should_defer_summary_handoff_receipt_acknowledgement: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgement,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgement::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgement::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement(
+        acknowledgement: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgement,
+    ) -> Self {
+        let should_defer_summary_handoff_receipt_acknowledgement_record =
+            acknowledgement.should_defer_summary_handoff_receipt_acknowledgement;
+        let should_record_summary_handoff_receipt_acknowledgement =
+            !should_defer_summary_handoff_receipt_acknowledgement_record;
+        let runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_status =
+            if should_defer_summary_handoff_receipt_acknowledgement_record {
+                "deferred"
+            } else {
+                "recorded"
+            };
+        let runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_outcome =
+            acknowledgement
+                .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_outcome
+                .as_str();
+        let runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_message =
+            if should_defer_summary_handoff_receipt_acknowledgement_record {
+                "Runtime activation receipt journal summary handoff receipt acknowledgement record deferred until acknowledgement blockers clear."
+            } else {
+                "Runtime activation receipt journal summary handoff receipt acknowledgement recorded for product-shell replay."
+            };
+        let runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_action =
+            if should_defer_summary_handoff_receipt_acknowledgement_record {
+                "defer-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement-record"
+            } else {
+                "record-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement"
+            };
+        let runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_disposition =
+            if should_defer_summary_handoff_receipt_acknowledgement_record {
+                "deferred"
+            } else {
+                "recorded"
+            };
+        let mut activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_steps =
+            vec![
+                "receive-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement"
+                    .to_string(),
+                "read-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement"
+                    .to_string(),
+            ];
+        activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_steps.extend(
+            acknowledgement
+                .activation_receipt_journal_summary_handoff_receipt_acknowledgement_steps
+                .iter()
+                .cloned(),
+        );
+        activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_steps.push(
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_action
+                .to_string(),
+        );
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_JOURNAL_SUMMARY_HANDOFF_RECEIPT_ACKNOWLEDGEMENT_RECORD_SCHEMA_VERSION,
+            package_name: acknowledgement.package_name.clone(),
+            source_fingerprint: acknowledgement.source_fingerprint.clone(),
+            title: acknowledgement.title.clone(),
+            startup_route: acknowledgement.startup_route.clone(),
+            ready: acknowledgement.ready,
+            severity: acknowledgement.severity.clone(),
+            attention_required: acknowledgement.attention_required,
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement-record"
+                    .to_string(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_kind:
+                "berkeley-product-handoff-webassembly-embed-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement-record"
+                    .to_string(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_status:
+                runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_status
+                    .to_string(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_outcome:
+                runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_outcome
+                    .to_string(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_message:
+                runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_message
+                    .to_string(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_id:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_id.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_kind:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_kind.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_status:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_status.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_outcome:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_outcome.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_disposition:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_disposition.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_id:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_id.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_status:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_status.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_outcome:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_outcome.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_disposition:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_receipt_disposition.clone(),
+            runtime_activation_receipt_journal_summary_handoff_id:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_id.clone(),
+            runtime_activation_receipt_journal_summary_handoff_status:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_status.clone(),
+            runtime_activation_receipt_journal_summary_handoff_outcome:
+                acknowledgement.runtime_activation_receipt_journal_summary_handoff_outcome.clone(),
+            runtime_activation_receipt_journal_summary_id:
+                acknowledgement.runtime_activation_receipt_journal_summary_id.clone(),
+            runtime_activation_receipt_journal_summary_status:
+                acknowledgement.runtime_activation_receipt_journal_summary_status.clone(),
+            latest_runtime_activation_receipt_id:
+                acknowledgement.latest_runtime_activation_receipt_id.clone(),
+            latest_runtime_activation_receipt_status:
+                acknowledgement.latest_runtime_activation_receipt_status.clone(),
+            latest_runtime_activation_receipt_outcome:
+                acknowledgement.latest_runtime_activation_receipt_outcome.clone(),
+            delivery_package_id: acknowledgement.delivery_package_id.clone(),
+            delivery_route: acknowledgement.delivery_route.clone(),
+            product_surface: acknowledgement.product_surface.clone(),
+            render_region: acknowledgement.render_region.clone(),
+            product_shell_action: acknowledgement.product_shell_action.clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_action:
+                acknowledgement
+                    .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_action
+                    .clone(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_action:
+                runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_action
+                    .to_string(),
+            runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_disposition:
+                runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_disposition
+                    .to_string(),
+            activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_steps,
+            activation_receipt_journal_summary_handoff_receipt_acknowledgement_steps:
+                acknowledgement
+                    .activation_receipt_journal_summary_handoff_receipt_acknowledgement_steps
+                    .clone(),
+            journal_entry_count: acknowledgement.journal_entry_count,
+            committed_journal_entry_count: acknowledgement.committed_journal_entry_count,
+            deferred_journal_entry_count: acknowledgement.deferred_journal_entry_count,
+            should_record_summary_handoff_receipt_acknowledgement,
+            should_defer_summary_handoff_receipt_acknowledgement_record,
+            should_acknowledge_summary_handoff_receipt_acknowledgement: acknowledgement
+                .should_acknowledge_summary_handoff_receipt_acknowledgement,
+            should_defer_summary_handoff_receipt_acknowledgement: acknowledgement
+                .should_defer_summary_handoff_receipt_acknowledgement,
+            requires_attention: acknowledgement.requires_attention,
+            notification_count: acknowledgement.notification_count,
+            visible_notification_count: acknowledgement.visible_notification_count,
+            announce_notification_count: acknowledgement.announce_notification_count,
+            attention_notification_count: acknowledgement.attention_notification_count,
+            success_notification_count: acknowledgement.success_notification_count,
+            error_notification_count: acknowledgement.error_notification_count,
+            info_notification_count: acknowledgement.info_notification_count,
+            embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement:
+                acknowledgement.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_capability_id:
+                acknowledgement
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-receipt-journal-summary-handoff-receipt-acknowledgement-record-json"
+                    .to_string(),
+            artifact_capability_count: acknowledgement.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -15424,6 +15699,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -22475,6 +22811,212 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
         "artifactCapabilityCount",
         acknowledgement.artifact_capability_count
     );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_json_value(
+    record: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", record.schema_version);
+    insert_json!("packageName", &record.package_name);
+    insert_json!("sourceFingerprint", &record.source_fingerprint);
+    insert_json!("title", &record.title);
+    insert_json!("startupRoute", &record.startup_route);
+    insert_json!("ready", record.ready);
+    insert_json!("severity", &record.severity);
+    insert_json!("attentionRequired", record.attention_required);
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordId",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_id
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordKind",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_kind
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordStatus",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_status
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordOutcome",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_outcome
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordMessage",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_message
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementId",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_id
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementKind",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_kind
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementStatus",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_status
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementOutcome",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_outcome
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementDisposition",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_disposition
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptId",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_id
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptStatus",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_status
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptOutcome",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_outcome
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptDisposition",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_disposition
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffId",
+        &record.runtime_activation_receipt_journal_summary_handoff_id
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffStatus",
+        &record.runtime_activation_receipt_journal_summary_handoff_status
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffOutcome",
+        &record.runtime_activation_receipt_journal_summary_handoff_outcome
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryId",
+        &record.runtime_activation_receipt_journal_summary_id
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryStatus",
+        &record.runtime_activation_receipt_journal_summary_status
+    );
+    insert_json!(
+        "latestRuntimeActivationReceiptId",
+        &record.latest_runtime_activation_receipt_id
+    );
+    insert_json!(
+        "latestRuntimeActivationReceiptStatus",
+        &record.latest_runtime_activation_receipt_status
+    );
+    insert_json!(
+        "latestRuntimeActivationReceiptOutcome",
+        &record.latest_runtime_activation_receipt_outcome
+    );
+    insert_json!("deliveryPackageId", &record.delivery_package_id);
+    insert_json!("deliveryRoute", &record.delivery_route);
+    insert_json!("productSurface", &record.product_surface);
+    insert_json!("renderRegion", &record.render_region);
+    insert_json!("productShellAction", &record.product_shell_action);
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementAction",
+        &record.runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_action
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordAction",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_action
+    );
+    insert_json!(
+        "runtimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordDisposition",
+        &record
+            .runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_disposition
+    );
+    insert_json!(
+        "activationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordSteps",
+        &record.activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_steps
+    );
+    insert_json!(
+        "activationReceiptJournalSummaryHandoffReceiptAcknowledgementSteps",
+        &record.activation_receipt_journal_summary_handoff_receipt_acknowledgement_steps
+    );
+    insert_json!("journalEntryCount", record.journal_entry_count);
+    insert_json!(
+        "committedJournalEntryCount",
+        record.committed_journal_entry_count
+    );
+    insert_json!(
+        "deferredJournalEntryCount",
+        record.deferred_journal_entry_count
+    );
+    insert_json!(
+        "shouldRecordSummaryHandoffReceiptAcknowledgement",
+        record.should_record_summary_handoff_receipt_acknowledgement
+    );
+    insert_json!(
+        "shouldDeferSummaryHandoffReceiptAcknowledgementRecord",
+        record.should_defer_summary_handoff_receipt_acknowledgement_record
+    );
+    insert_json!(
+        "shouldAcknowledgeSummaryHandoffReceiptAcknowledgement",
+        record.should_acknowledge_summary_handoff_receipt_acknowledgement
+    );
+    insert_json!(
+        "shouldDeferSummaryHandoffReceiptAcknowledgement",
+        record.should_defer_summary_handoff_receipt_acknowledgement
+    );
+    insert_json!("requiresAttention", record.requires_attention);
+    insert_json!("notificationCount", record.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        record.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        record.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        record.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        record.success_notification_count
+    );
+    insert_json!("errorNotificationCount", record.error_notification_count);
+    insert_json!("infoNotificationCount", record.info_notification_count);
+    value.insert(
+        "embedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgement".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_json_value(
+            &record
+                .embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementCapabilityId",
+        &record
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordCapabilityId",
+        &record
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_capability_id
+    );
+    insert_json!("artifactCapabilityCount", record.artifact_capability_count);
 
     serde_json::Value::Object(value)
 }

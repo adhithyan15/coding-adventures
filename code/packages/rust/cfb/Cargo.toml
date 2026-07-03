@@ -1,0 +1,9 @@
+[package]
+name = "cfb"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-dependency reader for the OLE2 / Compound File Binary Format ([MS-CFB]) — the container inside legacy .xls/.doc/.ppt files."
+license = "MIT"
+
+[dependencies]
+# No dependencies — pure std, from-scratch binary parser.

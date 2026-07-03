@@ -39,6 +39,11 @@
  * | `__twig_input_i64`    | Read a line and parse it as a signed int64.  |
  * | `__twig_exit`         | Terminate the program with the given code.   |
  * | `__twig_str_eq`       | LANG-STR-RT: byte-equal two length-prefixed strings. |
+ * | `__twig_str_len`      | E4-dyn: byte length of a length-prefixed string.     |
+ * | `__twig_str_concat`   | E4-dyn: fresh block = a's bytes then b's.            |
+ * | `__twig_str_slice`    | E4-dyn: fresh block = bytes [start,end); traps OOB.  |
+ * | `__twig_str_index`    | E4-dyn: byte at index i (0..255); traps OOB.         |
+ * | `__twig_str_cmp`      | E4-dyn: lexicographic byte compare → -1 / 0 / 1.     |
  *
  * Adding new runtime helpers
  * ─────────────────────────
@@ -200,4 +205,121 @@ int64_t __twig_alloc_bytes(int64_t n) {
     if (n <= 0) return 0;
     void *p = calloc(1, (size_t)n);
     return (int64_t)(intptr_t)p;
+}
+
+/* ─── LANG-FULL E4-dyn: runtime (dynamic) string helpers ──────────────────
+ *
+ * A runtime string is the SAME length-prefixed heap block E5 arrays use:
+ *   offset 0 : int64_t length  (byte count, always >= 0)
+ *   offset 8 : the `length` bytes
+ * The "handle" is the block base pointer carried as an int64_t (identical to
+ * __twig_alloc_bytes / __twig_str_eq above).  These helpers let a string built
+ * at RUN TIME (a concat of two variables, a slice of an input, a value chosen
+ * by a branch) be a first-class value on the static backends — the same way
+ * __twig_str_eq already compares runtime blocks.
+ *
+ * Immutability: every helper that *produces* a string allocates a FRESH block
+ * and copies into it; it never writes through an operand handle.  This upholds
+ * E4's immutable-value contract.
+ *
+ * Bounds: __twig_str_slice / __twig_str_index enforce the E4 bounds contract
+ * (§2.2 of lang-full-e4-strings.md) and `abort()` on an out-of-range access —
+ * the runtime twin of the static backends' `udf`/`ud2`/`llvm.trap` array-bounds
+ * trap.  The metadata helpers (`__twig_str_len`, `__twig_str_cmp`) stay
+ * permissive on a null/corrupt handle (treat as the empty string), matching
+ * __twig_str_eq, so a compiler bug degrades to a wrong-but-safe answer rather
+ * than a crash.
+ */
+
+/* twig_str_len_checked — read a block's length header, validating the handle.
+ * Returns the (non-negative) length, or -1 when the handle is null or the
+ * header is negative (a corrupt or adversarially-written buffer).  A negative
+ * header cast to size_t would be enormous and make a downstream memcpy/memcmp
+ * over-read the heap, so every helper routes through this guard. */
+static int64_t twig_str_len_checked(int64_t s) {
+    if (s == 0) return -1;
+    int64_t len = *(const int64_t *)(intptr_t)s;
+    if (len < 0) return -1;
+    return len;
+}
+
+/* __twig_str_len — the byte length of a runtime string (the offset-0 header).
+ * A null/corrupt handle yields 0 (permissive, matching __twig_str_eq). */
+int64_t __twig_str_len(int64_t s) {
+    int64_t len = twig_str_len_checked(s);
+    return len < 0 ? 0 : len;
+}
+
+/* __twig_str_concat — a fresh block holding a's bytes followed by b's.
+ * Null/corrupt operands are treated as the empty string.  The `+ 8` and the
+ * length sum are overflow-guarded before reaching __twig_alloc_bytes (which
+ * would otherwise cast a wrapped negative to a huge size_t); a real string
+ * never approaches INT64_MAX, so the guards only fire on corruption, where an
+ * `abort()` trap is the safe outcome.  Allocation failure also traps rather
+ * than returning a NULL handle a caller would dereference. */
+int64_t __twig_str_concat(int64_t a, int64_t b) {
+    int64_t la = twig_str_len_checked(a);
+    int64_t lb = twig_str_len_checked(b);
+    if (la < 0) la = 0;
+    if (lb < 0) lb = 0;
+    if (la > INT64_MAX - lb) abort();          /* la + lb overflow */
+    int64_t total = la + lb;
+    if (total > INT64_MAX - 8) abort();         /* total + 8 overflow */
+    int64_t handle = __twig_alloc_bytes(total + 8);
+    if (handle == 0) abort();                   /* OOM */
+    *(int64_t *)(intptr_t)handle = total;
+    char *dst = (char *)(intptr_t)handle + 8;
+    if (la > 0) memcpy(dst,      (const char *)(intptr_t)a + 8, (size_t)la);
+    if (lb > 0) memcpy(dst + la, (const char *)(intptr_t)b + 8, (size_t)lb);
+    return handle;
+}
+
+/* __twig_str_slice — a fresh block holding bytes [start, end) of `s`.
+ * E4 bounds contract: 0 <= start <= end <= len, else TRAP.  A null/corrupt
+ * source also traps (there is no in-range slice of nothing).  `end - start`
+ * cannot overflow because both are bounded by `len >= 0`. */
+int64_t __twig_str_slice(int64_t s, int64_t start, int64_t end) {
+    int64_t len = twig_str_len_checked(s);
+    if (len < 0) abort();
+    if (start < 0 || end < start || end > len) abort();
+    int64_t n = end - start;
+    int64_t handle = __twig_alloc_bytes(n + 8);
+    if (handle == 0) abort();
+    *(int64_t *)(intptr_t)handle = n;
+    if (n > 0) memcpy((char *)(intptr_t)handle + 8,
+                      (const char *)(intptr_t)s + 8 + start, (size_t)n);
+    return handle;
+}
+
+/* __twig_str_index — the byte at index `i` of `s`, zero-extended to int64_t
+ * (an unsigned 0..255 byte value).  E4 bounds contract: 0 <= i < len, else
+ * TRAP. */
+int64_t __twig_str_index(int64_t s, int64_t i) {
+    int64_t len = twig_str_len_checked(s);
+    if (len < 0) abort();
+    if (i < 0 || i >= len) abort();
+    unsigned char byte = *((const unsigned char *)(intptr_t)s + 8 + i);
+    return (int64_t)byte;
+}
+
+/* __twig_str_cmp — lexicographic byte comparison: -1 if a<b, 0 if equal,
+ * 1 if a>b.  Compares the first min(len) bytes; on a tie the shorter string is
+ * "less" (strcmp / String.compareTo semantics over unsigned byte values).
+ * Null/corrupt operands are treated as the empty string, so a null handle
+ * never reaches the guarded memcmp (n collapses to 0). */
+int64_t __twig_str_cmp(int64_t a, int64_t b) {
+    int64_t la = twig_str_len_checked(a);
+    int64_t lb = twig_str_len_checked(b);
+    if (la < 0) la = 0;
+    if (lb < 0) lb = 0;
+    int64_t n = la < lb ? la : lb;
+    if (n > 0) {
+        int c = memcmp((const char *)(intptr_t)a + 8,
+                       (const char *)(intptr_t)b + 8, (size_t)n);
+        if (c < 0) return -1;
+        if (c > 0) return 1;
+    }
+    if (la < lb) return -1;
+    if (la > lb) return 1;
+    return 0;
 }

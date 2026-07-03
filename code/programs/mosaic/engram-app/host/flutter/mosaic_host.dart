@@ -198,14 +198,15 @@ class MosaicHost {
 
     _persistSnapshot();
     final refreshed = props() ?? const <String, Object?>{};
-    return <String, Object?>{
+    final hostResult = <String, Object?>{
+      'status': 'imported',
+      'path': path,
+    };
+    return _withHostStatusProps(<String, Object?>{
       ...refreshed,
       'hostIntent': hostIntent,
-      'hostResult': <String, Object?>{
-        'status': 'imported',
-        'path': path,
-      },
-    };
+      'hostResult': hostResult,
+    }, hostResult);
   }
 
   Future<Map<String, Object?>?> _exportAnkiPackage(
@@ -482,7 +483,93 @@ Map<String, Object?> _hostResultResponse(
     hostResult['error'] = error.toString();
   }
   out['hostResult'] = hostResult;
-  return out;
+  return _withHostStatusProps(out, hostResult);
+}
+
+Map<String, Object?> _withHostStatusProps(
+  Map<String, Object?> response,
+  Map<String, Object?> hostResult,
+) {
+  final statusProps = _hostStatusProps(hostResult);
+  if (statusProps.isEmpty) return response;
+  final props = <String, Object?>{
+    ..._mosaicMap(response['props']),
+    ...statusProps,
+  };
+  return <String, Object?>{
+    ...response,
+    'props': props,
+  };
+}
+
+Map<String, Object?> _hostStatusProps(Map<String, Object?> hostResult) {
+  final status = hostResult['status']?.toString() ?? '';
+  if (status.isEmpty) return const <String, Object?>{};
+  return <String, Object?>{
+    'host-status-visible': true,
+    'host-status-kind': status,
+    'host-status-label': _hostStatusLabel(status),
+    'host-status-message': _hostStatusMessage(hostResult, status),
+  };
+}
+
+String _hostStatusLabel(String status) {
+  switch (status) {
+    case 'imported':
+      return 'Import complete';
+    case 'exported':
+      return 'Export complete';
+    case 'cancelled':
+      return 'Import cancelled';
+    case 'read-error':
+    case 'import-error':
+      return 'Import failed';
+    case 'export-error':
+    case 'write-error':
+      return 'Export failed';
+    case 'unsupported':
+      return 'Host unavailable';
+    default:
+      return 'Host status';
+  }
+}
+
+String _hostStatusMessage(Map<String, Object?> hostResult, String status) {
+  final file = _hostResultFile(hostResult);
+  final error = hostResult['error']?.toString() ?? '';
+  switch (status) {
+    case 'imported':
+      return file.isEmpty ? 'Anki package imported.' : 'Imported $file.';
+    case 'exported':
+      return file.isEmpty ? 'Anki package exported.' : 'Saved $file.';
+    case 'cancelled':
+      return 'No Anki package was selected.';
+    case 'read-error':
+      return error.isNotEmpty
+          ? 'Could not read ${file.isEmpty ? 'the selected file' : file}: $error'
+          : 'Could not read ${file.isEmpty ? 'the selected file' : file}.';
+    case 'import-error':
+      return error.isNotEmpty
+          ? 'Could not import ${file.isEmpty ? 'the selected package' : file}: $error'
+          : 'Could not import ${file.isEmpty ? 'the selected package' : file}.';
+    case 'export-error':
+      return error.isNotEmpty
+          ? 'Could not export Anki package: $error'
+          : 'Could not export Anki package.';
+    case 'write-error':
+      return error.isNotEmpty
+          ? 'Could not save ${file.isEmpty ? 'the Anki package' : file}: $error'
+          : 'Could not save ${file.isEmpty ? 'the Anki package' : file}.';
+    case 'unsupported':
+      return 'This host does not support native Anki file dialogs yet.';
+    default:
+      return error.isNotEmpty ? error : (file.isEmpty ? status : file);
+  }
+}
+
+String _hostResultFile(Map<String, Object?> hostResult) {
+  final path = hostResult['path']?.toString() ?? '';
+  return path.isEmpty ? '' : _baseName(path);
 }
 
 List<String> hostIntentExtensions(

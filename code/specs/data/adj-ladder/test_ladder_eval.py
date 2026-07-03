@@ -99,6 +99,7 @@ SELF_CONTAINED_RUNGS = (
     "rung59_reconstituted_concentration",
     "rung60_apheresis_net_rate",
     "rung61_polysomnography_apnea_rate",
+    "rung62_urodynamics_average_flow",
 )
 
 

@@ -1350,6 +1350,32 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         return;
     }
 
+    // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or",
+    // [lhs, rhs])` — the frontend folds BOTH the 2-operand `a || b` form and a
+    // multi-value `when 1, 2, 3` chain through them.  They MUST short-circuit
+    // (rhs not evaluated once lhs decides) and use SIR truthiness, returning the
+    // deciding OPERAND (not a bare bool).  So they emit the same truthy-guarded
+    // block as `Expr::LogicalOr`/`LogicalAnd` rather than routing through the
+    // eager `__sir::call_builtin_by_name` dispatch — which has no `or`/`and`
+    // entry and would evaluate both operands, losing Ruby semantics.  `__l`
+    // shadows cleanly so nested `&&`/`||` never collide.
+    if name == "and" && args.len() == 2 {
+        out.push_str("({ let __l = (");
+        emit_expr(out, &args[0], indent);
+        out.push_str("); if __sir::truthy(&__l) { (");
+        emit_expr(out, &args[1], indent);
+        out.push_str(") } else { __l } })");
+        return;
+    }
+    if name == "or" && args.len() == 2 {
+        out.push_str("({ let __l = (");
+        emit_expr(out, &args[0], indent);
+        out.push_str("); if __sir::truthy(&__l) { __l } else { (");
+        emit_expr(out, &args[1], indent);
+        out.push_str(") } })");
+        return;
+    }
+
     // Variadic helpers take a Vec<Value>; fixed-arity helpers take
     // positional Value arguments.  This matches the inlined runtime
     // signatures.
@@ -3570,6 +3596,25 @@ mod tests {
         // a string literal, never a runtime constant read.
         let e2 = builtin("__new__", vec![constref("Dog")]);
         assert_eq!(emit_e(&e2), r#"__sir::call_new("Dog", vec![])"#);
+    }
+
+    #[test]
+    fn emit_or_and_builtins_short_circuit() {
+        // Ruby `a || b` / `a && b` lower to `builtin("or"/"and", [a, b])` and must
+        // emit the SAME short-circuit block as `LogicalOr`/`LogicalAnd` — NOT the
+        // eager `call_builtin_by_name` fallback (which has no `or`/`and` entry and
+        // would panic `unknown builtin` at runtime).
+        let or = builtin("or", vec![int(5), int(7)]);
+        assert_eq!(
+            emit_e(&or),
+            "({ let __l = (__sir::Value::Int(5i64)); if __sir::truthy(&__l) { __l } else { (__sir::Value::Int(7i64)) } })"
+        );
+        assert!(!emit_e(&or).contains("call_builtin_by_name"));
+        let and = builtin("and", vec![int(5), int(7)]);
+        assert_eq!(
+            emit_e(&and),
+            "({ let __l = (__sir::Value::Int(5i64)); if __sir::truthy(&__l) { (__sir::Value::Int(7i64)) } else { __l } })"
+        );
     }
 
     #[test]
