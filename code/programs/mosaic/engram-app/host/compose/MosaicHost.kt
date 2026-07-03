@@ -80,11 +80,12 @@ class MosaicHost {
         persistSnapshot()
         val refreshed = props().toMutableMap()
         refreshed["hostIntent"] = jsonMap(hostIntent)
-        refreshed["hostResult"] = mapOf(
+        val hostResult = mapOf(
             "status" to "imported",
             "path" to file.path
         )
-        return refreshed
+        refreshed["hostResult"] = hostResult
+        return withHostStatusProps(refreshed, hostResult)
     }
 
     private fun exportAnkiPackage(
@@ -265,7 +266,76 @@ class MosaicHost {
             hostResult["path"] = path
         }
         out["hostResult"] = hostResult
+        return withHostStatusProps(out, hostResult)
+    }
+
+    private fun withHostStatusProps(
+        response: Map<String, Any?>,
+        hostResult: Map<String, Any?>
+    ): Map<String, Any?> {
+        val statusProps = hostStatusProps(hostResult)
+        if (statusProps.isEmpty()) return response
+        val out = response.toMutableMap()
+        val props = (out["props"] as? Map<*, *>)?.let(::jsonMap)?.toMutableMap()
+            ?: mutableMapOf()
+        props.putAll(statusProps)
+        out["props"] = props
         return out
+    }
+
+    private fun hostStatusProps(hostResult: Map<String, Any?>): Map<String, Any?> {
+        val status = hostResult["status"] as? String ?: return emptyMap()
+        if (status.isBlank()) return emptyMap()
+        return mapOf(
+            "host-status-visible" to true,
+            "host-status-kind" to status,
+            "host-status-label" to hostStatusLabel(status),
+            "host-status-message" to hostStatusMessage(hostResult, status)
+        )
+    }
+
+    private fun hostStatusLabel(status: String): String =
+        when (status) {
+            "imported" -> "Import complete"
+            "exported" -> "Export complete"
+            "cancelled" -> "Import cancelled"
+            "read-error", "import-error" -> "Import failed"
+            "export-error", "write-error" -> "Export failed"
+            "unavailable", "unsupported" -> "Host unavailable"
+            else -> "Host status"
+        }
+
+    private fun hostStatusMessage(hostResult: Map<String, Any?>, status: String): String {
+        val file = hostResultFile(hostResult)
+        return when (status) {
+            "imported" -> if (file.isBlank()) "Anki package imported." else "Imported $file."
+            "exported" -> if (file.isBlank()) "Anki package exported." else "Saved $file."
+            "cancelled" -> "No Anki package was selected."
+            "read-error" -> if (file.isBlank()) {
+                "Could not read the selected file."
+            } else {
+                "Could not read $file."
+            }
+            "import-error" -> if (file.isBlank()) {
+                "Could not import the selected package."
+            } else {
+                "Could not import $file."
+            }
+            "export-error" -> "Could not export Anki package."
+            "write-error" -> if (file.isBlank()) {
+                "Could not save the Anki package."
+            } else {
+                "Could not save $file."
+            }
+            "unavailable" -> "Engram native host is unavailable."
+            "unsupported" -> "This host does not support native Anki file dialogs yet."
+            else -> if (file.isBlank()) status else file
+        }
+    }
+
+    private fun hostResultFile(hostResult: Map<String, Any?>): String {
+        val path = hostResult["path"] as? String ?: return ""
+        return File(path).name
     }
 
     private fun hostIntentExtensions(

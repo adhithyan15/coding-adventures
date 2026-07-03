@@ -264,7 +264,7 @@ QVariantMap MosaicHost::importAnkiPackage(
   hostResult.insert(QStringLiteral("status"), QStringLiteral("imported"));
   hostResult.insert(QStringLiteral("path"), path);
   refreshed.insert(QStringLiteral("hostResult"), hostResult);
-  return refreshed;
+  return withHostStatusProps(refreshed, hostResult);
 }
 
 QVariantMap MosaicHost::exportAnkiPackage(
@@ -333,7 +333,91 @@ QVariantMap MosaicHost::hostResultResponse(
     hostResult.insert(QStringLiteral("path"), path);
   }
   out.insert(QStringLiteral("hostResult"), hostResult);
-  return out;
+  return withHostStatusProps(out, hostResult);
+}
+
+QVariantMap MosaicHost::withHostStatusProps(
+    QVariantMap response,
+    const QVariantMap &hostResult) const {
+  const QVariantMap statusProps = hostStatusProps(hostResult);
+  if (statusProps.isEmpty()) {
+    return response;
+  }
+  QVariantMap props = response.value(QStringLiteral("props")).toMap();
+  for (auto it = statusProps.cbegin(); it != statusProps.cend(); ++it) {
+    props.insert(it.key(), it.value());
+  }
+  response.insert(QStringLiteral("props"), props);
+  return response;
+}
+
+QVariantMap MosaicHost::hostStatusProps(const QVariantMap &hostResult) const {
+  const QString status = hostResult.value(QStringLiteral("status")).toString();
+  if (status.isEmpty()) {
+    return {};
+  }
+  return {
+      {QStringLiteral("hostStatusVisible"), true},
+      {QStringLiteral("hostStatusKind"), status},
+      {QStringLiteral("hostStatusLabel"), hostStatusLabel(status)},
+      {QStringLiteral("hostStatusMessage"), hostStatusMessage(hostResult, status)}};
+}
+
+QString MosaicHost::hostStatusLabel(const QString &status) const {
+  if (status == QStringLiteral("imported")) {
+    return QStringLiteral("Import complete");
+  }
+  if (status == QStringLiteral("exported")) {
+    return QStringLiteral("Export complete");
+  }
+  if (status == QStringLiteral("cancelled")) {
+    return QStringLiteral("Import cancelled");
+  }
+  if (status == QStringLiteral("read-error") || status == QStringLiteral("import-error")) {
+    return QStringLiteral("Import failed");
+  }
+  if (status == QStringLiteral("export-error") || status == QStringLiteral("write-error")) {
+    return QStringLiteral("Export failed");
+  }
+  return QStringLiteral("Host status");
+}
+
+QString MosaicHost::hostStatusMessage(
+    const QVariantMap &hostResult,
+    const QString &status) const {
+  const QString file = hostResultFile(hostResult);
+  if (status == QStringLiteral("imported")) {
+    return file.isEmpty() ? QStringLiteral("Anki package imported.")
+                          : QStringLiteral("Imported %1.").arg(file);
+  }
+  if (status == QStringLiteral("exported")) {
+    return file.isEmpty() ? QStringLiteral("Anki package exported.")
+                          : QStringLiteral("Saved %1.").arg(file);
+  }
+  if (status == QStringLiteral("cancelled")) {
+    return QStringLiteral("No Anki package was selected.");
+  }
+  if (status == QStringLiteral("read-error")) {
+    return file.isEmpty() ? QStringLiteral("Could not read the selected file.")
+                          : QStringLiteral("Could not read %1.").arg(file);
+  }
+  if (status == QStringLiteral("import-error")) {
+    return file.isEmpty() ? QStringLiteral("Could not import the selected package.")
+                          : QStringLiteral("Could not import %1.").arg(file);
+  }
+  if (status == QStringLiteral("export-error")) {
+    return QStringLiteral("Could not export Anki package.");
+  }
+  if (status == QStringLiteral("write-error")) {
+    return file.isEmpty() ? QStringLiteral("Could not save the Anki package.")
+                          : QStringLiteral("Could not save %1.").arg(file);
+  }
+  return file.isEmpty() ? status : file;
+}
+
+QString MosaicHost::hostResultFile(const QVariantMap &hostResult) const {
+  const QString path = hostResult.value(QStringLiteral("path")).toString();
+  return path.isEmpty() ? QString() : QFileInfo(path).fileName();
 }
 
 QVariantMap MosaicHost::camelCaseProps(const QVariantMap &props) const {
