@@ -164,13 +164,13 @@ mod tests {
 
     #[test]
     fn single_star_one_component() {
-        assert!(match_target("./grammars/*", "./grammars/json/json.tokens"));
+        assert!(match_target("./grammars/*", "./grammars/json.tokens"));
         assert!(!match_target("./grammars/*", "./grammars/sub/json.tokens"));
     }
 
     #[test]
     fn double_star_any_depth() {
-        assert!(match_target("./**/*.tokens", "./grammars/json/json.tokens"));
+        assert!(match_target("./**/*.tokens", "./grammars/json.tokens"));
         assert!(match_target(
             "./**/*.tokens",
             "./grammars/sub/deep/json.tokens"
@@ -184,7 +184,7 @@ mod tests {
         assert!(!match_target("*.tokens", "json.toml"));
         assert!(match_target(
             "./grammars/*.tokens",
-            "./grammars/json/json.tokens"
+            "./grammars/json.tokens"
         ));
     }
 

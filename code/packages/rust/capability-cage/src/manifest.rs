@@ -440,15 +440,15 @@ mod tests {
 
     #[test]
     fn exact_match() {
-        let m = Manifest::new(vec![fs_read_cap("./grammars/json/json.tokens")]);
-        assert!(m.has(Category::Fs, Action::Read, "./grammars/json/json.tokens"));
+        let m = Manifest::new(vec![fs_read_cap("./grammars/json.tokens")]);
+        assert!(m.has(Category::Fs, Action::Read, "./grammars/json.tokens"));
         assert!(!m.has(Category::Fs, Action::Read, "./grammars/other.tokens"));
     }
 
     #[test]
     fn glob_match() {
         let m = Manifest::new(vec![fs_read_cap("./grammars/*.tokens")]);
-        assert!(m.has(Category::Fs, Action::Read, "./grammars/json/json.tokens"));
+        assert!(m.has(Category::Fs, Action::Read, "./grammars/json.tokens"));
         assert!(m.has(Category::Fs, Action::Read, "./grammars/yaml.tokens"));
         assert!(!m.has(Category::Fs, Action::Read, "./grammars/sub/json.tokens"));
     }
@@ -494,7 +494,7 @@ mod tests {
         }"#;
         let m = Manifest::load_from_str(json).unwrap();
         assert_eq!(m.capabilities().len(), 1);
-        assert!(m.has(Category::Fs, Action::Read, "./grammars/json/json.tokens"));
+        assert!(m.has(Category::Fs, Action::Read, "./grammars/json.tokens"));
     }
 
     #[test]

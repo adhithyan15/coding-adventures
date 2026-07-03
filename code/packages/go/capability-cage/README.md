@@ -63,7 +63,7 @@ if err != nil {
 
 - `"*"` — matches any target (broad access, use sparingly)
 - `"*.tokens"` — matches files ending in `.tokens` in the **same directory only** (star does not cross `/`)
-- `"grammars/verilog/verilog.tokens"` — exact match only
+- `"grammars/verilog.tokens"` — exact match only
 
 ## Pure Computation Packages
 

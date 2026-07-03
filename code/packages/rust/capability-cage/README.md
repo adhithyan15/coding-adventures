@@ -51,7 +51,7 @@ let m = Manifest::try_new(vec![
 ])?;
 
 // Reading a file the manifest covers — succeeds (calls OpenBackend).
-let bytes = secure_file::read_file(&m, Path::new("./grammars/json/json.tokens"))?;
+let bytes = secure_file::read_file(&m, Path::new("./grammars/json.tokens"))?;
 
 // Reading a path the manifest does NOT cover — fails before any
 // stdlib call. The error wraps a CapabilityViolationError.
