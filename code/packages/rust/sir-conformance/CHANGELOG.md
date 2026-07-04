@@ -2,6 +2,37 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.10.0] - Division frontier captured (oracle-judged), §E3
+
+### Added — `tests/division.rs`
+
+Probing division through the current pipeline (with the T3b-1 `DivOp` oracle as
+judge) surfaced a **confirmed, multi-way cross-backend divergence** — the exact
+"one overloaded `divide` that does the Ruby thing on Tuesdays" bug §E3 exists to
+kill. Ruby's integer `/` floors (`-7 / 2 == -4`); today:
+
+- **Python** prints `-3` — its runtime `div` truncates toward zero (`int(a/b)`),
+  and is deliberately documented/unit-tested that way ("to match SIR semantics").
+- **JavaScript** prints `-3.5` — true (float) division, not integer at all
+  (even `7 / 2` prints `3.5`).
+- **Go / Rust** — the emitted program **crashes** on the negative path.
+
+So besides bugs, there is a genuine **semantics conflict** to resolve: the Python
+runtime's truncating `div` vs. the SIR21 oracle's (and Ruby's) floor `/`. That is
+exactly why §E3 splits `/` into explicit `div_floor` / `div_trunc`; resolving it
+(flip vs. split, plus `Integer#/` floors while `Float#/` true-divides) is a
+design decision tracked separately, not made here.
+
+This slice **captures** the frontier so it is oracle-judged and tracked (the way
+`arithmetic.rs` captures the 10²⁴ bignum frontier):
+
+- `oracle_floor_matches_ruby_integer_division` — a toolchain-free control
+  pinning the oracle's floor expectations to Ruby (`7/2=3`, `-7/2=-4`, …).
+- `division_matches_ruby_floor_on_every_backend` — the cross-backend frontier,
+  `#[ignore]`d so the suite stays green; verified to genuinely fail today
+  (`javascript computed 7/2 = 3.5, Ruby floor = 3`) and it flips to a passing
+  assertion once division is made floor-faithful everywhere.
+
 ## [0.9.0] - SIR21 T3b (T3b-1) — division reference semantics (floor vs trunc, §E3)
 
 ### Added — `oracle::DivOp` + `Outcome::DivByZero`
