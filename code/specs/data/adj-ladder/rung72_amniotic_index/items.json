@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 72 \u2014 obstetrics amniotic-fluid index from four stated quantities (a NEW panel: obstetrics / amniotic-fluid). From a pocket depth, a transducer factor to divide by, a quadrant gain to scale by, and a probe offset to subtract, compute the amniotic index (pocket_depth/transducer_factor*quadrant_gain-probe_offset), the depth ratio (pocket_depth/transducer_factor), or the scaled pocket (pocket_depth/transducer_factor*quadrant_gain). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, QUOTIENT-TIMES-FACTOR MINUS A TERM a/b*c-d (DIVIDE first, then scale, then subtract \u2014 contrast rung-71 a/b*c+d which adds the term, and rung-70 a*b/c-d which multiplies first; the left-to-right a/b*c = a*c/b, not a/(b*c)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via /, *, and - \u2014 no constant leaks, and neither the depth ratio, the scaled pocket, nor any amniotic figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: DIVIDING by the PRODUCT (a/(b*c)-d, a wrong scaling) and SWAPPING the multiply and divide (a*b/c-d, a wrong scaling). The core confusion tested is that a/b*c-d is not a/(b*c)-d and not a*b/c-d.",
+  "items": [
+    {
+      "id": "r72amni-01",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 24, normalised by a transducer factor of 4, scaled by a quadrant gain of 3 and offset by a probe baseline of 1. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(24)\nobserve transducer_factor(4)\nobserve quadrant_gain(3)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r72amni-02",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 24, normalised by a transducer factor of 4, scaled by a quadrant gain of 3 and offset by a probe baseline of 1. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(24)\nobserve transducer_factor(4)\nobserve quadrant_gain(3)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r72amni-03",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 24, normalised by a transducer factor of 4, scaled by a quadrant gain of 3 and offset by a probe baseline of 1. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(24)\nobserve transducer_factor(4)\nobserve quadrant_gain(3)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r72amni-04",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 30, normalised by a transducer factor of 5, scaled by a quadrant gain of 2 and offset by a probe baseline of 2. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(30)\nobserve transducer_factor(5)\nobserve quadrant_gain(2)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 73.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r72amni-05",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 30, normalised by a transducer factor of 5, scaled by a quadrant gain of 2 and offset by a probe baseline of 2. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(30)\nobserve transducer_factor(5)\nobserve quadrant_gain(2)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 73.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r72amni-06",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 30, normalised by a transducer factor of 5, scaled by a quadrant gain of 2 and offset by a probe baseline of 2. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(30)\nobserve transducer_factor(5)\nobserve quadrant_gain(2)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 73.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r72amni-07",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 36, normalised by a transducer factor of 6, scaled by a quadrant gain of 4 and offset by a probe baseline of 1. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(36)\nobserve transducer_factor(6)\nobserve quadrant_gain(4)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 53.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r72amni-08",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 36, normalised by a transducer factor of 6, scaled by a quadrant gain of 4 and offset by a probe baseline of 1. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(36)\nobserve transducer_factor(6)\nobserve quadrant_gain(4)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 53.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r72amni-09",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 36, normalised by a transducer factor of 6, scaled by a quadrant gain of 4 and offset by a probe baseline of 1. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(36)\nobserve transducer_factor(6)\nobserve quadrant_gain(4)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 53.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r72amni-10",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 40, normalised by a transducer factor of 4, scaled by a quadrant gain of 5 and offset by a probe baseline of 1. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(40)\nobserve transducer_factor(4)\nobserve quadrant_gain(5)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r72amni-11",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 40, normalised by a transducer factor of 4, scaled by a quadrant gain of 5 and offset by a probe baseline of 1. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(40)\nobserve transducer_factor(4)\nobserve quadrant_gain(5)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r72amni-12",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 40, normalised by a transducer factor of 4, scaled by a quadrant gain of 5 and offset by a probe baseline of 1. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(40)\nobserve transducer_factor(4)\nobserve quadrant_gain(5)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r72amni-13",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 28, normalised by a transducer factor of 7, scaled by a quadrant gain of 3 and offset by a probe baseline of 1. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(28)\nobserve transducer_factor(7)\nobserve quadrant_gain(3)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.33333333333333326,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 64.33333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r72amni-14",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 28, normalised by a transducer factor of 7, scaled by a quadrant gain of 3 and offset by a probe baseline of 1. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(28)\nobserve transducer_factor(7)\nobserve quadrant_gain(3)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.33333333333333326,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 64.33333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r72amni-15",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 28, normalised by a transducer factor of 7, scaled by a quadrant gain of 3 and offset by a probe baseline of 1. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(28)\nobserve transducer_factor(7)\nobserve quadrant_gain(3)\nobserve probe_offset(1)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.33333333333333326,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 64.33333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r72amni-16",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 45, normalised by a transducer factor of 5, scaled by a quadrant gain of 4 and offset by a probe baseline of 2. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(45)\nobserve transducer_factor(5)\nobserve quadrant_gain(4)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r72amni-17",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 45, normalised by a transducer factor of 5, scaled by a quadrant gain of 4 and offset by a probe baseline of 2. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(45)\nobserve transducer_factor(5)\nobserve quadrant_gain(4)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r72amni-18",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 45, normalised by a transducer factor of 5, scaled by a quadrant gain of 4 and offset by a probe baseline of 2. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(45)\nobserve transducer_factor(5)\nobserve quadrant_gain(4)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r72amni-19",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 48, normalised by a transducer factor of 6, scaled by a quadrant gain of 3 and offset by a probe baseline of 2. What is the corrected amniotic-fluid index (pocket depth normalised, gain-scaled, then offset)?",
+      "program": "observe pocket_depth(48)\nobserve transducer_factor(6)\nobserve quadrant_gain(3)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor * quadrant_gain - probe_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6666666666666665,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 94.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r72amni-20",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 48, normalised by a transducer factor of 6, scaled by a quadrant gain of 3 and offset by a probe baseline of 2. What is the the depth ratio (pocket depth over the transducer factor)?",
+      "program": "observe pocket_depth(48)\nobserve transducer_factor(6)\nobserve quadrant_gain(3)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6666666666666665,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 94.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r72amni-21",
+      "qtype": "amniotic_index",
+      "stem": "A sonographer records a pocket depth of 48, normalised by a transducer factor of 6, scaled by a quadrant gain of 3 and offset by a probe baseline of 2. What is the the scaled pocket before subtracting the probe offset (depth ratio times the quadrant gain)?",
+      "program": "observe pocket_depth(48)\nobserve transducer_factor(6)\nobserve quadrant_gain(3)\nobserve probe_offset(2)\nlet answer = pocket_depth / transducer_factor * quadrant_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 94.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
