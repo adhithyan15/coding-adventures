@@ -38,23 +38,26 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
 | **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
 | **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `NodeKind::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `NodeKind::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
-| **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; coarse (region-granular) spans | ✅ |
+| **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; body spans precise per node as of 0.34.0 (S3) | ✅ |
 | **D3 sectioning fold** | folds the flat block stream into the **nested sectioning forest**: each heading OWNS the run of following blocks up to the next heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`, via `rank(level)`); deeper headings nest. A trailing `\label{key}` is hoisted onto its section's new `label` field. Applies to every block-list (top-level + environment/list/table bodies). Total & panic-free; `to_latex` fixed point; `flatten(fold(flat)) == flat` property test; folded-section span = union of heading ∪ children spans | ✅ |
 | **D4 metadata** | extracts `\title`/`\author{A \and B}`/`\date` and the `abstract` env into a typed `Metadata` record on `Document`, as an **additive projection** — the underlying nodes stay in `preamble`/`body`, so `to_latex` round-trips unchanged and re-parsing repopulates the same `Metadata` (fixed point). Both preamble and body scanned; first title/date wins; every `\author` (each `\and`-split) contributes; `\maketitle` is a metadata no-op. Total & panic-free; never fabricated. (Inline normalization — `\textbf`/`\emph`/`\texttt`/`$…$`/`\ref`/accents — already lands in D2/D3's `lower_inline`.) | ✅ |
-| **D5 floats/code/display-math** | specializes the generic environment fold by name: `figure`/`figure*` → `Block::Figure` and `table`/`table*` → the inner `Block::Table`, each with `\caption{…}` → `Caption` + a hoisted `\label`; `verbatim`/`lstlisting` → `Block::CodeBlock` (raw text kept unparsed); `equation`/`align`/`gather`/… → `Block::DisplayMath` (source kept, delegated to the math frontend on demand); `quote`/`quotation` → `Block::Quote`; any other env → recursed `Block::Environment`. `to_latex` fixed point; total & panic-free; coarse spans | ✅ |
-| **D6 provenance API (capstone)** | the byte-provenance surface: `Document::walk()` — a pre-order, depth-first `impl Iterator<Item = NodeRef>` over every body block + nested inline; `Document::node_at(byte)` — the innermost walked node whose span contains a source byte, returned as `Provenance { node, span }`; `NodeRef::{span,kind}`. A capstone real-paper corpus (article + abstract + tabular + itemize + inline/display math + figure+caption+label + `\cite`) proves a `to_latex` fixed point, a non-panicking `walk()`, and **byte coverage**: every non-whitespace body-region byte is owned by ≥1 walked node. Panic-free (`saturating_sub`); honestly **region-coarse** (no exact byte→leaf claim). | ✅ |
+| **D5 floats/code/display-math** | specializes the generic environment fold by name: `figure`/`figure*` → `Block::Figure` and `table`/`table*` → the inner `Block::Table`, each with `\caption{…}` → `Caption` + a hoisted `\label`; `verbatim`/`lstlisting` → `Block::CodeBlock` (raw text kept unparsed); `equation`/`align`/`gather`/… → `Block::DisplayMath` (source kept, delegated to the math frontend on demand); `quote`/`quotation` → `Block::Quote`; any other env → recursed `Block::Environment`. `to_latex` fixed point; total & panic-free; body spans precise per node as of 0.34.0 (S3) | ✅ |
+| **D6 provenance API (capstone)** | the byte-provenance surface: `Document::walk()` — a pre-order, depth-first `impl Iterator<Item = NodeRef>` over every body block + nested inline; `Document::node_at(byte)` — the innermost walked node whose span contains a source byte, returned as `Provenance { node, span }`; `NodeRef::{span,kind}`. A capstone real-paper corpus (article + abstract + tabular + itemize + inline/display math + figure+caption+label + `\cite`) proves a `to_latex` fixed point, a non-panicking `walk()`, and **byte coverage**: every non-whitespace body-region byte is owned by ≥1 walked node. Panic-free (`saturating_sub`); spans region-coarse at D6, made precise by LTXDOC02 S3 (below). | ✅ |
 | **LTXDOC02 S1 — spanned L1 nodes** | `Node` restructured to `{ kind: NodeKind, span: Span }`; `parse()` threads each token's exact byte span onto the node it builds, so `&src[node.span()]` slices back to the node's own source (`\textbf{x}`, `{…}` incl. braces, `$…$` incl. delimiters, `\begin{env}…\end{env}`, a `Text` run's exact chars). Span is orthogonal to shape; `PartialEq` ignores it (round-trip = fixed point **modulo spans**); `Unsupported`'s bespoke tuple folded onto the uniform `Node.span`. `to_latex` unchanged. The one parser-level rung of the precise-spans arc (recognition-pass + Document-fold precision = S2/S3). | ✅ |
 | **LTXDOC02 S2 — spanned recognition passes** | the opt-in recognition passes now give each *synthesised* node the exact union of its constituents' real S1 spans: `recognize_structure` (`Section`/`CrossRef`/`Preamble`/`Styled` = recognizing command ∪ each argument), `recognize_accents` (`Accent` = command ∪ argument), `recognize_tables` (`Tabular` = `\begin{tabular}…\end{tabular}` ∪ every cell; `List` = `\begin{env}…\end{env}` ∪ every item). `&src[node.span()]` slices back to the exact source extent for a Section (heading through owned body), an Accent, a Tabular, and an itemize List. Unions over real child spans (never substring search); `to_latex` + round-trip-modulo-spans unchanged. Document-fold precision = S3. | ✅ |
+| **LTXDOC02 S3 — precise Document fold** | `build_document` reads each source `Node`'s carried, precise span instead of the coarse enclosing `region`, so **every body `Block`/`Inline` span is now the node's tight source range**: `&src[inline.span]` slices back to exactly a `Text` run's word, a `\textbf{…}`, an inline `$…$`, a `\cite{…}`. Composites union their children's real spans (`Paragraph` = ∪ its inlines; `Section` = heading ∪ owned body; `List`/`Tabular`/`Environment`/`Figure` = the `\begin…\end` extent; captioned `table` float = tabular ∪ float; `DocListItem` = term ∪ body; `Caption` = ∪ its content). The `region` parameter is deleted from the fold helpers (a fallback-only seed survives on `lower_blocks`). Preamble/`DocumentClass`/`Package` stay honestly preamble-region-coarse (classified, not walked). `to_latex` + round-trip-modulo-spans unchanged; precise `node_at` + coverage capstone = S4/S5. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
 tables/lists (D1) → preamble/body skeleton (D2) → sectioning forest (D3) → metadata + inline
 normalization (D4) → floats/code/display-math (D5) → provenance API + byte-coverage capstone (D6).
 The **precise per-token spans** arc (LTXDOC02) is now under way: **S1 shipped spanned L1 nodes**
-(`parse()` retains the exact byte range it already computed for each node) and **S2 shipped spanned
+(`parse()` retains the exact byte range it already computed for each node), **S2 shipped spanned
 recognition passes** (each synthesised `Section`/`CrossRef`/`Preamble`/`Styled`/`Accent`/`Tabular`/
-`List` node carries the exact union of its constituents' spans) — with S3 (precise Document fold) and
-S4/S5 (precise `node_at` + coverage capstone, retiring the region-coarse caveat) to follow.
+`List` node carries the exact union of its constituents' spans), and **S3 shipped the precise
+Document fold** (every body `Block`/`Inline` span is now the node's tight source range, composites
+union their children's real spans, and the coarse `region` plumbing is deleted) — with S4/S5
+(precise `node_at` + coverage capstone, retiring the last region-coarse caveat) to follow.
 
 ## The Document layer (LTXDOC01)
 
@@ -139,10 +142,12 @@ Caption/label extraction mirrors D3's `\label` hoist and never drops float conte
 re-emits the `figure`/`table` wrapper (with `\caption`/`\label`), `verbatim` fences, and `$$…$$`
 so `parse(to_latex(d)).strip_spans() == d.strip_spans()` remains a fixed point.
 
-**D2/D3 spans are coarse (region-granular)**: every leaf block/inline span defaults to its enclosing
-region span, and a folded D3 section's span is the **union** of its heading region span and its owned
-children's spans — so every child span ⊆ its parent ⊆ the `Document` span still holds. The `span`
-field exists now so later work can tighten the *values* without an API break.
+**Body spans are precise as of 0.34.0 (LTXDOC02 S3):** every body block/inline span is the source
+node's own tight byte range (`&src[node.span]` slices back to exactly its source), and a composite's
+span is the **union** of its children's real spans — so every child span ⊆ its parent ⊆ the
+`Document` span still holds, and now the leaves are tight. Only `Preamble` / `DocumentClass` /
+`Package` remain honestly preamble-region-coarse (the preamble is classified out of directives, not
+walked as per-node body content).
 
 ### The provenance API — walk / node_at (LTXDOC01 D6, arc complete)
 
@@ -165,12 +170,12 @@ if let Some(p) = d.node_at(35) {
 assert!(d.node_at(usize::MAX).is_none()); // out of range → None, never panics
 ```
 
-**Honest granularity.** Because D2–D5 spans are region-coarse, `node_at` resolves to the innermost
-node *at region granularity* — it returns the tightest-covering node, **not** an exact byte→leaf
-(many siblings share a region span). The capstone byte-coverage test asserts what is true at this
-granularity: every non-whitespace byte inside the document **body region** is owned by ≥1 walked
-node. Precise per-byte resolution needs the parser to thread exact token spans into each lowered
-node — future work, not overclaimed here.
+**Granularity.** As of 0.34.0 (S3) body spans are precise, so `node_at` returns the narrowest-span
+node containing a byte — the genuine per-token leaf in the common case. The *formal* "always
+resolves to the true leaf" guarantee (and the removal of the last hedging wording on `node_at` /
+`Provenance`) is **S4**; the leaf-tightness coverage capstone is **S5**. The current capstone
+byte-coverage test asserts every non-whitespace byte inside the document **body region** is owned by
+≥1 walked node — coverage preserved under S3's tightening.
 
 ## Usage
 
