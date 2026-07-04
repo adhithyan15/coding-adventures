@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.28.0] - 2026-07-04
+
+### Added — CLOC12.163 PR2: bridge generator functions and `yield` (closes gap-164)
+
+The bridge now converts `generator_declaration` / `generator_expression`
+(sharing the function converter; a `*` token sets the `generator` flag and is
+skipped during name extraction) and `yield_expression` →
+`Expression::YieldExpression` (delegate = the node carries a `*`; the operand
+is the sole child node), instead of declining these to `UnsupportedSyntax` and
+dragging the whole file to WHITESPACE_ONLY. 5 new bridge unit tests (generator
+declaration with `yield`, delegating `yield*`, binary yield operand, generator
+expression in value position, and a plain-function-is-not-a-generator guard).
+Known grammar limitation: a bare operand-less `yield` (`function*g(){yield;}`)
+does not parse — the grammar's `yield_expression` production requires an
+operand — so the bridge only ever produces `Some(argument)`; tracked as a
+separate grammar gap.
+
 ## [0.27.0] - 2026-07-03
 
 ### Added — CLOC12.162 PR2: bridge spread `...arg` → `SpreadElement` (closes gap-163)
