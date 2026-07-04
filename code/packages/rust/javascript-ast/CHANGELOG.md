@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.25.0] - 2026-07-04
+
+### Added — CLOC12.166: `Expression::Super` (`super`)
+
+Added `Expression::Super` variant + `Super { cv }` struct — the `super` keyword, a reserved-word **leaf** primary (same shape as `ThisExpression`, no operand). Like `this`, modelled as its own node rather than `Identifier { name: "super" }` so renaming passes never touch it; `super` is syntactically restricted to member-object / call-callee position inside a method or derived constructor, but that is the parser's concern — the AST treats it as a plain leaf primary. Re-exported from the crate root. Atomic node PR (PR1): the node + `closure-emitter` emit + all nine downstream pass match-arms land together so the workspace never breaks. (CLOC12.166)
+
+
 ## [0.24.0] - 2026-07-04
 
 ### Added — CLOC12.165: `Expression::ThisExpression` (`this`)

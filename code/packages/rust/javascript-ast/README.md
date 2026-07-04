@@ -121,6 +121,18 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   `f(this)` all print bare) and never forces a paren around an operand. Node +
   `closure-emitter` + all pass traversals land in one atomic PR; the
   bridge-enable + conformance port follow.
+- `Super` (CLOC12.166) — the `super` keyword: the reserved-word **leaf**
+  sibling of `this`, naming the home object's prototype (`super.m()`,
+  `super[k]`) or the superclass constructor (`super(a, b)`). `Super { cv }` —
+  no operand, the same shape as `ThisExpression`. Named `Super` to match
+  ESTree's node type exactly (ESTree uses bare `Super`, asymmetric with
+  `ThisExpression`). Modelled as its own node so the renaming passes never
+  touch it. `super` is syntactically restricted to member-object / call-callee
+  position inside a method or derived constructor, but that is the parser's
+  concern — the AST treats it as a plain leaf primary. It tags at
+  `PREC_PRIMARY` and prints as the bare keyword. Node + `closure-emitter` +
+  all pass traversals land in one atomic PR; the bridge-enable + conformance
+  port follow.
 
 ## What's coming (follow-up PRs)
 

@@ -65,6 +65,7 @@ pub enum Expression {
     YieldExpression(YieldExpression),
     AwaitExpression(AwaitExpression),
     ThisExpression(ThisExpression),
+    Super(Super),
 }
 
 // ---------------------------------------------------------------------
@@ -613,6 +614,41 @@ pub struct ThisExpression {
     pub cv: Option<CvId>,
 }
 
+/// The `super` keyword — a primary that names the *home object's* prototype
+/// (in a method) or the *superclass constructor* (in a derived
+/// constructor):
+///
+/// ```text
+///   super.method()     call an overridden method on the prototype chain
+///   super[key]         computed member access off the home object's proto
+///   super(a, b)        delegate to the superclass constructor (constructor only)
+/// ```
+///
+/// # Shape
+///
+/// `super` is a **leaf** — like [`ThisExpression`], it carries no operand and
+/// no payload beyond its `cv`. ESTree models it as its own `Super` node
+/// rather than an `Identifier { name: "super" }`, because `super` is a
+/// reserved word: it can never be a variable name, so passes that rename
+/// identifiers must never touch it. Note that `super` is *syntactically*
+/// restricted — it may appear only as the object of a member access or as a
+/// call callee, and only inside a method/derived-constructor — but that is
+/// the **parser's** concern: the AST and emitter treat it as a plain leaf
+/// primary and print it wherever it is placed.
+///
+/// # Precedence
+///
+/// `super` binds at **primary** strength — the tightest level, exactly like
+/// `this`. It never needs wrapping in any parent context, and no parent
+/// operand ever forces a paren around it. The emitter tags it `PREC_PRIMARY`
+/// and prints the bare keyword.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Super {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+}
+
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the
 /// `property` is conventionally an [`Expression::Identifier`]);
 /// `computed = true` ↔ `obj[key]` (the `property` is any expression).
@@ -1058,6 +1094,21 @@ mod tests {
         let json = serde_json::to_string(&t).expect("serialize");
         assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
         assert_eq!(t.clone(), roundtrip(t));
+    }
+
+    #[test]
+    fn super_roundtrips_traced() {
+        let s = Expression::Super(Super { cv: Some("super.1".to_string()) });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "Super");
+    }
+
+    #[test]
+    fn super_untraced_omits_cv() {
+        let s = Expression::Super(Super { cv: None });
+        let json = serde_json::to_string(&s).expect("serialize");
+        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(s.clone(), roundtrip(s));
     }
 
     #[test]

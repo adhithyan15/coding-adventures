@@ -1166,6 +1166,7 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
         // `this` is a leaf keyword — no sub-expression to walk, never dead on
         // its own, so it clones through like the literals.
         | Expression::ThisExpression(_)
+        | Expression::Super(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {
