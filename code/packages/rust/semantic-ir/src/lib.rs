@@ -64,7 +64,7 @@ pub use backend::{
 };
 pub use effects::{Effect, EffectSet};
 pub use int_const::{eval_named as eval_int_const_named, IntConst};
-pub use op_select::{resolve_numeric, NumericLowering};
+pub use op_select::{resolve_binary, resolve_numeric, BinaryLowering, NumericLowering};
 pub use limits::MAX_IR_DEPTH;
 pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};

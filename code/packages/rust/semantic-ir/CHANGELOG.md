@@ -2,6 +2,34 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.20.0 — SIR21 T3c-2: complete the op-selection rule (concat + comparison)
+
+Completes the `op_select` rule begun in T3c-1. Where `resolve_numeric` decides
+only the `+`/`-`/`*` *numeric* case, the new op-aware `resolve_binary(op, lhs,
+rhs)` folds in the two cases a bare numeric resolver can't see, so a backend has
+one entry point for every binary operator it lowers.
+
+- New `resolve_binary(op, lhs, rhs) -> BinaryLowering`, with `BinaryLowering` =
+  `IntArith(IntSpec)` · `FloatArith` · `StrConcat` · `TypedCompare` ·
+  `RuntimeDispatch`. Re-exported from the crate root.
+  - `+` is polymorphic: `(Str, Str)` → `StrConcat`, else the numeric decision.
+  - `-`/`*` → the numeric decision (via `resolve_numeric`).
+  - `<` `>` `<=` `>=` `==` `!=` → `TypedCompare` only when both operands are the
+    *same* concrete comparable type (same int spec, both `Float`, both `Str`, or
+    both `Bool`); mixed / `Dynamic` → dispatch (no silent promotion).
+  - `/` is deliberately **not** modelled — division is split into
+    `div_floor`/`div_trunc` with its own rounding semantics (§E3); it and any
+    unknown operator resolve to `RuntimeDispatch`.
+- No inference, no mutation, no behaviour change: `resolve_numeric` is unchanged
+  and every operand is `Dynamic` in the current pipeline, so `resolve_binary`
+  returns `RuntimeDispatch` everywhere until a typed frontend (or the per-backend
+  sized-int lowering) supplies types. 5 new tests cover arithmetic parity with
+  `resolve_numeric`, `+`-concat vs `-`/`*`, comparison specialise/dispatch, and
+  the `/`/unknown-operator fallthrough.
+
+Purely additive (extends one module + two more re-exports; no existing code
+changed); every downstream consumer still builds and passes.
+
 ## 0.19.0 — SIR21 T3c (T3c-1): type-directed op-selection rule
 
 First slice of milestone **T3c** — "semantic neutrality made mechanical". Adds
