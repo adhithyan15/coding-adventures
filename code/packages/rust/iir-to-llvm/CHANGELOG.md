@@ -1,5 +1,39 @@
 # Changelog — iir-to-llvm
 
+## [0.31.0] — 2026-07-03 (LANG-FULL E4-dyn E4d-2b: runtime string as return value / call result)
+
+Extended the E4-dyn runtime-string support so a runtime string that arrives as a
+function **return value**, **call result**, or **parameter** — not only a
+branch-selected local slot — is a first-class value. This is what lets an ALGOL
+`string procedure` (which returns a runtime string) run on the LLVM column.
+
+Three changes:
+
+- **`llvm_type_for` maps `"str"` → `"i64"`.** A string value is an i64 handle
+  (the address of a `[i64 len][bytes…]` block), so it can now flow through a
+  function boundary: a `str` parameter, a `str` return type, and a `call` whose
+  result is `str` all type-check as `i64`. Previously `"str"` was rejected, so a
+  string-returning function failed to lower at all.
+- **`print_str` / `str_len` take the runtime header-read path for ANY string
+  without a compile-time length**, not only promoted slots. The discriminator is
+  now `!str_lens.contains(src)` (a slot is never in `str_lens`, so this subsumes
+  the old `slots.contains` check and additionally covers a call result / return
+  value / parameter). `env[src]` holds the i64 handle in every case;
+  `inttoptr` + `load i64` recover the length. `str_len` gained its runtime branch
+  (it previously only folded a compile-time constant).
+- **`ret` of a `str` converts a literal global pointer with `ptrtoint`.** A
+  single-assignment string is tracked as its `@__twig_str_N` global pointer;
+  returning it directly would emit `ret i64 @global` (a type error), so the
+  pointer is converted to the i64 handle first (branch-selected / call-result
+  strings already carry an i64).
+
+New unit tests `e4dyn_string_procedure_return_and_call_result_print` and
+`e4dyn_str_len_of_runtime_string_reads_header`; the validator test that used
+`str` as an "unsupported param type" now uses `ref<Foo>`, and a positive
+`validate_accepts_str_param_and_return` was added. The `lang-aot` ALGOL
+string-procedure matrix cell adds the `Llvm` column (verified end-to-end via
+`clang`).
+
 ## [0.30.0] — 2026-07-03 (LANG-FULL E4-dyn E4d-2: runtime branch-selected strings)
 
 First LLVM step of the **E4-dyn** arc (`code/specs/lang-full-e4-dyn-strings.md`):

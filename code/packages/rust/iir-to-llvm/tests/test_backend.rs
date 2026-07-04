@@ -87,15 +87,31 @@ fn validate_rejects_unsupported_type() {
 /// Unsupported param type is flagged.
 #[test]
 fn validate_rejects_unsupported_param_type() {
+    // A non-Lispy `ref<…>` has no LLVM value model and is still rejected.
     let f = IIRFunction::new(
         "f",
-        vec![("p".into(), "str".into())],
+        vec![("p".into(), "ref<Foo>".into())],
         "void",
         vec![IIRInstr::new("ret_void", None, vec![], "void")],
     );
     let errors = validate_for_llvm(&module_with(f));
-    assert!(errors.iter().any(|e| e.contains("UnsupportedType") && e.contains("\"str\"")),
-        "expected UnsupportedType for param `str`; got: {errors:?}");
+    assert!(errors.iter().any(|e| e.contains("UnsupportedType") && e.contains("ref<Foo>")),
+        "expected UnsupportedType for param `ref<Foo>`; got: {errors:?}");
+}
+
+/// E4-dyn (E4d-2b): a `str` parameter / return type is now accepted — a string
+/// is carried as an i64 handle across function boundaries, so an ALGOL
+/// `string procedure` (which returns a runtime string) lowers cleanly.
+#[test]
+fn validate_accepts_str_param_and_return() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("p".into(), "str".into())],
+        "str",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("p".into())], "str")],
+    );
+    let errors = validate_for_llvm(&module_with(f));
+    assert!(errors.is_empty(), "str param/return should be valid; got: {errors:?}");
 }
 
 // ===========================================================================
@@ -2155,4 +2171,111 @@ fn e4dyn_single_assignment_string_keeps_literal_fast_path() {
         "single-assignment str print should use the literal fast path (no inttoptr) in:\n{ll}");
     assert!(ll.contains("call void @__print_str"),
         "literal print_str still calls @__print_str in:\n{ll}");
+}
+
+// ===========================================================================
+// E4-dyn (E4d-2b): a runtime string as a function RETURN VALUE / call result
+// ===========================================================================
+
+/// An ALGOL `string procedure` lowers to a function returning `str` — carried
+/// as an i64 **handle** — that the caller prints. This exercises the E4d-2b
+/// runtime path: `str` maps to `i64` at the function boundary, and `print_str`
+/// of a *call result* (which has no compile-time length) reads the length from
+/// the block header at run time.
+#[test]
+fn e4dyn_string_procedure_return_and_call_result_print() {
+    // pick(n) -> str : if n > 0 then "HI" else "LO"  (branch-selected → slot)
+    let pick = IIRFunction::new(
+        "pick",
+        vec![("n".into(), "i64".into())],
+        "str",
+        vec![
+            IIRInstr::new("str_const", Some("pick".into()), vec![Operand::Str(String::new())], "str"),
+            IIRInstr::new("const", Some("c0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("cmp_gt", Some("t".into()),
+                vec![Operand::Var("n".into()), Operand::Var("c0".into())], "i64"),
+            IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var("t".into()), Operand::Var("Lelse".into())], "void"),
+            IIRInstr::new("str_const", Some("pick".into()), vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+            IIRInstr::new("str_const", Some("pick".into()), vec![Operand::Str("LO".into())], "str"),
+            IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("pick".into())], "str"),
+        ],
+    );
+    // main() : print(pick(1))
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("call", Some("r".into()),
+                vec![Operand::Var("pick".into()), Operand::Var("one".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "strproc".into(),
+        functions: vec![pick, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+
+    // `str` return type + call result map to i64 (the handle).
+    assert!(ll.contains("define i64 @pick(i64 %n)"),
+        "string procedure must lower to `define i64 @pick(i64 %n)`:\n{ll}");
+    assert!(ll.contains("= call i64 @pick(i64"),
+        "the call result must be typed i64 (a runtime handle):\n{ll}");
+    assert!(ll.contains("ret i64 "),
+        "pick must return an i64 handle:\n{ll}");
+    // The call result is printed via the runtime path: recover the pointer,
+    // read the length header, then call @__print_str.
+    assert!(ll.contains("inttoptr i64"),
+        "print of a call-result runtime string must inttoptr the handle:\n{ll}");
+    assert!(ll.contains("load i64, ptr %__strp"),
+        "print of a call-result runtime string must read the length header:\n{ll}");
+    assert!(ll.contains("call void @__print_str(ptr %__strb"),
+        "print of a call-result runtime string must call @__print_str with the bytes ptr:\n{ll}");
+}
+
+/// `str_len` of a runtime string (a call result / param) reads the length from
+/// the block header at run time (`inttoptr` + `load i64`) instead of folding a
+/// compile-time constant.
+#[test]
+fn e4dyn_str_len_of_runtime_string_reads_header() {
+    // id(s) -> str : ret s     (s is a runtime str handle param)
+    let id = IIRFunction::new(
+        "id",
+        vec![("s".into(), "str".into())],
+        "str",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "str")],
+    );
+    // main(p: str) : n = str_len(p); ret n   (p is a runtime handle param)
+    let main = IIRFunction::new(
+        "main",
+        vec![("p".into(), "str".into())],
+        "i64",
+        vec![
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("p".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "strlen_rt".into(),
+        functions: vec![id, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains("inttoptr i64") && ll.contains("load i64, ptr %__slp"),
+        "str_len of a runtime string must read the length header at run time:\n{ll}");
 }

@@ -209,6 +209,14 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         t if t.starts_with("ref<Lispy") => Ok("i64"),
         // McCarthy W13 (F6): an interned symbol is a tagged 64-bit immediate.
         "symbol" => Ok("i64"),
+        // E4-dyn (E4d-2b): a `str` VALUE is carried as an i64 **handle** — the
+        // address of a `[i64 len][bytes…]` block.  Mapping it here lets a string
+        // flow through a function boundary (a `str` parameter or return type) and
+        // a `call` result, so an ALGOL `string procedure`'s returned string is a
+        // first-class value.  String *operations* still dispatch on the `"str"`
+        // type_hint separately (`lower_str_*`); this only governs the LLVM value
+        // type at those boundaries.
+        "str" => Ok("i64"),
         other => Err(IIRLlvmError::UnsupportedType {
             function: function.to_string(),
             type_hint: other.to_string(),
@@ -1513,8 +1521,19 @@ fn lower_instr(
         // ── ret <var> ───────────────────────────────────────────────────
         "ret" => {
             let ty = llvm_type_for(&instr.type_hint, fn_name)?;
-            let operand =
+            let mut operand =
                 resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, fn_name)?;
+            // E4-dyn (E4d-2b): a `str` is returned as an i64 handle. A
+            // single-assignment string is tracked as its literal GLOBAL POINTER
+            // (`@__twig_str_N`), so returning it directly would emit
+            // `ret i64 @global` — a type error. A literal's `{i64 len,[N×i8]}`
+            // address IS a valid handle, so convert the pointer with `ptrtoint`
+            // first (branch-selected / call-result strings already carry an i64).
+            if instr.type_hint == "str" && operand.starts_with('@') {
+                let h = state.fresh("reth");
+                out.push_str(&format!("  {h} = ptrtoint ptr {operand} to i64\n"));
+                operand = h;
+            }
             out.push_str(&format!("  ret {ty} {operand}\n"));
             state.block_open = false; // `ret` terminates the block.
             Ok(())
@@ -1667,7 +1686,7 @@ fn lower_instr(
         "str_concat" => lower_str_concat(instr, state),
         "str_slice" => lower_str_slice(instr, state, out),
         "str_index" => lower_str_index(instr, state, out),
-        "str_len" => lower_str_len(instr, state),
+        "str_len" => lower_str_len(instr, state, out),
         "str_eq" => lower_str_eq(instr, state),
         "str_cmp" => lower_str_cmp(instr, state),
         "print_str" => lower_print_str(instr, state, out),
@@ -1726,12 +1745,16 @@ fn lower_print_str(
         }
     };
 
-    // E4-dyn runtime path: a str variable assigned in >1 place is an i64-**handle**
-    // slot (a runtime string — e.g. one chosen by a branch).  The slot protocol
-    // has pre-loaded its handle into `env`, so read the length from the block
-    // header (`[i64 len][bytes…]`) at run time rather than from compile-time
-    // metadata.  The handle is a plain integer; `inttoptr` recovers the pointer.
-    if state.slots.contains(src) {
+    // E4-dyn runtime path: any str value WITHOUT a compile-time length is a
+    // runtime i64-**handle** — a branch-selected slot (E4d-2), OR a value that
+    // arrives as a function **return value / call result** or a **parameter**
+    // (E4d-2b).  In every case `env[src]` holds the handle (the slot protocol
+    // pre-loads it; a `call` binds its i64 result; a param is its argument), so
+    // read the length from the block header (`[i64 len][bytes…]`) at run time
+    // rather than from compile-time metadata.  `inttoptr` recovers the pointer.
+    // (A slot is never in `str_lens` — its `str_const` lowers through a renamed
+    // temp — so this single check subsumes the old `slots.contains` test.)
+    if !state.str_lens.contains_key(src) {
         let handle = state.env.get(src).cloned().ok_or_else(|| {
             IIRLlvmError::UndefinedVariable {
                 function: state.fn_name.into(),
@@ -1777,6 +1800,7 @@ fn lower_print_str(
 fn lower_str_len(
     instr: &IIRInstr,
     state: &mut FnState,
+    out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_len", state.fn_name)?.to_string();
     let src = match instr.srcs.first() {
@@ -1788,13 +1812,27 @@ fn lower_str_len(
             });
         }
     };
-    let len = state.str_lens.get(src).copied().ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
+    // Literal fast path: a single-assignment string has a compile-time length.
+    if let Some(len) = state.str_lens.get(src).copied() {
+        state.env.insert(dest, len.to_string());
+        return Ok(());
+    }
+
+    // E4-dyn runtime path (E4d-2b): a runtime string (slot / call result / param)
+    // has no compile-time length — read it from the block header at run time.
+    // `env[src]` is the i64 handle; the length is the leading `i64` of the
+    // `[i64 len][bytes…]` block.
+    let handle = state.env.get(src).cloned().ok_or_else(|| {
+        IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
-            detail: format!("str_len source {src:?} is not a string literal value"),
+            name: src.clone(),
         }
     })?;
-    state.env.insert(dest, len.to_string());
+    let p = state.fresh("slp");
+    out.push_str(&format!("  {p} = inttoptr i64 {handle} to ptr\n"));
+    let len = state.fresh("sln");
+    out.push_str(&format!("  {len} = load i64, ptr {p}\n"));
+    state.env.insert(dest, len);
     Ok(())
 }
 

@@ -879,19 +879,21 @@ const PROGRAMS: &[Prog] = &[
     // evaluates the call to a runtime string handle and prints it (a new general
     // string-expression path in the ALGOL output lowering). This exercises the
     // whole chain end-to-end: string-procedure declaration + call + runtime-string
-    // return + print. It is a *foothold* today — proven on the columns that already
-    // carry a runtime string arriving as a **call result / return value** (not just
-    // a branch-selected local slot, which is all the E4-dyn foothold exercised):
+    // return + print. It runs on the columns that carry a runtime string arriving
+    // as a **call result / return value** (not just a branch-selected local slot,
+    // which is all the E4-dyn foothold exercised):
     //   * NativeAot — twig-aot: a call-result str is absent from the compile-time
     //     `strings` map, so `print_str` reads the length header at run time.
+    //   * Llvm (E4d-2b) — `str` maps to an i64 handle at function boundaries, and
+    //     `print_str`/`str_len` read the header at run time for ANY string without
+    //     a compile-time length (call result / return value / param), not only a
+    //     promoted slot. Verified via clang.
     //   * VM / JIT — tagged values: a returned string is printed like any value.
-    // The other four columns take their runtime-string path only for *promoted
-    // slot* operands, so a string **return value** still fails there: LLVM/WASM
-    // fall to their literal fast path (no compile-time length) and JVM/CLR need
-    // str return-type / call-result typing. Extending `print_str`/`str_len` to any
-    // non-foldable runtime handle (call result, return value, parameter) is the
-    // E4d-2b (LLVM) / E4d-3b (WASM) / JVM+CLR follow-up, which will add those four
-    // columns to this cell. Stdin-free; N=1>0 → `HI`.
+    // WASM and JVM/CLR still take their runtime-string path only for *promoted
+    // slot* operands, so a string **return value** fails there: WASM falls to its
+    // literal fast path (no compile-time length) and JVM/CLR need str return-type /
+    // call-result typing. Extending them the same way (E4d-3b WASM + JVM/CLR) will
+    // add those three columns to this cell. Stdin-free; N=1>0 → `HI`.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -899,7 +901,7 @@ const PROGRAMS: &[Prog] = &[
                   if n > 0 then pick := 'HI' else pick := 'LO'; \
               print(pick(1)) end",
         expect: Expect::Stdout("HI"),
-        backends: &[NativeAot, Vm, Jit],
+        backends: &[NativeAot, Llvm, Vm, Jit],
     },
     // ALGOL 60 — scalar string variables in the current AL4 foothold. A
     // `string` scalar may be assigned from a literal, which emits `str_const`
