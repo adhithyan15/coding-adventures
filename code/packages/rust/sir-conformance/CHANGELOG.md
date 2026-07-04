@@ -2,6 +2,35 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.9.0] - SIR21 T3b (T3b-1) — division reference semantics (floor vs trunc, §E3)
+
+### Added — `oracle::DivOp` + `Outcome::DivByZero`
+
+First slice of the milestone-T3 **division split**: the reference semantics for
+integer division, so the oracle can later judge a frontend/backend that emits
+explicit `div_floor` / `div_trunc` instead of one overloaded `_sir_divide`
+(SIR21 §E3 "division semantics are explicit, not guessed").
+
+- `DivOp { Floor, Trunc }` with `ALL`, `name()` (canonical IR op names
+  `div_floor` / `div_trunc`), and `eval(lhs, rhs) -> Outcome` at arbitrary
+  precision. `Floor` rounds toward −∞ (Ruby `/`, Python `//`); `Trunc` rounds
+  toward 0 (C / Rust / Go / Java `/`). They agree on positive operands and exact
+  division, and differ exactly when a negative quotient has a non-zero
+  remainder — the canonical `−7 / 2` = `−4` (floor) vs `−3` (trunc).
+- New `Outcome::DivByZero` — division by zero (a faithful backend *raises*, so
+  the harness asserts failure, never a value). The one overflow case
+  `i128::MIN / -1` reports `BeyondOracle` rather than panicking.
+- `div_true` (Python `/`, `7 / 2 == 3.5`) is intentionally **not** modelled: it
+  yields a float, so it belongs to a future float oracle. Documented in `DivOp`.
+- 6 unit tests pin floor-vs-trunc across all four sign combinations, exact
+  division agreement, div-by-zero, and the `MIN / -1` overflow.
+
+Pure and additive: `DivOp` is a new type kept *out* of `IntOp::ALL`, so the
+T2c coverage gate is untouched and the existing `_sir_divide` path is unchanged
+(no frontend emits these ops yet). Wiring the frontend to emit `div_floor` and
+each backend to lower it — and running division conformance cases — is the next
+slice (T3b-2).
+
 ## [0.8.0] - SIR21 T2c — the coverage gate (§P5)
 
 ### Added — structural coverage guard over the integer-op × backend grid
