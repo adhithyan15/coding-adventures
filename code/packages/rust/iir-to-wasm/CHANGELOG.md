@@ -1,5 +1,58 @@
 # Changelog — iir-to-wasm
 
+## [0.29.0] — 2026-07-03 (LANG-FULL E4-dyn E4d-3: runtime branch-selected strings)
+
+Gave the WASM backend a **runtime** string representation, mirroring the LLVM
+E4d-2 lowering, so a string chosen by control flow — not foldable to one
+literal at compile time — runs correctly.
+
+**The problem.** The pre-existing string machinery keyed every string to one
+compile-time `{offset, len}` by its destination variable. That is exact for a
+straight-line program (even `s := "OK"; s := "NO"` folds, last-writer-wins),
+but wrong the moment control flow chooses the value:
+
+```basic
+10 INPUT N
+20 IF N > 0 THEN 50
+30 LET A$ = "LO"      ← str_const A$ "LO"   (block B1)
+40 GOTO 60
+50 LET A$ = "HI"      ← str_const A$ "HI"   (block B2)
+60 PRINT A$
+```
+
+`A$` is the dest of `str_const` in two different basic blocks, so a by-dest
+table can only remember one literal and its length would be wrong whenever the
+other branch runs and the two differ in length.
+
+**The fix — a runtime handle.** A string variable assigned by `str_const` in
+**more than one basic block** is promoted to carry an i32 **handle** = the byte
+offset of a length-prefixed block `[i32 len (little-endian)][bytes]` in linear
+memory:
+
+- `collect_runtime_str_vars` computes the promoted set with the same
+  basic-block rule as `iir-to-llvm`'s `collect_slot_vars` (a `label` starts a
+  block; a `jmp*`/`ret*` ends one), so both backends promote identical
+  variables from identical IIR.
+- `collect_module_features` lays down one length-prefixed block per distinct
+  promoted literal (deduplicated by text) in the string data segment and
+  records its offset.
+- `str_const` of a promoted var stores its block offset (the handle); every
+  other `str_const` keeps the folded raw-byte-offset fast path.
+- `print_str` of a promoted var reads the length back with `i32.load` at the
+  handle and passes `handle + 4` (the bytes) + that length to
+  `env.__print_str(ptr, len)` — the WASM sibling of LLVM's `inttoptr` + `load`
+  + `getelementptr … i64 8` sequence.
+
+Single-assignment (and straight-line-reassigned) strings are unchanged: zero
+behavioural difference for every existing WASM string cell.
+
+Added `encode_i32_load` (opcode `0x28`) to `codegen.rs`. New unit tests
+(`e4dyn_branch_selected_string_emits_runtime_handle_and_load`,
+`e4dyn_single_block_string_keeps_literal_fast_path`,
+`e4dyn_straight_line_reassignment_is_not_promoted`) assert the emitted wasm.
+The `lang-aot` E4-dyn foothold matrix cell now proves this end-to-end on the
+Wasm column (via the in-process `wasm-runtime` + `env.__print_str` host).
+
 ## [0.28.0] — 2026-06-30 (BA-INPUT: `input_i64` → `env.__input_i64` host import)
 
 Added `"input_i64"` to `CALL_BUILTIN_SUPPORTED_NAMES` in `validate.rs` and

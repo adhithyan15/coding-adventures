@@ -2025,3 +2025,107 @@ fn i64_condition_uses_i64_eqz_and_widened_cmp() {
     assert!(bytes.contains(&0x50u8), "expected i64.eqz (0x50) for an i64 loop guard");
     assert!(bytes.contains(&0xADu8), "expected i64.extend_i32_u (0xAD) widening the i64 cmp result");
 }
+
+// ---------------------------------------------------------------------------
+// ── Group 12: E4-dyn (E4d-3) runtime (branch-selected) strings ─────────────
+// ---------------------------------------------------------------------------
+//
+// A string variable assigned by `str_const` in more than one basic block is
+// chosen by control flow, so the compiler cannot fold it to one literal. Such a
+// variable is promoted to a runtime **handle** = the i32 offset of a
+// length-prefixed block `[i32 len (LE)][bytes]` in linear memory. `str_const`
+// stores that offset; `print_str` reads the length back with `i32.load` (0x28)
+// and passes `handle + 4` + that length to `env.__print_str(ptr, len)`. This is
+// the WASM sibling of iir-to-llvm's E4d-2 `inttoptr` + `load` runtime path.
+
+// Test 12.1 — a branch-selected string lowers to a runtime handle + i32.load.
+#[test]
+fn e4dyn_branch_selected_string_emits_runtime_handle_and_load() {
+    // main():
+    //   cond = 1
+    //   if !cond goto Lelse
+    //   Lthen: A = "HI"; goto Ldone
+    //   Lelse: A = "LO"
+    //   Ldone: print_str A
+    //   ret_void
+    // `A` is the dest of `str_const` in the two branch blocks, so it is promoted.
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var("cond".into()), Operand::Var("Lelse".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("Lthen".into())], "void"),
+        IIRInstr::new("str_const", Some("A".into()), vec![Operand::Str("HI".into())], "str"),
+        IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+        IIRInstr::new("str_const", Some("A".into()), vec![Operand::Str("LO".into())], "str"),
+        IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("A".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+
+    // The runtime read: print_str of a promoted var reads the block length with
+    // i32.load (0x28). The literal fast path never emits a load.
+    assert!(
+        wm.code[0].code.contains(&0x28),
+        "print_str of a branch-selected string must read its length with i32.load (0x28)"
+    );
+
+    // The data segment carries a length-prefixed block for each distinct
+    // literal: `[len=2 (i32 LE)][b'H', b'I']` and `[len=2][b'L', b'O']`.
+    let data = &wm.data[0].data;
+    let hi_block = [2u8, 0, 0, 0, b'H', b'I'];
+    let lo_block = [2u8, 0, 0, 0, b'L', b'O'];
+    assert!(
+        data.windows(hi_block.len()).any(|w| w == hi_block),
+        "data segment must contain the length-prefixed \"HI\" runtime block"
+    );
+    assert!(
+        data.windows(lo_block.len()).any(|w| w == lo_block),
+        "data segment must contain the length-prefixed \"LO\" runtime block"
+    );
+
+    // Encoding still succeeds (well-formed module).
+    encode_module(&wm).expect("encoding failed");
+}
+
+// Test 12.2 — a single-block string keeps the folded literal fast path.
+#[test]
+fn e4dyn_single_block_string_keeps_literal_fast_path() {
+    // `s` is assigned once (one block), so it stays a compile-time literal: the
+    // length is folded, no runtime i32.load is emitted, and the data segment
+    // holds only the raw bytes (no 4-byte length prefix).
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    assert!(
+        !wm.code[0].code.contains(&0x28),
+        "single-assignment string must fold to a compile-time length (no i32.load)"
+    );
+    assert_eq!(
+        wm.data[0].data, b"HI",
+        "fast-path string must not add a length-prefixed runtime block"
+    );
+}
+
+// Test 12.3 — a straight-line reassignment stays on the fast path (matches the
+// E4d-2 rule: promotion needs *distinct basic blocks*, not just two writes).
+#[test]
+fn e4dyn_straight_line_reassignment_is_not_promoted() {
+    // `s := "OK"; s := "NO"; print s` — two writes, one block. The last-writer
+    // literal tracking is exactly right, so no runtime handle and no i32.load.
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("OK".into())], "str"),
+        IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("NO".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    assert!(
+        !wm.code[0].code.contains(&0x28),
+        "a straight-line reassignment must not be promoted to a runtime handle"
+    );
+}

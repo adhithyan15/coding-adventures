@@ -145,7 +145,7 @@ use wasm_types::{
 
 use crate::codegen::{
     encode_br, encode_br_table, encode_call, encode_f32_const, encode_f64_const,
-    encode_f64_load, encode_f64_store, encode_i64_load, encode_i64_store,
+    encode_f64_load, encode_f64_store, encode_i32_load, encode_i64_load, encode_i64_store,
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
@@ -175,6 +175,91 @@ struct WasmStringLiteral {
 
 type FunctionStringLiterals = HashMap<String, WasmStringLiteral>;
 type ModuleStringLiterals = HashMap<String, FunctionStringLiterals>;
+
+// ---------------------------------------------------------------------------
+// E4-dyn (E4d-3): runtime (branch-selected) strings
+// ---------------------------------------------------------------------------
+//
+// The literal machinery above resolves every string to a single compile-time
+// `{offset, len}` keyed by its destination variable.  That is exact for a
+// straight-line program: even `s := "OK"; s := "NO"` folds correctly because
+// the last write wins and there is only ever one live value at `print_str`.
+//
+// It breaks the moment control flow chooses the string:
+//
+// ```basic
+// 10 INPUT N
+// 20 IF N > 0 THEN 50
+// 30 LET A$ = "LO"      ← str_const A$ "LO"   (block B1)
+// 40 GOTO 60
+// 50 LET A$ = "HI"      ← str_const A$ "HI"   (block B2)
+// 60 PRINT A$           ← print_str A$        (block B3)
+// ```
+//
+// Here `A$` is the dest of `str_const` in **two different basic blocks**, so
+// the by-dest table can only remember one of them (last writer, `"HI"`), and
+// its length would be wrong whenever the other branch ran and the two literals
+// differ in length.  This is the exact problem the LLVM backend solved in
+// E4d-2: promote such a variable to carry a **runtime handle** instead of a
+// folded literal.
+//
+// Representation (mirrors E4d-2's `{i64 len}[bytes]` block, sized for wasm32):
+//   * A *runtime string* is a length-prefixed block in linear memory:
+//     `[i32 len (4 bytes, little-endian)][len bytes of UTF-8]`.
+//   * The *handle* carried in the string variable's i32 local is the byte
+//     offset of that block (the offset of its length prefix).
+//   * `str_const` of a promoted var stores the handle (its block's offset);
+//     `print_str` of a promoted var reads the length back with `i32.load` and
+//     passes `handle + 4` (the bytes) + that length to `env.__print_str`.
+//
+// A string assigned in only one basic block keeps the folded literal fast path
+// unchanged — zero behavioural change for every existing WASM string cell.
+
+/// Per-function set of string variables promoted to a runtime handle (assigned
+/// by `str_const` in more than one basic block).
+type FunctionRuntimeStrVars = HashSet<String>;
+type ModuleRuntimeStrVars = HashMap<String, FunctionRuntimeStrVars>;
+
+/// Per-function map: literal text → linear-memory offset of its length-prefixed
+/// runtime block `[i32 len][bytes]`.  Dedadup'd by text, so two `str_const`s of
+/// the same string in different blocks share one block.
+type FunctionRuntimeStrBlocks = HashMap<String, u32>;
+type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
+
+/// Compute the set of string variables that must be promoted to a runtime
+/// handle: those that are the destination of a `str`-typed instruction in **more
+/// than one basic block**.  This mirrors `iir-to-llvm`'s `collect_slot_vars`
+/// (the `str_blocks` half) so the two backends promote exactly the same
+/// variables from identical IIR.
+///
+/// Basic-block boundaries match the rest of this backend: a `label` starts a new
+/// block, and a terminator (`jmp`/`jmp_if_false`/`jmp_if_true`/`ret`/`ret_void`)
+/// ends one.  A str variable reassigned twice *straight-line* stays in one block
+/// and keeps the literal fast path — the linear last-writer-wins tracking is
+/// exactly right there.
+fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
+    let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    let mut block: usize = 0;
+    for instr in &fn_.instructions {
+        let op = instr.op.as_str();
+        if op == "label" {
+            block += 1;
+        }
+        if let Some(dest) = &instr.dest {
+            if instr.type_hint == "str" {
+                str_blocks.entry(dest.as_str()).or_default().insert(block);
+            }
+        }
+        if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
+            block += 1;
+        }
+    }
+    str_blocks
+        .into_iter()
+        .filter(|(_, blocks)| blocks.len() >= 2)
+        .map(|(name, _)| name.to_string())
+        .collect()
+}
 
 // ---------------------------------------------------------------------------
 // Global opcode helpers (LANG32)
@@ -830,6 +915,8 @@ fn emit_instr(
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
     string_literals: &FunctionStringLiterals,
+    runtime_str_vars: &FunctionRuntimeStrVars,
+    runtime_str_blocks: &FunctionRuntimeStrBlocks,
     print_fn_idx: Option<u32>,
     print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
@@ -891,6 +978,35 @@ fn emit_instr(
                 detail: "str_const must have a dest".to_string(),
             })?;
             let rd = get_reg(dest)?;
+
+            // E4-dyn (E4d-3) runtime path: a string variable chosen by control
+            // flow carries an i32 **handle** = the offset of its length-prefixed
+            // block `[i32 len][bytes]`.  The handle (not the raw-byte offset) is
+            // what `print_str` needs so it can read the length back at run time,
+            // because the compile-time table cannot tell which branch's literal
+            // is live.  The block was laid down in `collect_module_features`,
+            // keyed by the literal text.
+            if runtime_str_vars.contains(dest) {
+                let text = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s.as_str(),
+                    _ => return Err(IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "str_const requires Operand::Str".to_string(),
+                    }),
+                };
+                let block_offset = runtime_str_blocks.get(text).copied().ok_or_else(|| {
+                    IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: format!("str_const missing runtime block for {text:?}"),
+                    }
+                })?;
+                code.extend(encode_i32_const(block_offset as i32));
+                code.extend(encode_local_set(rd));
+                return Ok(());
+            }
+
+            // Literal fast path: a single-assignment string folds to a known
+            // raw-byte offset + compile-time length.
             let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: format!("str_const missing module string table entry for {dest:?}"),
@@ -1124,6 +1240,32 @@ fn emit_instr(
                 }),
             };
             let val_slot = get_reg(val_var)?;
+
+            // E4-dyn (E4d-3) runtime path: the source is a branch-selected string,
+            // so its local holds an i32 handle = the offset of a length-prefixed
+            // block `[i32 len][bytes]`.  Read the length back from linear memory
+            // (`i32.load` at the handle) and pass the *bytes* pointer (handle + 4)
+            // plus that length to `env.__print_str(ptr, len)` — mirroring the LLVM
+            // E4d-2 `inttoptr` + `load` + `getelementptr … i64 8` sequence.
+            //
+            //   local.get slot       ;; handle
+            //   i32.const 4
+            //   i32.add              ;; ptr  = handle + 4      → stack: [ptr]
+            //   local.get slot       ;; handle                 → stack: [ptr, handle]
+            //   i32.load offset=0    ;; len  = mem[handle]     → stack: [ptr, len]
+            //   call __print_str
+            if runtime_str_vars.contains(val_var) {
+                code.extend(encode_local_get(val_slot));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_i32_add());
+                code.extend(encode_local_get(val_slot));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_call(fn_idx));
+                return Ok(());
+            }
+
+            // Literal fast path: single-assignment string with a compile-time
+            // known raw-byte offset + length.
             let lit = string_literals.get(val_var).ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: format!(
@@ -2883,6 +3025,8 @@ fn lower_function(
     lispy_pair_type_idx: Option<u32>,
     global_map: &HashMap<String, u32>,
     string_literals: &FunctionStringLiterals,
+    runtime_str_vars: &FunctionRuntimeStrVars,
+    runtime_str_blocks: &FunctionRuntimeStrBlocks,
     print_fn_idx: Option<u32>,
     print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
@@ -2998,6 +3142,8 @@ fn lower_function(
                     lispy_pair_type_idx,
                     global_map,
                     string_literals,
+                    runtime_str_vars,
+                    runtime_str_blocks,
                     print_fn_idx,
                     print_str_fn_idx,
                     putchar_fn_idx,
@@ -3065,6 +3211,8 @@ fn lower_function(
                 lispy_pair_type_idx,
                 global_map,
                 string_literals,
+                runtime_str_vars,
+                runtime_str_blocks,
                 print_fn_idx,
                 print_str_fn_idx,
                 putchar_fn_idx,
@@ -3192,6 +3340,12 @@ struct ModuleFeatures {
     string_literals: ModuleStringLiterals,
     /// Concatenated literal bytes for the active E4 string data segment.
     string_data: Vec<u8>,
+    /// E4-dyn (E4d-3): fn-name -> set of string vars promoted to a runtime
+    /// handle (assigned in >1 basic block).
+    runtime_str_vars: ModuleRuntimeStrVars,
+    /// E4-dyn (E4d-3): fn-name -> literal text -> offset of its length-prefixed
+    /// runtime block `[i32 len][bytes]` in the string data segment.
+    runtime_str_blocks: ModuleRuntimeStrBlocks,
 }
 
 /// Walk the module once to collect everything the lowering needs to know
@@ -3218,8 +3372,14 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_f64_pow = false;
     let mut string_literals: ModuleStringLiterals = HashMap::new();
     let mut string_data: Vec<u8> = Vec::new();
+    let mut runtime_str_vars: ModuleRuntimeStrVars = HashMap::new();
+    let mut runtime_str_blocks: ModuleRuntimeStrBlocks = HashMap::new();
     for fn_ in &module.functions {
         let mut fn_ints: HashMap<String, i64> = HashMap::new();
+        // E4-dyn (E4d-3): which of this function's string variables are chosen by
+        // control flow (assigned in >1 basic block) and so must carry a runtime
+        // handle rather than a folded literal.
+        let fn_runtime_vars = collect_runtime_str_vars(fn_);
         for instr in &fn_.instructions {
             match instr.op.as_str() {
                 "global_load" | "global_store" => {
@@ -3257,6 +3417,29 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                 len,
                                 bytes: s.as_bytes().to_vec(),
                             });
+
+                        // E4-dyn (E4d-3): if this string variable is chosen by
+                        // control flow, also lay down a length-prefixed runtime
+                        // block `[i32 len (LE)][bytes]` and remember its offset
+                        // (the *handle*).  Deduplicated by text — two branches
+                        // that assign the same string share one block.  The
+                        // flat literal above is left in place too (harmless, and
+                        // still serves any literal-only reader of this dest).
+                        if fn_runtime_vars.contains(dest) {
+                            let fn_blocks = runtime_str_blocks
+                                .entry(fn_.name.clone())
+                                .or_default();
+                            if !fn_blocks.contains_key(s) {
+                                let block_offset = string_data.len() as u32;
+                                string_data.extend_from_slice(&len.to_le_bytes());
+                                string_data.extend_from_slice(s.as_bytes());
+                                fn_blocks.insert(s.clone(), block_offset);
+                            }
+                            runtime_str_vars
+                                .entry(fn_.name.clone())
+                                .or_default()
+                                .insert(dest.clone());
+                        }
                     }
                 }
                 "str_concat" => {
@@ -3437,6 +3620,8 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_f64_pow,
         string_literals,
         string_data,
+        runtime_str_vars,
+        runtime_str_blocks,
     }
 }
 
@@ -3517,6 +3702,8 @@ pub fn lower_iir_to_wasm(
     let uses_f64_pow = features.uses_f64_pow;
     let string_literals = features.string_literals;
     let string_data = features.string_data;
+    let runtime_str_vars = features.runtime_str_vars;
+    let runtime_str_blocks = features.runtime_str_blocks;
 
     // Map each global name to its WASM global section index.
     let global_map: HashMap<String, u32> = global_names
@@ -3854,8 +4041,20 @@ pub fn lower_iir_to_wasm(
         let fn_string_literals = string_literals
             .get(&fn_.name)
             .unwrap_or(&empty_string_literals);
+        // E4-dyn (E4d-3): this function's runtime-string promotions + their
+        // length-prefixed block offsets (empty for functions with no
+        // branch-selected strings).
+        let empty_runtime_vars = FunctionRuntimeStrVars::new();
+        let fn_runtime_str_vars = runtime_str_vars
+            .get(&fn_.name)
+            .unwrap_or(&empty_runtime_vars);
+        let empty_runtime_blocks = FunctionRuntimeStrBlocks::new();
+        let fn_runtime_str_blocks = runtime_str_blocks
+            .get(&fn_.name)
+            .unwrap_or(&empty_runtime_blocks);
         let body = lower_function(
             fn_, &fn_map, lispy_pair_type_idx, &global_map, fn_string_literals,
+            fn_runtime_str_vars, fn_runtime_str_blocks,
             print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
             input_i64_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,

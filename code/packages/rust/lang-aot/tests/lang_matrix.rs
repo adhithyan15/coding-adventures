@@ -2286,21 +2286,25 @@ const PROGRAMS: &[Prog] = &[
     // **not known at compile time**: `A$` is a genuinely dynamic string value,
     // unlike every prior E4 cell where the compiler could fold the string to a
     // constant. This is the first matrix proof of a runtime string, and it runs
-    // today on the four **already-dynamic** columns — VM/JIT (tagged value),
-    // JVM (`java.lang.String` local), CLR (`System.String` local) — which carry
-    // a reassigned-across-branches string slot natively. The four static
-    // backends (NativeAot/Llvm/Wasm) fold strings to compile-time constants and
-    // cannot yet represent this value; they are added column-by-column by the
-    // E4-dyn backend PRs (E4d-2 LLVM → E4d-3 WASM → E4d-4 native), each of which
-    // extends THIS cell's `backends` list once its runtime heap-string lowering
-    // (on the E4d-1 `__twig_str_*` helpers) lands. Stdin `1` → N=1>0 → `A$="HI"`
-    // → prints `HI`.
+    // today on the already-dynamic columns — VM/JIT (tagged value), JVM
+    // (`java.lang.String` local), CLR (`System.String` local) — which carry a
+    // reassigned-across-branches string slot natively, plus the two static
+    // backends whose runtime heap-string lowering has landed: Llvm (E4d-2) and
+    // Wasm (E4d-3). The remaining static backend (NativeAot) still folds strings
+    // to compile-time constants and is added by E4d-4. Each E4-dyn backend PR
+    // (E4d-2 LLVM → E4d-3 WASM → E4d-4 native) extends THIS cell's `backends`
+    // list once its runtime string lowering lands. On WASM (E4d-3) a
+    // branch-selected string variable carries an i32 **handle** = the offset of
+    // a length-prefixed block `[i32 len][bytes]` in linear memory; `print_str`
+    // reads the length back with `i32.load` and calls `env.__print_str(ptr,len)`
+    // — so the value is genuinely chosen at run time, not folded. Stdin `1` →
+    // N=1>0 → `A$="HI"` → prints `HI`.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
         expect: Expect::Stdout("HI"),
-        backends: &[Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 

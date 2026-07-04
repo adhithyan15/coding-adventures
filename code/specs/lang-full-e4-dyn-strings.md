@@ -82,8 +82,8 @@ handle→ | i64 length (# bytes)     | b0 | b1 | ... | b(len-1) |
 | **VM / JIT** | tagged value | tagged value — already dynamic ✅ |
 | **JVM** | `ldc` `String` | `java.lang.String` from `char[]`/`String.concat` — already dynamic ✅ |
 | **CLR** | `ldstr` `String` | `System.String` from `String.Concat`/`Substring` — already dynamic ✅ |
-| **LLVM** | private `{i64,[N×i8]}` global | **`__twig_alloc_bytes`-backed `[i64 len][i8…]` heap block** (E5 model) |
-| **WASM** | data segment + side-table | **linear-memory `[i64 len][i8…]` block** (E5 model) |
+| **LLVM** | private `{i64,[N×i8]}` global | **`[i64 len][i8…]` block; handle = block address, `inttoptr`+`load` in `print_str`** ✅ (E4d-2) |
+| **WASM** | data segment + side-table | **linear-memory `[i32 len][i8…]` block; handle = i32 offset, `i32.load` in `print_str`** ✅ (E4d-3) |
 | **x86_64** | folded literal | **`__twig_alloc_bytes` heap block** (E5 model) |
 | **aarch64** | folded literal | **`__twig_alloc_bytes` heap block** (E5 model) |
 
@@ -174,8 +174,19 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    guarded loads (mirror E5 `array_*`). Not needed by the foothold (it only
    *observes* a runtime string via `print_str`); needed by the frontend payoffs
    that *build* runtime strings (ALGOL string procedures' `s := t & u`). *(needs 2)*
-3. **E4d-3 — WASM runtime strings.** Same for `iir-to-wasm`, inlined over linear
-   memory (mirror E5 `array_*`). Extend the foothold cell with `Wasm`. *(needs 1, 1a)*
+3. **E4d-3 — WASM runtime strings.** ✅ **Landed** (`iir-to-wasm` 0.29.0 /
+   `lang-aot` 0.173.0). Mirrors E4d-2 over linear memory: `collect_runtime_str_vars`
+   promotes a `str` var assigned in **>1 basic block** to an i32 **handle** = the
+   offset of a length-prefixed block `[i32 len (LE)][bytes]` laid down in the
+   string data segment (deduped by text). `str_const` of a promoted var stores its
+   block offset; `print_str` reads the length back with `i32.load` and calls
+   `env.__print_str(handle + 4, len)` — the WASM sibling of LLVM's `inttoptr` +
+   `load` + `getelementptr … i64 8`. Single-assignment strings keep the folded
+   fast path. The **foothold cell now runs on `Wasm`** (in-process `wasm-runtime` +
+   `env.__print_str` host), verified by the two guard tests; 3 unit tests assert
+   the emitted wasm. Deferred (like E4d-2b): runtime `str_len`/`str_concat`/
+   `str_slice`/`str_index`/`str_cmp` over promoted operands (E4d-3b — not needed by
+   the foothold, which only *observes* a runtime string via `print_str`). *(needs 1, 1a)*
 4. **E4d-4 — native runtime strings.** `aarch64-backend` + `x86_64-backend` lower
    the ops to `__twig_alloc_bytes` blocks + `bl/call` helpers + `udf/ud2` bounds
    traps (mirror E5 arrays). Run-verify aarch64 locally + x86_64 on CI. Extend the

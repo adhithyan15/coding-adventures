@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.172.0"
+version = "0.173.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.172.0 (E4-dyn E4d-2): the runtime branch-selected-string foothold cell now runs on the Llvm column too (via clang) — iir-to-llvm 0.30.0 runtime-string lowering.  v0.171.0 (E4-dyn foothold): first RUNTIME string cell on the 4 already-dynamic backends.  v0.170.0 (AL-pow): ALGOL 60 exponentiation."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.173.0 (E4-dyn E4d-3): the runtime branch-selected-string foothold cell now runs on the Wasm column too (in-process wasm-runtime + env.__print_str host) — iir-to-wasm 0.29.0 runtime-string lowering (i32 handle → length-prefixed linear-memory block).  v0.172.0 (E4-dyn E4d-2): the runtime branch-selected-string foothold cell now runs on the Llvm column too (via clang) — iir-to-llvm 0.30.0 runtime-string lowering.  v0.171.0 (E4-dyn foothold): first RUNTIME string cell on the 4 already-dynamic backends.  v0.170.0 (AL-pow): ALGOL 60 exponentiation."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
