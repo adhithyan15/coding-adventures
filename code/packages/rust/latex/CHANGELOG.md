@@ -2,6 +2,40 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.26.0] — 2026-07-03
+
+### Added — document-mode tables & lists via a new `recognize_tables` pass (LTXDOC01 D1)
+
+Closes the L3b gap LTX01 deferred: document-mode `tabular`/`tabular*` grids and the
+`itemize`/`enumerate`/`description` list environments now fold into structured AST nodes. This is
+a **recognition pass over already-parsed generic environments** — not a parser/lexer change: L1
+already parses `\begin{tabular}{lcr}a & b \\ c & d\end{tabular}` as a generic `Node::Environment`
+(with `&` → `Text("&")`, `\\` → `Command("\\")`, `\item[t] x` → `Command("item", opt:[t])` + siblings).
+
+- **New `Node` variants** (both span-less, matching the other structural variants):
+  - `Node::Tabular { col_spec: Option<String>, rows: Vec<Vec<Vec<Node>>> }` — `rows[r][c]` is cell
+    `c` of row `r`; `col_spec` is the column spec captured verbatim (`"lcr"`, `"l|c|r"`), `None` if
+    absent. For `tabular*` the `{width}` argument is dropped and the trailing `{colspec}` kept.
+  - `Node::List { kind: ListKind, items: Vec<ListItem> }` with new `pub enum ListKind { Itemize,
+    Enumerate, Description }` and `pub struct ListItem { label: Option<Vec<Node>>, body: Vec<Node> }`
+    (`label` = the `\item[term]` optional term).
+- **New `recognize_tables(nodes) -> Vec<Node>` pass** (`src/tables.rs`), mirroring
+  `recognize_structure`: a total, infallible fold that recurses into every child node-list and
+  splits `tabular` bodies on `&`/`\\` and list bodies on `\item`. Re-exported from `lib.rs` along
+  with `ListKind`/`ListItem`.
+- **`to_latex` round-trip**: `recognize_tables(parse(&node.to_latex())) == [node]` for tables and
+  lists (asserted over a corpus). A recognized `tabular*` round-trips as a plain `tabular` (its
+  width was not a column spec — dropping it is faithful to the grid).
+- **Totality (spec reconciliation)**: the pass never errors and never panics — ragged rows
+  (differing cell counts) are preserved exactly, and a list with stray content before its first
+  `\item` is left as a generic `Node::Environment`. The spec's "spanned errors on malformed grids"
+  guarantee lives in the **L1 parser** (unbalanced braces / `\begin`/`\end` mismatch, `MAX_DEPTH`
+  depth guard), upstream of this total recognition pass; recursion here is bounded by the L1 tree
+  depth (no new unbounded recursion, no raw brace counting — `col_spec` comes from parsed argument
+  nodes). Per-node byte spans remain the Document layer's job (D2+).
+- No `unsafe`; `cargo clippy -p latex -- -D warnings` clean; downstream `adj-lang`/`adj-lang-cli`
+  unaffected (the new variants don't reach the math-frontend path).
+
 ## [0.25.0] — 2026-07-01
 
 ### Changed — comma/semicolon fence lists now keep their delimiters (`Fenced`-of-`Sequence`)

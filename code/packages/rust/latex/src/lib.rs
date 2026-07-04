@@ -39,7 +39,11 @@
 //!    nodes: sectioning ([`Node::Section`]), cross-refs/citations ([`Node::CrossRef`]),
 //!    preamble directives ([`Node::Preamble`]), and argument-form font commands
 //!    ([`Node::Styled`]). **Implemented (L5d).**
-//! 8. [`LatexMath`] — the `math-frontend` adapter: implements `math_frontend::MathFrontend`,
+//! 8. [`recognize_tables`] — an opt-in pass folding document-mode `tabular`/`tabular*` grids into
+//!    [`Node::Tabular`] (splitting the body on `&`/`\\`) and the list environments
+//!    `itemize`/`enumerate`/`description` into [`Node::List`] (splitting on `\item`). Total and
+//!    infallible; leaves questionable input as its generic [`Node::Environment`]. **Implemented (D1).**
+//! 9. [`LatexMath`] — the `math-frontend` adapter: implements `math_frontend::MathFrontend`,
 //!    lifting a math island's [`MathNode`] into the neutral `MathExpr`, so LaTeX plugs into the
 //!    pluggable-frontend registry ([`registry`] / [`register_latex`]). **Implemented (L6).**
 //!    Gated behind the default-on `frontend` cargo feature; `--no-default-features` keeps
@@ -68,6 +72,7 @@ mod macros;
 mod math;
 mod parser;
 mod structure;
+mod tables;
 mod text;
 mod token;
 
@@ -77,7 +82,7 @@ mod frontend;
 #[cfg(feature = "frontend")]
 pub use frontend::{register_latex, registry, LatexMath};
 
-pub use ast::{document_to_latex, Node, SectionLevel};
+pub use ast::{document_to_latex, ListItem, ListKind, Node, SectionLevel};
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};
 pub use lexer::tokenize;
@@ -85,5 +90,6 @@ pub use macros::expand;
 pub use math::{parse_math, MBinOp, MRelOp, MUnOp, MathNode};
 pub use parser::parse;
 pub use structure::recognize_structure;
+pub use tables::recognize_tables;
 pub use text::recognize_accents;
 pub use token::{Span, Token, TokenKind};
