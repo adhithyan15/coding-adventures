@@ -1,11 +1,12 @@
 [package]
 name = "spreadsheet-core-wasm"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
-description = "Browser/WASM-facing string-in / JSON-out facade over spreadsheet-core"
+description = "Browser/WASM-facing string-in / JSON-out facade over spreadsheet-core, including real spreadsheet file open/save (.xlsx/.xls) via spreadsheet-io"
 license = "MIT"
 
 [dependencies]
 spreadsheet-core = { path = "../spreadsheet-core" }
+spreadsheet-io = { path = "../spreadsheet-io" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.14.0
+
+**Open & save real spreadsheet files (SSIO03).** The session can now open and
+save actual `.xlsx` / `.xls` files, not just its own JSON snapshot — the
+file-format half of the VisiCalc "open/save" story, reaching every front-end
+(WASM / C-ABI / JNI) through this one facade.
+
+- `load_xlsx_bytes(&[u8]) -> bool` / `load_xls_bytes(&[u8]) -> bool` — open a file
+  as the current document. Reuses the existing snapshot path (load into a fresh
+  engine workbook via `spreadsheet-io`, serialize to the engine's canonical JSON,
+  feed to `deserialize`), so an open is **undoable** and rebuilds the formula-bar
+  echo for free. Returns `false` (document untouched) on unreadable bytes.
+- `save_xlsx_bytes() -> Vec<u8>` / `save_xls_bytes() -> Vec<u8>` — serialize the
+  current document to file bytes (`.xlsx` preserves live numeric-result formulas;
+  `.xls` is values-only). Pure computation.
+- Fix: the formula-bar echo now always shows a formula with a leading `=`. A
+  formula loaded from `.xlsx` has none (Excel's `<f>` omits it); the raw-rebuild
+  normalises to exactly one `=`, so a reopened `=SUM(A1:A2)` reads back with its
+  `=` like a freshly-typed one.
+- New dep on `spreadsheet-io`; builds for `wasm32-unknown-unknown`. 5 tests
+  (xlsx/xls round-trip through the session, live-formula recompute after open,
+  bad-bytes-preserves-document, open-is-undoable).
+
 ## 0.13.0
 
 **Column widths & row heights (facade for spreadsheet-core 0.16.0).** Per-column /
