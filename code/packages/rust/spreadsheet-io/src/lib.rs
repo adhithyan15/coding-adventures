@@ -54,7 +54,7 @@
 
 use coding_adventures_xlsx_eval::open_and_evaluate;
 use coding_adventures_xlsx_writer::{write_xlsx, Workbook as XlsxOut};
-use spreadsheet_core::{CellAddress, CellValue, Workbook};
+use spreadsheet_core::{CellAddress, CellValue, SpreadsheetError, Workbook};
 
 /// The engine workbook, re-exported so callers can name the type this crate
 /// loads into and saves from without a separate dependency on `spreadsheet-core`.
@@ -74,12 +74,17 @@ pub enum IoError {
     /// XML, an unresolvable relationship, or a cell reference the reader could
     /// not parse. Carries the underlying message for diagnostics.
     Xlsx(String),
+    /// The `.xls` (legacy BIFF8) bytes could not be opened — not an OLE2
+    /// compound file, a missing/short workbook stream, or a malformed record.
+    /// Carries the underlying message for diagnostics.
+    Xls(String),
 }
 
 impl std::fmt::Display for IoError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             IoError::Xlsx(msg) => write!(f, "failed to load .xlsx: {msg}"),
+            IoError::Xls(msg) => write!(f, "failed to load .xls: {msg}"),
         }
     }
 }
@@ -192,6 +197,144 @@ pub fn save_xlsx(wb: &Workbook) -> Vec<u8> {
     }
 
     write_xlsx(&out)
+}
+
+// ===========================================================================
+// Legacy .xls (BIFF8) — load & save
+// ===========================================================================
+//
+// The `.xls` codecs are less capable than the `.xlsx` ones, and the bridge is
+// honest about it:
+//
+// - The `.xls` **reader** decodes a formula cell's *cached value* but not its
+//   expression, so a `.xls` formula loads as a plain value (the formula is
+//   lost). This is a reader limitation, not a bridge choice.
+// - The `.xls` **writer** models only numbers and strings — no formulas, no
+//   booleans, no error sentinels — so save writes computed values (bools as
+//   1/0, errors as their display text). BIFF cell addresses are `u16`, so a
+//   cell beyond row/col 65535 is skipped by the writer.
+//
+// Numbers and text round-trip exactly. See `code/specs/SSIO02-spreadsheet-io-xls.md`.
+
+/// Map a BIFF8 error code (the `u8` the `.xls` reader surfaces) to the engine's
+/// typed [`SpreadsheetError`]. The codes are fixed by [MS-XLS]; an unrecognised
+/// one falls back to `#VALUE!` (a generic "bad value") rather than being dropped.
+fn biff_error_to_core(code: u8) -> SpreadsheetError {
+    match code {
+        0x00 => SpreadsheetError::Null,         // #NULL!
+        0x07 => SpreadsheetError::DivZero,      // #DIV/0!
+        0x0F => SpreadsheetError::Value,        // #VALUE!
+        0x17 => SpreadsheetError::Ref,          // #REF!
+        0x1D => SpreadsheetError::Name,         // #NAME?
+        0x24 => SpreadsheetError::Num,          // #NUM!
+        0x2A => SpreadsheetError::NotAvailable, // #N/A
+        _ => SpreadsheetError::Value,
+    }
+}
+
+/// Convert one decoded `.xls` cell value into an engine [`CellValue`]. A formula
+/// cell carries only its *cached* result (the reader does not decode the
+/// expression), so we unwrap that cache and store it as a literal.
+///
+/// The `Formula { cached }` unwrap is written as a **loop, not recursion**: the
+/// `xls` reader only ever puts a leaf value in `cached`, so in practice the loop
+/// runs once — but iterating means even a hypothetical deeply-nested cache (which
+/// the type permits) costs no stack, so untrusted input can never overflow here.
+fn xls_value_to_core(v: &xls::CellValue) -> CellValue {
+    let mut v = v;
+    while let xls::CellValue::Formula { cached } = v {
+        v = cached;
+    }
+    match v {
+        xls::CellValue::Number(n) => CellValue::Number(*n),
+        xls::CellValue::Text(s) => CellValue::Text(s.clone()),
+        xls::CellValue::Bool(b) => CellValue::Boolean(*b),
+        xls::CellValue::Error(code) => CellValue::Error(biff_error_to_core(*code)),
+        xls::CellValue::Blank => CellValue::Empty,
+        // Unreachable: the loop above stripped every Formula layer.
+        xls::CellValue::Formula { .. } => CellValue::Empty,
+    }
+}
+
+/// Load a legacy `.xls` (BIFF8) file's bytes into a live
+/// [`spreadsheet_core::Workbook`].
+///
+/// ```text
+/// bytes ─▶ xls::open_xls   (OLE2/CFB → BIFF records → typed cells, 0-based)
+///       ─▶ spreadsheet_core::Workbook   (addresses shifted to 1-based)
+/// ```
+///
+/// The `.xls` reader recovers each cell's *value* (including a formula's cached
+/// result), but not formula expressions — so formulas arrive as literals. Blank
+/// cells are skipped.
+///
+/// # Errors
+///
+/// Returns [`IoError::Xls`] if the bytes are not a readable `.xls`.
+pub fn load_xls(bytes: &[u8]) -> Result<Workbook, IoError> {
+    let src = xls::open_xls(bytes).map_err(|e| IoError::Xls(e.to_string()))?;
+
+    let mut wb = Workbook::new();
+    for sheet in src.sheets() {
+        let sid = wb.add_sheet(sheet.name.clone());
+        for cell in sheet.cells() {
+            let value = xls_value_to_core(&cell.value);
+            if value == CellValue::Empty {
+                continue; // blank cells carry no content
+            }
+            // .xls is 0-based; the engine is 1-based.
+            let addr = CellAddress::new(cell.row + 1, cell.col + 1);
+            wb.set_value(sid, addr, value);
+        }
+    }
+    wb.recalc_all();
+    Ok(wb)
+}
+
+/// Serialize a live [`spreadsheet_core::Workbook`] to legacy `.xls` (BIFF8)
+/// bytes.
+///
+/// Like [`save_xlsx`], it walks each sheet's populated cells **sparsely**
+/// (`populated_cells`). But the `.xls` writer's value model is smaller — only
+/// numbers and strings — so every cell is written as its **computed value**:
+///
+/// | Cell in the engine | Written to `.xls` |
+/// |--------------------|-------------------|
+/// | `Number(n)` (literal or formula cache) | numeric cell |
+/// | `Text(s)`                              | shared-string cell |
+/// | `Boolean(b)`                           | numeric `1`/`0` |
+/// | `Error(e)`                             | its display text as a string |
+/// | empty                                  | omitted |
+///
+/// Formulas are therefore **not preserved** in `.xls` (their computed result is
+/// written); for formula fidelity, use [`save_xlsx`]. Cells beyond BIFF's `u16`
+/// address limit (row/col 65535) are skipped by the writer. Output is
+/// deterministic.
+pub fn save_xls(wb: &Workbook) -> Vec<u8> {
+    let mut out = xls_writer::Workbook::new();
+
+    for name in wb.sheet_names() {
+        let Some(sid) = wb.sheet_id(name) else {
+            continue;
+        };
+        let ws = out.add_sheet(name);
+
+        for addr in wb.populated_cells(sid) {
+            // The engine is 1-based; the .xls writer is 0-based. populated_cells
+            // never yields row/col 0, so these subtractions cannot underflow.
+            let row = addr.row - 1;
+            let col = addr.col - 1;
+            match wb.get_value(sid, addr).unwrap_or(CellValue::Empty) {
+                CellValue::Number(n) => ws.set_number(row, col, n),
+                CellValue::Text(s) => ws.set_string(row, col, &s),
+                CellValue::Boolean(b) => ws.set_number(row, col, if b { 1.0 } else { 0.0 }),
+                CellValue::Error(e) => ws.set_string(row, col, e.display()),
+                CellValue::Empty => {}
+            }
+        }
+    }
+
+    xls_writer::write_xls(&out)
 }
 
 #[cfg(test)]
