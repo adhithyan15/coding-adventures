@@ -2,6 +2,55 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.27.0] — 2026-07-03
+
+### Added — the hierarchical `Document` layer, preamble/body split (LTXDOC01 D2)
+
+A new `src/document.rs` module lifts LTX01's *flat* `Vec<Node>` into a reusable, hierarchical
+`Document` model — the layer above the presentation-shaped node stream. This is a **pure, total
+fold** over already-parsed nodes; it touches no lexer/parser/grammar.
+
+- **New public types** (each carries a `token::Span`):
+  - `Document { preamble, body: Vec<Block>, span }` — the whole document.
+  - `Preamble { document_class, packages, raw: Vec<Node>, span }` — classified directives plus the
+    untouched remainder.
+  - `DocumentClass { class, options, span }`, `Package { name, options, command, span }`.
+  - `Block` — `Section { level, numbered, title, short_title, body, span }` (zero-body in D2),
+    `Paragraph`, `List`, `Table`, `DisplayMath`, `Environment`, `Raw(Node, …)`.
+  - `Inline` — `Text`, `Space`, `Strong`, `Emph`, `Code`, `Styled`, `Math`, `CrossRef`, `Accent`,
+    `Raw(Node, …)`.
+  - `DocListItem { term, body, span }` — the D2 analogue of `ListItem`.
+- **New public functions:**
+  - `build_document(nodes: Vec<Node>, src: &str) -> Document` — the fold in isolation. **Total**:
+    never errors, never panics. Splits the node stream at the `document` environment (whole stream
+    is preamble if absent), classifies `\documentclass`/`\usepackage`/`\RequirePackage` (matched on
+    the `Node::Preamble` variant `recognize_structure` produces), and lowers the body's flat nodes
+    into a **flat** `Vec<Block>` (no sectioning nesting yet — every heading is a zero-body
+    `Block::Section`; D3 fills the bodies).
+  - `parse_document(src: &str) -> Result<Document, ParseError>` =
+    `Ok(build_document(recognize_tables(recognize_accents(recognize_structure(parse(src)?))), src))`.
+    `recognize_structure` runs first so the fold matches on semantic variants directly; the only
+    fallible stage is `parse`.
+  - `Document::to_latex()` (+ block/inline renderers) round-trips: `parse_document(&d.to_latex())`
+    equals `d` **modulo spans**, compared via a span-stripped `Document::strip_spans()` projection.
+- **Span policy (D2 — coarse but honestly nested).** `Document.span = 0..src.len()`; `Preamble.span
+  = 0..find("\\begin{document}")` (or `src.len()`); the body region span = end of
+  `\begin{document}`..start of `\end{document}` (found by substring search over the source). Every
+  block/inline span **defaults to its enclosing region span**, so every child span ⊆ its parent ⊆
+  the `Document` span (asserted by a span-integrity test). **Precise per-node byte coverage is
+  deferred to D6** once the parser threads token spans through `Node` — a repo-std-#9 divergence
+  from the spec's per-node-span ideal; the type carries the field now so later rungs tighten values
+  without an API break.
+- Re-exported from `lib.rs`: `build_document`, `parse_document`, `Document`, `Preamble`,
+  `DocumentClass`, `Package`, `Block`, `Inline`, `DocListItem`. Pipeline doc-comment entry #10 added.
+- Tests: preamble/body split on a real document; no-`document`-env fragment (all preamble, empty
+  body); `\documentclass`+`\usepackage` classification; a body exercising heading + paragraph +
+  itemize + tabular + inline `$…$` + display `\[…\]` + `\ref`; span-integrity (child ⊆ parent ⊆
+  document); round-trip modulo spans; totality on junk input; environment recursion.
+
+*No `unsafe`; `cargo clippy -p latex -- -D warnings` clean. `Metadata` (spec §3) is intentionally
+deferred to D4 — D2 ships only the skeleton + preamble/body split it specifies.*
+
 ## [0.26.0] — 2026-07-03
 
 ### Added — document-mode tables & lists via a new `recognize_tables` pass (LTXDOC01 D1)

@@ -38,8 +38,33 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
 | **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
 | **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `Node::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `Node::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
+| **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; coarse (region-granular) spans | ✅ |
 
-The ladder is **complete** (L0–L6). 🎉
+The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01)
+is building on top: D1–D2 shipped.
+
+## The Document layer (LTXDOC01)
+
+Above the flat `Vec<Node>` sits a reusable, hierarchical `Document` AST — the write-once fold every
+consumer (renderers, format conversion, structure queries, the ADJ byte-provenance pipeline) shares
+instead of re-deriving the hierarchy. `parse_document` composes the shipped LTX01 passes then folds:
+
+```rust
+use latex::{parse_document, Block, Inline};
+
+let doc = parse_document(
+    r"\documentclass{article}\begin{document}\section{Intro}Hello \textbf{world}.\end{document}",
+).unwrap();
+
+assert_eq!(doc.preamble.document_class.unwrap().class, "article");
+assert!(matches!(doc.body[0], Block::Section { .. }));        // zero-body heading (D2)
+assert_eq!(doc.to_latex().is_empty(), false);                // round-trips (modulo spans)
+```
+
+**D2 spans are coarse (region-granular)**: every block/inline span defaults to its enclosing region
+span, guaranteeing every child span ⊆ its parent ⊆ the `Document` span. Precise per-node byte
+coverage is deferred to D6 (once the parser threads token spans through `Node`); the `span` field
+exists now so later rungs tighten the *values* without an API break.
 
 ## Usage
 
