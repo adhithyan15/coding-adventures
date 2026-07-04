@@ -50,6 +50,24 @@
 //! would exceed the cap is refused (the operands are returned as an
 //! unexpanded `Mul` instead of being allocated), so growth stops the
 //! moment it would cross the line rather than after it already has.
+//!
+//! **This guard has already had one real bug**, caught in security
+//! review before merge: [`term_count`] originally treated *any*
+//! non-`Add`/`Sub` node — including a refused-and-wrapped `Mul(a, b)`
+//! that [`expand_mul`] itself had just produced — as a single opaque
+//! term of size `1`. That let a capped subtree's true size go dark on
+//! the very next multiplication (the guard saw a stale "1" instead of
+//! the real, possibly-huge count), so a chain of several multi-term
+//! sum factors (`(a1+..)*(b1+..)*(c1+..)*...`, an entirely ordinary-
+//! looking expression, no pathological construction needed) could
+//! still reach hundreds of millions of nodes — confirmed empirically
+//! against the original code before the fix. `term_count` now
+//! recurses into `Mul` descendants *multiplicatively* (mirroring how
+//! it already recurses into `Add`/`Sub` *additively*), so a refused
+//! `Mul`'s true size is always visible to the next check. See
+//! [`term_count`]'s own docs and
+//! `term_count_sees_through_a_refused_mul_instead_of_going_blind` for
+//! the full account and the regression test.
 
 use symbolic_ir::{apply, sym, IRApply, IRNode, ADD, MUL, POW, SUB};
 
@@ -75,22 +93,48 @@ pub const EXPAND_MAX_POW: i64 = 32;
 /// not after.
 pub const EXPAND_MAX_TERMS: usize = 10_000;
 
-/// The number of leaf terms `node` contributes to a `Mul` distribution.
+/// The number of leaf terms `node` *would* have if fully distributed —
+/// not necessarily the number it structurally has right now.
 ///
-/// This must recurse into `Add`/`Sub` descendants, not just count
-/// `node`'s own direct args: [`expand_mul`] does not flatten/canonicalize
-/// between successive squaring steps inside [`expand_pow`], so an
-/// intermediate result is typically a *nested* `Add(Add(..), Add(..))`
-/// tree, not a single flat `Add` node. Counting only the direct args
-/// (e.g. `2` for `Add(Add(4 terms), Add(4 terms))`) would drastically
-/// undercount the true term count and let the very blowup this guard
-/// exists to prevent slip through uncapped — confirmed by a test that
-/// hung and had to be killed before this fix.
+/// This must recurse into **both** `Add`/`Sub` descendants (summed) and
+/// `Mul` descendants (multiplied), not just count `node`'s own direct
+/// args:
+///
+/// - [`expand_mul`] does not flatten/canonicalize between successive
+///   squaring steps inside [`expand_pow`], so an intermediate result is
+///   typically a *nested* `Add(Add(..), Add(..))` tree, not a single
+///   flat `Add` node. Counting only the direct args (e.g. `2` for
+///   `Add(Add(4 terms), Add(4 terms))`) would undercount.
+/// - **Critically**, when [`expand_mul`] *refuses* to distribute
+///   because the product would exceed [`EXPAND_MAX_TERMS`], it returns
+///   the operands wrapped in an ordinary `Mul(a, b)` node — the exact
+///   same shape [`expand_apply`]'s `Mul` branch folds a chain of
+///   factors through. If `term_count` treated every `Mul`-headed node
+///   as a single opaque term (size `1`, the same as any atom), a
+///   refused distribution would make its own true size *invisible* to
+///   the very next fold step: `term_count(refused_mul) == 1` even
+///   though the subtree it wraps may already represent millions of
+///   would-be terms. The next multiplication then sails through the
+///   cap check and distributes anyway, repeating this "cap → go dark →
+///   distribute past the cap → cap again" cycle once per chained
+///   factor — unbounded growth despite the cap, confirmed by an
+///   adversarial-review harness that reached 200M+ nodes from a
+///   perfectly ordinary six-factor expression (six chained parenthesized
+///   sums) before this fix. Recursing multiplicatively into `Mul`
+///   descendants here closes that hole: a refused-and-wrapped `Mul`
+///   reports its true (potentially huge) size on every subsequent
+///   check, so the guard keeps seeing accurate numbers instead of a
+///   stale "1" and correctly keeps refusing to distribute further.
 fn term_count(node: &IRNode) -> usize {
     match node {
         IRNode::Apply(app) if is_head(&app.head, ADD) || is_head(&app.head, SUB) => {
             app.args.iter().map(term_count).sum::<usize>().max(1)
         }
+        IRNode::Apply(app) if is_head(&app.head, MUL) => app
+            .args
+            .iter()
+            .map(term_count)
+            .fold(1usize, |acc, c| acc.saturating_mul(c)),
         _ => 1,
     }
 }
@@ -398,5 +442,62 @@ mod tests {
         // 200 * 200 = 40,000 > EXPAND_MAX_TERMS (10,000).
         let result = expand_mul(&add(terms_a.clone()), &add(terms_b.clone()));
         assert_eq!(result, mul(vec![add(terms_a), add(terms_b)]));
+    }
+
+    /// Recursively counts every node in `node`, regardless of head — a
+    /// literal tree-size measurement, unlike [`term_count`] (which
+    /// counts would-be polynomial terms, not allocated nodes). Used
+    /// only by the regression test below to prove the result actually
+    /// stayed bounded, not just that it returned before a test timeout.
+    fn total_node_count(node: &IRNode) -> usize {
+        match node {
+            IRNode::Apply(app) => 1 + app.args.iter().map(total_node_count).sum::<usize>(),
+            _ => 1,
+        }
+    }
+
+    #[test]
+    fn term_count_sees_through_a_refused_mul_instead_of_going_blind() {
+        // Regression test for a real vulnerability caught in security
+        // review: term_count() originally treated ANY non-Add/Sub node
+        // — including a Mul(a, b) that expand_mul itself had just
+        // *refused* to distribute because it was already too big — as
+        // a single opaque term of size 1. That let a capped subtree's
+        // true size go dark on the very next multiplication: the guard
+        // would see a stale "1" instead of the real (possibly huge)
+        // count, wave the next factor through, and repeat — "cap, go
+        // blind, distribute past the cap, cap again" once per chained
+        // factor. An adversarial-review harness against the original
+        // code reached 200M+ nodes from six chained 20-term sums.
+        //
+        // This constructs the same shape (chained multi-term sum
+        // factors) at a size that would have detonated under the old
+        // logic, and asserts the result stays small — proving
+        // term_count's Mul case (added by this fix) keeps the guard
+        // seeing the real size instead of a fictitious "1".
+        fn sum_of(prefix: &str, n: usize) -> IRNode {
+            add((0..n).map(|i| sym(format!("{prefix}{i}"))).collect())
+        }
+        let factors = vec![
+            sum_of("a", 20),
+            sum_of("b", 20),
+            sum_of("c", 20),
+            sum_of("d", 20),
+            sum_of("e", 20),
+            sum_of("f", 20),
+        ];
+        let expr = mul(factors);
+        let result = expand(expr);
+        // Under the pre-fix logic this reached 200M+ nodes; with the
+        // fix, growth stops the moment any single distribution step
+        // would exceed EXPAND_MAX_TERMS, so the true total stays in
+        // the low tens of thousands at most — nowhere near millions.
+        assert!(
+            total_node_count(&result) < 100_000,
+            "expand() of six chained 20-term sums produced {} nodes -- \
+             the term_count guard is not seeing through a refused Mul \
+             the way it should",
+            total_node_count(&result)
+        );
     }
 }
