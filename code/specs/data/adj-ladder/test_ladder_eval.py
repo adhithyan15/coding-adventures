@@ -113,6 +113,7 @@ SELF_CONTAINED_RUNGS = (
     "rung73_spirometry_flow",
     "rung74_dialysis_clearance",
     "rung75_hearing_threshold",
+    "rung76_fluid_resuscitation",
 )
 
 
