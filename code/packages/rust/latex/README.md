@@ -37,6 +37,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
 | **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
+| **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `Node::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `Node::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
 
 The ladder is **complete** (L0–L6). 🎉
 
@@ -197,6 +198,38 @@ cross-ref with no key) is left as a plain command — never dropped or mis-folde
 positional (until end of group), so wrapping them in an argument node would misrepresent them.
 The pass is idempotent and round-trips: `recognize_structure(parse(&n.to_latex())) == [n]`.
 (The two passes — `recognize_accents` and `recognize_structure` — are independent and compose.)
+
+### Document-mode tables & lists (D1)
+
+`recognize_tables` is the third opt-in classification pass (like the two above). It folds the
+*generic* environments L1 produces for document-mode `tabular`/`tabular*` grids and the
+`itemize`/`enumerate`/`description` list environments into structured nodes — splitting a table
+body on the `&` alignment tab and the `\\` row break, and a list body on `\item`:
+
+```rust
+use latex::{parse, recognize_tables, Node, ListKind};
+
+let table = recognize_tables(parse(r"\begin{tabular}{lc}a & b \\ c & d\end{tabular}").unwrap());
+assert!(matches!(table[0], Node::Tabular { .. }));   // 2×2 grid, col_spec = Some("lc")
+
+let list = recognize_tables(parse(r"\begin{itemize}\item one\item two\end{itemize}").unwrap());
+assert!(matches!(list[0], Node::List { kind: ListKind::Itemize, .. }));
+```
+
+Recognized:
+
+- **`Node::Tabular { col_spec, rows }`** — `tabular`/`tabular*`; `rows[r][c]` is the node
+  sequence of cell `c` in row `r`; `col_spec` is the column spec captured verbatim (`None` if
+  absent). A `tabular*` `{width}` argument is dropped, keeping the trailing `{colspec}`.
+- **`Node::List { kind, items }`** — `itemize`/`enumerate`/`description`; each `ListItem` carries
+  its `\item[term]` optional `label` and the `body` up to the next `\item`.
+
+The pass is **total and infallible**: ragged rows (differing cell counts) are preserved exactly,
+and a list with stray content before its first `\item` is left as a generic `Node::Environment`
+— never an error here (truly malformed input — unbalanced braces, `\begin`/`\end` mismatch — is
+already rejected by the L1 parser with a spanned error, upstream of this pass). It is idempotent
+and round-trips: `recognize_tables(parse(&n.to_latex())) == [n]`. All three recognition passes
+are independent and compose.
 
 ### Pluggable frontend (L6)
 

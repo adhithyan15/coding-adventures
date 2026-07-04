@@ -47,6 +47,55 @@ impl SectionLevel {
     }
 }
 
+/// The flavour of a document-mode list environment, produced by the opt-in
+/// [`recognize_tables`](crate::recognize_tables) pass (D1) as part of [`Node::List`].
+///
+/// | Environment | Kind | What the `\item`s look like |
+/// |-------------|------|------------------------------|
+/// | `\begin{itemize}` | [`ListKind::Itemize`] | bulleted — plain `\item body` |
+/// | `\begin{enumerate}` | [`ListKind::Enumerate`] | numbered — plain `\item body` |
+/// | `\begin{description}` | [`ListKind::Description`] | term/definition — `\item[term] body` |
+///
+/// The three share one shape (a list of `\item`s), so they share one node and differ only by
+/// this tag. The tag is all `to_latex` needs to pick the environment name back.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ListKind {
+    /// `\begin{itemize}` — an unordered (bulleted) list.
+    Itemize,
+    /// `\begin{enumerate}` — an ordered (numbered) list.
+    Enumerate,
+    /// `\begin{description}` — a description list; each `\item[term]` carries a bold term.
+    Description,
+}
+
+impl ListKind {
+    /// The environment name (without braces) this kind renders to — the inverse of the
+    /// recognition table above, used by [`Node::to_latex`].
+    pub fn env(self) -> &'static str {
+        match self {
+            ListKind::Itemize => "itemize",
+            ListKind::Enumerate => "enumerate",
+            ListKind::Description => "description",
+        }
+    }
+}
+
+/// One entry of a [`Node::List`] — a single `\item` and the content that follows it up to the
+/// next `\item` (or the end of the list).
+///
+/// `\item body` (in `itemize`/`enumerate`) has `label == None`. `\item[term] body` (the
+/// `description` form, though LaTeX allows the optional term on any list) captures `[term]` as
+/// `label` — the nodes of the bracketed optional argument — and everything after it as `body`.
+/// Splitting on `\item` is a pure regrouping of the already-parsed siblings, so no source is
+/// dropped: concatenating every item's optional-marker + body reproduces the environment body.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ListItem {
+    /// The `\item[term]` optional term, if present (`None` for a plain `\item`).
+    pub label: Option<Vec<Node>>,
+    /// The nodes following this `\item`, up to (not including) the next `\item`.
+    pub body: Vec<Node>,
+}
+
 /// One node of the document tree.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Node {
@@ -112,6 +161,19 @@ pub enum Node {
     /// positional, not a wrapped argument.) Produced only by the opt-in
     /// [`recognize_structure`](crate::recognize_structure) pass, not by L1.
     Styled { command: String, content: Vec<Node> },
+    /// A document-mode table (D1): `\begin{tabular}{lcr} a & b \\ c & d \end{tabular}` (and the
+    /// `tabular*` width-argument form). `col_spec` is the column specification captured verbatim
+    /// (`"lcr"`, `"l|c|r"`, …) or `None` if the environment carried none; `rows[r][c]` is the node
+    /// sequence of cell `c` in row `r`. Cells are split on the `&` alignment tab, rows on the `\\`
+    /// row break — a pure regrouping of the parsed environment body (Space nodes inside a cell are
+    /// kept for faithfulness). Produced only by the opt-in
+    /// [`recognize_tables`](crate::recognize_tables) pass, not by L1.
+    Tabular { col_spec: Option<String>, rows: Vec<Vec<Vec<Node>>> },
+    /// A document-mode list (D1): `\begin{itemize}`, `\begin{enumerate}`, `\begin{description}`.
+    /// `kind` tags which of the three; `items` are the `\item` entries in order (each with its
+    /// optional `[term]` label and the body up to the next `\item`). Produced only by the opt-in
+    /// [`recognize_tables`](crate::recognize_tables) pass, not by L1.
+    List { kind: ListKind, items: Vec<ListItem> },
     /// An active character that acts like a command — `~`.
     Active(char),
     /// A construct deliberately out of scope (the TeX-programmability asymptote — e.g.
@@ -272,6 +334,57 @@ impl Node {
                 out.push_str(command);
                 out.push('{');
                 render_seq(content, out);
+                out.push('}');
+            }
+            Node::Tabular { col_spec, rows } => {
+                // `\begin{tabular}{spec}` cell & cell \\ cell & cell `\end{tabular}`. We always
+                // render the single-argument `tabular` form (a recognized `tabular*` folds its
+                // width away into the colspec at recognition time — the width is not a column
+                // spec — so it round-trips as a plain `tabular`, which is faithful to the grid).
+                out.push_str("\\begin{tabular}");
+                if let Some(spec) = col_spec {
+                    out.push('{');
+                    out.push_str(spec);
+                    out.push('}');
+                }
+                for (r, row) in rows.iter().enumerate() {
+                    if r > 0 {
+                        // Row break: ` \\ ` with surrounding spaces so re-parsing keeps the `\\`
+                        // its own `Command` node between cells rather than fusing with text.
+                        out.push_str(" \\\\ ");
+                    }
+                    for (c, cell) in row.iter().enumerate() {
+                        if c > 0 {
+                            out.push_str(" & ");
+                        }
+                        render_seq(cell, out);
+                    }
+                }
+                out.push_str("\\end{tabular}");
+            }
+            Node::List { kind, items } => {
+                out.push_str("\\begin{");
+                out.push_str(kind.env());
+                out.push('}');
+                for item in items {
+                    out.push_str("\\item");
+                    if let Some(label) = &item.label {
+                        // `\item[term]` — the `]` terminates the control word, so the body's own
+                        // leading Space (if any) is preserved verbatim by `render_seq` below.
+                        out.push('[');
+                        render_seq(label, out);
+                        out.push(']');
+                    } else {
+                        // Bare `\item` — a control *word*, so it needs a terminating space or the
+                        // following body text would fuse into the command name (`\itemone`). L1
+                        // eats exactly one such space, so re-parsing drops it and the body
+                        // re-splits identically (round-trip fixed point).
+                        out.push(' ');
+                    }
+                    render_seq(&item.body, out);
+                }
+                out.push_str("\\end{");
+                out.push_str(kind.env());
                 out.push('}');
             }
             Node::Active(c) => out.push(*c),
