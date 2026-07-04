@@ -48,6 +48,12 @@
 //!    pluggable-frontend registry ([`registry`] / [`register_latex`]). **Implemented (L6).**
 //!    Gated behind the default-on `frontend` cargo feature; `--no-default-features` keeps
 //!    L0–L5 dependency-free.
+//! 10. [`build_document`] / [`parse_document`] — the hierarchical **Document** layer (LTXDOC01
+//!     D2): a pure, total fold over the flat [`Node`] tree that splits the source at
+//!     `\begin{document}` into a [`Preamble`] and a *flat* body of [`Block`]s (classifying
+//!     `\documentclass`/`\usepackage`, lowering headings to zero-body [`Block::Section`]s,
+//!     paragraphs/lists/tables/display-math/environments to blocks, and text runs to
+//!     [`Inline`]s). Spans are coarse (region-granular) but honestly nested. **Implemented (D2).**
 //!
 //! ## Example
 //!
@@ -66,6 +72,7 @@
 
 pub mod catcode;
 mod ast;
+mod document;
 mod error;
 mod lexer;
 mod macros;
@@ -83,6 +90,10 @@ mod frontend;
 pub use frontend::{register_latex, registry, LatexMath};
 
 pub use ast::{document_to_latex, ListItem, ListKind, Node, SectionLevel};
+pub use document::{
+    build_document, parse_document, Block, DocListItem, Document, DocumentClass, Inline, Package,
+    Preamble,
+};
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};
 pub use lexer::tokenize;
