@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 66 \u2014 clinical attachment level from four stated quantities (a NEW panel: dentistry / periodontics). From a buccal and a lingual sum of probing depths (their sum is the total depth), a tooth count to divide by, and a gingival margin offset to subtract, compute the attachment level ((buccal_sum+lingual_sum)/tooth_count-margin_offset), the total depth (buccal_sum+lingual_sum), or the mean depth ((buccal_sum+lingual_sum)/tooth_count). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, SUM-OVER-A-DIVISOR MINUS A TERM (a+b)/c-d, the first on the ladder to divide a sum and then subtract a separate term OUTSIDE the division (the mirror of rung-65 (a-b)/c+d) \u2014 and the harness matches the scalar to the printed options. The pedagogical heart is operator precedence, and it ties the family together: (a+b)/c-d is ((a+b)/c)-d, not (a+b)/(c-d) [rung-63, offset in the denominator] and not (a+b)/c+d [rung-65, added not subtracted]. Contamination-safe: every index is built only from the four observed quantities via /, +, and - \u2014 no constant leaks, and neither the total depth, the mean depth, nor any attachment-level figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: folding the margin offset INTO the denominator ((a+b)/(c-d), a wrong divisor) and ADDING the margin instead of subtracting it ((a+b)/c+d, a wrong attachment level). The core confusion tested is that (a+b)/c-d is not (a+b)/(c-d) and not (a+b)/c+d.",
+  "items": [
+    {
+      "id": "r66perio-01",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 60 units of buccal probing depth and 40 of lingual probing depth across 10 teeth, then a 3 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(60)\nobserve lingual_sum(40)\nobserve tooth_count(10)\nobserve margin_offset(3)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r66perio-02",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 60 units of buccal probing depth and 40 of lingual probing depth across 10 teeth, then a 3 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(60)\nobserve lingual_sum(40)\nobserve tooth_count(10)\nobserve margin_offset(3)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r66perio-03",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 60 units of buccal probing depth and 40 of lingual probing depth across 10 teeth, then a 3 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(60)\nobserve lingual_sum(40)\nobserve tooth_count(10)\nobserve margin_offset(3)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r66perio-04",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 80 units of buccal probing depth and 40 of lingual probing depth across 8 teeth, then a 4 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(80)\nobserve lingual_sum(40)\nobserve tooth_count(8)\nobserve margin_offset(4)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r66perio-05",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 80 units of buccal probing depth and 40 of lingual probing depth across 8 teeth, then a 4 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(80)\nobserve lingual_sum(40)\nobserve tooth_count(8)\nobserve margin_offset(4)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r66perio-06",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 80 units of buccal probing depth and 40 of lingual probing depth across 8 teeth, then a 4 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(80)\nobserve lingual_sum(40)\nobserve tooth_count(8)\nobserve margin_offset(4)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r66perio-07",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 50 units of buccal probing depth and 30 of lingual probing depth across 8 teeth, then a 2 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(50)\nobserve lingual_sum(30)\nobserve tooth_count(8)\nobserve margin_offset(2)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r66perio-08",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 50 units of buccal probing depth and 30 of lingual probing depth across 8 teeth, then a 2 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(50)\nobserve lingual_sum(30)\nobserve tooth_count(8)\nobserve margin_offset(2)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r66perio-09",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 50 units of buccal probing depth and 30 of lingual probing depth across 8 teeth, then a 2 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(50)\nobserve lingual_sum(30)\nobserve tooth_count(8)\nobserve margin_offset(2)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r66perio-10",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 90 units of buccal probing depth and 60 of lingual probing depth across 10 teeth, then a 5 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(90)\nobserve lingual_sum(60)\nobserve tooth_count(10)\nobserve margin_offset(5)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r66perio-11",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 90 units of buccal probing depth and 60 of lingual probing depth across 10 teeth, then a 5 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(90)\nobserve lingual_sum(60)\nobserve tooth_count(10)\nobserve margin_offset(5)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r66perio-12",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 90 units of buccal probing depth and 60 of lingual probing depth across 10 teeth, then a 5 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(90)\nobserve lingual_sum(60)\nobserve tooth_count(10)\nobserve margin_offset(5)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r66perio-13",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 70 units of buccal probing depth and 50 of lingual probing depth across 6 teeth, then a 4 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(70)\nobserve lingual_sum(50)\nobserve tooth_count(6)\nobserve margin_offset(4)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r66perio-14",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 70 units of buccal probing depth and 50 of lingual probing depth across 6 teeth, then a 4 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(70)\nobserve lingual_sum(50)\nobserve tooth_count(6)\nobserve margin_offset(4)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r66perio-15",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 70 units of buccal probing depth and 50 of lingual probing depth across 6 teeth, then a 4 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(70)\nobserve lingual_sum(50)\nobserve tooth_count(6)\nobserve margin_offset(4)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r66perio-16",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 100 units of buccal probing depth and 80 of lingual probing depth across 12 teeth, then a 5 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(100)\nobserve lingual_sum(80)\nobserve tooth_count(12)\nobserve margin_offset(5)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r66perio-17",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 100 units of buccal probing depth and 80 of lingual probing depth across 12 teeth, then a 5 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(100)\nobserve lingual_sum(80)\nobserve tooth_count(12)\nobserve margin_offset(5)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r66perio-18",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 100 units of buccal probing depth and 80 of lingual probing depth across 12 teeth, then a 5 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(100)\nobserve lingual_sum(80)\nobserve tooth_count(12)\nobserve margin_offset(5)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r66perio-19",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 60 units of buccal probing depth and 60 of lingual probing depth across 8 teeth, then a 3 gingival margin offset is applied. What is the clinical attachment level (mean probing depth per tooth minus the gingival margin offset)?",
+      "program": "observe buccal_sum(60)\nobserve lingual_sum(60)\nobserve tooth_count(8)\nobserve margin_offset(3)\nlet answer = (buccal_sum + lingual_sum) / tooth_count - margin_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r66perio-20",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 60 units of buccal probing depth and 60 of lingual probing depth across 8 teeth, then a 3 gingival margin offset is applied. What is the the total probing depth (buccal plus lingual sums)?",
+      "program": "observe buccal_sum(60)\nobserve lingual_sum(60)\nobserve tooth_count(8)\nobserve margin_offset(3)\nlet answer = buccal_sum + lingual_sum\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r66perio-21",
+      "qtype": "periodontal_attachment_level",
+      "stem": "A periodontal chart sums to 60 units of buccal probing depth and 60 of lingual probing depth across 8 teeth, then a 3 gingival margin offset is applied. What is the the mean probing depth per tooth before the margin offset (total depth over the tooth count)?",
+      "program": "observe buccal_sum(60)\nobserve lingual_sum(60)\nobserve tooth_count(8)\nobserve margin_offset(3)\nlet answer = (buccal_sum + lingual_sum) / tooth_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

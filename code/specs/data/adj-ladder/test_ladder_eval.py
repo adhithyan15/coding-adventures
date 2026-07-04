@@ -103,6 +103,7 @@ SELF_CONTAINED_RUNGS = (
     "rung63_lacrimal_tear_clearance",
     "rung64_gastric_acid_buffer",
     "rung65_audiometry_corrected_threshold",
+    "rung66_periodontal_attachment_level",
 )
 
 
