@@ -62,7 +62,7 @@ use coding_adventures_javascript_ast::{
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
-        ThisExpression, UndefinedLiteral, UpdateExpression, UpdateOperator, YieldExpression,
+        Super, ThisExpression, UndefinedLiteral, UpdateExpression, UpdateOperator, YieldExpression,
     },
     statement::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
@@ -2147,7 +2147,13 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
 
     let nodes = node_children(node);
 
-    if nodes.is_empty() {
+    // Every member_expression has at least one Node child (the primary base) —
+    // EXCEPT the `super`-based forms (`super.x`, `super.m(…)`), whose base is a
+    // bare `super` *token*, not a Node. Those are handled below (CLOC12.166
+    // PR2 / gap-167), so only reject a genuinely empty node here.
+    let super_base =
+        matches!(node.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "super");
+    if nodes.is_empty() && !super_base {
         return Err(internal(node, "member_expression: no children"));
     }
 
@@ -2174,13 +2180,16 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
         });
     }
 
-    // `super` — Phase 3.
-    if node.children.iter().any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "super")) {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "Super".to_string(),
-            location: loc(node),
-        });
-    }
+    // `super` (CLOC12.166 PR2, closes gap-167). Unlike every other primary,
+    // `super` is a reserved word that the grammar emits as a *bare token*
+    // directly among the member_expression children (not wrapped in a
+    // `primary_expression` Node), so `super.m`/`super[k]`/`super(a)` arrive as
+    // `[Token("super"), <suffix…>]`. It is handled in two places: a lone
+    // `super` (degenerate, no suffix) is returned here; a `super` with a
+    // suffix chain becomes the `base` in the suffix-fold below. `super` is
+    // syntactically legal only inside a method / derived constructor, but that
+    // is enforced upstream — the bridge simply lowers whatever the parser
+    // produced. See CLOC12.166 / CLOC02.
 
     // A bare primary has a SINGLE child overall (just the
     // primary_expression Node, no suffix tokens). We check the full
@@ -2189,6 +2198,13 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
     // Nodes alone would wrongly treat `a.b` as a bare primary and
     // drop the `.b`. (That was the bug this guard previously had.)
     if node.children.len() == 1 {
+        // A lone `super` token is a bare `Super` primary (no Node child to
+        // pass through — `nodes` is empty here, so we must intercept it).
+        if let Some(ASTNodeOrToken::Token(t)) = node.children.first() {
+            if t.value == "super" {
+                return Ok(Expression::Super(Super { cv: t.cv.clone() }));
+            }
+        }
         return convert_expression(nodes[0]); // primary_expression pass-through
     }
 
@@ -2248,6 +2264,13 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
                 ))
             }
         }
+    } else if let Some(ASTNodeOrToken::Token(t)) = children.first().filter(
+        |c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "super"),
+    ) {
+        // `super` base — a bare token, so the suffix chain (`.NAME` / `[expr]`
+        // / call `arguments`) begins at index 1. `super.m`, `super[k]` and
+        // `super(a)` all fold from here exactly like an identifier base.
+        (Expression::Super(Super { cv: t.cv.clone() }), 1)
     } else {
         // A plain primary base — always the first child Node.
         let base = match children.first() {
@@ -3040,6 +3063,53 @@ mod tests {
                 assert!(matches!(&*m.object, Expression::ThisExpression(_)));
             }
             other => panic!("expected MemberExpression; got {:?}", other),
+        }
+    }
+
+    /// `super.x` — `super` (gap-167, CLOC12.166 PR2) bridges as the object of a
+    /// member access rather than being declined as `UnsupportedSyntax`. Unlike
+    /// `this`, `super` is a bare token base folded through the member suffix
+    /// chain, so a member access is the canonical shape (bare `super` is not
+    /// valid JS).
+    #[test]
+    fn super_member_object() {
+        let p = bridge_ok("super.x;");
+        match only_expr(&p) {
+            Expression::MemberExpression(m) => {
+                assert!(matches!(&*m.object, Expression::Super(_)));
+            }
+            other => panic!("expected MemberExpression; got {:?}", other),
+        }
+    }
+
+    /// `super[k]` — the computed-member form also folds onto the `Super` base.
+    #[test]
+    fn super_computed_member_object() {
+        let p = bridge_ok("super[k];");
+        match only_expr(&p) {
+            Expression::MemberExpression(m) => {
+                assert!(m.computed);
+                assert!(matches!(&*m.object, Expression::Super(_)));
+            }
+            other => panic!("expected MemberExpression; got {:?}", other),
+        }
+    }
+
+    /// `super.m(1 + 2)` — a method call off `super`: the callee is a
+    /// member access whose object is `Super`, and the argument survives so the
+    /// downstream constant-fold can reduce it.
+    #[test]
+    fn super_method_call() {
+        let p = bridge_ok("super.m(1 + 2);");
+        match only_expr(&p) {
+            Expression::CallExpression(c) => match &*c.callee {
+                Expression::MemberExpression(m) => {
+                    assert!(matches!(&*m.object, Expression::Super(_)));
+                    assert_eq!(c.arguments.len(), 1);
+                }
+                other => panic!("expected MemberExpression callee; got {:?}", other),
+            },
+            other => panic!("expected CallExpression; got {:?}", other),
         }
     }
 

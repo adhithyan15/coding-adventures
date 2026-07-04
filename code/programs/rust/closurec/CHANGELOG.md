@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.5] - 2026-07-04
+
+### Added — CLOC12.166 PR2: `super` end-to-end fixture
+
+The `super` keyword now flows through the full SIMPLE pipeline (via the
+javascript-parser 0.30.0 bridge) instead of falling back to WHITESPACE_ONLY
+(gap-167, now closed). New e2e diff fixture `tests/diff/simple-super/` proving
+`super.f(1 + 2);` → `super.f(3);` at SIMPLE: the `super` receiver round-trips
+(the bridge produced a real `Super` node) and the argument `1 + 2` folds to `3`
+(a WHITESPACE_ONLY fallback would leave `super.f(1 + 2)` unfolded). Version
+bumped to 0.234.5 (cli.spec.json + help-markdown fixture synced).
+
+
 ## [0.234.4] - 2026-07-04
 
 ### Added — CLOC12.165 PR2: `this` end-to-end fixture

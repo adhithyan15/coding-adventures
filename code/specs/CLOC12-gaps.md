@@ -2172,16 +2172,29 @@ The six traversal passes get a no-op arm (`super` binds/references no ordinary
 identifier and has no sub-expression). Atomic node PR1: node + emit + all nine
 downstream pass arms land together so the workspace never breaks.
 
-### gap-167 — bridge declines `super` (`Super`) — pending (CLOC12.166 PR2)
+### gap-167 — bridge declines `super` (`Super`) — **RESOLVED (javascript-parser 0.30.0, CLOC12.166 PR2)**
 
-The `javascript-parser` bridge returns `UnsupportedSyntax { rule: "Super" }`
-(bridge.rs, the `super`-token guard) for the `super` primary, so any file
-containing `super` currently drops to WHITESPACE_ONLY. Like `this` (gap-166,
-resolved) and **unlike `await` (gap-165)**, `super` is already parseable — the
-grammar produces the token the bridge *reaches* and explicitly declines — so
-PR2 is a pure bridge slice with **no grammar work required**: swap the decline
-for `Ok(Expression::Super(Super { cv: … }))`, mirroring the `this` fix. Tracked
-for CLOC12.166 PR2.
+The `javascript-parser` bridge previously returned `UnsupportedSyntax { rule:
+"Super" }` for the `super` primary, so any file containing `super` dropped to
+WHITESPACE_ONLY. Like `this` (gap-166) and **unlike `await` (gap-165)**,
+`super` was already parseable — the grammar produces the token the bridge
+*reaches* and explicitly declined — so PR2 was a pure bridge slice with **no
+grammar work required**.
+
+**Fix (CLOC12.166 PR2):** the shape differs from `this`. Where `this` is a
+`primary_expression` handled in `convert_primary_token`, the grammar emits
+`super` as a bare *token* directly among the `member_expression` children (not
+wrapped in a `primary_expression` Node). `convert_member_expression` therefore
+gains a `super` base-branch parallel to the `new` branch — the `super` token
+becomes the base `Expression::Super` and the existing suffix-fold loop composes
+`.NAME` / `[expr]` / call arguments onto it (`super.m`, `super[k]`,
+`super.m(a)`). The `nodes.is_empty()` guard is relaxed for the `super`-token
+base (it has no Node child), and a lone `super` returns `Super` directly. 4 new
+bridge unit tests (`super.x`, `super[k]`, `super.m(1 + 2)`) plus the closurec
+end-to-end diff fixture `tests/diff/simple-super/` (`super.f(1 + 2);` →
+`super.f(3);` at SIMPLE — the `super` receiver round-trips and the argument
+folds, proving the pipeline ran rather than falling back to WHITESPACE_ONLY).
+The **PR3** CodePrinter conformance port follows.
 
 
 ## CLOC12.165 — `ThisExpression` (`this`): atomic node + emit + passes (PR1)
