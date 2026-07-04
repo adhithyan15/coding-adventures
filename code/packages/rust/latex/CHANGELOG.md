@@ -2,6 +2,48 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.34.0] — 2026-07-04
+
+### Changed — precise Document fold (LTXDOC02 S3)
+
+The `build_document` fold now reads each source `Node`'s **carried, precise byte `Span`** (threaded
+by S1, unioned onto the recognition-pass nodes by S2) instead of stamping every lowered
+`Block`/`Inline` with the coarse enclosing `region`. Body span *values* are now tight:
+
+- **Leaf body nodes carry the node source range.** `lower_block` / `lower_inline` (and
+  `lower_inlines` / `lower_accent_base`) stamp each `Block`/`Inline` with the source node's own
+  `Node::span()`. `&src[inline.span]` slices back to exactly `\textbf{x}`, a `Text` run's word, an
+  inline `$…$` island, a `\cite{…}`, etc. — no longer a shared region.
+- **Composite bodies union their children's real spans.** A `Paragraph` = union of its inlines'
+  spans (new `span_of_inlines` helper); a `Section` = heading node span ∪ owned children's spans
+  (D3 `fold_sections`, unchanged mechanism, now over precise spans); a `List` / `Tabular` /
+  `Environment` / `Figure` = the `\begin…\end` extent S2 computed; a captioned `table` float =
+  inner-tabular extent ∪ float extent (so it owns the caption/label bytes); a `DocListItem` =
+  union of its term-inline and body-block spans (a `ListItem` carries no span of its own); a
+  `Caption` = union of its content inlines' spans. All unions fold min-start/max-end over real
+  child spans — never substring search.
+- **Region plumbing deleted.** `lower_block`, `lower_inline`, `lower_inlines`, `lower_list_item`,
+  `lower_accent_base`, `extract_caption_label`, `scan_title_author_date`, and `extract_metadata`
+  dropped their `region` parameter. `lower_blocks` keeps a `region` *fallback* only for the
+  degenerate empty-paragraph / top-level body-region seed; nested cells/bodies route through a new
+  `lower_blocks_precise` that seeds the fallback from the constituents' real spans.
+- **Metadata content is precise too.** `\title` / `\author` / `\date` inline runs and the
+  `abstract` body lower through the same span-precise fold, so their inline/block content carries
+  tight ranges (though `Metadata` itself, an additive index, is not walked).
+
+**Still region-coarse, honestly:** `Preamble.span` and the `span` on `DocumentClass` / `Package`
+remain the preamble-region span — the preamble is classified out of directives, not walked as
+per-node body content, so a preamble-region span is the right granularity there (these are not
+visited by `Document::walk`). **Out of scope (S4):** the *formal* `node_at` "resolves to the true
+leaf" guarantee, its dedicated test, and the removal of the remaining "region-coarse" hedging on
+`node_at` / `Provenance` — S3 only makes the span *values* precise. Coverage capstone still holds
+under tightening; `to_latex` output and the round-trip-modulo-spans fixed point are unchanged. No
+`unsafe`; recursion `MAX_DEPTH`-bounded; no new `unwrap`/indexing on untrusted input. New S3 tests
+assert `&src[node.span]` slices back to the exact source for a section title inline, a paragraph
+`Text` run, a `\textbf` construct, a figure caption, a table cell, list items, and inline
+math/cite; the D2-D5 containment tests tighten from "child ⊆ region" to "leaf == node source
+range".
+
 ## [0.33.0] — 2026-07-04
 
 ### Added — spanned recognition passes (LTXDOC02 S2)

@@ -30,25 +30,39 @@
 //!    [`Block::DisplayMath`]; other environments recurse into [`Block::Environment`]; inline
 //!    runs collect into a [`Block::Paragraph`].
 //!
-//! ## Span policy (D2 — coarse but honestly nested)
+//! ## Span policy (LTXDOC02 S3 — precise body spans)
 //!
-//! Every [`Document`]/[`Preamble`]/[`Block`]/[`Inline`] node carries a [`Span`]. D2 does **not**
-//! fabricate per-node byte ranges the flat [`Node`] cannot support. Instead:
+//! Every [`Document`]/[`Preamble`]/[`Block`]/[`Inline`] node carries a [`Span`]. As of **LTXDOC02
+//! S3**, the fold reads each source [`Node`]'s **carried, precise byte [`Span`]** (S1 threaded
+//! exact token spans onto every `Node`; S2 unioned them onto the recognition-pass nodes), so:
 //!
 //! - `Document.span` = `0 .. src.len()` (the whole source).
 //! - `Preamble.span` = `0 ..` the byte index of `\begin{document}` in the source (or `src.len()`
 //!   if absent), located by a direct substring search.
-//! - The *body region* span = end of `\begin{document}` .. start of `\end{document}` (or the
-//!   preamble-end .. `src.len()` when there is no `document` environment).
-//! - **Every block/inline span defaults to the enclosing region span** — the body region span for
-//!   top-level blocks, the parent block's span for nested content.
+//! - **Every body [`Block`]/[`Inline`] span is now the source node's own tight byte range** —
+//!   `&src[block.span]` / `&src[inline.span]` slices back to *exactly* that node's source text
+//!   (`\textbf{x}`, a `Text` run's word, a `\section` heading, …). A **composite** block that owns
+//!   children (a `Section` after the D3 fold, a `Paragraph`, a `List`, a `Table`/`Figure` float, a
+//!   list item, a caption) carries the **union** of its constituents' real spans (min start …
+//!   max end), folded from the real child spans — never re-derived by substring search.
 //!
-//! This is **coarse (region-granular)** but **honestly nested**: every child span ⊆ its parent
-//! span ⊆ the `Document` span, so the containment invariant the spec (and the ADJ total-coverage
-//! gate) rely on holds. **Precise per-node byte coverage is deferred to D6**, once the parser
-//! threads token spans through `Node` — a *repo-standard-#9 divergence* from the spec's
-//! per-node-span ideal. The type carries the `span` field now, so later rungs tighten the
-//! *values* without an API break.
+//! Every child span ⊆ its parent span ⊆ the `Document` span still holds (the containment invariant
+//! the spec and the ADJ total-coverage gate rely on), and now the leaves are *tight*: a body byte
+//! resolves to the single node whose source it is.
+//!
+//! ### What stays region-coarse (honestly)
+//!
+//! - **`Preamble.span`** and the `span` fields on [`DocumentClass`]/[`Package`] remain the
+//!   preamble-region span: the preamble is classified out of `\documentclass`/`\usepackage`
+//!   *directives*, not walked as per-node body content, so a preamble-region span is the honest
+//!   granularity there (these nodes are not visited by [`Document::walk`]).
+//! - **[`Metadata`]** inline/block *content* is precise (it lowers through the same span-precise
+//!   fold), but `Metadata` is an additive index over preamble/body nodes and is likewise not
+//!   walked.
+//!
+//! `Document::node_at`'s full precision (resolving to the true leaf, and retiring the remaining
+//! "region-coarse" wording on its own doc-comment) lands in **S4**; S3 only makes the `Document`
+//! `Block`/`Inline` span *values* precise.
 //!
 //! ## Totality
 //!
@@ -161,7 +175,9 @@ pub struct DocumentClass {
     pub class: String,
     /// The `[options]` list rendered back to source, e.g. `Some("11pt,twocolumn")`.
     pub options: Option<String>,
-    /// The span of the enclosing region (the preamble span in D2).
+    /// The preamble-region span. **Honestly region-coarse** (S3): the preamble is classified out
+    /// of directives rather than walked as per-node body content, so a preamble-region span is the
+    /// right granularity here (this node is not visited by [`Document::walk`]).
     pub span: Span,
 }
 
@@ -175,7 +191,9 @@ pub struct Package {
     /// Which directive introduced it (`"usepackage"` or `"RequirePackage"`), preserved so the
     /// package round-trips to the exact command it came from.
     pub command: String,
-    /// The span of the enclosing region (the preamble span in D2).
+    /// The preamble-region span. **Honestly region-coarse** (S3): the preamble is classified out
+    /// of directives rather than walked as per-node body content, so a preamble-region span is the
+    /// right granularity here (this node is not visited by [`Document::walk`]).
     pub span: Span,
 }
 
@@ -201,11 +219,12 @@ pub enum Block {
         label: Option<String>,
         /// The blocks owned by this section. Empty until D3's [`fold_sections`] pass fills it.
         body: Vec<Block>,
-        /// Enclosing-region span (D3: the union of the heading's region span and the owned
-        /// children's spans — still ⊆ the body-region span).
+        /// Precise span (S3): the union of the heading command's real span and the owned
+        /// children's real spans — the section's exact source extent.
         span: Span,
     },
-    /// A run of inline content between paragraph breaks.
+    /// A run of inline content between paragraph breaks. The span is the union of the run's
+    /// inlines' real spans (S3) — the paragraph's tight source extent.
     Paragraph(Vec<Inline>, Span),
     /// An `itemize`/`enumerate`/`description` list (from [`Node::List`]).
     List {
@@ -213,7 +232,7 @@ pub enum Block {
         kind: ListKind,
         /// The list items (each lowered to blocks; the term to inlines).
         items: Vec<DocListItem>,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the `\begin{…}`…`\end{…}` extent of the list environment.
         span: Span,
     },
     /// A `tabular`/`tabular*` grid (from [`Node::Tabular`]) — optionally wrapped by a `table`
@@ -228,7 +247,9 @@ pub enum Block {
         caption: Option<Caption>,
         /// A `\label{…}` hoisted off the enclosing `table` float (the key, no braces), if any (D5).
         label: Option<String>,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the `\begin{tabular}`…`\end{tabular}` extent — unioned with the
+        /// enclosing `\begin{table}`…`\end{table}` float extent when a float wraps it, so a
+        /// captioned table's span covers its caption/label bytes too.
         span: Span,
     },
     /// A `figure`/`figure*` float (D5). `content` is the float body (e.g. an `\includegraphics`
@@ -241,7 +262,7 @@ pub enum Block {
         caption: Option<Caption>,
         /// A `\label{…}` hoisted off the float (the key, no braces), if any.
         label: Option<String>,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the `\begin{figure}`…`\end{figure}` float extent.
         span: Span,
     },
     /// A verbatim code block (`verbatim`/`verbatim*`/`lstlisting`, D5). `verbatim` is the raw inner
@@ -249,7 +270,7 @@ pub enum Block {
     CodeBlock {
         /// The raw inner text of the verbatim environment.
         verbatim: String,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the `\begin{verbatim}`…`\end{verbatim}` extent.
         span: Span,
     },
     /// A display-math island (`\[…\]`, `$$…$$`, or a named display-math environment such as
@@ -258,10 +279,12 @@ pub enum Block {
     DisplayMath {
         /// The exact inner math source.
         source: String,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the display-math island's extent (`\[…\]`, `$$…$$`, or the named
+        /// `\begin{equation}`…`\end{equation}`).
         span: Span,
     },
-    /// A `quote`/`quotation` block quotation (D5), body recursively lowered to blocks.
+    /// A `quote`/`quotation` block quotation (D5), body recursively lowered to blocks. The span is
+    /// the `\begin{quote}`…`\end{quote}` extent (S3).
     Quote(Vec<Block>, Span),
     /// Any other `\begin{env}…\end{env}` block, recursed.
     Environment {
@@ -269,19 +292,21 @@ pub enum Block {
         name: String,
         /// The environment body, recursively lowered to blocks.
         body: Vec<Block>,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the `\begin{name}`…`\end{name}` extent.
         span: Span,
     },
     /// An LTX01 node with no block meaning of its own — carried through verbatim (never dropped).
+    /// The span is the underlying node's own real span (S3).
     Raw(Node, Span),
 }
 
-/// A `\caption{…}` on a float (D5): the caption content lowered to inlines, plus its coarse span.
+/// A `\caption{…}` on a float (D5): the caption content lowered to inlines, plus its span.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Caption {
     /// The caption content, lowered to inlines.
     pub content: Vec<Inline>,
-    /// Enclosing-region span (D2 coarse).
+    /// Precise span (S3): the union of the caption's content inlines' real spans (falling back to
+    /// the `\caption` command's own span for an empty `\caption{}`).
     pub span: Span,
 }
 
@@ -301,22 +326,26 @@ pub struct DocListItem {
     pub term: Option<Vec<Inline>>,
     /// The item body, lowered to blocks.
     pub body: Vec<Block>,
-    /// Enclosing-region span (D2 coarse).
+    /// Precise span (S3): the union of the item's term-inline spans and body-block spans — its
+    /// tight source extent. ([`crate::ListItem`] carries no span of its own, so we fold it here.)
     pub span: Span,
 }
 
-/// An inline (character-level) element.
+/// An inline (character-level) element. As of **S3** every span is the source node's own precise
+/// byte range (`&src[inline.span()]` slices back to exactly the inline's source); a composite
+/// inline (`Strong`/`Emph`/`Styled`/`CrossRef`/`Accent`) carries the whole-construct span S2
+/// computed (e.g. `\textbf`…closing `}`), which ⊇ its children's spans.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Inline {
-    /// A run of ordinary text.
+    /// A run of ordinary text; span = the run's exact bytes (S3).
     Text(String, Span),
-    /// Significant inter-word space.
+    /// Significant inter-word space; span = the space's exact bytes (S3).
     Space(Span),
-    /// `\textbf{…}` — strong (bold) emphasis.
+    /// `\textbf{…}` — strong (bold) emphasis; span = `\textbf`…closing `}` (S3).
     Strong(Vec<Inline>, Span),
-    /// `\emph{…}` — emphasis.
+    /// `\emph{…}` — emphasis; span = `\emph`…closing `}` (S3).
     Emph(Vec<Inline>, Span),
-    /// `\texttt{…}` — monospace/code.
+    /// `\texttt{…}` — monospace/code; span = `\texttt`…closing `}` (S3).
     Code(String, Span),
     /// Any other argument-form font command (`\textsf{…}`, `\underline{…}`, …).
     Styled {
@@ -324,14 +353,14 @@ pub enum Inline {
         command: String,
         /// The wrapped content, lowered to inlines.
         content: Vec<Inline>,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the whole `\command{…}` construct.
         span: Span,
     },
     /// An inline math island (`$…$`, `\(…\)`) — kept as its source string.
     Math {
         /// The exact inner math source.
         source: String,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): the whole `$…$` / `\(…\)` island.
         span: Span,
     },
     /// A cross-reference / citation (`\ref{k}`, `\cite[note]{k}`, …).
@@ -342,7 +371,7 @@ pub enum Inline {
         note: Option<Vec<Inline>>,
         /// The mandatory target key rendered back to source (`"foo"`).
         target: String,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): `\command`…closing `}` (spanning the optional `[note]` too).
         span: Span,
     },
     /// A text accent (`\'e`, `\c{c}`) — the accent control word plus its base inline.
@@ -351,10 +380,11 @@ pub enum Inline {
         accent: String,
         /// The accented base, lowered to a single inline.
         base: Box<Inline>,
-        /// Enclosing-region span (D2 coarse).
+        /// Precise span (S3): `\accent`…the base's closing `}` — the whole accent construct.
         span: Span,
     },
-    /// An LTX01 node with no inline meaning of its own — carried through verbatim.
+    /// An LTX01 node with no inline meaning of its own — carried through verbatim; span = the
+    /// node's own real span (S3).
     Raw(Node, Span),
 }
 
@@ -366,25 +396,21 @@ pub enum Inline {
 // source byte, *which document node owns it* — the exact source→node correlation the reasoning
 // stack audits against.
 //
-// ## The honest granularity caveat (region-coarse spans)
+// ## Span granularity (S3: body Block/Inline spans are now precise)
 //
-// A crucial honesty point that every doc-comment below repeats: the spans D2–D5 attached are
-// **region-granular**, not precise per-token byte ranges. When the D2 fold lowered a body region
-// it handed *every* block and inline in that region the same enclosing-region span (see the
-// `region` parameter threaded through `lower_block`/`lower_inlines`). So a `Section`'s title
-// inlines, its child paragraphs, and their `Text` runs frequently **share one span** — the region
-// they were lowered from. Consequently:
+// As of **LTXDOC02 S3**, the D2 fold reads each source node's carried, precise byte span (S1/S2)
+// instead of the old enclosing-region parameter. So a body `Block`/`Inline` span is the node's
+// *tight* source range — a `Section`'s title inline, its child paragraphs, and their `Text` runs
+// no longer share one region span; each slices back to exactly its own source. `walk()` visits
+// every body node in structural pre-order (unchanged), and every yielded span is now precise.
 //
-//   * `walk()` is faithful (it visits every node in structural pre-order),
-//   * but `node_at(byte)` cannot resolve *below* the region granularity. It returns the
-//     **narrowest node whose span contains the byte**, which — when many siblings share a region
-//     span — is whichever node has the tightest `[start,end)` covering that byte, not necessarily
-//     the single leaf a precise-span parser would pinpoint.
-//
-// Precise per-byte resolution needs the *parser* to thread exact token spans down into each
-// lowered node (future work, noted in the spec §4/§5). We do NOT overclaim "exact byte→node"
-// precision here; the capstone test asserts only what is TRUE at region granularity (every
-// non-whitespace body byte is owned by ≥1 walked node).
+// **What S3 does *not* yet retire:** the [`Document::node_at`] doc-comment still describes its
+// resolution conservatively. `node_at` already returns the narrowest-span walked node containing a
+// byte, and with precise spans that *is* the true leaf — but the formal "resolves to the true
+// leaf" guarantee, its dedicated test, and the removal of the remaining "region-coarse" wording on
+// `node_at`/[`Provenance`] are **S4** (spec §5). S3's job is only to make the span *values*
+// precise. The capstone byte-coverage test still asserts the honest, S3-true property (every
+// non-whitespace body byte is owned by ≥1 walked node); S5 tightens it to leaf-tightness.
 // ---------------------------------------------------------------------------------------------
 
 /// A borrowed reference to one node visited by [`Document::walk`]: either a body [`Block`] or an
@@ -402,7 +428,7 @@ pub enum NodeRef<'a> {
 }
 
 impl<'a> NodeRef<'a> {
-    /// This node's byte [`Span`] (region-coarse — see the D6 module note).
+    /// This node's byte [`Span`] — precise for body nodes as of S3 (see the module span note).
     pub fn span(&self) -> Span {
         match self {
             NodeRef::Block(b) => block_span(b),
@@ -447,14 +473,15 @@ impl<'a> NodeRef<'a> {
 /// span contains the queried byte, plus that node's [`Span`] (surfaced directly so the caller need
 /// not re-derive it).
 ///
-/// The `span` is region-coarse (see the D6 module note): it is the enclosing region the node was
-/// lowered from, not a precise per-token range. `node_at` returns the node with the *narrowest*
-/// such span, which is the best resolution available at this granularity.
+/// The `span` is the returned node's own byte range — **precise** for body nodes as of S3 (see the
+/// module span note). `node_at` returns the node with the *narrowest* such span. The formal
+/// "resolves to the true leaf" guarantee and the retirement of the last node_at caveat wording are
+/// S4; S3 makes the span values precise.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Provenance<'a> {
     /// The narrowest node owning the queried byte.
     pub node: NodeRef<'a>,
-    /// That node's span (region-coarse).
+    /// That node's span (precise for body nodes as of S3).
     pub span: Span,
 }
 
@@ -568,8 +595,7 @@ pub fn build_document(nodes: Vec<Node>, src: &str) -> Document {
     // scan over *borrowed* nodes: it copies out the `\title`/`\author`/`\date` arguments and the
     // `abstract` body, but leaves every node in place so the subsequent `classify_preamble` /
     // `lower_blocks` folds still see them (additive projection — see [`Metadata`]).
-    let metadata =
-        extract_metadata(&preamble_nodes, &body_nodes, preamble_span, body_region);
+    let metadata = extract_metadata(&preamble_nodes, &body_nodes);
 
     let preamble = classify_preamble(preamble_nodes, preamble_span);
     // `lower_blocks` produces the *flat* D2 block stream and then runs the D3 sectioning fold on
@@ -601,26 +627,23 @@ pub fn build_document(nodes: Vec<Node>, src: &str) -> Document {
 /// contributes — a document may issue several `\author` commands, and each `\and` inside one
 /// splits it into multiple author entries.
 ///
-/// `preamble_span` / `body_region` are the coarse enclosing spans (D4 keeps the D2/D3 region-
-/// granular span policy; precise per-node byte coverage is D6).
-fn extract_metadata(
-    preamble_nodes: &[Node],
-    body_nodes: &[Node],
-    preamble_span: Span,
-    body_region: Span,
-) -> Metadata {
+/// **S3 (precise spans).** The metadata's inline runs (`\title`/`\author`/`\date` arguments) and
+/// the `abstract` body lower through the span-precise [`lower_inlines`]/[`lower_blocks_precise`],
+/// so each metadata inline/block carries its own tight source range — no enclosing region is
+/// threaded here anymore.
+fn extract_metadata(preamble_nodes: &[Node], body_nodes: &[Node]) -> Metadata {
     let mut meta = Metadata::default();
 
     // `\title`/`\author`/`\date` may live in either stream. Scan the preamble first (the common
     // home), then the body, so a preamble `\title` takes precedence over a stray body one.
-    scan_title_author_date(preamble_nodes, preamble_span, &mut meta);
-    scan_title_author_date(body_nodes, body_region, &mut meta);
+    scan_title_author_date(preamble_nodes, &mut meta);
+    scan_title_author_date(body_nodes, &mut meta);
 
     // The `abstract` environment is a body construct only.
     for node in body_nodes {
         if let NodeKind::Environment { name, body, .. } = &node.kind {
             if name == "abstract" && meta.abstract_.is_none() {
-                meta.abstract_ = Some(lower_blocks(body.clone(), body_region));
+                meta.abstract_ = Some(lower_blocks_precise(body.clone()));
             }
         }
     }
@@ -629,8 +652,8 @@ fn extract_metadata(
 }
 
 /// Scan one node stream for `\title` / `\author` / `\date` commands, folding each into `meta`.
-/// `region` is the coarse span the lowered inlines inherit. Total and allocation-only.
-fn scan_title_author_date(nodes: &[Node], region: Span, meta: &mut Metadata) {
+/// Each lowered inline keeps its own real span (S3). Total and allocation-only.
+fn scan_title_author_date(nodes: &[Node], meta: &mut Metadata) {
     for node in nodes {
         // These directives survive D2 lowering as plain `Node::Command`s (they are not among the
         // constructs `recognize_structure` folds), so we match the raw command with exactly one
@@ -643,21 +666,21 @@ fn scan_title_author_date(nodes: &[Node], region: Span, meta: &mut Metadata) {
                 "title" => {
                     if meta.title.is_none() {
                         if let Some(arg) = arguments.first() {
-                            meta.title = Some(lower_inlines(arg.clone(), region));
+                            meta.title = Some(lower_inlines(arg.clone()));
                         }
                     }
                 }
                 "date" => {
                     if meta.date.is_none() {
                         if let Some(arg) = arguments.first() {
-                            meta.date = Some(lower_inlines(arg.clone(), region));
+                            meta.date = Some(lower_inlines(arg.clone()));
                         }
                     }
                 }
                 "author" => {
                     if let Some(arg) = arguments.first() {
                         for group in split_on_and(arg) {
-                            meta.authors.push(lower_inlines(group, region));
+                            meta.authors.push(lower_inlines(group));
                         }
                     }
                 }
@@ -736,9 +759,13 @@ fn classify_preamble(nodes: Vec<Node>, span: Span) -> Preamble {
 /// (D3). The walk first produces the flat D2 block stream (a run of *inline* nodes flushes into a
 /// [`Block::Paragraph`]; each block-level node emits its block, with its own child block-lists
 /// recursively lowered+folded by `lower_block`), then [`fold_sections`] folds that flat stream so
-/// every [`Block::Section`] owns the run of blocks that follow it. `region` is the enclosing span
-/// every emitted block inherits (coarse span policy); a folded section then unions in its
-/// children's spans.
+/// every [`Block::Section`] owns the run of blocks that follow it.
+///
+/// **S3 (precise spans).** Each emitted block carries its source node's own tight span (via
+/// `lower_block`); a flushed [`Block::Paragraph`] carries the union of its inlines' real spans. The
+/// `region` parameter is now only a **fallback** for the degenerate empty-paragraph case (which
+/// `flush` never actually reaches) and for the top-level body-region seed — every real block/inline
+/// span is precise. A folded section then unions in its owned children's real spans.
 ///
 /// Because *every* block-list in the document (top-level body, environment/quote/figure bodies,
 /// list-item bodies, table cells) routes through this one function, the sectioning fold applies
@@ -747,26 +774,42 @@ fn lower_blocks(nodes: Vec<Node>, region: Span) -> Vec<Block> {
     let mut blocks: Vec<Block> = Vec::new();
     let mut pending: Vec<Inline> = Vec::new();
 
-    // Flush the pending inline run into a Paragraph block, if non-empty.
+    // Flush the pending inline run into a Paragraph block, if non-empty. The paragraph's span is
+    // the **union of its inlines' real spans** (S3): the byte range from the first inline's start
+    // to the last inline's end. `region` is the fallback for the degenerate empty-inlines case
+    // (which `flush` never actually reaches, since it only runs when `pending` is non-empty), so
+    // the paragraph span is precise — `&src[span]` slices back to exactly the run's source text.
     fn flush(pending: &mut Vec<Inline>, blocks: &mut Vec<Block>, region: Span) {
         if !pending.is_empty() {
-            blocks.push(Block::Paragraph(std::mem::take(pending), region));
+            let span = span_of_inlines(pending, region);
+            blocks.push(Block::Paragraph(std::mem::take(pending), span));
         }
     }
 
     for node in nodes {
         if is_block_node(&node) {
             flush(&mut pending, &mut blocks, region);
-            blocks.push(lower_block(node, region));
+            blocks.push(lower_block(node));
         } else if matches!(node.kind, NodeKind::Par) {
             // A blank-line paragraph break closes the current paragraph.
             flush(&mut pending, &mut blocks, region);
         } else {
-            pending.push(lower_inline(node, region));
+            pending.push(lower_inline(node));
         }
     }
     flush(&mut pending, &mut blocks, region);
     fold_sections(blocks)
+}
+
+/// The union of an inline run's real spans (S3): min start … max end over every inline's carried
+/// span. Used to give a [`Block::Paragraph`] (and a float caption) the tight byte range of its
+/// content, rather than the coarse enclosing region. We *seed the fold from the first inline's own
+/// span* (via [`Iterator::reduce`]) so a non-empty run's span is exactly its content extent — a
+/// plain `fold(fallback, …)` would only ever *widen* past `fallback` and never shrink to the true
+/// start. An empty run has no inlines, so `reduce` yields `None` and we fall back to `fallback`
+/// (never a panic).
+fn span_of_inlines(inlines: &[Inline], fallback: Span) -> Span {
+    inlines.iter().map(inline_span).reduce(union).unwrap_or(fallback)
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -821,7 +864,7 @@ fn heading_rank(block: &Block) -> Option<u8> {
 ///   The run stops at the first block whose heading-rank is ≤ this section's rank — that block
 ///   starts a new sibling/ancestor section and is not consumed here.
 /// - The owned run is **recursively folded** (so deeper headings nest), then assigned as the
-///   section's `body`. The section's `span` becomes the union of its heading region span and its
+///   section's `body`. The section's `span` becomes the union of its heading's real span and its
 ///   folded children's spans.
 /// - **Label hoisting**: if, after folding, the first owned block is a lone `\label` (a
 ///   [`Block::Paragraph`] whose only non-space inline is an `Inline::CrossRef { command: "label" }`),
@@ -862,7 +905,7 @@ fn fold_sections(blocks: Vec<Block>) -> Vec<Block> {
                 // Label hoisting: pull a leading lone `\label{…}` onto the section.
                 let hoisted = hoist_label(&mut folded);
                 let label = label.or(hoisted);
-                // Span union: heading region span ∪ each folded child's span.
+                // Span union: heading's real span ∪ each folded child's real span (S3).
                 let span = folded.iter().fold(span, |acc, child| union(acc, block_span(child)));
                 out.push(Block::Section {
                     level,
@@ -923,7 +966,7 @@ fn hoist_label(body: &mut Vec<Block>) -> Option<String> {
     if empty {
         body.remove(0);
     } else if let Some(Block::Paragraph(_, s)) = body.first_mut() {
-        *s = span; // keep the (coarse) span; unchanged, but explicit.
+        *s = span; // keep the paragraph's span; unchanged, but explicit.
     }
     Some(key)
 }
@@ -1062,47 +1105,69 @@ fn is_block_node(node: &Node) -> bool {
     )
 }
 
-/// Lower a single block-level node into its [`Block`], recursing into child node-lists. `region`
-/// is the enclosing span the block (and, coarsely, its descendants) inherit.
-fn lower_block(node: Node, region: Span) -> Block {
-    // Destructure on the kind; the fallback needs the whole node, so re-wrap it there.
+/// Lower a single block-level node into its [`Block`], recursing into child node-lists.
+///
+/// **S3 (precise spans).** The resulting block is stamped with the source node's own carried
+/// [`Node::span`] — its exact byte range — not an enclosing region. For a `Section` this is the
+/// heading command's span (S2: `\section`…title); [`fold_sections`] later unions in the owned
+/// children's real spans. For a `List`/`Tabular`/`Environment` it is the `\begin`…`\end` extent
+/// S2 computed. Child node-lists (list items, table cells, environment bodies) recurse through the
+/// span-precise [`lower_blocks`]/[`lower_inline`], so *their* spans are precise too.
+fn lower_block(node: Node) -> Block {
+    // Destructure on the kind; several arms need the node's own span, and the fallback needs the
+    // whole node, so bind `span` up front.
     let Node { kind, span } = node;
     match kind {
         NodeKind::Section { level, starred, short, title } => Block::Section {
             level,
             numbered: !starred,
-            title: lower_inlines(title, region),
-            short_title: short.map(|s| lower_inlines(s, region)),
+            title: lower_inlines(title),
+            short_title: short.map(lower_inlines),
             label: None,      // filled by fold_sections (D3) if a \label follows the heading.
             body: Vec::new(), // filled by fold_sections (D3): the run of blocks this heading owns.
-            span: region,
+            span, // the heading command's real span; fold_sections unions in the owned children.
         },
         NodeKind::List { kind, items } => Block::List {
             kind,
-            items: items.into_iter().map(|it| lower_list_item(it, region)).collect(),
-            span: region,
+            items: items.into_iter().map(lower_list_item).collect(),
+            span, // the `\begin{…}`…`\end{…}` extent (S2).
         },
         NodeKind::Tabular { col_spec, rows } => Block::Table {
             col_spec,
             rows: rows
                 .into_iter()
-                .map(|row| row.into_iter().map(|cell| lower_blocks(cell, region)).collect())
+                .map(|row| row.into_iter().map(lower_blocks_precise).collect())
                 .collect(),
             caption: None, // set only when a `table` float wraps this tabular (see `lower_environment`).
             label: None,
-            span: region,
+            span, // the `\begin{tabular}`…`\end{tabular}` extent (S2).
         },
-        NodeKind::Math { display: true, content } => Block::DisplayMath { source: content, span: region },
+        NodeKind::Math { display: true, content } => Block::DisplayMath { source: content, span },
         // A `verbatim`/`verbatim*` environment is lexed raw (catcodes suspended) into a
         // `VerbatimEnv` node; its content is source code, not marked-up LaTeX, so we keep it
         // **unparsed** as a `CodeBlock` (D5).
-        NodeKind::VerbatimEnv { content, .. } => Block::CodeBlock { verbatim: content, span: region },
+        NodeKind::VerbatimEnv { content, .. } => Block::CodeBlock { verbatim: content, span },
         // Every `\begin{env}…\end{env}` (floats, quotes, display-math envs, code listings, or an
-        // unknown env) is classified by name in `lower_environment` (D5).
-        NodeKind::Environment { name, body, .. } => lower_environment(name, body, region),
+        // unknown env) is classified by name in `lower_environment` (D5), carrying the env's span.
+        NodeKind::Environment { name, body, .. } => lower_environment(name, body, span),
         // Anything else with no block model of its own — carried through verbatim (never dropped).
-        other => Block::Raw(Node::new(other, span), region),
+        other => {
+            let raw = Node::new(other, span);
+            Block::Raw(raw, span)
+        }
     }
+}
+
+/// A cell/body lowering that lowers a node-list to blocks and unions its blocks' real spans into
+/// the cell's fallback region — used for `tabular` cells, whose enclosing region span we no longer
+/// thread. Cells contain fully-spanned blocks, so this just forwards to [`lower_blocks`] with the
+/// cell's own union as the fallback region: the union of the cell's node spans (empty cell → an
+/// empty span at the tabular start, which never surfaces because empty cells produce no blocks).
+fn lower_blocks_precise(nodes: Vec<Node>) -> Vec<Block> {
+    // The cell's fallback region: the union of its constituent node spans (precise), so any
+    // paragraph flushed from an all-inline cell gets a tight span even without a threaded region.
+    let region = nodes.iter().map(|n| n.span).reduce(union).unwrap_or(Span::new(0, 0));
+    lower_blocks(nodes, region)
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -1145,49 +1210,58 @@ fn is_display_math_env(name: &str) -> bool {
 /// | display-math envs (see [`is_display_math_env`]) | [`Block::DisplayMath`] (source kept, unparsed) |
 /// | `lstlisting` | [`Block::CodeBlock`] (body rendered back to source text) |
 /// | any other | [`Block::Environment`] (recursed) — unchanged from D2 |
-fn lower_environment(name: String, body: Vec<Node>, region: Span) -> Block {
+fn lower_environment(name: String, body: Vec<Node>, env_span: Span) -> Block {
+    // `env_span` is the environment node's own real span (S2/S3): `\begin{name}`…the closing `}`
+    // of `\end{name}`. It is the precise byte extent of the whole float/quote/env, so every block
+    // below stamps it directly. The body's *inner* blocks recurse through span-precise
+    // `lower_blocks_precise`, so their spans are the tight per-node ranges — only the wrapper
+    // block carries the `\begin…\end` extent (which correctly ⊇ its children).
+
     // A display-math environment: keep the inner LaTeX as a source string. We render the body's
     // nodes back to source (the parser accepted the math tokens as ordinary nodes, since these
     // are *text-mode* `\begin{equation}` wrappers) and trim the outer whitespace the wrapper adds.
     if is_display_math_env(&name) {
-        return Block::DisplayMath { source: render_nodes(&body).trim().to_string(), span: region };
+        return Block::DisplayMath { source: render_nodes(&body).trim().to_string(), span: env_span };
     }
     // `lstlisting` is *not* lexed raw (only `verbatim`/`verbatim*` are), so its body parsed as
     // ordinary nodes; render it back to source to recover the listing text. (A perfectly faithful
     // capture of `lstlisting` would need raw-lexing support in a later rung; rendering the parsed
     // body back is lossless for the common case of plain code and keeps the fold total.)
     if name == "lstlisting" {
-        return Block::CodeBlock { verbatim: render_nodes(&body), span: region };
+        return Block::CodeBlock { verbatim: render_nodes(&body), span: env_span };
     }
     if name == "quote" || name == "quotation" {
-        return Block::Quote(lower_blocks(body, region), region);
+        return Block::Quote(lower_blocks_precise(body), env_span);
     }
 
-    // Floats: lower the body first, then lift the `\caption`/`\label` markers out of it.
+    // Floats: lower the body first, then lift the `\caption`/`\label` markers out of it. The
+    // float wrapper carries the `\begin…\end` extent; its inner content blocks are span-precise.
     if name == "figure" || name == "figure*" {
-        let mut content = lower_blocks(body, region);
-        let (caption, label) = extract_caption_label(&mut content, region);
-        return Block::Figure { content, caption, label, span: region };
+        let mut content = lower_blocks_precise(body);
+        let (caption, label) = extract_caption_label(&mut content);
+        return Block::Figure { content, caption, label, span: env_span };
     }
     if name == "table" || name == "table*" {
-        let mut content = lower_blocks(body, region);
-        let (caption, label) = extract_caption_label(&mut content, region);
+        let mut content = lower_blocks_precise(body);
+        let (caption, label) = extract_caption_label(&mut content);
         // Attach the float's caption/label to the inner `tabular` if there is one — the common,
         // faithful shape (`\begin{table}…\begin{tabular}…\end{tabular}\caption{…}\end{table}`).
         // The inner `tabular` was lowered to a `Block::Table` with `caption: None, label: None`;
-        // we rebuild it with the float's caption/label attached and return that block directly.
+        // we rebuild it with the float's caption/label attached. Its span becomes the **union** of
+        // the inner tabular's real span and the enclosing float extent (so the captioned table's
+        // span covers the whole `\begin{table}…\end{table}`, which owns the caption/label bytes).
         if let Some(idx) = content.iter().position(|b| matches!(b, Block::Table { .. })) {
             if let Block::Table { col_spec, rows, span, .. } = content.remove(idx) {
-                return Block::Table { col_spec, rows, caption, label, span };
+                return Block::Table { col_spec, rows, caption, label, span: union(span, env_span) };
             }
         }
         // No inner tabular — do not lose the float; treat it as a figure-shaped float so the
         // caption/label are still attached and the body survives.
-        return Block::Figure { content, caption, label, span: region };
+        return Block::Figure { content, caption, label, span: env_span };
     }
 
-    // Any other environment: recurse, unchanged from D2.
-    Block::Environment { name, body: lower_blocks(body, region), span: region }
+    // Any other environment: recurse, carrying the env's real `\begin…\end` span.
+    Block::Environment { name, body: lower_blocks_precise(body), span: env_span }
 }
 
 /// Lift a `\caption{…}` and a `\label{…}` out of a float's lowered body, returning them and
@@ -1200,7 +1274,7 @@ fn lower_environment(name: String, body: Vec<Node>, region: Span) -> Block {
 /// `\par` between `\includegraphics`, `\caption`, and `\label`, so they fuse into one paragraph).
 /// We scan every paragraph, pull the **first** caption and **first** label out, and drop any
 /// paragraph left empty (whitespace-only) once its markers are removed. Total & panic-free.
-fn extract_caption_label(content: &mut Vec<Block>, region: Span) -> (Option<Caption>, Option<String>) {
+fn extract_caption_label(content: &mut Vec<Block>) -> (Option<Caption>, Option<String>) {
     let mut caption: Option<Caption> = None;
     let mut label: Option<String> = None;
 
@@ -1210,15 +1284,18 @@ fn extract_caption_label(content: &mut Vec<Block>, region: Span) -> (Option<Capt
             let mut kept: Vec<Inline> = Vec::with_capacity(inlines.len());
             for inline in std::mem::take(inlines) {
                 match &inline {
-                    Inline::Raw(Node { kind: NodeKind::Command { name, arguments, optional }, .. }, _)
+                    Inline::Raw(Node { kind: NodeKind::Command { name, arguments, optional }, span: cmd_span }, _)
                         if name == "caption" && optional.is_empty() && caption.is_none() =>
                     {
-                        // `\caption{X}` — lower its mandatory argument to inlines.
+                        // `\caption{X}` — lower its mandatory argument to inlines. The caption's
+                        // span is the union of those inlines' real spans (S3), falling back to the
+                        // `\caption` command's own span for an empty `\caption{}`.
                         let content_inlines = arguments
                             .first()
-                            .map(|arg| lower_inlines(arg.clone(), region))
+                            .map(|arg| lower_inlines(arg.clone()))
                             .unwrap_or_default();
-                        caption = Some(Caption { content: content_inlines, span: region });
+                        let cap_span = span_of_inlines(&content_inlines, *cmd_span);
+                        caption = Some(Caption { content: content_inlines, span: cap_span });
                     }
                     Inline::CrossRef { command, target, .. }
                         if command == "label" && label.is_none() =>
@@ -1241,65 +1318,95 @@ fn extract_caption_label(content: &mut Vec<Block>, region: Span) -> (Option<Capt
 }
 
 /// Lower one [`ListItem`] into a [`DocListItem`].
-fn lower_list_item(item: ListItem, region: Span) -> DocListItem {
-    DocListItem {
-        term: item.label.map(|t| lower_inlines(t, region)),
-        body: lower_blocks(item.body, region),
-        span: region,
+///
+/// **S3 (precise spans).** [`ListItem`] itself carries no span (it is a pure regrouping of the
+/// list body — see `ast.rs`), so the item's span is the **union of its constituents' real spans**:
+/// the term inlines' spans folded with the body blocks' spans. That tight range slices back to the
+/// item's source extent (from the `\item` argument/first body node to the last body node), rather
+/// than the whole list region. An item with neither term nor body (rare) falls back to an empty
+/// span at the origin — it produces no walkable children, so the fallback never surfaces.
+fn lower_list_item(item: ListItem) -> DocListItem {
+    let term = item.label.map(lower_inlines);
+    let body = lower_blocks_precise(item.body);
+    // Union the term inlines' spans and the body blocks' spans into the item's precise extent.
+    let mut span: Option<Span> = None;
+    if let Some(t) = &term {
+        if let Some(s) = t.iter().map(inline_span).reduce(union) {
+            span = Some(span.map_or(s, |acc| union(acc, s)));
+        }
     }
+    if let Some(s) = body.iter().map(block_span).reduce(union) {
+        span = Some(span.map_or(s, |acc| union(acc, s)));
+    }
+    DocListItem { term, body, span: span.unwrap_or_else(|| Span::new(0, 0)) }
 }
 
 /// Lower a flat node run into a `Vec<Inline>` (used for headings, list terms, styled content).
-fn lower_inlines(nodes: Vec<Node>, region: Span) -> Vec<Inline> {
-    nodes.into_iter().map(|n| lower_inline(n, region)).collect()
+/// Each node keeps its own real span (S3) — no enclosing region is threaded.
+fn lower_inlines(nodes: Vec<Node>) -> Vec<Inline> {
+    nodes.into_iter().map(lower_inline).collect()
 }
 
 /// Lower a single node into its [`Inline`]. Anything without an inline meaning becomes
-/// [`Inline::Raw`] — never dropped, never a panic. `region` is the enclosing span.
-fn lower_inline(node: Node, region: Span) -> Inline {
-    // Destructure on the kind; the fallback needs the whole node, so re-wrap it there.
+/// [`Inline::Raw`] — never dropped, never a panic.
+///
+/// **S3 (precise spans).** Every resulting inline is stamped with the source node's own carried
+/// [`Node::span`] — its exact byte range — not an enclosing region. For a composite inline
+/// (`Strong`/`Emph`/`Styled`/`CrossRef`/`Accent`) S2 gave the node a span covering the whole
+/// construct (`\textbf`…closing `}`, `\cite[note]`…`{key}`, `\'`…`{e}`), so that one span is both
+/// the composite's tight extent *and* ⊇ its lowered children's spans. `&src[inline.span]` slices
+/// back to exactly the inline's source.
+fn lower_inline(node: Node) -> Inline {
+    // Destructure on the kind; every arm stamps the node's own real `span`.
     let Node { kind, span } = node;
     match kind {
-        NodeKind::Text(t) => Inline::Text(t, region),
-        NodeKind::Space => Inline::Space(region),
+        NodeKind::Text(t) => Inline::Text(t, span),
+        NodeKind::Space => Inline::Space(span),
         NodeKind::Styled { command, content } => match command.as_str() {
-            "textbf" => Inline::Strong(lower_inlines(content, region), region),
-            "emph" | "textit" => Inline::Emph(lower_inlines(content, region), region),
-            "texttt" => Inline::Code(render_nodes(&content), region),
-            _ => Inline::Styled { command, content: lower_inlines(content, region), span: region },
+            "textbf" => Inline::Strong(lower_inlines(content), span),
+            "emph" | "textit" => Inline::Emph(lower_inlines(content), span),
+            "texttt" => Inline::Code(render_nodes(&content), span),
+            _ => Inline::Styled { command, content: lower_inlines(content), span },
         },
-        NodeKind::Math { display: false, content } => Inline::Math { source: content, span: region },
+        NodeKind::Math { display: false, content } => Inline::Math { source: content, span },
         NodeKind::CrossRef { command, note, target } => Inline::CrossRef {
             command,
-            note: note.map(|n| lower_inlines(n, region)),
+            note: note.map(lower_inlines),
             target: render_nodes(&target),
-            span: region,
+            span,
         },
         NodeKind::Accent { accent, arg } => Inline::Accent {
             accent,
-            base: Box::new(lower_accent_base(arg, region)),
-            span: region,
+            base: Box::new(lower_accent_base(arg, span)),
+            span,
         },
         // Everything else (a display Math slipped into an inline run, an unhandled command, …)
-        // is carried through verbatim.
-        other => Inline::Raw(Node::new(other, span), region),
+        // is carried through verbatim, keeping its own span.
+        other => {
+            let raw = Node::new(other, span);
+            Inline::Raw(raw, span)
+        }
     }
 }
 
 /// Lower an accent's base argument (a node list) into a single [`Inline`]. Accents apply to one
-/// base; if the argument is a single node we lower it directly, otherwise we wrap the run so no
-/// content is lost.
-fn lower_accent_base(arg: Vec<Node>, region: Span) -> Inline {
+/// base; if the argument is a single node we lower it directly (keeping its real span), otherwise
+/// we wrap the run in a `Styled` group whose span is the **union of the run's node spans** (S3) so
+/// nothing is dropped and the wrapper's span is the true extent of the base. An empty base falls
+/// back to `accent_span` (the accent command's own span) so the synthesised empty `Text` still sits
+/// inside the accent's byte range.
+fn lower_accent_base(arg: Vec<Node>, accent_span: Span) -> Inline {
+    let run_span = arg.iter().map(|n| n.span).reduce(union).unwrap_or(accent_span);
     let mut it = arg.into_iter();
     match (it.next(), it.next()) {
-        (Some(single), None) => lower_inline(single, region),
+        (Some(single), None) => lower_inline(single),
         (Some(first), Some(second)) => {
             // Multi-node base (rare) — keep it faithfully as a Styled group so nothing is dropped.
             let mut rest: Vec<Node> = vec![first, second];
             rest.extend(it);
-            Inline::Styled { command: String::new(), content: lower_inlines(rest, region), span: region }
+            Inline::Styled { command: String::new(), content: lower_inlines(rest), span: run_span }
         }
-        (None, _) => Inline::Text(String::new(), region),
+        (None, _) => Inline::Text(String::new(), accent_span),
     }
 }
 
@@ -1339,15 +1446,15 @@ impl Document {
     /// children. This mirrors the traversal a renderer or a diff would use.
     ///
     /// The traversal covers the **document body** (the core provenance surface). Preamble and
-    /// metadata nodes are *not* walked — they carry only the coarse preamble/body-region span (they
-    /// are not per-node spanned), so including them would add nodes whose spans overlap the whole
-    /// preamble region without improving byte→node resolution; the spec §4 names "body Blocks +
-    /// their Inlines" as the core requirement and that is what we yield.
+    /// metadata nodes are *not* walked — the preamble is classified out of directives and carries a
+    /// preamble-region span rather than per-node body spans, so including it would add nodes whose
+    /// spans overlap the whole preamble region without improving byte→node resolution; the spec §4
+    /// names "body Blocks + their Inlines" as the core requirement and that is what we yield.
     ///
-    /// **Region-coarse spans** (see the D6 module note): each yielded span is the enclosing region
-    /// its node was lowered from, not a precise token range. `walk()` is nonetheless *total* — it
-    /// visits every structural node exactly once — and *bounded*: body depth is capped upstream by
-    /// the parser's `MAX_DEPTH`, so the recursion cannot blow the stack.
+    /// **Precise spans (S3):** each yielded body span is the node's own tight source range (S1/S2
+    /// threaded, S3 propagated). `walk()` is *total* — it visits every structural node exactly once
+    /// — and *bounded*: body depth is capped upstream by the parser's `MAX_DEPTH`, so the recursion
+    /// cannot blow the stack.
     ///
     /// Returned as a materialized `std::vec::IntoIter<NodeRef>` (the simplest total realization of
     /// the `impl Iterator` signature); the whole forest is small relative to the source.
@@ -1365,15 +1472,15 @@ impl Document {
     /// byte (`span.start <= byte < span.end`), or `None` if no walked node covers it. "Narrowest"
     /// is measured by span width `end.saturating_sub(start)` (saturating so the subtraction is
     /// panic-free even on a degenerate `end < start`), with ties broken toward the node visited
-    /// *later* in pre-order — i.e. the deepest descendant, which is the tightest fit when a parent
-    /// and child share a region span.
+    /// *later* in pre-order — i.e. the deepest descendant, the tightest fit when a parent and child
+    /// share a span.
     ///
-    /// **Region-coarse resolution** (see the D6 module note): because D2–D5 spans are
-    /// region-granular, `node_at` resolves to the innermost node *at the current span granularity*,
-    /// not to a precise per-byte leaf. When many siblings share a region span, it returns the
-    /// tightest-covering one; it does **not** claim exact byte→leaf precision — that needs the
-    /// parser to thread exact token spans (future work). Totally panic-free: no `unwrap`/`expect`,
-    /// no unchecked indexing, guarded subtraction.
+    /// **Resolution (S3 precise spans):** body spans are now the nodes' tight source ranges (S3),
+    /// so the narrowest-covering node this returns is the genuine per-token leaf in the common
+    /// case. The *formal* "always resolves to the true leaf" guarantee — plus its dedicated test
+    /// and the removal of this hedging wording — is **S4** (spec §5); S3's contribution is making
+    /// the span values precise. Totally panic-free: no `unwrap`/`expect`, no unchecked indexing,
+    /// guarded subtraction.
     pub fn node_at(&self, byte: usize) -> Option<Provenance<'_>> {
         let mut best: Option<NodeRef<'_>> = None;
         let mut best_width: usize = usize::MAX;
@@ -1382,7 +1489,7 @@ impl Document {
             if span.start <= byte && byte < span.end {
                 let width = span.end.saturating_sub(span.start);
                 // `<=` so a later (deeper, in pre-order) node of equal width wins the tie: the
-                // deepest node sharing a region span is the most specific answer.
+                // deepest node sharing a span is the most specific answer.
                 if best.is_none() || width <= best_width {
                     best = Some(node);
                     best_width = width;
@@ -1986,6 +2093,17 @@ mod tests {
         for block in &doc.body {
             check_block(block, doc.span);
         }
+        // S3 tightening: the containment above is no longer merely region-coarse — the "bold" Text
+        // leaf slices back to EXACTLY its own source, proving the leaf span is the node source
+        // range, not the enclosing region.
+        let bold_leaf = doc
+            .walk()
+            .find_map(|n| match n {
+                NodeRef::Inline(Inline::Text(t, sp)) if t == "bold" => Some(*sp),
+                _ => None,
+            })
+            .expect("a 'bold' Text leaf");
+        assert_eq!(&src[bold_leaf.start..bold_leaf.end], "bold", "S3: leaf span == exact node source");
     }
 
     #[test]
@@ -2674,18 +2792,19 @@ mod tests {
 
     #[test]
     fn capstone_byte_coverage_body_region() {
-        // THE CAPSTONE GUARANTEE, stated HONESTLY at region-coarse granularity:
+        // THE CAPSTONE COVERAGE GUARANTEE (S3-precise spans still tile the body):
         //
         //   For every NON-WHITESPACE byte inside the document *body region*
         //   (`\begin{document}` … `\end{document}`), `node_at(byte).is_some()` — i.e. some walked
         //   node owns it.
         //
-        // We scope the assertion to the body region (not the preamble) because D6's `walk()`
+        // We scope the assertion to the body region (not the preamble) because `walk()`
         // deliberately covers body Blocks + Inlines (the provenance surface the ADJ pipeline
         // consumes); preamble directives (`\documentclass`, `\title`, …) are indexed into
-        // `Preamble`/`Metadata`, which are not per-node walked. Within the body region, the
-        // region-coarse spans still tile every meaningful byte — that is what we prove here, rather
-        // than an aspirational "every source byte, exact leaf" claim the coarse spans can't back.
+        // `Preamble`/`Metadata`, which are not per-node walked. With S3 the body spans are now the
+        // precise per-node ranges (not region-coarse), and they *still* tile every meaningful byte
+        // — coverage is preserved under tightening. The S5 rung will strengthen this to
+        // leaf-tightness (the covering node is the tightest one, no strictly-narrower node exists).
         let doc = parse_document(CAPSTONE_SRC).expect("parse capstone");
 
         let begin = r"\begin{document}";
@@ -2708,5 +2827,226 @@ mod tests {
             );
         }
         assert!(checked > 50, "sanity: the body region should have many non-whitespace bytes, got {checked}");
+    }
+
+    // -- S3: precise Document-fold spans ------------------------------------------------------
+    //
+    // Every BODY Block/Inline that has a real underlying node span now slices back to *exactly*
+    // that node's source substring, and composites carry the union of their children's real spans.
+    // These tests take a known source, build the Document, and assert `&src[node.span]` == the
+    // exact expected substring (the S3 tightness the D6 caveat used to disclaim).
+
+    /// The source substring a span points at.
+    fn slice(src: &str, span: Span) -> &str {
+        &src[span.start..span.end]
+    }
+
+    #[test]
+    fn s3_section_title_inline_slices_to_exact_source() {
+        // The heading title's `Text` inline slices back to exactly "Introduction", not the region.
+        let src = r"\begin{document}\section{Introduction}Body text here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let Block::Section { title, span: sec_span, .. } = &doc.body[0] else {
+            panic!("expected a Section");
+        };
+        // The title's Text inline is tight.
+        let t = title
+            .iter()
+            .find(|i| matches!(i, Inline::Text(txt, _) if txt == "Introduction"))
+            .expect("title Text");
+        assert_eq!(slice(src, inline_span(t)), "Introduction");
+        // The Section's own span is the union of the heading node and its owned children — it
+        // covers from the `\section` command to the end of the last owned block ("here.").
+        let sec_src = slice(src, *sec_span);
+        assert!(sec_src.starts_with(r"\section{Introduction}"), "section span starts at heading: {sec_src:?}");
+        assert!(sec_src.ends_with("Body text here."), "section span ends at last owned content: {sec_src:?}");
+    }
+
+    #[test]
+    fn s3_paragraph_text_run_slices_to_exact_source() {
+        // A `Text` run inside a paragraph slices to exactly its source word(s), and the Paragraph
+        // span is the union of its inlines' spans (min start .. max end).
+        let src = r"\begin{document}widgets everywhere\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let Block::Paragraph(inls, para_span) = &doc.body[0] else {
+            panic!("expected a Paragraph");
+        };
+        // The paragraph span is the union of its inline spans.
+        let union_span = inls.iter().map(inline_span).reduce(union).expect("non-empty");
+        assert_eq!(*para_span, union_span, "paragraph span == union of inline spans");
+        assert_eq!(slice(src, *para_span), "widgets everywhere", "paragraph slices to its content");
+        // A specific Text run slices to exactly its word.
+        let w = inls
+            .iter()
+            .find(|i| matches!(i, Inline::Text(t, _) if t == "widgets"))
+            .expect("widgets Text");
+        assert_eq!(slice(src, inline_span(w)), "widgets");
+    }
+
+    #[test]
+    fn s3_strong_inline_slices_to_whole_construct() {
+        // A composite inline (`\textbf{bold}`) slices to the whole `\textbf{…}` construct, and its
+        // inner `Text` slices to just "bold" — proving the composite ⊇ its precise child.
+        let src = r"\begin{document}see \textbf{bold} now\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let Block::Paragraph(inls, _) = &doc.body[0] else { panic!("expected Paragraph") };
+        let strong = inls.iter().find(|i| matches!(i, Inline::Strong(..))).expect("Strong");
+        assert_eq!(slice(src, inline_span(strong)), r"\textbf{bold}");
+        if let Inline::Strong(children, _) = strong {
+            let inner = children.iter().find(|i| matches!(i, Inline::Text(t, _) if t == "bold")).unwrap();
+            assert_eq!(slice(src, inline_span(inner)), "bold");
+        }
+    }
+
+    #[test]
+    fn s3_figure_caption_slices_to_exact_source() {
+        // A figure's caption content slices to exactly the caption text.
+        let src = r"\begin{document}\begin{figure}\includegraphics{w.png}\caption{A widget}\label{fig:w}\end{figure}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let fig = doc.body.iter().find(|b| matches!(b, Block::Figure { .. })).expect("figure");
+        let Block::Figure { caption, span: fig_span, .. } = fig else { unreachable!() };
+        let cap = caption.as_ref().expect("caption");
+        assert_eq!(slice(src, cap.span), "A widget", "caption span slices to its content");
+        // The figure's own span covers the whole `\begin{figure}…\end{figure}` float.
+        let fig_src = slice(src, *fig_span);
+        assert!(fig_src.starts_with(r"\begin{figure}"), "figure span starts at \\begin: {fig_src:?}");
+        assert!(fig_src.ends_with(r"\end{figure}"), "figure span ends at \\end: {fig_src:?}");
+    }
+
+    #[test]
+    fn s3_table_cell_slices_to_exact_source() {
+        // A tabular cell's `Text` slices to exactly that cell's source token.
+        let src = r"\begin{document}\begin{tabular}{lc}alpha & beta \\ gamma & delta\end{tabular}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let tbl = doc.body.iter().find(|b| matches!(b, Block::Table { .. })).expect("table");
+        let Block::Table { rows, span: tbl_span, .. } = tbl else { unreachable!() };
+        // Find the "gamma" cell's Text run.
+        let mut found = false;
+        for row in rows {
+            for cell in row {
+                for block in cell {
+                    if let Block::Paragraph(inls, _) = block {
+                        if let Some(i) = inls.iter().find(|i| matches!(i, Inline::Text(t, _) if t == "gamma")) {
+                            assert_eq!(slice(src, inline_span(i)), "gamma");
+                            found = true;
+                        }
+                    }
+                }
+            }
+        }
+        assert!(found, "the 'gamma' cell Text run was located");
+        // The table's own span covers the `\begin{tabular}…\end{tabular}` extent.
+        let tbl_src = slice(src, *tbl_span);
+        assert!(tbl_src.starts_with(r"\begin{tabular}"), "table span starts at \\begin{{tabular}}: {tbl_src:?}");
+        assert!(tbl_src.ends_with(r"\end{tabular}"), "table span ends at \\end{{tabular}}: {tbl_src:?}");
+    }
+
+    #[test]
+    fn s3_list_item_span_is_union_of_its_content() {
+        // A list item's span is the union (min start .. max end) of its content blocks' real spans,
+        // and slices back to the item's source extent.
+        let src = r"\begin{document}\begin{itemize}\item first point\item second point\end{itemize}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let list = doc.body.iter().find(|b| matches!(b, Block::List { .. })).expect("list");
+        let Block::List { items, span: list_span, .. } = list else { unreachable!() };
+        for it in items {
+            let body_union = it.body.iter().map(block_span).reduce(union).expect("item has body");
+            assert_eq!(it.span, body_union, "item span == union of its body block spans");
+            // The item slices back to a substring that contains its body text ("first"/"second").
+            let s = slice(src, it.span);
+            assert!(s.contains("point"), "item slices to its content: {s:?}");
+        }
+        // The list's own span covers the `\begin{itemize}…\end{itemize}` extent.
+        let list_src = slice(src, *list_span);
+        assert!(list_src.starts_with(r"\begin{itemize}"), "list span starts at \\begin: {list_src:?}");
+        assert!(list_src.ends_with(r"\end{itemize}"), "list span ends at \\end: {list_src:?}");
+    }
+
+    #[test]
+    fn s3_body_leaf_spans_are_node_source_range_not_region() {
+        // The DEFINITIVE S3 tightness assertion: over a rich body, every leaf Text/Math/CrossRef
+        // inline slices back to EXACTLY its own source substring (== node source range), NOT a
+        // shared enclosing region. Before S3 many of these shared one coarse region span and this
+        // slice would have returned the whole region.
+        let src = concat!(
+            r"\begin{document}",
+            r"\section{Intro}",
+            r"We study \textbf{widgets} and $E=mc^2$ \cite{smith} here.",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+        // Collect leaf inlines and check each slices to its own source.
+        let mut checked_text = false;
+        let mut checked_math = false;
+        let mut checked_ref = false;
+        for n in doc.walk() {
+            if let NodeRef::Inline(i) = n {
+                match i {
+                    Inline::Text(t, sp) if t == "widgets" => {
+                        // "widgets" appears once, inside \textbf{…}; its span is exactly the word.
+                        assert_eq!(slice(src, *sp), "widgets");
+                        checked_text = true;
+                    }
+                    Inline::Math { source, span } if source.contains("E=mc^2") => {
+                        assert_eq!(slice(src, *span), "$E=mc^2$", "inline math slices to the whole island");
+                        checked_math = true;
+                    }
+                    Inline::CrossRef { command, span, .. } if command == "cite" => {
+                        assert_eq!(slice(src, *span), r"\cite{smith}", "cite slices to the whole command");
+                        checked_ref = true;
+                    }
+                    _ => {}
+                }
+            }
+        }
+        assert!(checked_text && checked_math && checked_ref, "all three leaf kinds were located and checked");
+    }
+
+    #[test]
+    fn s3_captioned_table_float_span_covers_caption_bytes() {
+        // A `table` float attaches its caption/label to the inner tabular; the resulting Table's
+        // span is the union of the tabular extent and the float extent, so it covers the caption.
+        let src = concat!(
+            r"\begin{document}",
+            r"\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{Grid}\label{tab:g}\end{table}",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+        let tbl = doc.body.iter().find(|b| matches!(b, Block::Table { caption: Some(_), .. })).expect("captioned table");
+        let Block::Table { span, caption, .. } = tbl else { unreachable!() };
+        let tbl_src = slice(src, *span);
+        // The span covers the whole `\begin{table}…\end{table}` float (so it owns the caption bytes).
+        assert!(tbl_src.starts_with(r"\begin{table}"), "captioned table span starts at the float: {tbl_src:?}");
+        assert!(tbl_src.ends_with(r"\end{table}"), "captioned table span ends at the float: {tbl_src:?}");
+        // The caption's own span is tight — exactly "Grid".
+        assert_eq!(slice(src, caption.as_ref().unwrap().span), "Grid");
+    }
+
+    #[test]
+    fn s3_containment_tightens_to_exact_for_leaf_text() {
+        // The D2-D5 tests asserted child ⊆ region. S3 tightens: a leaf Text's span is EXACTLY its
+        // own source characters (`&src[span] == t`), and strictly tighter than the enclosing body
+        // region — the defining S3 property that the D6 caveat used to disclaim.
+        let src = r"\begin{document}\section{Head}alpha beta gamma\end{document}";
+        let doc = parse_document(src).expect("parse");
+        // The whole body region string, for contrast.
+        let body_region = {
+            let b = src.find(r"\begin{document}").unwrap() + r"\begin{document}".len();
+            let e = src.find(r"\end{document}").unwrap();
+            &src[b..e]
+        };
+        // Every Text leaf slices to EXACTLY its own string content, and is tighter than the region.
+        let mut saw_leaf = false;
+        for n in doc.walk() {
+            if let NodeRef::Inline(Inline::Text(t, sp)) = n {
+                assert_eq!(slice(src, *sp), t, "Text leaf slices to exactly its own content");
+                assert!(
+                    (sp.end - sp.start) < body_region.len(),
+                    "Text leaf span {sp:?} must be strictly tighter than the region"
+                );
+                saw_leaf = true;
+            }
+        }
+        assert!(saw_leaf, "the document has at least one Text leaf");
     }
 }
