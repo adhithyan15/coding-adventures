@@ -280,6 +280,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         YieldExpression(y) => y.cv.clone(),
         AwaitExpression(a) => a.cv.clone(),
         ThisExpression(t) => t.cv.clone(),
+        Super(s) => s.cv.clone(),
         MemberExpression(e) => e.cv.clone(),
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
@@ -1362,6 +1363,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // `this` is a leaf keyword — nothing inside to fold, so it clones
         // through like the literals.
         | Expression::ThisExpression(_)
+        | Expression::Super(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {

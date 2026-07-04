@@ -79,6 +79,7 @@ use coding_adventures_javascript_ast::{
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
+    Super,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1140,6 +1141,7 @@ impl<'a> Emitter<'a> {
             Expression::YieldExpression(y) => self.emit_yield(y),
             Expression::AwaitExpression(a) => self.emit_await(a),
             Expression::ThisExpression(t) => self.emit_this(t),
+            Expression::Super(s) => self.emit_super(s),
         }
         if needs_parens {
             self.write_str(")");
@@ -1637,6 +1639,17 @@ impl<'a> Emitter<'a> {
         self.write_str("this");
     }
 
+    /// `super` — a bare reserved-word keyword, the sibling of `this`. Like
+    /// `this` it carries no operand, so the emit is simply the five
+    /// characters `super` (after recording the source-map anchor). As a
+    /// `PREC_PRIMARY` leaf it is only ever followed by a member/call token
+    /// (`super.x`, `super()`, `super[k]`) or a punctuator, never by another
+    /// word that would fuse, so no trailing separator is needed.
+    fn emit_super(&mut self, s: &Super) {
+        self.maybe_map(&s.cv);
+        self.write_str("super");
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -2013,7 +2026,12 @@ fn expr_prec(e: &Expression) -> u8 {
         // tightest level, like an identifier. It never needs wrapping in any
         // parent (`this.x`, `this()`, `f(this)` are all valid bare), and no
         // operand context ever forces a paren around it.
-        | Expression::ThisExpression(_) => PREC_PRIMARY,
+        | Expression::ThisExpression(_)
+        // `super` is a reserved-word primary, the sibling of `this`: a bare
+        // keyword that binds at the tightest level. It is only ever the object
+        // of a member access or a call callee (`super.m()`, `super[k]`,
+        // `super()`) — all of which compose paren-free at primary strength.
+        | Expression::Super(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
         // Update (`++x` / `x++`) binds a hair tighter than the pure unary
@@ -5103,5 +5121,45 @@ mod tests {
     fn this_under_binary_parent_is_bare() {
         let e = binary(BinaryOperator::Add, this_expr(), num(1.0));
         assert_eq!(emit_expr(e), "this+1;");
+    }
+
+    // =================================================================
+    // Super (`super`) — CLOC12.166
+    // =================================================================
+
+    /// Build a `Super`.
+    fn super_expr() -> Expression {
+        Expression::Super(Super { cv: None })
+    }
+
+    /// `super` — a bare keyword, printed verbatim.
+    #[test]
+    fn super_emits_bare_keyword() {
+        assert_eq!(emit_expr(super_expr()), "super;");
+    }
+
+    /// `super.x` — `super` is a primary, so a member parent needs no parens.
+    #[test]
+    fn super_as_member_object_is_bare() {
+        assert_eq!(emit_expr(member(super_expr(), "x", false)), "super.x;");
+    }
+
+    /// `super()` — as a call callee `super` stays bare (primary strength).
+    #[test]
+    fn super_as_call_callee_is_bare() {
+        assert_eq!(emit_expr(call(super_expr(), vec![])), "super();");
+    }
+
+    /// `super.m()` — a method call off `super` composes without parens.
+    #[test]
+    fn super_method_call_is_bare() {
+        assert_eq!(emit_expr(call(member(super_expr(), "m", false), vec![])), "super.m();");
+    }
+
+    /// `super+1` — even a binary parent leaves the primary `super` bare.
+    #[test]
+    fn super_under_binary_parent_is_bare() {
+        let e = binary(BinaryOperator::Add, super_expr(), num(1.0));
+        assert_eq!(emit_expr(e), "super+1;");
     }
 }

@@ -2137,6 +2137,53 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.166 — `Super` (`super`): atomic node + emit + passes (PR1)
+
+Adds `Expression::Super { cv }` to `javascript-ast` (0.25.0) — the `super`
+keyword, the reserved-word **leaf** sibling of `this`. `super` names the home
+object's prototype (in a method: `super.m()`, `super[k]`) or the superclass
+constructor (in a derived constructor: `super(a, b)`). Like `this`, it is the
+simplest possible node: no operand, no axis, the same shape as `ThisExpression`
+/ `NullLiteral`.
+
+It is modelled as its own variant rather than `Identifier { name: "super" }`
+for the same reason as `this`: `super` is a reserved word, can never be a
+variable name, and the renaming passes must exclude it structurally. `super`
+is *syntactically* restricted — legal only as a member-object or call-callee
+inside a method / derived constructor — but that is the **parser's** concern;
+the AST and emitter treat it as a plain leaf primary and print it wherever it
+is placed.
+
+**Naming — divergence from CLOC02 spec.** CLOC02 §Expression pencilled in
+`Super(SuperExpression)`. The node is named **`Super`** (struct `Super`) to
+match ESTree's node type exactly (ESTree uses bare `"Super"` — note the
+asymmetry with `"ThisExpression"`). The CLOC02 spec line is updated to
+`Super(Super)` to match the implementation.
+
+**Emit (`closure-emitter` 0.30.0).** `emit_super` writes the bare five-character
+keyword. `super` tags at `PREC_PRIMARY` — the tightest level, exactly like
+`this` — so it never needs wrapping in any parent (`super.x`, `super()`,
+`super.m()` all print bare) and never forces a paren around an operand.
+
+**Passes (PATCH bumps).** The three rebuild passes (`constant-fold`, `dce`,
+`fold-control-flow`) clone the leaf through unchanged like the literals;
+`fold-control-flow` also gains a `Super` arm in its `expression_cv` accessor.
+The six traversal passes get a no-op arm (`super` binds/references no ordinary
+identifier and has no sub-expression). Atomic node PR1: node + emit + all nine
+downstream pass arms land together so the workspace never breaks.
+
+### gap-167 — bridge declines `super` (`Super`) — pending (CLOC12.166 PR2)
+
+The `javascript-parser` bridge returns `UnsupportedSyntax { rule: "Super" }`
+(bridge.rs, the `super`-token guard) for the `super` primary, so any file
+containing `super` currently drops to WHITESPACE_ONLY. Like `this` (gap-166,
+resolved) and **unlike `await` (gap-165)**, `super` is already parseable — the
+grammar produces the token the bridge *reaches* and explicitly declines — so
+PR2 is a pure bridge slice with **no grammar work required**: swap the decline
+for `Ok(Expression::Super(Super { cv: … }))`, mirroring the `this` fix. Tracked
+for CLOC12.166 PR2.
+
+
 ## CLOC12.165 — `ThisExpression` (`this`): atomic node + emit + passes (PR1)
 
 Adds `Expression::ThisExpression { cv }` to `javascript-ast` (0.24.0) — the

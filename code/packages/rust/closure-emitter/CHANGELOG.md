@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.30.0] - 2026-07-04
+
+### Added — CLOC12.166: emit `Super` (`super`)
+
+Added `emit_super` (prints the bare keyword `super` after recording its source-map anchor) and classified `Expression::Super` at `PREC_PRIMARY` in `expr_prec` — the sibling of `this`. As a primary leaf it never needs wrapping and never forces a paren around an operand, so `super.m()`, `super[k]`, `super()` compose paren-free. Five unit tests. (CLOC12.166)
+
+
 ## [0.29.1] - 2026-07-04
 
 ### Added — CLOC12.165 PR3: CodePrinter `this` conformance port

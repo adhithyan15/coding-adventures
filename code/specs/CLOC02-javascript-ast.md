@@ -217,7 +217,7 @@ variant to produce.
 pub enum Expression {
     // Primary
     This(ThisExpression),
-    Super(SuperExpression),              // ES2015+
+    Super(Super),                        // ES2015+ (ESTree node type is bare `Super`; CLOC12.166)
     Identifier(Identifier),
     PrivateName(PrivateName),            // ES2022+ (only valid inside class)
     Literal(Literal),
