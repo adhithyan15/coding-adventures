@@ -37,17 +37,22 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
 | **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
-| **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `Node::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `Node::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
+| **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `NodeKind::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `NodeKind::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
 | **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; coarse (region-granular) spans | ✅ |
 | **D3 sectioning fold** | folds the flat block stream into the **nested sectioning forest**: each heading OWNS the run of following blocks up to the next heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`, via `rank(level)`); deeper headings nest. A trailing `\label{key}` is hoisted onto its section's new `label` field. Applies to every block-list (top-level + environment/list/table bodies). Total & panic-free; `to_latex` fixed point; `flatten(fold(flat)) == flat` property test; folded-section span = union of heading ∪ children spans | ✅ |
 | **D4 metadata** | extracts `\title`/`\author{A \and B}`/`\date` and the `abstract` env into a typed `Metadata` record on `Document`, as an **additive projection** — the underlying nodes stay in `preamble`/`body`, so `to_latex` round-trips unchanged and re-parsing repopulates the same `Metadata` (fixed point). Both preamble and body scanned; first title/date wins; every `\author` (each `\and`-split) contributes; `\maketitle` is a metadata no-op. Total & panic-free; never fabricated. (Inline normalization — `\textbf`/`\emph`/`\texttt`/`$…$`/`\ref`/accents — already lands in D2/D3's `lower_inline`.) | ✅ |
 | **D5 floats/code/display-math** | specializes the generic environment fold by name: `figure`/`figure*` → `Block::Figure` and `table`/`table*` → the inner `Block::Table`, each with `\caption{…}` → `Caption` + a hoisted `\label`; `verbatim`/`lstlisting` → `Block::CodeBlock` (raw text kept unparsed); `equation`/`align`/`gather`/… → `Block::DisplayMath` (source kept, delegated to the math frontend on demand); `quote`/`quotation` → `Block::Quote`; any other env → recursed `Block::Environment`. `to_latex` fixed point; total & panic-free; coarse spans | ✅ |
 | **D6 provenance API (capstone)** | the byte-provenance surface: `Document::walk()` — a pre-order, depth-first `impl Iterator<Item = NodeRef>` over every body block + nested inline; `Document::node_at(byte)` — the innermost walked node whose span contains a source byte, returned as `Provenance { node, span }`; `NodeRef::{span,kind}`. A capstone real-paper corpus (article + abstract + tabular + itemize + inline/display math + figure+caption+label + `\cite`) proves a `to_latex` fixed point, a non-panicking `walk()`, and **byte coverage**: every non-whitespace body-region byte is owned by ≥1 walked node. Panic-free (`saturating_sub`); honestly **region-coarse** (no exact byte→leaf claim). | ✅ |
+| **LTXDOC02 S1 — spanned L1 nodes** | `Node` restructured to `{ kind: NodeKind, span: Span }`; `parse()` threads each token's exact byte span onto the node it builds, so `&src[node.span()]` slices back to the node's own source (`\textbf{x}`, `{…}` incl. braces, `$…$` incl. delimiters, `\begin{env}…\end{env}`, a `Text` run's exact chars). Span is orthogonal to shape; `PartialEq` ignores it (round-trip = fixed point **modulo spans**); `Unsupported`'s bespoke tuple folded onto the uniform `Node.span`. `to_latex` unchanged. The one parser-level rung of the precise-spans arc (recognition-pass + Document-fold precision = S2/S3). | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
 tables/lists (D1) → preamble/body skeleton (D2) → sectioning forest (D3) → metadata + inline
 normalization (D4) → floats/code/display-math (D5) → provenance API + byte-coverage capstone (D6).
+The **precise per-token spans** arc (LTXDOC02) is now under way: **S1 ships spanned L1 nodes** —
+`parse()` retains the exact byte range it already computed for each node — with S2 (spanned
+recognition passes), S3 (precise Document fold), and S4/S5 (precise `node_at` + coverage capstone,
+retiring the region-coarse caveat) to follow.
 
 ## The Document layer (LTXDOC01)
 
@@ -168,11 +173,15 @@ node — future work, not overclaimed here.
 ## Usage
 
 ```rust
-use latex::{parse, Node};
+use latex::{parse, NodeKind};
 
 let doc = parse(r"Let $x$ be \textbf{bold}.").unwrap();
-assert!(matches!(doc[0], Node::Text(_)));                       // "Let"
-assert!(doc.iter().any(|n| matches!(n, Node::Math { .. })));    // $x$
+assert!(matches!(doc[0].kind, NodeKind::Text(_)));                       // "Let"
+assert!(doc.iter().any(|n| matches!(n.kind, NodeKind::Math { .. })));    // $x$
+// every node carries its exact source byte span (LTXDOC02 S1):
+let src = r"Let $x$ be \textbf{bold}.";
+let d = parse(src).unwrap();
+assert_eq!(&src[d[0].span().start..d[0].span().end], "Let");
 // round-trips: parsing the rendered AST yields the same AST
 assert_eq!(parse(&latex::document_to_latex(&doc)).unwrap(), doc);
 ```
@@ -250,24 +259,24 @@ built-in starter set; `#n` inside a math island is not substituted in L4a.
 ### Verbatim (L5a/L5b)
 
 `\verb<delim>…<delim>` (and the `\verb*` visible-space variant) read their body **raw** — the
-tokenizer suspends catcodes inside, so `{ } $ # \` are literal — producing a `Node::Verb`
+tokenizer suspends catcodes inside, so `{ } $ # \` are literal — producing a `NodeKind::Verb`
 that round-trips:
 
 ```rust
 use latex::{parse, Node};
 
 let doc = parse(r"call \verb|x{y}$z| now").unwrap();
-assert!(matches!(doc[1], Node::Verb { delim: '|', .. }));   // body "x{y}$z" kept verbatim
+assert!(matches!(doc[1].kind, NodeKind::Verb { delim: '|', .. }));   // body "x{y}$z" kept verbatim
 ```
 
 The **`verbatim` environment** (and `verbatim*`) reads its whole body raw — newlines included —
-up to the matching `\end{verbatim}`, producing a `Node::VerbatimEnv` that also round-trips:
+up to the matching `\end{verbatim}`, producing a `NodeKind::VerbatimEnv` that also round-trips:
 
 ```rust
 use latex::{parse, Node};
 
 let doc = parse("\\begin{verbatim}let x = {1};\n$y$\\end{verbatim}").unwrap();
-assert!(matches!(doc[0], Node::VerbatimEnv { .. }));   // body kept literal, $/{} not special
+assert!(matches!(doc[0].kind, NodeKind::VerbatimEnv { .. }));   // body kept literal, $/{} not special
 ```
 
 Only `verbatim`/`verbatim*` divert to raw scanning; every other `\begin{…}` is parsed
@@ -277,14 +286,14 @@ and an unterminated `verbatim` environment are spanned errors — never a mis-pa
 ### Text accents (L5c)
 
 `recognize_accents` is an opt-in pass (like `expand`) that folds an accent control sequence
-and the character it accents into a `Node::Accent` — both spellings, `\'e` and `\'{e}`,
+and the character it accents into a `NodeKind::Accent` — both spellings, `\'e` and `\'{e}`,
 recognize to the same node and round-trip:
 
 ```rust
 use latex::{parse, recognize_accents, Node};
 
 let doc = recognize_accents(parse(r"caf\'e").unwrap());
-assert!(matches!(doc[1], Node::Accent { .. }));   // é over `e`; "caf" stays text
+assert!(matches!(doc[1].kind, NodeKind::Accent { .. }));   // é over `e`; "caf" stays text
 ```
 
 Recognized: `\'  \`  \^  \"  \~  \=  \.` and `\u \v \H \c \d \b \r \t`. A dangling accent (no
@@ -301,19 +310,19 @@ round-trip intact:
 use latex::{parse, recognize_structure, Node, SectionLevel};
 
 let doc = recognize_structure(parse(r"\section*{Intro} see \ref{fig:1}").unwrap());
-assert!(matches!(doc[0], Node::Section { level: SectionLevel::Section, starred: true, .. }));
-assert!(doc.iter().any(|n| matches!(n, Node::CrossRef { .. })));   // \ref{fig:1}
+assert!(matches!(doc[0].kind, NodeKind::Section { level: SectionLevel::Section, starred: true, .. }));
+assert!(doc.iter().any(|n| matches!(n.kind, NodeKind::CrossRef { .. })));   // \ref{fig:1}
 ```
 
 Recognized:
 
-- **`Node::Section`** — `\part`/`\chapter`/`\section`/`\subsection`/`\subsubsection`/
+- **`NodeKind::Section`** — `\part`/`\chapter`/`\section`/`\subsection`/`\subsubsection`/
   `\paragraph`/`\subparagraph`, the starred `\section*{…}` form (the `*` sibling is folded),
   and the optional short TOC title `\section[Short]{Title}`;
-- **`Node::CrossRef`** — `\label`/`\ref`/`\eqref`/`\pageref`/`\autoref`/`\nameref`/`\cite`/
+- **`NodeKind::CrossRef`** — `\label`/`\ref`/`\eqref`/`\pageref`/`\autoref`/`\nameref`/`\cite`/
   `\citep`/`\citet` (the `\cite[note]{key}` optional is kept);
-- **`Node::Preamble`** — `\documentclass`/`\usepackage`/`\RequirePackage` with `[options]`;
-- **`Node::Styled`** — argument-form font commands (`\textbf`, `\textit`, `\texttt`, `\emph`,
+- **`NodeKind::Preamble`** — `\documentclass`/`\usepackage`/`\RequirePackage` with `[options]`;
+- **`NodeKind::Styled`** — argument-form font commands (`\textbf`, `\textit`, `\texttt`, `\emph`,
   `\underline`, …).
 
 A command that does not match its expected shape (a sectioning command with no title, a
@@ -334,22 +343,22 @@ body on the `&` alignment tab and the `\\` row break, and a list body on `\item`
 use latex::{parse, recognize_tables, Node, ListKind};
 
 let table = recognize_tables(parse(r"\begin{tabular}{lc}a & b \\ c & d\end{tabular}").unwrap());
-assert!(matches!(table[0], Node::Tabular { .. }));   // 2×2 grid, col_spec = Some("lc")
+assert!(matches!(table[0].kind, NodeKind::Tabular { .. }));   // 2×2 grid, col_spec = Some("lc")
 
 let list = recognize_tables(parse(r"\begin{itemize}\item one\item two\end{itemize}").unwrap());
-assert!(matches!(list[0], Node::List { kind: ListKind::Itemize, .. }));
+assert!(matches!(list[0].kind, NodeKind::List { kind: ListKind::Itemize, .. }));
 ```
 
 Recognized:
 
-- **`Node::Tabular { col_spec, rows }`** — `tabular`/`tabular*`; `rows[r][c]` is the node
+- **`NodeKind::Tabular { col_spec, rows }`** — `tabular`/`tabular*`; `rows[r][c]` is the node
   sequence of cell `c` in row `r`; `col_spec` is the column spec captured verbatim (`None` if
   absent). A `tabular*` `{width}` argument is dropped, keeping the trailing `{colspec}`.
-- **`Node::List { kind, items }`** — `itemize`/`enumerate`/`description`; each `ListItem` carries
+- **`NodeKind::List { kind, items }`** — `itemize`/`enumerate`/`description`; each `ListItem` carries
   its `\item[term]` optional `label` and the `body` up to the next `\item`.
 
 The pass is **total and infallible**: ragged rows (differing cell counts) are preserved exactly,
-and a list with stray content before its first `\item` is left as a generic `Node::Environment`
+and a list with stray content before its first `\item` is left as a generic `NodeKind::Environment`
 — never an error here (truly malformed input — unbalanced braces, `\begin`/`\end` mismatch — is
 already rejected by the L1 parser with a spanned error, upstream of this pass). It is idempotent
 and round-trips: `recognize_tables(parse(&n.to_latex())) == [n]`. All three recognition passes

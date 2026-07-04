@@ -25,24 +25,24 @@
 //!    roots, scripts, big operators, functions, fenced groups, relations, and **math
 //!    environments** (`matrix`/`pmatrix`/`cases`/`aligned`/… with `&` and `\\`) →
 //!    [`MathNode`], with precedence and [`MathNode::to_latex`] round-tripping.
-//!    [`Node::parsed_math`] parses a [`Node::Math`] island on demand. **Implemented
+//!    [`Node::parsed_math`] parses a [`NodeKind::Math`] island on demand. **Implemented
 //!    (this release).**
 //! 4. [`expand`] — an opt-in **macro pass** over the document tree: registers
 //!    `\newcommand`/`\renewcommand`/`\providecommand` (positional `#1`..`#9`) and replaces
 //!    uses by their bounded, recursively-expanded bodies. **Implemented (L4a).**
-//! 5. **Verbatim** — `\verb`/`\verb*` ([`Node::Verb`]) and the `verbatim`/`verbatim*`
-//!    environment ([`Node::VerbatimEnv`]) read their bodies **raw** (catcodes suspended).
+//! 5. **Verbatim** — `\verb`/`\verb*` ([`NodeKind::Verb`]) and the `verbatim`/`verbatim*`
+//!    environment ([`NodeKind::VerbatimEnv`]) read their bodies **raw** (catcodes suspended).
 //!    **Implemented (L5a/L5b).**
 //! 6. [`recognize_accents`] — an opt-in pass folding text accents (`\'e`, `\c{c}`) into
-//!    [`Node::Accent`]. **Implemented (L5c).**
+//!    [`NodeKind::Accent`]. **Implemented (L5c).**
 //! 7. [`recognize_structure`] — an opt-in pass classifying generic commands into structure
-//!    nodes: sectioning ([`Node::Section`]), cross-refs/citations ([`Node::CrossRef`]),
-//!    preamble directives ([`Node::Preamble`]), and argument-form font commands
-//!    ([`Node::Styled`]). **Implemented (L5d).**
+//!    nodes: sectioning ([`NodeKind::Section`]), cross-refs/citations ([`NodeKind::CrossRef`]),
+//!    preamble directives ([`NodeKind::Preamble`]), and argument-form font commands
+//!    ([`NodeKind::Styled`]). **Implemented (L5d).**
 //! 8. [`recognize_tables`] — an opt-in pass folding document-mode `tabular`/`tabular*` grids into
-//!    [`Node::Tabular`] (splitting the body on `&`/`\\`) and the list environments
-//!    `itemize`/`enumerate`/`description` into [`Node::List`] (splitting on `\item`). Total and
-//!    infallible; leaves questionable input as its generic [`Node::Environment`]. **Implemented (D1).**
+//!    [`NodeKind::Tabular`] (splitting the body on `&`/`\\`) and the list environments
+//!    `itemize`/`enumerate`/`description` into [`NodeKind::List`] (splitting on `\item`). Total and
+//!    infallible; leaves questionable input as its generic [`NodeKind::Environment`]. **Implemented (D1).**
 //! 9. [`LatexMath`] — the `math-frontend` adapter: implements `math_frontend::MathFrontend`,
 //!    lifting a math island's [`MathNode`] into the neutral `MathExpr`, so LaTeX plugs into the
 //!    pluggable-frontend registry ([`registry`] / [`register_latex`]). **Implemented (L6).**
@@ -62,10 +62,10 @@
 //! ## Example
 //!
 //! ```
-//! use latex::{parse, parse_math, Node, MathNode};
+//! use latex::{parse, parse_math, NodeKind, MathNode};
 //! let doc = parse(r"Let $x$ be \textbf{bold}.").unwrap();
-//! assert!(matches!(doc[0], Node::Text(_)));
-//! assert!(doc.iter().any(|n| matches!(n, Node::Math { .. })));
+//! assert!(matches!(doc[0].kind, NodeKind::Text(_)));
+//! assert!(doc.iter().any(|n| matches!(n.kind, NodeKind::Math { .. })));
 //!
 //! let m = parse_math(r"\frac{12 \times 15}{3}").unwrap();
 //! assert!(matches!(m, MathNode::Frac(..)));
@@ -93,7 +93,7 @@ mod frontend;
 #[cfg(feature = "frontend")]
 pub use frontend::{register_latex, registry, LatexMath};
 
-pub use ast::{document_to_latex, ListItem, ListKind, Node, SectionLevel};
+pub use ast::{document_to_latex, ListItem, ListKind, Node, NodeKind, SectionLevel};
 pub use document::{
     build_document, parse_document, Block, Caption, DocListItem, Document, DocumentClass, Inline,
     Metadata, NodeRef, Package, Preamble, Provenance,

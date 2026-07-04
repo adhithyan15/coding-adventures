@@ -66,7 +66,7 @@
 //! spans**: the round-trip test strips spans to a projection before comparing (see
 //! [`Document::strip_spans`]).
 
-use crate::ast::{ListItem, ListKind, Node, SectionLevel};
+use crate::ast::{ListItem, ListKind, Node, NodeKind, SectionLevel};
 use crate::error::ParseError;
 use crate::token::Span;
 use crate::{document_to_latex, parse, recognize_accents, recognize_structure, recognize_tables};
@@ -549,7 +549,7 @@ pub fn build_document(nodes: Vec<Node>, src: &str) -> Document {
     let mut found_document = false;
     for node in nodes {
         if !found_document {
-            if let Node::Environment { name, body, .. } = &node {
+            if let NodeKind::Environment { name, body, .. } = &node.kind {
                 if name == "document" {
                     body_nodes = body.clone();
                     found_document = true;
@@ -618,7 +618,7 @@ fn extract_metadata(
 
     // The `abstract` environment is a body construct only.
     for node in body_nodes {
-        if let Node::Environment { name, body, .. } = node {
+        if let NodeKind::Environment { name, body, .. } = &node.kind {
             if name == "abstract" && meta.abstract_.is_none() {
                 meta.abstract_ = Some(lower_blocks(body.clone(), body_region));
             }
@@ -635,7 +635,7 @@ fn scan_title_author_date(nodes: &[Node], region: Span, meta: &mut Metadata) {
         // These directives survive D2 lowering as plain `Node::Command`s (they are not among the
         // constructs `recognize_structure` folds), so we match the raw command with exactly one
         // mandatory argument and no optional argument.
-        if let Node::Command { name, optional, arguments } = node {
+        if let NodeKind::Command { name, optional, arguments } = &node.kind {
             if !optional.is_empty() {
                 continue; // A bracketed form isn't the plain \title{…}/\author{…}/\date{…} we mean.
             }
@@ -676,7 +676,7 @@ fn split_on_and(arg: &[Node]) -> Vec<Vec<Node>> {
     let mut groups: Vec<Vec<Node>> = Vec::new();
     let mut current: Vec<Node> = Vec::new();
     for node in arg {
-        if matches!(node, Node::Command { name, arguments, .. } if name == "and" && arguments.is_empty())
+        if matches!(&node.kind, NodeKind::Command { name, arguments, .. } if name == "and" && arguments.is_empty())
         {
             groups.push(std::mem::take(&mut current));
         } else {
@@ -695,8 +695,8 @@ fn classify_preamble(nodes: Vec<Node>, span: Span) -> Preamble {
     let mut raw: Vec<Node> = Vec::new();
 
     for node in nodes {
-        match &node {
-            Node::Preamble { command, options, name } if command == "documentclass" => {
+        match &node.kind {
+            NodeKind::Preamble { command, options, name } if command == "documentclass" => {
                 // Only the first `\documentclass` counts (LaTeX allows exactly one); a stray
                 // second one is kept in `raw` so it is not silently lost.
                 if document_class.is_none() {
@@ -709,7 +709,7 @@ fn classify_preamble(nodes: Vec<Node>, span: Span) -> Preamble {
                     raw.push(node);
                 }
             }
-            Node::Preamble { command, options, name }
+            NodeKind::Preamble { command, options, name }
                 if command == "usepackage" || command == "RequirePackage" =>
             {
                 packages.push(Package {
@@ -758,7 +758,7 @@ fn lower_blocks(nodes: Vec<Node>, region: Span) -> Vec<Block> {
         if is_block_node(&node) {
             flush(&mut pending, &mut blocks, region);
             blocks.push(lower_block(node, region));
-        } else if matches!(node, Node::Par) {
+        } else if matches!(node.kind, NodeKind::Par) {
             // A blank-line paragraph break closes the current paragraph.
             flush(&mut pending, &mut blocks, region);
         } else {
@@ -1052,21 +1052,23 @@ fn walk_inline<'a>(inline: &'a Inline, out: &mut Vec<NodeRef<'a>>) {
 /// Does this node lower to a [`Block`] of its own (rather than joining an inline run)?
 fn is_block_node(node: &Node) -> bool {
     matches!(
-        node,
-        Node::Section { .. }
-            | Node::List { .. }
-            | Node::Tabular { .. }
-            | Node::Math { display: true, .. }
-            | Node::Environment { .. }
-            | Node::VerbatimEnv { .. }
+        node.kind,
+        NodeKind::Section { .. }
+            | NodeKind::List { .. }
+            | NodeKind::Tabular { .. }
+            | NodeKind::Math { display: true, .. }
+            | NodeKind::Environment { .. }
+            | NodeKind::VerbatimEnv { .. }
     )
 }
 
 /// Lower a single block-level node into its [`Block`], recursing into child node-lists. `region`
 /// is the enclosing span the block (and, coarsely, its descendants) inherit.
 fn lower_block(node: Node, region: Span) -> Block {
-    match node {
-        Node::Section { level, starred, short, title } => Block::Section {
+    // Destructure on the kind; the fallback needs the whole node, so re-wrap it there.
+    let Node { kind, span } = node;
+    match kind {
+        NodeKind::Section { level, starred, short, title } => Block::Section {
             level,
             numbered: !starred,
             title: lower_inlines(title, region),
@@ -1075,12 +1077,12 @@ fn lower_block(node: Node, region: Span) -> Block {
             body: Vec::new(), // filled by fold_sections (D3): the run of blocks this heading owns.
             span: region,
         },
-        Node::List { kind, items } => Block::List {
+        NodeKind::List { kind, items } => Block::List {
             kind,
             items: items.into_iter().map(|it| lower_list_item(it, region)).collect(),
             span: region,
         },
-        Node::Tabular { col_spec, rows } => Block::Table {
+        NodeKind::Tabular { col_spec, rows } => Block::Table {
             col_spec,
             rows: rows
                 .into_iter()
@@ -1090,16 +1092,16 @@ fn lower_block(node: Node, region: Span) -> Block {
             label: None,
             span: region,
         },
-        Node::Math { display: true, content } => Block::DisplayMath { source: content, span: region },
+        NodeKind::Math { display: true, content } => Block::DisplayMath { source: content, span: region },
         // A `verbatim`/`verbatim*` environment is lexed raw (catcodes suspended) into a
         // `VerbatimEnv` node; its content is source code, not marked-up LaTeX, so we keep it
         // **unparsed** as a `CodeBlock` (D5).
-        Node::VerbatimEnv { content, .. } => Block::CodeBlock { verbatim: content, span: region },
+        NodeKind::VerbatimEnv { content, .. } => Block::CodeBlock { verbatim: content, span: region },
         // Every `\begin{env}…\end{env}` (floats, quotes, display-math envs, code listings, or an
         // unknown env) is classified by name in `lower_environment` (D5).
-        Node::Environment { name, body, .. } => lower_environment(name, body, region),
+        NodeKind::Environment { name, body, .. } => lower_environment(name, body, region),
         // Anything else with no block model of its own — carried through verbatim (never dropped).
-        other => Block::Raw(other, region),
+        other => Block::Raw(Node::new(other, span), region),
     }
 }
 
@@ -1208,7 +1210,7 @@ fn extract_caption_label(content: &mut Vec<Block>, region: Span) -> (Option<Capt
             let mut kept: Vec<Inline> = Vec::with_capacity(inlines.len());
             for inline in std::mem::take(inlines) {
                 match &inline {
-                    Inline::Raw(Node::Command { name, arguments, optional }, _)
+                    Inline::Raw(Node { kind: NodeKind::Command { name, arguments, optional }, .. }, _)
                         if name == "caption" && optional.is_empty() && caption.is_none() =>
                     {
                         // `\caption{X}` — lower its mandatory argument to inlines.
@@ -1255,30 +1257,32 @@ fn lower_inlines(nodes: Vec<Node>, region: Span) -> Vec<Inline> {
 /// Lower a single node into its [`Inline`]. Anything without an inline meaning becomes
 /// [`Inline::Raw`] — never dropped, never a panic. `region` is the enclosing span.
 fn lower_inline(node: Node, region: Span) -> Inline {
-    match node {
-        Node::Text(t) => Inline::Text(t, region),
-        Node::Space => Inline::Space(region),
-        Node::Styled { command, content } => match command.as_str() {
+    // Destructure on the kind; the fallback needs the whole node, so re-wrap it there.
+    let Node { kind, span } = node;
+    match kind {
+        NodeKind::Text(t) => Inline::Text(t, region),
+        NodeKind::Space => Inline::Space(region),
+        NodeKind::Styled { command, content } => match command.as_str() {
             "textbf" => Inline::Strong(lower_inlines(content, region), region),
             "emph" | "textit" => Inline::Emph(lower_inlines(content, region), region),
             "texttt" => Inline::Code(render_nodes(&content), region),
             _ => Inline::Styled { command, content: lower_inlines(content, region), span: region },
         },
-        Node::Math { display: false, content } => Inline::Math { source: content, span: region },
-        Node::CrossRef { command, note, target } => Inline::CrossRef {
+        NodeKind::Math { display: false, content } => Inline::Math { source: content, span: region },
+        NodeKind::CrossRef { command, note, target } => Inline::CrossRef {
             command,
             note: note.map(|n| lower_inlines(n, region)),
             target: render_nodes(&target),
             span: region,
         },
-        Node::Accent { accent, arg } => Inline::Accent {
+        NodeKind::Accent { accent, arg } => Inline::Accent {
             accent,
             base: Box::new(lower_accent_base(arg, region)),
             span: region,
         },
         // Everything else (a display Math slipped into an inline run, an unhandled command, …)
         // is carried through verbatim.
-        other => Inline::Raw(other, region),
+        other => Inline::Raw(Node::new(other, span), region),
     }
 }
 
@@ -2314,7 +2318,7 @@ mod tests {
         assert_eq!(inline_text(title), "T");
         // Additive projection: the `\title` node is NOT removed — it survives in preamble.raw.
         assert!(
-            doc.preamble.raw.iter().any(|n| matches!(n, Node::Command { name, .. } if name == "title")),
+            doc.preamble.raw.iter().any(|n| matches!(&n.kind, NodeKind::Command { name, .. } if name == "title")),
             "the \\title node stays in preamble.raw (additive projection)"
         );
     }
@@ -2373,7 +2377,7 @@ mod tests {
         // `\maketitle` is a no-op for metadata (nothing to capture) but is carried through the body.
         assert!(
             doc.body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
-                if inls.iter().any(|i| matches!(i, Inline::Raw(Node::Command { name, .. }, _)
+                if inls.iter().any(|i| matches!(i, Inline::Raw(Node { kind: NodeKind::Command { name, .. }, .. }, _)
                     if name == "maketitle")))),
             "\\maketitle is carried through as a Raw inline (no metadata side effect)"
         );
@@ -2445,13 +2449,13 @@ mod tests {
             // caption nor the label lingers as body content.
             assert!(
                 content.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
-                    if inls.iter().any(|i| matches!(i, Inline::Raw(Node::Command { name, .. }, _)
+                    if inls.iter().any(|i| matches!(i, Inline::Raw(Node { kind: NodeKind::Command { name, .. }, .. }, _)
                         if name == "includegraphics")))),
                 "the \\includegraphics body is preserved"
             );
             assert!(
                 !content.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
-                    if inls.iter().any(|i| matches!(i, Inline::Raw(Node::Command { name, .. }, _)
+                    if inls.iter().any(|i| matches!(i, Inline::Raw(Node { kind: NodeKind::Command { name, .. }, .. }, _)
                         if name == "caption")))),
                 "the \\caption marker is lifted out of the body"
             );

@@ -45,7 +45,19 @@
 //! they have no single wrapped argument — modeling them as an argument node would misrepresent
 //! their scope. They round-trip fine as plain commands.
 
-use crate::ast::{Node, SectionLevel};
+use crate::ast::{Node, NodeKind, SectionLevel};
+use crate::token::Span;
+
+/// The smallest span covering both `a` and `b` — composes a synthesised node's span from its
+/// constituents (S1: union-of-children; precise per-construct spans are S2's job).
+fn union(a: Span, b: Span) -> Span {
+    Span::new(a.start.min(b.start), a.end.max(b.end))
+}
+
+/// The span covering a whole node sequence (empty → `fallback`): the union of every node's span.
+fn seq_span(nodes: &[Node], fallback: Span) -> Span {
+    nodes.iter().map(|n| n.span).reduce(union).unwrap_or(fallback)
+}
 
 /// Map a sectioning control word to its [`SectionLevel`], or `None` if `name` is not a
 /// sectioning command.
@@ -101,17 +113,25 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
     let mut out: Vec<Node> = Vec::with_capacity(nodes.len());
     let mut i = 0;
     while i < nodes.len() {
-        if let Node::Command { name, optional, arguments } = &nodes[i] {
+        // These recognized nodes fold an existing `Node::Command` (and, for the starred form,
+        // its `*` and group siblings). The synthesised node keeps the command's own span — it
+        // already covers `\name[opt]{arg}` — extended over any folded siblings.
+        let cmd_span = nodes[i].span;
+        if let NodeKind::Command { name, optional, arguments } = &nodes[i].kind {
             // --- Sectioning: \section{T} / \section*{T} / \section[s]{T} -------------------
             if let Some(level) = section_level(name) {
                 if let Some(first) = arguments.first() {
                     // Captured-argument form (no `*` intervened): \section[short]{title}.
                     let short = optional.first().map(|o| recognize_structure(o.clone()));
                     let title = recognize_structure(first.clone());
-                    out.push(Node::Section { level, starred: false, short, title });
+                    out.push(Node::new(
+                        NodeKind::Section { level, starred: false, short, title },
+                        cmd_span,
+                    ));
                     // Any further captured groups were not part of the heading — keep them.
                     for extra in arguments.iter().skip(1) {
-                        out.push(Node::Group(recognize_structure(extra.clone())));
+                        let sp = seq_span(extra, cmd_span);
+                        out.push(Node::group(recognize_structure(extra.clone()), sp));
                     }
                     i += 1;
                     continue;
@@ -119,7 +139,12 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
                 // No captured argument: try the starred form `\section*{title}`.
                 if optional.is_empty() {
                     if let Some(title) = starred_title(&nodes, i) {
-                        out.push(Node::Section { level, starred: true, short: None, title });
+                        // Span covers the command through the folded `*` and title group.
+                        let span = union(cmd_span, nodes[i + 2].span);
+                        out.push(Node::new(
+                            NodeKind::Section { level, starred: true, short: None, title },
+                            span,
+                        ));
                         i += 3; // command + Text("*") + Group
                         continue;
                     }
@@ -135,9 +160,13 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
                 if let Some(first) = arguments.first() {
                     let note = optional.first().map(|o| recognize_structure(o.clone()));
                     let target = recognize_structure(first.clone());
-                    out.push(Node::CrossRef { command: name.clone(), note, target });
+                    out.push(Node::new(
+                        NodeKind::CrossRef { command: name.clone(), note, target },
+                        cmd_span,
+                    ));
                     for extra in arguments.iter().skip(1) {
-                        out.push(Node::Group(recognize_structure(extra.clone())));
+                        let sp = seq_span(extra, cmd_span);
+                        out.push(Node::group(recognize_structure(extra.clone()), sp));
                     }
                     i += 1;
                     continue;
@@ -152,9 +181,13 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
                 if let Some(first) = arguments.first() {
                     let options = optional.first().map(|o| recognize_structure(o.clone()));
                     let name_arg = recognize_structure(first.clone());
-                    out.push(Node::Preamble { command: name.clone(), options, name: name_arg });
+                    out.push(Node::new(
+                        NodeKind::Preamble { command: name.clone(), options, name: name_arg },
+                        cmd_span,
+                    ));
                     for extra in arguments.iter().skip(1) {
-                        out.push(Node::Group(recognize_structure(extra.clone())));
+                        let sp = seq_span(extra, cmd_span);
+                        out.push(Node::group(recognize_structure(extra.clone()), sp));
                     }
                     i += 1;
                     continue;
@@ -167,7 +200,7 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
             // --- Argument-form font commands: \textbf{x}, \emph{x} -----------------------
             if is_style(name) && optional.is_empty() && arguments.len() == 1 {
                 let content = recognize_structure(arguments[0].clone());
-                out.push(Node::Styled { command: name.clone(), content });
+                out.push(Node::new(NodeKind::Styled { command: name.clone(), content }, cmd_span));
                 i += 1;
                 continue;
             }
@@ -185,9 +218,9 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
 /// untouched). Only the canonical `\section*{title}` shape folds — unusual spacings such as
 /// `\section* foo` are deliberately left alone, since they round-trip fine as plain nodes.
 fn starred_title(nodes: &[Node], i: usize) -> Option<Vec<Node>> {
-    match nodes.get(i + 1) {
-        Some(Node::Text(star)) if star == "*" => match nodes.get(i + 2) {
-            Some(Node::Group(inner)) => Some(recognize_structure(inner.clone())),
+    match nodes.get(i + 1).map(|n| &n.kind) {
+        Some(NodeKind::Text(star)) if star == "*" => match nodes.get(i + 2).map(|n| &n.kind) {
+            Some(NodeKind::Group(inner)) => Some(recognize_structure(inner.clone())),
             _ => None,
         },
         _ => None,
@@ -197,14 +230,16 @@ fn starred_title(nodes: &[Node], i: usize) -> Option<Vec<Node>> {
 /// Recurse structure recognition into a node's child sequences without treating the node
 /// itself as a structure command (mirrors `text::recurse`).
 fn recurse(node: Node) -> Node {
-    match node {
-        Node::Group(inner) => Node::Group(recognize_structure(inner)),
-        Node::Command { name, optional, arguments } => Node::Command {
+    // Recursion regroups children but never changes the node's extent, so its span is kept.
+    let span = node.span;
+    let kind = match node.kind {
+        NodeKind::Group(inner) => NodeKind::Group(recognize_structure(inner)),
+        NodeKind::Command { name, optional, arguments } => NodeKind::Command {
             name,
             optional: optional.into_iter().map(recognize_structure).collect(),
             arguments: arguments.into_iter().map(recognize_structure).collect(),
         },
-        Node::Environment { name, optional, arguments, body } => Node::Environment {
+        NodeKind::Environment { name, optional, arguments, body } => NodeKind::Environment {
             name,
             optional: optional.into_iter().map(recognize_structure).collect(),
             arguments: arguments.into_iter().map(recognize_structure).collect(),
@@ -212,30 +247,31 @@ fn recurse(node: Node) -> Node {
         },
         // Recurse into the parts of already-recognized structure nodes too, so the pass is
         // idempotent and composes with itself (e.g. a section title containing a `\ref`).
-        Node::Section { level, starred, short, title } => Node::Section {
+        NodeKind::Section { level, starred, short, title } => NodeKind::Section {
             level,
             starred,
             short: short.map(recognize_structure),
             title: recognize_structure(title),
         },
-        Node::CrossRef { command, note, target } => Node::CrossRef {
+        NodeKind::CrossRef { command, note, target } => NodeKind::CrossRef {
             command,
             note: note.map(recognize_structure),
             target: recognize_structure(target),
         },
-        Node::Preamble { command, options, name } => Node::Preamble {
+        NodeKind::Preamble { command, options, name } => NodeKind::Preamble {
             command,
             options: options.map(recognize_structure),
             name: recognize_structure(name),
         },
-        Node::Styled { command, content } => Node::Styled {
+        NodeKind::Styled { command, content } => NodeKind::Styled {
             command,
             content: recognize_structure(content),
         },
         // leaves (Text, Space, Par, Math, Comment, Verb, VerbatimEnv, Accent, Active,
         // Unsupported) carry no further structure to fold here
         other => other,
-    }
+    };
+    Node::new(kind, span)
 }
 
 #[cfg(test)]
@@ -246,6 +282,16 @@ mod tests {
     /// Parse and recognize structure, for concise assertions.
     fn st(src: &str) -> Vec<Node> {
         recognize_structure(parse(src).expect("parse"))
+    }
+
+    /// The node kinds only (spans checked separately) — for structural assertions.
+    fn kinds(nodes: &[Node]) -> Vec<NodeKind> {
+        nodes.iter().map(|n| n.kind.clone()).collect()
+    }
+
+    /// A dummy span for building expected `NodeKind` trees (equality ignores spans).
+    fn z() -> Span {
+        Span::new(0, 0)
     }
 
     /// The L5d round-trip: rendering a recognized tree and re-recognizing yields the same tree.
@@ -259,12 +305,12 @@ mod tests {
     #[test]
     fn plain_section() {
         assert_eq!(
-            st(r"\section{Intro}"),
-            vec![Node::Section {
+            kinds(&st(r"\section{Intro}")),
+            vec![NodeKind::Section {
                 level: SectionLevel::Section,
                 starred: false,
                 short: None,
-                title: vec![Node::Text("Intro".into())],
+                title: vec![Node::text("Intro", z())],
             }]
         );
     }
@@ -273,26 +319,35 @@ mod tests {
     fn starred_section_folds_the_star() {
         // \section*{Intro} → starred heading; the intervening Text("*") is consumed.
         assert_eq!(
-            st(r"\section*{Intro}"),
-            vec![Node::Section {
+            kinds(&st(r"\section*{Intro}")),
+            vec![NodeKind::Section {
                 level: SectionLevel::Section,
                 starred: true,
                 short: None,
-                title: vec![Node::Text("Intro".into())],
+                title: vec![Node::text("Intro", z())],
             }]
         );
+    }
+
+    #[test]
+    fn section_span_slices_back_to_source() {
+        // A recognized section covers its full source extent, incl. the starred `*` and group.
+        let src = r"\section*{Intro}";
+        let n = st(src);
+        assert!(matches!(n[0].kind, NodeKind::Section { starred: true, .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], src);
     }
 
     #[test]
     fn section_with_short_toc_title() {
         // \section[Intro]{Introduction} → optional short TOC title preserved.
         assert_eq!(
-            st(r"\section[Intro]{Introduction}"),
-            vec![Node::Section {
+            kinds(&st(r"\section[Intro]{Introduction}")),
+            vec![NodeKind::Section {
                 level: SectionLevel::Section,
                 starred: false,
-                short: Some(vec![Node::Text("Intro".into())]),
-                title: vec![Node::Text("Introduction".into())],
+                short: Some(vec![Node::text("Intro", z())]),
+                title: vec![Node::text("Introduction", z())],
             }]
         );
     }
@@ -309,8 +364,8 @@ mod tests {
             (r"\subparagraph{a}", SectionLevel::Subparagraph),
         ];
         for (src, level) in cases {
-            match &st(src)[0] {
-                Node::Section { level: got, .. } => assert_eq!(*got, level, "{src}"),
+            match &st(src)[0].kind {
+                NodeKind::Section { level: got, .. } => assert_eq!(*got, level, "{src}"),
                 other => panic!("expected Section for {src}, got {other:?}"),
             }
         }
@@ -320,27 +375,27 @@ mod tests {
     fn section_without_title_stays_command() {
         // A bare `\section` (nothing accent-able / no title) is left untouched.
         assert_eq!(
-            st(r"\section"),
-            vec![Node::Command { name: "section".into(), optional: vec![], arguments: vec![] }]
+            kinds(&st(r"\section")),
+            vec![NodeKind::Command { name: "section".into(), optional: vec![], arguments: vec![] }]
         );
     }
 
     #[test]
     fn cross_references() {
         assert_eq!(
-            st(r"\label{eq:1}"),
-            vec![Node::CrossRef {
+            kinds(&st(r"\label{eq:1}")),
+            vec![NodeKind::CrossRef {
                 command: "label".into(),
                 note: None,
-                target: vec![Node::Text("eq:1".into())],
+                target: vec![Node::text("eq:1", z())],
             }]
         );
         assert_eq!(
-            st(r"\ref{eq:1}"),
-            vec![Node::CrossRef {
+            kinds(&st(r"\ref{eq:1}")),
+            vec![NodeKind::CrossRef {
                 command: "ref".into(),
                 note: None,
-                target: vec![Node::Text("eq:1".into())],
+                target: vec![Node::text("eq:1", z())],
             }]
         );
     }
@@ -348,11 +403,11 @@ mod tests {
     #[test]
     fn citation_with_note() {
         // \cite[p.~5]{foo} keeps the optional note.
-        match &st(r"\cite[p]{foo}")[0] {
-            Node::CrossRef { command, note, target } => {
+        match &st(r"\cite[p]{foo}")[0].kind {
+            NodeKind::CrossRef { command, note, target } => {
                 assert_eq!(command, "cite");
-                assert_eq!(note, &Some(vec![Node::Text("p".into())]));
-                assert_eq!(target, &vec![Node::Text("foo".into())]);
+                assert_eq!(note, &Some(vec![Node::text("p", z())]));
+                assert_eq!(target, &vec![Node::text("foo", z())]);
             }
             other => panic!("expected CrossRef, got {other:?}"),
         }
@@ -361,19 +416,19 @@ mod tests {
     #[test]
     fn preamble_directives() {
         assert_eq!(
-            st(r"\documentclass[a4paper]{article}"),
-            vec![Node::Preamble {
+            kinds(&st(r"\documentclass[a4paper]{article}")),
+            vec![NodeKind::Preamble {
                 command: "documentclass".into(),
-                options: Some(vec![Node::Text("a4paper".into())]),
-                name: vec![Node::Text("article".into())],
+                options: Some(vec![Node::text("a4paper", z())]),
+                name: vec![Node::text("article", z())],
             }]
         );
         assert_eq!(
-            st(r"\usepackage{amsmath}"),
-            vec![Node::Preamble {
+            kinds(&st(r"\usepackage{amsmath}")),
+            vec![NodeKind::Preamble {
                 command: "usepackage".into(),
                 options: None,
-                name: vec![Node::Text("amsmath".into())],
+                name: vec![Node::text("amsmath", z())],
             }]
         );
     }
@@ -381,15 +436,15 @@ mod tests {
     #[test]
     fn styled_font_commands() {
         assert_eq!(
-            st(r"\textbf{bold}"),
-            vec![Node::Styled {
+            kinds(&st(r"\textbf{bold}")),
+            vec![NodeKind::Styled {
                 command: "textbf".into(),
-                content: vec![Node::Text("bold".into())],
+                content: vec![Node::text("bold", z())],
             }]
         );
         assert_eq!(
-            st(r"\emph{x}"),
-            vec![Node::Styled { command: "emph".into(), content: vec![Node::Text("x".into())] }]
+            kinds(&st(r"\emph{x}")),
+            vec![NodeKind::Styled { command: "emph".into(), content: vec![Node::text("x", z())] }]
         );
     }
 
@@ -397,17 +452,17 @@ mod tests {
     fn font_declaration_stays_command() {
         // \bfseries is a declaration (no wrapped argument) — left as a plain command.
         assert_eq!(
-            st(r"\bfseries"),
-            vec![Node::Command { name: "bfseries".into(), optional: vec![], arguments: vec![] }]
+            kinds(&st(r"\bfseries")),
+            vec![NodeKind::Command { name: "bfseries".into(), optional: vec![], arguments: vec![] }]
         );
     }
 
     #[test]
     fn recognition_recurses_into_groups_and_titles() {
         // A \ref inside a section title is itself recognized.
-        match &st(r"\section{see \ref{x}}")[0] {
-            Node::Section { title, .. } => {
-                assert!(title.iter().any(|n| matches!(n, Node::CrossRef { .. })));
+        match &st(r"\section{see \ref{x}}")[0].kind {
+            NodeKind::Section { title, .. } => {
+                assert!(title.iter().any(|n| matches!(n.kind, NodeKind::CrossRef { .. })));
             }
             other => panic!("expected Section, got {other:?}"),
         }
@@ -417,8 +472,8 @@ mod tests {
     fn surrounding_text_is_preserved() {
         // Heading then a paragraph: the text after the heading stays put.
         let nodes = st("\\section{Intro}\nhello");
-        assert!(matches!(nodes[0], Node::Section { .. }));
-        assert!(nodes.iter().any(|n| matches!(n, Node::Text(t) if t.contains("hello"))));
+        assert!(matches!(nodes[0].kind, NodeKind::Section { .. }));
+        assert!(nodes.iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t.contains("hello"))));
     }
 
     #[test]
