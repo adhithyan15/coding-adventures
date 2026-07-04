@@ -1,5 +1,39 @@
 # Changelog — `twig-aot`
 
+## 0.27.0 — 2026-07-03 — E4-dyn E4d-4: runtime (branch-selected) strings on native
+
+Completes the E4-dyn backend ladder: the runtime branch-selected-string foothold
+now runs on the **native aarch64 + x86_64** columns, so the E4-dyn foothold is
+proven on **all seven backends**.
+
+**How native strings already worked.** `lower_string_literals_for_aot` lowers each
+`str_const` to a `push_aot_string_literal` block — an `alloc_bytes` heap buffer with
+the E5/E4d-1 `[i64 len][bytes]` layout (`field_store` len at offset 0, `store_byte`s
+at offset 8+) — followed by `mov dest = buf`, so the variable's stack slot already
+holds the buffer's **address** (a runtime handle). And `print_str`/`str_len` already
+have a runtime branch that reads the length header from the buffer at run time
+(`field_load src[0]`), used today for runtime string *parameters*.
+
+**The bug for a branch-selected local.** `str_const` also registered every `dest`
+in the compile-time `strings` map (last-writer-wins). So for `A$` assigned `"LO"` in
+one block and `"HI"` in another, `print_str A$` took the *static-length* path using
+whichever literal was written last — printing the wrong length whenever the two
+branches' strings differ in length.
+
+**The fix.** Add `collect_runtime_str_vars_for_aot` (same basic-block promotion rule
+as `iir-to-llvm`'s `collect_slot_vars` and `iir-to-wasm`'s `collect_runtime_str_vars`:
+a `str`-typed dest appearing in >1 basic block). In `str_const`, a promoted var is
+**not** registered in `strings`, so every downstream `print_str`/`str_len`/`str_eq`/
+`str_cmp` on it takes its existing runtime path. No backend change is needed — the
+buffer + slot address were already correct — so one change covers both aarch64 and
+x86_64. Single-assignment (and straight-line-reassigned) strings are unchanged.
+
+Two unit tests: `branch_selected_string_reads_length_at_runtime` (differing lengths
+`"LONGER"`/`"HI"` → asserts the emitted `field_load A[0]` runtime length read) and
+`straight_line_reassignment_keeps_static_length` (one block → no `field_load`). The
+`lang-aot` E4-dyn foothold matrix cell adds `NativeAot` and now proves the runtime
+string on all 7 backends (aarch64 run-verified locally; x86_64 on CI).
+
 ## 0.26.0 — 2026-07-03 — E4-dyn E4d-1: runtime string helpers
 
 First step of the **E4-dyn** arc (`code/specs/lang-full-e4-dyn-strings.md`):
