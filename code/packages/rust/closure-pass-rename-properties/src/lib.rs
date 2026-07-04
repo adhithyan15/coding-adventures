@@ -1145,6 +1145,8 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` holds no property name to classify or rewrite.
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             classify_expr(&be.left, cls);
@@ -1428,6 +1430,8 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` holds no property name to classify or rewrite.
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             rewrite_expr(&mut be.left, map);

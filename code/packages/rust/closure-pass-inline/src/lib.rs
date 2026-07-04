@@ -437,6 +437,9 @@ fn expr_node_count(expr: &Expression) -> usize {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a single leaf keyword — it contributes one node like the
+        // other leaves (which this arm counts as 0 sub-nodes).
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => 0,
         Expression::BinaryExpression(be) => expr_node_count(&be.left) + expr_node_count(&be.right),
         Expression::LogicalExpression(le) => expr_node_count(&le.left) + expr_node_count(&le.right),
@@ -748,6 +751,12 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — it binds/references no identifier and has
+        // no sub-expression, so these traversals do nothing for it. (It is
+        // deliberately NOT treated as a freely-substitutable primary: `this` is
+        // bound at the call site, so the inliner's triv-/pure-expression
+        // predicates leave it conservative.)
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             collect_binding_idents_expr(&be.left, out);
@@ -1028,6 +1037,12 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — it binds/references no identifier and has
+        // no sub-expression, so these traversals do nothing for it. (It is
+        // deliberately NOT treated as a freely-substitutable primary: `this` is
+        // bound at the call site, so the inliner's triv-/pure-expression
+        // predicates leave it conservative.)
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             tally_expr(&be.left, cand, t);
@@ -1364,6 +1379,12 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — it binds/references no identifier and has
+        // no sub-expression, so these traversals do nothing for it. (It is
+        // deliberately NOT treated as a freely-substitutable primary: `this` is
+        // bound at the call site, so the inliner's triv-/pure-expression
+        // predicates leave it conservative.)
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             changed |= inline_in_expr(&mut be.left, cand);
@@ -1490,6 +1511,12 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — it binds/references no identifier and has
+        // no sub-expression, so these traversals do nothing for it. (It is
+        // deliberately NOT treated as a freely-substitutable primary: `this` is
+        // bound at the call site, so the inliner's triv-/pure-expression
+        // predicates leave it conservative.)
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             substitute(&mut be.left, map);
@@ -2004,6 +2031,12 @@ fn expr_collect_mutated_params(
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — it binds/references no identifier and has
+        // no sub-expression, so these traversals do nothing for it. (It is
+        // deliberately NOT treated as a freely-substitutable primary: `this` is
+        // bound at the call site, so the inliner's triv-/pure-expression
+        // predicates leave it conservative.)
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
     }
 }
@@ -3348,6 +3381,12 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — it binds/references no identifier and has
+        // no sub-expression, so these traversals do nothing for it. (It is
+        // deliberately NOT treated as a freely-substitutable primary: `this` is
+        // bound at the call site, so the inliner's triv-/pure-expression
+        // predicates leave it conservative.)
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             rename_in_expr(&mut be.left, map);

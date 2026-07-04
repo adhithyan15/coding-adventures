@@ -111,6 +111,16 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   member/call/new parents wrap the whole await (`(await p).x`, `(await f)()`).
   Node + `closure-emitter` + all pass traversals land in one atomic PR; the
   bridge-enable + conformance port follow.
+- `ThisExpression` (CLOC12.165) — the `this` keyword: a reserved-word **leaf**
+  primary that reads the current execution context's `this` binding.
+  `ThisExpression { cv }` — no operand, the same shape as `NullLiteral` /
+  `UndefinedLiteral`. Modelled as its own node rather than
+  `Identifier { name: "this" }` so the renaming passes never touch it (a
+  reserved word can never be a variable name). It tags at `PREC_PRIMARY` and
+  prints as the bare keyword — it never needs wrapping (`this.x`, `this()`,
+  `f(this)` all print bare) and never forces a paren around an operand. Node +
+  `closure-emitter` + all pass traversals land in one atomic PR; the
+  bridge-enable + conformance port follow.
 
 ## What's coming (follow-up PRs)
 

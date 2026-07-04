@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.20.8] - 2026-07-04
+
+### Changed — CLOC12.165: `ThisExpression` exhaustive-match arm
+
+Added an `Expression::ThisExpression` case so the pass stays exhaustive over the new `javascript-ast` leaf variant (part of the CLOC12.165 atomic node PR1). `this` is a leaf keyword with no sub-expression and is never itself a constant, so it clones through unchanged alongside the literals. No behaviour change to any existing node.
+
+
 ## [0.20.7] - 2026-07-04
 
 ### Changed — CLOC12.164: `AwaitExpression` exhaustive-match arm

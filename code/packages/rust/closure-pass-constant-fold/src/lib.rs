@@ -500,6 +500,9 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a leaf keyword — nothing inside to fold, and it is never
+        // itself a constant, so it passes through unchanged like the literals.
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => fold_binary(b, st),

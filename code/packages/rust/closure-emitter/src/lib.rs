@@ -78,7 +78,7 @@ use coding_adventures_javascript_ast::{
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
-    TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression,
+    TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1139,6 +1139,7 @@ impl<'a> Emitter<'a> {
             Expression::SpreadElement(s) => self.emit_spread(s),
             Expression::YieldExpression(y) => self.emit_yield(y),
             Expression::AwaitExpression(a) => self.emit_await(a),
+            Expression::ThisExpression(t) => self.emit_this(t),
         }
         if needs_parens {
             self.write_str(")");
@@ -1626,6 +1627,16 @@ impl<'a> Emitter<'a> {
         self.emit_expression_inner(&a.argument, PREC_UNARY);
     }
 
+    /// `this` — a bare reserved-word keyword. It carries no operand, so the
+    /// emit is simply the four characters `this` (after recording the source
+    /// map anchor). No trailing separator is needed: as a `PREC_PRIMARY`
+    /// leaf `this` is only ever followed by a member/call token (`this.x`,
+    /// `this()`) or a punctuator, never by another word that would fuse.
+    fn emit_this(&mut self, t: &ThisExpression) {
+        self.maybe_map(&t.cv);
+        self.write_str("this");
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -1997,7 +2008,12 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::ArrayExpression(_)
         | Expression::ObjectExpression(_)
         | Expression::CallExpression(_)
-        | Expression::MemberExpression(_) => PREC_PRIMARY,
+        | Expression::MemberExpression(_)
+        // `this` is a reserved-word primary — a bare keyword that binds at the
+        // tightest level, like an identifier. It never needs wrapping in any
+        // parent (`this.x`, `this()`, `f(this)` are all valid bare), and no
+        // operand context ever forces a paren around it.
+        | Expression::ThisExpression(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
         // Update (`++x` / `x++`) binds a hair tighter than the pure unary
@@ -5047,5 +5063,45 @@ mod tests {
     #[test]
     fn await_nested_is_bare() {
         assert_eq!(emit_expr(aw(aw(ident("p")))), "await await p;");
+    }
+
+    // =================================================================
+    // ThisExpression (`this`) — CLOC12.165
+    // =================================================================
+
+    /// Build a `ThisExpression`.
+    fn this_expr() -> Expression {
+        Expression::ThisExpression(ThisExpression { cv: None })
+    }
+
+    /// `this` — a bare keyword, printed verbatim.
+    #[test]
+    fn this_emits_bare_keyword() {
+        assert_eq!(emit_expr(this_expr()), "this;");
+    }
+
+    /// `this.x` — `this` is a primary, so a member parent needs no parens.
+    #[test]
+    fn this_as_member_object_is_bare() {
+        assert_eq!(emit_expr(member(this_expr(), "x", false)), "this.x;");
+    }
+
+    /// `this()` — as a call callee `this` stays bare (primary strength).
+    #[test]
+    fn this_as_call_callee_is_bare() {
+        assert_eq!(emit_expr(call(this_expr(), vec![])), "this();");
+    }
+
+    /// `f(this)` — `this` as a call argument is a plain primary operand.
+    #[test]
+    fn this_as_call_argument_is_bare() {
+        assert_eq!(emit_expr(call(ident("f"), vec![this_expr()])), "f(this);");
+    }
+
+    /// `this+1` — even a binary parent leaves the primary `this` bare.
+    #[test]
+    fn this_under_binary_parent_is_bare() {
+        let e = binary(BinaryOperator::Add, this_expr(), num(1.0));
+        assert_eq!(emit_expr(e), "this+1;");
     }
 }

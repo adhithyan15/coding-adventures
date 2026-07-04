@@ -2135,3 +2135,48 @@ Until then, PR1's node + the **PR3 conformance port**
 the same staging used for the substitution-template slice (gap-157), which also
 shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
+
+
+## CLOC12.165 — `ThisExpression` (`this`): atomic node + emit + passes (PR1)
+
+Adds `Expression::ThisExpression { cv }` to `javascript-ast` (0.24.0) — the
+`this` keyword, a reserved-word **leaf** primary that reads the current
+execution context's `this` binding. It is the simplest node in the recent
+run: no operand, no axis, the same shape as `NullLiteral` / `UndefinedLiteral`.
+
+It is modelled as its own variant rather than `Identifier { name: "this" }`
+because `this` is a reserved word — it can never be a variable name, so the
+renaming passes (`rename`, `rename-globals`, `rename-properties`) must never
+touch it. A dedicated variant lets those passes exclude it structurally instead
+of string-comparing every identifier name.
+
+**Emit (`closure-emitter` 0.29.0).** `emit_this` writes the bare four-character
+keyword. `this` tags at `PREC_PRIMARY` — the tightest level — so it never needs
+wrapping in any parent (`this.x`, `this()`, `f(this)`, `this+1` all print bare)
+and never forces a paren around an operand.
+
+**Passes (PATCH bumps).** The three rebuild passes (`constant-fold`, `dce`,
+`fold-control-flow`) clone the leaf through unchanged like the literals;
+`fold-control-flow` also gains a `ThisExpression` arm in its `expression_cv`
+accessor. The six traversal passes get a no-op arm (`this` binds/references no
+identifier and has no sub-expression). In `inline`, `this` is deliberately left
+OUT of the trivial-/pure-expression predicates: `this` is bound at the *call
+site*, so treating it as a freely-substitutable primary would be unsound; the
+inliner handles it conservatively.
+
+### gap-166 — bridge declines `this` (`ThisExpression`) — **OPEN (PR2, viable)**
+
+The `javascript-parser` bridge does not yet convert a `this` node to
+`Expression::ThisExpression`; it returns `UnsupportedSyntax { rule:
+"ThisExpression" }`, so any file containing `this` drops to WHITESPACE_ONLY. The
+atomic node PR (CLOC12.165 PR1) landed the node + emit + pass traversals so the
+typed AST and every downstream pass can already represent and print a `this`.
+
+**Unlike `await` (gap-165), `this` is already parseable.** The grammar produces
+a `this` node that the bridge *reaches* and explicitly declines — the bridge
+already matches `"this"` in its decline list, so the parser recognises it as a
+primary expression today. PR2 (bridge-enable) is therefore a straightforward
+bridge slice — convert the `this` grammar node to `Expression::ThisExpression`
+and add a closurec end-to-end diff fixture — with **no grammar work required**.
+The **PR3 conformance port** (`code_printer_this_test.rs`) exercises the emitter
+via hand-constructed AST in the meantime.

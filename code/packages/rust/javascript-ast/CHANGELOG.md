@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.24.0] - 2026-07-04
+
+### Added — CLOC12.165: `Expression::ThisExpression` (`this`)
+
+Added `Expression::ThisExpression` variant + `ThisExpression { cv }` struct — the `this` keyword, a reserved-word **leaf** primary (same shape as `NullLiteral` / `UndefinedLiteral`, no operand). Modelled as its own node rather than `Identifier { name: "this" }` so renaming passes never touch it. Re-exported from the crate root. Atomic node PR (PR1): the node + `closure-emitter` emit + all nine downstream pass match-arms land together so the workspace never breaks. (CLOC12.165)
+
+
 ## [0.23.0] - 2026-07-04
 
 ### Added — CLOC12.164: `Expression::AwaitExpression` (`await x`)
