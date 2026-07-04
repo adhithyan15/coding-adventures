@@ -21,7 +21,7 @@
 //! | `EmptyModule`       | Module has zero functions |
 //! | `EmptyFunction`     | A function has zero instructions |
 //! | `UntypedInstruction`| `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`   | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
+//! | `UnsupportedType`   | `type_hint` is unsupported (`"str"` except `str_const`/`str_concat`/`str_slice`/`call`/`ret`, or unsupported `ref<...>`) |
 //! | `UnsupportedOp`     | op is a runtime/memory/IO/GC opcode (list below) |
 //!
 //! **Importantly, float type hints and float constant operands are SUPPORTED.**
@@ -287,12 +287,19 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // `"f32"` and `"f64"` are intentionally NOT rejected here.  The JVM
             // has first-class float/double operations (`fload`, `dload`, `fadd`,
             // `dadd`, etc.) that this backend emits.
+            // E4-dyn: a `str` VALUE is a `java.lang.String`, so it may also flow
+            // through a `call` (a `str` return / call result) and a `ret` (a
+            // `str`-returning method) — an ALGOL `string procedure`'s returned
+            // runtime string.
             if instr.type_hint == "str"
-                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+                && !matches!(
+                    instr.op.as_str(),
+                    "str_const" | "str_concat" | "str_slice" | "call" | "ret"
+                )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const, str_concat, and str_slice literals are supported in this JVM backend",
+                     only str_const, str_concat, str_slice literals and str call/ret are supported in this JVM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")

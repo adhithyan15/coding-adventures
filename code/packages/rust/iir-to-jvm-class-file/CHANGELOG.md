@@ -1,5 +1,21 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.28.0] — 2026-07-04 (LANG-FULL E4-dyn: `str` as a return value / call result)
+
+A runtime string that arrives as a function **return value** or **call result**
+— an ALGOL `string procedure`'s returned runtime string — now lowers on the JVM.
+
+The `str` value model is already a `java.lang.String` reference, so a `str`
+parameter, a `str`-returning method, and a `str` call result already lower
+correctly. The only gap was the validator, which rejected a `str` type_hint on
+any op other than `str_const`/`str_concat`/`str_slice`. A `call` (str return /
+call result) and a `ret` (str-returning method) carry the `String`, so both are
+now accepted. (Diagnosed with a probe: the failure was a validation rejection,
+matching the WASM E4d-3b pattern — not a lowering gap.)
+
+Unit test `validate_accepts_str_on_call_and_ret`. The `lang-aot` ALGOL
+string-procedure matrix cell now runs on **all seven backends**.
+
 ## [0.27.0] — 2026-06-30 (BA-INPUT: JVM wide i64 model fixes for `input_i64`)
 
 Two correctness fixes that together allow Dartmouth BASIC `INPUT X` programs to
