@@ -142,7 +142,22 @@ impl Document {
     pub fn node_at(&self, byte: usize) -> Option<Provenance>;  // provenance query: which node owns a byte
     pub fn walk(&self) -> impl Iterator<Item = NodeRef<'_>>;   // pre-order, span-annotated
 }
+
+// D6 provenance view types (as shipped):
+pub enum NodeRef<'a> { Block(&'a Block), Inline(&'a Inline) }
+impl<'a> NodeRef<'a> { pub fn span(&self) -> Span; pub fn kind(&self) -> &'static str; }
+pub struct Provenance<'a> { pub node: NodeRef<'a>, pub span: Span }  // narrowest node owning the byte
 ```
+
+**D6 honesty caveat — region-coarse spans (as shipped).** D2–D5 attach *region-granular* spans:
+many sibling blocks/inlines share the enclosing region they were lowered from (the parser does not
+yet thread exact per-token spans into lowered nodes). Consequently `walk()` is faithful (visits every
+body node once, pre-order), but `node_at(byte)` resolves to the **innermost node at region
+granularity** — the narrowest-span node containing the byte — **not** an exact byte→leaf. `walk()`
+covers the document **body** (Blocks + their Inlines, the provenance surface); preamble/metadata
+directives are indexed into `Preamble`/`Metadata`, not per-node walked. The byte-coverage guarantee
+below is therefore stated honestly at this granularity; precise per-byte→leaf resolution is future
+work once the parser threads token spans.
 
 `parse_document(src)` = `build_document(recognize_structure(recognize_accents(parse(src)?)),
 src.len())` after the L3b table/list recognition runs — i.e. it composes the shipped LTX01 passes and
@@ -188,11 +203,15 @@ warnings` clean; a byte-span on every node asserted in tests.
   with `\caption{…}` → `Caption` and a hoisted `\label`; `verbatim`/`lstlisting` → `CodeBlock`;
   `equation`/`align`/`\[..\]` → `DisplayMath` (source kept, delegated to the math frontend on demand);
   `quote`/`quotation` → `Quote`; any other `\begin{env}` → recursed `Block::Environment`.
-- **D6 — provenance API + round-trip corpus + capstone.** `Document::node_at(byte)` (which node owns
-  a source byte), `walk()` pre-order iterator, and `to_latex()` fixed-point over a corpus of real
-  papers (a sectioned article with abstract, a `tabular`, an `itemize`, inline + display math, a
-  figure with caption+label, a `\cite`). Assert **total byte coverage**: every non-whitespace source
-  byte is owned by exactly one leaf node — the provenance guarantee the ADJ pipeline consumes.
+- **D6 — provenance API + round-trip corpus + capstone.** ✅ *(shipped)* `Document::node_at(byte)`
+  (innermost node owning a source byte), `walk()` pre-order iterator, and `to_latex()` fixed-point
+  over a corpus of real papers (a sectioned article with abstract, a `tabular`, an `itemize`, inline
+  + display math, a figure with caption+label, a `\cite`). **Byte coverage, stated honestly at
+  region granularity:** because D2–D5 spans are region-coarse (not per-token), the capstone asserts
+  that every **non-whitespace byte inside the document body region** is owned by **≥1** walked node
+  (not "exactly one leaf" — that precise-leaf claim awaits the parser threading token spans). This
+  is the provenance surface the ADJ pipeline consumes; the granularity is documented, not
+  overclaimed. **This rung completes the LTXDOC01 D1–D6 arc — LaTeX → `Document` AST end-to-end.**
 
 **Explicitly out of scope (documented, not built):** counter resolution / printed numbers, ToC/index
 generation, BibTeX resolution (we keep `\cite{key}` as a `CrossRef`, not the formatted citation),

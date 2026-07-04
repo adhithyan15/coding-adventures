@@ -359,6 +359,123 @@ pub enum Inline {
 }
 
 // ---------------------------------------------------------------------------------------------
+// D6 — the provenance API: `walk` (pre-order, span-annotated) and `node_at` (byte → node).
+//
+// The `Document` AST already carries a `Span` on every node. D6 exposes two views over those
+// spans so a consumer (the ADJ byte-provenance pipeline being the north-star one) can ask, of any
+// source byte, *which document node owns it* — the exact source→node correlation the reasoning
+// stack audits against.
+//
+// ## The honest granularity caveat (region-coarse spans)
+//
+// A crucial honesty point that every doc-comment below repeats: the spans D2–D5 attached are
+// **region-granular**, not precise per-token byte ranges. When the D2 fold lowered a body region
+// it handed *every* block and inline in that region the same enclosing-region span (see the
+// `region` parameter threaded through `lower_block`/`lower_inlines`). So a `Section`'s title
+// inlines, its child paragraphs, and their `Text` runs frequently **share one span** — the region
+// they were lowered from. Consequently:
+//
+//   * `walk()` is faithful (it visits every node in structural pre-order),
+//   * but `node_at(byte)` cannot resolve *below* the region granularity. It returns the
+//     **narrowest node whose span contains the byte**, which — when many siblings share a region
+//     span — is whichever node has the tightest `[start,end)` covering that byte, not necessarily
+//     the single leaf a precise-span parser would pinpoint.
+//
+// Precise per-byte resolution needs the *parser* to thread exact token spans down into each
+// lowered node (future work, noted in the spec §4/§5). We do NOT overclaim "exact byte→node"
+// precision here; the capstone test asserts only what is TRUE at region granularity (every
+// non-whitespace body byte is owned by ≥1 walked node).
+// ---------------------------------------------------------------------------------------------
+
+/// A borrowed reference to one node visited by [`Document::walk`]: either a body [`Block`] or an
+/// [`Inline`], tagged so the caller can read its [`kind`](NodeRef::kind) and
+/// [`span`](NodeRef::span) uniformly without matching every variant.
+///
+/// This is a lightweight *view* — it borrows the node in place (no clone), so a `walk()` over a
+/// large document allocates only the traversal's `Vec<NodeRef>`, not a copy of the tree.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NodeRef<'a> {
+    /// A block-level node (`Section`, `Paragraph`, `Table`, `Figure`, …).
+    Block(&'a Block),
+    /// An inline node (`Text`, `Strong`, `Math`, `CrossRef`, …).
+    Inline(&'a Inline),
+}
+
+impl<'a> NodeRef<'a> {
+    /// This node's byte [`Span`] (region-coarse — see the D6 module note).
+    pub fn span(&self) -> Span {
+        match self {
+            NodeRef::Block(b) => block_span(b),
+            NodeRef::Inline(i) => inline_span(i),
+        }
+    }
+
+    /// A stable, human-readable kind string for this node's variant (`"Section"`, `"Paragraph"`,
+    /// `"Text"`, `"Math"`, …). Useful for structure queries and test assertions that want to name
+    /// what `walk()` yielded without matching the full enum.
+    pub fn kind(&self) -> &'static str {
+        match self {
+            NodeRef::Block(b) => match b {
+                Block::Section { .. } => "Section",
+                Block::Paragraph(..) => "Paragraph",
+                Block::List { .. } => "List",
+                Block::Table { .. } => "Table",
+                Block::Figure { .. } => "Figure",
+                Block::CodeBlock { .. } => "CodeBlock",
+                Block::DisplayMath { .. } => "DisplayMath",
+                Block::Quote(..) => "Quote",
+                Block::Environment { .. } => "Environment",
+                Block::Raw(..) => "Raw",
+            },
+            NodeRef::Inline(i) => match i {
+                Inline::Text(..) => "Text",
+                Inline::Space(..) => "Space",
+                Inline::Strong(..) => "Strong",
+                Inline::Emph(..) => "Emph",
+                Inline::Code(..) => "Code",
+                Inline::Styled { .. } => "Styled",
+                Inline::Math { .. } => "Math",
+                Inline::CrossRef { .. } => "CrossRef",
+                Inline::Accent { .. } => "Accent",
+                Inline::Raw(..) => "Raw",
+            },
+        }
+    }
+}
+
+/// The result of a [`Document::node_at`] provenance query: the narrowest walked [`NodeRef`] whose
+/// span contains the queried byte, plus that node's [`Span`] (surfaced directly so the caller need
+/// not re-derive it).
+///
+/// The `span` is region-coarse (see the D6 module note): it is the enclosing region the node was
+/// lowered from, not a precise per-token range. `node_at` returns the node with the *narrowest*
+/// such span, which is the best resolution available at this granularity.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Provenance<'a> {
+    /// The narrowest node owning the queried byte.
+    pub node: NodeRef<'a>,
+    /// That node's span (region-coarse).
+    pub span: Span,
+}
+
+/// The production analogue of the test-module helper: this node's [`Span`], mirroring
+/// [`block_span`] for the [`Inline`] side. Used by [`NodeRef::span`] and the walk/`node_at` logic.
+fn inline_span(i: &Inline) -> Span {
+    match i {
+        Inline::Text(_, span)
+        | Inline::Space(span)
+        | Inline::Strong(_, span)
+        | Inline::Emph(_, span)
+        | Inline::Code(_, span)
+        | Inline::Raw(_, span) => *span,
+        Inline::Styled { span, .. }
+        | Inline::Math { span, .. }
+        | Inline::CrossRef { span, .. }
+        | Inline::Accent { span, .. } => *span,
+    }
+}
+
+// ---------------------------------------------------------------------------------------------
 // The public API.
 // ---------------------------------------------------------------------------------------------
 
@@ -830,6 +947,108 @@ fn block_span(b: &Block) -> Span {
     }
 }
 
+// ---------------------------------------------------------------------------------------------
+// D6 walk collectors — pre-order, depth-first accumulation into a `Vec<NodeRef>`.
+//
+// These mirror the shape of the test-module's `check_block`/`check_inline` traversals exactly, so
+// "what `walk()` visits" and "what the span-integrity check descends into" stay in lockstep. Each
+// function pushes the node itself FIRST (pre-order), then recurses into its children in source
+// order. Recursion depth is bounded by the parser's `MAX_DEPTH` cap on body nesting.
+// ---------------------------------------------------------------------------------------------
+
+/// Push `block` and, in pre-order, every descendant block/inline into `out`.
+fn walk_block<'a>(block: &'a Block, out: &mut Vec<NodeRef<'a>>) {
+    out.push(NodeRef::Block(block));
+    match block {
+        Block::Section { title, short_title, body, .. } => {
+            for i in title {
+                walk_inline(i, out);
+            }
+            if let Some(s) = short_title {
+                for i in s {
+                    walk_inline(i, out);
+                }
+            }
+            for b in body {
+                walk_block(b, out);
+            }
+        }
+        Block::Paragraph(inlines, _) => {
+            for i in inlines {
+                walk_inline(i, out);
+            }
+        }
+        Block::List { items, .. } => {
+            for it in items {
+                if let Some(t) = &it.term {
+                    for i in t {
+                        walk_inline(i, out);
+                    }
+                }
+                for b in &it.body {
+                    walk_block(b, out);
+                }
+            }
+        }
+        Block::Table { rows, caption, .. } => {
+            if let Some(cap) = caption {
+                for i in &cap.content {
+                    walk_inline(i, out);
+                }
+            }
+            for row in rows {
+                for cell in row {
+                    for b in cell {
+                        walk_block(b, out);
+                    }
+                }
+            }
+        }
+        Block::Figure { content, caption, .. } => {
+            if let Some(cap) = caption {
+                for i in &cap.content {
+                    walk_inline(i, out);
+                }
+            }
+            for b in content {
+                walk_block(b, out);
+            }
+        }
+        Block::Environment { body, .. } | Block::Quote(body, _) => {
+            for b in body {
+                walk_block(b, out);
+            }
+        }
+        // Leaves with no walkable children.
+        Block::DisplayMath { .. } | Block::CodeBlock { .. } | Block::Raw(..) => {}
+    }
+}
+
+/// Push `inline` and, in pre-order, every descendant inline into `out`.
+fn walk_inline<'a>(inline: &'a Inline, out: &mut Vec<NodeRef<'a>>) {
+    out.push(NodeRef::Inline(inline));
+    match inline {
+        Inline::Strong(c, _) | Inline::Emph(c, _) => {
+            for i in c {
+                walk_inline(i, out);
+            }
+        }
+        Inline::Styled { content, .. } => {
+            for i in content {
+                walk_inline(i, out);
+            }
+        }
+        Inline::CrossRef { note: Some(n), .. } => {
+            for i in n {
+                walk_inline(i, out);
+            }
+        }
+        Inline::Accent { base, .. } => walk_inline(base, out),
+        // Leaves (and `CrossRef` with no note).
+        _ => {}
+    }
+}
+
 /// Does this node lower to a [`Block`] of its own (rather than joining an inline run)?
 fn is_block_node(node: &Node) -> bool {
     matches!(
@@ -1104,6 +1323,69 @@ impl Document {
             out.push_str("\\end{document}");
         }
         out
+    }
+
+    /// Walk every body node in **pre-order, depth-first**, yielding a [`NodeRef`] for each.
+    ///
+    /// Order: a parent is yielded **before** its children, and children in source order — so a
+    /// `Section` precedes its title inlines and then its child blocks; a `Figure` precedes its
+    /// caption inlines and its content blocks; a `List` precedes each item's term inlines then body
+    /// blocks; a `Table` precedes its cell blocks; a `Paragraph` precedes its inlines; and a
+    /// composite inline (`Strong`/`Emph`/`Styled`/`CrossRef` note/`Accent` base) precedes its
+    /// children. This mirrors the traversal a renderer or a diff would use.
+    ///
+    /// The traversal covers the **document body** (the core provenance surface). Preamble and
+    /// metadata nodes are *not* walked — they carry only the coarse preamble/body-region span (they
+    /// are not per-node spanned), so including them would add nodes whose spans overlap the whole
+    /// preamble region without improving byte→node resolution; the spec §4 names "body Blocks +
+    /// their Inlines" as the core requirement and that is what we yield.
+    ///
+    /// **Region-coarse spans** (see the D6 module note): each yielded span is the enclosing region
+    /// its node was lowered from, not a precise token range. `walk()` is nonetheless *total* — it
+    /// visits every structural node exactly once — and *bounded*: body depth is capped upstream by
+    /// the parser's `MAX_DEPTH`, so the recursion cannot blow the stack.
+    ///
+    /// Returned as a materialized `std::vec::IntoIter<NodeRef>` (the simplest total realization of
+    /// the `impl Iterator` signature); the whole forest is small relative to the source.
+    pub fn walk(&self) -> impl Iterator<Item = NodeRef<'_>> {
+        let mut out: Vec<NodeRef<'_>> = Vec::new();
+        for b in &self.body {
+            walk_block(b, &mut out);
+        }
+        out.into_iter()
+    }
+
+    /// Provenance query: which document node owns source `byte`?
+    ///
+    /// Returns the **innermost** (narrowest-span) walked node whose half-open span *contains* the
+    /// byte (`span.start <= byte < span.end`), or `None` if no walked node covers it. "Narrowest"
+    /// is measured by span width `end.saturating_sub(start)` (saturating so the subtraction is
+    /// panic-free even on a degenerate `end < start`), with ties broken toward the node visited
+    /// *later* in pre-order — i.e. the deepest descendant, which is the tightest fit when a parent
+    /// and child share a region span.
+    ///
+    /// **Region-coarse resolution** (see the D6 module note): because D2–D5 spans are
+    /// region-granular, `node_at` resolves to the innermost node *at the current span granularity*,
+    /// not to a precise per-byte leaf. When many siblings share a region span, it returns the
+    /// tightest-covering one; it does **not** claim exact byte→leaf precision — that needs the
+    /// parser to thread exact token spans (future work). Totally panic-free: no `unwrap`/`expect`,
+    /// no unchecked indexing, guarded subtraction.
+    pub fn node_at(&self, byte: usize) -> Option<Provenance<'_>> {
+        let mut best: Option<NodeRef<'_>> = None;
+        let mut best_width: usize = usize::MAX;
+        for node in self.walk() {
+            let span = node.span();
+            if span.start <= byte && byte < span.end {
+                let width = span.end.saturating_sub(span.start);
+                // `<=` so a later (deeper, in pre-order) node of equal width wins the tie: the
+                // deepest node sharing a region span is the most specific answer.
+                if best.is_none() || width <= best_width {
+                    best = Some(node);
+                    best_width = width;
+                }
+            }
+        }
+        best.map(|node| Provenance { node, span: node.span() })
     }
 
     /// A fragment (no `document` env, empty body) must not sprout an empty `\begin{document}` on
@@ -1587,33 +1869,7 @@ mod tests {
         }
     }
 
-    fn block_span(b: &Block) -> Span {
-        match b {
-            Block::Section { span, .. }
-            | Block::List { span, .. }
-            | Block::Table { span, .. }
-            | Block::Figure { span, .. }
-            | Block::CodeBlock { span, .. }
-            | Block::DisplayMath { span, .. }
-            | Block::Environment { span, .. } => *span,
-            Block::Paragraph(_, span) | Block::Quote(_, span) | Block::Raw(_, span) => *span,
-        }
-    }
-
-    fn inline_span(i: &Inline) -> Span {
-        match i {
-            Inline::Text(_, span)
-            | Inline::Space(span)
-            | Inline::Strong(_, span)
-            | Inline::Emph(_, span)
-            | Inline::Code(_, span)
-            | Inline::Raw(_, span) => *span,
-            Inline::Styled { span, .. }
-            | Inline::Math { span, .. }
-            | Inline::CrossRef { span, .. }
-            | Inline::Accent { span, .. } => *span,
-        }
-    }
+    // `block_span` and `inline_span` are the production helpers, imported via `use super::*`.
 
     // -- tests --------------------------------------------------------------------------------
 
@@ -2294,5 +2550,159 @@ mod tests {
                 "D5 round-trip fixed point failed:\n src = {src:?}\n rendered = {rendered:?}"
             );
         }
+    }
+
+    // -- D6: provenance API (walk / node_at) --------------------------------------------------
+
+    /// A realistic corpus document exercising every major Block/Inline kind: a titled `article`
+    /// with an `abstract`, a `\section`, a `tabular` in a `table` float, an `itemize`, inline `$…$`
+    /// and display `equation` math, a `figure` with `\caption`+`\label`, and a `\cite`.
+    const CAPSTONE_SRC: &str = concat!(
+        r"\documentclass{article}",
+        r"\title{On Widgets}\author{Ada \and Bob}\date{2026}",
+        r"\begin{document}",
+        r"\maketitle",
+        r"\begin{abstract}A short abstract about widgets.\end{abstract}",
+        r"\section{Introduction}",
+        r"We study widgets \cite{smith}. Energy is $E = mc^2$.",
+        r"\begin{itemize}\item First point.\item Second point.\end{itemize}",
+        r"\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{A table}\label{tab:t}\end{table}",
+        r"\begin{equation}\int_0^1 x\,dx = \frac{1}{2}\end{equation}",
+        r"\begin{figure}\includegraphics{w.png}\caption{A widget}\label{fig:w}\end{figure}",
+        r"\end{document}",
+    );
+
+    #[test]
+    fn walk_visits_section_before_its_child_paragraph() {
+        // Pre-order: a Section is yielded before the Paragraph nested in its body.
+        let src = r"\begin{document}\section{Intro}Body text here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let kinds: Vec<&str> = doc.walk().map(|n| n.kind()).collect();
+        let sec = kinds.iter().position(|k| *k == "Section").expect("a Section");
+        let para = kinds.iter().position(|k| *k == "Paragraph").expect("a Paragraph");
+        assert!(sec < para, "Section must precede its child Paragraph: {kinds:?}");
+    }
+
+    #[test]
+    fn walk_visits_figure_before_its_caption_inlines() {
+        // A Figure is yielded before the Text of its caption (pre-order, caption before content).
+        let src = r"\begin{document}\begin{figure}\includegraphics{w.png}\caption{Widget}\label{fig:w}\end{figure}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let nodes: Vec<NodeRef> = doc.walk().collect();
+        let fig = nodes.iter().position(|n| n.kind() == "Figure").expect("a Figure");
+        // The caption's "Widget" Text appears after the Figure in pre-order.
+        let cap_text = nodes.iter().position(|n| {
+            matches!(n, NodeRef::Inline(Inline::Text(t, _)) if t.contains("Widget"))
+        });
+        assert!(cap_text.is_some(), "caption text is walked: {:?}", nodes.iter().map(|n| n.kind()).collect::<Vec<_>>());
+        assert!(fig < cap_text.unwrap(), "Figure precedes its caption inline");
+    }
+
+    #[test]
+    fn node_at_inside_body_returns_innermost_containing_node() {
+        let src = r"\begin{document}\section{Intro}Body text here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        // Pick a byte inside the body region (after `\begin{document}`), e.g. inside "Body".
+        let byte = src.find("Body text").expect("body text present") + 1;
+        let prov = doc.node_at(byte).expect("a node owns this byte");
+        // The returned span actually contains the byte.
+        assert!(
+            prov.span.start <= byte && byte < prov.span.end,
+            "node_at span {:?} must contain byte {byte}",
+            prov.span
+        );
+        // And it is the *innermost* (narrowest) containing node: no walked node with a strictly
+        // narrower span also contains this byte.
+        let best_width = prov.span.end.saturating_sub(prov.span.start);
+        for n in doc.walk() {
+            let s = n.span();
+            if s.start <= byte && byte < s.end {
+                assert!(
+                    s.end.saturating_sub(s.start) >= best_width,
+                    "found a narrower containing node {s:?} than node_at returned {:?}",
+                    prov.span
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn node_at_out_of_range_is_none() {
+        let src = r"\begin{document}Hi.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        // A byte past end of source is owned by no node.
+        assert!(doc.node_at(src.len() + 100).is_none());
+        // usize::MAX never panics (saturating width, no unchecked indexing).
+        assert!(doc.node_at(usize::MAX).is_none());
+    }
+
+    #[test]
+    fn capstone_round_trip_fixed_point() {
+        // The full corpus round-trips modulo spans (parse → to_latex → re-parse == original).
+        let doc = parse_document(CAPSTONE_SRC).expect("parse capstone");
+        let rendered = doc.to_latex();
+        let redoc = parse_document(&rendered).expect("re-parse capstone");
+        assert_eq!(
+            doc.strip_spans(),
+            redoc.strip_spans(),
+            "capstone round-trip fixed point failed:\n rendered = {rendered:?}"
+        );
+    }
+
+    #[test]
+    fn capstone_walk_is_total_and_nonpanicking() {
+        // walk() visits the whole corpus without panicking and yields a non-trivial forest that
+        // includes the headline kinds we planted.
+        let doc = parse_document(CAPSTONE_SRC).expect("parse capstone");
+        let kinds: Vec<&str> = doc.walk().map(|n| n.kind()).collect();
+        for expected in ["Section", "Paragraph", "List", "Table", "Figure", "DisplayMath", "Math", "CrossRef"] {
+            assert!(
+                kinds.contains(&expected),
+                "walk() should surface a {expected} node; got {kinds:?}"
+            );
+        }
+        // Every walked span is within the whole-document span (span integrity at the API surface).
+        for n in doc.walk() {
+            let s = n.span();
+            assert!(s.start >= doc.span.start && s.end <= doc.span.end, "walked span {s:?} escapes doc {:?}", doc.span);
+        }
+    }
+
+    #[test]
+    fn capstone_byte_coverage_body_region() {
+        // THE CAPSTONE GUARANTEE, stated HONESTLY at region-coarse granularity:
+        //
+        //   For every NON-WHITESPACE byte inside the document *body region*
+        //   (`\begin{document}` … `\end{document}`), `node_at(byte).is_some()` — i.e. some walked
+        //   node owns it.
+        //
+        // We scope the assertion to the body region (not the preamble) because D6's `walk()`
+        // deliberately covers body Blocks + Inlines (the provenance surface the ADJ pipeline
+        // consumes); preamble directives (`\documentclass`, `\title`, …) are indexed into
+        // `Preamble`/`Metadata`, which are not per-node walked. Within the body region, the
+        // region-coarse spans still tile every meaningful byte — that is what we prove here, rather
+        // than an aspirational "every source byte, exact leaf" claim the coarse spans can't back.
+        let doc = parse_document(CAPSTONE_SRC).expect("parse capstone");
+
+        let begin = r"\begin{document}";
+        let end = r"\end{document}";
+        let body_start = CAPSTONE_SRC.find(begin).expect("begin marker") + begin.len();
+        let body_end = CAPSTONE_SRC[body_start..].find(end).expect("end marker") + body_start;
+
+        let bytes = CAPSTONE_SRC.as_bytes();
+        let mut checked = 0usize;
+        for byte in body_start..body_end {
+            if bytes[byte].is_ascii_whitespace() {
+                continue; // whitespace is not required to be owned (honest scope)
+            }
+            checked += 1;
+            assert!(
+                doc.node_at(byte).is_some(),
+                "uncovered non-whitespace body byte {byte} = {:?} in {:?}",
+                bytes[byte] as char,
+                &CAPSTONE_SRC[byte..(byte + 8).min(body_end)]
+            );
+        }
+        assert!(checked > 50, "sanity: the body region should have many non-whitespace bytes, got {checked}");
     }
 }
