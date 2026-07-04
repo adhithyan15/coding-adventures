@@ -174,6 +174,25 @@ under the Apache License, Version 2.0:
       `await`, `this` was already parseable, so that bridge slice needed no
       grammar work.
 
+- `code_printer_super_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the `super` keyword printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_super` + the `PREC_PRIMARY` classification that landed with
+      `Expression::Super` (CLOC12.166). 7 active `#[test]`s and **0 `#[ignore]`**
+      — `super` printed as a bare reserved-word primary (the sibling of `this`)
+      that never needs wrapping and never wraps an operand: the surface `super`,
+      as a member object (`super.x`), as a call callee (`super()`), as a call
+      argument (`f(super)`), composed in a member chain (`super.a.b`) and a
+      method call (`super.m()`), and left bare under a binary parent
+      (`super+1`). Inputs are hand-constructed AST; the bridge conversion of
+      `super` (gap-167) is exercised separately in `javascript-parser`
+      (CLOC12.166 PR2) — like `this` and unlike `await`, `super` was already
+      parseable, so that bridge slice needed no grammar work. The bare `super;`
+      / `f(super)` / `super+1` inputs isolate the printer's leaf handling and
+      are not asserted to be valid JS (`super` is syntactically restricted to
+      member/call position inside a method or derived constructor).
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
