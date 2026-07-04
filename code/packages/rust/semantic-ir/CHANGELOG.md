@@ -2,6 +2,34 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.19.0 — SIR21 T3c (T3c-1): type-directed op-selection rule
+
+First slice of milestone **T3c** — "semantic neutrality made mechanical". Adds
+the pure decision function each backend consults to choose *when* to specialise
+a binary numeric op (`+`/`-`/`*`) from its operands' static types, vs. fall back
+to runtime dispatch (SIR21 §"Type-directed operation selection").
+
+- New `op_select` module: `resolve_numeric(lhs, rhs) -> NumericLowering` where
+  `NumericLowering` is `Int(IntSpec)` (both operands the same concrete integer
+  type — specialise; `Arbitrary` = the bignum path), `Float` (a float meets
+  another number — promote), or `RuntimeDispatch` (any operand `Dynamic`/absent,
+  non-numeric, or two integers of *different* specs — today's `_sir_*` path).
+  Re-exported from the crate root.
+- **No inference, no mutation, no behaviour change.** SIR carries types, it does
+  not synthesise them; mismatched widths dispatch rather than silently promote.
+  An untyped program (every operand `Dynamic`, as in the current pipeline)
+  resolves to `RuntimeDispatch` on every node, so emitters keep doing exactly
+  what they do now. It is the shared rule the per-backend sized-integer lowering
+  (T4–T8) will consult so they agree on when to specialise.
+- 8 unit tests walk the spec table row by row: matching i32/arbitrary/sized
+  widths specialise; float promotes against any number (but not against
+  `Dynamic`); mismatched width / signedness / overflow-mode and non-numeric
+  types dispatch.
+
+Purely additive (a new module + two re-exports; no existing code changed); every
+downstream consumer still builds and passes. Scoped to the numeric keystone —
+string concat on `+` and comparison operators are a later slice.
+
 ## 0.18.0 — SIR21 T3a: integer-reflection const-intrinsics (`int.max/min/width`)
 
 First slice of milestone **T3**. Adds the canonical evaluator for the three
