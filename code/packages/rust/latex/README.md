@@ -40,9 +40,10 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `Node::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `Node::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
 | **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; coarse (region-granular) spans | ✅ |
 | **D3 sectioning fold** | folds the flat block stream into the **nested sectioning forest**: each heading OWNS the run of following blocks up to the next heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`, via `rank(level)`); deeper headings nest. A trailing `\label{key}` is hoisted onto its section's new `label` field. Applies to every block-list (top-level + environment/list/table bodies). Total & panic-free; `to_latex` fixed point; `flatten(fold(flat)) == flat` property test; folded-section span = union of heading ∪ children spans | ✅ |
+| **D4 metadata** | extracts `\title`/`\author{A \and B}`/`\date` and the `abstract` env into a typed `Metadata` record on `Document`, as an **additive projection** — the underlying nodes stay in `preamble`/`body`, so `to_latex` round-trips unchanged and re-parsing repopulates the same `Metadata` (fixed point). Both preamble and body scanned; first title/date wins; every `\author` (each `\and`-split) contributes; `\maketitle` is a metadata no-op. Total & panic-free; never fabricated. (Inline normalization — `\textbf`/`\emph`/`\texttt`/`$…$`/`\ref`/accents — already lands in D2/D3's `lower_inline`.) | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01)
-is building on top: D1–D3 shipped.
+is building on top: D1–D4 shipped.
 
 ## The Document layer (LTXDOC01)
 
@@ -64,6 +65,28 @@ if let Block::Section { body, .. } = &doc.body[0] {
 }
 assert_eq!(doc.to_latex().is_empty(), false);                // round-trips (modulo spans)
 ```
+
+### Document metadata (LTXDOC01 D4)
+
+`Document::metadata` is a typed `Metadata { title, authors, date, abstract_ }` record — ask "what is
+the title / who are the authors / what is the abstract?" without walking the tree:
+
+```rust
+use latex::parse_document;
+
+let doc = parse_document(
+    r"\title{Paper}\author{Alice \and Bob}\begin{document}\maketitle\begin{abstract}An abstract.\end{abstract}Body.\end{document}",
+).unwrap();
+
+assert_eq!(doc.metadata.authors.len(), 2);           // \and split → two entries
+assert!(doc.metadata.title.is_some());
+assert!(doc.metadata.abstract_.is_some());
+```
+
+Metadata is an **additive projection**: the `\title`/`\author`/`\date` commands and the `abstract`
+environment are *not* removed — they still live in `preamble`/`body`, so `to_latex` round-trips
+unchanged and re-parsing repopulates the identical `Metadata` (a fixed point). Absent directives
+leave the fields `None`/empty — never fabricated.
 
 **D2/D3 spans are coarse (region-granular)**: every leaf block/inline span defaults to its enclosing
 region span, and a folded D3 section's span is the **union** of its heading region span and its owned

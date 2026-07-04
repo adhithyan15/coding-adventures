@@ -177,6 +177,13 @@ warnings` clean; a byte-span on every node asserted in tests.
   `\textbf`/`\emph`/`\texttt` → `Strong`/`Emph`/`Code`; inline `$…$` → `Inline::Math`; `\ref`/`\cite`
   → `CrossRef`; accents → `Inline::Accent`. Extract `Metadata` (`\title`/`\author{A\and B}`/`\date`,
   `abstract` env → `Vec<Block>`). `\maketitle` becomes a no-op marker (metadata already captured).
+  **Implementation note (additive projection):** metadata is extracted as a *non-destructive index*
+  — the `\title`/`\author`/`\date` commands and the `abstract` environment are **not removed** from
+  `preamble`/`body`; `Metadata` merely points at them. This keeps `to_latex` a byte-for-byte fixed
+  point and makes re-parsing repopulate the identical `Metadata`. `\title`/`\author`/`\date` are
+  scanned in **both** the preamble and the body (LaTeX allows either), preamble first (so a preamble
+  `\title` wins). The inline-normalization sub-list was in fact already delivered by D2/D3's
+  `lower_inline` pass, so D4's net-new work is the metadata index.
 - **D5 — floats, captions, code & display math.** `figure`/`table` floats → `Block::Figure`/`Table`
   with `\caption{…}` → `Caption` and a hoisted `\label`; `verbatim`/`lstlisting` → `CodeBlock`;
   `equation`/`align`/`\[..\]` → `DisplayMath` (source kept, delegated to the math frontend on demand);
