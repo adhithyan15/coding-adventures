@@ -1,5 +1,33 @@
 # Changelog — iir-to-wasm
 
+## [0.30.0] — 2026-07-04 (LANG-FULL E4-dyn E4d-3b: runtime string as return value / call result)
+
+Extended the E4-dyn runtime-string support so a runtime string that arrives as a
+function **return value**, **call result**, or **parameter** — not only a
+branch-selected local slot — is a first-class value, mirroring the LLVM E4d-2b
+change. This lets an ALGOL `string procedure` (which returns a runtime string)
+run on the WASM column.
+
+WASM already types a `str` as an `i32` handle everywhere (`hint_to_value_type`),
+so a `str` parameter, a `str` return type, and a `call` whose result is `str`
+already lowered correctly — no boundary/typing change was needed. The only gap
+was that `print_str` / `str_len` took the runtime header-read path only for a
+promoted `runtime_str_vars` slot; a call result / return value / parameter (in
+neither `runtime_str_vars` nor the compile-time `string_literals` map) fell to
+the literal fast path and errored.
+
+- **`print_str`**: the runtime-path guard became
+  `runtime_str_vars.contains(v) || !string_literals.contains_key(v)`, so any
+  string without a compile-time literal entry reads its length from the
+  `[i32 len][bytes]` block header (`i32.load` at the handle) and passes
+  `handle + 4` + that length to `env.__print_str`.
+- **`str_len`**: gained the same runtime branch — `i32.load` the length at the
+  handle (widened with `i64.extend_i32_u` for an i64 dest) instead of folding a
+  compile-time constant.
+
+The `lang-aot` ALGOL string-procedure matrix cell adds the `Wasm` column
+(verified end-to-end in-process via `wasm-runtime`).
+
 ## [0.29.0] — 2026-07-03 (LANG-FULL E4-dyn E4d-3: runtime branch-selected strings)
 
 Gave the WASM backend a **runtime** string representation, mirroring the LLVM
