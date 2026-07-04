@@ -45,6 +45,7 @@ pub mod effects;
 pub mod limits;
 pub mod manifest;
 pub mod metadata;
+pub mod int_const;
 pub mod nodes;
 pub mod span;
 pub mod text;
@@ -61,6 +62,7 @@ pub use backend::{
     Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, BackendRegistry,
 };
 pub use effects::{Effect, EffectSet};
+pub use int_const::{eval_named as eval_int_const_named, IntConst};
 pub use limits::MAX_IR_DEPTH;
 pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};
