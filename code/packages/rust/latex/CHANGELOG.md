@@ -2,6 +2,46 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.30.0] — 2026-07-03
+
+### Added — floats, captions, code & display-math environments (LTXDOC01 D5)
+
+D5 specializes the generic `Block::Environment` fold by environment name, so the `Document` model
+finally distinguishes the semantic block kinds a real paper uses: floats with captions, verbatim
+code, block quotations, and the named display-math environments.
+
+- **New `Caption` struct** (`content: Vec<Inline>`, `span: Span`), derives
+  `Debug, Clone, PartialEq, Eq`, re-exported from the crate root.
+- **New `Block` variants**: `Figure { content, caption, label, span }`,
+  `CodeBlock { verbatim, span }`, `Quote(Vec<Block>, Span)`. The `Table` variant gains
+  `caption: Option<Caption>` and `label: Option<String>` fields (a bare `tabular` leaves both
+  `None`; a `table` float attaches them to the inner tabular).
+- **Environment classification** in `lower_environment`, all recursing the body through the same
+  bounded `lower_blocks`:
+  - `figure`/`figure*` → `Block::Figure`; the `\caption{…}` and a hoisted `\label{…}` are lifted
+    out of the body, everything else (e.g. `\includegraphics`) stays in `content`.
+  - `table`/`table*` → the inner `Block::Table` with the float's `\caption`/`\label` attached; a
+    float with no inner tabular degrades to `Block::Figure` so nothing is lost.
+  - `verbatim`/`verbatim*` (lexed raw as `VerbatimEnv`) → `Block::CodeBlock` with the raw inner
+    text kept **unparsed**; `lstlisting` → `CodeBlock` (parsed body rendered back to source text).
+  - `equation`/`equation*`/`align`/`align*`/`displaymath`/`gather`/`multline`/`eqnarray` →
+    `Block::DisplayMath` with the inner LaTeX kept as a **source string** (delegated to the math
+    frontend on demand — LTXDOC01 never parses math itself).
+  - `quote`/`quotation` → `Block::Quote`.
+  - any other environment → `Block::Environment` (recursed), unchanged from D2.
+- **Caption/label extraction** (`extract_caption_label`) mirrors D3's `\label` hoist: after
+  `lower_blocks`, a float's `\caption{X}` is an `Inline::Raw(Node::Command{"caption"})` and its
+  `\label{k}` an `Inline::CrossRef{"label"}` inside the float's paragraphs; the first of each is
+  lifted, its marker removed, and any now-empty paragraph dropped. Total & panic-free (no
+  `unwrap`/`expect`/unchecked indexing).
+- **`to_latex` round-trip.** Figures/table floats re-emit their `\begin{figure}`/`\begin{table}`
+  wrapper with `\caption`/`\label`; `CodeBlock`s re-emit as `\begin{verbatim}…\end{verbatim}`
+  (a fixed point — `lstlisting` normalizes through `verbatim`, text preserved); display-math envs
+  re-emit as `$$…$$`. `parse(to_latex(d)).strip_spans() == d.strip_spans()` holds across a corpus
+  containing a figure, a table float, a verbatim, an equation, and a quote.
+- **Span policy unchanged** (coarse / region-granular; precise per-node coverage is D6). `Caption`
+  and every new block carry a span; `strip_spans` and the span-containment tests cover them.
+
 ## [0.29.0] — 2026-07-03
 
 ### Added — document metadata extraction (LTXDOC01 D4)

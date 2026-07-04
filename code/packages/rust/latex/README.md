@@ -41,9 +41,10 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; coarse (region-granular) spans | ✅ |
 | **D3 sectioning fold** | folds the flat block stream into the **nested sectioning forest**: each heading OWNS the run of following blocks up to the next heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`, via `rank(level)`); deeper headings nest. A trailing `\label{key}` is hoisted onto its section's new `label` field. Applies to every block-list (top-level + environment/list/table bodies). Total & panic-free; `to_latex` fixed point; `flatten(fold(flat)) == flat` property test; folded-section span = union of heading ∪ children spans | ✅ |
 | **D4 metadata** | extracts `\title`/`\author{A \and B}`/`\date` and the `abstract` env into a typed `Metadata` record on `Document`, as an **additive projection** — the underlying nodes stay in `preamble`/`body`, so `to_latex` round-trips unchanged and re-parsing repopulates the same `Metadata` (fixed point). Both preamble and body scanned; first title/date wins; every `\author` (each `\and`-split) contributes; `\maketitle` is a metadata no-op. Total & panic-free; never fabricated. (Inline normalization — `\textbf`/`\emph`/`\texttt`/`$…$`/`\ref`/accents — already lands in D2/D3's `lower_inline`.) | ✅ |
+| **D5 floats/code/display-math** | specializes the generic environment fold by name: `figure`/`figure*` → `Block::Figure` and `table`/`table*` → the inner `Block::Table`, each with `\caption{…}` → `Caption` + a hoisted `\label`; `verbatim`/`lstlisting` → `Block::CodeBlock` (raw text kept unparsed); `equation`/`align`/`gather`/… → `Block::DisplayMath` (source kept, delegated to the math frontend on demand); `quote`/`quotation` → `Block::Quote`; any other env → recursed `Block::Environment`. `to_latex` fixed point; total & panic-free; coarse spans | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01)
-is building on top: D1–D4 shipped.
+is building on top: D1–D5 shipped.
 
 ## The Document layer (LTXDOC01)
 
@@ -87,6 +88,46 @@ Metadata is an **additive projection**: the `\title`/`\author`/`\date` commands 
 environment are *not* removed — they still live in `preamble`/`body`, so `to_latex` round-trips
 unchanged and re-parsing repopulates the identical `Metadata` (a fixed point). Absent directives
 leave the fields `None`/empty — never fabricated.
+
+### Floats, code & display math (LTXDOC01 D5)
+
+D5 gives the semantic block kinds a real paper uses, by specializing the environment fold on the
+`\begin{env}` name:
+
+```rust
+use latex::{parse_document, Block};
+
+let doc = parse_document(concat!(
+    r"\begin{document}",
+    r"\begin{figure}\includegraphics{plot.png}\caption{A plot}\label{fig:p}\end{figure}",
+    r"\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{Grid}\label{tab:g}\end{table}",
+    r"\begin{equation}E = mc^2\end{equation}",
+    r"\end{document}",
+)).unwrap();
+
+// A `figure` float: caption + label lifted, the \includegraphics body preserved.
+assert!(doc.body.iter().any(|b| matches!(b, Block::Figure { caption: Some(_), label: Some(_), .. })));
+// A `table` float attaches its \caption/\label to the *inner* tabular's Block::Table.
+assert!(doc.body.iter().any(|b| matches!(b, Block::Table { caption: Some(_), .. })));
+// A named display-math environment keeps its source string (unparsed here).
+assert!(doc.body.iter().any(|b| matches!(b, Block::DisplayMath { .. })));
+```
+
+- **`figure`/`figure*`** → `Block::Figure { content, caption, label }` — the `\caption{…}` becomes a
+  `Caption`, a following `\label{…}` is hoisted, and everything else (e.g. `\includegraphics`) stays
+  in `content`.
+- **`table`/`table*`** → the inner `Block::Table` with the float's caption/label attached (a float
+  with no tabular degrades to a `Block::Figure`, so nothing is lost).
+- **`verbatim`/`lstlisting`** → `Block::CodeBlock` — the body is kept **unparsed** (code is source,
+  not marked-up LaTeX).
+- **`equation`/`align`/`gather`/`displaymath`/…** → `Block::DisplayMath` — the inner LaTeX is kept
+  as a source string, delegated to the math frontend on demand (LTXDOC01 never parses math itself).
+- **`quote`/`quotation`** → `Block::Quote`; any other environment stays a recursed
+  `Block::Environment`.
+
+Caption/label extraction mirrors D3's `\label` hoist and never drops float content; `to_latex`
+re-emits the `figure`/`table` wrapper (with `\caption`/`\label`), `verbatim` fences, and `$$…$$`
+so `parse(to_latex(d)).strip_spans() == d.strip_spans()` remains a fixed point.
 
 **D2/D3 spans are coarse (region-granular)**: every leaf block/inline span defaults to its enclosing
 region span, and a folded D3 section's span is the **union** of its heading region span and its owned
