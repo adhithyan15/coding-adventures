@@ -30,7 +30,7 @@
 //!    [`Block::DisplayMath`]; other environments recurse into [`Block::Environment`]; inline
 //!    runs collect into a [`Block::Paragraph`].
 //!
-//! ## Span policy (LTXDOC02 S3 — precise body spans)
+//! ## Span policy (LTXDOC02 S3/S4 — precise body spans, precise `node_at`)
 //!
 //! Every [`Document`]/[`Preamble`]/[`Block`]/[`Inline`] node carries a [`Span`]. As of **LTXDOC02
 //! S3**, the fold reads each source [`Node`]'s **carried, precise byte [`Span`]** (S1 threaded
@@ -60,9 +60,11 @@
 //!   fold), but `Metadata` is an additive index over preamble/body nodes and is likewise not
 //!   walked.
 //!
-//! `Document::node_at`'s full precision (resolving to the true leaf, and retiring the remaining
-//! "region-coarse" wording on its own doc-comment) lands in **S4**; S3 only makes the `Document`
-//! `Block`/`Inline` span *values* precise.
+//! As of **LTXDOC02 S4**, [`Document::node_at`] is formally the precise counterpart: because body
+//! spans are now tight, `node_at(byte)` returns the **true per-token leaf** — the narrowest node
+//! whose precise span contains the byte (ties → deepest in pre-order). The old "region-coarse"
+//! hedging on `node_at`/[`Provenance`] is **retired** for body nodes; only the preamble/metadata
+//! spans below stay honestly coarse.
 //!
 //! ## Totality
 //!
@@ -175,9 +177,10 @@ pub struct DocumentClass {
     pub class: String,
     /// The `[options]` list rendered back to source, e.g. `Some("11pt,twocolumn")`.
     pub options: Option<String>,
-    /// The preamble-region span. **Honestly region-coarse** (S3): the preamble is classified out
-    /// of directives rather than walked as per-node body content, so a preamble-region span is the
-    /// right granularity here (this node is not visited by [`Document::walk`]).
+    /// The preamble-region span. **Honestly region-coarse** (and stays so past S4, which only made
+    /// *body* nodes precise): the preamble is classified out of directives rather than walked as
+    /// per-node body content, so a preamble-region span is the right granularity here (this node is
+    /// not visited by [`Document::walk`], and `node_at` never resolves into it).
     pub span: Span,
 }
 
@@ -191,9 +194,10 @@ pub struct Package {
     /// Which directive introduced it (`"usepackage"` or `"RequirePackage"`), preserved so the
     /// package round-trips to the exact command it came from.
     pub command: String,
-    /// The preamble-region span. **Honestly region-coarse** (S3): the preamble is classified out
-    /// of directives rather than walked as per-node body content, so a preamble-region span is the
-    /// right granularity here (this node is not visited by [`Document::walk`]).
+    /// The preamble-region span. **Honestly region-coarse** (and stays so past S4, which only made
+    /// *body* nodes precise): the preamble is classified out of directives rather than walked as
+    /// per-node body content, so a preamble-region span is the right granularity here (this node is
+    /// not visited by [`Document::walk`], and `node_at` never resolves into it).
     pub span: Span,
 }
 
@@ -396,21 +400,25 @@ pub enum Inline {
 // source byte, *which document node owns it* — the exact source→node correlation the reasoning
 // stack audits against.
 //
-// ## Span granularity (S3: body Block/Inline spans are now precise)
+// ## Span granularity (S3/S4: body Block/Inline spans are precise; `node_at` resolves to the leaf)
 //
 // As of **LTXDOC02 S3**, the D2 fold reads each source node's carried, precise byte span (S1/S2)
 // instead of the old enclosing-region parameter. So a body `Block`/`Inline` span is the node's
 // *tight* source range — a `Section`'s title inline, its child paragraphs, and their `Text` runs
 // no longer share one region span; each slices back to exactly its own source. `walk()` visits
-// every body node in structural pre-order (unchanged), and every yielded span is now precise.
+// every body node in structural pre-order (unchanged), and every yielded span is precise.
 //
-// **What S3 does *not* yet retire:** the [`Document::node_at`] doc-comment still describes its
-// resolution conservatively. `node_at` already returns the narrowest-span walked node containing a
-// byte, and with precise spans that *is* the true leaf — but the formal "resolves to the true
-// leaf" guarantee, its dedicated test, and the removal of the remaining "region-coarse" wording on
-// `node_at`/[`Provenance`] are **S4** (spec §5). S3's job is only to make the span *values*
-// precise. The capstone byte-coverage test still asserts the honest, S3-true property (every
-// non-whitespace body byte is owned by ≥1 walked node); S5 tightens it to leaf-tightness.
+// **S4 retires the region-coarse caveat for body nodes.** Because the spans are tight,
+// [`Document::node_at`] returns the **true per-token leaf**: the narrowest node whose precise span
+// contains the queried byte (ties → the deepest node in pre-order). A byte inside `widgets`
+// resolves to the `Text` node owning `widgets`, not to the enclosing `Paragraph`/`Section`. The
+// dedicated leaf-resolution tests (`node_at_resolves_to_text_leaf_not_paragraph`,
+// `node_at_in_section_title_resolves_to_heading_inline`,
+// `node_at_in_textbf_resolves_to_inner_leaf`) pin this down, and the honest body byte-coverage test
+// (`body_bytes_resolve_to_containing_node`) asserts every non-whitespace body byte resolves to a
+// node whose precise span actually contains it. What stays coarse is **only** the preamble/metadata
+// (classified out of directives, not walked). The full tightest-covering-leaf capstone over the
+// whole LTXDOC01 corpus (no strictly-narrower node exists) is **S5**.
 // ---------------------------------------------------------------------------------------------
 
 /// A borrowed reference to one node visited by [`Document::walk`]: either a body [`Block`] or an
@@ -428,7 +436,8 @@ pub enum NodeRef<'a> {
 }
 
 impl<'a> NodeRef<'a> {
-    /// This node's byte [`Span`] — precise for body nodes as of S3 (see the module span note).
+    /// This node's byte [`Span`] — precise (tight source range) for body nodes (see the module span
+    /// note); `node_at` uses it to resolve a byte to the true per-token leaf (S4).
     pub fn span(&self) -> Span {
         match self {
             NodeRef::Block(b) => block_span(b),
@@ -473,15 +482,15 @@ impl<'a> NodeRef<'a> {
 /// span contains the queried byte, plus that node's [`Span`] (surfaced directly so the caller need
 /// not re-derive it).
 ///
-/// The `span` is the returned node's own byte range — **precise** for body nodes as of S3 (see the
-/// module span note). `node_at` returns the node with the *narrowest* such span. The formal
-/// "resolves to the true leaf" guarantee and the retirement of the last node_at caveat wording are
-/// S4; S3 makes the span values precise.
+/// The `span` is the returned node's own byte range — **precise** for body nodes (see the module
+/// span note). `node_at` returns the node with the *narrowest* such span, which as of **S4** is the
+/// true per-token leaf: a byte inside a word resolves to the `Text` run owning that word, not to an
+/// enclosing `Paragraph`/`Section`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Provenance<'a> {
-    /// The narrowest node owning the queried byte.
+    /// The narrowest node owning the queried byte — the true per-token leaf for body nodes (S4).
     pub node: NodeRef<'a>,
-    /// That node's span (precise for body nodes as of S3).
+    /// That node's precise span (for body nodes).
     pub span: Span,
 }
 
@@ -1475,11 +1484,16 @@ impl Document {
     /// *later* in pre-order — i.e. the deepest descendant, the tightest fit when a parent and child
     /// share a span.
     ///
-    /// **Resolution (S3 precise spans):** body spans are now the nodes' tight source ranges (S3),
-    /// so the narrowest-covering node this returns is the genuine per-token leaf in the common
-    /// case. The *formal* "always resolves to the true leaf" guarantee — plus its dedicated test
-    /// and the removal of this hedging wording — is **S4** (spec §5); S3's contribution is making
-    /// the span values precise. Totally panic-free: no `unwrap`/`expect`, no unchecked indexing,
+    /// **Resolution (S4 — precise, region-coarse caveat retired):** body spans are the nodes' tight
+    /// source ranges (S3 propagated the real per-node spans), so the narrowest-covering node this
+    /// returns **is the true per-token leaf** — the narrowest node whose precise span contains the
+    /// byte. A byte inside `widgets` resolves to the `Text` node owning `widgets`, not to the
+    /// enclosing `Paragraph`/`Section`; a byte inside a `\section` title resolves to the heading's
+    /// title inline, not to the whole `Section` block. This holds for **body** nodes (the ones
+    /// `walk` visits); the preamble/metadata are classified out of directives rather than walked, so
+    /// their spans stay honestly region-coarse and `node_at` does not resolve into them. The S5 rung
+    /// adds the whole-corpus tightest-covering-leaf capstone (proving no strictly-narrower node
+    /// exists for every body byte). Totally panic-free: no `unwrap`/`expect`, no unchecked indexing,
     /// guarded subtraction.
     pub fn node_at(&self, byte: usize) -> Option<Provenance<'_>> {
         let mut best: Option<NodeRef<'_>> = None;
@@ -2756,6 +2770,118 @@ mod tests {
         assert!(doc.node_at(src.len() + 100).is_none());
         // usize::MAX never panics (saturating width, no unchecked indexing).
         assert!(doc.node_at(usize::MAX).is_none());
+    }
+
+    // -- S4: precise `node_at` — resolution to the true per-token leaf -------------------------
+    //
+    // With S3's tight body spans, `node_at(byte)` no longer stops at an enclosing region: it
+    // resolves to the *narrowest* node whose precise span contains the byte — the genuine
+    // per-token leaf. These tests prove that a byte inside a word/title/inner-run resolves to the
+    // leaf that owns it (and that the resolved span slices back to exactly that leaf's source), not
+    // to the enclosing `Paragraph`/`Section`/composite. This is the region-coarse caveat, retired.
+
+    #[test]
+    fn node_at_resolves_to_text_leaf_not_paragraph() {
+        // A byte inside the word "widgets" must resolve to the `Text` leaf owning "widgets" — and
+        // its span must slice back to EXACTLY "widgets", not to the enclosing paragraph.
+        let src = r"\begin{document}We study widgets everywhere\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let byte = src.find("widgets").expect("widgets present") + 2; // inside the word
+        let prov = doc.node_at(byte).expect("a node owns this byte");
+        // The resolved node is the `Text` leaf whose text is exactly "widgets".
+        assert!(
+            matches!(prov.node, NodeRef::Inline(Inline::Text(t, _)) if t == "widgets"),
+            "node_at should resolve to the `widgets` Text leaf, got kind {:?}",
+            prov.node.kind()
+        );
+        // And its span slices back to exactly that word — NOT the enclosing paragraph.
+        assert_eq!(&src[prov.span.start..prov.span.end], "widgets");
+    }
+
+    #[test]
+    fn node_at_in_section_title_resolves_to_heading_inline() {
+        // A byte inside a `\section` heading's title must resolve to the title *inline* (the Text
+        // leaf), NOT to the whole `Section` block that unions the heading + its owned body.
+        let src = r"\begin{document}\section{Introduction}Body text here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let byte = src.find("Introduction").expect("title present") + 3; // inside the title word
+        let prov = doc.node_at(byte).expect("a node owns this byte");
+        assert!(
+            matches!(prov.node, NodeRef::Inline(Inline::Text(t, _)) if t == "Introduction"),
+            "node_at should resolve to the heading title inline, got kind {:?} span {:?}",
+            prov.node.kind(),
+            prov.span
+        );
+        // The resolved span is the tight title word, strictly narrower than the Section span.
+        assert_eq!(&src[prov.span.start..prov.span.end], "Introduction");
+        let Block::Section { span: sec_span, .. } = &doc.body[0] else { panic!("expected Section") };
+        let sec_width = sec_span.end.saturating_sub(sec_span.start);
+        let title_width = prov.span.end.saturating_sub(prov.span.start);
+        assert!(
+            title_width < sec_width,
+            "title span {:?} must be strictly narrower than the Section span {sec_span:?}",
+            prov.span
+        );
+    }
+
+    #[test]
+    fn node_at_in_textbf_resolves_to_inner_leaf() {
+        // A byte inside `\textbf{bold}`'s inner text resolves to the inner `Text` leaf ("bold"),
+        // NOT to the whole `\textbf{…}` composite inline.
+        let src = r"\begin{document}see \textbf{bold} now\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let byte = src.find("bold").expect("bold present") + 1; // inside the inner word
+        let prov = doc.node_at(byte).expect("a node owns this byte");
+        assert!(
+            matches!(prov.node, NodeRef::Inline(Inline::Text(t, _)) if t == "bold"),
+            "node_at should resolve to the inner `bold` Text leaf, got kind {:?}",
+            prov.node.kind()
+        );
+        assert_eq!(&src[prov.span.start..prov.span.end], "bold");
+    }
+
+    #[test]
+    fn body_bytes_resolve_to_containing_node() {
+        // HONEST BODY BYTE-COVERAGE (S4 scope, NOT the S5 whole-corpus capstone):
+        //
+        // For a representative multi-node document, every NON-WHITESPACE body byte both (a) resolves
+        // (`node_at(byte).is_some()`) AND (b) resolves to a node whose PRECISE span actually
+        // contains that byte (`span.start <= byte < span.end`). We assert this on a representative
+        // input only — S4 proves leaf-resolution here; the tightest-covering-leaf guarantee over the
+        // full LTXDOC01 corpus (no strictly-narrower node exists for any byte) is the S5 capstone.
+        let src = concat!(
+            r"\begin{document}",
+            r"\section{Widgets}",
+            r"We study \textbf{widgets} and $E = mc^2$ here.",
+            r"\begin{itemize}\item First.\item Second.\end{itemize}",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+
+        let begin = r"\begin{document}";
+        let end = r"\end{document}";
+        let body_start = src.find(begin).expect("begin marker") + begin.len();
+        let body_end = src[body_start..].find(end).expect("end marker") + body_start;
+
+        let bytes = src.as_bytes();
+        let mut checked = 0usize;
+        for (byte, &b) in bytes.iter().enumerate().take(body_end).skip(body_start) {
+            if b.is_ascii_whitespace() {
+                continue; // whitespace is not required to be owned (honest scope)
+            }
+            checked += 1;
+            let prov = doc
+                .node_at(byte)
+                .unwrap_or_else(|| panic!("unresolved non-whitespace body byte {byte} = {:?}", b as char));
+            // (b): the resolved node's PRECISE span genuinely contains the byte.
+            assert!(
+                prov.span.start <= byte && byte < prov.span.end,
+                "resolved span {:?} does not contain byte {byte} = {:?}",
+                prov.span,
+                b as char
+            );
+        }
+        assert!(checked > 40, "sanity: the body should have many non-whitespace bytes, got {checked}");
     }
 
     #[test]

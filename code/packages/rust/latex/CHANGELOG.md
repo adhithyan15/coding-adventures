@@ -2,6 +2,37 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.35.0] — 2026-07-04
+
+### Changed — precise `node_at` + region-coarse caveat retired for body nodes (LTXDOC02 S4)
+
+With S3's tight body spans in place, `Document::node_at(byte)` now **formally** resolves to the
+**true per-token leaf** — the narrowest node whose *precise* span contains the byte (ties → the
+deepest node in pre-order). A byte inside `widgets` resolves to the `Text` run owning `widgets`, not
+to the enclosing `Paragraph`/`Section`; a byte inside a `\section` title resolves to the title
+inline, not the whole `Section` block.
+
+- **Documentation only for `node_at`/`walk` — no logic change.** `node_at` already returned the
+  narrowest-span walked node; S4 retires the hedging wording now that the spans are precise. Updated
+  the `node_at` doc-comment (the "Resolution" paragraph), the `Provenance` struct docs, the
+  `NodeRef::span` doc, the D6 module comment block, and the module-level span-policy note to state
+  plainly that body resolution is precise. Preamble/metadata spans stay **honestly region-coarse**
+  (the preamble is classified out of `\documentclass`/`\usepackage` *directives*, not walked, and
+  `node_at` never resolves into it) — the `DocumentClass`/`Package` field docs keep that note.
+- **New leaf-resolution tests.** `node_at_resolves_to_text_leaf_not_paragraph`,
+  `node_at_in_section_title_resolves_to_heading_inline`, `node_at_in_textbf_resolves_to_inner_leaf` —
+  each plants a byte inside a word/title/inner-run and asserts `node_at` returns exactly that `Text`
+  leaf and its span slices back to precisely that word (`&src[prov.span] == "widgets"`).
+- **New honest body byte-coverage test.** `body_bytes_resolve_to_containing_node` asserts that for a
+  representative multi-node document (section, `\textbf`, inline math, an `itemize`), every
+  non-whitespace body byte both resolves and resolves to a node whose precise span actually contains
+  it. Scoped to a representative input (not the whole LTXDOC01 corpus) — the tightest-covering-leaf
+  capstone remains S5.
+
+Round-trip fixed point, totality/no-panic, no `unsafe`, and `MAX_DEPTH`-bounded recursion all
+preserved. Spec `LTXDOC02-precise-token-spans.md` §5 S4 marked shipped; the LTXDOC01 §4/§5 D6
+region-coarse caveats updated to say body resolution is now precise (preamble stays coarse).
+
 ## [0.34.0] — 2026-07-04
 
 ### Changed — precise Document fold (LTXDOC02 S3)

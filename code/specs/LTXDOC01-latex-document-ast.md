@@ -149,15 +149,20 @@ impl<'a> NodeRef<'a> { pub fn span(&self) -> Span; pub fn kind(&self) -> &'stati
 pub struct Provenance<'a> { pub node: NodeRef<'a>, pub span: Span }  // narrowest node owning the byte
 ```
 
-**D6 honesty caveat — region-coarse spans (as shipped).** D2–D5 attach *region-granular* spans:
-many sibling blocks/inlines share the enclosing region they were lowered from (the parser does not
-yet thread exact per-token spans into lowered nodes). Consequently `walk()` is faithful (visits every
-body node once, pre-order), but `node_at(byte)` resolves to the **innermost node at region
-granularity** — the narrowest-span node containing the byte — **not** an exact byte→leaf. `walk()`
-covers the document **body** (Blocks + their Inlines, the provenance surface); preamble/metadata
-directives are indexed into `Preamble`/`Metadata`, not per-node walked. The byte-coverage guarantee
-below is therefore stated honestly at this granularity; precise per-byte→leaf resolution is future
-work once the parser threads token spans.
+**D6 provenance granularity — precise body spans (updated by LTXDOC02 S4).** As shipped, D2–D5
+attached *region-granular* spans (many sibling blocks/inlines shared the enclosing region they were
+lowered from), so `node_at(byte)` resolved only to the innermost node *at region granularity*.
+**LTXDOC02** retired that caveat for **body** nodes: S1/S2 thread exact per-token spans through the
+parser and recognition passes, S3 propagates them into every body `Block`/`Inline`, and **S4** makes
+`node_at(byte)` resolve to the **true per-token leaf** — the narrowest node whose *precise* span
+contains the byte (ties → deepest in pre-order). A byte inside `widgets` now resolves to the `Text`
+run owning `widgets`, not to the enclosing `Paragraph`/`Section`; a byte inside a `\section` title
+resolves to the title inline, not the whole `Section`. `walk()` covers the document **body** (Blocks
++ their Inlines, the provenance surface); **preamble/metadata** directives are indexed into
+`Preamble`/`Metadata`, not per-node walked, so their spans remain honestly region-coarse and
+`node_at` never resolves into them. (See `code/specs/LTXDOC02-precise-token-spans.md`. The
+whole-corpus *tightest-covering-leaf* capstone — proving no strictly-narrower node exists for any
+body byte — is LTXDOC02 S5.)
 
 `parse_document(src)` = `build_document(recognize_structure(recognize_accents(parse(src)?)),
 src.len())` after the L3b table/list recognition runs — i.e. it composes the shipped LTX01 passes and
@@ -206,12 +211,14 @@ warnings` clean; a byte-span on every node asserted in tests.
 - **D6 — provenance API + round-trip corpus + capstone.** ✅ *(shipped)* `Document::node_at(byte)`
   (innermost node owning a source byte), `walk()` pre-order iterator, and `to_latex()` fixed-point
   over a corpus of real papers (a sectioned article with abstract, a `tabular`, an `itemize`, inline
-  + display math, a figure with caption+label, a `\cite`). **Byte coverage, stated honestly at
-  region granularity:** because D2–D5 spans are region-coarse (not per-token), the capstone asserts
-  that every **non-whitespace byte inside the document body region** is owned by **≥1** walked node
-  (not "exactly one leaf" — that precise-leaf claim awaits the parser threading token spans). This
-  is the provenance surface the ADJ pipeline consumes; the granularity is documented, not
-  overclaimed. **This rung completes the LTXDOC01 D1–D6 arc — LaTeX → `Document` AST end-to-end.**
+  + display math, a figure with caption+label, a `\cite`). **Byte coverage:** the capstone asserts
+  that every **non-whitespace byte inside the document body region** is owned by **≥1** walked node.
+  As shipped this was stated honestly at *region* granularity (D2–D5 spans were region-coarse, not
+  per-token); **LTXDOC02** then threaded exact per-token spans (S1–S3) and made `node_at` resolve to
+  the true per-token leaf for body nodes (S4), so the precise-leaf claim that D6 deferred is now
+  delivered. Preamble/metadata remain honestly region-coarse (not per-node walked). This is the
+  provenance surface the ADJ pipeline consumes; the granularity is documented, not overclaimed.
+  **This rung completes the LTXDOC01 D1–D6 arc — LaTeX → `Document` AST end-to-end.**
 
 **Explicitly out of scope (documented, not built):** counter resolution / printed numbers, ToC/index
 generation, BibTeX resolution (we keep `\cite{key}` as a `CrossRef`, not the formatted citation),

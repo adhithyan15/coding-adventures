@@ -78,9 +78,17 @@ table. Both double the surface and de-sync from `Node` under edits; carrying the
 - **S3 — precise Document fold.** `build_document` reads carried node spans instead of the `region`;
   `Block`/`Inline` spans become tight. Delete the region-coarse span assignment; containment tests tighten
   from "⊆ region" to "== node source range".
-- **S4 — precise `node_at` + retire the caveat.** With tight spans, `node_at(byte)` returns the true leaf;
-  update its doc-comment and the LTXDOC01 §4/§5 caveats to drop "region-coarse". Add a test: a byte inside a
-  `Text` leaf resolves to that `Text`, and the resolved span slices back to exactly that word.
+- **S4 — precise `node_at` + retire the caveat.** ✅ *(shipped, latex 0.35.0)* With tight spans,
+  `node_at(byte)` returns the true per-token leaf — the narrowest node whose *precise* span contains the byte
+  (ties → deepest in pre-order). Retired the "region-coarse" hedging on `node_at`/`Provenance`/`walk` and the
+  module span note for **body** nodes; kept the honest region-coarse notes on `Preamble`/`DocumentClass`/`Package`
+  (classified out of directives, not walked) and updated the LTXDOC01 §4/§5 caveats to say body resolution is now
+  precise. Added leaf-resolution tests (`node_at_resolves_to_text_leaf_not_paragraph`,
+  `node_at_in_section_title_resolves_to_heading_inline`, `node_at_in_textbf_resolves_to_inner_leaf`) — a byte inside a
+  `Text`/title/inner-run resolves to that leaf and its span slices back to exactly the word — plus an honest body
+  byte-coverage test (`body_bytes_resolve_to_containing_node`) asserting every non-whitespace body byte both resolves
+  and resolves to a node whose precise span contains it (representative input only; the whole-corpus
+  tightest-covering-leaf capstone stays S5). No `node_at`/`walk` logic changed.
 - **S5 — precise byte-coverage capstone.** Over the LTXDOC01 capstone corpus, assert every non-whitespace
   body byte resolves (`node_at(byte).is_some()`) AND the resolved node is a **leaf** whose span is the
   tightest covering range (no strictly-narrower node also contains the byte). The precise counterpart of
