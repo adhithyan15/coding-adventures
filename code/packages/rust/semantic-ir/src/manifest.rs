@@ -35,6 +35,11 @@ use std::fmt;
 /// | `Pointers`                 | a `SirType::Ptr`                      |
 /// | `Structs`                  | a `SirType::Struct`                   |
 /// | `Bignum`                   | an arbitrary-precision `Int`          |
+/// | `NDArrays`                 | a `SirType::NDArray` or `Expr::ArrayLit`/`IndexGet`/`Range` |
+/// | `MatrixOps`                | a `MatMul`, `ElementwiseOp`, or `Transpose` node |
+/// | `Rationals`                | a `SirType::Rational`                 |
+/// | `Complex`                  | a `SirType::Complex`                  |
+/// | `ArrayColumnMajor`         | any `ArrayLit`/matrix op — column-major storage convention |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -156,6 +161,39 @@ pub enum Feature {
     /// dynamic backends implicitly support this; the flag makes the
     /// requirement explicit for the sized-integer cascade.)
     Bignum,
+    // ── SIR22 (array/matrix numeric-language IR extension) ───────────
+    /// The module uses a dense N-D numeric array — a `SirType::NDArray`
+    /// type annotation, or any of `Expr::ArrayLit` / `Expr::IndexGet` /
+    /// `Expr::Range` / `Stmt::IndexSet`.  A backend that doesn't declare
+    /// this in `accepts_features()` cleanly rejects the module via the
+    /// existing capability-check mechanism (SIR10) — no new mechanism
+    /// needed.  See
+    /// [SIR22](../../../../specs/SIR22-array-matrix-semantic-ir.md).
+    NDArrays,
+    /// The module uses a matrix operator: `Expr::MatMul`,
+    /// `Expr::ElementwiseOp`, or `Expr::Transpose`.  Split out from
+    /// `NDArrays` because a backend could in principle carry array
+    /// *values* (e.g. via an opaque intrinsic) without supporting these
+    /// specific operators, though the first-wave frontends declare both
+    /// together.
+    MatrixOps,
+    /// The module uses an exact rational scalar (`SirType::Rational`).
+    /// Shared with the future SIR23 symbolic extension.
+    Rationals,
+    /// The module uses a complex scalar (`SirType::Complex`).  Shared
+    /// with the future SIR23 symbolic extension.  Named `Complex` to
+    /// match the `SirType::Complex` variant it gates (not to be
+    /// confused with `SirType`'s own naming — this is a `Feature`).
+    Complex,
+    /// Declared whenever any `ArrayLit`/matrix op appears in the
+    /// module: states explicitly (per the SIR22 spec's "Storage
+    /// convention") that array storage is column-major (Fortran/MATLAB
+    /// order), matching `array_runtime::Array`'s internal layout. A JS
+    /// backend's own array representation needs this fact stated
+    /// explicitly rather than left implicit, since it owns its own
+    /// buffer layout and must match the same `(r, c) → c * nrows + r`
+    /// indexing formula.
+    ArrayColumnMajor,
 }
 
 impl Feature {
@@ -193,6 +231,11 @@ impl Feature {
         Feature::Pointers,
         Feature::Structs,
         Feature::Bignum,
+        Feature::NDArrays,
+        Feature::MatrixOps,
+        Feature::Rationals,
+        Feature::Complex,
+        Feature::ArrayColumnMajor,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -230,6 +273,11 @@ impl Feature {
             Feature::Pointers => "pointers",
             Feature::Structs => "structs",
             Feature::Bignum => "bignum",
+            Feature::NDArrays => "nd-arrays",
+            Feature::MatrixOps => "matrix-ops",
+            Feature::Rationals => "rationals",
+            Feature::Complex => "complex",
+            Feature::ArrayColumnMajor => "array-column-major",
         }
     }
 
@@ -371,11 +419,8 @@ mod tests {
 
     #[test]
     fn manifest_dedupes() {
-        let m = FeatureManifest::from_features(&[
-            Feature::Closures,
-            Feature::Pairs,
-            Feature::Closures,
-        ]);
+        let m =
+            FeatureManifest::from_features(&[Feature::Closures, Feature::Pairs, Feature::Closures]);
         assert_eq!(m.len(), 2);
         assert!(m.contains(Feature::Closures));
         assert!(m.contains(Feature::Pairs));
@@ -383,11 +428,8 @@ mod tests {
 
     #[test]
     fn manifest_display_is_space_separated() {
-        let m = FeatureManifest::from_features(&[
-            Feature::Closures,
-            Feature::Pairs,
-            Feature::Globals,
-        ]);
+        let m =
+            FeatureManifest::from_features(&[Feature::Closures, Feature::Pairs, Feature::Globals]);
         assert_eq!(format!("{}", m), "closures pairs globals");
     }
 

@@ -14,7 +14,7 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
     Block, Capture, CaptureValue, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest,
-    Function, Metadata, Module, Param, ParamKind, RescueClause, Scope, Span, Stmt,
+    Function, IndexArg, Metadata, Module, Param, ParamKind, RescueClause, Scope, Span, Stmt,
 };
 
 /// A failure encountered during Ruby → SIR lowering.
@@ -54,10 +54,7 @@ impl std::error::Error for RubyLowerError {}
 pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, RubyLowerError> {
     if program.rule_name != "program" {
         return Err(RubyLowerError {
-            message: format!(
-                "expected root rule `program`, got `{}`",
-                program.rule_name
-            ),
+            message: format!("expected root rule `program`, got `{}`", program.rule_name),
             line: program.start_line.unwrap_or(0),
             column: program.start_column.unwrap_or(0),
         });
@@ -119,8 +116,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
             // not a parenless call, so it must be excluded from the
             // call-rewrite below (a local can legitimately shadow a
             // method name).
-            let mut bound: HashSet<String> =
-                f.params.iter().map(|p| p.name.clone()).collect();
+            let mut bound: HashSet<String> = f.params.iter().map(|p| p.name.clone()).collect();
             Lowerer::collect_bound_names_block(&f.body, &mut bound);
             let ctx = BlockNormCtx {
                 methods: &lw.block_param_methods,
@@ -236,7 +232,12 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
         | Expr::StrLit { .. }
         | Expr::FloatLit { .. } => false,
 
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             expr_references_any_name(cond, names)
                 || block_references_any_name(then_branch, names)
                 || block_references_any_name(else_branch, names)
@@ -246,9 +247,7 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
 
         Expr::DirectCall { args, .. }
         | Expr::BuiltinCall { args, .. }
-        | Expr::Intrinsic { args, .. } => {
-            args.iter().any(|a| expr_references_any_name(a, names))
-        }
+        | Expr::Intrinsic { args, .. } => args.iter().any(|a| expr_references_any_name(a, names)),
 
         Expr::IndirectCall { target, args, .. } => {
             expr_references_any_name(target, names)
@@ -259,17 +258,14 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
             .iter()
             .any(|c| expr_references_any_name(&c.value, names)),
 
-        Expr::SeqLit { items, .. } => {
-            items.iter().any(|i| expr_references_any_name(i, names))
-        }
+        Expr::SeqLit { items, .. } => items.iter().any(|i| expr_references_any_name(i, names)),
         Expr::SeqIndex { seq, index, .. } => {
             expr_references_any_name(seq, names) || expr_references_any_name(index, names)
         }
         Expr::SeqLen { seq, .. } => expr_references_any_name(seq, names),
 
         Expr::MapLit { entries, .. } => entries.iter().any(|e| {
-            expr_references_any_name(&e.key, names)
-                || expr_references_any_name(&e.value, names)
+            expr_references_any_name(&e.key, names) || expr_references_any_name(&e.value, names)
         }),
         Expr::MapGet { map, key, .. } => {
             expr_references_any_name(map, names) || expr_references_any_name(key, names)
@@ -279,15 +275,59 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
             expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
         }
 
-        Expr::StrConcat { parts, .. } => {
-            parts.iter().any(|p| expr_references_any_name(p, names))
-        }
+        Expr::StrConcat { parts, .. } => parts.iter().any(|p| expr_references_any_name(p, names)),
 
         // KW1 compile-compat stub: a `KeywordArg` is a single-child wrapper
         // whose runtime meaning is its inner `value` (the `name` is a static
         // label carrying no `VarRef`).  Recurse into `value` so the swap-safety
         // reference check stays faithful.  Real support pending KW2–KW8.
         Expr::KeywordArg { value, .. } => expr_references_any_name(value, names),
+
+        // SIR22 compile-compat stubs: the Ruby frontend never *produces* any
+        // of these array/matrix nodes today (no lowering path emits them), so
+        // these arms are unreachable in practice.  They are still walked
+        // structurally — like every other arm above — so that if a future
+        // lowering path does start emitting them, the swap-safety check
+        // keeps scanning every child `Expr` for `VarRef`s instead of silently
+        // going blind on a subtree.
+        Expr::ArrayLit { rows, .. } => rows
+            .iter()
+            .any(|row| row.iter().any(|e| expr_references_any_name(e, names))),
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            expr_references_any_name(start, names)
+                || step
+                    .as_ref()
+                    .is_some_and(|s| expr_references_any_name(s, names))
+                || expr_references_any_name(stop, names)
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+        Expr::Transpose { target, .. } => expr_references_any_name(target, names),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            expr_references_any_name(target, names)
+                || indices
+                    .iter()
+                    .any(|idx| index_arg_references_any_name(idx, names))
+        }
+    }
+}
+
+// SIR22 helper: `IndexArg` (used by `Expr::IndexGet` / `Stmt::IndexSet`) is
+// not an `Expr` itself but a small wrapper enum around one — mirroring how
+// this file already unwraps other non-`Expr` wrapper shapes (e.g. `MapLit`'s
+// entries) before recursing into their contained expressions.
+fn index_arg_references_any_name(idx: &IndexArg, names: &HashSet<String>) -> bool {
+    match idx {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => expr_references_any_name(e, names),
+        IndexArg::Whole => false,
     }
 }
 
@@ -312,13 +352,17 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                 }
             }
             Stmt::While { cond, body, .. } => {
-                if expr_references_any_name(cond, names)
-                    || block_references_any_name(body, names)
-                {
+                if expr_references_any_name(cond, names) || block_references_any_name(body, names) {
                     return true;
                 }
             }
-            Stmt::ForRange { start, stop, step, body, .. } => {
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
                 if expr_references_any_name(start, names)
                     || expr_references_any_name(stop, names)
                     || expr_references_any_name(step, names)
@@ -328,13 +372,13 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                 }
             }
             Stmt::ForEach { iter, body, .. } => {
-                if expr_references_any_name(iter, names)
-                    || block_references_any_name(body, names)
-                {
+                if expr_references_any_name(iter, names) || block_references_any_name(body, names) {
                     return true;
                 }
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 if expr_references_any_name(seq, names)
                     || expr_references_any_name(index, names)
                     || expr_references_any_name(value, names)
@@ -342,9 +386,31 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     return true;
                 }
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 if expr_references_any_name(map, names)
                     || expr_references_any_name(key, names)
+                    || expr_references_any_name(value, names)
+                {
+                    return true;
+                }
+            }
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                // SIR22 compile-compat stub (never emitted by this frontend
+                // today — see the `Expr::ArrayLit`/etc. arms above for the
+                // same rationale): mirrors the `SeqSet`/`MapSet` arms by
+                // recursing into every child `Expr`, including each
+                // `IndexArg`'s embedded expression.
+                if expr_references_any_name(target, names)
+                    || indices
+                        .iter()
+                        .any(|idx| index_arg_references_any_name(idx, names))
                     || expr_references_any_name(value, names)
                 {
                     return true;
@@ -360,7 +426,9 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                 for inner in body {
                     let synthetic = Block {
                         stmts: vec![inner.clone()],
-                        value: Expr::NilLit { span: inner.span().clone() },
+                        value: Expr::NilLit {
+                            span: inner.span().clone(),
+                        },
                         span: inner.span().clone(),
                     };
                     if block_references_any_name(&synthetic, names) {
@@ -368,7 +436,12 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     }
                 }
             }
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 // Exception handling (Phase 16a): the try body, each
                 // rescue body, and the optional ensure body are all
                 // `Vec<Stmt>`.  Recurse over every contained statement via
@@ -377,7 +450,9 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     stmts.iter().any(|inner| {
                         let synthetic = Block {
                             stmts: vec![inner.clone()],
-                            value: Expr::NilLit { span: inner.span().clone() },
+                            value: Expr::NilLit {
+                                span: inner.span().clone(),
+                            },
                             span: inner.span().clone(),
                         };
                         block_references_any_name(&synthetic, names)
@@ -433,12 +508,25 @@ fn sequentialize_let_bindings(stmts: &mut [Stmt]) {
             let taken = std::mem::replace(
                 s,
                 Stmt::ExprStmt {
-                    expr: Expr::NilLit { span: Span::synthetic() },
+                    expr: Expr::NilLit {
+                        span: Span::synthetic(),
+                    },
                     span: Span::synthetic(),
                 },
             );
-            if let Stmt::LetBinding { name, sir_type, value, span } = taken {
-                *s = Stmt::LetStarBinding { name, sir_type, value, span };
+            if let Stmt::LetBinding {
+                name,
+                sir_type,
+                value,
+                span,
+            } = taken
+            {
+                *s = Stmt::LetStarBinding {
+                    name,
+                    sir_type,
+                    value,
+                    span,
+                };
             }
         }
         // Record the name this statement binds, so later statements see it.
@@ -811,7 +899,9 @@ impl Lowerer {
         if stmts_in.is_empty() {
             return Ok(Block {
                 stmts: Vec::new(),
-                value: Expr::NilLit { span: self.span_of(program) },
+                value: Expr::NilLit {
+                    span: self.span_of(program),
+                },
                 span: self.span_of(program),
             });
         }
@@ -838,17 +928,21 @@ impl Lowerer {
 
             let is_tail = i == last_idx;
             let tail_kind = inner.rule_name.as_str();
-            if is_tail && matches!(tail_kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
+            if is_tail
+                && matches!(
+                    tail_kind,
+                    "expression_stmt" | "method_call" | "method_call_no_paren"
+                )
+            {
                 // Promote the tail expression to the block's value.
                 let v = match tail_kind {
                     "expression_stmt" => {
-                        let expr_node = self.first_node_child(inner).ok_or_else(|| {
-                            RubyLowerError {
+                        let expr_node =
+                            self.first_node_child(inner).ok_or_else(|| RubyLowerError {
                                 message: "expression_stmt had no expression child".to_string(),
                                 line: inner.start_line.unwrap_or(0),
                                 column: inner.start_column.unwrap_or(0),
-                            }
-                        })?;
+                            })?;
                         self.lower_expression(expr_node)?
                     }
                     "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
@@ -863,7 +957,9 @@ impl Lowerer {
             }
         }
 
-        let value = value.unwrap_or(Expr::NilLit { span: self.span_of(program) });
+        let value = value.unwrap_or(Expr::NilLit {
+            span: self.span_of(program),
+        });
         // Ruby assignments are sequential: rewrite any `LetBinding` whose RHS
         // reads an earlier local to a `LetStarBinding` (see the fn's doc).
         sequentialize_let_bindings(&mut stmts_out);
@@ -924,10 +1020,7 @@ impl Lowerer {
     /// Lower the inner rule node of a `statement` (one of
     /// `assignment` / `method_call` / `expression_stmt`) into a
     /// `Stmt`.
-    fn lower_statement_inner(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Stmt, RubyLowerError> {
+    fn lower_statement_inner(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         match node.rule_name.as_str() {
             "assignment" => self.lower_assignment(node),
             "rightward_assignment" => self.lower_rightward_assignment(node),
@@ -1089,8 +1182,7 @@ impl Lowerer {
                 // effect set when the block is constructed.  Modelling
                 // `yield` itself as PURE keeps the effect lattice from
                 // double-counting block effects.
-                let yield_args_node = self
-                    .find_node_child(node, "yield_args");
+                let yield_args_node = self.find_node_child(node, "yield_args");
                 let call_arg_nodes: Vec<&GrammarASTNode> = if let Some(ya) = yield_args_node {
                     ya.children
                         .iter()
@@ -1145,7 +1237,9 @@ impl Lowerer {
                 let arg_node = self.find_node_child(node, "expression");
                 let arg = match arg_node {
                     Some(n) => self.lower_expression(n)?,
-                    None => Expr::NilLit { span: self.span_of(node) },
+                    None => Expr::NilLit {
+                        span: self.span_of(node),
+                    },
                 };
                 let expr = Expr::BuiltinCall {
                     name: name.to_string(),
@@ -1307,10 +1401,7 @@ impl Lowerer {
     /// condition is negated.  `elsif` chains nest right — the
     /// `else_branch` of the outermost `If` is itself an `If` for
     /// the first elsif, etc.
-    fn lower_if_or_unless(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_if_or_unless(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         let is_unless = node.rule_name == "unless_statement";
         // The first `expression` child is the condition.
         let cond_node = self
@@ -1359,7 +1450,9 @@ impl Lowerer {
         } else {
             Block {
                 stmts: Vec::new(),
-                value: Expr::NilLit { span: self.span_of(node) },
+                value: Expr::NilLit {
+                    span: self.span_of(node),
+                },
                 span: self.span_of(node),
             }
         };
@@ -1367,13 +1460,13 @@ impl Lowerer {
         // Unwind elsif clauses in reverse order, each wrapping the
         // accumulated tail as its own else-branch.
         for ec in elsifs.iter().rev() {
-            let ec_cond = self.find_node_child(ec, "expression").ok_or_else(|| {
-                RubyLowerError {
+            let ec_cond = self
+                .find_node_child(ec, "expression")
+                .ok_or_else(|| RubyLowerError {
                     message: "elsif_clause missing condition expression".to_string(),
                     line: ec.start_line.unwrap_or(0),
                     column: ec.start_column.unwrap_or(0),
-                }
-            })?;
+                })?;
             let ec_cond_expr = self.lower_expression(ec_cond)?;
             let ec_body = self.lower_clause_statements(ec)?;
             tail = Block {
@@ -1401,10 +1494,7 @@ impl Lowerer {
     /// `Block`.  Tail-expression promotion follows the same rule as
     /// `lower_program` — last bare `expression_stmt` / `method_call`
     /// becomes `value`, otherwise `value = NilLit`.
-    fn lower_clause_statements(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Block, RubyLowerError> {
+    fn lower_clause_statements(&mut self, node: &GrammarASTNode) -> Result<Block, RubyLowerError> {
         // Phase 6b: each branch is an independent SIR `Block`.
         // Lock the declared-locals set to the outer-scope's snapshot
         // before lowering the body, then restore on exit.  Without
@@ -1423,7 +1513,9 @@ impl Lowerer {
         if stmts_in.is_empty() {
             return Ok(Block {
                 stmts: Vec::new(),
-                value: Expr::NilLit { span: self.span_of(node) },
+                value: Expr::NilLit {
+                    span: self.span_of(node),
+                },
                 span: self.span_of(node),
             });
         }
@@ -1450,7 +1542,9 @@ impl Lowerer {
             // Phase 6r — multi-stmt fan-out for `multi_assignment`.
             stmts_out.extend(self.lower_statement_inner_multi(inner)?);
         }
-        let value = value.unwrap_or(Expr::NilLit { span: self.span_of(node) });
+        let value = value.unwrap_or(Expr::NilLit {
+            span: self.span_of(node),
+        });
         // Restore the outer scope's declared locals.
         self.declared_locals = saved_locals;
         // Sequential-assignment fix-up (see `sequentialize_let_bindings`).
@@ -1501,10 +1595,7 @@ impl Lowerer {
     /// implicit return is observable.  A *script's* top-level value is not
     /// language-visible, so [`Self::lower_program`] keeps a bare trailing
     /// `if` as a `Stmt` (see its own promotion list).
-    fn lower_tail_value(
-        &mut self,
-        inner: &GrammarASTNode,
-    ) -> Result<Option<Expr>, RubyLowerError> {
+    fn lower_tail_value(&mut self, inner: &GrammarASTNode) -> Result<Option<Expr>, RubyLowerError> {
         let value = match inner.rule_name.as_str() {
             "expression_stmt" => {
                 let expr_node = self.first_node_child(inner).ok_or_else(|| RubyLowerError {
@@ -1534,10 +1625,7 @@ impl Lowerer {
     /// Lower a `while_statement` or `until_statement` into a
     /// `Stmt::While`.  `until cond` lowers to `while !cond`
     /// (condition wrapped in `BuiltinCall("not", ...)`).
-    fn lower_while_or_until(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Stmt, RubyLowerError> {
+    fn lower_while_or_until(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         let is_until = node.rule_name == "until_statement";
         let cond_node = self
             .find_node_child(node, "expression")
@@ -1610,21 +1698,18 @@ impl Lowerer {
     /// - Range/Regex/Class values in `when` lists work syntactically
     ///   (they parse as expressions) but the `==` comparison won't
     ///   match Ruby's case-equality semantics.
-    fn lower_case_statement(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_case_statement(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // 1. Scrutinee — the first `expression` direct child of the
         //    case_statement.  (subsequent `expression` children belong
         //    to when_clause descendants, but they're inside subnodes,
         //    not direct children.)
-        let scrutinee_node = self
-            .find_node_child(node, "expression")
-            .ok_or_else(|| RubyLowerError {
-                message: "case_statement missing scrutinee expression".to_string(),
-                line: node.start_line.unwrap_or(0),
-                column: node.start_column.unwrap_or(0),
-            })?;
+        let scrutinee_node =
+            self.find_node_child(node, "expression")
+                .ok_or_else(|| RubyLowerError {
+                    message: "case_statement missing scrutinee expression".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
         let scrutinee = self.lower_expression(scrutinee_node)?;
 
         // 2. Collect every when_clause / in_clause subnode in source order.
@@ -1657,7 +1742,9 @@ impl Lowerer {
         } else {
             Block {
                 stmts: Vec::new(),
-                value: Expr::NilLit { span: self.span_of(node) },
+                value: Expr::NilLit {
+                    span: self.span_of(node),
+                },
                 span: self.span_of(node),
             }
         };
@@ -1758,7 +1845,13 @@ impl Lowerer {
             //     which dispatches Range→membership, Regexp→match, else `==`.
             // The `case_eq` floor is `==`, so plain literals keep their old
             // behaviour.
-            let cmp = if matches!(val, Expr::VarRef { scope: Scope::Const, .. }) {
+            let cmp = if matches!(
+                val,
+                Expr::VarRef {
+                    scope: Scope::Const,
+                    ..
+                }
+            ) {
                 self.features_used.insert(Feature::Classes);
                 // The synthetic `"is_a?"` method-name is a string literal.
                 self.features_used.insert(Feature::Strings);
@@ -1766,7 +1859,10 @@ impl Lowerer {
                     name: "__method__".to_string(),
                     args: vec![
                         scrutinee.clone(),
-                        Expr::StrLit { value: "is_a?".to_string(), span: span.clone() },
+                        Expr::StrLit {
+                            value: "is_a?".to_string(),
+                            span: span.clone(),
+                        },
                         val,
                     ],
                     effects: EffectSet::PURE,
@@ -1836,13 +1932,13 @@ impl Lowerer {
         pattern_node: &GrammarASTNode,
         scrutinee: &Expr,
     ) -> Result<(Expr, Vec<Stmt>), RubyLowerError> {
-        let inner = self.first_node_child(pattern_node).ok_or_else(|| {
-            RubyLowerError {
+        let inner = self
+            .first_node_child(pattern_node)
+            .ok_or_else(|| RubyLowerError {
                 message: "pattern node had no inner rule child".to_string(),
                 line: pattern_node.start_line.unwrap_or(0),
                 column: pattern_node.start_column.unwrap_or(0),
-            }
-        })?;
+            })?;
         let span = self.span_of(pattern_node);
         match inner.rule_name.as_str() {
             "literal_pattern" => {
@@ -2245,9 +2341,7 @@ impl Lowerer {
                         .children
                         .iter()
                         .find_map(|c| match c {
-                            ASTNodeOrToken::Token(t)
-                                if matches!(t.type_, TokenType::Name) =>
-                            {
+                            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => {
                                 Some(t)
                             }
                             _ => None,
@@ -2627,12 +2721,8 @@ impl Lowerer {
                             // Reuse the Phase-6z numeric dispatch so
                             // every shape (float/hex/bin/oct/dec) is
                             // handled identically here.
-                            return self.lower_numeric_literal(
-                                &tok.value,
-                                span,
-                                tok.line,
-                                tok.column,
-                            );
+                            return self
+                                .lower_numeric_literal(&tok.value, span, tok.line, tok.column);
                         }
                         TokenType::String => {
                             return Ok(Expr::StrLit {
@@ -2739,10 +2829,7 @@ impl Lowerer {
     /// The LHS body is wrapped in a single-statement `Block` (with
     /// `value: NilLit` — the modifier form is statement-position only,
     /// never tail-promoted to expression).
-    fn lower_modifier_statement(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Stmt, RubyLowerError> {
+    fn lower_modifier_statement(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         // 1. Find the LHS inner-rule node.  It's the first child that's
         //    one of the four LHS-eligible rules.
         let lhs_node = node
@@ -2752,10 +2839,7 @@ impl Lowerer {
                 ASTNodeOrToken::Node(n)
                     if matches!(
                         n.rule_name.as_str(),
-                        "assignment"
-                            | "method_call"
-                            | "method_call_no_paren"
-                            | "expression_stmt"
+                        "assignment" | "method_call" | "method_call_no_paren" | "expression_stmt"
                     ) =>
                 {
                     Some(n)
@@ -2778,10 +2862,7 @@ impl Lowerer {
                 ASTNodeOrToken::Token(t)
                     if matches!(
                         t.value.as_str(),
-                        "if_modifier"
-                            | "unless_modifier"
-                            | "while_modifier"
-                            | "until_modifier"
+                        "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier"
                     ) =>
                 {
                     Some(t.value.as_str())
@@ -2830,8 +2911,7 @@ impl Lowerer {
         //    wrap it in `not` — identical to the leading-keyword
         //    `unless_statement` / `until_statement` lowerings.
         let mut cond = self.lower_expression(cond_node)?;
-        let negate =
-            matches!(modifier_kw, "unless_modifier" | "until_modifier");
+        let negate = matches!(modifier_kw, "unless_modifier" | "until_modifier");
         if negate {
             cond = Expr::BuiltinCall {
                 name: "not".to_string(),
@@ -2889,10 +2969,7 @@ impl Lowerer {
     /// `self.user_functions`.  Method bodies are recursively
     /// lowered using a *fresh* declared-locals set so the outer
     /// program's let-bindings don't leak in.
-    fn collect_def_statements(
-        &mut self,
-        program: &GrammarASTNode,
-    ) -> Result<(), RubyLowerError> {
+    fn collect_def_statements(&mut self, program: &GrammarASTNode) -> Result<(), RubyLowerError> {
         for child in &program.children {
             let stmt = match child {
                 ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
@@ -3243,7 +3320,10 @@ impl Lowerer {
     /// `def m` and `def self.m` to coexist).  The runtime class-method table is
     /// keyed on the bare method name, so dispatch is unaffected by the suffix.
     fn qualified_class_method_fn_name(&self, class_name: &str, method_name: &str) -> String {
-        format!("{}_cm", self.qualified_method_fn_name(class_name, method_name))
+        format!(
+            "{}_cm",
+            self.qualified_method_fn_name(class_name, method_name)
+        )
     }
 
     /// Issue #59 — does this `def_statement` / `endless_def_statement` carry a
@@ -3299,8 +3379,14 @@ impl Lowerer {
             expr: Expr::BuiltinCall {
                 name: builtin.to_string(),
                 args: vec![
-                    Expr::StrLit { value: class_name.to_string(), span: span.clone() },
-                    Expr::StrLit { value: method_name.to_string(), span: span.clone() },
+                    Expr::StrLit {
+                        value: class_name.to_string(),
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: method_name.to_string(),
+                        span: span.clone(),
+                    },
                     Expr::MakeClosure {
                         fn_name: fn_name.to_string(),
                         captures: Vec::new(),
@@ -3334,7 +3420,9 @@ impl Lowerer {
     ) -> Result<Option<Vec<Stmt>>, RubyLowerError> {
         // The callee is the first Name token directly under the call node.
         let callee = call_node.children.iter().find_map(|c| match c {
-            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.as_str()),
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => {
+                Some(t.value.as_str())
+            }
             _ => None,
         });
         let (want_reader, want_writer) = match callee {
@@ -3478,7 +3566,9 @@ impl Lowerer {
     ) -> Result<Option<Stmt>, RubyLowerError> {
         // The callee is the first Name token directly under the call node.
         let callee = call_node.children.iter().find_map(|c| match c {
-            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.as_str()),
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => {
+                Some(t.value.as_str())
+            }
             _ => None,
         });
         let builtin = match callee {
@@ -3501,7 +3591,11 @@ impl Lowerer {
         };
         let lowered = self.lower_expression(arg_node)?;
         let module_name = match lowered {
-            Expr::VarRef { name, scope: Scope::Const, .. } => name,
+            Expr::VarRef {
+                name,
+                scope: Scope::Const,
+                ..
+            } => name,
             // Not a bare constant — fall through to the ordinary-call path.
             _ => return Ok(None),
         };
@@ -3517,8 +3611,14 @@ impl Lowerer {
             expr: Expr::BuiltinCall {
                 name: builtin.to_string(),
                 args: vec![
-                    Expr::StrLit { value: owner.to_string(), span: span.clone() },
-                    Expr::StrLit { value: module_name, span: span.clone() },
+                    Expr::StrLit {
+                        value: owner.to_string(),
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: module_name,
+                        span: span.clone(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: span.clone(),
@@ -3535,7 +3635,10 @@ impl Lowerer {
         if node.rule_name == "symbol_literal" {
             return node.children.iter().find_map(|c| match c {
                 ASTNodeOrToken::Token(t)
-                    if matches!(t.type_, TokenType::Name | TokenType::Keyword | TokenType::String) =>
+                    if matches!(
+                        t.type_,
+                        TokenType::Name | TokenType::Keyword | TokenType::String
+                    ) =>
                 {
                     Some(t.value.clone())
                 }
@@ -3562,10 +3665,7 @@ impl Lowerer {
     /// explicit Name-type filter for symmetry with the analogous
     /// helper inside `lower_def_statement` that extracts the method
     /// name).
-    fn extract_class_name(
-        &self,
-        node: &GrammarASTNode,
-    ) -> Result<String, RubyLowerError> {
+    fn extract_class_name(&self, node: &GrammarASTNode) -> Result<String, RubyLowerError> {
         let name_token = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
             _ => None,
@@ -3584,10 +3684,7 @@ impl Lowerer {
     /// Shape: `KEYWORD("module") NAME { !"end" statement } "end"`.  The
     /// name is the first `TokenType::Name` token — symmetric with
     /// `extract_class_name`, but with a module-specific error message.
-    fn extract_module_name(
-        &self,
-        node: &GrammarASTNode,
-    ) -> Result<String, RubyLowerError> {
+    fn extract_module_name(&self, node: &GrammarASTNode) -> Result<String, RubyLowerError> {
         let name_token = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
             _ => None,
@@ -3721,7 +3818,6 @@ impl Lowerer {
         func
     }
 
-
     /// Rewrite every direct-in-body `yield` within a [`Block`], returning
     /// whether at least one was found.  Recurses through the block's
     /// statements and its trailing value expression.
@@ -3755,13 +3851,21 @@ impl Lowerer {
             Stmt::LetBinding { value, .. }
             | Stmt::LetStarBinding { value, .. }
             | Stmt::Assign { value, .. }
-            | Stmt::ExprStmt { expr: value, .. } => Self::rewrite_yields_in_expr(value, block_scope),
+            | Stmt::ExprStmt { expr: value, .. } => {
+                Self::rewrite_yields_in_expr(value, block_scope)
+            }
             Stmt::While { cond, body, .. } => {
                 let mut found = Self::rewrite_yields_in_expr(cond, block_scope);
                 found |= Self::rewrite_yields_in_block(body, block_scope);
                 found
             }
-            Stmt::ForRange { start, stop, step, body, .. } => {
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
                 let mut found = Self::rewrite_yields_in_expr(start, block_scope);
                 found |= Self::rewrite_yields_in_expr(stop, block_scope);
                 found |= Self::rewrite_yields_in_expr(step, block_scope);
@@ -3773,19 +3877,48 @@ impl Lowerer {
                 found |= Self::rewrite_yields_in_block(body, block_scope);
                 found
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 let mut found = Self::rewrite_yields_in_expr(seq, block_scope);
                 found |= Self::rewrite_yields_in_expr(index, block_scope);
                 found |= Self::rewrite_yields_in_expr(value, block_scope);
                 found
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 let mut found = Self::rewrite_yields_in_expr(map, block_scope);
                 found |= Self::rewrite_yields_in_expr(key, block_scope);
                 found |= Self::rewrite_yields_in_expr(value, block_scope);
                 found
             }
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // SIR22 compile-compat stub: this frontend never emits
+            // `IndexSet` today, so this arm is unreachable in practice.
+            // It still recurses into every child `Expr` (including each
+            // `IndexArg`'s embedded expression), mirroring the `SeqSet` /
+            // `MapSet` arms above, so a nested `yield` would still be
+            // found and rewritten if a future lowering path ever produced
+            // this node inside a `yield`-bearing method body.
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                let mut found = Self::rewrite_yields_in_expr(target, block_scope);
+                for idx in indices.iter_mut() {
+                    found |= Self::rewrite_yields_in_index_arg(idx, block_scope);
+                }
+                found |= Self::rewrite_yields_in_expr(value, block_scope);
+                found
+            }
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 let mut found = Self::rewrite_yields_in_stmts(body, block_scope);
                 for r in rescues {
                     found |= Self::rewrite_yields_in_stmts(&mut r.body, block_scope);
@@ -3798,9 +3931,21 @@ impl Lowerer {
             // Class/module/singleton declaration bodies are NOT descended:
             // their method `def`s are hoisted to their own top-level
             // Functions, where any `yield` is rewritten in its own right.
-            Stmt::ClassDef { .. }
-            | Stmt::ModuleDef { .. }
-            | Stmt::SingletonClassDef { .. } => false,
+            Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {
+                false
+            }
+        }
+    }
+
+    /// SIR22 helper for the `yield`-rewrite pass: `IndexArg` wraps an
+    /// optional inner `Expr` (see `Expr::IndexGet`/`Stmt::IndexSet`);
+    /// recurse into it exactly like any other single-child wrapper above.
+    fn rewrite_yields_in_index_arg(idx: &mut IndexArg, block_scope: Scope) -> bool {
+        match idx {
+            IndexArg::Scalar(e) | IndexArg::Range(e) => {
+                Self::rewrite_yields_in_expr(e, block_scope)
+            }
+            IndexArg::Whole => false,
         }
     }
 
@@ -3813,7 +3958,12 @@ impl Lowerer {
     /// `yield` inside a block literal belongs to the enclosing method).
     fn rewrite_yields_in_expr(expr: &mut Expr, block_scope: Scope) -> bool {
         match expr {
-            Expr::BuiltinCall { name, args, effects, span } if name == "yield" => {
+            Expr::BuiltinCall {
+                name,
+                args,
+                effects,
+                span,
+            } if name == "yield" => {
                 // Rewrite any yields nested within this yield's own
                 // arguments first (e.g. `yield(yield x)`), then replace
                 // the whole node with the indirect call.
@@ -3852,7 +4002,12 @@ impl Lowerer {
                 }
                 found
             }
-            Expr::If { cond, then_branch, else_branch, .. } => {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
                 let mut found = Self::rewrite_yields_in_expr(cond, block_scope);
                 found |= Self::rewrite_yields_in_block(then_branch, block_scope);
                 found |= Self::rewrite_yields_in_block(else_branch, block_scope);
@@ -3901,9 +4056,7 @@ impl Lowerer {
             // `value` (its runtime meaning) so a `yield` nested inside a
             // keyword argument is still rewritten.  Real support pending
             // KW2–KW8.
-            Expr::KeywordArg { value, .. } => {
-                Self::rewrite_yields_in_expr(value, block_scope)
-            }
+            Expr::KeywordArg { value, .. } => Self::rewrite_yields_in_expr(value, block_scope),
             // Phase Q10b — `block_given?` reaches the lowerer as a bare
             // `VarRef` named "block_given?" (it is parenless, so the
             // method-call parser treats it as a name).  Inside a method
@@ -3947,6 +4100,51 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => false,
+
+            // SIR22 compile-compat stubs: unreachable in practice (this
+            // frontend never emits these array/matrix nodes), but they
+            // recurse into every child `Expr` — same convention as
+            // `SeqLit`/`MapLit`/etc. above — so a nested `yield` inside one
+            // would still be found if such a node were ever produced.
+            Expr::ArrayLit { rows, .. } => {
+                let mut found = false;
+                for row in rows.iter_mut() {
+                    for e in row.iter_mut() {
+                        found |= Self::rewrite_yields_in_expr(e, block_scope);
+                    }
+                }
+                found
+            }
+            Expr::Range {
+                start, step, stop, ..
+            } => {
+                let mut found = Self::rewrite_yields_in_expr(start, block_scope);
+                if let Some(s) = step {
+                    found |= Self::rewrite_yields_in_expr(s, block_scope);
+                }
+                found |= Self::rewrite_yields_in_expr(stop, block_scope);
+                found
+            }
+            Expr::MatMul { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+            Expr::ElementwiseOp { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+            Expr::Transpose { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::IndexGet {
+                target, indices, ..
+            } => {
+                let mut found = Self::rewrite_yields_in_expr(target, block_scope);
+                for idx in indices.iter_mut() {
+                    found |= Self::rewrite_yields_in_index_arg(idx, block_scope);
+                }
+                found
+            }
         }
     }
 
@@ -4003,29 +4201,64 @@ impl Lowerer {
                 Self::collect_bound_names_in_expr(cond, out);
                 Self::collect_bound_names_in_block(body, out);
             }
-            Stmt::ForRange { var, start, stop, step, body, .. } => {
+            Stmt::ForRange {
+                var,
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
                 out.insert(var.clone());
                 Self::collect_bound_names_in_expr(start, out);
                 Self::collect_bound_names_in_expr(stop, out);
                 Self::collect_bound_names_in_expr(step, out);
                 Self::collect_bound_names_in_block(body, out);
             }
-            Stmt::ForEach { var, iter, body, .. } => {
+            Stmt::ForEach {
+                var, iter, body, ..
+            } => {
                 out.insert(var.clone());
                 Self::collect_bound_names_in_expr(iter, out);
                 Self::collect_bound_names_in_block(body, out);
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 Self::collect_bound_names_in_expr(seq, out);
                 Self::collect_bound_names_in_expr(index, out);
                 Self::collect_bound_names_in_expr(value, out);
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 Self::collect_bound_names_in_expr(map, out);
                 Self::collect_bound_names_in_expr(key, out);
                 Self::collect_bound_names_in_expr(value, out);
             }
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // SIR22 compile-compat stub (never emitted by this frontend):
+            // an index-assignment binds no new name, but its operand
+            // expressions can still contain a `MakeClosure` whose captures
+            // read outer locals, so recurse into all of them exactly like
+            // the `SeqSet`/`MapSet` arms above.
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                Self::collect_bound_names_in_expr(target, out);
+                for idx in indices {
+                    Self::collect_bound_names_in_index_arg(idx, out);
+                }
+                Self::collect_bound_names_in_expr(value, out);
+            }
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 for s in body {
                     Self::collect_bound_names_in_stmt(s, out);
                 }
@@ -4044,15 +4277,18 @@ impl Lowerer {
                 }
             }
             // Declaration bodies hoist their own methods; not descended.
-            Stmt::ClassDef { .. }
-            | Stmt::ModuleDef { .. }
-            | Stmt::SingletonClassDef { .. } => {}
+            Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
         }
     }
 
     fn collect_bound_names_in_expr(expr: &Expr, out: &mut HashSet<String>) {
         match expr {
-            Expr::If { cond, then_branch, else_branch, .. } => {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
                 Self::collect_bound_names_in_expr(cond, out);
                 Self::collect_bound_names_in_block(then_branch, out);
                 Self::collect_bound_names_in_block(else_branch, out);
@@ -4105,6 +4341,16 @@ impl Lowerer {
         }
     }
 
+    /// SIR22 helper for `collect_bound_names_in_stmt`: recurse into an
+    /// `IndexArg`'s embedded expression (if any), mirroring the treatment
+    /// above of other single-child wrapper shapes.
+    fn collect_bound_names_in_index_arg(idx: &IndexArg, out: &mut HashSet<String>) {
+        match idx {
+            IndexArg::Scalar(e) | IndexArg::Range(e) => Self::collect_bound_names_in_expr(e, out),
+            IndexArg::Whole => {}
+        }
+    }
+
     /// Rewrite every free *read* (`VarRef{scope:Local}`) of a name for which
     /// `is_free(name)` holds to `Scope::Capture`, recording each captured
     /// name once in first-occurrence order.  Nested `MakeClosure` bodies are
@@ -4136,7 +4382,13 @@ impl Lowerer {
                 Self::recapture_reads_in_expr(cond, is_free, found);
                 Self::recapture_reads_in_block(body, is_free, found);
             }
-            Stmt::ForRange { start, stop, step, body, .. } => {
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
                 Self::recapture_reads_in_expr(start, is_free, found);
                 Self::recapture_reads_in_expr(stop, is_free, found);
                 Self::recapture_reads_in_expr(step, is_free, found);
@@ -4146,17 +4398,42 @@ impl Lowerer {
                 Self::recapture_reads_in_expr(iter, is_free, found);
                 Self::recapture_reads_in_block(body, is_free, found);
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 Self::recapture_reads_in_expr(seq, is_free, found);
                 Self::recapture_reads_in_expr(index, is_free, found);
                 Self::recapture_reads_in_expr(value, is_free, found);
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 Self::recapture_reads_in_expr(map, is_free, found);
                 Self::recapture_reads_in_expr(key, is_free, found);
                 Self::recapture_reads_in_expr(value, is_free, found);
             }
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // SIR22 compile-compat stub (never emitted by this frontend):
+            // recurse into every child `Expr`, including each `IndexArg`'s
+            // embedded expression, mirroring `SeqSet`/`MapSet` above, so a
+            // free outer-local read nested inside one is still recaptured.
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                Self::recapture_reads_in_expr(target, is_free, found);
+                for idx in indices.iter_mut() {
+                    Self::recapture_reads_in_index_arg(idx, is_free, found);
+                }
+                Self::recapture_reads_in_expr(value, is_free, found);
+            }
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 for s in body {
                     Self::recapture_reads_in_stmt(s, is_free, found);
                 }
@@ -4171,9 +4448,22 @@ impl Lowerer {
                     }
                 }
             }
-            Stmt::ClassDef { .. }
-            | Stmt::ModuleDef { .. }
-            | Stmt::SingletonClassDef { .. } => {}
+            Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
+        }
+    }
+
+    /// SIR22 helper for `recapture_reads_in_stmt`: recurse into an
+    /// `IndexArg`'s embedded expression (if any).
+    fn recapture_reads_in_index_arg(
+        idx: &mut IndexArg,
+        is_free: &impl Fn(&str) -> bool,
+        found: &mut Vec<String>,
+    ) {
+        match idx {
+            IndexArg::Scalar(e) | IndexArg::Range(e) => {
+                Self::recapture_reads_in_expr(e, is_free, found)
+            }
+            IndexArg::Whole => {}
         }
     }
 
@@ -4189,7 +4479,12 @@ impl Lowerer {
                 }
                 *scope = Scope::Capture;
             }
-            Expr::If { cond, then_branch, else_branch, .. } => {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
                 Self::recapture_reads_in_expr(cond, is_free, found);
                 Self::recapture_reads_in_block(then_branch, is_free, found);
                 Self::recapture_reads_in_block(else_branch, is_free, found);
@@ -4290,7 +4585,13 @@ impl Lowerer {
                 Self::normalize_calls_in_expr(cond, ctx);
                 Self::normalize_block_call_args(body, ctx);
             }
-            Stmt::ForRange { start, stop, step, body, .. } => {
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
                 Self::normalize_calls_in_expr(start, ctx);
                 Self::normalize_calls_in_expr(stop, ctx);
                 Self::normalize_calls_in_expr(step, ctx);
@@ -4300,14 +4601,35 @@ impl Lowerer {
                 Self::normalize_calls_in_expr(iter, ctx);
                 Self::normalize_block_call_args(body, ctx);
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 Self::normalize_calls_in_expr(seq, ctx);
                 Self::normalize_calls_in_expr(index, ctx);
                 Self::normalize_calls_in_expr(value, ctx);
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 Self::normalize_calls_in_expr(map, ctx);
                 Self::normalize_calls_in_expr(key, ctx);
+                Self::normalize_calls_in_expr(value, ctx);
+            }
+            // SIR22 compile-compat stub (never emitted by this frontend):
+            // recurse into every child `Expr`, including each `IndexArg`'s
+            // embedded expression, mirroring `SeqSet`/`MapSet` above, so a
+            // parenless block-method call nested inside one is still
+            // threaded/normalized.
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                Self::normalize_calls_in_expr(target, ctx);
+                for idx in indices.iter_mut() {
+                    Self::normalize_calls_in_index_arg(idx, ctx);
+                }
                 Self::normalize_calls_in_expr(value, ctx);
             }
             // Class/module/singleton bodies carry non-`def` statements
@@ -4317,7 +4639,12 @@ impl Lowerer {
             Stmt::ClassDef { body, .. }
             | Stmt::ModuleDef { body, .. }
             | Stmt::SingletonClassDef { body, .. } => Self::normalize_calls_in_stmts(body, ctx),
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 Self::normalize_calls_in_stmts(body, ctx);
                 for r in rescues {
                     Self::normalize_calls_in_stmts(&mut r.body, ctx);
@@ -4341,9 +4668,11 @@ impl Lowerer {
             // matches the def's trailing `__sir_block__` parameter.  The
             // synthesized call already carries its block slot, so it is
             // not re-walked (no double-padding).
-            Expr::VarRef { name, scope: Scope::Local, span }
-                if ctx.methods.contains(name) && !ctx.bound.contains(name) =>
-            {
+            Expr::VarRef {
+                name,
+                scope: Scope::Local,
+                span,
+            } if ctx.methods.contains(name) && !ctx.bound.contains(name) => {
                 let span = span.clone();
                 *expr = Expr::DirectCall {
                     fn_name: name.clone(),
@@ -4352,7 +4681,12 @@ impl Lowerer {
                     span,
                 };
             }
-            Expr::DirectCall { fn_name, args, span, .. } => {
+            Expr::DirectCall {
+                fn_name,
+                args,
+                span,
+                ..
+            } => {
                 // Normalize nested calls in the arguments first (so an
                 // unwrapped `block_pass` inner / a closure capture value
                 // is itself threaded), then fix this call's trailing slot.
@@ -4393,7 +4727,12 @@ impl Lowerer {
                     Self::normalize_calls_in_expr(a, ctx);
                 }
             }
-            Expr::If { cond, then_branch, else_branch, .. } => {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
                 Self::normalize_calls_in_expr(cond, ctx);
                 Self::normalize_block_call_args(then_branch, ctx);
                 Self::normalize_block_call_args(else_branch, ctx);
@@ -4439,6 +4778,43 @@ impl Lowerer {
             Expr::KeywordArg { value, .. } => {
                 Self::normalize_calls_in_expr(value, ctx);
             }
+            // SIR22 compile-compat stubs (never emitted by this frontend):
+            // recurse into every child `Expr`, matching the treatment of
+            // `SeqLit`/`MapLit`/etc. above, so a parenless block-method call
+            // nested inside one of these would still be normalized.
+            Expr::ArrayLit { rows, .. } => {
+                for row in rows.iter_mut() {
+                    for e in row.iter_mut() {
+                        Self::normalize_calls_in_expr(e, ctx);
+                    }
+                }
+            }
+            Expr::Range {
+                start, step, stop, ..
+            } => {
+                Self::normalize_calls_in_expr(start, ctx);
+                if let Some(s) = step {
+                    Self::normalize_calls_in_expr(s, ctx);
+                }
+                Self::normalize_calls_in_expr(stop, ctx);
+            }
+            Expr::MatMul { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::ElementwiseOp { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::Transpose { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::IndexGet {
+                target, indices, ..
+            } => {
+                Self::normalize_calls_in_expr(target, ctx);
+                for idx in indices.iter_mut() {
+                    Self::normalize_calls_in_index_arg(idx, ctx);
+                }
+            }
             // Atomic literals and a non-rewritten VarRef carry no
             // sub-expressions.
             Expr::IntLit { .. }
@@ -4448,6 +4824,15 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => {}
+        }
+    }
+
+    /// SIR22 helper for `normalize_calls_in_stmt`/`normalize_calls_in_expr`:
+    /// recurse into an `IndexArg`'s embedded expression (if any).
+    fn normalize_calls_in_index_arg(idx: &mut IndexArg, ctx: &BlockNormCtx) {
+        match idx {
+            IndexArg::Scalar(e) | IndexArg::Range(e) => Self::normalize_calls_in_expr(e, ctx),
+            IndexArg::Whole => {}
         }
     }
 
@@ -4473,8 +4858,7 @@ impl Lowerer {
 
     fn collect_bound_names_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
         match stmt {
-            Stmt::LetBinding { name, value, .. }
-            | Stmt::LetStarBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 out.insert(name.clone());
                 Self::collect_bound_names_expr(value, out);
             }
@@ -4487,32 +4871,67 @@ impl Lowerer {
                 Self::collect_bound_names_expr(cond, out);
                 Self::collect_bound_names_block(body, out);
             }
-            Stmt::ForRange { var, start, stop, step, body, .. } => {
+            Stmt::ForRange {
+                var,
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
                 out.insert(var.clone());
                 Self::collect_bound_names_expr(start, out);
                 Self::collect_bound_names_expr(stop, out);
                 Self::collect_bound_names_expr(step, out);
                 Self::collect_bound_names_block(body, out);
             }
-            Stmt::ForEach { var, iter, body, .. } => {
+            Stmt::ForEach {
+                var, iter, body, ..
+            } => {
                 out.insert(var.clone());
                 Self::collect_bound_names_expr(iter, out);
                 Self::collect_bound_names_block(body, out);
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 Self::collect_bound_names_expr(seq, out);
                 Self::collect_bound_names_expr(index, out);
                 Self::collect_bound_names_expr(value, out);
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 Self::collect_bound_names_expr(map, out);
                 Self::collect_bound_names_expr(key, out);
+                Self::collect_bound_names_expr(value, out);
+            }
+            // SIR22 compile-compat stub (never emitted by this frontend):
+            // an index-assignment binds no new name itself, but recurse
+            // into every child `Expr` — including each `IndexArg`'s
+            // embedded expression — matching `SeqSet`/`MapSet` above, in
+            // case a nested closure or let-binding is ever produced there.
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                Self::collect_bound_names_expr(target, out);
+                for idx in indices {
+                    Self::collect_bound_names_expr_in_index_arg(idx, out);
+                }
                 Self::collect_bound_names_expr(value, out);
             }
             Stmt::ClassDef { body, .. }
             | Stmt::ModuleDef { body, .. }
             | Stmt::SingletonClassDef { body, .. } => Self::collect_bound_names_stmts(body, out),
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 Self::collect_bound_names_stmts(body, out);
                 for r in rescues {
                     if let Some(b) = &r.binding {
@@ -4529,7 +4948,12 @@ impl Lowerer {
 
     fn collect_bound_names_expr(expr: &Expr, out: &mut HashSet<String>) {
         match expr {
-            Expr::If { cond, then_branch, else_branch, .. } => {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
                 Self::collect_bound_names_expr(cond, out);
                 Self::collect_bound_names_block(then_branch, out);
                 Self::collect_bound_names_block(else_branch, out);
@@ -4586,6 +5010,43 @@ impl Lowerer {
             // `value` so a name bound inside a keyword argument is still
             // collected.  Real support pending KW2–KW8.
             Expr::KeywordArg { value, .. } => Self::collect_bound_names_expr(value, out),
+            // SIR22 compile-compat stubs (never emitted by this frontend):
+            // recurse into every child `Expr`, matching the treatment of
+            // `SeqLit`/`MapLit`/etc. above, so a name bound inside a nested
+            // closure would still be collected.
+            Expr::ArrayLit { rows, .. } => {
+                for row in rows {
+                    for e in row {
+                        Self::collect_bound_names_expr(e, out);
+                    }
+                }
+            }
+            Expr::Range {
+                start, step, stop, ..
+            } => {
+                Self::collect_bound_names_expr(start, out);
+                if let Some(s) = step {
+                    Self::collect_bound_names_expr(s, out);
+                }
+                Self::collect_bound_names_expr(stop, out);
+            }
+            Expr::MatMul { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::ElementwiseOp { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::Transpose { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::IndexGet {
+                target, indices, ..
+            } => {
+                Self::collect_bound_names_expr(target, out);
+                for idx in indices {
+                    Self::collect_bound_names_expr_in_index_arg(idx, out);
+                }
+            }
             Expr::IntLit { .. }
             | Expr::BoolLit { .. }
             | Expr::NilLit { .. }
@@ -4593,6 +5054,16 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => {}
+        }
+    }
+
+    /// SIR22 helper for `collect_bound_names_stmt`/`collect_bound_names_expr`
+    /// (Q10c section): recurse into an `IndexArg`'s embedded expression (if
+    /// any).
+    fn collect_bound_names_expr_in_index_arg(idx: &IndexArg, out: &mut HashSet<String>) {
+        match idx {
+            IndexArg::Scalar(e) | IndexArg::Range(e) => Self::collect_bound_names_expr(e, out),
+            IndexArg::Whole => {}
         }
     }
 
@@ -4712,10 +5183,7 @@ impl Lowerer {
         Ok(threaded)
     }
 
-    fn lower_def_statement(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Function, RubyLowerError> {
+    fn lower_def_statement(&mut self, node: &GrammarASTNode) -> Result<Function, RubyLowerError> {
         // Shape:
         //   KEYWORD("def") NAME [ LPAREN [ params ] RPAREN ]
         //                  { !"end" statement } KEYWORD("end")
@@ -4820,7 +5288,9 @@ impl Lowerer {
                     ensure_body,
                     span: self.span_of(node),
                 }],
-                Expr::NilLit { span: self.span_of(node) },
+                Expr::NilLit {
+                    span: self.span_of(node),
+                },
             )
         } else {
             let mut stmts_out: Vec<Stmt> = Vec::new();
@@ -4832,12 +5302,10 @@ impl Lowerer {
             } else {
                 let last_idx = body_stmts.len() - 1;
                 for (i, s) in body_stmts.iter().enumerate() {
-                    let inner = self.first_node_child(s).ok_or_else(|| {
-                        RubyLowerError {
-                            message: "statement node had no child rule".to_string(),
-                            line: s.start_line.unwrap_or(0),
-                            column: s.start_column.unwrap_or(0),
-                        }
+                    let inner = self.first_node_child(s).ok_or_else(|| RubyLowerError {
+                        message: "statement node had no child rule".to_string(),
+                        line: s.start_line.unwrap_or(0),
+                        column: s.start_column.unwrap_or(0),
                     })?;
                     let is_tail = i == last_idx;
                     // Phase FC — Ruby methods have no explicit `return`: the
@@ -4859,7 +5327,9 @@ impl Lowerer {
             }
             (
                 stmts_out,
-                value.unwrap_or(Expr::NilLit { span: self.span_of(node) }),
+                value.unwrap_or(Expr::NilLit {
+                    span: self.span_of(node),
+                }),
             )
         };
 
@@ -4907,13 +5377,13 @@ impl Lowerer {
     fn lower_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         // Shape (post-6p): NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression
         let (name, name_span) = self.expect_first_name_token(node)?;
-        let expr_node = self.find_node_child(node, "expression").ok_or_else(|| {
-            RubyLowerError {
+        let expr_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
                 message: "assignment missing RHS expression".to_string(),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
-            }
-        })?;
+            })?;
         let rhs = self.lower_expression(expr_node)?;
 
         // Phase 6p — detect compound-assign operator.  The lexer
@@ -5224,13 +5694,13 @@ impl Lowerer {
     ) -> Result<Stmt, RubyLowerError> {
         // Step 1: the LHS-as-source (Ruby left side) is the value
         // expression — the `expression` Node child.
-        let expr_node = self.find_node_child(node, "expression").ok_or_else(|| {
-            RubyLowerError {
+        let expr_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
                 message: "rightward_assignment missing LHS expression".to_string(),
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
-            }
-        })?;
+            })?;
         let value = self.lower_expression(expr_node)?;
 
         // Step 2: the binding name is the trailing `NAME` token.  Walk
@@ -5359,10 +5829,7 @@ impl Lowerer {
                                 {
                                     is_splat = true;
                                 } else if t.type_ == TokenType::Name {
-                                    name_and_span = Some((
-                                        t.value.clone(),
-                                        self.span_of_token(t),
-                                    ));
+                                    name_and_span = Some((t.value.clone(), self.span_of_token(t)));
                                 }
                             }
                         }
@@ -5427,8 +5894,7 @@ impl Lowerer {
         // `Expr::SeqIndex`.  The check below permits that shape; the
         // dispatch a few lines down routes it to the dedicated helper.
         if splat_idx.is_none() {
-            let is_single_rhs_unpack =
-                rhs_exprs.len() == 1 && lhs_targets.len() > 1;
+            let is_single_rhs_unpack = rhs_exprs.len() == 1 && lhs_targets.len() > 1;
             if lhs_targets.len() != rhs_exprs.len() && !is_single_rhs_unpack {
                 return Err(RubyLowerError {
                     message: format!(
@@ -5538,8 +6004,7 @@ impl Lowerer {
         // so nested or repeated multi-assignments don't collide.  Names
         // are double-underscore-prefixed so they can't collide with
         // user-typeable Ruby locals.
-        let lhs_name_set: HashSet<String> =
-            lhs_names.iter().map(|(n, _)| n.clone()).collect();
+        let lhs_name_set: HashSet<String> = lhs_names.iter().map(|(n, _)| n.clone()).collect();
         let needs_temps = lowered_rhs
             .iter()
             .any(|e| expr_references_any_name(e, &lhs_name_set));
@@ -5577,9 +6042,7 @@ impl Lowerer {
             }
 
             // Pass 2: assign each LHS from its temp.
-            for ((name, name_span), tmp_ref) in
-                lhs_names.into_iter().zip(temp_refs.into_iter())
-            {
+            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs.into_iter()) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -5604,9 +6067,7 @@ impl Lowerer {
             // Fast path: no LHS appears in any RHS, so the sequential
             // lowering Phase 6r used is observably equivalent to the
             // truly-parallel form.  Emit one Stmt per pair.
-            for ((name, name_span), value) in
-                lhs_names.into_iter().zip(lowered_rhs.into_iter())
-            {
+            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs.into_iter()) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -5980,9 +6441,7 @@ impl Lowerer {
                         .children
                         .iter()
                         .find_map(|c| match c {
-                            ASTNodeOrToken::Node(en)
-                                if en.rule_name == "exception_list" =>
-                            {
+                            ASTNodeOrToken::Node(en) if en.rule_name == "exception_list" => {
                                 Some(en)
                             }
                             _ => None,
@@ -5991,9 +6450,7 @@ impl Lowerer {
                             en.children
                                 .iter()
                                 .filter_map(|cc| match cc {
-                                    ASTNodeOrToken::Token(t)
-                                        if t.type_ == TokenType::Name =>
-                                    {
+                                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => {
                                         Some(t.value.clone())
                                     }
                                     _ => None,
@@ -6126,10 +6583,7 @@ impl Lowerer {
     /// (so splat/double-splat prefixes have a slot).  Callers route
     /// each returned `call_arg` through [`lower_call_arg`] to unwrap
     /// the `*` / `**` envelope.
-    fn head_call_args<'a>(
-        &self,
-        node: &'a GrammarASTNode,
-    ) -> Vec<&'a GrammarASTNode> {
+    fn head_call_args<'a>(&self, node: &'a GrammarASTNode) -> Vec<&'a GrammarASTNode> {
         let mut out = Vec::new();
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
@@ -6166,10 +6620,7 @@ impl Lowerer {
     /// (where the lossy v0 Param shape can't represent variadic
     /// parameters directly).  Callers downstream can pattern-match the
     /// builtin name to convert back to splat syntax in target source.
-    fn lower_call_arg(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_call_arg(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // KW7 — keyword argument `name: value` (`f(a: 1)`).  The grammar's
         // FIRST `call_arg` alternative is `NAME COLON expression`, so a
         // keyword arg node carries a COLON token child (the single `:`).
@@ -6232,9 +6683,7 @@ impl Lowerer {
         // Op token — the `&.` safe-nav fusion does not fire because no
         // `.` follows a block-pass `&`).
         let prefix = node.children.iter().find_map(|c| match c {
-            ASTNodeOrToken::Token(t)
-                if matches!(t.value.as_str(), "*" | "**" | "&") =>
-            {
+            ASTNodeOrToken::Token(t) if matches!(t.value.as_str(), "*" | "**" | "&") => {
                 Some(t.value.clone())
             }
             _ => None,
@@ -6314,10 +6763,7 @@ impl Lowerer {
     /// (no captures from the outer scope).  Bodies that reference
     /// outer locals will fail the SIR validator at the `VarRef` stage.
     /// Documented in the crate CHANGELOG as a known limitation.
-    fn lower_method_with_block(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_method_with_block(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // Shape:
         //   (NAME | KEYWORD) [LPAREN [expression (COMMA expression)*] RPAREN] block
         // The leading callee name comes first.
@@ -6391,11 +6837,13 @@ impl Lowerer {
         block_node: &GrammarASTNode,
     ) -> Result<(String, Vec<CaptureValue>), RubyLowerError> {
         // Drill into the do_block / brace_block child.
-        let inner = self.first_node_child(block_node).ok_or_else(|| RubyLowerError {
-            message: "block missing do_block/brace_block child".to_string(),
-            line: block_node.start_line.unwrap_or(0),
-            column: block_node.start_column.unwrap_or(0),
-        })?;
+        let inner = self
+            .first_node_child(block_node)
+            .ok_or_else(|| RubyLowerError {
+                message: "block missing do_block/brace_block child".to_string(),
+                line: block_node.start_line.unwrap_or(0),
+                column: block_node.start_column.unwrap_or(0),
+            })?;
 
         // Extract block parameters (the `|x, y|` pipe form).  Each
         // Name token *that isn't a `|`* is a parameter.  The lexer
@@ -6417,9 +6865,7 @@ impl Lowerer {
             let mut seen_semicolon = false;
             for c in &pn.children {
                 match c {
-                    ASTNodeOrToken::Token(t)
-                        if matches!(t.type_, TokenType::Semicolon) =>
-                    {
+                    ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Semicolon) => {
                         seen_semicolon = true;
                     }
                     ASTNodeOrToken::Token(t)
@@ -6751,10 +7197,7 @@ impl Lowerer {
     ///   `method_with_block` — they're regular keyword-led calls.
     ///   The SIR builtin table tags both as `BuiltinCall("lambda", …)`
     ///   so downstream emitters see a single closure-construction shape.
-    fn lower_lambda_literal(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_lambda_literal(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // 1. Find the `block` subnode (mandatory).
         let block_node = self
             .find_node_child(node, "block")
@@ -6810,11 +7253,13 @@ impl Lowerer {
         block_node: &GrammarASTNode,
         params: Vec<Param>,
     ) -> Result<String, RubyLowerError> {
-        let inner = self.first_node_child(block_node).ok_or_else(|| RubyLowerError {
-            message: "block missing do_block/brace_block child".to_string(),
-            line: block_node.start_line.unwrap_or(0),
-            column: block_node.start_column.unwrap_or(0),
-        })?;
+        let inner = self
+            .first_node_child(block_node)
+            .ok_or_else(|| RubyLowerError {
+                message: "block missing do_block/brace_block child".to_string(),
+                line: block_node.start_line.unwrap_or(0),
+                column: block_node.start_column.unwrap_or(0),
+            })?;
 
         // Lower body with fresh scope (params pre-declared as locals
         // + tracked in current_params so VarRefs get Scope::Param).
@@ -6856,8 +7301,7 @@ impl Lowerer {
                         "expression_stmt" => {
                             let en = self.first_node_child(inner_stmt).ok_or_else(|| {
                                 RubyLowerError {
-                                    message: "expression_stmt had no expression child"
-                                        .to_string(),
+                                    message: "expression_stmt had no expression child".to_string(),
                                     line: inner_stmt.start_line.unwrap_or(0),
                                     column: inner_stmt.start_column.unwrap_or(0),
                                 }
@@ -6999,9 +7443,7 @@ impl Lowerer {
             // `::` as Colon-typed tokens, but a param suffix only ever holds
             // the single `:`.)
             let is_keyword = param_node.children.iter().any(|cc| match cc {
-                ASTNodeOrToken::Token(t) => {
-                    matches!(t.type_, TokenType::Colon) && t.value == ":"
-                }
+                ASTNodeOrToken::Token(t) => matches!(t.type_, TokenType::Colon) && t.value == ":",
                 _ => false,
             });
 
@@ -7009,9 +7451,7 @@ impl Lowerer {
             // `*`/`**` prefix.
             let name_tok = param_node.children.iter().find_map(|cc| match cc {
                 ASTNodeOrToken::Token(t)
-                    if matches!(t.type_, TokenType::Name)
-                        && t.value != "*"
-                        && t.value != "**" =>
+                    if matches!(t.type_, TokenType::Name) && t.value != "*" && t.value != "**" =>
                 {
                     Some(t)
                 }
@@ -7341,10 +7781,7 @@ impl Lowerer {
     /// comparison operators by *value*, not by token type — the same
     /// trick used for `=>` in `hash_entry`.  This means the helper is
     /// resilient to the lexer's classifier changing in the future.
-    fn lower_comparison_chain(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_comparison_chain(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         const COMPARISON_OPS: &[&str] = &["==", "!=", "<", ">", "<=", ">="];
         let mut acc: Option<Expr> = None;
         let mut pending_op: Option<(String, Span)> = None;
@@ -7453,17 +7890,16 @@ impl Lowerer {
     /// Lower a `logical_not` node.  Shape: `{ "!" | "not" } comparison`.
     /// Each leading `!` or `not` wraps the inner expression in another
     /// `BuiltinCall("not", …)` layer — so `!!x` produces `not(not(x))`.
-    fn lower_logical_not(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_logical_not(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         let not_count = node
             .children
             .iter()
-            .filter(|c| matches!(
-                c,
-                ASTNodeOrToken::Token(t) if t.value == "!" || t.value == "not"
-            ))
+            .filter(|c| {
+                matches!(
+                    c,
+                    ASTNodeOrToken::Token(t) if t.value == "!" || t.value == "not"
+                )
+            })
             .count();
         // The single Node child is the inner `comparison` expression.
         let inner = self.first_node_child(node).ok_or_else(|| RubyLowerError {
@@ -7689,10 +8125,7 @@ impl Lowerer {
     /// Name/Keyword/String token that follows.  For quoted forms
     /// (`:"hello world"`) the String token's value already strips
     /// the surrounding quotes, so we use it verbatim.
-    fn lower_symbol_literal(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_symbol_literal(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         let name_tok = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Token(t)
                 if matches!(
@@ -7717,10 +8150,7 @@ impl Lowerer {
     }
 
     /// Phase 6d — `[a, b, c]` → `Expr::SeqLit`.
-    fn lower_array_literal(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_array_literal(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         let items: Vec<Expr> = node
             .children
             .iter()
@@ -7745,10 +8175,7 @@ impl Lowerer {
     /// `SymLit` for the shorthand (since `a:` is sugar for `:a =>`)
     /// or whatever the LHS expression evaluates to for the rocket
     /// form.
-    fn lower_hash_literal(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_hash_literal(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         let entry_nodes: Vec<&GrammarASTNode> = node
             .children
             .iter()
@@ -7970,10 +8397,7 @@ impl Lowerer {
         // Defensive fallback: if either delimiter is missing (which
         // would be a lexer bug), treat the whole value as the body so
         // we don't panic on a malformed input.
-        let body = if raw.len() >= 2
-            && raw.starts_with('`')
-            && raw.ends_with('`')
-        {
+        let body = if raw.len() >= 2 && raw.starts_with('`') && raw.ends_with('`') {
             &raw[1..raw.len() - 1]
         } else {
             raw
@@ -8054,7 +8478,10 @@ impl Lowerer {
             name: "regex".to_string(),
             args: vec![
                 pattern_expr,
-                Expr::StrLit { value: flags.to_string(), span: span.clone() },
+                Expr::StrLit {
+                    value: flags.to_string(),
+                    span: span.clone(),
+                },
             ],
             effects: EffectSet::PURE,
             span,
@@ -8480,10 +8907,7 @@ impl Lowerer {
     /// will reject as an unknown name — `defined?` on a never-bound bare
     /// local is not representable yet.  In practice the operand is a
     /// bound name, a method call, or a literal.
-    fn lower_defined_expression(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Expr, RubyLowerError> {
+    fn lower_defined_expression(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         let operand_node = self.first_node_child(node).ok_or_else(|| RubyLowerError {
             message: "defined_expression missing operand".to_string(),
             line: node.start_line.unwrap_or(0),
@@ -8529,12 +8953,8 @@ impl Lowerer {
                             // value carries the verbatim source text.  The
                             // parser sees them all uniformly at the factor
                             // atom position — no grammar changes needed.
-                            return self.lower_numeric_literal(
-                                &tok.value,
-                                span,
-                                tok.line,
-                                tok.column,
-                            );
+                            return self
+                                .lower_numeric_literal(&tok.value, span, tok.line, tok.column);
                         }
                         TokenType::String => {
                             // Phase 7a — backtick command literal dispatch.
@@ -8545,10 +8965,7 @@ impl Lowerer {
                             // percent literals and heredocs use.  Detect by
                             // checking the leading byte.
                             if tok.value.starts_with('`') {
-                                return Ok(self.lower_backtick_command_literal(
-                                    &tok.value,
-                                    span,
-                                ));
+                                return Ok(self.lower_backtick_command_literal(&tok.value, span));
                             }
                             // Phase 7b — heredoc dispatch.  The lexer (Phase
                             // 3c / 4o) finalises every heredoc into a single
@@ -8558,10 +8975,7 @@ impl Lowerer {
                             // tag.  We detect by the `<<` prefix.
                             if tok.value.starts_with("<<") {
                                 return Ok(self.lower_heredoc_literal(
-                                    &tok.value,
-                                    span,
-                                    tok.line,
-                                    tok.column,
+                                    &tok.value, span, tok.line, tok.column,
                                 ));
                             }
                             // Phase 19d (FC) — `%r{...}` regex literal
@@ -8572,8 +8986,7 @@ impl Lowerer {
                             // so interpolation inside `%r{...}` is handled
                             // for free by the shared pattern splitter.
                             if let Some((pattern, flags)) = percent_r_pattern_flags(&tok.value) {
-                                let (pattern, flags) =
-                                    (pattern.to_string(), flags.to_string());
+                                let (pattern, flags) = (pattern.to_string(), flags.to_string());
                                 return self.lower_regex_literal(
                                     &pattern, &flags, span, tok.line, tok.column,
                                 );
@@ -8586,8 +8999,7 @@ impl Lowerer {
                             // strings like `/usr/bin` via the flag-letter
                             // check), splitting it into pattern + flags.
                             if let Some((pattern, flags)) = regex_pattern_flags(&tok.value) {
-                                let (pattern, flags) =
-                                    (pattern.to_string(), flags.to_string());
+                                let (pattern, flags) = (pattern.to_string(), flags.to_string());
                                 return self.lower_regex_literal(
                                     &pattern, &flags, span, tok.line, tok.column,
                                 );
@@ -8602,10 +9014,7 @@ impl Lowerer {
                             // when absent we fall through to a plain
                             // `StrLit` (zero-cost fast path).
                             return self.lower_string_literal_with_interp(
-                                &tok.value,
-                                span,
-                                tok.line,
-                                tok.column,
+                                &tok.value, span, tok.line, tok.column,
                             );
                         }
                         TokenType::Name => {
@@ -8617,9 +9026,7 @@ impl Lowerer {
                             // requests `Feature::Exceptions`.  A `raise`
                             // shadowed by a local binding (`raise = 1`)
                             // keeps the local.
-                            if tok.value == "raise"
-                                && !self.declared_locals.contains("raise")
-                            {
+                            if tok.value == "raise" && !self.declared_locals.contains("raise") {
                                 self.features_used.insert(Feature::Exceptions);
                                 return Ok(Expr::BuiltinCall {
                                     name: "raise".to_string(),
@@ -8652,8 +9059,7 @@ impl Lowerer {
                             // A `__FILE__` shadowed by a local binding
                             // (`__FILE__ = 1`) keeps the local, mirroring
                             // the `raise` shadow guard.
-                            if tok.value == "__FILE__"
-                                && !self.declared_locals.contains("__FILE__")
+                            if tok.value == "__FILE__" && !self.declared_locals.contains("__FILE__")
                             {
                                 self.features_used.insert(Feature::Strings);
                                 return Ok(Expr::StrLit {
@@ -8681,8 +9087,7 @@ impl Lowerer {
                             // A `__LINE__` shadowed by a local binding
                             // (`__LINE__ = 1`) keeps the local, mirroring
                             // the `__FILE__` / `raise` shadow guards.
-                            if tok.value == "__LINE__"
-                                && !self.declared_locals.contains("__LINE__")
+                            if tok.value == "__LINE__" && !self.declared_locals.contains("__LINE__")
                             {
                                 return Ok(Expr::IntLit {
                                     value: tok.line as i64,
@@ -8716,13 +9121,8 @@ impl Lowerer {
                             // sibling shadow guards.  Scope: the bare form;
                             // the explicit-call form `__dir__()` is a
                             // deliberate follow-up slice.
-                            if tok.value == "__dir__"
-                                && !self.declared_locals.contains("__dir__")
-                            {
-                                let dir = match self
-                                    .file_name
-                                    .rfind(|c| c == '/' || c == '\\')
-                                {
+                            if tok.value == "__dir__" && !self.declared_locals.contains("__dir__") {
+                                let dir = match self.file_name.rfind(|c| c == '/' || c == '\\') {
                                     Some(i) => self.file_name[..i].to_string(),
                                     None => ".".to_string(),
                                 };
@@ -8917,7 +9317,11 @@ impl Lowerer {
         let (rhs_name, rhs_span) = self.expect_first_name_token(sr_node)?;
         self.features_used.insert(Feature::Constants);
         match base {
-            Expr::VarRef { name, scope: Scope::Const, span } => Ok(Expr::VarRef {
+            Expr::VarRef {
+                name,
+                scope: Scope::Const,
+                span,
+            } => Ok(Expr::VarRef {
                 name: format!("{name}::{rhs_name}"),
                 scope: Scope::Const,
                 span,
@@ -8985,7 +9389,12 @@ impl Lowerer {
         // exactly as required, and a longer chain (`c.inc.inc`) nests the same
         // way.
         if method_name == "new" {
-            if let Expr::VarRef { name: class_name, scope: Scope::Const, .. } = &receiver {
+            if let Expr::VarRef {
+                name: class_name,
+                scope: Scope::Const,
+                ..
+            } = &receiver
+            {
                 self.features_used.insert(Feature::Classes);
                 self.features_used.insert(Feature::Strings);
                 let mut new_args: Vec<Expr> = Vec::with_capacity(args.len() + 1);
@@ -9017,7 +9426,12 @@ impl Lowerer {
         // `Foo.bar.baz`, this folds `.bar` into a `__class_method__` call and
         // `apply_dot_chain` then folds `.baz` with that call as the receiver of
         // an outer `__method__` — exactly the nesting `.new(...).meth` uses.
-        if let Expr::VarRef { name: class_name, scope: Scope::Const, .. } = &receiver {
+        if let Expr::VarRef {
+            name: class_name,
+            scope: Scope::Const,
+            ..
+        } = &receiver
+        {
             self.features_used.insert(Feature::Classes);
             self.features_used.insert(Feature::Strings);
             let mut cm_args: Vec<Expr> = Vec::with_capacity(args.len() + 2);
@@ -9164,9 +9578,7 @@ fn token_lexeme_for_op(t: TokenType) -> &'static str {
 /// will grow this as the lowering matures.
 fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
     match name {
-        "puts" | "print" | "p" => {
-            Some(EffectSet::PURE.with(Effect::MayPrint))
-        }
+        "puts" | "print" | "p" => Some(EffectSet::PURE.with(Effect::MayPrint)),
         "gets" => {
             // Reads from stdin — modelled as a blocking effect.  Not
             // strictly pure, but `MayBlock` is the closest tag we
@@ -9178,7 +9590,11 @@ fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
             // also throws — backends use both tags to suppress
             // unreachable-code warnings and to emit `throw`/`return`
             // shapes correctly.
-            Some(EffectSet::PURE.with(Effect::MayThrow).with(Effect::Divergent))
+            Some(
+                EffectSet::PURE
+                    .with(Effect::MayThrow)
+                    .with(Effect::Divergent),
+            )
         }
         // Phase 6g: block-taking iterators.  These all accept a
         // trailing block (closure) as their last argument and invoke
@@ -9194,15 +9610,11 @@ fn ruby_builtin_effects(name: &str) -> Option<EffectSet> {
         // builtins (PURE) gives downstream emitters a single
         // closure-construction shape — same as Phase 6w's arrow-lambda.
         "lambda" | "proc" => Some(EffectSet::PURE),
-        "each" | "map" | "select" | "reject" | "filter"
-        | "each_with_index" | "each_with_object" | "times"
-        | "tap" | "then" | "yield_self" | "loop"
-        | "collect" | "find" | "detect" | "any?" | "all?"
-        | "none?" | "count" | "reduce" | "inject" | "sort_by"
-        | "group_by" | "min_by" | "max_by" | "flat_map"
-        | "partition" | "each_slice" | "each_cons" => {
-            Some(EffectSet::PURE)
-        }
+        "each" | "map" | "select" | "reject" | "filter" | "each_with_index"
+        | "each_with_object" | "times" | "tap" | "then" | "yield_self" | "loop" | "collect"
+        | "find" | "detect" | "any?" | "all?" | "none?" | "count" | "reduce" | "inject"
+        | "sort_by" | "group_by" | "min_by" | "max_by" | "flat_map" | "partition"
+        | "each_slice" | "each_cons" => Some(EffectSet::PURE),
         // Phase 26a (FC) — `using Mod` activates a refinement module in
         // the current lexical scope.  It is an ordinary method call
         // (`using` is a `Kernel`/`Module` method, not a keyword), so it
@@ -9247,4 +9659,3 @@ impl RubyLowerError {
         self
     }
 }
-

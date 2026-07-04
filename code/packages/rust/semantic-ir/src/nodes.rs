@@ -508,6 +508,30 @@ pub enum Stmt {
         ensure_body: Option<Vec<Stmt>>,
         span: Span,
     },
+
+    // ── SIR22: array/matrix indexed assignment ─────────────────────
+    /// `target[indices...] = value` — mutate an element, row, column,
+    /// or sub-range of an `NDArray` (MATLAB/Octave `A(2, :) = v`).
+    ///
+    /// Introduced by [SIR22](../../../../specs/SIR22-array-matrix-semantic-ir.md)
+    /// as the mutation-shaped counterpart of [`Expr::IndexGet`] — indexed
+    /// *reads* are a value-producing `Expr`, but an indexed *write* has a
+    /// mutation effect indistinguishable in shape from [`Stmt::Assign`], so
+    /// it lives in `Stmt` rather than `Expr`, exactly as SIR16's `Assign`
+    /// does relative to a plain `VarRef`.  This is the one exception noted
+    /// in the SIR22 spec's "Effects" section: every other new SIR22 node is
+    /// `Pure`.
+    ///
+    /// `indices` mirrors [`Expr::IndexGet`]'s `indices: Vec<IndexArg>` —
+    /// the frontend has already resolved 1-based/`end`-relative MATLAB
+    /// indexing down to concrete 0-based [`IndexArg`]s before emitting this
+    /// node; the IR never sees `end`.
+    IndexSet {
+        target: Box<Expr>,
+        indices: Vec<IndexArg>,
+        value: Box<Expr>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -526,6 +550,7 @@ impl Stmt {
             Stmt::ModuleDef { span, .. } => span,
             Stmt::SingletonClassDef { span, .. } => span,
             Stmt::TryCatch { span, .. } => span,
+            Stmt::IndexSet { span, .. } => span,
         }
     }
 }
@@ -605,11 +630,25 @@ impl Scope {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
     // ── atomic literals ────────────────────────────────────────────
-    IntLit { value: i64, span: Span },
-    BoolLit { value: bool, span: Span },
-    NilLit { span: Span },
-    SymLit { name: String, span: Span },
-    StrLit { value: String, span: Span },
+    IntLit {
+        value: i64,
+        span: Span,
+    },
+    BoolLit {
+        value: bool,
+        span: Span,
+    },
+    NilLit {
+        span: Span,
+    },
+    SymLit {
+        name: String,
+        span: Span,
+    },
+    StrLit {
+        value: String,
+        span: Span,
+    },
 
     // ── reference ───────────────────────────────────────────────────
     VarRef {
@@ -669,11 +708,17 @@ pub enum Expr {
 
     // ── SIR16: floats ──────────────────────────────────────────────
     /// 64-bit floating-point literal.
-    FloatLit { value: f64, span: Span },
+    FloatLit {
+        value: f64,
+        span: Span,
+    },
 
     // ── SIR16: sequences ───────────────────────────────────────────
     /// `[item0, item1, ...]` literal.
-    SeqLit { items: Vec<Expr>, span: Span },
+    SeqLit {
+        items: Vec<Expr>,
+        span: Span,
+    },
     /// `seq[index]` — 0-indexed.  Out-of-bounds behaviour is target-
     /// language-defined.
     SeqIndex {
@@ -685,11 +730,17 @@ pub enum Expr {
     /// so backends can emit native length access (`xs.length` /
     /// `len(xs)` / `xs.len()`).  Frontends should prefer this node
     /// over the builtin form.
-    SeqLen { seq: Box<Expr>, span: Span },
+    SeqLen {
+        seq: Box<Expr>,
+        span: Span,
+    },
 
     // ── SIR16: maps ────────────────────────────────────────────────
     /// `{key: value, ...}` literal.
-    MapLit { entries: Vec<MapEntry>, span: Span },
+    MapLit {
+        entries: Vec<MapEntry>,
+        span: Span,
+    },
     /// `map[key]` — missing-key behaviour is target-language-defined.
     MapGet {
         map: Box<Expr>,
@@ -730,7 +781,10 @@ pub enum Expr {
     /// Invariant: `parts.len() >= 2`.  A zero- or one-part concat is
     /// degenerate — frontends emit a bare `StrLit` (empty string) or the
     /// single part directly rather than wrapping it.
-    StrConcat { parts: Vec<Expr>, span: Span },
+    StrConcat {
+        parts: Vec<Expr>,
+        span: Span,
+    },
 
     // ── KW1: keyword arguments ─────────────────────────────────────
     /// A keyword argument at a call site: `name: value` (Ruby `f(a: 1)`,
@@ -751,7 +805,160 @@ pub enum Expr {
     ///
     /// `value` is boxed for the same fixed-size reason as the other
     /// single-child expression variants (`SeqLen`, `MapGet`, …).
-    KeywordArg { name: String, value: Box<Expr>, span: Span },
+    KeywordArg {
+        name: String,
+        value: Box<Expr>,
+        span: Span,
+    },
+
+    // ── SIR22: array/matrix literals, ranges, and operators ────────
+    //
+    // Every node kind below is deliberately mapped 1:1 onto an existing
+    // `array_runtime::execute()` op shape (see the SIR22 spec's
+    // "Motivation") so that a MATLAB/Octave frontend's job is picking the
+    // right node, not inventing new semantics.  All are `Pure` (see
+    // `effects.rs`'s SIR22 doc note) — array construction, indexing, and
+    // arithmetic have no observable side effects distinct from the value
+    // they compute.  `IndexSet` (the one mutation-shaped exception) is a
+    // `Stmt`, not an `Expr` — see its doc comment above.
+    /// `[1 2; 3 4]` — a matrix/array literal.  `rows` is row-major *in
+    /// the literal syntax*; reconciling that with the column-major
+    /// storage convention (`Feature::ArrayColumnMajor`, see the SIR22
+    /// spec's "Storage convention") is the frontend's job, not the IR's.
+    /// A 1-row literal (`rows.len() == 1`) is a row vector; a frontend
+    /// wanting a column vector emits one single-element row per element.
+    ArrayLit {
+        rows: Vec<Vec<Expr>>,
+        span: Span,
+    },
+
+    /// `start:stop` / `start:step:stop` — a numeric range (MATLAB `1:5`,
+    /// `0:2:10`).  `step` of `None` means step = 1, matching the MATLAB
+    /// two-argument colon form.  Half-open vs. closed is left to
+    /// `array_runtime::execute(Range, …)`'s own semantics — the IR node
+    /// only carries the three operand slots the runtime op already takes.
+    Range {
+        start: Box<Expr>,
+        step: Option<Box<Expr>>,
+        stop: Box<Expr>,
+        span: Span,
+    },
+
+    /// Matrix multiplication (MATLAB `*` on two matrices) — distinct
+    /// from [`Expr::ElementwiseOp`]`(Mul, …)` (MATLAB `.*`), which
+    /// multiplies same-shape arrays element-by-element.  Shape
+    /// compatibility is an `array_runtime` runtime concern, not a SIR
+    /// validation rule (SIR10 "types carry, don't verify").
+    MatMul {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
+    /// An elementwise (broadcast) binary arithmetic op — MATLAB's
+    /// dotted operators `.+` `.-` `.*` `./` `.^` (plain `+`/`-` are
+    /// already elementwise in MATLAB, since they don't have a
+    /// non-elementwise reading the way `*` does).  `op` selects which
+    /// of the five [`ElementwiseOpKind`]s applies.
+    ElementwiseOp {
+        op: ElementwiseOpKind,
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
+    /// Matrix transpose.  `conjugate: true` is MATLAB `'` (conjugate /
+    /// Hermitian transpose); `conjugate: false` is `.'` (plain
+    /// transpose, no conjugation).  Both map onto the same
+    /// `array_runtime::execute(Transpose, …)` op; the frontend picks the
+    /// flag at lowering time (the `'`-transpose-vs-string lexer decision
+    /// is orthogonal to and unaffected by this node — see the SIR22
+    /// spec).
+    Transpose {
+        target: Box<Expr>,
+        conjugate: bool,
+        span: Span,
+    },
+
+    /// `target(indices...)` / `target[indices...]` — an indexed *read*
+    /// (MATLAB `A(2, :)`, `A(1:3)`).  Each entry of `indices` is an
+    /// [`IndexArg`]; the frontend has already resolved 1-based and
+    /// `end`-relative MATLAB subscripts down to concrete 0-based
+    /// `IndexArg`s (the IR never sees `end` — see the SIR22 spec's note
+    /// on `end`-relative indices).  The mutating counterpart is
+    /// [`Stmt::IndexSet`], not a variant here — see that type's doc
+    /// comment for why indexed *write* is a statement while indexed
+    /// *read* is this expression.
+    IndexGet {
+        target: Box<Expr>,
+        indices: Vec<IndexArg>,
+        span: Span,
+    },
+}
+
+/// The five elementwise (broadcast) binary arithmetic operators
+/// (SIR22) — MATLAB's dotted operators `.+ .- .* ./ .^`.  Carried by
+/// [`Expr::ElementwiseOp`] rather than five separate `Expr` variants
+/// so a backend's `match` has one arm to open and a `match op` inside
+/// it, mirroring how `Scope`/`ParamKind` are small closed enums rather
+/// than a variant explosion on their parent node.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum ElementwiseOpKind {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Pow,
+}
+
+impl ElementwiseOpKind {
+    /// Kebab-case name used by the SIR text format (matches the
+    /// convention set by [`Scope::name`] / [`Feature::name`]).
+    pub fn name(&self) -> &'static str {
+        match self {
+            ElementwiseOpKind::Add => "add",
+            ElementwiseOpKind::Sub => "sub",
+            ElementwiseOpKind::Mul => "mul",
+            ElementwiseOpKind::Div => "div",
+            ElementwiseOpKind::Pow => "pow",
+        }
+    }
+
+    /// Inverse of [`Self::name`].  Returns `None` for unknown names.
+    pub fn from_name(s: &str) -> Option<ElementwiseOpKind> {
+        Some(match s {
+            "add" => ElementwiseOpKind::Add,
+            "sub" => ElementwiseOpKind::Sub,
+            "mul" => ElementwiseOpKind::Mul,
+            "div" => ElementwiseOpKind::Div,
+            "pow" => ElementwiseOpKind::Pow,
+            _ => return None,
+        })
+    }
+}
+
+/// One subscript argument to [`Expr::IndexGet`] / [`Stmt::IndexSet`]
+/// (SIR22).  A MATLAB index expression `A(i, :, 1:3)` lowers to three
+/// `IndexArg`s, one per axis, in source order.
+///
+/// ```text
+/// A(3)      →  [IndexArg::Scalar(IntLit(2))]     -- already 0-based
+/// A(:, 2)   →  [IndexArg::Whole, IndexArg::Scalar(IntLit(1))]
+/// A(1:5)    →  [IndexArg::Range(Range { .. })]
+/// ```
+#[derive(Debug, Clone, PartialEq)]
+pub enum IndexArg {
+    /// A single-element subscript on this axis (MATLAB `A(3)`) —
+    /// already translated to a 0-based index expression by the
+    /// frontend (including any `end`-relative resolution; see the
+    /// SIR22 spec).
+    Scalar(Box<Expr>),
+    /// `:` — every element on this axis (MATLAB `A(:, k)`).
+    Whole,
+    /// A range subscript on this axis (MATLAB `A(1:5)`) — reuses
+    /// [`Expr::Range`] as the index argument rather than duplicating
+    /// its three operand slots here.
+    Range(Box<Expr>),
 }
 
 /// A single capture provided to `MakeClosure`.  The `name` matches a
@@ -797,6 +1004,12 @@ impl Expr {
             Expr::LogicalOr { span, .. } => span,
             Expr::StrConcat { span, .. } => span,
             Expr::KeywordArg { span, .. } => span,
+            Expr::ArrayLit { span, .. } => span,
+            Expr::Range { span, .. } => span,
+            Expr::MatMul { span, .. } => span,
+            Expr::ElementwiseOp { span, .. } => span,
+            Expr::Transpose { span, .. } => span,
+            Expr::IndexGet { span, .. } => span,
         }
     }
 
@@ -827,6 +1040,12 @@ impl Expr {
             Expr::LogicalOr { .. } => "or",
             Expr::StrConcat { .. } => "str-concat",
             Expr::KeywordArg { .. } => "keyword-arg",
+            Expr::ArrayLit { .. } => "array",
+            Expr::Range { .. } => "range",
+            Expr::MatMul { .. } => "matmul",
+            Expr::ElementwiseOp { .. } => "elementwise-op",
+            Expr::Transpose { .. } => "transpose",
+            Expr::IndexGet { .. } => "index-get",
         }
     }
 }
@@ -842,7 +1061,10 @@ mod tests {
 
     #[test]
     fn expr_span_helper() {
-        let e = Expr::IntLit { value: 42, span: s() };
+        let e = Expr::IntLit {
+            value: 42,
+            span: s(),
+        };
         assert_eq!(e.span(), &s());
         assert_eq!(e.kind_name(), "int");
     }
@@ -878,11 +1100,17 @@ mod tests {
             Stmt::Assign {
                 name: "x".into(),
                 scope: Scope::Local,
-                value: Expr::IntLit { value: 1, span: s() },
+                value: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 span: s(),
             },
             Stmt::While {
-                cond: Expr::BoolLit { value: true, span: s() },
+                cond: Expr::BoolLit {
+                    value: true,
+                    span: s(),
+                },
                 body: Block {
                     stmts: vec![],
                     value: Expr::NilLit { span: s() },
@@ -892,9 +1120,18 @@ mod tests {
             },
             Stmt::ForRange {
                 var: "i".into(),
-                start: Expr::IntLit { value: 0, span: s() },
-                stop: Expr::IntLit { value: 10, span: s() },
-                step: Expr::IntLit { value: 1, span: s() },
+                start: Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                },
+                stop: Expr::IntLit {
+                    value: 10,
+                    span: s(),
+                },
+                step: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 body: Block {
                     stmts: vec![],
                     value: Expr::NilLit { span: s() },
@@ -904,7 +1141,10 @@ mod tests {
             },
             Stmt::ForEach {
                 var: "x".into(),
-                iter: Expr::SeqLit { items: vec![], span: s() },
+                iter: Expr::SeqLit {
+                    items: vec![],
+                    span: s(),
+                },
                 body: Block {
                     stmts: vec![],
                     value: Expr::NilLit { span: s() },
@@ -913,15 +1153,35 @@ mod tests {
                 span: s(),
             },
             Stmt::SeqSet {
-                seq: Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() },
-                index: Expr::IntLit { value: 0, span: s() },
-                value: Expr::IntLit { value: 1, span: s() },
+                seq: Expr::VarRef {
+                    name: "xs".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                index: Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                },
+                value: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 span: s(),
             },
             Stmt::MapSet {
-                map: Expr::VarRef { name: "d".into(), scope: Scope::Local, span: s() },
-                key: Expr::StrLit { value: "k".into(), span: s() },
-                value: Expr::IntLit { value: 1, span: s() },
+                map: Expr::VarRef {
+                    name: "d".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                key: Expr::StrLit {
+                    value: "k".into(),
+                    span: s(),
+                },
+                value: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 span: s(),
             },
         ];
@@ -934,12 +1194,27 @@ mod tests {
     fn sir16_expr_kind_names() {
         let span = s();
         let cases: Vec<(Expr, &'static str)> = vec![
-            (Expr::FloatLit { value: 3.14, span: span.clone() }, "float"),
-            (Expr::SeqLit { items: vec![], span: span.clone() }, "seq"),
+            (
+                Expr::FloatLit {
+                    value: 3.14,
+                    span: span.clone(),
+                },
+                "float",
+            ),
+            (
+                Expr::SeqLit {
+                    items: vec![],
+                    span: span.clone(),
+                },
+                "seq",
+            ),
             (
                 Expr::SeqIndex {
                     seq: Box::new(Expr::NilLit { span: span.clone() }),
-                    index: Box::new(Expr::IntLit { value: 0, span: span.clone() }),
+                    index: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    }),
                     span: span.clone(),
                 },
                 "seq-index",
@@ -951,7 +1226,13 @@ mod tests {
                 },
                 "seq-len",
             ),
-            (Expr::MapLit { entries: vec![], span: span.clone() }, "map"),
+            (
+                Expr::MapLit {
+                    entries: vec![],
+                    span: span.clone(),
+                },
+                "map",
+            ),
             (
                 Expr::MapGet {
                     map: Box::new(Expr::NilLit { span: span.clone() }),
@@ -962,16 +1243,28 @@ mod tests {
             ),
             (
                 Expr::LogicalAnd {
-                    lhs: Box::new(Expr::BoolLit { value: true, span: span.clone() }),
-                    rhs: Box::new(Expr::BoolLit { value: false, span: span.clone() }),
+                    lhs: Box::new(Expr::BoolLit {
+                        value: true,
+                        span: span.clone(),
+                    }),
+                    rhs: Box::new(Expr::BoolLit {
+                        value: false,
+                        span: span.clone(),
+                    }),
                     span: span.clone(),
                 },
                 "and",
             ),
             (
                 Expr::LogicalOr {
-                    lhs: Box::new(Expr::BoolLit { value: true, span: span.clone() }),
-                    rhs: Box::new(Expr::BoolLit { value: false, span: span.clone() }),
+                    lhs: Box::new(Expr::BoolLit {
+                        value: true,
+                        span: span.clone(),
+                    }),
+                    rhs: Box::new(Expr::BoolLit {
+                        value: false,
+                        span: span.clone(),
+                    }),
                     span: span.clone(),
                 },
                 "or",
@@ -979,8 +1272,14 @@ mod tests {
             (
                 Expr::StrConcat {
                     parts: vec![
-                        Expr::StrLit { value: "a".into(), span: span.clone() },
-                        Expr::StrLit { value: "b".into(), span: span.clone() },
+                        Expr::StrLit {
+                            value: "a".into(),
+                            span: span.clone(),
+                        },
+                        Expr::StrLit {
+                            value: "b".into(),
+                            span: span.clone(),
+                        },
                     ],
                     span: span.clone(),
                 },
@@ -998,11 +1297,23 @@ mod tests {
         // f64::NAN is never equal to itself — Expr only impls
         // PartialEq, not Eq, and that's the reason.  This test pins
         // the contract.
-        let a = Expr::FloatLit { value: f64::NAN, span: s() };
-        let b = Expr::FloatLit { value: f64::NAN, span: s() };
+        let a = Expr::FloatLit {
+            value: f64::NAN,
+            span: s(),
+        };
+        let b = Expr::FloatLit {
+            value: f64::NAN,
+            span: s(),
+        };
         assert_ne!(a, b);
-        let c = Expr::FloatLit { value: 3.14, span: s() };
-        let d = Expr::FloatLit { value: 3.14, span: s() };
+        let c = Expr::FloatLit {
+            value: 3.14,
+            span: s(),
+        };
+        let d = Expr::FloatLit {
+            value: 3.14,
+            span: s(),
+        };
         assert_eq!(c, d);
     }
 
@@ -1012,7 +1323,10 @@ mod tests {
     fn keyword_arg_span_and_kind_name() {
         let e = Expr::KeywordArg {
             name: "a".into(),
-            value: Box::new(Expr::IntLit { value: 1, span: s() }),
+            value: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
             span: s(),
         };
         assert_eq!(e.span(), &s());
@@ -1035,7 +1349,10 @@ mod tests {
             name: "y".into(),
             sir_type: None,
             kind: ParamKind::Keyword,
-            default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+            default: Some(Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            })),
             span: s(),
         };
         assert_eq!(required.kind, ParamKind::Keyword);
@@ -1048,7 +1365,12 @@ mod tests {
             name: name.into(),
             sir_type: None,
             kind: ParamKind::Keyword,
-            default: default.map(|v| Box::new(Expr::IntLit { value: v, span: s() })),
+            default: default.map(|v| {
+                Box::new(Expr::IntLit {
+                    value: v,
+                    span: s(),
+                })
+            }),
             span: s(),
         }
     }
@@ -1059,7 +1381,11 @@ mod tests {
             params,
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1070,10 +1396,22 @@ mod tests {
     fn keyword_params_helper_selects_only_keyword_kind() {
         // def f(a, x:, y: 1, **rest) → keyword_params() == [x, y].
         let f = fn_with_params(vec![
-            Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            },
             kw_param("x", None),
             kw_param("y", Some(1)),
-            Param { name: "rest".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+            Param {
+                name: "rest".into(),
+                sir_type: None,
+                kind: ParamKind::KwRest,
+                default: None,
+                span: s(),
+            },
         ]);
         let kws: Vec<&str> = f.keyword_params().iter().map(|p| p.name.as_str()).collect();
         assert_eq!(kws, vec!["x", "y"]);
@@ -1105,16 +1443,339 @@ mod tests {
         assert!(f.missing_keywords(&["x", "y", "z"]).is_empty());
     }
 
+    // ── SIR22: array/matrix nodes ───────────────────────────────────
+
+    #[test]
+    fn index_set_is_a_stmt_not_an_expr() {
+        // SIR22 §"Effects": IndexSet is lowered as a Stmt-position
+        // mutation (like Assign), not a value-producing Expr — pin that
+        // by constructing it as a Stmt and confirming span() dispatches
+        // through Stmt::span, exactly like the sir16_stmt_kinds test does
+        // for Assign/SeqSet/MapSet.
+        let st = Stmt::IndexSet {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            indices: vec![IndexArg::Scalar(Box::new(Expr::IntLit {
+                value: 0,
+                span: s(),
+            }))],
+            value: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(st.span(), &s());
+        // There is no Expr::IndexSet variant — the type system itself
+        // enforces "not an Expr": this file would fail to compile if
+        // such a variant existed and this test tried to skip it, so the
+        // absence is exercised implicitly by every other test in this
+        // module compiling against the real Expr enum.
+    }
+
+    #[test]
+    fn sir22_stmt_index_set_has_span() {
+        let cases: Vec<Stmt> = vec![Stmt::IndexSet {
+            target: Box::new(Expr::VarRef {
+                name: "m".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            indices: vec![
+                IndexArg::Whole,
+                IndexArg::Scalar(Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                })),
+            ],
+            value: Box::new(Expr::IntLit {
+                value: 9,
+                span: s(),
+            }),
+            span: s(),
+        }];
+        for st in &cases {
+            assert_eq!(st.span(), &s());
+        }
+    }
+
+    #[test]
+    fn sir22_expr_kind_names_and_spans() {
+        let span = s();
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (
+                Expr::ArrayLit {
+                    rows: vec![
+                        vec![
+                            Expr::IntLit {
+                                value: 1,
+                                span: span.clone(),
+                            },
+                            Expr::IntLit {
+                                value: 2,
+                                span: span.clone(),
+                            },
+                        ],
+                        vec![
+                            Expr::IntLit {
+                                value: 3,
+                                span: span.clone(),
+                            },
+                            Expr::IntLit {
+                                value: 4,
+                                span: span.clone(),
+                            },
+                        ],
+                    ],
+                    span: span.clone(),
+                },
+                "array",
+            ),
+            (
+                Expr::Range {
+                    start: Box::new(Expr::IntLit {
+                        value: 1,
+                        span: span.clone(),
+                    }),
+                    step: None,
+                    stop: Box::new(Expr::IntLit {
+                        value: 5,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                },
+                "range",
+            ),
+            (
+                Expr::MatMul {
+                    lhs: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }),
+                    rhs: Box::new(Expr::VarRef {
+                        name: "b".into(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                },
+                "matmul",
+            ),
+            (
+                Expr::ElementwiseOp {
+                    op: ElementwiseOpKind::Mul,
+                    lhs: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }),
+                    rhs: Box::new(Expr::VarRef {
+                        name: "b".into(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                },
+                "elementwise-op",
+            ),
+            (
+                Expr::Transpose {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }),
+                    conjugate: true,
+                    span: span.clone(),
+                },
+                "transpose",
+            ),
+            (
+                Expr::IndexGet {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }),
+                    indices: vec![IndexArg::Whole],
+                    span: span.clone(),
+                },
+                "index-get",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
+    fn range_with_explicit_step() {
+        // 0:2:10 — step is `Some`, distinct from the default-step form.
+        let r = Expr::Range {
+            start: Box::new(Expr::IntLit {
+                value: 0,
+                span: s(),
+            }),
+            step: Some(Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            })),
+            stop: Box::new(Expr::IntLit {
+                value: 10,
+                span: s(),
+            }),
+            span: s(),
+        };
+        match r {
+            Expr::Range {
+                step: Some(step), ..
+            } => {
+                assert_eq!(
+                    *step,
+                    Expr::IntLit {
+                        value: 2,
+                        span: s()
+                    }
+                );
+            }
+            _ => panic!("expected Range with explicit step"),
+        }
+    }
+
+    #[test]
+    fn transpose_conjugate_flag_distinguishes_tick_from_dot_tick() {
+        // MATLAB `A'` (conjugate transpose) vs `A.'` (plain transpose) —
+        // the SIR22 spec maps both onto the same node, distinguished only
+        // by `conjugate`.
+        let tick = Expr::Transpose {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            conjugate: true,
+            span: s(),
+        };
+        let dot_tick = Expr::Transpose {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            conjugate: false,
+            span: s(),
+        };
+        assert_ne!(tick, dot_tick);
+    }
+
+    #[test]
+    fn elementwise_op_kind_name_round_trips() {
+        for op in [
+            ElementwiseOpKind::Add,
+            ElementwiseOpKind::Sub,
+            ElementwiseOpKind::Mul,
+            ElementwiseOpKind::Div,
+            ElementwiseOpKind::Pow,
+        ] {
+            assert_eq!(ElementwiseOpKind::from_name(op.name()), Some(op));
+        }
+        assert_eq!(ElementwiseOpKind::from_name("bogus"), None);
+    }
+
+    #[test]
+    fn index_arg_variants_construct() {
+        // Scalar / Whole / Range — the three IndexArg shapes from the
+        // SIR22 spec's worked examples (`A(3)`, `A(:, 2)`, `A(1:5)`).
+        let scalar = IndexArg::Scalar(Box::new(Expr::IntLit {
+            value: 2,
+            span: s(),
+        }));
+        let whole = IndexArg::Whole;
+        let range = IndexArg::Range(Box::new(Expr::Range {
+            start: Box::new(Expr::IntLit {
+                value: 0,
+                span: s(),
+            }),
+            step: None,
+            stop: Box::new(Expr::IntLit {
+                value: 5,
+                span: s(),
+            }),
+            span: s(),
+        }));
+        assert!(matches!(scalar, IndexArg::Scalar(_)));
+        assert!(matches!(whole, IndexArg::Whole));
+        assert!(matches!(range, IndexArg::Range(_)));
+    }
+
+    #[test]
+    fn index_get_carries_multiple_axes() {
+        // A(i, :, 1:3) — one IndexArg per axis, in source order.
+        let e = Expr::IndexGet {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            indices: vec![
+                IndexArg::Scalar(Box::new(Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                })),
+                IndexArg::Whole,
+                IndexArg::Range(Box::new(Expr::Range {
+                    start: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }),
+                    step: None,
+                    stop: Box::new(Expr::IntLit {
+                        value: 3,
+                        span: s(),
+                    }),
+                    span: s(),
+                })),
+            ],
+            span: s(),
+        };
+        if let Expr::IndexGet { indices, .. } = &e {
+            assert_eq!(indices.len(), 3);
+        } else {
+            panic!("expected IndexGet");
+        }
+    }
+
     #[test]
     fn expr_kind_names_exhaustive() {
         let span = s();
         let cases: Vec<Expr> = vec![
-            Expr::IntLit { value: 1, span: span.clone() },
-            Expr::BoolLit { value: true, span: span.clone() },
+            Expr::IntLit {
+                value: 1,
+                span: span.clone(),
+            },
+            Expr::BoolLit {
+                value: true,
+                span: span.clone(),
+            },
             Expr::NilLit { span: span.clone() },
-            Expr::SymLit { name: "x".into(), span: span.clone() },
-            Expr::StrLit { value: "y".into(), span: span.clone() },
-            Expr::VarRef { name: "z".into(), scope: Scope::Local, span: span.clone() },
+            Expr::SymLit {
+                name: "x".into(),
+                span: span.clone(),
+            },
+            Expr::StrLit {
+                value: "y".into(),
+                span: span.clone(),
+            },
+            Expr::VarRef {
+                name: "z".into(),
+                scope: Scope::Local,
+                span: span.clone(),
+            },
             Expr::DirectCall {
                 fn_name: "f".into(),
                 args: vec![],
@@ -1137,8 +1798,15 @@ mod tests {
         assert_eq!(
             names,
             vec![
-                "int", "bool", "nil", "sym", "str", "var-ref",
-                "direct-call", "builtin-call", "make-closure"
+                "int",
+                "bool",
+                "nil",
+                "sym",
+                "str",
+                "var-ref",
+                "direct-call",
+                "builtin-call",
+                "make-closure"
             ]
         );
     }

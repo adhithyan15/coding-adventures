@@ -240,9 +240,7 @@ impl Backend for JavaScriptBackend {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{
-        Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Span, Stmt,
-    };
+    use semantic_ir::{Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Span, Stmt};
 
     fn s() -> Span {
         Span::synthetic()
@@ -262,7 +260,10 @@ mod tests {
                 captures: vec![],
                 body: Block {
                     stmts: vec![],
-                    value: Expr::IntLit { value: 42, span: s() },
+                    value: Expr::IntLit {
+                        value: 42,
+                        span: s(),
+                    },
                     span: s(),
                 },
                 effects: EffectSet::PURE,
@@ -378,6 +379,66 @@ mod tests {
         );
     }
 
+    // ── SIR22: array/matrix capability-rejection tests ────────────────
+    //
+    // Per the SIR22 spec's "Backend impact": "Rust/Go/Python backends: not
+    // required to support this in the first wave; they reject modules
+    // declaring NDArrays/MatrixOps per the existing capability-rejection
+    // path."  This JavaScript backend is likewise not updated for real
+    // SIR22 codegen in this PR, so it must reject the same way, via the
+    // same SIR10 capability-check mechanism `rejects_tail_calls_feature`
+    // above already exercises for `Feature::TailCalls`.
+
+    #[test]
+    fn rejects_nd_arrays_feature() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::NDArrays]);
+        let err = compile(&m).expect_err("nd-arrays rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+    }
+
+    #[test]
+    fn rejects_matrix_ops_feature() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::MatrixOps]);
+        let err = compile(&m).expect_err("matrix-ops rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+    }
+
+    /// End-to-end version: a real module body using `Expr::ArrayLit` and
+    /// `Expr::MatMul` (the concrete SIR22 nodes the spec names), not just a
+    /// hand-set manifest flag — proving the rejection path works from
+    /// actual node usage.
+    #[test]
+    fn rejects_module_body_using_array_lit_and_matmul() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::MatMul {
+            lhs: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }]],
+                span: s(),
+            }),
+            rhs: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }]],
+                span: s(),
+            }),
+            span: s(),
+        };
+        let err = compile(&m).expect_err("array/matmul body rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+    }
+
     #[test]
     fn end_to_end_from_twig_source() {
         let module = twig_to_semantic_ir::compile_source(
@@ -386,13 +447,25 @@ mod tests {
         )
         .expect("lower");
         let a = compile(&module).expect("compile");
-        assert!(a.source.contains("function add(a, b) {"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("function add(a, b) {"),
+            "got:\n{}",
+            a.source
+        );
         // `+` is Ruby-polymorphic, so it routes through the runtime
         // dispatch helper (numeric add, String/Array concat) rather than
         // native infix.
-        assert!(a.source.contains("return __Sir.plus(a, b);"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("return __Sir.plus(a, b);"),
+            "got:\n{}",
+            a.source
+        );
         // Top-level print of a direct call.
-        assert!(a.source.contains("__Sir.print(add(1, 2))"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("__Sir.print(add(1, 2))"),
+            "got:\n{}",
+            a.source
+        );
     }
 
     #[test]
@@ -404,14 +477,22 @@ mod tests {
         .expect("lower");
         let a = compile(&module).expect("compile");
         // A synthesised lambda function is emitted.
-        assert!(a.source.contains("function __lambda_0("), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("function __lambda_0("),
+            "got:\n{}",
+            a.source
+        );
         // MakeClosure → a `new __Sir.Closure`.
         assert!(a.source.contains("new __Sir.Closure"), "got:\n{}", a.source);
         // `add5` is a module global, initialised in `_init`.
         assert!(a.source.contains("let add5 = null;"), "got:\n{}", a.source);
         assert!(a.source.contains("_init();"), "got:\n{}", a.source);
         // The indirect call to the closure routes through applyClosure.
-        assert!(a.source.contains("__Sir.applyClosure"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("__Sir.applyClosure"),
+            "got:\n{}",
+            a.source
+        );
     }
 
     #[test]
@@ -428,8 +509,8 @@ mod tests {
 
     #[test]
     fn output_is_deterministic() {
-        let module =
-            twig_to_semantic_ir::compile_source("(define (id x) x)\n(id 7)", "demo").expect("lower");
+        let module = twig_to_semantic_ir::compile_source("(define (id x) x)\n(id 7)", "demo")
+            .expect("lower");
         let a = compile(&module).expect("compile");
         let b = compile(&module).expect("compile again");
         assert_eq!(a.source, b.source);

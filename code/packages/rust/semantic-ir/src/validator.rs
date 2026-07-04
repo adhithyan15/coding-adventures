@@ -185,10 +185,7 @@ impl<'m> ValidatorState<'m> {
             if !self.depth_overflow_reported {
                 self.depth_overflow_reported = true;
                 self.error(
-                    format!(
-                        "expression nesting exceeds MAX_IR_DEPTH ({})",
-                        MAX_IR_DEPTH
-                    ),
+                    format!("expression nesting exceeds MAX_IR_DEPTH ({})", MAX_IR_DEPTH),
                     span,
                 );
             }
@@ -243,10 +240,7 @@ impl<'m> ValidatorState<'m> {
     fn collect_top_level_names(&mut self) {
         for f in &self.module.functions {
             if !self.function_names.insert(f.name.clone()) {
-                self.error(
-                    format!("duplicate function name `{}`", f.name),
-                    &f.span,
-                );
+                self.error(format!("duplicate function name `{}`", f.name), &f.span);
             }
             // Cache the call-arity profile (SIR10 default-param call-arity
             // rule).  `variadic` is set when the callee carries a
@@ -255,9 +249,10 @@ impl<'m> ValidatorState<'m> {
             // enforced at the call site (deferred — see the `DirectCall`
             // arm).  A duplicate name keeps the first profile, matching how
             // `function_names` reports-but-keeps the first binding.
-            let variadic = f.params.iter().any(|p| {
-                p.kind != ParamKind::Required || p.name == "__sir_block__"
-            });
+            let variadic = f
+                .params
+                .iter()
+                .any(|p| p.kind != ParamKind::Required || p.name == "__sir_block__");
             self.fn_arity.entry(f.name.clone()).or_insert(FnArity {
                 min: f.required_param_count(),
                 max: f.params.len(),
@@ -266,10 +261,7 @@ impl<'m> ValidatorState<'m> {
         }
         for g in &self.module.globals {
             if !self.global_names.insert(g.name.clone()) {
-                self.error(
-                    format!("duplicate global name `{}`", g.name),
-                    &g.span,
-                );
+                self.error(format!("duplicate global name `{}`", g.name), &g.span);
             }
         }
         if !self.module.globals.is_empty() {
@@ -301,10 +293,7 @@ impl<'m> ValidatorState<'m> {
         let no_captures: HashSet<String> = HashSet::new();
         for p in &f.params {
             if !param_names.insert(p.name.clone()) {
-                self.error(
-                    format!("duplicate parameter `{}`", p.name),
-                    &p.span,
-                );
+                self.error(format!("duplicate parameter `{}`", p.name), &p.span);
             }
             if p.sir_type.is_some() {
                 self.observed.add(Feature::OptionalTypeAnnotations);
@@ -376,13 +365,19 @@ impl<'m> ValidatorState<'m> {
                     }
                     if keyword_seen {
                         self.error(
-                            format!("rest parameter `*{}` must precede keyword parameters", p.name),
+                            format!(
+                                "rest parameter `*{}` must precede keyword parameters",
+                                p.name
+                            ),
                             &p.span,
                         );
                     }
                     if kwrest_seen {
                         self.error(
-                            format!("rest parameter `*{}` must precede the keyword-rest parameter", p.name),
+                            format!(
+                                "rest parameter `*{}` must precede the keyword-rest parameter",
+                                p.name
+                            ),
                             &p.span,
                         );
                     }
@@ -393,7 +388,10 @@ impl<'m> ValidatorState<'m> {
                     // follow positionals, the `*rest`, and other keywords.
                     if kwrest_seen {
                         self.error(
-                            format!("keyword parameter `{}` must precede the keyword-rest parameter", p.name),
+                            format!(
+                                "keyword parameter `{}` must precede the keyword-rest parameter",
+                                p.name
+                            ),
                             &p.span,
                         );
                     }
@@ -418,17 +416,26 @@ impl<'m> ValidatorState<'m> {
                     }
                     if kwrest_seen {
                         self.error(
-                            format!("required parameter `{}` must precede the keyword-rest parameter", p.name),
+                            format!(
+                                "required parameter `{}` must precede the keyword-rest parameter",
+                                p.name
+                            ),
                             &p.span,
                         );
                     } else if keyword_seen {
                         self.error(
-                            format!("required parameter `{}` must precede keyword parameters", p.name),
+                            format!(
+                                "required parameter `{}` must precede keyword parameters",
+                                p.name
+                            ),
                             &p.span,
                         );
                     } else if rest_seen {
                         self.error(
-                            format!("required parameter `{}` must precede the rest parameter", p.name),
+                            format!(
+                                "required parameter `{}` must precede the rest parameter",
+                                p.name
+                            ),
                             &p.span,
                         );
                     }
@@ -529,7 +536,10 @@ impl<'m> ValidatorState<'m> {
                     // Check every RHS in the *outer* env (no new
                     // names added yet).
                     for k in i..j {
-                        if let Stmt::LetBinding { value, sir_type, .. } = &stmts[k] {
+                        if let Stmt::LetBinding {
+                            value, sir_type, ..
+                        } = &stmts[k]
+                        {
                             self.check_expr(value, env, depth + 1);
                             if sir_type.is_some() {
                                 self.observed.add(Feature::OptionalTypeAnnotations);
@@ -544,7 +554,12 @@ impl<'m> ValidatorState<'m> {
                     }
                     i = j;
                 }
-                Stmt::LetStarBinding { name, sir_type, value, .. } => {
+                Stmt::LetStarBinding {
+                    name,
+                    sir_type,
+                    value,
+                    ..
+                } => {
                     self.check_expr(value, env, depth + 1);
                     env.add_local(name.clone());
                     if sir_type.is_some() {
@@ -556,7 +571,12 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(expr, env, depth + 1);
                     i += 1;
                 }
-                Stmt::Assign { name, scope, value, span } => {
+                Stmt::Assign {
+                    name,
+                    scope,
+                    value,
+                    span,
+                } => {
                     self.observed.add(Feature::MutableBindings);
                     self.check_expr(value, env, depth + 1);
                     self.check_varref(name, *scope, span, env);
@@ -568,7 +588,14 @@ impl<'m> ValidatorState<'m> {
                     self.check_block(body, env, depth + 1);
                     i += 1;
                 }
-                Stmt::ForRange { var, start, stop, step, body, .. } => {
+                Stmt::ForRange {
+                    var,
+                    start,
+                    stop,
+                    step,
+                    body,
+                    ..
+                } => {
                     self.observed.add(Feature::Loops);
                     self.check_expr(start, env, depth + 1);
                     self.check_expr(stop, env, depth + 1);
@@ -580,7 +607,9 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(inner_mark);
                     i += 1;
                 }
-                Stmt::ForEach { var, iter, body, .. } => {
+                Stmt::ForEach {
+                    var, iter, body, ..
+                } => {
                     self.observed.add(Feature::Loops);
                     self.check_expr(iter, env, depth + 1);
                     let inner_mark = env.mark();
@@ -589,17 +618,39 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(inner_mark);
                     i += 1;
                 }
-                Stmt::SeqSet { seq, index, value, .. } => {
+                Stmt::SeqSet {
+                    seq, index, value, ..
+                } => {
                     self.observed.add(Feature::Sequences);
                     self.check_expr(seq, env, depth + 1);
                     self.check_expr(index, env, depth + 1);
                     self.check_expr(value, env, depth + 1);
                     i += 1;
                 }
-                Stmt::MapSet { map, key, value, .. } => {
+                Stmt::MapSet {
+                    map, key, value, ..
+                } => {
                     self.observed.add(Feature::Maps);
                     self.check_expr(map, env, depth + 1);
                     self.check_expr(key, env, depth + 1);
+                    self.check_expr(value, env, depth + 1);
+                    i += 1;
+                }
+                Stmt::IndexSet {
+                    target,
+                    indices,
+                    value,
+                    ..
+                } => {
+                    // SIR22: `target[indices...] = value` — the mutation-
+                    // shaped counterpart of SeqSet/MapSet above (and, per
+                    // the spec, the one exception to "every new SIR22 node
+                    // is Pure").  `target` is an arbitrary expression (not
+                    // a bound name), so — like SeqSet/MapSet, and unlike
+                    // Assign — there's no `check_varref` here.
+                    self.observed.add(Feature::NDArrays);
+                    self.check_expr(target, env, depth + 1);
+                    self.check_index_args(indices, env, depth + 1);
                     self.check_expr(value, env, depth + 1);
                     i += 1;
                 }
@@ -663,7 +714,12 @@ impl<'m> ValidatorState<'m> {
                     env.rewind(singleton_mark);
                     i += 1;
                 }
-                Stmt::TryCatch { body, rescues, ensure_body, span } => {
+                Stmt::TryCatch {
+                    body,
+                    rescues,
+                    ensure_body,
+                    span,
+                } => {
                     // Structured exception handling (Ruby Phase 16a).
                     // Mark Feature::Exceptions, then depth-guard and walk
                     // each block in a fresh local-env scope so block-local
@@ -713,7 +769,12 @@ impl<'m> ValidatorState<'m> {
             Expr::VarRef { name, scope, span } => {
                 self.check_varref(name, *scope, span, env);
             }
-            Expr::If { cond, then_branch, else_branch, .. } => {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
                 self.check_expr(cond, env, depth + 1);
                 self.check_block(then_branch, env, depth + 1);
                 self.check_block(else_branch, env, depth + 1);
@@ -809,7 +870,11 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(a, env, depth + 1);
                 }
             }
-            Expr::MakeClosure { fn_name, captures, span } => {
+            Expr::MakeClosure {
+                fn_name,
+                captures,
+                span,
+            } => {
                 self.observed.add(Feature::Closures);
                 if !self.function_names.contains(fn_name) {
                     self.error(
@@ -821,7 +886,12 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(&c.value, env, depth + 1);
                 }
             }
-            Expr::Intrinsic { targets, args, span, .. } => {
+            Expr::Intrinsic {
+                targets,
+                args,
+                span,
+                ..
+            } => {
                 self.observed.add(Feature::Intrinsics);
                 if targets.is_empty() {
                     self.error("intrinsic must declare at least one target tag", span);
@@ -875,10 +945,7 @@ impl<'m> ValidatorState<'m> {
                 // (it should have emitted the bare part instead).
                 if parts.len() < 2 {
                     self.error(
-                        format!(
-                            "str-concat needs at least 2 parts, got {}",
-                            parts.len()
-                        ),
+                        format!("str-concat needs at least 2 parts, got {}", parts.len()),
                         span,
                     );
                 }
@@ -911,6 +978,65 @@ impl<'m> ValidatorState<'m> {
                 self.in_call_args = false;
                 self.check_expr(value, env, depth + 1);
                 self.in_call_args = prev;
+            }
+
+            // ── SIR22: array/matrix nodes ───────────────────────────
+            Expr::ArrayLit { rows, .. } => {
+                self.observed.add(Feature::NDArrays);
+                self.observed.add(Feature::ArrayColumnMajor);
+                for row in rows {
+                    for item in row {
+                        self.check_expr(item, env, depth + 1);
+                    }
+                }
+            }
+            Expr::Range {
+                start, step, stop, ..
+            } => {
+                self.observed.add(Feature::NDArrays);
+                self.check_expr(start, env, depth + 1);
+                if let Some(step) = step {
+                    self.check_expr(step, env, depth + 1);
+                }
+                self.check_expr(stop, env, depth + 1);
+            }
+            Expr::MatMul { lhs, rhs, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+            Expr::ElementwiseOp { lhs, rhs, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+            Expr::Transpose { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::IndexGet {
+                target, indices, ..
+            } => {
+                self.observed.add(Feature::NDArrays);
+                self.check_expr(target, env, depth + 1);
+                self.check_index_args(indices, env, depth + 1);
+            }
+        }
+    }
+
+    /// Validate the `Expr` nested inside every `IndexArg` of an
+    /// `IndexGet`/`IndexSet` (SIR22).  Factored out because both node
+    /// kinds share the exact same index-arg shape (mirroring how
+    /// `walker.rs`'s `walk_index_args` is shared between them).
+    fn check_index_args(&mut self, indices: &[IndexArg], env: &mut LocalEnv, depth: usize) {
+        for arg in indices {
+            match arg {
+                IndexArg::Scalar(e) => self.check_expr(e, env, depth + 1),
+                IndexArg::Whole => {}
+                IndexArg::Range(e) => self.check_expr(e, env, depth + 1),
             }
         }
     }
@@ -980,8 +1106,7 @@ impl<'m> ValidatorState<'m> {
                     // keyword unambiguously.
                     if seen_keyword {
                         self.error(
-                            "positional argument may not follow a keyword argument"
-                                .to_string(),
+                            "positional argument may not follow a keyword argument".to_string(),
                             a.span(),
                         );
                     }
@@ -1028,8 +1153,7 @@ impl<'m> ValidatorState<'m> {
         let Some(f) = self.module.functions.iter().find(|f| f.name == callee) else {
             return;
         };
-        let kw_names: HashSet<String> =
-            f.keyword_params().iter().map(|p| p.name.clone()).collect();
+        let kw_names: HashSet<String> = f.keyword_params().iter().map(|p| p.name.clone()).collect();
         let has_kwrest = f.params.iter().any(|p| p.kind == ParamKind::KwRest);
         let required_kw: Vec<String> = f
             .params
@@ -1060,10 +1184,7 @@ impl<'m> ValidatorState<'m> {
         for req in &required_kw {
             if !supplied.contains(&req.as_str()) {
                 self.error(
-                    format!(
-                        "call to `{}` is missing required keyword `{}`",
-                        callee, req
-                    ),
+                    format!("call to `{}` is missing required keyword `{}`", callee, req),
                     call_span,
                 );
             }
@@ -1090,7 +1211,10 @@ impl<'m> ValidatorState<'m> {
             Scope::Param => {
                 if !env.has_param(name) {
                     self.error(
-                        format!("var-ref scope=param references unknown parameter `{}`", name),
+                        format!(
+                            "var-ref scope=param references unknown parameter `{}`",
+                            name
+                        ),
                         span,
                     );
                 }
@@ -1098,7 +1222,10 @@ impl<'m> ValidatorState<'m> {
             Scope::Capture => {
                 if !env.has_capture(name) {
                     self.error(
-                        format!("var-ref scope=capture references unknown capture `{}`", name),
+                        format!(
+                            "var-ref scope=capture references unknown capture `{}`",
+                            name
+                        ),
                         span,
                     );
                 }
@@ -1311,7 +1438,13 @@ mod tests {
     }
 
     fn p(name: &str, kind: ParamKind) -> Param {
-        Param { name: name.into(), sir_type: None, kind, default: None, span: s() }
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind,
+            default: None,
+            span: s(),
+        }
     }
 
     #[test]
@@ -1328,10 +1461,7 @@ mod tests {
 
     #[test]
     fn two_rest_params_is_error() {
-        let m = module_with_params(vec![
-            p("a", ParamKind::Rest),
-            p("b", ParamKind::Rest),
-        ]);
+        let m = module_with_params(vec![p("a", ParamKind::Rest), p("b", ParamKind::Rest)]);
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(r.errors().any(|i| i.message.contains("more than one rest")));
@@ -1339,13 +1469,12 @@ mod tests {
 
     #[test]
     fn two_kwrest_params_is_error() {
-        let m = module_with_params(vec![
-            p("a", ParamKind::KwRest),
-            p("b", ParamKind::KwRest),
-        ]);
+        let m = module_with_params(vec![p("a", ParamKind::KwRest), p("b", ParamKind::KwRest)]);
         let r = validate(&m);
         assert!(!r.is_ok());
-        assert!(r.errors().any(|i| i.message.contains("more than one keyword-rest")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("more than one keyword-rest")));
     }
 
     #[test]
@@ -1357,7 +1486,9 @@ mod tests {
         ]);
         let r = validate(&m);
         assert!(!r.is_ok());
-        assert!(r.errors().any(|i| i.message.contains("must precede the keyword-rest")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("must precede the keyword-rest")));
     }
 
     /// SIR19: a parameter carrying a default-value expression validates
@@ -1365,23 +1496,29 @@ mod tests {
     #[test]
     fn param_with_default_validates_and_observes_feature() {
         // def f(a = 1) — one required param with a default literal `1`.
-        let mut m =
-            empty_module(FeatureManifest::from_features(&[
-                Feature::DynamicTyping,
-                Feature::DefaultParams,
-            ]));
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
         m.functions.push(Function {
             name: "f".into(),
             params: vec![Param {
                 name: "a".into(),
                 sir_type: None,
                 kind: ParamKind::Required,
-                default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                default: Some(Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                })),
                 span: s(),
             }],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1398,24 +1535,30 @@ mod tests {
     fn default_expr_features_are_observed() {
         // def f(a = "x") — manifest must declare Strings (from the default)
         // as well as DefaultParams, or validation fails.
-        let mut m =
-            empty_module(FeatureManifest::from_features(&[
-                Feature::DynamicTyping,
-                Feature::DefaultParams,
-                Feature::Strings,
-            ]));
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+            Feature::Strings,
+        ]));
         m.functions.push(Function {
             name: "f".into(),
             params: vec![Param {
                 name: "a".into(),
                 sir_type: None,
                 kind: ParamKind::Required,
-                default: Some(Box::new(Expr::StrLit { value: "x".into(), span: s() })),
+                default: Some(Box::new(Expr::StrLit {
+                    value: "x".into(),
+                    span: s(),
+                })),
                 span: s(),
             }],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1429,15 +1572,20 @@ mod tests {
     /// the params declared so far.
     #[test]
     fn default_expr_may_reference_earlier_param() {
-        let mut m =
-            empty_module(FeatureManifest::from_features(&[
-                Feature::DynamicTyping,
-                Feature::DefaultParams,
-            ]));
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
         m.functions.push(Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
                 Param {
                     name: "b".into(),
                     sir_type: None,
@@ -1452,7 +1600,11 @@ mod tests {
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1465,11 +1617,10 @@ mod tests {
     /// scope error — only params declared so far are in view.
     #[test]
     fn default_expr_cannot_reference_later_param() {
-        let mut m =
-            empty_module(FeatureManifest::from_features(&[
-                Feature::DynamicTyping,
-                Feature::DefaultParams,
-            ]));
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
         m.functions.push(Function {
             name: "f".into(),
             params: vec![
@@ -1485,11 +1636,21 @@ mod tests {
                     })),
                     span: s(),
                 },
-                Param { name: "b".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1512,7 +1673,10 @@ mod tests {
             name: name.into(),
             sir_type: None,
             kind: ParamKind::Required,
-            default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+            default: Some(Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            })),
             span: s(),
         }
     }
@@ -1531,13 +1695,20 @@ mod tests {
             params: callee_params,
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
         });
         let args: Vec<Expr> = (0..n_args)
-            .map(|i| Expr::IntLit { value: i as i64, span: s() })
+            .map(|i| Expr::IntLit {
+                value: i as i64,
+                span: s(),
+            })
             .collect();
         m.functions.push(Function {
             name: "g".into(),
@@ -1643,7 +1814,11 @@ mod tests {
             4,
         );
         let r = validate(&m);
-        assert!(r.is_ok(), "expected ok for variadic callee, got {:?}", r.issues);
+        assert!(
+            r.is_ok(),
+            "expected ok for variadic callee, got {:?}",
+            r.issues
+        );
     }
 
     #[test]
@@ -1664,7 +1839,11 @@ mod tests {
             params: vec![p("x", ParamKind::Required)],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1675,7 +1854,11 @@ mod tests {
             params: vec![],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1690,7 +1873,10 @@ mod tests {
                 value: Expr::DirectCall {
                     fn_name: "helper".into(),
                     args: vec![
-                        Expr::IntLit { value: 2, span: s() },
+                        Expr::IntLit {
+                            value: 2,
+                            span: s(),
+                        },
                         Expr::MakeClosure {
                             fn_name: "__block_0".into(),
                             captures: vec![],
@@ -1707,7 +1893,11 @@ mod tests {
             span: s(),
         });
         let r = validate(&m);
-        assert!(r.is_ok(), "block-passing call must validate, got {:?}", r.issues);
+        assert!(
+            r.is_ok(),
+            "block-passing call must validate, got {:?}",
+            r.issues
+        );
     }
 
     #[test]
@@ -1721,7 +1911,11 @@ mod tests {
             params: vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1767,7 +1961,11 @@ mod tests {
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1799,7 +1997,11 @@ mod tests {
             params,
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1816,9 +2018,8 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok(), "a hole must fail validation");
         assert!(
-            r.errors().any(|i| i
-                .message
-                .contains("may not follow a defaulted parameter")),
+            r.errors()
+                .any(|i| i.message.contains("may not follow a defaulted parameter")),
             "expected the trailing-defaults error, got {:?}",
             r.issues
         );
@@ -1833,7 +2034,11 @@ mod tests {
             p_default("c"),
         ]);
         let r = validate(&m);
-        assert!(r.is_ok(), "trailing defaults must validate, got {:?}", r.issues);
+        assert!(
+            r.is_ok(),
+            "trailing defaults must validate, got {:?}",
+            r.issues
+        );
     }
 
     #[test]
@@ -1862,7 +2067,9 @@ mod tests {
         ]);
         let r = validate(&m);
         assert!(!r.is_ok());
-        assert!(r.errors().any(|i| i.message.contains("must precede the rest")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("must precede the rest")));
     }
 
     #[test]
@@ -1890,7 +2097,10 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::SymLit { name: "x".into(), span: s() },
+                value: Expr::SymLit {
+                    name: "x".into(),
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -1899,9 +2109,7 @@ mod tests {
         });
         let r = validate(&m);
         assert!(!r.is_ok());
-        assert!(r
-            .errors()
-            .any(|i| i.message.contains("symbols")));
+        assert!(r.errors().any(|i| i.message.contains("symbols")));
     }
 
     #[test]
@@ -2021,7 +2229,10 @@ mod tests {
                     Stmt::LetBinding {
                         name: "x".into(),
                         sir_type: None,
-                        value: Expr::IntLit { value: 1, span: s() },
+                        value: Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
                         span: s(),
                     },
                     Stmt::LetBinding {
@@ -2107,7 +2318,10 @@ mod tests {
         let mut e = Expr::NilLit { span: s() };
         for _ in 0..depth {
             e = Expr::If {
-                cond: Box::new(Expr::BoolLit { value: true, span: s() }),
+                cond: Box::new(Expr::BoolLit {
+                    value: true,
+                    span: s(),
+                }),
                 then_branch: Box::new(Block {
                     stmts: vec![],
                     value: e,
@@ -2136,7 +2350,10 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::FloatLit { value: 3.14, span: s() },
+                value: Expr::FloatLit {
+                    value: 3.14,
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -2158,7 +2375,10 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![Stmt::While {
-                    cond: Expr::BoolLit { value: false, span: s() },
+                    cond: Expr::BoolLit {
+                        value: false,
+                        span: s(),
+                    },
                     body: Block {
                         stmts: vec![],
                         value: Expr::NilLit { span: s() },
@@ -2190,9 +2410,18 @@ mod tests {
             body: Block {
                 stmts: vec![Stmt::ForRange {
                     var: "i".into(),
-                    start: Expr::IntLit { value: 0, span: s() },
-                    stop: Expr::IntLit { value: 10, span: s() },
-                    step: Expr::IntLit { value: 1, span: s() },
+                    start: Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    },
+                    stop: Expr::IntLit {
+                        value: 10,
+                        span: s(),
+                    },
+                    step: Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
                     body: Block {
                         stmts: vec![],
                         value: Expr::VarRef {
@@ -2227,9 +2456,18 @@ mod tests {
             body: Block {
                 stmts: vec![Stmt::ForRange {
                     var: "i".into(),
-                    start: Expr::IntLit { value: 0, span: s() },
-                    stop: Expr::IntLit { value: 10, span: s() },
-                    step: Expr::IntLit { value: 1, span: s() },
+                    start: Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    },
+                    stop: Expr::IntLit {
+                        value: 10,
+                        span: s(),
+                    },
+                    step: Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
                     body: Block {
                         stmts: vec![],
                         value: Expr::NilLit { span: s() },
@@ -2263,8 +2501,14 @@ mod tests {
             body: Block {
                 stmts: vec![],
                 value: Expr::LogicalAnd {
-                    lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
-                    rhs: Box::new(Expr::BoolLit { value: false, span: s() }),
+                    lhs: Box::new(Expr::BoolLit {
+                        value: true,
+                        span: s(),
+                    }),
+                    rhs: Box::new(Expr::BoolLit {
+                        value: false,
+                        span: s(),
+                    }),
                     span: s(),
                 },
                 span: s(),
@@ -2281,8 +2525,10 @@ mod tests {
     fn str_concat_observes_string_interpolation_feature() {
         // Phase 20b — a well-formed two-part `StrConcat` validates when
         // the manifest declares `StringInterpolation`.
-        let mut m =
-            empty_module(FeatureManifest::from_features(&[Feature::StringInterpolation, Feature::Strings]));
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::StringInterpolation,
+            Feature::Strings,
+        ]));
         m.functions.push(Function {
             name: "f".into(),
             params: vec![],
@@ -2292,8 +2538,14 @@ mod tests {
                 stmts: vec![],
                 value: Expr::StrConcat {
                     parts: vec![
-                        Expr::StrLit { value: "a".into(), span: s() },
-                        Expr::StrLit { value: "b".into(), span: s() },
+                        Expr::StrLit {
+                            value: "a".into(),
+                            span: s(),
+                        },
+                        Expr::StrLit {
+                            value: "b".into(),
+                            span: s(),
+                        },
                     ],
                     span: s(),
                 },
@@ -2312,8 +2564,10 @@ mod tests {
         // Phase 20b — a one-part concat is degenerate; the frontend
         // should have emitted the bare part instead.  The validator
         // flags it so a buggy lowerer is caught early.
-        let mut m =
-            empty_module(FeatureManifest::from_features(&[Feature::StringInterpolation, Feature::Strings]));
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::StringInterpolation,
+            Feature::Strings,
+        ]));
         m.functions.push(Function {
             name: "f".into(),
             params: vec![],
@@ -2322,7 +2576,10 @@ mod tests {
             body: Block {
                 stmts: vec![],
                 value: Expr::StrConcat {
-                    parts: vec![Expr::StrLit { value: "lonely".into(), span: s() }],
+                    parts: vec![Expr::StrLit {
+                        value: "lonely".into(),
+                        span: s(),
+                    }],
                     span: s(),
                 },
                 span: s(),
@@ -2349,7 +2606,10 @@ mod tests {
                     Stmt::LetStarBinding {
                         name: "x".into(),
                         sir_type: None,
-                        value: Expr::IntLit { value: 1, span: s() },
+                        value: Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
                         span: s(),
                     },
                     Stmt::LetStarBinding {
@@ -2418,7 +2678,10 @@ mod tests {
             vec![Stmt::LetBinding {
                 name: "MAX".into(),
                 sir_type: None,
-                value: Expr::IntLit { value: 10, span: s() },
+                value: Expr::IntLit {
+                    value: 10,
+                    span: s(),
+                },
                 span: s(),
             }],
         );
@@ -2472,7 +2735,10 @@ mod tests {
                         body: vec![Stmt::LetBinding {
                             name: "INNER".into(),
                             sir_type: None,
-                            value: Expr::IntLit { value: 1, span: s() },
+                            value: Expr::IntLit {
+                                value: 1,
+                                span: s(),
+                            },
                             span: s(),
                         }],
                         span: s(),
@@ -2521,7 +2787,10 @@ mod tests {
                     body: vec![Stmt::LetBinding {
                         name: "V".into(),
                         sir_type: None,
-                        value: Expr::IntLit { value: 3, span: s() },
+                        value: Expr::IntLit {
+                            value: 3,
+                            span: s(),
+                        },
                         span: s(),
                     }],
                     span: s(),
@@ -2623,7 +2892,10 @@ mod tests {
                     body: vec![Stmt::LetBinding {
                         name: "X".into(),
                         sir_type: None,
-                        value: Expr::IntLit { value: 1, span: s() },
+                        value: Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
                         span: s(),
                     }],
                     span: s(),
@@ -2849,18 +3121,34 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![Stmt::TryCatch {
-                    body: vec![lb("_t", Expr::IntLit { value: 1, span: s() })],
+                    body: vec![lb(
+                        "_t",
+                        Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
+                    )],
                     rescues: vec![RescueClause {
                         exception_types: vec!["Foo".into()],
                         binding: Some("e".into()),
                         // The rescue body reads the bound `e` — must resolve.
                         body: vec![lb(
                             "_r",
-                            Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+                            Expr::VarRef {
+                                name: "e".into(),
+                                scope: Scope::Local,
+                                span: s(),
+                            },
                         )],
                         span: s(),
                     }],
-                    ensure_body: Some(vec![lb("_e", Expr::IntLit { value: 1, span: s() })]),
+                    ensure_body: Some(vec![lb(
+                        "_e",
+                        Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
+                    )]),
                     span: s(),
                 }],
                 value: Expr::NilLit { span: s() },
@@ -2915,7 +3203,11 @@ mod tests {
                     ensure_body: Some(vec![Stmt::LetBinding {
                         name: "_x".into(),
                         sir_type: None,
-                        value: Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+                        value: Expr::VarRef {
+                            name: "e".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
                         span: s(),
                     }]),
                     span: s(),
@@ -2939,7 +3231,12 @@ mod tests {
             name: name.into(),
             sir_type: None,
             kind: ParamKind::Keyword,
-            default: default.map(|v| Box::new(Expr::IntLit { value: v, span: s() })),
+            default: default.map(|v| {
+                Box::new(Expr::IntLit {
+                    value: v,
+                    span: s(),
+                })
+            }),
             span: s(),
         }
     }
@@ -2948,7 +3245,10 @@ mod tests {
     fn kwarg(name: &str, v: i64) -> Expr {
         Expr::KeywordArg {
             name: name.into(),
-            value: Box::new(Expr::IntLit { value: v, span: s() }),
+            value: Box::new(Expr::IntLit {
+                value: v,
+                span: s(),
+            }),
             span: s(),
         }
     }
@@ -2971,7 +3271,11 @@ mod tests {
             params: callee_params,
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -3018,7 +3322,11 @@ mod tests {
             params: vec![kw("x", Some(1))],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -3038,7 +3346,11 @@ mod tests {
             params: vec![kw("a", Some(0))],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -3094,7 +3406,11 @@ mod tests {
             params,
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -3109,7 +3425,8 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors().any(|i| i.message.contains("must precede keyword parameters")),
+            r.errors()
+                .any(|i| i.message.contains("must precede keyword parameters")),
             "got {:?}",
             r.issues
         );
@@ -3150,7 +3467,13 @@ mod tests {
         // def f(a, x:); f(1, x: 2) — one positional then one keyword.
         let m = module_kw_call(
             vec![p("a", ParamKind::Required), kw("x", None)],
-            vec![Expr::IntLit { value: 1, span: s() }, kwarg("x", 2)],
+            vec![
+                Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
+                kwarg("x", 2),
+            ],
             &[],
         );
         let r = validate(&m);
@@ -3162,14 +3485,21 @@ mod tests {
         // f(x: 2, 1) — a positional after a keyword argument.
         let m = module_kw_call(
             vec![kw("x", Some(0)), p("a", ParamKind::Required)],
-            vec![kwarg("x", 2), Expr::IntLit { value: 1, span: s() }],
+            vec![
+                kwarg("x", 2),
+                Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
+            ],
             &[],
         );
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors()
-                .any(|i| i.message.contains("positional argument may not follow a keyword")),
+            r.errors().any(|i| i
+                .message
+                .contains("positional argument may not follow a keyword")),
             "got {:?}",
             r.issues
         );
@@ -3186,7 +3516,8 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors().any(|i| i.message.contains("duplicate keyword argument")),
+            r.errors()
+                .any(|i| i.message.contains("duplicate keyword argument")),
             "got {:?}",
             r.issues
         );
@@ -3202,7 +3533,8 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors().any(|i| i.message.contains("unknown keyword `y`")),
+            r.errors()
+                .any(|i| i.message.contains("unknown keyword `y`")),
             "got {:?}",
             r.issues
         );
@@ -3212,11 +3544,7 @@ mod tests {
     fn unknown_keyword_with_kwrest_is_accepted() {
         // def f(**opts); f(y: 1) — the **opts absorbs the unmatched keyword,
         // so an otherwise-unknown keyword name is accepted.
-        let m = module_kw_call(
-            vec![p("opts", ParamKind::KwRest)],
-            vec![kwarg("y", 1)],
-            &[],
-        );
+        let m = module_kw_call(vec![p("opts", ParamKind::KwRest)], vec![kwarg("y", 1)], &[]);
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok with **kwrest, got {:?}", r.issues);
     }
@@ -3228,7 +3556,8 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors().any(|i| i.message.contains("missing required keyword `x`")),
+            r.errors()
+                .any(|i| i.message.contains("missing required keyword `x`")),
             "got {:?}",
             r.issues
         );
@@ -3313,15 +3642,26 @@ mod tests {
         // DirectCall path.  def f(x:); g() = f(x: 1).
         let m = module_kw_call(vec![kw("x", None)], vec![kwarg("x", 1)], &[]);
         let r = validate(&m);
-        assert!(r.is_ok(), "direct keyword call must still validate, got {:?}", r.issues);
+        assert!(
+            r.is_ok(),
+            "direct keyword call must still validate, got {:?}",
+            r.issues
+        );
     }
 
     #[test]
     fn indirect_call_with_only_positionals_still_validates() {
         // DoD (c): an indirect call with only positional args is unaffected.
-        let m = module_indirect_call(vec![Expr::IntLit { value: 1, span: s() }]);
+        let m = module_indirect_call(vec![Expr::IntLit {
+            value: 1,
+            span: s(),
+        }]);
         let r = validate(&m);
-        assert!(r.is_ok(), "positional indirect call must validate, got {:?}", r.issues);
+        assert!(
+            r.is_ok(),
+            "positional indirect call must validate, got {:?}",
+            r.issues
+        );
     }
 
     #[test]
@@ -3346,7 +3686,13 @@ mod tests {
                         scope: Scope::Param,
                         span: s(),
                     }),
-                    args: vec![kwarg("x", 1), Expr::IntLit { value: 2, span: s() }],
+                    args: vec![
+                        kwarg("x", 1),
+                        Expr::IntLit {
+                            value: 2,
+                            span: s(),
+                        },
+                    ],
                     effects: EffectSet::PURE,
                     span: s(),
                 },
@@ -3359,8 +3705,9 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors()
-                .any(|i| i.message.contains("positional argument may not follow a keyword")),
+            r.errors().any(|i| i
+                .message
+                .contains("positional argument may not follow a keyword")),
             "got {:?}",
             r.issues
         );
@@ -3444,7 +3791,10 @@ mod tests {
         // f(a: (b: 1)) — the inner `(b: 1)` is invalid.
         let inner = Expr::KeywordArg {
             name: "b".into(),
-            value: Box::new(Expr::IntLit { value: 1, span: s() }),
+            value: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
             span: s(),
         };
         let outer = Expr::KeywordArg {
@@ -3452,11 +3802,7 @@ mod tests {
             value: Box::new(inner),
             span: s(),
         };
-        let m = module_kw_call(
-            vec![p("opts", ParamKind::KwRest)],
-            vec![outer],
-            &[],
-        );
+        let m = module_kw_call(vec![p("opts", ParamKind::KwRest)], vec![outer], &[]);
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
@@ -3487,9 +3833,470 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(
-            r.errors().any(|i| i.message.contains("unknown name `ghost`")),
+            r.errors()
+                .any(|i| i.message.contains("unknown name `ghost`")),
             "got {:?}",
             r.issues
         );
+    }
+
+    // ── SIR22: array/matrix validator tests ──────────────────────────
+
+    fn module_with_fn_body_value(manifest: FeatureManifest, value: Expr) -> Module {
+        let mut m = empty_module(manifest);
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value,
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn array_lit_observes_nd_arrays_and_column_major_features() {
+        // [1 2; 3 4] used without declaring NDArrays/ArrayColumnMajor → error.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::ArrayLit {
+                rows: vec![
+                    vec![
+                        Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
+                        Expr::IntLit {
+                            value: 2,
+                            span: s(),
+                        },
+                    ],
+                    vec![
+                        Expr::IntLit {
+                            value: 3,
+                            span: s(),
+                        },
+                        Expr::IntLit {
+                            value: 4,
+                            span: s(),
+                        },
+                    ],
+                ],
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn array_lit_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays, Feature::ArrayColumnMajor]),
+            Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }]],
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn range_observes_nd_arrays_feature() {
+        // 1:5 — a bare Range doesn't need MatrixOps or ArrayColumnMajor,
+        // only NDArrays.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Range {
+                start: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                step: None,
+                stop: Box::new(Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(!r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn range_with_declared_nd_arrays_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays]),
+            Expr::Range {
+                start: Box::new(Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                }),
+                step: Some(Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                })),
+                stop: Box::new(Expr::IntLit {
+                    value: 10,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn matmul_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::MatMul {
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn matmul_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::MatMul {
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn elementwise_op_observes_matrix_ops_feature() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::ElementwiseOp {
+                op: ElementwiseOpKind::Mul,
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn transpose_observes_matrix_ops_feature() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Transpose {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                conjugate: true,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn index_get_observes_nd_arrays_feature_and_validates_index_args() {
+        // a(i, :, 1:3) — the Scalar index `ghost` is an unresolvable
+        // local, so both the missing-feature error and the scope error
+        // are expected.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::IndexGet {
+                target: Box::new(Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Global,
+                    span: s(),
+                }),
+                indices: vec![
+                    IndexArg::Scalar(Box::new(Expr::VarRef {
+                        name: "ghost".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    })),
+                    IndexArg::Whole,
+                ],
+                span: s(),
+            },
+        );
+        // `a` is referenced with Scope::Global but never declared as a
+        // module global — expect a scope error on `a` too, plus one on
+        // `ghost`, plus the missing-feature error.  We only assert the
+        // two things this test targets: the feature observation and
+        // that IndexArg::Scalar's nested expr is actually validated.
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    #[test]
+    fn index_get_with_declared_feature_and_valid_args_is_valid() {
+        // `a` is scope-checked via a function param (Scope::Param) rather
+        // than a local/global, keeping this test focused on the
+        // feature-observation + index-arg validation path.  The param's
+        // `sir_type: None` is itself what triggers `Feature::DynamicTyping`,
+        // hence declaring it in the manifest below.
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays, Feature::DynamicTyping]),
+            Expr::IndexGet {
+                target: Box::new(Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                }),
+                indices: vec![IndexArg::Whole],
+                span: s(),
+            },
+        );
+        let mut m = m;
+        m.functions[0].params.push(Param {
+            name: "a".into(),
+            sir_type: None,
+            kind: ParamKind::Required,
+            default: None,
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn index_set_observes_nd_arrays_feature() {
+        // a(1) = 9 — IndexSet without NDArrays declared → error.
+        let mut m = empty_module(FeatureManifest::new());
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::IndexSet {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    indices: vec![IndexArg::Scalar(Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }))],
+                    value: Box::new(Expr::IntLit {
+                        value: 9,
+                        span: s(),
+                    }),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+    }
+
+    #[test]
+    fn index_set_with_declared_feature_is_valid() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::DynamicTyping,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::IndexSet {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    indices: vec![IndexArg::Whole],
+                    value: Box::new(Expr::IntLit {
+                        value: 9,
+                        span: s(),
+                    }),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn index_set_value_expression_is_validated() {
+        // a(0) = ghost — the RHS value expr must still be scope-checked.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::NDArrays]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::IndexSet {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    indices: vec![IndexArg::Scalar(Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }))],
+                    value: Box::new(Expr::VarRef {
+                        name: "ghost".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    }),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r
+            .errors()
+            .any(|i| i.message.contains("unknown name `ghost`")));
+    }
+
+    /// Pin the SIR22 "IndexSet is a Stmt, not an Expr" design rule at the
+    /// validator layer: an `IndexSet` can only ever be reached via
+    /// `check_stmt_seq` (it's not a variant of `Expr` at all, so
+    /// `check_expr` cannot dispatch to it — this is enforced by the type
+    /// system, not a runtime check). This test documents that a
+    /// well-formed `IndexSet` statement validates cleanly through the
+    /// statement path, confirming the mutation semantics SIR16's `Assign`
+    /// established are followed here too (target checked, value checked,
+    /// no `Expr`-position use possible).
+    #[test]
+    fn index_set_validates_via_stmt_path_only() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::DynamicTyping,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::IndexSet {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    indices: vec![IndexArg::Whole],
+                    value: Box::new(Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    }),
+                    span: s(),
+                }],
+                // The block's trailing *value* position is a plain Expr —
+                // IndexSet could not be placed here even if we wanted to,
+                // since Expr has no IndexSet variant to construct.
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
 }

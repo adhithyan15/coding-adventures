@@ -28,8 +28,8 @@ mod emit;
 mod runtime;
 
 use semantic_ir::{
-    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Expr, Feature, Module,
-    ParamKind, Scope, Stmt,
+    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Expr, Feature, IndexArg,
+    Module, ParamKind, Scope, Stmt,
 };
 
 pub use emit::sanitize_ident;
@@ -370,7 +370,9 @@ fn reject_stateful_class(module: &Module) -> Option<BackendError> {
 fn stateful_class_in_stmts(stmts: &[Stmt]) -> Option<BackendError> {
     for s in stmts {
         match s {
-            Stmt::ClassDef { name, body, span, .. } => {
+            Stmt::ClassDef {
+                name, body, span, ..
+            } => {
                 if !body.is_empty() {
                     return Some(BackendError {
                         kind: BackendErrorKind::UnsupportedFeature,
@@ -390,7 +392,9 @@ fn stateful_class_in_stmts(stmts: &[Stmt]) -> Option<BackendError> {
             // has no object model for (and would reach the `Stmt::ModuleDef`
             // emit path), so reject it cleanly HERE — mirroring the ClassDef
             // rule — rather than letting emit produce nonsense.
-            Stmt::ModuleDef { name, body, span, .. } => {
+            Stmt::ModuleDef {
+                name, body, span, ..
+            } => {
                 if !body.is_empty() {
                     return Some(BackendError {
                         kind: BackendErrorKind::UnsupportedFeature,
@@ -410,7 +414,12 @@ fn stateful_class_in_stmts(stmts: &[Stmt]) -> Option<BackendError> {
                     return Some(e);
                 }
             }
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 if let Some(e) = stateful_class_in_stmts(body) {
                     return Some(e);
                 }
@@ -473,28 +482,47 @@ fn const_ref_in_stmt(s: &Stmt) -> Option<BackendError> {
         Stmt::LetBinding { value, .. }
         | Stmt::LetStarBinding { value, .. }
         | Stmt::ExprStmt { expr: value, .. } => const_ref_in_expr(value),
-        Stmt::Assign { scope: Scope::Const, span, .. } => Some(unsupported_const(span.clone())),
+        Stmt::Assign {
+            scope: Scope::Const,
+            span,
+            ..
+        } => Some(unsupported_const(span.clone())),
         Stmt::Assign { value, .. } => const_ref_in_expr(value),
         Stmt::While { cond, body, .. } => {
             const_ref_in_expr(cond).or_else(|| const_ref_in_block(body))
         }
-        Stmt::ForRange { start, stop, step, body, .. } => const_ref_in_expr(start)
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => const_ref_in_expr(start)
             .or_else(|| const_ref_in_expr(stop))
             .or_else(|| const_ref_in_expr(step))
             .or_else(|| const_ref_in_block(body)),
         Stmt::ForEach { iter, body, .. } => {
             const_ref_in_expr(iter).or_else(|| const_ref_in_block(body))
         }
-        Stmt::SeqSet { seq, index, value, .. } => const_ref_in_expr(seq)
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => const_ref_in_expr(seq)
             .or_else(|| const_ref_in_expr(index))
             .or_else(|| const_ref_in_expr(value)),
-        Stmt::MapSet { map, key, value, .. } => const_ref_in_expr(map)
+        Stmt::MapSet {
+            map, key, value, ..
+        } => const_ref_in_expr(map)
             .or_else(|| const_ref_in_expr(key))
             .or_else(|| const_ref_in_expr(value)),
         Stmt::ClassDef { body, .. }
         | Stmt::ModuleDef { body, .. }
         | Stmt::SingletonClassDef { body, .. } => const_ref_in_stmts(body),
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             if let Some(e) = const_ref_in_stmts(body) {
                 return Some(e);
             }
@@ -510,6 +538,35 @@ fn const_ref_in_stmt(s: &Stmt) -> Option<BackendError> {
             }
             None
         }
+        // SIR22 array/matrix indexed assignment: `Feature::NDArrays` /
+        // `Feature::MatrixOps` are not in this backend's accepted-features
+        // list, so `check_module` rejects any module using `IndexSet`
+        // before this analysis ever runs. Still scan `target`, each index
+        // sub-expression, and `value` faithfully — same recursive style as
+        // the `SeqSet`/`MapSet` arms above (this function never takes a
+        // "rejected elsewhere" shortcut).
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            if let Some(e) = const_ref_in_expr(target) {
+                return Some(e);
+            }
+            for idx in indices {
+                let inner = match idx {
+                    IndexArg::Scalar(inner) | IndexArg::Range(inner) => Some(inner.as_ref()),
+                    IndexArg::Whole => None,
+                };
+                if let Some(inner) = inner {
+                    if let Some(e) = const_ref_in_expr(inner) {
+                        return Some(e);
+                    }
+                }
+            }
+            const_ref_in_expr(value)
+        }
     }
 }
 
@@ -521,14 +578,21 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
     match e {
         // A `Const` VarRef standing alone (not a raise class name) cannot be
         // lowered — flag it.
-        Expr::VarRef { scope: Scope::Const, span, .. } => Some(unsupported_const(span.clone())),
+        Expr::VarRef {
+            scope: Scope::Const,
+            span,
+            ..
+        } => Some(unsupported_const(span.clone())),
         // `raise` is one allowed home for a `Const`: its first argument may
         // be a `Const` class name (lifted to a string).  Skip that slot;
         // still scan the remaining arguments (the message expression, etc.).
         Expr::BuiltinCall { name, args, .. } if name == "raise" => {
             let skip_first = matches!(
                 args.first(),
-                Some(Expr::VarRef { scope: Scope::Const, .. })
+                Some(Expr::VarRef {
+                    scope: Scope::Const,
+                    ..
+                })
             );
             let start = if skip_first { 1 } else { 0 };
             for a in &args[start.min(args.len())..] {
@@ -613,7 +677,12 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
             }
             None
         }
-        Expr::If { cond, then_branch, else_branch, .. } => const_ref_in_expr(cond)
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => const_ref_in_expr(cond)
             .or_else(|| const_ref_in_block(then_branch))
             .or_else(|| const_ref_in_block(else_branch)),
         Expr::Block(b) => const_ref_in_block(b),
@@ -644,9 +713,7 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
             }
             None
         }
-        Expr::MapGet { map, key, .. } => {
-            const_ref_in_expr(map).or_else(|| const_ref_in_expr(key))
-        }
+        Expr::MapGet { map, key, .. } => const_ref_in_expr(map).or_else(|| const_ref_in_expr(key)),
         // A closure's captured values are ordinary expressions emitted at the
         // capture site — a `Const` VarRef hiding in a capture would otherwise
         // slip past this gate and reach the `Scope::Const` emit panic (a
@@ -700,7 +767,10 @@ mod tests {
                 captures: vec![],
                 body: Block {
                     stmts: vec![],
-                    value: Expr::IntLit { value: 42, span: s() },
+                    value: Expr::IntLit {
+                        value: 42,
+                        span: s(),
+                    },
                     span: s(),
                 },
                 effects: EffectSet::PURE,
@@ -741,11 +811,8 @@ mod tests {
 
     #[test]
     fn end_to_end_twig_to_rust_id_function() {
-        let module = twig_to_semantic_ir::compile_source(
-            "(define (id x) x)\n(id 42)",
-            "demo",
-        )
-        .expect("lower");
+        let module = twig_to_semantic_ir::compile_source("(define (id x) x)\n(id 42)", "demo")
+            .expect("lower");
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("fn id(x: __sir::Value) -> __sir::Value"));
         assert!(a.source.contains("x.clone()"));
@@ -774,18 +841,17 @@ mod tests {
         .expect("lower");
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("fn __lambda_0("));
-        assert!(a.source.contains("__sir::Value::Closure(::std::rc::Rc::new"));
+        assert!(a
+            .source
+            .contains("__sir::Value::Closure(::std::rc::Rc::new"));
         assert!(a.source.contains("__sir::apply_closure"));
         assert!(a.source.contains("Globals (initialised in _init): add5"));
     }
 
     #[test]
     fn output_is_deterministic() {
-        let module = twig_to_semantic_ir::compile_source(
-            "(define (id x) x)\n(id 7)",
-            "demo",
-        )
-        .expect("lower");
+        let module = twig_to_semantic_ir::compile_source("(define (id x) x)\n(id 7)", "demo")
+            .expect("lower");
         let a = compile(&module).expect("compile");
         let b = compile(&module).expect("compile again");
         assert_eq!(a.source, b.source);
@@ -876,7 +942,10 @@ mod tests {
                 value: Expr::DirectCall {
                     fn_name: "f".into(),
                     args: vec![
-                        Expr::StrLit { value: "hi".into(), span: s() },
+                        Expr::StrLit {
+                            value: "hi".into(),
+                            span: s(),
+                        },
                         Expr::KeywordArg {
                             name: "name".into(),
                             value: Box::new(Expr::StrLit {
@@ -946,15 +1015,30 @@ mod tests {
         // Reorder to the M3-legal `Required* Keyword* KwRest?`: keyword
         // BEFORE the KwRest slot (a `**opts` must come last).
         f.params = vec![
-            Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+            Param {
+                name: "a".into(),
+                kind: ParamKind::Required,
+                sir_type: None,
+                default: None,
+                span: s(),
+            },
             Param {
                 name: "name".into(),
                 kind: ParamKind::Keyword,
                 sir_type: None,
-                default: Some(Box::new(Expr::StrLit { value: "world".into(), span: s() })),
+                default: Some(Box::new(Expr::StrLit {
+                    value: "world".into(),
+                    span: s(),
+                })),
                 span: s(),
             },
-            Param { name: "opts".into(), kind: ParamKind::KwRest, sir_type: None, default: None, span: s() },
+            Param {
+                name: "opts".into(),
+                kind: ParamKind::KwRest,
+                sir_type: None,
+                default: None,
+                span: s(),
+            },
         ];
         let m = kw_module(vec![f, main_calling_f_by_keyword()]);
         let err = compile(&m).expect_err("keyword + **kwrest must be rejected");
@@ -969,12 +1053,21 @@ mod tests {
         let f = Function {
             name: "greet".into(),
             params: vec![
-                Param { name: "greeting".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param {
+                    name: "greeting".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
                 Param {
                     name: "name".into(),
                     kind: ParamKind::Keyword,
                     sir_type: None,
-                    default: Some(Box::new(Expr::StrLit { value: "world".into(), span: s() })),
+                    default: Some(Box::new(Expr::StrLit {
+                        value: "world".into(),
+                        span: s(),
+                    })),
                     span: s(),
                 },
             ],
@@ -982,7 +1075,11 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::VarRef { name: "name".into(), scope: Scope::Param, span: s() },
+                value: Expr::VarRef {
+                    name: "name".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -998,7 +1095,10 @@ mod tests {
                 stmts: vec![],
                 value: Expr::DirectCall {
                     fn_name: "greet".into(),
-                    args: vec![Expr::StrLit { value: "hi".into(), span: s() }],
+                    args: vec![Expr::StrLit {
+                        value: "hi".into(),
+                        span: s(),
+                    }],
                     effects: EffectSet::PURE,
                     span: s(),
                 },
@@ -1033,8 +1133,15 @@ mod tests {
             expr: Expr::BuiltinCall {
                 name: "raise".into(),
                 args: vec![
-                    Expr::VarRef { name: cls.into(), scope: Scope::Const, span: s() },
-                    Expr::StrLit { value: "m".into(), span: s() },
+                    Expr::VarRef {
+                        name: cls.into(),
+                        scope: Scope::Const,
+                        span: s(),
+                    },
+                    Expr::StrLit {
+                        value: "m".into(),
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -1057,13 +1164,21 @@ mod tests {
             span: s(),
         };
         let a = compile(&exc_module(vec![tc], &[Feature::Constants])).expect("exceptions accepted");
-        assert!(a.source.contains("std::panic::catch_unwind"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("std::panic::catch_unwind"),
+            "got:\n{}",
+            a.source
+        );
         assert!(
             a.source.contains(r#"__sir::raise("ArgumentError", "#),
             "got:\n{}",
             a.source
         );
-        assert!(a.source.contains("__sir::install_panic_hook();"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("__sir::install_panic_hook();"),
+            "got:\n{}",
+            a.source
+        );
     }
 
     #[test]
@@ -1077,7 +1192,8 @@ mod tests {
         let a = compile(&exc_module(vec![cd], &[Feature::Classes]))
             .expect("empty-body exception subclass accepted");
         assert!(
-            a.source.contains(r#"__sir::register_ancestry(&[("MyErr", "StandardError")]);"#),
+            a.source
+                .contains(r#"__sir::register_ancestry(&[("MyErr", "StandardError")]);"#),
             "got:\n{}",
             a.source
         );
@@ -1090,7 +1206,10 @@ mod tests {
             name: "Widget".into(),
             superclass: None,
             body: vec![Stmt::ExprStmt {
-                expr: Expr::IntLit { value: 1, span: s() },
+                expr: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 span: s(),
             }],
             span: s(),
@@ -1098,7 +1217,11 @@ mod tests {
         let err = compile(&exc_module(vec![cd], &[Feature::Classes]))
             .expect_err("stateful class rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
-        assert!(err.message.contains("non-empty body"), "got: {}", err.message);
+        assert!(
+            err.message.contains("non-empty body"),
+            "got: {}",
+            err.message
+        );
     }
 
     #[test]
@@ -1107,13 +1230,21 @@ mod tests {
         let stmt = Stmt::LetBinding {
             name: "x".into(),
             sir_type: None,
-            value: Expr::VarRef { name: "PI".into(), scope: Scope::Const, span: s() },
+            value: Expr::VarRef {
+                name: "PI".into(),
+                scope: Scope::Const,
+                span: s(),
+            },
             span: s(),
         };
         let err = compile(&exc_module(vec![stmt], &[Feature::Constants]))
             .expect_err("bare const ref rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
-        assert!(err.message.contains("constant reference"), "got: {}", err.message);
+        assert!(
+            err.message.contains("constant reference"),
+            "got: {}",
+            err.message
+        );
     }
 
     #[test]
@@ -1129,7 +1260,11 @@ mod tests {
                 fn_name: "lam".into(),
                 captures: vec![semantic_ir::CaptureValue {
                     name: "c".into(),
-                    value: Expr::VarRef { name: "PI".into(), scope: Scope::Const, span: s() },
+                    value: Expr::VarRef {
+                        name: "PI".into(),
+                        scope: Scope::Const,
+                        span: s(),
+                    },
                 }],
                 span: s(),
             },
@@ -1142,16 +1277,27 @@ mod tests {
             name: "lam".into(),
             params: vec![],
             return_type: None,
-            captures: vec![semantic_ir::Capture { name: "c".into(), sir_type: None }],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            captures: vec![semantic_ir::Capture {
+                name: "c".into(),
+                sir_type: None,
+            }],
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
         });
-        let err = compile(&m)
-            .expect_err("const ref in closure capture must be rejected, not panic");
+        let err =
+            compile(&m).expect_err("const ref in closure capture must be rejected, not panic");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
-        assert!(err.message.contains("constant reference"), "got: {}", err.message);
+        assert!(
+            err.message.contains("constant reference"),
+            "got: {}",
+            err.message
+        );
     }
 
     #[test]
@@ -1159,7 +1305,11 @@ mod tests {
         // `raise Foo, "m"` — the Const is the class name → allowed.
         let a = compile(&exc_module(vec![raise_stmt("Foo")], &[Feature::Constants]))
             .expect("raise-class-name const is allowed");
-        assert!(a.source.contains(r#"__sir::raise("Foo", "#), "got:\n{}", a.source);
+        assert!(
+            a.source.contains(r#"__sir::raise("Foo", "#),
+            "got:\n{}",
+            a.source
+        );
     }
 
     // ── O5: user-defined-class OOP acceptance + soundness ──────────────
@@ -1180,14 +1330,29 @@ mod tests {
         // A real OOP module: `class Dog`, a `__def_method__`, a `Dog.new`,
         // and an `@ivar` write — all now ACCEPTED and routed to the runtime.
         let stmts = vec![
-            Stmt::ClassDef { name: "Dog".into(), superclass: None, body: vec![], span: s() },
+            Stmt::ClassDef {
+                name: "Dog".into(),
+                superclass: None,
+                body: vec![],
+                span: s(),
+            },
             Stmt::ExprStmt {
                 expr: Expr::BuiltinCall {
                     name: "__def_method__".into(),
                     args: vec![
-                        Expr::StrLit { value: "Dog".into(), span: s() },
-                        Expr::StrLit { value: "speak".into(), span: s() },
-                        Expr::MakeClosure { fn_name: "Dog_speak".into(), captures: vec![], span: s() },
+                        Expr::StrLit {
+                            value: "Dog".into(),
+                            span: s(),
+                        },
+                        Expr::StrLit {
+                            value: "speak".into(),
+                            span: s(),
+                        },
+                        Expr::MakeClosure {
+                            fn_name: "Dog_speak".into(),
+                            captures: vec![],
+                            span: s(),
+                        },
                     ],
                     effects: EffectSet::PURE,
                     span: s(),
@@ -1197,13 +1362,19 @@ mod tests {
             Stmt::Assign {
                 name: "@name".into(),
                 scope: Scope::Instance,
-                value: Expr::StrLit { value: "Rex".into(), span: s() },
+                value: Expr::StrLit {
+                    value: "Rex".into(),
+                    span: s(),
+                },
                 span: s(),
             },
             Stmt::ExprStmt {
                 expr: Expr::BuiltinCall {
                     name: "__new__".into(),
-                    args: vec![Expr::StrLit { value: "Dog".into(), span: s() }],
+                    args: vec![Expr::StrLit {
+                        value: "Dog".into(),
+                        span: s(),
+                    }],
                     effects: EffectSet::PURE,
                     span: s(),
                 },
@@ -1228,7 +1399,11 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::VarRef { name: "@name".into(), scope: Scope::Instance, span: s() },
+                value: Expr::VarRef {
+                    name: "@name".into(),
+                    scope: Scope::Instance,
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -1236,16 +1411,32 @@ mod tests {
             span: s(),
         });
         let a = compile(&m).expect("real OOP module should be accepted");
-        assert!(a.source.contains(r#"__sir::def_method("Dog", "speak", "#), "got:\n{}", a.source);
-        assert!(a.source.contains(r#"__sir::call_new("Dog", vec![])"#), "got:\n{}", a.source);
-        assert!(a.source.contains(r#"__sir::ivar_set("@name", "#), "got:\n{}", a.source);
+        assert!(
+            a.source.contains(r#"__sir::def_method("Dog", "speak", "#),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains(r#"__sir::call_new("Dog", vec![])"#),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains(r#"__sir::ivar_set("@name", "#),
+            "got:\n{}",
+            a.source
+        );
     }
 
     #[test]
     fn accepts_empty_module_def() {
         // `module Foo … end` with method defs hoisted (empty body) → accepted,
         // emits only a comment marker.
-        let md = Stmt::ModuleDef { name: "Foo".into(), body: vec![], span: s() };
+        let md = Stmt::ModuleDef {
+            name: "Foo".into(),
+            body: vec![],
+            span: s(),
+        };
         let a = compile(&feat_module(vec![md], &[Feature::Modules]))
             .expect("empty module def accepted");
         assert!(a.source.contains("// module Foo"), "got:\n{}", a.source);
@@ -1257,7 +1448,10 @@ mod tests {
         let md = Stmt::ModuleDef {
             name: "Foo".into(),
             body: vec![Stmt::ExprStmt {
-                expr: Expr::IntLit { value: 1, span: s() },
+                expr: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 span: s(),
             }],
             span: s(),
@@ -1265,7 +1459,11 @@ mod tests {
         let err = compile(&feat_module(vec![md], &[Feature::Modules]))
             .expect_err("stateful module rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
-        assert!(err.message.contains("non-empty body"), "got: {}", err.message);
+        assert!(
+            err.message.contains("non-empty body"),
+            "got: {}",
+            err.message
+        );
     }
 
     #[test]
@@ -1275,14 +1473,25 @@ mod tests {
         let st = Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
                 name: "__new__".into(),
-                args: vec![Expr::VarRef { name: "Dog".into(), scope: Scope::Const, span: s() }],
+                args: vec![Expr::VarRef {
+                    name: "Dog".into(),
+                    scope: Scope::Const,
+                    span: s(),
+                }],
                 effects: EffectSet::PURE,
                 span: s(),
             },
             span: s(),
         };
-        let a = compile(&feat_module(vec![st], &[Feature::Classes, Feature::Constants]))
-            .expect("const class name in __new__ is allowed");
-        assert!(a.source.contains(r#"__sir::call_new("Dog", vec![])"#), "got:\n{}", a.source);
+        let a = compile(&feat_module(
+            vec![st],
+            &[Feature::Classes, Feature::Constants],
+        ))
+        .expect("const class name in __new__ is allowed");
+        assert!(
+            a.source.contains(r#"__sir::call_new("Dog", vec![])"#),
+            "got:\n{}",
+            a.source
+        );
     }
 }

@@ -109,7 +109,13 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             v.visit_expr(cond);
             v.visit_block(body);
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             v.visit_expr(start);
             v.visit_expr(stop);
             v.visit_expr(step);
@@ -119,12 +125,16 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             v.visit_expr(iter);
             v.visit_block(body);
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             v.visit_expr(seq);
             v.visit_expr(index);
             v.visit_expr(value);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             v.visit_expr(map);
             v.visit_expr(key);
             v.visit_expr(value);
@@ -151,7 +161,12 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
                 v.visit_stmt(stmt);
             }
         }
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             // Exception handling (Ruby Phase 16a): recurse into the try
             // body, each rescue clause's body, and the optional ensure
             // body, so visitors see every nested statement.
@@ -169,6 +184,35 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
                 }
             }
         }
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            // SIR22: `target[indices...] = value`. Recurse into the
+            // target, every index-arg subexpression, and the value —
+            // same shape as SeqSet/MapSet above.
+            v.visit_expr(target);
+            walk_index_args(v, indices);
+            v.visit_expr(value);
+        }
+    }
+}
+
+/// Shared helper: visit every `Expr` nested inside a slice of
+/// [`IndexArg`]s (SIR22).  `Whole` has no children; `Scalar`/`Range`
+/// each carry exactly one nested expression.  Used by both
+/// [`walk_stmt_default`] (for `Stmt::IndexSet`) and
+/// [`walk_expr_default`] (for `Expr::IndexGet`) so the two index-arg
+/// walks can't drift apart.
+fn walk_index_args<V: Visitor>(v: &mut V, indices: &[IndexArg]) {
+    for arg in indices {
+        match arg {
+            IndexArg::Scalar(e) => v.visit_expr(e),
+            IndexArg::Whole => {}
+            IndexArg::Range(e) => v.visit_expr(e),
+        }
     }
 }
 
@@ -183,7 +227,12 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
         | Expr::StrLit { .. }
         | Expr::VarRef { .. } => {}
 
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             v.visit_expr(cond);
             v.visit_block(then_branch);
             v.visit_block(else_branch);
@@ -267,6 +316,41 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
         Expr::KeywordArg { value, .. } => {
             v.visit_expr(value);
         }
+
+        // ── SIR22: array/matrix nodes ───────────────────────────────
+        Expr::ArrayLit { rows, .. } => {
+            for row in rows {
+                for item in row {
+                    v.visit_expr(item);
+                }
+            }
+        }
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            v.visit_expr(start);
+            if let Some(step) = step {
+                v.visit_expr(step);
+            }
+            v.visit_expr(stop);
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            v.visit_expr(lhs);
+            v.visit_expr(rhs);
+        }
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            v.visit_expr(lhs);
+            v.visit_expr(rhs);
+        }
+        Expr::Transpose { target, .. } => {
+            v.visit_expr(target);
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            v.visit_expr(target);
+            walk_index_args(v, indices);
+        }
     }
 }
 
@@ -305,8 +389,14 @@ mod tests {
             value: Expr::BuiltinCall {
                 name: "+".into(),
                 args: vec![
-                    Expr::IntLit { value: 1, span: s() },
-                    Expr::IntLit { value: 2, span: s() },
+                    Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -338,7 +428,10 @@ mod tests {
     #[test]
     fn visitor_walks_full_tree() {
         let m = sample_module();
-        let mut c = Counter { builtins: 0, ints: 0 };
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
         c.visit_module(&m);
         assert_eq!(c.builtins, 1);
         assert_eq!(c.ints, 2);
@@ -351,7 +444,10 @@ mod tests {
             stmts: vec![Stmt::LetBinding {
                 name: "x".into(),
                 sir_type: None,
-                value: Expr::IntLit { value: 5, span: s() },
+                value: Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                },
                 span: s(),
             }],
             value: Expr::VarRef {
@@ -381,9 +477,12 @@ mod tests {
             metadata: Metadata::new(),
             span: s(),
         };
-        let mut c = Counter { builtins: 0, ints: 0 };
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
         c.visit_module(&m);
-        assert_eq!(c.ints, 1);  // the literal 5 in the let RHS
+        assert_eq!(c.ints, 1); // the literal 5 in the let RHS
     }
 
     #[test]
@@ -401,7 +500,10 @@ mod tests {
                 name: "a".into(),
                 sir_type: None,
                 kind: ParamKind::Required,
-                default: Some(Box::new(Expr::IntLit { value: 7, span: s() })),
+                default: Some(Box::new(Expr::IntLit {
+                    value: 7,
+                    span: s(),
+                })),
                 span: s(),
             }],
             return_type: None,
@@ -421,9 +523,15 @@ mod tests {
             metadata: Metadata::new(),
             span: s(),
         };
-        let mut c = Counter { builtins: 0, ints: 0 };
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
         c.visit_module(&m);
-        assert_eq!(c.ints, 1, "walker should visit the default-value expression");
+        assert_eq!(
+            c.ints, 1,
+            "walker should visit the default-value expression"
+        );
     }
 
     #[test]
@@ -436,7 +544,10 @@ mod tests {
                 fn_name: "f".into(),
                 args: vec![Expr::KeywordArg {
                     name: "a".into(),
-                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    value: Box::new(Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    }),
                     span: s(),
                 }],
                 effects: EffectSet::PURE,
@@ -464,7 +575,10 @@ mod tests {
             metadata: Metadata::new(),
             span: s(),
         };
-        let mut c = Counter { builtins: 0, ints: 0 };
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
         c.visit_module(&m);
         assert_eq!(c.ints, 1, "walker should visit the keyword-arg value");
     }
@@ -473,18 +587,27 @@ mod tests {
     fn visitor_visits_if_branches() {
         let then_block = Block {
             stmts: vec![],
-            value: Expr::IntLit { value: 1, span: s() },
+            value: Expr::IntLit {
+                value: 1,
+                span: s(),
+            },
             span: s(),
         };
         let else_block = Block {
             stmts: vec![],
-            value: Expr::IntLit { value: 2, span: s() },
+            value: Expr::IntLit {
+                value: 2,
+                span: s(),
+            },
             span: s(),
         };
         let body = Block {
             stmts: vec![],
             value: Expr::If {
-                cond: Box::new(Expr::BoolLit { value: true, span: s() }),
+                cond: Box::new(Expr::BoolLit {
+                    value: true,
+                    span: s(),
+                }),
                 then_branch: Box::new(then_block),
                 else_branch: Box::new(else_block),
                 span: s(),
@@ -511,8 +634,271 @@ mod tests {
             metadata: Metadata::new(),
             span: s(),
         };
-        let mut c = Counter { builtins: 0, ints: 0 };
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
         c.visit_module(&m);
-        assert_eq!(c.ints, 2);  // both branches counted
+        assert_eq!(c.ints, 2); // both branches counted
+    }
+
+    // ── SIR22: array/matrix walker tests ─────────────────────────────
+
+    fn module_with_body_value(value: Expr) -> Module {
+        let f = Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value,
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        Module {
+            name: "m".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn visitor_walks_array_lit_rows() {
+        // [1 2; 3 4] — all four IntLits must be visited.
+        let m = module_with_body_value(Expr::ArrayLit {
+            rows: vec![
+                vec![
+                    Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    },
+                ],
+                vec![
+                    Expr::IntLit {
+                        value: 3,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 4,
+                        span: s(),
+                    },
+                ],
+            ],
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 4);
+    }
+
+    #[test]
+    fn visitor_walks_range_with_and_without_step() {
+        // 1:5 — no step: two ints (start, stop).
+        let m = module_with_body_value(Expr::Range {
+            start: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            step: None,
+            stop: Box::new(Expr::IntLit {
+                value: 5,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+
+        // 0:2:10 — with step: three ints.
+        let m2 = module_with_body_value(Expr::Range {
+            start: Box::new(Expr::IntLit {
+                value: 0,
+                span: s(),
+            }),
+            step: Some(Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            })),
+            stop: Box::new(Expr::IntLit {
+                value: 10,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c2 = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c2.visit_module(&m2);
+        assert_eq!(c2.ints, 3);
+    }
+
+    #[test]
+    fn visitor_walks_matmul_and_elementwise_op_operands() {
+        let matmul = module_with_body_value(Expr::MatMul {
+            lhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&matmul);
+        assert_eq!(c.ints, 2);
+
+        let ew = module_with_body_value(Expr::ElementwiseOp {
+            op: ElementwiseOpKind::Add,
+            lhs: Box::new(Expr::IntLit {
+                value: 3,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 4,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c2 = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c2.visit_module(&ew);
+        assert_eq!(c2.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_transpose_target() {
+        let m = module_with_body_value(Expr::Transpose {
+            target: Box::new(Expr::IntLit {
+                value: 7,
+                span: s(),
+            }),
+            conjugate: true,
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_index_get_target_and_index_args() {
+        // a(i, :, 1:3) — target `a` isn't an IntLit, but the Scalar `i`
+        // index and the Range's start/stop are, so 3 ints total.
+        let m = module_with_body_value(Expr::IndexGet {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            indices: vec![
+                IndexArg::Scalar(Box::new(Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                })),
+                IndexArg::Whole,
+                IndexArg::Range(Box::new(Expr::Range {
+                    start: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }),
+                    step: None,
+                    stop: Box::new(Expr::IntLit {
+                        value: 3,
+                        span: s(),
+                    }),
+                    span: s(),
+                })),
+            ],
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 3);
+    }
+
+    #[test]
+    fn visitor_walks_index_set_stmt() {
+        // a(1) = 9 — Stmt::IndexSet is a statement, not the block's value
+        // expr, so it's exercised via a non-empty `stmts` list this time.
+        let f = Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::IndexSet {
+                    target: Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    }),
+                    indices: vec![IndexArg::Scalar(Box::new(Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    }))],
+                    value: Box::new(Expr::IntLit {
+                        value: 9,
+                        span: s(),
+                    }),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "m".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        // The index-arg IntLit(0) and the value IntLit(9) — 2 total.
+        assert_eq!(c.ints, 2);
     }
 }

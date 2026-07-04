@@ -340,7 +340,7 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
     Block, Capture, CaptureValue, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest,
-    Function, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, CURRENT_SIR_VERSION,
+    Function, IndexArg, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, CURRENT_SIR_VERSION,
 };
 use std::collections::HashSet;
 
@@ -623,8 +623,10 @@ impl Lowerer {
             self.file_name.clone(),
             node.start_line.unwrap_or(0),
             node.start_column.unwrap_or(0),
-            node.end_line.unwrap_or_else(|| node.start_line.unwrap_or(0)),
-            node.end_column.unwrap_or_else(|| node.start_column.unwrap_or(0)),
+            node.end_line
+                .unwrap_or_else(|| node.start_line.unwrap_or(0)),
+            node.end_column
+                .unwrap_or_else(|| node.start_column.unwrap_or(0)),
         )
     }
 
@@ -997,8 +999,12 @@ impl Lowerer {
         // or [cond_expr, then_stmt, else_stmt].  The `if`/`else` keywords,
         // parens, etc. are tokens we skip.
         let nodes = child_nodes(node);
-        let cond_node = nodes.first().ok_or_else(|| self.unsupported(node, "if (no condition)"))?;
-        let then_node = nodes.get(1).ok_or_else(|| self.unsupported(node, "if (no then branch)"))?;
+        let cond_node = nodes
+            .first()
+            .ok_or_else(|| self.unsupported(node, "if (no condition)"))?;
+        let then_node = nodes
+            .get(1)
+            .ok_or_else(|| self.unsupported(node, "if (no then branch)"))?;
 
         let cond = self.lower_expression(cond_node, 0)?;
         let then_branch = self.lower_body(then_node, depth)?;
@@ -1027,8 +1033,12 @@ impl Lowerer {
         self.check_stmt_depth(node, depth)?;
         let span = self.span_of(node);
         let nodes = child_nodes(node);
-        let cond_node = nodes.first().ok_or_else(|| self.unsupported(node, "while (no condition)"))?;
-        let body_node = nodes.get(1).ok_or_else(|| self.unsupported(node, "while (no body)"))?;
+        let cond_node = nodes
+            .first()
+            .ok_or_else(|| self.unsupported(node, "while (no condition)"))?;
+        let body_node = nodes
+            .get(1)
+            .ok_or_else(|| self.unsupported(node, "while (no body)"))?;
 
         let cond = self.lower_expression(cond_node, 0)?;
         let body = self.lower_body(body_node, depth)?;
@@ -1071,7 +1081,12 @@ impl Lowerer {
 
         let body = self.lower_loop_body_scoped(&var, node, depth)?;
         self.features_used.add(Feature::Loops);
-        Ok(Stmt::ForEach { var, iter, body, span })
+        Ok(Stmt::ForEach {
+            var,
+            iter,
+            body,
+            span,
+        })
     }
 
     /// Lower a canonical C-style `for_statement` to a [`Stmt::ForRange`].
@@ -1107,9 +1122,9 @@ impl Lowerer {
         // wrapped in a `lexical_declaration` here — the `let` keyword and
         // `binding_list` are direct children).  `var` would surface a
         // `variable_declaration_list` instead; we accept either.
-        let (loop_var, start) = self.extract_for_init(node).ok_or_else(|| {
-            reject("init is not a single `let i = <start>` binding")
-        })?;
+        let (loop_var, start) = self
+            .extract_for_init(node)
+            .ok_or_else(|| reject("init is not a single `let i = <start>` binding"))?;
 
         // ── cond: `i < <stop>` / `i <= <stop>` ──────────────────────────
         // The condition is the first `expression` child after the init's
@@ -1125,9 +1140,11 @@ impl Lowerer {
         let update_expr = self
             .for_clause_expr(node, 1)
             .ok_or_else(|| reject("missing update clause"))?;
-        let step = self.extract_for_step(update_expr, &loop_var).ok_or_else(|| {
-            reject("update is not an increment of the loop variable by a constant step")
-        })?;
+        let step = self
+            .extract_for_step(update_expr, &loop_var)
+            .ok_or_else(|| {
+                reject("update is not an increment of the loop variable by a constant step")
+            })?;
 
         // ── body (loop variable scoped into it) ─────────────────────────
         let body = self.lower_loop_body_scoped(&loop_var, node, depth)?;
@@ -1148,12 +1165,11 @@ impl Lowerer {
     fn extract_for_init(&mut self, for_node: &GrammarASTNode) -> Option<(String, Expr)> {
         // `let`/`const` → `binding_list[ lexical_binding[ Name, =, init ] ]`.
         // `var`         → `variable_declaration_list[ variable_declaration ]`.
-        let (list_name, binding_name) =
-            if child_node_named(for_node, "binding_list").is_some() {
-                ("binding_list", "lexical_binding")
-            } else {
-                ("variable_declaration_list", "variable_declaration")
-            };
+        let (list_name, binding_name) = if child_node_named(for_node, "binding_list").is_some() {
+            ("binding_list", "lexical_binding")
+        } else {
+            ("variable_declaration_list", "variable_declaration")
+        };
         let list = child_node_named(for_node, list_name)?;
         let bindings = children_nodes_named(list, binding_name);
         if bindings.len() != 1 {
@@ -1195,11 +1211,7 @@ impl Lowerer {
     /// Accepts `i < S` (→ `S`) and `i <= S` (→ half-open `S + 1`), where the
     /// left operand is exactly the loop variable `var`.  Returns `None` for
     /// any other comparison (wrong variable, `>`/`>=`, RHS-anchored, …).
-    fn extract_for_cond(
-        &mut self,
-        cond_node: &GrammarASTNode,
-        var: &str,
-    ) -> Option<Expr> {
+    fn extract_for_cond(&mut self, cond_node: &GrammarASTNode, var: &str) -> Option<Expr> {
         // Peel to the branching `relational_expression`: `[lhs, op, rhs]`.
         let branch = peel_to_branch(cond_node);
         if branch.rule_name != "relational_expression" || branch.children.len() != 3 {
@@ -1231,7 +1243,13 @@ impl Lowerer {
                 let span = stop.span().clone();
                 Some(Expr::BuiltinCall {
                     name: "+".to_string(),
-                    args: vec![stop, Expr::IntLit { value: 1, span: span.clone() }],
+                    args: vec![
+                        stop,
+                        Expr::IntLit {
+                            value: 1,
+                            span: span.clone(),
+                        },
+                    ],
                     effects: EffectSet::PURE,
                     span,
                 })
@@ -1249,11 +1267,7 @@ impl Lowerer {
     ///   * `i = i + <step>`→ `<step>`.
     ///
     /// Returns `None` for decrements, `*=`, a different variable, etc.
-    fn extract_for_step(
-        &mut self,
-        update_node: &GrammarASTNode,
-        var: &str,
-    ) -> Option<Expr> {
+    fn extract_for_step(&mut self, update_node: &GrammarASTNode, var: &str) -> Option<Expr> {
         let branch = peel_to_branch(update_node);
         match branch.rule_name.as_str() {
             // ── `i++` : postfix_expression[ lhs, Name("++") ] ───────────
@@ -1265,13 +1279,17 @@ impl Lowerer {
                     return None;
                 }
                 // The operator token must be `++` (reject `i--`).
-                let op_ok = branch.children.iter().any(|c| {
-                    matches!(c, ASTNodeOrToken::Token(tok) if tok.value == "++")
-                });
+                let op_ok = branch
+                    .children
+                    .iter()
+                    .any(|c| matches!(c, ASTNodeOrToken::Token(tok) if tok.value == "++"));
                 if !op_ok {
                     return None;
                 }
-                Some(Expr::IntLit { value: 1, span: self.span_of(branch) })
+                Some(Expr::IntLit {
+                    value: 1,
+                    span: self.span_of(branch),
+                })
             }
             // ── `i += s` or `i = i + s` :
             //    assignment_expression[ lhs, op, rhs ] ─────────────────
@@ -1487,10 +1505,20 @@ impl Lowerer {
             // call it.  First sighting binds; a redeclare re-assigns.
             let stmt = if self.is_current_local(&name) {
                 self.features_used.add(Feature::MutableBindings);
-                Stmt::Assign { name, scope: Scope::Local, value: make, span }
+                Stmt::Assign {
+                    name,
+                    scope: Scope::Local,
+                    value: make,
+                    span,
+                }
             } else {
                 self.declare_local(&name);
-                Stmt::LetStarBinding { name, sir_type: None, value: make, span }
+                Stmt::LetStarBinding {
+                    name,
+                    sir_type: None,
+                    value: make,
+                    span,
+                }
             };
             Ok(Lowered::Stmt(Box::new(stmt)))
         } else {
@@ -1500,7 +1528,9 @@ impl Lowerer {
             // discards (a pure literal is superseded by any real value, and
             // dropped at the end of the block otherwise).
             self.user_functions.push(lowered_fn);
-            Ok(Lowered::Expr(Expr::NilLit { span: self.span_of(node) }))
+            Ok(Lowered::Expr(Expr::NilLit {
+                span: self.span_of(node),
+            }))
         }
     }
 
@@ -1634,8 +1664,7 @@ impl Lowerer {
         let mut i = first_args_idx + 1;
         while i < children.len() {
             // Expect `Dot`, `Name`, `arguments`.
-            let is_dot =
-                matches!(&children[i], ASTNodeOrToken::Token(t) if t.value == ".");
+            let is_dot = matches!(&children[i], ASTNodeOrToken::Token(t) if t.value == ".");
             if !is_dot {
                 // A computed step (`…[expr](…)`) or other trailing access is
                 // not a named method → deferred.
@@ -1655,7 +1684,13 @@ impl Lowerer {
             };
             let step_args = self.lower_arguments(args_node, depth)?;
             let name_span = self.span_of_token(method_tok);
-            acc = self.make_method_dispatch(acc, method_tok.value.clone(), name_span, step_args, span.clone())?;
+            acc = self.make_method_dispatch(
+                acc,
+                method_tok.value.clone(),
+                name_span,
+                step_args,
+                span.clone(),
+            )?;
             i += 3;
         }
 
@@ -1725,8 +1760,7 @@ impl Lowerer {
                 }
                 // Otherwise it must resolve to a *value* (a closure handle
                 // bound to a local / param / capture) → IndirectCall.
-                let target =
-                    self.resolve_name(&fname, span.clone(), tok.line, tok.column)?;
+                let target = self.resolve_name(&fname, span.clone(), tok.line, tok.column)?;
                 self.features_used.add(Feature::Closures);
                 return Ok(Expr::IndirectCall {
                     target: Box::new(target),
@@ -1794,7 +1828,10 @@ impl Lowerer {
         self.features_used.add(Feature::Strings);
         let mut full_args = Vec::with_capacity(args.len() + 2);
         full_args.push(receiver);
-        full_args.push(Expr::StrLit { value: method, span: name_span });
+        full_args.push(Expr::StrLit {
+            value: method,
+            span: name_span,
+        });
         full_args.extend(args);
         Ok(Expr::BuiltinCall {
             name: "__method__".to_string(),
@@ -1869,7 +1906,10 @@ impl Lowerer {
             captures: frame
                 .captures
                 .iter()
-                .map(|n| Capture { name: n.clone(), sir_type: None })
+                .map(|n| Capture {
+                    name: n.clone(),
+                    sir_type: None,
+                })
                 .collect(),
             body,
             // A closure body may allocate; a plain top-level function is
@@ -1928,7 +1968,11 @@ impl Lowerer {
                     })
                     .ok_or_else(|| self.unsupported(concise, "arrow concise body"))?;
                 let value = self.lower_expression(expr_node, depth + 1)?;
-                Ok(Block { stmts: Vec::new(), value, span: span.clone() })
+                Ok(Block {
+                    stmts: Vec::new(),
+                    value,
+                    span: span.clone(),
+                })
             }
         })();
 
@@ -1943,7 +1987,10 @@ impl Lowerer {
             captures: frame
                 .captures
                 .iter()
-                .map(|n| Capture { name: n.clone(), sir_type: None })
+                .map(|n| Capture {
+                    name: n.clone(),
+                    sir_type: None,
+                })
                 .collect(),
             body,
             effects: EffectSet::PURE.with(Effect::MayAllocate),
@@ -2082,8 +2129,7 @@ impl Lowerer {
                     self.check_stmt_depth(concrete, depth)?;
                     let span = self.span_of(concrete);
                     let saved = self.cur().locals.clone();
-                    let nested =
-                        self.lower_function_body(&concrete.children, span, depth + 1);
+                    let nested = self.lower_function_body(&concrete.children, span, depth + 1);
                     self.cur().locals = saved;
                     tail = Some(Expr::Block(Box::new(nested?)));
                 }
@@ -2094,18 +2140,20 @@ impl Lowerer {
             }
         }
 
-        let value = tail.unwrap_or(Expr::NilLit { span: block_span.clone() });
-        Ok(Block { stmts, value, span: block_span })
+        let value = tail.unwrap_or(Expr::NilLit {
+            span: block_span.clone(),
+        });
+        Ok(Block {
+            stmts,
+            value,
+            span: block_span,
+        })
     }
 
     /// Lower a *tail-position* `if_statement` to an [`Expr::If`] whose
     /// branch values come from recursively tail-lowering each branch.  A
     /// missing `else` yields a nil-valued else block.
-    fn lower_tail_if(
-        &mut self,
-        node: &GrammarASTNode,
-        depth: usize,
-    ) -> Result<Expr, JsLowerError> {
+    fn lower_tail_if(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, JsLowerError> {
         self.check_stmt_depth(node, depth)?;
         let span = self.span_of(node);
         let nodes = child_nodes(node);
@@ -2181,7 +2229,10 @@ impl Lowerer {
         if node.rule_name == "return_statement" {
             return Err(self.early_return_error(node));
         }
-        if matches!(node.rule_name.as_str(), "function_declaration" | "arrow_function") {
+        if matches!(
+            node.rule_name.as_str(),
+            "function_declaration" | "arrow_function"
+        ) {
             return Ok(());
         }
         for child in &node.children {
@@ -2198,9 +2249,7 @@ impl Lowerer {
     /// [`check_stmt_depth`](Self::check_stmt_depth) emits.
     fn too_deep_error(&self, node: &GrammarASTNode) -> JsLowerError {
         JsLowerError {
-            message: format!(
-                "input nests deeper than the supported limit ({MAX_STMT_DEPTH})"
-            ),
+            message: format!("input nests deeper than the supported limit ({MAX_STMT_DEPTH})"),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         }
@@ -2211,7 +2260,9 @@ impl Lowerer {
     fn lower_return_value(&mut self, ret: &GrammarASTNode) -> Result<Expr, JsLowerError> {
         match child_node_named(ret, "expression") {
             Some(e) => self.lower_expression(e, 0),
-            None => Ok(Expr::NilLit { span: self.span_of(ret) }),
+            None => Ok(Expr::NilLit {
+                span: self.span_of(ret),
+            }),
         }
     }
 
@@ -2240,7 +2291,10 @@ impl Lowerer {
         // Bare single-identifier form: `a => …` (no parens, no default).
         if let Some(tok) = ap.token() {
             if matches!(tok.type_, TokenType::Name) {
-                return Ok(vec![FormalParamSpec { name: tok.value.clone(), default: None }]);
+                return Ok(vec![FormalParamSpec {
+                    name: tok.value.clone(),
+                    default: None,
+                }]);
             }
         }
         match child_node_named(ap, "formal_parameters") {
@@ -2286,9 +2340,7 @@ impl Lowerer {
             //   - anything else             → deferred
             let default = match &param.children[1..] {
                 [] => None,
-                [ASTNodeOrToken::Token(eq), ASTNodeOrToken::Node(expr)]
-                    if eq.value == "=" =>
-                {
+                [ASTNodeOrToken::Token(eq), ASTNodeOrToken::Node(expr)] if eq.value == "=" => {
                     Some(expr)
                 }
                 _ => return Err(self.deferred_param(ctx_node)),
@@ -2336,10 +2388,7 @@ impl Lowerer {
     /// M2 supports the common single-binding case; a comma-separated
     /// multi-binding list (`let a = 1, b = 2;`) is rejected (deferred) so
     /// the lossy behaviour is explicit rather than silent.
-    fn lower_lexical_declaration(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Stmt, JsLowerError> {
+    fn lower_lexical_declaration(&mut self, node: &GrammarASTNode) -> Result<Stmt, JsLowerError> {
         let list = child_node_named(node, "binding_list")
             .ok_or_else(|| self.unsupported(node, "lexical_declaration (no binding_list)"))?;
         let bindings = children_nodes_named(list, "lexical_binding");
@@ -2353,10 +2402,7 @@ impl Lowerer {
     /// `[ Name, Equals, assignment_expression ]`.  `var` hoisting is NOT
     /// modelled (SIR19 spec "`var` hoisting"): we emit the binding at its
     /// source position, exactly like `let`.
-    fn lower_variable_statement(
-        &mut self,
-        node: &GrammarASTNode,
-    ) -> Result<Stmt, JsLowerError> {
+    fn lower_variable_statement(&mut self, node: &GrammarASTNode) -> Result<Stmt, JsLowerError> {
         let list = child_node_named(node, "variable_declaration_list")
             .ok_or_else(|| self.unsupported(node, "variable_statement (no declaration list)"))?;
         let decls = children_nodes_named(list, "variable_declaration");
@@ -2390,9 +2436,7 @@ impl Lowerer {
                 ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
                 _ => None,
             })
-            .ok_or_else(|| {
-                self.unsupported(binding, &format!("{what} (destructuring/no name)"))
-            })?;
+            .ok_or_else(|| self.unsupported(binding, &format!("{what} (destructuring/no name)")))?;
         let name = name_tok.value.clone();
         let span = self.span_of(decl_node);
 
@@ -2475,7 +2519,9 @@ impl Lowerer {
         // it's a statement-level assignment.
         let branch = peel_to_branch(expr_node);
         if branch.rule_name == "assignment_expression" && branch.children.len() == 3 {
-            return self.lower_assignment(branch).map(|s| Lowered::Stmt(Box::new(s)));
+            return self
+                .lower_assignment(branch)
+                .map(|s| Lowered::Stmt(Box::new(s)));
         }
         self.lower_expression(expr_node, 0).map(Lowered::Expr)
     }
@@ -2608,7 +2654,9 @@ impl Lowerer {
         let last_access = member
             .children
             .iter()
-            .rposition(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "." || t.value == "["))
+            .rposition(
+                |c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "." || t.value == "["),
+            )
             .ok_or_else(|| self.unsupported(member, "assignment target (no access)"))?;
 
         // The receiver is the member_expression truncated to everything
@@ -2638,7 +2686,10 @@ impl Lowerer {
                 self.features_used.add(Feature::Strings);
                 Ok(Stmt::MapSet {
                     map: recv,
-                    key: Expr::StrLit { value: prop, span: span.clone() },
+                    key: Expr::StrLit {
+                        value: prop,
+                        span: span.clone(),
+                    },
                     value,
                     span,
                 })
@@ -2652,10 +2703,20 @@ impl Lowerer {
                 let index = self.lower_expression(index_node, 0)?;
                 if matches!(index, Expr::StrLit { .. }) {
                     self.features_used.add(Feature::Maps);
-                    Ok(Stmt::MapSet { map: recv, key: index, value, span })
+                    Ok(Stmt::MapSet {
+                        map: recv,
+                        key: index,
+                        value,
+                        span,
+                    })
                 } else {
                     self.features_used.add(Feature::Sequences);
-                    Ok(Stmt::SeqSet { seq: recv, index, value, span })
+                    Ok(Stmt::SeqSet {
+                        seq: recv,
+                        index,
+                        value,
+                        span,
+                    })
                 }
             }
             _ => Err(self.unsupported(member, "assignment target (unsupported access form)")),
@@ -2768,11 +2829,7 @@ impl Lowerer {
     }
 
     /// Dispatch a *branching* precedence node to its operator handler.
-    fn lower_branch(
-        &mut self,
-        node: &GrammarASTNode,
-        depth: usize,
-    ) -> Result<Expr, JsLowerError> {
+    fn lower_branch(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, JsLowerError> {
         match node.rule_name.as_str() {
             // ── flat left-associative binary chains ─────────────────
             // children = [lhs, op, rhs, op, rhs, …]
@@ -2848,8 +2905,7 @@ impl Lowerer {
                         // we cannot model as a plain item; reject it.
                         if peel_to_branch(n).rule_name == "spread_element" {
                             return Err(JsLowerError {
-                                message: "array spread (`[...xs]`) is deferred past M5"
-                                    .to_string(),
+                                message: "array spread (`[...xs]`) is deferred past M5".to_string(),
                                 line: span.start_line,
                                 column: span.start_col,
                             });
@@ -2917,11 +2973,7 @@ impl Lowerer {
 
     /// Extract the string key of a `property_definition`, rejecting the
     /// deferred key forms (computed `[e]`, shorthand, method, numeric).
-    fn object_key(
-        &mut self,
-        prop: &GrammarASTNode,
-        span: &Span,
-    ) -> Result<Expr, JsLowerError> {
+    fn object_key(&mut self, prop: &GrammarASTNode, span: &Span) -> Result<Expr, JsLowerError> {
         let name_node = child_node_named(prop, "property_name").ok_or_else(|| JsLowerError {
             message: "object property key form (computed / shorthand / method) \
                       is deferred past M5"
@@ -3027,7 +3079,10 @@ impl Lowerer {
                     acc = if prop == "length" {
                         // The one dotted property that is a sequence op.
                         self.features_used.add(Feature::Sequences);
-                        Expr::SeqLen { seq: Box::new(acc), span: span.clone() }
+                        Expr::SeqLen {
+                            seq: Box::new(acc),
+                            span: span.clone(),
+                        }
                     } else {
                         self.features_used.add(Feature::Maps);
                         self.features_used.add(Feature::Strings);
@@ -3052,8 +3107,8 @@ impl Lowerer {
                     };
                     let index = self.lower_expression(index_node, depth + 1)?;
                     i += 3; // skip `[`, index, `]`.
-                    // A *string-literal* key reads like object access → MapGet
-                    // (mirrors `obj.prop`); any other index → sequence index.
+                            // A *string-literal* key reads like object access → MapGet
+                            // (mirrors `obj.prop`); any other index → sequence index.
                     acc = if matches!(index, Expr::StrLit { .. }) {
                         self.features_used.add(Feature::Maps);
                         Expr::MapGet {
@@ -3117,12 +3172,7 @@ impl Lowerer {
 
     /// Build one binary `BuiltinCall` from an operator token and its two
     /// already-lowered operands, applying equality normalisation.
-    fn build_binary_op(
-        &mut self,
-        op: &Token,
-        lhs: Expr,
-        rhs: Expr,
-    ) -> Result<Expr, JsLowerError> {
+    fn build_binary_op(&mut self, op: &Token, lhs: Expr, rhs: Expr) -> Result<Expr, JsLowerError> {
         // Normalise the operator spelling to the IR builtin name.  Both
         // loose and strict equality collapse to the strict-shaped IR
         // comparison — a deliberate semantic change (see module docs).
@@ -3200,11 +3250,7 @@ impl Lowerer {
     /// constant-folded into a negative literal (see module docs).  Other
     /// prefix operators (`+`, `~`, `typeof`, `void`, `delete`) are
     /// deferred.
-    fn lower_unary(
-        &mut self,
-        node: &GrammarASTNode,
-        depth: usize,
-    ) -> Result<Expr, JsLowerError> {
+    fn lower_unary(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, JsLowerError> {
         // The operator is the leading token; the operand is the node.
         let op = node
             .children
@@ -3240,7 +3286,8 @@ impl Lowerer {
                 // IntLit` row exact).
                 if let Some(tok) = single_leaf_token(peel_to_branch(operand_node)) {
                     if matches!(tok.type_, TokenType::Number) {
-                        return self.lower_number(&format!("-{}", tok.value), self.span_of_token(op));
+                        return self
+                            .lower_number(&format!("-{}", tok.value), self.span_of_token(op));
                     }
                 }
                 let operand = self.lower_expression(operand_node, depth + 1)?;
@@ -3277,9 +3324,7 @@ impl Lowerer {
                 "false" => Ok(Expr::BoolLit { value: false, span }),
                 "null" => Ok(Expr::NilLit { span }),
                 other => Err(JsLowerError {
-                    message: format!(
-                        "keyword `{other}` is not a value expression supported in M2"
-                    ),
+                    message: format!("keyword `{other}` is not a value expression supported in M2"),
                     line: tok.line,
                     column: tok.column,
                 }),
@@ -3330,7 +3375,10 @@ impl Lowerer {
         let digits = text.strip_prefix('-').unwrap_or(text);
         let non_decimal = digits.len() > 1
             && digits.starts_with('0')
-            && matches!(digits.as_bytes()[1], b'x' | b'X' | b'o' | b'O' | b'b' | b'B');
+            && matches!(
+                digits.as_bytes()[1],
+                b'x' | b'X' | b'o' | b'O' | b'b' | b'B'
+            );
         if non_decimal || text.ends_with('n') {
             return Err(JsLowerError {
                 message: format!(
@@ -3431,16 +3479,19 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
         Expr::SeqIndex { seq, index, .. } => {
             expr_may_have_effects(seq) || expr_may_have_effects(index)
         }
-        Expr::MapGet { map, key, .. } => {
-            expr_may_have_effects(map) || expr_may_have_effects(key)
-        }
+        Expr::MapGet { map, key, .. } => expr_may_have_effects(map) || expr_may_have_effects(key),
         Expr::MapLit { entries, .. } => entries
             .iter()
             .any(|e| expr_may_have_effects(&e.key) || expr_may_have_effects(&e.value)),
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
             expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
         }
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             expr_may_have_effects(cond)
                 || block_may_have_effects(then_branch)
                 || block_may_have_effects(else_branch)
@@ -3452,6 +3503,32 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
         // faithfully so effect inference stays conservative-correct.  Real
         // support pending KW2–KW8.
         Expr::KeywordArg { value, .. } => expr_may_have_effects(value),
+
+        // SIR22 array/matrix nodes: the spec's "Effects" section marks every
+        // one of these `Pure`, so — like `SeqLit`/`MapLit`/etc. above — they
+        // are pure iff every operand is pure.
+        Expr::ArrayLit { rows, .. } => rows.iter().any(|row| row.iter().any(expr_may_have_effects)),
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            expr_may_have_effects(start)
+                || step.as_deref().is_some_and(expr_may_have_effects)
+                || expr_may_have_effects(stop)
+        }
+        Expr::MatMul { lhs, rhs, .. } => expr_may_have_effects(lhs) || expr_may_have_effects(rhs),
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+        Expr::Transpose { target, .. } => expr_may_have_effects(target),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            expr_may_have_effects(target)
+                || indices.iter().any(|idx| match idx {
+                    IndexArg::Scalar(e) | IndexArg::Range(e) => expr_may_have_effects(e),
+                    IndexArg::Whole => false,
+                })
+        }
 
         // Calls, closures, and intrinsics may do anything → keep.
         Expr::DirectCall { .. }
@@ -3602,9 +3679,7 @@ fn collect_function_names(
 ) -> Result<(), JsLowerError> {
     if depth > MAX_STMT_DEPTH {
         return Err(JsLowerError {
-            message: format!(
-                "input nests deeper than the supported limit ({MAX_STMT_DEPTH})"
-            ),
+            message: format!("input nests deeper than the supported limit ({MAX_STMT_DEPTH})"),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         });
@@ -3808,14 +3883,18 @@ fn collect_stmt_callees(
         Stmt::LetBinding { value, .. }
         | Stmt::LetStarBinding { value, .. }
         | Stmt::Assign { value, .. }
-        | Stmt::ExprStmt { expr: value, .. } => {
-            collect_expr_callees(value, names, self_name, out)
-        }
+        | Stmt::ExprStmt { expr: value, .. } => collect_expr_callees(value, names, self_name, out),
         Stmt::While { cond, body, .. } => {
             collect_expr_callees(cond, names, self_name, out);
             collect_direct_callees(body, names, self_name, out);
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             collect_expr_callees(start, names, self_name, out);
             collect_expr_callees(stop, names, self_name, out);
             collect_expr_callees(step, names, self_name, out);
@@ -3861,7 +3940,12 @@ fn collect_expr_callees(
                 collect_expr_callees(&c.value, names, self_name, out);
             }
         }
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             collect_expr_callees(cond, names, self_name, out);
             collect_direct_callees(then_branch, names, self_name, out);
             collect_direct_callees(else_branch, names, self_name, out);

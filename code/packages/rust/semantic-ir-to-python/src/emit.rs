@@ -12,7 +12,7 @@ use std::collections::{BTreeSet, HashMap};
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Feature, Function, Global, Module, ParamKind, Scope, Stmt,
+    Block, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -115,7 +115,12 @@ fn collect_ancestry_in_stmt(
     seen: &mut BTreeSet<String>,
 ) {
     match s {
-        Stmt::ClassDef { name, superclass, body, .. } => {
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            ..
+        } => {
             if let Some(sup) = superclass {
                 if seen.insert(name.clone()) {
                     pairs.push((name.clone(), sup.clone()));
@@ -126,12 +131,15 @@ fn collect_ancestry_in_stmt(
         Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
             collect_ancestry_in_stmts(body, pairs, seen);
         }
-        Stmt::While { body, .. }
-        | Stmt::ForRange { body, .. }
-        | Stmt::ForEach { body, .. } => {
+        Stmt::While { body, .. } | Stmt::ForRange { body, .. } | Stmt::ForEach { body, .. } => {
             collect_ancestry_in_block(body, pairs, seen);
         }
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             collect_ancestry_in_stmts(body, pairs, seen);
             for r in rescues {
                 collect_ancestry_in_stmts(&r.body, pairs, seen);
@@ -150,16 +158,48 @@ fn collect_ancestry_in_stmt(
         | Stmt::ExprStmt { expr: value, .. } => {
             collect_ancestry_in_expr(value, pairs, seen);
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             collect_ancestry_in_expr(seq, pairs, seen);
             collect_ancestry_in_expr(index, pairs, seen);
             collect_ancestry_in_expr(value, pairs, seen);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             collect_ancestry_in_expr(map, pairs, seen);
             collect_ancestry_in_expr(key, pairs, seen);
             collect_ancestry_in_expr(value, pairs, seen);
         }
+        // SIR22 `target[indices...] = value` — same shape as `SeqSet`/
+        // `MapSet` above (an indexed mutation), so recurse into its
+        // sub-expressions the same way: a class def cannot itself be one
+        // of these, but a nested `if`-with-block (etc.) inside `target`,
+        // an index, or `value` could still carry one.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            collect_ancestry_in_expr(target, pairs, seen);
+            for ix in indices {
+                collect_ancestry_in_index_arg(ix, pairs, seen);
+            }
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+    }
+}
+
+fn collect_ancestry_in_index_arg(
+    ix: &IndexArg,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut BTreeSet<String>,
+) {
+    match ix {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => collect_ancestry_in_expr(e, pairs, seen),
+        IndexArg::Whole => {}
     }
 }
 
@@ -169,7 +209,11 @@ fn collect_ancestry_in_expr(
     seen: &mut BTreeSet<String>,
 ) {
     match e {
-        Expr::If { then_branch, else_branch, .. } => {
+        Expr::If {
+            then_branch,
+            else_branch,
+            ..
+        } => {
             collect_ancestry_in_block(then_branch, pairs, seen);
             collect_ancestry_in_block(else_branch, pairs, seen);
         }
@@ -216,7 +260,9 @@ fn uses_range(m: &Module) -> bool {
 /// (e.g. `regex`).  Exhaustive over `Stmt`/`Expr` so a new node can't silently
 /// hide a use (the compiler forces every arm to be handled).
 fn module_uses_builtin(m: &Module, name: &str) -> bool {
-    m.functions.iter().any(|f| block_uses_builtin(&f.body, name))
+    m.functions
+        .iter()
+        .any(|f| block_uses_builtin(&f.body, name))
 }
 
 fn block_uses_builtin(b: &Block, name: &str) -> bool {
@@ -236,7 +282,13 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         Stmt::While { cond, body, .. } => {
             expr_uses_builtin(cond, name) || block_uses_builtin(body, name)
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             expr_uses_builtin(start, name)
                 || expr_uses_builtin(stop, name)
                 || expr_uses_builtin(step, name)
@@ -245,23 +297,48 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         Stmt::ForEach { iter, body, .. } => {
             expr_uses_builtin(iter, name) || block_uses_builtin(body, name)
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             expr_uses_builtin(seq, name)
                 || expr_uses_builtin(index, name)
                 || expr_uses_builtin(value, name)
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             expr_uses_builtin(map, name)
                 || expr_uses_builtin(key, name)
+                || expr_uses_builtin(value, name)
+        }
+        // SIR22 `target[indices...] = value` — same recursion shape as
+        // `SeqSet`/`MapSet`: walk into `target`, each index argument, and
+        // `value` so a nested builtin call (e.g. inside an index
+        // expression) is still detected.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            expr_uses_builtin(target, name)
+                || indices.iter().any(|ix| index_arg_uses_builtin(ix, name))
                 || expr_uses_builtin(value, name)
         }
         Stmt::ClassDef { body, .. }
         | Stmt::ModuleDef { body, .. }
         | Stmt::SingletonClassDef { body, .. } => stmts_use_builtin(body, name),
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             stmts_use_builtin(body, name)
                 || rescues.iter().any(|r| stmts_use_builtin(&r.body, name))
-                || ensure_body.as_deref().is_some_and(|e| stmts_use_builtin(e, name))
+                || ensure_body
+                    .as_deref()
+                    .is_some_and(|e| stmts_use_builtin(e, name))
         }
     }
 }
@@ -275,7 +352,12 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         Expr::IndirectCall { target, args, .. } => {
             expr_uses_builtin(target, name) || args.iter().any(|a| expr_uses_builtin(a, name))
         }
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             expr_uses_builtin(cond, name)
                 || block_uses_builtin(then_branch, name)
                 || block_uses_builtin(else_branch, name)
@@ -304,6 +386,35 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         // whose runtime meaning is its inner `value`; recurse into it so this
         // builtin-usage scan stays faithful.  Real support pending KW2–KW6.
         Expr::KeywordArg { value, .. } => expr_uses_builtin(value, name),
+        // SIR22 array/matrix expressions are not accepted by this backend
+        // yet (see `ACCEPTED_FEATURES` in `lib.rs`), so a validated module
+        // never contains them in practice. Still, this scan is exhaustive
+        // by design so a new node can't silently hide a builtin use — recurse
+        // into every sub-expression the same way the other compound-expr
+        // arms above do.
+        Expr::ArrayLit { rows, .. } => rows
+            .iter()
+            .any(|row| row.iter().any(|c| expr_uses_builtin(c, name))),
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            expr_uses_builtin(start, name)
+                || step.as_deref().is_some_and(|s| expr_uses_builtin(s, name))
+                || expr_uses_builtin(stop, name)
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Transpose { target, .. } => expr_uses_builtin(target, name),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            expr_uses_builtin(target, name)
+                || indices.iter().any(|ix| index_arg_uses_builtin(ix, name))
+        }
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -311,6 +422,16 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         | Expr::SymLit { .. }
         | Expr::StrLit { .. }
         | Expr::VarRef { .. } => false,
+    }
+}
+
+/// Same walk as `expr_uses_builtin`, specialised to a single SIR22
+/// [`IndexArg`] subscript: `Scalar`/`Range` each wrap one expression to
+/// recurse into, and `Whole` (`:`) carries no expression at all.
+fn index_arg_uses_builtin(ix: &IndexArg, name: &str) -> bool {
+    match ix {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => expr_uses_builtin(e, name),
+        IndexArg::Whole => false,
     }
 }
 
@@ -651,13 +772,20 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push('\n');
         }
-        Stmt::Assign { name, scope: Scope::Global, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Global,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(name));
             emit_expr(out, value, indent);
             out.push('\n');
         }
         // `seq[index] = value`
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             out.push_str(&pad);
             emit_expr(out, seq, indent);
             out.push('[');
@@ -667,7 +795,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             out.push('\n');
         }
         // `map[key] = value`
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             out.push_str(&pad);
             emit_expr(out, map, indent);
             out.push('[');
@@ -689,7 +819,14 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // `for var in range(start, stop, step):` — Python's `range` is
         // already half-open (`stop` exclusive) and direction-aware (a
         // negative `step` counts down), matching SIR `ForRange`.
-        Stmt::ForRange { var, start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            var,
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             let _ = write!(out, "{}for {} in range(", pad, sanitize_ident(var));
             emit_expr(out, start, indent);
             out.push_str(", ");
@@ -700,7 +837,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             emit_block_as_stmts(out, body, indent + 1);
         }
         // `for var in iter:` — iterate a Seq.
-        Stmt::ForEach { var, iter, body, .. } => {
+        Stmt::ForEach {
+            var, iter, body, ..
+        } => {
             let _ = write!(out, "{}for {} in ", pad, sanitize_ident(var));
             emit_expr(out, iter, indent);
             out.push_str(":\n");
@@ -709,28 +848,50 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // ── SIR17 scopes (assignment) ───────────────────────────────
         // `@x = v` → current-self instance-variable write via the OOP
         // runtime (no native `self` — methods are receiver-less).
-        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Instance,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}_sir_oop_ivar_set({}, ", pad, quote_py_string(name));
             emit_expr(out, value, indent);
             out.push_str(")\n");
         }
         // `@@x = v` → class-variable store write.
-        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::ClassVar,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}_sir_oop_cvar_set({}, ", pad, quote_py_string(name));
             emit_expr(out, value, indent);
             out.push_str(")\n");
         }
         // `CONST = v` → an ordinary module-level binding; reads elsewhere
         // emit the bare identifier (see `emit_var_ref`).
-        Stmt::Assign { name, scope: Scope::Const, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Const,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
             emit_expr(out, value, indent);
             out.push('\n');
         }
         // `Assign` to a builtin is never produced by any frontend (you
         // cannot rebind `+`); a validated module never reaches here.
-        Stmt::Assign { scope: Scope::Builtin, span, .. } => {
-            panic!("python backend reached an assign to a Builtin-scoped name at {} — invalid SIR", span);
+        Stmt::Assign {
+            scope: Scope::Builtin,
+            span,
+            ..
+        } => {
+            panic!(
+                "python backend reached an assign to a Builtin-scoped name at {} — invalid SIR",
+                span
+            );
         }
         // ── SIR17 class / module / singleton declarations ───────────
         // The Ruby→SIR frontend hoists method `def`s to top-level
@@ -738,8 +899,18 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // statements (constant / class-variable assigns).  We register
         // the class in the OOP runtime (for ancestry-aware `is_a?`) and
         // emit the body statements in source order.
-        Stmt::ClassDef { name, superclass, body, .. } => {
-            let _ = write!(out, "{}_sir_oop_define_class({}, ", pad, quote_py_string(name));
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            ..
+        } => {
+            let _ = write!(
+                out,
+                "{}_sir_oop_define_class({}, ",
+                pad,
+                quote_py_string(name)
+            );
             match superclass {
                 Some(sup) => out.push_str(&quote_py_string(sup)),
                 None => out.push_str("None"),
@@ -752,7 +923,12 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // A module is a namespace with no superclass; register it so it
         // can participate in `is_a?`/ancestry, then emit its body.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = write!(out, "{}_sir_oop_define_class({}, None)\n", pad, quote_py_string(name));
+            let _ = write!(
+                out,
+                "{}_sir_oop_define_class({}, None)\n",
+                pad,
+                quote_py_string(name)
+            );
             for st in body {
                 emit_stmt(out, st, indent);
             }
@@ -772,7 +948,12 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // clause in source order; a `rescue Foo => e` binds `e = __exc`; if no
         // clause matches the original exception is re-`raise`d (Ruby's
         // "propagate when unrescued").  `ensure_body` → a `finally:` block.
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             let _ = write!(out, "{}try:\n", pad);
             emit_stmt_list(out, body, indent + 1);
             if !rescues.is_empty() {
@@ -814,6 +995,17 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, "{}finally:\n", pad);
                 emit_stmt_list(out, ens, indent + 1);
             }
+        }
+        // SIR22 `target[indices...] = value`. This backend does not declare
+        // `Feature::NDArrays`/`Feature::MatrixOps` in `ACCEPTED_FEATURES`
+        // (see `lib.rs`), so `Backend::check_module` rejects any module
+        // using this node before it ever reaches emission — a validated
+        // module never reaches this arm.
+        Stmt::IndexSet { span, .. } => {
+            panic!(
+                "python backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
+                span
+            );
         }
     }
 }
@@ -883,7 +1075,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str(&quote_py_string(value));
         }
         Expr::VarRef { name, scope, .. } => emit_var_ref(out, name, *scope),
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             // Python ternary: (then if cond else else)
             out.push('(');
             emit_block_as_expr(out, then_branch, indent);
@@ -907,7 +1104,9 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str("])");
         }
         Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
-        Expr::MakeClosure { fn_name, captures, .. } => {
+        Expr::MakeClosure {
+            fn_name, captures, ..
+        } => {
             let _ = write!(out, "_sir_make_closure({}, [", function_emit_name(fn_name));
             for (i, c) in captures.iter().enumerate() {
                 if i > 0 {
@@ -1010,6 +1209,24 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str(&sanitize_ident(name));
             out.push('=');
             emit_expr(out, value, indent);
+        }
+        // SIR22 array/matrix expressions. This backend does not declare
+        // `Feature::NDArrays`/`Feature::MatrixOps` in `ACCEPTED_FEATURES`
+        // (see `lib.rs`), so `Backend::check_module` rejects any module
+        // using these nodes before emission is ever reached — matching the
+        // `Expr::Intrinsic` guard above, a validated module never reaches
+        // this arm.
+        Expr::ArrayLit { .. }
+        | Expr::Range { .. }
+        | Expr::MatMul { .. }
+        | Expr::ElementwiseOp { .. }
+        | Expr::Transpose { .. }
+        | Expr::IndexGet { .. } => {
+            panic!(
+                "python backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
+            );
         }
     }
 }
@@ -1131,12 +1348,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             out.push_str("_sir_oop_call_method(");
             emit_expr(out, &args[0], indent);
             let _ = write!(out, ", {}", quote_py_string(meth));
-            let is_class_pred =
-                matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
+            let is_class_pred = matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
             for (i, a) in args[2..].iter().enumerate() {
                 out.push_str(", ");
                 match a {
-                    Expr::VarRef { name: cn, scope: Scope::Const, .. } if is_class_pred && i == 0 => {
+                    Expr::VarRef {
+                        name: cn,
+                        scope: Scope::Const,
+                        ..
+                    } if is_class_pred && i == 0 => {
                         out.push_str(&quote_py_string(cn));
                     }
                     // A `&:sym` / `&proc` block argument on a dispatched call
@@ -1247,7 +1467,11 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("_sir_exc_raise_error(");
         match args.first() {
             None => {}
-            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+            Some(Expr::VarRef {
+                name: cn,
+                scope: Scope::Const,
+                ..
+            }) => {
                 out.push_str(&quote_py_string(cn));
                 if let Some(msg) = args.get(1) {
                     out.push_str(", ");
@@ -1446,12 +1670,22 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
         match s {
             Stmt::LetBinding { name, value, .. }
             | Stmt::LetStarBinding { name, value, .. }
-            | Stmt::Assign { name, scope: Scope::Local | Scope::Param | Scope::Capture, value, .. } => {
+            | Stmt::Assign {
+                name,
+                scope: Scope::Local | Scope::Param | Scope::Capture,
+                value,
+                ..
+            } => {
                 let _ = write!(out, "({} := ", sanitize_ident(name));
                 emit_expr(out, value, indent);
                 out.push_str("), ");
             }
-            Stmt::Assign { name, scope: Scope::Global, value, .. } => {
+            Stmt::Assign {
+                name,
+                scope: Scope::Global,
+                value,
+                ..
+            } => {
                 let _ = write!(out, "(_globals.__setitem__({}, ", quote_py_string(name));
                 emit_expr(out, value, indent);
                 out.push_str(")), ");
@@ -1461,7 +1695,9 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 emit_expr(out, expr, indent);
                 out.push_str("), ");
             }
-            Stmt::SeqSet { seq, index, value, .. } => {
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
                 out.push('(');
                 emit_expr(out, seq, indent);
                 out.push_str(".__setitem__(");
@@ -1470,7 +1706,9 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 emit_expr(out, value, indent);
                 out.push_str(")), ");
             }
-            Stmt::MapSet { map, key, value, .. } => {
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
                 out.push('(');
                 emit_expr(out, map, indent);
                 out.push_str(".__setitem__(");
@@ -1481,28 +1719,44 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
             }
             // `@x = v` / `@@x = v` → OOP-store writes (return the value,
             // so they compose in the walrus tuple).
-            Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+            Stmt::Assign {
+                name,
+                scope: Scope::Instance,
+                value,
+                ..
+            } => {
                 let _ = write!(out, "(_sir_oop_ivar_set({}, ", quote_py_string(name));
                 emit_expr(out, value, indent);
                 out.push_str(")), ");
             }
-            Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+            Stmt::Assign {
+                name,
+                scope: Scope::ClassVar,
+                value,
+                ..
+            } => {
                 let _ = write!(out, "(_sir_oop_cvar_set({}, ", quote_py_string(name));
                 emit_expr(out, value, indent);
                 out.push_str(")), ");
             }
             // `CONST = v` → walrus binding (the const name is a plain
             // identifier, so `(NAME := v)` both binds and yields it).
-            Stmt::Assign { name, scope: Scope::Const, value, .. } => {
+            Stmt::Assign {
+                name,
+                scope: Scope::Const,
+                value,
+                ..
+            } => {
                 let _ = write!(out, "({} := ", sanitize_ident(name));
                 emit_expr(out, value, indent);
                 out.push_str("), ");
             }
             // Loops were diverted to the lifted-def path above.
-            Stmt::While { span, .. }
-            | Stmt::ForRange { span, .. }
-            | Stmt::ForEach { span, .. } => {
-                panic!("python backend (walrus path) reached a loop at {} — should have been lifted", span);
+            Stmt::While { span, .. } | Stmt::ForRange { span, .. } | Stmt::ForEach { span, .. } => {
+                panic!(
+                    "python backend (walrus path) reached a loop at {} — should have been lifted",
+                    span
+                );
             }
             // `Assign` to a builtin, and class/module/singleton/try
             // declarations, have no walrus-expression form; the former is
@@ -1513,7 +1767,21 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
             | Stmt::ModuleDef { span, .. }
             | Stmt::SingletonClassDef { span, .. }
             | Stmt::TryCatch { span, .. } => {
-                panic!("python backend (walrus path) reached an unwalrusable statement at {}", span);
+                panic!(
+                    "python backend (walrus path) reached an unwalrusable statement at {}",
+                    span
+                );
+            }
+            // SIR22 `target[indices...] = value`. This backend does not
+            // declare `Feature::NDArrays`/`Feature::MatrixOps` in
+            // `ACCEPTED_FEATURES` (see `lib.rs`), so `Backend::check_module`
+            // rejects any module using this node before emission is ever
+            // reached — a validated module never reaches this arm.
+            Stmt::IndexSet { span, .. } => {
+                panic!(
+                    "python backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
+                    span
+                );
             }
         }
     }
@@ -1617,13 +1885,21 @@ fn collect_nonlocals(b: &Block) -> BTreeSet<String> {
     assigned.difference(&bound).cloned().collect()
 }
 
-fn collect_nonlocals_block(b: &Block, assigned: &mut BTreeSet<String>, bound: &mut BTreeSet<String>) {
+fn collect_nonlocals_block(
+    b: &Block,
+    assigned: &mut BTreeSet<String>,
+    bound: &mut BTreeSet<String>,
+) {
     for s in &b.stmts {
         match s {
             Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
                 bound.insert(name.clone());
             }
-            Stmt::Assign { name, scope: Scope::Local | Scope::Param | Scope::Capture, .. } => {
+            Stmt::Assign {
+                name,
+                scope: Scope::Local | Scope::Param | Scope::Capture,
+                ..
+            } => {
                 assigned.insert(name.clone());
             }
             Stmt::While { body, .. } => collect_nonlocals_block(body, assigned, bound),
@@ -1635,10 +1911,17 @@ fn collect_nonlocals_block(b: &Block, assigned: &mut BTreeSet<String>, bound: &m
             // each so an outer local reassigned inside the `begin` is declared
             // `nonlocal` in the lifted def.  A rescue binding (`=> e`) is a
             // freshly-introduced local, so it counts as `bound`.
-            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            Stmt::TryCatch {
+                body,
+                rescues,
+                ensure_body,
+                ..
+            } => {
                 let synthetic = Block {
                     stmts: body.clone(),
-                    value: Expr::NilLit { span: s.span().clone() },
+                    value: Expr::NilLit {
+                        span: s.span().clone(),
+                    },
                     span: s.span().clone(),
                 };
                 collect_nonlocals_block(&synthetic, assigned, bound);
@@ -1648,7 +1931,9 @@ fn collect_nonlocals_block(b: &Block, assigned: &mut BTreeSet<String>, bound: &m
                     }
                     let rb = Block {
                         stmts: r.body.clone(),
-                        value: Expr::NilLit { span: s.span().clone() },
+                        value: Expr::NilLit {
+                            span: s.span().clone(),
+                        },
                         span: s.span().clone(),
                     };
                     collect_nonlocals_block(&rb, assigned, bound);
@@ -1656,7 +1941,9 @@ fn collect_nonlocals_block(b: &Block, assigned: &mut BTreeSet<String>, bound: &m
                 if let Some(ens) = ensure_body {
                     let eb = Block {
                         stmts: ens.clone(),
-                        value: Expr::NilLit { span: s.span().clone() },
+                        value: Expr::NilLit {
+                            span: s.span().clone(),
+                        },
                         span: s.span().clone(),
                     };
                     collect_nonlocals_block(&eb, assigned, bound);
@@ -1744,12 +2031,43 @@ fn is_valid_py_ident(s: &str) -> bool {
 fn is_python_keyword(s: &str) -> bool {
     matches!(
         s,
-        "False" | "None" | "True" | "and" | "as" | "assert" | "async"
-            | "await" | "break" | "class" | "continue" | "def" | "del"
-            | "elif" | "else" | "except" | "finally" | "for" | "from"
-            | "global" | "if" | "import" | "in" | "is" | "lambda"
-            | "nonlocal" | "not" | "or" | "pass" | "raise" | "return"
-            | "try" | "while" | "with" | "yield" | "match" | "case"
+        "False"
+            | "None"
+            | "True"
+            | "and"
+            | "as"
+            | "assert"
+            | "async"
+            | "await"
+            | "break"
+            | "class"
+            | "continue"
+            | "def"
+            | "del"
+            | "elif"
+            | "else"
+            | "except"
+            | "finally"
+            | "for"
+            | "from"
+            | "global"
+            | "if"
+            | "import"
+            | "in"
+            | "is"
+            | "lambda"
+            | "nonlocal"
+            | "not"
+            | "or"
+            | "pass"
+            | "raise"
+            | "return"
+            | "try"
+            | "while"
+            | "with"
+            | "yield"
+            | "match"
+            | "case"
     )
 }
 
@@ -1787,9 +2105,7 @@ fn quote_py_string(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{
-        EffectSet, FeatureManifest, Metadata, Param, Span,
-    };
+    use semantic_ir::{EffectSet, FeatureManifest, Metadata, Param, Span};
 
     fn s() -> Span {
         Span::synthetic()
@@ -1846,7 +2162,13 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() }],
+            params: vec![Param {
+                name: "x".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
             return_type: None,
             captures: vec![],
             body,
@@ -1867,13 +2189,35 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
-                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
-                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "rest".into(),
+                    sir_type: None,
+                    kind: ParamKind::Rest,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "opts".into(),
+                    sir_type: None,
+                    kind: ParamKind::KwRest,
+                    default: None,
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -1893,8 +2237,15 @@ mod tests {
         let default_b = Expr::BuiltinCall {
             name: "+".into(),
             args: vec![
-                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
-                Expr::IntLit { value: 1, span: s() },
+                Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
+                Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
             ],
             effects: EffectSet::PURE,
             span: s(),
@@ -1904,8 +2255,16 @@ mod tests {
             value: Expr::BuiltinCall {
                 name: "+".into(),
                 args: vec![
-                    Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
-                    Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                    Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    },
+                    Expr::VarRef {
+                        name: "b".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -1915,7 +2274,13 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
                 Param {
                     name: "b".into(),
                     sir_type: None,
@@ -1941,7 +2306,10 @@ mod tests {
         // The prologue precedes the body's `return`.
         let prologue_at = out.find("if b is _SIR_MISSING:").unwrap();
         let return_at = out.find("return ").unwrap();
-        assert!(prologue_at < return_at, "prologue must precede return; got:\n{out}");
+        assert!(
+            prologue_at < return_at,
+            "prologue must precede return; got:\n{out}"
+        );
         // A param with no default must NOT gain a sentinel default.
         assert!(!out.contains("a=_SIR_MISSING"), "got:\n{out}");
     }
@@ -1960,7 +2328,10 @@ mod tests {
                 captures: vec![],
                 body: Block {
                     stmts: vec![],
-                    value: Expr::IntLit { value: 42, span: s() },
+                    value: Expr::IntLit {
+                        value: 42,
+                        span: s(),
+                    },
                     span: s(),
                 },
                 effects: EffectSet::PURE,
@@ -1988,7 +2359,10 @@ mod tests {
             stmts: vec![Stmt::LetBinding {
                 name: "x".into(),
                 sir_type: None,
-                value: Expr::IntLit { value: 1, span: s() },
+                value: Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
                 span: s(),
             }],
             value: Expr::BuiltinCall {
@@ -1999,7 +2373,10 @@ mod tests {
                         scope: Scope::Local,
                         span: s(),
                     },
-                    Expr::IntLit { value: 2, span: s() },
+                    Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -2017,7 +2394,13 @@ mod tests {
     // M2 — `&:sym` symbol-to-proc on a method-dispatch call.
 
     fn method_call(recv: Expr, meth: &str, extra: Vec<Expr>) -> Expr {
-        let mut args = vec![recv, Expr::StrLit { value: meth.into(), span: s() }];
+        let mut args = vec![
+            recv,
+            Expr::StrLit {
+                value: meth.into(),
+                span: s(),
+            },
+        ];
         args.extend(extra);
         Expr::BuiltinCall {
             name: "__method__".into(),
@@ -2039,11 +2422,19 @@ mod tests {
     // ── O1: OOP object-model builtin emit arms ───────────────────────────────
 
     fn str_lit(v: &str) -> Expr {
-        Expr::StrLit { value: v.into(), span: s() }
+        Expr::StrLit {
+            value: v.into(),
+            span: s(),
+        }
     }
 
     fn builtin(name: &str, args: Vec<Expr>) -> Expr {
-        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+        Expr::BuiltinCall {
+            name: name.into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        }
     }
 
     #[test]
@@ -2073,7 +2464,10 @@ mod tests {
             captures: vec![],
             span: s(),
         };
-        let e = builtin("__def_method__", vec![str_lit("Dog"), str_lit("speak"), closure]);
+        let e = builtin(
+            "__def_method__",
+            vec![str_lit("Dog"), str_lit("speak"), closure],
+        );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert_eq!(
@@ -2133,9 +2527,16 @@ mod tests {
     fn sym_block_pass_on_dispatch_emits_sym_to_proc() {
         // arr.map(&:to_s) → callMethod(arr, "map", sym_to_proc(intern("to_s")))
         let e = method_call(
-            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            Expr::VarRef {
+                name: "arr".into(),
+                scope: Scope::Local,
+                span: s(),
+            },
             "map",
-            vec![block_pass(Expr::SymLit { name: "to_s".into(), span: s() })],
+            vec![block_pass(Expr::SymLit {
+                name: "to_s".into(),
+                span: s(),
+            })],
         );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
@@ -2149,7 +2550,11 @@ mod tests {
     fn proc_block_pass_on_dispatch_unwraps_to_value() {
         // arr.each(&p) → callMethod(arr, "each", p) — the proc IS the block.
         let e = method_call(
-            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            Expr::VarRef {
+                name: "arr".into(),
+                scope: Scope::Local,
+                span: s(),
+            },
             "each",
             vec![block_pass(Expr::VarRef {
                 name: "p".into(),
@@ -2166,7 +2571,14 @@ mod tests {
     fn sym_block_pass_as_plain_arg_emits_sym_to_proc() {
         // The general emit_arg path also handles a surviving block_pass.
         let mut out = String::new();
-        emit_arg(&mut out, &block_pass(Expr::SymLit { name: "upcase".into(), span: s() }), 0);
+        emit_arg(
+            &mut out,
+            &block_pass(Expr::SymLit {
+                name: "upcase".into(),
+                span: s(),
+            }),
+            0,
+        );
         assert_eq!(out, r#"_sir_oop_sym_to_proc(_sir_intern("upcase"))"#);
     }
 }
