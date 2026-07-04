@@ -258,6 +258,9 @@ impl fmt::Display for IntSpec {
 /// | `Float`   | 64-bit IEEE-754 float (SIR16)                         |
 /// | `Seq(elem)` | homogeneous sequence (`list`/`Array`/`Vec`) (SIR16) |
 /// | `Map(val)` | string-keyed map (`dict`/`Object`/`HashMap`) (SIR16) |
+/// | `Ptr { pointee, nullable }` | C/C++ pointer or reference (SIR21 T1b) |
+/// | `Struct { name, fields }`   | nominal record / struct    (SIR21 T1b) |
+/// | `Optional { inner }`        | nullable `T`-or-nil        (SIR21 T1b) |
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum SirType {
     /// Top type — unknown/any.  The default; renamed from `Any` in SIR21.
@@ -278,6 +281,24 @@ pub enum SirType {
     Seq(Box<SirType>),
     /// String-keyed map carrier (`dict`/`Object`/`HashMap`-style).
     Map(Box<SirType>),
+    // ── SIR21 T1b (source-fidelity types for typed frontends) ────────
+    /// A pointer or reference (C/C++ `T*`, `T&`).  Exists primarily for
+    /// *source* fidelity — a C frontend needs it to record pointer shape
+    /// (not aliasing/ownership).  `nullable` distinguishes a possibly-
+    /// null pointer from a reference that is guaranteed non-null.
+    /// Dynamic targets (Ruby/JS) lower `Ptr` to a plain reference;
+    /// targets without pointers declare so in their manifest and reject.
+    Ptr { pointee: Box<SirType>, nullable: bool },
+    /// A nominal record — a C `struct`, or a class's field bag.  `name`
+    /// is the declared type name; `fields` are `(field-name, type)` in
+    /// declaration order (order matters for C layout / positional init).
+    /// Dynamic targets lower it to a record/object; targets without
+    /// structs reject via the manifest.
+    Struct { name: String, fields: Vec<(String, SirType)> },
+    /// A nullable value: `inner`-or-nil.  The type-level counterpart of
+    /// an `Optional`/`Maybe`/`T?`.  Distinct from `Ptr { nullable }`
+    /// (which is specifically a pointer) — `Optional` wraps *any* type.
+    Optional { inner: Box<SirType> },
 }
 
 impl SirType {
@@ -301,6 +322,22 @@ impl SirType {
     /// `true` iff this is the top type `Dynamic`.
     pub fn is_dynamic(&self) -> bool {
         matches!(self, SirType::Dynamic)
+    }
+
+    /// A pointer/reference to `pointee`.  `nullable` marks a possibly-
+    /// null pointer (vs a guaranteed non-null reference).
+    pub fn ptr(pointee: SirType, nullable: bool) -> Self {
+        SirType::Ptr { pointee: Box::new(pointee), nullable }
+    }
+
+    /// A nominal record `name` with ordered `(field, type)` members.
+    pub fn struct_type(name: impl Into<String>, fields: Vec<(String, SirType)>) -> Self {
+        SirType::Struct { name: name.into(), fields }
+    }
+
+    /// A nullable `inner`-or-nil value.
+    pub fn optional(inner: SirType) -> Self {
+        SirType::Optional { inner: Box::new(inner) }
     }
 }
 
@@ -334,6 +371,19 @@ impl fmt::Display for SirType {
             SirType::Float => write!(f, "float"),
             SirType::Seq(elem) => write!(f, "(seq {})", elem),
             SirType::Map(val) => write!(f, "(map {})", val),
+            // SIR21 T1b tokens.  A nullable pointer prints `(ptr? T)`; a
+            // non-null reference prints `(ptr T)`.
+            SirType::Ptr { pointee, nullable } => {
+                write!(f, "(ptr{} {})", if *nullable { "?" } else { "" }, pointee)
+            }
+            SirType::Struct { name, fields } => {
+                write!(f, "(struct {}", name)?;
+                for (fname, fty) in fields {
+                    write!(f, " ({} {})", fname, fty)?;
+                }
+                write!(f, ")")
+            }
+            SirType::Optional { inner } => write!(f, "(optional {})", inner),
         }
     }
 }
@@ -481,5 +531,56 @@ mod tests {
         assert_eq!(format!("{}", Overflow::Checked), "checked");
         assert_eq!(format!("{}", Overflow::Undefined), "ub");
         assert_eq!(format!("{}", Overflow::Arbitrary), "arb");
+    }
+
+    // ── SIR21 T1b source-fidelity type tests ──────────────────────────
+
+    #[test]
+    fn display_ptr_non_null_and_nullable() {
+        let p = SirType::ptr(SirType::int(IntWidth::W32, true, Overflow::Wrap), false);
+        assert_eq!(format!("{}", p), "(ptr (int i32 wrap))");
+        let np = SirType::ptr(SirType::Str, true);
+        assert_eq!(format!("{}", np), "(ptr? str)");
+    }
+
+    #[test]
+    fn display_struct_ordered_fields() {
+        let s = SirType::struct_type(
+            "Point",
+            vec![
+                ("x".into(), SirType::int(IntWidth::W32, true, Overflow::Wrap)),
+                ("y".into(), SirType::int(IntWidth::W32, true, Overflow::Wrap)),
+            ],
+        );
+        assert_eq!(format!("{}", s), "(struct Point (x (int i32 wrap)) (y (int i32 wrap)))");
+    }
+
+    #[test]
+    fn display_struct_empty_fields() {
+        let s = SirType::struct_type("Unit", vec![]);
+        assert_eq!(format!("{}", s), "(struct Unit)");
+    }
+
+    #[test]
+    fn display_optional() {
+        let o = SirType::optional(SirType::Bool);
+        assert_eq!(format!("{}", o), "(optional bool)");
+        // Optional wraps any type, including a pointer.
+        let op = SirType::optional(SirType::ptr(SirType::Str, false));
+        assert_eq!(format!("{}", op), "(optional (ptr str))");
+    }
+
+    #[test]
+    fn new_variants_are_not_dynamic() {
+        assert!(!SirType::ptr(SirType::Str, false).is_dynamic());
+        assert!(!SirType::optional(SirType::Str).is_dynamic());
+        assert!(!SirType::struct_type("S", vec![]).is_dynamic());
+    }
+
+    #[test]
+    fn nullable_flag_affects_equality() {
+        let a = SirType::ptr(SirType::Str, false);
+        let b = SirType::ptr(SirType::Str, true);
+        assert_ne!(a, b);
     }
 }
