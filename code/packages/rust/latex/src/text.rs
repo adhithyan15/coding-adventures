@@ -29,7 +29,8 @@ use crate::ast::{Node, NodeKind};
 use crate::token::Span;
 
 /// The smallest span covering both `a` and `b` — used to compose a synthesised node's span from
-/// its constituents (S1: union-of-children; a precise per-construct span is S2's job).
+/// its constituents (S2: an accent's span is the exact union of the accent command and its
+/// argument's real spans).
 fn union(a: Span, b: Span) -> Span {
     Span::new(a.start.min(b.start), a.end.max(b.end))
 }
@@ -63,8 +64,11 @@ pub fn recognize_accents(nodes: Vec<Node>) -> Vec<Node> {
                 // Case A: the accent captured its argument as `{group}` (e.g. `\c{e}`).
                 if let Some(first) = arguments.first() {
                     let arg = recognize_accents(first.clone());
-                    // The recognized accent covers the whole `\accent{arg}` command.
-                    out.push(Node::new(NodeKind::Accent { accent: name.clone(), arg }, cmd_span));
+                    // The recognized accent covers the accent command through the end of its
+                    // argument — the union of the command span and the recognized arg's real span
+                    // (an empty `\c{}` falls back to `cmd_span`, so the union is a safe no-op).
+                    let span = union(cmd_span, seq_span(&arg, cmd_span));
+                    out.push(Node::new(NodeKind::Accent { accent: name.clone(), arg }, span));
                     // Any further captured groups were not part of the accent — keep them.
                     for extra in arguments.iter().skip(1) {
                         let sp = seq_span(extra, cmd_span);
@@ -233,6 +237,55 @@ mod tests {
         let accent = &n[1];
         assert!(matches!(accent.kind, NodeKind::Accent { .. }));
         assert_eq!(&src[accent.span.start..accent.span.end], r"\'e");
+    }
+
+    #[test]
+    fn accent_span_covers_command_plus_control_symbol_arg() {
+        // `\'e` — the Accent span slices back to the accent command through its base character.
+        let src = r"\'e";
+        let n = acc(src);
+        assert!(matches!(n[0].kind, NodeKind::Accent { .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], r"\'e");
+    }
+
+    #[test]
+    fn accent_span_covers_braced_control_word_arg() {
+        // `\c{c}` — the Accent span slices back to the whole `\c{c}` command+argument.
+        let src = r"\c{c}";
+        let n = acc(src);
+        assert!(matches!(n[0].kind, NodeKind::Accent { .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], r"\c{c}");
+    }
+
+    #[test]
+    fn accent_span_contains_its_argument() {
+        // Containment: the accent's span ⊇ its argument node's span, and both ⊆ `0..len`.
+        let src = r"caf\'{e}";
+        let n = acc(src);
+        let accent = n.iter().find(|x| matches!(x.kind, NodeKind::Accent { .. })).expect("accent");
+        assert!(accent.span.end <= src.len());
+        if let NodeKind::Accent { arg, .. } = &accent.kind {
+            for a in arg {
+                assert!(
+                    accent.span.start <= a.span.start && a.span.end <= accent.span.end,
+                    "arg span {:?} not ⊆ accent span {:?}",
+                    a.span,
+                    accent.span
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn accent_span_fixed_point_modulo_re_recognition() {
+        let src = r"caf\'e";
+        let a = acc(src);
+        let rendered = document_to_latex(&a);
+        let b = recognize_accents(parse(&rendered).expect("re-parse"));
+        assert_eq!(a, b, "accent tree equal modulo spans");
+        let accent = b.iter().find(|x| matches!(x.kind, NodeKind::Accent { .. })).expect("accent");
+        // The re-recognized accent's span still slices back to a `\<accent>{…}` extent.
+        assert!(rendered[accent.span.start..accent.span.end].starts_with('\\'));
     }
 
     #[test]

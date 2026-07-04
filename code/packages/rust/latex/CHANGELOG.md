@@ -2,6 +2,30 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.33.0] — 2026-07-04
+
+### Added — spanned recognition passes (LTXDOC02 S2)
+
+With S1 threading a real byte `Span` onto every L1 `Node`, S2 makes each node the OPT-IN
+recognition passes *synthesise* carry the exact union of its constituents' real spans instead of a
+coarse command/environment placeholder:
+
+- **`recognize_structure`** (`structure.rs`): `Section` / `CrossRef` / `Preamble` / `Styled` fold the
+  recognizing command's span with each recognized argument's real `Node::span()` (via a
+  `fold_opt_arg` helper); the hoisted `\label` handling keeps real spans.
+- **`recognize_accents`** (`text.rs`): the braced-argument `Accent` (`\c{c}`) unions the accent
+  command span with its argument's span (the group / next-char cases were already exact in S1).
+- **`recognize_tables`** (`tables.rs`): `Tabular` = `\begin{tabular}…\end{tabular}` unioned with every
+  cell's content span; `List` = `\begin{env}…\end{env}` unioned with every item's label+body span
+  (`union` / `seq_span` / `grid_span` / `list_span` helpers).
+
+`&src[node.span()]` now slices back to the exact source extent for a `Section` (heading through its
+owned body), an `Accent`, a `Tabular`, and an `itemize` `List`. All unions reuse the
+`Span::new(a.start.min(b.start), a.end.max(b.end))` style over real child spans (never substring
+search), fall back safely on degenerate/empty constituents, and leave `to_latex` output text and the
+round-trip-modulo-spans fixed point untouched. No `unsafe`; recursion `MAX_DEPTH`-bounded. Precise
+Document-fold spans (region-coarse today) land in S3.
+
 ## [0.32.0] — 2026-07-04
 
 ### Added — spanned L1 nodes (LTXDOC02 S1)
