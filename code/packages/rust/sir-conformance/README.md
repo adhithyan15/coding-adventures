@@ -122,6 +122,13 @@ pinned to: `INT32_MAX + 1 == INT32_MIN` (i32 wrap), `0u32 - 1 == 4294967295`,
 `10¹² · 10¹² == 10²⁴` (arbitrary). The differential runner and coverage gate
 (T2b) will consume it to derive expected outputs instead of hand-typing them.
 
+**Division** is modelled by `oracle::DivOp { Floor, Trunc }` (T3b) — the two
+honest rounding modes SIR21 §E3 splits apart: `Floor` rounds toward −∞ (Ruby
+`/`, Python `//`; `−7 / 2 == −4`), `Trunc` toward 0 (C/Rust/Go/Java; `−7 / 2 ==
+−3`). Division by zero is `Outcome::DivByZero` (a backend must *raise*), and the
+lone `i128::MIN / -1` overflow is `BeyondOracle`. `div_true` (Python's float
+`/`) is a future float-oracle op, not modelled here.
+
 ## The oracle-derived differential runner (`tests/arithmetic.rs`, SIR21 §P1)
 
 For integer arithmetic the expected value is **not** hand-typed — it is computed
