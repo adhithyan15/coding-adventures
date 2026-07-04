@@ -2086,3 +2086,73 @@ fn conversions_round_trip_runs_on_real_clang() {
     let _ = std::fs::remove_dir_all(&dir);
     assert_eq!(run.code(), Some(42), "floor(45.0 - 2.7) should exit 42");
 }
+
+// ===========================================================================
+// LANG-FULL E4-dyn — runtime (branch-selected) string on LLVM
+// ===========================================================================
+
+/// A `str` variable assigned in **two basic blocks** (a value chosen by control
+/// flow) is promoted to an `i64`-**handle** slot: each `str_const` stores the
+/// literal global's *address* (`ptrtoint`), and `print_str` reads the length
+/// from the block header at run time (`inttoptr` + `load i64`) rather than from a
+/// compile-time constant. This is the E4-dyn runtime-string path (E4d-2); a
+/// single-assignment string keeps the folded literal fast path (covered
+/// elsewhere).
+#[test]
+fn e4dyn_branch_selected_string_uses_runtime_handle() {
+    // A := "HI" (block 0) ; jmp L1 ; L1: A := "LO" (block 2) ; print A ; ret.
+    // A is assigned in two blocks, so it becomes a runtime handle slot.
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("A".into()), vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("jmp", None, vec![Operand::Var("L1".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("L1".into())], "void"),
+            IIRInstr::new("str_const", Some("A".into()), vec![Operand::Str("LO".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("A".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+
+    // A is a slot (alloca) carrying an i64 handle.
+    assert!(ll.contains("%A.slot = alloca i64"),
+        "branch-assigned str `A` should be an i64 handle slot in:\n{ll}");
+    // Each str_const stores the literal global's ADDRESS as the handle.
+    assert!(ll.contains("ptrtoint ptr @") && ll.contains(" to i64"),
+        "str_const into a slot should ptrtoint the literal global in:\n{ll}");
+    // print_str recovers the pointer and loads the length from the header at run time.
+    assert!(ll.contains("inttoptr i64"),
+        "runtime print_str should inttoptr the handle in:\n{ll}");
+    assert!(ll.contains("load i64, ptr %__strp"),
+        "runtime print_str should load the length from the block header in:\n{ll}");
+    assert!(ll.contains("getelementptr inbounds i8, ptr %__strp"),
+        "runtime print_str should gep past the 8-byte header in:\n{ll}");
+    assert!(ll.contains("call void @__print_str(ptr %__strb"),
+        "runtime print_str should call @__print_str with the byte pointer in:\n{ll}");
+}
+
+/// A **single-assignment** string is unchanged: it keeps the folded literal fast
+/// path (compile-time length, no `inttoptr`/runtime load).
+#[test]
+fn e4dyn_single_assignment_string_keeps_literal_fast_path() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(!ll.contains("%s.slot"),
+        "single-assignment str should NOT be a slot in:\n{ll}");
+    assert!(!ll.contains("inttoptr"),
+        "single-assignment str print should use the literal fast path (no inttoptr) in:\n{ll}");
+    assert!(ll.contains("call void @__print_str"),
+        "literal print_str still calls @__print_str in:\n{ll}");
+}

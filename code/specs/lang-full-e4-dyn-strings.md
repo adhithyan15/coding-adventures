@@ -159,14 +159,21 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    string support is pure compile-time literal folding, and no frontend emitted a
    runtime string to the static columns, so those columns had nothing to prove
    against. The foothold supplies it.)
-2. **E4d-2 — LLVM runtime strings.** Relax the `iir-to-llvm` validator so a
-   `str`-typed **register** (not just `Operand::Str`) is legal; give each str
-   slot a runtime path (when it carries no compile-time `str_values`/`str_lens`
-   metadata) that lowers `str_concat`/`str_slice`/`str_index`/`str_len`/`str_cmp`/
-   `print_str` to the E4d-1 `__twig_str_*` helpers + guarded loads over the
-   `[i64 len][i8]` block (mirror how the file lowers E5 `array_*`). Keep literal
-   folding as the fast path. **Extend the E4d-foothold cell's `backends` with
-   `Llvm`.** *(needs 1, 1a)*
+2. **E4d-2 — LLVM runtime-string representation + `print_str`.** ✅ **Landed**
+   (`iir-to-llvm` 0.30.0 / `lang-aot` 0.172.0). Key finding: `iir-to-llvm` is
+   **alloca-backed**, and a str var was never promoted to a slot — so a
+   cross-block string emitted invalid IR. Fix: `collect_slot_vars` promotes a
+   `str` var assigned in **>1 basic block** to an `i64`-**handle** slot (a
+   literal's `{i64 len,[N×i8]}` global address is a valid handle, stored via
+   `ptrtoint`); `print_str` of such a slot reads the length from the block header
+   at run time (`inttoptr` + `load`). Single-assignment strings keep the folded
+   fast path. The **foothold cell now runs on `Llvm`** (real `clang`), verified
+   locally + by the two guard tests; 2 unit tests assert the emitted IR.
+2b. **E4d-2b — LLVM runtime `str_len`/`str_concat`/`str_slice`/`str_index`/
+   `str_cmp`** over slot (runtime) operands → the E4d-1 `__twig_str_*` helpers +
+   guarded loads (mirror E5 `array_*`). Not needed by the foothold (it only
+   *observes* a runtime string via `print_str`); needed by the frontend payoffs
+   that *build* runtime strings (ALGOL string procedures' `s := t & u`). *(needs 2)*
 3. **E4d-3 — WASM runtime strings.** Same for `iir-to-wasm`, inlined over linear
    memory (mirror E5 `array_*`). Extend the foothold cell with `Wasm`. *(needs 1, 1a)*
 4. **E4d-4 — native runtime strings.** `aarch64-backend` + `x86_64-backend` lower

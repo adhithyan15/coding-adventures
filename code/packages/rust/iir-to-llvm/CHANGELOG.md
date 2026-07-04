@@ -1,5 +1,37 @@
 # Changelog — iir-to-llvm
 
+## [0.30.0] — 2026-07-03 (LANG-FULL E4-dyn E4d-2: runtime branch-selected strings)
+
+First LLVM step of the **E4-dyn** arc (`code/specs/lang-full-e4-dyn-strings.md`):
+a **runtime** string — one whose value is chosen by control flow, so it can't be
+folded to a compile-time constant — now lowers on LLVM.
+
+- **`collect_slot_vars`**: a `str` variable assigned in **more than one basic
+  block** is promoted to a stack slot (an `i64` **handle**). A str reassigned
+  twice *straight-line* keeps the compile-time literal fast path (linear
+  last-write tracking is exact there); only cross-block assignment needs a
+  runtime handle in memory. Basic-block boundaries are `label` (starts a block)
+  and terminators `jmp`/`jmp_if_false`/`jmp_if_true`/`ret`/`ret_void` (end one).
+- **Slot store**: a str value is carried in `env` as a global-symbol pointer
+  (`@.str.N`); an `i64` slot stores the **handle** (block address), so the
+  slot-store protocol emits `ptrtoint ptr @.str.N to i64` first. A literal
+  string's `{i64 len, [N x i8]}` global address **is** a valid string handle, so
+  a literal and a runtime heap string share one representation.
+- **`print_str`** of a runtime (slot) string: `inttoptr` the handle, `load i64`
+  the length from the block header (offset 0), `getelementptr … i64 8` to the
+  bytes, `call @__print_str(ptr, i64)` — no compile-time length. A
+  single-assignment literal keeps the folded fast path.
+
+Proven end-to-end by the E4-dyn foothold matrix cell (a BASIC branch-selected
+string), which now runs on the **`Llvm`** column (real `clang`) in addition to
+VM/JIT/JVM/CLR. Two new unit tests assert the emitted runtime IR (`ptrtoint`
+slot store, `inttoptr`+`load` print) and that a single-assignment string is
+unchanged.
+
+**Deferred to E4d-2b:** runtime paths for `str_len`/`str_concat`/`str_slice`/
+`str_index`/`str_cmp` over slot operands (needed by the frontend payoffs that
+*build* runtime strings; the foothold only observes one via `print_str`).
+
 ## [0.29.0] — 2026-06-30 (BA-INPUT: `input_i64` → `@__twig_input_i64`)
 
 Added `"input_i64"` to `SUPPORTED_BUILTINS` and wired it to the `@__twig_input_i64`

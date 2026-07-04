@@ -1300,19 +1300,43 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
             counts.insert(pname.as_str(), 1);
         }
     }
+    // E4-dyn: a `str` variable is promoted to a slot only when it is assigned in
+    // **more than one basic block** — i.e. its value is chosen by control flow
+    // (a branch), so the compile-time last-write-wins string tracking can no
+    // longer resolve it to a single literal and it must carry a runtime `i64`
+    // **handle** through memory.  A str reassigned twice *straight-line*
+    // (`s := "OK"; s := "NO"`) keeps the literal fast path — the linear tracking
+    // is exactly right there.  Basic-block boundaries: a `label` starts a new
+    // block, and a terminator (`jmp*`/`ret*`) ends one.
+    let mut str_blocks: Map<&str, std::collections::HashSet<usize>> = Map::new();
+    let mut block: usize = 0;
     for instr in &func.instructions {
+        let op = instr.op.as_str();
+        if op == "label" {
+            block += 1;
+        }
         if let Some(dest) = &instr.dest {
             if instr.type_hint == "str" {
-                continue;
+                str_blocks.entry(dest.as_str()).or_default().insert(block);
+            } else {
+                *counts.entry(dest.as_str()).or_insert(0) += 1;
             }
-            *counts.entry(dest.as_str()).or_insert(0) += 1;
+        }
+        if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
+            block += 1;
         }
     }
-    counts
+    let mut slots: std::collections::HashSet<String> = counts
         .into_iter()
         .filter(|&(_, n)| n >= 2)
         .map(|(name, _)| name.to_string())
-        .collect()
+        .collect();
+    for (name, blocks) in str_blocks {
+        if blocks.len() >= 2 {
+            slots.insert(name.to_string());
+        }
+    }
+    slots
 }
 
 /// Decide the LLVM stack-slot type for each promoted variable in `slots`.
@@ -1419,7 +1443,20 @@ fn lower_instr_with_slots(
         // 3a. Post-store the produced value into the original slot.
         if let Some(val) = state.env.get(&fresh).cloned() {
             let ty = state.slot_ty(orig);
-            out.push_str(&format!("  store {ty} {val}, ptr %{orig}.slot\n"));
+            // E4-dyn: a `str` value is carried in `env` as a global-symbol
+            // pointer (e.g. `@.str.3`), but its slot stores the runtime *handle*
+            // (an `i64` block address).  Convert the symbol to an integer first —
+            // a literal string's `{i64 len, [N x i8]}` global address IS a valid
+            // string handle, so a str slot and a runtime heap string are the same
+            // representation.  (Non-`@` values — SSA registers, integer literals —
+            // store directly.)
+            if ty == "i64" && val.starts_with('@') {
+                let h = state.fresh("strh");
+                out.push_str(&format!("  {h} = ptrtoint ptr {val} to i64\n"));
+                out.push_str(&format!("  store i64 {h}, ptr %{orig}.slot\n"));
+            } else {
+                out.push_str(&format!("  store {ty} {val}, ptr %{orig}.slot\n"));
+            }
         }
         state.env.remove(&fresh); // the fresh temp is not referenced again.
         state.env.remove(orig); // future reads of `orig` go through its slot load.
@@ -1688,6 +1725,35 @@ fn lower_print_str(
             });
         }
     };
+
+    // E4-dyn runtime path: a str variable assigned in >1 place is an i64-**handle**
+    // slot (a runtime string — e.g. one chosen by a branch).  The slot protocol
+    // has pre-loaded its handle into `env`, so read the length from the block
+    // header (`[i64 len][bytes…]`) at run time rather than from compile-time
+    // metadata.  The handle is a plain integer; `inttoptr` recovers the pointer.
+    if state.slots.contains(src) {
+        let handle = state.env.get(src).cloned().ok_or_else(|| {
+            IIRLlvmError::UndefinedVariable {
+                function: state.fn_name.into(),
+                name: src.clone(),
+            }
+        })?;
+        let p = state.fresh("strp");
+        out.push_str(&format!("  {p} = inttoptr i64 {handle} to ptr\n"));
+        let len = state.fresh("strn");
+        out.push_str(&format!("  {len} = load i64, ptr {p}\n"));
+        let bytes = state.fresh("strb");
+        out.push_str(&format!(
+            "  {bytes} = getelementptr inbounds i8, ptr {p}, i64 8\n"
+        ));
+        out.push_str(&format!(
+            "  call void @__print_str(ptr {bytes}, i64 {len})\n"
+        ));
+        return Ok(());
+    }
+
+    // Literal fast path: a single-assignment string folds to a known global +
+    // compile-time length.
     let base = state.env.get(src).cloned().ok_or_else(|| {
         IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
