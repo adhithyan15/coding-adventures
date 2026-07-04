@@ -13,14 +13,17 @@ could talk to another. `spreadsheet-io` makes `spreadsheet-core::Workbook` the
 live workbook:
 
 ```text
-  .xlsx ──load_xlsx──┐                              ┌──save_xlsx──▶ .xlsx
-                     ├─▶  spreadsheet-core::Workbook ─┤
-  .xls  ──load_xls───┘     (THE model)               └──save_xls───▶ .xls
+  .xlsx ──load_xlsx────┐                              ┌────save_xlsx──▶ .xlsx
+  .xls  ──load_xls─────┤─▶  spreadsheet-core::Workbook ─┤────save_xls───▶ .xls
+  .csv/.tsv ─load_csv──┘        (THE model)             └────save_csv───▶ .csv/.tsv
 ```
 
-Both modern `.xlsx` (SSIO01) and legacy `.xls`/BIFF8 (SSIO02) are supported.
-`.xlsx` preserves live formulas; `.xls` is lower-fidelity (values only — see
-below).
+Modern `.xlsx` (SSIO01), legacy `.xls`/BIFF8 (SSIO02), and delimited `.csv`/`.tsv`
+(SSIOCSV01) are supported. `.xlsx` preserves live formulas; `.xls` and CSV are
+lower-fidelity (values only — see below). Because everything lands in the one
+`Workbook`, any format loads and any format saves: `load_csv` then `save_xlsx`
+converts a CSV to Excel, and a loaded sheet is queryable with SQL via
+`sql-spreadsheet-source`.
 
 It is the *only* crate that depends on both the engine and the file-format
 codecs, so the engine never learns what a `.xlsx` is and each codec stays small.

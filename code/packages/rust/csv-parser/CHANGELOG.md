@@ -1,5 +1,16 @@
 # Changelog — csv-parser (Rust)
 
+## [0.1.1] — 2026-07-03
+
+### Added
+- `parse_records(source, delimiter) -> Result<Vec<Vec<String>>, CsvError>` — the
+  raw grid of records (rows of fields, header row included, no header→value
+  mapping). This exposes the internal `tokenise_rows` primitive that the
+  HashMap-returning `parse_csv` / `parse_csv_with_delimiter` are built on, for
+  callers that need column order and the header preserved (e.g. loading a CSV
+  into a positional spreadsheet grid, added in `spreadsheet-io` SSIO-CSV).
+  Purely additive; existing APIs unchanged.
+
 ## [0.1.0] — 2026-03-25
 
 ### Added

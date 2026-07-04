@@ -78,6 +78,9 @@ pub enum IoError {
     /// compound file, a missing/short workbook stream, or a malformed record.
     /// Carries the underlying message for diagnostics.
     Xls(String),
+    /// The delimited-text (CSV/TSV) bytes could not be read — not valid UTF-8,
+    /// or malformed CSV structure. Carries the underlying message.
+    Csv(String),
 }
 
 impl std::fmt::Display for IoError {
@@ -85,6 +88,7 @@ impl std::fmt::Display for IoError {
         match self {
             IoError::Xlsx(msg) => write!(f, "failed to load .xlsx: {msg}"),
             IoError::Xls(msg) => write!(f, "failed to load .xls: {msg}"),
+            IoError::Csv(msg) => write!(f, "failed to load CSV/TSV: {msg}"),
         }
     }
 }
@@ -335,6 +339,159 @@ pub fn save_xls(wb: &Workbook) -> Vec<u8> {
     }
 
     xls_writer::write_xls(&out)
+}
+
+// ===========================================================================
+// Delimited text (CSV / TSV) — load & save
+// ===========================================================================
+//
+// A CSV/TSV is a single positional grid, so it maps to a one-sheet workbook:
+// field (r, c) → cell (r+1, c+1). There is no formula, type, or multi-sheet
+// notion in the format, so:
+//   - load coerces each field to a Number (if it parses) or Text; blank → empty.
+//   - save writes the FIRST sheet's used range, cells rendered as text. Other
+//     sheets are dropped (use .xlsx for multi-sheet); formulas save as their
+//     computed value.
+
+/// Decide the cell value for a raw CSV field: an empty field is a blank cell; a
+/// field that parses as a number becomes `Number` (so a spreadsheet import of
+/// `42` is numeric, and `007` becomes `7` just as Excel would); everything else
+/// is `Text`.
+fn coerce_field(field: &str) -> CellValue {
+    if field.is_empty() {
+        CellValue::Empty
+    } else if let Ok(n) = field.parse::<f64>() {
+        CellValue::Number(n)
+    } else {
+        CellValue::Text(field.to_string())
+    }
+}
+
+/// Render one cell's computed value as a CSV field string (before quoting).
+fn cell_to_field(v: CellValue) -> String {
+    match v {
+        CellValue::Empty => String::new(),
+        CellValue::Number(n) => {
+            if n.fract() == 0.0 && n.is_finite() {
+                format!("{}", n as i64)
+            } else {
+                format!("{n}")
+            }
+        }
+        CellValue::Text(s) => s,
+        CellValue::Boolean(b) => if b { "TRUE" } else { "FALSE" }.to_string(),
+        CellValue::Error(e) => e.display().to_string(),
+    }
+}
+
+/// Quote a field per RFC 4180 if it contains the delimiter, a quote, or a
+/// newline: wrap in `"` and double any internal `"`. Otherwise return it as-is.
+fn csv_quote(field: &str, delimiter: char) -> String {
+    let needs = field.contains(delimiter)
+        || field.contains('"')
+        || field.contains('\n')
+        || field.contains('\r');
+    if needs {
+        format!("\"{}\"", field.replace('"', "\"\""))
+    } else {
+        field.to_string()
+    }
+}
+
+/// Load delimited text (`delimiter` = `,` for CSV, `\t` for TSV, …) into a
+/// one-sheet [`Workbook`] named `Sheet1`. Each field lands at its grid position
+/// (row 1 = the first line); a field that looks numeric becomes a `Number`,
+/// otherwise `Text`; a blank field is an empty cell.
+///
+/// # Errors
+///
+/// [`IoError::Csv`] if the bytes are not valid UTF-8 or the CSV is malformed.
+pub fn load_delimited(bytes: &[u8], delimiter: char) -> Result<Workbook, IoError> {
+    let text = std::str::from_utf8(bytes).map_err(|e| IoError::Csv(e.to_string()))?;
+    let rows = coding_adventures_csv_parser::parse_records(text, delimiter)
+        .map_err(|e| IoError::Csv(format!("{e:?}")))?;
+
+    let mut wb = Workbook::new();
+    let sheet = wb.add_sheet("Sheet1");
+    for (r, row) in rows.iter().enumerate() {
+        // 1-based, checked: a field past the u32 address space (a >4-billion-row
+        // or -column CSV) can't be placed and is skipped rather than wrapping to
+        // a wrong, colliding address.
+        let Ok(row_i) = u32::try_from(r + 1) else {
+            continue;
+        };
+        for (c, field) in row.iter().enumerate() {
+            let value = coerce_field(field);
+            if value == CellValue::Empty {
+                continue;
+            }
+            let Ok(col_i) = u32::try_from(c + 1) else {
+                continue;
+            };
+            wb.set_value(sheet, CellAddress::new(row_i, col_i), value);
+        }
+    }
+    wb.recalc_all();
+    Ok(wb)
+}
+
+/// Load a `.csv` (comma-delimited) file. See [`load_delimited`].
+pub fn load_csv(bytes: &[u8]) -> Result<Workbook, IoError> {
+    load_delimited(bytes, ',')
+}
+
+/// Load a `.tsv` (tab-delimited) file. See [`load_delimited`].
+pub fn load_tsv(bytes: &[u8]) -> Result<Workbook, IoError> {
+    load_delimited(bytes, '\t')
+}
+
+/// Serialize the workbook's **first sheet** to delimited text using `delimiter`.
+///
+/// The output is the sheet's used range as a positional grid — line `r` holds
+/// row `r`, each cell rendered as text (a formula as its computed value, a
+/// boolean as `TRUE`/`FALSE`, an error as its display text), fields quoted per
+/// RFC 4180 where needed, rows joined with `\n`.
+///
+/// **Size note:** because a CSV is a *dense* positional grid, its size is
+/// proportional to the used-range **area**. A sheet with a far-flung cell
+/// therefore yields a correspondingly large CSV — inherent to the format, unlike
+/// the sparse `.xlsx` writer. Callers exposing this to untrusted workbooks
+/// should bound the used range first.
+pub fn save_delimited(wb: &Workbook, delimiter: char) -> Vec<u8> {
+    let Some(first) = wb.sheet_names().first().and_then(|n| wb.sheet_id(n)) else {
+        return Vec::new(); // no sheets → empty file
+    };
+    let Some(ur) = wb.used_range(first) else {
+        return Vec::new(); // empty sheet → empty file
+    };
+
+    let delim = delimiter.to_string();
+    let mut out = String::new();
+    for row in ur.min_row..=ur.max_row {
+        if row > ur.min_row {
+            out.push('\n');
+        }
+        for col in ur.min_col..=ur.max_col {
+            if col > ur.min_col {
+                out.push_str(&delim);
+            }
+            let value = wb
+                .get_value(first, CellAddress::new(row, col))
+                .unwrap_or(CellValue::Empty);
+            out.push_str(&csv_quote(&cell_to_field(value), delimiter));
+        }
+    }
+    out.into_bytes()
+}
+
+/// Serialize the first sheet to `.csv` (comma-delimited). See [`save_delimited`].
+pub fn save_csv(wb: &Workbook) -> Vec<u8> {
+    save_delimited(wb, ',')
+}
+
+/// Serialize the first sheet to `.tsv` (tab-delimited). See [`save_delimited`].
+pub fn save_tsv(wb: &Workbook) -> Vec<u8> {
+    save_delimited(wb, '\t')
 }
 
 #[cfg(test)]
