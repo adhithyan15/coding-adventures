@@ -2,6 +2,34 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.6.0] - SIR21 T2a — the integer reference oracle (§P2)
+
+### Added — `oracle` module (pure, toolchain-free)
+
+The first slice of SIR21 milestone **T2**: a **reference oracle** for integer
+semantics — the independent authority every backend is later measured against,
+so two backends that share a bug can no longer agree with each other and hide it
+(SIR21 §P2). It runs no toolchain and touches no backend.
+
+- `oracle::eval(op, lhs, rhs, spec) -> Outcome` computes the observable result
+  of a binary integer op (`Add`/`Sub`/`Mul`) under an `IntSpec`'s
+  `(width, signed, overflow)`, and `oracle::reduce(exact, spec)` applies the
+  width + overflow policy to an already-exact value (decoupled from any op).
+- `Outcome` = `Value(i128)` · `Trapped` (overflow-trap raises) · `NoValue`
+  (checked → none) · `Unspecified` (UB — oracle asserts nothing) ·
+  `BeyondOracle` (exact result / `W128` modulus exceeds the oracle's `i128`
+  working range — a documented, honest limit rather than a wrong number).
+- Overflow policy per the SIR21 faithfulness table: `Wrap` → mod 2ⁿ re-centred
+  for signedness, `Saturate` → clamp, `Trap` → raise, `Checked` → none,
+  `Undefined` → unspecified, `Arbitrary` → grows.
+- 13 unit tests pin the canonical constants (`INT32_MAX+1 == INT32_MIN`,
+  `0u32-1 == 4294967295`, `255+1 (u8) == 0`, `10¹²·10¹² == 10²⁴`), every
+  overflow mode, in-range passthrough, and the honest `W128`/`>i128` limits.
+
+This is the semantic core the differential runner (P1) and coverage gate (P5)
+will consume in T2b to derive expected outputs programmatically instead of
+hand-typing them. The existing Ruby-source golden matrix is unchanged.
+
 ## [0.5.0] - 2026-07-03
 
 ### Added — `seq_assign` (14 -> 15 programs)
