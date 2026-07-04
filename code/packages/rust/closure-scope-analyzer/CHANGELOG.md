@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.6] - 2026-07-03
+
+### Changed — CLOC12.163: `YieldExpression` exhaustive-match arm
+
+Added an `Expression::YieldExpression` arm that walks into the yield's optional
+`argument` when present, so the analyzer stays exhaustive over the new
+`javascript-ast` variant (part of the CLOC12.163 atomic node PR1). No behaviour
+change to any existing node; the yield argument is now visited exactly like any
+other sub-expression the analyzer already handles.
+
+
 ## [0.12.5] - 2026-07-03
 
 ### Changed — CLOC12.162: `SpreadElement` exhaustive-match arm

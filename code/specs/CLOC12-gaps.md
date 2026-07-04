@@ -1953,3 +1953,71 @@ WHITESPACE_ONLY.
 **Scope:** object-spread `{...o}` in an object literal (`convert_property_definition`,
 gap tracked as `SpreadProperty`) remains declined — it is a *property*, a
 separate later slice; this PR is the call/array/`new` spread only.
+
+## CLOC12.163 — `YieldExpression` (`yield` / `yield*`): atomic node + emit + passes (PR1)
+
+Adds `Expression::YieldExpression { cv, delegate: bool, argument: Option<Box<Expression>> }`
+to `javascript-ast` (0.22.0) — the generator **yield** operator that pauses a
+generator and surrenders a value to its caller. Two independent axes are kept
+as separate fields so the emitter and every AST walker reason about them
+independently:
+
+| source        | `delegate` | `argument` |
+|---------------|------------|------------|
+| `yield`       | `false`    | `None`     |
+| `yield x`     | `false`    | `Some(x)`  |
+| `yield* xs`   | `true`     | `Some(xs)` |
+
+`delegate` is the `*` of a *delegating* yield (which forwards every value its
+argument iterable produces); `argument` is `None` only for a bare `yield`. The
+argument is boxed so the `Expression` enum stays a fixed size. The variant is
+re-exported from the crate root alongside the other expression nodes.
+
+`closure-emitter` (0.27.0) `emit_yield` prints the `yield` keyword, then the `*`
+for a delegate, then — if an argument is present — the argument at
+`PREC_ASSIGNMENT`. **Token separation:** a non-delegating `yield` needs a
+mandatory `required_ws()` before its argument (`yield x`; `yieldx` would be one
+identifier), while after a delegating `yield*` the `*` already terminates the
+keyword token so the argument abuts it (`yield*xs`). **Precedence:** `yield` is
+an `AssignmentExpression` alternative — the loosest-binding expression bar the
+comma — so a conditional or assignment argument prints bare
+(`yield a?b:c`, `yield a=b`) while the one looser form, a **sequence**, wraps
+(`yield (a,b)`). `expr_prec` tags the whole node at `PREC_ASSIGNMENT` (exactly
+like arrow / assignment), so a tighter parent wraps it — `(yield a)+1`,
+`(yield a).b` — with no local paren logic in `emit_yield`.
+
+All nine downstream pass/analysis crates get a `YieldExpression` match arm that
+recurses into the optional `argument` (the transforms — constant-fold, dce,
+fold-control-flow — rebuild the node preserving `delegate` and mapping over the
+`Option`; `fold-control-flow`'s exhaustive `expression_cv` accessor gains its
+arm; the traversal passes — inline, inline-variables, rename, rename-globals,
+rename-properties, scope-analyzer — walk into the argument when present) — all
+in one atomic commit so the workspace never has a broken exhaustive `match`.
+
+9 new emitter unit tests: bare `yield`, `yield x` (required space), `yield*xs`
+(no space), `yield*a.b` (delegate member arg), the assignment-precedence
+argument cases (`yield a?b:c` and `yield a=b` bare, `yield (a,b)` sequence
+wrapped), and the whole-node wraps in tighter parents (`(yield a)+1`,
+`(yield a).b`). No behaviour change for existing inputs — the bridge still
+declines yield (gap-164), so closurec falls back to WHITESPACE_ONLY on generator
+bodies for now. PR2 (bridge-enable) and PR3 (conformance port) follow.
+
+### gap-164 — bridge declines `yield` (`YieldExpression`) — **OPEN**
+
+The `javascript-parser` bridge does not yet convert a `yield` / `yield*`
+expression to `Expression::YieldExpression`; a generator body containing a
+`yield` drops the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.163
+PR1) landed the node + emit + pass traversals so the typed AST and every
+downstream pass can already represent and print a yield.
+
+**PR2 (bridge-enable) — pending parseability check.** Unlike the preceding
+expression nodes, `yield` is only grammatical inside a generator function body
+(`function* g(){ … }`), so the bridge slice must first confirm the parser
+produces a generator-function parse tree with a reachable `yield`/`yield*`
+sub-node (analogous to the parse-tree dump that unblocked gap-163 for spread).
+If the parser does not yet admit generator bodies, PR2 waits on that grammar
+work and PR1's node remains exercised by hand-constructed AST (emitter unit
+tests) plus the PR3 conformance port — the same staging used for the
+substitution-template slice (gap-157). Note the existing WHITESPACE_ONLY path
+already strips redundant parens around a `yield` operand (gap-105); that is the
+token-level fallback, independent of this structured-AST node.

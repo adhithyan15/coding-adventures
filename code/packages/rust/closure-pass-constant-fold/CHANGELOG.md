@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.6] - 2026-07-03
+
+### Changed — CLOC12.163: `YieldExpression` exhaustive-match arm
+
+Added an `Expression::YieldExpression` arm that rebuilds the node, preserving
+`delegate` and folding/recursing into the optional `argument` when present, so
+the pass stays exhaustive over the new `javascript-ast` variant (part of the
+CLOC12.163 atomic node PR1). No behaviour change to any existing node; the
+yield argument is now visited/rewritten exactly like any other sub-expression
+the pass already handles.
+
+
 ## [0.85.5] - 2026-07-03
 
 ### Changed — CLOC12.162: `SpreadElement` exhaustive-match arm
