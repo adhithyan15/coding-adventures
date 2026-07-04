@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 76 \u2014 burn-care fluid-resuscitation volume index from four stated quantities (a NEW panel: burn-care / fluid-resuscitation). From a burn area, a body weight to add, a rate factor to divide by, and a shift gain to scale by, compute the resuscitation volume ((burn_area+body_weight)/rate_factor*shift_gain), the combined load (burn_area+body_weight), or the normalized load ((burn_area+body_weight)/rate_factor). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, SUM-QUOTIENT SCALED BY A FACTOR (a+b)/c*d (add first, then DIVIDE, then scale \u2014 contrast rung-68 (a+b)*c/d which scales THEN divides, and rung-75 (a-b)/c*d which subtracts; the left-to-right (a+b)/c*d = (a+b)*d/c, not (a+b)/(c*d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via +, /, and * \u2014 no constant leaks, and neither the combined load, the normalized load, nor any resuscitation figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: DIVIDING by the PRODUCT ((a+b)/(c*d), a wrong scaling) and SWAPPING the multiply and divide ((a+b)*c/d, a wrong scaling). The core confusion tested is that (a+b)/c*d is not (a+b)/(c*d) and not (a+b)*c/d.",
+  "items": [
+    {
+      "id": "r76burn-01",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 16, a body weight of 8 to add, a rate factor of 3 to divide by and a shift gain of 2. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(16)\nobserve body_weight(8)\nobserve rate_factor(3)\nobserve shift_gain(2)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r76burn-02",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 16, a body weight of 8 to add, a rate factor of 3 to divide by and a shift gain of 2. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(16)\nobserve body_weight(8)\nobserve rate_factor(3)\nobserve shift_gain(2)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r76burn-03",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 16, a body weight of 8 to add, a rate factor of 3 to divide by and a shift gain of 2. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(16)\nobserve body_weight(8)\nobserve rate_factor(3)\nobserve shift_gain(2)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r76burn-04",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 20, a body weight of 10 to add, a rate factor of 5 to divide by and a shift gain of 3. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(20)\nobserve body_weight(10)\nobserve rate_factor(5)\nobserve shift_gain(3)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r76burn-05",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 20, a body weight of 10 to add, a rate factor of 5 to divide by and a shift gain of 3. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(20)\nobserve body_weight(10)\nobserve rate_factor(5)\nobserve shift_gain(3)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r76burn-06",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 20, a body weight of 10 to add, a rate factor of 5 to divide by and a shift gain of 3. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(20)\nobserve body_weight(10)\nobserve rate_factor(5)\nobserve shift_gain(3)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r76burn-07",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 14, a body weight of 10 to add, a rate factor of 4 to divide by and a shift gain of 3. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(14)\nobserve body_weight(10)\nobserve rate_factor(4)\nobserve shift_gain(3)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r76burn-08",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 14, a body weight of 10 to add, a rate factor of 4 to divide by and a shift gain of 3. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(14)\nobserve body_weight(10)\nobserve rate_factor(4)\nobserve shift_gain(3)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r76burn-09",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 14, a body weight of 10 to add, a rate factor of 4 to divide by and a shift gain of 3. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(14)\nobserve body_weight(10)\nobserve rate_factor(4)\nobserve shift_gain(3)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r76burn-10",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 30, a body weight of 6 to add, a rate factor of 6 to divide by and a shift gain of 2. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(30)\nobserve body_weight(6)\nobserve rate_factor(6)\nobserve shift_gain(2)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 108.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r76burn-11",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 30, a body weight of 6 to add, a rate factor of 6 to divide by and a shift gain of 2. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(30)\nobserve body_weight(6)\nobserve rate_factor(6)\nobserve shift_gain(2)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 108.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r76burn-12",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 30, a body weight of 6 to add, a rate factor of 6 to divide by and a shift gain of 2. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(30)\nobserve body_weight(6)\nobserve rate_factor(6)\nobserve shift_gain(2)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 108.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r76burn-13",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 18, a body weight of 12 to add, a rate factor of 5 to divide by and a shift gain of 2. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(18)\nobserve body_weight(12)\nobserve rate_factor(5)\nobserve shift_gain(2)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r76burn-14",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 18, a body weight of 12 to add, a rate factor of 5 to divide by and a shift gain of 2. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(18)\nobserve body_weight(12)\nobserve rate_factor(5)\nobserve shift_gain(2)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r76burn-15",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 18, a body weight of 12 to add, a rate factor of 5 to divide by and a shift gain of 2. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(18)\nobserve body_weight(12)\nobserve rate_factor(5)\nobserve shift_gain(2)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 75.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r76burn-16",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 10, a body weight of 6 to add, a rate factor of 2 to divide by and a shift gain of 3. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(10)\nobserve body_weight(6)\nobserve rate_factor(2)\nobserve shift_gain(3)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r76burn-17",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 10, a body weight of 6 to add, a rate factor of 2 to divide by and a shift gain of 3. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(10)\nobserve body_weight(6)\nobserve rate_factor(2)\nobserve shift_gain(3)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r76burn-18",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 10, a body weight of 6 to add, a rate factor of 2 to divide by and a shift gain of 3. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(10)\nobserve body_weight(6)\nobserve rate_factor(2)\nobserve shift_gain(3)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r76burn-19",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 28, a body weight of 12 to add, a rate factor of 5 to divide by and a shift gain of 4. What is the resuscitation volume (combined load normalised by the rate factor, then gain-scaled)?",
+      "program": "observe burn_area(28)\nobserve body_weight(12)\nobserve rate_factor(5)\nobserve shift_gain(4)\nlet answer = (burn_area + body_weight) / rate_factor * shift_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r76burn-20",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 28, a body weight of 12 to add, a rate factor of 5 to divide by and a shift gain of 4. What is the the combined load (burn area plus the body weight)?",
+      "program": "observe burn_area(28)\nobserve body_weight(12)\nobserve rate_factor(5)\nobserve shift_gain(4)\nlet answer = burn_area + body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r76burn-21",
+      "qtype": "fluid_resuscitation",
+      "stem": "A burn assessment records a burn area of 28, a body weight of 12 to add, a rate factor of 5 to divide by and a shift gain of 4. What is the the normalized load before scaling (combined load over the rate factor)?",
+      "program": "observe burn_area(28)\nobserve body_weight(12)\nobserve rate_factor(5)\nobserve shift_gain(4)\nlet answer = (burn_area + body_weight) / rate_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
