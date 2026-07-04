@@ -137,7 +137,8 @@ fn validate_rejects_polymorphic_type_hint() {
     assert!(errors.iter().any(|e| e.contains("UntypedInstruction")));
 }
 
-/// The `"str"` type hint is not supported (no string arithmetic in v1).
+/// The `"str"` type hint is not supported for value-producing arithmetic ops
+/// like `const` (no string arithmetic in v1).
 #[test]
 fn validate_rejects_str_type() {
     let func = IIRFunction::new(
@@ -148,6 +149,41 @@ fn validate_rejects_str_type() {
     );
     let errors = validate_for_jvm(&module_with(func));
     assert!(errors.iter().any(|e| e.contains("UnsupportedType")));
+}
+
+/// E4-dyn: a `str` VALUE (a `java.lang.String`) flows through a `call` (a `str`
+/// return / call result) and a `ret` (a `str`-returning method) — an ALGOL
+/// `string procedure`'s returned runtime string. Those two ops accept `str`.
+#[test]
+fn validate_accepts_str_on_call_and_ret() {
+    // id(s: str) -> str { ret str s }
+    let id = IIRFunction::new(
+        "id",
+        vec![("s".into(), "str".into())],
+        "str",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "str")],
+    );
+    // main() { r = call id(s0); ... }  (str call result)
+    let main = IIRFunction::new(
+        "main",
+        vec![("s0".into(), "str".into())],
+        "void",
+        vec![
+            IIRInstr::new("call", Some("r".into()),
+                vec![Operand::Var("id".into()), Operand::Var("s0".into())], "str"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let module = IIRModule {
+        name: "strproc".into(),
+        functions: vec![id, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let errors = validate_for_jvm(&module);
+    assert!(errors.is_empty(), "str on call/ret must validate; got: {errors:?}");
 }
 
 /// Reference types `ref<T>` are not supported.

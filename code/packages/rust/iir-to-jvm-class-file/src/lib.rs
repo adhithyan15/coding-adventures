@@ -92,8 +92,10 @@
 //!
 //! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`, `alloc`,
 //! `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
-//! instruction with `type_hint` of `"any"`, `"polymorphic"`, `"str"`, or
-//! `"ref<…>"`.
+//! instruction with `type_hint` of `"any"`, `"polymorphic"`, or `"ref<…>"`.
+//! (`"str"` is accepted on the string ops `str_const`/`str_concat`/`str_slice`
+//! and — E4-dyn — on `call`/`ret`, where a `str` value flows as a
+//! `java.lang.String` return / call result.)
 //!
 //! Float type hints (`f32`, `f64`) and float constant operands **are supported**
 //! — unlike the BEAM backend.

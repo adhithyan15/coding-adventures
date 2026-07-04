@@ -204,24 +204,27 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    (E4d-4b, like E4d-2b/E4d-3b): runtime `str_concat`/`str_slice`/`str_index` over
    promoted operands — not needed by the foothold. *(needs 1, 1a)*
 5. **Frontend payoffs** *(each needs 1–4 for the backends it targets)*:
-   - **E4d-AL — ALGOL string procedures.** ✅ **Foothold landed**
-     (`algol-iir-compiler` 0.28.0 / `lang-aot` 0.175.0). Lifted the
+   - **E4d-AL — ALGOL string procedures.** ✅ **Landed on ALL SEVEN backends**
+     (`algol-iir-compiler` 0.28.0 / `lang-aot` 0.178.0). Lifted the
      `string procedures` `Unsupported` (algol-iir-compiler:886): a `string
      procedure` returns a runtime `str` (its result slot), and `print` gained a
      general string-expression path so `print(pick(1))` prints a call result.
      Matrix cell: a string procedure whose branch-selected result is printed —
-     runs on **NativeAot + Llvm + Wasm + VM/JIT** today. **Discovery:** a runtime
-     string arriving as a *call result / return value* is a NEW path beyond the
-     E4-dyn foothold (which only printed a branch-selected *local*): a backend
-     must map `str` to its handle type at function boundaries and take the runtime
-     header-read path for ANY non-foldable string, not only a promoted slot.
-     **Landed for LLVM (E4d-2b, iir-to-llvm 0.31.0):** `str`→`i64` at boundaries;
+     runs on **all 7 backends**. **Discovery:** a runtime string arriving as a
+     *call result / return value* is a NEW path beyond the E4-dyn foothold (which
+     only printed a branch-selected *local*): a backend must map `str` to its
+     handle type at function boundaries and take the runtime header-read path for
+     ANY non-foldable string, not only a promoted slot. Per-backend:
+     **LLVM (E4d-2b, iir-to-llvm 0.31.0)** `str`→`i64` at boundaries;
      `print_str`/`str_len` runtime path keyed on `!str_lens.contains(src)`;
-     `ret` of a literal-global str `ptrtoint`s to the handle. **Landed for WASM
-     (E4d-3b, iir-to-wasm 0.30.0):** `str` already types as i32; the validator now
-     accepts `str` on `call`/`ret`, and `print_str`/`str_len` `i32.load` the
-     header for any non-foldable string. JVM/CLR are the same change and will add
-     the last two columns. Bringing E4d-AL up also fixed a **latent native miscompile**
+     `ret` of a literal-global str `ptrtoint`s to the handle.
+     **WASM (E4d-3b, iir-to-wasm 0.30.0)** `str` types as i32; validator accepts
+     `str` on `call`/`ret`; `print_str`/`str_len` `i32.load` the header.
+     **JVM (iir-to-jvm-class-file 0.28.0)** `str` is a `java.lang.String`;
+     validator accepts `str` on `call`/`ret`. **CLR** `str` is a `System.String`;
+     already accepted `str` call/ret + lowered the returned string (no code change,
+     only added to the cell). **NativeAot / VM / JIT** already carried a call-result
+     runtime string. Bringing E4d-AL up also fixed a **latent native miscompile**
      (`strip_dead_aot_string_allocs` dropped all but the last buffer of a
      multi-block string alias → the not-last branch printed `""`; twig-aot 0.28.0).
    - **E4d-BA-input — BASIC string `INPUT`.** `INPUT A$` reads a runtime string

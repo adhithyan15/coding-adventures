@@ -892,11 +892,13 @@ const PROGRAMS: &[Prog] = &[
     //     validator now accepts `str` on `call`/`ret`, and `print_str`/`str_len`
     //     read the length via `i32.load` for any non-foldable string. Verified
     //     in-process via wasm-runtime.
+    //   * Jvm (E4d-JVM) — a `str` value is a `java.lang.String`; the validator now
+    //     accepts `str` on `call`/`ret`. Verified on real java.
+    //   * Clr — a `str` value is a `System.String`; it already accepted `str`
+    //     call/ret and lowered the returned string. Verified via the CLR simulator.
     //   * VM / JIT — tagged values: a returned string is printed like any value.
-    // Only JVM/CLR still take their runtime-string path solely for *promoted slot*
-    // operands, so a string **return value** fails there (they need the same
-    // str return-type / call-result typing). Extending them the same way will add
-    // the last two columns to this cell. Stdin-free; N=1>0 → `HI`.
+    // A `string procedure` — the first E4-dyn frontend feature — now runs on ALL
+    // SEVEN backends. Stdin-free; N=1>0 → `HI`.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -904,7 +906,7 @@ const PROGRAMS: &[Prog] = &[
                   if n > 0 then pick := 'HI' else pick := 'LO'; \
               print(pick(1)) end",
         expect: Expect::Stdout("HI"),
-        backends: &[NativeAot, Llvm, Wasm, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — scalar string variables in the current AL4 foothold. A
     // `string` scalar may be assigned from a literal, which emits `str_const`
@@ -3760,6 +3762,7 @@ fn proven_columns_do_not_silently_skip() {
         }
     }
 }
+
 
 
 
