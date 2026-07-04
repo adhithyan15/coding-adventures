@@ -216,23 +216,53 @@ pub enum Block {
         /// Enclosing-region span (D2 coarse).
         span: Span,
     },
-    /// A `tabular`/`tabular*` grid (from [`Node::Tabular`]).
+    /// A `tabular`/`tabular*` grid (from [`Node::Tabular`]) — optionally wrapped by a `table`
+    /// float that contributes a `\caption` and/or `\label` (D5).
     Table {
         /// The column spec captured verbatim (`"lcr"`), or `None`.
         col_spec: Option<String>,
         /// `rows[r][c]` is cell `c` of row `r`, each lowered to blocks.
         rows: Vec<Vec<Vec<Block>>>,
+        /// The `\caption{…}` of the enclosing `table` float, if any (D5). `None` for a bare
+        /// `tabular` with no float wrapper.
+        caption: Option<Caption>,
+        /// A `\label{…}` hoisted off the enclosing `table` float (the key, no braces), if any (D5).
+        label: Option<String>,
         /// Enclosing-region span (D2 coarse).
         span: Span,
     },
-    /// A display-math island (`\[…\]`, `$$…$$`) — kept as its source string (delegated to the
-    /// math frontend on demand).
+    /// A `figure`/`figure*` float (D5). `content` is the float body (e.g. an `\includegraphics`
+    /// command carried through as a paragraph) minus the `\caption`/`\label` markers, which are
+    /// lifted into `caption`/`label`.
+    Figure {
+        /// The float body, lowered to blocks, with the caption/label markers removed.
+        content: Vec<Block>,
+        /// The `\caption{…}`, lowered to inlines, if any.
+        caption: Option<Caption>,
+        /// A `\label{…}` hoisted off the float (the key, no braces), if any.
+        label: Option<String>,
+        /// Enclosing-region span (D2 coarse).
+        span: Span,
+    },
+    /// A verbatim code block (`verbatim`/`verbatim*`/`lstlisting`, D5). `verbatim` is the raw inner
+    /// text kept **unparsed** — a code listing is source, not marked-up LaTeX.
+    CodeBlock {
+        /// The raw inner text of the verbatim environment.
+        verbatim: String,
+        /// Enclosing-region span (D2 coarse).
+        span: Span,
+    },
+    /// A display-math island (`\[…\]`, `$$…$$`, or a named display-math environment such as
+    /// `equation`/`align`/`gather`, D5) — kept as its source string (delegated to the math frontend
+    /// on demand, never parsed here).
     DisplayMath {
         /// The exact inner math source.
         source: String,
         /// Enclosing-region span (D2 coarse).
         span: Span,
     },
+    /// A `quote`/`quotation` block quotation (D5), body recursively lowered to blocks.
+    Quote(Vec<Block>, Span),
     /// Any other `\begin{env}…\end{env}` block, recursed.
     Environment {
         /// The environment name.
@@ -244,6 +274,23 @@ pub enum Block {
     },
     /// An LTX01 node with no block meaning of its own — carried through verbatim (never dropped).
     Raw(Node, Span),
+}
+
+/// A `\caption{…}` on a float (D5): the caption content lowered to inlines, plus its coarse span.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Caption {
+    /// The caption content, lowered to inlines.
+    pub content: Vec<Inline>,
+    /// Enclosing-region span (D2 coarse).
+    pub span: Span,
+}
+
+impl Caption {
+    /// Span-stripped projection of the caption (its content inlines zeroed), for round-trip
+    /// equality that ignores byte offsets.
+    fn strip_spans(&self, z: Span) -> Caption {
+        Caption { content: strip_inlines(&self.content, z), span: z }
+    }
 }
 
 /// One entry of a [`Block::List`] — the D2 analogue of [`crate::ListItem`], with the `\item[term]`
@@ -775,9 +822,11 @@ fn block_span(b: &Block) -> Span {
         Block::Section { span, .. }
         | Block::List { span, .. }
         | Block::Table { span, .. }
+        | Block::Figure { span, .. }
+        | Block::CodeBlock { span, .. }
         | Block::DisplayMath { span, .. }
         | Block::Environment { span, .. } => *span,
-        Block::Paragraph(_, span) | Block::Raw(_, span) => *span,
+        Block::Paragraph(_, span) | Block::Quote(_, span) | Block::Raw(_, span) => *span,
     }
 }
 
@@ -818,16 +867,156 @@ fn lower_block(node: Node, region: Span) -> Block {
                 .into_iter()
                 .map(|row| row.into_iter().map(|cell| lower_blocks(cell, region)).collect())
                 .collect(),
+            caption: None, // set only when a `table` float wraps this tabular (see `lower_environment`).
+            label: None,
             span: region,
         },
         Node::Math { display: true, content } => Block::DisplayMath { source: content, span: region },
-        Node::Environment { name, body, .. } => {
-            Block::Environment { name, body: lower_blocks(body, region), span: region }
-        }
-        // A verbatim environment has no structured block model in D2 — carry it through verbatim
-        // (never dropped) so a later rung (D5 CodeBlock) can refine it without data loss.
+        // A `verbatim`/`verbatim*` environment is lexed raw (catcodes suspended) into a
+        // `VerbatimEnv` node; its content is source code, not marked-up LaTeX, so we keep it
+        // **unparsed** as a `CodeBlock` (D5).
+        Node::VerbatimEnv { content, .. } => Block::CodeBlock { verbatim: content, span: region },
+        // Every `\begin{env}…\end{env}` (floats, quotes, display-math envs, code listings, or an
+        // unknown env) is classified by name in `lower_environment` (D5).
+        Node::Environment { name, body, .. } => lower_environment(name, body, region),
+        // Anything else with no block model of its own — carried through verbatim (never dropped).
         other => Block::Raw(other, region),
     }
+}
+
+// ---------------------------------------------------------------------------------------------
+// D5 — environment classification: figures, table floats, code, display-math, quotes.
+// ---------------------------------------------------------------------------------------------
+
+/// The named display-math **environments** (`equation`, `align`, …). These are display math whose
+/// inner LaTeX is kept as a **source string** (delegated to the math frontend on demand — LTXDOC01
+/// never parses math itself). `\[…\]` / `$$…$$` already route through [`Node::Math`]; this closes
+/// the *named-environment* form. `align`/`gather`/`multline` carry `\\`-separated lines and `&`
+/// alignment points — all preserved verbatim in the source string, since we do not tokenize them.
+fn is_display_math_env(name: &str) -> bool {
+    matches!(
+        name,
+        "equation"
+            | "equation*"
+            | "align"
+            | "align*"
+            | "displaymath"
+            | "gather"
+            | "gather*"
+            | "multline"
+            | "multline*"
+            | "eqnarray"
+            | "eqnarray*"
+    )
+}
+
+/// Classify a `\begin{name}…\end{name}` environment into its D5 [`Block`], recursing the body
+/// through the same bounded [`lower_blocks`] fold every other block-list uses (so nesting and
+/// sectioning work uniformly inside floats/quotes). **Total & panic-free**: no `unwrap`/`expect`,
+/// no unchecked indexing; anything that does not classify cleanly falls back to a lossless
+/// [`Block::Environment`] / [`Block::Figure`] so no content is ever dropped.
+///
+/// | environment | → block |
+/// |-------------|---------|
+/// | `figure`, `figure*` | [`Block::Figure`] (body minus `\caption`/`\label`) |
+/// | `table`, `table*` | the inner [`Block::Table`] with the float's `\caption`/`\label` attached (or [`Block::Figure`] if no tabular inside) |
+/// | `quote`, `quotation` | [`Block::Quote`] |
+/// | display-math envs (see [`is_display_math_env`]) | [`Block::DisplayMath`] (source kept, unparsed) |
+/// | `lstlisting` | [`Block::CodeBlock`] (body rendered back to source text) |
+/// | any other | [`Block::Environment`] (recursed) — unchanged from D2 |
+fn lower_environment(name: String, body: Vec<Node>, region: Span) -> Block {
+    // A display-math environment: keep the inner LaTeX as a source string. We render the body's
+    // nodes back to source (the parser accepted the math tokens as ordinary nodes, since these
+    // are *text-mode* `\begin{equation}` wrappers) and trim the outer whitespace the wrapper adds.
+    if is_display_math_env(&name) {
+        return Block::DisplayMath { source: render_nodes(&body).trim().to_string(), span: region };
+    }
+    // `lstlisting` is *not* lexed raw (only `verbatim`/`verbatim*` are), so its body parsed as
+    // ordinary nodes; render it back to source to recover the listing text. (A perfectly faithful
+    // capture of `lstlisting` would need raw-lexing support in a later rung; rendering the parsed
+    // body back is lossless for the common case of plain code and keeps the fold total.)
+    if name == "lstlisting" {
+        return Block::CodeBlock { verbatim: render_nodes(&body), span: region };
+    }
+    if name == "quote" || name == "quotation" {
+        return Block::Quote(lower_blocks(body, region), region);
+    }
+
+    // Floats: lower the body first, then lift the `\caption`/`\label` markers out of it.
+    if name == "figure" || name == "figure*" {
+        let mut content = lower_blocks(body, region);
+        let (caption, label) = extract_caption_label(&mut content, region);
+        return Block::Figure { content, caption, label, span: region };
+    }
+    if name == "table" || name == "table*" {
+        let mut content = lower_blocks(body, region);
+        let (caption, label) = extract_caption_label(&mut content, region);
+        // Attach the float's caption/label to the inner `tabular` if there is one — the common,
+        // faithful shape (`\begin{table}…\begin{tabular}…\end{tabular}\caption{…}\end{table}`).
+        // The inner `tabular` was lowered to a `Block::Table` with `caption: None, label: None`;
+        // we rebuild it with the float's caption/label attached and return that block directly.
+        if let Some(idx) = content.iter().position(|b| matches!(b, Block::Table { .. })) {
+            if let Block::Table { col_spec, rows, span, .. } = content.remove(idx) {
+                return Block::Table { col_spec, rows, caption, label, span };
+            }
+        }
+        // No inner tabular — do not lose the float; treat it as a figure-shaped float so the
+        // caption/label are still attached and the body survives.
+        return Block::Figure { content, caption, label, span: region };
+    }
+
+    // Any other environment: recurse, unchanged from D2.
+    Block::Environment { name, body: lower_blocks(body, region), span: region }
+}
+
+/// Lift a `\caption{…}` and a `\label{…}` out of a float's lowered body, returning them and
+/// **removing** their marker inlines from `content` (so they are not double-counted). Everything
+/// that is *not* a caption or label stays in `content` — the fold never drops float content.
+///
+/// After [`lower_blocks`], a float's `\caption{X}` is an [`Inline::Raw`] wrapping a
+/// `Node::Command { name: "caption", … }` and its `\label{k}` is an [`Inline::CrossRef`] with
+/// `command == "label"`, both living inside the float's [`Block::Paragraph`]s (there is usually no
+/// `\par` between `\includegraphics`, `\caption`, and `\label`, so they fuse into one paragraph).
+/// We scan every paragraph, pull the **first** caption and **first** label out, and drop any
+/// paragraph left empty (whitespace-only) once its markers are removed. Total & panic-free.
+fn extract_caption_label(content: &mut Vec<Block>, region: Span) -> (Option<Caption>, Option<String>) {
+    let mut caption: Option<Caption> = None;
+    let mut label: Option<String> = None;
+
+    for block in content.iter_mut() {
+        if let Block::Paragraph(inlines, _) = block {
+            // Walk the paragraph, keeping non-marker inlines and lifting the first caption/label.
+            let mut kept: Vec<Inline> = Vec::with_capacity(inlines.len());
+            for inline in std::mem::take(inlines) {
+                match &inline {
+                    Inline::Raw(Node::Command { name, arguments, optional }, _)
+                        if name == "caption" && optional.is_empty() && caption.is_none() =>
+                    {
+                        // `\caption{X}` — lower its mandatory argument to inlines.
+                        let content_inlines = arguments
+                            .first()
+                            .map(|arg| lower_inlines(arg.clone(), region))
+                            .unwrap_or_default();
+                        caption = Some(Caption { content: content_inlines, span: region });
+                    }
+                    Inline::CrossRef { command, target, .. }
+                        if command == "label" && label.is_none() =>
+                    {
+                        label = Some(target.clone());
+                    }
+                    _ => kept.push(inline),
+                }
+            }
+            *inlines = kept;
+        }
+    }
+    // Drop any paragraph that is now empty or whitespace-only (its only content was a marker).
+    content.retain(|b| match b {
+        Block::Paragraph(inlines, _) => !inlines.iter().all(|i| matches!(i, Inline::Space(_))),
+        _ => true,
+    });
+
+    (caption, label)
 }
 
 /// Lower one [`ListItem`] into a [`DocListItem`].
@@ -1052,7 +1241,13 @@ impl Block {
                 out.push_str(kind.env());
                 out.push('}');
             }
-            Block::Table { col_spec, rows, .. } => {
+            Block::Table { col_spec, rows, caption, label, .. } => {
+                // When the tabular carries a float's caption/label, wrap it back in a `table`
+                // float so re-parsing re-attaches them (round-trip fixed point).
+                let floated = caption.is_some() || label.is_some();
+                if floated {
+                    out.push_str("\\begin{table}");
+                }
                 out.push_str("\\begin{tabular}");
                 if let Some(spec) = col_spec {
                     out.push('{');
@@ -1071,11 +1266,34 @@ impl Block {
                     }
                 }
                 out.push_str("\\end{tabular}");
+                if floated {
+                    write_caption_label(caption, label, out);
+                    out.push_str("\\end{table}");
+                }
+            }
+            Block::Figure { content, caption, label, .. } => {
+                out.push_str("\\begin{figure}");
+                write_blocks(content, out);
+                write_caption_label(caption, label, out);
+                out.push_str("\\end{figure}");
+            }
+            Block::CodeBlock { verbatim, .. } => {
+                // Re-emit as a `verbatim` environment (which re-lexes raw to a `VerbatimEnv` →
+                // `CodeBlock`, a fixed point). `lstlisting`-sourced blocks round-trip *through*
+                // `verbatim` — the text is preserved, only the fence name normalizes.
+                out.push_str("\\begin{verbatim}");
+                out.push_str(verbatim);
+                out.push_str("\\end{verbatim}");
             }
             Block::DisplayMath { source, .. } => {
                 out.push_str("$$");
                 out.push_str(source);
                 out.push_str("$$");
+            }
+            Block::Quote(body, _) => {
+                out.push_str("\\begin{quote}");
+                write_blocks(body, out);
+                out.push_str("\\end{quote}");
             }
             Block::Environment { name, body, .. } => {
                 out.push_str("\\begin{");
@@ -1114,14 +1332,24 @@ impl Block {
                     .collect(),
                 span: z,
             },
-            Block::Table { col_spec, rows, .. } => Block::Table {
+            Block::Table { col_spec, rows, caption, label, .. } => Block::Table {
                 col_spec: col_spec.clone(),
                 rows: rows
                     .iter()
                     .map(|row| row.iter().map(|cell| cell.iter().map(|b| b.strip_spans(z)).collect()).collect())
                     .collect(),
+                caption: caption.as_ref().map(|c| c.strip_spans(z)),
+                label: label.clone(),
                 span: z,
             },
+            Block::Figure { content, caption, label, .. } => Block::Figure {
+                content: content.iter().map(|b| b.strip_spans(z)).collect(),
+                caption: caption.as_ref().map(|c| c.strip_spans(z)),
+                label: label.clone(),
+                span: z,
+            },
+            Block::CodeBlock { verbatim, .. } => Block::CodeBlock { verbatim: verbatim.clone(), span: z },
+            Block::Quote(body, _) => Block::Quote(body.iter().map(|b| b.strip_spans(z)).collect(), z),
             Block::DisplayMath { source, .. } => Block::DisplayMath { source: source.clone(), span: z },
             Block::Environment { name, body, .. } => Block::Environment {
                 name: name.clone(),
@@ -1230,6 +1458,21 @@ fn write_blocks(blocks: &[Block], out: &mut String) {
     }
 }
 
+/// Render a float's `\caption{…}` and hoisted `\label{…}` back to source (D5), in that order —
+/// the shape `extract_caption_label` re-recognizes on the round-trip.
+fn write_caption_label(caption: &Option<Caption>, label: &Option<String>, out: &mut String) {
+    if let Some(cap) = caption {
+        out.push_str("\\caption{");
+        write_inlines(&cap.content, out);
+        out.push('}');
+    }
+    if let Some(key) = label {
+        out.push_str("\\label{");
+        out.push_str(key);
+        out.push('}');
+    }
+}
+
 /// Render a `Vec<Inline>` back to LaTeX.
 fn write_inlines(inlines: &[Inline], out: &mut String) {
     for inl in inlines {
@@ -1301,8 +1544,18 @@ mod tests {
                     }
                 }
             }
-            Block::DisplayMath { .. } | Block::Raw(..) => {}
-            Block::Environment { body, .. } => {
+            Block::DisplayMath { .. } | Block::CodeBlock { .. } | Block::Raw(..) => {}
+            Block::Figure { content, caption, .. } => {
+                if let Some(cap) = caption {
+                    for i in &cap.content {
+                        check_inline(i, span);
+                    }
+                }
+                for b in content {
+                    check_block(b, span);
+                }
+            }
+            Block::Environment { body, .. } | Block::Quote(body, _) => {
                 for b in body {
                     check_block(b, span);
                 }
@@ -1339,9 +1592,11 @@ mod tests {
             Block::Section { span, .. }
             | Block::List { span, .. }
             | Block::Table { span, .. }
+            | Block::Figure { span, .. }
+            | Block::CodeBlock { span, .. }
             | Block::DisplayMath { span, .. }
             | Block::Environment { span, .. } => *span,
-            Block::Paragraph(_, span) | Block::Raw(_, span) => *span,
+            Block::Paragraph(_, span) | Block::Quote(_, span) | Block::Raw(_, span) => *span,
         }
     }
 
@@ -1909,6 +2164,134 @@ mod tests {
                 doc.strip_spans(),
                 redoc.strip_spans(),
                 "D4 broke the document round-trip:\n src = {src:?}\n rendered = {rendered:?}"
+            );
+        }
+    }
+
+    // -- D5: floats, captions, code & display-math tests --------------------------------------
+
+    #[test]
+    fn figure_with_caption_and_label() {
+        // A `figure` float with an \includegraphics-ish body, a \caption, and a \label.
+        let src = concat!(
+            r"\begin{document}",
+            r"\begin{figure}\includegraphics{plot.png}\caption{A plot}\label{fig:plot}\end{figure}",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+        let fig = doc.body.iter().find(|b| matches!(b, Block::Figure { .. })).expect("figure");
+        if let Block::Figure { content, caption, label, .. } = fig {
+            // Caption text is "A plot"; label is "fig:plot".
+            let cap = caption.as_ref().expect("caption present");
+            assert_eq!(inline_text(&cap.content), "A plot");
+            assert_eq!(label.as_deref(), Some("fig:plot"));
+            // The \includegraphics command survives in the body (nothing dropped), and neither the
+            // caption nor the label lingers as body content.
+            assert!(
+                content.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                    if inls.iter().any(|i| matches!(i, Inline::Raw(Node::Command { name, .. }, _)
+                        if name == "includegraphics")))),
+                "the \\includegraphics body is preserved"
+            );
+            assert!(
+                !content.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                    if inls.iter().any(|i| matches!(i, Inline::Raw(Node::Command { name, .. }, _)
+                        if name == "caption")))),
+                "the \\caption marker is lifted out of the body"
+            );
+        }
+    }
+
+    #[test]
+    fn table_float_attaches_caption_to_inner_tabular() {
+        // A `table` float wrapping a `tabular`, with a \caption and \label — the caption/label
+        // attach to the inner Block::Table.
+        let src = concat!(
+            r"\begin{document}",
+            r"\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{Grid}\label{tab:g}\end{table}",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+        let tbl = doc.body.iter().find(|b| matches!(b, Block::Table { .. })).expect("table");
+        if let Block::Table { rows, caption, label, .. } = tbl {
+            assert_eq!(rows.len(), 2, "two rows survive");
+            let cap = caption.as_ref().expect("float caption attached to tabular");
+            assert_eq!(inline_text(&cap.content), "Grid");
+            assert_eq!(label.as_deref(), Some("tab:g"));
+        }
+        // A bare tabular (no float) has no caption/label.
+        let bare = parse_document(r"\begin{document}\begin{tabular}{c}x\end{tabular}\end{document}")
+            .expect("parse");
+        assert!(bare.body.iter().any(|b| matches!(b, Block::Table { caption: None, label: None, .. })));
+    }
+
+    #[test]
+    fn verbatim_becomes_codeblock_with_raw_text() {
+        // The verbatim body is captured raw — `{b}`, `$x$`, and the newline are all literal.
+        let src = "\\begin{document}\\begin{verbatim}fn main() { $x }\ncode\\end{verbatim}\\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let code = doc.body.iter().find(|b| matches!(b, Block::CodeBlock { .. })).expect("codeblock");
+        if let Block::CodeBlock { verbatim, .. } = code {
+            assert_eq!(verbatim, "fn main() { $x }\ncode");
+        }
+    }
+
+    #[test]
+    fn quote_env_becomes_quote_block() {
+        let src = r"\begin{document}\begin{quote}A quoted \emph{passage}.\end{quote}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let q = doc.body.iter().find(|b| matches!(b, Block::Quote(..))).expect("quote");
+        if let Block::Quote(body, _) = q {
+            assert!(body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Emph(..))))));
+        }
+    }
+
+    #[test]
+    fn equation_env_becomes_display_math_with_source() {
+        // Named display-math environments keep their inner LaTeX as an unparsed source string.
+        let src = r"\begin{document}\begin{equation}E = mc^2\end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let dm = doc.body.iter().find(|b| matches!(b, Block::DisplayMath { .. })).expect("display math");
+        if let Block::DisplayMath { source, .. } = dm {
+            assert!(source.contains("E = mc^2"), "kept the equation source: {source:?}");
+        }
+        // `align` (with `\\` and `&`) is also a display-math env.
+        let al = parse_document(r"\begin{document}\begin{align}a &= b \\ c &= d\end{align}\end{document}")
+            .expect("parse");
+        assert!(al.body.iter().any(|b| matches!(b, Block::DisplayMath { .. })));
+    }
+
+    #[test]
+    fn unknown_env_still_becomes_environment() {
+        let src = r"\begin{document}\begin{center}centered\end{center}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert!(doc.body.iter().any(|b| matches!(b, Block::Environment { name, .. } if name == "center")));
+    }
+
+    #[test]
+    fn d5_round_trip_fixed_point() {
+        // A doc with a figure (caption+label), a table float, a verbatim, an equation, and a quote
+        // must be a to_latex fixed point (modulo spans).
+        for src in [
+            concat!(
+                r"\begin{document}",
+                r"\begin{figure}\includegraphics{p.png}\caption{Cap}\label{fig:p}\end{figure}",
+                r"\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{T}\label{tab:t}\end{table}",
+                r"\begin{quote}Quoted text.\end{quote}",
+                r"\begin{equation}E = mc^2\end{equation}",
+                r"\end{document}",
+            ),
+            "\\begin{document}\\begin{verbatim}raw {code} $here\nline two\\end{verbatim}\\end{document}",
+            r"\begin{document}\begin{figure}\caption{No graphic}\end{figure}\end{document}",
+        ] {
+            let doc = parse_document(src).expect("parse");
+            let rendered = doc.to_latex();
+            let redoc = parse_document(&rendered).expect("re-parse");
+            assert_eq!(
+                doc.strip_spans(),
+                redoc.strip_spans(),
+                "D5 round-trip fixed point failed:\n src = {src:?}\n rendered = {rendered:?}"
             );
         }
     }
