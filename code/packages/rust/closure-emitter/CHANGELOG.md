@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.30.1] - 2026-07-04
+
+### Added — CLOC12.166 PR3: CodePrinter `super` conformance port
+
+Ported the upstream `CodePrinterTest` **super** printing cases into
+`tests/upstream/code_printer_super_test.rs` (nineteenth CodePrinter port; test-
+only, no library change). 7 active `#[test]`s isolating `emit_super` + the
+`PREC_PRIMARY` classification from `Expression::Super` (CLOC12.166 PR1): the
+bare keyword `super`, as a member object (`super.x`), call callee (`super()`),
+call argument (`f(super)`), member chain (`super.a.b`), method call
+(`super.m()`), and left bare under a binary parent (`super+1`). Registered via
+an explicit `[[test]]` entry; ATTRIBUTION.md updated. Inputs are hand-
+constructed AST, so the port does not depend on the bridge (`super` bridging is
+CLOC12.166 PR2). (CLOC12.166 PR3)
+
+
 ## [0.30.0] - 2026-07-04
 
 ### Added — CLOC12.166: emit `Super` (`super`)
