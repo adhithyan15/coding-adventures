@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.30.0] - 2026-07-04
+
+### Added — CLOC12.166 PR2: bridge `super` → `Expression::Super` (closes gap-167)
+
+The bridge now converts the `super` primary to `Expression::Super { cv }`
+instead of declining it to `UnsupportedSyntax` (dragging the whole file to
+WHITESPACE_ONLY). Unlike `this` (gap-166, a bare keyword handled in
+`convert_primary_token`), `super` is emitted by the grammar as a bare *token*
+directly among the `member_expression` children (not wrapped in a
+`primary_expression` Node), so `convert_member_expression` gains a `super`
+base-branch parallel to the `new` branch: the `super` token becomes the base
+`Expression::Super` and the existing suffix-fold loop composes `.NAME` / `[expr]`
+/ call arguments onto it (`super.m`, `super[k]`, `super.m(a)`). The
+`nodes.is_empty()` guard is relaxed for the `super`-token base (it has no Node
+child), and a lone `super` returns `Super` directly. Like `this`, `super` was
+already parseable, so this is a pure bridge slice — **no grammar work**. 4 new
+bridge unit tests (`super.x`, `super[k]`, `super.m(1 + 2)`). (CLOC12.166 PR2)
+
+
 ## [0.29.0] - 2026-07-04
 
 ### Added — CLOC12.165 PR2: bridge `this` → `Expression::ThisExpression` (closes gap-166)
