@@ -1,5 +1,33 @@
 # Changelog — `twig-aot`
 
+## 0.28.0 — 2026-07-03 — E4d-4 fix: keep every buffer of a multi-block string alias
+
+Fixed a latent native miscompile in `strip_dead_aot_string_allocs`, surfaced by
+ALGOL string procedures (a runtime string *returned* from a procedure and printed
+by the caller).
+
+`lower_string_literals_for_aot` emits an alias `mov s = buf` after each
+`str_const`'s buffer so the str variable `s` can be used by `call`/`ret`. The
+dead-alloc stripper collected these in a `HashMap<alias, buf>` keyed by the alias
+name — assuming one buffer per string variable. But an E4d-4 promoted
+(branch-selected) variable is the dest of `str_const` in **more than one basic
+block**, so a single alias name (`s`) maps to **several** buffers (one per
+branch). The map kept only the last, and the stripper then deleted the other
+branches' `alloc_bytes`/`store_byte` blocks as "dead" even though a live
+`mov s = buf` still referenced them. At run time the branch that selected an
+earlier buffer read freed/empty memory (e.g. printed `""`). The E4-dyn foothold
+only dodged this because the input it tested happened to select the *last-defined*
+branch's buffer.
+
+Fix: track every `(alias, buffer)` pair (a `Vec`, not an alias-keyed map). A
+buffer is live iff it is directly referenced **or** its alias is live — so **all**
+buffers of a live alias survive. Regression test
+`multi_block_string_keeps_every_branch_buffer` builds a two-branch string
+(`"LONGER"`/`"HI"`) and asserts both `alloc_bytes` and both alias-`mov`s survive.
+This also hardens the E4d-4 foothold (a program that selects the earlier branch
+now prints correctly) and is what lets an ALGOL `string procedure` return a
+runtime string on NativeAot.
+
 ## 0.27.0 — 2026-07-03 — E4-dyn E4d-4: runtime (branch-selected) strings on native
 
 Completes the E4-dyn backend ladder: the runtime branch-selected-string foothold

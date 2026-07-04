@@ -882,9 +882,13 @@ impl Compiler {
                 )))
             }
         };
-        if ret == ScalarType::String {
-            return Err(CompileError::Unsupported("string procedures".into()));
-        }
+        // E4-dyn payoff (E4d-AL): `string procedure`s are now supported. The
+        // result variable (the procedure name) holds a runtime string handle,
+        // which every backend can carry and `print` since the E4-dyn foothold
+        // landed on all seven columns. A body that assigns the result in more
+        // than one branch (`if … then p := "HI" else p := "LO"`) makes the
+        // result a genuinely runtime string; the backends' E4-dyn promotion
+        // reads its length from the buffer header at run time.
 
         // Parameter names, in call order, from `formal_params`.
         let param_names: Vec<String> = match first_direct_node(proc_decl, "formal_params") {
@@ -1023,12 +1027,26 @@ impl Compiler {
         // value; seed it with a default so a path that never assigns it still
         // returns a defined value.
         let result_slot = self.declare_var(&name, ret, false)?;
-        self.emit(IIRInstr::new(
-            "const",
-            Some(result_slot.clone()),
-            vec![ret.default_operand()],
-            ret.iir(),
-        ));
+        if ret == ScalarType::String {
+            // A string result is a runtime handle, so its default must be a real
+            // (empty) string buffer, not a `const 0`. Seed it with `str_const ""`
+            // — the same shape a literal assignment produces — and mark it
+            // literal-backed so an unassigned path still yields a printable value.
+            self.emit(IIRInstr::new(
+                "str_const",
+                Some(result_slot.clone()),
+                vec![Operand::Str(String::new())],
+                "str",
+            ));
+            self.literal_string_slots.insert(result_slot.clone());
+        } else {
+            self.emit(IIRInstr::new(
+                "const",
+                Some(result_slot.clone()),
+                vec![ret.default_operand()],
+                ret.iir(),
+            ));
+        }
 
         // ── lower the body ───────────────────────────────────────────────
         let body = first_direct_node(proc_decl, "proc_body")
@@ -1174,9 +1192,26 @@ impl Compiler {
                 continue;
             }
 
-            return Err(CompileError::Unsupported(format!(
-                "standard output procedure {name:?} currently supports string literals and literal-backed string variables only"
-            )));
+            // E4-dyn payoff (E4d-AL): a general string-valued expression — most
+            // importantly a `string procedure` call, e.g. `print(pick(1))`.
+            // Evaluate it to a runtime string handle and print it. This is now
+            // sound on every backend because the E4-dyn foothold proved
+            // `print_str` of a runtime string on all seven columns, so — unlike
+            // the literal/variable fast paths above — no literal-backing is
+            // required. A non-string result is a type error.
+            let value = self.emit_expr(actual)?;
+            if value.ty != ScalarType::String {
+                return Err(CompileError::Type(format!(
+                    "standard output procedure {name:?} cannot print a {} value",
+                    value.ty.name()
+                )));
+            }
+            self.emit(IIRInstr::new(
+                "print_str",
+                None,
+                vec![Operand::Var(value.slot)],
+                "void",
+            ));
         }
 
         Ok(true)
@@ -3944,10 +3979,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_numeric_argument_rejects_until_string_expressions_land() {
+    fn al4_print_numeric_argument_rejects_as_wrong_type() {
+        // `print` is a string-output procedure; a numeric argument is a type
+        // error. Since E4d-AL added a general string-expression path, `print(42)`
+        // now evaluates the argument and rejects it by *type* (a clearer message)
+        // rather than by the old literal-only shape check.
         let err = compile_source("begin print(42) end", "test")
-            .expect_err("numeric print is outside the AL4 literal-string slice");
-        assert!(format!("{err:?}").contains("string literals and literal-backed string variables"));
+            .expect_err("numeric print is a type error for the string-output procedure");
+        assert!(
+            format!("{err:?}").contains("cannot print a integer value"),
+            "expected an integer-type rejection, got: {err:?}"
+        );
     }
 
     #[test]
@@ -3985,6 +4027,79 @@ mod tests {
         let err = compile_source("begin string s; print(s) end", "test")
             .expect_err("unassigned string variables are not literal-backed");
         assert!(format!("{err:?}").contains("literal-backed string variable"));
+    }
+
+    // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────
+
+    /// A `string procedure` returns a runtime string. Here the result is chosen
+    /// by control flow (`if n > 0 then pick := 'HI' else pick := 'LO'`), so the
+    /// procedure name `pick` is the dest of `str_const` in two basic blocks — a
+    /// genuinely runtime string the backends carry as a handle (E4-dyn). The
+    /// call site `print(pick(1))` evaluates the call and prints the result.
+    const STRING_PROC_PROG: &str =
+        "begin string procedure pick(n); value n; integer n; \
+             if n > 0 then pick := 'HI' else pick := 'LO'; \
+         print(pick(1)) end";
+
+    #[test]
+    fn string_procedure_returns_runtime_string_and_prints() {
+        let module = compile_source(STRING_PROC_PROG, "test")
+            .expect("string procedure compiles");
+
+        // The procedure lowers to its own function returning `str`.
+        let pick = module
+            .functions
+            .iter()
+            .find(|f| f.name == "pick")
+            .expect("string procedure `pick` is a function");
+        assert_eq!(pick.return_type, "str", "pick returns a runtime string handle");
+        // Its result is assigned by str_const in the two branches — a runtime
+        // (branch-selected) string, exactly the E4-dyn foothold shape.
+        let branch_writes = pick
+            .instructions
+            .iter()
+            .filter(|i| i.op == "str_const" && i.dest.as_deref() == Some("pick"))
+            .count();
+        assert!(
+            branch_writes >= 2,
+            "pick's result must be assigned in both branches (str_const×2): {:?}",
+            pick.instructions
+        );
+        // It returns the result slot as a `str`.
+        assert!(
+            pick.instructions.iter().any(|i| {
+                i.op == "ret"
+                    && i.type_hint == "str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "pick")
+            }),
+            "pick must `ret str pick`: {:?}",
+            pick.instructions
+        );
+
+        // main calls pick and prints the returned handle.
+        let main = module
+            .functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("has main");
+        let call = main
+            .instructions
+            .iter()
+            .find(|i| {
+                i.op == "call"
+                    && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "pick")
+            })
+            .expect("main calls pick");
+        let call_dest = call.dest.clone().expect("call has a dest");
+        assert_eq!(call.type_hint, "str", "the call result is a runtime string");
+        assert!(
+            main.instructions.iter().any(|i| {
+                i.op == "print_str"
+                    && matches!(i.srcs.first(), Some(Operand::Var(v)) if *v == call_dest)
+            }),
+            "print(pick(1)) must print the call's runtime-string result: {:?}",
+            main.instructions
+        );
     }
 
     #[test]
