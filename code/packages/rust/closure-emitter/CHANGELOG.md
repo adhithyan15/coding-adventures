@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.29.0] - 2026-07-04
+
+### Added — CLOC12.165: `emit_this` (`this`)
+
+Added `emit_this` + the `Expression::ThisExpression` dispatch arm and its `PREC_PRIMARY` classification. `this` prints as the bare four-character keyword — a primary that never needs wrapping in any parent (`this.x`, `this()`, `f(this)`, `this+1` all print bare) and never forces a paren around an operand. Reachable via hand-constructed AST today; the bridge conversion of `this` (gap-166) lands as CLOC12.165 PR2. (CLOC12.165)
+
+
 ## [0.28.1] - 2026-07-04
 
 ### Added — CLOC12.164 PR3: CodePrinter await conformance port

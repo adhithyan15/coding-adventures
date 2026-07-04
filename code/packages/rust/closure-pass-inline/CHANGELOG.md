@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.25.8] - 2026-07-04
+
+### Changed — CLOC12.165: `ThisExpression` exhaustive-match arms
+
+Added `Expression::ThisExpression` arms to the pass's exhaustive expression matches (node-count → 0 sub-nodes; the collect/tally/substitute/rename traversals → no-op), keeping the pass exhaustive over the new `javascript-ast` leaf variant (part of the CLOC12.165 atomic node PR1). `this` is deliberately left OUT of the trivial-/pure-expression predicates: `this` is bound at the call site, so treating it as a freely-substitutable primary would be unsound. The inliner therefore handles it conservatively. No behaviour change to any existing node.
+
+
 ## [0.25.7] - 2026-07-04
 
 ### Changed — CLOC12.164: `AwaitExpression` traversal arms

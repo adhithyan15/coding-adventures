@@ -849,6 +849,9 @@ fn walk_expression(
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` binds no lexical name — it is resolved by the runtime, not by
+        // scope analysis — so it introduces and references nothing.
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             walk_expression(&be.left, ctx, analysis, pending);

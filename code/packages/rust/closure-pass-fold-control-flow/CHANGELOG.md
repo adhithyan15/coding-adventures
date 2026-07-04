@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.20.8] - 2026-07-04
+
+### Changed — CLOC12.165: `ThisExpression` exhaustive-match + `expression_cv` arm
+
+Added `Expression::ThisExpression` arms to both the rebuild match (clones the leaf through, like the literals) and the `expression_cv` accessor (returns its `cv`), keeping the pass exhaustive over the new `javascript-ast` leaf variant (part of the CLOC12.165 atomic node PR1). No behaviour change to any existing node.
+
+
 ## [0.20.7] - 2026-07-04
 
 ### Changed — CLOC12.164: `AwaitExpression` exhaustive-match arm

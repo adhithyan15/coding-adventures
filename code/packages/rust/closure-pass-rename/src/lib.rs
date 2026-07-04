@@ -912,6 +912,8 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a reserved-word leaf — never a renameable identifier.
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             collect_all_idents_expr(&be.left, out);
@@ -1219,6 +1221,8 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // `this` is a reserved-word leaf — never a renameable identifier.
+        | Expression::ThisExpression(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             rewrite_uses_expr(&mut be.left, map);

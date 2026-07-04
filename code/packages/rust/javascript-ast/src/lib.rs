@@ -142,7 +142,7 @@ pub use expression::{
     SequenceExpression, SpreadElement,
     StringLiteral, TaggedTemplateExpression, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
     UndefinedLiteral, UpdateExpression, UpdateOperator,
-    AwaitExpression, YieldExpression,
+    AwaitExpression, ThisExpression, YieldExpression,
 };
 pub use statement::{
     BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,

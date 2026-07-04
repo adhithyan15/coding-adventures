@@ -64,6 +64,7 @@ pub enum Expression {
     SpreadElement(SpreadElement),
     YieldExpression(YieldExpression),
     AwaitExpression(AwaitExpression),
+    ThisExpression(ThisExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -580,6 +581,38 @@ pub struct AwaitExpression {
     pub argument: Box<Expression>,
 }
 
+/// The `this` keyword — a primary expression that reads the current
+/// execution context's `this` binding:
+///
+/// ```text
+///   this            the receiver of the enclosing method / the global-or-undefined
+///   this.x          member access off the receiver
+///   f(this)         pass the receiver as an argument
+/// ```
+///
+/// # Shape
+///
+/// `this` is a **leaf** — it carries no operand and no payload beyond its
+/// `cv` (the same shape as [`NullLiteral`] / [`UndefinedLiteral`]). ESTree
+/// models it as its own `ThisExpression` node rather than an
+/// `Identifier { name: "this" }`, because `this` is a reserved word: it can
+/// never be a variable name, so passes that rename identifiers must never
+/// touch it. Giving it a dedicated variant lets those passes pattern-match
+/// it out structurally instead of string-comparing every identifier name.
+///
+/// # Precedence
+///
+/// `this` binds at **primary** strength — the tightest level, like an
+/// identifier or a parenthesised group. It never needs wrapping in any
+/// parent context, and no parent operand ever forces a paren around it. The
+/// emitter therefore tags it `PREC_PRIMARY` and prints the bare keyword.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ThisExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+}
+
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the
 /// `property` is conventionally an [`Expression::Identifier`]);
 /// `computed = true` ↔ `obj[key]` (the `property` is any expression).
@@ -1010,6 +1043,21 @@ mod tests {
         let json = serde_json::to_string(&u).expect("serialize");
         assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
         assert_eq!(u.clone(), roundtrip(u));
+    }
+
+    #[test]
+    fn this_expression_roundtrips_traced() {
+        let t = Expression::ThisExpression(ThisExpression { cv: Some("this.1".to_string()) });
+        assert_eq!(t.clone(), roundtrip(t.clone()));
+        assert_eq!(type_tag(&t), "ThisExpression");
+    }
+
+    #[test]
+    fn this_expression_untraced_omits_cv() {
+        let t = Expression::ThisExpression(ThisExpression { cv: None });
+        let json = serde_json::to_string(&t).expect("serialize");
+        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(t.clone(), roundtrip(t));
     }
 
     #[test]
