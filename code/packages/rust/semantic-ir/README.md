@@ -79,8 +79,9 @@ What's covered:
 - DirectCall, IndirectCall, BuiltinCall
 - MakeClosure
 - Intrinsic with escape-hatch discipline
-- SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map)
-  — SIR21: `Int` carries an `IntSpec { width, signed, overflow }`; `Dynamic` (was `Any`) is the top type
+- SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map, Ptr, Struct, Optional)
+  — SIR21: `Int` carries an `IntSpec { width, signed, overflow }`; `Dynamic` (was `Any`) is the top type;
+  `Ptr`/`Struct`/`Optional` (T1b) are source-fidelity types for typed frontends
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

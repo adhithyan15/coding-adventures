@@ -450,7 +450,8 @@ One PR per row; backend rows fan out in parallel after the core rows land.
 |---|-------|---------|
 | T0 | `code/specs/` | this spec |
 | T1a ✅ | `semantic-ir` | Phase-0 core: `Any→Dynamic` rename + `Int→Int{IntSpec}` (`IntSpec`/`IntWidth`/`Overflow`, derived bounds). Behaviour-preserving; serialisation byte-identical (surface keyword stays `any`, default int prints `int`); no version bump yet. *(Done — CHANGELOG 0.16.0.)* |
-| T1b | `semantic-ir` | Additive source-fidelity types `Ptr`/`Struct`/`Optional`, new `Feature` flags (`SizedIntegers`/`Unsigned`/`WrappingArithmetic`/`FixedArrays`/`Pointers`/`Structs`/`Bignum`), `Seq.len` for fixed arrays, validator updates. Bumps `CURRENT_SIR_VERSION` (first new text tokens). |
+| T1b ✅ | `semantic-ir` | Additive source-fidelity types `Ptr`/`Struct`/`Optional` + seven new `Feature` flags (`SizedIntegers`/`Unsigned`/`WrappingArithmetic`/`FixedArrays`/`Pointers`/`Structs`/`Bignum`). Bumps `CURRENT_SIR_VERSION` `0→1` (first new text tokens). *(Done — CHANGELOG 0.17.0.)* |
+| T1c | `semantic-ir` | Reshape existing containers to the SIR21 lattice: `Seq(elem)` → `Seq { elem, len: Option<u64> }` (fixed C arrays) and `Map(val)` → `Map { key, val }`. Deferred out of T1b because these *change* existing variant shapes (ripple to `Seq`/`Map` consumers) rather than adding new ones. |
 | T2 | conformance harness crate | reference oracle (P2) + differential runner (P1) + coverage gate (P5), wired to the existing backends on `Dynamic`/`Arbitrary` only (Phase 1 net). |
 | T3 | `semantic-ir` | type-directed op-selection rules + `int.max/min/width` const-intrinsics + `div_floor/div_trunc/div_true` split. |
 | T4–T8 | one per existing backend (py, ts, js, go, rust) | sized-integer lowering per the faithfulness table; add conformance cases; pass P6. JS/BigInt gets extra scrutiny. |

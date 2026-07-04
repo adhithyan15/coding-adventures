@@ -28,6 +28,13 @@ use std::fmt;
 /// | `StringInterpolation`      | an `Expr::StrConcat` node             |
 /// | `DefaultParams`            | a param with `default = Some(_)`      |
 /// | `KeywordParams`            | a `Keyword` param or `KeywordArg`     |
+/// | `SizedIntegers`            | an `Int` of concrete (non-`Arbitrary`) width |
+/// | `Unsigned`                 | an `Int` with `signed == false`       |
+/// | `WrappingArithmetic`       | an int op with a non-`Arbitrary` overflow mode |
+/// | `FixedArrays`              | a fixed-length `Seq` (C array)        |
+/// | `Pointers`                 | a `SirType::Ptr`                      |
+/// | `Structs`                  | a `SirType::Struct`                   |
+/// | `Bignum`                   | an arbitrary-precision `Int`          |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -113,6 +120,42 @@ pub enum Feature {
     /// support.  Emission (backends) and lowering (frontends) land in
     /// follow-up PRs.
     KeywordParams,
+    // ── SIR21 T1b (typed integers & source-fidelity types) ───────────
+    /// The module uses at least one integer with a **concrete width**
+    /// (an `IntSpec` whose width is not `Arbitrary`).  A backend that
+    /// accepts this promises to honour the width's min/max/modulus per
+    /// the SIR21 faithfulness contract.  A purely-dynamic (Ruby/Python)
+    /// module never sets this; a C module does.
+    SizedIntegers,
+    /// The module uses at least one **unsigned** integer (`IntSpec`
+    /// with `signed == false`).  Called out separately from
+    /// `SizedIntegers` because some targets (Java) lack native unsigned
+    /// types and must lower via the unsigned-op family.
+    Unsigned,
+    /// The module uses an integer op whose overflow mode is
+    /// `Wrap`/`Saturate`/`Checked`/`Trap` (i.e. *not* `Arbitrary`).  A
+    /// backend accepting this must realise the declared overflow
+    /// behaviour, not silently promote to bignum.
+    WrappingArithmetic,
+    /// The module uses a fixed-length sequence (`Seq` with a known
+    /// length — a C array).  Backends without fixed arrays lower to
+    /// their growable list type; this flag lets a backend that *needs*
+    /// the distinction (C) see it.
+    FixedArrays,
+    /// The module uses a pointer/reference type (`SirType::Ptr`).
+    /// Dynamic targets lower it to a reference; targets without
+    /// pointers reject via this flag.
+    Pointers,
+    /// The module uses a nominal record type (`SirType::Struct`).
+    /// Dynamic targets lower it to a record/object.
+    Structs,
+    /// The module uses an **arbitrary-precision** integer
+    /// (`IntWidth::Arbitrary`) — the Ruby/Python integer that grows.
+    /// A backend without a bignum runtime must reject rather than
+    /// silently truncate; this is the flag it checks.  (Existing
+    /// dynamic backends implicitly support this; the flag makes the
+    /// requirement explicit for the sized-integer cascade.)
+    Bignum,
 }
 
 impl Feature {
@@ -143,6 +186,13 @@ impl Feature {
         Feature::StringInterpolation,
         Feature::DefaultParams,
         Feature::KeywordParams,
+        Feature::SizedIntegers,
+        Feature::Unsigned,
+        Feature::WrappingArithmetic,
+        Feature::FixedArrays,
+        Feature::Pointers,
+        Feature::Structs,
+        Feature::Bignum,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -173,6 +223,13 @@ impl Feature {
             Feature::StringInterpolation => "string-interpolation",
             Feature::DefaultParams => "default-params",
             Feature::KeywordParams => "keyword-params",
+            Feature::SizedIntegers => "sized-integers",
+            Feature::Unsigned => "unsigned",
+            Feature::WrappingArithmetic => "wrapping-arithmetic",
+            Feature::FixedArrays => "fixed-arrays",
+            Feature::Pointers => "pointers",
+            Feature::Structs => "structs",
+            Feature::Bignum => "bignum",
         }
     }
 
@@ -266,6 +323,26 @@ mod tests {
         let mut seen = std::collections::HashSet::new();
         for f in Feature::ALL {
             assert!(seen.insert(f.name()), "duplicate name {}", f.name());
+        }
+    }
+
+    #[test]
+    fn sir21_t1b_features_present_and_named() {
+        // The seven SIR21 T1b flags round-trip through name()/from_name
+        // and are members of ALL.
+        let new = [
+            (Feature::SizedIntegers, "sized-integers"),
+            (Feature::Unsigned, "unsigned"),
+            (Feature::WrappingArithmetic, "wrapping-arithmetic"),
+            (Feature::FixedArrays, "fixed-arrays"),
+            (Feature::Pointers, "pointers"),
+            (Feature::Structs, "structs"),
+            (Feature::Bignum, "bignum"),
+        ];
+        for (feat, name) in new {
+            assert_eq!(feat.name(), name);
+            assert_eq!(Feature::from_name(name), Some(feat));
+            assert!(Feature::ALL.contains(&feat), "{} missing from ALL", name);
         }
     }
 

@@ -2,6 +2,40 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.17.0 — SIR21 T1b: source-fidelity types + feature flags + version bump
+
+Milestone **T1b** of the [SIR21 cascade](../../../specs/SIR21-type-system-and-integer-semantics.md).
+Adds the additive type surface for typed frontends and the feature flags a
+backend uses to fast-reject what it can't express, and bumps the SIR version
+to `"1"` — the first milestone whose surface introduces **new text tokens**.
+
+- **Three new `SirType` variants** (additive; no existing consumer matched
+  `SirType` exhaustively, so only the `Display` impl needed new arms):
+  - `Ptr { pointee, nullable }` — C/C++ pointer/reference (source fidelity;
+    `nullable` distinguishes a possibly-null pointer from a non-null ref).
+    Prints `(ptr T)` / `(ptr? T)`.
+  - `Struct { name, fields }` — nominal record with **ordered** `(field, type)`
+    members (order matters for C layout). Prints `(struct Name (f T) …)`.
+  - `Optional { inner }` — nullable `T`-or-nil, wraps any type. Prints
+    `(optional T)`.
+  - Constructors `SirType::ptr` / `struct_type` / `optional`.
+- **Seven new `Feature` flags** (manifest.rs) so a backend rejects in O(1)
+  what it cannot honour: `SizedIntegers`, `Unsigned`, `WrappingArithmetic`,
+  `FixedArrays`, `Pointers`, `Structs`, `Bignum`. Each added to the enum,
+  `ALL`, `name()` (kebab-case), and the doc table; the existing
+  `name_round_trips` / `all_features_have_unique_names` tests cover them, plus
+  a focused `sir21_t1b_features_present_and_named`.
+- **`CURRENT_SIR_VERSION` bumped `"0"` → `"1"`.** Per the crate's own policy
+  ("adding a feature is a v.bump") and because the type surface grew. All
+  frontends set the version symbolically via `.with_sir_version(...)`, and no
+  backend gates on the literal, so the bump ripples cleanly; the two printed-
+  header golden tests (`v0` → `v1`) were updated. The printer's version
+  fallback now reads `CURRENT_SIR_VERSION` instead of a hard-coded `"0"` that
+  silently drifted.
+- Serialisation of *existing* modules is otherwise unchanged (no frontend
+  emits the new types yet). All 10 downstream consumers + `sir-conformance`
+  re-run green.
+
 ## 0.16.0 — SIR21 T1a: `SirType` v2 core (Dynamic + parameterised Int)
 
 Milestone **T1a** of the [SIR21 type-system cascade](../../../specs/SIR21-type-system-and-integer-semantics.md)

@@ -94,7 +94,7 @@ mod smoke {
         let r = validate(&m);
         assert!(r.is_ok());
         let t = print_module(&m);
-        assert!(t.contains("(sir-module empty v0"));
+        assert!(t.contains("(sir-module empty v1"));
     }
 
     #[test]

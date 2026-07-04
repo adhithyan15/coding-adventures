@@ -61,7 +61,12 @@ pub fn print_module(m: &Module) -> String {
 }
 
 fn sir_version(meta: &Metadata) -> String {
-    meta.sir_version.clone().unwrap_or_else(|| "0".into())
+    // When a module carries no explicit version, print the version this
+    // build implements (rather than a hard-coded literal that silently
+    // drifts on every SIR bump — as it did between "0" and "1").
+    meta.sir_version
+        .clone()
+        .unwrap_or_else(|| crate::metadata::CURRENT_SIR_VERSION.into())
 }
 
 fn print_import(out: &mut String, imp: &Import) {
@@ -554,7 +559,7 @@ mod tests {
     fn print_empty_module() {
         let m = module_with(vec![], FeatureManifest::new());
         let t = print_module(&m);
-        assert!(t.starts_with("(sir-module demo v0"));
+        assert!(t.starts_with("(sir-module demo v1"));
         assert!(t.contains("(metadata"));
         assert!(t.ends_with(")\n"));
     }

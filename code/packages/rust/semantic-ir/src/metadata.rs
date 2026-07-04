@@ -9,14 +9,20 @@
 //!
 //! - `source_language` — frontend identifier (`"twig"`, `"python"`, …)
 //! - `source_version`  — version string of the source language
-//! - `sir_version`     — IR spec version (`"0"` in this build)
+//! - `sir_version`     — IR spec version (`"1"` in this build)
 
 use std::collections::BTreeMap;
 use std::fmt;
 
-/// Pinned to the SIR major version this crate implements.  v0
-/// modules are tagged `"0"`; backends and validators check this.
-pub const CURRENT_SIR_VERSION: &str = "0";
+/// Pinned to the SIR major version this crate implements.
+///
+/// - `"0"` — the original flat type set (through KW1).
+/// - `"1"` — SIR21: the `SirType` type lattice grew (`Int{IntSpec}`,
+///   `Ptr`/`Struct`/`Optional`) and the feature manifest gained the
+///   sized-integer / pointer / struct / bignum flags (T1a + T1b).  The
+///   bump lands in T1b, the first milestone whose surface introduces
+///   *new text tokens* a reader would need to understand.
+pub const CURRENT_SIR_VERSION: &str = "1";
 
 /// Advisory metadata.  All fields are optional.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -107,7 +113,7 @@ mod tests {
             .with_sir_version(CURRENT_SIR_VERSION);
         assert_eq!(m.source_language.as_deref(), Some("twig"));
         assert_eq!(m.source_version.as_deref(), Some("0.7"));
-        assert_eq!(m.sir_version.as_deref(), Some("0"));
+        assert_eq!(m.sir_version.as_deref(), Some("1"));
         assert!(!m.is_empty());
     }
 
@@ -130,7 +136,8 @@ mod tests {
     }
 
     #[test]
-    fn current_sir_version_is_zero() {
-        assert_eq!(CURRENT_SIR_VERSION, "0");
+    fn current_sir_version_is_one() {
+        // Bumped 0 → 1 in SIR21 T1b (new type/manifest text tokens).
+        assert_eq!(CURRENT_SIR_VERSION, "1");
     }
 }
