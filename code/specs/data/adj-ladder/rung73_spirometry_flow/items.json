@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 73 \u2014 pulmonology spirometry corrected-flow index from four stated quantities (a NEW panel: pulmonology / spirometry). From a forced volume, a dead space to divide, an effort scale to divide by, and a breath rate to scale by, compute the corrected flow (forced_volume-dead_space/effort_scale*breath_rate), the dead-space ratio (dead_space/effort_scale), or the scaled dead space (dead_space/effort_scale*breath_rate). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, TERM MINUS A SCALED QUOTIENT a - b/c*d (a leading term with a divide-then-multiply subtrahend subtracted \u2014 contrast rung-72 a/b*c-d which subtracts a bare term at the end; the left-to-right b/c*d = b*d/c, not b/(c*d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via /, *, and - \u2014 no constant leaks, and neither the dead-space ratio, the scaled dead space, nor any corrected figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: DIVIDING by the PRODUCT (a - b/(c*d), a wrong scaling) and SWAPPING the multiply and divide (a - b*c/d, a wrong scaling). The core confusion tested is that a - b/c*d is not a - b/(c*d) and not a - b*c/d.",
+  "items": [
+    {
+      "id": "r73spir-01",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 20, a dead space of 12 divided by an effort scale of 3 and scaled by a breath rate of 2. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(20)\nobserve dead_space(12)\nobserve effort_scale(3)\nobserve breath_rate(2)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r73spir-02",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 20, a dead space of 12 divided by an effort scale of 3 and scaled by a breath rate of 2. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(20)\nobserve dead_space(12)\nobserve effort_scale(3)\nobserve breath_rate(2)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r73spir-03",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 20, a dead space of 12 divided by an effort scale of 3 and scaled by a breath rate of 2. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(20)\nobserve dead_space(12)\nobserve effort_scale(3)\nobserve breath_rate(2)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r73spir-04",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 30, a dead space of 12 divided by an effort scale of 4 and scaled by a breath rate of 3. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(30)\nobserve dead_space(12)\nobserve effort_scale(4)\nobserve breath_rate(3)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 29.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r73spir-05",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 30, a dead space of 12 divided by an effort scale of 4 and scaled by a breath rate of 3. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(30)\nobserve dead_space(12)\nobserve effort_scale(4)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 29.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r73spir-06",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 30, a dead space of 12 divided by an effort scale of 4 and scaled by a breath rate of 3. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(30)\nobserve dead_space(12)\nobserve effort_scale(4)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r73spir-07",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 30, a dead space of 10 divided by an effort scale of 5 and scaled by a breath rate of 2. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(30)\nobserve dead_space(10)\nobserve effort_scale(5)\nobserve breath_rate(2)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r73spir-08",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 30, a dead space of 10 divided by an effort scale of 5 and scaled by a breath rate of 2. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(30)\nobserve dead_space(10)\nobserve effort_scale(5)\nobserve breath_rate(2)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r73spir-09",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 30, a dead space of 10 divided by an effort scale of 5 and scaled by a breath rate of 2. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(30)\nobserve dead_space(10)\nobserve effort_scale(5)\nobserve breath_rate(2)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 29.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r73spir-10",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 40, a dead space of 18 divided by an effort scale of 6 and scaled by a breath rate of 3. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(40)\nobserve dead_space(18)\nobserve effort_scale(6)\nobserve breath_rate(3)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 39.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r73spir-11",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 40, a dead space of 18 divided by an effort scale of 6 and scaled by a breath rate of 3. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(40)\nobserve dead_space(18)\nobserve effort_scale(6)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 39.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r73spir-12",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 40, a dead space of 18 divided by an effort scale of 6 and scaled by a breath rate of 3. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(40)\nobserve dead_space(18)\nobserve effort_scale(6)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 39.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r73spir-13",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 36, a dead space of 15 divided by an effort scale of 5 and scaled by a breath rate of 3. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(36)\nobserve dead_space(15)\nobserve effort_scale(5)\nobserve breath_rate(3)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 27.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r73spir-14",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 36, a dead space of 15 divided by an effort scale of 5 and scaled by a breath rate of 3. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(36)\nobserve dead_space(15)\nobserve effort_scale(5)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r73spir-15",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 36, a dead space of 15 divided by an effort scale of 5 and scaled by a breath rate of 3. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(36)\nobserve dead_space(15)\nobserve effort_scale(5)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r73spir-16",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 28, a dead space of 8 divided by an effort scale of 2 and scaled by a breath rate of 3. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(28)\nobserve dead_space(8)\nobserve effort_scale(2)\nobserve breath_rate(3)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r73spir-17",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 28, a dead space of 8 divided by an effort scale of 2 and scaled by a breath rate of 3. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(28)\nobserve dead_space(8)\nobserve effort_scale(2)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r73spir-18",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 28, a dead space of 8 divided by an effort scale of 2 and scaled by a breath rate of 3. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(28)\nobserve dead_space(8)\nobserve effort_scale(2)\nobserve breath_rate(3)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r73spir-19",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 50, a dead space of 20 divided by an effort scale of 5 and scaled by a breath rate of 4. What is the corrected expiratory flow (forced volume minus the scaled dead space)?",
+      "program": "observe forced_volume(50)\nobserve dead_space(20)\nobserve effort_scale(5)\nobserve breath_rate(4)\nlet answer = forced_volume - dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r73spir-20",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 50, a dead space of 20 divided by an effort scale of 5 and scaled by a breath rate of 4. What is the the dead-space ratio (dead space over the effort scale)?",
+      "program": "observe forced_volume(50)\nobserve dead_space(20)\nobserve effort_scale(5)\nobserve breath_rate(4)\nlet answer = dead_space / effort_scale\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r73spir-21",
+      "qtype": "spirometry_flow",
+      "stem": "A spirometry test records a forced volume of 50, a dead space of 20 divided by an effort scale of 5 and scaled by a breath rate of 4. What is the the scaled dead space that is subtracted (dead-space ratio times the breath rate)?",
+      "program": "observe forced_volume(50)\nobserve dead_space(20)\nobserve effort_scale(5)\nobserve breath_rate(4)\nlet answer = dead_space / effort_scale * breath_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
