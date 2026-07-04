@@ -2,6 +2,28 @@
 
 All notable changes to `spreadsheet-io` are documented here.
 
+## [0.3.0] — SSIO-CSV: delimited text (CSV / TSV) load & save
+
+### Added
+- `load_csv` / `load_tsv` / `load_delimited(bytes, delimiter)` — read delimited
+  text into a one-sheet `Workbook` (field `(r,c)` → cell `(r+1,c+1)`); a numeric
+  field becomes `Number`, else `Text`, blank → empty. Via `csv-parser`'s new
+  `parse_records` (grid-preserving), so column order and the header row are kept.
+- `save_csv` / `save_tsv` / `save_delimited(&wb, delimiter)` — write the **first**
+  sheet's used range as delimited text; cells rendered as text (a formula as its
+  computed value, bool as `TRUE`/`FALSE`, error as its display text), fields
+  quoted per RFC 4180.
+- `IoError::Csv` variant.
+- 9 tests: coercion, number/text round-trip, RFC-4180 quoting round-trip (comma /
+  quote / newline), TSV, formula→value, first-sheet-only, invalid-UTF-8 rejection,
+  empty input, and a **CSV → .xlsx bridge** (any format in, any format out).
+
+### Notes / limitations
+- A CSV is a single positional grid: `save_csv` writes one sheet (others dropped —
+  use `.xlsx` for multi-sheet), has no formulas/booleans/types, and its size is
+  proportional to the used-range **area** (inherent to the dense format; callers
+  exposing it to untrusted workbooks should bound the used range first).
+
 ## [0.2.0] — SSIO02: legacy `.xls` (BIFF8) load & save
 
 ### Added

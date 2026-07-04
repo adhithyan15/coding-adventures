@@ -5,7 +5,9 @@
 //! formulas*. We also assert the writer is idempotent (re-saving the reopened
 //! workbook is byte-identical) and cover the documented edge cases.
 
-use super::{load_xls, load_xlsx, save_xls, save_xlsx};
+use super::{
+    load_csv, load_tsv, load_xls, load_xlsx, save_csv, save_tsv, save_xls, save_xlsx,
+};
 use spreadsheet_core::{CellAddress, CellValue, SheetId, Workbook};
 
 /// Build the canonical test workbook: two sheets, numbers, text, and a live
@@ -453,4 +455,119 @@ fn biff_error_code_mapping() {
     assert_eq!(super::biff_error_to_core(0x0F), Value);
     assert_eq!(super::biff_error_to_core(0x24), Num);
     assert_eq!(super::biff_error_to_core(0xFF), Value); // unknown → generic
+}
+
+// =========================================================================
+// Delimited text (CSV / TSV) — SSIO-CSV
+// =========================================================================
+
+fn cell(wb: &Workbook, a1: &str) -> CellValue {
+    let s = wb.sheet_id("Sheet1").unwrap();
+    wb.get_value(s, CellAddress::parse(a1).unwrap())
+        .unwrap_or(CellValue::Empty)
+}
+
+#[test]
+fn csv_loads_grid_with_type_coercion() {
+    let wb = load_csv(b"name,age,active\nAda,36,yes\nGrace,45,no\n").unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Text("name".into())); // header stays text
+    assert_eq!(cell(&wb, "A2"), CellValue::Text("Ada".into()));
+    assert_eq!(cell(&wb, "B2"), CellValue::Number(36.0)); // numeric field → Number
+    assert_eq!(cell(&wb, "C2"), CellValue::Text("yes".into()));
+}
+
+#[test]
+fn csv_round_trips_numbers_and_text() {
+    let original = b"region,amount\nWest,100\nEast,80.5\n";
+    let wb = load_csv(original).unwrap();
+    let out = save_csv(&wb);
+    // Numbers render without trailing .0; text unchanged.
+    assert_eq!(out, b"region,amount\nWest,100\nEast,80.5", "{}", String::from_utf8_lossy(&out));
+    // And reloading yields the same values.
+    let wb2 = load_csv(&out).unwrap();
+    assert_eq!(cell(&wb2, "B2"), CellValue::Number(100.0));
+    assert_eq!(cell(&wb2, "B3"), CellValue::Number(80.5));
+}
+
+#[test]
+fn csv_quotes_fields_that_need_it() {
+    // A field with a comma, a quote, and a newline must be RFC-4180 quoted.
+    let mut wb = Workbook::new();
+    let s = wb.add_sheet("Sheet1");
+    wb.set_value(s, CellAddress::new(1, 1), CellValue::Text("a,b".into()));
+    wb.set_value(s, CellAddress::new(1, 2), CellValue::Text("he said \"hi\"".into()));
+    wb.set_value(s, CellAddress::new(2, 1), CellValue::Text("line1\nline2".into()));
+    wb.recalc_all();
+
+    let out = String::from_utf8(save_csv(&wb)).unwrap();
+    assert_eq!(out, "\"a,b\",\"he said \"\"hi\"\"\"\n\"line1\nline2\",");
+    // Round-trips: the quoting is understood on the way back in.
+    let wb2 = load_csv(out.as_bytes()).unwrap();
+    assert_eq!(cell(&wb2, "A1"), CellValue::Text("a,b".into()));
+    assert_eq!(cell(&wb2, "B1"), CellValue::Text("he said \"hi\"".into()));
+    assert_eq!(cell(&wb2, "A2"), CellValue::Text("line1\nline2".into()));
+}
+
+#[test]
+fn tsv_uses_tabs() {
+    let wb = load_tsv(b"a\tb\n1\t2\n").unwrap();
+    assert_eq!(cell(&wb, "A2"), CellValue::Number(1.0));
+    assert_eq!(cell(&wb, "B2"), CellValue::Number(2.0));
+    let out = save_tsv(&wb);
+    assert_eq!(out, b"a\tb\n1\t2");
+}
+
+#[test]
+fn csv_formula_saves_as_computed_value() {
+    // A CSV has no formulas: the computed value is written.
+    let mut wb = Workbook::new();
+    let s = wb.add_sheet("Sheet1");
+    wb.set_value(s, CellAddress::new(1, 1), CellValue::Number(10.0));
+    wb.set_value(s, CellAddress::new(1, 2), CellValue::Number(20.0));
+    wb.set_formula(s, CellAddress::new(1, 3), "=A1+B1").unwrap();
+    wb.recalc_all();
+    assert_eq!(save_csv(&wb), b"10,20,30");
+}
+
+#[test]
+fn csv_save_writes_only_first_sheet() {
+    let mut wb = Workbook::new();
+    let s1 = wb.add_sheet("Sheet1");
+    wb.set_value(s1, CellAddress::new(1, 1), CellValue::Text("first".into()));
+    let s2 = wb.add_sheet("Sheet2");
+    wb.set_value(s2, CellAddress::new(1, 1), CellValue::Text("second".into()));
+    wb.recalc_all();
+    assert_eq!(save_csv(&wb), b"first");
+}
+
+#[test]
+fn csv_load_rejects_invalid_utf8() {
+    match load_csv(&[0xff, 0xfe, 0x00]) {
+        Ok(_) => panic!("invalid UTF-8 must not load as CSV"),
+        Err(e) => {
+            assert!(matches!(e, super::IoError::Csv(_)));
+            assert!(e.to_string().contains("failed to load CSV/TSV"));
+        }
+    }
+}
+
+#[test]
+fn csv_empty_input_is_empty_workbook() {
+    let wb = load_csv(b"").unwrap();
+    let s = wb.sheet_id("Sheet1").unwrap();
+    assert!(wb.used_range(s).is_none());
+    assert_eq!(save_csv(&wb), b"");
+}
+
+#[test]
+fn csv_to_xlsx_bridge() {
+    // A CSV loaded into the engine can be saved right back out as a real .xlsx —
+    // the whole point of a single hub: any format in, any format out.
+    let wb = load_csv(b"h1,h2\n1,two\n").unwrap();
+    let xlsx = save_xlsx(&wb);
+    assert_eq!(&xlsx[..2], b"PK");
+    let reopened = load_xlsx(&xlsx).unwrap();
+    let s = reopened.sheet_id("Sheet1").unwrap();
+    assert_eq!(reopened.get_value(s, CellAddress::new(2, 1)), Some(CellValue::Number(1.0)));
+    assert_eq!(reopened.get_value(s, CellAddress::new(2, 2)), Some(CellValue::Text("two".into())));
 }

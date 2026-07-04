@@ -294,6 +294,30 @@ pub fn parse_csv_with_delimiter(
     Ok(result)
 }
 
+/// Parse delimited text into its raw **grid of records** — a `Vec<Vec<String>>`
+/// of rows, each a list of field strings, in file order, with quoting/escaping
+/// resolved but **no header interpretation**.
+///
+/// This is the lower-level primitive that [`parse_csv`] / [`parse_csv_with_delimiter`]
+/// build their header→value maps on top of. Use it when you need column order
+/// and the header row itself preserved — e.g. loading a CSV into a positional
+/// grid (a spreadsheet), or a `DataSource` that reads the header separately.
+/// The first row is the header only by convention; this function does not treat
+/// it specially.
+///
+/// # Examples
+///
+/// ```
+/// use coding_adventures_csv_parser::parse_records;
+///
+/// let rows = parse_records("name,age\nAda,36\nGrace,45\n", ',').unwrap();
+/// assert_eq!(rows[0], vec!["name", "age"]);      // header row preserved
+/// assert_eq!(rows[2], vec!["Grace", "45"]);      // in column order
+/// ```
+pub fn parse_records(source: &str, delimiter: char) -> Result<Vec<Vec<String>>, CsvError> {
+    tokenise_rows(source, delimiter)
+}
+
 // ===========================================================================
 // Internal: tokenise_rows
 // ===========================================================================
