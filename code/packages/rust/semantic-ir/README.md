@@ -84,6 +84,8 @@ What's covered:
   `Ptr`/`Struct`/`Optional` (T1b) are source-fidelity types for typed frontends
 - `int_const` — the `int.max`/`int.min`/`int.width` reflection const-intrinsics (T3a);
   pure, const-folding functions of an `IntSpec` (`IntConst::eval`), `None` for arbitrary-precision
+- `op_select` — type-directed op selection (T3c): `resolve_numeric(lhs, rhs)` chooses
+  `Int`/`Float`/`RuntimeDispatch` for a binary numeric op from operand types (pure, no inference)
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)
