@@ -6,6 +6,7 @@ use spice_engine::{
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_analysis_summary,
     device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures, device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_matrix, device_model_reference_deck_audit_matrix_records,
     device_model_reference_deck_audit_records, device_model_reference_deck_audit_summary,
     device_model_reference_deck_audit_summary_records, device_model_temperature_audit_fixtures,
     diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
@@ -16,6 +17,9 @@ use spice_engine::{
     format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
+    format_device_model_reference_deck_audit_matrix_csv,
+    format_device_model_reference_deck_audit_matrix_json,
+    format_device_model_reference_deck_audit_matrix_table,
     format_device_model_reference_deck_audit_summary_csv,
     format_device_model_reference_deck_audit_summary_json,
     format_device_model_reference_deck_audit_summary_table,
@@ -537,6 +541,84 @@ fn device_model_reference_deck_audit_analysis_summary_reports_missing_kind() {
             "tran\t3\tD,NPN,NJF\tNMOS\t30\tSPICE2/SPICE3-style local model-depth fixture"
         )
     );
+}
+
+#[test]
+fn device_model_reference_deck_audit_matrix_exports_are_stable() {
+    let fixtures = device_model_reference_deck_audit_fixtures().unwrap();
+    let matrix = device_model_reference_deck_audit_matrix(&fixtures);
+
+    assert_eq!(matrix.len(), 4);
+    assert_eq!(matrix[0].kind, "D");
+    assert_eq!(matrix[0].fixture_count, 5);
+    assert_eq!(matrix[0].op, "diode-forward-bias:op");
+    assert_eq!(matrix[0].temperature, "diode-forward-bias:temperature");
+    assert_eq!(matrix[0].ac, "diode-capacitance-ac:ac");
+    assert_eq!(matrix[0].noise, "diode-shot-noise:noise");
+    assert_eq!(matrix[0].tran, "diode-storage-charge:tran");
+    assert!(matrix[0].missing_analyses.is_empty());
+    assert!(matrix[0].extra_analyses.is_empty());
+    assert_eq!(matrix[0].deck_line_count, 42);
+
+    let table = format_device_model_reference_deck_audit_matrix_table(&fixtures);
+    assert_eq!(
+        table,
+        concat!(
+            "kind\tfixture_count\top\ttemperature\tac\tnoise\ttran\tmissing_analyses\textra_analyses\tdeck_lines\n",
+            "D\t5\tdiode-forward-bias:op\tdiode-forward-bias:temperature\tdiode-capacitance-ac:ac\tdiode-shot-noise:noise\tdiode-storage-charge:tran\t\t\t42\n",
+            "NPN\t5\tbjt-emitter-follower:op\tbjt-emitter-follower:temperature\tbjt-capacitance-ac:ac\tbjt-shot-noise:noise\tbjt-storage-charge:tran\t\t\t47\n",
+            "NJF\t5\tjfet-source-bias:op\tjfet-source-bias:temperature\tjfet-capacitance-ac:ac\tjfet-channel-noise:noise\tjfet-storage-charge:tran\t\t\t52\n",
+            "NMOS\t5\tmos-level1-common-source:op\tmos-level1-common-source:temperature\tmos-level1-capacitance-ac:ac\tmos-level1-channel-noise:noise\tmos-level1-storage-charge:tran\t\t\t47"
+        )
+    );
+
+    let records = device_model_reference_deck_audit_matrix_records(&fixtures);
+    assert_eq!(records[0].get("kind").map(String::as_str), Some("D"));
+    assert_eq!(
+        records[0].get("fixture_count").map(String::as_str),
+        Some("5")
+    );
+    assert_eq!(
+        records[0].get("op").map(String::as_str),
+        Some("diode-forward-bias:op")
+    );
+    assert_eq!(
+        records[0].get("missing_analyses").map(String::as_str),
+        Some("")
+    );
+    assert_eq!(
+        format_device_model_reference_deck_audit_matrix_csv(&fixtures)
+            .lines()
+            .nth(1),
+        Some("D,5,diode-forward-bias:op,diode-forward-bias:temperature,diode-capacitance-ac:ac,diode-shot-noise:noise,diode-storage-charge:tran,,,42")
+    );
+    let json = format_device_model_reference_deck_audit_matrix_json(&fixtures);
+    assert!(json.starts_with("[{\"kind\":\"D\""));
+    assert!(json.contains("\"tran\":\"mos-level1-storage-charge:tran\""));
+    assert!(json.ends_with("]\n"));
+}
+
+#[test]
+fn device_model_reference_deck_audit_matrix_reports_missing_analysis() {
+    let fixtures = device_model_reference_deck_audit_fixtures()
+        .unwrap()
+        .into_iter()
+        .filter(|fixture| !(fixture.kind == ModelCardKind::Nmos && fixture.analysis == "tran"))
+        .collect::<Vec<_>>();
+
+    let matrix = device_model_reference_deck_audit_matrix(&fixtures);
+    let nmos = matrix
+        .iter()
+        .find(|row| row.kind == "NMOS")
+        .expect("NMOS matrix row should exist");
+
+    assert_eq!(nmos.fixture_count, 4);
+    assert_eq!(nmos.tran, "");
+    assert_eq!(nmos.missing_analyses, vec!["tran"]);
+    assert_eq!(nmos.deck_line_count, 37);
+    assert!(format_device_model_reference_deck_audit_matrix_table(&fixtures).contains(
+        "NMOS\t4\tmos-level1-common-source:op\tmos-level1-common-source:temperature\tmos-level1-capacitance-ac:ac\tmos-level1-channel-noise:noise\t\ttran\t\t37"
+    ));
 }
 
 #[test]

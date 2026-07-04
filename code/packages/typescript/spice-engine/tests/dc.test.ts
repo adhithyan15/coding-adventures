@@ -27,6 +27,8 @@ import {
   deviceModelReferenceDeckAuditAnalysisSummaryRecords,
   deviceModelReferenceDeckAuditFixtures,
   deviceModelReferenceDeckAuditGate,
+  deviceModelReferenceDeckAuditMatrix,
+  deviceModelReferenceDeckAuditMatrixRecords,
   deviceModelReferenceDeckAuditRecords,
   deviceModelReferenceDeckAuditSummary,
   deviceModelReferenceDeckAuditSummaryRecords,
@@ -44,6 +46,9 @@ import {
   formatDeviceModelReferenceDeckAuditCsv,
   formatDeviceModelReferenceDeckAuditGateReport,
   formatDeviceModelReferenceDeckAuditJson,
+  formatDeviceModelReferenceDeckAuditMatrixCsv,
+  formatDeviceModelReferenceDeckAuditMatrixJson,
+  formatDeviceModelReferenceDeckAuditMatrixTable,
   formatDeviceModelReferenceDeckAuditSummaryCsv,
   formatDeviceModelReferenceDeckAuditSummaryJson,
   formatDeviceModelReferenceDeckAuditSummaryTable,
@@ -382,6 +387,68 @@ describe("dcOp", () => {
     expect(tran?.deckLineCount).toBe(30);
     expect(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures)).toContain(
       "tran\t3\tD,NPN,NJF\tNMOS\t30\tSPICE2/SPICE3-style local model-depth fixture",
+    );
+  });
+
+  it("exports stable device model reference deck audit matrix rows", () => {
+    const matrix = deviceModelReferenceDeckAuditMatrix();
+    expect(matrix).toHaveLength(4);
+    expect(matrix[0]).toStrictEqual({
+      kind: "D",
+      fixtureCount: 5,
+      op: "diode-forward-bias:op",
+      temperature: "diode-forward-bias:temperature",
+      ac: "diode-capacitance-ac:ac",
+      noise: "diode-shot-noise:noise",
+      tran: "diode-storage-charge:tran",
+      missingAnalyses: [],
+      extraAnalyses: [],
+      deckLineCount: 42,
+    });
+
+    expect(formatDeviceModelReferenceDeckAuditMatrixTable()).toBe(
+      [
+        "kind\tfixture_count\top\ttemperature\tac\tnoise\ttran\tmissing_analyses\textra_analyses\tdeck_lines",
+        "D\t5\tdiode-forward-bias:op\tdiode-forward-bias:temperature\tdiode-capacitance-ac:ac\tdiode-shot-noise:noise\tdiode-storage-charge:tran\t\t\t42",
+        "NPN\t5\tbjt-emitter-follower:op\tbjt-emitter-follower:temperature\tbjt-capacitance-ac:ac\tbjt-shot-noise:noise\tbjt-storage-charge:tran\t\t\t47",
+        "NJF\t5\tjfet-source-bias:op\tjfet-source-bias:temperature\tjfet-capacitance-ac:ac\tjfet-channel-noise:noise\tjfet-storage-charge:tran\t\t\t52",
+        "NMOS\t5\tmos-level1-common-source:op\tmos-level1-common-source:temperature\tmos-level1-capacitance-ac:ac\tmos-level1-channel-noise:noise\tmos-level1-storage-charge:tran\t\t\t47",
+      ].join("\n"),
+    );
+
+    const records = deviceModelReferenceDeckAuditMatrixRecords();
+    expect(records[0]).toStrictEqual({
+      kind: "D",
+      fixture_count: "5",
+      op: "diode-forward-bias:op",
+      temperature: "diode-forward-bias:temperature",
+      ac: "diode-capacitance-ac:ac",
+      noise: "diode-shot-noise:noise",
+      tran: "diode-storage-charge:tran",
+      missing_analyses: "",
+      extra_analyses: "",
+      deck_lines: "42",
+    });
+    expect(formatDeviceModelReferenceDeckAuditMatrixCsv().split(/\r?\n/u)[1]).toBe(
+      "D,5,diode-forward-bias:op,diode-forward-bias:temperature,diode-capacitance-ac:ac,diode-shot-noise:noise,diode-storage-charge:tran,,,42",
+    );
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditMatrixJson())).toStrictEqual(records);
+  });
+
+  it("reports missing device model reference deck audit matrix analyses", () => {
+    const fixtures = deviceModelReferenceDeckAuditFixtures().filter(
+      (fixture) => !(fixture.kind === "NMOS" && fixture.analysis === "tran"),
+    );
+
+    const matrix = deviceModelReferenceDeckAuditMatrix(fixtures);
+    const nmos = matrix.find((row) => row.kind === "NMOS");
+
+    expect(nmos?.fixtureCount).toBe(4);
+    expect(nmos?.tran).toBe("");
+    expect(nmos?.missingAnalyses).toStrictEqual(["tran"]);
+    expect(nmos?.deckLineCount).toBe(37);
+    expect(formatDeviceModelReferenceDeckAuditMatrixTable(fixtures)).toContain(
+      "NMOS\t4\tmos-level1-common-source:op\tmos-level1-common-source:temperature\tmos-level1-capacitance-ac:ac\tmos-level1-channel-noise:noise\t\ttran\t\t37",
     );
   });
 

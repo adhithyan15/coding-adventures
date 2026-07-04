@@ -189,6 +189,8 @@ from spice_engine import (
     device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_matrix,
+    device_model_reference_deck_audit_matrix_records,
     device_model_reference_deck_audit_records,
     device_model_reference_deck_audit_summary,
     device_model_reference_deck_audit_summary_records,
@@ -255,6 +257,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
+    format_device_model_reference_deck_audit_matrix_csv,
+    format_device_model_reference_deck_audit_matrix_json,
+    format_device_model_reference_deck_audit_matrix_table,
     format_device_model_reference_deck_audit_summary_csv,
     format_device_model_reference_deck_audit_summary_json,
     format_device_model_reference_deck_audit_summary_table,
@@ -784,6 +789,86 @@ def test_device_model_reference_deck_audit_analysis_summary_reports_missing_kind
         "tran\t3\tD,NPN,NJF\tNMOS\t30\t"
         "SPICE2/SPICE3-style local model-depth fixture"
     ) in format_device_model_reference_deck_audit_analysis_summary_table(fixtures)
+
+
+def test_device_model_reference_deck_audit_matrix_exports_are_stable() -> None:
+    matrix = device_model_reference_deck_audit_matrix()
+
+    assert len(matrix) == 4
+    assert matrix[0].kind == "D"
+    assert matrix[0].fixture_count == 5
+    assert matrix[0].op == "diode-forward-bias:op"
+    assert matrix[0].temperature == "diode-forward-bias:temperature"
+    assert matrix[0].ac == "diode-capacitance-ac:ac"
+    assert matrix[0].noise == "diode-shot-noise:noise"
+    assert matrix[0].tran == "diode-storage-charge:tran"
+    assert matrix[0].missing_analyses == ()
+    assert matrix[0].extra_analyses == ()
+    assert matrix[0].deck_line_count == 42
+
+    assert format_device_model_reference_deck_audit_matrix_table().splitlines() == [
+        "kind\tfixture_count\top\ttemperature\tac\tnoise\ttran\tmissing_analyses\textra_analyses\tdeck_lines",
+        (
+            "D\t5\tdiode-forward-bias:op\tdiode-forward-bias:temperature\t"
+            "diode-capacitance-ac:ac\tdiode-shot-noise:noise\t"
+            "diode-storage-charge:tran\t\t\t42"
+        ),
+        (
+            "NPN\t5\tbjt-emitter-follower:op\tbjt-emitter-follower:temperature\t"
+            "bjt-capacitance-ac:ac\tbjt-shot-noise:noise\tbjt-storage-charge:tran"
+            "\t\t\t47"
+        ),
+        (
+            "NJF\t5\tjfet-source-bias:op\tjfet-source-bias:temperature\t"
+            "jfet-capacitance-ac:ac\tjfet-channel-noise:noise\t"
+            "jfet-storage-charge:tran\t\t\t52"
+        ),
+        (
+            "NMOS\t5\tmos-level1-common-source:op\t"
+            "mos-level1-common-source:temperature\tmos-level1-capacitance-ac:ac\t"
+            "mos-level1-channel-noise:noise\tmos-level1-storage-charge:tran\t\t\t47"
+        ),
+    ]
+
+    records = device_model_reference_deck_audit_matrix_records()
+    assert records[0] == {
+        "kind": "D",
+        "fixture_count": "5",
+        "op": "diode-forward-bias:op",
+        "temperature": "diode-forward-bias:temperature",
+        "ac": "diode-capacitance-ac:ac",
+        "noise": "diode-shot-noise:noise",
+        "tran": "diode-storage-charge:tran",
+        "missing_analyses": "",
+        "extra_analyses": "",
+        "deck_lines": "42",
+    }
+    assert format_device_model_reference_deck_audit_matrix_csv().splitlines()[1] == (
+        "D,5,diode-forward-bias:op,diode-forward-bias:temperature,"
+        "diode-capacitance-ac:ac,diode-shot-noise:noise,diode-storage-charge:tran,,,42"
+    )
+    assert json.loads(format_device_model_reference_deck_audit_matrix_json()) == records
+
+
+def test_device_model_reference_deck_audit_matrix_reports_missing_analysis() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    matrix = device_model_reference_deck_audit_matrix(fixtures)
+    nmos = next(row for row in matrix if row.kind == "NMOS")
+
+    assert nmos.fixture_count == 4
+    assert nmos.tran == ""
+    assert nmos.missing_analyses == ("tran",)
+    assert nmos.deck_line_count == 37
+    assert (
+        "NMOS\t4\tmos-level1-common-source:op\t"
+        "mos-level1-common-source:temperature\tmos-level1-capacitance-ac:ac\t"
+        "mos-level1-channel-noise:noise\t\ttran\t\t37"
+    ) in format_device_model_reference_deck_audit_matrix_table(fixtures)
 
 
 def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:

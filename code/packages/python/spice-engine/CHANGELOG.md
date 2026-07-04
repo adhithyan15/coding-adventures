@@ -10,6 +10,15 @@
   source spans, token streams, stable diagnostics, and analysis inventory for
   frontend and parser-tooling consumers.
 
+- **Device model reference-deck audit matrix dashboards** —
+  `device_model_reference_deck_audit_matrix()`,
+  `format_device_model_reference_deck_audit_matrix_table()`,
+  `device_model_reference_deck_audit_matrix_records()`,
+  `format_device_model_reference_deck_audit_matrix_csv()`, and
+  `format_device_model_reference_deck_audit_matrix_json()` now expose stable
+  per-model-family audit dashboard rows with explicit OP, temperature, AC,
+  noise, and transient fixture columns, matching Rust and TypeScript.
+
 - **Device model reference-deck audit analysis summaries** —
   `device_model_reference_deck_audit_analysis_summary()`,
   `format_device_model_reference_deck_audit_analysis_summary_table()`,

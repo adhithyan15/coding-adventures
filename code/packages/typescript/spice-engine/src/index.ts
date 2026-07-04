@@ -1870,6 +1870,19 @@ export interface DeviceModelReferenceDeckAuditAnalysisSummary {
   readonly references: readonly string[];
 }
 
+export interface DeviceModelReferenceDeckAuditMatrixRow {
+  readonly kind: ModelCardKind | string;
+  readonly fixtureCount: number;
+  readonly op: string;
+  readonly temperature: string;
+  readonly ac: string;
+  readonly noise: string;
+  readonly tran: string;
+  readonly missingAnalyses: readonly string[];
+  readonly extraAnalyses: readonly string[];
+  readonly deckLineCount: number;
+}
+
 const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: readonly ModelCardKind[] = [
   "D",
   "NPN",
@@ -8834,6 +8847,87 @@ export function formatDeviceModelReferenceDeckAuditAnalysisSummaryJson(
   fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
 ): string {
   return formatDeckTableJson(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
+}
+
+export function deviceModelReferenceDeckAuditMatrix(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): readonly DeviceModelReferenceDeckAuditMatrixRow[] {
+  const expectedKinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[];
+  const expectedAnalyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[];
+  const kinds = [...expectedKinds];
+  for (const kind of [...new Set(fixtures.map((fixture) => fixture.kind))].sort()) {
+    if (!kinds.includes(kind)) {
+      kinds.push(kind);
+    }
+  }
+
+  const namesFor = (
+    rows: readonly DeviceModelReferenceDeckAuditFixture[],
+    analysis: string,
+  ): string => rows.filter((fixture) => fixture.analysis === analysis).map((fixture) => fixture.name).join(",");
+
+  return kinds.map((kind) => {
+    const rows = fixtures.filter((fixture) => fixture.kind === kind);
+    const rowAnalyses = new Set(rows.map((fixture) => fixture.analysis));
+    const missingAnalyses = expectedKinds.includes(kind)
+      ? REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.filter((analysis) => !rowAnalyses.has(analysis))
+      : [];
+    const extraAnalyses = [...rowAnalyses]
+      .filter((analysis) => !expectedAnalyses.includes(analysis))
+      .sort();
+
+    return {
+      kind,
+      fixtureCount: rows.length,
+      op: namesFor(rows, "op"),
+      temperature: namesFor(rows, "temperature"),
+      ac: namesFor(rows, "ac"),
+      noise: namesFor(rows, "noise"),
+      tran: namesFor(rows, "tran"),
+      missingAnalyses,
+      extraAnalyses,
+      deckLineCount: rows.reduce((total, fixture) => total + fixture.deckLines.length, 0),
+    };
+  });
+}
+
+export function formatDeviceModelReferenceDeckAuditMatrixTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["kind\tfixture_count\top\ttemperature\tac\tnoise\ttran\tmissing_analyses\textra_analyses\tdeck_lines"];
+  for (const row of deviceModelReferenceDeckAuditMatrix(fixtures)) {
+    lines.push([
+      row.kind,
+      row.fixtureCount.toString(),
+      row.op,
+      row.temperature,
+      row.ac,
+      row.noise,
+      row.tran,
+      row.missingAnalyses.join(","),
+      row.extraAnalyses.join(","),
+      row.deckLineCount.toString(),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditMatrixRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditMatrixTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditMatrixCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditMatrixTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditMatrixJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditMatrixTable(fixtures));
 }
 
 export function deviceModelReferenceDeckAuditGate(

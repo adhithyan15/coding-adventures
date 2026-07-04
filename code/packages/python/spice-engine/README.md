@@ -248,6 +248,13 @@ per-kind coverage summaries with missing-analysis and deck-line totals.
 `format_device_model_reference_deck_audit_analysis_summary_json()` expose the
 same audit matrix grouped by analysis kind, with missing-model-family and
 deck-line totals for release dashboards.
+`device_model_reference_deck_audit_matrix()`,
+`format_device_model_reference_deck_audit_matrix_table()`,
+`device_model_reference_deck_audit_matrix_records()`,
+`format_device_model_reference_deck_audit_matrix_csv()`, and
+`format_device_model_reference_deck_audit_matrix_json()` expose one stable
+dashboard row per model family with explicit OP, temperature, AC, noise, and
+transient fixture columns plus missing/extra-analysis inventories.
 `device_model_reference_deck_audit_gate()` and
 `format_device_model_reference_deck_audit_gate_report()` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.

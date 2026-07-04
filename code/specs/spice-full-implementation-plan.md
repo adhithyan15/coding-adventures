@@ -33,42 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt journal summary handoff receipt acknowledgement record receipt acknowledgement record.
+1. Device model reference-deck audit matrix dashboard.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
-     panel-card-action-menu-group-shortcut-command-palette-search-invocation
-     receipt-notification-stack-summary-product-handoff-delivery-package-embed-
-     runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement-record-receipt-acknowledgement-record surfaces and JSON helpers
-     that wrap runtime activation receipt journal summary handoff receipt
-     acknowledgement record receipt acknowledgements into deterministic
-     WebAssembly product-shell closeout payloads, record/defer dispositions,
-     record actions, record messages, record steps,
-     nested runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement-record-receipt-acknowledgement metadata, and runtime-
-     activation-receipt-journal-summary-handoff-receipt-acknowledgement-
-     record-receipt-acknowledgement-record capability IDs for first-render product-shell
-     bootstrapping.
-   - Preserve package name, source fingerprint, route/status metadata,
-     runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement-record-receipt-acknowledgement-record ID/kind/status/
-     outcome/message, runtime-activation-receipt-journal-summary-handoff-
-     receipt-acknowledgement-record-receipt-acknowledgement ID/status/outcome/
-     disposition/action, deterministic acknowledgement-record steps,
-     acknowledgement/defer and record/defer flags, visible/announce/attention/
-     success/error/info counts, nested embed runtime activation receipt journal
-     summary handoff receipt acknowledgement record receipt acknowledgement,
-     runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement-record-receipt-acknowledgement capability ID, runtime-
-     activation-receipt-journal-summary-handoff-receipt-acknowledgement-
-     record-receipt-acknowledgement-record capability ID, and advertised
-     capability count so Mosaic, WebAssembly, and product shells can record
-     compact post-invocation product handoff runtime activation receipt journal
-     summary handoff receipt acknowledgement record receipt acknowledgements
-     without recomputing acknowledgement payloads.
-   - Keep this as a Rust-only app-substrate packaging slice over the public
-     parser contract; Python and TypeScript parser parity remains aligned when
-     parser behavior changes.
+   - Add Python, Rust, and TypeScript helpers that turn the device-model
+     reference-deck audit fixtures into one stable dashboard row per model
+     family.
+   - Preserve expected OP, temperature, AC, noise, and transient fixture names
+     as explicit columns, plus missing-analysis inventories, extra-analysis
+     inventories, fixture counts, and deck-line totals for browser dashboards,
+     release automation, and reference-deck comparison tools.
+   - Keep table, header-keyed record, CSV, and compact JSON exports aligned
+     across the three packages so device-model audit dashboards can consume the
+     same shape without rescanning individual fixture rows.
 
 ## Completed Slices
 
@@ -2892,6 +2868,23 @@ the Rust, Python, and TypeScript surfaces together.
      journal summary handoff receipt acknowledgement record receipt metadata,
      and runtime-activation-receipt-journal-summary-handoff-receipt-
      acknowledgement-record-receipt-acknowledgement capability IDs for
+     first-render product-shell bootstrapping.
+
+206. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt journal summary handoff receipt acknowledgement record receipt acknowledgement record.
+   - Status: completed in PR 7556.
+   - Added schema-versioned Rust app shell dashboard dispatch-queue lane-tab
+     panel-card-action-menu-group-shortcut-command-palette-search-invocation
+     receipt-notification-stack-summary-product-handoff-delivery-package-embed-
+     runtime-activation-receipt-journal-summary-handoff-receipt-
+     acknowledgement-record-receipt-acknowledgement-record surfaces and JSON
+     helpers that wrap runtime activation receipt journal summary handoff
+     receipt acknowledgement record receipt acknowledgements into deterministic
+     WebAssembly product-shell closeout payloads.
+   - The record payload preserves record/defer dispositions, record actions,
+     record messages, record steps, nested runtime activation receipt journal
+     summary handoff receipt acknowledgement record receipt acknowledgement
+     metadata, and runtime-activation-receipt-journal-summary-handoff-receipt-
+     acknowledgement-record-receipt-acknowledgement-record capability IDs for
      first-render product-shell bootstrapping.
 
 ## Backlog
