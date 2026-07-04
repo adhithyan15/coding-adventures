@@ -820,7 +820,14 @@ fn ev_numer_and_float_coerce_exact_numbers() {
 }
 
 #[test]
-fn ev_routes_supported_flags_and_preserves_unsupported_heads() {
+fn ev_routes_ratsimp_trigsimp_and_expand_flags() {
+    // Previously named `..._and_preserves_unsupported_heads`: the third
+    // case (`ev(x + 1, expand)`) used to demonstrate an unsupported
+    // head passing through unevaluated, because `Expand` had no
+    // registered handler at all (see `expand_distributes_polynomial_
+    // multiplication` for the fix). Now that `Expand` is a real,
+    // supported flag, this asserts its (correct, canonicalized) output
+    // instead of the old no-op passthrough.
     let mut session = MacsymaSession::new();
     let results = session
         .eval_source("ev((x + 0) * 1, ratsimp); ev(sin(0) + cos(0), trigsimp); ev(x + 1, expand);")
@@ -830,7 +837,7 @@ fn ev_routes_supported_flags_and_preserves_unsupported_heads() {
     assert_eq!(results[1].output, int(1));
     assert_eq!(
         results[2].output,
-        apply(sym("Expand"), vec![apply(sym(ADD), vec![sym("x"), int(1)])])
+        apply(sym(ADD), vec![int(1), sym("x")])
     );
 }
 
@@ -1382,5 +1389,36 @@ fn returns_rational_linsolve_results() {
                 apply(sym(RULE), vec![y.clone(), rat(13, 7)]),
             ],
         )
+    );
+}
+
+#[test]
+fn expand_distributes_polynomial_multiplication() {
+    // Regression test: expand((x+1)^2) previously returned unevaluated
+    // -- symbolic-vm's build_handler_table never registered a handler
+    // for "Expand", so the Expand-named head in the shared table was a
+    // silent no-op. Fixed by wiring cas_simplify::expand as the
+    // MacsymaBackend's Expand handler.
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("expand((x+1)^2);").unwrap();
+    assert_eq!(results.len(), 1);
+    let x = sym("x");
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(ADD),
+            vec![int(1), x.clone(), x.clone(), apply(sym(MUL), vec![x.clone(), x])],
+        )
+    );
+}
+
+#[test]
+fn expand_with_wrong_arity_stays_unevaluated() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("expand(x, y);").unwrap();
+    assert_eq!(results.len(), 1);
+    assert_eq!(
+        results[0].output,
+        apply(sym("Expand"), vec![sym("x"), sym("y")])
     );
 }

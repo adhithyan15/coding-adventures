@@ -36,6 +36,7 @@
 
 pub mod assumptions;
 pub mod canonical;
+pub mod expand;
 pub mod exponentialize;
 pub mod heads;
 pub mod logcontract;
@@ -46,6 +47,7 @@ pub mod simplifier;
 
 pub use assumptions::AssumptionContext;
 pub use canonical::canonical;
+pub use expand::expand;
 pub use exponentialize::{demoivre, exponentialize};
 pub use logcontract::{logcontract, logexpand};
 pub use numeric_fold::numeric_fold;

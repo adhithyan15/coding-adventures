@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0] — 2026-07-03
+
+### Fixed
+
+- **`expand(...)` and `ev(expr, expand)` now actually expand.** Previously
+  `expand((x+1)^2)` returned the input unevaluated — `symbolic-vm`'s shared
+  `build_handler_table` never registered a handler for the `Expand` head
+  the name table already routed `expand`/the `expand` `ev` flag through, so
+  the head silently had nowhere to land. Fixed by registering a new
+  `expand_handler` in `MacsymaBackend` (the same decorator-over-the-shared-
+  table pattern already used for `Simplify`/`RatSimplify`/`Radcan`), backed
+  by the new `cas_simplify::expand` (see that crate's 0.4.0 CHANGELOG entry
+  for the algorithm and its honestly-documented scope: correct distribution,
+  no like-term collection yet). `expand((x+1)^2)` now returns
+  `1 + x + x + x*x`.
+- `ev_routes_supported_flags_and_preserves_unsupported_heads` renamed to
+  `ev_routes_ratsimp_trigsimp_and_expand_flags` and its `expand` case
+  updated to assert the new (correct) output — it previously demonstrated
+  `expand` as an example of an *unsupported* passthrough head, which is no
+  longer true.
+
 ## [0.5.0] — 2026-05-29
 
 - Track M2 — port the MACSYMA `load("name")` runtime package directive

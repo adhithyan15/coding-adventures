@@ -1,5 +1,32 @@
 # Changelog — cas-simplify (Rust)
 
+## [0.4.0] — 2026-07-03
+
+### Added
+
+- `expand(node: IRNode) -> IRNode` — full polynomial expansion: distributes
+  `Mul` over `Add`/`Sub` and expands bounded non-negative integer `Pow`s via
+  square-and-multiply, then cleans up the result through the existing
+  `simplify` pipeline. A faithful port of the Python reference's general
+  recursive-distributor path (`symbolic_vm.cas_handlers._sym_expand`),
+  generalized to the n-ary `Add`/`Mul` shape this Rust IR actually produces.
+- `EXPAND_MAX_POW` (32) and `EXPAND_MAX_TERMS` (10,000) — DoS guards.
+  Square-and-multiply on a multi-term base squares the term count at every
+  squaring step (doubly exponential in the number of squarings, not the
+  exponent), so `EXPAND_MAX_TERMS` refuses any single distribution step
+  whose *product* of operand term-counts would exceed the cap, checked
+  before allocating rather than after.
+- **Honest scope note**: `expand` does not collect like terms — repeated
+  monomials produced by distribution are not merged and combined coefficients
+  are not summed (e.g. `expand((x+1)^2)` returns `1 + x + x + x*x`, not the
+  fully-collected `1 + 2*x + x^2`). Mathematically correct, not maximally
+  consolidated. See the module docs for why.
+
+This closes a real, previously-undocumented gap: no consumer had a working
+`Expand`/`expand()` handler at all — `symbolic-vm`'s shared handler table
+never registered one, so Macsyma's `expand(...)` silently returned its input
+unevaluated. See `macsyma-runtime` 0.6.0 and `spice-macsyma-pending-work.md`.
+
 ## [0.2.0] — 2026-05-29
 
 **Track G2 — compound-relation assumption store (Rust port).**

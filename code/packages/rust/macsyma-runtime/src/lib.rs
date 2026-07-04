@@ -13,7 +13,7 @@ use cas_list_operations::{
     range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
 };
 use cas_pretty_printer::{pretty, pretty_2d, MacsymaDialect};
-use cas_simplify::{radcan, simplify, AssumptionContext};
+use cas_simplify::{expand, radcan, simplify, AssumptionContext};
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_substitution::subst;
 use cas_trig::{expand_trig, trig_reduce, trig_simplify};
@@ -577,6 +577,7 @@ impl MacsymaBackend {
         handlers.insert(FLOAT_FUNC.to_string(), handler_fn(float_handler));
         handlers.insert(SOLVE.to_string(), handler_fn(solve_handler));
         handlers.insert(SIMPLIFY.to_string(), handler_fn(simplify_handler));
+        handlers.insert(EXPAND.to_string(), handler_fn(expand_handler));
         handlers.insert(SUBST.to_string(), handler_fn(subst_handler));
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
         let radcan_state = state.clone();
@@ -1569,6 +1570,21 @@ fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
         return IRNode::Apply(Box::new(expr));
     }
     simplify(expr.args[0].clone(), 50)
+}
+
+/// `expand(expr)` — full polynomial expansion: distribute `Mul` over
+/// `Add`/`Sub` and expand bounded non-negative integer `Pow`s. Was
+/// previously wired to the `Expand` head via the `EXPAND` name-table
+/// entry, but no handler was ever registered for that head in
+/// `symbolic-vm`'s shared table, so `expand((x+1)^2)` silently returned
+/// the unevaluated input. Fixed by delegating to `cas_simplify::expand`
+/// — see that crate for the full algorithm and its documented scope
+/// (distributes correctly; does not collect like terms).
+fn expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    expand(expr.args[0].clone())
 }
 
 fn radcan_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
