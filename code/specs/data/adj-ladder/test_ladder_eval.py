@@ -105,6 +105,7 @@ SELF_CONTAINED_RUNGS = (
     "rung65_audiometry_corrected_threshold",
     "rung66_periodontal_attachment_level",
     "rung67_ergometry_specific_work",
+    "rung68_gait_efficiency_index",
 )
 
 
