@@ -134,7 +134,9 @@ pub struct Package {
 /// [`Block::Section`] always has an empty `body` (the sectioning fold that fills it is D3).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Block {
-    /// A sectioning heading. In D2 `body` is always empty (zero-body); D3 fills it.
+    /// A sectioning heading. **D3 fills `body`** with the run of blocks this heading owns (the
+    /// blocks that follow it until the next heading of the same-or-higher level), recursively
+    /// folded so deeper headings nest. A trailing `\label{…}` is hoisted onto `label`.
     Section {
         /// `\part` … `\subparagraph`.
         level: SectionLevel,
@@ -144,9 +146,14 @@ pub enum Block {
         title: Vec<Inline>,
         /// The optional `[short]` TOC/running-head title, if present.
         short_title: Option<Vec<Inline>>,
-        /// The blocks owned by this section — **always empty in D2** (D3 fills it).
+        /// A `\label{key}` hoisted off the section's body (the key, without braces), if the block
+        /// immediately following the heading was a lone `\label`. `None` otherwise. See the D3
+        /// **label hoisting** note on [`fold_sections`].
+        label: Option<String>,
+        /// The blocks owned by this section. Empty until D3's [`fold_sections`] pass fills it.
         body: Vec<Block>,
-        /// Enclosing-region span (D2 coarse).
+        /// Enclosing-region span (D3: the union of the heading's region span and the owned
+        /// children's spans — still ⊆ the body-region span).
         span: Span,
     },
     /// A run of inline content between paragraph breaks.
@@ -345,6 +352,10 @@ pub fn build_document(nodes: Vec<Node>, src: &str) -> Document {
     }
 
     let preamble = classify_preamble(preamble_nodes, preamble_span);
+    // `lower_blocks` produces the *flat* D2 block stream and then runs the D3 sectioning fold on
+    // it (see `lower_blocks`), so `body` is already the nested sectioning forest. The same fold
+    // runs on every nested block-list (environment/quote/figure bodies, list items, table cells)
+    // because they all route through `lower_blocks` too — nesting therefore works everywhere.
     let body = lower_blocks(body_nodes, body_region);
 
     Document { preamble, body, span: doc_span }
@@ -395,12 +406,17 @@ fn classify_preamble(nodes: Vec<Node>, span: Span) -> Preamble {
 // Body lowering: flat Vec<Node> -> flat Vec<Block>.
 // ---------------------------------------------------------------------------------------------
 
-/// Lower a flat node stream into a **flat** `Vec<Block>` (D2 — no sectioning nesting).
+/// Lower a flat node stream into a `Vec<Block>` and fold it into the **nested sectioning forest**
+/// (D3). The walk first produces the flat D2 block stream (a run of *inline* nodes flushes into a
+/// [`Block::Paragraph`]; each block-level node emits its block, with its own child block-lists
+/// recursively lowered+folded by `lower_block`), then [`fold_sections`] folds that flat stream so
+/// every [`Block::Section`] owns the run of blocks that follow it. `region` is the enclosing span
+/// every emitted block inherits (coarse span policy); a folded section then unions in its
+/// children's spans.
 ///
-/// The walk accumulates a run of *inline* nodes; whenever it hits a block-level node (a heading,
-/// a paragraph break, a list, a table, display math, or a block environment) it first flushes the
-/// pending inline run into a [`Block::Paragraph`], then emits the block. `region` is the enclosing
-/// span every emitted block inherits (D2 coarse span policy).
+/// Because *every* block-list in the document (top-level body, environment/quote/figure bodies,
+/// list-item bodies, table cells) routes through this one function, the sectioning fold applies
+/// uniformly — a `\section` inside a `\begin{center}…\end{center}` nests just like a top-level one.
 fn lower_blocks(nodes: Vec<Node>, region: Span) -> Vec<Block> {
     let mut blocks: Vec<Block> = Vec::new();
     let mut pending: Vec<Inline> = Vec::new();
@@ -424,7 +440,183 @@ fn lower_blocks(nodes: Vec<Node>, region: Span) -> Vec<Block> {
         }
     }
     flush(&mut pending, &mut blocks, region);
-    blocks
+    fold_sections(blocks)
+}
+
+// ---------------------------------------------------------------------------------------------
+// D3 — the sectioning fold: flat Vec<Block> -> nested sectioning forest.
+// ---------------------------------------------------------------------------------------------
+
+/// The **rank** of a sectioning level: `0` for the coarsest (`\part`) up to `6` for the finest
+/// (`\subparagraph`). A section *owns* every following block until it hits a heading whose rank is
+/// **≤** its own — that heading begins a new sibling (equal rank) or ancestor (smaller rank)
+/// section. Deeper headings (strictly greater rank) nest inside.
+///
+/// | level | rank |
+/// |-------|------|
+/// | `Part` | 0 |
+/// | `Chapter` | 1 |
+/// | `Section` | 2 |
+/// | `Subsection` | 3 |
+/// | `Subsubsection` | 4 |
+/// | `Paragraph` | 5 |
+/// | `Subparagraph` | 6 |
+///
+/// This mirrors the declaration order of [`SectionLevel`]; it is a pure lookup (no arithmetic on
+/// the block list), so it cannot panic.
+fn rank(level: SectionLevel) -> u8 {
+    match level {
+        SectionLevel::Part => 0,
+        SectionLevel::Chapter => 1,
+        SectionLevel::Section => 2,
+        SectionLevel::Subsection => 3,
+        SectionLevel::Subsubsection => 4,
+        SectionLevel::Paragraph => 5,
+        SectionLevel::Subparagraph => 6,
+    }
+}
+
+/// If `block` is a heading, return its rank; otherwise `None` (a non-heading block is always owned
+/// by whatever section it falls under — it never *starts* a new section).
+fn heading_rank(block: &Block) -> Option<u8> {
+    match block {
+        Block::Section { level, .. } => Some(rank(*level)),
+        _ => None,
+    }
+}
+
+/// Fold a **flat** block stream into the nested sectioning forest (D3).
+///
+/// Algorithm (total, infallible):
+///
+/// - Leading non-`Section` blocks (before the first heading) stay at top level, in order.
+/// - When a `Section` heading is met, it **owns** the maximal following run of blocks whose
+///   heading-rank is strictly greater than its own (deeper headings) *or* which are non-headings.
+///   The run stops at the first block whose heading-rank is ≤ this section's rank — that block
+///   starts a new sibling/ancestor section and is not consumed here.
+/// - The owned run is **recursively folded** (so deeper headings nest), then assigned as the
+///   section's `body`. The section's `span` becomes the union of its heading region span and its
+///   folded children's spans.
+/// - **Label hoisting**: if, after folding, the first owned block is a lone `\label` (a
+///   [`Block::Paragraph`] whose only non-space inline is an `Inline::CrossRef { command: "label" }`),
+///   its key is hoisted onto the section's `label` and that block is dropped from `body` (the
+///   `\label` is metadata about the section, not content). Any other `\label` position is **left in
+///   place** in `body` (never dropped) — hoisting only the unambiguous immediately-following case
+///   keeps the fold total; richer hoisting is a follow-on.
+///
+/// Termination: each recursive call folds a **strict sub-slice** of its input (the heading is
+/// removed and its owned run is a proper suffix-prefix), so the recursion depth is bounded by the
+/// number of blocks, which is itself bounded by the parser's `MAX_DEPTH`-capped tree. No `unwrap`,
+/// no indexing that can go out of bounds.
+fn fold_sections(blocks: Vec<Block>) -> Vec<Block> {
+    let mut out: Vec<Block> = Vec::new();
+    let mut iter = blocks.into_iter().peekable();
+
+    while let Some(block) = iter.next() {
+        match block {
+            Block::Section { level, numbered, title, short_title, label, body: _, span } => {
+                let my_rank = rank(level);
+                // Collect the run this heading owns: every subsequent block until one whose
+                // heading-rank is ≤ my_rank. `peek` lets us stop *before* consuming that block.
+                let mut owned: Vec<Block> = Vec::new();
+                while let Some(next) = iter.peek() {
+                    match heading_rank(next) {
+                        Some(r) if r <= my_rank => break, // sibling/ancestor: not mine.
+                        _ => {
+                            // Deeper heading or a non-heading block: owned. `next()` cannot be
+                            // `None` here because `peek()` just returned `Some`.
+                            if let Some(owned_block) = iter.next() {
+                                owned.push(owned_block);
+                            }
+                        }
+                    }
+                }
+                // Recursively fold the owned run so deeper headings nest inside it.
+                let mut folded = fold_sections(owned);
+                // Label hoisting: pull a leading lone `\label{…}` onto the section.
+                let hoisted = hoist_label(&mut folded);
+                let label = label.or(hoisted);
+                // Span union: heading region span ∪ each folded child's span.
+                let span = folded.iter().fold(span, |acc, child| union(acc, block_span(child)));
+                out.push(Block::Section {
+                    level,
+                    numbered,
+                    title,
+                    short_title,
+                    label,
+                    body: folded,
+                    span,
+                });
+            }
+            other => out.push(other),
+        }
+    }
+    out
+}
+
+/// Hoist a `\label{key}` off the front of a section's owned body, if one is there.
+///
+/// LaTeX practice is `\section{Title}\label{sec:title}…` — the `\label` comes right after the
+/// heading. After D2 lowering, that `\label` is the **leading `label` cross-reference of the first
+/// paragraph** (it fuses with any following text into one `Block::Paragraph`, since there is no
+/// `Node::Par` between them). So we look at the first block:
+///
+/// - If it is a [`Block::Paragraph`] whose leading non-space inlines contain **exactly one**
+///   `label` [`Inline::CrossRef`] (with no other content before it), we take its key, strip that
+///   label inline out of the paragraph, and — if the paragraph is now empty (the label stood
+///   alone) — drop the paragraph entirely. The rest of the paragraph text is preserved.
+/// - Anything else (first block is not a paragraph, or its leading content is not a lone label)
+///   leaves `body` untouched and returns `None` — no content is ever dropped.
+fn hoist_label(body: &mut Vec<Block>) -> Option<String> {
+    let Some(Block::Paragraph(inlines, span)) = body.first_mut() else {
+        return None;
+    };
+    // Find the first non-space inline; it must be the label, and there must be no non-space
+    // inline before it (there can't be — it's the first — but we scan defensively).
+    let mut label_idx: Option<usize> = None;
+    for (i, inline) in inlines.iter().enumerate() {
+        match inline {
+            Inline::Space(_) => continue,
+            Inline::CrossRef { command, .. } if command == "label" => {
+                label_idx = Some(i);
+                break;
+            }
+            _ => return None, // leading content is not a label → do not hoist.
+        }
+    }
+    let idx = label_idx?;
+    let key = match &inlines[idx] {
+        Inline::CrossRef { target, .. } => target.clone(),
+        _ => return None, // unreachable given the scan above, but keep it total.
+    };
+    // Remove the label inline (and any spaces up to it) from the paragraph.
+    inlines.drain(..=idx);
+    // Drop a now-empty (or whitespace-only) paragraph so the hoisted label leaves no husk.
+    let empty = inlines.iter().all(|i| matches!(i, Inline::Space(_)));
+    let span = *span;
+    if empty {
+        body.remove(0);
+    } else if let Some(Block::Paragraph(_, s)) = body.first_mut() {
+        *s = span; // keep the (coarse) span; unchanged, but explicit.
+    }
+    Some(key)
+}
+
+/// The union of two spans: the smallest span covering both.
+fn union(a: Span, b: Span) -> Span {
+    Span::new(a.start.min(b.start), a.end.max(b.end))
+}
+
+/// The span of a block (mirror of the test helper, needed by the D3 span union in `fold_sections`).
+fn block_span(b: &Block) -> Span {
+    match b {
+        Block::Section { span, .. }
+        | Block::List { span, .. }
+        | Block::Table { span, .. }
+        | Block::DisplayMath { span, .. }
+        | Block::Environment { span, .. } => *span,
+        Block::Paragraph(_, span) | Block::Raw(_, span) => *span,
+    }
 }
 
 /// Does this node lower to a [`Block`] of its own (rather than joining an inline run)?
@@ -449,7 +641,8 @@ fn lower_block(node: Node, region: Span) -> Block {
             numbered: !starred,
             title: lower_inlines(title, region),
             short_title: short.map(|s| lower_inlines(s, region)),
-            body: Vec::new(), // D2: zero-body; the sectioning fold that fills this is D3.
+            label: None,      // filled by fold_sections (D3) if a \label follows the heading.
+            body: Vec::new(), // filled by fold_sections (D3): the run of blocks this heading owns.
             span: region,
         },
         Node::List { kind, items } => Block::List {
@@ -626,7 +819,7 @@ impl Preamble {
 impl Block {
     fn write_latex(&self, out: &mut String) {
         match self {
-            Block::Section { level, numbered, title, short_title, body, .. } => {
+            Block::Section { level, numbered, title, short_title, label, body, .. } => {
                 out.push('\\');
                 out.push_str(level.command());
                 if !numbered {
@@ -640,7 +833,19 @@ impl Block {
                 out.push('{');
                 write_inlines(title, out);
                 out.push('}');
-                // D2 body is always empty, but render it for forward-compat with D3.
+                // Re-emit a hoisted `\label{key}` immediately after the heading, so re-parsing +
+                // re-folding hoists it back onto this section (round-trip fixed point). A `\par`
+                // (blank line) after it keeps the label a **lone** paragraph on re-parse, so
+                // `hoist_label` recognizes it again rather than fusing it with following text.
+                if let Some(key) = label {
+                    out.push_str("\\label{");
+                    out.push_str(key);
+                    out.push('}');
+                    if !body.is_empty() {
+                        out.push_str("\n\n");
+                    }
+                }
+                // D3: render the owned child blocks inline after the heading.
                 write_blocks(body, out);
             }
             Block::Paragraph(inlines, _) => {
@@ -708,11 +913,12 @@ impl Block {
 
     fn strip_spans(&self, z: Span) -> Block {
         match self {
-            Block::Section { level, numbered, title, short_title, body, .. } => Block::Section {
+            Block::Section { level, numbered, title, short_title, label, body, .. } => Block::Section {
                 level: *level,
                 numbered: *numbered,
                 title: strip_inlines(title, z),
                 short_title: short_title.as_ref().map(|s| strip_inlines(s, z)),
+                label: label.clone(),
                 body: body.iter().map(|b| b.strip_spans(z)).collect(),
                 span: z,
             },
@@ -1034,18 +1240,22 @@ mod tests {
         );
         let doc = parse_document(src).expect("parse");
 
-        // A heading became a zero-body Section.
-        let sec = doc.body.iter().find(|b| matches!(b, Block::Section { .. })).expect("section");
-        if let Block::Section { level, numbered, title, body, .. } = sec {
+        // D3: the heading now OWNS every following block (all deeper-or-non-heading), so the
+        // section sits at top level and the paragraph/list/table/math/ref are inside its body.
+        assert_eq!(doc.body.len(), 1, "the single \\section owns the whole body");
+        let sec = &doc.body[0];
+        let owned: &[Block] = if let Block::Section { level, numbered, title, body, .. } = sec {
             assert_eq!(*level, SectionLevel::Section);
             assert!(*numbered);
-            assert!(body.is_empty(), "D2 sections are zero-body");
+            assert!(!body.is_empty(), "D3 sections own their following blocks");
             assert!(title.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "Intro")));
-        }
+            body
+        } else {
+            panic!("expected a Section at top level");
+        };
 
-        // A paragraph with Strong / Emph / inline Math.
-        let para = doc
-            .body
+        // A paragraph with Strong / Emph / inline Math — now inside the section body.
+        let para = owned
             .iter()
             .find(|b| matches!(b, Block::Paragraph(inls, _)
                 if inls.iter().any(|i| matches!(i, Inline::Strong(..)))))
@@ -1056,12 +1266,12 @@ mod tests {
             assert!(inls.iter().any(|i| matches!(i, Inline::Math { source, .. } if source.contains("x^2"))));
         }
 
-        // List, Table, DisplayMath, CrossRef.
-        assert!(doc.body.iter().any(|b| matches!(b, Block::List { .. })));
-        assert!(doc.body.iter().any(|b| matches!(b, Block::Table { .. })));
-        assert!(doc.body.iter().any(|b| matches!(b, Block::DisplayMath { source, .. } if source.contains("E = mc^2"))));
+        // List, Table, DisplayMath, CrossRef — all owned by the section.
+        assert!(owned.iter().any(|b| matches!(b, Block::List { .. })));
+        assert!(owned.iter().any(|b| matches!(b, Block::Table { .. })));
+        assert!(owned.iter().any(|b| matches!(b, Block::DisplayMath { source, .. } if source.contains("E = mc^2"))));
         // The \ref lowered to a CrossRef inline inside its paragraph.
-        assert!(doc.body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+        assert!(owned.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
             if inls.iter().any(|i| matches!(i, Inline::CrossRef { command, target, .. }
                 if command == "ref" && target == "eq:one")))));
     }
@@ -1123,6 +1333,263 @@ mod tests {
             assert_eq!(name, "center");
             assert!(body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
                 if inls.iter().any(|i| matches!(i, Inline::Strong(..))))));
+        }
+    }
+
+    // -- D3: sectioning-fold tests ------------------------------------------------------------
+
+    /// A flat, span-stripped **linearization** of the folded forest: a heading followed by the
+    /// depth-first linearization of the blocks it owns. This is the inverse of `fold_sections`:
+    /// `flatten(fold(flat)) == flat` (modulo section bodies, which are empty pre-fold and populated
+    /// post-fold — so we compare with each `Section`'s own `body` emptied). All spans are stripped
+    /// to `z` so ordering is compared without the D3 span-union differences.
+    fn flatten(blocks: &[Block]) -> Vec<Block> {
+        let z = Span::new(0, 0);
+        let mut out = Vec::new();
+        for b in blocks {
+            match b {
+                Block::Section { level, numbered, title, short_title, label, body, .. } => {
+                    // Emit the heading with an EMPTY body (matching the pre-fold shape), then the
+                    // depth-first linearization of the blocks it owned.
+                    out.push(Block::Section {
+                        level: *level,
+                        numbered: *numbered,
+                        title: strip_inlines(title, z),
+                        short_title: short_title.as_ref().map(|s| strip_inlines(s, z)),
+                        label: label.clone(),
+                        body: Vec::new(),
+                        span: z,
+                    });
+                    out.extend(flatten(body));
+                }
+                other => out.push(other.strip_spans(z)),
+            }
+        }
+        out
+    }
+
+    #[test]
+    fn fold_nests_and_flatten_reproduces_order() {
+        // \section{A} p1 \subsection{B} p2 \section{C} p3
+        // → A owns {p1, B{p2}}, C owns {p3}; A and C are top-level siblings; B nests in A.
+        let src = concat!(
+            r"\begin{document}",
+            r"\section{A}p1",
+            r"\subsection{B}p2",
+            r"\section{C}p3",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+
+        // Two top-level sections: A and C.
+        assert_eq!(doc.body.len(), 2);
+        let (a_body, c_body) = match (&doc.body[0], &doc.body[1]) {
+            (
+                Block::Section { title: ta, body: ba, level: SectionLevel::Section, .. },
+                Block::Section { title: tc, body: bc, level: SectionLevel::Section, .. },
+            ) => {
+                assert!(ta.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "A")));
+                assert!(tc.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "C")));
+                (ba, bc)
+            }
+            other => panic!("expected two top-level Sections, got {other:?}"),
+        };
+
+        // A owns p1 then subsection B (which nests p2).
+        assert!(a_body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+            if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "p1")))));
+        let b_sec = a_body
+            .iter()
+            .find(|b| matches!(b, Block::Section { level: SectionLevel::Subsection, .. }))
+            .expect("subsection B nested in A");
+        if let Block::Section { title, body, .. } = b_sec {
+            assert!(title.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "B")));
+            assert!(body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "p2")))));
+        }
+        // C owns only p3 (no nested section).
+        assert!(c_body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+            if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "p3")))));
+        assert!(!c_body.iter().any(|b| matches!(b, Block::Section { .. })));
+
+        // Property: flattening the folded forest reproduces the pre-fold flat block order.
+        // The pre-fold shape = zero-body Section markers interleaved with the owned blocks, in
+        // source order: [Sec(A), p1, Sec(B), p2, Sec(C), p3].
+        let flat = flatten(&doc.body);
+        let z = Span::new(0, 0);
+        let sec = |title: &str, level: SectionLevel| Block::Section {
+            level,
+            numbered: true,
+            title: vec![Inline::Text(title.into(), z)],
+            short_title: None,
+            label: None,
+            body: Vec::new(),
+            span: z,
+        };
+        let para = |t: &str| Block::Paragraph(vec![Inline::Text(t.into(), z)], z);
+        assert_eq!(
+            flat,
+            vec![
+                sec("A", SectionLevel::Section),
+                para("p1"),
+                sec("B", SectionLevel::Subsection),
+                para("p2"),
+                sec("C", SectionLevel::Section),
+                para("p3"),
+            ]
+        );
+    }
+
+    #[test]
+    fn deeper_then_shallower_closes_the_right_sections() {
+        // \section{A} \subsection{B} \subsubsection{C} \section{D}
+        // C nests in B nests in A; D is a top-level sibling of A (rank ≤ A closes A, B, C).
+        let src = concat!(
+            r"\begin{document}",
+            r"\section{A}\subsection{B}\subsubsection{C}x\section{D}y",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.body.len(), 2, "A and D are top-level siblings");
+        // A → B → C chain.
+        if let Block::Section { body: a, .. } = &doc.body[0] {
+            let b = a.iter().find_map(|blk| match blk {
+                Block::Section { level: SectionLevel::Subsection, body, .. } => Some(body),
+                _ => None,
+            });
+            let b = b.expect("B nested in A");
+            let c = b.iter().find_map(|blk| match blk {
+                Block::Section { level: SectionLevel::Subsubsection, body, .. } => Some(body),
+                _ => None,
+            });
+            let c = c.expect("C nested in B");
+            assert!(c.iter().any(|blk| matches!(blk, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "x")))));
+        } else {
+            panic!("body[0] must be section A");
+        }
+        // D owns "y".
+        if let Block::Section { title, body, .. } = &doc.body[1] {
+            assert!(title.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "D")));
+            assert!(body.iter().any(|blk| matches!(blk, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t == "y")))));
+        }
+    }
+
+    #[test]
+    fn leading_blocks_before_first_heading_stay_top_level() {
+        let src = r"\begin{document}intro text\section{A}body\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.body.len(), 2, "the intro paragraph + section A");
+        assert!(matches!(doc.body[0], Block::Paragraph(..)), "leading text stays at top level");
+        assert!(matches!(doc.body[1], Block::Section { .. }));
+    }
+
+    #[test]
+    fn label_hoisted_onto_section() {
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}First paragraph.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.body.len(), 1);
+        if let Block::Section { label, body, .. } = &doc.body[0] {
+            assert_eq!(label.as_deref(), Some("sec:intro"), "the \\label is hoisted onto the section");
+            // The label block is removed from body; the paragraph remains.
+            assert!(!body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::CrossRef { command, .. } if command == "label")))),
+                "the hoisted label is no longer a body block");
+            assert!(body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t.contains("First"))))));
+        } else {
+            panic!("expected section");
+        }
+    }
+
+    #[test]
+    fn non_lone_label_is_not_hoisted() {
+        // A `\ref` (not `\label`), or a label fused with text, must NOT be hoisted — kept in body.
+        let src = r"\begin{document}\section{A}See \ref{k} here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        if let Block::Section { label, body, .. } = &doc.body[0] {
+            assert_eq!(*label, None, "a \\ref is not a section label");
+            assert!(body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::CrossRef { command, .. } if command == "ref")))),
+                "the \\ref is preserved in the body");
+        }
+    }
+
+    #[test]
+    fn label_round_trips_through_to_latex() {
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}Body text here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let rendered = doc.to_latex();
+        let redoc = parse_document(&rendered).expect("re-parse");
+        assert_eq!(
+            doc.strip_spans(),
+            redoc.strip_spans(),
+            "label round-trip failed; rendered = {rendered:?}"
+        );
+        // And the label survived the round-trip.
+        if let Block::Section { label, .. } = &redoc.body[0] {
+            assert_eq!(label.as_deref(), Some("sec:intro"));
+        }
+    }
+
+    #[test]
+    fn round_trip_with_nested_sections() {
+        // The folded forest must be a to_latex fixed point (modulo spans) for nested sections.
+        for src in [
+            r"\begin{document}\section{A}p1\subsection{B}p2\section{C}p3\end{document}",
+            r"\begin{document}\part{P}\chapter{C}\section{S}deep text\end{document}",
+            r"\begin{document}intro\section{A}\label{sec:a}owned\subsection{B}more\end{document}",
+        ] {
+            let doc = parse_document(src).expect("parse");
+            let rendered = doc.to_latex();
+            let redoc = parse_document(&rendered).expect("re-parse");
+            assert_eq!(
+                doc.strip_spans(),
+                redoc.strip_spans(),
+                "nested round-trip failed:\n src = {src:?}\n rendered = {rendered:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn span_union_containment_for_nested_sections() {
+        // D3 span-union: a section's span ⊇ its children's spans, and still ⊆ the body region.
+        let src = concat!(
+            r"\documentclass{article}\begin{document}",
+            r"\section{A}p1\subsection{B}p2\section{C}p3",
+            r"\end{document}",
+        );
+        let doc = parse_document(src).expect("parse");
+        for block in &doc.body {
+            check_block(block, doc.span);
+        }
+        // Explicitly: section A's span contains subsection B's span.
+        if let Block::Section { span: a_span, body, .. } = &doc.body[0] {
+            let b = body
+                .iter()
+                .find(|b| matches!(b, Block::Section { level: SectionLevel::Subsection, .. }))
+                .expect("B");
+            let b_span = block_span(b);
+            assert!(
+                b_span.start >= a_span.start && b_span.end <= a_span.end,
+                "B span {b_span:?} not within A span {a_span:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_is_total_on_headings_inside_environment() {
+        // A section inside a `center` environment nests via the same fold — no panic, and the
+        // environment body is a folded forest too.
+        let src = r"\begin{document}\begin{center}\section{Inner}owned text\end{center}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let env = doc.body.iter().find(|b| matches!(b, Block::Environment { .. })).expect("env");
+        if let Block::Environment { body, .. } = env {
+            let sec = body.iter().find(|b| matches!(b, Block::Section { .. })).expect("inner section");
+            if let Block::Section { body, .. } = sec {
+                assert!(body.iter().any(|b| matches!(b, Block::Paragraph(..))), "section owns its text");
+            }
         }
     }
 }

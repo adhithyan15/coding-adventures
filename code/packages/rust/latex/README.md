@@ -39,9 +39,10 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
 | **D1 doc tables/lists** | document-mode `tabular`/`tabular*` grids (split on `&`/`\\`) → `Node::Tabular` and `itemize`/`enumerate`/`description` (split on `\item`) → `Node::List`, via the opt-in `recognize_tables` pass; total, round-trip | ✅ |
 | **D2 Document skeleton** | hierarchical `Document` model: preamble/body split at `\begin{document}`, `\documentclass`/`\usepackage` classified, body lowered to a **flat** `Vec<Block>` (headings → zero-body `Block::Section`; paragraphs/lists/tables/display-math/environments; inline runs → `Vec<Inline>`); `parse_document`/`build_document` + `Document::to_latex` round-trip; coarse (region-granular) spans | ✅ |
+| **D3 sectioning fold** | folds the flat block stream into the **nested sectioning forest**: each heading OWNS the run of following blocks up to the next heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`, via `rank(level)`); deeper headings nest. A trailing `\label{key}` is hoisted onto its section's new `label` field. Applies to every block-list (top-level + environment/list/table bodies). Total & panic-free; `to_latex` fixed point; `flatten(fold(flat)) == flat` property test; folded-section span = union of heading ∪ children spans | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01)
-is building on top: D1–D2 shipped.
+is building on top: D1–D3 shipped.
 
 ## The Document layer (LTXDOC01)
 
@@ -57,14 +58,18 @@ let doc = parse_document(
 ).unwrap();
 
 assert_eq!(doc.preamble.document_class.unwrap().class, "article");
-assert!(matches!(doc.body[0], Block::Section { .. }));        // zero-body heading (D2)
+// D3: the heading OWNS the following blocks — its `body` is the nested sectioning forest.
+if let Block::Section { body, .. } = &doc.body[0] {
+    assert!(matches!(body[0], Block::Paragraph(..)));         // "Hello world." is owned by Intro
+}
 assert_eq!(doc.to_latex().is_empty(), false);                // round-trips (modulo spans)
 ```
 
-**D2 spans are coarse (region-granular)**: every block/inline span defaults to its enclosing region
-span, guaranteeing every child span ⊆ its parent ⊆ the `Document` span. Precise per-node byte
-coverage is deferred to D6 (once the parser threads token spans through `Node`); the `span` field
-exists now so later rungs tighten the *values* without an API break.
+**D2/D3 spans are coarse (region-granular)**: every leaf block/inline span defaults to its enclosing
+region span, and a folded D3 section's span is the **union** of its heading region span and its owned
+children's spans — so every child span ⊆ its parent ⊆ the `Document` span still holds. Precise
+per-node byte coverage is deferred to D6 (once the parser threads token spans through `Node`); the
+`span` field exists now so later rungs tighten the *values* without an API break.
 
 ## Usage
 

@@ -2,6 +2,43 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.28.0] — 2026-07-03
+
+### Added — the sectioning fold (LTXDOC01 D3)
+
+D3 folds D2's **flat** body block stream into the **nested sectioning forest**. Where D2 emitted
+every heading as a zero-body `Block::Section`, D3's `fold_sections` pass makes each heading OWN the
+run of blocks that follow it, up to (but not including) the next heading of the same-or-higher level;
+deeper headings nest inside. This runs inside `build_document` for the top-level body **and every
+nested block-list** (environment/quote/figure bodies, list items, table cells), because they all
+route through the one `lower_blocks` function — so nesting works everywhere.
+
+- **Level ranking.** A new `fn rank(level: SectionLevel) -> u8` gives the hierarchy order
+  `Part=0 < Chapter=1 < Section=2 < Subsection=3 < Subsubsection=4 < Paragraph=5 < Subparagraph=6`
+  (mirroring `SectionLevel`'s declaration order). A section owns following blocks until it meets a
+  heading whose rank is **≤** its own (that heading starts a sibling/ancestor section); strictly
+  greater rank nests inside.
+- **`Block::Section` gains a `label: Option<String>` field** (per spec §3). `fold_sections` **hoists
+  a `\label{key}`** that immediately follows a heading onto this field: the `\label` lowers (via
+  `recognize_structure`) to a leading `label` `Inline::CrossRef` on the section's first owned
+  paragraph, which the fold peels off (dropping a now-empty paragraph, preserving any following
+  text). Only the unambiguous immediately-following case is hoisted; any other `\label` position is
+  **left in place in `body`** (never dropped), keeping the fold total. A hoisted label is re-emitted
+  by `to_latex` right after the heading so re-parsing + re-folding is a fixed point.
+- **Span union.** A folded section's `span` is the union of its heading's (coarse) region span and
+  its owned children's spans, so it still satisfies child ⊆ parent ⊆ `Document` (extended
+  span-integrity test covers the nested case).
+- **Totality preserved.** `fold_sections` is total and panic-free — no `unwrap`/`expect`, no
+  unchecked indexing on the block list; recursion folds a strict sub-slice each call, bounded by the
+  parser's `MAX_DEPTH`-capped tree. No `unsafe`.
+- **Property test.** A `flatten(&[Block])` linearizes the folded forest (heading with emptied body,
+  then depth-first its owned blocks); `flatten(fold(flat)) == flat` reproduces D2's pre-fold order.
+  Covered case: `\section{A} p1 \subsection{B} p2 \section{C} p3` → A owns `{p1, B{p2}}`, C owns
+  `{p3}`; A and C are top-level siblings, B nests in A.
+
+`Cargo.toml` bumped 0.27.0 → 0.28.0. No public API break beyond the added `Section.label` field;
+all D2 constructors/matchers/tests updated accordingly.
+
 ## [0.27.0] — 2026-07-03
 
 ### Added — the hierarchical `Document` layer, preamble/body split (LTXDOC01 D2)
