@@ -2,6 +2,39 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.29.0] — 2026-07-03
+
+### Added — document metadata extraction (LTXDOC01 D4)
+
+D4 lifts the `\title` / `\author` / `\date` directives and the `abstract` environment into a small
+typed `Metadata` record on `Document`, so a consumer can ask "what is the title / who are the
+authors / what is the abstract?" without walking the block/inline tree. (Inline normalization —
+`\textbf`/`\emph`/`\texttt` → `Strong`/`Emph`/`Code`, `$…$` → `Math`, `\ref`/`\cite` → `CrossRef`,
+accents → `Accent` — was already delivered by the `lower_inline` pass in D2/D3; D4's remaining work
+is the metadata index.)
+
+- **New `Metadata` struct** (`title: Option<Vec<Inline>>`, `authors: Vec<Vec<Inline>>`,
+  `date: Option<Vec<Inline>>`, `abstract_: Option<Vec<Block>>`), derives
+  `Debug, Clone, PartialEq, Eq, Default`, re-exported from the crate root. A new
+  `pub metadata: Metadata` field sits between `Document::preamble` and `Document::body`.
+- **Additive, non-destructive projection.** Metadata is a typed *index over* the existing nodes —
+  the `\title`/`\author`/`\date` commands still lower into `preamble.raw` (or a body block) and the
+  `abstract` environment still becomes a `Block::Environment`. **Nothing is moved or removed**, so
+  `to_latex` round-trips byte-for-byte unchanged and re-parsing repopulates the same `Metadata` (a
+  fixed point — pinned by a test). `\maketitle` is a no-op for metadata (nothing to capture) and is
+  carried through the body as before.
+- **Both streams scanned.** `\title`/`\author`/`\date` are honoured in the preamble **or** the body
+  (LaTeX allows either); the preamble is scanned first, so a preamble `\title` wins over a stray
+  body one. First `\title` and first `\date` win; every `\author` contributes, and each `\and`
+  inside an `\author` splits it into multiple author entries.
+- **Total & panic-free.** Extraction is a single linear allocation-only pass per stream, with no
+  unchecked indexing and no new recursion (the `abstract` body lowers through the same bounded
+  `lower_blocks`). Absent directives leave the fields `None`/empty — never fabricated.
+- **Spec divergence noted:** the spec's D4 bullet describes metadata extraction but not the
+  *additive-projection* decision (keeping the nodes in place for round-trip safety). The spec's D4
+  bullet is updated to record this. Spans stay coarse (region-granular); precise per-node byte
+  coverage remains D6.
+
 ## [0.28.0] — 2026-07-03
 
 ### Added — the sectioning fold (LTXDOC01 D3)

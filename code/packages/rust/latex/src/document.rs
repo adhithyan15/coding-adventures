@@ -82,7 +82,11 @@ use crate::{document_to_latex, parse, recognize_accents, recognize_structure, re
 pub struct Document {
     /// Everything before `\begin{document}` (or the whole node stream for a fragment).
     pub preamble: Preamble,
-    /// The document body, lowered to a **flat** `Vec<Block>` (no sectioning nesting in D2).
+    /// Document metadata (`\title`/`\author`/`\date`/`abstract`), extracted as an **additive
+    /// projection** over the preamble + body nodes — see [`Metadata`]. Never fabricated; the
+    /// underlying nodes stay in `preamble`/`body`, so `to_latex` round-trips unchanged.
+    pub metadata: Metadata,
+    /// The document body, the nested sectioning forest of [`Block`]s.
     pub body: Vec<Block>,
     /// The whole source: `Span { start: 0, end: src.len() }`.
     pub span: Span,
@@ -100,6 +104,51 @@ pub struct Preamble {
     pub raw: Vec<Node>,
     /// `0 ..` the byte offset of `\begin{document}` (or `src.len()` if absent).
     pub span: Span,
+}
+
+/// Document **metadata** (LTXDOC01 D4): the `\title` / `\author` / `\date` directives and the
+/// `abstract` environment, lifted into a small typed record so a consumer can ask "what is the
+/// title?" without walking the block/inline tree.
+///
+/// ## Additive projection — the underlying nodes are **not** removed
+///
+/// `Metadata` is an **additive, non-destructive projection**. The `\title{…}` / `\author{…}` /
+/// `\date{…}` commands still lower into [`Preamble::raw`] (or a body [`Block`]) exactly as they
+/// did before D4, and the `abstract` environment still becomes a [`Block::Environment`] in the
+/// body. `Metadata` is just a typed *index over* those nodes — nothing is moved or deleted. Two
+/// consequences the tests pin down:
+///
+/// - **`to_latex` round-trips unchanged.** Because no node was removed, rendering back to source
+///   is byte-for-byte the same as it was pre-D4 (the metadata field contributes nothing to
+///   `to_latex`; the nodes it points at do the rendering, as before).
+/// - **Re-parsing repopulates the same `Metadata` (a fixed point).**
+///   `parse_document(&doc.to_latex())` yields a `Document` whose `metadata` equals `doc.metadata`
+///   modulo spans — the projection is stable under the round-trip.
+///
+/// ## Never fabricated
+///
+/// Every field is `None`/empty when the corresponding directive is absent — D4 never invents a
+/// title, author, or date. Extraction is **total and panic-free**: it scans the already-parsed
+/// node stream (no new parsing, no unchecked indexing, no unbounded recursion — the `abstract`
+/// body lowers through the same bounded [`lower_blocks`] every other environment body uses).
+///
+/// ## Where the directives may appear
+///
+/// LaTeX allows `\title` / `\author` / `\date` in **either** the preamble (the common case) *or*
+/// the body (after `\begin{document}`, before `\maketitle`). D4 therefore scans **both** node
+/// streams; the first `\title` (and first `\date`) wins, and every `\author` contributes. The
+/// `abstract` environment is a body construct, so only the body is scanned for it.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct Metadata {
+    /// `\title{…}`, lowered to inlines. `None` when there is no `\title`. First `\title` wins.
+    pub title: Option<Vec<Inline>>,
+    /// `\author{A \and B}` → one entry per `\and`-separated author group, each lowered to inlines.
+    /// Every `\author` command contributes (a paper may split authors across several `\author`s).
+    pub authors: Vec<Vec<Inline>>,
+    /// `\date{…}`, lowered to inlines. `None` when there is no `\date`. First `\date` wins.
+    pub date: Option<Vec<Inline>>,
+    /// The `abstract` environment's body, lowered to blocks. `None` when there is no `abstract`.
+    pub abstract_: Option<Vec<Block>>,
 }
 
 /// A `\documentclass[options]{class}` directive.
@@ -351,6 +400,13 @@ pub fn build_document(nodes: Vec<Node>, src: &str) -> Document {
         }
     }
 
+    // D4 metadata extraction runs **before** we consume the two node streams, as a read-only
+    // scan over *borrowed* nodes: it copies out the `\title`/`\author`/`\date` arguments and the
+    // `abstract` body, but leaves every node in place so the subsequent `classify_preamble` /
+    // `lower_blocks` folds still see them (additive projection — see [`Metadata`]).
+    let metadata =
+        extract_metadata(&preamble_nodes, &body_nodes, preamble_span, body_region);
+
     let preamble = classify_preamble(preamble_nodes, preamble_span);
     // `lower_blocks` produces the *flat* D2 block stream and then runs the D3 sectioning fold on
     // it (see `lower_blocks`), so `body` is already the nested sectioning forest. The same fold
@@ -358,7 +414,113 @@ pub fn build_document(nodes: Vec<Node>, src: &str) -> Document {
     // because they all route through `lower_blocks` too — nesting therefore works everywhere.
     let body = lower_blocks(body_nodes, body_region);
 
-    Document { preamble, body, span: doc_span }
+    Document { preamble, metadata, body, span: doc_span }
+}
+
+// ---------------------------------------------------------------------------------------------
+// D4 — metadata extraction (an additive projection over the preamble + body node streams).
+// ---------------------------------------------------------------------------------------------
+
+/// Build the [`Metadata`] projection by scanning the preamble and body node streams for the
+/// `\title` / `\author` / `\date` commands and the `abstract` environment.
+///
+/// **Non-destructive**: this takes the node streams *by reference* and mutates nothing — the same
+/// nodes are folded into `preamble.raw` / `body` afterwards, so nothing is moved or dropped. The
+/// scan is a single linear pass over each top-level stream (it does **not** descend into arbitrary
+/// nested groups — `\title` in real documents is a top-level directive, and descending would risk
+/// double-capturing a `\title` that appears verbatim inside, say, a `verbatim` example). This
+/// keeps the pass total and O(n).
+///
+/// Precedence: the **first** `\title` and the **first** `\date` win (LaTeX honours the last
+/// definition, but for a faithful *structure* model the first occurrence is the stable choice and
+/// matches how `\maketitle` would render a well-formed single-`\title` document). Every `\author`
+/// contributes — a document may issue several `\author` commands, and each `\and` inside one
+/// splits it into multiple author entries.
+///
+/// `preamble_span` / `body_region` are the coarse enclosing spans (D4 keeps the D2/D3 region-
+/// granular span policy; precise per-node byte coverage is D6).
+fn extract_metadata(
+    preamble_nodes: &[Node],
+    body_nodes: &[Node],
+    preamble_span: Span,
+    body_region: Span,
+) -> Metadata {
+    let mut meta = Metadata::default();
+
+    // `\title`/`\author`/`\date` may live in either stream. Scan the preamble first (the common
+    // home), then the body, so a preamble `\title` takes precedence over a stray body one.
+    scan_title_author_date(preamble_nodes, preamble_span, &mut meta);
+    scan_title_author_date(body_nodes, body_region, &mut meta);
+
+    // The `abstract` environment is a body construct only.
+    for node in body_nodes {
+        if let Node::Environment { name, body, .. } = node {
+            if name == "abstract" && meta.abstract_.is_none() {
+                meta.abstract_ = Some(lower_blocks(body.clone(), body_region));
+            }
+        }
+    }
+
+    meta
+}
+
+/// Scan one node stream for `\title` / `\author` / `\date` commands, folding each into `meta`.
+/// `region` is the coarse span the lowered inlines inherit. Total and allocation-only.
+fn scan_title_author_date(nodes: &[Node], region: Span, meta: &mut Metadata) {
+    for node in nodes {
+        // These directives survive D2 lowering as plain `Node::Command`s (they are not among the
+        // constructs `recognize_structure` folds), so we match the raw command with exactly one
+        // mandatory argument and no optional argument.
+        if let Node::Command { name, optional, arguments } = node {
+            if !optional.is_empty() {
+                continue; // A bracketed form isn't the plain \title{…}/\author{…}/\date{…} we mean.
+            }
+            match name.as_str() {
+                "title" => {
+                    if meta.title.is_none() {
+                        if let Some(arg) = arguments.first() {
+                            meta.title = Some(lower_inlines(arg.clone(), region));
+                        }
+                    }
+                }
+                "date" => {
+                    if meta.date.is_none() {
+                        if let Some(arg) = arguments.first() {
+                            meta.date = Some(lower_inlines(arg.clone(), region));
+                        }
+                    }
+                }
+                "author" => {
+                    if let Some(arg) = arguments.first() {
+                        for group in split_on_and(arg) {
+                            meta.authors.push(lower_inlines(group, region));
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+}
+
+/// Split an `\author` argument's node list on the `\and` separator (`\and` parses to a zero-arg
+/// `Node::Command { name: "and", … }`). `\author{Alice \and Bob}` → `[[Alice, Space], [Space, Bob]]`
+/// (two groups). A leading/trailing `\and` yields an empty group, which still becomes an (empty)
+/// author entry — we do **not** silently drop it, keeping the split faithful; a single-author
+/// argument with no `\and` yields exactly one group.
+fn split_on_and(arg: &[Node]) -> Vec<Vec<Node>> {
+    let mut groups: Vec<Vec<Node>> = Vec::new();
+    let mut current: Vec<Node> = Vec::new();
+    for node in arg {
+        if matches!(node, Node::Command { name, arguments, .. } if name == "and" && arguments.is_empty())
+        {
+            groups.push(std::mem::take(&mut current));
+        } else {
+            current.push(node.clone());
+        }
+    }
+    groups.push(current);
+    groups
 }
 
 /// Classify a preamble node stream into `\documentclass` / `\usepackage` directives plus the
@@ -770,8 +932,25 @@ impl Document {
         let z = Span::new(0, 0);
         Document {
             preamble: self.preamble.strip_spans(z),
+            metadata: self.metadata.strip_spans(z),
             body: self.body.iter().map(|b| b.strip_spans(z)).collect(),
             span: z,
+        }
+    }
+}
+
+impl Metadata {
+    /// Span-stripped projection of the metadata, so the round-trip fixed-point test can compare
+    /// `\title`/`\author`/`\date`/`abstract` modulo byte offsets (which move under the round-trip).
+    fn strip_spans(&self, z: Span) -> Metadata {
+        Metadata {
+            title: self.title.as_ref().map(|t| strip_inlines(t, z)),
+            authors: self.authors.iter().map(|a| strip_inlines(a, z)).collect(),
+            date: self.date.as_ref().map(|d| strip_inlines(d, z)),
+            abstract_: self
+                .abstract_
+                .as_ref()
+                .map(|blocks| blocks.iter().map(|b| b.strip_spans(z)).collect()),
         }
     }
 }
@@ -1590,6 +1769,147 @@ mod tests {
             if let Block::Section { body, .. } = sec {
                 assert!(body.iter().any(|b| matches!(b, Block::Paragraph(..))), "section owns its text");
             }
+        }
+    }
+
+    // -- D4: metadata-extraction tests --------------------------------------------------------
+
+    /// Concatenate the plain-text of an inline run (for asserting a metadata field's text), joining
+    /// [`Inline::Text`] and [`Inline::Space`] and recursing through emphasis/style wrappers. Spaces
+    /// are rendered as a single ` `, and the result is trimmed so a leading/trailing `\and`-adjacent
+    /// space (kept faithfully in the inlines) does not clutter the equality check.
+    fn inline_text(inlines: &[Inline]) -> String {
+        fn go(inlines: &[Inline], out: &mut String) {
+            for i in inlines {
+                match i {
+                    Inline::Text(t, _) => out.push_str(t),
+                    Inline::Space(_) => out.push(' '),
+                    Inline::Strong(c, _) | Inline::Emph(c, _) => go(c, out),
+                    Inline::Styled { content, .. } => go(content, out),
+                    _ => {}
+                }
+            }
+        }
+        let mut s = String::new();
+        go(inlines, &mut s);
+        s.trim().to_string()
+    }
+
+    #[test]
+    fn title_in_preamble_captured() {
+        let src = r"\documentclass{article}\title{T}\begin{document}x\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let title = doc.metadata.title.as_ref().expect("title present");
+        assert_eq!(inline_text(title), "T");
+        // Additive projection: the `\title` node is NOT removed — it survives in preamble.raw.
+        assert!(
+            doc.preamble.raw.iter().any(|n| matches!(n, Node::Command { name, .. } if name == "title")),
+            "the \\title node stays in preamble.raw (additive projection)"
+        );
+    }
+
+    #[test]
+    fn author_splits_on_and() {
+        let src = r"\documentclass{article}\author{Alice \and Bob}\begin{document}x\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.metadata.authors.len(), 2, "\\and splits into two authors");
+        assert_eq!(inline_text(&doc.metadata.authors[0]), "Alice");
+        assert_eq!(inline_text(&doc.metadata.authors[1]), "Bob");
+    }
+
+    #[test]
+    fn multiple_author_commands_all_contribute() {
+        // A paper may issue several `\author` commands; each contributes its (possibly \and-split)
+        // entries in order.
+        let src = r"\author{Alice}\author{Bob \and Carol}\begin{document}x\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let names: Vec<String> = doc.metadata.authors.iter().map(|a| inline_text(a)).collect();
+        assert_eq!(names, vec!["Alice", "Bob", "Carol"]);
+    }
+
+    #[test]
+    fn date_captured() {
+        let src = r"\documentclass{article}\date{2026}\begin{document}x\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let date = doc.metadata.date.as_ref().expect("date present");
+        assert_eq!(inline_text(date), "2026");
+    }
+
+    #[test]
+    fn abstract_env_captured_as_blocks() {
+        let src = r"\begin{document}\begin{abstract}This is the abstract.\end{abstract}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let abs = doc.metadata.abstract_.as_ref().expect("abstract present");
+        assert!(
+            abs.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Text(t, _) if t.contains("abstract"))))),
+            "abstract body contains a paragraph with its text"
+        );
+        // Additive projection: the abstract environment ALSO stays as a body Block::Environment.
+        assert!(
+            doc.body.iter().any(|b| matches!(b, Block::Environment { name, .. } if name == "abstract")),
+            "the abstract env stays in the body (additive projection)"
+        );
+    }
+
+    #[test]
+    fn title_in_body_captured() {
+        // `\title` after `\begin{document}` (before `\maketitle`) is still captured.
+        let src = r"\begin{document}\title{Body Title}\maketitle Hi.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let title = doc.metadata.title.as_ref().expect("body \\title present");
+        assert_eq!(inline_text(title), "Body Title");
+        // `\maketitle` is a no-op for metadata (nothing to capture) but is carried through the body.
+        assert!(
+            doc.body.iter().any(|b| matches!(b, Block::Paragraph(inls, _)
+                if inls.iter().any(|i| matches!(i, Inline::Raw(Node::Command { name, .. }, _)
+                    if name == "maketitle")))),
+            "\\maketitle is carried through as a Raw inline (no metadata side effect)"
+        );
+    }
+
+    #[test]
+    fn preamble_title_wins_over_body_title() {
+        // First \title wins; the preamble is scanned before the body.
+        let src = r"\title{Preamble}\begin{document}\title{Body}\maketitle\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(inline_text(doc.metadata.title.as_ref().unwrap()), "Preamble");
+    }
+
+    #[test]
+    fn no_metadata_is_all_none_empty() {
+        let src = r"\documentclass{article}\begin{document}Just body text.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.metadata, Metadata::default(), "no directives → default (all None/empty)");
+        assert!(doc.metadata.title.is_none());
+        assert!(doc.metadata.authors.is_empty());
+        assert!(doc.metadata.date.is_none());
+        assert!(doc.metadata.abstract_.is_none());
+    }
+
+    #[test]
+    fn metadata_round_trip_fixed_point() {
+        // Re-parsing `to_latex()` repopulates the SAME metadata (modulo spans) — the projection is
+        // a fixed point because the underlying \title/\author/\date/abstract nodes are never removed.
+        for src in [
+            r"\documentclass{article}\title{Paper}\author{Alice \and Bob}\date{2026}\begin{document}\maketitle\begin{abstract}An abstract.\end{abstract}Body.\end{document}",
+            r"\begin{document}\title{Only Title}\maketitle Text.\end{document}",
+            r"\documentclass{article}\begin{document}No metadata here.\end{document}",
+        ] {
+            let doc = parse_document(src).expect("parse");
+            let rendered = doc.to_latex();
+            let redoc = parse_document(&rendered).expect("re-parse");
+            assert_eq!(
+                doc.strip_spans().metadata,
+                redoc.strip_spans().metadata,
+                "metadata is not a round-trip fixed point:\n src = {src:?}\n rendered = {rendered:?}"
+            );
+            // And the whole document still round-trips modulo spans (to_latex unaffected by D4).
+            assert_eq!(
+                doc.strip_spans(),
+                redoc.strip_spans(),
+                "D4 broke the document round-trip:\n src = {src:?}\n rendered = {rendered:?}"
+            );
         }
     }
 }
