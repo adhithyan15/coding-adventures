@@ -690,6 +690,12 @@ fn decode_cell(
         },
         // --- number: t absent, t="n", or an unknown t we treat as numeric ---
         _ => match v_text {
+            // A present-but-empty <v> is a formula cell with no cached result —
+            // e.g. openpyxl writes `<c><f>SUM(..)</f><v></v></c>` for a formula
+            // it never computed. That is legal (the <v> is only a *cache*), so we
+            // decode it as Empty rather than failing to parse "" as a number. The
+            // formula text is still captured above, and re-evaluation fills it in.
+            Some(t) if t.trim().is_empty() => Value::Empty,
             Some(t) => {
                 let n: f64 = t
                     .trim()
