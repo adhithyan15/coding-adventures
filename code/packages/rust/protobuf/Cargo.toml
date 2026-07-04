@@ -1,0 +1,9 @@
+[package]
+name = "protobuf"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-dependency Protocol Buffers wire-format reader/writer (varint + wire types)."
+license = "MIT OR Apache-2.0"
+
+[lib]
+path = "src/lib.rs"
