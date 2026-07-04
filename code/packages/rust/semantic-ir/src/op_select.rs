@@ -94,6 +94,75 @@ pub fn resolve_numeric(lhs: Option<&SirType>, rhs: Option<&SirType>) -> NumericL
     }
 }
 
+/// How *any* binary operator lowers, resolved from its operand types. This is
+/// the complete, op-aware companion to [`resolve_numeric`]: it folds in the two
+/// cases a bare numeric resolver can't see — `+` on strings is concatenation,
+/// and the comparison operators are their own category (they yield `Bool`, not
+/// a number).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BinaryLowering {
+    /// Typed integer arithmetic on the given spec (both operands that int type).
+    IntArith(IntSpec),
+    /// Float arithmetic (a float met another number — promote).
+    FloatArith,
+    /// String concatenation — `+` where both operands are `Str`.
+    StrConcat,
+    /// A comparison whose operands share a single concrete comparable type
+    /// (both the same int spec, both `Float`, both `Str`, or both `Bool`) — the
+    /// backend can emit a native typed comparison.
+    TypedCompare,
+    /// Any operand `Dynamic`/absent, mismatched, or otherwise not statically
+    /// resolvable — fall back to the runtime helper (`_sir_plus`/`_sir_lt`/…),
+    /// exactly today's behaviour.
+    RuntimeDispatch,
+}
+
+/// The set of binary operators a frontend emits as `BuiltinCall(op, [a, b])`.
+/// Anything outside this set resolves to [`BinaryLowering::RuntimeDispatch`].
+///
+/// | category   | operators                       |
+/// |------------|---------------------------------|
+/// | arithmetic | `+` `-` `*`                     |
+/// | comparison | `<` `>` `<=` `>=` `==` `!=`      |
+///
+/// (`/` is deliberately absent — division is split into `div_floor`/`div_trunc`
+/// with its own rounding semantics; see SIR21 §E3 and `sir-conformance`.)
+pub fn resolve_binary(op: &str, lhs: Option<&SirType>, rhs: Option<&SirType>) -> BinaryLowering {
+    match op {
+        // `+` is polymorphic: string concat when both are strings, else numeric.
+        "+" => match (lhs, rhs) {
+            (Some(SirType::Str), Some(SirType::Str)) => BinaryLowering::StrConcat,
+            _ => from_numeric(resolve_numeric(lhs, rhs)),
+        },
+        "-" | "*" => from_numeric(resolve_numeric(lhs, rhs)),
+        "<" | ">" | "<=" | ">=" | "==" | "!=" => resolve_compare(lhs, rhs),
+        // Unknown / not-yet-modelled operator: let the runtime decide.
+        _ => BinaryLowering::RuntimeDispatch,
+    }
+}
+
+/// Lift a [`NumericLowering`] into the richer [`BinaryLowering`].
+fn from_numeric(n: NumericLowering) -> BinaryLowering {
+    match n {
+        NumericLowering::Int(spec) => BinaryLowering::IntArith(spec),
+        NumericLowering::Float => BinaryLowering::FloatArith,
+        NumericLowering::RuntimeDispatch => BinaryLowering::RuntimeDispatch,
+    }
+}
+
+/// Resolve a comparison. A native typed comparison is emitted only when both
+/// operands are the *same* concrete comparable type; anything mixed or `Dynamic`
+/// dispatches (no inference, no silent numeric promotion in comparisons).
+fn resolve_compare(lhs: Option<&SirType>, rhs: Option<&SirType>) -> BinaryLowering {
+    match (lhs, rhs) {
+        (Some(SirType::Int(a)), Some(SirType::Int(b))) if a == b => BinaryLowering::TypedCompare,
+        (Some(SirType::Float), Some(SirType::Float)) => BinaryLowering::TypedCompare,
+        (Some(SirType::Str), Some(SirType::Str)) => BinaryLowering::TypedCompare,
+        (Some(SirType::Bool), Some(SirType::Bool)) => BinaryLowering::TypedCompare,
+        _ => BinaryLowering::RuntimeDispatch,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -198,5 +267,81 @@ mod tests {
                 "matching {w:?} should specialise"
             );
         }
+    }
+
+    // ── resolve_binary: arithmetic + concat + comparison (T3c-2) ──────
+
+    #[test]
+    fn binary_arithmetic_matches_the_numeric_rule() {
+        let i32 = int(IntWidth::W32, true, Overflow::Wrap);
+        let spec = IntSpec::sized(IntWidth::W32, true, Overflow::Wrap);
+        for op in ["+", "-", "*"] {
+            assert_eq!(resolve_binary(op, Some(&i32), Some(&i32)), BinaryLowering::IntArith(spec));
+            assert_eq!(
+                resolve_binary(op, Some(&SirType::Float), Some(&i32)),
+                BinaryLowering::FloatArith
+            );
+            assert_eq!(
+                resolve_binary(op, Some(&i32), None),
+                BinaryLowering::RuntimeDispatch
+            );
+        }
+    }
+
+    #[test]
+    fn plus_on_strings_is_concat_but_minus_times_are_not() {
+        let s = SirType::Str;
+        assert_eq!(resolve_binary("+", Some(&s), Some(&s)), BinaryLowering::StrConcat);
+        // `-`/`*` on strings are not numeric and not concat → dispatch.
+        assert_eq!(resolve_binary("-", Some(&s), Some(&s)), BinaryLowering::RuntimeDispatch);
+        assert_eq!(resolve_binary("*", Some(&s), Some(&s)), BinaryLowering::RuntimeDispatch);
+        // `+` with only one string (or string+int) is not concat → dispatch.
+        let i32 = int(IntWidth::W32, true, Overflow::Wrap);
+        assert_eq!(resolve_binary("+", Some(&s), Some(&i32)), BinaryLowering::RuntimeDispatch);
+        assert_eq!(resolve_binary("+", Some(&s), None), BinaryLowering::RuntimeDispatch);
+    }
+
+    #[test]
+    fn comparisons_specialise_on_matching_comparable_types() {
+        let i32 = int(IntWidth::W32, true, Overflow::Wrap);
+        for op in ["<", ">", "<=", ">=", "==", "!="] {
+            assert_eq!(resolve_binary(op, Some(&i32), Some(&i32)), BinaryLowering::TypedCompare);
+            assert_eq!(
+                resolve_binary(op, Some(&SirType::Float), Some(&SirType::Float)),
+                BinaryLowering::TypedCompare
+            );
+            assert_eq!(
+                resolve_binary(op, Some(&SirType::Str), Some(&SirType::Str)),
+                BinaryLowering::TypedCompare
+            );
+            assert_eq!(
+                resolve_binary(op, Some(&SirType::Bool), Some(&SirType::Bool)),
+                BinaryLowering::TypedCompare
+            );
+        }
+    }
+
+    #[test]
+    fn comparisons_dispatch_on_mismatch_or_dynamic() {
+        let i8 = int(IntWidth::W8, true, Overflow::Wrap);
+        let i32 = int(IntWidth::W32, true, Overflow::Wrap);
+        // Mismatched int widths, mixed int/float, and Dynamic all dispatch —
+        // no silent promotion in a comparison.
+        assert_eq!(resolve_binary("<", Some(&i8), Some(&i32)), BinaryLowering::RuntimeDispatch);
+        assert_eq!(
+            resolve_binary("<", Some(&i32), Some(&SirType::Float)),
+            BinaryLowering::RuntimeDispatch
+        );
+        assert_eq!(resolve_binary("==", Some(&i32), None), BinaryLowering::RuntimeDispatch);
+        assert_eq!(resolve_binary("==", None, None), BinaryLowering::RuntimeDispatch);
+    }
+
+    #[test]
+    fn unknown_and_division_operators_dispatch() {
+        let i32 = int(IntWidth::W32, true, Overflow::Wrap);
+        // `/` is intentionally not modelled here (division is split — §E3).
+        assert_eq!(resolve_binary("/", Some(&i32), Some(&i32)), BinaryLowering::RuntimeDispatch);
+        // A genuinely unknown operator dispatches too.
+        assert_eq!(resolve_binary("<=>", Some(&i32), Some(&i32)), BinaryLowering::RuntimeDispatch);
     }
 }
