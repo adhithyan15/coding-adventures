@@ -204,10 +204,21 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    (E4d-4b, like E4d-2b/E4d-3b): runtime `str_concat`/`str_slice`/`str_index` over
    promoted operands — not needed by the foothold. *(needs 1, 1a)*
 5. **Frontend payoffs** *(each needs 1–4 for the backends it targets)*:
-   - **E4d-AL — ALGOL string procedures.** Lift the `string procedures`
-     `Unsupported` (algol-iir-compiler:886): a `string procedure` returns a
-     runtime `str`; a runtime string variable (`s := t & u`-style concat) works.
-     Matrix cell: a string procedure whose result is printed.
+   - **E4d-AL — ALGOL string procedures.** ✅ **Foothold landed**
+     (`algol-iir-compiler` 0.28.0 / `lang-aot` 0.175.0). Lifted the
+     `string procedures` `Unsupported` (algol-iir-compiler:886): a `string
+     procedure` returns a runtime `str` (its result slot), and `print` gained a
+     general string-expression path so `print(pick(1))` prints a call result.
+     Matrix cell: a string procedure whose branch-selected result is printed —
+     runs on **NativeAot + VM/JIT** today. **Discovery:** a runtime string
+     arriving as a *call result / return value* is a NEW path beyond the E4-dyn
+     foothold (which only printed a branch-selected *local*): LLVM/WASM/JVM/CLR
+     take their runtime path only for *promoted-slot* operands, so a string
+     return value still fails there — the **E4d-2b/3b + JVM/CLR follow-up**
+     (runtime `print_str`/`str_len` over ANY non-foldable handle) will extend the
+     cell to all 7. Bringing this up also fixed a **latent native miscompile**
+     (`strip_dead_aot_string_allocs` dropped all but the last buffer of a
+     multi-block string alias → the not-last branch printed `""`; twig-aot 0.28.0).
    - **E4d-BA-input — BASIC string `INPUT`.** `INPUT A$` reads a runtime string
      from the host input queue; `PRINT A$` echoes it. Matrix cell.
    - **E4d-BA-arr — BASIC string arrays.** `DIM A$(n)` + `A$(i)` over runtime

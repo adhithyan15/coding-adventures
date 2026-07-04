@@ -1464,7 +1464,7 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 /// srcs of any instruction other than `store_byte` (writes into the buffer are
 /// not observable consumers; they only make sense if the buffer is later read).
 fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashSet;
 
     // ① Collect all __aot_str{N}_buf vars produced by alloc_bytes.
     let aot_bufs: HashSet<String> = func.instructions
@@ -1481,8 +1481,17 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
 
     // ② Collect alias-mov instructions: `mov alias = buf_var` where buf_var ∈ aot_bufs.
     //    These are emitted by `lower_string_literals_for_aot` to make the original
-    //    `str_const` dest variable available for use in `call` and similar instructions.
-    let alias_movs: HashMap<String, String> = func.instructions
+    //    `str_const` dest variable available for use in `call` / `ret` / similar.
+    //
+    //    E4-dyn (E4d-4): a string variable promoted to a runtime handle is the
+    //    dest of `str_const` — and therefore of an alias `mov alias = buf` — in
+    //    MORE THAN ONE basic block, so a single alias name maps to SEVERAL buffers
+    //    (one per branch). We must keep every `(alias, buf)` pair: a map keyed by
+    //    alias would retain only the last buffer and wrongly strip the others as
+    //    dead, so at run time a branch that selects an earlier buffer would read
+    //    freed/empty memory (the E4-dyn foothold only dodged this by testing the
+    //    branch whose buffer happened to be defined last).
+    let alias_pairs: Vec<(String, String)> = func.instructions
         .iter()
         .filter(|instr| instr.op == "mov")
         .filter_map(|instr| {
@@ -1498,10 +1507,14 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
             }
         })
         .collect();
+    // The set of alias names (str vars fed by a buffer) — used to exclude the
+    // alias-defining `mov` from the buffer-liveness scan.
+    let alias_names: HashSet<String> =
+        alias_pairs.iter().map(|(alias, _)| alias.clone()).collect();
 
     // ③ Find alias dests that are "live" — referenced in srcs of any instruction
     //    other than write-only buffer ops and the alias-mov itself.
-    //    A live alias means the buf it points to is needed at runtime.
+    //    A live alias means the buf(s) it points to are needed at runtime.
     let live_alias_dests: HashSet<String> = func.instructions
         .iter()
         .filter(|instr| {
@@ -1511,7 +1524,7 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
             // Exclude the alias-defining mov itself from the liveness scan.
             if instr.op == "mov" {
                 if let Some(dest) = &instr.dest {
-                    if alias_movs.contains_key(dest) {
+                    if alias_names.contains(dest) {
                         return false;
                     }
                 }
@@ -1520,7 +1533,7 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
         })
         .flat_map(|instr| instr.srcs.iter())
         .filter_map(|op| if let Operand::Var(n) = op { Some(n.clone()) } else { None })
-        .filter(|n| alias_movs.contains_key(n))
+        .filter(|n| alias_names.contains(n))
         .collect();
 
     // ④ A buf is live if directly referenced (non-write-only, non-alias-mov) OR if
@@ -1535,7 +1548,7 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
                 // The alias-mov doesn't constitute a "read" of the buffer data.
                 if instr.op == "mov" {
                     if let Some(dest) = &instr.dest {
-                        if alias_movs.contains_key(dest) {
+                        if alias_names.contains(dest) {
                             return false;
                         }
                     }
@@ -1547,7 +1560,9 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
             .filter(|n| aot_bufs.contains(n))
             .collect();
 
-        let via_alias: HashSet<String> = alias_movs
+        // EVERY buffer bound to a live alias stays live — not just the last one
+        // that happened to be `mov`d into that alias name (the E4d-4 fix).
+        let via_alias: HashSet<String> = alias_pairs
             .iter()
             .filter(|(alias, _)| live_alias_dests.contains(alias.as_str()))
             .map(|(_, buf)| buf.clone())
@@ -1588,13 +1603,13 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
                 }
             }
         }
-        // Strip alias-movs for dead bufs (safe — alias dest not in live_alias_dests).
+        // Strip alias-movs whose source buffer is dead: `mov alias = dead_buf`.
+        // Safe because a live alias keeps ALL of its buffers live (see ④), so a
+        // dead source buffer here can only belong to a dead alias.
         if instr.op == "mov" {
-            if let Some(dest) = &instr.dest {
-                if let Some(buf) = alias_movs.get(dest) {
-                    if dead_bufs.contains(buf) {
-                        return false;
-                    }
+            if let Some(Operand::Var(src)) = instr.srcs.first() {
+                if dead_bufs.contains(src) {
+                    return false;
                 }
             }
         }
@@ -3441,6 +3456,58 @@ mod tests {
             !f.instructions.iter().any(|i| i.op == "field_load"),
             "a straight-line reassignment keeps the static-length fast path (no \
              runtime field_load): {:?}",
+            f.instructions
+        );
+    }
+
+    /// Regression: a branch-selected string (E4d-4 promoted var) has ONE alias
+    /// name (`s`) fed by TWO buffers — one per branch. `strip_dead_aot_string_allocs`
+    /// must keep BOTH buffers alive; a map keyed by alias would drop all but the
+    /// last, so the not-last branch would read a freed/empty buffer at run time
+    /// (the E4-dyn foothold only dodged this by printing the last-defined branch).
+    #[test]
+    fn multi_block_string_keeps_every_branch_buffer() {
+        // if cond goto Lelse; Lthen: s = "LONGER"; goto Ldone; Lelse: s = "HI";
+        // Ldone: print s
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("cond".into()), Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Lthen".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("LONGER".into())], "str"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+        strip_dead_aot_string_allocs(&mut f);
+
+        // Both branch buffers must survive — neither is dead when `s` is live.
+        assert_eq!(
+            f.instructions.iter().filter(|i| i.op == "alloc_bytes").count(),
+            2,
+            "both branch buffers must survive strip_dead_aot_string_allocs: {:?}",
+            f.instructions
+        );
+        // And both alias-movs (`mov s = buf`) survive so the taken branch's buffer
+        // reaches `s`.
+        assert_eq!(
+            f.instructions
+                .iter()
+                .filter(|i| i.op == "mov" && i.dest.as_deref() == Some("s"))
+                .count(),
+            2,
+            "both alias-movs feeding `s` must survive: {:?}",
             f.instructions
         );
     }

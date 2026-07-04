@@ -870,6 +870,37 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
+    // E4-dyn *frontend* feature: a `string procedure` returns a runtime string.
+    // Here the result is chosen by control flow inside the body
+    // (`if n > 0 then pick := 'HI' else pick := 'LO'`), so `pick`'s result slot
+    // is a genuinely runtime, branch-selected string — the exact shape the
+    // E4-dyn foothold proved on all seven backends. The call site `print(pick(1))`
+    // evaluates the call to a runtime string handle and prints it (a new general
+    // string-expression path in the ALGOL output lowering). This exercises the
+    // whole chain end-to-end: string-procedure declaration + call + runtime-string
+    // return + print. It is a *foothold* today — proven on the columns that already
+    // carry a runtime string arriving as a **call result / return value** (not just
+    // a branch-selected local slot, which is all the E4-dyn foothold exercised):
+    //   * NativeAot — twig-aot: a call-result str is absent from the compile-time
+    //     `strings` map, so `print_str` reads the length header at run time.
+    //   * VM / JIT — tagged values: a returned string is printed like any value.
+    // The other four columns take their runtime-string path only for *promoted
+    // slot* operands, so a string **return value** still fails there: LLVM/WASM
+    // fall to their literal fast path (no compile-time length) and JVM/CLR need
+    // str return-type / call-result typing. Extending `print_str`/`str_len` to any
+    // non-foldable runtime handle (call result, return value, parameter) is the
+    // E4d-2b (LLVM) / E4d-3b (WASM) / JVM+CLR follow-up, which will add those four
+    // columns to this cell. Stdin-free; N=1>0 → `HI`.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string procedure pick(n); value n; integer n; \
+                  if n > 0 then pick := 'HI' else pick := 'LO'; \
+              print(pick(1)) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables in the current AL4 foothold. A
     // `string` scalar may be assigned from a literal, which emits `str_const`
     // directly to the variable slot; `print(s)` is accepted only because that
