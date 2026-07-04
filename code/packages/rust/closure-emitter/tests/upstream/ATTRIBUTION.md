@@ -158,6 +158,22 @@ under the Apache License, Version 2.0:
       treats `await` inside an async body as a plain identifier, so it does not
       yet parse (see the spec).
 
+- `code_printer_this_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the `this` keyword printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_this` + the `PREC_PRIMARY` classification that landed with
+      `Expression::ThisExpression` (CLOC12.165). 7 active `#[test]`s and **0
+      `#[ignore]`** — `this` printed as a bare reserved-word primary that never
+      needs wrapping and never wraps an operand: the surface `this`, as a member
+      object (`this.x`), as a call callee (`this()`), as a call argument
+      (`f(this)`), composed in a member chain (`this.a.b`) and a method call
+      (`this.m()`), and left bare under a binary parent (`this+1`). Inputs are
+      hand-constructed AST; the bridge conversion of `this` (gap-166) is
+      exercised separately in `javascript-parser` (CLOC12.165 PR2) — unlike
+      `await`, `this` was already parseable, so that bridge slice needed no
+      grammar work.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

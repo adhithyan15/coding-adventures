@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.29.1] - 2026-07-04
+
+### Added — CLOC12.165 PR3: CodePrinter `this` conformance port
+
+Ported the upstream `CodePrinterTest` **this** printing cases into
+`tests/upstream/code_printer_this_test.rs` (registered as the
+`upstream_code_printer_this` `[[test]]`). 7 active `#[test]`s, 0 `#[ignore]` —
+`emit_this` + the `PREC_PRIMARY` classification conform to every covered shape:
+the bare keyword `this`, `this` as a member object (`this.x`), call callee
+(`this()`), and call argument (`f(this)`), composed in a member chain
+(`this.a.b`) and a method call (`this.m()`), and left bare under a binary parent
+(`this+1`). Test-only; no emitter behaviour change (the emit logic landed in
+CLOC12.165 PR1, closure-emitter 0.29.0).
+
 ## [0.29.0] - 2026-07-04
 
 ### Added — CLOC12.165: `emit_this` (`this`)
