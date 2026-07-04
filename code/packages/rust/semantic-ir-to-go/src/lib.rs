@@ -343,7 +343,12 @@ fn unsupported(msg: &str, span: semantic_ir::Span) -> BackendError {
 fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
     use semantic_ir::Stmt;
     match s {
-        Stmt::Assign { scope: Scope::Const, name, span, .. } => {
+        Stmt::Assign {
+            scope: Scope::Const,
+            name,
+            span,
+            ..
+        } => {
             errs.push(unsupported(
                 &format!(
                     "go backend cannot emit a constant assignment `{}` — \
@@ -374,7 +379,13 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
             }
             check_soundness_expr(&body.value, errs);
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             check_soundness_expr(start, errs);
             check_soundness_expr(stop, errs);
             check_soundness_expr(step, errs);
@@ -390,12 +401,16 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
             }
             check_soundness_expr(&body.value, errs);
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             check_soundness_expr(seq, errs);
             check_soundness_expr(index, errs);
             check_soundness_expr(value, errs);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             check_soundness_expr(map, errs);
             check_soundness_expr(key, errs);
             check_soundness_expr(value, errs);
@@ -405,7 +420,12 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
                 check_soundness_stmt(st, errs);
             }
         }
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             for st in body {
                 check_soundness_stmt(st, errs);
             }
@@ -420,13 +440,32 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
                 }
             }
         }
+        // ── SIR22 (array/matrix IR) ──────────────────────────────────
+        // `IndexSet` (`A(i, j) = v`) observes `Feature::NDArrays` /
+        // `Feature::MatrixOps`, neither of which this backend accepts (see
+        // `ACCEPTED_FEATURES`), so the SIR10 capability gate
+        // (`Backend::check_module`) rejects any module containing it before
+        // `check_soundness_stmt` (called only on already-gated modules) ever
+        // sees one.  Reaching this arm would be an internal bug, not a user
+        // error — mirror the `Stmt::Assign` unsupported-scope arm above.
+        Stmt::IndexSet { span, .. } => {
+            panic!(
+                "go backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
+                span
+            );
+        }
     }
 }
 
 fn check_soundness_expr(e: &semantic_ir::Expr, errs: &mut Vec<BackendError>) {
     use semantic_ir::Expr;
     match e {
-        Expr::VarRef { scope: Scope::Const, name, span, .. } => {
+        Expr::VarRef {
+            scope: Scope::Const,
+            name,
+            span,
+            ..
+        } => {
             errs.push(unsupported(
                 &format!(
                     "go backend cannot emit a constant reference `{}` outside a \
@@ -441,7 +480,15 @@ fn check_soundness_expr(e: &semantic_ir::Expr, errs: &mut Vec<BackendError>) {
             // The FIRST arg of `raise` may be a `Const` class name — that is
             // the whitelisted position, so skip it and check only the rest.
             for (i, a) in args.iter().enumerate() {
-                if i == 0 && matches!(a, Expr::VarRef { scope: Scope::Const, .. }) {
+                if i == 0
+                    && matches!(
+                        a,
+                        Expr::VarRef {
+                            scope: Scope::Const,
+                            ..
+                        }
+                    )
+                {
                     continue;
                 }
                 check_soundness_expr(a, errs);
@@ -458,7 +505,12 @@ fn check_soundness_expr(e: &semantic_ir::Expr, errs: &mut Vec<BackendError>) {
                 check_soundness_expr(a, errs);
             }
         }
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             check_soundness_expr(cond, errs);
             check_soundness_block(then_branch, errs);
             check_soundness_block(else_branch, errs);
@@ -542,8 +594,11 @@ mod tests {
         )
         .expect("lower");
         let a = compile(&m).expect("compile");
-        assert!(a.source.contains("func _0x5flambda_5f0_(n Value, x Value) Value")
-            || a.source.contains("func __lambda_0(n Value, x Value) Value"));
+        assert!(
+            a.source
+                .contains("func _0x5flambda_5f0_(n Value, x Value) Value")
+                || a.source.contains("func __lambda_0(n Value, x Value) Value")
+        );
         assert!(a.source.contains("_sir_make_closure"));
     }
 
@@ -602,7 +657,10 @@ mod tests {
                     name: "x".into(),
                     kind: ParamKind::Keyword,
                     sir_type: None,
-                    default: Some(Box::new(Expr::IntLit { value: 1, span: sp() })),
+                    default: Some(Box::new(Expr::IntLit {
+                        value: 1,
+                        span: sp(),
+                    })),
                     span: sp(),
                 },
             ],
@@ -618,7 +676,10 @@ mod tests {
                     name: "x".into(),
                     kind: ParamKind::Keyword,
                     sir_type: None,
-                    default: Some(Box::new(Expr::IntLit { value: 1, span: sp() })),
+                    default: Some(Box::new(Expr::IntLit {
+                        value: 1,
+                        span: sp(),
+                    })),
                     span: sp(),
                 },
                 Param {
@@ -638,7 +699,11 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::VarRef { name: "a".into(), scope: Scope::Param, span: sp() },
+                value: Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: sp(),
+                },
                 span: sp(),
             },
             effects: EffectSet::PURE,
@@ -656,10 +721,16 @@ mod tests {
                     expr: Expr::DirectCall {
                         fn_name: "f".into(),
                         args: vec![
-                            Expr::IntLit { value: 10, span: sp() },
+                            Expr::IntLit {
+                                value: 10,
+                                span: sp(),
+                            },
                             Expr::KeywordArg {
                                 name: "x".into(),
-                                value: Box::new(Expr::IntLit { value: 5, span: sp() }),
+                                value: Box::new(Expr::IntLit {
+                                    value: 5,
+                                    span: sp(),
+                                }),
                                 span: sp(),
                             },
                         ],
@@ -703,8 +774,7 @@ mod tests {
         let err = compile(&m).expect_err("keyword+*rest mix must be rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
         assert!(
-            err.message.contains("keyword parameters")
-                && err.message.contains("*rest/**kwrest"),
+            err.message.contains("keyword parameters") && err.message.contains("*rest/**kwrest"),
             "unexpected message: {}",
             err.message
         );
@@ -764,13 +834,25 @@ mod tests {
             args: vec![
                 Expr::SeqLit {
                     items: vec![
-                        Expr::IntLit { value: 1, span: sp() },
-                        Expr::IntLit { value: 2, span: sp() },
-                        Expr::IntLit { value: 3, span: sp() },
+                        Expr::IntLit {
+                            value: 1,
+                            span: sp(),
+                        },
+                        Expr::IntLit {
+                            value: 2,
+                            span: sp(),
+                        },
+                        Expr::IntLit {
+                            value: 3,
+                            span: sp(),
+                        },
                     ],
                     span: sp(),
                 },
-                Expr::StrLit { value: "length".into(), span: sp() },
+                Expr::StrLit {
+                    value: "length".into(),
+                    span: sp(),
+                },
             ],
             effects: EffectSet::PURE,
             span: sp(),
@@ -781,7 +863,10 @@ mod tests {
             return_type: None,
             captures: vec![],
             body: Block {
-                stmts: vec![Stmt::ExprStmt { expr: dispatch, span: sp() }],
+                stmts: vec![Stmt::ExprStmt {
+                    expr: dispatch,
+                    span: sp(),
+                }],
                 value: Expr::NilLit { span: sp() },
                 span: sp(),
             },
@@ -831,7 +916,10 @@ mod tests {
             body: vec![Stmt::Assign {
                 name: "@count".into(),
                 scope: Scope::Instance,
-                value: Expr::IntLit { value: 0, span: sp() },
+                value: Expr::IntLit {
+                    value: 0,
+                    span: sp(),
+                },
                 span: sp(),
             }],
             span: sp(),
@@ -889,7 +977,10 @@ mod tests {
                 stmts: vec![Stmt::Assign {
                     name: "FOO".into(),
                     scope: Scope::Const,
-                    value: Expr::IntLit { value: 4, span: sp() },
+                    value: Expr::IntLit {
+                        value: 4,
+                        span: sp(),
+                    },
                     span: sp(),
                 }],
                 value: Expr::NilLit { span: sp() },

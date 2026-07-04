@@ -9,7 +9,7 @@
 //!
 //! - `source_language` — frontend identifier (`"twig"`, `"python"`, …)
 //! - `source_version`  — version string of the source language
-//! - `sir_version`     — IR spec version (`"1"` in this build)
+//! - `sir_version`     — IR spec version (`"2"` in this build)
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -22,7 +22,16 @@ use std::fmt;
 ///   sized-integer / pointer / struct / bignum flags (T1a + T1b).  The
 ///   bump lands in T1b, the first milestone whose surface introduces
 ///   *new text tokens* a reader would need to understand.
-pub const CURRENT_SIR_VERSION: &str = "1";
+/// - `"2"` — SIR22: the array/matrix IR extension.  New `SirType`
+///   variants (`NDArray`/`Rational`/`Complex`), new `Expr` variants
+///   (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
+///   `IndexGet`), a new `Stmt` variant (`IndexSet`), and five new
+///   `Feature` flags — all additive, all introducing new SIR text
+///   tokens, so the same "adding a feature is a v.bump" policy that
+///   moved `"0"` → `"1"` applies again here.  A frontend lowering
+///   MATLAB/Octave sets `metadata.sir_version` to this value when its
+///   module uses any SIR22 node.
+pub const CURRENT_SIR_VERSION: &str = "2";
 
 /// Advisory metadata.  All fields are optional.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -113,7 +122,7 @@ mod tests {
             .with_sir_version(CURRENT_SIR_VERSION);
         assert_eq!(m.source_language.as_deref(), Some("twig"));
         assert_eq!(m.source_version.as_deref(), Some("0.7"));
-        assert_eq!(m.sir_version.as_deref(), Some("1"));
+        assert_eq!(m.sir_version.as_deref(), Some("2"));
         assert!(!m.is_empty());
     }
 
@@ -130,14 +139,19 @@ mod tests {
 
     #[test]
     fn extra_fields_round_trip() {
-        let m = Metadata::new().with_extra("origin", "test").with_extra("foo", "bar");
+        let m = Metadata::new()
+            .with_extra("origin", "test")
+            .with_extra("foo", "bar");
         // BTreeMap orders by key alphabetically.
         assert_eq!(format!("{}", m), "(metadata (foo bar) (origin test))");
     }
 
     #[test]
-    fn current_sir_version_is_one() {
-        // Bumped 0 → 1 in SIR21 T1b (new type/manifest text tokens).
-        assert_eq!(CURRENT_SIR_VERSION, "1");
+    fn current_sir_version_is_two() {
+        // Bumped 1 → 2 in SIR22 (array/matrix IR extension: new
+        // SirType/Expr/Stmt/Feature text tokens), following the same
+        // "adding a feature is a v.bump" policy that moved 0 → 1 in
+        // SIR21 T1b.
+        assert_eq!(CURRENT_SIR_VERSION, "2");
     }
 }

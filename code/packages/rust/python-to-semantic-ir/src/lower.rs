@@ -190,8 +190,8 @@ use std::collections::HashSet;
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, MapEntry,
-    Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
+    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, IndexArg,
+    MapEntry, Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
 };
 
 /// Maximum expression-nesting depth the lowerer will descend before
@@ -957,7 +957,9 @@ impl Lowerer {
         };
         match inner.rule_name.as_str() {
             "if_stmt" => Ok(Lowered::Expr(self.lower_if(inner, ctx, depth)?)),
-            "while_stmt" => Ok(Lowered::Stmt(Box::new(self.lower_while(inner, ctx, depth)?))),
+            "while_stmt" => Ok(Lowered::Stmt(Box::new(
+                self.lower_while(inner, ctx, depth)?,
+            ))),
             "for_stmt" => Ok(Lowered::Stmt(Box::new(self.lower_for(inner, ctx, depth)?))),
             "def_stmt" => {
                 // A nested `def` reaching the general statement lowerer:
@@ -1550,8 +1552,7 @@ impl Lowerer {
         let mut seen = HashSet::new();
         self.collect_free_names(body_expr, &bound, &mut free, &mut seen, 0)?;
 
-        let (captures, capture_values) =
-            self.resolve_captures(&free, enclosing, &span)?;
+        let (captures, capture_values) = self.resolve_captures(&free, enclosing, &span)?;
 
         // Lower the body in the synthesised function's own context.
         let mut inner = FunctionCtx::new(bound.clone(), captures.iter().cloned().collect());
@@ -1672,8 +1673,7 @@ impl Lowerer {
             // Record the capture list so a *bare reference* to this
             // function name re-threads the captures (a nested closure
             // returned/passed by name).
-            self.fn_captures
-                .insert(name.to_string(), captures.to_vec());
+            self.fn_captures.insert(name.to_string(), captures.to_vec());
         }
         let f = Function {
             name: name.to_string(),
@@ -1858,9 +1858,8 @@ impl Lowerer {
                     .any(|n| n.rule_name == "assign_suffix");
                 if has_suffix {
                     if let Some(list) = self.first_child_named(node, "expression_list") {
-                        if let Ok(Some(name)) = self
-                            .single_expr(list)
-                            .and_then(|e| self.target_name(e))
+                        if let Ok(Some(name)) =
+                            self.single_expr(list).and_then(|e| self.target_name(e))
                         {
                             out.push(name);
                         }
@@ -2507,9 +2506,7 @@ impl Lowerer {
                     span: span.clone(),
                 })
             }
-            SuffixKind::Subscript => {
-                self.lower_subscript_suffix(base, suffix, ctx, depth, span)
-            }
+            SuffixKind::Subscript => self.lower_subscript_suffix(base, suffix, ctx, depth, span),
             // Attribute suffixes are consumed by the fold's look-ahead
             // (`.method (args)` → method dispatch) before reaching here.
             SuffixKind::Attr(_) => Err(self.err_at(
@@ -2624,9 +2621,7 @@ impl Lowerer {
             .children
             .iter()
             .filter_map(|c| match c {
-                ASTNodeOrToken::Token(t)
-                    if matches!(t.type_, lexer::token::TokenType::Name) =>
-                {
+                ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Name) => {
                     Some(t.value.clone())
                 }
                 _ => None,
@@ -2796,9 +2791,7 @@ impl Lowerer {
                 {
                     name = Some(t.value.clone());
                 }
-                ASTNodeOrToken::Token(t)
-                    if matches!(t.type_, lexer::token::TokenType::Equals) =>
-                {
+                ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Equals) => {
                     has_equals = true;
                 }
                 _ => {}
@@ -2875,7 +2868,10 @@ impl Lowerer {
             }
         };
         self.first_child_named(item, "expression").ok_or_else(|| {
-            self.err_at(item, "unsupported: non-expression subscript (deferred)".to_string())
+            self.err_at(
+                item,
+                "unsupported: non-expression subscript (deferred)".to_string(),
+            )
         })
     }
 
@@ -3064,7 +3060,10 @@ impl Lowerer {
             return Ok(None);
         }
         let operand_node = child_nodes(node).into_iter().next().ok_or_else(|| {
-            self.err_at(node, "malformed `not` expression (missing operand)".to_string())
+            self.err_at(
+                node,
+                "malformed `not` expression (missing operand)".to_string(),
+            )
         })?;
         let operand = self.lower_expr_d(operand_node, ctx, depth + 1)?;
         let span = self.span_of(node);
@@ -3508,9 +3507,9 @@ fn is_str_lit(expr: &Expr) -> bool {
 /// detect a slice subscript (`xs[a:b]`), which surfaces as a `Colon` token
 /// inside the `subscript` node and is rejected (deferred) in M5.
 fn has_colon_token(node: &GrammarASTNode) -> bool {
-    node.children.iter().any(|c| {
-        matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Colon)
-    })
+    node.children
+        .iter()
+        .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Colon))
 }
 
 /// An empty `Block` whose value is `NilLit`.
@@ -3553,7 +3552,11 @@ fn collect_callees_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
             collect_direct_callees(body, out);
         }
         Stmt::ForRange {
-            start, stop, step, body, ..
+            start,
+            stop,
+            step,
+            body,
+            ..
         } => {
             collect_callees_expr(start, out);
             collect_callees_expr(stop, out);
@@ -3564,14 +3567,33 @@ fn collect_callees_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
             collect_callees_expr(iter, out);
             collect_direct_callees(body, out);
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             collect_callees_expr(seq, out);
             collect_callees_expr(index, out);
             collect_callees_expr(value, out);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             collect_callees_expr(map, out);
             collect_callees_expr(key, out);
+            collect_callees_expr(value, out);
+        }
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            collect_callees_expr(target, out);
+            for idx in indices {
+                match idx {
+                    IndexArg::Scalar(e) | IndexArg::Range(e) => collect_callees_expr(e, out),
+                    IndexArg::Whole => {}
+                }
+            }
             collect_callees_expr(value, out);
         }
         Stmt::ClassDef { body, .. }
@@ -3677,6 +3699,47 @@ fn collect_callees_expr(expr: &Expr, out: &mut HashSet<String>) {
         // `value` (its runtime meaning) so callees nested in a keyword
         // argument are still collected.  Real support pending KW2–KW8.
         Expr::KeywordArg { value, .. } => collect_callees_expr(value, out),
+        // SIR22 array/matrix nodes: the Python frontend never emits these
+        // (no lowering path constructs them today), but a `DirectCall` could
+        // in principle appear nested inside one (e.g. as a row element or a
+        // range bound), so recurse into every child `Expr` slot, matching
+        // the treatment of every other compound node above.
+        Expr::ArrayLit { rows, .. } => {
+            for row in rows {
+                for cell in row {
+                    collect_callees_expr(cell, out);
+                }
+            }
+        }
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            collect_callees_expr(start, out);
+            if let Some(step) = step {
+                collect_callees_expr(step, out);
+            }
+            collect_callees_expr(stop, out);
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            collect_callees_expr(lhs, out);
+            collect_callees_expr(rhs, out);
+        }
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            collect_callees_expr(lhs, out);
+            collect_callees_expr(rhs, out);
+        }
+        Expr::Transpose { target, .. } => collect_callees_expr(target, out),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            collect_callees_expr(target, out);
+            for idx in indices {
+                match idx {
+                    IndexArg::Scalar(e) | IndexArg::Range(e) => collect_callees_expr(e, out),
+                    IndexArg::Whole => {}
+                }
+            }
+        }
         // Atoms and references bind nothing.
         Expr::IntLit { .. }
         | Expr::BoolLit { .. }

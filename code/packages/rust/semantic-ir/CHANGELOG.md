@@ -2,6 +2,110 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.21.0 — SIR22: array/matrix IR extension
+
+Implements [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md) — the
+narrow-waist vocabulary for dense numeric-array languages (MATLAB/Octave today;
+APL/J/K/Scilab/IDL per HML00 tomorrow). Additive only, following the exact
+discipline SIR16 used to add loops/sequences: every existing SIR10/SIR16/SIR17/
+SIR18/SIR21 module remains valid; no existing `Expr`/`Stmt`/`SirType`/`Feature`
+variant, validator rule, or backend behaviour changed.
+
+**New `SirType` variants** (`types.rs`):
+- `NDArray { elem: Box<SirType>, rank: Option<usize> }` — dense N-D numeric
+  array; `rank: None` means unknown/dynamic rank (a frontend that can't prove
+  rank statically leaves it absent — backends handle the absence, they never
+  infer it). Prints `(ndarray T)` / `(ndarray T n)`.
+- `Rational` — exact rational scalar (arbitrary-precision numerator/
+  denominator left to the backend runtime). Prints `rational`.
+- `Complex` — complex scalar (`{ re: f64, im: f64 }`). Prints `complex`.
+- `Rational`/`Complex` are type-level carriers only — no numerator/denominator
+  or re/im storage at the type level (a runtime concern) — shared with the
+  future SIR23 symbolic-math extension, landed once here.
+
+**New `Expr` variants** (`nodes.rs`), every one mapped 1:1 onto an existing
+`array_runtime::execute()` op shape so a MATLAB/Octave frontend's job is
+picking the right node, not inventing new semantics:
+- `ArrayLit { rows: Vec<Vec<Expr>>, span }` — matrix literal `[1 2; 3 4]`.
+- `Range { start, step: Option<Box<Expr>>, stop, span }` — `1:5`, `0:2:10`;
+  `step: None` means step = 1.
+- `MatMul { lhs, rhs, span }` — matrix multiplication (MATLAB `*`), distinct
+  from `ElementwiseOp(Mul, ...)` (MATLAB `.*`).
+- `ElementwiseOp { op: ElementwiseOpKind, lhs, rhs, span }` — the five dotted
+  operators `.+ .- .* ./ .^` via the new `ElementwiseOpKind` enum
+  (`Add`/`Sub`/`Mul`/`Div`/`Pow`).
+- `Transpose { target, conjugate: bool, span }` — MATLAB `'` (conjugate,
+  `true`) vs `.'` (plain, `false`); both map to the same runtime op.
+- `IndexGet { target, indices: Vec<IndexArg>, span }` — indexed *read*
+  (`A(2, :)`, `A(1:3)`). `IndexArg` is `Scalar(Box<Expr>)` (already 0-based —
+  the frontend resolves `end`-relative subscripts before emitting this; the
+  IR never sees `end`) / `Whole` (`:`) / `Range(Box<Expr>)`.
+
+**New `Stmt` variant** (`nodes.rs`):
+- `IndexSet { target, indices: Vec<IndexArg>, value, span }` — indexed
+  *write* (`A(2, :) = v`). Per the spec, this is lowered as a `Stmt`-position
+  mutation (like `Assign`), **not** a value-producing `Expr` — the one
+  exception to "every new SIR22 node is Pure." Verified structurally: there
+  is no `Expr::IndexSet` variant for the type system to construct.
+
+**New `Feature` flags** (`manifest.rs`): `NDArrays`, `MatrixOps`, `Rationals`,
+`Complex`, `ArrayColumnMajor` (the last states explicitly, at the manifest
+level, that array storage is column-major/Fortran order — matching
+`array_runtime::Array`'s internal layout — since a JS backend owns its own
+buffer representation and needs that convention stated rather than left
+implicit).
+
+**Effects** (`validator.rs`): every new `Expr` variant observes `Pure`
+semantics implicitly (no `EffectSet` field — same as `SeqLit`/`MapLit`/other
+pure SIR16 literals). The validator's `check_expr`/`check_stmt_seq` observe
+the matching `Feature`(s) for each new node (`ArrayLit`/`Range`/`IndexGet`/
+`IndexSet` → `NDArrays`; `MatMul`/`ElementwiseOp`/`Transpose` → `MatrixOps`;
+`ArrayLit`/`MatMul`/`ElementwiseOp`/`Transpose` → `ArrayColumnMajor`), so a
+module using these nodes without declaring the feature is a validator error,
+exactly like every other SIR16/17/18 feature-observation rule.
+
+**Walker** (`walker.rs`, `backend.rs`): both the public `Visitor` traversal and
+`backend.rs`'s internal `walk_intrinsics_in_{stmt,expr}` (used for the
+intrinsic-whitelist check) recurse into every new node's children, including a
+shared `walk_index_args`/`walk_intrinsics_in_index_args` helper for the three
+`IndexArg` shapes.
+
+**Printer** (`text/printer.rs`): new S-expression forms — `(array (row ...) ...)`,
+`(range start [step] stop)`, `(matmul lhs rhs)`, `(elementwise-op <kind> lhs rhs)`,
+`(transpose target conjugate|plain)`, `(index-get target (idx-scalar e) (idx-whole)
+(idx-range e) ...)`, `(index-set target ...indices... value)`.
+
+**Backend capability rejection**: no backend changes are required for this
+spec to land safely, per the SIR22 spec's "Backend impact" — a backend that
+doesn't declare `NDArrays`/`MatrixOps` in `accepts_features()` cleanly rejects
+any module using these nodes via the existing SIR10 capability-check
+mechanism (`Backend::check_module`), proven with new `backend.rs` tests
+constructing a real `ArrayLit`/`MatMul`-using module. Verified this claim
+against the actual mechanism rather than just asserting it: all five existing
+Rust-workspace backends (`semantic-ir-to-{javascript,typescript,rust,go,python}`)
+and three frontends (`{javascript,ruby,python}-to-semantic-ir`) had exhaustive
+`match` statements over `Expr`/`Stmt` that would otherwise fail to compile;
+each gained the minimal panic-guard arm (never real codegen) needed to keep
+`cargo build --workspace` green, following the exact precedent SIR16 set for
+its own four-backend rollout (their `ACCEPTED_FEATURES` lists are unchanged,
+so the capability check rejects a SIR22-using module before any panic arm is
+ever reached — the panic exists only to catch a future capability-check
+regression). `twig-to-semantic-ir` required no changes.
+
+**Versioning** (`metadata.rs`): `CURRENT_SIR_VERSION` bumped `"1"` → `"2"`,
+following the same "adding a feature is a v.bump" / "new text tokens" policy
+that moved `"0"` → `"1"` in SIR21 T1b — SIR22 introduces new `SirType`/`Expr`/
+`Stmt` surface with new printed text tokens. A frontend lowering MATLAB/Octave
+sets `metadata.sir_version` to `"2"` when its module uses any SIR22 node. The
+two `v1`-asserting golden tests (`lib.rs`, `text/printer.rs`) were updated to
+`v2`.
+
+Extensive unit tests added for every new node kind (construction, span
+handling, printer round-trip, walker traversal, validator feature-observation,
+and the `IndexSet`-is-a-`Stmt`-not-an-`Expr` design rule) plus new
+`backend.rs` tests proving the capability-rejection path against real
+`ArrayLit`/`MatMul` node usage, not just a hand-set manifest flag.
+
 ## 0.20.0 — SIR21 T3c-2: complete the op-selection rule (concat + comparison)
 
 Completes the `op_select` rule begun in T3c-1. Where `resolve_numeric` decides

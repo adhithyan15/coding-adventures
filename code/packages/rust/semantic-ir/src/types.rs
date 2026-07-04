@@ -168,12 +168,20 @@ impl IntSpec {
     /// a fixed 64-bit width.  A frontend that means a machine `i64`
     /// must now say so explicitly via [`Self::sized`].
     pub const fn arbitrary() -> Self {
-        IntSpec { width: IntWidth::Arbitrary, signed: true, overflow: Overflow::Arbitrary }
+        IntSpec {
+            width: IntWidth::Arbitrary,
+            signed: true,
+            overflow: Overflow::Arbitrary,
+        }
     }
 
     /// A fixed-width integer with an explicit overflow mode.
     pub const fn sized(width: IntWidth, signed: bool, overflow: Overflow) -> Self {
-        IntSpec { width, signed, overflow }
+        IntSpec {
+            width,
+            signed,
+            overflow,
+        }
     }
 
     /// `true` iff this is the arbitrary-precision (dynamic) integer.
@@ -193,7 +201,11 @@ impl IntSpec {
         // −2^127 == `i128::MIN` is — so special-case rather than
         // computing `-(1i128 << 127)`, which negates `i128::MIN` and
         // panics on overflow in debug builds.
-        Some(if bits >= 128 { i128::MIN } else { -(1i128 << (bits - 1)) })
+        Some(if bits >= 128 {
+            i128::MIN
+        } else {
+            -(1i128 << (bits - 1))
+        })
     }
 
     /// The largest representable value, or `None` if unbounded.
@@ -204,7 +216,11 @@ impl IntSpec {
             // 2^(bits-1) − 1.  Same 128-bit corner as `min`: the answer
             // 2^127−1 == `i128::MAX` is representable but the naive
             // `(1i128 << 127) − 1` overflows the intermediate.
-            Some(if bits >= 128 { i128::MAX } else { (1i128 << (bits - 1)) - 1 })
+            Some(if bits >= 128 {
+                i128::MAX
+            } else {
+                (1i128 << (bits - 1)) - 1
+            })
         } else {
             // 2^n - 1.  Fits i128 for n ≤ 127; W128 unsigned max is the
             // one case that would overflow i128, so compute in u128 and
@@ -261,6 +277,9 @@ impl fmt::Display for IntSpec {
 /// | `Ptr { pointee, nullable }` | C/C++ pointer or reference (SIR21 T1b) |
 /// | `Struct { name, fields }`   | nominal record / struct    (SIR21 T1b) |
 /// | `Optional { inner }`        | nullable `T`-or-nil        (SIR21 T1b) |
+/// | `NDArray { elem, rank }`    | dense N-D numeric array     (SIR22)    |
+/// | `Rational`                  | exact rational scalar       (SIR22/SIR23) |
+/// | `Complex`                   | complex scalar `{re, im}`   (SIR22/SIR23) |
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum SirType {
     /// Top type — unknown/any.  The default; renamed from `Any` in SIR21.
@@ -273,7 +292,10 @@ pub enum SirType {
     Str,
     Pair,
     Closure,
-    Fn { params: Vec<SirType>, ret: Box<SirType> },
+    Fn {
+        params: Vec<SirType>,
+        ret: Box<SirType>,
+    },
     // ── SIR16 (Python / JavaScript interop) ──────────────────────────
     /// 64-bit IEEE-754 float carrier.
     Float,
@@ -288,23 +310,61 @@ pub enum SirType {
     /// null pointer from a reference that is guaranteed non-null.
     /// Dynamic targets (Ruby/JS) lower `Ptr` to a plain reference;
     /// targets without pointers declare so in their manifest and reject.
-    Ptr { pointee: Box<SirType>, nullable: bool },
+    Ptr {
+        pointee: Box<SirType>,
+        nullable: bool,
+    },
     /// A nominal record — a C `struct`, or a class's field bag.  `name`
     /// is the declared type name; `fields` are `(field-name, type)` in
     /// declaration order (order matters for C layout / positional init).
     /// Dynamic targets lower it to a record/object; targets without
     /// structs reject via the manifest.
-    Struct { name: String, fields: Vec<(String, SirType)> },
+    Struct {
+        name: String,
+        fields: Vec<(String, SirType)>,
+    },
     /// A nullable value: `inner`-or-nil.  The type-level counterpart of
     /// an `Optional`/`Maybe`/`T?`.  Distinct from `Ptr { nullable }`
     /// (which is specifically a pointer) — `Optional` wraps *any* type.
-    Optional { inner: Box<SirType> },
+    Optional {
+        inner: Box<SirType>,
+    },
+    // ── SIR22 (array/matrix numeric-language IR extension) ───────────
+    /// A dense N-dimensional numeric array (the MATLAB/Octave
+    /// "everything is a matrix" model — see
+    /// [SIR22](../../../../specs/SIR22-array-matrix-semantic-ir.md)).
+    /// `rank` is `None` when a frontend cannot prove the dimensionality
+    /// statically ("unknown/dynamic rank" per the spec); backends must
+    /// handle the absent case explicitly rather than inferring one.
+    /// Storage order (row- vs. column-major) is *not* part of the type —
+    /// it is a manifest-level fact (`Feature::ArrayColumnMajor`), because
+    /// it's a representation choice, not part of the array's shape.
+    NDArray {
+        elem: Box<SirType>,
+        rank: Option<usize>,
+    },
+    /// An exact rational scalar (arbitrary-precision numerator/
+    /// denominator).  This is a type-level carrier only — SIR22 adds no
+    /// numerator/denominator *storage* at the type level (that's a
+    /// runtime concern for the backend); the pair representation itself
+    /// is shared with the future symbolic-math extension
+    /// [SIR23](../../../../specs/SIR23-symbolic-pattern-semantic-ir.md),
+    /// landed once here rather than twice.
+    Rational,
+    /// A complex scalar (`{ re: f64, im: f64 }`).  Like `Rational`, this
+    /// is a type-level carrier with no additional fields — the value
+    /// representation is a backend/runtime concern — shared with the
+    /// future SIR23 symbolic extension.
+    Complex,
 }
 
 impl SirType {
     /// Convenience constructor for `Fn`.
     pub fn function(params: Vec<SirType>, ret: SirType) -> Self {
-        SirType::Fn { params, ret: Box::new(ret) }
+        SirType::Fn {
+            params,
+            ret: Box::new(ret),
+        }
     }
 
     /// The arbitrary-precision integer — the default `Int` (Ruby/Python
@@ -327,17 +387,34 @@ impl SirType {
     /// A pointer/reference to `pointee`.  `nullable` marks a possibly-
     /// null pointer (vs a guaranteed non-null reference).
     pub fn ptr(pointee: SirType, nullable: bool) -> Self {
-        SirType::Ptr { pointee: Box::new(pointee), nullable }
+        SirType::Ptr {
+            pointee: Box::new(pointee),
+            nullable,
+        }
     }
 
     /// A nominal record `name` with ordered `(field, type)` members.
     pub fn struct_type(name: impl Into<String>, fields: Vec<(String, SirType)>) -> Self {
-        SirType::Struct { name: name.into(), fields }
+        SirType::Struct {
+            name: name.into(),
+            fields,
+        }
     }
 
     /// A nullable `inner`-or-nil value.
     pub fn optional(inner: SirType) -> Self {
-        SirType::Optional { inner: Box::new(inner) }
+        SirType::Optional {
+            inner: Box::new(inner),
+        }
+    }
+
+    /// A dense N-D numeric array of `elem`.  `rank = None` means
+    /// unknown/dynamic rank (SIR22).
+    pub fn ndarray(elem: SirType, rank: Option<usize>) -> Self {
+        SirType::NDArray {
+            elem: Box::new(elem),
+            rank,
+        }
     }
 }
 
@@ -384,6 +461,14 @@ impl fmt::Display for SirType {
                 write!(f, ")")
             }
             SirType::Optional { inner } => write!(f, "(optional {})", inner),
+            // SIR22 tokens.  An unknown/dynamic rank prints `(ndarray T)`;
+            // a statically-known rank prints `(ndarray T n)`.
+            SirType::NDArray { elem, rank } => match rank {
+                Some(r) => write!(f, "(ndarray {} {})", elem, r),
+                None => write!(f, "(ndarray {})", elem),
+            },
+            SirType::Rational => write!(f, "rational"),
+            SirType::Complex => write!(f, "complex"),
         }
     }
 }
@@ -407,7 +492,10 @@ mod tests {
 
     #[test]
     fn display_fn_type() {
-        let t = SirType::function(vec![SirType::int_default(), SirType::int_default()], SirType::Bool);
+        let t = SirType::function(
+            vec![SirType::int_default(), SirType::int_default()],
+            SirType::Bool,
+        );
         assert_eq!(format!("{}", t), "(fn (int int) bool)");
     }
 
@@ -444,7 +532,11 @@ mod tests {
     fn default_int_is_arbitrary_precision() {
         // The behaviour-preserving remap: v0 `Int` == arbitrary.
         assert_eq!(SirType::int_default(), SirType::Int(IntSpec::arbitrary()));
-        let IntSpec { width, signed, overflow } = IntSpec::arbitrary();
+        let IntSpec {
+            width,
+            signed,
+            overflow,
+        } = IntSpec::arbitrary();
         assert_eq!(width, IntWidth::Arbitrary);
         assert!(signed);
         assert_eq!(overflow, Overflow::Arbitrary);
@@ -548,11 +640,20 @@ mod tests {
         let s = SirType::struct_type(
             "Point",
             vec![
-                ("x".into(), SirType::int(IntWidth::W32, true, Overflow::Wrap)),
-                ("y".into(), SirType::int(IntWidth::W32, true, Overflow::Wrap)),
+                (
+                    "x".into(),
+                    SirType::int(IntWidth::W32, true, Overflow::Wrap),
+                ),
+                (
+                    "y".into(),
+                    SirType::int(IntWidth::W32, true, Overflow::Wrap),
+                ),
             ],
         );
-        assert_eq!(format!("{}", s), "(struct Point (x (int i32 wrap)) (y (int i32 wrap)))");
+        assert_eq!(
+            format!("{}", s),
+            "(struct Point (x (int i32 wrap)) (y (int i32 wrap)))"
+        );
     }
 
     #[test]
@@ -582,5 +683,59 @@ mod tests {
         let a = SirType::ptr(SirType::Str, false);
         let b = SirType::ptr(SirType::Str, true);
         assert_ne!(a, b);
+    }
+
+    // ── SIR22 array/matrix type tests ─────────────────────────────────
+
+    #[test]
+    fn display_ndarray_unknown_rank() {
+        // rank: None — a frontend that can't prove rank statically.
+        let t = SirType::ndarray(SirType::Float, None);
+        assert_eq!(format!("{}", t), "(ndarray float)");
+    }
+
+    #[test]
+    fn display_ndarray_known_rank() {
+        let t = SirType::ndarray(SirType::Float, Some(2));
+        assert_eq!(format!("{}", t), "(ndarray float 2)");
+    }
+
+    #[test]
+    fn display_rational_and_complex() {
+        assert_eq!(format!("{}", SirType::Rational), "rational");
+        assert_eq!(format!("{}", SirType::Complex), "complex");
+    }
+
+    #[test]
+    fn ndarray_rank_affects_equality() {
+        let a = SirType::ndarray(SirType::Float, Some(1));
+        let b = SirType::ndarray(SirType::Float, Some(2));
+        let c = SirType::ndarray(SirType::Float, None);
+        assert_ne!(a, b);
+        assert_ne!(a, c);
+    }
+
+    #[test]
+    fn ndarray_elem_type_affects_equality() {
+        let a = SirType::ndarray(SirType::Float, Some(2));
+        let b = SirType::ndarray(SirType::int_default(), Some(2));
+        assert_ne!(a, b);
+    }
+
+    #[test]
+    fn new_sir22_variants_are_not_dynamic() {
+        assert!(!SirType::ndarray(SirType::Float, None).is_dynamic());
+        assert!(!SirType::Rational.is_dynamic());
+        assert!(!SirType::Complex.is_dynamic());
+    }
+
+    #[test]
+    fn ndarray_can_nest_ndarray_elem() {
+        // A frontend representing a "ragged" higher-rank array as
+        // nested NDArrays (rather than a single flat NDArray with a
+        // known rank) is representable — the elem type is unconstrained.
+        let inner = SirType::ndarray(SirType::Float, Some(1));
+        let outer = SirType::ndarray(inner, None);
+        assert_eq!(format!("{}", outer), "(ndarray (ndarray float 1))");
     }
 }

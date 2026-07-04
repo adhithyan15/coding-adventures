@@ -49,6 +49,8 @@ use semantic_ir::{
     Span, Metadata, CURRENT_SIR_VERSION,
     validate, Backend, BackendRegistry, Artifact,
     print_module, print_expr,
+    // SIR22: array/matrix IR extension
+    ElementwiseOpKind, IndexArg,
 };
 ```
 
@@ -79,9 +81,22 @@ What's covered:
 - DirectCall, IndirectCall, BuiltinCall
 - MakeClosure
 - Intrinsic with escape-hatch discipline
-- SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map, Ptr, Struct, Optional)
+- SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map, Ptr, Struct, Optional,
+  NDArray, Rational, Complex)
   — SIR21: `Int` carries an `IntSpec { width, signed, overflow }`; `Dynamic` (was `Any`) is the top type;
   `Ptr`/`Struct`/`Optional` (T1b) are source-fidelity types for typed frontends
+  — SIR22: `NDArray { elem, rank }` is a dense N-D numeric array (rank `None` = unknown/dynamic);
+  `Rational`/`Complex` are exact-rational and complex scalar carriers, shared with the future SIR23
+  symbolic-math extension
+- SIR22 array/matrix nodes (additive, numeric-array languages — MATLAB/Octave and future
+  APL/J/K/Scilab/IDL frontends): `Expr::ArrayLit` (matrix literal `[1 2; 3 4]`), `Expr::Range`
+  (`1:5`, `0:2:10`), `Expr::MatMul`, `Expr::ElementwiseOp` (the five dotted ops `.+ .- .* ./ .^`
+  via `ElementwiseOpKind`), `Expr::Transpose` (`'` vs `.'` via a `conjugate` flag), `Expr::IndexGet`
+  / `Stmt::IndexSet` (indexed read/write via `IndexArg::{Scalar,Whole,Range}` — write is a `Stmt`,
+  mirroring how SIR16's `Assign` is a `Stmt` and not an `Expr`). New features:
+  `NDArrays`/`MatrixOps`/`Rationals`/`Complex`/`ArrayColumnMajor`. Every new node kind maps 1:1 onto
+  an `array_runtime::execute()` op shape — see
+  [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
 - `int_const` — the `int.max`/`int.min`/`int.width` reflection const-intrinsics (T3a);
   pure, const-folding functions of an `IntSpec` (`IntConst::eval`), `None` for arbitrary-precision
 - `op_select` — type-directed op selection (T3c): `resolve_binary(op, lhs, rhs)` chooses

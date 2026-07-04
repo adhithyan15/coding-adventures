@@ -42,10 +42,10 @@
 
 pub mod backend;
 pub mod effects;
+pub mod int_const;
 pub mod limits;
 pub mod manifest;
 pub mod metadata;
-pub mod int_const;
 pub mod nodes;
 pub mod op_select;
 pub mod span;
@@ -64,19 +64,21 @@ pub use backend::{
 };
 pub use effects::{Effect, EffectSet};
 pub use int_const::{eval_named as eval_int_const_named, IntConst};
-pub use op_select::{resolve_binary, resolve_numeric, BinaryLowering, NumericLowering};
 pub use limits::MAX_IR_DEPTH;
 pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};
 pub use nodes::{
-    Block, Capture, CaptureValue, ExportName, Expr, Function, Global, Import, ImportName, MapEntry,
-    Module, Param, ParamKind, RescueClause, Scope, Stmt,
+    Block, Capture, CaptureValue, ElementwiseOpKind, ExportName, Expr, Function, Global, Import,
+    ImportName, IndexArg, MapEntry, Module, Param, ParamKind, RescueClause, Scope, Stmt,
 };
+pub use op_select::{resolve_binary, resolve_numeric, BinaryLowering, NumericLowering};
 pub use span::Span;
 pub use text::{print_block, print_expr, print_function, print_module};
 pub use types::{IntSpec, IntWidth, Overflow, SirType};
 pub use validator::{validate, Severity, ValidationResult, ValidatorIssue};
-pub use walker::{walk_expr_default, walk_function_default, walk_module_default, walk_stmt_default, Visitor};
+pub use walker::{
+    walk_expr_default, walk_function_default, walk_module_default, walk_stmt_default, Visitor,
+};
 
 #[cfg(test)]
 mod smoke {
@@ -98,7 +100,7 @@ mod smoke {
         let r = validate(&m);
         assert!(r.is_ok());
         let t = print_module(&m);
-        assert!(t.contains("(sir-module empty v1"));
+        assert!(t.contains("(sir-module empty v2"));
     }
 
     #[test]

@@ -21,7 +21,7 @@ use std::collections::HashSet;
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Feature, Function, Global, Module, ParamKind, Scope, Stmt,
+    Block, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -123,7 +123,12 @@ fn collect_ancestry_in_stmt(
     seen: &mut HashSet<String>,
 ) {
     match s {
-        Stmt::ClassDef { name, superclass, body, .. } => {
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            ..
+        } => {
             if let Some(sup) = superclass {
                 if seen.insert(name.clone()) {
                     pairs.push((name.clone(), sup.clone()));
@@ -134,12 +139,15 @@ fn collect_ancestry_in_stmt(
         Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
             collect_ancestry_in_stmts(body, pairs, seen);
         }
-        Stmt::While { body, .. }
-        | Stmt::ForRange { body, .. }
-        | Stmt::ForEach { body, .. } => {
+        Stmt::While { body, .. } | Stmt::ForRange { body, .. } | Stmt::ForEach { body, .. } => {
             collect_ancestry_in_block(body, pairs, seen);
         }
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             collect_ancestry_in_stmts(body, pairs, seen);
             for r in rescues {
                 collect_ancestry_in_stmts(&r.body, pairs, seen);
@@ -154,16 +162,47 @@ fn collect_ancestry_in_stmt(
         | Stmt::ExprStmt { expr: value, .. } => {
             collect_ancestry_in_expr(value, pairs, seen);
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             collect_ancestry_in_expr(seq, pairs, seen);
             collect_ancestry_in_expr(index, pairs, seen);
             collect_ancestry_in_expr(value, pairs, seen);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             collect_ancestry_in_expr(map, pairs, seen);
             collect_ancestry_in_expr(key, pairs, seen);
             collect_ancestry_in_expr(value, pairs, seen);
         }
+        // SIR22: `target[indices...] = value` carries only sub-*expressions*
+        // (target/indices/value), never a statement block, so it can nest no
+        // `ClassDef` — same reasoning as `SeqSet`/`MapSet` above, just walked
+        // for completeness in case a future frontend surprises us.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            collect_ancestry_in_expr(target, pairs, seen);
+            for idx in indices {
+                collect_ancestry_in_index_arg(idx, pairs, seen);
+            }
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+    }
+}
+
+fn collect_ancestry_in_index_arg(
+    idx: &IndexArg,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut HashSet<String>,
+) {
+    match idx {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => collect_ancestry_in_expr(e, pairs, seen),
+        IndexArg::Whole => {}
     }
 }
 
@@ -173,7 +212,11 @@ fn collect_ancestry_in_expr(
     seen: &mut HashSet<String>,
 ) {
     match e {
-        Expr::If { then_branch, else_branch, .. } => {
+        Expr::If {
+            then_branch,
+            else_branch,
+            ..
+        } => {
             collect_ancestry_in_block(then_branch, pairs, seen);
             collect_ancestry_in_block(else_branch, pairs, seen);
         }
@@ -218,7 +261,9 @@ fn uses_range(m: &Module) -> bool {
 /// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
 /// over `Stmt`/`Expr` so a new node can't silently hide a use.
 fn module_uses_builtin(m: &Module, name: &str) -> bool {
-    m.functions.iter().any(|f| block_uses_builtin(&f.body, name))
+    m.functions
+        .iter()
+        .any(|f| block_uses_builtin(&f.body, name))
 }
 
 fn block_uses_builtin(b: &Block, name: &str) -> bool {
@@ -238,7 +283,13 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         Stmt::While { cond, body, .. } => {
             expr_uses_builtin(cond, name) || block_uses_builtin(body, name)
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             expr_uses_builtin(start, name)
                 || expr_uses_builtin(stop, name)
                 || expr_uses_builtin(step, name)
@@ -247,12 +298,16 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         Stmt::ForEach { iter, body, .. } => {
             expr_uses_builtin(iter, name) || block_uses_builtin(body, name)
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             expr_uses_builtin(seq, name)
                 || expr_uses_builtin(index, name)
                 || expr_uses_builtin(value, name)
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             expr_uses_builtin(map, name)
                 || expr_uses_builtin(key, name)
                 || expr_uses_builtin(value, name)
@@ -260,11 +315,38 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
         Stmt::ClassDef { body, .. }
         | Stmt::ModuleDef { body, .. }
         | Stmt::SingletonClassDef { body, .. } => stmts_use_builtin(body, name),
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             stmts_use_builtin(body, name)
                 || rescues.iter().any(|r| stmts_use_builtin(&r.body, name))
-                || ensure_body.as_deref().is_some_and(|e| stmts_use_builtin(e, name))
+                || ensure_body
+                    .as_deref()
+                    .is_some_and(|e| stmts_use_builtin(e, name))
         }
+        // SIR22: `target[indices...] = value` — recurse into every operand
+        // (mirrors `SeqSet`/`MapSet` above) so a builtin nested inside an
+        // index expression is still detected.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            expr_uses_builtin(target, name)
+                || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
+                || expr_uses_builtin(value, name)
+        }
+    }
+}
+
+fn index_arg_uses_builtin(idx: &IndexArg, name: &str) -> bool {
+    match idx {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => expr_uses_builtin(e, name),
+        IndexArg::Whole => false,
     }
 }
 
@@ -277,7 +359,12 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         Expr::IndirectCall { target, args, .. } => {
             expr_uses_builtin(target, name) || args.iter().any(|a| expr_uses_builtin(a, name))
         }
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             expr_uses_builtin(cond, name)
                 || block_uses_builtin(then_branch, name)
                 || block_uses_builtin(else_branch, name)
@@ -306,6 +393,34 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         // (its runtime meaning) so this builtin-usage scan stays faithful.
         // Real support pending KW2–KW6.
         Expr::KeywordArg { value, .. } => expr_uses_builtin(value, name),
+        // SIR22 compile-compat stubs: this backend does not accept
+        // `Feature::NDArrays`/`Feature::MatrixOps` (see `accepts_features` in
+        // lib.rs), so `check_module` rejects any module using these nodes
+        // before emission — but the scan still recurses into every operand
+        // so it stays faithful if that ever changes.
+        Expr::ArrayLit { rows, .. } => rows
+            .iter()
+            .any(|row| row.iter().any(|e| expr_uses_builtin(e, name))),
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            expr_uses_builtin(start, name)
+                || step.as_deref().is_some_and(|s| expr_uses_builtin(s, name))
+                || expr_uses_builtin(stop, name)
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Transpose { target, .. } => expr_uses_builtin(target, name),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            expr_uses_builtin(target, name)
+                || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
+        }
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -444,7 +559,11 @@ fn emit_module_footer(out: &mut String, m: &Module) {
 // ---------------------------------------------------------------------------
 
 fn emit_function(out: &mut String, f: &Function) {
-    let _ = writeln!(out, "// SIR span: {}", sanitize_comment(&f.span.to_string()));
+    let _ = writeln!(
+        out,
+        "// SIR span: {}",
+        sanitize_comment(&f.span.to_string())
+    );
     let _ = write!(out, "function {}(", sanitize_ident(&f.name));
     // Captures are positional and come BEFORE params, matching the
     // lowerer's MakeClosure convention.
@@ -595,7 +714,12 @@ fn collect_assigned_locals(b: &Block, out: &mut HashSet<String>) {
 
 fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
     match s {
-        Stmt::Assign { name, scope: Scope::Local, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Local,
+            value,
+            ..
+        } => {
             out.insert(name.clone());
             collect_expr_assigned(value, out);
         }
@@ -608,7 +732,13 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(cond, out);
             collect_assigned_locals(body, out);
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             collect_expr_assigned(start, out);
             collect_expr_assigned(stop, out);
             collect_expr_assigned(step, out);
@@ -618,19 +748,28 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(iter, out);
             collect_assigned_locals(body, out);
         }
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             collect_expr_assigned(seq, out);
             collect_expr_assigned(index, out);
             collect_expr_assigned(value, out);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             collect_expr_assigned(map, out);
             collect_expr_assigned(key, out);
             collect_expr_assigned(value, out);
         }
         // A try/rescue/ensure carries bare statement lists that may reassign
         // an outer local, so descend into every one.
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             for st in body {
                 collect_stmt_assigned(st, out);
             }
@@ -648,12 +787,40 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         // Class/module bodies are rejected at the capability check for this
         // backend; nothing to collect.
         Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
+        // SIR22 compile-compat stub: rejected by `check_module` before this
+        // backend ever emits (no `Feature::NDArrays`/`Feature::MatrixOps` in
+        // `accepts_features`), but recurse into every operand — mirroring
+        // `SeqSet`/`MapSet` above — so the scan stays faithful regardless.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            collect_expr_assigned(target, out);
+            for idx in indices {
+                collect_index_arg_assigned(idx, out);
+            }
+            collect_expr_assigned(value, out);
+        }
+    }
+}
+
+fn collect_index_arg_assigned(idx: &IndexArg, out: &mut HashSet<String>) {
+    match idx {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => collect_expr_assigned(e, out),
+        IndexArg::Whole => {}
     }
 }
 
 fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
     match e {
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             collect_expr_assigned(cond, out);
             collect_assigned_locals(then_branch, out);
             collect_assigned_locals(else_branch, out);
@@ -708,6 +875,39 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         // — its runtime meaning — so assigned-local collection stays faithful.
         // Real support pending KW2–KW6.
         Expr::KeywordArg { value, .. } => collect_expr_assigned(value, out),
+        // SIR22 compile-compat stubs: rejected by `check_module` before this
+        // backend ever emits (no `Feature::NDArrays`/`Feature::MatrixOps` in
+        // `accepts_features`), but recurse into every operand so the scan
+        // stays faithful regardless.
+        Expr::ArrayLit { rows, .. } => {
+            for row in rows {
+                for e in row {
+                    collect_expr_assigned(e, out);
+                }
+            }
+        }
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            collect_expr_assigned(start, out);
+            if let Some(s) = step {
+                collect_expr_assigned(s, out);
+            }
+            collect_expr_assigned(stop, out);
+        }
+        Expr::MatMul { lhs, rhs, .. } | Expr::ElementwiseOp { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::Transpose { target, .. } => collect_expr_assigned(target, out),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            collect_expr_assigned(target, out);
+            for idx in indices {
+                collect_index_arg_assigned(idx, out);
+            }
+        }
         // Leaves with no nested blocks/exprs that could hold an Assign.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
@@ -748,7 +948,13 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             } else {
                 "const"
             };
-            let _ = write!(out, "{}{} {}: __Sir.Val = ", pad, keyword, sanitize_ident(name));
+            let _ = write!(
+                out,
+                "{}{} {}: __Sir.Val = ",
+                pad,
+                keyword,
+                sanitize_ident(name)
+            );
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -783,7 +989,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(";\n");
         }
         // `seq[index] = value` — cast through the array view of `Val`.
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             out.push_str(&pad);
             out.push_str("((");
             emit_expr(out, seq, indent);
@@ -794,7 +1002,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(";\n");
         }
         // `map[key] = value` — `Map.set` on the map view of `Val`.
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             out.push_str(&pad);
             out.push_str("((");
             emit_expr(out, map, indent);
@@ -820,7 +1030,14 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // block-scoped temporaries (matching Python's `range`), and the
         // loop condition is direction-aware so a negative `step` counts
         // down correctly.
-        Stmt::ForRange { var, start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            var,
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             let id = fresh_loop_id();
             let v = sanitize_ident(var);
             let inner = indent + 2;
@@ -855,7 +1072,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         }
         // `for (const var of iter) { body }` — iterate a Seq.  The
         // binding uses `let` if the body reassigns the loop variable.
-        Stmt::ForEach { var, iter, body, .. } => {
+        Stmt::ForEach {
+            var, iter, body, ..
+        } => {
             let kw = if MUTABLE_NAMES.with(|m| m.borrow().contains(var)) {
                 "let"
             } else {
@@ -870,13 +1089,23 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // ── SIR17 scopes (assignment) ───────────────────────────────
         // `@x = v` → current-self instance-variable write via the OOP
         // runtime (no native `this` — methods are receiver-less).
-        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Instance,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}__SirOop.ivarSet({}, ", pad, quote_ts_string(name));
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
         // `@@x = v` → class-variable store write.
-        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::ClassVar,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}__SirOop.cvarSet({}, ", pad, quote_ts_string(name));
             emit_expr(out, value, indent);
             out.push_str(");\n");
@@ -884,15 +1113,27 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // `CONST = v` → an ordinary module-level binding.  Constants are
         // assign-once in Ruby, so `const` is faithful; reads elsewhere
         // emit the bare identifier (see `emit_var_ref`).
-        Stmt::Assign { name, scope: Scope::Const, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Const,
+            value,
+            ..
+        } => {
             let _ = write!(out, "{}const {}: __Sir.Val = ", pad, sanitize_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
         // `Assign` to a builtin is never produced by any frontend (you
         // cannot rebind `+`); a validated module never reaches here.
-        Stmt::Assign { scope: Scope::Builtin, span, .. } => {
-            panic!("ts backend reached an assign to a Builtin-scoped name at {} — invalid SIR", span);
+        Stmt::Assign {
+            scope: Scope::Builtin,
+            span,
+            ..
+        } => {
+            panic!(
+                "ts backend reached an assign to a Builtin-scoped name at {} — invalid SIR",
+                span
+            );
         }
         // ── SIR17 class / module / singleton declarations ───────────
         // The Ruby→SIR frontend hoists method `def`s to top-level
@@ -900,8 +1141,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // statements (constant / class-variable assigns).  We register
         // the class in the OOP runtime (for ancestry-aware `is_a?`) and
         // emit the body statements in source order.
-        Stmt::ClassDef { name, superclass, body, .. } => {
-            let _ = write!(out, "{}__SirOop.defineClass({}, ", pad, quote_ts_string(name));
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            ..
+        } => {
+            let _ = write!(
+                out,
+                "{}__SirOop.defineClass({}, ",
+                pad,
+                quote_ts_string(name)
+            );
             match superclass {
                 Some(sup) => {
                     let _ = write!(out, "{}", quote_ts_string(sup));
@@ -916,7 +1167,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // A module is a namespace with no superclass; register it so it
         // can participate in `is_a?`/ancestry, then emit its body.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = write!(out, "{}__SirOop.defineClass({}, null);\n", pad, quote_ts_string(name));
+            let _ = write!(
+                out,
+                "{}__SirOop.defineClass({}, null);\n",
+                pad,
+                quote_ts_string(name)
+            );
             for st in body {
                 emit_stmt(out, st, indent);
             }
@@ -935,7 +1191,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // the exception runtime `rescueMatches(exc, [class names])` for each
         // clause in source order and re-`throw`s if none match (matching
         // Ruby's "propagate when unrescued").
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             let pad = " ".repeat(indent);
             let _ = write!(out, "{}try {{\n", pad);
             emit_stmt_block(out, body, indent + 2);
@@ -983,6 +1244,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             }
             out.push('\n');
         }
+        // SIR22 array/matrix indexed assignment.  This backend does not
+        // declare `Feature::NDArrays`/`Feature::MatrixOps` in
+        // `accepts_features` (see lib.rs), so `Backend::check_module`
+        // rejects any module containing this node before it ever reaches
+        // emission.  Panic here to catch a backend/validator drift, mirroring
+        // the `Expr::Intrinsic` guard below.
+        Stmt::IndexSet { span, .. } => {
+            panic!(
+                "typescript backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
+                span
+            );
+        }
     }
 }
 
@@ -991,7 +1264,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
 fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
     if let Expr::BuiltinCall { name, args, .. } = e {
         if name == "global_set" && args.len() == 2 {
-            if let Expr::SymLit { name: global_name, .. } = &args[0] {
+            if let Expr::SymLit {
+                name: global_name, ..
+            } = &args[0]
+            {
                 return Some((global_name.as_str(), &args[1]));
             }
         }
@@ -1019,7 +1295,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             let _ = write!(out, "{}", quote_ts_string(value));
         }
         Expr::VarRef { name, scope, .. } => emit_var_ref(out, name, *scope),
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             out.push_str("(__Sir.truthy(");
             emit_expr(out, cond, indent);
             out.push_str(") ? (");
@@ -1042,7 +1323,9 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str("])");
         }
         Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
-        Expr::MakeClosure { fn_name, captures, .. } => {
+        Expr::MakeClosure {
+            fn_name, captures, ..
+        } => {
             // Render: new __Sir.Closure((..._a) => <fn>(<cap0>, <cap1>, ..._a))
             out.push_str("new __Sir.Closure((..._a: __Sir.Val[]) => ");
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
@@ -1151,6 +1434,25 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             panic!(
                 "typescript backend reached a bare keyword-arg expression at {} — a KeywordArg must be collapsed by emit_call_args, never emitted as a value",
                 span
+            );
+        }
+        // SIR22 array/matrix expressions (`ArrayLit`/`Range`/`MatMul`/
+        // `ElementwiseOp`/`Transpose`/`IndexGet`).  This backend does not
+        // declare `Feature::NDArrays`/`Feature::MatrixOps` in
+        // `accepts_features` (see lib.rs), so `Backend::check_module` rejects
+        // any module using these nodes before it ever reaches emission.
+        // Panic here to catch a backend/validator drift (mirrors the
+        // `Intrinsic` guard above).
+        Expr::ArrayLit { .. }
+        | Expr::Range { .. }
+        | Expr::MatMul { .. }
+        | Expr::ElementwiseOp { .. }
+        | Expr::Transpose { .. }
+        | Expr::IndexGet { .. } => {
+            panic!(
+                "typescript backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
             );
         }
     }
@@ -1371,14 +1673,17 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             out.push_str("__SirOop.callMethod(");
             emit_expr(out, &args[0], indent);
             let _ = write!(out, ", {}", quote_ts_string(meth));
-            let is_class_pred =
-                matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
+            let is_class_pred = matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
             for (i, a) in args[2..].iter().enumerate() {
                 out.push_str(", ");
                 match a {
                     // First operand of a class predicate, given as a
                     // constant class name → emit the name as a string.
-                    Expr::VarRef { name: cn, scope: Scope::Const, .. } if is_class_pred && i == 0 => {
+                    Expr::VarRef {
+                        name: cn,
+                        scope: Scope::Const,
+                        ..
+                    } if is_class_pred && i == 0 => {
                         out.push_str(&quote_ts_string(cn));
                     }
                     // A `&:sym` / `&proc` block argument on a dispatched call
@@ -1493,7 +1798,11 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("__SirExc.raiseError(");
         match args.first() {
             None => {}
-            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+            Some(Expr::VarRef {
+                name: cn,
+                scope: Scope::Const,
+                ..
+            }) => {
                 out.push_str(&quote_ts_string(cn));
                 if let Some(msg) = args.get(1) {
                     out.push_str(", ");
@@ -1888,7 +2197,10 @@ mod tests {
     fn emit_function_sanitises_span_in_comment() {
         let body = Block {
             stmts: vec![],
-            value: Expr::IntLit { value: 0, span: s() },
+            value: Expr::IntLit {
+                value: 0,
+                span: s(),
+            },
             span: s(),
         };
         let f = Function {
@@ -1963,16 +2275,37 @@ mod tests {
     #[test]
     fn emit_int_literal() {
         let mut out = String::new();
-        emit_expr(&mut out, &Expr::IntLit { value: 42, span: s() }, 0);
+        emit_expr(
+            &mut out,
+            &Expr::IntLit {
+                value: 42,
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(out, "42");
     }
 
     #[test]
     fn emit_bool_and_nil() {
         let mut a = String::new();
-        emit_expr(&mut a, &Expr::BoolLit { value: true, span: s() }, 0);
+        emit_expr(
+            &mut a,
+            &Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            0,
+        );
         let mut b = String::new();
-        emit_expr(&mut b, &Expr::BoolLit { value: false, span: s() }, 0);
+        emit_expr(
+            &mut b,
+            &Expr::BoolLit {
+                value: false,
+                span: s(),
+            },
+            0,
+        );
         let mut c = String::new();
         emit_expr(&mut c, &Expr::NilLit { span: s() }, 0);
         assert_eq!(a, "true");
@@ -1983,7 +2316,14 @@ mod tests {
     #[test]
     fn emit_symbol_interns() {
         let mut out = String::new();
-        emit_expr(&mut out, &Expr::SymLit { name: "foo".into(), span: s() }, 0);
+        emit_expr(
+            &mut out,
+            &Expr::SymLit {
+                name: "foo".into(),
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(out, r#"__Sir.intern("foo")"#);
     }
 
@@ -2025,8 +2365,14 @@ mod tests {
             &Expr::BuiltinCall {
                 name: "+".into(),
                 args: vec![
-                    Expr::IntLit { value: 1, span: s() },
-                    Expr::IntLit { value: 2, span: s() },
+                    Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -2043,7 +2389,10 @@ mod tests {
             &mut out,
             &Expr::DirectCall {
                 fn_name: "id".into(),
-                args: vec![Expr::IntLit { value: 7, span: s() }],
+                args: vec![Expr::IntLit {
+                    value: 7,
+                    span: s(),
+                }],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2063,7 +2412,10 @@ mod tests {
                     scope: Scope::Local,
                     span: s(),
                 }),
-                args: vec![Expr::IntLit { value: 5, span: s() }],
+                args: vec![Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2081,7 +2433,10 @@ mod tests {
                 fn_name: "__lambda_0".into(),
                 captures: vec![semantic_ir::CaptureValue {
                     name: "n".into(),
-                    value: Expr::IntLit { value: 5, span: s() },
+                    value: Expr::IntLit {
+                        value: 5,
+                        span: s(),
+                    },
                 }],
                 span: s(),
             },
@@ -2106,7 +2461,13 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() }],
+            params: vec![Param {
+                name: "x".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
             return_type: None,
             captures: vec![],
             body,
@@ -2129,8 +2490,15 @@ mod tests {
         let default_b = Expr::BuiltinCall {
             name: "+".into(),
             args: vec![
-                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
-                Expr::IntLit { value: 1, span: s() },
+                Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
+                Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
             ],
             effects: EffectSet::PURE,
             span: s(),
@@ -2138,7 +2506,13 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
                 Param {
                     name: "b".into(),
                     sir_type: None,
@@ -2151,7 +2525,11 @@ mod tests {
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                value: Expr::VarRef {
+                    name: "b".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -2176,13 +2554,35 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
-                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
-                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "rest".into(),
+                    sir_type: None,
+                    kind: ParamKind::Rest,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "opts".into(),
+                    sir_type: None,
+                    kind: ParamKind::KwRest,
+                    default: None,
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -2209,7 +2609,10 @@ mod tests {
                 captures: vec![],
                 body: Block {
                     stmts: vec![],
-                    value: Expr::IntLit { value: 42, span: s() },
+                    value: Expr::IntLit {
+                        value: 42,
+                        span: s(),
+                    },
                     span: s(),
                 },
                 effects: EffectSet::PURE,
@@ -2236,8 +2639,14 @@ mod tests {
         let e = Expr::BuiltinCall {
             name: "global_set".into(),
             args: vec![
-                Expr::SymLit { name: "counter".into(), span: s() },
-                Expr::IntLit { value: 0, span: s() },
+                Expr::SymLit {
+                    name: "counter".into(),
+                    span: s(),
+                },
+                Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                },
             ],
             effects: EffectSet::PURE,
             span: s(),
@@ -2254,7 +2663,13 @@ mod tests {
     // M2 — `&:sym` symbol-to-proc on a method-dispatch call.
 
     fn method_call(recv: Expr, meth: &str, extra: Vec<Expr>) -> Expr {
-        let mut args = vec![recv, Expr::StrLit { value: meth.into(), span: s() }];
+        let mut args = vec![
+            recv,
+            Expr::StrLit {
+                value: meth.into(),
+                span: s(),
+            },
+        ];
         args.extend(extra);
         Expr::BuiltinCall {
             name: "__method__".into(),
@@ -2276,11 +2691,19 @@ mod tests {
     // ── O1: OOP object-model builtin emit arms ───────────────────────────────
 
     fn ts_str_lit(v: &str) -> Expr {
-        Expr::StrLit { value: v.into(), span: s() }
+        Expr::StrLit {
+            value: v.into(),
+            span: s(),
+        }
     }
 
     fn ts_builtin(name: &str, args: Vec<Expr>) -> Expr {
-        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+        Expr::BuiltinCall {
+            name: name.into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        }
     }
 
     #[test]
@@ -2309,7 +2732,10 @@ mod tests {
             captures: vec![],
             span: s(),
         };
-        let e = ts_builtin("__def_method__", vec![ts_str_lit("Dog"), ts_str_lit("speak"), closure]);
+        let e = ts_builtin(
+            "__def_method__",
+            vec![ts_str_lit("Dog"), ts_str_lit("speak"), closure],
+        );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert!(
@@ -2348,7 +2774,10 @@ mod tests {
     #[test]
     fn class_method_call_emits_call_class_method_ts() {
         // __class_method__("Counter", "zero") → __SirOop.callClassMethod("Counter", "zero").
-        let e = ts_builtin("__class_method__", vec![ts_str_lit("Counter"), ts_str_lit("zero")]);
+        let e = ts_builtin(
+            "__class_method__",
+            vec![ts_str_lit("Counter"), ts_str_lit("zero")],
+        );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert_eq!(out, r#"__SirOop.callClassMethod("Counter", "zero")"#);
@@ -2357,7 +2786,10 @@ mod tests {
     #[test]
     fn mixin_include_emits_include_module_ts() {
         // __include__("Greeter", "Loud") → __SirOop.includeModule("Greeter", "Loud").
-        let e = ts_builtin("__include__", vec![ts_str_lit("Greeter"), ts_str_lit("Loud")]);
+        let e = ts_builtin(
+            "__include__",
+            vec![ts_str_lit("Greeter"), ts_str_lit("Loud")],
+        );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert_eq!(out, r#"__SirOop.includeModule("Greeter", "Loud")"#);
@@ -2366,7 +2798,10 @@ mod tests {
     #[test]
     fn mixin_extend_emits_extend_module_ts() {
         // __extend__("Widget", "Describable") → __SirOop.extendModule("Widget", "Describable").
-        let e = ts_builtin("__extend__", vec![ts_str_lit("Widget"), ts_str_lit("Describable")]);
+        let e = ts_builtin(
+            "__extend__",
+            vec![ts_str_lit("Widget"), ts_str_lit("Describable")],
+        );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert_eq!(out, r#"__SirOop.extendModule("Widget", "Describable")"#);
@@ -2376,9 +2811,16 @@ mod tests {
     fn sym_block_pass_on_dispatch_emits_sym_to_proc() {
         // arr.map(&:to_s) → callMethod(arr, "map", symToProc(intern("to_s")))
         let e = method_call(
-            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            Expr::VarRef {
+                name: "arr".into(),
+                scope: Scope::Local,
+                span: s(),
+            },
             "map",
-            vec![block_pass(Expr::SymLit { name: "to_s".into(), span: s() })],
+            vec![block_pass(Expr::SymLit {
+                name: "to_s".into(),
+                span: s(),
+            })],
         );
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
@@ -2392,7 +2834,11 @@ mod tests {
     fn proc_block_pass_on_dispatch_unwraps_to_value() {
         // arr.each(&p) → callMethod(arr, "each", p) — the proc IS the block.
         let e = method_call(
-            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            Expr::VarRef {
+                name: "arr".into(),
+                scope: Scope::Local,
+                span: s(),
+            },
             "each",
             vec![block_pass(Expr::VarRef {
                 name: "p".into(),
@@ -2409,7 +2855,14 @@ mod tests {
     fn sym_block_pass_as_plain_arg_emits_sym_to_proc() {
         // The general emit_arg path also handles a surviving block_pass.
         let mut out = String::new();
-        emit_arg(&mut out, &block_pass(Expr::SymLit { name: "upcase".into(), span: s() }), 0);
+        emit_arg(
+            &mut out,
+            &block_pass(Expr::SymLit {
+                name: "upcase".into(),
+                span: s(),
+            }),
+            0,
+        );
         assert_eq!(out, r#"__SirOop.symToProc(__Sir.intern("upcase"))"#);
     }
 }

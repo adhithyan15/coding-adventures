@@ -20,9 +20,7 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashSet;
 use std::fmt::Write;
 
-use semantic_ir::{
-    Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt,
-};
+use semantic_ir::{Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt};
 
 use crate::runtime::RUNTIME;
 
@@ -154,9 +152,7 @@ fn emit_main(out: &mut String, m: &Module) {
     };
 
     if uses_exceptions {
-        out.push_str(
-            "    let __r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {\n",
-        );
+        out.push_str("    let __r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {\n");
         run_body(out, "        ");
         out.push_str("    }));\n");
         out.push_str("    if let Err(__payload) = __r {\n");
@@ -207,7 +203,12 @@ fn collect_ancestry_block(b: &Block, edges: &mut Vec<(String, String)>) {
 /// `begin`/`class` still registers.
 fn collect_ancestry_stmt(s: &Stmt, edges: &mut Vec<(String, String)>) {
     match s {
-        Stmt::ClassDef { name, superclass: Some(sup), body, .. } => {
+        Stmt::ClassDef {
+            name,
+            superclass: Some(sup),
+            body,
+            ..
+        } => {
             edges.push((name.clone(), sup.clone()));
             for st in body {
                 collect_ancestry_stmt(st, edges);
@@ -220,7 +221,12 @@ fn collect_ancestry_stmt(s: &Stmt, edges: &mut Vec<(String, String)>) {
                 collect_ancestry_stmt(st, edges);
             }
         }
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             for st in body {
                 collect_ancestry_stmt(st, edges);
             }
@@ -244,7 +250,11 @@ fn collect_ancestry_stmt(s: &Stmt, edges: &mut Vec<(String, String)>) {
 // ---------------------------------------------------------------------------
 
 fn emit_function(out: &mut String, f: &Function) {
-    let _ = writeln!(out, "// SIR span: {}", sanitize_comment(&f.span.to_string()));
+    let _ = writeln!(
+        out,
+        "// SIR span: {}",
+        sanitize_comment(&f.span.to_string())
+    );
     let _ = write!(out, "fn {}(", function_emit_name(&f.name));
 
     let mut first = true;
@@ -324,7 +334,11 @@ fn emit_default_param_prologue(out: &mut String, f: &Function, indent: usize) {
     for p in &f.params {
         let Some(default) = &p.default else { continue };
         let name = sanitize_ident(&p.name);
-        let _ = write!(out, "{}let {} = if __sir::is_missing(&{}) {{ ", pad, name, name);
+        let _ = write!(
+            out,
+            "{}let {} = if __sir::is_missing(&{}) {{ ",
+            pad, name, name
+        );
         emit_expr(out, default, indent);
         let _ = writeln!(out, " }} else {{ {} }};", name);
     }
@@ -344,7 +358,12 @@ fn collect_assigned_locals(b: &Block, out: &mut HashSet<String>) {
 
 fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
     match s {
-        Stmt::Assign { name, scope: Scope::Local, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Local,
+            value,
+            ..
+        } => {
             out.insert(name.clone());
             collect_expr_assigned(value, out);
         }
@@ -357,7 +376,13 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(cond, out);
             collect_assigned_locals(body, out);
         }
-        Stmt::ForRange { start, stop, step, body, .. } => {
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
             collect_expr_assigned(start, out);
             collect_expr_assigned(stop, out);
             collect_expr_assigned(step, out);
@@ -370,12 +395,16 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         // SIR16 Seq/Map indexed assignment: the target, index/key, and
         // value sub-expressions can each hold a nested `Assign` (e.g.
         // `xs[i] = (foo := 1)`), so recurse into all three.
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             collect_expr_assigned(seq, out);
             collect_expr_assigned(index, out);
             collect_expr_assigned(value, out);
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             collect_expr_assigned(map, out);
             collect_expr_assigned(key, out);
             collect_expr_assigned(value, out);
@@ -386,12 +415,23 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         | Stmt::ModuleDef { .. }
         | Stmt::SingletonClassDef { .. }
         | Stmt::TryCatch { .. } => {}
+        // SIR22 array/matrix indexed assignment: `Feature::NDArrays` /
+        // `Feature::MatrixOps` are not in this backend's accepted-features
+        // list, so `check_module` rejects any module using `IndexSet`
+        // before it ever reaches this pure collection helper. Nothing
+        // reachable to collect.
+        Stmt::IndexSet { .. } => {}
     }
 }
 
 fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
     match e {
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             collect_expr_assigned(cond, out);
             collect_assigned_locals(then_branch, out);
             collect_assigned_locals(else_branch, out);
@@ -457,6 +497,16 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::VarRef { .. }
         | Expr::Intrinsic { .. }
         | Expr::StrConcat { .. } => {}
+        // SIR22 array/matrix nodes (rejected before emit — see
+        // `collect_stmt_assigned`'s `IndexSet` arm): none of these carry a
+        // reachable `Assign` for THIS backend, since a validated module can
+        // never contain them in the first place.
+        Expr::ArrayLit { .. }
+        | Expr::Range { .. }
+        | Expr::MatMul { .. }
+        | Expr::ElementwiseOp { .. }
+        | Expr::Transpose { .. }
+        | Expr::IndexGet { .. } => {}
     }
 }
 
@@ -497,7 +547,13 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // let emission.  A name later re-bound by an `Assign`
             // (SIR16 MutableBindings) must be declared `let mut` so
             // the reassignment compiles; immutable bindings stay `let`.
-            let _ = write!(out, "{}{} {}: __sir::Value = ", pad, let_keyword(name), sanitize_ident(name));
+            let _ = write!(
+                out,
+                "{}{} {}: __sir::Value = ",
+                pad,
+                let_keyword(name),
+                sanitize_ident(name)
+            );
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -526,8 +582,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
-        Stmt::Assign { name, scope: Scope::Global, value, .. } => {
-            let _ = write!(out, "{}let _ = __sir::global_set(&__sir::intern({}), ", pad, quote_rs_string(name));
+        Stmt::Assign {
+            name,
+            scope: Scope::Global,
+            value,
+            ..
+        } => {
+            let _ = write!(
+                out,
+                "{}let _ = __sir::global_set(&__sir::intern({}), ",
+                pad,
+                quote_rs_string(name)
+            );
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
@@ -536,28 +602,55 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // acting on the current self (a no-op returning `v` outside any
         // method).  The sigil-bearing name is the map key.  The returned
         // value is discarded here (`let _ = …`).
-        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
-            let _ = write!(out, "{}let _ = __sir::ivar_set({}, ", pad, quote_rs_string(name));
+        Stmt::Assign {
+            name,
+            scope: Scope::Instance,
+            value,
+            ..
+        } => {
+            let _ = write!(
+                out,
+                "{}let _ = __sir::ivar_set({}, ",
+                pad,
+                quote_rs_string(name)
+            );
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
-        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
-            let _ = write!(out, "{}let _ = __sir::cvar_set({}, ", pad, quote_rs_string(name));
+        Stmt::Assign {
+            name,
+            scope: Scope::ClassVar,
+            value,
+            ..
+        } => {
+            let _ = write!(
+                out,
+                "{}let _ = __sir::cvar_set({}, ",
+                pad,
+                quote_rs_string(name)
+            );
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
         // ── SIR16 loops ─────────────────────────────────────────────
         Stmt::While { cond, body, .. } => emit_while(out, cond, body, indent),
-        Stmt::ForRange { var, start, stop, step, body, .. } => {
-            emit_for_range(out, var, start, stop, step, body, indent)
-        }
-        Stmt::ForEach { var, iter, body, .. } => {
-            emit_for_each(out, var, iter, body, indent)
-        }
+        Stmt::ForRange {
+            var,
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => emit_for_range(out, var, start, stop, step, body, indent),
+        Stmt::ForEach {
+            var, iter, body, ..
+        } => emit_for_each(out, var, iter, body, indent),
         // ── SIR16 indexed assignment (Sequences/Maps) ───────────────
         // `seq[index] = value` mutates the shared backing vector in place
         // via `seq_set`; the returned value is discarded (`let _ = …`).
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             let _ = write!(out, "{}let _ = __sir::seq_set(&(", pad);
             emit_expr(out, seq, indent);
             out.push_str("), &(");
@@ -567,7 +660,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(");\n");
         }
         // `map[key] = value` inserts/overwrites via `map_set`.
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             let _ = write!(out, "{}let _ = __sir::map_set(&(", pad);
             emit_expr(out, map, indent);
             out.push_str("), ");
@@ -593,13 +688,29 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // `emit_ancestry_registration`); the declaration itself emits no
         // runtime code here — it exists purely as ancestry metadata.  We
         // emit a comment marker so the output is self-documenting.
-        Stmt::ClassDef { name, superclass, body, .. } => {
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            ..
+        } => {
             match superclass {
                 Some(sup) => {
-                    let _ = writeln!(out, "{}// class {} < {} (exception ancestry registered at init)", pad, sanitize_comment(name), sanitize_comment(sup));
+                    let _ = writeln!(
+                        out,
+                        "{}// class {} < {} (exception ancestry registered at init)",
+                        pad,
+                        sanitize_comment(name),
+                        sanitize_comment(sup)
+                    );
                 }
                 None => {
-                    let _ = writeln!(out, "{}// class {} (no ancestry edge)", pad, sanitize_comment(name));
+                    let _ = writeln!(
+                        out,
+                        "{}// class {} (no ancestry edge)",
+                        pad,
+                        sanitize_comment(name)
+                    );
                 }
             }
             // Body is empty for accepted (exception-subclass) classes, but
@@ -617,7 +728,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // so the defensive body loop below only ever runs for backend-
         // supported statements.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = writeln!(out, "{}// module {} (methods hoisted to top-level fns)", pad, sanitize_comment(name));
+            let _ = writeln!(
+                out,
+                "{}// module {} (methods hoisted to top-level fns)",
+                pad,
+                sanitize_comment(name)
+            );
             for st in body {
                 emit_stmt(out, st, indent);
             }
@@ -628,8 +744,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // `begin … rescue … ensure … end` → a `catch_unwind` region.  See
         // `emit_try_catch` for the full mapping and its ensure-ordering
         // guarantees.
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             emit_try_catch(out, body, rescues, ensure_body, indent);
+        }
+        // SIR22 array/matrix indexed assignment — `Feature::NDArrays` /
+        // `Feature::MatrixOps` are not in this backend's accepted-features
+        // list, so `check_module` rejects any module using `IndexSet`
+        // before it ever reaches emit.  Defensive panic covers internal
+        // bugs only (matches the `SingletonClassDef` arm above).
+        Stmt::IndexSet { span, .. } => {
+            panic!("rust backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet", span);
         }
     }
 }
@@ -724,15 +853,15 @@ fn emit_try_catch(
     // ── Err: an unwind occurred ──────────────────────────────────────
     let _ = writeln!(out, "{}Err(__payload) => {{", arm_pad);
     let dpad = indent_str(arm + 1);
-    let _ = writeln!(out, "{}let __exc = __sir::exc_from_payload(__payload);", dpad);
+    let _ = writeln!(
+        out,
+        "{}let __exc = __sir::exc_from_payload(__payload);",
+        dpad
+    );
     if rescues.is_empty() {
         // No rescue clauses: run ensure, then re-raise the exception.
         emit_ensure(out, arm + 1);
-        let _ = writeln!(
-            out,
-            "{}std::panic::resume_unwind(Box::new(__exc));",
-            dpad
-        );
+        let _ = writeln!(out, "{}std::panic::resume_unwind(Box::new(__exc));", dpad);
     } else {
         for (i, r) in rescues.iter().enumerate() {
             let kw = if i == 0 { "if" } else { "}} else if" };
@@ -804,10 +933,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             let _ = write!(out, "__sir::intern({})", quote_rs_string(name));
         }
         Expr::StrLit { value, .. } => {
-            let _ = write!(out, "__sir::Value::Str(::std::rc::Rc::from({}))", quote_rs_string(value));
+            let _ = write!(
+                out,
+                "__sir::Value::Str(::std::rc::Rc::from({}))",
+                quote_rs_string(value)
+            );
         }
         Expr::VarRef { name, scope, .. } => emit_var_ref(out, name, *scope),
-        Expr::If { cond, then_branch, else_branch, .. } => {
+        Expr::If {
+            cond,
+            then_branch,
+            else_branch,
+            ..
+        } => {
             out.push_str("(if __sir::truthy(&(");
             emit_expr(out, cond, indent);
             out.push_str(")) { ");
@@ -828,7 +966,9 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str("])");
         }
         Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
-        Expr::MakeClosure { fn_name, captures, .. } => {
+        Expr::MakeClosure {
+            fn_name, captures, ..
+        } => {
             emit_make_closure(out, fn_name, captures, indent);
         }
         Expr::Intrinsic { name, span, .. } => {
@@ -937,6 +1077,24 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // (matching `StrConcat`/`Intrinsic` above).
         Expr::KeywordArg { span, .. } => {
             panic!("rust backend reached a stand-alone keyword-arg expression at {} — indirect/closure keyword calls are out of scope for v0 (see sir-keyword-params.md)", span);
+        }
+        // SIR22 array/matrix expressions (`ArrayLit`/`Range`/`MatMul`/
+        // `ElementwiseOp`/`Transpose`/`IndexGet`) — `Feature::NDArrays` /
+        // `Feature::MatrixOps` are not in this backend's accepted-features
+        // list, so `check_module` rejects any module using them before it
+        // ever reaches emit.  Defensive panic covers internal bugs only
+        // (matches the `StrConcat`/`Intrinsic` arms above).
+        Expr::ArrayLit { span, .. }
+        | Expr::Range { span, .. }
+        | Expr::MatMul { span, .. }
+        | Expr::ElementwiseOp { span, .. }
+        | Expr::Transpose { span, .. }
+        | Expr::IndexGet { span, .. } => {
+            panic!(
+                "rust backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                span
+            );
         }
     }
 }
@@ -1173,9 +1331,11 @@ fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usiz
 fn emit_oop_name_arg(out: &mut String, e: &Expr) {
     match e {
         Expr::StrLit { value, .. } => out.push_str(&quote_rs_string(value)),
-        Expr::VarRef { name, scope: Scope::Const, .. } => {
-            out.push_str(&quote_rs_string(name))
-        }
+        Expr::VarRef {
+            name,
+            scope: Scope::Const,
+            ..
+        } => out.push_str(&quote_rs_string(name)),
         other => {
             // Defensive fallback: coerce a non-literal name to a `&str` at
             // runtime.  The frontends never emit this; the runtime helpers
@@ -1209,7 +1369,11 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             None => {
                 out.push_str("__sir::reraise()");
             }
-            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+            Some(Expr::VarRef {
+                name: cn,
+                scope: Scope::Const,
+                ..
+            }) => {
                 let _ = write!(out, "__sir::raise({}, ", quote_rs_string(cn));
                 match args.get(1) {
                     Some(msg) => emit_expr(out, msg, indent),
@@ -1451,7 +1615,11 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         }
         _ => {
             // Unknown name → dispatch by name (forward-compat).
-            let _ = write!(out, "__sir::call_builtin_by_name({}, vec![", quote_rs_string(name));
+            let _ = write!(
+                out,
+                "__sir::call_builtin_by_name({}, vec![",
+                quote_rs_string(name)
+            );
             emit_args(out, args, indent);
             out.push_str("])");
             return;
@@ -1806,13 +1974,25 @@ fn emit_for_range(
     // Open a block so the loop temporaries don't leak.
     let _ = writeln!(out, "{}{{", pad);
 
-    let _ = write!(out, "{}let mut __sir_i_{}: i64 = __sir::as_int(&(", inner_pad, id);
+    let _ = write!(
+        out,
+        "{}let mut __sir_i_{}: i64 = __sir::as_int(&(",
+        inner_pad, id
+    );
     emit_expr(out, start, inner);
     out.push_str("));\n");
-    let _ = write!(out, "{}let __sir_stop_{}: i64 = __sir::as_int(&(", inner_pad, id);
+    let _ = write!(
+        out,
+        "{}let __sir_stop_{}: i64 = __sir::as_int(&(",
+        inner_pad, id
+    );
     emit_expr(out, stop, inner);
     out.push_str("));\n");
-    let _ = write!(out, "{}let __sir_step_{}: i64 = __sir::as_int(&(", inner_pad, id);
+    let _ = write!(
+        out,
+        "{}let __sir_step_{}: i64 = __sir::as_int(&(",
+        inner_pad, id
+    );
     emit_expr(out, step, inner);
     out.push_str("));\n");
 
@@ -1855,7 +2035,12 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
     // Compact rendering for block-as-expression contexts.
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
-            let _ = write!(out, "{} {}: __sir::Value = ", let_keyword(name), sanitize_ident(name));
+            let _ = write!(
+                out,
+                "{} {}: __sir::Value = ",
+                let_keyword(name),
+                sanitize_ident(name)
+            );
             emit_expr(out, value, indent);
             out.push_str("; ");
         }
@@ -1875,18 +2060,37 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str("; ");
         }
-        Stmt::Assign { name, scope: Scope::Global, value, .. } => {
-            let _ = write!(out, "let _ = __sir::global_set(&__sir::intern({}), ", quote_rs_string(name));
+        Stmt::Assign {
+            name,
+            scope: Scope::Global,
+            value,
+            ..
+        } => {
+            let _ = write!(
+                out,
+                "let _ = __sir::global_set(&__sir::intern({}), ",
+                quote_rs_string(name)
+            );
             emit_expr(out, value, indent);
             out.push_str("); ");
         }
         // ── SIR17 O5 instance / class variable writes (inline) ──────
-        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::Instance,
+            value,
+            ..
+        } => {
             let _ = write!(out, "let _ = __sir::ivar_set({}, ", quote_rs_string(name));
             emit_expr(out, value, indent);
             out.push_str("); ");
         }
-        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+        Stmt::Assign {
+            name,
+            scope: Scope::ClassVar,
+            value,
+            ..
+        } => {
             let _ = write!(out, "let _ = __sir::cvar_set({}, ", quote_rs_string(name));
             emit_expr(out, value, indent);
             out.push_str("); ");
@@ -1897,17 +2101,24 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         // a Rust block-as-expression too (`{ <loop>; <value> }`), so the
         // inline path reuses them rather than maintaining a second shape.
         Stmt::While { cond, body, .. } => emit_while(out, cond, body, indent),
-        Stmt::ForRange { var, start, stop, step, body, .. } => {
-            emit_for_range(out, var, start, stop, step, body, indent)
-        }
-        Stmt::ForEach { var, iter, body, .. } => {
-            emit_for_each(out, var, iter, body, indent)
-        }
+        Stmt::ForRange {
+            var,
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => emit_for_range(out, var, start, stop, step, body, indent),
+        Stmt::ForEach {
+            var, iter, body, ..
+        } => emit_for_each(out, var, iter, body, indent),
         // SIR16 Seq/Map indexed assignment — compact (inline) rendering
         // for a block-as-expression context.  Same `seq_set`/`map_set`
         // helpers as the statement path, with a trailing space instead of
         // a newline.
-        Stmt::SeqSet { seq, index, value, .. } => {
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
             out.push_str("let _ = __sir::seq_set(&(");
             emit_expr(out, seq, indent);
             out.push_str("), &(");
@@ -1916,7 +2127,9 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str("); ");
         }
-        Stmt::MapSet { map, key, value, .. } => {
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
             out.push_str("let _ = __sir::map_set(&(");
             emit_expr(out, map, indent);
             out.push_str("), ");
@@ -1933,10 +2146,20 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         // registered at init.  In a block-as-expression context we emit
         // just the self-documenting comment (multi-line is faithful in a
         // Rust `{ … }`), reusing the same helpers as the loop arms.
-        Stmt::ClassDef { name, superclass, body, .. } => {
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            ..
+        } => {
             match superclass {
                 Some(sup) => {
-                    let _ = write!(out, "/* class {} < {} */ ", sanitize_comment(name), sanitize_comment(sup));
+                    let _ = write!(
+                        out,
+                        "/* class {} < {} */ ",
+                        sanitize_comment(name),
+                        sanitize_comment(sup)
+                    );
                 }
                 None => {
                     let _ = write!(out, "/* class {} */ ", sanitize_comment(name));
@@ -1963,8 +2186,19 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         // `emit_try_catch` helper renders is faithful inside a Rust
         // `{ … }`, so the inline path reuses it rather than maintaining a
         // second shape (same strategy as the loop arms above).
-        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
             emit_try_catch(out, body, rescues, ensure_body, indent);
+        }
+        // SIR22 array/matrix indexed assignment (inline) — see the
+        // `IndexSet` arm in `emit_stmt` above; same reasoning applies here
+        // (matches the `SingletonClassDef` (inline) arm above).
+        Stmt::IndexSet { span, .. } => {
+            panic!("rust backend (inline) reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet", span);
         }
     }
 }
@@ -2064,15 +2298,52 @@ fn is_rust_keyword(s: &str) -> bool {
     // keywords; the few un-raw-able ones get encoded.
     matches!(
         s,
-        "as" | "break" | "const" | "continue" | "else" | "enum"
-            | "false" | "fn" | "for" | "if" | "impl" | "in"
-            | "let" | "loop" | "match" | "mod" | "move" | "mut"
-            | "pub" | "ref" | "return" | "static" | "struct"
-            | "trait" | "true" | "type" | "unsafe" | "use"
-            | "where" | "while" | "async" | "await" | "dyn"
-            | "abstract" | "become" | "box" | "do" | "final"
-            | "macro" | "override" | "priv" | "typeof" | "unsized"
-            | "virtual" | "yield" | "try" | "union"
+        "as" | "break"
+            | "const"
+            | "continue"
+            | "else"
+            | "enum"
+            | "false"
+            | "fn"
+            | "for"
+            | "if"
+            | "impl"
+            | "in"
+            | "let"
+            | "loop"
+            | "match"
+            | "mod"
+            | "move"
+            | "mut"
+            | "pub"
+            | "ref"
+            | "return"
+            | "static"
+            | "struct"
+            | "trait"
+            | "true"
+            | "type"
+            | "unsafe"
+            | "use"
+            | "where"
+            | "while"
+            | "async"
+            | "await"
+            | "dyn"
+            | "abstract"
+            | "become"
+            | "box"
+            | "do"
+            | "final"
+            | "macro"
+            | "override"
+            | "priv"
+            | "typeof"
+            | "unsized"
+            | "virtual"
+            | "yield"
+            | "try"
+            | "union"
     )
 }
 
@@ -2112,9 +2383,7 @@ fn quote_rs_string(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{
-        EffectSet, FeatureManifest, Metadata, Param, ParamKind, Span,
-    };
+    use semantic_ir::{EffectSet, FeatureManifest, Metadata, Param, ParamKind, Span};
 
     fn s() -> Span {
         Span::synthetic()
@@ -2177,14 +2446,28 @@ mod tests {
     #[test]
     fn emit_int_literal() {
         let mut out = String::new();
-        emit_expr(&mut out, &Expr::IntLit { value: 42, span: s() }, 0);
+        emit_expr(
+            &mut out,
+            &Expr::IntLit {
+                value: 42,
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(out, "__sir::Value::Int(42i64)");
     }
 
     #[test]
     fn emit_negative_int() {
         let mut out = String::new();
-        emit_expr(&mut out, &Expr::IntLit { value: -7, span: s() }, 0);
+        emit_expr(
+            &mut out,
+            &Expr::IntLit {
+                value: -7,
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(out, "__sir::Value::Int(-7i64)");
     }
 
@@ -2193,8 +2476,22 @@ mod tests {
         let mut a = String::new();
         let mut b = String::new();
         let mut c = String::new();
-        emit_expr(&mut a, &Expr::BoolLit { value: true, span: s() }, 0);
-        emit_expr(&mut b, &Expr::BoolLit { value: false, span: s() }, 0);
+        emit_expr(
+            &mut a,
+            &Expr::BoolLit {
+                value: true,
+                span: s(),
+            },
+            0,
+        );
+        emit_expr(
+            &mut b,
+            &Expr::BoolLit {
+                value: false,
+                span: s(),
+            },
+            0,
+        );
         emit_expr(&mut c, &Expr::NilLit { span: s() }, 0);
         assert_eq!(a, "__sir::Value::Bool(true)");
         assert_eq!(b, "__sir::Value::Bool(false)");
@@ -2204,7 +2501,14 @@ mod tests {
     #[test]
     fn emit_symbol_interns() {
         let mut out = String::new();
-        emit_expr(&mut out, &Expr::SymLit { name: "foo".into(), span: s() }, 0);
+        emit_expr(
+            &mut out,
+            &Expr::SymLit {
+                name: "foo".into(),
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(out, r#"__sir::intern("foo")"#);
     }
 
@@ -2261,15 +2565,24 @@ mod tests {
             &Expr::BuiltinCall {
                 name: "+".into(),
                 args: vec![
-                    Expr::IntLit { value: 1, span: s() },
-                    Expr::IntLit { value: 2, span: s() },
+                    Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
             0,
         );
-        assert_eq!(out, "__sir::plus(vec![__sir::Value::Int(1i64), __sir::Value::Int(2i64)])");
+        assert_eq!(
+            out,
+            "__sir::plus(vec![__sir::Value::Int(1i64), __sir::Value::Int(2i64)])"
+        );
     }
 
     #[test]
@@ -2280,8 +2593,14 @@ mod tests {
             &Expr::BuiltinCall {
                 name: "global_set".into(),
                 args: vec![
-                    Expr::SymLit { name: "x".into(), span: s() },
-                    Expr::IntLit { value: 5, span: s() },
+                    Expr::SymLit {
+                        name: "x".into(),
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 5,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -2305,10 +2624,16 @@ mod tests {
                 name: "__method__".into(),
                 args: vec![
                     Expr::SeqLit {
-                        items: vec![Expr::IntLit { value: 1, span: s() }],
+                        items: vec![Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        }],
                         span: s(),
                     },
-                    Expr::StrLit { value: "length".into(), span: s() },
+                    Expr::StrLit {
+                        value: "length".into(),
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -2331,9 +2656,19 @@ mod tests {
             &Expr::BuiltinCall {
                 name: "__method__".into(),
                 args: vec![
-                    Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() },
-                    Expr::StrLit { value: "reduce".into(), span: s() },
-                    Expr::IntLit { value: 0, span: s() },
+                    Expr::VarRef {
+                        name: "xs".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    },
+                    Expr::StrLit {
+                        value: "reduce".into(),
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 0,
+                        span: s(),
+                    },
                     Expr::MakeClosure {
                         fn_name: "__blk".into(),
                         captures: vec![],
@@ -2359,7 +2694,10 @@ mod tests {
             &mut out,
             &Expr::BuiltinCall {
                 name: "block_pass".into(),
-                args: vec![Expr::SymLit { name: "to_s".into(), span: s() }],
+                args: vec![Expr::SymLit {
+                    name: "to_s".into(),
+                    span: s(),
+                }],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2375,7 +2713,10 @@ mod tests {
             &mut out,
             &Expr::DirectCall {
                 fn_name: "id".into(),
-                args: vec![Expr::IntLit { value: 7, span: s() }],
+                args: vec![Expr::IntLit {
+                    value: 7,
+                    span: s(),
+                }],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2411,13 +2752,19 @@ mod tests {
                     scope: Scope::Local,
                     span: s(),
                 }),
-                args: vec![Expr::IntLit { value: 5, span: s() }],
+                args: vec![Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }],
                 effects: EffectSet::PURE,
                 span: s(),
             },
             0,
         );
-        assert_eq!(out, "__sir::apply_closure(&(f.clone()), vec![__sir::Value::Int(5i64)])");
+        assert_eq!(
+            out,
+            "__sir::apply_closure(&(f.clone()), vec![__sir::Value::Int(5i64)])"
+        );
     }
 
     #[test]
@@ -2425,7 +2772,14 @@ mod tests {
         // Integral floats must render with `.0` so the literal is an
         // f64, never an i64.
         let mut out = String::new();
-        emit_expr(&mut out, &Expr::FloatLit { value: 3.0, span: s() }, 0);
+        emit_expr(
+            &mut out,
+            &Expr::FloatLit {
+                value: 3.0,
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(out, "__sir::Value::Float(3.0f64)");
     }
 
@@ -2433,8 +2787,22 @@ mod tests {
     fn emit_float_literal_fractional_and_negative() {
         let mut a = String::new();
         let mut b = String::new();
-        emit_expr(&mut a, &Expr::FloatLit { value: 3.25, span: s() }, 0);
-        emit_expr(&mut b, &Expr::FloatLit { value: -7.5, span: s() }, 0);
+        emit_expr(
+            &mut a,
+            &Expr::FloatLit {
+                value: 3.25,
+                span: s(),
+            },
+            0,
+        );
+        emit_expr(
+            &mut b,
+            &Expr::FloatLit {
+                value: -7.5,
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(a, "__sir::Value::Float(3.25f64)");
         assert_eq!(b, "__sir::Value::Float(-7.5f64)");
     }
@@ -2444,9 +2812,30 @@ mod tests {
         let mut nan = String::new();
         let mut inf = String::new();
         let mut ninf = String::new();
-        emit_expr(&mut nan, &Expr::FloatLit { value: f64::NAN, span: s() }, 0);
-        emit_expr(&mut inf, &Expr::FloatLit { value: f64::INFINITY, span: s() }, 0);
-        emit_expr(&mut ninf, &Expr::FloatLit { value: f64::NEG_INFINITY, span: s() }, 0);
+        emit_expr(
+            &mut nan,
+            &Expr::FloatLit {
+                value: f64::NAN,
+                span: s(),
+            },
+            0,
+        );
+        emit_expr(
+            &mut inf,
+            &Expr::FloatLit {
+                value: f64::INFINITY,
+                span: s(),
+            },
+            0,
+        );
+        emit_expr(
+            &mut ninf,
+            &Expr::FloatLit {
+                value: f64::NEG_INFINITY,
+                span: s(),
+            },
+            0,
+        );
         assert_eq!(nan, "__sir::Value::Float(f64::NAN)");
         assert_eq!(inf, "__sir::Value::Float(f64::INFINITY)");
         assert_eq!(ninf, "__sir::Value::Float(f64::NEG_INFINITY)");
@@ -2458,8 +2847,14 @@ mod tests {
         emit_expr(
             &mut out,
             &Expr::LogicalAnd {
-                lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
-                rhs: Box::new(Expr::IntLit { value: 5, span: s() }),
+                lhs: Box::new(Expr::BoolLit {
+                    value: true,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }),
                 span: s(),
             },
             0,
@@ -2477,8 +2872,14 @@ mod tests {
         emit_expr(
             &mut out,
             &Expr::LogicalOr {
-                lhs: Box::new(Expr::BoolLit { value: false, span: s() }),
-                rhs: Box::new(Expr::IntLit { value: 7, span: s() }),
+                lhs: Box::new(Expr::BoolLit {
+                    value: false,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 7,
+                    span: s(),
+                }),
                 span: s(),
             },
             0,
@@ -2498,11 +2899,20 @@ mod tests {
             &mut out,
             &Expr::LogicalOr {
                 lhs: Box::new(Expr::LogicalAnd {
-                    lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
-                    rhs: Box::new(Expr::IntLit { value: 1, span: s() }),
+                    lhs: Box::new(Expr::BoolLit {
+                        value: true,
+                        span: s(),
+                    }),
+                    rhs: Box::new(Expr::IntLit {
+                        value: 1,
+                        span: s(),
+                    }),
                     span: s(),
                 }),
-                rhs: Box::new(Expr::IntLit { value: 2, span: s() }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
                 span: s(),
             },
             0,
@@ -2525,7 +2935,13 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() }],
+            params: vec![Param {
+                name: "x".into(),
+                kind: ParamKind::Required,
+                sir_type: None,
+                default: None,
+                span: s(),
+            }],
             return_type: None,
             captures: vec![],
             body,
@@ -2553,8 +2969,16 @@ mod tests {
             value: Expr::BuiltinCall {
                 name: "+".into(),
                 args: vec![
-                    Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
-                    Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                    Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    },
+                    Expr::VarRef {
+                        name: "b".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    },
                 ],
                 effects: EffectSet::PURE,
                 span: s(),
@@ -2564,8 +2988,15 @@ mod tests {
         let default_b = Expr::BuiltinCall {
             name: "+".into(),
             args: vec![
-                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
-                Expr::IntLit { value: 1, span: s() },
+                Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
+                Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
             ],
             effects: EffectSet::PURE,
             span: s(),
@@ -2573,8 +3004,20 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
-                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: Some(Box::new(default_b)), span: s() },
+                Param {
+                    name: "a".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "b".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
@@ -2604,18 +3047,37 @@ mod tests {
     fn emit_direct_call_pads_omitted_defaults() {
         // Build a module with f(a, b = ...) so FN_ARITY[f] == 2, then a
         // `main` whose body is `f(5)` — one arg short.
-        let default_b = Expr::IntLit { value: 99, span: s() };
+        let default_b = Expr::IntLit {
+            value: 99,
+            span: s(),
+        };
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
-                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: Some(Box::new(default_b)), span: s() },
+                Param {
+                    name: "a".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "b".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                value: Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -2631,7 +3093,10 @@ mod tests {
                 stmts: vec![],
                 value: Expr::DirectCall {
                     fn_name: "f".into(),
-                    args: vec![Expr::IntLit { value: 5, span: s() }],
+                    args: vec![Expr::IntLit {
+                        value: 5,
+                        span: s(),
+                    }],
                     effects: EffectSet::PURE,
                     span: s(),
                 },
@@ -2668,12 +3133,32 @@ mod tests {
         let f = Function {
             name: "g".into(),
             params: vec![
-                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
-                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param {
+                    name: "a".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "b".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "a".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -2688,8 +3173,14 @@ mod tests {
                 value: Expr::DirectCall {
                     fn_name: "g".into(),
                     args: vec![
-                        Expr::IntLit { value: 1, span: s() },
-                        Expr::IntLit { value: 2, span: s() },
+                        Expr::IntLit {
+                            value: 1,
+                            span: s(),
+                        },
+                        Expr::IntLit {
+                            value: 2,
+                            span: s(),
+                        },
                     ],
                     effects: EffectSet::PURE,
                     span: s(),
@@ -2734,14 +3225,30 @@ mod tests {
         Function {
             name: "greet".into(),
             params: vec![
-                Param { name: "greeting".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
-                Param { name: "name".into(), kind: ParamKind::Keyword, sir_type: None, default: Some(Box::new(default_name)), span: s() },
+                Param {
+                    name: "greeting".into(),
+                    kind: ParamKind::Required,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "name".into(),
+                    kind: ParamKind::Keyword,
+                    sir_type: None,
+                    default: Some(Box::new(default_name)),
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
             body: Block {
                 stmts: vec![],
-                value: Expr::VarRef { name: "name".into(), scope: Scope::Param, span: s() },
+                value: Expr::VarRef {
+                    name: "name".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
                 span: s(),
             },
             effects: EffectSet::PURE,
@@ -2751,7 +3258,10 @@ mod tests {
     }
 
     fn kw_str(v: &str) -> Expr {
-        Expr::StrLit { value: v.into(), span: s() }
+        Expr::StrLit {
+            value: v.into(),
+            span: s(),
+        }
     }
 
     fn main_calling(call: Expr) -> Function {
@@ -2760,7 +3270,11 @@ mod tests {
             params: vec![],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: call, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: call,
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -2829,7 +3343,8 @@ mod tests {
             "supplied keyword should resolve to positional; got:\n{out}"
         );
         // No sentinel — the keyword was supplied, not omitted.
-        assert!(!out.contains("greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::missing())"));
+        assert!(!out
+            .contains("greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::missing())"));
     }
 
     /// Call side, keyword OMITTED: `greet("hi")` fills the omitted
@@ -2848,9 +3363,7 @@ mod tests {
         let m = module_of(vec![greet_fn(kw_str("world")), main_calling(call)]);
         let out = emit_module_with_arity_table(&m);
         assert!(
-            out.contains(
-                "greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::missing())"
-            ),
+            out.contains("greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::missing())"),
             "omitted optional keyword should pad the sentinel; got:\n{out}"
         );
     }
@@ -2865,12 +3378,35 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "x".into(), kind: ParamKind::Keyword, sir_type: None, default: None, span: s() },
-                Param { name: "y".into(), kind: ParamKind::Keyword, sir_type: None, default: Some(Box::new(Expr::IntLit { value: 2, span: s() })), span: s() },
+                Param {
+                    name: "x".into(),
+                    kind: ParamKind::Keyword,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "y".into(),
+                    kind: ParamKind::Keyword,
+                    sir_type: None,
+                    default: Some(Box::new(Expr::IntLit {
+                        value: 2,
+                        span: s(),
+                    })),
+                    span: s(),
+                },
             ],
             return_type: None,
             captures: vec![],
-            body: Block { stmts: vec![], value: Expr::VarRef { name: "x".into(), scope: Scope::Param, span: s() }, span: s() },
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "x".into(),
+                    scope: Scope::Param,
+                    span: s(),
+                },
+                span: s(),
+            },
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: s(),
@@ -2879,7 +3415,10 @@ mod tests {
             fn_name: "f".into(),
             args: vec![Expr::KeywordArg {
                 name: "x".into(),
-                value: Box::new(Expr::IntLit { value: 1, span: s() }),
+                value: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
                 span: s(),
             }],
             effects: EffectSet::PURE,
@@ -2907,7 +3446,10 @@ mod tests {
                 captures: vec![],
                 body: Block {
                     stmts: vec![],
-                    value: Expr::IntLit { value: 42, span: s() },
+                    value: Expr::IntLit {
+                        value: 42,
+                        span: s(),
+                    },
                     span: s(),
                 },
                 effects: EffectSet::PURE,
@@ -2932,7 +3474,10 @@ mod tests {
     fn emit_function_sanitises_span_in_comment() {
         let body = Block {
             stmts: vec![],
-            value: Expr::IntLit { value: 0, span: s() },
+            value: Expr::IntLit {
+                value: 0,
+                span: s(),
+            },
             span: s(),
         };
         let f = Function {
@@ -2961,7 +3506,11 @@ mod tests {
     // ── SIR16 MutableBindings + Loops ──────────────────────────────
 
     fn block(stmts: Vec<Stmt>, value: Expr) -> Block {
-        Block { stmts, value, span: s() }
+        Block {
+            stmts,
+            value,
+            span: s(),
+        }
     }
 
     fn nil() -> Expr {
@@ -2969,11 +3518,18 @@ mod tests {
     }
 
     fn int(v: i64) -> Expr {
-        Expr::IntLit { value: v, span: s() }
+        Expr::IntLit {
+            value: v,
+            span: s(),
+        }
     }
 
     fn local(name: &str) -> Expr {
-        Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
+        Expr::VarRef {
+            name: name.into(),
+            scope: Scope::Local,
+            span: s(),
+        }
     }
 
     #[test]
@@ -3005,7 +3561,10 @@ mod tests {
             },
             1,
         );
-        assert!(out.contains("__sir::global_set(&__sir::intern(\"counter\")"), "got: {out}");
+        assert!(
+            out.contains("__sir::global_set(&__sir::intern(\"counter\")"),
+            "got: {out}"
+        );
         assert!(out.contains("__sir::Value::Int(7i64)"), "got: {out}");
     }
 
@@ -3041,7 +3600,10 @@ mod tests {
         };
         let mut out = String::new();
         emit_function(&mut out, &f);
-        assert!(out.contains("let mut acc: __sir::Value = __sir::Value::Int(0i64);"), "got: {out}");
+        assert!(
+            out.contains("let mut acc: __sir::Value = __sir::Value::Int(0i64);"),
+            "got: {out}"
+        );
         assert!(out.contains("acc = __sir::Value::Int(1i64);"), "got: {out}");
     }
 
@@ -3067,7 +3629,10 @@ mod tests {
         };
         let mut out = String::new();
         emit_function(&mut out, &f);
-        assert!(out.contains("let k: __sir::Value = __sir::Value::Int(3i64);"), "got: {out}");
+        assert!(
+            out.contains("let k: __sir::Value = __sir::Value::Int(3i64);"),
+            "got: {out}"
+        );
         assert!(!out.contains("let mut k"), "got: {out}");
     }
 
@@ -3077,13 +3642,19 @@ mod tests {
         emit_stmt(
             &mut out,
             &Stmt::While {
-                cond: Expr::BoolLit { value: true, span: s() },
+                cond: Expr::BoolLit {
+                    value: true,
+                    span: s(),
+                },
                 body: block(vec![], nil()),
                 span: s(),
             },
             1,
         );
-        assert!(out.contains("while __sir::truthy(&(__sir::Value::Bool(true)))"), "got: {out}");
+        assert!(
+            out.contains("while __sir::truthy(&(__sir::Value::Bool(true)))"),
+            "got: {out}"
+        );
         assert!(out.trim_end().ends_with('}'), "got: {out}");
     }
 
@@ -3103,10 +3674,19 @@ mod tests {
             1,
         );
         // stop/step are cached into i64 temps so they are evaluated once.
-        assert!(out.contains("let __sir_stop_0: i64 = __sir::as_int("), "got: {out}");
-        assert!(out.contains("let __sir_step_0: i64 = __sir::as_int("), "got: {out}");
+        assert!(
+            out.contains("let __sir_stop_0: i64 = __sir::as_int("),
+            "got: {out}"
+        );
+        assert!(
+            out.contains("let __sir_step_0: i64 = __sir::as_int("),
+            "got: {out}"
+        );
         // The loop var is rebound each turn as an Int Value.
-        assert!(out.contains("let i: __sir::Value = __sir::Value::Int(__sir_i_0);"), "got: {out}");
+        assert!(
+            out.contains("let i: __sir::Value = __sir::Value::Int(__sir_i_0);"),
+            "got: {out}"
+        );
         // Direction-aware condition + step advance.
         assert!(out.contains("if __sir_step_0 >= 0 { __sir_i_0 < __sir_stop_0 } else { __sir_i_0 > __sir_stop_0 }"), "got: {out}");
         assert!(out.contains("__sir_i_0 += __sir_step_0;"), "got: {out}");
@@ -3153,7 +3733,10 @@ mod tests {
             },
             1,
         );
-        assert!(out.contains("for x in __sir::seq_iter(&(xs.clone()))"), "got: {out}");
+        assert!(
+            out.contains("for x in __sir::seq_iter(&(xs.clone()))"),
+            "got: {out}"
+        );
     }
 
     #[test]
@@ -3182,7 +3765,10 @@ mod tests {
         let mut out = String::new();
         emit_expr(
             &mut out,
-            &Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: s() },
+            &Expr::SeqLit {
+                items: vec![int(1), int(2), int(3)],
+                span: s(),
+            },
             0,
         );
         assert_eq!(
@@ -3203,7 +3789,10 @@ mod tests {
             },
             0,
         );
-        assert_eq!(out, "__sir::seq_index(&(xs.clone()), &(__sir::Value::Int(0i64)))");
+        assert_eq!(
+            out,
+            "__sir::seq_index(&(xs.clone()), &(__sir::Value::Int(0i64)))"
+        );
     }
 
     #[test]
@@ -3211,7 +3800,10 @@ mod tests {
         let mut out = String::new();
         emit_expr(
             &mut out,
-            &Expr::SeqLen { seq: Box::new(local("xs")), span: s() },
+            &Expr::SeqLen {
+                seq: Box::new(local("xs")),
+                span: s(),
+            },
             0,
         );
         assert_eq!(out, "__sir::seq_len(&(xs.clone()))");
@@ -3226,11 +3818,17 @@ mod tests {
             &Expr::MapLit {
                 entries: vec![
                     MapEntry {
-                        key: Expr::StrLit { value: "a".into(), span: s() },
+                        key: Expr::StrLit {
+                            value: "a".into(),
+                            span: s(),
+                        },
                         value: int(1),
                     },
                     MapEntry {
-                        key: Expr::StrLit { value: "b".into(), span: s() },
+                        key: Expr::StrLit {
+                            value: "b".into(),
+                            span: s(),
+                        },
                         value: int(2),
                     },
                 ],
@@ -3239,8 +3837,18 @@ mod tests {
             0,
         );
         assert!(out.starts_with("__sir::map_lit(vec!["), "got: {out}");
-        assert!(out.contains("(__sir::Value::Str(::std::rc::Rc::from(\"a\")), __sir::Value::Int(1i64))"), "got: {out}");
-        assert!(out.contains("(__sir::Value::Str(::std::rc::Rc::from(\"b\")), __sir::Value::Int(2i64))"), "got: {out}");
+        assert!(
+            out.contains(
+                "(__sir::Value::Str(::std::rc::Rc::from(\"a\")), __sir::Value::Int(1i64))"
+            ),
+            "got: {out}"
+        );
+        assert!(
+            out.contains(
+                "(__sir::Value::Str(::std::rc::Rc::from(\"b\")), __sir::Value::Int(2i64))"
+            ),
+            "got: {out}"
+        );
     }
 
     #[test]
@@ -3250,7 +3858,10 @@ mod tests {
             &mut out,
             &Expr::MapGet {
                 map: Box::new(local("d")),
-                key: Box::new(Expr::StrLit { value: "k".into(), span: s() }),
+                key: Box::new(Expr::StrLit {
+                    value: "k".into(),
+                    span: s(),
+                }),
                 span: s(),
             },
             0,
@@ -3287,7 +3898,10 @@ mod tests {
             &mut out,
             &Stmt::MapSet {
                 map: local("d"),
-                key: Expr::StrLit { value: "k".into(), span: s() },
+                key: Expr::StrLit {
+                    value: "k".into(),
+                    span: s(),
+                },
                 value: int(7),
                 span: s(),
             },
@@ -3327,7 +3941,10 @@ mod tests {
             &mut out,
             &Stmt::MapSet {
                 map: local("d"),
-                key: Expr::StrLit { value: "k".into(), span: s() },
+                key: Expr::StrLit {
+                    value: "k".into(),
+                    span: s(),
+                },
                 value: int(2),
                 span: s(),
             },
@@ -3349,13 +3966,19 @@ mod tests {
             &mut out,
             &Stmt::ForEach {
                 var: "x".into(),
-                iter: Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: s() },
+                iter: Expr::SeqLit {
+                    items: vec![int(1), int(2), int(3)],
+                    span: s(),
+                },
                 body: block(vec![], nil()),
                 span: s(),
             },
             1,
         );
-        assert!(out.contains("for x in __sir::seq_iter(&(__sir::seq_lit(vec!["), "got: {out}");
+        assert!(
+            out.contains("for x in __sir::seq_iter(&(__sir::seq_lit(vec!["),
+            "got: {out}"
+        );
     }
 
     #[test]
@@ -3369,13 +3992,31 @@ mod tests {
             captures: vec![],
             body: block(
                 vec![
-                    Stmt::LetBinding { name: "acc".into(), sir_type: None, value: int(0), span: s() },
-                    Stmt::LetBinding { name: "xs".into(), sir_type: None, value: Expr::SeqLit { items: vec![int(0)], span: s() }, span: s() },
+                    Stmt::LetBinding {
+                        name: "acc".into(),
+                        sir_type: None,
+                        value: int(0),
+                        span: s(),
+                    },
+                    Stmt::LetBinding {
+                        name: "xs".into(),
+                        sir_type: None,
+                        value: Expr::SeqLit {
+                            items: vec![int(0)],
+                            span: s(),
+                        },
+                        span: s(),
+                    },
                     Stmt::SeqSet {
                         seq: local("xs"),
                         index: int(0),
                         value: Expr::Block(Box::new(block(
-                            vec![Stmt::Assign { name: "acc".into(), scope: Scope::Local, value: int(1), span: s() }],
+                            vec![Stmt::Assign {
+                                name: "acc".into(),
+                                scope: Scope::Local,
+                                value: int(1),
+                                span: s(),
+                            }],
                             local("acc"),
                         ))),
                         span: s(),
@@ -3389,21 +4030,36 @@ mod tests {
         };
         let mut out = String::new();
         emit_function(&mut out, &f);
-        assert!(out.contains("let mut acc: __sir::Value = __sir::Value::Int(0i64);"), "got: {out}");
+        assert!(
+            out.contains("let mut acc: __sir::Value = __sir::Value::Int(0i64);"),
+            "got: {out}"
+        );
     }
 
     // ── E4: exception emission shape ───────────────────────────────
 
     fn constref(name: &str) -> Expr {
-        Expr::VarRef { name: name.into(), scope: Scope::Const, span: s() }
+        Expr::VarRef {
+            name: name.into(),
+            scope: Scope::Const,
+            span: s(),
+        }
     }
 
     fn builtin(name: &str, args: Vec<Expr>) -> Expr {
-        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+        Expr::BuiltinCall {
+            name: name.into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        }
     }
 
     fn strlit(v: &str) -> Expr {
-        Expr::StrLit { value: v.into(), span: s() }
+        Expr::StrLit {
+            value: v.into(),
+            span: s(),
+        }
     }
 
     /// `puts` routes to the **variadic** `__sir::puts(vec![…])` helper, so
@@ -3419,9 +4075,16 @@ mod tests {
 
         // Multiple args, both forwarded.
         let mut out2 = String::new();
-        emit_expr(&mut out2, &builtin("puts", vec![strlit("a"), strlit("b")]), 0);
+        emit_expr(
+            &mut out2,
+            &builtin("puts", vec![strlit("a"), strlit("b")]),
+            0,
+        );
         assert!(out2.starts_with("__sir::puts(vec!["), "got: {out2}");
-        assert!(out2.contains(r#""a""#) && out2.contains(r#""b""#), "got: {out2}");
+        assert!(
+            out2.contains(r#""a""#) && out2.contains(r#""b""#),
+            "got: {out2}"
+        );
 
         // No args — a bare `puts`.
         let mut out0 = String::new();
@@ -3449,7 +4112,11 @@ mod tests {
     fn emit_raise_const_class_defaults_message_to_class_name() {
         // `raise RuntimeError` → __sir::raise("RuntimeError", Str("RuntimeError"))
         let mut out = String::new();
-        emit_expr(&mut out, &builtin("raise", vec![constref("RuntimeError")]), 0);
+        emit_expr(
+            &mut out,
+            &builtin("raise", vec![constref("RuntimeError")]),
+            0,
+        );
         assert!(out.contains(r#"__sir::raise("RuntimeError""#), "got: {out}");
         assert!(out.contains(r#"Rc::from("RuntimeError")"#), "got: {out}");
     }
@@ -3459,7 +4126,10 @@ mod tests {
         // `raise "boom"` → __sir::raise("RuntimeError", <arg>)
         let mut out = String::new();
         emit_expr(&mut out, &builtin("raise", vec![strlit("boom")]), 0);
-        assert!(out.contains(r#"__sir::raise("RuntimeError", "#), "got: {out}");
+        assert!(
+            out.contains(r#"__sir::raise("RuntimeError", "#),
+            "got: {out}"
+        );
         assert!(out.contains(r#""boom""#), "got: {out}");
     }
 
@@ -3482,7 +4152,10 @@ mod tests {
             rescues: vec![semantic_ir::RescueClause {
                 exception_types: vec!["StandardError".into()],
                 binding: Some("e".into()),
-                body: vec![Stmt::ExprStmt { expr: local("e"), span: s() }],
+                body: vec![Stmt::ExprStmt {
+                    expr: local("e"),
+                    span: s(),
+                }],
                 span: s(),
             }],
             ensure_body: None,
@@ -3493,15 +4166,24 @@ mod tests {
         assert!(out.contains("std::panic::catch_unwind"), "got: {out}");
         assert!(out.contains("std::panic::AssertUnwindSafe"), "got: {out}");
         assert!(out.contains("match __r {"), "got: {out}");
-        assert!(out.contains("let __exc = __sir::exc_from_payload(__payload);"), "got: {out}");
+        assert!(
+            out.contains("let __exc = __sir::exc_from_payload(__payload);"),
+            "got: {out}"
+        );
         assert!(
             out.contains(r#"if __sir::rescue_matches(&__exc, &["StandardError"])"#),
             "got: {out}"
         );
         // `=> e` binds the exception value.
-        assert!(out.contains("let e: __sir::Value = __sir::exc_value(&__exc);"), "got: {out}");
+        assert!(
+            out.contains("let e: __sir::Value = __sir::exc_value(&__exc);"),
+            "got: {out}"
+        );
         // No rescue matched → re-raise.
-        assert!(out.contains("std::panic::resume_unwind(Box::new(__exc));"), "got: {out}");
+        assert!(
+            out.contains("std::panic::resume_unwind(Box::new(__exc));"),
+            "got: {out}"
+        );
     }
 
     #[test]
@@ -3516,7 +4198,10 @@ mod tests {
             rescues: vec![semantic_ir::RescueClause {
                 exception_types: vec!["TypeError".into()],
                 binding: None,
-                body: vec![Stmt::ExprStmt { expr: int(1), span: s() }],
+                body: vec![Stmt::ExprStmt {
+                    expr: int(1),
+                    span: s(),
+                }],
                 span: s(),
             }],
             ensure_body: Some(vec![Stmt::ExprStmt {
@@ -3530,14 +4215,20 @@ mod tests {
         // The ensure body (`print(9)`) must appear three times: Ok arm,
         // matched arm, unmatched-else arm.
         let count = out.matches("__sir::print(__sir::Value::Int(9i64))").count();
-        assert_eq!(count, 3, "ensure should run on all 3 paths; got {count}:\n{out}");
+        assert_eq!(
+            count, 3,
+            "ensure should run on all 3 paths; got {count}:\n{out}"
+        );
     }
 
     #[test]
     fn emit_try_catch_no_rescue_runs_ensure_then_reraises() {
         // begin; …; ensure …; end  (no rescue) → ensure then resume_unwind.
         let tc = Stmt::TryCatch {
-            body: vec![Stmt::ExprStmt { expr: int(1), span: s() }],
+            body: vec![Stmt::ExprStmt {
+                expr: int(1),
+                span: s(),
+            }],
             rescues: vec![],
             ensure_body: Some(vec![Stmt::ExprStmt {
                 expr: builtin("print", vec![int(9)]),
@@ -3551,7 +4242,10 @@ mod tests {
         // ensure appears in both Ok and Err arms.
         let count = out.matches("__sir::print(__sir::Value::Int(9i64))").count();
         assert_eq!(count, 2, "got {count}:\n{out}");
-        assert!(out.contains("std::panic::resume_unwind(Box::new(__exc));"), "got: {out}");
+        assert!(
+            out.contains("std::panic::resume_unwind(Box::new(__exc));"),
+            "got: {out}"
+        );
     }
 
     #[test]
@@ -3567,7 +4261,10 @@ mod tests {
         emit_stmt(&mut out, &cd, 1);
         assert!(out.contains("class MyErr < StandardError"), "got: {out}");
         // No runtime statement is emitted for the class body.
-        assert!(!out.contains("__sir::"), "class def should emit no runtime code; got: {out}");
+        assert!(
+            !out.contains("__sir::"),
+            "class def should emit no runtime code; got: {out}"
+        );
     }
 
     // ── O5: user-defined-class OOP emission shape ──────────────────────
@@ -3620,7 +4317,10 @@ mod tests {
     #[test]
     fn emit_super_routes_to_call_super() {
         // super("x") inside Cat#describe → __super__("describe","Cat","x").
-        let e = builtin("__super__", vec![strlit("describe"), strlit("Cat"), strlit("x")]);
+        let e = builtin(
+            "__super__",
+            vec![strlit("describe"), strlit("Cat"), strlit("x")],
+        );
         assert_eq!(
             emit_e(&e),
             r#"__sir::call_super("describe", "Cat", vec![__sir::Value::Str(::std::rc::Rc::from("x"))])"#
@@ -3630,24 +4330,47 @@ mod tests {
     #[test]
     fn emit_def_method_routes_to_def_method() {
         // def speak; end in class Dog → __def_method__("Dog","speak",<closure>).
-        let closure = Expr::MakeClosure { fn_name: "Dog_speak".into(), captures: vec![], span: s() };
-        let e = builtin("__def_method__", vec![strlit("Dog"), strlit("speak"), closure]);
+        let closure = Expr::MakeClosure {
+            fn_name: "Dog_speak".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = builtin(
+            "__def_method__",
+            vec![strlit("Dog"), strlit("speak"), closure],
+        );
         let out = emit_e(&e);
-        assert!(out.starts_with(r#"__sir::def_method("Dog", "speak", "#), "got: {out}");
+        assert!(
+            out.starts_with(r#"__sir::def_method("Dog", "speak", "#),
+            "got: {out}"
+        );
         assert!(out.contains("__sir::Value::Closure"), "got: {out}");
     }
 
     #[test]
     fn emit_def_class_method_routes_to_def_class_method() {
-        let closure = Expr::MakeClosure { fn_name: "Dog_count".into(), captures: vec![], span: s() };
-        let e = builtin("__def_class_method__", vec![strlit("Dog"), strlit("count"), closure]);
+        let closure = Expr::MakeClosure {
+            fn_name: "Dog_count".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = builtin(
+            "__def_class_method__",
+            vec![strlit("Dog"), strlit("count"), closure],
+        );
         let out = emit_e(&e);
-        assert!(out.starts_with(r#"__sir::def_class_method("Dog", "count", "#), "got: {out}");
+        assert!(
+            out.starts_with(r#"__sir::def_class_method("Dog", "count", "#),
+            "got: {out}"
+        );
     }
 
     #[test]
     fn emit_self_routes_to_current_self() {
-        assert_eq!(emit_e(&builtin("__self__", vec![])), "__sir::current_self()");
+        assert_eq!(
+            emit_e(&builtin("__self__", vec![])),
+            "__sir::current_self()"
+        );
     }
 
     // ── MX6 mixins: include / extend / class-method emit shapes ────────
@@ -3662,19 +4385,31 @@ mod tests {
     #[test]
     fn emit_extend_routes_to_extend_module() {
         let e = builtin("__extend__", vec![strlit("Registry"), strlit("Counting")]);
-        assert_eq!(emit_e(&e), r#"__sir::extend_module("Registry", "Counting")"#);
+        assert_eq!(
+            emit_e(&e),
+            r#"__sir::extend_module("Registry", "Counting")"#
+        );
     }
 
     #[test]
     fn emit_class_method_routes_to_call_class_method() {
         // `Registry.total` → __class_method__("Registry","total") → call.
-        let e = builtin("__class_method__", vec![strlit("Registry"), strlit("total")]);
-        assert_eq!(emit_e(&e), r#"__sir::call_class_method("Registry", "total", vec![])"#);
+        let e = builtin(
+            "__class_method__",
+            vec![strlit("Registry"), strlit("total")],
+        );
+        assert_eq!(
+            emit_e(&e),
+            r#"__sir::call_class_method("Registry", "total", vec![])"#
+        );
     }
 
     #[test]
     fn emit_class_method_with_args_passes_them_through() {
-        let e = builtin("__class_method__", vec![strlit("Math"), strlit("add"), int(1), int(2)]);
+        let e = builtin(
+            "__class_method__",
+            vec![strlit("Math"), strlit("add"), int(1), int(2)],
+        );
         assert_eq!(
             emit_e(&e),
             r#"__sir::call_class_method("Math", "add", vec![__sir::Value::Int(1i64), __sir::Value::Int(2i64)])"#
@@ -3686,21 +4421,36 @@ mod tests {
         // `Registry.total` where `Registry` is a bare constant → a `Const`
         // VarRef in the owner slot, LIFTED to a `&str` literal (never a
         // runtime constant read), exactly as `__new__`/`__super__` lift.
-        let owner = Expr::VarRef { name: "Registry".into(), scope: Scope::Const, span: s() };
+        let owner = Expr::VarRef {
+            name: "Registry".into(),
+            scope: Scope::Const,
+            span: s(),
+        };
         let e = builtin("__class_method__", vec![owner, strlit("total")]);
-        assert_eq!(emit_e(&e), r#"__sir::call_class_method("Registry", "total", vec![])"#);
+        assert_eq!(
+            emit_e(&e),
+            r#"__sir::call_class_method("Registry", "total", vec![])"#
+        );
     }
 
     #[test]
     fn emit_ivar_read_routes_to_ivar_get() {
         // `@name` (Scope::Instance, sigil preserved) → ivar_get("@name").
-        let e = Expr::VarRef { name: "@name".into(), scope: Scope::Instance, span: s() };
+        let e = Expr::VarRef {
+            name: "@name".into(),
+            scope: Scope::Instance,
+            span: s(),
+        };
         assert_eq!(emit_e(&e), r#"__sir::ivar_get("@name")"#);
     }
 
     #[test]
     fn emit_cvar_read_routes_to_cvar_get() {
-        let e = Expr::VarRef { name: "@@count".into(), scope: Scope::ClassVar, span: s() };
+        let e = Expr::VarRef {
+            name: "@@count".into(),
+            scope: Scope::ClassVar,
+            span: s(),
+        };
         assert_eq!(emit_e(&e), r#"__sir::cvar_get("@@count")"#);
     }
 
