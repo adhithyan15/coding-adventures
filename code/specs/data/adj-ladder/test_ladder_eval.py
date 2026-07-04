@@ -115,6 +115,7 @@ SELF_CONTAINED_RUNGS = (
     "rung75_hearing_threshold",
     "rung76_fluid_resuscitation",
     "rung77_gas_uptake",
+    "rung78_insulin_titration",
 )
 
 

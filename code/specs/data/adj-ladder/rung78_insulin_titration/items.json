@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 78 \u2014 endocrinology insulin-titration index from four stated quantities (a NEW panel: endocrinology / insulin-titration). From a glucose excess to divide, a sensitivity factor to divide by, a carb load to multiply, and a coverage gain to scale by, compute the net titration (glucose_excess/sensitivity_factor - carb_load*coverage_gain), the correction component (glucose_excess/sensitivity_factor), or the offset component (carb_load*coverage_gain). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, QUOTIENT MINUS A PRODUCT a/b-c*d (two INDEPENDENT binary terms \u2014 a pure quotient and a pure product \u2014 with the product subtracted from the quotient, divide/multiply before subtract; the minus-counterpart of rung-77 a/b+c*d; contrast rungs 69-74 which chained the +/- and */\u00f7 through a SHARED operand; here the two sides of the - are disjoint 2-operand terms, so a/b-c*d = (a/b)-(c*d), not a/(b-c)*d and not a*b-c/d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via /, *, and - \u2014 no constant leaks, and neither the correction component, the offset component, nor any net figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: SUBTRACTING the carb load INTO the denominator (a/(b-c)*d, a wrong grouping) and SWAPPING the multiply and divide between the two pairs (a*b-c/d, a wrong grouping). The core confusion tested is that a/b-c*d is (a/b)-(c*d), not a/(b-c)*d and not a*b-c/d.",
+  "items": [
+    {
+      "id": "r78ins-01",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 40, a sensitivity factor of 4 to divide by, a carb load of 2 and a coverage gain of 3 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(40)\nobserve sensitivity_factor(4)\nobserve carb_load(2)\nobserve coverage_gain(3)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 159.33333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r78ins-02",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 40, a sensitivity factor of 4 to divide by, a carb load of 2 and a coverage gain of 3 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(40)\nobserve sensitivity_factor(4)\nobserve carb_load(2)\nobserve coverage_gain(3)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 159.33333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r78ins-03",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 40, a sensitivity factor of 4 to divide by, a carb load of 2 and a coverage gain of 3 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(40)\nobserve sensitivity_factor(4)\nobserve carb_load(2)\nobserve coverage_gain(3)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 159.33333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r78ins-04",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 60, a sensitivity factor of 5 to divide by, a carb load of 2 and a coverage gain of 4 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(60)\nobserve sensitivity_factor(5)\nobserve carb_load(2)\nobserve coverage_gain(4)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 299.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r78ins-05",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 60, a sensitivity factor of 5 to divide by, a carb load of 2 and a coverage gain of 4 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(60)\nobserve sensitivity_factor(5)\nobserve carb_load(2)\nobserve coverage_gain(4)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 299.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r78ins-06",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 60, a sensitivity factor of 5 to divide by, a carb load of 2 and a coverage gain of 4 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(60)\nobserve sensitivity_factor(5)\nobserve carb_load(2)\nobserve coverage_gain(4)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 299.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r78ins-07",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 36, a sensitivity factor of 6 to divide by, a carb load of 1 and a coverage gain of 5 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(36)\nobserve sensitivity_factor(6)\nobserve carb_load(1)\nobserve coverage_gain(5)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 215.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r78ins-08",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 36, a sensitivity factor of 6 to divide by, a carb load of 1 and a coverage gain of 5 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(36)\nobserve sensitivity_factor(6)\nobserve carb_load(1)\nobserve coverage_gain(5)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 215.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r78ins-09",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 36, a sensitivity factor of 6 to divide by, a carb load of 1 and a coverage gain of 5 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(36)\nobserve sensitivity_factor(6)\nobserve carb_load(1)\nobserve coverage_gain(5)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 215.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r78ins-10",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 50, a sensitivity factor of 5 to divide by, a carb load of 3 and a coverage gain of 2 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(50)\nobserve sensitivity_factor(5)\nobserve carb_load(3)\nobserve coverage_gain(2)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 248.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r78ins-11",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 50, a sensitivity factor of 5 to divide by, a carb load of 3 and a coverage gain of 2 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(50)\nobserve sensitivity_factor(5)\nobserve carb_load(3)\nobserve coverage_gain(2)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 248.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r78ins-12",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 50, a sensitivity factor of 5 to divide by, a carb load of 3 and a coverage gain of 2 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(50)\nobserve sensitivity_factor(5)\nobserve carb_load(3)\nobserve coverage_gain(2)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 248.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r78ins-13",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 45, a sensitivity factor of 9 to divide by, a carb load of 1 and a coverage gain of 3 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(45)\nobserve sensitivity_factor(9)\nobserve carb_load(1)\nobserve coverage_gain(3)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 404.6666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r78ins-14",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 45, a sensitivity factor of 9 to divide by, a carb load of 1 and a coverage gain of 3 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(45)\nobserve sensitivity_factor(9)\nobserve carb_load(1)\nobserve coverage_gain(3)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.875,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 404.6666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r78ins-15",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 45, a sensitivity factor of 9 to divide by, a carb load of 1 and a coverage gain of 3 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(45)\nobserve sensitivity_factor(9)\nobserve carb_load(1)\nobserve coverage_gain(3)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.875,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 404.6666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r78ins-16",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 48, a sensitivity factor of 4 to divide by, a carb load of 2 and a coverage gain of 4 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(48)\nobserve sensitivity_factor(4)\nobserve carb_load(2)\nobserve coverage_gain(4)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 96.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 191.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r78ins-17",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 48, a sensitivity factor of 4 to divide by, a carb load of 2 and a coverage gain of 4 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(48)\nobserve sensitivity_factor(4)\nobserve carb_load(2)\nobserve coverage_gain(4)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 96.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 191.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r78ins-18",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 48, a sensitivity factor of 4 to divide by, a carb load of 2 and a coverage gain of 4 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(48)\nobserve sensitivity_factor(4)\nobserve carb_load(2)\nobserve coverage_gain(4)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 96.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 191.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r78ins-19",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 54, a sensitivity factor of 6 to divide by, a carb load of 2 and a coverage gain of 3 to scale it by. What is the net insulin-titration dose (the correction component minus the offset component)?",
+      "program": "observe glucose_excess(54)\nobserve sensitivity_factor(6)\nobserve carb_load(2)\nobserve coverage_gain(3)\nlet answer = glucose_excess / sensitivity_factor - carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 323.3333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r78ins-20",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 54, a sensitivity factor of 6 to divide by, a carb load of 2 and a coverage gain of 3 to scale it by. What is the the correction component (glucose excess over the sensitivity factor)?",
+      "program": "observe glucose_excess(54)\nobserve sensitivity_factor(6)\nobserve carb_load(2)\nobserve coverage_gain(3)\nlet answer = glucose_excess / sensitivity_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 323.3333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r78ins-21",
+      "qtype": "insulin_titration",
+      "stem": "An insulin titration records a glucose excess of 54, a sensitivity factor of 6 to divide by, a carb load of 2 and a coverage gain of 3 to scale it by. What is the the offset component (carb load times the coverage gain)?",
+      "program": "observe glucose_excess(54)\nobserve sensitivity_factor(6)\nobserve carb_load(2)\nobserve coverage_gain(3)\nlet answer = carb_load * coverage_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 323.3333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
