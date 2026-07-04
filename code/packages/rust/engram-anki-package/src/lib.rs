@@ -21,7 +21,6 @@ use engram_core::{
     LeechAction, MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session,
     SessionStatus, TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
-use prost::Message;
 use rusqlite::{ffi as sqlite_ffi, serialize::OwnedData};
 use rusqlite::{Connection, DatabaseName};
 use serde::{Deserialize, Serialize};
@@ -36,13 +35,12 @@ const META: &str = "meta";
 const ANKI_V11_SOURCE: &str = "anki-v11";
 const ANKI_MARKED_TAG: &str = "marked";
 
-#[derive(Clone, PartialEq, Message)]
+#[derive(Clone, PartialEq)]
 struct PackageMetadataProto {
-    #[prost(enumeration = "PackageVersionProto", tag = "1")]
     version: i32,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, prost::Enumeration)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(i32)]
 enum PackageVersionProto {
     Unknown = 0,
@@ -51,22 +49,142 @@ enum PackageVersionProto {
     Latest = 3,
 }
 
-#[derive(Clone, PartialEq, Message)]
+#[derive(Clone, PartialEq)]
 struct MediaEntriesProto {
-    #[prost(message, repeated, tag = "1")]
     entries: Vec<MediaEntryProto>,
 }
 
-#[derive(Clone, PartialEq, Message)]
+#[derive(Clone, PartialEq)]
 struct MediaEntryProto {
-    #[prost(string, tag = "1")]
     name: String,
-    #[prost(uint32, tag = "2")]
     size: u32,
-    #[prost(bytes, tag = "3")]
     sha1: Vec<u8>,
-    #[prost(uint32, optional, tag = "255")]
     legacy_zip_filename: Option<u32>,
+}
+
+// --- Zero-dep protobuf codecs for the Anki meta/media messages --------------
+//
+// Hand-coded encode/decode against the repo `protobuf` wire crate. These
+// replaced the third-party `prost` derive (removed in this crate) after a
+// cross-compat gate proved they produce byte-for-byte identical output to
+// `prost` and round-trip its bytes, guaranteeing real-Anki `.anki21b` interop.
+// They follow proto3 semantics: implicit-presence scalar fields are OMITTED
+// when equal to their default
+// (empty string / 0 / empty bytes), and the explicit-`optional`
+// `legacy_zip_filename` is emitted only when `Some` (even if 0). Decoders start
+// from defaults and overwrite per field, ignoring unknown field numbers.
+
+impl PackageVersionProto {
+    fn parse_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(PackageVersionProto::Unknown),
+            1 => Some(PackageVersionProto::Legacy1),
+            2 => Some(PackageVersionProto::Legacy2),
+            3 => Some(PackageVersionProto::Latest),
+            _ => None,
+        }
+    }
+}
+
+impl PackageMetadataProto {
+    fn encode_pb(&self) -> Vec<u8> {
+        let mut w = protobuf::Writer::new();
+        if self.version != 0 {
+            w.varint(1, self.version as u64);
+        }
+        w.into_bytes()
+    }
+
+    fn decode_pb(bytes: &[u8]) -> Result<Self, protobuf::Error> {
+        let mut version = 0i32;
+        let mut r = protobuf::Reader::new(bytes);
+        while let Some(field) = r.next_field()? {
+            if field.number == 1 {
+                if let Some(v) = field.value.as_varint() {
+                    version = v as i32;
+                }
+            }
+        }
+        Ok(PackageMetadataProto { version })
+    }
+}
+
+impl MediaEntryProto {
+    fn encode_pb(&self) -> Vec<u8> {
+        let mut w = protobuf::Writer::new();
+        if !self.name.is_empty() {
+            w.string(1, &self.name);
+        }
+        if self.size != 0 {
+            w.varint(2, self.size as u64);
+        }
+        if !self.sha1.is_empty() {
+            w.bytes(3, &self.sha1);
+        }
+        if let Some(legacy) = self.legacy_zip_filename {
+            w.varint(255, legacy as u64);
+        }
+        w.into_bytes()
+    }
+
+    fn decode_pb(bytes: &[u8]) -> Result<Self, protobuf::Error> {
+        let mut entry = MediaEntryProto {
+            name: String::new(),
+            size: 0,
+            sha1: Vec::new(),
+            legacy_zip_filename: None,
+        };
+        let mut r = protobuf::Reader::new(bytes);
+        while let Some(field) = r.next_field()? {
+            match field.number {
+                1 => {
+                    if let Some(b) = field.value.as_bytes() {
+                        entry.name = String::from_utf8_lossy(b).into_owned();
+                    }
+                }
+                2 => {
+                    if let Some(v) = field.value.as_varint() {
+                        entry.size = v as u32;
+                    }
+                }
+                3 => {
+                    if let Some(b) = field.value.as_bytes() {
+                        entry.sha1 = b.to_vec();
+                    }
+                }
+                255 => {
+                    if let Some(v) = field.value.as_varint() {
+                        entry.legacy_zip_filename = Some(v as u32);
+                    }
+                }
+                _ => {}
+            }
+        }
+        Ok(entry)
+    }
+}
+
+impl MediaEntriesProto {
+    fn encode_pb(&self) -> Vec<u8> {
+        let mut w = protobuf::Writer::new();
+        for entry in &self.entries {
+            w.message(1, &entry.encode_pb());
+        }
+        w.into_bytes()
+    }
+
+    fn decode_pb(bytes: &[u8]) -> Result<Self, protobuf::Error> {
+        let mut entries = Vec::new();
+        let mut r = protobuf::Reader::new(bytes);
+        while let Some(field) = r.next_field()? {
+            if field.number == 1 {
+                if let Some(b) = field.value.as_bytes() {
+                    entries.push(MediaEntryProto::decode_pb(b)?);
+                }
+            }
+        }
+        Ok(MediaEntriesProto { entries })
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -425,12 +543,10 @@ pub fn write_modern_apkg(
 ) -> Result<Vec<u8>, ApkgError> {
     let mut writer = ZipWriter::new();
 
-    let mut metadata = Vec::new();
-    PackageMetadataProto {
+    let metadata = PackageMetadataProto {
         version: PackageVersionProto::Latest as i32,
     }
-    .encode(&mut metadata)
-    .map_err(|err| apkg_error(format!("failed to encode Anki package metadata: {err}")))?;
+    .encode_pb();
     writer.add_file(META, &metadata, false);
 
     let collection = encode_package_payload("collection", collection_anki21b)?;
@@ -447,10 +563,7 @@ pub fn write_modern_apkg(
             })
             .collect(),
     };
-    let mut media_map = Vec::new();
-    media_entries
-        .encode(&mut media_map)
-        .map_err(|err| apkg_error(format!("failed to encode Anki media entries: {err}")))?;
+    let media_map = media_entries.encode_pb();
     let media_map = encode_package_payload("media map", &media_map)?;
     writer.add_file(MEDIA_MAP, &media_map, false);
 
@@ -3964,9 +4077,9 @@ fn package_collection_format(
     let Ok(bytes) = reader.read_by_name(META) else {
         return Ok(None);
     };
-    let metadata = PackageMetadataProto::decode(bytes.as_slice())
+    let metadata = PackageMetadataProto::decode_pb(bytes.as_slice())
         .map_err(|err| apkg_error(format!("invalid Anki package metadata: {err}")))?;
-    let version = PackageVersionProto::try_from(metadata.version).map_err(|_| {
+    let version = PackageVersionProto::parse_i32(metadata.version).ok_or_else(|| {
         apkg_error(format!(
             "unsupported Anki package version {}",
             metadata.version
@@ -4073,7 +4186,7 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
     };
     manifest.map_present = true;
     let media_map = decode_package_payload(CollectionFormat::Sqlite21b, "media map", &media_map)?;
-    let entries = MediaEntriesProto::decode(media_map.as_slice())
+    let entries = MediaEntriesProto::decode_pb(media_map.as_slice())
         .map_err(|err| apkg_error(format!("invalid Anki media entries protobuf: {err}")))?;
 
     let archive_entries: BTreeMap<&str, u32> = reader
@@ -4159,12 +4272,10 @@ mod tests {
     fn modern_package(collection: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
         let mut writer = ZipWriter::new();
 
-        let mut meta = Vec::new();
-        PackageMetadataProto {
+        let meta = PackageMetadataProto {
             version: PackageVersionProto::Latest as i32,
         }
-        .encode(&mut meta)
-        .unwrap();
+        .encode_pb();
         writer.add_file(META, &meta, false);
         writer.add_file(SQLITE_21B_COLLECTION, &zstd_encode(collection), false);
         writer.add_file(LEGACY_COLLECTION, b"dummy legacy collection", false);
@@ -4181,8 +4292,7 @@ mod tests {
                 })
                 .collect(),
         };
-        let mut media_map = Vec::new();
-        media_entries.encode(&mut media_map).unwrap();
+        let media_map = media_entries.encode_pb();
         writer.add_file(MEDIA_MAP, &zstd_encode(&media_map), false);
 
         for (index, asset) in media_assets.iter().enumerate() {
@@ -6272,12 +6382,10 @@ CREATE TABLE graves (
     #[test]
     fn reads_modern_media_payloads_via_legacy_zip_filename() {
         let mut writer = ZipWriter::new();
-        let mut meta = Vec::new();
-        PackageMetadataProto {
+        let meta = PackageMetadataProto {
             version: PackageVersionProto::Latest as i32,
         }
-        .encode(&mut meta)
-        .unwrap();
+        .encode_pb();
         writer.add_file(META, &meta, false);
         writer.add_file(
             SQLITE_21B_COLLECTION,
@@ -6294,8 +6402,7 @@ CREATE TABLE graves (
                 legacy_zip_filename: Some(7),
             }],
         };
-        let mut media_map = Vec::new();
-        media_entries.encode(&mut media_map).unwrap();
+        let media_map = media_entries.encode_pb();
         writer.add_file(MEDIA_MAP, &zstd_encode(&media_map), false);
         writer.add_file("7", &zstd_encode(b"mp3"), false);
         let apkg = writer.finish();
