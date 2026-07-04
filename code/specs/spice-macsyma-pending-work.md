@@ -585,21 +585,37 @@ Next ODE work should focus only on the Frobenius power-series case (irregular
 singular points and series solutions around regular singular points) unless a
 parity audit finds a smaller gap.
 
-#### `Expand` has no handler (found 2026-07-03, while wiring Wolfram's `Simplify`)
+#### `Expand` has no handler — ✅ fixed (2026-07-03)
 
 Macsyma's `expand(...)` surface function and `ev(expr, expand)` both route
 through `apply(sym("Expand"), …)` (`macsyma-runtime/src/lib.rs`), but
-`symbolic-vm`'s `build_handler_table` registers no handler under the string
-`"Expand"` — verified by grep, and there is no test anywhere in
-`macsyma-runtime`'s test suite that exercises `expand(...)` end-to-end. So
-today `expand((x+1)^2)` most likely just returns the unevaluated `Expand[...]`
-form (an unresolved head), not the distributed polynomial a user would
-expect — this is a real, previously-undocumented gap, not merely an untested
-path. Needs a real `Expand` handler (full polynomial distribution over
-`Add`/`Mul`/`Pow`), most naturally added to `symbolic-vm` or `cas-simplify`
-so both Macsyma and Wolfram (which hit the identical gap wiring its own
-`Expand`, MA04 §24.2) close at the same time. Not yet scheduled as its own
-track/PR.
+`symbolic-vm`'s `build_handler_table` registered no handler under the string
+`"Expand"` — verified empirically: `expand((x+1)^2)` returned the unevaluated
+input, not the distributed polynomial a user would expect.
+
+**Fix**: added `cas_simplify::expand` — a faithful port of the Python
+reference's general recursive-distributor path (`_sym_expand`/
+`_sym_expand_mul`/`_sym_expand_pow`), generalized to n-ary `Add`/`Mul` and
+guarded against the doubly-exponential term-count blowup square-and-multiply
+can hit on a multi-term base (`EXPAND_MAX_TERMS`, checked *before* every
+distribution step, not after). Registered as the `Expand` handler in
+`MacsymaBackend` (the same decorator-over-`build_handler_table` pattern
+already used for `Simplify`/`RatSimplify`/`Radcan`/etc.) — the shared
+`symbolic-vm` table itself is still unchanged, matching how every other
+Macsyma-specific head is layered on. `expand((x+1)^2)` now correctly returns
+`1 + x + x + x*x`.
+
+**Known remaining gap, honestly scoped out of this fix**: this does **not**
+collect like terms — the two `x` terms above stay separate rather than
+combining into `2*x`, and `x*x` is not folded into `x^2`. Python's reference
+only achieves that clean form via a *second*, single-variable
+rational-polynomial fast path (`to_rational`/`from_polynomial`) that this
+port does not include. A future "collect like terms" pass (grouping
+structurally-repeated monomials and summing their coefficients) is real,
+separate, more involved work — not yet scheduled as its own track/PR.
+
+This also unblocks Wolfram's own `Expand[...]` (MA04 §24.2) via the identical
+thin-wiring pattern used for `Simplify[...]`.
 
 #### Factoring gaps
 

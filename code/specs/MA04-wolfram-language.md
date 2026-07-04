@@ -2128,20 +2128,23 @@ Simplify[2 + 3]     (* 5 *)
 
 ### §24.2 Remaining (not yet delivered)
 
-`Expand`, `Factor`, `Solve`, `D`, `Integrate`, and the rest of §2's original
-list — each is a separate future item, no grammar change required for any of
-them (all are ordinary `Head[args]` forms the existing grammar already
-parses). **Note on `Expand`:** unlike `Simplify`, Macsyma's own `expand()`
-surface function has no dedicated handler backing its `Expand` head in
-`symbolic-vm`'s `build_handler_table` today (verified: no `"Expand"` handler
-registration exists) — Macsyma's `expand(...)` and `ev(expr, expand)` both
-route through `apply(sym("Expand"), …)`, which currently has no handler to
-land on. Wiring Wolfram's `Expand` is therefore **not** a "call the same
-function Macsyma calls" item the way `Simplify` was; it needs a real
-`Expand` handler (full polynomial distribution over `Add`/`Mul`/`Pow`) built
-first, most naturally in `symbolic-vm` or `cas-simplify` so Macsyma's
-long-standing `expand()` gap closes at the same time. Track as its own item,
-not scope creep into this one.
+`Factor`, `Solve`, `D`, `Integrate`, and the rest of §2's original list —
+each is a separate future item, no grammar change required for any of them
+(all are ordinary `Head[args]` forms the existing grammar already parses).
+
+**`Expand` — the blocker is now cleared, wiring is the remaining step.**
+Macsyma's own `expand()` had no dedicated handler backing its `Expand` head
+in `symbolic-vm`'s `build_handler_table` (verified empirically:
+`expand((x+1)^2)` returned unevaluated) — that gap is now fixed via
+`cas_simplify::expand`, a faithful port of the Python reference's general
+recursive-distributor path (distributes `Mul` over `Add`/`Sub`, expands
+bounded non-negative integer `Pow`, guarded against the doubly-exponential
+term-count blowup square-and-multiply can hit on a multi-term base). Wiring
+Wolfram's `Expand[...]` is now the same thin `call the shared function` shape
+as `Simplify[...]` was. **Honest scope note (inherited from `cas-simplify`,
+not a Wolfram-specific gap):** `expand` does not collect like terms — e.g.
+`Expand[(x+1)^2]` will produce `1 + x + x + x*x`, not the fully-collected
+`1 + 2*x + x^2` — tracked as a separate follow-up.
 
 ### §6 References
 

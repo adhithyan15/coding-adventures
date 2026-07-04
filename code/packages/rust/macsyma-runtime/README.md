@@ -42,3 +42,11 @@ results while invalid calls remain unevaluated.
 `TrigReduce(expr)` and `ev(expr, trigreduce)` delegate to the Rust `cas-trig`
 power-reduction walker, so MACSYMA sessions can rewrite supported sine/cosine
 powers and `sin(x)cos(x)` products to multiple-angle forms.
+
+`Expand(expr)` and `ev(expr, expand)` delegate to the Rust `cas-simplify`
+`expand` function, distributing `Mul` over `Add`/`Sub` and expanding bounded
+non-negative integer `Pow`s: `expand((x+1)^2)` returns `1 + x + x + x*x`.
+This distributes correctly but does not yet collect like terms (see
+`cas-simplify`'s own README/module docs for the exact scope) — a real,
+previously-unfixed gap: no handler for `Expand` existed anywhere before this,
+so `expand(...)` silently returned its input unevaluated.
