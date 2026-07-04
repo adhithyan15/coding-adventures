@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.12.7] - 2026-07-04
+
+### Changed — CLOC12.164: `AwaitExpression` traversal arms
+
+Added `Expression::AwaitExpression` arms that walk into the await's `argument`,
+so the pass stays exhaustive over the new `javascript-ast` variant (part of the
+CLOC12.164 atomic node PR1). No behaviour change to any existing node; the await
+argument is now visited exactly like any other sub-expression the pass already
+handles.
+
+
 ## [0.12.6] - 2026-07-03
 
 ### Changed — CLOC12.163: `YieldExpression` traversal arms

@@ -91,7 +91,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
-    BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression,
+    BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
@@ -572,6 +572,10 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             cv: y.cv.clone(),
             delegate: y.delegate,
             argument: y.argument.as_ref().map(|a| Box::new(fold_expression(a, st))),
+        }),
+        Expression::AwaitExpression(a) => Expression::AwaitExpression(AwaitExpression {
+            cv: a.cv.clone(),
+            argument: Box::new(fold_expression(&a.argument, st)),
         }),
         Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {

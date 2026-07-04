@@ -748,6 +748,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // `...arg` — recurse into the spread argument to collect its idents.
         Expression::SpreadElement(s) => collect_all_idents_expr(&s.argument, out),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { collect_all_idents_expr(a, out); } }
+        Expression::AwaitExpression(a) => collect_all_idents_expr(&a.argument, out),
     }
 }
 
@@ -1081,6 +1082,7 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // `...arg` — recurse into the spread argument to rename globals through it.
         Expression::SpreadElement(s) => rename_apply_expr(&mut s.argument, map),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { rename_apply_expr(a, map); } }
+        Expression::AwaitExpression(a) => rename_apply_expr(&mut a.argument, map),
     }
 }
 

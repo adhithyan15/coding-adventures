@@ -78,7 +78,7 @@ use coding_adventures_javascript_ast::{
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
-    TaggedTemplateExpression, SpreadElement, YieldExpression,
+    TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1138,6 +1138,7 @@ impl<'a> Emitter<'a> {
             Expression::TaggedTemplateExpression(t) => self.emit_tagged_template(t),
             Expression::SpreadElement(s) => self.emit_spread(s),
             Expression::YieldExpression(y) => self.emit_yield(y),
+            Expression::AwaitExpression(a) => self.emit_await(a),
         }
         if needs_parens {
             self.write_str(")");
@@ -1606,6 +1607,25 @@ impl<'a> Emitter<'a> {
         }
     }
 
+    /// Emit an `AwaitExpression` — `await x`.
+    ///
+    /// `await` is a *word-shaped* unary operator, so — exactly like
+    /// `typeof` / `void` / `delete` in [`emit_unary`] — it always needs a
+    /// mandatory separator before its operand, or the keyword would fuse into
+    /// one identifier (`awaitx`). We emit `required_ws()` then the operand at
+    /// `PREC_UNARY`, so a looser operand is parenthesised (`await (a+b)` for the
+    /// binary `a+b`), while a member / call / unary operand prints bare
+    /// (`await a.b`, `await f()`, `await -x`). The wrapping of the *whole* await
+    /// in a tighter parent — `(await p).x`, `(await f)()` — is handled by
+    /// `expr_prec` (which tags it at `PREC_UNARY`) plus `emit_expression_inner`,
+    /// the same machinery that wraps a `typeof`/`void` in those positions.
+    fn emit_await(&mut self, a: &AwaitExpression) {
+        self.maybe_map(&a.cv);
+        self.write_str("await");
+        self.required_ws();
+        self.emit_expression_inner(&a.argument, PREC_UNARY);
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -2045,6 +2065,12 @@ fn expr_prec(e: &Expression) -> u8 {
         // emitted at `PREC_ASSIGNMENT` — leave it bare (`x=yield v`,
         // `c?yield a:yield b`). This mirrors the arrow / assignment tags exactly.
         Expression::YieldExpression(_) => PREC_ASSIGNMENT,
+        // `await x` is a unary operator in the grammar (`await UnaryExpression`),
+        // binding exactly like the word unaries `typeof` / `void` / `delete`.
+        // Tag it at `PREC_UNARY` so a member/call/new parent wraps the whole
+        // await (`(await p).x`, `(await f)()`) while a binary/assignment parent
+        // leaves it bare (`await a+b` = `(await a)+b`, `x=await p`).
+        Expression::AwaitExpression(_) => PREC_UNARY,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -4956,5 +4982,70 @@ mod tests {
     fn yield_wrapped_as_member_object() {
         let e = member(yld(false, Some(ident("a"))), "b", false);
         assert_eq!(emit_expr(e), "(yield a).b;");
+    }
+
+    // =================================================================
+    // AwaitExpression (`await x`) — CLOC12.164
+    // =================================================================
+
+    /// Build an `AwaitExpression` (named `aw` — `await` is a Rust keyword).
+    fn aw(argument: Expression) -> Expression {
+        Expression::AwaitExpression(AwaitExpression { cv: None, argument: Box::new(argument) })
+    }
+
+    /// `await p` — the keyword and operand are separated by a mandatory space
+    /// (`awaitp` would be one identifier).
+    #[test]
+    fn await_value_requires_space() {
+        assert_eq!(emit_expr(aw(ident("p"))), "await p;");
+    }
+
+    /// `await a.b` — a member operand binds tighter than unary, so it prints
+    /// bare after `await`.
+    #[test]
+    fn await_member_operand_is_bare() {
+        assert_eq!(emit_expr(aw(member(ident("a"), "b", false))), "await a.b;");
+    }
+
+    /// `await f()` — a call operand also binds tighter than unary → bare.
+    #[test]
+    fn await_call_operand_is_bare() {
+        assert_eq!(emit_expr(aw(call(ident("f"), vec![]))), "await f();");
+    }
+
+    /// `await (a+b)` — a **binary** operand binds looser than unary, so it must
+    /// wrap (a bare `await a+b` would parse as `(await a)+b`).
+    #[test]
+    fn await_binary_operand_is_wrapped() {
+        let e = aw(binary(BinaryOperator::Add, ident("a"), ident("b")));
+        assert_eq!(emit_expr(e), "await (a+b);");
+    }
+
+    /// `await p+1` — the whole await binds *tighter* than `+` (await is unary),
+    /// so a binary parent leaves it bare on the left: `(await p)+1`.
+    #[test]
+    fn await_binds_tighter_than_binary_parent() {
+        let e = binary(BinaryOperator::Add, aw(ident("p")), num(1.0));
+        assert_eq!(emit_expr(e), "await p+1;");
+    }
+
+    /// `(await p).x` — a member parent binds at primary strength and wraps the
+    /// looser await object.
+    #[test]
+    fn await_wrapped_as_member_object() {
+        assert_eq!(emit_expr(member(aw(ident("p")), "x", false)), "(await p).x;");
+    }
+
+    /// `(await f)()` — a call callee likewise wraps the await.
+    #[test]
+    fn await_wrapped_as_call_callee() {
+        assert_eq!(emit_expr(call(aw(ident("f")), vec![])), "(await f)();");
+    }
+
+    /// `await await p` — a nested await operand prints bare (await is exactly at
+    /// the unary operand floor).
+    #[test]
+    fn await_nested_is_bare() {
+        assert_eq!(emit_expr(aw(aw(ident("p")))), "await await p;");
     }
 }

@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.23.0] - 2026-07-04
+
+### Added — CLOC12.164: `Expression::AwaitExpression` (`await x`)
+
+Added `Expression::AwaitExpression` variant + `AwaitExpression { cv, argument:
+Box<Expression> }` struct — the `await x` async-suspend operator (always has an
+operand; no optional/delegate axis, unlike YieldExpression). Re-exported from
+the crate root. (CLOC12.164)
+
+
 ## [0.22.0] - 2026-07-03
 
 ### Added — CLOC12.163: `Expression::YieldExpression` (`yield` / `yield x` / `yield* xs`)

@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.7] - 2026-07-04
+
+### Changed — CLOC12.164: `AwaitExpression` exhaustive-match arm
+
+Added an `Expression::AwaitExpression` arm that walks into the await's
+`argument`, so the analyzer stays exhaustive over the new `javascript-ast`
+variant (part of the CLOC12.164 atomic node PR1). No behaviour change to any
+existing node; the await argument is now visited exactly like any other
+sub-expression the analyzer already handles.
+
+
 ## [0.12.6] - 2026-07-03
 
 ### Changed — CLOC12.163: `YieldExpression` exhaustive-match arm

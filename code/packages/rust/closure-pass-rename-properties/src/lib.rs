@@ -1257,6 +1257,7 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         // `...arg` — recurse into the spread argument to classify accesses in it.
         Expression::SpreadElement(s) => classify_expr(&s.argument, cls),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { classify_expr(a, cls); } }
+        Expression::AwaitExpression(a) => classify_expr(&a.argument, cls),
     }
 }
 
@@ -1525,6 +1526,7 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // `...arg` — recurse into the spread argument to rewrite accesses in it.
         Expression::SpreadElement(s) => rewrite_expr(&mut s.argument, map),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { rewrite_expr(a, map); } }
+        Expression::AwaitExpression(a) => rewrite_expr(&mut a.argument, map),
     }
 }
 
