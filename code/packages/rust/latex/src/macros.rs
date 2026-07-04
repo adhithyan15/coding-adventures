@@ -24,11 +24,11 @@
 //!
 //! ## How `#n` survives L1
 //!
-//! L1 lexes `#` to a [`Node::Text`] `"#"` and the following digit to a separate `Text`, so a
+//! L1 lexes `#` to a [`NodeKind::Text`] `"#"` and the following digit to a separate `Text`, so a
 //! body `#1y` arrives as `[Text("#"), Text("1y")]`. Substitution therefore scans each node
 //! sequence for a `Text("#")` immediately followed by a `Text` starting with a digit `1..=9`,
 //! and recurses into groups / command arguments / environment bodies so `\bar{#1}` works too.
-//! `##` denotes a literal `#`. (`#n` *inside a math island* — a [`Node::Math`] whose body is a
+//! `##` denotes a literal `#`. (`#n` *inside a math island* — a [`NodeKind::Math`] whose body is a
 //! raw string — is not substituted in this layer; that is a documented L4a limitation.)
 //!
 //! ## Honest scope (L4a)
@@ -48,9 +48,21 @@
 //!
 //! Either way the pass returns `Err`, it never hangs or overflows the stack.
 
-use crate::ast::Node;
+use crate::ast::{Node, NodeKind};
 use crate::error::ParseError;
+use crate::token::Span;
 use std::collections::HashMap;
+
+/// The smallest span covering both `a` and `b` — composes a synthesised node's span from its
+/// constituents (S1: union-of-children where expansion splices nodes together).
+fn union(a: Span, b: Span) -> Span {
+    Span::new(a.start.min(b.start), a.end.max(b.end))
+}
+
+/// The span covering a whole node sequence (empty → `fallback`): the union of every node's span.
+fn seq_span(nodes: &[Node], fallback: Span) -> Span {
+    nodes.iter().map(|n| n.span).reduce(union).unwrap_or(fallback)
+}
 
 /// Maximum nesting of macro-expands-to-macro before we give up (cycle guard).
 const MAX_EXPANSION_DEPTH: usize = 64;
@@ -121,16 +133,17 @@ impl Expander {
         let mut i = 0;
         while i < nodes.len() {
             self.tick()?;
-            match &nodes[i] {
+            let node_span = nodes[i].span;
+            match &nodes[i].kind {
                 // ---- a definition: register it, drop it from the output ----
-                Node::Command { name, optional, arguments } if is_definition(name) => {
+                NodeKind::Command { name, optional, arguments } if is_definition(name) => {
                     let (mac_name, mac, consumed) =
                         parse_definition(name, optional, arguments, &nodes[i + 1..])?;
                     self.table.insert(mac_name, mac);
                     i += 1 + consumed;
                 }
                 // ---- a use of a registered macro: substitute + recurse ----
-                Node::Command { name, optional, arguments }
+                NodeKind::Command { name, optional, arguments }
                     if optional.is_empty() && self.table.contains_key(name) =>
                 {
                     let mac = self.table.get(name).expect("checked").clone();
@@ -159,8 +172,9 @@ impl Expander {
                     // macro; keep them (as groups) so e.g. a 0-arg `\foo{x}` still yields the
                     // expansion followed by `{x}`.
                     for extra in arguments.iter().skip(mac.nargs) {
+                        let sp = seq_span(extra, node_span);
                         let inner = self.expand_seq(extra.clone(), depth + 1)?;
-                        out.push(Node::Group(inner));
+                        out.push(Node::group(inner, sp));
                     }
                     i += 1;
                 }
@@ -181,14 +195,17 @@ impl Expander {
     /// not how deeply groups nest — the latter is already bounded by L1's parse-depth cap, so
     /// counting it here would wrongly reject valid deeply-nested-but-finite documents.
     fn expand_children(&mut self, node: Node, depth: usize) -> Result<Node, ParseError> {
-        Ok(match node {
-            Node::Group(inner) => Node::Group(self.expand_seq(inner, depth)?),
-            Node::Command { name, optional, arguments } => Node::Command {
+        // Recursing into a node's children never changes the node's own extent, so it keeps its
+        // span.
+        let span = node.span;
+        let kind = match node.kind {
+            NodeKind::Group(inner) => NodeKind::Group(self.expand_seq(inner, depth)?),
+            NodeKind::Command { name, optional, arguments } => NodeKind::Command {
                 name,
                 optional: self.expand_vecs(optional, depth)?,
                 arguments: self.expand_vecs(arguments, depth)?,
             },
-            Node::Environment { name, optional, arguments, body } => Node::Environment {
+            NodeKind::Environment { name, optional, arguments, body } => NodeKind::Environment {
                 name,
                 optional: self.expand_vecs(optional, depth)?,
                 arguments: self.expand_vecs(arguments, depth)?,
@@ -196,7 +213,8 @@ impl Expander {
             },
             // leaves carry no child node sequences
             other => other,
-        })
+        };
+        Ok(Node::new(kind, span))
     }
 
     fn expand_vecs(&mut self, vs: Vec<Vec<Node>>, depth: usize) -> Result<Vec<Vec<Node>>, ParseError> {
@@ -221,7 +239,7 @@ fn parse_definition(
     // The macro name is the first mandatory argument: a `{\foo}` group, captured as a
     // one-element node list holding the command `\foo`.
     let name = match arguments.first().map(Vec::as_slice) {
-        Some([Node::Command { name, .. }]) => name.clone(),
+        Some([Node { kind: NodeKind::Command { name, .. }, .. }]) => name.clone(),
         _ => {
             return Err(ParseError::new(
                 format!("\\{cmd} must be followed by {{\\name}}"),
@@ -249,15 +267,15 @@ fn parse_definition(
     let mut consumed = 0;
     let mut nargs = 0usize;
     // optional arity bracket, e.g. Text("[2]")
-    if let Some(Node::Text(t)) = rest.first() {
+    if let Some(Node { kind: NodeKind::Text(t), .. }) = rest.first() {
         if let Some(n) = parse_arity_bracket(t) {
             nargs = n?;
             consumed += 1;
         }
     }
     // the body group
-    match rest.get(consumed) {
-        Some(Node::Group(body)) => {
+    match rest.get(consumed).map(|n| &n.kind) {
+        Some(NodeKind::Group(body)) => {
             consumed += 1;
             Ok((name, Macro { nargs, body: body.clone() }, consumed))
         }
@@ -300,12 +318,13 @@ impl Expander {
         let mut i = 0;
         while i < body.len() {
             self.tick()?;
-            match &body[i] {
+            let node_span = body[i].span;
+            match &body[i].kind {
                 // `#` is a lone Text("#"); look at the next node to classify it.
-                Node::Text(h) if h == "#" => {
-                    match body.get(i + 1) {
+                NodeKind::Text(h) if h == "#" => {
+                    match body.get(i + 1).map(|n| (&n.kind, n.span)) {
                         // `#n` — a parameter reference.
-                        Some(Node::Text(t)) if first_is_param_digit(t) => {
+                        Some((NodeKind::Text(t), t_span)) if first_is_param_digit(t) => {
                             let d = (t.as_bytes()[0] - b'0') as usize; // 1..=9
                             if d > args.len() {
                                 return Err(ParseError::new(
@@ -317,46 +336,55 @@ impl Expander {
                             // Charge for the spliced argument *before* cloning it in, so a
                             // large arg duplicated many times is bounded as it is built.
                             self.charge(args[d - 1].len())?;
+                            // Spliced-in argument nodes keep their own (call-site) spans.
                             out.extend(args[d - 1].clone());
                             let remainder = &t[1..];
                             if !remainder.is_empty() {
-                                out.push(Node::Text(remainder.to_string()));
+                                // The remainder occupies the digit's byte onward in the `#n…` text.
+                                let rem_span = Span::new(
+                                    t_span.start + (t.len() - remainder.len()),
+                                    t_span.end,
+                                );
+                                out.push(Node::text(remainder.to_string(), rem_span));
                             }
                             i += 2;
                         }
                         // `##` — a literal `#`.
-                        Some(Node::Text(t)) if t == "#" => {
-                            out.push(Node::Text("#".into()));
+                        Some((NodeKind::Text(t), t_span)) if t == "#" => {
+                            out.push(Node::text("#", union(node_span, t_span)));
                             i += 2;
                         }
                         // a `#` not followed by a digit or `#` — keep it literal.
                         _ => {
-                            out.push(Node::Text("#".into()));
+                            out.push(Node::text("#", node_span));
                             i += 1;
                         }
                     }
                 }
                 // recurse into structures that carry child node sequences
-                Node::Group(inner) => {
+                NodeKind::Group(inner) => {
                     let g = self.subst_seq(inner, args, mac)?;
-                    out.push(Node::Group(g));
+                    out.push(Node::group(g, node_span));
                     i += 1;
                 }
-                Node::Command { name, optional, arguments } => {
+                NodeKind::Command { name, optional, arguments } => {
                     let optional = self.subst_vecs(optional, args, mac)?;
                     let arguments = self.subst_vecs(arguments, args, mac)?;
-                    out.push(Node::Command { name: name.clone(), optional, arguments });
+                    out.push(Node::command(name.clone(), optional, arguments, node_span));
                     i += 1;
                 }
-                Node::Environment { name, optional, arguments, body: ebody } => {
+                NodeKind::Environment { name, optional, arguments, body: ebody } => {
                     let optional = self.subst_vecs(optional, args, mac)?;
                     let arguments = self.subst_vecs(arguments, args, mac)?;
                     let ebody = self.subst_seq(ebody, args, mac)?;
-                    out.push(Node::Environment { name: name.clone(), optional, arguments, body: ebody });
+                    out.push(Node::new(
+                        NodeKind::Environment { name: name.clone(), optional, arguments, body: ebody },
+                        node_span,
+                    ));
                     i += 1;
                 }
-                other => {
-                    out.push(other.clone());
+                _ => {
+                    out.push(body[i].clone());
                     i += 1;
                 }
             }

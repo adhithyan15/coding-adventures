@@ -9,10 +9,35 @@
 //! Every node round-trips: [`Node::to_latex`] renders a node back to LaTeX, and
 //! `parse(&render(ast)) == ast` (AST-equality, not byte-equality — surface spacing and the
 //! `$…$` vs `\(…\)` delimiter choice are normalized).
+//!
+//! ## Precise byte spans (LTXDOC02 S1)
+//!
+//! Every [`Node`] carries its exact source byte [`Span`] — the half-open `[start, end)` range
+//! such that `&src[node.span.start .. node.span.end]` is the node's own source substring
+//! (`\textbf{x}`, `{…}` including braces, `$…$` including the delimiters, and so on). The L1
+//! lexer already records a precise span on every token; the parser threads those tracked spans
+//! straight into each node it builds, so nothing is re-derived by substring search.
+//!
+//! The span is carried **beside** the node's payload as a uniform `{ kind, span }` split
+//! ([`Node`] = a [`NodeKind`] plus a [`Span`]) rather than baked into each variant. That keeps
+//! the span *orthogonal*: a `match` that only cares about the shape reads `node.kind`, and the
+//! span is a single field every node has (the single source of truth, replacing the bespoke
+//! `(usize, usize)` the old `Unsupported` variant carried).
+//!
+//! ### Spans are metadata, not identity
+//!
+//! Two nodes are [`PartialEq`]-equal when their [`NodeKind`]s are equal — the [`span`](Node::span)
+//! is deliberately **excluded** from equality (and from [`Hash`] were it derived). This is what
+//! makes "round-trip is a fixed point *modulo spans*" true: re-emitting a tree with
+//! [`to_latex`](Node::to_latex) and re-parsing moves byte offsets around (surface spacing is
+//! normalized) but preserves structure, so `parse(&render(ast)) == ast` still holds even though
+//! the two trees' spans differ. Tests that assert exact byte ranges read [`Node::span`] directly.
+
+use crate::token::Span;
 
 /// A sectioning level, in document-hierarchy order from coarsest (`\part`) to finest
 /// (`\subparagraph`). Produced by the L5d [`recognize_structure`](crate::recognize_structure)
-/// pass as part of [`Node::Section`].
+/// pass as part of [`NodeKind::Section`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SectionLevel {
     /// `\part`
@@ -25,7 +50,7 @@ pub enum SectionLevel {
     Subsection,
     /// `\subsubsection`
     Subsubsection,
-    /// `\paragraph` (a run-in heading, *not* a paragraph break — see [`Node::Par`])
+    /// `\paragraph` (a run-in heading, *not* a paragraph break — see [`NodeKind::Par`])
     Paragraph,
     /// `\subparagraph`
     Subparagraph,
@@ -33,7 +58,7 @@ pub enum SectionLevel {
 
 impl SectionLevel {
     /// The LaTeX control word for this level (without the leading backslash), used to render a
-    /// [`Node::Section`] back to source.
+    /// [`NodeKind::Section`] back to source.
     pub fn command(self) -> &'static str {
         match self {
             SectionLevel::Part => "part",
@@ -48,7 +73,7 @@ impl SectionLevel {
 }
 
 /// The flavour of a document-mode list environment, produced by the opt-in
-/// [`recognize_tables`](crate::recognize_tables) pass (D1) as part of [`Node::List`].
+/// [`recognize_tables`](crate::recognize_tables) pass (D1) as part of [`NodeKind::List`].
 ///
 /// | Environment | Kind | What the `\item`s look like |
 /// |-------------|------|------------------------------|
@@ -80,7 +105,7 @@ impl ListKind {
     }
 }
 
-/// One entry of a [`Node::List`] — a single `\item` and the content that follows it up to the
+/// One entry of a [`NodeKind::List`] — a single `\item` and the content that follows it up to the
 /// next `\item` (or the end of the list).
 ///
 /// `\item body` (in `itemize`/`enumerate`) has `label == None`. `\item[term] body` (the
@@ -96,9 +121,36 @@ pub struct ListItem {
     pub body: Vec<Node>,
 }
 
-/// One node of the document tree.
+/// One node of the document tree: its [`NodeKind`] (the shape + payload) plus its exact source
+/// byte [`Span`].
+///
+/// ## Why `{ kind, span }` and not a span field per variant
+///
+/// Every node needs a span, so hanging it off a single uniform field (rather than repeating a
+/// `span:` field inside all ~19 variants) keeps the span *orthogonal* to the shape: a `match`
+/// that only classifies the node reads [`node.kind`](Node::kind), untouched by spans, and the
+/// span is read the same way ([`node.span`](Node::span)) regardless of variant. This is the
+/// single source of truth the old `Unsupported { span: (usize, usize) }` bespoke field is now
+/// folded onto.
+///
+/// ## Equality ignores the span
+///
+/// [`PartialEq`]/[`Eq`] compare **only** [`kind`](Node::kind) — see the module docs. Construct a
+/// node with [`Node::new`], or the terse [`Node::text`]/[`Node::group`]/… helpers.
+#[derive(Debug, Clone)]
+pub struct Node {
+    /// The node's shape and payload.
+    pub kind: NodeKind,
+    /// The node's exact source byte range `[start, end)` — `&src[start..end]` is its source.
+    pub span: Span,
+}
+
+/// The shape and payload of a [`Node`], factored out so the [`Span`] can live beside it uniformly.
+///
+/// These are the variants L1 (and the opt-in recognition passes) produce. See [`Node`] for the
+/// span that accompanies each.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Node {
+pub enum NodeKind {
     /// A run of ordinary text (consecutive ordinary characters, coalesced).
     Text(String),
     /// Significant inter-word space.
@@ -157,7 +209,7 @@ pub enum Node {
     Preamble { command: String, options: Option<Vec<Node>>, name: Vec<Node> },
     /// An argument-form text font command (L5d): `\textbf{x}`, `\emph{x}`, `\underline{x}`, …
     /// `command` is the control-word verbatim; `content` is the wrapped argument. (Declaration-
-    /// form font commands like `\bfseries` stay plain [`Node::Command`]s — their effect is
+    /// form font commands like `\bfseries` stay plain [`NodeKind::Command`]s — their effect is
     /// positional, not a wrapped argument.) Produced only by the opt-in
     /// [`recognize_structure`](crate::recognize_structure) pass, not by L1.
     Styled { command: String, content: Vec<Node> },
@@ -178,23 +230,79 @@ pub enum Node {
     Active(char),
     /// A construct deliberately out of scope (the TeX-programmability asymptote — e.g.
     /// runtime `\catcode`). Not produced by L1; reserved so later layers can surface an
-    /// honest "unsupported" rather than mis-parse.
-    Unsupported { construct: String, span: (usize, usize) },
+    /// honest "unsupported" rather than mis-parse. (Its byte range lives in the enclosing
+    /// [`Node::span`], like every other node.)
+    Unsupported { construct: String },
 }
 
+/// Equality on a [`Node`] compares its [`NodeKind`] only — the [`span`](Node::span) is metadata,
+/// not identity (see the module docs). This is what keeps the round-trip a fixed point *modulo
+/// spans*: re-emitting and re-parsing preserves `kind` but moves byte offsets.
+impl PartialEq for Node {
+    fn eq(&self, other: &Self) -> bool {
+        self.kind == other.kind
+    }
+}
+impl Eq for Node {}
+
 impl Node {
-    /// If this is a [`Node::Math`] island, parse its raw content into the math AST
-    /// ([`crate::MathNode`]); otherwise `None`. The structural tree is unchanged (L1
-    /// round-trip intact) — parsed math is produced on demand here.
+    /// Build a node from its [`NodeKind`] and source [`Span`].
+    pub fn new(kind: NodeKind, span: Span) -> Self {
+        Node { kind, span }
+    }
+
+    /// This node's exact source byte [`Span`] — `&src[.span.start .. .span.end]` is its source.
+    /// (A convenience accessor mirroring the public [`span`](Node::span) field, so callers can
+    /// read the range through a method as the spec's mechanism note describes.)
+    pub fn span(&self) -> Span {
+        self.span
+    }
+
+    // --- Terse constructors -----------------------------------------------------------------
+    //
+    // These build a `Node` from a payload plus a span. They keep the parser (and the recognition
+    // passes, and tests) readable — `Node::group(inner, sp)` instead of the full struct literal —
+    // and are the single place a `NodeKind` is paired with its `Span`.
+
+    /// A `Text(String)` run spanning `span`.
+    pub fn text(s: impl Into<String>, span: Span) -> Self {
+        Node::new(NodeKind::Text(s.into()), span)
+    }
+    /// A `Space` spanning `span`.
+    pub fn space(span: Span) -> Self {
+        Node::new(NodeKind::Space, span)
+    }
+    /// A `Par` (paragraph break) spanning `span`.
+    pub fn par(span: Span) -> Self {
+        Node::new(NodeKind::Par, span)
+    }
+    /// A `Group([…])` — the span should cover the `{`…`}` including braces.
+    pub fn group(inner: Vec<Node>, span: Span) -> Self {
+        Node::new(NodeKind::Group(inner), span)
+    }
+    /// A `Command` — the span should cover `\name`…the last argument's closing `}` (or just the
+    /// control word if it has no arguments).
+    pub fn command(
+        name: impl Into<String>,
+        optional: Vec<Vec<Node>>,
+        arguments: Vec<Vec<Node>>,
+        span: Span,
+    ) -> Self {
+        Node::new(NodeKind::Command { name: name.into(), optional, arguments }, span)
+    }
+
+    /// If this is a math island, parse its raw content into the math AST ([`crate::MathNode`]);
+    /// otherwise `None`. The structural tree is unchanged (L1 round-trip intact) — parsed math is
+    /// produced on demand here.
     pub fn parsed_math(&self) -> Option<Result<crate::MathNode, crate::ParseError>> {
-        match self {
-            Node::Math { content, .. } => Some(crate::parse_math(content)),
+        match &self.kind {
+            NodeKind::Math { content, .. } => Some(crate::parse_math(content)),
             _ => None,
         }
     }
 
     /// Render this node back to LaTeX source. `parse(&node.to_latex()) == [node]` up to the
-    /// normalizations noted in the module docs.
+    /// normalizations noted in the module docs (and modulo spans — see the module docs).
     pub fn to_latex(&self) -> String {
         let mut s = String::new();
         self.write_latex(&mut s);
@@ -202,16 +310,16 @@ impl Node {
     }
 
     fn write_latex(&self, out: &mut String) {
-        match self {
-            Node::Text(t) => out.push_str(t),
-            Node::Space => out.push(' '),
-            Node::Par => out.push_str("\n\n"),
-            Node::Group(nodes) => {
+        match &self.kind {
+            NodeKind::Text(t) => out.push_str(t),
+            NodeKind::Space => out.push(' '),
+            NodeKind::Par => out.push_str("\n\n"),
+            NodeKind::Group(nodes) => {
                 out.push('{');
                 render_seq(nodes, out);
                 out.push('}');
             }
-            Node::Command { name, optional, arguments } => {
+            NodeKind::Command { name, optional, arguments } => {
                 out.push('\\');
                 out.push_str(name);
                 for opt in optional {
@@ -231,7 +339,7 @@ impl Node {
                     out.push(' ');
                 }
             }
-            Node::Environment { name, optional, arguments, body } => {
+            NodeKind::Environment { name, optional, arguments, body } => {
                 out.push_str("\\begin{");
                 out.push_str(name);
                 out.push('}');
@@ -250,18 +358,18 @@ impl Node {
                 out.push_str(name);
                 out.push('}');
             }
-            Node::Math { display, content } => {
+            NodeKind::Math { display, content } => {
                 let delim = if *display { "$$" } else { "$" };
                 out.push_str(delim);
                 out.push_str(content);
                 out.push_str(delim);
             }
-            Node::Comment(c) => {
+            NodeKind::Comment(c) => {
                 out.push('%');
                 out.push_str(c);
                 out.push('\n');
             }
-            Node::Verb { star, delim, content } => {
+            NodeKind::Verb { star, delim, content } => {
                 out.push_str("\\verb");
                 if *star {
                     out.push('*');
@@ -270,7 +378,7 @@ impl Node {
                 out.push_str(content);
                 out.push(*delim);
             }
-            Node::VerbatimEnv { env, content } => {
+            NodeKind::VerbatimEnv { env, content } => {
                 out.push_str("\\begin{");
                 out.push_str(env);
                 out.push('}');
@@ -279,7 +387,7 @@ impl Node {
                 out.push_str(env);
                 out.push('}');
             }
-            Node::Accent { accent, arg } => {
+            NodeKind::Accent { accent, arg } => {
                 // Render the braced form `\<accent>{arg}` — it re-recognizes to the same node
                 // whether the source wrote `\'e` or `\'{e}`.
                 out.push('\\');
@@ -288,7 +396,7 @@ impl Node {
                 render_seq(arg, out);
                 out.push('}');
             }
-            Node::Section { level, starred, short, title } => {
+            NodeKind::Section { level, starred, short, title } => {
                 // `\section` (+ `*` if starred) (+ `[short]` if present) `{title}`. Renders back
                 // to the exact shape `recognize_structure` folds, so it re-recognizes equal.
                 out.push('\\');
@@ -305,7 +413,7 @@ impl Node {
                 render_seq(title, out);
                 out.push('}');
             }
-            Node::CrossRef { command, note, target } => {
+            NodeKind::CrossRef { command, note, target } => {
                 out.push('\\');
                 out.push_str(command);
                 if let Some(note) = note {
@@ -317,7 +425,7 @@ impl Node {
                 render_seq(target, out);
                 out.push('}');
             }
-            Node::Preamble { command, options, name } => {
+            NodeKind::Preamble { command, options, name } => {
                 out.push('\\');
                 out.push_str(command);
                 if let Some(options) = options {
@@ -329,14 +437,14 @@ impl Node {
                 render_seq(name, out);
                 out.push('}');
             }
-            Node::Styled { command, content } => {
+            NodeKind::Styled { command, content } => {
                 out.push('\\');
                 out.push_str(command);
                 out.push('{');
                 render_seq(content, out);
                 out.push('}');
             }
-            Node::Tabular { col_spec, rows } => {
+            NodeKind::Tabular { col_spec, rows } => {
                 // `\begin{tabular}{spec}` cell & cell \\ cell & cell `\end{tabular}`. We always
                 // render the single-argument `tabular` form (a recognized `tabular*` folds its
                 // width away into the colspec at recognition time — the width is not a column
@@ -362,7 +470,7 @@ impl Node {
                 }
                 out.push_str("\\end{tabular}");
             }
-            Node::List { kind, items } => {
+            NodeKind::List { kind, items } => {
                 out.push_str("\\begin{");
                 out.push_str(kind.env());
                 out.push('}');
@@ -387,8 +495,8 @@ impl Node {
                 out.push_str(kind.env());
                 out.push('}');
             }
-            Node::Active(c) => out.push(*c),
-            Node::Unsupported { construct, .. } => out.push_str(construct),
+            NodeKind::Active(c) => out.push(*c),
+            NodeKind::Unsupported { construct } => out.push_str(construct),
         }
     }
 }

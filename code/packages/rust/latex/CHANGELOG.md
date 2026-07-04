@@ -2,6 +2,38 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.32.0] — 2026-07-04
+
+### Added — spanned L1 nodes (LTXDOC02 S1)
+
+The first implementation rung of the **precise per-token byte spans** arc (spec
+`LTXDOC02-precise-token-spans.md` §5). Every `Node` produced by `parse()` now carries its **exact
+source byte `Span`**, threaded from the spans the lexer already records on every token — no
+substring re-scanning. `&src[node.span().start .. node.span().end]` slices back to the node's own
+source (`\textbf{x}`, `{…}` incl. braces, `$…$` incl. the delimiters, `\begin{env}…\end{env}`, a
+`Text` run's exact characters, …).
+
+- **`Node` restructured to `{ kind: NodeKind, span: Span }`.** The variants moved to a new public
+  `NodeKind` enum; `Node` pairs a `NodeKind` with its `Span`. This keeps the span **orthogonal**
+  (a `match` on shape reads `node.kind`; the span is one uniform field every node has) and is the
+  single source of truth — the old `Unsupported { span: (usize, usize) }` bespoke tuple is dropped
+  in favour of the uniform `Node.span`. New `NodeKind` export from the crate root.
+- **Span accessor + terse constructors.** `Node::new(kind, span)`, `Node::span() -> Span`, and
+  `Node::text/space/par/group/command(...)` builders. `Group`/`Command`/`Environment`/`Math` spans
+  cover their delimiters; composite spans compose from the tracked start/end of the covered tokens.
+- **Equality ignores the span.** `Node`'s `PartialEq`/`Eq` compare `kind` only, so the round-trip
+  stays a **fixed point modulo spans** (`parse(&render(ast)) == ast`) even though re-emitting moves
+  byte offsets — and every existing round-trip/equality test stays valid unchanged.
+- **Recognition passes + Document fold threaded through.** `recognize_structure` /
+  `recognize_accents` / `recognize_tables` fold onto the folded command's own span (extended over
+  any folded siblings — union-of-constituents); `build_document`/`macros::expand` updated to match
+  on `node.kind`. Deep precise-span work inside the recognition passes and the Document fold remains
+  S2/S3; S1's core deliverable is spanned L1 `Node`s from `parse()`.
+- **`to_latex` output text is unchanged** (spans move on re-emit; structure/text do not).
+- **Tests:** exact source-slicing for a `Command`/`Group`/`Math`/`Text`/`Environment`; containment
+  (`child.span ⊆ parent.span ⊆ 0..src.len()`); and a totality/no-panic test over malformed-but-
+  parseable input (`Span::new` guards `end < start`).
+
 ## [0.31.0] — 2026-07-03
 
 ### Added — provenance API + byte-coverage capstone (LTXDOC01 D6, arc complete)

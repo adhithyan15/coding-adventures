@@ -48,7 +48,8 @@
 //! (no *new* unbounded recursion). The column spec is read off the already-parsed argument nodes
 //! via [`Node::to_latex`] — there is **no raw brace counting** in this module.
 
-use crate::ast::{ListItem, ListKind, Node};
+use crate::ast::{ListItem, ListKind, Node, NodeKind};
+use crate::token::Span;
 
 /// Map a list-environment name to its [`ListKind`], or `None` if `name` is not one.
 fn list_kind(name: &str) -> Option<ListKind> {
@@ -71,8 +72,12 @@ pub fn recognize_tables(nodes: Vec<Node>) -> Vec<Node> {
 /// Rebuild one node, recursing `recognize_tables` into every child node-list, and — for the
 /// table/list environments — folding it into the structured variant.
 fn recurse(node: Node) -> Node {
-    match node {
-        Node::Environment { name, optional, arguments, body } => {
+    // The node's own span already covers its full source extent; recursion/folding regroups its
+    // children without changing that extent (a `tabular`/list environment folds `\begin`…`\end`,
+    // which is exactly the environment node's span), so we keep it.
+    let span = node.span;
+    let kind = match node.kind {
+        NodeKind::Environment { name, optional, arguments, body } => {
             // Recurse into the argument/optional lists and the body regardless, then decide
             // whether this environment is a table, a list, or just a recursed environment.
             let optional: Vec<Vec<Node>> = optional.into_iter().map(recognize_tables).collect();
@@ -80,50 +85,50 @@ fn recurse(node: Node) -> Node {
             let body = recognize_tables(body);
 
             if name == "tabular" || name == "tabular*" {
-                return fold_tabular(&arguments, body);
+                return Node::new(fold_tabular(&arguments, body), span);
             }
             if let Some(kind) = list_kind(&name) {
-                return fold_list(kind, name, optional, arguments, body);
+                return Node::new(fold_list(kind, name, optional, arguments, body, span), span);
             }
-            Node::Environment { name, optional, arguments, body }
+            NodeKind::Environment { name, optional, arguments, body }
         }
 
         // --- plain structural recursion into every other node's child lists -------------------
-        Node::Group(inner) => Node::Group(recognize_tables(inner)),
-        Node::Command { name, optional, arguments } => Node::Command {
+        NodeKind::Group(inner) => NodeKind::Group(recognize_tables(inner)),
+        NodeKind::Command { name, optional, arguments } => NodeKind::Command {
             name,
             optional: optional.into_iter().map(recognize_tables).collect(),
             arguments: arguments.into_iter().map(recognize_tables).collect(),
         },
-        Node::Section { level, starred, short, title } => Node::Section {
+        NodeKind::Section { level, starred, short, title } => NodeKind::Section {
             level,
             starred,
             short: short.map(recognize_tables),
             title: recognize_tables(title),
         },
-        Node::CrossRef { command, note, target } => Node::CrossRef {
+        NodeKind::CrossRef { command, note, target } => NodeKind::CrossRef {
             command,
             note: note.map(recognize_tables),
             target: recognize_tables(target),
         },
-        Node::Preamble { command, options, name } => Node::Preamble {
+        NodeKind::Preamble { command, options, name } => NodeKind::Preamble {
             command,
             options: options.map(recognize_tables),
             name: recognize_tables(name),
         },
-        Node::Styled { command, content } => {
-            Node::Styled { command, content: recognize_tables(content) }
+        NodeKind::Styled { command, content } => {
+            NodeKind::Styled { command, content: recognize_tables(content) }
         }
         // Recurse into already-recognized tables/lists too, so the pass is idempotent and
         // composes with itself (e.g. a list nested inside a table cell).
-        Node::Tabular { col_spec, rows } => Node::Tabular {
+        NodeKind::Tabular { col_spec, rows } => NodeKind::Tabular {
             col_spec,
             rows: rows
                 .into_iter()
                 .map(|row| row.into_iter().map(recognize_tables).collect())
                 .collect(),
         },
-        Node::List { kind, items } => Node::List {
+        NodeKind::List { kind, items } => NodeKind::List {
             kind,
             items: items
                 .into_iter()
@@ -136,7 +141,8 @@ fn recurse(node: Node) -> Node {
         // leaves (Text, Space, Par, Math, Comment, Verb, VerbatimEnv, Accent, Active,
         // Unsupported) carry no further child lists to fold here
         other => other,
-    }
+    };
+    Node::new(kind, span)
 }
 
 /// Fold a (already-recursed) `tabular`/`tabular*` body into a [`Node::Tabular`].
@@ -144,10 +150,10 @@ fn recurse(node: Node) -> Node {
 /// `col_spec` = the **last** mandatory argument rendered back to source (the only argument for
 /// `tabular`; the `{colspec}` after `{width}` for `tabular*`), or `None` if there were none.
 /// Rows are the body split on the `\\` row break; cells are each row split on the `&` tab.
-fn fold_tabular(arguments: &[Vec<Node>], body: Vec<Node>) -> Node {
+fn fold_tabular(arguments: &[Vec<Node>], body: Vec<Node>) -> NodeKind {
     let col_spec = arguments.last().map(|arg| crate::document_to_latex(arg));
     let rows = split_rows(body);
-    Node::Tabular { col_spec, rows }
+    NodeKind::Tabular { col_spec, rows }
 }
 
 /// Split a tabular body into rows (on `\\`), each row into cells (on `Text("&")`).
@@ -196,20 +202,20 @@ fn split_cells(row: Vec<Node>) -> Vec<Vec<Node>> {
 
 /// Is this node the `\\` row-break command (`Command { name: "\\", .. }`)?
 fn is_row_break(node: &Node) -> bool {
-    matches!(node, Node::Command { name, optional, arguments }
+    matches!(&node.kind, NodeKind::Command { name, optional, arguments }
         if name == "\\" && optional.is_empty() && arguments.is_empty())
 }
 
 /// Is this node the `&` alignment tab (its own `Text("&")` node between cells)?
 fn is_align_tab(node: &Node) -> bool {
-    matches!(node, Node::Text(t) if t == "&")
+    matches!(&node.kind, NodeKind::Text(t) if t == "&")
 }
 
 /// Does a row consist only of insignificant whitespace (Space/Par) and comments? Such a row is
 /// what a trailing `\\` leaves behind, and is dropped so `a & b \\` is one row, not two.
 fn is_blank_row(row: &[Node]) -> bool {
     row.iter()
-        .all(|n| matches!(n, Node::Space | Node::Par | Node::Comment(_)))
+        .all(|n| matches!(n.kind, NodeKind::Space | NodeKind::Par | NodeKind::Comment(_)))
 }
 
 /// Fold a (already-recursed) list environment body into a [`Node::List`], **unless** the body
@@ -221,18 +227,19 @@ fn fold_list(
     optional: Vec<Vec<Node>>,
     arguments: Vec<Vec<Node>>,
     body: Vec<Node>,
-) -> Node {
+    _env_span: Span,
+) -> NodeKind {
     // Ignoring leading insignificant whitespace/comments, does the body start with an `\item`?
     let first_significant = body
         .iter()
-        .find(|n| !matches!(n, Node::Space | Node::Par | Node::Comment(_)));
+        .find(|n| !matches!(n.kind, NodeKind::Space | NodeKind::Par | NodeKind::Comment(_)));
     let starts_with_item = matches!(
-        first_significant,
-        Some(Node::Command { name, .. }) if name == "item"
+        first_significant.map(|n| &n.kind),
+        Some(NodeKind::Command { name, .. }) if name == "item"
     );
     if !starts_with_item {
         // Stray content before the first item — leave it as a generic (recursed) environment.
-        return Node::Environment { name, optional, arguments, body };
+        return NodeKind::Environment { name, optional, arguments, body };
     }
 
     // Split the body at each `\item`; each item's label = its optional term, body = the nodes
@@ -245,8 +252,8 @@ fn fold_list(
     let mut current: Vec<Node> = Vec::new();
     let mut open = false; // are we inside an item yet?
     for node in body {
-        match &node {
-            Node::Command { name, optional, .. } if name == "item" => {
+        match &node.kind {
+            NodeKind::Command { name, optional, .. } if name == "item" => {
                 // Close the previous item (if any) and open a new one.
                 if open {
                     items.push(ListItem { label: pending_label.take(), body: std::mem::take(&mut current) });
@@ -266,7 +273,7 @@ fn fold_list(
         items.push(ListItem { label: pending_label.take(), body: current });
     }
 
-    Node::List { kind, items }
+    NodeKind::List { kind, items }
 }
 
 #[cfg(test)]
@@ -289,24 +296,41 @@ mod tests {
 
     #[test]
     fn basic_2x2_tabular_with_col_spec() {
-        match &tb(r"\begin{tabular}{lc}a & b \\ c & d\end{tabular}")[0] {
-            Node::Tabular { col_spec, rows } => {
+        match &tb(r"\begin{tabular}{lc}a & b \\ c & d\end{tabular}")[0].kind {
+            NodeKind::Tabular { col_spec, rows } => {
                 assert_eq!(col_spec.as_deref(), Some("lc"));
                 assert_eq!(rows.len(), 2, "two rows");
                 assert_eq!(rows[0].len(), 2, "row 0 has 2 cells");
                 assert_eq!(rows[1].len(), 2, "row 1 has 2 cells");
                 // Cell contents include the `a` text (plus surrounding Space nodes kept verbatim).
-                assert!(rows[0][0].iter().any(|n| matches!(n, Node::Text(t) if t == "a")));
-                assert!(rows[1][1].iter().any(|n| matches!(n, Node::Text(t) if t == "d")));
+                assert!(rows[0][0].iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t == "a")));
+                assert!(rows[1][1].iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t == "d")));
             }
             other => panic!("expected Tabular, got {other:?}"),
         }
     }
 
     #[test]
+    fn tabular_span_slices_back_to_source() {
+        // The recognized tabular covers `\begin{tabular}…\end{tabular}` exactly.
+        let src = r"\begin{tabular}{lc}a & b\end{tabular}";
+        let n = tb(src);
+        assert!(matches!(n[0].kind, NodeKind::Tabular { .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+    }
+
+    #[test]
+    fn list_span_slices_back_to_source() {
+        let src = r"\begin{itemize}\item one\item two\end{itemize}";
+        let n = tb(src);
+        assert!(matches!(n[0].kind, NodeKind::List { .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+    }
+
+    #[test]
     fn no_col_spec_is_none() {
-        match &tb(r"\begin{tabular}a & b\end{tabular}")[0] {
-            Node::Tabular { col_spec, rows } => {
+        match &tb(r"\begin{tabular}a & b\end{tabular}")[0].kind {
+            NodeKind::Tabular { col_spec, rows } => {
                 assert_eq!(*col_spec, None);
                 assert_eq!(rows.len(), 1);
                 assert_eq!(rows[0].len(), 2);
@@ -318,8 +342,8 @@ mod tests {
     #[test]
     fn tabular_star_drops_width_keeps_colspec() {
         // `tabular*` carries {width}{colspec}; the LAST argument is the column spec.
-        match &tb(r"\begin{tabular*}{2cm}{lr}a & b\end{tabular*}")[0] {
-            Node::Tabular { col_spec, rows } => {
+        match &tb(r"\begin{tabular*}{2cm}{lr}a & b\end{tabular*}")[0].kind {
+            NodeKind::Tabular { col_spec, rows } => {
                 assert_eq!(col_spec.as_deref(), Some("lr"));
                 assert_eq!(rows[0].len(), 2);
             }
@@ -330,8 +354,8 @@ mod tests {
     #[test]
     fn ragged_rows_preserved_not_error() {
         // Row 0 has 2 cells, row 1 has 3 — kept as-is, no padding, no error.
-        match &tb(r"\begin{tabular}{c}a & b \\ c & d & e\end{tabular}")[0] {
-            Node::Tabular { rows, .. } => {
+        match &tb(r"\begin{tabular}{c}a & b \\ c & d & e\end{tabular}")[0].kind {
+            NodeKind::Tabular { rows, .. } => {
                 assert_eq!(rows.len(), 2);
                 assert_eq!(rows[0].len(), 2);
                 assert_eq!(rows[1].len(), 3);
@@ -343,21 +367,21 @@ mod tests {
     #[test]
     fn trailing_row_break_dropped() {
         // A trailing `\\` should not leave a spurious empty final row.
-        match &tb(r"\begin{tabular}{c}a & b \\\end{tabular}")[0] {
-            Node::Tabular { rows, .. } => assert_eq!(rows.len(), 1, "one row, trailing \\\\ dropped"),
+        match &tb(r"\begin{tabular}{c}a & b \\\end{tabular}")[0].kind {
+            NodeKind::Tabular { rows, .. } => assert_eq!(rows.len(), 1, "one row, trailing \\\\ dropped"),
             other => panic!("expected Tabular, got {other:?}"),
         }
     }
 
     #[test]
     fn itemize_two_items() {
-        match &tb(r"\begin{itemize}\item one\item two\end{itemize}")[0] {
-            Node::List { kind, items } => {
+        match &tb(r"\begin{itemize}\item one\item two\end{itemize}")[0].kind {
+            NodeKind::List { kind, items } => {
                 assert_eq!(*kind, ListKind::Itemize);
                 assert_eq!(items.len(), 2);
                 assert_eq!(items[0].label, None);
-                assert!(items[0].body.iter().any(|n| matches!(n, Node::Text(t) if t == "one")));
-                assert!(items[1].body.iter().any(|n| matches!(n, Node::Text(t) if t == "two")));
+                assert!(items[0].body.iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t == "one")));
+                assert!(items[1].body.iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t == "two")));
             }
             other => panic!("expected List, got {other:?}"),
         }
@@ -365,12 +389,12 @@ mod tests {
 
     #[test]
     fn item_label_captured() {
-        match &tb(r"\begin{description}\item[Term] definition\end{description}")[0] {
-            Node::List { kind, items } => {
+        match &tb(r"\begin{description}\item[Term] definition\end{description}")[0].kind {
+            NodeKind::List { kind, items } => {
                 assert_eq!(*kind, ListKind::Description);
                 assert_eq!(items.len(), 1);
-                assert_eq!(items[0].label, Some(vec![Node::Text("Term".into())]));
-                assert!(items[0].body.iter().any(|n| matches!(n, Node::Text(t) if t == "definition")));
+                assert_eq!(items[0].label, Some(vec![Node::text("Term", Span::new(0, 0))]));
+                assert!(items[0].body.iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t == "definition")));
             }
             other => panic!("expected List, got {other:?}"),
         }
@@ -378,8 +402,8 @@ mod tests {
 
     #[test]
     fn enumerate_recognized() {
-        match &tb(r"\begin{enumerate}\item a\item b\end{enumerate}")[0] {
-            Node::List { kind, items } => {
+        match &tb(r"\begin{enumerate}\item a\item b\end{enumerate}")[0].kind {
+            NodeKind::List { kind, items } => {
                 assert_eq!(*kind, ListKind::Enumerate);
                 assert_eq!(items.len(), 2);
             }
@@ -391,12 +415,12 @@ mod tests {
     fn nested_list_inside_item() {
         // An itemize inside an enumerate item is itself recognized.
         let src = r"\begin{enumerate}\item outer\begin{itemize}\item inner\end{itemize}\end{enumerate}";
-        match &tb(src)[0] {
-            Node::List { kind, items } => {
+        match &tb(src)[0].kind {
+            NodeKind::List { kind, items } => {
                 assert_eq!(*kind, ListKind::Enumerate);
                 assert_eq!(items.len(), 1);
                 assert!(
-                    items[0].body.iter().any(|n| matches!(n, Node::List { kind, .. } if *kind == ListKind::Itemize)),
+                    items[0].body.iter().any(|n| matches!(&n.kind, NodeKind::List { kind, .. } if *kind == ListKind::Itemize)),
                     "inner itemize should be a recognized List: {:#?}", items[0].body
                 );
             }
@@ -407,10 +431,10 @@ mod tests {
     #[test]
     fn stray_content_before_first_item_stays_environment() {
         // Real content (not whitespace) before the first `\item` — leave as an Environment.
-        match &tb(r"\begin{itemize}oops\item one\end{itemize}")[0] {
-            Node::Environment { name, body, .. } => {
+        match &tb(r"\begin{itemize}oops\item one\end{itemize}")[0].kind {
+            NodeKind::Environment { name, body, .. } => {
                 assert_eq!(name, "itemize");
-                assert!(body.iter().any(|n| matches!(n, Node::Text(t) if t == "oops")));
+                assert!(body.iter().any(|n| matches!(&n.kind, NodeKind::Text(t) if t == "oops")));
             }
             other => panic!("expected Environment (stray content), got {other:?}"),
         }
@@ -423,9 +447,9 @@ mod tests {
         let nodes = recognize_tables(
             crate::recognize_structure(parse(&format!(r"\section{{H}} {src}")).expect("parse")),
         );
-        assert!(matches!(nodes[0], Node::Section { .. }));
+        assert!(matches!(nodes[0].kind, NodeKind::Section { .. }));
         assert!(
-            nodes.iter().any(|n| matches!(n, Node::List { .. })),
+            nodes.iter().any(|n| matches!(n.kind, NodeKind::List { .. })),
             "list after a section should be recognized: {nodes:#?}"
         );
     }
@@ -433,9 +457,9 @@ mod tests {
     #[test]
     fn recurses_into_group() {
         // A tabular wrapped in a brace group is still recognized inside the group.
-        match &tb(r"{\begin{tabular}{c}a\end{tabular}}")[0] {
-            Node::Group(inner) => {
-                assert!(inner.iter().any(|n| matches!(n, Node::Tabular { .. })));
+        match &tb(r"{\begin{tabular}{c}a\end{tabular}}")[0].kind {
+            NodeKind::Group(inner) => {
+                assert!(inner.iter().any(|n| matches!(n.kind, NodeKind::Tabular { .. })));
             }
             other => panic!("expected Group, got {other:?}"),
         }
