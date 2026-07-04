@@ -51,6 +51,43 @@
 use crate::ast::{ListItem, ListKind, Node, NodeKind};
 use crate::token::Span;
 
+/// The smallest span covering both `a` and `b` — folds a synthesised node's span from its parts.
+fn union(a: Span, b: Span) -> Span {
+    Span::new(a.start.min(b.start), a.end.max(b.end))
+}
+
+/// The span covering a whole node sequence (empty → `fallback`): the union of every node's span.
+/// Used to fold a cell's / row's / item's content spans into one range (S2).
+fn seq_span(nodes: &[Node], fallback: Span) -> Span {
+    nodes.iter().map(|n| n.span).reduce(union).unwrap_or(fallback)
+}
+
+/// The span of a whole grid: the union of every cell's content span, folded onto `anchor`
+/// (the `\begin{tabular}…\end{tabular}` environment span, which already brackets the grid). An
+/// empty grid keeps `anchor`, so the result is never smaller than the environment delimiters.
+fn grid_span(anchor: Span, rows: &[Vec<Vec<Node>>]) -> Span {
+    let mut span = anchor;
+    for row in rows {
+        for cell in row {
+            span = union(span, seq_span(cell, anchor));
+        }
+    }
+    span
+}
+
+/// The span of a whole list: the union of every item's label + body span, folded onto `anchor`
+/// (the `\begin{env}…\end{env}` environment span, which already brackets the items).
+fn list_span(anchor: Span, items: &[ListItem]) -> Span {
+    let mut span = anchor;
+    for item in items {
+        if let Some(label) = &item.label {
+            span = union(span, seq_span(label, anchor));
+        }
+        span = union(span, seq_span(&item.body, anchor));
+    }
+    span
+}
+
 /// Map a list-environment name to its [`ListKind`], or `None` if `name` is not one.
 fn list_kind(name: &str) -> Option<ListKind> {
     Some(match name {
@@ -85,10 +122,24 @@ fn recurse(node: Node) -> Node {
             let body = recognize_tables(body);
 
             if name == "tabular" || name == "tabular*" {
-                return Node::new(fold_tabular(&arguments, body), span);
+                let kind = fold_tabular(&arguments, body);
+                // S2: the Tabular's span is the union of `\begin{tabular}…\end{tabular}` (the
+                // env span) with every cell's content span — the exact grid extent.
+                let tab_span = match &kind {
+                    NodeKind::Tabular { rows, .. } => grid_span(span, rows),
+                    _ => span,
+                };
+                return Node::new(kind, tab_span);
             }
             if let Some(kind) = list_kind(&name) {
-                return Node::new(fold_list(kind, name, optional, arguments, body, span), span);
+                let folded = fold_list(kind, name, optional, arguments, body, span);
+                // S2: a folded List's span is the union of `\begin{env}…\end{env}` with every
+                // item's span; an un-folded (stray-content) Environment keeps its own env span.
+                let list_span = match &folded {
+                    NodeKind::List { items, .. } => list_span(span, items),
+                    _ => span,
+                };
+                return Node::new(folded, list_span);
             }
             NodeKind::Environment { name, optional, arguments, body }
         }
@@ -325,6 +376,84 @@ mod tests {
         let n = tb(src);
         assert!(matches!(n[0].kind, NodeKind::List { .. }));
         assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+    }
+
+    #[test]
+    fn tabular_span_is_exact_grid_extent() {
+        // A 2×2 grid: the Tabular span slices back to `\begin{tabular}…\end{tabular}` exactly,
+        // and every cell's content span is contained within it (S2 grid_span union).
+        let src = r"\begin{tabular}{lc}a & b \\ c & d\end{tabular}";
+        let n = tb(src);
+        assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+        if let NodeKind::Tabular { rows, .. } = &n[0].kind {
+            for row in rows {
+                for cell in row {
+                    for node in cell {
+                        assert!(
+                            n[0].span.start <= node.span.start && node.span.end <= n[0].span.end,
+                            "cell node span {:?} not ⊆ tabular span {:?}",
+                            node.span,
+                            n[0].span
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn itemize_span_and_per_item_extents_slice_back() {
+        // The List span covers `\begin{itemize}…\end{itemize}`; each item's body span (the union
+        // of its content nodes) slices back to that item's own `\item …` extent.
+        let src = r"\begin{itemize}\item one\item two\end{itemize}";
+        let n = tb(src);
+        assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+        if let NodeKind::List { items, .. } = &n[0].kind {
+            assert_eq!(items.len(), 2);
+            // item 0 body = ` one` (leading space the lexer kept after `\item`), item 1 = ` two`.
+            let body0 = seq_span(&items[0].body, n[0].span);
+            let body1 = seq_span(&items[1].body, n[0].span);
+            assert_eq!(&src[body0.start..body0.end], "one");
+            assert_eq!(&src[body1.start..body1.end], "two");
+            // Each item body ⊆ the list span.
+            for b in [body0, body1] {
+                assert!(n[0].span.start <= b.start && b.end <= n[0].span.end);
+            }
+        } else {
+            panic!("expected List");
+        }
+    }
+
+    #[test]
+    fn description_item_label_and_body_spans_slice_back() {
+        let src = r"\begin{description}\item[Term] definition\end{description}";
+        let n = tb(src);
+        if let NodeKind::List { items, .. } = &n[0].kind {
+            let label = items[0].label.as_ref().expect("label");
+            let lsp = seq_span(label, n[0].span);
+            assert_eq!(&src[lsp.start..lsp.end], "Term");
+            // `\item[Term] definition`: the `]` ends the control word, so the following Space is
+            // kept as the body's leading node — the body span slices to ` definition` (with space).
+            let bsp = seq_span(&items[0].body, n[0].span);
+            assert_eq!(&src[bsp.start..bsp.end], " definition");
+        } else {
+            panic!("expected List");
+        }
+    }
+
+    #[test]
+    fn tabular_and_list_spans_fixed_point_modulo_re_recognition() {
+        for src in [
+            r"\begin{tabular}{lc}a & b \\ c & d\end{tabular}",
+            r"\begin{itemize}\item one\item two\end{itemize}",
+        ] {
+            let a = tb(src);
+            let rendered = document_to_latex(&a);
+            let b = recognize_tables(parse(&rendered).expect("re-parse"));
+            assert_eq!(a, b, "table/list tree equal modulo spans: {src:?}");
+            // The top node still slices back to the freshly-rendered whole source.
+            assert_eq!(&rendered[b[0].span.start..b[0].span.end], rendered.as_str());
+        }
     }
 
     #[test]

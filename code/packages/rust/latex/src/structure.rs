@@ -49,7 +49,7 @@ use crate::ast::{Node, NodeKind, SectionLevel};
 use crate::token::Span;
 
 /// The smallest span covering both `a` and `b` — composes a synthesised node's span from its
-/// constituents (S1: union-of-children; precise per-construct spans are S2's job).
+/// constituents (S2: the span of each recognized node is the exact union of its parts).
 fn union(a: Span, b: Span) -> Span {
     Span::new(a.start.min(b.start), a.end.max(b.end))
 }
@@ -57,6 +57,20 @@ fn union(a: Span, b: Span) -> Span {
 /// The span covering a whole node sequence (empty → `fallback`): the union of every node's span.
 fn seq_span(nodes: &[Node], fallback: Span) -> Span {
     nodes.iter().map(|n| n.span).reduce(union).unwrap_or(fallback)
+}
+
+/// Fold the spans of an optional `[…]` argument, then a mandatory `{…}` argument, onto an anchor
+/// span (typically the recognizing command's own span, which already covers `\name` and — for the
+/// captured-argument forms — the braces). This is the S2 union: the synthesised node's span is the
+/// exact union of the command token and each recognized constituent's real span, computed from the
+/// spans S1 threaded (never re-derived by substring search). If a part is empty (a degenerate
+/// `\ref{}`), its `seq_span` falls back to the anchor, so the union is a safe no-op — never a panic.
+fn fold_opt_arg(anchor: Span, opt: Option<&Vec<Node>>, arg: &[Node]) -> Span {
+    let mut span = anchor;
+    if let Some(opt) = opt {
+        span = union(span, seq_span(opt, anchor));
+    }
+    union(span, seq_span(arg, anchor))
 }
 
 /// Map a sectioning control word to its [`SectionLevel`], or `None` if `name` is not a
@@ -124,9 +138,12 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
                     // Captured-argument form (no `*` intervened): \section[short]{title}.
                     let short = optional.first().map(|o| recognize_structure(o.clone()));
                     let title = recognize_structure(first.clone());
+                    // Span = heading command's start … end of its last owned part (the title, or
+                    // the optional `[short]` if it reaches further), as the union of real spans.
+                    let span = fold_opt_arg(cmd_span, short.as_ref(), &title);
                     out.push(Node::new(
                         NodeKind::Section { level, starred: false, short, title },
-                        cmd_span,
+                        span,
                     ));
                     // Any further captured groups were not part of the heading — keep them.
                     for extra in arguments.iter().skip(1) {
@@ -160,9 +177,12 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
                 if let Some(first) = arguments.first() {
                     let note = optional.first().map(|o| recognize_structure(o.clone()));
                     let target = recognize_structure(first.clone());
+                    // Span = command's start … end of its last argument (the `{key}`, or the
+                    // optional `[note]` if longer), as the union of the real constituent spans.
+                    let span = fold_opt_arg(cmd_span, note.as_ref(), &target);
                     out.push(Node::new(
                         NodeKind::CrossRef { command: name.clone(), note, target },
-                        cmd_span,
+                        span,
                     ));
                     for extra in arguments.iter().skip(1) {
                         let sp = seq_span(extra, cmd_span);
@@ -181,9 +201,12 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
                 if let Some(first) = arguments.first() {
                     let options = optional.first().map(|o| recognize_structure(o.clone()));
                     let name_arg = recognize_structure(first.clone());
+                    // Span = command's start … end of its last argument (the `{name}`, or the
+                    // optional `[options]` if longer), as the union of the real constituent spans.
+                    let span = fold_opt_arg(cmd_span, options.as_ref(), &name_arg);
                     out.push(Node::new(
                         NodeKind::Preamble { command: name.clone(), options, name: name_arg },
-                        cmd_span,
+                        span,
                     ));
                     for extra in arguments.iter().skip(1) {
                         let sp = seq_span(extra, cmd_span);
@@ -200,7 +223,9 @@ pub fn recognize_structure(nodes: Vec<Node>) -> Vec<Node> {
             // --- Argument-form font commands: \textbf{x}, \emph{x} -----------------------
             if is_style(name) && optional.is_empty() && arguments.len() == 1 {
                 let content = recognize_structure(arguments[0].clone());
-                out.push(Node::new(NodeKind::Styled { command: name.clone(), content }, cmd_span));
+                // Span = command's start … end of its single `{content}` argument.
+                let span = fold_opt_arg(cmd_span, None, &content);
+                out.push(Node::new(NodeKind::Styled { command: name.clone(), content }, span));
                 i += 1;
                 continue;
             }
@@ -336,6 +361,125 @@ mod tests {
         let n = st(src);
         assert!(matches!(n[0].kind, NodeKind::Section { starred: true, .. }));
         assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+    }
+
+    // --- S2: each synthesised node's span is the exact union of its constituents ---------------
+
+    /// Recursively check every node's span is inside `[0, len)` and ⊇ each of its children's
+    /// spans — the S2 containment invariant (LTXDOC02 §3.2), applied over the recognized tree.
+    fn assert_containment(nodes: &[Node], len: usize) {
+        for n in nodes {
+            assert!(n.span.start <= n.span.end, "span not ordered: {:?}", n.span);
+            assert!(n.span.end <= len, "span {:?} exceeds src len {len}", n.span);
+            for child in child_seqs(n) {
+                for c in &child {
+                    assert!(
+                        n.span.start <= c.span.start && c.span.end <= n.span.end,
+                        "child span {:?} not ⊆ parent {:?}",
+                        c.span,
+                        n.span
+                    );
+                }
+                assert_containment(&child, len);
+            }
+        }
+    }
+
+    /// The child node-sequences of a recognized node (for the containment walk).
+    fn child_seqs(n: &Node) -> Vec<Vec<Node>> {
+        match &n.kind {
+            NodeKind::Group(inner) => vec![inner.clone()],
+            NodeKind::Section { short, title, .. } => {
+                let mut v = vec![title.clone()];
+                if let Some(s) = short {
+                    v.push(s.clone());
+                }
+                v
+            }
+            NodeKind::CrossRef { note, target, .. } => {
+                let mut v = vec![target.clone()];
+                if let Some(nn) = note {
+                    v.push(nn.clone());
+                }
+                v
+            }
+            NodeKind::Preamble { options, name, .. } => {
+                let mut v = vec![name.clone()];
+                if let Some(o) = options {
+                    v.push(o.clone());
+                }
+                v
+            }
+            NodeKind::Styled { content, .. } => vec![content.clone()],
+            _ => vec![],
+        }
+    }
+
+    #[test]
+    fn plain_section_span_covers_command_through_title() {
+        // `\section{Intro}` — the span slices back to the heading command through its `{title}`.
+        let src = r"\section{Intro}";
+        let n = st(src);
+        assert!(matches!(n[0].kind, NodeKind::Section { starred: false, .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], r"\section{Intro}");
+    }
+
+    #[test]
+    fn section_span_covers_heading_through_owned_body() {
+        // A heading followed by body text: at the recognition layer a `Section` owns only its
+        // heading command + title (body attachment is the D-fold's job). Prove the Section span
+        // is exactly the heading command extent and that the following `Body.` text keeps its own.
+        let src = r"\section{Intro}Body.";
+        let n = st(src);
+        assert!(matches!(n[0].kind, NodeKind::Section { .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], r"\section{Intro}");
+        // The trailing text is a separate node whose span slices back to `Body.`.
+        let body = n.iter().find(|x| matches!(&x.kind, NodeKind::Text(t) if t.contains("Body")));
+        let body = body.expect("body text node");
+        assert_eq!(&src[body.span.start..body.span.end], "Body.");
+    }
+
+    #[test]
+    fn section_with_short_span_reaches_the_title() {
+        let src = r"\section[Short]{Long title}";
+        let n = st(src);
+        assert!(matches!(n[0].kind, NodeKind::Section { short: Some(_), .. }));
+        assert_eq!(&src[n[0].span.start..n[0].span.end], src);
+    }
+
+    #[test]
+    fn crossref_preamble_styled_spans_slice_back() {
+        for src in [
+            r"\ref{eq:1}",
+            r"\cite[p]{foo}",
+            r"\documentclass[a4paper]{article}",
+            r"\usepackage{amsmath}",
+            r"\textbf{bold}",
+            r"\emph{x}",
+        ] {
+            let n = st(src);
+            assert_eq!(&src[n[0].span.start..n[0].span.end], src, "span for {src:?}");
+        }
+    }
+
+    #[test]
+    fn containment_holds_over_recognized_tree() {
+        let src = r"\section[S]{see \ref{x} and \textbf{y}} tail \cite[p]{k}";
+        let n = st(src);
+        assert_containment(&n, src.len());
+    }
+
+    #[test]
+    fn spans_are_a_fixed_point_modulo_re_recognition() {
+        // Re-emitting a recognized tree and re-recognizing yields spans that still slice back to
+        // the freshly-rendered source — the round-trip stays a fixed point modulo spans.
+        let src = r"\section*{Intro}";
+        let a = st(src);
+        let rendered = document_to_latex(&a);
+        let b = recognize_structure(parse(&rendered).expect("re-parse"));
+        assert_eq!(a, b, "structure equal modulo spans");
+        assert!(matches!(b[0].kind, NodeKind::Section { .. }));
+        assert_eq!(&rendered[b[0].span.start..b[0].span.end], rendered.as_str());
     }
 
     #[test]
