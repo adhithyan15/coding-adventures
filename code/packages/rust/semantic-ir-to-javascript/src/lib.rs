@@ -365,7 +365,7 @@ mod tests {
                 targets: vec!["javascript".into()],
                 name: "raw_js".into(),
                 args: vec![],
-                return_type: SirType::Any,
+                return_type: SirType::Dynamic,
                 effects: EffectSet::PURE,
                 span: s(),
             },

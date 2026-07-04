@@ -341,7 +341,7 @@ mod tests {
                 targets: vec!["typescript".into()],
                 name: "raw_ts".into(),
                 args: vec![],
-                return_type: SirType::Any,
+                return_type: SirType::Dynamic,
                 effects: EffectSet::PURE,
                 span: s(),
             },

@@ -111,8 +111,13 @@ SirType =
 
 Notes:
 - **Backwards compatibility.** `Any → Dynamic`, and the old flat `Int` becomes
-  `Int { spec: IntSpec::I64_WRAPPING_OR_ARBITRARY }` (see below) so existing
-  serialised modules map deterministically onto the new shape.
+  `Int { spec: IntSpec::arbitrary() }` so existing serialised modules map
+  deterministically onto the new shape. *(Implemented in T1a — see
+  [semantic-ir CHANGELOG 0.16.0]. This resolves the earlier tentative
+  `I64_WRAPPING_OR_ARBITRARY` name toward `Arbitrary`: the historical dynamic
+  pipeline never masked integers — Ruby → Python both grow — so the
+  behaviour-preserving default is arbitrary precision, and a frontend that means
+  a fixed machine width must say so explicitly.)*
 - **`Seq.len`** distinguishes a growable list (`None`) from a fixed C array
   (`Some(n)`). Backends that lack fixed arrays lower both to their list type.
 - **`Ptr`/`Struct`** exist primarily for *source* fidelity (a C frontend needs
@@ -444,7 +449,8 @@ One PR per row; backend rows fan out in parallel after the core rows land.
 | # | Scope | Content |
 |---|-------|---------|
 | T0 | `code/specs/` | this spec |
-| T1 | `semantic-ir` | `SirType` v2 enum (`Dynamic`, `Int{IntSpec}`, `Float`, `Seq/Map/Ptr/Struct/Optional`), `IntSpec`, new `Feature`s, validator updates, serialisation round-trip. Behaviour-preserving (`Any→Dynamic`, default int). |
+| T1a ✅ | `semantic-ir` | Phase-0 core: `Any→Dynamic` rename + `Int→Int{IntSpec}` (`IntSpec`/`IntWidth`/`Overflow`, derived bounds). Behaviour-preserving; serialisation byte-identical (surface keyword stays `any`, default int prints `int`); no version bump yet. *(Done — CHANGELOG 0.16.0.)* |
+| T1b | `semantic-ir` | Additive source-fidelity types `Ptr`/`Struct`/`Optional`, new `Feature` flags (`SizedIntegers`/`Unsigned`/`WrappingArithmetic`/`FixedArrays`/`Pointers`/`Structs`/`Bignum`), `Seq.len` for fixed arrays, validator updates. Bumps `CURRENT_SIR_VERSION` (first new text tokens). |
 | T2 | conformance harness crate | reference oracle (P2) + differential runner (P1) + coverage gate (P5), wired to the existing backends on `Dynamic`/`Arbitrary` only (Phase 1 net). |
 | T3 | `semantic-ir` | type-directed op-selection rules + `int.max/min/width` const-intrinsics + `div_floor/div_trunc/div_true` split. |
 | T4–T8 | one per existing backend (py, ts, js, go, rust) | sized-integer lowering per the faithfulness table; add conformance cases; pass P6. JS/BigInt gets extra scrutiny. |

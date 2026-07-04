@@ -1991,7 +1991,7 @@ mod tests {
                     targets: vec![],
                     name: "asm".into(),
                     args: vec![],
-                    return_type: crate::types::SirType::Any,
+                    return_type: crate::types::SirType::Dynamic,
                     effects: EffectSet::PURE,
                     span: s(),
                 },

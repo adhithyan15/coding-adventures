@@ -70,7 +70,7 @@ pub use nodes::{
 };
 pub use span::Span;
 pub use text::{print_block, print_expr, print_function, print_module};
-pub use types::SirType;
+pub use types::{IntSpec, IntWidth, Overflow, SirType};
 pub use validator::{validate, Severity, ValidationResult, ValidatorIssue};
 pub use walker::{walk_expr_default, walk_function_default, walk_module_default, walk_stmt_default, Visitor};
 
