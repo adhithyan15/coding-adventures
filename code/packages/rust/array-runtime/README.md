@@ -41,14 +41,38 @@ Correct, dependency-free implementations that produce values **today**:
 - **Elementwise** `add`/`sub`/`mul`/`div` with scalar broadcasting (NaN/Inf
   propagate naturally).
 - **Linear algebra** `matmul` (`[m,k]·[k,n] → [m,n]`) and `transpose`.
-- **Reductions** `sum`, `mean`, `max`, `min`.
+- **Reductions** `sum`, `mean`, `max`, `min` (fixed-operator, whole-array).
+- **Generalized reduce/scan/outer-product** (AR-2) — `reduce`, `scan`, and
+  `outer` each take an arbitrary `BinOp`, not a fixed one, motivated by APL's
+  `/`, `\`, and `∘.` operators (see
+  [`MA05-apl-language.md`](../../../specs/MA05-apl-language.md) §2):
+  - `reduce(op, &a)` folds `a`'s last axis (`+/v` sums a vector to a scalar;
+    on a `[r, c]` matrix, folds each row across its columns to a `[r]`
+    vector).
+  - `scan(op, &a)` is the same fold but keeps every intermediate result
+    (same shape as `a` — a running total, for `op = Add`).
+  - `outer(op, &a, &b)` applies `op` to every pair, producing rank
+    `rank(a) + rank(b)` — two vectors `[m]`/`[n]` become a `[m, n]` matrix.
+    `matmul` is `outer`'s `op = Mul` **-then-summed** special case; the raw
+    product (no summing) is what `outer` adds.
 
 ```rust
-use coding_adventures_array_runtime::{Array, ops};
+use coding_adventures_array_runtime::{Array, ops, ops::BinOp};
 
 let a = Array::from_rows(vec![vec![1.0, 2.0], vec![3.0, 4.0]]).unwrap();
 let c = ops::matmul(&a, &Array::eye(2)).unwrap(); // a · I == a
 assert_eq!(c.data(), a.data());
+
+// +/[1,2,3,4] = 10 (reduce); +\[1,2,3,4] = [1,3,6,10] (scan, every partial sum).
+let v = Array::from_vec(vec![1.0, 2.0, 3.0, 4.0]);
+assert_eq!(ops::reduce(BinOp::Add, &v).unwrap().data(), &[10.0]);
+assert_eq!(ops::scan(BinOp::Add, &v).unwrap().data(), &[1.0, 3.0, 6.0, 10.0]);
+
+// [1,2] ∘.× [10,100] = [[10,100],[20,200]] (outer product, no summing).
+let p = Array::from_vec(vec![1.0, 2.0]);
+let q = Array::from_vec(vec![10.0, 100.0]);
+let table = ops::outer(BinOp::Mul, &p, &q).unwrap();
+assert_eq!(table.shape(), &[2, 2]);
 ```
 
 ### 3. GPU dispatch by lowering (`accel.rs`)
@@ -128,6 +152,11 @@ assert_eq!(total.data()[0], 6.0);
   result is **bit-exact** with the reference path. `execute_sum()` adds an `f64`
   whole-array reduction on the same path. `plan_backend`/`build_graph` now take an
   explicit `DType` (breaking signature change for `plan_backend`).
+- **AR-2 (this release):** generalized `reduce`/`scan`/`outer` kernels,
+  parameterized over `BinOp` rather than fixed to one operator — the
+  prerequisite APL's `/`, `\`, and `∘.` operators need (`apl-runtime`, MA-4e).
+  CPU-reference only for now, same as `matmul`/`transpose` before MA-2 wired
+  them through `exec`.
 - **Next (MXF-4):** R's `s-runtime` adopts this `f64` path for `%*%` and the
   matrix ops, replacing its hand-written loops; then executing scalar-broadcast /
   `transpose`, and registering real CUDA/Metal executor crates.
