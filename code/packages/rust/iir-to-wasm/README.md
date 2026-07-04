@@ -80,6 +80,20 @@ through a deprecated intermediate.
   `(string-length (string-append "AB" "CDE"))`, plus
   `(string-ref (substring "ABCDE" 1 4) 1)`; non-literal string values still fail
   closed until the full byte-string runtime lands.
+- **Runtime (branch-selected) strings (v0.29.0 — LANG-FULL E4-dyn E4d-3)**: a
+  string variable assigned by `str_const` in **more than one basic block** is
+  chosen by control flow, so it cannot fold to one literal. Such a variable is
+  promoted to carry an i32 **handle** = the byte offset of a length-prefixed
+  block `[i32 len (little-endian)][bytes]` in linear memory. `str_const` of a
+  promoted var stores its block offset; `print_str` reads the length back with
+  `i32.load` at the handle and passes `handle + 4` + that length to
+  `env.__print_str(ptr, len)`. This is the wasm sibling of the LLVM `inttoptr` +
+  `load` + `getelementptr … i64 8` runtime path (E4d-2), and lets
+  `10 INPUT N … 30 LET A$="LO" … 50 LET A$="HI" … 60 PRINT A$` print the branch's
+  string at run time. Single-assignment (and straight-line-reassigned) strings
+  keep the folded literal fast path unchanged. Runtime `str_len`/`str_concat`/
+  `str_slice`/`str_index`/`str_cmp` over promoted operands are still deferred
+  (E4d-3b).
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
