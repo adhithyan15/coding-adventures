@@ -107,6 +107,7 @@ SELF_CONTAINED_RUNGS = (
     "rung67_ergometry_specific_work",
     "rung68_gait_efficiency_index",
     "rung69_traction_force",
+    "rung70_phototherapy_dose",
 )
 
 
