@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 70 \u2014 neonatal phototherapy effective dose from four stated quantities (a NEW panel: neonatology / phototherapy). From a lamp output and an exposure factor (their product is the radiant output), a skin distance to normalise by, and an ambient light to subtract, compute the effective dose (lamp_output*exposure_factor/skin_distance-ambient_light), the radiant output (lamp_output*exposure_factor), or the distributed irradiance (lamp_output*exposure_factor/skin_distance). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT OVER A DIVISOR MINUS A TERM a*b/c-d, the mirror of rung-69 a*b/c+d (subtract instead of add the trailing term; distinct from rung-65 (a-b)/c+d, rung-66 (a+b)/c-d, and rung-68 (a+b)*c/d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, /, and - \u2014 no constant leaks, and neither the radiant output, the distributed irradiance, nor any dose figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: SUBTRACTING the ambient BEFORE dividing ((a*b-d)/c, a wrong offset) and folding the ambient into the DENOMINATOR (a*b/(c-d), a wrong divisor). The core confusion tested is that a*b/c-d is not (a*b-d)/c and not a*b/(c-d).",
+  "items": [
+    {
+      "id": "r70photo-01",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 15 through an exposure factor of 4, normalised to a skin distance of 5 and net of an ambient light of 3. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(15)\nobserve exposure_factor(4)\nobserve skin_distance(5)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r70photo-02",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 15 through an exposure factor of 4, normalised to a skin distance of 5 and net of an ambient light of 3. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(15)\nobserve exposure_factor(4)\nobserve skin_distance(5)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r70photo-03",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 15 through an exposure factor of 4, normalised to a skin distance of 5 and net of an ambient light of 3. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(15)\nobserve exposure_factor(4)\nobserve skin_distance(5)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r70photo-04",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 20 through an exposure factor of 3, normalised to a skin distance of 6 and net of an ambient light of 4. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(20)\nobserve exposure_factor(3)\nobserve skin_distance(6)\nobserve ambient_light(4)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r70photo-05",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 20 through an exposure factor of 3, normalised to a skin distance of 6 and net of an ambient light of 4. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(20)\nobserve exposure_factor(3)\nobserve skin_distance(6)\nobserve ambient_light(4)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r70photo-06",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 20 through an exposure factor of 3, normalised to a skin distance of 6 and net of an ambient light of 4. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(20)\nobserve exposure_factor(3)\nobserve skin_distance(6)\nobserve ambient_light(4)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r70photo-07",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 14 through an exposure factor of 5, normalised to a skin distance of 7 and net of an ambient light of 2. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(14)\nobserve exposure_factor(5)\nobserve skin_distance(7)\nobserve ambient_light(2)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r70photo-08",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 14 through an exposure factor of 5, normalised to a skin distance of 7 and net of an ambient light of 2. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(14)\nobserve exposure_factor(5)\nobserve skin_distance(7)\nobserve ambient_light(2)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r70photo-09",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 14 through an exposure factor of 5, normalised to a skin distance of 7 and net of an ambient light of 2. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(14)\nobserve exposure_factor(5)\nobserve skin_distance(7)\nobserve ambient_light(2)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.714285714285714,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r70photo-10",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 9 through an exposure factor of 8, normalised to a skin distance of 8 and net of an ambient light of 3. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(9)\nobserve exposure_factor(8)\nobserve skin_distance(8)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r70photo-11",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 9 through an exposure factor of 8, normalised to a skin distance of 8 and net of an ambient light of 3. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(9)\nobserve exposure_factor(8)\nobserve skin_distance(8)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r70photo-12",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 9 through an exposure factor of 8, normalised to a skin distance of 8 and net of an ambient light of 3. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(9)\nobserve exposure_factor(8)\nobserve skin_distance(8)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r70photo-13",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 16 through an exposure factor of 4, normalised to a skin distance of 8 and net of an ambient light of 2. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(16)\nobserve exposure_factor(4)\nobserve skin_distance(8)\nobserve ambient_light(2)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r70photo-14",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 16 through an exposure factor of 4, normalised to a skin distance of 8 and net of an ambient light of 2. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(16)\nobserve exposure_factor(4)\nobserve skin_distance(8)\nobserve ambient_light(2)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r70photo-15",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 16 through an exposure factor of 4, normalised to a skin distance of 8 and net of an ambient light of 2. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(16)\nobserve exposure_factor(4)\nobserve skin_distance(8)\nobserve ambient_light(2)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r70photo-16",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 18 through an exposure factor of 5, normalised to a skin distance of 6 and net of an ambient light of 3. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(18)\nobserve exposure_factor(5)\nobserve skin_distance(6)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r70photo-17",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 18 through an exposure factor of 5, normalised to a skin distance of 6 and net of an ambient light of 3. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(18)\nobserve exposure_factor(5)\nobserve skin_distance(6)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r70photo-18",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 18 through an exposure factor of 5, normalised to a skin distance of 6 and net of an ambient light of 3. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(18)\nobserve exposure_factor(5)\nobserve skin_distance(6)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r70photo-19",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 21 through an exposure factor of 4, normalised to a skin distance of 7 and net of an ambient light of 3. What is the effective phototherapy dose (radiant output distributed over the skin distance, net of ambient light)?",
+      "program": "observe lamp_output(21)\nobserve exposure_factor(4)\nobserve skin_distance(7)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance - ambient_light\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r70photo-20",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 21 through an exposure factor of 4, normalised to a skin distance of 7 and net of an ambient light of 3. What is the the radiant output (lamp output times the exposure factor)?",
+      "program": "observe lamp_output(21)\nobserve exposure_factor(4)\nobserve skin_distance(7)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 84,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r70photo-21",
+      "qtype": "phototherapy_dose",
+      "stem": "A phototherapy lamp puts out 21 through an exposure factor of 4, normalised to a skin distance of 7 and net of an ambient light of 3. What is the the distributed irradiance before subtracting the ambient light (radiant output over the skin distance)?",
+      "program": "observe lamp_output(21)\nobserve exposure_factor(4)\nobserve skin_distance(7)\nobserve ambient_light(3)\nlet answer = lamp_output * exposure_factor / skin_distance\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
