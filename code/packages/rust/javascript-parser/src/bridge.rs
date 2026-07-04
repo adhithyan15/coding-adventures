@@ -62,7 +62,7 @@ use coding_adventures_javascript_ast::{
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
-        UndefinedLiteral, UpdateExpression, UpdateOperator, YieldExpression,
+        ThisExpression, UndefinedLiteral, UpdateExpression, UpdateOperator, YieldExpression,
     },
     statement::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
@@ -2387,10 +2387,7 @@ fn convert_primary_expression(node: &GrammarASTNode) -> Result<Expression, Bridg
 fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // Value-based checks first (keywords: this, true, false, null, undefined).
     match t.value.as_str() {
-        "this" => return Err(BridgeError::UnsupportedSyntax {
-            rule: "ThisExpression".to_string(),
-            location: loc(ctx),
-        }),
+        "this" => return Ok(Expression::ThisExpression(ThisExpression { cv: t.cv.clone() })),
         "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: t.cv.clone() })),
         "undefined" => return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: t.cv.clone() })),
         "true" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: true })),
@@ -3014,6 +3011,35 @@ mod tests {
                 assert!(matches!(&es.expression, Expression::NullLiteral(_)));
             }
             _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// `this` — the reserved-word primary now bridges to `ThisExpression`
+    /// (gap-166, CLOC12.165 PR2) rather than being declined as
+    /// `UnsupportedSyntax`.
+    #[test]
+    fn this_expression() {
+        let p = bridge_ok("this;");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => {
+                assert!(matches!(&es.expression, Expression::ThisExpression(_)));
+            }
+            _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// `this.x` — `this` bridges as the object of a member access, proving it
+    /// composes as a normal primary (not just as a bare statement).
+    #[test]
+    fn this_member_object() {
+        let p = bridge_ok("this.x;");
+        match only_expr(&p) {
+            Expression::MemberExpression(m) => {
+                assert!(matches!(&*m.object, Expression::ThisExpression(_)));
+            }
+            other => panic!("expected MemberExpression; got {:?}", other),
         }
     }
 

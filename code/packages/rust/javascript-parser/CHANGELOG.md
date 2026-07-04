@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.29.0] - 2026-07-04
+
+### Added — CLOC12.165 PR2: bridge `this` → `Expression::ThisExpression` (closes gap-166)
+
+The bridge now converts the `this` primary token to
+`Expression::ThisExpression { cv }` (mirroring the `null` / `undefined` /
+`true` / `false` keyword arms in `convert_primary_token`) instead of declining
+it to `UnsupportedSyntax` and dragging the whole file to WHITESPACE_ONLY.
+Unlike `await` (gap-165, blocked on grammar), `this` was already parseable —
+the bridge reached and explicitly declined it — so this is a pure bridge slice
+with no grammar work. 2 new bridge unit tests (`this;` → `ThisExpression`;
+`this.x;` → a member access whose object is a `ThisExpression`). The `this`
+node + emit + all nine downstream passes landed in CLOC12.165 PR1
+(javascript-ast 0.24.0, closure-emitter 0.29.0).
+
 ## [0.28.0] - 2026-07-04
 
 ### Added — CLOC12.163 PR2: bridge generator functions and `yield` (closes gap-164)

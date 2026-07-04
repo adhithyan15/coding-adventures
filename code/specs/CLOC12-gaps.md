@@ -2164,19 +2164,25 @@ OUT of the trivial-/pure-expression predicates: `this` is bound at the *call
 site*, so treating it as a freely-substitutable primary would be unsound; the
 inliner handles it conservatively.
 
-### gap-166 — bridge declines `this` (`ThisExpression`) — **OPEN (PR2, viable)**
+### gap-166 — bridge declines `this` (`ThisExpression`) — **RESOLVED (javascript-parser 0.29.0, CLOC12.165 PR2)**
 
-The `javascript-parser` bridge does not yet convert a `this` node to
-`Expression::ThisExpression`; it returns `UnsupportedSyntax { rule:
-"ThisExpression" }`, so any file containing `this` drops to WHITESPACE_ONLY. The
-atomic node PR (CLOC12.165 PR1) landed the node + emit + pass traversals so the
-typed AST and every downstream pass can already represent and print a `this`.
+The `javascript-parser` bridge previously returned `UnsupportedSyntax { rule:
+"ThisExpression" }` for the `this` primary token, so any file containing `this`
+dropped to WHITESPACE_ONLY. The atomic node PR (CLOC12.165 PR1) landed the node
++ emit + pass traversals so the typed AST and every downstream pass could
+already represent and print a `this`.
 
-**Unlike `await` (gap-165), `this` is already parseable.** The grammar produces
-a `this` node that the bridge *reaches* and explicitly declines — the bridge
-already matches `"this"` in its decline list, so the parser recognises it as a
-primary expression today. PR2 (bridge-enable) is therefore a straightforward
-bridge slice — convert the `this` grammar node to `Expression::ThisExpression`
-and add a closurec end-to-end diff fixture — with **no grammar work required**.
-The **PR3 conformance port** (`code_printer_this_test.rs`) exercises the emitter
-via hand-constructed AST in the meantime.
+**Unlike `await` (gap-165), `this` was already parseable.** The grammar produces
+a `this` node that the bridge *reaches* and explicitly declined — so PR2 was a
+pure bridge slice with **no grammar work required**.
+
+**Fix (CLOC12.165 PR2):** `convert_primary_token`'s `"this"` arm now returns
+`Ok(Expression::ThisExpression(ThisExpression { cv: t.cv.clone() }))` (mirroring
+the `null` / `undefined` / `true` / `false` keyword arms). 2 new bridge unit
+tests (`this;` → `ThisExpression`; `this.x;` → member access whose object is a
+`ThisExpression`) plus the closurec end-to-end diff fixture
+`tests/diff/simple-this/` (`this.f(1 + 2);` → `this.f(3);` at SIMPLE — the
+`this` receiver round-trips and the argument folds, proving the pipeline ran
+rather than falling back to a verbatim WHITESPACE_ONLY pass). The **PR3
+conformance port** (`code_printer_this_test.rs`) exercises the emitter via
+hand-constructed AST separately.
