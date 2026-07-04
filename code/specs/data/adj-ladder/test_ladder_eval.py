@@ -112,6 +112,7 @@ SELF_CONTAINED_RUNGS = (
     "rung72_amniotic_index",
     "rung73_spirometry_flow",
     "rung74_dialysis_clearance",
+    "rung75_hearing_threshold",
 )
 
 
