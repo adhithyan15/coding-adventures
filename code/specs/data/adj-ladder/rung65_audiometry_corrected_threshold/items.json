@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 65 \u2014 corrected average hearing threshold from four stated quantities (a NEW panel: audiology / audiometry). From a summed threshold and a masking offset (their difference is the net threshold), a tone count to divide by, and a baseline shift to add, compute the corrected average ((summed_threshold-masking_offset)/tone_count+baseline_shift), the net threshold (summed_threshold-masking_offset), or the per-tone quotient ((summed_threshold-masking_offset)/tone_count). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DIFFERENCE-OVER-A-DIVISOR PLUS A TERM (a-b)/c+d, the first on the ladder to divide a difference and then add a separate term OUTSIDE the division (distinct from rung-64 difference-over-sum (a-b)/(c+d), where the term is folded INTO the denominator, and rung-53 (a+b+c)/d) \u2014 and the harness matches the scalar to the printed options. The pedagogical heart is operator precedence: (a-b)/c+d is ((a-b)/c)+d, not (a-b)/(c+d). Contamination-safe: every index is built only from the four observed quantities via /, -, and + \u2014 no constant leaks, and neither the net threshold, the per-tone quotient, nor any corrected-average figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: folding the baseline shift INTO the denominator ((a-b)/(c+d), a wrong divisor) and SUMMING the numerator ((a+b)/c+d, a wrong net threshold). The core confusion tested is that (a-b)/c+d is not (a-b)/(c+d) and not (a+b)/c+d.",
+  "items": [
+    {
+      "id": "r65aud-01",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 90 units of threshold with a 30 masking offset across 6 tones, then a 10 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(90)\nobserve masking_offset(30)\nobserve tone_count(6)\nobserve baseline_shift(10)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r65aud-02",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 90 units of threshold with a 30 masking offset across 6 tones, then a 10 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(90)\nobserve masking_offset(30)\nobserve tone_count(6)\nobserve baseline_shift(10)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r65aud-03",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 90 units of threshold with a 30 masking offset across 6 tones, then a 10 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(90)\nobserve masking_offset(30)\nobserve tone_count(6)\nobserve baseline_shift(10)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r65aud-04",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 84 units of threshold with a 24 masking offset across 4 tones, then a 5 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(84)\nobserve masking_offset(24)\nobserve tone_count(4)\nobserve baseline_shift(5)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r65aud-05",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 84 units of threshold with a 24 masking offset across 4 tones, then a 5 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(84)\nobserve masking_offset(24)\nobserve tone_count(4)\nobserve baseline_shift(5)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r65aud-06",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 84 units of threshold with a 24 masking offset across 4 tones, then a 5 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(84)\nobserve masking_offset(24)\nobserve tone_count(4)\nobserve baseline_shift(5)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r65aud-07",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 100 units of threshold with a 20 masking offset across 8 tones, then a 6 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(100)\nobserve masking_offset(20)\nobserve tone_count(8)\nobserve baseline_shift(6)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r65aud-08",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 100 units of threshold with a 20 masking offset across 8 tones, then a 6 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(100)\nobserve masking_offset(20)\nobserve tone_count(8)\nobserve baseline_shift(6)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r65aud-09",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 100 units of threshold with a 20 masking offset across 8 tones, then a 6 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(100)\nobserve masking_offset(20)\nobserve tone_count(8)\nobserve baseline_shift(6)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.714285714285714,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r65aud-10",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 72 units of threshold with a 12 masking offset across 4 tones, then a 9 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(72)\nobserve masking_offset(12)\nobserve tone_count(4)\nobserve baseline_shift(9)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.615384615384615,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r65aud-11",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 72 units of threshold with a 12 masking offset across 4 tones, then a 9 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(72)\nobserve masking_offset(12)\nobserve tone_count(4)\nobserve baseline_shift(9)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.615384615384615,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r65aud-12",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 72 units of threshold with a 12 masking offset across 4 tones, then a 9 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(72)\nobserve masking_offset(12)\nobserve tone_count(4)\nobserve baseline_shift(9)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.615384615384615,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r65aud-13",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 96 units of threshold with a 36 masking offset across 6 tones, then a 4 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(96)\nobserve masking_offset(36)\nobserve tone_count(6)\nobserve baseline_shift(4)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r65aud-14",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 96 units of threshold with a 36 masking offset across 6 tones, then a 4 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(96)\nobserve masking_offset(36)\nobserve tone_count(6)\nobserve baseline_shift(4)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r65aud-15",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 96 units of threshold with a 36 masking offset across 6 tones, then a 4 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(96)\nobserve masking_offset(36)\nobserve tone_count(6)\nobserve baseline_shift(4)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r65aud-16",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 120 units of threshold with a 30 masking offset across 9 tones, then a 5 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(120)\nobserve masking_offset(30)\nobserve tone_count(9)\nobserve baseline_shift(5)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r65aud-17",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 120 units of threshold with a 30 masking offset across 9 tones, then a 5 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(120)\nobserve masking_offset(30)\nobserve tone_count(9)\nobserve baseline_shift(5)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r65aud-18",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 120 units of threshold with a 30 masking offset across 9 tones, then a 5 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(120)\nobserve masking_offset(30)\nobserve tone_count(9)\nobserve baseline_shift(5)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r65aud-19",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 110 units of threshold with a 50 masking offset across 5 tones, then a 8 baseline shift is applied. What is the corrected average threshold (net masked sum over the tone count, plus the baseline shift)?",
+      "program": "observe summed_threshold(110)\nobserve masking_offset(50)\nobserve tone_count(5)\nobserve baseline_shift(8)\nlet answer = (summed_threshold - masking_offset) / tone_count + baseline_shift\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.615384615384615,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r65aud-20",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 110 units of threshold with a 50 masking offset across 5 tones, then a 8 baseline shift is applied. What is the the net threshold (summed threshold minus the masking offset)?",
+      "program": "observe summed_threshold(110)\nobserve masking_offset(50)\nobserve tone_count(5)\nobserve baseline_shift(8)\nlet answer = summed_threshold - masking_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.615384615384615,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r65aud-21",
+      "qtype": "audiometry_corrected_threshold",
+      "stem": "An audiometry battery sums to 110 units of threshold with a 50 masking offset across 5 tones, then a 8 baseline shift is applied. What is the the per-tone average before the baseline shift (net threshold over the tone count)?",
+      "program": "observe summed_threshold(110)\nobserve masking_offset(50)\nobserve tone_count(5)\nobserve baseline_shift(8)\nlet answer = (summed_threshold - masking_offset) / tone_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.615384615384615,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

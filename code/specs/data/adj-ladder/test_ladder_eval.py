@@ -102,6 +102,7 @@ SELF_CONTAINED_RUNGS = (
     "rung62_urodynamics_average_flow",
     "rung63_lacrimal_tear_clearance",
     "rung64_gastric_acid_buffer",
+    "rung65_audiometry_corrected_threshold",
 )
 
 
