@@ -2290,8 +2290,13 @@ const PROGRAMS: &[Prog] = &[
     // (`java.lang.String` local), CLR (`System.String` local) — which carry a
     // reassigned-across-branches string slot natively, plus the two static
     // backends whose runtime heap-string lowering has landed: Llvm (E4d-2) and
-    // Wasm (E4d-3). The remaining static backend (NativeAot) still folds strings
-    // to compile-time constants and is added by E4d-4. Each E4-dyn backend PR
+    // Wasm (E4d-3), and NativeAot (E4d-4, aarch64 + x86_64). On the native
+    // columns `str_const` already builds a `[i64 len][bytes]` heap buffer and
+    // stores its address in the variable's stack slot (`mov dest = buf`); the
+    // E4d-4 fix keeps a branch-selected string OUT of `twig-aot`'s compile-time
+    // literal map so `print_str` reads the length from the buffer header at run
+    // time (`field_load` + `__twig_print_string`) rather than folding one branch's
+    // constant. Each E4-dyn backend PR
     // (E4d-2 LLVM → E4d-3 WASM → E4d-4 native) extends THIS cell's `backends`
     // list once its runtime string lowering lands. On WASM (E4d-3) a
     // branch-selected string variable carries an i32 **handle** = the offset of
@@ -2304,7 +2309,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
         expect: Expect::Stdout("HI"),
-        backends: &[Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 

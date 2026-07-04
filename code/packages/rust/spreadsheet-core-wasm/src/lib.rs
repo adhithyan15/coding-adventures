@@ -286,7 +286,11 @@ impl SpreadsheetSession {
                         continue;
                     };
                     let raw = if let Some(f) = c.get("formula").and_then(Value::as_str) {
-                        f.to_string()
+                        // The formula bar always shows a formula with a leading
+                        // `=`. The engine stores a formula's text verbatim, and a
+                        // formula loaded from `.xlsx` has none (Excel's `<f>` omits
+                        // it), so normalise to exactly one `=` here.
+                        format!("={}", f.trim_start_matches('='))
                     } else if let Some(vj) = c.get("value") {
                         raw_from_value_json(vj)
                     } else {
@@ -846,6 +850,51 @@ impl SpreadsheetSession {
         true
     }
 
+    // --------------------------------------------------------------------
+    // Real spreadsheet files — open / save (.xlsx / .xls) via spreadsheet-io
+    // --------------------------------------------------------------------
+    //
+    // These turn the session into something that can open and save the actual
+    // files a user has on disk, not just its own JSON snapshot. Each open reuses
+    // the existing snapshot path: a file is loaded into a fresh engine workbook,
+    // serialized to the engine's canonical JSON, and fed to `deserialize` — so a
+    // file-open is undoable and rebuilds the formula-bar echo for free, exactly
+    // like restoring a saved document. Save is pure computation over the current
+    // workbook; the host writes/downloads the returned bytes.
+
+    /// Open a `.xlsx` file (its raw bytes) as the current document, replacing the
+    /// workbook. Returns `true` on success, `false` if the bytes are not a
+    /// readable `.xlsx`. Formulas load as **live** formulas (they recompute on
+    /// edit); the load is undoable.
+    pub fn load_xlsx_bytes(&mut self, bytes: &[u8]) -> bool {
+        match spreadsheet_io::load_xlsx(bytes) {
+            Ok(loaded) => self.deserialize(&loaded.serialize()),
+            Err(_) => false,
+        }
+    }
+
+    /// Serialize the current document to `.xlsx` file bytes (numeric-result
+    /// formulas preserved as formulas). Pure computation — no I/O.
+    pub fn save_xlsx_bytes(&self) -> Vec<u8> {
+        spreadsheet_io::save_xlsx(&self.wb)
+    }
+
+    /// Open a legacy `.xls` (BIFF8) file as the current document. Same semantics
+    /// as [`load_xlsx_bytes`](Self::load_xlsx_bytes); note `.xls` formulas arrive
+    /// as their computed value (the legacy reader doesn't decode expressions).
+    pub fn load_xls_bytes(&mut self, bytes: &[u8]) -> bool {
+        match spreadsheet_io::load_xls(bytes) {
+            Ok(loaded) => self.deserialize(&loaded.serialize()),
+            Err(_) => false,
+        }
+    }
+
+    /// Serialize the current document to legacy `.xls` bytes (values only — see
+    /// the `spreadsheet-io` fidelity notes). Pure computation — no I/O.
+    pub fn save_xls_bytes(&self) -> Vec<u8> {
+        spreadsheet_io::save_xls(&self.wb)
+    }
+
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
     /// the shape). A malformed address yields an `#REF!`-style error object
     /// rather than failing.
@@ -1254,6 +1303,76 @@ mod tests {
         // Change a precedent → the total recomputes.
         s.set_cell("B1", "115");
         assert_eq!(s.get_value("B6"), r#"{"kind":"number","value":146.0}"#);
+    }
+
+    // ── Real file open / save (.xlsx / .xls) ────────────────────────
+
+    #[test]
+    fn xlsx_open_save_round_trip_through_session() {
+        // Author a document, save it to .xlsx bytes, open those bytes in a fresh
+        // session: values, the live formula, and the formula-bar echo all survive.
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("A2", "20");
+        s.set_cell("A3", "=SUM(A1:A2)");
+        s.set_cell("B1", "hello");
+        let bytes = s.save_xlsx_bytes();
+        assert_eq!(&bytes[..2], b"PK", "an .xlsx is a ZIP");
+
+        let mut s2 = SpreadsheetSession::new();
+        assert!(s2.load_xlsx_bytes(&bytes), "our own .xlsx must open");
+        assert_eq!(s2.get_value("A3"), r#"{"kind":"number","value":30.0}"#);
+        // The formula-bar echo was rebuilt and A3 is still a live formula:
+        assert_eq!(s2.get_raw("A3"), "=SUM(A1:A2)");
+        assert_eq!(s2.get_value("B1"), r#"{"kind":"text","value":"hello"}"#);
+        // Live: edit a precedent and the total recomputes.
+        s2.set_cell("A1", "110");
+        assert_eq!(s2.get_value("A3"), r#"{"kind":"number","value":130.0}"#);
+    }
+
+    #[test]
+    fn xls_open_save_round_trip_through_session() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "42");
+        s.set_cell("A2", "world");
+        let bytes = s.save_xls_bytes();
+        assert_eq!(
+            &bytes[..8],
+            &[0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1],
+            "an .xls is an OLE2 compound file"
+        );
+
+        let mut s2 = SpreadsheetSession::new();
+        assert!(s2.load_xls_bytes(&bytes), "our own .xls must open");
+        assert_eq!(s2.get_value("A1"), r#"{"kind":"number","value":42.0}"#);
+        assert_eq!(s2.get_value("A2"), r#"{"kind":"text","value":"world"}"#);
+    }
+
+    #[test]
+    fn load_bad_bytes_returns_false_and_preserves_document() {
+        // A failed open must not clobber the open document.
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "keepme");
+        assert!(!s.load_xlsx_bytes(b"not a zip file"));
+        assert!(!s.load_xls_bytes(b"not an ole2 file"));
+        assert_eq!(s.get_value("A1"), r#"{"kind":"text","value":"keepme"}"#);
+    }
+
+    #[test]
+    fn opening_a_file_is_undoable() {
+        // Opening a file routes through `deserialize` → it's a checkpointed edit,
+        // so undo restores the prior document.
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "original");
+        let file = {
+            let mut t = SpreadsheetSession::new();
+            t.set_cell("A1", "fromfile");
+            t.save_xlsx_bytes()
+        };
+        assert!(s.load_xlsx_bytes(&file));
+        assert_eq!(s.get_value("A1"), r#"{"kind":"text","value":"fromfile"}"#);
+        assert!(s.undo(), "opening a file is undoable");
+        assert_eq!(s.get_value("A1"), r#"{"kind":"text","value":"original"}"#);
     }
 
     // ── Multi-sheet workbook ────────────────────────────────────────
