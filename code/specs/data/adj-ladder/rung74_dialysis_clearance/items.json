@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 74 \u2014 nephrology dialysis corrected-clearance index from four stated quantities (a NEW panel: nephrology / dialysis-clearance). From a blood flow, a solute load to divide, a membrane factor to divide by, and a session gain to scale by, compute the corrected clearance (blood_flow+solute_load/membrane_factor*session_gain), the load ratio (solute_load/membrane_factor), or the scaled load (solute_load/membrane_factor*session_gain). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, TERM PLUS A SCALED QUOTIENT a + b/c*d (a leading term with a divide-then-multiply addend added \u2014 contrast rung-73 a-b/c*d which subtracts the scaled quotient; the left-to-right b/c*d = b*d/c, not b/(c*d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via /, *, and + \u2014 no constant leaks, and neither the load ratio, the scaled load, nor any corrected figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: DIVIDING by the PRODUCT (a + b/(c*d), a wrong scaling) and SWAPPING the multiply and divide (a + b*c/d, a wrong scaling). The core confusion tested is that a + b/c*d is not a + b/(c*d) and not a + b*c/d.",
+  "items": [
+    {
+      "id": "r74dial-01",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 20, a solute load of 12 divided by a membrane factor of 3 and scaled by a session gain of 2. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(20)\nobserve solute_load(12)\nobserve membrane_factor(3)\nobserve session_gain(2)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 38.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r74dial-02",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 20, a solute load of 12 divided by a membrane factor of 3 and scaled by a session gain of 2. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(20)\nobserve solute_load(12)\nobserve membrane_factor(3)\nobserve session_gain(2)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 38.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r74dial-03",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 20, a solute load of 12 divided by a membrane factor of 3 and scaled by a session gain of 2. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(20)\nobserve solute_load(12)\nobserve membrane_factor(3)\nobserve session_gain(2)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 38.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r74dial-04",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 30, a solute load of 12 divided by a membrane factor of 4 and scaled by a session gain of 3. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(30)\nobserve solute_load(12)\nobserve membrane_factor(4)\nobserve session_gain(3)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 39.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 46.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r74dial-05",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 30, a solute load of 12 divided by a membrane factor of 4 and scaled by a session gain of 3. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(30)\nobserve solute_load(12)\nobserve membrane_factor(4)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 39.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 46.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r74dial-06",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 30, a solute load of 12 divided by a membrane factor of 4 and scaled by a session gain of 3. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(30)\nobserve solute_load(12)\nobserve membrane_factor(4)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 39.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 46.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r74dial-07",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 30, a solute load of 10 divided by a membrane factor of 5 and scaled by a session gain of 2. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(30)\nobserve solute_load(10)\nobserve membrane_factor(5)\nobserve session_gain(2)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 55.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r74dial-08",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 30, a solute load of 10 divided by a membrane factor of 5 and scaled by a session gain of 2. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(30)\nobserve solute_load(10)\nobserve membrane_factor(5)\nobserve session_gain(2)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 55.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r74dial-09",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 30, a solute load of 10 divided by a membrane factor of 5 and scaled by a session gain of 2. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(30)\nobserve solute_load(10)\nobserve membrane_factor(5)\nobserve session_gain(2)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 31.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 55.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r74dial-10",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 40, a solute load of 18 divided by a membrane factor of 6 and scaled by a session gain of 3. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(40)\nobserve solute_load(18)\nobserve membrane_factor(6)\nobserve session_gain(3)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 41.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 76.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r74dial-11",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 40, a solute load of 18 divided by a membrane factor of 6 and scaled by a session gain of 3. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(40)\nobserve solute_load(18)\nobserve membrane_factor(6)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 41.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 76.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r74dial-12",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 40, a solute load of 18 divided by a membrane factor of 6 and scaled by a session gain of 3. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(40)\nobserve solute_load(18)\nobserve membrane_factor(6)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 49.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 41.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 76.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r74dial-13",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 36, a solute load of 15 divided by a membrane factor of 5 and scaled by a session gain of 3. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(36)\nobserve solute_load(15)\nobserve membrane_factor(5)\nobserve session_gain(3)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 37.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 61.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r74dial-14",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 36, a solute load of 15 divided by a membrane factor of 5 and scaled by a session gain of 3. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(36)\nobserve solute_load(15)\nobserve membrane_factor(5)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 37.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 61.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r74dial-15",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 36, a solute load of 15 divided by a membrane factor of 5 and scaled by a session gain of 3. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(36)\nobserve solute_load(15)\nobserve membrane_factor(5)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 37.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 61.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r74dial-16",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 28, a solute load of 8 divided by a membrane factor of 2 and scaled by a session gain of 3. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(28)\nobserve solute_load(8)\nobserve membrane_factor(2)\nobserve session_gain(3)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r74dial-17",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 28, a solute load of 8 divided by a membrane factor of 2 and scaled by a session gain of 3. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(28)\nobserve solute_load(8)\nobserve membrane_factor(2)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r74dial-18",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 28, a solute load of 8 divided by a membrane factor of 2 and scaled by a session gain of 3. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(28)\nobserve solute_load(8)\nobserve membrane_factor(2)\nobserve session_gain(3)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r74dial-19",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 50, a solute load of 20 divided by a membrane factor of 5 and scaled by a session gain of 4. What is the corrected solute clearance (blood flow plus the scaled solute load)?",
+      "program": "observe blood_flow(50)\nobserve solute_load(20)\nobserve membrane_factor(5)\nobserve session_gain(4)\nlet answer = blood_flow + solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 51.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 66.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r74dial-20",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 50, a solute load of 20 divided by a membrane factor of 5 and scaled by a session gain of 4. What is the the load ratio (solute load over the membrane factor)?",
+      "program": "observe blood_flow(50)\nobserve solute_load(20)\nobserve membrane_factor(5)\nobserve session_gain(4)\nlet answer = solute_load / membrane_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 66.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 51.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 75.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r74dial-21",
+      "qtype": "dialysis_clearance",
+      "stem": "A dialysis session records a blood flow of 50, a solute load of 20 divided by a membrane factor of 5 and scaled by a session gain of 4. What is the the scaled load that is added (load ratio times the session gain)?",
+      "program": "observe blood_flow(50)\nobserve solute_load(20)\nobserve membrane_factor(5)\nobserve session_gain(4)\nlet answer = solute_load / membrane_factor * session_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 66.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 51.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

@@ -111,6 +111,7 @@ SELF_CONTAINED_RUNGS = (
     "rung71_refraction_acuity",
     "rung72_amniotic_index",
     "rung73_spirometry_flow",
+    "rung74_dialysis_clearance",
 )
 
 
