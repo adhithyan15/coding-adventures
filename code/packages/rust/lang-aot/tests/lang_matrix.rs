@@ -2300,7 +2300,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
         expect: Expect::Stdout("HI"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[Llvm, Jvm, Clr, Vm, Jit],
     },
 ];
 
