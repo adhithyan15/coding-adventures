@@ -3,6 +3,44 @@
 All notable changes to `array-runtime` are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] — 2026-07-04
+
+**AR-2 — generalized reduce/scan/outer-product kernels.** Motivated by
+[`MA05-apl-language.md`](../../../specs/MA05-apl-language.md) §2: APL's `/`
+(reduce), `\` (scan), and `∘.` (outer product) operators take an *arbitrary*
+dyadic function as their left operand, not a fixed one — `+/v`, `-/v`, `×/v`
+are all the same generic kernel parameterized over `BinOp`, unlike the
+existing fixed-operator `sum`/`mean`/`max`/`min`. Sequenced as a prerequisite
+for the APL runtime (MA-4e), but lands in the shared `array-runtime` substrate
+so J and K/Q inherit the same three primitives for free.
+
+### Added
+
+- **`ops::reduce(op, &Array) -> Result<Array, String>`** — folds `a` with an
+  arbitrary `BinOp` along its last axis: a scalar reduces to itself, a vector
+  `[n]` folds to a scalar, and a matrix `[r, c]` folds each row across its
+  columns to a vector `[r]`. An empty axis (`n == 0` or `c == 0`) is a clean
+  error rather than a guessed identity element, since a generic `BinOp` has no
+  single universal identity (`Mul`'s is `1`, not `0`) the way the existing
+  fixed `sum` does.
+- **`ops::scan(op, &Array) -> Result<Array, String>`** — the same fold as
+  `reduce`, but keeping every intermediate result: output has the same shape
+  as the input (a running-total analogue for `op = Add`).
+- **`ops::outer(op, &Array, &Array) -> Result<Array, String>`** — applies `op`
+  to every pair `(aᵢ, bⱼ)`, producing a result of rank `rank(a) + rank(b)`:
+  scalar⊗scalar → scalar, scalar⊗vector → vector (broadcast), vector `[m]` ⊗
+  vector `[n]` → matrix `[m, n]`. `Kernel::MatMul` is the `op = Mul`
+  **-then-sum-reduce** special case of this; the product alone, with no
+  summing, is new.
+
+All three are scoped to rank ≤ 2 operands/results, matching this crate's
+existing documented convention (`value.rs`: "higher ranks are stored but only
+rank ≤ 2 ops are defined"), and — like `matmul`/`transpose` when they were
+first added — are CPU-reference implementations in `ops.rs` only. Wiring them
+through `accel`/`exec` for GPU dispatch (so `apl-runtime`'s `+/`/`+\`/`∘.×`
+are accelerator-eligible like `matmul` already is) is a natural follow-up,
+not required for AR-2 itself.
+
 ## [0.3.0] — 2026-06-17
 
 **MXF-3 — the `f64` execution path (no `f32` round-trip).** Part of MX12, which

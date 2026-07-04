@@ -169,9 +169,12 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
 
 - **MA-4a — this spec.** Language scope, the function/operator grammar
   design (§3), and the substrate gap (§2).
-- **AR-2 — `array-runtime`: generalized reduce/scan/outer-product kernels**,
-  parameterized over the existing `BinOp` enum. Prerequisite for MA-4e;
-  benefits every future array-family language (J, K/Q) for free.
+- **AR-2 — `array-runtime`: generalized reduce/scan/outer-product kernels**
+  (✅ done), parameterized over the existing `BinOp` enum. Prerequisite for
+  MA-4e; benefits every future array-family language (J, K/Q) for free.
+  Landed as `ops::reduce`/`ops::scan`/`ops::outer`, CPU-reference only
+  (rank ≤ 2, matching this crate's existing ceiling) — GPU-dispatch wiring
+  through `accel`/`exec` is a follow-up, not required to unblock MA-4e.
 - **MA-4b — `apl.tokens`/`apl.grammar`**: the two-nonterminal grammar (§3),
   validated with `grammar-tools validate`.
 - **MA-4c — `apl-lexer`.** Single-codepoint glyph tokens, `⍝` line comments.

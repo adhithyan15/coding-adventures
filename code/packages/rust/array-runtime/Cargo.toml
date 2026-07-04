@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-array-runtime"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "N-D numeric array substrate for array languages — lowers to matrix-ir for GPU-aware execution"
 
