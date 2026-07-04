@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.4] - 2026-07-04
+
+### Added — CLOC12.165 PR2: `this` end-to-end fixture
+
+The `this` keyword now flows through the full SIMPLE/ADVANCED pipeline (via the
+javascript-parser 0.29.0 bridge) instead of falling back to WHITESPACE_ONLY
+(gap-166, now closed). New e2e diff fixture `tests/diff/simple-this/` proving
+`this.f(1 + 2);` → `this.f(3);` at SIMPLE: the `this` receiver round-trips
+(the bridge produced a real `ThisExpression`) and the argument `1 + 2` folds to
+`3` (a WHITESPACE_ONLY fallback would leave `this.f(1 + 2)` unfolded).
+
 ## [0.234.3] - 2026-07-04
 
 ### Added — CLOC12.163 PR2: generator/`yield` end-to-end fixture
