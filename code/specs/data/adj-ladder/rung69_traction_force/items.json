@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 69 \u2014 skeletal traction force from four stated quantities (a NEW panel: orthopedics / skeletal traction). From an applied weight and a pulley factor (their product is the leverage), a limb length to normalise by, and a baseline tension to add, compute the traction force (applied_weight*pulley_factor/limb_length+baseline_tension), the leverage (applied_weight*pulley_factor), or the distributed load (applied_weight*pulley_factor/limb_length). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT OVER A DIVISOR PLUS A TERM a*b/c+d, the first on the ladder to put a product (not a sum or difference) over the divisor and then add a term (distinct from rung-65 (a-b)/c+d, rung-66 (a+b)/c-d, and rung-68 (a+b)*c/d with no trailing term) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, /, and + \u2014 no constant leaks, and neither the leverage, the distributed load, nor any traction figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: ADDING the baseline BEFORE dividing ((a*b+d)/c, a wrong offset) and folding the baseline into the DENOMINATOR (a*b/(c+d), a wrong divisor). The core confusion tested is that a*b/c+d is not (a*b+d)/c and not a*b/(c+d).",
+  "items": [
+    {
+      "id": "r69trac-01",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 12 through a pulley factor of 5, normalised to a limb length of 3 and added to a baseline tension of 4. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(12)\nobserve pulley_factor(5)\nobserve limb_length(3)\nobserve baseline_tension(4)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r69trac-02",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 12 through a pulley factor of 5, normalised to a limb length of 3 and added to a baseline tension of 4. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(12)\nobserve pulley_factor(5)\nobserve limb_length(3)\nobserve baseline_tension(4)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r69trac-03",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 12 through a pulley factor of 5, normalised to a limb length of 3 and added to a baseline tension of 4. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(12)\nobserve pulley_factor(5)\nobserve limb_length(3)\nobserve baseline_tension(4)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r69trac-04",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 10 through a pulley factor of 6, normalised to a limb length of 4 and added to a baseline tension of 5. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(10)\nobserve pulley_factor(6)\nobserve limb_length(4)\nobserve baseline_tension(5)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r69trac-05",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 10 through a pulley factor of 6, normalised to a limb length of 4 and added to a baseline tension of 5. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(10)\nobserve pulley_factor(6)\nobserve limb_length(4)\nobserve baseline_tension(5)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r69trac-06",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 10 through a pulley factor of 6, normalised to a limb length of 4 and added to a baseline tension of 5. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(10)\nobserve pulley_factor(6)\nobserve limb_length(4)\nobserve baseline_tension(5)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r69trac-07",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 8 through a pulley factor of 9, normalised to a limb length of 6 and added to a baseline tension of 3. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(8)\nobserve pulley_factor(9)\nobserve limb_length(6)\nobserve baseline_tension(3)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r69trac-08",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 8 through a pulley factor of 9, normalised to a limb length of 6 and added to a baseline tension of 3. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(8)\nobserve pulley_factor(9)\nobserve limb_length(6)\nobserve baseline_tension(3)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r69trac-09",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 8 through a pulley factor of 9, normalised to a limb length of 6 and added to a baseline tension of 3. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(8)\nobserve pulley_factor(9)\nobserve limb_length(6)\nobserve baseline_tension(3)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r69trac-10",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 15 through a pulley factor of 4, normalised to a limb length of 5 and added to a baseline tension of 6. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(15)\nobserve pulley_factor(4)\nobserve limb_length(5)\nobserve baseline_tension(6)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.454545454545454,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r69trac-11",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 15 through a pulley factor of 4, normalised to a limb length of 5 and added to a baseline tension of 6. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(15)\nobserve pulley_factor(4)\nobserve limb_length(5)\nobserve baseline_tension(6)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.454545454545454,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r69trac-12",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 15 through a pulley factor of 4, normalised to a limb length of 5 and added to a baseline tension of 6. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(15)\nobserve pulley_factor(4)\nobserve limb_length(5)\nobserve baseline_tension(6)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.454545454545454,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r69trac-13",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 9 through a pulley factor of 8, normalised to a limb length of 4 and added to a baseline tension of 2. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(9)\nobserve pulley_factor(8)\nobserve limb_length(4)\nobserve baseline_tension(2)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r69trac-14",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 9 through a pulley factor of 8, normalised to a limb length of 4 and added to a baseline tension of 2. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(9)\nobserve pulley_factor(8)\nobserve limb_length(4)\nobserve baseline_tension(2)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r69trac-15",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 9 through a pulley factor of 8, normalised to a limb length of 4 and added to a baseline tension of 2. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(9)\nobserve pulley_factor(8)\nobserve limb_length(4)\nobserve baseline_tension(2)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r69trac-16",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 14 through a pulley factor of 5, normalised to a limb length of 7 and added to a baseline tension of 3. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(14)\nobserve pulley_factor(5)\nobserve limb_length(7)\nobserve baseline_tension(3)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r69trac-17",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 14 through a pulley factor of 5, normalised to a limb length of 7 and added to a baseline tension of 3. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(14)\nobserve pulley_factor(5)\nobserve limb_length(7)\nobserve baseline_tension(3)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r69trac-18",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 14 through a pulley factor of 5, normalised to a limb length of 7 and added to a baseline tension of 3. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(14)\nobserve pulley_factor(5)\nobserve limb_length(7)\nobserve baseline_tension(3)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r69trac-19",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 6 through a pulley factor of 10, normalised to a limb length of 4 and added to a baseline tension of 8. What is the traction force (leverage distributed over the limb length, plus the baseline tension)?",
+      "program": "observe applied_weight(6)\nobserve pulley_factor(10)\nobserve limb_length(4)\nobserve baseline_tension(8)\nlet answer = applied_weight * pulley_factor / limb_length + baseline_tension\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r69trac-20",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 6 through a pulley factor of 10, normalised to a limb length of 4 and added to a baseline tension of 8. What is the the leverage (applied weight times the pulley factor)?",
+      "program": "observe applied_weight(6)\nobserve pulley_factor(10)\nobserve limb_length(4)\nobserve baseline_tension(8)\nlet answer = applied_weight * pulley_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r69trac-21",
+      "qtype": "traction_force",
+      "stem": "A skeletal traction rig applies a weight of 6 through a pulley factor of 10, normalised to a limb length of 4 and added to a baseline tension of 8. What is the the distributed load before adding the baseline tension (leverage over the limb length)?",
+      "program": "observe applied_weight(6)\nobserve pulley_factor(10)\nobserve limb_length(4)\nobserve baseline_tension(8)\nlet answer = applied_weight * pulley_factor / limb_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
