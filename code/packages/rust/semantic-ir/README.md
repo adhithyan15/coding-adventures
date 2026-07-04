@@ -82,6 +82,8 @@ What's covered:
 - SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map, Ptr, Struct, Optional)
   — SIR21: `Int` carries an `IntSpec { width, signed, overflow }`; `Dynamic` (was `Any`) is the top type;
   `Ptr`/`Struct`/`Optional` (T1b) are source-fidelity types for typed frontends
+- `int_const` — the `int.max`/`int.min`/`int.width` reflection const-intrinsics (T3a);
+  pure, const-folding functions of an `IntSpec` (`IntConst::eval`), `None` for arbitrary-precision
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

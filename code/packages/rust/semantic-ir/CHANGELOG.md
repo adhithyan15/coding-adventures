@@ -2,6 +2,33 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.18.0 — SIR21 T3a: integer-reflection const-intrinsics (`int.max/min/width`)
+
+First slice of milestone **T3**. Adds the canonical evaluator for the three
+integer-reflection const-intrinsics (SIR21 §"Min / max / limits are derived"):
+a program that reads `INT_MAX` / `i32::MAX` / a type's bit-width goes through
+these, and they **const-fold** to a literal from the `(width, signed)` spec —
+the value is target-independent, so a backend emits `2147483647`, never a
+runtime call.
+
+- New `int_const` module: `IntConst { Max, Min, Width }` with `name()` /
+  `from_name()` (canonical boundary names `int.max` / `int.min` / `int.width`),
+  `IntConst::ALL`, and `IntConst::eval(spec) -> Option<i128>`, plus the
+  convenience `eval_int_const_named(name, spec)`. Re-exported from the crate
+  root (`IntConst`, `eval_int_const_named`).
+- Values are derived from T1a's `IntSpec::max()` / `min()` / `width().bits()`,
+  so they inherit the audited (and panic-free) `i128`-corner handling. An
+  `Arbitrary`-width integer (Ruby's `Integer`) has no `Max`/`Min`/fixed `Width`
+  → `None`, matching a language whose integers grow without bound.
+- 9 unit tests pin the spec examples (`int.max(i32) = 2147483647`,
+  `int.min(u8) = 0`, `int.width(i32) = 32`, `arbitrary → None`), the name
+  round-trip, and the W128 corner.
+
+Behaviour-preserving: purely additive (a new module + two re-exports; no
+existing code changed), so no frontend emits these yet and every downstream
+consumer (frontends, backends, conformance) still builds and passes. The module
+establishes the one canonical meaning each backend will const-fold to.
+
 ## 0.17.0 — SIR21 T1b: source-fidelity types + feature flags + version bump
 
 Milestone **T1b** of the [SIR21 cascade](../../../specs/SIR21-type-system-and-integer-semantics.md).
