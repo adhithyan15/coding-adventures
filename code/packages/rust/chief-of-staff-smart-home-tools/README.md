@@ -42,6 +42,8 @@ Chief of Staff job/session/agent
      command, scene, and authorization readiness
   -> platform evidence ledger over platform, closeout-retention, and runtime
      maintenance evidence signals without owning smart-home state
+  -> platform access review over command-risk, authorization-gap, authorization
+     decision, and capability-grant signals without owning smart-home state
   -> recovery brief over incident, policy, runtime, state, and validation
      handoff signals
   -> escalation brief over morning, blocker, review, and owner-lane signals
@@ -282,6 +284,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_platform_brief`
 - `smart_home.list_platform_evidence_ledger`
 - `smart_home.get_platform_evidence_ledger_summary`
+- `smart_home.list_platform_access_review`
+- `smart_home.get_platform_access_review_summary`
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_pending_work_summary`
 - `smart_home.get_attention_overview`
