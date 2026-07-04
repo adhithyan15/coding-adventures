@@ -2129,3 +2129,70 @@ fn e4dyn_straight_line_reassignment_is_not_promoted() {
         "a straight-line reassignment must not be promoted to a runtime handle"
     );
 }
+
+// ===========================================================================
+// E4-dyn (E4d-3b): a runtime string as a function RETURN VALUE / call result
+// ===========================================================================
+
+/// An ALGOL `string procedure` lowers to a function returning `str` — carried
+/// as an i32 **handle** — that the caller prints. `str` boundaries type as i32,
+/// and `print_str` of a *call result* (which has no compile-time literal entry)
+/// reads the length from the `[i32 len][bytes]` block header at run time
+/// (`i32.load`, opcode 0x28).
+#[test]
+fn e4dyn_wasm_string_procedure_return_and_call_result_print() {
+    // pick(n) -> str : if n > 0 then "HI" else "LO"  (branch-selected → runtime)
+    let pick = (
+        "pick",
+        vec![("n", "i64")],
+        "str",
+        vec![
+            IIRInstr::new("str_const", Some("pick".into()), vec![Operand::Str(String::new())], "str"),
+            IIRInstr::new("const", Some("c0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("cmp_gt", Some("t".into()),
+                vec![Operand::Var("n".into()), Operand::Var("c0".into())], "i64"),
+            IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var("t".into()), Operand::Var("Lelse".into())], "void"),
+            IIRInstr::new("str_const", Some("pick".into()), vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+            IIRInstr::new("str_const", Some("pick".into()), vec![Operand::Str("LO".into())], "str"),
+            IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("pick".into())], "str"),
+        ],
+    );
+    // main() : print(pick(1))
+    let main = (
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("call", Some("r".into()),
+                vec![Operand::Var("pick".into()), Operand::Var("one".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+        ],
+    );
+    let m = module_multi(vec![pick, main]);
+
+    // Validation accepts `str` on `call` and `ret`.
+    assert!(validate_for_wasm(&m).is_empty(), "str on call/ret must validate: {:?}", validate_for_wasm(&m));
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+
+    // `pick`'s function type returns i32 (a str handle).
+    let pick_idx = wm.exports.iter().position(|e| e.name == "pick").expect("pick exported");
+    let pick_type = wm.functions[pick_idx];
+    assert_eq!(wm.types[pick_type as usize].results, vec![ValueType::I32],
+        "string procedure returns an i32 handle");
+
+    // The print of the call result uses the runtime path: i32.load (0x28).
+    let main_code = &wm.code[wm.exports.iter().position(|e| e.name == "main").unwrap()].code;
+    assert!(main_code.contains(&0x28),
+        "print of a call-result runtime string must read its length with i32.load (0x28)");
+
+    // Well-formed module.
+    encode_module(&wm).expect("encoding failed");
+}

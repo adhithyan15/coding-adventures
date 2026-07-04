@@ -283,6 +283,9 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // `"str"` — accepted for the E4 literal-output/metadata foothold's
             // direct string producers (`str_const`, `str_concat`, `str_slice`). `str_len`,
             // `str_index`, `str_eq`, and `str_cmp` produce integers, not string values.
+            // E4-dyn (E4d-3b): a `str` value is an i32 **handle**, so it may also
+            // flow through a `call` (a `str` return / call result) and a `ret` (a
+            // `str`-returning function) — both carry the handle as an i32.
             // Richer dynamic string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
@@ -292,7 +295,10 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // NOTE: float types (`"f32"`, `"f64"`) are NOT rejected here.
             // WASM has native float arithmetic, so they are fully supported.
             if instr.type_hint == "str"
-                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+                && !matches!(
+                    instr.op.as_str(),
+                    "str_const" | "str_concat" | "str_slice" | "call" | "ret"
+                )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \

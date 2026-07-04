@@ -1123,6 +1123,23 @@ fn emit_instr(
                     detail: "str_len requires Operand::Var(str)".to_string(),
                 }),
             };
+
+            // E4-dyn runtime path (E4d-3/E4d-3b): a runtime string (branch-selected
+            // slot, call result, return value, or parameter) has no compile-time
+            // length — its local is an i32 handle to a `[i32 len][bytes]` block, so
+            // read the length back with `i32.load` at the handle.
+            if runtime_str_vars.contains(val_var) || !string_literals.contains_key(val_var) {
+                let val_slot = get_reg(val_var)?;
+                code.extend(encode_local_get(val_slot));
+                code.extend(encode_i32_load(0));
+                if slot_is_i64(rd) {
+                    code.extend(encode_i64_extend_i32_u());
+                }
+                code.extend(encode_local_set(rd));
+                return Ok(());
+            }
+
+            // Literal fast path: single-assignment string with a compile-time length.
             let lit = string_literals.get(val_var).ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: format!(
@@ -1241,12 +1258,15 @@ fn emit_instr(
             };
             let val_slot = get_reg(val_var)?;
 
-            // E4-dyn (E4d-3) runtime path: the source is a branch-selected string,
-            // so its local holds an i32 handle = the offset of a length-prefixed
-            // block `[i32 len][bytes]`.  Read the length back from linear memory
-            // (`i32.load` at the handle) and pass the *bytes* pointer (handle + 4)
-            // plus that length to `env.__print_str(ptr, len)` — mirroring the LLVM
-            // E4d-2 `inttoptr` + `load` + `getelementptr … i64 8` sequence.
+            // E4-dyn runtime path: the source's local holds an i32 handle = the
+            // offset of a length-prefixed block `[i32 len][bytes]`.  This is the
+            // case for a branch-selected string (E4d-3, in `runtime_str_vars`) AND
+            // for any string WITHOUT a compile-time literal entry — a function
+            // **return value / call result** or a **parameter** (E4d-3b): its local
+            // holds an i32 handle to the callee's `[i32 len][bytes]` block.  Read
+            // the length back from linear memory (`i32.load` at the handle) and
+            // pass the *bytes* pointer (handle + 4) plus that length to
+            // `env.__print_str(ptr, len)` — mirroring the LLVM E4d-2/E4d-2b path.
             //
             //   local.get slot       ;; handle
             //   i32.const 4
@@ -1254,7 +1274,7 @@ fn emit_instr(
             //   local.get slot       ;; handle                 → stack: [ptr, handle]
             //   i32.load offset=0    ;; len  = mem[handle]     → stack: [ptr, len]
             //   call __print_str
-            if runtime_str_vars.contains(val_var) {
+            if runtime_str_vars.contains(val_var) || !string_literals.contains_key(val_var) {
                 code.extend(encode_local_get(val_slot));
                 code.extend(encode_i32_const(4));
                 code.extend(encode_i32_add());
