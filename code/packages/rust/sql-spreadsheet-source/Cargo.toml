@@ -1,0 +1,14 @@
+[package]
+name = "coding-adventures-sql-spreadsheet-source"
+version = "0.1.0"
+edition = "2021"
+description = "Query a spreadsheet with SQL: a DataSource that exposes each sheet of a spreadsheet-core Workbook as a SQL table (header row = columns, data rows = rows) for the sql-execution-engine (SSQL01)"
+license = "MIT"
+
+[dependencies]
+spreadsheet-core = { path = "../spreadsheet-core" }
+coding-adventures-sql-execution-engine = { path = "../sql-execution-engine" }
+
+[dev-dependencies]
+# The end-to-end test loads a real .xlsx and runs SQL over it.
+spreadsheet-io = { path = "../spreadsheet-io" }

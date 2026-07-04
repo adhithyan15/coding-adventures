@@ -387,6 +387,7 @@ members = [
     "csv-parser",
     "sql-execution-engine",
     "sql-csv-source",
+    "sql-spreadsheet-source",
     "sql-backend",
     "sql-planner",
     "sql-optimizer",
