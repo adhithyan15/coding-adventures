@@ -2,6 +2,43 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.16.0 — SIR21 T1a: `SirType` v2 core (Dynamic + parameterised Int)
+
+Milestone **T1a** of the [SIR21 type-system cascade](../../../specs/SIR21-type-system-and-integer-semantics.md)
+— the Phase-0 mechanical remap. Behaviour-preserving: every existing module
+lowers **identically** and serialises **byte-for-byte** the same.
+
+- **`SirType::Any → SirType::Dynamic`.** The top type is renamed to make room
+  for a vocabulary of more-specific types. The five in-tree construction sites
+  (backend intrinsic scaffolding, validator test, JS/TS `return_type`) were
+  updated. The method `is_any()` → `is_dynamic()`.
+- **`SirType::Int` is now `SirType::Int(IntSpec)`.** An integer carries its
+  `(width, signed, overflow)` semantics — the keystone of SIR21 ("the type is
+  the semantics"). New public types:
+  - `IntWidth = W8 | W16 | W32 | W64 | W128 | Arbitrary` (with `bits()`).
+  - `Overflow = Wrap | Trap | Saturate | Checked | Undefined | Arbitrary`.
+  - `IntSpec { width, signed, overflow }` with derived (never-stored)
+    `min()` / `max()` / `modulus()` bounds and constructors `arbitrary()` /
+    `sized(..)`.
+  - `SirType::int_default()` (== `Int(IntSpec::arbitrary())`) and
+    `SirType::int(width, signed, overflow)`.
+- **The v0 flat `Int` maps to arbitrary-precision, not 64-bit.** *Divergence
+  from the spec's tentative `I64_WRAPPING_OR_ARBITRARY` default:* the historical
+  dynamic pipeline never masked integers (Ruby → Python both grow), so the
+  *faithful* behaviour-preserving default is `Arbitrary`. A frontend that means
+  a machine `i64` must now say so explicitly. The SIR21 spec §"The extended type
+  lattice" was updated to record this.
+- **Text surface unchanged.** The enum variant is `Dynamic` but the S-expr
+  keyword for the top type stays `any`, and the default (arbitrary) `Int` still
+  prints as bare `int` — so all printed modules and golden tests round-trip
+  unchanged. Only a *sized* spec prints its full shape, e.g. `(int u32 wrap)`.
+- **No SIR version bump yet.** T1a's serialisation is byte-identical (nothing
+  emits sized ints), so `CURRENT_SIR_VERSION` stays `"0"`; the bump lands with
+  T1b when new text tokens (`Ptr`/`Struct`/`Optional`, sized ints) first appear.
+- New unit tests for `IntSpec` bounds, width bits, overflow/spec Display, and
+  the arbitrary-default remap. All 10 downstream consumers (frontends,
+  backends, conformance) re-run green.
+
 ## 0.15.0 — Reject keyword arguments on indirect/closure calls (KW hardening)
 
 Closes a **soundness gap** left by KW1. The validator's shared keyword check
