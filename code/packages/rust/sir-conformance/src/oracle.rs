@@ -64,6 +64,24 @@ pub enum IntOp {
 }
 
 impl IntOp {
+    /// Every operation the oracle knows, in declaration order.
+    ///
+    /// This is the enumeration the **coverage gate** (SIR21 §P5) iterates: it
+    /// asserts that for each op here there is a passing conformance case on
+    /// every backend that accepts it, so an op the frontend can emit but a
+    /// backend never implemented cannot hide. **Adding a variant to [`IntOp`]
+    /// requires adding it here** — the gate then forces a case for it.
+    pub const ALL: &'static [IntOp] = &[IntOp::Add, IntOp::Sub, IntOp::Mul];
+
+    /// A short, stable tag for assertion messages and coverage keys.
+    pub fn tag(self) -> &'static str {
+        match self {
+            IntOp::Add => "add",
+            IntOp::Sub => "sub",
+            IntOp::Mul => "mul",
+        }
+    }
+
     /// The exact (unbounded) result of the op, or `None` if it overflows the
     /// oracle's own `i128` working range (see [`Outcome::BeyondOracle`]).
     fn exact(self, lhs: i128, rhs: i128) -> Option<i128> {
@@ -330,5 +348,26 @@ mod tests {
         // 256 wraps to 0 in 8 bits either way.
         assert_eq!(wrap_to(256, 8, false), 0);
         assert_eq!(wrap_to(256, 8, true), 0);
+    }
+
+    #[test]
+    fn all_ops_is_exhaustive_and_tagged() {
+        // Exhaustive match: adding a variant to `IntOp` makes this fail to
+        // compile until the author handles it — a compile-time nudge to keep
+        // `ALL` (and the coverage gate) complete.
+        fn recognised(op: IntOp) -> bool {
+            match op {
+                IntOp::Add | IntOp::Sub | IntOp::Mul => true,
+            }
+        }
+        assert!(IntOp::ALL.iter().copied().all(recognised));
+        assert_eq!(IntOp::ALL.len(), 3, "IntOp::ALL must list every variant");
+
+        // Tags are unique and non-empty (they key the coverage matrix).
+        let mut seen = std::collections::HashSet::new();
+        for op in IntOp::ALL {
+            assert!(!op.tag().is_empty());
+            assert!(seen.insert(op.tag()), "duplicate op tag {}", op.tag());
+        }
     }
 }
