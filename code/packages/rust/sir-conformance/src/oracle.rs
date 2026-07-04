@@ -109,6 +109,10 @@ pub enum Outcome {
     /// The exact result (or a `W128` modulus) exceeds the oracle's `i128`
     /// working range. A documented, honest limit — not a wrong answer.
     BeyondOracle,
+    /// Division (or modulo) by zero. A faithful backend *raises* — Ruby
+    /// `ZeroDivisionError`, Python `ZeroDivisionError`, a Rust panic, a Go
+    /// runtime panic — so the harness asserts the program fails, never a value.
+    DivByZero,
 }
 
 /// Reduce a mathematically-exact result `exact` to the observable outcome for
@@ -179,6 +183,88 @@ pub fn eval(op: IntOp, lhs: i128, rhs: i128, spec: IntSpec) -> Outcome {
     match op.exact(lhs, rhs) {
         Some(exact) => reduce(exact, spec),
         None => Outcome::BeyondOracle,
+    }
+}
+
+/// Integer **division**, split by rounding mode (SIR21 §E3 "division semantics
+/// are explicit, not guessed").
+///
+/// Division is the operation where "one overloaded `divide` that does the Ruby
+/// thing" is a latent bug the moment a second frontend appears — the languages
+/// genuinely disagree on how to round a negative quotient:
+///
+/// | `−7 / 2` | rounds | language |
+/// |----------|--------|----------|
+/// | `Floor` → `−4` | toward −∞ | Ruby, Python `//` |
+/// | `Trunc` → `−3` | toward 0  | C, Rust, Go, Java |
+///
+/// Making them **two honest ops** (`div_floor`, `div_trunc`) puts the choice in
+/// the IR instead of an overloaded runtime `_sir_divide`. A frontend emits the
+/// one its language means; each backend lowers to the matching primitive.
+///
+/// `div_true` (Python's `/`, `7 / 2 == 3.5`) is the third division op, but it
+/// produces a **float**, not an integer — it belongs to a future float oracle
+/// and is intentionally *not* modelled here (this is the integer oracle).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DivOp {
+    /// Round the quotient toward −∞ (Ruby `/`, Python `//`).
+    Floor,
+    /// Round the quotient toward 0 (C / Rust / Go / Java `/`).
+    Trunc,
+}
+
+impl DivOp {
+    /// Both division ops, in declaration order.
+    pub const ALL: &'static [DivOp] = &[DivOp::Floor, DivOp::Trunc];
+
+    /// The canonical IR op name a frontend emits and a backend lowers.
+    pub fn name(self) -> &'static str {
+        match self {
+            DivOp::Floor => "div_floor",
+            DivOp::Trunc => "div_trunc",
+        }
+    }
+
+    /// Evaluate `lhs <op> rhs` at arbitrary precision.
+    ///
+    /// - `rhs == 0` → [`Outcome::DivByZero`] (a real program raises).
+    /// - `i128::MIN / -1` (the single division-overflow case) →
+    ///   [`Outcome::BeyondOracle`] — the true result `2¹²⁷` doesn't fit `i128`.
+    /// - otherwise a definite [`Outcome::Value`], rounded per the mode.
+    ///
+    /// `Trunc` is Rust's native `/` (rounds toward 0). `Floor` starts from that
+    /// truncated quotient and subtracts one exactly when the remainder is
+    /// non-zero **and** its sign differs from the divisor's — i.e. when a real
+    /// division would have landed between two integers on the negative side.
+    pub fn eval(self, lhs: i128, rhs: i128) -> Outcome {
+        if rhs == 0 {
+            return Outcome::DivByZero;
+        }
+        // checked_div returns None only for i128::MIN / -1 (rhs == 0 is already
+        // handled), so a `None` here is the honest overflow report.
+        let trunc = match lhs.checked_div(rhs) {
+            Some(q) => q,
+            None => return Outcome::BeyondOracle,
+        };
+        match self {
+            DivOp::Trunc => Outcome::Value(trunc),
+            DivOp::Floor => {
+                // `%` is safe here: it overflows under the same MIN/-1 condition
+                // that `checked_div` just cleared.
+                let rem = lhs % rhs;
+                if rem != 0 && ((rem < 0) != (rhs < 0)) {
+                    // Landed on the negative side of a non-integer quotient —
+                    // step down toward −∞. `checked_sub` guards the (unreachable
+                    // here, but defensive) `trunc == i128::MIN` corner.
+                    match trunc.checked_sub(1) {
+                        Some(q) => Outcome::Value(q),
+                        None => Outcome::BeyondOracle,
+                    }
+                } else {
+                    Outcome::Value(trunc)
+                }
+            }
+        }
     }
 }
 
@@ -369,5 +455,71 @@ mod tests {
             assert!(!op.tag().is_empty());
             assert!(seen.insert(op.tag()), "duplicate op tag {}", op.tag());
         }
+    }
+
+    // ── Division: floor vs trunc, div-by-zero, overflow (SIR21 §E3) ────
+
+    #[test]
+    fn division_agrees_when_exact_or_positive() {
+        // With no rounding needed, or all-positive operands, floor == trunc.
+        for op in [DivOp::Floor, DivOp::Trunc] {
+            assert_eq!(op.eval(6, 3), Outcome::Value(2), "{op:?} 6/3");
+            assert_eq!(op.eval(7, 2), Outcome::Value(3), "{op:?} 7/2"); // both round 3.5→3
+            assert_eq!(op.eval(0, 5), Outcome::Value(0), "{op:?} 0/5");
+        }
+    }
+
+    #[test]
+    fn floor_and_trunc_differ_on_negatives() {
+        // The canonical §E3 example: −7 / 2.
+        assert_eq!(DivOp::Floor.eval(-7, 2), Outcome::Value(-4)); // Ruby −7/2
+        assert_eq!(DivOp::Trunc.eval(-7, 2), Outcome::Value(-3)); // C −7/2
+
+        // Negative divisor, positive dividend.
+        assert_eq!(DivOp::Floor.eval(7, -2), Outcome::Value(-4));
+        assert_eq!(DivOp::Trunc.eval(7, -2), Outcome::Value(-3));
+
+        // Both operands negative → quotient positive → they agree again.
+        assert_eq!(DivOp::Floor.eval(-7, -2), Outcome::Value(3));
+        assert_eq!(DivOp::Trunc.eval(-7, -2), Outcome::Value(3));
+    }
+
+    #[test]
+    fn exact_negative_division_agrees() {
+        // No remainder ⇒ nothing to round ⇒ floor == trunc even for negatives.
+        assert_eq!(DivOp::Floor.eval(-6, 2), Outcome::Value(-3));
+        assert_eq!(DivOp::Trunc.eval(-6, 2), Outcome::Value(-3));
+        assert_eq!(DivOp::Floor.eval(-6, -3), Outcome::Value(2));
+        assert_eq!(DivOp::Trunc.eval(-6, -3), Outcome::Value(2));
+    }
+
+    #[test]
+    fn division_by_zero_is_reported() {
+        for op in [DivOp::Floor, DivOp::Trunc] {
+            assert_eq!(op.eval(7, 0), Outcome::DivByZero, "{op:?} 7/0");
+            assert_eq!(op.eval(0, 0), Outcome::DivByZero, "{op:?} 0/0");
+            assert_eq!(op.eval(-3, 0), Outcome::DivByZero, "{op:?} -3/0");
+        }
+    }
+
+    #[test]
+    fn min_over_negative_one_is_beyond_oracle() {
+        // i128::MIN / -1 == 2^127, which does not fit i128 — reported honestly
+        // rather than panicking (both rounding modes).
+        assert_eq!(DivOp::Floor.eval(i128::MIN, -1), Outcome::BeyondOracle);
+        assert_eq!(DivOp::Trunc.eval(i128::MIN, -1), Outcome::BeyondOracle);
+        // But MIN / 1 is fine.
+        assert_eq!(DivOp::Trunc.eval(i128::MIN, 1), Outcome::Value(i128::MIN));
+    }
+
+    #[test]
+    fn div_op_names_round_trip() {
+        assert_eq!(DivOp::Floor.name(), "div_floor");
+        assert_eq!(DivOp::Trunc.name(), "div_trunc");
+        let mut seen = std::collections::HashSet::new();
+        for op in DivOp::ALL {
+            assert!(seen.insert(op.name()), "duplicate div name {}", op.name());
+        }
+        assert_eq!(DivOp::ALL.len(), 2);
     }
 }
