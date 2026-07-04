@@ -2108,15 +2108,30 @@ drops the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.164 PR1)
 landed the node + emit + pass traversals so the typed AST and every downstream
 pass can already represent and print an await.
 
-**PR2 (bridge-enable) — mirrors the generator/yield slice (CLOC12.163 PR2,
-gap-164).** `await` is only grammatical inside an async function body
-(`async function f(){ … }` / `async () => …`), so the bridge slice must, like
-generators, convert *both* the enclosing async function (setting the `is_async`
-flag — `FunctionDeclaration`/`FunctionExpression` already carry it, and the
-emitter already prints the `async` prefix) *and* the `await_expression` node
-(currently in the `convert_expression` decline list alongside
-`async_function_expression` / `async_arrow_function` / `async_generator_expression`).
-First dump the parse tree to confirm `async function f(){await p}` parses with a
-reachable `await_expression` sub-node (the analogue of the generator parse-tree
-dump that unblocked gap-164). The emit side is already complete, so PR2 is
-bridge-only.
+**PR2 (bridge-enable) — BLOCKED on grammar work (unlike the generator/yield
+slice).** The parse-tree dump — the same gate that unblocked gap-164 for
+generators — came back **negative for await**:
+
+- `async function f(){}` **does** parse → an `async_function_declaration` node
+  (with an `async` token), so the async-function *shell* is recognised.
+- `async function f(){await p;}` **does NOT parse**: the parser reports an error
+  at `p`, because inside the function body it treats `await` as a plain
+  *identifier* (a primary expression) and then finds `p` where it expects an
+  operator. The `await_expression` grammar production exists (it is a named rule
+  in the decline list) but is **never reached** — the parser does not switch
+  into an "async context" in which `await` becomes a prefix operator. Same for
+  `async ()=>await p` and `x = async function(){await 1+2}`.
+
+So, unlike `yield` (which parsed cleanly inside a generator body), `await` is
+**not yet parseable**. Bridging it end-to-end requires *grammar* work — making
+`await` a context-sensitive operator recognised inside async function /
+async-arrow bodies — in the shared `code/grammars/` parser, a
+larger and higher-risk change than a bridge slice (it is regenerated and shared
+across every language that uses the grammar-driven parser). That grammar work is
+deferred; PR2 waits on it.
+
+Until then, PR1's node + the **PR3 conformance port**
+(`code_printer_await_test.rs`) exercise the emitter via hand-constructed AST —
+the same staging used for the substitution-template slice (gap-157), which also
+shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
+fully covered; only the parser→typed-AST reachability remains, tracked here.

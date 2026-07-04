@@ -140,6 +140,24 @@ under the Apache License, Version 2.0:
       bridge conversion of yield (CLOC12.163 PR2, gap-164) is exercised
       separately in `javascript-parser` once generator bodies parse.
 
+- `code_printer_await_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the async `await` printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_await` + the `PREC_UNARY` classification that landed with
+      `Expression::AwaitExpression` (CLOC12.164). 9 active `#[test]`s and **0
+      `#[ignore]`** — `await` printed like the word-unaries typeof/void/delete:
+      the surface `await p` (mandatory keyword↔operand space), operands that
+      bind tighter print bare (`await a.b`, `await f()`) while a looser binary
+      operand wraps (`await (a+b)`), and the whole-node precedence cases where
+      the unary-strength await is left bare under a binary parent (`await p+1`)
+      but wrapped by member/call parents (`(await p).x`, `(await f)()`), by the
+      exponentiation base (`(await p)**2` — a bare `await p**2` is a syntax
+      error), and nested (`await await p`). Inputs are hand-constructed AST; the
+      bridge conversion of await (gap-165) is deferred — the current grammar
+      treats `await` inside an async body as a plain identifier, so it does not
+      yet parse (see the spec).
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

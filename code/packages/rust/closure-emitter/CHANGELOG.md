@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.28.1] - 2026-07-04
+
+### Added — CLOC12.164 PR3: CodePrinter await conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_await_test.rs`
+(registered as the `upstream_code_printer_await` `[[test]]` target) porting the
+Closure Compiler `CodePrinterTest` `await` printing cases against `emit_await`.
+9 active `#[test]`s, **0 `#[ignore]`** — `await` printed like the word-unaries
+typeof/void/delete: the surface `await p` (mandatory keyword↔operand space),
+tighter operands bare (`await a.b`, `await f()`), a looser binary operand
+wrapped (`await (a+b)`), and the whole-node `PREC_UNARY` precedence cases —
+bare under a binary parent (`await p+1`), wrapped by member/call parents
+(`(await p).x`, `(await f)()`), wrapped as an exponentiation base
+(`(await p)**2`, since a bare `await p**2` is a syntax error), and nested
+(`await await p`). Inputs are hand-constructed AST; the bridge conversion of
+await (gap-165) is deferred — the current grammar treats `await` inside an
+async body as a plain identifier, so it does not yet parse. Test-only — no
+library behaviour change.
+
 ## [0.28.0] - 2026-07-04
 
 ### Added — CLOC12.164: emit `AwaitExpression` (`await x`)
