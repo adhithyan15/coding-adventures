@@ -31,6 +31,7 @@ members = [
     "doc",
     "cfb-writer",
     "xls-writer",
+    "doc-writer",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",

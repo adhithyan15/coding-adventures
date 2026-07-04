@@ -1,0 +1,14 @@
+[package]
+name = "doc-writer"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-third-party-dependency writer for legacy .doc (Word 97-2003 binary, [MS-DOC]) files — emits the FIB + a piece table (CLX) + text, wrapped in an OLE2 Compound File via the `cfb-writer` crate."
+license = "MIT"
+
+[dependencies]
+# Only our own zero-dependency CFB container writer.
+cfb-writer = { path = "../cfb-writer" }
+
+[dev-dependencies]
+# The CFB reader, used to prove our output round-trips back to the original text.
+cfb = { path = "../cfb" }
