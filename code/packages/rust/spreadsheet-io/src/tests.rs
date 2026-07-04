@@ -5,7 +5,7 @@
 //! formulas*. We also assert the writer is idempotent (re-saving the reopened
 //! workbook is byte-identical) and cover the documented edge cases.
 
-use super::{load_xlsx, save_xlsx};
+use super::{load_xls, load_xlsx, save_xls, save_xlsx};
 use spreadsheet_core::{CellAddress, CellValue, SheetId, Workbook};
 
 /// Build the canonical test workbook: two sheets, numbers, text, and a live
@@ -294,4 +294,163 @@ fn sheet_id_lookup_is_stable() {
     let a: SheetId = wb.sheet_id("Sheet1").unwrap();
     let b: SheetId = wb.sheet_id("Sheet1").unwrap();
     assert_eq!(a, b);
+}
+
+// =========================================================================
+// Legacy .xls (BIFF8) — SSIO02
+// =========================================================================
+
+#[test]
+fn xls_output_is_ole2() {
+    // A .xls is an OLE2 compound file: it starts with the D0CF11E0 magic.
+    let bytes = save_xls(&sample_workbook());
+    assert_eq!(
+        &bytes[..8],
+        &[0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1],
+        "an .xls begins with the OLE2 signature"
+    );
+}
+
+#[test]
+fn xls_round_trip_preserves_numbers_and_text() {
+    // Numbers and text round-trip exactly through .xls. Formulas do NOT survive
+    // as formulas (the .xls writer has no formula record) — their *computed
+    // value* is written — so we compare computed values, which must match.
+    let wb = sample_workbook();
+    let reopened = load_xls(&save_xls(&wb)).expect("our own .xls must reload");
+    assert_eq!(
+        value_map(&wb),
+        value_map(&reopened),
+        "every populated cell's computed value must survive .xls save→load"
+    );
+}
+
+#[test]
+fn xls_flattens_formulas_to_values() {
+    // Document + pin the .xls fidelity limit: a formula cell comes back as a
+    // plain value (the computed result), NOT a formula. Its value is still right.
+    let wb = sample_workbook();
+    let reopened = load_xls(&save_xls(&wb)).unwrap();
+    let s1 = reopened.sheet_id("Sheet1").unwrap();
+
+    assert_eq!(
+        reopened.get_value(s1, CellAddress::new(1, 4)), // D1 was =SUM(A1:C1)
+        Some(CellValue::Number(31.0)),
+        "the formula's computed value is preserved"
+    );
+    assert!(
+        !reopened.cell_is_formula(s1, CellAddress::new(1, 4)),
+        ".xls can't store the formula, so it reloads as a literal value"
+    );
+}
+
+#[test]
+fn xls_save_is_idempotent() {
+    let once = save_xls(&sample_workbook());
+    let reopened = load_xls(&once).unwrap();
+    let twice = save_xls(&reopened);
+    assert_eq!(once, twice, "save∘load∘save == save for .xls");
+}
+
+#[test]
+fn xls_sheet_names_survive() {
+    let reopened = load_xls(&save_xls(&sample_workbook())).unwrap();
+    assert_eq!(reopened.sheet_names(), vec!["Sheet1", "Budget"]);
+}
+
+#[test]
+fn xls_negative_and_fractional_numbers_survive() {
+    let reopened = load_xls(&save_xls(&sample_workbook())).unwrap();
+    let s1 = reopened.sheet_id("Sheet1").unwrap();
+    let s2 = reopened.sheet_id("Budget").unwrap();
+    assert_eq!(
+        reopened.get_value(s1, CellAddress::new(1, 2)),
+        Some(CellValue::Number(20.5))
+    );
+    assert_eq!(
+        reopened.get_value(s2, CellAddress::new(1, 1)),
+        Some(CellValue::Number(-3.25))
+    );
+}
+
+#[test]
+fn xls_error_cell_maps_to_display_text() {
+    // The .xls writer has no error record, so an engine error is written as its
+    // display text and reloads as that Text. (A .xlsx→.xls degradation path.)
+    let mut wb = Workbook::new();
+    let s = wb.add_sheet("Sheet1");
+    wb.set_value(
+        s,
+        CellAddress::new(1, 1),
+        CellValue::Error(spreadsheet_core::SpreadsheetError::DivZero),
+    );
+    wb.recalc_all();
+
+    let reopened = load_xls(&save_xls(&wb)).unwrap();
+    let s2 = reopened.sheet_id("Sheet1").unwrap();
+    assert_eq!(
+        reopened.get_value(s2, CellAddress::new(1, 1)),
+        Some(CellValue::Text("#DIV/0!".into()))
+    );
+}
+
+#[test]
+fn xls_empty_workbook_round_trips() {
+    let mut wb = Workbook::new();
+    wb.add_sheet("Sheet1");
+    let reopened = load_xls(&save_xls(&wb)).unwrap();
+    assert_eq!(reopened.sheet_names(), vec!["Sheet1"]);
+    let s = reopened.sheet_id("Sheet1").unwrap();
+    assert!(reopened.used_range(s).is_none());
+}
+
+#[test]
+fn xls_load_rejects_non_xls_bytes() {
+    match load_xls(b"PK\x03\x04 this is a zip, not an OLE2 file") {
+        Ok(_) => panic!("zip bytes must not parse as .xls"),
+        Err(e) => {
+            assert!(matches!(e, super::IoError::Xls(_)));
+            assert!(e.to_string().contains("failed to load .xls"));
+        }
+    }
+}
+
+/// A real `.xls` authored by **xlwt** (a third-party library), checked in as a
+/// fixture — proof we read legacy files other tools produce.
+const XLWT_AUTHORED: &[u8] = include_bytes!("../tests/fixtures/xlwt_authored.xls");
+
+#[test]
+fn reads_a_real_xlwt_file() {
+    let wb = load_xls(XLWT_AUTHORED).expect("must open an xlwt-authored .xls");
+    assert_eq!(wb.sheet_names(), vec!["Sales", "Notes"]);
+
+    let sales = wb.sheet_id("Sales").unwrap();
+    assert_eq!(wb.get_value(sales, CellAddress::new(1, 1)), Some(CellValue::Text("Region".into())));
+    assert_eq!(wb.get_value(sales, CellAddress::new(2, 2)), Some(CellValue::Number(100.0)));
+    assert_eq!(wb.get_value(sales, CellAddress::new(3, 3)), Some(CellValue::Number(120.0)));
+
+    let notes = wb.sheet_id("Notes").unwrap();
+    assert_eq!(
+        wb.get_value(notes, CellAddress::new(1, 1)),
+        Some(CellValue::Text("R&D budget = 5%".into()))
+    );
+
+    // Documented limitation: xlwt wrote the SUM cells as formulas with no cached
+    // value, and the .xls reader decodes cached values but not formula
+    // expressions — so B4/C4 carry no recoverable result (no live formula to
+    // recompute, unlike the .xlsx path). They are NOT live formulas.
+    assert!(!wb.cell_is_formula(sales, CellAddress::new(4, 2)));
+}
+
+#[test]
+fn biff_error_code_mapping() {
+    use spreadsheet_core::SpreadsheetError::*;
+    assert_eq!(super::biff_error_to_core(0x07), DivZero);
+    assert_eq!(super::biff_error_to_core(0x17), Ref);
+    assert_eq!(super::biff_error_to_core(0x1D), Name);
+    assert_eq!(super::biff_error_to_core(0x2A), NotAvailable);
+    assert_eq!(super::biff_error_to_core(0x00), Null);
+    assert_eq!(super::biff_error_to_core(0x0F), Value);
+    assert_eq!(super::biff_error_to_core(0x24), Num);
+    assert_eq!(super::biff_error_to_core(0xFF), Value); // unknown → generic
 }

@@ -15,8 +15,12 @@ live workbook:
 ```text
   .xlsx ──load_xlsx──┐                              ┌──save_xlsx──▶ .xlsx
                      ├─▶  spreadsheet-core::Workbook ─┤
-  .xls  ─(SSIO02)────┘     (THE model)               └─(SSIO02)────▶ .xls
+  .xls  ──load_xls───┘     (THE model)               └──save_xls───▶ .xls
 ```
+
+Both modern `.xlsx` (SSIO01) and legacy `.xls`/BIFF8 (SSIO02) are supported.
+`.xlsx` preserves live formulas; `.xls` is lower-fidelity (values only — see
+below).
 
 It is the *only* crate that depends on both the engine and the file-format
 codecs, so the engine never learns what a `.xlsx` is and each codec stays small.
@@ -60,13 +64,20 @@ The `.xlsx` writer's value model can't yet express everything the engine holds:
 Numbers, text, and numeric-result formulas — a whole VisiCalc-authored sheet —
 round-trip exactly. See `code/specs/SSIO01-spreadsheet-io.md`.
 
+**Legacy `.xls` (SSIO02) is lower-fidelity:** its reader recovers cell values but
+not formula *expressions*, and its writer stores only numbers and strings — so
+`.xls` formulas become their computed value (or empty, if the producer didn't
+cache one), booleans become `1`/`0`, and errors become their display text.
+Numbers and text round-trip exactly. Prefer `.xlsx` when formulas matter. See
+`code/specs/SSIO02-spreadsheet-io-xls.md`.
+
 ## Where it sits
 
 ```
-spreadsheetml + xlsx-eval  (read)  ─┐
-                                    ├─▶  spreadsheet-io  ◀─▶  spreadsheet-core
-xlsx-writer                (write) ─┘                          (the engine)
+spreadsheetml + xlsx-eval / xls   (read)  ─┐
+                                           ├─▶ spreadsheet-io ◀─▶ spreadsheet-core
+xlsx-writer / xls-writer          (write) ─┘                        (the engine)
 ```
 
-Later milestones add `.xls`, wire load/save into the `SpreadsheetSession` facade,
-and surface open/save buttons in the VisiCalc apps across every backend.
+Later milestones wire load/save into the `SpreadsheetSession` facade and surface
+open/save buttons in the VisiCalc apps across every backend.

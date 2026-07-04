@@ -2,6 +2,28 @@
 
 All notable changes to `spreadsheet-io` are documented here.
 
+## [0.2.0] — SSIO02: legacy `.xls` (BIFF8) load & save
+
+### Added
+- `load_xls(&[u8]) -> Result<Workbook, IoError>` — open a legacy `.xls` (BIFF8)
+  into a live engine workbook via `xls::open_xls` (addresses shifted 0→1-based).
+  `biff_error_to_core` maps BIFF error codes to typed `SpreadsheetError`s.
+- `save_xls(&Workbook) -> Vec<u8>` — serialize to `.xls` via `xls-writer`, walking
+  `populated_cells` sparsely (same DoS-safe pattern as `save_xlsx`).
+- `IoError::Xls(String)` variant.
+- 11 `.xls` tests (round-trip of numbers/text, formula-flattens-to-value,
+  idempotence, error mapping, empty workbook, OLE2 magic, non-`.xls` rejection)
+  plus a committed **xlwt-authored** `.xls` fixture; an xlrd cross-check confirms
+  our output reads in a third-party library.
+
+### Known limitations (`.xls` is lower-fidelity than `.xlsx`)
+- The `.xls` **reader** decodes a formula's cached value but not its expression,
+  so `.xls` formulas load as plain values (and producers like xlwt that don't
+  cache a result yield empty cells). The `.xls` **writer** has no formula/boolean/
+  error records, so save writes computed values (bools as 1/0, errors as display
+  text). Cells beyond BIFF's `u16` address limit (row/col 65535) are skipped.
+  Numbers and text round-trip exactly. Prefer `.xlsx` for formula fidelity.
+
 ## [0.1.0] — SSIO01: unify file I/O onto spreadsheet-core (.xlsx)
 
 ### Added

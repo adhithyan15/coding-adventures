@@ -1,11 +1,13 @@
 [package]
 name = "spreadsheet-io"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "The adapter layer that unifies every spreadsheet file format onto a single in-memory model: load/save .xlsx (and later .xls) straight to and from the spreadsheet-core engine VisiCalc computes on (SSIO01)"
+description = "The adapter layer that unifies every spreadsheet file format onto a single in-memory model: load/save .xlsx and legacy .xls straight to and from the spreadsheet-core engine VisiCalc computes on (SSIO01-02)"
 license = "MIT"
 
 [dependencies]
 spreadsheet-core = { path = "../spreadsheet-core" }
 coding-adventures-xlsx-eval = { path = "../xlsx-eval" }
 coding-adventures-xlsx-writer = { path = "../xlsx-writer" }
+xls = { path = "../xls" }
+xls-writer = { path = "../xls-writer" }
