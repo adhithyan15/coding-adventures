@@ -96,7 +96,7 @@ pub use frontend::{register_latex, registry, LatexMath};
 pub use ast::{document_to_latex, ListItem, ListKind, Node, SectionLevel};
 pub use document::{
     build_document, parse_document, Block, Caption, DocListItem, Document, DocumentClass, Inline,
-    Metadata, Package, Preamble,
+    Metadata, NodeRef, Package, Preamble, Provenance,
 };
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};

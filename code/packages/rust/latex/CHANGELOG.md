@@ -2,6 +2,44 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.31.0] — 2026-07-03
+
+### Added — provenance API + byte-coverage capstone (LTXDOC01 D6, arc complete)
+
+D6 is the **capstone** of the LTXDOC01 D1–D6 arc: with the `Document` model built (D2–D5), it adds
+the two provenance queries the spec §4 promised and closes the arc with a real-paper byte-coverage
+test.
+
+- **New `NodeRef<'a>` enum** — a borrowed, `Copy` view over a walked node: `Block(&Block)` /
+  `Inline(&Inline)`. Methods `span() -> Span` (reusing `block_span` / a new production
+  `inline_span`) and `kind() -> &'static str` (a stable name per variant, e.g. `"Section"`,
+  `"Paragraph"`, `"Math"`, `"CrossRef"`). Re-exported from the crate root.
+- **New `Provenance<'a>` struct** — `{ node: NodeRef, span: Span }`, the result of a byte query.
+  Re-exported from the crate root.
+- **`Document::walk() -> impl Iterator<Item = NodeRef>`** — a **pre-order, depth-first** traversal
+  of every body `Block` and every nested `Inline` (Section title/body, List item terms+bodies,
+  Table/Figure captions+cells, Quote/Environment bodies, Paragraph inlines, composite-inline
+  children, Accent bases). Materialized as `std::vec::IntoIter<NodeRef>`; bounded by the parser's
+  `MAX_DEPTH`, so it is total and cannot overflow the stack.
+- **`Document::node_at(byte) -> Option<Provenance>`** — returns the **innermost** (narrowest-span)
+  walked node whose half-open span contains `byte`, ties broken toward the deeper (later pre-order)
+  node. Panic-free: no `unwrap`/`expect`/unchecked index; span width is `end.saturating_sub(start)`.
+- **Capstone tests** — a realistic titled `article` (abstract + `\section` + `tabular` in a `table`
+  float + `itemize` + inline `$…$` + display `equation` + `figure` with `\caption`/`\label` +
+  `\cite`): a `to_latex` round-trip fixed point (modulo spans), a non-panicking `walk()` covering
+  all headline kinds, and a **byte-coverage** assertion that every non-whitespace byte inside the
+  document body region is owned by ≥1 walked node.
+
+### Honesty note — region-coarse spans
+
+The D2–D5 spans are **region-granular**, not precise per-token ranges: many sibling blocks/inlines
+share the enclosing region they were lowered from. The `walk`/`node_at` doc-comments and the
+capstone test state this plainly — `node_at` resolves to the innermost node *at region
+granularity* (not an exact byte→leaf), and the byte-coverage guarantee is scoped to the document
+**body region** (preamble directives are indexed into `Preamble`/`Metadata`, not per-node walked).
+Precise per-byte resolution needs the parser to thread exact token spans into lowered nodes — noted
+as future work in the spec, not overclaimed here.
+
 ## [0.30.0] — 2026-07-03
 
 ### Added — floats, captions, code & display-math environments (LTXDOC01 D5)

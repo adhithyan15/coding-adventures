@@ -42,9 +42,12 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **D3 sectioning fold** | folds the flat block stream into the **nested sectioning forest**: each heading OWNS the run of following blocks up to the next heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`, via `rank(level)`); deeper headings nest. A trailing `\label{key}` is hoisted onto its section's new `label` field. Applies to every block-list (top-level + environment/list/table bodies). Total & panic-free; `to_latex` fixed point; `flatten(fold(flat)) == flat` property test; folded-section span = union of heading ∪ children spans | ✅ |
 | **D4 metadata** | extracts `\title`/`\author{A \and B}`/`\date` and the `abstract` env into a typed `Metadata` record on `Document`, as an **additive projection** — the underlying nodes stay in `preamble`/`body`, so `to_latex` round-trips unchanged and re-parsing repopulates the same `Metadata` (fixed point). Both preamble and body scanned; first title/date wins; every `\author` (each `\and`-split) contributes; `\maketitle` is a metadata no-op. Total & panic-free; never fabricated. (Inline normalization — `\textbf`/`\emph`/`\texttt`/`$…$`/`\ref`/accents — already lands in D2/D3's `lower_inline`.) | ✅ |
 | **D5 floats/code/display-math** | specializes the generic environment fold by name: `figure`/`figure*` → `Block::Figure` and `table`/`table*` → the inner `Block::Table`, each with `\caption{…}` → `Caption` + a hoisted `\label`; `verbatim`/`lstlisting` → `Block::CodeBlock` (raw text kept unparsed); `equation`/`align`/`gather`/… → `Block::DisplayMath` (source kept, delegated to the math frontend on demand); `quote`/`quotation` → `Block::Quote`; any other env → recursed `Block::Environment`. `to_latex` fixed point; total & panic-free; coarse spans | ✅ |
+| **D6 provenance API (capstone)** | the byte-provenance surface: `Document::walk()` — a pre-order, depth-first `impl Iterator<Item = NodeRef>` over every body block + nested inline; `Document::node_at(byte)` — the innermost walked node whose span contains a source byte, returned as `Provenance { node, span }`; `NodeRef::{span,kind}`. A capstone real-paper corpus (article + abstract + tabular + itemize + inline/display math + figure+caption+label + `\cite`) proves a `to_latex` fixed point, a non-panicking `walk()`, and **byte coverage**: every non-whitespace body-region byte is owned by ≥1 walked node. Panic-free (`saturating_sub`); honestly **region-coarse** (no exact byte→leaf claim). | ✅ |
 
-The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01)
-is building on top: D1–D5 shipped.
+The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
+now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
+tables/lists (D1) → preamble/body skeleton (D2) → sectioning forest (D3) → metadata + inline
+normalization (D4) → floats/code/display-math (D5) → provenance API + byte-coverage capstone (D6).
 
 ## The Document layer (LTXDOC01)
 
@@ -131,9 +134,36 @@ so `parse(to_latex(d)).strip_spans() == d.strip_spans()` remains a fixed point.
 
 **D2/D3 spans are coarse (region-granular)**: every leaf block/inline span defaults to its enclosing
 region span, and a folded D3 section's span is the **union** of its heading region span and its owned
-children's spans — so every child span ⊆ its parent ⊆ the `Document` span still holds. Precise
-per-node byte coverage is deferred to D6 (once the parser threads token spans through `Node`); the
-`span` field exists now so later rungs tighten the *values* without an API break.
+children's spans — so every child span ⊆ its parent ⊆ the `Document` span still holds. The `span`
+field exists now so later work can tighten the *values* without an API break.
+
+### The provenance API — walk / node_at (LTXDOC01 D6, arc complete)
+
+D6 exposes the byte-provenance surface the ADJ reasoning pipeline consumes — "which node owns this
+source byte?" and "visit every node in order":
+
+```rust
+use latex::parse_document;
+
+let d = parse_document(r"\begin{document}\section{Intro}Body text.\end{document}").unwrap();
+
+// walk(): pre-order, depth-first over every body Block + nested Inline.
+let kinds: Vec<&str> = d.walk().map(|n| n.kind()).collect();
+// e.g. ["Section", "Text", "Paragraph", "Text", …] — a parent precedes its children.
+
+// node_at(byte): the innermost (narrowest-span) node whose span contains the byte.
+if let Some(p) = d.node_at(35) {
+    let _ = (p.node.kind(), p.span); // NodeRef + its span
+}
+assert!(d.node_at(usize::MAX).is_none()); // out of range → None, never panics
+```
+
+**Honest granularity.** Because D2–D5 spans are region-coarse, `node_at` resolves to the innermost
+node *at region granularity* — it returns the tightest-covering node, **not** an exact byte→leaf
+(many siblings share a region span). The capstone byte-coverage test asserts what is true at this
+granularity: every non-whitespace byte inside the document **body region** is owned by ≥1 walked
+node. Precise per-byte resolution needs the parser to thread exact token spans into each lowered
+node — future work, not overclaimed here.
 
 ## Usage
 
