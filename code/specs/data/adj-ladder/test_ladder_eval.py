@@ -104,6 +104,7 @@ SELF_CONTAINED_RUNGS = (
     "rung64_gastric_acid_buffer",
     "rung65_audiometry_corrected_threshold",
     "rung66_periodontal_attachment_level",
+    "rung67_ergometry_specific_work",
 )
 
 

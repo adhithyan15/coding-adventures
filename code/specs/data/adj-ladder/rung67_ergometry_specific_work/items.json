@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 67 \u2014 specific work rate from four stated quantities (a NEW panel: sports medicine / ergometry). From a peak and a baseline power (their difference is the net power), a gear ratio to scale by, and a body mass to normalise by, compute the specific work ((peak_power-baseline_power)*gear_ratio/body_mass), the net power (peak_power-baseline_power), or the geared power ((peak_power-baseline_power)*gear_ratio). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DIFFERENCE-TIMES-FACTOR OVER A DIVISOR (a-b)*c/d, the first on the ladder to scale a difference by a factor and then divide (distinct from rung-50 a*(b-c) with the factor leading, rung-33 (a-b)*(c-d), and rung-51 a*b*c) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via -, *, and / \u2014 no constant leaks, and neither the net power, the geared power, nor any specific-work figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: SUMMING the two powers ((a+b)*c/d, a wrong net power) and SWAPPING the multiply and divide ((a-b)/c*d, a wrong scaling). The core confusion tested is that (a-b)*c/d is not (a+b)*c/d and not (a-b)/c*d.",
+  "items": [
+    {
+      "id": "r67ergo-01",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 200 and a baseline of 80, scaled by a gear ratio of 6 and normalised to a body mass of 60. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(200)\nobserve baseline_power(80)\nobserve gear_ratio(6)\nobserve body_mass(60)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r67ergo-02",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 200 and a baseline of 80, scaled by a gear ratio of 6 and normalised to a body mass of 60. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(200)\nobserve baseline_power(80)\nobserve gear_ratio(6)\nobserve body_mass(60)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r67ergo-03",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 200 and a baseline of 80, scaled by a gear ratio of 6 and normalised to a body mass of 60. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(200)\nobserve baseline_power(80)\nobserve gear_ratio(6)\nobserve body_mass(60)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r67ergo-04",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 180 and a baseline of 60, scaled by a gear ratio of 8 and normalised to a body mass of 80. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(180)\nobserve baseline_power(60)\nobserve gear_ratio(8)\nobserve body_mass(80)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r67ergo-05",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 180 and a baseline of 60, scaled by a gear ratio of 8 and normalised to a body mass of 80. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(180)\nobserve baseline_power(60)\nobserve gear_ratio(8)\nobserve body_mass(80)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1200.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r67ergo-06",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 180 and a baseline of 60, scaled by a gear ratio of 8 and normalised to a body mass of 80. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(180)\nobserve baseline_power(60)\nobserve gear_ratio(8)\nobserve body_mass(80)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r67ergo-07",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 150 and a baseline of 50, scaled by a gear ratio of 5 and normalised to a body mass of 80. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(150)\nobserve baseline_power(50)\nobserve gear_ratio(5)\nobserve body_mass(80)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1600.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r67ergo-08",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 150 and a baseline of 50, scaled by a gear ratio of 5 and normalised to a body mass of 80. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(150)\nobserve baseline_power(50)\nobserve gear_ratio(5)\nobserve body_mass(80)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1600.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r67ergo-09",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 150 and a baseline of 50, scaled by a gear ratio of 5 and normalised to a body mass of 80. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(150)\nobserve baseline_power(50)\nobserve gear_ratio(5)\nobserve body_mass(80)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1600.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r67ergo-10",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 240 and a baseline of 120, scaled by a gear ratio of 6 and normalised to a body mass of 90. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(240)\nobserve baseline_power(120)\nobserve gear_ratio(6)\nobserve body_mass(90)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1800.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r67ergo-11",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 240 and a baseline of 120, scaled by a gear ratio of 6 and normalised to a body mass of 90. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(240)\nobserve baseline_power(120)\nobserve gear_ratio(6)\nobserve body_mass(90)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r67ergo-12",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 240 and a baseline of 120, scaled by a gear ratio of 6 and normalised to a body mass of 90. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(240)\nobserve baseline_power(120)\nobserve gear_ratio(6)\nobserve body_mass(90)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r67ergo-13",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 200 and a baseline of 40, scaled by a gear ratio of 8 and normalised to a body mass of 80. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(200)\nobserve baseline_power(40)\nobserve gear_ratio(8)\nobserve body_mass(80)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1280,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1600.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r67ergo-14",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 200 and a baseline of 40, scaled by a gear ratio of 8 and normalised to a body mass of 80. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(200)\nobserve baseline_power(40)\nobserve gear_ratio(8)\nobserve body_mass(80)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1280,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1600.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r67ergo-15",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 200 and a baseline of 40, scaled by a gear ratio of 8 and normalised to a body mass of 80. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(200)\nobserve baseline_power(40)\nobserve gear_ratio(8)\nobserve body_mass(80)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1600.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1280,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r67ergo-16",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 220 and a baseline of 100, scaled by a gear ratio of 7 and normalised to a body mass of 60. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(220)\nobserve baseline_power(100)\nobserve gear_ratio(7)\nobserve body_mass(60)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 840,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 37.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1028.5714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r67ergo-17",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 220 and a baseline of 100, scaled by a gear ratio of 7 and normalised to a body mass of 60. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(220)\nobserve baseline_power(100)\nobserve gear_ratio(7)\nobserve body_mass(60)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 840,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 37.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1028.5714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r67ergo-18",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 220 and a baseline of 100, scaled by a gear ratio of 7 and normalised to a body mass of 60. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(220)\nobserve baseline_power(100)\nobserve gear_ratio(7)\nobserve body_mass(60)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 840,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 37.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1028.5714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r67ergo-19",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 160 and a baseline of 40, scaled by a gear ratio of 6 and normalised to a body mass of 90. What is the specific work rate (net power geared, per unit body mass)?",
+      "program": "observe peak_power(160)\nobserve baseline_power(40)\nobserve gear_ratio(6)\nobserve body_mass(90)\nlet answer = (peak_power - baseline_power) * gear_ratio / body_mass\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r67ergo-20",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 160 and a baseline of 40, scaled by a gear ratio of 6 and normalised to a body mass of 90. What is the the net power (peak minus baseline power)?",
+      "program": "observe peak_power(160)\nobserve baseline_power(40)\nobserve gear_ratio(6)\nobserve body_mass(90)\nlet answer = peak_power - baseline_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1800.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r67ergo-21",
+      "qtype": "ergometry_specific_work",
+      "stem": "An ergometer test records a peak power of 160 and a baseline of 40, scaled by a gear ratio of 6 and normalised to a body mass of 90. What is the the geared power before normalising to body mass (net power times the gear ratio)?",
+      "program": "observe peak_power(160)\nobserve baseline_power(40)\nobserve gear_ratio(6)\nobserve body_mass(90)\nlet answer = (peak_power - baseline_power) * gear_ratio\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
