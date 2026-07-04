@@ -944,6 +944,7 @@ fn walk_expression(
         // `...arg` — recurse into the spread argument to resolve references in it.
         Expression::SpreadElement(s) => walk_expression(&s.argument, ctx, analysis, pending),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { walk_expression(a, ctx, analysis, pending); } }
+        Expression::AwaitExpression(a) => walk_expression(&a.argument, ctx, analysis, pending),
     }
 }
 

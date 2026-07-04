@@ -509,6 +509,7 @@ fn expr_node_count(expr: &Expression) -> usize {
         // `...arg` — the spread weighs exactly its single inner argument.
         Expression::SpreadElement(s) => expr_node_count(&s.argument),
         Expression::YieldExpression(y) => y.argument.as_ref().map_or(0, |a| expr_node_count(a)),
+        Expression::AwaitExpression(a) => expr_node_count(&a.argument),
     }
 }
 
@@ -844,6 +845,7 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // `...arg` — recurse into the spread argument to collect its bindings.
         Expression::SpreadElement(s) => collect_binding_idents_expr(&s.argument, out),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { collect_binding_idents_expr(a, out); } }
+        Expression::AwaitExpression(a) => collect_binding_idents_expr(&a.argument, out),
     }
 }
 
@@ -1145,6 +1147,7 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         // `...arg` — recurse into the spread argument to tally candidate uses.
         Expression::SpreadElement(s) => tally_expr(&s.argument, cand, t),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { tally_expr(a, cand, t); } }
+        Expression::AwaitExpression(a) => tally_expr(&a.argument, cand, t),
     }
 }
 
@@ -1452,6 +1455,7 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
         // `...arg` — recurse into the spread argument to inline candidate calls.
         Expression::SpreadElement(s) => changed |= inline_in_expr(&mut s.argument, cand),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { changed |= inline_in_expr(a, cand); } }
+        Expression::AwaitExpression(a) => changed |= inline_in_expr(&mut a.argument, cand),
     }
     changed
 }
@@ -1610,6 +1614,7 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         // `...arg` — recurse into the spread argument to substitute through it.
         Expression::SpreadElement(s) => substitute(&mut s.argument, map),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { substitute(a, map); } }
+        Expression::AwaitExpression(a) => substitute(&mut a.argument, map),
     }
 }
 
@@ -1992,6 +1997,7 @@ fn expr_collect_mutated_params(
         // `...arg` — recurse into the spread argument to find mutated params.
         Expression::SpreadElement(s) => expr_collect_mutated_params(&s.argument, params, out),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { expr_collect_mutated_params(a, params, out); } }
+        Expression::AwaitExpression(a) => expr_collect_mutated_params(&a.argument, params, out),
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
@@ -3465,6 +3471,7 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // `...arg` — recurse into the spread argument to alpha-rename through it.
         Expression::SpreadElement(s) => rename_in_expr(&mut s.argument, map),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { rename_in_expr(a, map); } }
+        Expression::AwaitExpression(a) => rename_in_expr(&mut a.argument, map),
     }
 }
 

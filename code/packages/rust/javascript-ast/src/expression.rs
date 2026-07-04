@@ -63,6 +63,7 @@ pub enum Expression {
     TaggedTemplateExpression(TaggedTemplateExpression),
     SpreadElement(SpreadElement),
     YieldExpression(YieldExpression),
+    AwaitExpression(AwaitExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -542,6 +543,41 @@ pub struct YieldExpression {
     pub delegate: bool,
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub argument: Option<Box<Expression>>,
+}
+
+/// An `await` expression — the async-suspend operator that only appears inside
+/// an async function body:
+///
+/// ```text
+///   await promise      suspend until `promise` settles, then resume with its value
+/// ```
+///
+/// # Shape
+///
+/// Unlike [`YieldExpression`], an `await` **always** has an operand — bare
+/// `await` is a syntax error — so `argument` is a plain (non-optional)
+/// `Box<Expression>`, not an `Option`. There is no delegating form (`await*`
+/// does not exist), so no second axis is needed.
+///
+/// # Precedence
+///
+/// `await` is a **unary** operator in the grammar (`await UnaryExpression`),
+/// binding exactly like the word-prefix unaries `typeof` / `void` / `delete`:
+/// tighter than every binary operator, looser than member/call. So the emitter
+/// tags it at unary precedence — `await a + b` prints bare on the left
+/// (`await a+b`, i.e. `(await a)+b`), while a looser operand wraps
+/// (`await (a+b)`), and a member/call parent wraps the whole await
+/// (`(await p).x`, `(await f)()`). The operand likewise prints at unary
+/// precedence.
+///
+/// Like the other operand-carrying nodes `argument` is a `Box` so the
+/// `Expression` enum stays a fixed size regardless of nesting depth.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AwaitExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub argument: Box<Expression>,
 }
 
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the

@@ -71,7 +71,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
-    BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression,
+    BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression,
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
@@ -1254,6 +1254,10 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             cv: y.cv.clone(),
             delegate: y.delegate,
             argument: y.argument.as_ref().map(|a| Box::new(dce_expression(a, st))),
+        }),
+        Expression::AwaitExpression(a) => Expression::AwaitExpression(AwaitExpression {
+            cv: a.cv.clone(),
+            argument: Box::new(dce_expression(&a.argument, st)),
         }),
         Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
             cv: m.cv.clone(),

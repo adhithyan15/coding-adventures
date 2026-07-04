@@ -102,6 +102,15 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   tighter parent wraps the whole yield: `(yield a)+1`). Node + `closure-emitter`
   + all pass traversals land in one atomic PR; the bridge-enable + conformance
   port follow.
+- `AwaitExpression` (CLOC12.164) — an `await x` async-suspend operator: waits on
+  a promise operand and resumes with its settled value.
+  `AwaitExpression { argument: Box<Expression> }` — the `argument` is mandatory
+  (a bare `await` has no meaning), and there is no optional/delegate axis, unlike
+  `YieldExpression`. It tags at `PREC_UNARY`, printed like the word-unaries
+  typeof/void/delete: it binds tighter than binary parents (`await a+b`) but
+  member/call/new parents wrap the whole await (`(await p).x`, `(await f)()`).
+  Node + `closure-emitter` + all pass traversals land in one atomic PR; the
+  bridge-enable + conformance port follow.
 
 ## What's coming (follow-up PRs)
 

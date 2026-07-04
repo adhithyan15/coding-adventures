@@ -2051,3 +2051,72 @@ rather than mis-converting if a future operand-less node ever appears. Tracked
 as a grammar gap, distinct from this structured-AST slice. (The existing
 WHITESPACE_ONLY path also strips redundant parens around a `yield` operand,
 gap-105 — a token-level fallback independent of this node.)
+
+## CLOC12.164 — `AwaitExpression` (`await x`): atomic node + emit + passes (PR1)
+
+Adds `Expression::AwaitExpression { cv, argument: Box<Expression> }` to
+`javascript-ast` (0.23.0) — the **async-suspend** operator `await x`, which
+pauses an async function until its operand promise settles and resumes with the
+settled value. It is the async-side sibling of the generator `yield`
+(CLOC12.163): both are context-restricted suspend operators. Two shape
+differences from yield make the node *simpler*:
+
+- **`argument` is a plain `Box<Expression>`, not `Option`.** A bare `await`
+  (no operand) is a syntax error in every context, so the operand is always
+  present — no `Option` is needed (contrast `yield`, where a bare `yield` is
+  legal).
+- **No `delegate` axis.** There is no `await*` form, so the node needs no
+  second boolean.
+
+`closure-emitter` (0.28.0) `emit_await` prints `await` then a **mandatory**
+separator (`required_ws`) then the operand at `PREC_UNARY` — exactly the
+treatment `emit_unary` gives the word-shaped unaries `typeof` / `void` /
+`delete`. `await` is grammatically a unary operator (`await UnaryExpression`),
+so it binds tighter than every binary operator and looser than member/call:
+
+```text
+  await a.b      → await a.b      member operand binds tighter → bare
+  await f()      → await f()      call operand binds tighter   → bare
+  await (a+b)    → await (a+b)    binary operand binds LOOSER   → wraps
+  await a+b      → await a+b      the whole await binds tighter than + → (await a)+b bare
+  (await p).x    → (await p).x    member parent binds at primary → wraps the await
+  (await f)()    → (await f)()    call callee wraps the await
+```
+
+`expr_prec` tags `AwaitExpression` at `PREC_UNARY` (like the `void`/`typeof`
+unary-word cases), which drives the member/call/new wrapping automatically —
+no emit-site paren surgery. All nine downstream pass/analysis crates get an
+`AwaitExpression` match arm recursing into `argument` (transforms rebuild the
+node; `fold-control-flow`'s exhaustive `expression_cv` accessor gains its arm;
+traversal passes walk into the argument) — structurally identical to the
+`SpreadElement` arms since `argument` is a plain `Box`. All in one atomic commit
+so the workspace never has a broken exhaustive `match`.
+
+8 new emitter unit tests: mandatory space (`await p`), member/call operands
+bare (`await a.b`, `await f()`), binary operand wrapped (`await (a+b)`), await
+binding tighter than a binary parent (`await a+b`), member/call parents wrapping
+the whole await (`(await p).x`, `(await f)()`), and a nested `await await p`. No
+behaviour change for existing inputs — the bridge still declines `await`
+(gap-165), so closurec falls back to WHITESPACE_ONLY on async bodies for now.
+PR2 (bridge-enable) and PR3 (conformance port) follow.
+
+### gap-165 — bridge declines `await` (`AwaitExpression`) — **OPEN**
+
+The `javascript-parser` bridge does not yet convert an `await` expression to
+`Expression::AwaitExpression`; an async function body containing an `await`
+drops the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.164 PR1)
+landed the node + emit + pass traversals so the typed AST and every downstream
+pass can already represent and print an await.
+
+**PR2 (bridge-enable) — mirrors the generator/yield slice (CLOC12.163 PR2,
+gap-164).** `await` is only grammatical inside an async function body
+(`async function f(){ … }` / `async () => …`), so the bridge slice must, like
+generators, convert *both* the enclosing async function (setting the `is_async`
+flag — `FunctionDeclaration`/`FunctionExpression` already carry it, and the
+emitter already prints the `async` prefix) *and* the `await_expression` node
+(currently in the `convert_expression` decline list alongside
+`async_function_expression` / `async_arrow_function` / `async_generator_expression`).
+First dump the parse tree to confirm `async function f(){await p}` parses with a
+reachable `await_expression` sub-node (the analogue of the generator parse-tree
+dump that unblocked gap-164). The emit side is already complete, so PR2 is
+bridge-only.

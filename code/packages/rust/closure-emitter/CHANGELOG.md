@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.28.0] - 2026-07-04
+
+### Added — CLOC12.164: emit `AwaitExpression` (`await x`)
+
+Emit `Expression::AwaitExpression` via new `emit_await` — `await ` + operand,
+printed like the word-unaries typeof/void/delete: a mandatory keyword↔operand
+space, operand at `PREC_UNARY` so a looser binary operand wraps (`await (a+b)`)
+while member/call operands print bare (`await a.b`, `await f()`). `expr_prec`
+tags await at `PREC_UNARY` so it binds tighter than binary parents
+(`await a+b`) but member/call/new parents wrap it (`(await p).x`, `(await f)()`).
+8 new unit tests. (CLOC12.164)
+
+
 ## [0.27.1] - 2026-07-04
 
 ### Added — CLOC12.163 PR3: CodePrinter yield conformance port

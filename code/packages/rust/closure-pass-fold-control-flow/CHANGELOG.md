@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.20.7] - 2026-07-04
+
+### Changed — CLOC12.164: `AwaitExpression` exhaustive-match arm
+
+Added an `Expression::AwaitExpression` arm that rebuilds the node, recursing
+into its `argument`, plus a matching arm in the `expression_cv` accessor, so the
+pass stays exhaustive over the new `javascript-ast` variant (part of the
+CLOC12.164 atomic node PR1). No behaviour change to any existing node; the await
+argument is now visited/rewritten exactly like any other sub-expression the pass
+already handles.
+
+
 ## [0.20.6] - 2026-07-03
 
 ### Changed — CLOC12.163: `YieldExpression` exhaustive-match arm
