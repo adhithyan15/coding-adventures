@@ -51,7 +51,7 @@
 #![warn(rust_2018_idioms)]
 
 use std::cmp::Ordering;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 use aarch64_backend::{compile_with_globals, GlobalWordReloc, Reloc};
@@ -1691,7 +1691,56 @@ fn push_aot_string_literal(
     (buf_var, len_var, literal)
 }
 
+/// E4-dyn (E4d-4): compute the set of string variables that are chosen by
+/// control flow — the destination of a `str`-typed instruction in **more than
+/// one basic block**.  For these, the compile-time last-writer-wins literal
+/// tracking (`strings`) cannot resolve a single value, so we must NOT register
+/// them there; `print_str`/`str_len` then fall into their existing **runtime**
+/// paths (`field_load` the length header from the buffer at run time) instead of
+/// the static-length fast path — which would use the wrong branch's length
+/// whenever the two literals differ in length.
+///
+/// This mirrors `iir-to-llvm`'s `collect_slot_vars` and `iir-to-wasm`'s
+/// `collect_runtime_str_vars` exactly (same basic-block rule): a `label` starts
+/// a new block, and a terminator (`jmp`/`jmp_if_false`/`jmp_if_true`/`ret`/
+/// `ret_void`) ends one.  A str reassigned twice *straight-line* stays in one
+/// block and keeps the literal fast path — the linear tracking is right there.
+///
+/// The native buffer built by `push_aot_string_literal` already has the
+/// `[i64 len][bytes]` layout and the var's stack slot already holds the
+/// buffer's address (a runtime handle) via `mov dest = buf`, so no backend
+/// change is needed — dropping the `strings` registration is the whole fix, and
+/// it applies to both the aarch64 and x86_64 backends at once.
+fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
+    let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    let mut block: usize = 0;
+    for instr in &func.instructions {
+        let op = instr.op.as_str();
+        if op == "label" {
+            block += 1;
+        }
+        if let Some(dest) = &instr.dest {
+            if instr.type_hint == "str" {
+                str_blocks.entry(dest.as_str()).or_default().insert(block);
+            }
+        }
+        if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
+            block += 1;
+        }
+    }
+    str_blocks
+        .into_iter()
+        .filter(|(_, blocks)| blocks.len() >= 2)
+        .map(|(name, _)| name.to_string())
+        .collect()
+}
+
 fn lower_string_literals_for_aot(func: &mut IIRFunction) {
+    // E4-dyn (E4d-4): variables whose string value is chosen by control flow.
+    // These are kept OUT of the compile-time `strings` map so their length is
+    // read at run time from the buffer header, not folded to a (possibly wrong)
+    // branch's constant.
+    let runtime_str_vars = collect_runtime_str_vars_for_aot(func);
     let mut lowered = Vec::with_capacity(func.instructions.len());
     let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
     let mut ints: HashMap<String, i64> = HashMap::new();
@@ -1767,14 +1816,23 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             // that uses it directly (e.g. `call strlen(dest)`).  The alias is stripped by
             // `strip_dead_aot_string_allocs` when `dest` is not observed outside the
             // already-folded string ops, so this does not inflate the frame for fold-only
-            // strings.
+            // strings.  `dest`'s slot now holds the buffer's address — a runtime handle to
+            // a `[i64 len][bytes]` block, identical to a runtime string parameter.
             lowered.push(IIRInstr::new(
                 "mov",
                 Some(dest.clone()),
                 vec![Operand::Var(buf_var)],
                 "i64",
             ));
-            strings.insert(dest.clone(), (dest, len_var, lit));
+            // E4-dyn (E4d-4): only register a *single-block* (foldable) string in
+            // the compile-time literal map.  A branch-selected string is left out,
+            // so `print_str`/`str_len`/`str_eq`/`str_cmp` on it take their runtime
+            // paths (reading the length header at run time) rather than baking in
+            // one branch's last-written literal — which would print the wrong
+            // length whenever the branches' strings differ in length.
+            if !runtime_str_vars.contains(&dest) {
+                strings.insert(dest.clone(), (dest, len_var, lit));
+            }
             continue;
         }
 
@@ -3290,5 +3348,100 @@ mod tests {
             })
             .collect();
         assert_eq!(store_offsets, vec![8, 9], "byte stores must be at offset 8..9: {:?}", f.instructions);
+    }
+
+    // ── E4-dyn (E4d-4): runtime (branch-selected) strings ────────────────────
+
+    /// A string variable assigned by `str_const` in two different basic blocks
+    /// is chosen by control flow, so `print_str` on it must read the length from
+    /// the buffer header at run time (`field_load` index 0) rather than folding a
+    /// single branch's static length. The two branches here differ in length
+    /// ("LONGER" = 6 vs "HI" = 2), so a static-length fold would be observably
+    /// wrong. This is the native sibling of iir-to-llvm's E4d-2 and iir-to-wasm's
+    /// E4d-3 runtime paths.
+    #[test]
+    fn branch_selected_string_reads_length_at_runtime() {
+        // cond = 1; if !cond goto Lelse
+        // Lthen: A = "LONGER"; goto Ldone
+        // Lelse: A = "HI"
+        // Ldone: print_str A; ret 0
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("cond".into()), Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Lthen".into())], "void"),
+                IIRInstr::new("str_const", Some("A".into()), vec![Operand::Str("LONGER".into())], "str"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("str_const", Some("A".into()), vec![Operand::Str("HI".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("A".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        // Both branches still build their `[i64 len][bytes]` heap buffers.
+        assert_eq!(
+            f.instructions.iter().filter(|i| i.op == "alloc_bytes").count(),
+            2,
+            "each branch's string must still allocate its own buffer: {:?}",
+            f.instructions
+        );
+        // The runtime length read: `field_load` the header (index 0) from `A`.
+        assert!(
+            f.instructions.iter().any(|i| {
+                i.op == "field_load"
+                    && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "A")
+                    && matches!(i.srcs.get(1), Some(Operand::Int(0)))
+            }),
+            "print_str of a branch-selected string must read the length header at \
+             run time (field_load A[0]), not fold a static length: {:?}",
+            f.instructions
+        );
+        // And it still calls the print runtime.
+        assert!(
+            f.instructions.iter().any(|i| {
+                i.op == "call_builtin"
+                    && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "print_string")
+            }),
+            "print_str should still lower to call_builtin print_string: {:?}",
+            f.instructions
+        );
+    }
+
+    /// A string reassigned twice *straight-line* (one basic block) is NOT
+    /// promoted: the last-writer-wins literal tracking is exactly right, so
+    /// `print_str` keeps the static-length fast path and emits no runtime
+    /// `field_load`. Mirrors the E4d-2/E4d-3 "straight-line not promoted" rule.
+    #[test]
+    fn straight_line_reassignment_keeps_static_length() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("OK".into())], "str"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("NO".into())], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            !f.instructions.iter().any(|i| i.op == "field_load"),
+            "a straight-line reassignment keeps the static-length fast path (no \
+             runtime field_load): {:?}",
+            f.instructions
+        );
     }
 }

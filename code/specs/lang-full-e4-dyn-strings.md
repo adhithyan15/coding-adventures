@@ -84,11 +84,11 @@ handle→ | i64 length (# bytes)     | b0 | b1 | ... | b(len-1) |
 | **CLR** | `ldstr` `String` | `System.String` from `String.Concat`/`Substring` — already dynamic ✅ |
 | **LLVM** | private `{i64,[N×i8]}` global | **`[i64 len][i8…]` block; handle = block address, `inttoptr`+`load` in `print_str`** ✅ (E4d-2) |
 | **WASM** | data segment + side-table | **linear-memory `[i32 len][i8…]` block; handle = i32 offset, `i32.load` in `print_str`** ✅ (E4d-3) |
-| **x86_64** | folded literal | **`__twig_alloc_bytes` heap block** (E5 model) |
-| **aarch64** | folded literal | **`__twig_alloc_bytes` heap block** (E5 model) |
+| **x86_64** | folded literal | **`alloc_bytes` `[i64 len][i8…]` block; slot holds address, `field_load` header in `print_str`** ✅ (E4d-4) |
+| **aarch64** | folded literal | **`alloc_bytes` `[i64 len][i8…]` block; slot holds address, `field_load` header in `print_str`** ✅ (E4d-4) |
 
-The four static backends are the whole job; the other three already run runtime
-strings.
+All four static backends now run runtime strings; the E4-dyn foothold is proven
+on **all seven backends**.
 
 ---
 
@@ -187,10 +187,22 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    the emitted wasm. Deferred (like E4d-2b): runtime `str_len`/`str_concat`/
    `str_slice`/`str_index`/`str_cmp` over promoted operands (E4d-3b — not needed by
    the foothold, which only *observes* a runtime string via `print_str`). *(needs 1, 1a)*
-4. **E4d-4 — native runtime strings.** `aarch64-backend` + `x86_64-backend` lower
-   the ops to `__twig_alloc_bytes` blocks + `bl/call` helpers + `udf/ud2` bounds
-   traps (mirror E5 arrays). Run-verify aarch64 locally + x86_64 on CI. Extend the
-   foothold cell with `NativeAot` → **all 7 backends**. *(needs 1, 1a)*
+4. **E4d-4 — native runtime strings.** ✅ **Landed** (`twig-aot` 0.27.0 /
+   `lang-aot` 0.174.0). Key finding: the native path *already* had everything —
+   `lower_string_literals_for_aot` builds each `str_const`'s `[i64 len][bytes]`
+   buffer via `alloc_bytes`/`field_store`/`store_byte` and stores its **address**
+   in the var's stack slot (`mov dest = buf`), and `print_str`/`str_len` already
+   read the length header at run time (`field_load src[0]`) for runtime string
+   *parameters*. The only bug was that `str_const` registered every dest in the
+   compile-time `strings` map, so a branch-selected local wrongly took the
+   static-length (last-writer-wins) path. Fix: `collect_runtime_str_vars_for_aot`
+   (same >1-basic-block rule as E4d-2/E4d-3) and skip the `strings` registration
+   for promoted vars → `print_str` reads the runtime length. No backend code
+   changed, so **one change covers both aarch64 and x86_64**. Foothold cell adds
+   `NativeAot` → **all 7 backends** (aarch64 run-verified locally, x86_64 on CI);
+   2 unit tests (differing-length runtime read + straight-line static). Deferred
+   (E4d-4b, like E4d-2b/E4d-3b): runtime `str_concat`/`str_slice`/`str_index` over
+   promoted operands — not needed by the foothold. *(needs 1, 1a)*
 5. **Frontend payoffs** *(each needs 1–4 for the backends it targets)*:
    - **E4d-AL — ALGOL string procedures.** Lift the `string procedures`
      `Unsupported` (algol-iir-compiler:886): a `string procedure` returns a
