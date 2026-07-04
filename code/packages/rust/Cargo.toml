@@ -526,6 +526,7 @@ members = [
     "point2d",
     "polynomial",
     "protobuf",
+    "fsrs",
     "python-bridge",
     "python-lexer",
     "python-parser",

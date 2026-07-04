@@ -1,0 +1,24 @@
+# Changelog — engram-core
+
+## Unreleased
+
+### Removed third-party `fsrs` — FSRS scheduling is now zero-dep
+
+FSRS-6 review scheduling (`scheduler.rs`) and retrievability ranking
+(`search.rs`) previously used the third-party [`fsrs`](https://crates.io/crates/fsrs)
+crate, which pulls in the `burn` tensor framework and dozens of transitive
+crates in order to support parameter *training*. Engram never trains — it only
+schedules — and the scheduling path is pure scalar `f32` arithmetic.
+
+The dependency is now the repository's own zero-dependency `fsrs` crate
+(`code/packages/rust/fsrs`), a from-scratch, forward-only reimplementation of
+exactly that path. The public surface Engram consumes (`FSRS::new`,
+`next_states`, `memory_state_from_sm2`, `current_retrievability`,
+`DEFAULT_PARAMETERS`, `FSRS6_DEFAULT_DECAY`, `MemoryState`, `ItemState`) is
+identical, so the swap is a one-line `Cargo.toml` change with no source edits.
+
+Before the cutover a cross-check asserted the new crate matches the live upstream
+`fsrs` 6.6.1 across **5,900+ comparisons** (within a `1e-4` relative tolerance;
+in practice bit-for-bit). All 167 `engram-core` tests — including the FSRS
+scheduler oracle tests — pass unchanged, and `burn` is gone from the dependency
+tree.

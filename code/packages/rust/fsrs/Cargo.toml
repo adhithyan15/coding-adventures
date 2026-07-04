@@ -1,0 +1,8 @@
+[package]
+name = "fsrs"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-dependency, forward-only FSRS-6 spaced-repetition scheduler (the inference half of the FSRS algorithm), reimplemented from scratch to keep the Engram stack free of third-party crates."
+license = "MIT"
+
+[dependencies]
