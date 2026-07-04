@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.27.1] - 2026-07-04
+
+### Added — CLOC12.163 PR3: CodePrinter yield conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_yield_test.rs`
+(registered as the `upstream_code_printer_yield` `[[test]]` target) porting the
+Closure Compiler `CodePrinterTest` generator `yield` / `yield*` printing cases
+against `emit_yield`. 9 active `#[test]`s, **0 `#[ignore]`** — the three surface
+forms (bare `yield`, non-delegate `yield a` with its mandatory keyword↔operand
+space, delegate `yield*xs` with no space plus the member-operand `yield*a.b`),
+the operand-precedence cases (conditional `yield a?b:c` and assignment
+`yield a=b` stay bare, sequence `yield (a,b)` wraps), and the whole-node
+precedence cases where a tighter parent wraps the yield (`(yield a)+1`,
+`(yield a).b`). Inputs are hand-constructed AST; the bridge conversion of yield
+(CLOC12.163 PR2, gap-164) is exercised separately in `javascript-parser` once
+generator bodies parse. Test-only — no library behaviour change.
+
 ## [0.27.0] - 2026-07-03
 
 ### Added — CLOC12.163: emit `YieldExpression` (`yield` / `yield x` / `yield* xs`)
