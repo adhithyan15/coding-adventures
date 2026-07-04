@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 77 \u2014 anesthesia gas-uptake index from four stated quantities (a NEW panel: anesthesia / gas-uptake). From an alveolar tension to divide, a blood solubility to divide by, a cardiac output to multiply, and a partial gradient to scale by, compute the gas-uptake index (alveolar_tension/blood_solubility + cardiac_output*partial_gradient), the partition quotient (alveolar_tension/blood_solubility), or the circulatory load (cardiac_output*partial_gradient). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, QUOTIENT PLUS A PRODUCT a/b+c*d (two INDEPENDENT binary terms \u2014 a pure quotient and a pure product \u2014 summed, divide/multiply before add; contrast rungs 69-74 which chained the +/- and */\u00f7 through a SHARED operand; here the two sides of the + are disjoint 2-operand terms, so a/b+c*d = (a/b)+(c*d), not a/(b+c)*d and not a*b+c/d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via /, *, and + \u2014 no constant leaks, and neither the partition quotient, the circulatory load, nor any uptake figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: ADDING the cardiac output INTO the denominator (a/(b+c)*d, a wrong grouping) and SWAPPING the multiply and divide between the two pairs (a*b+c/d, a wrong grouping). The core confusion tested is that a/b+c*d is (a/b)+(c*d), not a/(b+c)*d and not a*b+c/d.",
+  "items": [
+    {
+      "id": "r77gas-01",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 12, a blood solubility of 4 to divide by, a cardiac output of 3 and a partial gradient of 5 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(12)\nobserve blood_solubility(4)\nobserve cardiac_output(3)\nobserve partial_gradient(5)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r77gas-02",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 12, a blood solubility of 4 to divide by, a cardiac output of 3 and a partial gradient of 5 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(12)\nobserve blood_solubility(4)\nobserve cardiac_output(3)\nobserve partial_gradient(5)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r77gas-03",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 12, a blood solubility of 4 to divide by, a cardiac output of 3 and a partial gradient of 5 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(12)\nobserve blood_solubility(4)\nobserve cardiac_output(3)\nobserve partial_gradient(5)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r77gas-04",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 20, a blood solubility of 5 to divide by, a cardiac output of 4 and a partial gradient of 3 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(20)\nobserve blood_solubility(5)\nobserve cardiac_output(4)\nobserve partial_gradient(3)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 101.33333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r77gas-05",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 20, a blood solubility of 5 to divide by, a cardiac output of 4 and a partial gradient of 3 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(20)\nobserve blood_solubility(5)\nobserve cardiac_output(4)\nobserve partial_gradient(3)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 101.33333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r77gas-06",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 20, a blood solubility of 5 to divide by, a cardiac output of 4 and a partial gradient of 3 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(20)\nobserve blood_solubility(5)\nobserve cardiac_output(4)\nobserve partial_gradient(3)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 101.33333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r77gas-07",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 18, a blood solubility of 6 to divide by, a cardiac output of 2 and a partial gradient of 4 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(18)\nobserve blood_solubility(6)\nobserve cardiac_output(2)\nobserve partial_gradient(4)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 108.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r77gas-08",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 18, a blood solubility of 6 to divide by, a cardiac output of 2 and a partial gradient of 4 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(18)\nobserve blood_solubility(6)\nobserve cardiac_output(2)\nobserve partial_gradient(4)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 108.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r77gas-09",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 18, a blood solubility of 6 to divide by, a cardiac output of 2 and a partial gradient of 4 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(18)\nobserve blood_solubility(6)\nobserve cardiac_output(2)\nobserve partial_gradient(4)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 108.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r77gas-10",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 24, a blood solubility of 8 to divide by, a cardiac output of 5 and a partial gradient of 2 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(24)\nobserve blood_solubility(8)\nobserve cardiac_output(5)\nobserve partial_gradient(2)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.6923076923076925,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 194.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r77gas-11",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 24, a blood solubility of 8 to divide by, a cardiac output of 5 and a partial gradient of 2 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(24)\nobserve blood_solubility(8)\nobserve cardiac_output(5)\nobserve partial_gradient(2)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6923076923076925,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 194.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r77gas-12",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 24, a blood solubility of 8 to divide by, a cardiac output of 5 and a partial gradient of 2 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(24)\nobserve blood_solubility(8)\nobserve cardiac_output(5)\nobserve partial_gradient(2)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6923076923076925,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 194.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r77gas-13",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 15, a blood solubility of 3 to divide by, a cardiac output of 6 and a partial gradient of 2 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(15)\nobserve blood_solubility(3)\nobserve cardiac_output(6)\nobserve partial_gradient(2)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r77gas-14",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 15, a blood solubility of 3 to divide by, a cardiac output of 6 and a partial gradient of 2 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(15)\nobserve blood_solubility(3)\nobserve cardiac_output(6)\nobserve partial_gradient(2)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r77gas-15",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 15, a blood solubility of 3 to divide by, a cardiac output of 6 and a partial gradient of 2 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(15)\nobserve blood_solubility(3)\nobserve cardiac_output(6)\nobserve partial_gradient(2)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r77gas-16",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 28, a blood solubility of 7 to divide by, a cardiac output of 3 and a partial gradient of 4 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(28)\nobserve blood_solubility(7)\nobserve cardiac_output(3)\nobserve partial_gradient(4)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 196.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r77gas-17",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 28, a blood solubility of 7 to divide by, a cardiac output of 3 and a partial gradient of 4 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(28)\nobserve blood_solubility(7)\nobserve cardiac_output(3)\nobserve partial_gradient(4)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 196.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r77gas-18",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 28, a blood solubility of 7 to divide by, a cardiac output of 3 and a partial gradient of 4 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(28)\nobserve blood_solubility(7)\nobserve cardiac_output(3)\nobserve partial_gradient(4)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 196.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r77gas-19",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 16, a blood solubility of 8 to divide by, a cardiac output of 4 and a partial gradient of 5 to scale it by. What is the gas-uptake index (the partition quotient plus the circulatory load)?",
+      "program": "observe alveolar_tension(16)\nobserve blood_solubility(8)\nobserve cardiac_output(4)\nobserve partial_gradient(5)\nlet answer = alveolar_tension / blood_solubility + cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 128.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r77gas-20",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 16, a blood solubility of 8 to divide by, a cardiac output of 4 and a partial gradient of 5 to scale it by. What is the the partition quotient (alveolar tension over the blood solubility)?",
+      "program": "observe alveolar_tension(16)\nobserve blood_solubility(8)\nobserve cardiac_output(4)\nobserve partial_gradient(5)\nlet answer = alveolar_tension / blood_solubility\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 128.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r77gas-21",
+      "qtype": "gas_uptake",
+      "stem": "A gas-uptake assessment records an alveolar tension of 16, a blood solubility of 8 to divide by, a cardiac output of 4 and a partial gradient of 5 to scale it by. What is the the circulatory load (cardiac output times the partial gradient)?",
+      "program": "observe alveolar_tension(16)\nobserve blood_solubility(8)\nobserve cardiac_output(4)\nobserve partial_gradient(5)\nlet answer = cardiac_output * partial_gradient\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 128.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
