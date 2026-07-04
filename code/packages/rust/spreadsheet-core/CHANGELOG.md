@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.17.0
+
+**Sparse read accessors for serializers.** Two additive, non-breaking `Workbook`
+methods added for the `spreadsheet-io` adapter (SSIO01) that unifies `.xlsx`/
+`.xls` load & save onto this engine:
+
+- `cell_is_formula(sheet, addr) -> bool` — whether a cell holds a formula (vs a
+  literal value or empty). A serializer needs it to choose between writing a
+  formula and a plain value; `cell_source_text` alone can't tell them apart (a
+  formula's text and a literal's canonical string are both just strings) and the
+  `=` prefix is unreliable.
+- `populated_cells(sheet) -> Vec<CellAddress>` — the **sparse**, sorted list of
+  non-empty cell addresses. The counterpart to `used_range` (a bounding box): a
+  serializer must walk only the cells that exist, never the dense rectangle
+  between them. A sheet with cells at `A1` and `XFD1048576` has a ~17-billion-
+  position used range but two populated cells — iterating the box would hang.
+  This closes a DoS in any code that expanded `used_range` into a dense walk.
+
 ## 0.16.0
 
 **Column widths & row heights — engine-homed, persisted layout.** The `Workbook`

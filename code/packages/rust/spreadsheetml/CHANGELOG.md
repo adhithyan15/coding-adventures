@@ -5,6 +5,17 @@ All notable changes to `coding-adventures-spreadsheetml` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] — 2026-07-03
+
+### Fixed
+- **Read real-world files with uncomputed formulas.** A numeric/formula cell
+  whose cached value element is present but empty (`<c><f>SUM(..)</f><v></v></c>`)
+  no longer errors with `bad number ""`. openpyxl (and other producers that
+  don't evaluate) emit exactly this; the `<v>` is only a cache, so an empty one
+  decodes as `Value::Empty` and the formula text is still captured for
+  re-evaluation. Surfaced while wiring `spreadsheet-io` (SSIO01), whose committed
+  openpyxl fixture guards it.
+
 ## [0.2.0] — 2026-07-02
 
 OOXML milestone **M4** — number formats, dates, merged cells, defined names.

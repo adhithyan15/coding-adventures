@@ -1581,6 +1581,55 @@ impl Workbook {
         }
     }
 
+    /// Is the cell at `addr` a **formula** (as opposed to a literal value or
+    /// empty)? A serializer needs this to decide between emitting a formula and
+    /// emitting a plain value: [`cell_source_text`] alone can't tell them apart
+    /// (a formula's text and a literal's canonical string are both just strings),
+    /// and the `=` prefix is unreliable — the stored text may or may not carry it
+    /// depending on how the formula was entered.
+    ///
+    /// Pairs with [`cell_source_text`] (the formula body) and [`get_value`] (its
+    /// cached result) to fully drive a file writer off the unified core model.
+    ///
+    /// [`cell_source_text`]: Workbook::cell_source_text
+    /// [`get_value`]: Workbook::get_value
+    pub fn cell_is_formula(&self, sheet: SheetId, addr: CellAddress) -> bool {
+        self.sheets
+            .get(sheet.0 as usize)
+            .and_then(|s| s.cells.get(&addr))
+            .map(|c| c.is_formula())
+            .unwrap_or(false)
+    }
+
+    /// The addresses of every **non-empty** cell on `sheet`, sorted by
+    /// `(row, col)`.
+    ///
+    /// This is the **sparse** counterpart to [`used_range`] (a bounding box): a
+    /// serializer must walk only the cells that actually hold content, never the
+    /// dense rectangle between them. A sheet with one cell at `A1` and one at
+    /// `XFD1048576` has a used range of ~17 billion positions but just two
+    /// populated cells — iterating the box would hang; iterating this list is
+    /// two steps. Cost is `O(n log n)` in the number of populated cells.
+    ///
+    /// "Non-empty" matches [`used_range`]'s rule: a present-but-empty cell (e.g.
+    /// a formula that evaluated to blank, or a format sitting on an otherwise
+    /// empty cell) is excluded.
+    ///
+    /// [`used_range`]: Workbook::used_range
+    pub fn populated_cells(&self, sheet: SheetId) -> Vec<CellAddress> {
+        let Some(s) = self.sheets.get(sheet.0 as usize) else {
+            return Vec::new();
+        };
+        let mut addrs: Vec<CellAddress> = s
+            .cells
+            .iter()
+            .filter(|(_, cell)| !cell.current_value().is_empty())
+            .map(|(addr, _)| *addr)
+            .collect();
+        addrs.sort_by_key(|a| (a.row, a.col));
+        addrs
+    }
+
     // ----------------------------------------------------------------
     // Persistence — serialize / deserialize (save / load)
     // ----------------------------------------------------------------
