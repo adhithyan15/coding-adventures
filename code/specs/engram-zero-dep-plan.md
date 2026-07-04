@@ -59,19 +59,29 @@ engram-anki-package, so the SQLite/zstd/prost work belongs in anki-package.
 
 Effort: S ≈ ½ day, M ≈ 1–2 days, L ≈ several days / multiple PRs.
 
-### Phase A — protobuf (removes `prost`) — S/M
+### Phase A — protobuf (removes `prost`) — S/M — ✅ DONE (#7574, #7578)
 - New `code/packages/rust/protobuf` (or inline in anki-pkg): varint + wire-type
   0/2 encode/decode for the 4 messages (`PackageMetadata`, `PackageVersion`,
   `MediaEntries`, `MediaEntry`). Cross-test vs `prost` before swap. Remove `prost`.
 - Self-contained; no wire-format risk beyond standard protobuf. **Best first win.**
+- **Landed:** zero-dep `protobuf` crate + hand-coded `encode_pb`/`decode_pb`;
+  byte-for-byte cross-verified vs `prost` before removal. `prost` gone.
 
-### Phase B — FSRS (removes `fsrs`) — M (numeric risk)
-- New `code/packages/rust/fsrs` (or module): forward FSRS-5/6 — initial S0/D0,
-  R(t), next difficulty, next stability (recall/forget/same-day), interval, and
-  `memory_state_from_sm2`. ~200 LOC of `f32` arithmetic.
-- **Gate:** first convert the existing oracle tests (`scheduler.rs:564,599`,
-  `reducer.rs:3251`) — which currently call the real crate — into **frozen
-  snapshot** expected-values, then implement against them.
+### Phase B — FSRS (removes `fsrs`) — M (numeric risk) — ✅ DONE
+- New `code/packages/rust/fsrs`: forward FSRS-6 — initial S0/D0, R(t), next
+  difficulty (mean-reversion + linear damping), next stability
+  (after-success/after-failure/short-term), interval, `memory_state_from_sm2`,
+  `current_retrievability`, param upgrade + clipping. ~200 LOC scalar `f32`.
+- **Gate met:** transcribed upstream 6.6.1 scalar path exactly; a throwaway
+  cross-check asserted **5,900+ comparisons** vs the live crate (grid of
+  retention × elapsed × random `(S,D)`, plus sm2 + retrievability) within `1e-4`
+  rel-tol, then froze the exact upstream outputs as unit-test snapshots and
+  removed the dev-dependency. Cut engram-core over via a one-line Cargo.toml
+  swap (zero source edits — identical API); all 167 tests pass; `burn` is gone.
+- **Note:** upstream `fsrs` uses `burn` only for *training*; the scheduling path
+  we consume is pure scalar arithmetic, so no tensor code was needed. The
+  `reducer.rs:3251` reference in the original plan did not exist; the only oracle
+  tests were `scheduler.rs:564,599`, which now exercise the zero-dep crate.
 
 ### Phase C — Unicode + non-`re` regex (removes `unicode-normalization`, most of `regex`) — M
 - New shared Unicode tables: combining-class / `is_combining_mark`,
