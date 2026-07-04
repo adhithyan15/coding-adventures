@@ -49,11 +49,15 @@
 //!    Gated behind the default-on `frontend` cargo feature; `--no-default-features` keeps
 //!    L0–L5 dependency-free.
 //! 10. [`build_document`] / [`parse_document`] — the hierarchical **Document** layer (LTXDOC01
-//!     D2): a pure, total fold over the flat [`Node`] tree that splits the source at
-//!     `\begin{document}` into a [`Preamble`] and a *flat* body of [`Block`]s (classifying
-//!     `\documentclass`/`\usepackage`, lowering headings to zero-body [`Block::Section`]s,
-//!     paragraphs/lists/tables/display-math/environments to blocks, and text runs to
-//!     [`Inline`]s). Spans are coarse (region-granular) but honestly nested. **Implemented (D2).**
+//!     D2–D3): a pure, total fold over the flat [`Node`] tree that splits the source at
+//!     `\begin{document}` into a [`Preamble`] and a body of [`Block`]s (classifying
+//!     `\documentclass`/`\usepackage`, lowering paragraphs/lists/tables/display-math/environments
+//!     to blocks and text runs to [`Inline`]s). **D3** then folds the flat block stream into the
+//!     **nested sectioning forest**: each heading owns the blocks that follow it until the next
+//!     heading of same-or-higher level (`\part > \chapter > \section > … > \subparagraph`), and a
+//!     trailing `\label` is hoisted onto the section. Spans are coarse (region-granular) but
+//!     honestly nested (a folded section's span is the union of its children's). **Implemented
+//!     (D2–D3).**
 //!
 //! ## Example
 //!
