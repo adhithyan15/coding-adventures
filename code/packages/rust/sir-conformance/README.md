@@ -122,6 +122,21 @@ pinned to: `INT32_MAX + 1 == INT32_MIN` (i32 wrap), `0u32 - 1 == 4294967295`,
 `10¹² · 10¹² == 10²⁴` (arbitrary). The differential runner and coverage gate
 (T2b) will consume it to derive expected outputs instead of hand-typing them.
 
+## The oracle-derived differential runner (`tests/arithmetic.rs`, SIR21 §P1)
+
+For integer arithmetic the expected value is **not** hand-typed — it is computed
+by the oracle and every backend is measured against *that*. Each case asks
+`oracle::eval(op, lhs, rhs, arbitrary)` for the answer, generates the equivalent
+Ruby (`puts(lhs op rhs)`), runs it through every backend's real toolchain, and
+asserts the stdout matches byte-for-byte (9 cases × 4 backends = 36 runs, green
+on the Phase-1 net).
+
+**Frontier surfaced:** `10¹² * 10¹²` diverges — Python prints the exact `10²⁴`,
+but JavaScript (`1e+24`, f64) and Go/Rust (`2003764205206896640`, 64-bit wrap)
+do not. Only Python honours Ruby's arbitrary precision today; closing the gap is
+the per-backend `Bignum` work (T4–T8), tracked by the `#[ignore]`d
+`frontier_large_arbitrary_diverges` test.
+
 ## Where it fits
 
 ```
