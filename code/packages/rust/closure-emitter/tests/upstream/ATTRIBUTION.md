@@ -124,6 +124,22 @@ under the Apache License, Version 2.0:
       hand-constructed AST; the bridge conversion of the spread form
       (CLOC12.162 PR2, gap-163) is exercised separately in `javascript-parser`.
 
+- `code_printer_yield_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the generator `yield` / `yield*` printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_yield` + the `PREC_ASSIGNMENT` classification that landed
+      with `Expression::YieldExpression` (CLOC12.163). 9 active `#[test]`s and
+      **0 `#[ignore]`** — the covered shapes: the three surface forms (bare
+      `yield`, non-delegate `yield a` with its mandatory keyword↔operand space,
+      delegate `yield*xs` with no space plus the member-operand `yield*a.b`),
+      the operand-precedence cases (conditional `yield a?b:c` and assignment
+      `yield a=b` stay bare, sequence `yield (a,b)` wraps), and the
+      whole-node-precedence cases where a tighter parent wraps the yield
+      (`(yield a)+1`, `(yield a).b`). Inputs are hand-constructed AST; the
+      bridge conversion of yield (CLOC12.163 PR2, gap-164) is exercised
+      separately in `javascript-parser` once generator bodies parse.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
