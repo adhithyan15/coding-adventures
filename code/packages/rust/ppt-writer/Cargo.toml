@@ -1,0 +1,15 @@
+[package]
+name = "ppt-writer"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-third-party-dependency writer for the legacy PowerPoint 97-2003 binary format (.ppt, [MS-PPT]). Emits records into a 'PowerPoint Document' stream and wraps it in an OLE2 Compound File via the `cfb-writer` crate."
+license = "MIT"
+
+[dependencies]
+# The only dependency is our sibling CFB container writer — no third-party crates.
+cfb-writer = { path = "../cfb-writer" }
+
+[dev-dependencies]
+# The reader, used to prove our .ppt output round-trips: reopen the container,
+# extract the "PowerPoint Document" stream, and walk the record tree.
+cfb = { path = "../cfb" }
