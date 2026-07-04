@@ -188,3 +188,89 @@ fn frontier_large_arbitrary_diverges() {
         }
     }
 }
+
+// ── The coverage gate (SIR21 §P5) ─────────────────────────────────────────
+//
+// The differential runner proves the cases it *has*. The coverage gate proves
+// there are no *gaps*: for every operation the oracle can evaluate (`IntOp::ALL`,
+// the set a frontend could emit), at least one conformance case must exist and
+// pass on every backend that accepts it. This is the structural fix for the
+// "a construct is emittable but a backend never implemented it, and no test
+// noticed" class of bug — the same shape as the `case_eq` gap. An op that grows
+// the oracle but gains no case fails CI as a *coverage* error, not silently.
+//
+// This is the arithmetic slice of the gate (op × backend). Extending it to the
+// full `SirType`/feature surface of the golden corpus is a later slice.
+
+/// Toolchain-free: every op the oracle supports is exercised by ≥1 case. Runs
+/// even on a host with no backends, so a new op with no case fails immediately.
+#[test]
+fn coverage_gate_every_op_has_a_case() {
+    for &op in IntOp::ALL {
+        assert!(
+            CASES.iter().any(|c| c.op == op),
+            "COVERAGE GAP: op `{}` is in IntOp::ALL but no arithmetic case exercises it \
+             — add a case to CASES (SIR21 §P5)",
+            op.tag()
+        );
+    }
+}
+
+/// Toolchain-gated: every `(op, backend)` cell is actually *proven* — for each
+/// op, a representative case runs on every available backend and matches the
+/// oracle. A backend that accepts an op (its toolchain is present and the
+/// program runs) but produces the wrong answer, or cannot run it at all, is a
+/// coverage failure localised to `(op, backend)`.
+#[test]
+fn coverage_gate_every_op_backend_cell_is_proven() {
+    let mut proven: std::collections::HashSet<(&str, &str)> = std::collections::HashSet::new();
+
+    for &target in Target::all() {
+        for &op in IntOp::ALL {
+            // First case that exercises this op is the representative.
+            let case = CASES.iter().find(|c| c.op == op).unwrap_or_else(|| {
+                panic!("no case for op `{}` (see coverage_gate_every_op_has_a_case)", op.tag())
+            });
+            let expected = expected_for(case);
+            let ruby = format!("puts({} {} {})\n", case.lhs, op_symbol(op), case.rhs);
+            match run_source(case.name, &ruby, target) {
+                RunOutcome::Ran(out) => {
+                    assert_eq!(
+                        out,
+                        expected,
+                        "COVERAGE FAILURE at ({}, {}): backend disagreed with the oracle",
+                        op.tag(),
+                        target.tag(),
+                    );
+                    proven.insert((op.tag(), target.tag()));
+                }
+                RunOutcome::Skipped(_) => {}
+                RunOutcome::Failed(msg) => {
+                    panic!("COVERAGE ERROR at ({}, {}): {msg}", op.tag(), target.tag())
+                }
+            }
+        }
+    }
+
+    // On every backend that ran at least one op (its toolchain is present),
+    // *all* ops must be proven — no accepted-but-untested cell.
+    for &target in Target::all() {
+        let backend_ran = IntOp::ALL.iter().any(|op| proven.contains(&(op.tag(), target.tag())));
+        if backend_ran {
+            for &op in IntOp::ALL {
+                assert!(
+                    proven.contains(&(op.tag(), target.tag())),
+                    "COVERAGE GAP: backend `{}` ran some ops but not `{}` — every accepted op \
+                     must have a passing case (SIR21 §P5)",
+                    target.tag(),
+                    op.tag()
+                );
+            }
+        }
+    }
+
+    assert!(
+        !proven.is_empty(),
+        "no backend toolchain was available — the coverage gate proved nothing"
+    );
+}

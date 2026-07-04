@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.3] - 2026-07-04
+
+### Added — CLOC12.163 PR2: generator/`yield` end-to-end fixture
+
+Generator functions and `yield` now flow through the full SIMPLE/ADVANCED
+pipeline (via the javascript-parser 0.28.0 bridge) instead of falling back to
+WHITESPACE_ONLY. New e2e diff fixture `tests/diff/simple-yield/` proving
+`use(function*(){yield 1 + 2;})` → `use(function*(){yield 3})` at SIMPLE: the
+generator prints as `function*`, the `yield` round-trips, and the operand
+`1 + 2` folds to `3` (a WHITESPACE_ONLY fallback would leave `yield 1+2`
+verbatim). Version-sync: `cli.spec.json` and the `--help_markdown` fixture
+bumped to 0.234.3.
+
 ## [0.234.2] - 2026-07-03
 
 ### Added — CLOC12.162 PR2: spread end-to-end fixture

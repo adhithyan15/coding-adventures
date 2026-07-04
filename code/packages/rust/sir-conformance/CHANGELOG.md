@@ -2,6 +2,32 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.8.0] - SIR21 T2c — the coverage gate (§P5)
+
+### Added — structural coverage guard over the integer-op × backend grid
+
+The third slice of T2. Where the differential runner proves the cases it *has*,
+the **coverage gate** proves there are no *gaps*: for every operation the oracle
+can evaluate (`IntOp::ALL` — the set a frontend could emit), at least one
+conformance case must exist and pass on every backend that accepts it. This is
+the structural fix for the "a construct is emittable but a backend never
+implemented it, and no test noticed" class of bug — the same shape as the
+`case_eq` gap (missing from three runtimes). An op that grows the oracle but
+gains no case now fails CI as a *coverage* error, not silently (SIR21 §P5).
+
+- `oracle::IntOp::ALL` enumerates every op (with a compile-time exhaustiveness
+  nudge in the tests), plus `IntOp::tag()` for stable coverage keys. Adding an
+  `IntOp` variant forces adding it to `ALL`, which forces a conformance case.
+- `coverage_gate_every_op_has_a_case` (toolchain-free): every op in `ALL` is
+  exercised by ≥1 arithmetic case — runs even on a host with no backends.
+- `coverage_gate_every_op_backend_cell_is_proven` (toolchain-gated): for each
+  op, a representative case runs on every available backend and matches the
+  oracle; and every backend that ran *any* op must have proven *all* of them —
+  no accepted-but-untested `(op, backend)` cell.
+
+This is the arithmetic slice of the gate (op × backend); extending it to the
+full `SirType`/feature surface of the golden corpus is a later slice (T2d).
+
 ## [0.7.0] - SIR21 T2b — the oracle-derived differential runner (§P1)
 
 ### Added — `tests/arithmetic.rs`, oracle-derived expectations
