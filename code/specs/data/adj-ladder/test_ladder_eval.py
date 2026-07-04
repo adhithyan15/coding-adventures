@@ -109,6 +109,7 @@ SELF_CONTAINED_RUNGS = (
     "rung69_traction_force",
     "rung70_phototherapy_dose",
     "rung71_refraction_acuity",
+    "rung72_amniotic_index",
 )
 
 
