@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 68 \u2014 gait efficiency index from four stated quantities (a NEW panel: physical therapy / gait analysis). From a stance and a swing phase (their sum is the stride time), a cadence count to scale by, and a leg length to normalise by, compute the gait index ((stance_phase+swing_phase)*cadence_count/leg_length), the stride (stance_phase+swing_phase), or the geared stride ((stance_phase+swing_phase)*cadence_count). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, SUM-TIMES-FACTOR OVER A DIVISOR (a+b)*c/d, the first on the ladder to scale a sum by a factor and then divide (the mirror of rung-67 (a-b)*c/d, and distinct from rung-49 a*(b+c) with the factor leading and rung-53 (a+b+c)/d with no scaling factor) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via +, -, *, and / \u2014 no constant leaks, and neither the stride, the geared stride, nor any gait-index figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: DIFFERENCING the two phases ((a-b)*c/d, a wrong stride \u2014 and exactly rung-67's shape) and SWAPPING the multiply and divide ((a+b)/c*d, a wrong scaling). The core confusion tested is that (a+b)*c/d is not (a-b)*c/d and not (a+b)/c*d.",
+  "items": [
+    {
+      "id": "r68gait-01",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 60 and a swing phase of 40, scaled by a cadence count of 6 and normalised to a leg length of 50. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(60)\nobserve swing_phase(40)\nobserve cadence_count(6)\nobserve leg_length(50)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 833.3333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r68gait-02",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 60 and a swing phase of 40, scaled by a cadence count of 6 and normalised to a leg length of 50. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(60)\nobserve swing_phase(40)\nobserve cadence_count(6)\nobserve leg_length(50)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 833.3333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r68gait-03",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 60 and a swing phase of 40, scaled by a cadence count of 6 and normalised to a leg length of 50. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(60)\nobserve swing_phase(40)\nobserve cadence_count(6)\nobserve leg_length(50)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 833.3333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r68gait-04",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 70 and a swing phase of 30, scaled by a cadence count of 8 and normalised to a leg length of 50. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(70)\nobserve swing_phase(30)\nobserve cadence_count(8)\nobserve leg_length(50)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 800,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 625.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r68gait-05",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 70 and a swing phase of 30, scaled by a cadence count of 8 and normalised to a leg length of 50. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(70)\nobserve swing_phase(30)\nobserve cadence_count(8)\nobserve leg_length(50)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 800,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 625.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r68gait-06",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 70 and a swing phase of 30, scaled by a cadence count of 8 and normalised to a leg length of 50. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(70)\nobserve swing_phase(30)\nobserve cadence_count(8)\nobserve leg_length(50)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 800,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 625.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r68gait-07",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 80 and a swing phase of 40, scaled by a cadence count of 5 and normalised to a leg length of 60. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(80)\nobserve swing_phase(40)\nobserve cadence_count(5)\nobserve leg_length(60)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1440.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r68gait-08",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 80 and a swing phase of 40, scaled by a cadence count of 5 and normalised to a leg length of 60. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(80)\nobserve swing_phase(40)\nobserve cadence_count(5)\nobserve leg_length(60)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1440.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r68gait-09",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 80 and a swing phase of 40, scaled by a cadence count of 5 and normalised to a leg length of 60. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(80)\nobserve swing_phase(40)\nobserve cadence_count(5)\nobserve leg_length(60)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1440.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r68gait-10",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 90 and a swing phase of 30, scaled by a cadence count of 6 and normalised to a leg length of 40. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(90)\nobserve swing_phase(30)\nobserve cadence_count(6)\nobserve leg_length(40)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 800.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r68gait-11",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 90 and a swing phase of 30, scaled by a cadence count of 6 and normalised to a leg length of 40. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(90)\nobserve swing_phase(30)\nobserve cadence_count(6)\nobserve leg_length(40)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r68gait-12",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 90 and a swing phase of 30, scaled by a cadence count of 6 and normalised to a leg length of 40. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(90)\nobserve swing_phase(30)\nobserve cadence_count(6)\nobserve leg_length(40)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r68gait-13",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 100 and a swing phase of 20, scaled by a cadence count of 8 and normalised to a leg length of 60. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(100)\nobserve swing_phase(20)\nobserve cadence_count(8)\nobserve leg_length(60)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 900.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r68gait-14",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 100 and a swing phase of 20, scaled by a cadence count of 8 and normalised to a leg length of 60. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(100)\nobserve swing_phase(20)\nobserve cadence_count(8)\nobserve leg_length(60)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 900.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r68gait-15",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 100 and a swing phase of 20, scaled by a cadence count of 8 and normalised to a leg length of 60. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(100)\nobserve swing_phase(20)\nobserve cadence_count(8)\nobserve leg_length(60)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 900.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 960,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r68gait-16",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 110 and a swing phase of 50, scaled by a cadence count of 7 and normalised to a leg length of 40. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(110)\nobserve swing_phase(50)\nobserve cadence_count(7)\nobserve leg_length(40)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 914.2857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r68gait-17",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 110 and a swing phase of 50, scaled by a cadence count of 7 and normalised to a leg length of 40. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(110)\nobserve swing_phase(50)\nobserve cadence_count(7)\nobserve leg_length(40)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 914.2857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r68gait-18",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 110 and a swing phase of 50, scaled by a cadence count of 7 and normalised to a leg length of 40. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(110)\nobserve swing_phase(50)\nobserve cadence_count(7)\nobserve leg_length(40)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 914.2857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r68gait-19",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 75 and a swing phase of 45, scaled by a cadence count of 6 and normalised to a leg length of 90. What is the gait efficiency index (stride geared by cadence, per unit leg length)?",
+      "program": "observe stance_phase(75)\nobserve swing_phase(45)\nobserve cadence_count(6)\nobserve leg_length(90)\nlet answer = (stance_phase + swing_phase) * cadence_count / leg_length\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r68gait-20",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 75 and a swing phase of 45, scaled by a cadence count of 6 and normalised to a leg length of 90. What is the the stride time (stance plus swing phase)?",
+      "program": "observe stance_phase(75)\nobserve swing_phase(45)\nobserve cadence_count(6)\nobserve leg_length(90)\nlet answer = stance_phase + swing_phase\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1800.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r68gait-21",
+      "qtype": "gait_efficiency_index",
+      "stem": "A gait analysis records a stance phase of 75 and a swing phase of 45, scaled by a cadence count of 6 and normalised to a leg length of 90. What is the the geared stride before normalising to leg length (stride times the cadence count)?",
+      "program": "observe stance_phase(75)\nobserve swing_phase(45)\nobserve cadence_count(6)\nobserve leg_length(90)\nlet answer = (stance_phase + swing_phase) * cadence_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1800.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
