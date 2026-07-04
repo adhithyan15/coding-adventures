@@ -2,6 +2,47 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.7.0] - SIR21 T2b — the oracle-derived differential runner (§P1)
+
+### Added — `tests/arithmetic.rs`, oracle-derived expectations
+
+The second slice of SIR21 T2. Wires the T2a reference oracle into a **differential
+runner**: for each integer-arithmetic case it asks the oracle for the answer,
+generates the equivalent Ruby (`puts(lhs op rhs)`), runs it through **every**
+backend's real toolchain, and asserts each backend's stdout equals the oracle's
+answer byte-for-byte. **No expected value is hand-typed** — the oracle is the
+single source of truth, so a disagreeing backend is localised as `(case, backend)`
+and can't hide behind another backend sharing its bug (§P1).
+
+- 9 arithmetic cases × 4 backends = 36 real toolchain runs, all green on the
+  **Phase-1 net** (values within the range every backend represents exactly
+  today — Python is bignum, JS `Number` is f64-exact to 2⁵³, Go/Rust are 64-bit).
+- A toolchain-free `every_case_has_a_well_formed_oracle_expectation` guard
+  cross-checks the oracle against native `i128` math and runs even with no
+  backends present.
+
+### Confirmed — a real cross-backend faithfulness gap (the bignum frontier)
+
+Probing beyond the Phase-1 net surfaced the harness's first genuine finding:
+`10¹² * 10¹²` (= 10²⁴) prints
+- `1000000000000000000000000` on **Python** (correct — Ruby ints are arbitrary
+  precision),
+- `1e+24` on **JavaScript** (f64 precision loss),
+- `2003764205206896640` on **Go** and **Rust** (64-bit wraparound).
+
+Only Python honours Ruby's arbitrary-precision semantics — precisely the "the
+type is the semantics" problem SIR21 exists to fix. It is captured as the
+`#[ignore]`d `frontier_large_arbitrary_diverges` test (executable documentation
+that flips to a passing assertion once the per-backend `Bignum` lowering, T4–T8,
+lands).
+
+### Refactored
+
+`lib.rs` gained source-level primitives `lower_source(name, src)` /
+`run_source(name, src, target)` (the internals now key off a `&str` name instead
+of a `&'static Program`), so runtime-generated programs can drive the harness;
+the static `Program`-based `lower`/`run` are thin wrappers, unchanged for callers.
+
 ## [0.6.0] - SIR21 T2a — the integer reference oracle (§P2)
 
 ### Added — `oracle` module (pure, toolchain-free)

@@ -129,29 +129,45 @@ pub enum RunOutcome {
     Failed(String),
 }
 
+/// Lower Ruby `source` (named `name`) to SIR. The source-level primitive used
+/// by both the static [`Program`] corpus and the oracle-derived arithmetic
+/// cases (whose source is generated at runtime, so it cannot be a `&'static`
+/// [`Program`]).
+pub fn lower_source(name: &str, source: &str) -> Result<Module, String> {
+    compile_source(source, name)
+        .map_err(|e| format!("frontend failed to lower `{name}`: {e:?}"))
+}
+
 /// Lower `program.ruby` to SIR (shared by every backend so the *frontend* runs
 /// exactly once per program, as it would in production).
 pub fn lower(program: &Program) -> Result<Module, String> {
-    compile_source(program.ruby, program.name)
-        .map_err(|e| format!("frontend failed to lower `{}`: {e:?}", program.name))
+    lower_source(program.name, program.ruby)
+}
+
+/// Run Ruby `source` (named `name`) through one `target`: lower, emit, compile
+/// if needed, execute through the real toolchain, and return the normalised
+/// stdout. This is the source-level primitive [`run`] delegates to; it accepts
+/// a runtime-generated `&str` so oracle-derived programs can drive it.
+pub fn run_source(name: &str, source: &str, target: Target) -> RunOutcome {
+    if !target.available() {
+        return RunOutcome::Skipped(format!("{} not on PATH", target.toolchain()));
+    }
+    let module = match lower_source(name, source) {
+        Ok(m) => m,
+        Err(e) => return RunOutcome::Failed(e),
+    };
+    match target {
+        Target::Python => run_python(name, &module),
+        Target::JavaScript => run_javascript(name, &module),
+        Target::Go => run_go(name, &module),
+        Target::Rust => run_rust(name, &module),
+    }
 }
 
 /// Run one `program` through one `target`: emit, compile if needed, execute
 /// through the real toolchain, and return the normalised stdout.
 pub fn run(program: &Program, target: Target) -> RunOutcome {
-    if !target.available() {
-        return RunOutcome::Skipped(format!("{} not on PATH", target.toolchain()));
-    }
-    let module = match lower(program) {
-        Ok(m) => m,
-        Err(e) => return RunOutcome::Failed(e),
-    };
-    match target {
-        Target::Python => run_python(program, &module),
-        Target::JavaScript => run_javascript(program, &module),
-        Target::Go => run_go(program, &module),
-        Target::Rust => run_rust(program, &module),
-    }
+    run_source(program.name, program.ruby, target)
 }
 
 /// Normalise stdout for comparison: unify CRLF→LF and strip trailing newlines
@@ -160,11 +176,11 @@ fn normalise(s: &str) -> String {
     s.replace("\r\n", "\n").trim_end_matches('\n').to_string()
 }
 
-fn temp_path(program: &Program, target: Target, ext: &str) -> PathBuf {
+fn temp_path(name: &str, target: Target, ext: &str) -> PathBuf {
     let mut p = std::env::temp_dir();
     p.push(format!(
         "sir_conf_{}_{}_{}{ext}",
-        program.name,
+        name,
         target.tag(),
         std::process::id()
     ));
@@ -202,12 +218,12 @@ fn python_runtime_path() -> Option<String> {
     }
 }
 
-fn run_python(program: &Program, module: &Module) -> RunOutcome {
+fn run_python(name: &str, module: &Module) -> RunOutcome {
     let artifact = match semantic_ir_to_python::compile(module) {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("python emit failed: {e:?}")),
     };
-    let path = temp_path(program, Target::Python, ".py");
+    let path = temp_path(name, Target::Python, ".py");
     if fs::write(&path, &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .py".into());
     }
@@ -224,12 +240,12 @@ fn run_python(program: &Program, module: &Module) -> RunOutcome {
 
 // ── JavaScript ──────────────────────────────────────────────────────────────
 
-fn run_javascript(program: &Program, module: &Module) -> RunOutcome {
+fn run_javascript(name: &str, module: &Module) -> RunOutcome {
     let artifact = match semantic_ir_to_javascript::compile(module) {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("javascript emit failed: {e:?}")),
     };
-    let path = temp_path(program, Target::JavaScript, ".js");
+    let path = temp_path(name, Target::JavaScript, ".js");
     if fs::write(&path, &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .js".into());
     }
@@ -240,12 +256,12 @@ fn run_javascript(program: &Program, module: &Module) -> RunOutcome {
 
 // ── Go ──────────────────────────────────────────────────────────────────────
 
-fn run_go(program: &Program, module: &Module) -> RunOutcome {
+fn run_go(name: &str, module: &Module) -> RunOutcome {
     let artifact = match semantic_ir_to_go::compile(module) {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("go emit failed: {e:?}")),
     };
-    let path = temp_path(program, Target::Go, ".go");
+    let path = temp_path(name, Target::Go, ".go");
     if fs::write(&path, &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .go".into());
     }
@@ -261,13 +277,13 @@ fn run_go(program: &Program, module: &Module) -> RunOutcome {
 // linker point at `rust-lld`), then run the binary. A missing linker is a
 // *skip*, not a failure — matching the per-backend exec tests.
 
-fn run_rust(program: &Program, module: &Module) -> RunOutcome {
+fn run_rust(name: &str, module: &Module) -> RunOutcome {
     let artifact = match semantic_ir_to_rust::compile(module) {
         Ok(a) => a,
         Err(e) => return RunOutcome::Failed(format!("rust emit failed: {e:?}")),
     };
-    let src = temp_path(program, Target::Rust, ".rs");
-    let bin = temp_path(program, Target::Rust, if cfg!(windows) { ".exe" } else { "" });
+    let src = temp_path(name, Target::Rust, ".rs");
+    let bin = temp_path(name, Target::Rust, if cfg!(windows) { ".exe" } else { "" });
     if fs::write(&src, &artifact.source).is_err() {
         return RunOutcome::Failed("could not write temp .rs".into());
     }
