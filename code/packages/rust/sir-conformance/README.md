@@ -137,6 +137,17 @@ do not. Only Python honours Ruby's arbitrary precision today; closing the gap is
 the per-backend `Bignum` work (T4–T8), tracked by the `#[ignore]`d
 `frontier_large_arbitrary_diverges` test.
 
+## The coverage gate (SIR21 §P5)
+
+The runner proves the cases it *has*; the coverage gate proves there are no
+*gaps*. For every op the oracle can evaluate (`IntOp::ALL` — the set a frontend
+could emit), it requires at least one conformance case that **passes on every
+backend that accepts it**. An op that grows the oracle but gains no case fails
+CI as a coverage error — the structural fix for the "emittable but never
+implemented, and no test noticed" bug (the `case_eq` class). Two tests:
+`coverage_gate_every_op_has_a_case` (toolchain-free) and
+`coverage_gate_every_op_backend_cell_is_proven` (no accepted-but-untested cell).
+
 ## Where it fits
 
 ```
