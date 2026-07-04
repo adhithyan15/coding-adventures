@@ -46,6 +46,8 @@ use std::process::Command;
 use ruby_to_semantic_ir::compile_source;
 use semantic_ir::Module;
 
+pub mod oracle;
+
 /// One conformance program: a name, its Ruby source, and the **reference**
 /// stdout it must produce on every backend.
 #[derive(Debug, Clone)]

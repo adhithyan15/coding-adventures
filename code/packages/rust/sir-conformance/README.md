@@ -108,6 +108,20 @@ As a library, `run(&program, target) -> RunOutcome` and `lower(&program)` are
 public so other harnesses (e.g. the eventual typed-integer conformance suite)
 can reuse the emit-and-run plumbing.
 
+## The reference oracle (`oracle` module, SIR21 §P2)
+
+`oracle::eval(op, lhs, rhs, spec)` is the **independent authority** for integer
+arithmetic: given operands, an op (`Add`/`Sub`/`Mul`), and an `IntSpec`
+(`width` × `signed` × `overflow`), it returns the one observable `Outcome` the
+[SIR21 faithfulness contract](../../../specs/SIR21-type-system-and-integer-semantics.md)
+prescribes — `Value`, `Trapped`, `NoValue`, `Unspecified` (UB), or
+`BeyondOracle` (a documented `i128` range limit, never a wrong number). It runs
+no toolchain and no backend, so every backend can be measured against it rather
+than against each other (which would let a shared bug hide). Examples it is
+pinned to: `INT32_MAX + 1 == INT32_MIN` (i32 wrap), `0u32 - 1 == 4294967295`,
+`10¹² · 10¹² == 10²⁴` (arbitrary). The differential runner and coverage gate
+(T2b) will consume it to derive expected outputs instead of hand-typing them.
+
 ## Where it fits
 
 ```
