@@ -94,6 +94,14 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   matching the assignment-position list slots it lives in. Node +
   `closure-emitter` + all pass traversals land in one atomic PR; the
   bridge-enable + conformance port follow (gap-163).
+- `YieldExpression` (CLOC12.163) — a generator `yield`: a bare `yield`, a value
+  `yield x`, or a delegating `yield* xs`.
+  `YieldExpression { delegate: bool, argument: Option<Box<Expression>> }` — the
+  `argument` is optional (a bare `yield` has no operand) and `delegate` splits
+  `yield` from `yield*`. It tags at `PREC_ASSIGNMENT` (a yield is loose, so a
+  tighter parent wraps the whole yield: `(yield a)+1`). Node + `closure-emitter`
+  + all pass traversals land in one atomic PR; the bridge-enable + conformance
+  port follow.
 
 ## What's coming (follow-up PRs)
 

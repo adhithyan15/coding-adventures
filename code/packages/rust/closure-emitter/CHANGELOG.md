@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.27.0] - 2026-07-03
+
+### Added — CLOC12.163: emit `YieldExpression` (`yield` / `yield x` / `yield* xs`)
+
+New `emit_yield` prints `Expression::YieldExpression`: a bare `yield`, a value
+yield `yield x` (mandatory keyword↔argument space), and a delegating
+`yield*xs` (no space after `*`). The argument is printed at `PREC_ASSIGNMENT`,
+so a sequence argument wraps (`yield (a,b)`) while a conditional or assignment
+argument prints bare. `expr_prec` tags a yield at `PREC_ASSIGNMENT`, so a
+tighter parent wraps the whole yield (`(yield a)+1`, `(yield a).b`). 9 new unit
+tests.
+
+
 ## [0.26.1] - 2026-07-03
 
 ### Added — CLOC12.162 PR3: CodePrinter spread conformance port

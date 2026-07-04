@@ -827,6 +827,7 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
         }
         // Count uses of `name` inside the spread argument (`...name`).
         Expression::SpreadElement(s) => count_uses_expr(&s.argument, name, count),
+        Expression::YieldExpression(y) => { if let Some(a) = &y.argument { count_uses_expr(a, name, count); } }
     }
 }
 
@@ -1123,6 +1124,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         }
         // Propagate into the spread argument (`...name`).
         Expression::SpreadElement(s) => changed |= propagate_in_expr(&mut s.argument, cand),
+        Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { changed |= propagate_in_expr(a, cand); } }
     }
     changed
 }

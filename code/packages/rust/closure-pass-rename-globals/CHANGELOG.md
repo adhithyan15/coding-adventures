@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.10.6] - 2026-07-03
+
+### Changed — CLOC12.163: `YieldExpression` traversal arms
+
+Added `Expression::YieldExpression` arms (2 across the pass's traversal
+routines) that walk into the yield's optional `argument` when present, so the
+pass stays exhaustive over the new `javascript-ast` variant (part of the
+CLOC12.163 atomic node PR1). No behaviour change to any existing node; the
+yield argument is now visited exactly like any other sub-expression the pass
+already handles.
+
+
 ## [0.10.5] - 2026-07-03
 
 ### Changed — CLOC12.162: `SpreadElement` exhaustive-match arm

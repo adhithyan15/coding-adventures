@@ -78,7 +78,7 @@ use coding_adventures_javascript_ast::{
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
-    TaggedTemplateExpression, SpreadElement,
+    TaggedTemplateExpression, SpreadElement, YieldExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1137,6 +1137,7 @@ impl<'a> Emitter<'a> {
             Expression::TemplateLiteral(t) => self.emit_template_literal(t),
             Expression::TaggedTemplateExpression(t) => self.emit_tagged_template(t),
             Expression::SpreadElement(s) => self.emit_spread(s),
+            Expression::YieldExpression(y) => self.emit_yield(y),
         }
         if needs_parens {
             self.write_str(")");
@@ -1558,6 +1559,51 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&s.cv);
         self.write_str("...");
         self.emit_expression_inner(&s.argument, PREC_ASSIGNMENT);
+    }
+
+    /// Emit a `YieldExpression` — `yield`, `yield x`, or `yield* xs`.
+    ///
+    /// Three shapes, driven by the two independent fields `delegate` and
+    /// `argument`:
+    ///
+    /// ```text
+    ///   yield             delegate=false, argument=None    → "yield"
+    ///   yield x           delegate=false, argument=Some    → "yield x"
+    ///   yield* xs         delegate=true,  argument=Some    → "yield*xs"
+    /// ```
+    ///
+    /// **Token separation.** `yield` is a *word* keyword, so a non-delegating
+    /// `yield` followed by an argument needs a mandatory separator or the two
+    /// would fuse into one identifier (`yieldx`): we emit `required_ws()`
+    /// between them (`yield x`). A delegating `yield*` needs no separator — the
+    /// `*` is punctuation that already terminates the keyword token, and no
+    /// valid `AssignmentExpression` argument begins with `*`, so `yield*xs`
+    /// tokenises unambiguously. (A delegating yield without an argument would be
+    /// a syntax error upstream; if a malformed AST presents `delegate=true,
+    /// argument=None` we still emit a bare `yield*`, leaving the invalidity
+    /// visible rather than silently rewriting it.)
+    ///
+    /// **Precedence.** The argument prints at `PREC_ASSIGNMENT` — the yield
+    /// operand grammar is an `AssignmentExpression`, so a conditional or
+    /// assignment argument prints bare (`yield a?b:c`, `yield a=b`) while a
+    /// looser sequence wraps (`yield (a,b)`). The wrapping of the *whole* yield
+    /// in a tighter parent is handled by `expr_prec` (which tags it at
+    /// `PREC_ASSIGNMENT`) plus `emit_expression_inner`, exactly as for arrows
+    /// and assignments — no local paren logic is needed here.
+    fn emit_yield(&mut self, y: &YieldExpression) {
+        self.maybe_map(&y.cv);
+        self.write_str("yield");
+        if y.delegate {
+            self.write_str("*");
+        }
+        if let Some(arg) = &y.argument {
+            // A non-delegating `yield` must be separated from its argument;
+            // after a delegating `yield*` the `*` already separates the tokens.
+            if !y.delegate {
+                self.required_ws();
+            }
+            self.emit_expression_inner(arg, PREC_ASSIGNMENT);
+        }
     }
 
     fn emit_member(&mut self, m: &MemberExpression) {
@@ -1991,6 +2037,14 @@ fn expr_prec(e: &Expression) -> u8 {
         // never emitted as a sub-operand of another operator (that would be
         // invalid JS), so no other context can observe this precedence.
         Expression::SpreadElement(_) => PREC_ASSIGNMENT,
+        // `yield` / `yield* x` is an `AssignmentExpression` alternative in the
+        // grammar — it binds looser than every operator except the comma. Tag it
+        // at `PREC_ASSIGNMENT` so a tighter parent wraps it (`(yield x)+1`,
+        // `f((yield x))` when the call slot is not itself assignment-position,
+        // `(yield x).y`), while an assignment RHS or conditional branch — both
+        // emitted at `PREC_ASSIGNMENT` — leave it bare (`x=yield v`,
+        // `c?yield a:yield b`). This mirrors the arrow / assignment tags exactly.
+        Expression::YieldExpression(_) => PREC_ASSIGNMENT,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -4815,5 +4869,92 @@ mod tests {
         });
         let e = call(ident("f"), vec![spread(cond)]);
         assert_eq!(emit_expr(e), "f(...a?b:c);");
+    }
+
+    // =================================================================
+    // YieldExpression (`yield` / `yield x` / `yield* xs`) — CLOC12.163
+    // =================================================================
+
+    /// Build a `YieldExpression` from its two axes.
+    fn yld(delegate: bool, argument: Option<Expression>) -> Expression {
+        Expression::YieldExpression(YieldExpression {
+            cv: None,
+            delegate,
+            argument: argument.map(Box::new),
+        })
+    }
+
+    /// `yield` — a bare yield with no operand prints just the keyword.
+    #[test]
+    fn yield_bare_prints_keyword_only() {
+        assert_eq!(emit_expr(yld(false, None)), "yield;");
+    }
+
+    /// `yield a` — a non-delegating yield separates the keyword from its
+    /// argument with a mandatory space (`yielda` would be one identifier).
+    #[test]
+    fn yield_value_has_required_space() {
+        assert_eq!(emit_expr(yld(false, Some(ident("a")))), "yield a;");
+    }
+
+    /// `yield*xs` — a delegating yield needs no separator: the `*` already
+    /// terminates the keyword token, so the argument abuts it.
+    #[test]
+    fn yield_delegate_needs_no_space() {
+        assert_eq!(emit_expr(yld(true, Some(ident("xs")))), "yield*xs;");
+    }
+
+    /// `yield*a.b` — a delegating yield's argument may be a member chain; it
+    /// binds tighter than assignment so it prints bare after `yield*`.
+    #[test]
+    fn yield_delegate_member_argument() {
+        let e = yld(true, Some(member(ident("a"), "b", false)));
+        assert_eq!(emit_expr(e), "yield*a.b;");
+    }
+
+    /// `yield a?b:c` — a conditional argument binds tighter than the sequence
+    /// floor (yield's operand grammar is an `AssignmentExpression`), so it
+    /// prints bare — no over-wrap.
+    #[test]
+    fn yield_conditional_argument_is_bare() {
+        let cond = Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(ident("a")),
+            consequent: Box::new(ident("b")),
+            alternate: Box::new(ident("c")),
+        });
+        assert_eq!(emit_expr(yld(false, Some(cond))), "yield a?b:c;");
+    }
+
+    /// `yield a=b` — an assignment argument also prints bare (it is exactly at
+    /// the operand's assignment precedence).
+    #[test]
+    fn yield_assignment_argument_is_bare() {
+        let e = yld(false, Some(assign("a", AssignmentOperator::Eq, ident("b"))));
+        assert_eq!(emit_expr(e), "yield a=b;");
+    }
+
+    /// `yield (a,b)` — a **sequence** argument is the one form that must wrap:
+    /// it binds looser than the assignment-precedence operand floor.
+    #[test]
+    fn yield_sequence_argument_is_wrapped() {
+        let e = yld(false, Some(seq(vec![ident("a"), ident("b")])));
+        assert_eq!(emit_expr(e), "yield (a,b);");
+    }
+
+    /// `(yield a)+1` — the whole yield binds looser than `+`, so a binary parent
+    /// wraps it (`expr_prec` tags yield at `PREC_ASSIGNMENT`).
+    #[test]
+    fn yield_wrapped_as_binary_operand() {
+        let e = binary(BinaryOperator::Add, yld(false, Some(ident("a"))), num(1.0));
+        assert_eq!(emit_expr(e), "(yield a)+1;");
+    }
+
+    /// `(yield a).b` — a member parent binds at primary strength and wraps the
+    /// looser yield object.
+    #[test]
+    fn yield_wrapped_as_member_object() {
+        let e = member(yld(false, Some(ident("a"))), "b", false);
+        assert_eq!(emit_expr(e), "(yield a).b;");
     }
 }

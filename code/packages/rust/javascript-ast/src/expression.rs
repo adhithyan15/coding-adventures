@@ -62,6 +62,7 @@ pub enum Expression {
     SequenceExpression(SequenceExpression),
     TaggedTemplateExpression(TaggedTemplateExpression),
     SpreadElement(SpreadElement),
+    YieldExpression(YieldExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -490,6 +491,57 @@ pub struct SpreadElement {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub argument: Box<Expression>,
+}
+
+/// A `yield` expression — the pause/resume operator that only appears inside a
+/// generator function body:
+///
+/// ```text
+///   yield              a bare yield, no operand      (delegate = false, argument = None)
+///   yield value        yield a single value          (delegate = false, argument = Some)
+///   yield* iterable    delegate to another iterable  (delegate = true,  argument = Some)
+/// ```
+///
+/// # Two independent axes
+///
+/// A yield carries two bits of shape, kept as separate fields so the emitter
+/// and every AST walker can reason about them independently:
+///
+/// - **`delegate`** — `false` for `yield` / `yield x`, `true` for `yield* x`.
+///   The `*` turns a yield into a *delegating* yield that forwards every value
+///   its `argument` iterable produces. A delegating yield **must** have an
+///   argument (bare `yield*` is a syntax error); a non-delegating yield may or
+///   may not.
+/// - **`argument`** — `None` for a bare `yield`, `Some(expr)` otherwise. When
+///   present it is an `AssignmentExpression` in the grammar (the loosest
+///   operand), so the emitter prints it at assignment precedence.
+///
+/// | source        | delegate | argument      |
+/// |---------------|----------|---------------|
+/// | `yield`       | `false`  | `None`        |
+/// | `yield x`     | `false`  | `Some(x)`     |
+/// | `yield* xs`   | `true`   | `Some(xs)`    |
+///
+/// # Precedence
+///
+/// `yield` is an `AssignmentExpression` alternative in the grammar — it binds
+/// looser than every operator except the comma. The emitter therefore tags it
+/// at assignment precedence: as an assignment RHS or a conditional branch it
+/// prints bare (`x = yield v`, `c ? yield a : yield b`), but any tighter parent
+/// — a binary operand, a call argument that is *not* already an
+/// assignment-position slot, a member object — wraps it into `(yield v)`.
+///
+/// Like the other operand-carrying nodes we model `argument` as a `Box` to keep
+/// the `Expression` enum a fixed size regardless of how deep the yielded
+/// expression nests.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct YieldExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub delegate: bool,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub argument: Option<Box<Expression>>,
 }
 
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the

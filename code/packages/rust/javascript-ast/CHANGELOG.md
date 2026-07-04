@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.22.0] - 2026-07-03
+
+### Added — CLOC12.163: `Expression::YieldExpression` (`yield` / `yield x` / `yield* xs`)
+
+New `YieldExpression { cv, delegate: bool, argument: Option<Box<Expression>> }`
+variant of `Expression` modelling a generator `yield` — a bare `yield`
+(`argument: None`, yields `undefined`), a value yield `yield x`
+(`argument: Some(x)`), and a delegating `yield* xs` (`delegate: true`). The
+argument is optional because a bare `yield` has no operand, and `delegate`
+distinguishes `yield` from `yield*`. Re-exported from the crate root. Atomic
+node PR (PR1): the node + `closure-emitter` emit + all nine downstream pass
+match-arms land in one commit so the workspace never breaks.
+
+
 ## [0.21.0] - 2026-07-03
 
 ### Added — CLOC12.162: `Expression::SpreadElement` (`...arg`)
