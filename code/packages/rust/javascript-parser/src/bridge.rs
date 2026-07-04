@@ -62,7 +62,7 @@ use coding_adventures_javascript_ast::{
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
-        UndefinedLiteral, UpdateExpression, UpdateOperator,
+        UndefinedLiteral, UpdateExpression, UpdateOperator, YieldExpression,
     },
     statement::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
@@ -233,7 +233,10 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
     // Alternation → exactly one child Node.
     let child = sole_node(node).ok_or_else(|| internal(node, "expected 1 child"))?;
     match child.rule_name.as_str() {
-        "function_declaration" => {
+        // `function_declaration` and `generator_declaration` share the same
+        // converter — the `*` distinguishes them and sets the `generator` flag
+        // (CLOC12.163 PR2).
+        "function_declaration" | "generator_declaration" => {
             let decl = convert_function_declaration(child)?;
             Ok(ProgramItem::Declaration(Declaration::FunctionDeclaration(decl)))
         }
@@ -903,15 +906,27 @@ fn convert_lexical_declaration(node: &GrammarASTNode) -> Result<VariableDeclarat
 // =========================================================================
 
 fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclaration, BridgeError> {
-    // function_declaration = "function" NAME LPAREN [ formal_parameters ] RPAREN
-    //                        LBRACE function_body RBRACE ;
-    // Token children include "function", NAME, "(", ")", "{", "}"
+    // function_declaration  = "function"     NAME LPAREN [ formal_parameters ] RPAREN
+    //                         LBRACE function_body RBRACE ;
+    // generator_declaration = "function" "*" NAME LPAREN [ formal_parameters ] RPAREN
+    //                         LBRACE function_body RBRACE ;
+    // Token children include "function", (optional "*"), NAME, "(", ")", "{", "}"
     // Node children: optional formal_parameters, then function_body
+    //
+    // The two rules share this converter: a `*` token marks a generator
+    // (CLOC12.163 PR2). We skip it during name extraction and record it in the
+    // `generator` flag so the emitter re-prints `function*`.
 
-    // Extract function name from token children (skip "function").
+    // Extract function name from token children (skip "function" and the
+    // generator "*").
     let name = node.children.iter().find_map(|c| match c {
         ASTNodeOrToken::Token(t)
-            if t.value != "function" && t.value != "(" && t.value != ")" && t.value != "{" && t.value != "}" =>
+            if t.value != "function"
+                && t.value != "*"
+                && t.value != "("
+                && t.value != ")"
+                && t.value != "{"
+                && t.value != "}" =>
         {
             Some(t.value.clone())
         }
@@ -945,22 +960,27 @@ fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclara
         id: Identifier { cv: None, name },
         params,
         body,
-        generator: false,
+        generator: has_token(node, "*"),
         is_async: false,
     })
 }
 
 fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpression, BridgeError> {
-    // function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
-    //                       LBRACE function_body RBRACE ;
+    // function_expression  = "function"     [ NAME ] LPAREN [ formal_parameters ] RPAREN
+    //                        LBRACE function_body RBRACE ;
+    // generator_expression = "function" "*" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+    //                        LBRACE function_body RBRACE ;
     // Structurally identical to `function_declaration` (see above) with ONE
     // difference: the NAME is OPTIONAL. `function () {}` is anonymous;
     // `function f () {}` in value position binds `f` only inside its own body
     // (a body-local self-reference for recursion), never in the enclosing
     // scope. So a missing name is NOT an error here — it's the common case.
+    // As with declarations, a `*` marks a generator expression (CLOC12.163 PR2):
+    // skip it during name extraction and record it in `generator`.
     let name = node.children.iter().find_map(|c| match c {
         ASTNodeOrToken::Token(t)
             if t.value != "function"
+                && t.value != "*"
                 && t.value != "("
                 && t.value != ")"
                 && t.value != "{"
@@ -997,9 +1017,47 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
         id: name.map(|name| Identifier { cv: None, name }),
         params,
         body,
-        generator: false,
+        generator: has_token(node, "*"),
         is_async: false,
     })
+}
+
+// ---------------------------------------------------------------------
+// YieldExpression (CLOC12.163 PR2 — bridge enable, gap-164)
+// ---------------------------------------------------------------------
+
+/// Convert a `yield_expression` grammar node into a [`YieldExpression`].
+///
+/// The parse tree has one of two shapes (confirmed by dumping the grammar
+/// parser's output for `function*g(){yield x}` / `function*g(){yield* xs}`):
+///
+/// ```text
+///   yield x     yield_expression = [ Token("yield"),            Node(assignment_expression) ]
+///   yield* xs   yield_expression = [ Token("yield"), Token("*"), Node(assignment_expression) ]
+/// ```
+///
+/// So `delegate` is simply "does the node carry a `*` token", and the operand
+/// is the sole child *node* (`node_children` skips the `yield` / `*` tokens).
+///
+/// **Operand is mandatory in this grammar.** A bare operand-less `yield` does
+/// *not* parse today — the grammar's `yield_expression` production requires an
+/// `assignment_expression` operand (`function*g(){yield;}` is a parse error).
+/// The typed AST models `argument` as `Option` (a bare `yield` is legal ES),
+/// but the bridge only ever produces `Some(_)` until the grammar admits the
+/// operand-less form. If a future grammar change yields an operand-less node,
+/// the `node_children().next()` below returns `None` and we surface an internal
+/// error rather than silently mis-converting.
+fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+    let delegate = has_token(node, "*");
+    let operand = node_children(node)
+        .into_iter()
+        .next()
+        .ok_or_else(|| internal(node, "yield_expression: missing operand"))?;
+    Ok(Expression::YieldExpression(YieldExpression {
+        cv: None,
+        delegate,
+        argument: Some(Box::new(convert_expression(operand)?)),
+    }))
 }
 
 // ---------------------------------------------------------------------
@@ -1304,6 +1362,21 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_function_expression(node).map(Expression::FunctionExpression)
         }
 
+        // A generator function in value position (`x = function*(){…}`,
+        // `(function*(){…})()`). Same converter as `function_expression` — the
+        // `*` sets the `generator` flag so the emitter re-prints `function*`
+        // (CLOC12.163 PR2, gap-164).
+        "generator_expression" => {
+            convert_function_expression(node).map(Expression::FunctionExpression)
+        }
+
+        // A `yield` / `yield* x` expression inside a generator body
+        // (CLOC12.163 PR2, gap-164). Now that the typed AST has
+        // `Expression::YieldExpression` (CLOC12.163 PR1) and the bridge
+        // converts the enclosing generator function, convert the yield instead
+        // of declining.
+        "yield_expression" => convert_yield_expression(node),
+
         // Concise-body arrow function (CLOC12.152). `convert_arrow_function`
         // itself declines the ambiguous `() => {}` / object-body case and
         // (until the grammar parses them) never sees a block body.
@@ -1328,9 +1401,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // no-substitution templates are handled above by
         // `convert_template_literal`.)
         "async_arrow_function"
-        | "yield_expression"
         | "await_expression"
-        | "generator_expression"
         | "async_function_expression"
         | "async_generator_expression"
         | "class_expression"
@@ -4438,5 +4509,103 @@ mod tests {
     #[test]
     fn single_operand_not_a_sequence() {
         assert!(matches!(sole_expr("a;"), Expression::Identifier(i) if i.name == "a"));
+    }
+
+    // ---- Generators + yield (CLOC12.163 PR2, closes gap-164) -----------
+
+    use coding_adventures_javascript_ast::statement::TaggedStatement;
+
+    /// Bridge `src`, expect a single generator/function *declaration*, and
+    /// return `(generator_flag, first_body_expression)`.
+    fn gen_decl(src: &str) -> (bool, Expression) {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) => {
+                let expr = match &f.body.body[0] {
+                    Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                        es.expression.clone()
+                    }
+                    other => panic!("expected an expression statement in body, got {other:?}"),
+                };
+                (f.generator, expr)
+            }
+            other => panic!("expected a FunctionDeclaration, got {other:?}"),
+        }
+    }
+
+    /// `function*g(){yield x;}` bridges to a *generator* `FunctionDeclaration`
+    /// (no longer declined) whose body holds a non-delegating `YieldExpression`
+    /// over `x`.
+    #[test]
+    fn generator_declaration_with_yield() {
+        let (is_gen, expr) = gen_decl("function*g(){yield x;}");
+        assert!(is_gen, "function* must set the generator flag");
+        match expr {
+            Expression::YieldExpression(y) => {
+                assert!(!y.delegate, "`yield x` is not delegating");
+                assert!(matches!(y.argument.as_deref(),
+                    Some(Expression::Identifier(i)) if i.name == "x"));
+            }
+            other => panic!("expected YieldExpression, got {other:?}"),
+        }
+    }
+
+    /// `function*g(){yield* xs;}` bridges to a **delegating** `YieldExpression`
+    /// (the `*` sets `delegate`).
+    #[test]
+    fn generator_declaration_with_delegate_yield() {
+        let (is_gen, expr) = gen_decl("function*g(){yield* xs;}");
+        assert!(is_gen);
+        match expr {
+            Expression::YieldExpression(y) => {
+                assert!(y.delegate, "`yield*` is delegating");
+                assert!(matches!(y.argument.as_deref(),
+                    Some(Expression::Identifier(i)) if i.name == "xs"));
+            }
+            other => panic!("expected delegating YieldExpression, got {other:?}"),
+        }
+    }
+
+    /// The yield operand is bridged in full — `yield a + b` carries a
+    /// `BinaryExpression` operand (the bridge does not fold; that is a pass's
+    /// job), so a downstream fold pass can still optimise it.
+    #[test]
+    fn yield_binary_operand_bridged() {
+        let (_, expr) = gen_decl("function*g(){yield a + b;}");
+        match expr {
+            Expression::YieldExpression(y) => {
+                assert!(matches!(y.argument.as_deref(), Some(Expression::BinaryExpression(_))));
+            }
+            other => panic!("expected YieldExpression, got {other:?}"),
+        }
+    }
+
+    /// A **generator expression** in value position (`x = function*(){yield 1;}`)
+    /// bridges to a `FunctionExpression` with `generator == true` — no longer
+    /// declined.
+    #[test]
+    fn generator_expression_in_value_position() {
+        match sole_expr("x = function*(){yield 1;};") {
+            Expression::AssignmentExpression(a) => match &*a.right {
+                Expression::FunctionExpression(f) => {
+                    assert!(f.generator, "function* expression must set the generator flag");
+                }
+                other => panic!("expected a generator FunctionExpression RHS, got {other:?}"),
+            },
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    /// A **plain** (non-generator) function declaration keeps `generator ==
+    /// false` — the `*`-detection does not misfire on `function g(){}`.
+    #[test]
+    fn plain_function_is_not_a_generator() {
+        let p = bridge_ok("function g(){return 1;}");
+        match &p.body[0] {
+            ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) => {
+                assert!(!f.generator, "a plain function is not a generator");
+            }
+            other => panic!("expected a FunctionDeclaration, got {other:?}"),
+        }
     }
 }

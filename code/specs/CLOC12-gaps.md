@@ -2002,22 +2002,52 @@ wrapped), and the whole-node wraps in tighter parents (`(yield a)+1`,
 declines yield (gap-164), so closurec falls back to WHITESPACE_ONLY on generator
 bodies for now. PR2 (bridge-enable) and PR3 (conformance port) follow.
 
-### gap-164 — bridge declines `yield` (`YieldExpression`) — **OPEN**
+### gap-164 — bridge declines `yield` (`YieldExpression`) — **RESOLVED (javascript-parser 0.28.0, CLOC12.163 PR2)**
 
-The `javascript-parser` bridge does not yet convert a `yield` / `yield*`
-expression to `Expression::YieldExpression`; a generator body containing a
-`yield` drops the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.163
-PR1) landed the node + emit + pass traversals so the typed AST and every
-downstream pass can already represent and print a yield.
+The `javascript-parser` bridge declined a `yield` / `yield*` expression (and the
+enclosing generator function), returning `UnsupportedSyntax` and dropping the
+whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.163 PR1) landed the
+node + emit + pass traversals so the typed AST and every downstream pass could
+already represent and print a yield.
 
-**PR2 (bridge-enable) — pending parseability check.** Unlike the preceding
-expression nodes, `yield` is only grammatical inside a generator function body
-(`function* g(){ … }`), so the bridge slice must first confirm the parser
-produces a generator-function parse tree with a reachable `yield`/`yield*`
-sub-node (analogous to the parse-tree dump that unblocked gap-163 for spread).
-If the parser does not yet admit generator bodies, PR2 waits on that grammar
-work and PR1's node remains exercised by hand-constructed AST (emitter unit
-tests) plus the PR3 conformance port — the same staging used for the
-substitution-template slice (gap-157). Note the existing WHITESPACE_ONLY path
-already strips redundant parens around a `yield` operand (gap-105); that is the
-token-level fallback, independent of this structured-AST node.
+**Parseability check (the gate).** Unlike the preceding expression nodes,
+`yield` is only grammatical inside a generator function body
+(`function* g(){ … }`). Dumping the grammar parser's output confirmed:
+`function*g(){}` parses (`generator_declaration`), and `function*g(){yield x;}`
+/ `function*g(){yield* xs;}` parse with a **reachable `yield_expression`
+node** — shape `[ Token("yield"), Node(assignment_expression) ]`, and delegate
+`[ Token("yield"), Token("*"), Node(assignment_expression) ]`. So both operand
+forms are parseable.
+
+**Fix (CLOC12.163 PR2):** two joined bridge changes, because a bare
+`yield_expression` conversion alone would still fall back to WHITESPACE_ONLY —
+the *enclosing* `generator_declaration` / `generator_expression` was itself
+declined. So this slice bridges both:
+1. `convert_source_element` and `convert_expression` route
+   `generator_declaration` / `generator_expression` through the existing
+   function converters; a `*` token sets the `generator` flag (skipped during
+   name extraction). The emitter already re-prints `function*`
+   (`emit_function_declaration` / `emit_function_expression`), so no emit change
+   was needed.
+2. `convert_yield_expression` wraps the node as `Expression::YieldExpression`
+   (`delegate = has_token(node, "*")`, operand = the sole child node via
+   `node_children`).
+
+5 bridge unit tests (generator declaration with `yield`, delegating `yield*`,
+binary yield operand, generator expression in value position, plain-function
+non-generator guard), plus a closurec e2e diff fixture
+(`tests/diff/simple-yield/`) proving `use(function*(){yield 1 + 2;})` →
+`use(function*(){yield 3})` at SIMPLE: the generator prints `function*`, the
+`yield` round-trips, and the operand `1 + 2` folds to `3` — proving the whole
+file ran through the pipeline rather than WHITESPACE_ONLY.
+
+**Known grammar limitation (separate gap).** A bare operand-less `yield`
+(`function*g(){yield;}`) does **not** parse today — the grammar's
+`yield_expression` production requires an `assignment_expression` operand.
+`Expression::YieldExpression` models `argument` as `Option` (a bare `yield` is
+legal ES), but the bridge only ever produces `Some(_)` until the grammar admits
+the operand-less form; `convert_yield_expression` surfaces an internal error
+rather than mis-converting if a future operand-less node ever appears. Tracked
+as a grammar gap, distinct from this structured-AST slice. (The existing
+WHITESPACE_ONLY path also strips redundant parens around a `yield` operand,
+gap-105 — a token-level fallback independent of this node.)
