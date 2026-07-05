@@ -1,0 +1,30 @@
+{
+  "case_count": 3,
+  "cases": [
+    {
+      "axis": "fostered-nobr-cell-continuation",
+      "id": "tests26-dat-1251",
+      "reason": "remaining finish-time recovery for fostered nobr continuation nodes that html5lib keeps inside the table cell",
+      "source": "tests26.dat:1251"
+    },
+    {
+      "axis": "fostered-nobr-cell-continuation",
+      "id": "tests26-dat-4",
+      "reason": "remaining finish-time recovery for fostered nobr continuation nodes that html5lib keeps inside the table cell",
+      "source": "tests26.dat:4"
+    },
+    {
+      "axis": "insanely-badly-nested-table-sequence",
+      "id": "tricky01-dat-8",
+      "reason": "remaining finish-time recovery for html5lib's insanely badly nested table sequence",
+      "source": "tricky01.dat:8"
+    }
+  ],
+  "counts_by_axis": {
+    "fostered-nobr-cell-continuation": 2,
+    "insanely-badly-nested-table-sequence": 1
+  },
+  "description": "Focused parser audit over the remaining html5lib tree-construction cases that justify finish-time post-parse repair shims.",
+  "format": "whatwg-html-post-parse-repair-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

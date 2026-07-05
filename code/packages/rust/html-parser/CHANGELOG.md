@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- The WHATWG post-parse repair audit now has a focused fixture and Rust replay
+  guard over the remaining html5lib rows that still justify finish-time repair
+  shims.
 - The WHATWG formatting audit now includes a focused post-parse repair evidence
   guard for the html5lib cases that still justify legacy finish-time recovery
   shims.
