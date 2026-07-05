@@ -44,6 +44,8 @@ Chief of Staff job/session/agent
      maintenance evidence signals without owning smart-home state
   -> platform access review over command-risk, authorization-gap, authorization
      decision, and capability-grant signals without owning smart-home state
+  -> platform event-ops review over event delivery, event log, and pending-work
+     signals without draining queues or owning smart-home state
   -> recovery brief over incident, policy, runtime, state, and validation
      handoff signals
   -> escalation brief over morning, blocker, review, and owner-lane signals
@@ -286,6 +288,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_platform_evidence_ledger_summary`
 - `smart_home.list_platform_access_review`
 - `smart_home.get_platform_access_review_summary`
+- `smart_home.list_platform_event_ops_review`
+- `smart_home.get_platform_event_ops_review_summary`
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_pending_work_summary`
 - `smart_home.get_attention_overview`

@@ -151,6 +151,8 @@ Current scope:
   inspecting checkpointed runtime event-log entries
 - D18D command-result observability descriptors for listing and summarizing
   command results from checkpointed runtime event history
+- D18D platform event-ops review descriptors for Chief-visible rollups over
+  event delivery, event-log, and pending-work primitives
 - D18D authorization-audit tool descriptors for listing decisions and compact
   allow/deny summaries
 - D18D capability-grant tool descriptors for listing grant rows and compact
