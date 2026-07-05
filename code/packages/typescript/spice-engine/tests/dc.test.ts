@@ -27,6 +27,7 @@ import {
   deviceModelReferenceDeckAuditAnalysisSummaryRecords,
   deviceModelReferenceDeckAuditFixtures,
   deviceModelReferenceDeckAuditGate,
+  deviceModelReferenceDeckAuditGateIssueRecords,
   deviceModelReferenceDeckAuditMatrix,
   deviceModelReferenceDeckAuditMatrixRecords,
   deviceModelReferenceDeckAuditRecords,
@@ -44,6 +45,9 @@ import {
   formatDeviceModelReferenceDeckAuditAnalysisSummaryJson,
   formatDeviceModelReferenceDeckAuditAnalysisSummaryTable,
   formatDeviceModelReferenceDeckAuditCsv,
+  formatDeviceModelReferenceDeckAuditGateIssueCsv,
+  formatDeviceModelReferenceDeckAuditGateIssueJson,
+  formatDeviceModelReferenceDeckAuditGateIssueTable,
   formatDeviceModelReferenceDeckAuditGateReport,
   formatDeviceModelReferenceDeckAuditJson,
   formatDeviceModelReferenceDeckAuditMatrixCsv,
@@ -477,6 +481,22 @@ describe("dcOp", () => {
     expect(report.issues.some((issue) => issue.fixtureName === "NMOS:tran" && issue.field === "coverage")).toBe(true);
     expect(table).toContain("fixture_name\tfield\tmessage");
     expect(table).toContain("NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row");
+
+    expect(formatDeviceModelReferenceDeckAuditGateIssueTable(report)).toBe(
+      "fixture_name\tfield\tmessage\nNMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row",
+    );
+    const records = deviceModelReferenceDeckAuditGateIssueRecords(report);
+    expect(records).toStrictEqual([
+      {
+        fixture_name: "NMOS:tran",
+        field: "coverage",
+        message: "missing required NMOS tran reference-deck audit row",
+      },
+    ]);
+    expect(formatDeviceModelReferenceDeckAuditGateIssueCsv(report)).toBe(
+      "fixture_name,field,message\nNMOS:tran,coverage,missing required NMOS tran reference-deck audit row\n",
+    );
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditGateIssueJson(report))).toStrictEqual(records);
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {

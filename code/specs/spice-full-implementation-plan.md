@@ -33,18 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model reference-deck audit matrix dashboard.
+1. Device model reference-deck audit gate issue exports.
    - Status: current PR completion candidate.
    - Add Python, Rust, and TypeScript helpers that turn the device-model
-     reference-deck audit fixtures into one stable dashboard row per model
-     family.
-   - Preserve expected OP, temperature, AC, noise, and transient fixture names
-     as explicit columns, plus missing-analysis inventories, extra-analysis
-     inventories, fixture counts, and deck-line totals for browser dashboards,
-     release automation, and reference-deck comparison tools.
-   - Keep table, header-keyed record, CSV, and compact JSON exports aligned
-     across the three packages so device-model audit dashboards can consume the
-     same shape without rescanning individual fixture rows.
+     reference-deck audit release gate's issue rows into stable table,
+     header-keyed record, CSV, and compact JSON exports.
+   - Preserve `fixture_name`, `field`, and `message` columns for browser
+     dashboards, release automation, and reference-deck comparison tools
+     without requiring callers to split the multi-section gate report.
+   - Keep the existing pass/fail gate behavior unchanged while locking the
+     negative missing-coverage case across the three packages.
 
 ## Completed Slices
 
@@ -2886,6 +2884,19 @@ the Rust, Python, and TypeScript surfaces together.
      metadata, and runtime-activation-receipt-journal-summary-handoff-receipt-
      acknowledgement-record-receipt-acknowledgement-record capability IDs for
      first-render product-shell bootstrapping.
+
+207. Device model reference-deck audit matrix dashboard.
+   - Status: completed in PR 7628.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_matrix` /
+     `deviceModelReferenceDeckAuditMatrix` helpers plus stable matrix table,
+     header-keyed records, CSV, and compact JSON output.
+   - The dashboard renders one row per model family with explicit OP,
+     temperature, AC, noise, and transient fixture columns plus
+     missing/extra-analysis inventories, fixture counts, and deck-line totals.
+   - Cross-language tests lock the four expected matrix rows, CSV/JSON
+     exports, and a negative missing `NMOS:tran` matrix case so dashboard
+     consumers can inspect coverage without scanning every fixture row.
 
 ## Backlog
 

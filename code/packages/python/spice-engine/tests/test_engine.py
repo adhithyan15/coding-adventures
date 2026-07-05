@@ -189,6 +189,7 @@ from spice_engine import (
     device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_gate_issue_records,
     device_model_reference_deck_audit_matrix,
     device_model_reference_deck_audit_matrix_records,
     device_model_reference_deck_audit_records,
@@ -255,6 +256,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_analysis_summary_json,
     format_device_model_reference_deck_audit_analysis_summary_table,
     format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_issue_csv,
+    format_device_model_reference_deck_audit_gate_issue_json,
+    format_device_model_reference_deck_audit_gate_issue_table,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
     format_device_model_reference_deck_audit_matrix_csv,
@@ -905,6 +909,25 @@ def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> No
         "NMOS:tran\tcoverage\t"
         "missing required NMOS tran reference-deck audit row"
     ) in table
+
+    issue_table = format_device_model_reference_deck_audit_gate_issue_table(report)
+    assert issue_table == (
+        "fixture_name\tfield\tmessage\n"
+        "NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row"
+    )
+    records = device_model_reference_deck_audit_gate_issue_records(report)
+    assert records == [
+        {
+            "fixture_name": "NMOS:tran",
+            "field": "coverage",
+            "message": "missing required NMOS tran reference-deck audit row",
+        }
+    ]
+    assert format_device_model_reference_deck_audit_gate_issue_csv(report) == (
+        "fixture_name,field,message\n"
+        "NMOS:tran,coverage,missing required NMOS tran reference-deck audit row\n"
+    )
+    assert json.loads(format_device_model_reference_deck_audit_gate_issue_json(report)) == records
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:
