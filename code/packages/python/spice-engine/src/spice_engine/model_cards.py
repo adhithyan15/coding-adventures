@@ -193,6 +193,22 @@ class DeviceModelReferenceDeckAuditAnalysisSummary:
     references: tuple[str, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class DeviceModelReferenceDeckAuditMatrixRow:
+    """A model-family by analysis reference-deck audit matrix row."""
+
+    kind: str
+    fixture_count: int
+    op: str
+    temperature: str
+    ac: str
+    noise: str
+    tran: str
+    missing_analyses: tuple[str, ...]
+    extra_analyses: tuple[str, ...]
+    deck_line_count: int
+
+
 _REFERENCE_DECK_AUDIT_EXPECTED_KINDS = ("D", "NPN", "NJF", "NMOS")
 _REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES = (
     "op",
@@ -1472,6 +1488,112 @@ def format_device_model_reference_deck_audit_analysis_summary_json(
 
     return format_deck_table_json(
         format_device_model_reference_deck_audit_analysis_summary_table(fixtures)
+    )
+
+
+def device_model_reference_deck_audit_matrix(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> tuple[DeviceModelReferenceDeckAuditMatrixRow, ...]:
+    """Return model-family by analysis reference-deck audit matrix rows."""
+
+    rows = (
+        device_model_reference_deck_audit_fixtures()
+        if fixtures is None
+        else tuple(fixtures)
+    )
+    expected_kinds = _REFERENCE_DECK_AUDIT_EXPECTED_KINDS
+    expected_analyses = _REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES
+    extra_kinds = tuple(
+        sorted({fixture.kind for fixture in rows if fixture.kind not in expected_kinds})
+    )
+
+    def names_for(
+        kind_rows: tuple[DeviceModelReferenceDeckAuditFixture, ...], analysis: str
+    ) -> str:
+        return ",".join(fixture.name for fixture in kind_rows if fixture.analysis == analysis)
+
+    matrix: list[DeviceModelReferenceDeckAuditMatrixRow] = []
+    for kind in (*expected_kinds, *extra_kinds):
+        kind_rows = tuple(fixture for fixture in rows if fixture.kind == kind)
+        row_analyses = {fixture.analysis for fixture in kind_rows}
+        missing_analyses = (
+            tuple(analysis for analysis in expected_analyses if analysis not in row_analyses)
+            if kind in expected_kinds
+            else ()
+        )
+        extra_analyses = tuple(
+            sorted(analysis for analysis in row_analyses if analysis not in expected_analyses)
+        )
+        matrix.append(
+            DeviceModelReferenceDeckAuditMatrixRow(
+                kind=kind,
+                fixture_count=len(kind_rows),
+                op=names_for(kind_rows, "op"),
+                temperature=names_for(kind_rows, "temperature"),
+                ac=names_for(kind_rows, "ac"),
+                noise=names_for(kind_rows, "noise"),
+                tran=names_for(kind_rows, "tran"),
+                missing_analyses=missing_analyses,
+                extra_analyses=extra_analyses,
+                deck_line_count=sum(len(fixture.deck_lines) for fixture in kind_rows),
+            )
+        )
+    return tuple(matrix)
+
+
+def format_device_model_reference_deck_audit_matrix_table(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> str:
+    """Return a stable model-family by analysis audit matrix table."""
+
+    lines = [
+        "kind\tfixture_count\top\ttemperature\tac\tnoise\ttran\tmissing_analyses\textra_analyses\tdeck_lines",
+    ]
+    for row in device_model_reference_deck_audit_matrix(fixtures):
+        lines.append(
+            "\t".join(
+                [
+                    row.kind,
+                    str(row.fixture_count),
+                    row.op,
+                    row.temperature,
+                    row.ac,
+                    row.noise,
+                    row.tran,
+                    ",".join(row.missing_analyses),
+                    ",".join(row.extra_analyses),
+                    str(row.deck_line_count),
+                ]
+            )
+        )
+    return "\n".join(lines)
+
+
+def device_model_reference_deck_audit_matrix_records(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for the reference-deck audit matrix table."""
+
+    return deck_table_records(format_device_model_reference_deck_audit_matrix_table(fixtures))
+
+
+def format_device_model_reference_deck_audit_matrix_csv(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> str:
+    """Return the reference-deck audit matrix table as RFC 4180-style CSV."""
+
+    return format_deck_table_csv(
+        format_device_model_reference_deck_audit_matrix_table(fixtures)
+    )
+
+
+def format_device_model_reference_deck_audit_matrix_json(
+    fixtures: Sequence[DeviceModelReferenceDeckAuditFixture] | None = None,
+) -> str:
+    """Return compact JSON records for the reference-deck audit matrix table."""
+
+    return format_deck_table_json(
+        format_device_model_reference_deck_audit_matrix_table(fixtures)
     )
 
 

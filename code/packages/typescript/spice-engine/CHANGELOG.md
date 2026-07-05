@@ -6,6 +6,13 @@
   embedded grammar metadata, normalized continuation cards, source spans,
   token streams, stable diagnostics, and analysis inventory, matching Python
   and Rust for frontend/parser-tooling consumers.
+- Add `deviceModelReferenceDeckAuditMatrix`,
+  `formatDeviceModelReferenceDeckAuditMatrixTable`,
+  `deviceModelReferenceDeckAuditMatrixRecords`,
+  `formatDeviceModelReferenceDeckAuditMatrixCsv`, and
+  `formatDeviceModelReferenceDeckAuditMatrixJson`, stable per-model-family
+  audit dashboard rows with explicit OP, temperature, AC, noise, and transient
+  fixture columns, matching Python and Rust.
 - Add `deviceModelReferenceDeckAuditAnalysisSummary`,
   `formatDeviceModelReferenceDeckAuditAnalysisSummaryTable`,
   `deviceModelReferenceDeckAuditAnalysisSummaryRecords`,
