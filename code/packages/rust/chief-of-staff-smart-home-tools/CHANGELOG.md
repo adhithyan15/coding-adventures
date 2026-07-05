@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.list_platform_access_review` and
+  `smart_home.get_platform_access_review_summary`, read-only Chief adapter tools
+  that roll up existing D23 command-risk, authorization-gap, authorization
+  decision, and capability-grant primitives without owning smart-home state.
 - Added `smart_home.list_platform_evidence_ledger` and
   `smart_home.get_platform_evidence_ledger_summary`, read-only Chief adapter
   tools that consolidate existing D23 platform brief, closeout retention, and

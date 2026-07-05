@@ -312,6 +312,10 @@ pub const SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID: &str =
     "smart_home.list_platform_evidence_ledger";
 pub const SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID: &str =
     "smart_home.get_platform_evidence_ledger_summary";
+pub const SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID: &str =
+    "smart_home.list_platform_access_review";
+pub const SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_platform_access_review_summary";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pending_work_summary";
 pub const SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID: &str = "smart_home.get_attention_overview";
@@ -2414,6 +2418,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID => {
                     let query = platform_evidence_ledger_query(&arguments)?;
                     get_platform_evidence_ledger_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID => {
+                    let query = platform_access_review_query(&arguments)?;
+                    list_platform_access_review_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID => {
+                    let query = platform_access_review_query(&arguments)?;
+                    get_platform_access_review_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6645,6 +6667,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_platform_brief_definition(),
         list_platform_evidence_ledger_definition(),
         get_platform_evidence_ledger_summary_definition(),
+        list_platform_access_review_definition(),
+        get_platform_access_review_summary_definition(),
         get_runtime_snapshot_definition(),
         get_pending_work_summary_definition(),
         get_attention_overview_definition(),
@@ -7478,6 +7502,69 @@ fn get_platform_evidence_ledger_summary_definition() -> ToolDefinition {
         "Get smart-home platform evidence ledger summary",
         "Return compact Chief-facing platform evidence ledger counts by status, kind, owner lane, attention, blockers, and source-tool coverage.",
         platform_evidence_ledger_query_schema(),
+        object_schema(
+            vec![SchemaProperty::new("summary", JsonSchema::Any)],
+            vec!["summary"],
+            false,
+        ),
+    )
+}
+
+fn platform_access_review_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("principal_id", JsonSchema::String),
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("entity_id", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("access_kind", JsonSchema::String),
+            SchemaProperty::new("access_kinds", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("risk_action", JsonSchema::String),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("denials_only", JsonSchema::Boolean),
+            SchemaProperty::new("grant_review_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        Vec::new(),
+        false,
+    )
+}
+
+fn platform_access_review_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "platform_access_review",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["platform_access_review", "summary", "count"],
+        false,
+    )
+}
+
+fn list_platform_access_review_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID,
+        "List smart-home platform access review",
+        "List Chief-facing access review rows over existing D23 command-risk, authorization-gap, authorization decision, and capability grant primitives without mutating runtime policy.",
+        platform_access_review_query_schema(),
+        platform_access_review_list_output_schema(),
+    )
+}
+
+fn get_platform_access_review_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID,
+        "Get smart-home platform access review summary",
+        "Return compact Chief-facing platform access risk, authorization blocker, command failure, and capability grant review pressure counts from existing D23 runtime primitives.",
+        platform_access_review_query_schema(),
         object_schema(
             vec![SchemaProperty::new("summary", JsonSchema::Any)],
             vec!["summary"],
@@ -11303,6 +11390,91 @@ fn default_authorization_gap_audit_query() -> AuthorizationGapAuditQuery {
         missing_capabilities_only: false,
         approval_gated_only: false,
         review_needed_only: false,
+        requires_attention_only: false,
+        sort: AuthorizationGapAuditSort::default(),
+        limit: None,
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum PlatformAccessReviewKind {
+    CommandRisk,
+    AuthorizationGap,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct PlatformAccessReviewQuery {
+    principal_id: Option<AgentId>,
+    bridge_id: Option<BridgeId>,
+    entity_id: Option<EntityId>,
+    capability_id: Option<CapabilityId>,
+    access_kinds: Vec<PlatformAccessReviewKind>,
+    risk_lane: Option<String>,
+    risk_action: Option<String>,
+    requires_attention_only: bool,
+    blocked_only: bool,
+    denials_only: bool,
+    grant_review_only: bool,
+    limit: Option<usize>,
+}
+
+fn platform_access_review_query(
+    arguments: &JsonValue,
+) -> Result<PlatformAccessReviewQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let access_kinds = optional_string_list(arguments, "access_kind", "access_kinds")?
+        .into_iter()
+        .map(|kind| parse_platform_access_review_kind(&kind))
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(PlatformAccessReviewQuery {
+        principal_id: optional_string(arguments, "principal_id")?.map(AgentId::trusted),
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+        access_kinds,
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        risk_action: optional_string(arguments, "risk_action")?,
+        requires_attention_only: optional_bool(arguments, "requires_attention_only")?
+            .unwrap_or(false),
+        blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
+        denials_only: optional_bool(arguments, "denials_only")?.unwrap_or(false),
+        grant_review_only: optional_bool(arguments, "grant_review_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn default_platform_access_review_command_query(
+    query: &PlatformAccessReviewQuery,
+) -> CommandRiskAuditQuery {
+    CommandRiskAuditQuery {
+        bridge_id: query.bridge_id.clone(),
+        principal_id: query.principal_id.clone(),
+        command_statuses: Vec::new(),
+        authorization_outcome: query.denials_only.then_some(AuthorizationOutcome::Denied),
+        risk_only: false,
+        failures_only: false,
+        denials_only: query.denials_only,
+        approval_gated_only: false,
+        limit: None,
+    }
+}
+
+fn default_platform_access_review_authorization_query(
+    query: &PlatformAccessReviewQuery,
+) -> AuthorizationGapAuditQuery {
+    AuthorizationGapAuditQuery {
+        principal_id: query.principal_id.clone(),
+        outcome: query.denials_only.then_some(AuthorizationOutcome::Denied),
+        grant_status: None,
+        scope_kind: None,
+        capability_id: query.capability_id.clone(),
+        entity_id: query.entity_id.clone(),
+        risk_lane: query.risk_lane.clone(),
+        risk_action: query.risk_action.clone(),
+        denials_only: query.denials_only,
+        missing_capabilities_only: false,
+        approval_gated_only: false,
+        review_needed_only: query.grant_review_only,
         requires_attention_only: false,
         sort: AuthorizationGapAuditSort::default(),
         limit: None,
@@ -37258,6 +37430,656 @@ fn authorization_gap_row_entity_id(row: &AuthorizationGapAuditRow) -> Option<&En
         Some(CapabilityGrantScope::EntityCapability { entity_id, .. }) => Some(entity_id),
         _ => None,
     }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+enum PlatformAccessReviewRecord {
+    CommandRisk(CommandRiskAuditRow),
+    AuthorizationGap(AuthorizationGapAuditRow),
+}
+
+impl PlatformAccessReviewRecord {
+    fn review_kind(&self) -> PlatformAccessReviewKind {
+        match self {
+            Self::CommandRisk(_) => PlatformAccessReviewKind::CommandRisk,
+            Self::AuthorizationGap(_) => PlatformAccessReviewKind::AuthorizationGap,
+        }
+    }
+
+    fn review_id(&self) -> String {
+        format!(
+            "{}:{}",
+            platform_access_review_kind_label(self.review_kind()),
+            self.source_id()
+        )
+    }
+
+    fn source(&self) -> &'static str {
+        match self {
+            Self::CommandRisk(row) => row.source,
+            Self::AuthorizationGap(row) => row.source,
+        }
+    }
+
+    fn source_id(&self) -> &str {
+        match self {
+            Self::CommandRisk(row) => &row.audit_id,
+            Self::AuthorizationGap(row) => &row.audit_id,
+        }
+    }
+
+    fn principal_id(&self) -> Option<&AgentId> {
+        match self {
+            Self::CommandRisk(row) => row.principal_id.as_ref(),
+            Self::AuthorizationGap(row) => Some(&row.principal_id),
+        }
+    }
+
+    fn bridge_id(&self) -> Option<&BridgeId> {
+        match self {
+            Self::CommandRisk(row) => row.bridge_id.as_ref(),
+            Self::AuthorizationGap(_) => None,
+        }
+    }
+
+    fn entity_id(&self) -> Option<&EntityId> {
+        match self {
+            Self::CommandRisk(row) => row.entity_id.as_ref(),
+            Self::AuthorizationGap(row) => authorization_gap_row_entity_id(row),
+        }
+    }
+
+    fn command_id(&self) -> Option<&CommandId> {
+        match self {
+            Self::CommandRisk(row) => row.command_id.as_ref(),
+            Self::AuthorizationGap(row) => match &row.subject {
+                Some(AuthorizationSubject::Command { command_id, .. }) => Some(command_id),
+                _ => None,
+            },
+        }
+    }
+
+    fn grant_id(&self) -> Option<&CapabilityGrantId> {
+        match self {
+            Self::CommandRisk(_) => None,
+            Self::AuthorizationGap(row) => row.grant_id.as_ref(),
+        }
+    }
+
+    fn status(&self) -> Option<CommandStatus> {
+        match self {
+            Self::CommandRisk(row) => row.status,
+            Self::AuthorizationGap(_) => None,
+        }
+    }
+
+    fn outcome(&self) -> Option<AuthorizationOutcome> {
+        match self {
+            Self::CommandRisk(row) => row.outcome,
+            Self::AuthorizationGap(row) => row.outcome,
+        }
+    }
+
+    fn grant_status(&self) -> Option<CapabilityGrantStatus> {
+        match self {
+            Self::CommandRisk(_) => None,
+            Self::AuthorizationGap(row) => row.grant_status,
+        }
+    }
+
+    fn risk_lane(&self) -> &'static str {
+        match self {
+            Self::CommandRisk(row) => row.risk_lane,
+            Self::AuthorizationGap(row) => row.risk_lane,
+        }
+    }
+
+    fn risk_action(&self) -> &'static str {
+        match self {
+            Self::CommandRisk(row) => row.risk_action,
+            Self::AuthorizationGap(row) => row.risk_action,
+        }
+    }
+
+    fn blocked(&self) -> bool {
+        match self {
+            Self::CommandRisk(row) => row.blocked,
+            Self::AuthorizationGap(row) => row.blocked,
+        }
+    }
+
+    fn requires_attention(&self) -> bool {
+        match self {
+            Self::CommandRisk(row) => row.requires_attention,
+            Self::AuthorizationGap(row) => row.requires_attention,
+        }
+    }
+
+    fn is_denial(&self) -> bool {
+        self.outcome() == Some(AuthorizationOutcome::Denied)
+    }
+
+    fn is_failure_result(&self) -> bool {
+        matches!(self, Self::CommandRisk(row) if row.is_failure_result())
+    }
+
+    fn missing_capability_count(&self) -> usize {
+        match self {
+            Self::CommandRisk(row) => row.missing_capability_count,
+            Self::AuthorizationGap(row) => row.missing_capabilities.len(),
+        }
+    }
+
+    fn is_approval_gated(&self) -> bool {
+        match self {
+            Self::CommandRisk(row) => row.is_approval_gated(),
+            Self::AuthorizationGap(row) => row.is_approval_gated(),
+        }
+    }
+
+    fn is_grant_review(&self) -> bool {
+        matches!(
+            self,
+            Self::AuthorizationGap(row)
+                if row.source == "capability_grant" && row.needs_review()
+        )
+    }
+
+    fn has_capability(&self, capability_id: &CapabilityId) -> bool {
+        match self {
+            Self::CommandRisk(row) => row
+                .missing_capabilities
+                .iter()
+                .any(|candidate| candidate == capability_id),
+            Self::AuthorizationGap(row) => authorization_gap_row_has_capability(row, capability_id),
+        }
+    }
+
+    fn source_record_json(&self) -> JsonValue {
+        match self {
+            Self::CommandRisk(row) => command_risk_audit_row_json(row),
+            Self::AuthorizationGap(row) => authorization_gap_audit_row_json(row),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct PlatformAccessReviewSummary {
+    total_rows: usize,
+    command_risk_rows: usize,
+    authorization_gap_rows: usize,
+    command_result_rows: usize,
+    authorization_decision_rows: usize,
+    capability_grant_rows: usize,
+    denied_decision_rows: usize,
+    command_failure_rows: usize,
+    missing_capability_rows: usize,
+    total_missing_capabilities: usize,
+    approval_gated_rows: usize,
+    grant_review_rows: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+    unique_principals: usize,
+    unique_entities: usize,
+}
+
+impl PlatformAccessReviewSummary {
+    fn from_records(records: &[PlatformAccessReviewRecord]) -> Self {
+        let mut summary = Self::default();
+        let mut principals = BTreeSet::new();
+        let mut entities = BTreeSet::new();
+        for record in records {
+            summary.total_rows += 1;
+            match record.review_kind() {
+                PlatformAccessReviewKind::CommandRisk => summary.command_risk_rows += 1,
+                PlatformAccessReviewKind::AuthorizationGap => summary.authorization_gap_rows += 1,
+            }
+            match record.source() {
+                "command_result" => summary.command_result_rows += 1,
+                "authorization_decision" => summary.authorization_decision_rows += 1,
+                "capability_grant" => summary.capability_grant_rows += 1,
+                _ => {}
+            }
+            if let Some(principal_id) = record.principal_id() {
+                principals.insert(principal_id.as_str().to_string());
+            }
+            if let Some(entity_id) = record.entity_id() {
+                entities.insert(entity_id.as_str().to_string());
+            }
+            if record.is_denial() {
+                summary.denied_decision_rows += 1;
+            }
+            if record.is_failure_result() {
+                summary.command_failure_rows += 1;
+            }
+            let missing_capability_count = record.missing_capability_count();
+            if missing_capability_count > 0 {
+                summary.missing_capability_rows += 1;
+                summary.total_missing_capabilities += missing_capability_count;
+            }
+            if record.is_approval_gated() {
+                summary.approval_gated_rows += 1;
+            }
+            if record.is_grant_review() {
+                summary.grant_review_rows += 1;
+            }
+            if record.blocked() {
+                summary.blocked_rows += 1;
+            }
+            if record.requires_attention() {
+                summary.requires_attention_rows += 1;
+            }
+        }
+        summary.unique_principals = principals.len();
+        summary.unique_entities = entities.len();
+        summary
+    }
+
+    fn status(&self) -> &'static str {
+        if self.blocked_rows > 0 {
+            "blocked"
+        } else if self.requires_attention_rows > 0 {
+            "review"
+        } else {
+            "ready"
+        }
+    }
+
+    fn ready(&self) -> bool {
+        self.blocked_rows == 0
+    }
+
+    fn has_access_risks(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+
+    fn recommended_action(&self) -> &'static str {
+        if self.denied_decision_rows > 0 || self.missing_capability_rows > 0 {
+            "grant_missing_capabilities"
+        } else if self.command_failure_rows > 0 {
+            "inspect_command_failures"
+        } else if self.grant_review_rows > 0 {
+            "review_capability_grants"
+        } else if self.approval_gated_rows > 0 {
+            "review_approval_gates"
+        } else if self.requires_attention_rows > 0 {
+            "review_platform_access_pressure"
+        } else {
+            "monitor_platform_access"
+        }
+    }
+}
+
+fn list_platform_access_review_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: PlatformAccessReviewQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut records, summary) =
+        platform_access_review_records(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        records.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "platform_access_review",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(platform_access_review_record_json)
+                    .collect(),
+            ),
+        ),
+        ("summary", platform_access_review_summary_json(&summary)),
+        ("count", integer(records.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_platform_access_review")),
+            ("count", integer(records.len() as i64)),
+            ("status", string(summary.status())),
+            ("ready", JsonValue::Bool(summary.ready())),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("next_action", string(summary.recommended_action())),
+        ]),
+    ))
+}
+
+fn get_platform_access_review_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: PlatformAccessReviewQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = platform_access_review_records(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        platform_access_review_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_platform_access_review_summary")),
+            ("status", string(summary.status())),
+            ("ready", JsonValue::Bool(summary.ready())),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("next_action", string(summary.recommended_action())),
+        ]),
+    ))
+}
+
+fn platform_access_review_records(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &PlatformAccessReviewQuery,
+) -> Result<(Vec<PlatformAccessReviewRecord>, PlatformAccessReviewSummary), ToolCallError> {
+    let mut records = Vec::new();
+    if platform_access_review_query_includes(query, PlatformAccessReviewKind::CommandRisk) {
+        let command_query = default_platform_access_review_command_query(query);
+        let (rows, _) =
+            command_risk_audit_rows(runtime, principal_id.clone(), now_ms, &command_query)?;
+        records.extend(
+            rows.into_iter()
+                .map(PlatformAccessReviewRecord::CommandRisk),
+        );
+    }
+    if platform_access_review_query_includes(query, PlatformAccessReviewKind::AuthorizationGap) {
+        let authorization_query = default_platform_access_review_authorization_query(query);
+        let (rows, _) =
+            authorization_gap_audit_rows(runtime, principal_id, now_ms, &authorization_query)?;
+        records.extend(
+            rows.into_iter()
+                .map(PlatformAccessReviewRecord::AuthorizationGap),
+        );
+    }
+
+    records.retain(|record| platform_access_review_record_matches(record, query));
+    records.sort_by(|left, right| {
+        platform_access_review_record_rank(right)
+            .cmp(&platform_access_review_record_rank(left))
+            .then_with(|| {
+                platform_access_review_record_time(right)
+                    .cmp(&platform_access_review_record_time(left))
+            })
+            .then_with(|| left.review_id().cmp(&right.review_id()))
+    });
+    let summary = PlatformAccessReviewSummary::from_records(&records);
+    Ok((records, summary))
+}
+
+fn platform_access_review_query_includes(
+    query: &PlatformAccessReviewQuery,
+    kind: PlatformAccessReviewKind,
+) -> bool {
+    query.access_kinds.is_empty() || query.access_kinds.contains(&kind)
+}
+
+fn platform_access_review_record_matches(
+    record: &PlatformAccessReviewRecord,
+    query: &PlatformAccessReviewQuery,
+) -> bool {
+    if !platform_access_review_query_includes(query, record.review_kind()) {
+        return false;
+    }
+    if query.requires_attention_only && !record.requires_attention() {
+        return false;
+    }
+    if query.blocked_only && !record.blocked() {
+        return false;
+    }
+    if query.denials_only && !record.is_denial() {
+        return false;
+    }
+    if query.grant_review_only && !record.is_grant_review() {
+        return false;
+    }
+    if query
+        .bridge_id
+        .as_ref()
+        .is_some_and(|bridge_id| record.bridge_id() != Some(bridge_id))
+    {
+        return false;
+    }
+    if query
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| record.entity_id() != Some(entity_id))
+    {
+        return false;
+    }
+    if query
+        .capability_id
+        .as_ref()
+        .is_some_and(|capability_id| !record.has_capability(capability_id))
+    {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| record.risk_lane() != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .risk_action
+        .as_ref()
+        .is_some_and(|risk_action| record.risk_action() != risk_action.as_str())
+    {
+        return false;
+    }
+    true
+}
+
+fn platform_access_review_record_rank(record: &PlatformAccessReviewRecord) -> u8 {
+    if record.is_denial() || record.missing_capability_count() > 0 {
+        6
+    } else if record.is_failure_result() {
+        5
+    } else if record.is_grant_review() {
+        4
+    } else if record.is_approval_gated() {
+        3
+    } else if record.blocked() {
+        2
+    } else if record.requires_attention() {
+        1
+    } else {
+        0
+    }
+}
+
+fn platform_access_review_record_time(record: &PlatformAccessReviewRecord) -> u64 {
+    match record {
+        PlatformAccessReviewRecord::CommandRisk(row) => command_risk_sort_key(row),
+        PlatformAccessReviewRecord::AuthorizationGap(row) => authorization_gap_row_time(row),
+    }
+}
+
+fn platform_access_review_kind_label(kind: PlatformAccessReviewKind) -> &'static str {
+    match kind {
+        PlatformAccessReviewKind::CommandRisk => "command_risk",
+        PlatformAccessReviewKind::AuthorizationGap => "authorization_gap",
+    }
+}
+
+fn platform_access_review_record_json(record: &PlatformAccessReviewRecord) -> JsonValue {
+    object([
+        ("review_id", string(record.review_id())),
+        (
+            "access_kind",
+            string(platform_access_review_kind_label(record.review_kind())),
+        ),
+        ("source", string(record.source())),
+        ("source_id", string(record.source_id())),
+        (
+            "principal_id",
+            record
+                .principal_id()
+                .map(|principal_id| string(principal_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "bridge_id",
+            record
+                .bridge_id()
+                .map(|bridge_id| string(bridge_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "entity_id",
+            record
+                .entity_id()
+                .map(|entity_id| string(entity_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "command_id",
+            record
+                .command_id()
+                .map(|command_id| string(command_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "grant_id",
+            record
+                .grant_id()
+                .map(|grant_id| string(grant_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "status",
+            record
+                .status()
+                .map(|status| string(command_status_label(status)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "outcome",
+            record
+                .outcome()
+                .map(|outcome| string(authorization_outcome_label(outcome)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "grant_status",
+            record
+                .grant_status()
+                .map(|status| string(capability_grant_status_label(status)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "missing_capability_count",
+            integer(record.missing_capability_count() as i64),
+        ),
+        (
+            "approval_gated",
+            JsonValue::Bool(record.is_approval_gated()),
+        ),
+        ("grant_review", JsonValue::Bool(record.is_grant_review())),
+        ("risk_lane", string(record.risk_lane())),
+        ("risk_action", string(record.risk_action())),
+        ("blocked", JsonValue::Bool(record.blocked())),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention()),
+        ),
+        ("source_record", record.source_record_json()),
+    ])
+}
+
+fn platform_access_review_summary_json(summary: &PlatformAccessReviewSummary) -> JsonValue {
+    object([
+        ("status", string(summary.status())),
+        ("ready", JsonValue::Bool(summary.ready())),
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "command_risk_rows",
+            integer(summary.command_risk_rows as i64),
+        ),
+        (
+            "authorization_gap_rows",
+            integer(summary.authorization_gap_rows as i64),
+        ),
+        (
+            "command_result_rows",
+            integer(summary.command_result_rows as i64),
+        ),
+        (
+            "authorization_decision_rows",
+            integer(summary.authorization_decision_rows as i64),
+        ),
+        (
+            "capability_grant_rows",
+            integer(summary.capability_grant_rows as i64),
+        ),
+        (
+            "denied_decision_rows",
+            integer(summary.denied_decision_rows as i64),
+        ),
+        (
+            "command_failure_rows",
+            integer(summary.command_failure_rows as i64),
+        ),
+        (
+            "missing_capability_rows",
+            integer(summary.missing_capability_rows as i64),
+        ),
+        (
+            "total_missing_capabilities",
+            integer(summary.total_missing_capabilities as i64),
+        ),
+        (
+            "approval_gated_rows",
+            integer(summary.approval_gated_rows as i64),
+        ),
+        (
+            "grant_review_rows",
+            integer(summary.grant_review_rows as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        (
+            "unique_principals",
+            integer(summary.unique_principals as i64),
+        ),
+        ("unique_entities", integer(summary.unique_entities as i64)),
+        (
+            "has_access_risks",
+            JsonValue::Bool(summary.has_access_risks()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("next_action", string(summary.recommended_action())),
+        (
+            "source_tools",
+            JsonValue::Array(vec![
+                string(SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID),
+                string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID),
+                string(SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID),
+                string(SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID),
+            ]),
+        ),
+    ])
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -83393,6 +84215,20 @@ fn parse_authorization_gap_audit_sort(
     }
 }
 
+fn parse_platform_access_review_kind(
+    label: &str,
+) -> Result<PlatformAccessReviewKind, ToolCallError> {
+    match label {
+        "command_risk" | "command" | "command_result" => Ok(PlatformAccessReviewKind::CommandRisk),
+        "authorization_gap" | "authorization" | "capability_grant" | "grant_review" => {
+            Ok(PlatformAccessReviewKind::AuthorizationGap)
+        }
+        _ => Err(validation_error(format!(
+            "unknown platform access review kind `{label}`"
+        ))),
+    }
+}
+
 fn parse_authorization_outcome(label: &str) -> Result<AuthorizationOutcome, ToolCallError> {
     match label {
         "allowed" | "allow" => Ok(AuthorizationOutcome::Allowed),
@@ -89748,7 +90584,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 310);
+        assert_eq!(definitions.len(), 312);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -89787,6 +90623,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID));
@@ -90643,7 +91485,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            302
+            304
         );
         assert_eq!(
             export
@@ -91346,6 +92188,13 @@ mod tests {
             SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID
         )
         .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID).is_some()
+        );
+        assert!(
+            smart_home_tool_definition(SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID)
+                .is_some()
+        );
         assert!(smart_home_tool_definition(SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID).is_some());
@@ -94287,11 +95136,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(310))
+            Some(&integer(312))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(302))
+            Some(&integer(304))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -108070,6 +108919,159 @@ mod tests {
         let journal_summary = journal.summary();
         assert_eq!(journal_summary.invocation_count, 3);
         assert_eq!(journal_summary.completed_count, 3);
+    }
+
+    #[test]
+    fn platform_access_review_tools_roll_up_runtime_access_pressure_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        {
+            let mut runtime = runtime.borrow_mut();
+            let registry = runtime.registry_mut();
+            registry.upsert_capability_grant(CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "user:test",
+                1_000,
+            ));
+            registry.upsert_capability_grant(
+                CapabilityGrant::for_capability(
+                    CapabilityGrantId::trusted("grant-command-pending"),
+                    AgentId::trusted(AGENT_ID),
+                    CapabilityId::trusted("smart_home.command.light"),
+                    PrivilegeTier::LowRisk,
+                    "user:test",
+                    1_000,
+                )
+                .with_status(CapabilityGrantStatus::Pending),
+            );
+            registry.upsert_capability_grant(
+                CapabilityGrant::for_capability(
+                    CapabilityGrantId::trusted("grant-command-revoked"),
+                    AgentId::trusted(AGENT_ID),
+                    CapabilityId::trusted("smart_home.command.lock"),
+                    PrivilegeTier::HumanApproval,
+                    "user:test",
+                    1_000,
+                )
+                .with_status(CapabilityGrantStatus::Revoked),
+            );
+        }
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command_trace = tool_runtime.invoke_with_events(&request(
+            "call-denied-platform-access-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+                ("idempotency_key", string("platform-access-denied")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command_trace.result.ok);
+        runtime
+            .borrow_mut()
+            .event_bus_mut()
+            .publish(RuntimeEvent::CommandResult(CommandResult {
+                command_id: CommandId::trusted("cmd-platform-access-failed"),
+                status: CommandStatus::Failed,
+                bridge_id: BridgeId::trusted("bridge-1"),
+                correlation_id: CorrelationId::trusted("corr-platform-access-failed"),
+                message: Some("integration dispatch failed".to_string()),
+            }));
+
+        let list_request = request(
+            "call-list-platform-access-review",
+            SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("limit", integer(20)),
+            ]),
+            3_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let rows = field(list_output, "platform_access_review").unwrap();
+        let JsonValue::Array(rows) = rows else {
+            panic!("platform_access_review should be an array");
+        };
+        assert!(
+            rows.len() >= 4,
+            "access review should include command risk, denied authorization, and grant review rows"
+        );
+        assert!(rows.iter().any(
+            |row| field(row, "access_kind") == Some(&string("command_risk"))
+                && field(row, "source") == Some(&string("command_result"))
+                && field(row, "status") == Some(&string("failed"))
+                && field(row, "risk_action") == Some(&string("inspect_failed_command"))
+                && field(row, "source_record").is_some()
+        ));
+        assert!(rows.iter().any(|row| field(row, "access_kind")
+            == Some(&string("authorization_gap"))
+            && field(row, "source") == Some(&string("authorization_decision"))
+            && field(row, "outcome") == Some(&string("denied"))
+            && integer_value(field(row, "missing_capability_count").unwrap()).unwrap() >= 1));
+        assert!(rows.iter().any(|row| field(row, "grant_id")
+            == Some(&string("grant-command-pending"))
+            && field(row, "grant_review") == Some(&JsonValue::Bool(true))
+            && field(row, "risk_action") == Some(&string("approve_pending_grant"))));
+        assert!(rows.iter().any(|row| field(row, "grant_id")
+            == Some(&string("grant-command-revoked"))
+            && field(row, "grant_review") == Some(&JsonValue::Bool(true))
+            && field(row, "risk_action") == Some(&string("replace_revoked_grant"))));
+
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "status"), Some(&string("blocked")));
+        assert_eq!(field(summary, "ready"), Some(&JsonValue::Bool(false)));
+        assert!(integer_value(field(summary, "command_risk_rows").unwrap()).unwrap() >= 1);
+        assert!(integer_value(field(summary, "authorization_gap_rows").unwrap()).unwrap() >= 3);
+        assert!(integer_value(field(summary, "command_result_rows").unwrap()).unwrap() >= 1);
+        assert!(
+            integer_value(field(summary, "authorization_decision_rows").unwrap()).unwrap() >= 1
+        );
+        assert!(integer_value(field(summary, "capability_grant_rows").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(summary, "denied_decision_rows").unwrap()).unwrap() >= 1);
+        assert!(integer_value(field(summary, "grant_review_rows").unwrap()).unwrap() >= 2);
+        assert_eq!(
+            field(summary, "has_access_risks"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(summary, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("grant_missing_capabilities"))
+        );
+
+        let grant_summary_request = request(
+            "call-platform-access-review-grants",
+            SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID,
+            object([
+                ("access_kind", string("authorization_gap")),
+                ("grant_review_only", JsonValue::Bool(true)),
+            ]),
+            3_001,
+        );
+        let grant_summary_trace = tool_runtime.invoke_with_events(&grant_summary_request);
+        assert!(grant_summary_trace.result.ok);
+        assert_eq!(grant_summary_trace.summary().progress_event_count, 1);
+        let grant_summary_output = grant_summary_trace.result.output.as_ref().unwrap();
+        let grant_summary = field(grant_summary_output, "summary").unwrap();
+        assert_eq!(field(grant_summary, "total_rows"), Some(&integer(2)));
+        assert_eq!(
+            field(grant_summary, "capability_grant_rows"),
+            Some(&integer(2))
+        );
+        assert_eq!(field(grant_summary, "grant_review_rows"), Some(&integer(2)));
+        assert_eq!(
+            field(grant_summary, "next_action"),
+            Some(&string("review_capability_grants"))
+        );
     }
 
     #[test]

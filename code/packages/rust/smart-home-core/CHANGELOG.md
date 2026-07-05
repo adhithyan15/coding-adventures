@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.list_platform_access_review` and
+  `smart_home.get_platform_access_review_summary` tool descriptors for read-only
+  Chief platform access rollups over existing D23 command-risk,
+  authorization-gap, authorization decision, and capability-grant primitives.
 - `smart_home.list_platform_evidence_ledger` and
   `smart_home.get_platform_evidence_ledger_summary` tool descriptors for
   read-only Chief platform evidence rollups over existing D23 platform,
