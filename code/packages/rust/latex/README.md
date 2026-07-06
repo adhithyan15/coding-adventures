@@ -48,6 +48,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC02 S3 — precise Document fold** | `build_document` reads each source `Node`'s carried, precise span instead of the coarse enclosing `region`, so **every body `Block`/`Inline` span is now the node's tight source range**: `&src[inline.span]` slices back to exactly a `Text` run's word, a `\textbf{…}`, an inline `$…$`, a `\cite{…}`. Composites union their children's real spans (`Paragraph` = ∪ its inlines; `Section` = heading ∪ owned body; `List`/`Tabular`/`Environment`/`Figure` = the `\begin…\end` extent; captioned `table` float = tabular ∪ float; `DocListItem` = term ∪ body; `Caption` = ∪ its content). The `region` parameter is deleted from the fold helpers (a fallback-only seed survives on `lower_blocks`). Preamble/`DocumentClass`/`Package` stay honestly preamble-region-coarse (classified, not walked). `to_latex` + round-trip-modulo-spans unchanged; precise `node_at` + coverage capstone = S4/S5. | ✅ |
 | **LTXDOC02 S4 — precise `node_at`, region-coarse caveat retired** | with S3's tight body spans, `Document::node_at(byte)` **formally** resolves to the **true per-token leaf** — the narrowest node whose *precise* span contains the byte (ties → deepest in pre-order): a byte inside `widgets` → the `Text` run owning `widgets` (not the enclosing `Paragraph`/`Section`); a byte inside a `\section` title → the title inline (not the whole `Section`). Docs-and-tests rung (no `node_at`/`walk` logic change): retired the region-coarse hedging on `node_at`/`Provenance`/`walk`/module note for **body** nodes, kept the honest coarse note on `Preamble`/`DocumentClass`/`Package`. New leaf-resolution tests + an honest body byte-coverage test (every non-whitespace body byte resolves to a node whose precise span contains it, on a representative input; whole-corpus tightest-leaf capstone = S5). | ✅ |
 | **LTXDOC02 S5 — precise byte-coverage capstone (arc COMPLETE)** | the capstone `capstone_every_body_byte_resolves_to_tightest_covering_node` proves, over the same LTXDOC01 D6 representative corpus, that **every** non-whitespace body byte (a) resolves (`node_at(b).is_some()`) AND (b) resolves to the **tightest-covering** walked node — no *other* walked node whose span is a strict subset also contains the byte. Honest, not overclaimed: the load-bearing gate is tightest-covering, **not** "always a `Text` leaf" — structural bytes (`\section`/`\item`/`\begin{…}` machinery, inter-child delimiters) legitimately resolve to their enclosing composite, which is the tightest cover there (a soft signal records that the *majority* of content bytes still land on leaves). No `node_at`/parser/fold logic change (S1–S4 already made spans precise + `node_at` leaf-resolving); pure test rung. Corpus fixed/bounded ⇒ O(len), not a DoS. **Completes the LTXDOC02 precise-per-token-spans arc.** | ✅ |
+| **LTXDOC03 S1 — cross-reference resolution (label table + `\ref` binding)** | `Document::resolve_references() -> ReferenceResolution` — a pure, additive pass (no parser/fold/`walk`/`node_at`/span change) that binds each cross-reference to the `\label` that defines it, **with byte spans on both sides**. Collects the label table from hoisted section/table/figure labels (`Block::…{ label: Some(k) }`) and inline `\label{k}` (`Inline::CrossRef`); resolves the reference family `{ref, eqref, pageref}` against it → `ResolvedRef` (ref-span **and** target def-span + `LabelKind`) or `UnresolvedRef` (dangling key + ref-span); reports `Duplicate` keys with **first-def-wins**. `\cite` is deferred (bibliography = a separate table, a later rung). The static analogue of LaTeX's two-pass `.aux` machinery, binding *structure* not numbers/pages. Total & panic-free, reuses the bounded `walk` (no new recursion). | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -64,6 +65,11 @@ per-token leaf; preamble/metadata stay honestly coarse), and **S5 shipped the pr
 capstone** — over the representative corpus, every non-whitespace body byte resolves to the
 *tightest-covering* walked node (no strictly-narrower walked node also covers it), stated honestly as
 tightest-covering rather than leaf-only.
+
+The **document-feature** arc (LTXDOC03) now builds on that precise-span foundation: **S1 ships
+cross-reference resolution** (`Document::resolve_references`) — a pure, additive pass that binds each
+`\ref`/`\eqref`/`\pageref` to the `\label` that defines it, with byte spans on both sides, reporting
+duplicate and dangling references. `\cite`/bibliography binding is a deferred later rung.
 
 ## The Document layer (LTXDOC01)
 
@@ -190,6 +196,40 @@ byte-coverage test asserts every non-whitespace byte inside the document **body 
 **tightest-covering** — every non-whitespace body byte resolves to the innermost walked node, with
 no strictly-narrower walked node also covering it (stated honestly as tightest-covering, since
 structural bytes legitimately resolve to their enclosing composite rather than a `Text` leaf).
+
+### Cross-reference resolution (LTXDOC03 S1)
+
+Built on top of the precise spans, `Document::resolve_references()` binds each cross-reference to the
+`\label` that defines it — the static, single-pass analogue of LaTeX's two-pass `.aux` machinery, but
+carrying the defining node's **source bytes** rather than its number/page. It is pure analysis: it
+changes nothing about the parser, the fold, `walk`, `node_at`, any span, or the `to_latex`
+round-trip.
+
+```rust
+use latex::{parse_document, LabelKind};
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+See Section~\ref{sec:intro}, and also \ref{missing}.\end{document}";
+let doc = parse_document(src).unwrap();
+let res = doc.resolve_references();
+
+// The `\label` is a definition (a section-kind label).
+assert_eq!(res.definitions[0].kind, LabelKind::Section);
+
+// The `\ref{sec:intro}` RESOLVES: both spans slice back to real source.
+let r = &res.resolved[0];
+assert_eq!(&src[r.ref_span.start..r.ref_span.end], r"\ref{sec:intro}");
+assert!(src[r.target_span.start..r.target_span.end].starts_with(r"\section{Intro}"));
+
+// The `\ref{missing}` is dangling (LaTeX's "Reference `missing' undefined").
+assert_eq!(res.unresolved[0].key, "missing");
+```
+
+The reference family is `{ref, eqref, pageref}`; `\cite` is deferred (it resolves against a
+bibliography — a separate table — in a later rung), and a multiply-defined key is reported as a
+`Duplicate` with **first-def-wins** for resolution. A resolved `\ref` therefore points at the exact
+defining node's source bytes — the source→source correlation the ADJ byte-provenance pipeline audits.
 
 ## Usage
 
