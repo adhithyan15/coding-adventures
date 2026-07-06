@@ -1239,6 +1239,50 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// bottoms out at `unknown_method` (Ruby `nil`) — never a reflective
     /// fallthrough.
     pub fn call_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        // ── M6 universal metaprogramming: `send`/`__send__`/`public_send` ─
+        //
+        // Ruby's `send(:meth, args…)` re-enters dispatch with a *dynamic*
+        // method name taken from the first argument (a Symbol or string),
+        // forwarding the rest unchanged — so `x.send(:upcase)` is exactly
+        // `x.upcase`, and a trailing block survives as a trailing arg.
+        //
+        // SECURITY ([[dynamic-dispatch-rce]]): the dynamic name is fed BACK
+        // through `call_method` — the SAME explicit, closed dispatch a normal
+        // `recv.meth` call takes.  It indexes the SAME hand-written catalogs /
+        // `METHOD_TABLE` a direct call does, so an unknown name bottoms out at
+        // the identical `no_method_error` boundary (a typed `NoMethodError`).
+        // There is NO reflective lookup on the source-derived name — the name
+        // is inert data that can only ever select an ARM we spelled out.
+        //
+        // A user-defined `send`/`tap`/etc. must win over the universal one
+        // (Ruby's resolution order), so for a `Value::Instance` receiver we
+        // check the user method table FIRST (below); only a genuine miss
+        // reaches these universal Kernel methods, via `object_method`.
+        //
+        // `send` is placed FIRST (before the instance branch) so it re-enters
+        // dispatch for EVERY receiver kind — an instance, a primitive, a
+        // collection — uniformly, exactly as Ruby's `Kernel#send`.  An empty
+        // arg list (`send` with no method name) floors to the honest
+        // `NoMethodError` rather than panicking on an out-of-bounds index.
+        // For an instance receiver we still honour a user-defined `send`
+        // override first (resolution order), matching the Python reference
+        // where the `define_method` table is consulted before `_SEND_METHODS`.
+        if matches!(name, "send" | "__send__" | "public_send") {
+            let user_send = match &recv {
+                Value::Instance(id) => resolve_instance_method(&instance_class(*id), name),
+                _ => None,
+            };
+            if user_send.is_none() {
+                let mut it = args.into_iter();
+                return match it.next() {
+                    Some(target) => {
+                        let target_name = method_name(&target);
+                        call_method(recv, &target_name, it.collect())
+                    }
+                    None => no_method_error(&recv, name),
+                };
+            }
+        }
         // ── user-defined-class dispatch (O5) ──────────────────────────
         // A `Value::Instance` receiver dispatches to the USER method table
         // (walking ancestry), with `self` bound for the call.  This branch
@@ -1248,7 +1292,10 @@ pub const RUNTIME: &str = r##"mod __sir {
         // `HashMap::get` on the `(class, method)` key (never reflection):
         // a name like `constructor` simply misses and floors to the same
         // honest `NoMethodError`/`Nil` boundary the collection catalog uses
-        // (`unknown_method`).  See `dispatch_user_method`.
+        // (`unknown_method`).  See `dispatch_user_method`.  A miss now falls
+        // through to the universal Object methods (`respond_to?`/`tap`/…)
+        // rather than raising immediately, matching the Python reference's
+        // "reflective built-ins after the user table" resolution order.
         if let Value::Instance(id) = &recv {
             return dispatch_user_method(*id, &recv, name, args);
         }
@@ -1266,6 +1313,18 @@ pub const RUNTIME: &str = r##"mod __sir {
             // everything else uses the universal display form.
             return Value::Str(Rc::from(format(&recv).as_str()));
         }
+        // ── M6 universal Object methods (respond_to?/tap/then/yield_self) ─
+        //
+        // These resolve on EVERY primitive receiver, *after* `to_s` but
+        // *before* the type-specific catalog so they never collide with a
+        // type method (there is no primitive `tap`/`then`/`respond_to?`).
+        // `object_method` returns `Some` when it claims the name; a `None`
+        // falls through to the type-specific catalog below.  Boolean `&`/`|`/
+        // `^` are handled inside `object_method` too (they resolve on a bool
+        // receiver before the `no_method_error` bool arm).
+        if let Some(v) = object_method(&recv, name, &args) {
+            return v;
+        }
         match &recv {
             Value::Seq(_) => array_method(recv, name, args),
             Value::Map(_) => map_method(recv, name, args),
@@ -1273,10 +1332,127 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Sym(_) => symbol_method(recv, name, args),
             // `bool` is checked before the numeric arm on purpose: a Ruby
             // `true`/`false` is not a Numeric, so it never resolves the
-            // numeric catalog.
+            // numeric catalog.  (Its `&`/`|`/`^` operators were handled by
+            // `object_method` above.)
             Value::Bool(_) => no_method_error(&recv, name),
             Value::Int(_) | Value::Float(_) => numeric_method(recv, name, args),
             _ => no_method_error(&recv, name),
+        }
+    }
+
+    // ── M6 universal Object / Kernel methods ──────────────────────────
+    //
+    // The Rust analogue of the Python/TS `sir-runtime-oop` universal Object
+    // table.  A method here resolves on ANY receiver (every value is-a
+    // `Object` in Ruby).  Returns `Some(value)` when `name` is a universal
+    // method it handles, or `None` to let the caller fall through to the
+    // type-specific catalog.  (`send`/`__send__`/`public_send` are handled
+    // separately in `call_method` because they RE-ENTER dispatch; `to_s`
+    // likewise, so it can render via `format`.)
+    //
+    // | method                  | yields | returns                    |
+    // |-------------------------|--------|----------------------------|
+    // | `respond_to?(name)`     | —      | bool — does dispatch resolve `name`? |
+    // | `tap { … }`             | recv   | **recv** (side-effect pipe)|
+    // | `then`/`yield_self { … }`| recv  | **block result** (functional pipe) |
+    // | `&`/`|`/`^` (bool recv) | —      | eager boolean logic        |
+    //
+    // Block-less `tap`/`then` return the receiver (Ruby returns an Enumerator;
+    // the v0 floor is the receiver, matching the Python reference).
+    fn object_method(recv: &Value, name: &str, args: &[Value]) -> Option<Value> {
+        // Boolean `&`/`|`/`^` — Ruby's EAGER, non-short-circuiting logical
+        // operators on a `true`/`false` receiver (distinct from the lazy
+        // `&&`/`||` keywords).  The operand is coerced by Ruby truthiness
+        // (`nil`/`false` falsy, everything else truthy), so `true & nil ==
+        // false` and `false | 0 == true`.  `^` is logical XOR.  Only a `Bool`
+        // receiver with an operand resolves these (a bare `true.&` with no
+        // arg falls through to the `no_method_error` bool arm).
+        if let Value::Bool(b) = recv {
+            if matches!(name, "&" | "|" | "^") {
+                if let Some(other) = args.first() {
+                    let o = truthy(other);
+                    return Some(Value::Bool(match name {
+                        "&" => *b && o,
+                        "|" => *b || o,
+                        _ => *b != o, // "^"
+                    }));
+                }
+            }
+        }
+        match name {
+            // `respond_to?(:m)` — true iff dispatch on `recv` resolves `m`,
+            // consulting the SAME catalogs/table a real call uses (so it is
+            // honest: an out-of-catalog name reports `false`, and that name
+            // would also raise `NoMethodError` if actually called).
+            "respond_to?" => {
+                let target = args.first().map(method_name).unwrap_or_default();
+                Some(Value::Bool(responds_to(recv, &target)))
+            }
+            // `tap { |x| … }` — run the block for its side effect, return the
+            // RECEIVER.  Block-less `tap` still returns the receiver (v0 floor).
+            "tap" => {
+                if let Some(Value::Closure(_)) = args.last() {
+                    apply_closure(args.last().unwrap(), vec![recv.clone()]);
+                }
+                Some(recv.clone())
+            }
+            // `then`/`yield_self { |x| … }` — pipe the receiver INTO the block,
+            // return the block's RESULT.  Block-less → the receiver (v0 floor).
+            "then" | "yield_self" => match args.last() {
+                Some(b @ Value::Closure(_)) => Some(apply_closure(b, vec![recv.clone()])),
+                _ => Some(recv.clone()),
+            },
+            _ => None,
+        }
+    }
+
+    // Does dispatch on `recv` resolve `name`?  Mirrors the Python reference's
+    // `_responds_to`: it consults the SAME closed catalogs / user method table
+    // that a real `call_method` would, so the answer is honest — a name it
+    // reports `true` for is exactly a name a real call would run, and a
+    // `false` name is exactly one that would raise `NoMethodError`.  It is an
+    // explicit membership test, never reflection on the source-derived name.
+    fn responds_to(recv: &Value, name: &str) -> bool {
+        // Universal methods available on every receiver.
+        if matches!(
+            name,
+            "to_s" | "respond_to?" | "send" | "__send__" | "public_send" | "tap"
+                | "then" | "yield_self"
+        ) {
+            return true;
+        }
+        match recv {
+            // A user instance responds to any method its class (or an ancestor
+            // / included module) defines — the SAME `resolve_instance_method`
+            // walk `dispatch_user_method` uses.
+            Value::Instance(id) => resolve_instance_method(&instance_class(*id), name).is_some(),
+            Value::Seq(_) => matches!(
+                name,
+                "length" | "size" | "first" | "last" | "[]" | "reverse" | "sort" | "join"
+                    | "include?" | "push" | "append" | "pop" | "fetch" | "each" | "map"
+                    | "collect" | "select" | "filter" | "reject" | "find" | "detect" | "any?"
+                    | "all?" | "none?" | "reduce" | "inject"
+            ),
+            Value::Map(_) => matches!(
+                name,
+                "keys" | "values" | "[]" | "size" | "length" | "has_key?" | "key?" | "include?"
+                    | "member?" | "fetch" | "each" | "each_pair" | "map" | "collect" | "select"
+                    | "filter"
+            ),
+            Value::Str(_) => matches!(
+                name,
+                "length" | "size" | "upcase" | "downcase" | "reverse" | "strip" | "include?"
+                    | "split"
+            ),
+            Value::Sym(_) => matches!(
+                name,
+                "to_s" | "to_sym" | "length" | "size" | "upcase" | "downcase"
+            ),
+            Value::Bool(_) => matches!(name, "&" | "|" | "^"),
+            Value::Int(_) | Value::Float(_) => {
+                matches!(name, "abs" | "to_i" | "to_f" | "even?" | "odd?" | "zero?" | "times")
+            }
+            _ => false,
         }
     }
 
@@ -2308,10 +2484,24 @@ pub const RUNTIME: &str = r##"mod __sir {
         };
         match resolve_instance_method(&class, name) {
             Some(f) => apply_with_self(&f, recv.clone(), args),
-            // An instance method genuinely absent from the class's table
-            // (and all ancestors) is a Ruby `NoMethodError` — surface it
-            // typed so `rescue NoMethodError` catches it.
-            None => no_method_error(recv, name),
+            // No user method resolved — fall through to the M6 universal
+            // Object methods (`respond_to?`/`tap`/`then`/`yield_self`), which
+            // every receiver (instances included) responds to.  `to_s` is a
+            // universal too: an instance with no user `to_s` renders via the
+            // default `#<Class>` `format` form.  Only a name NONE of these
+            // claim is a genuine Ruby `NoMethodError` — surfaced typed so a
+            // `rescue NoMethodError` catches it.  (`send`/`__send__`/
+            // `public_send` never reach here: `call_method` intercepts them
+            // for every receiver, re-entering dispatch with the dynamic name.)
+            None => {
+                if name == "to_s" {
+                    return Value::Str(Rc::from(format(recv).as_str()));
+                }
+                if let Some(v) = object_method(recv, name, &args) {
+                    return v;
+                }
+                no_method_error(recv, name)
+            }
         }
     }
 
@@ -2632,6 +2822,30 @@ mod tests {
         assert!(RUNTIME.contains("if !seen.insert(c.clone())"), "missing OOP cycle guard");
         // The instance dispatch branch is taken FIRST in `call_method`.
         assert!(RUNTIME.contains("fn dispatch_user_method"));
+    }
+
+    #[test]
+    fn runtime_declares_m6_metaprogramming_surface() {
+        // M6: the inline runtime must ship the universal Object/Kernel
+        // metaprogramming methods — `send`/`__send__`/`public_send`,
+        // `tap`, `then`/`yield_self`, `respond_to?`, and boolean `&`/`|`/`^`.
+        assert!(RUNTIME.contains("fn object_method"), "missing universal Object method dispatch");
+        assert!(RUNTIME.contains("fn responds_to"), "missing respond_to? resolver");
+        // `send` re-enters dispatch with the dynamic name (the security-
+        // critical routing: the name feeds back through the SAME closed
+        // `call_method`, never a reflective host lookup).
+        assert!(
+            RUNTIME.contains(r#""send" | "__send__" | "public_send""#),
+            "missing send/__send__/public_send routing"
+        );
+        assert!(
+            RUNTIME.contains("call_method(recv, &target_name, it.collect())"),
+            "send must re-enter the explicit call_method with the dynamic name"
+        );
+        // The block-taking universal pair and the boolean operators.
+        assert!(RUNTIME.contains(r#""then" | "yield_self""#), "missing then/yield_self");
+        assert!(RUNTIME.contains(r#""respond_to?" =>"#), "missing respond_to? arm");
+        assert!(RUNTIME.contains(r#"matches!(name, "&" | "|" | "^")"#), "missing bool operators");
     }
 
     #[test]
