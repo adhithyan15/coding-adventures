@@ -280,6 +280,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_table,
     format_model_card_supported_parameter_coverage_csv,
     format_model_card_supported_parameter_coverage_json,
+    format_model_card_supported_parameter_coverage_summary_csv,
+    format_model_card_supported_parameter_coverage_summary_json,
+    format_model_card_supported_parameter_coverage_summary_table,
     format_model_card_supported_parameter_coverage_table,
     format_model_card_unsupported_parameter_issue_csv,
     format_model_card_unsupported_parameter_issue_json,
@@ -318,6 +321,8 @@ from spice_engine import (
     measure_transient_when_probe_counted,
     model_card_supported_parameter_coverage,
     model_card_supported_parameter_coverage_records,
+    model_card_supported_parameter_coverage_summary,
+    model_card_supported_parameter_coverage_summary_records,
     model_card_unsupported_parameter_issue_records,
     model_card_unsupported_parameter_issues,
     mosfet_from_model_card,
@@ -425,6 +430,62 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
         "kind,canonical_parameter,accepted_names,alias_count\nD,IS,IS|JS,2\n"
     )
     assert json.loads(format_model_card_supported_parameter_coverage_json()) == records
+
+
+def test_model_card_supported_parameter_coverage_summary_exports_are_stable() -> None:
+    summary = model_card_supported_parameter_coverage_summary()
+    assert len(summary) == 7
+    assert summary[0].kind == "D"
+    assert summary[0].canonical_parameter_count == 7
+    assert summary[0].accepted_name_count == 11
+    assert summary[0].aliased_parameter_count == 3
+    assert summary[0].max_alias_count == 3
+    assert summary[0].aliased_parameters == ("IS", "VT", "CJO")
+    assert summary[5].kind == "NMOS"
+    assert summary[5].canonical_parameter_count == 18
+    assert summary[5].accepted_name_count == 25
+    assert summary[5].aliased_parameter_count == 6
+    assert summary[5].max_alias_count == 3
+    assert summary[5].aliased_parameters == (
+        "VT0",
+        "LAMBDA",
+        "N_SUB",
+        "T_NOM",
+        "CBS",
+        "CBD",
+    )
+    assert summary[-1].kind == "PMOS"
+
+    table = format_model_card_supported_parameter_coverage_summary_table()
+    assert (
+        table.splitlines()[0]
+        == "kind\tcanonical_parameter_count\taccepted_name_count\t"
+        "aliased_parameter_count\tmax_alias_count\taliased_parameters"
+    )
+    assert table.splitlines()[1] == "D\t7\t11\t3\t3\tIS|VT|CJO"
+    assert (
+        table.splitlines()[-1]
+        == "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
+    )
+    records = model_card_supported_parameter_coverage_summary_records()
+    assert len(records) == 7
+    assert records[0] == {
+        "kind": "D",
+        "canonical_parameter_count": "7",
+        "accepted_name_count": "11",
+        "aliased_parameter_count": "3",
+        "max_alias_count": "3",
+        "aliased_parameters": "IS|VT|CJO",
+    }
+    assert format_model_card_supported_parameter_coverage_summary_csv().startswith(
+        "kind,canonical_parameter_count,accepted_name_count,"
+        "aliased_parameter_count,max_alias_count,aliased_parameters\n"
+        "D,7,11,3,3,IS|VT|CJO\n"
+    )
+    assert (
+        json.loads(format_model_card_supported_parameter_coverage_summary_json())
+        == records
+    )
 
 
 def test_model_card_aliases_build_device_instances() -> None:

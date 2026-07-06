@@ -61,6 +61,18 @@ class ModelCardSupportedParameterCoverage:
 
 
 @dataclass(frozen=True, slots=True)
+class ModelCardSupportedParameterCoverageSummary:
+    """A compact per-model-kind summary of supported parameter aliases."""
+
+    kind: str
+    canonical_parameter_count: int
+    accepted_name_count: int
+    aliased_parameter_count: int
+    max_alias_count: int
+    aliased_parameters: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class DeviceModelBehaviorFixture:
     """A runnable device-model reference fixture with a stable DC probe window."""
 
@@ -536,6 +548,71 @@ def format_model_card_supported_parameter_coverage_json() -> str:
     """Return compact JSON records for supported model-card parameter coverage."""
 
     return format_deck_table_json(format_model_card_supported_parameter_coverage_table())
+
+
+def model_card_supported_parameter_coverage_summary() -> tuple[
+    ModelCardSupportedParameterCoverageSummary, ...
+]:
+    """Return compact per-kind supported parameter alias coverage summaries."""
+
+    coverage = model_card_supported_parameter_coverage()
+    rows: list[ModelCardSupportedParameterCoverageSummary] = []
+    for kind in _MODEL_CARD_SUPPORTED_PARAMETER_KINDS:
+        kind_rows = tuple(row for row in coverage if row.kind == kind)
+        aliased_parameters = tuple(
+            row.canonical_parameter for row in kind_rows if row.alias_count > 1
+        )
+        rows.append(
+            ModelCardSupportedParameterCoverageSummary(
+                kind=kind,
+                canonical_parameter_count=len(kind_rows),
+                accepted_name_count=sum(row.alias_count for row in kind_rows),
+                aliased_parameter_count=len(aliased_parameters),
+                max_alias_count=max((row.alias_count for row in kind_rows), default=0),
+                aliased_parameters=aliased_parameters,
+            )
+        )
+    return tuple(rows)
+
+
+def format_model_card_supported_parameter_coverage_summary_table() -> str:
+    """Return supported model-card parameter coverage summaries as a stable table."""
+
+    lines = [
+        "kind\tcanonical_parameter_count\taccepted_name_count\t"
+        "aliased_parameter_count\tmax_alias_count\taliased_parameters"
+    ]
+    lines.extend(
+        f"{row.kind}\t{row.canonical_parameter_count}\t"
+        f"{row.accepted_name_count}\t{row.aliased_parameter_count}\t"
+        f"{row.max_alias_count}\t{'|'.join(row.aliased_parameters)}"
+        for row in model_card_supported_parameter_coverage_summary()
+    )
+    return "\n".join(lines)
+
+
+def model_card_supported_parameter_coverage_summary_records() -> list[dict[str, str]]:
+    """Return header-keyed records for supported-parameter coverage summaries."""
+
+    return deck_table_records(
+        format_model_card_supported_parameter_coverage_summary_table()
+    )
+
+
+def format_model_card_supported_parameter_coverage_summary_csv() -> str:
+    """Return supported-parameter coverage summaries as CSV."""
+
+    return format_deck_table_csv(
+        format_model_card_supported_parameter_coverage_summary_table()
+    )
+
+
+def format_model_card_supported_parameter_coverage_summary_json() -> str:
+    """Return compact JSON records for supported-parameter coverage summaries."""
+
+    return format_deck_table_json(
+        format_model_card_supported_parameter_coverage_summary_table()
+    )
 
 
 def diode_from_model_card(

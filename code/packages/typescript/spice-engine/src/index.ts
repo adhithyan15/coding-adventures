@@ -1764,6 +1764,15 @@ export interface ModelCardSupportedParameterCoverage {
   readonly aliasCount: number;
 }
 
+export interface ModelCardSupportedParameterCoverageSummary {
+  readonly kind: ModelCardKind;
+  readonly canonicalParameterCount: number;
+  readonly acceptedNameCount: number;
+  readonly aliasedParameterCount: number;
+  readonly maxAliasCount: number;
+  readonly aliasedParameters: readonly string[];
+}
+
 export interface DeviceModelBehaviorFixture {
   readonly name: string;
   readonly kind: ModelCardKind;
@@ -7948,6 +7957,52 @@ export function formatModelCardSupportedParameterCoverageCsv(): string {
 
 export function formatModelCardSupportedParameterCoverageJson(): string {
   return formatDeckTableJson(formatModelCardSupportedParameterCoverageTable());
+}
+
+export function modelCardSupportedParameterCoverageSummary(): readonly ModelCardSupportedParameterCoverageSummary[] {
+  const coverage = modelCardSupportedParameterCoverage();
+  return MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS.map((kind) => {
+    const rows = coverage.filter((row) => row.kind === kind);
+    const aliasedParameters = rows
+      .filter((row) => row.aliasCount > 1)
+      .map((row) => row.canonicalParameter);
+    return {
+      kind,
+      canonicalParameterCount: rows.length,
+      acceptedNameCount: rows.reduce((total, row) => total + row.aliasCount, 0),
+      aliasedParameterCount: aliasedParameters.length,
+      maxAliasCount: rows.reduce((maximum, row) => Math.max(maximum, row.aliasCount), 0),
+      aliasedParameters,
+    };
+  });
+}
+
+export function formatModelCardSupportedParameterCoverageSummaryTable(): string {
+  return [
+    "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters",
+    ...modelCardSupportedParameterCoverageSummary().map((row) =>
+      [
+        row.kind,
+        row.canonicalParameterCount,
+        row.acceptedNameCount,
+        row.aliasedParameterCount,
+        row.maxAliasCount,
+        row.aliasedParameters.join("|"),
+      ].join("\t"),
+    ),
+  ].join("\n");
+}
+
+export function modelCardSupportedParameterCoverageSummaryRecords(): Array<Record<string, string>> {
+  return deckTableRecords(formatModelCardSupportedParameterCoverageSummaryTable());
+}
+
+export function formatModelCardSupportedParameterCoverageSummaryCsv(): string {
+  return formatDeckTableCsv(formatModelCardSupportedParameterCoverageSummaryTable());
+}
+
+export function formatModelCardSupportedParameterCoverageSummaryJson(): string {
+  return formatDeckTableJson(formatModelCardSupportedParameterCoverageSummaryTable());
 }
 
 export function diodeFromModelCard(

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `modelCardSupportedParameterCoverageSummary`,
+  `formatModelCardSupportedParameterCoverageSummaryTable`,
+  `modelCardSupportedParameterCoverageSummaryRecords`,
+  `formatModelCardSupportedParameterCoverageSummaryCsv`, and
+  `formatModelCardSupportedParameterCoverageSummaryJson`, stable
+  per-model-kind summaries of supported model-card parameter alias coverage,
+  matching Python and Rust.
 - Add `modelCardSupportedParameterCoverage`,
   `formatModelCardSupportedParameterCoverageTable`,
   `modelCardSupportedParameterCoverageRecords`,

@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Model-card supported-parameter coverage summaries** —
+  `model_card_supported_parameter_coverage_summary()`,
+  `format_model_card_supported_parameter_coverage_summary_table()`,
+  `model_card_supported_parameter_coverage_summary_records()`,
+  `format_model_card_supported_parameter_coverage_summary_csv()`, and
+  `format_model_card_supported_parameter_coverage_summary_json()` now expose
+  per-model-kind supported parameter alias counts as stable compact exports,
+  matching Rust and TypeScript.
+
 - **Model-card supported-parameter coverage** —
   `model_card_supported_parameter_coverage()`,
   `format_model_card_supported_parameter_coverage_table()`,

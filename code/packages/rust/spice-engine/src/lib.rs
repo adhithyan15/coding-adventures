@@ -2866,6 +2866,16 @@ pub struct ModelCardSupportedParameterCoverage {
     pub alias_count: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModelCardSupportedParameterCoverageSummary {
+    pub kind: ModelCardKind,
+    pub canonical_parameter_count: usize,
+    pub accepted_name_count: usize,
+    pub aliased_parameter_count: usize,
+    pub max_alias_count: usize,
+    pub aliased_parameters: Vec<String>,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeviceModelBehaviorFixture {
     pub name: String,
@@ -3316,6 +3326,68 @@ pub fn format_model_card_supported_parameter_coverage_csv() -> String {
 
 pub fn format_model_card_supported_parameter_coverage_json() -> String {
     format_deck_table_json(&format_model_card_supported_parameter_coverage_table())
+}
+
+pub fn model_card_supported_parameter_coverage_summary(
+) -> Vec<ModelCardSupportedParameterCoverageSummary> {
+    let coverage = model_card_supported_parameter_coverage();
+    MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS
+        .iter()
+        .map(|kind| {
+            let rows = coverage
+                .iter()
+                .filter(|row| row.kind == *kind)
+                .collect::<Vec<_>>();
+            let aliased_parameters = rows
+                .iter()
+                .filter(|row| row.alias_count > 1)
+                .map(|row| row.canonical_parameter.clone())
+                .collect::<Vec<_>>();
+            ModelCardSupportedParameterCoverageSummary {
+                kind: *kind,
+                canonical_parameter_count: rows.len(),
+                accepted_name_count: rows.iter().map(|row| row.alias_count).sum(),
+                aliased_parameter_count: aliased_parameters.len(),
+                max_alias_count: rows.iter().map(|row| row.alias_count).max().unwrap_or(0),
+                aliased_parameters,
+            }
+        })
+        .collect()
+}
+
+pub fn format_model_card_supported_parameter_coverage_summary_table() -> String {
+    let mut lines = vec![
+        "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters"
+            .to_string(),
+    ];
+    lines.extend(
+        model_card_supported_parameter_coverage_summary()
+            .into_iter()
+            .map(|row| {
+                format!(
+                    "{}\t{}\t{}\t{}\t{}\t{}",
+                    row.kind.as_str(),
+                    row.canonical_parameter_count,
+                    row.accepted_name_count,
+                    row.aliased_parameter_count,
+                    row.max_alias_count,
+                    row.aliased_parameters.join("|")
+                )
+            }),
+    );
+    lines.join("\n")
+}
+
+pub fn model_card_supported_parameter_coverage_summary_records() -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_model_card_supported_parameter_coverage_summary_table())
+}
+
+pub fn format_model_card_supported_parameter_coverage_summary_csv() -> String {
+    format_deck_table_csv(&format_model_card_supported_parameter_coverage_summary_table())
+}
+
+pub fn format_model_card_supported_parameter_coverage_summary_json() -> String {
+    format_deck_table_json(&format_model_card_supported_parameter_coverage_summary_table())
 }
 
 fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `model_card_supported_parameter_coverage_summary`,
+  `format_model_card_supported_parameter_coverage_summary_table`,
+  `model_card_supported_parameter_coverage_summary_records`,
+  `format_model_card_supported_parameter_coverage_summary_csv`, and
+  `format_model_card_supported_parameter_coverage_summary_json`, stable
+  per-model-kind summaries of supported model-card parameter alias coverage,
+  matching Python and TypeScript.
 - Add `model_card_supported_parameter_coverage`,
   `format_model_card_supported_parameter_coverage_table`,
   `model_card_supported_parameter_coverage_records`,

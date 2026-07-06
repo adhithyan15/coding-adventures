@@ -40,12 +40,17 @@ use spice_engine::{
     format_device_model_reference_deck_audit_table, format_measurement_table,
     format_model_card_supported_parameter_coverage_csv,
     format_model_card_supported_parameter_coverage_json,
+    format_model_card_supported_parameter_coverage_summary_csv,
+    format_model_card_supported_parameter_coverage_summary_json,
+    format_model_card_supported_parameter_coverage_summary_table,
     format_model_card_supported_parameter_coverage_table,
     format_model_card_unsupported_parameter_issue_csv,
     format_model_card_unsupported_parameter_issue_json,
     format_model_card_unsupported_parameter_issue_table, format_temperature_dc_table,
     jfet_from_model_card, measure_dc_sweep_deck, measure_dc_sweep_probe,
     model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_records,
+    model_card_supported_parameter_coverage_summary,
+    model_card_supported_parameter_coverage_summary_records,
     model_card_unsupported_parameter_issue_records, model_card_unsupported_parameter_issues,
     mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
     resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
@@ -118,6 +123,58 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     ));
     assert!(json.ends_with(
         "{\"kind\":\"PMOS\",\"canonical_parameter\":\"MJ\",\"accepted_names\":\"MJ\",\"alias_count\":\"1\"}]\n"
+    ));
+}
+
+#[test]
+fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
+    let summary = model_card_supported_parameter_coverage_summary();
+    assert_eq!(summary.len(), 7);
+    assert_eq!(summary[0].kind, ModelCardKind::Diode);
+    assert_eq!(summary[0].canonical_parameter_count, 7);
+    assert_eq!(summary[0].accepted_name_count, 11);
+    assert_eq!(summary[0].aliased_parameter_count, 3);
+    assert_eq!(summary[0].max_alias_count, 3);
+    assert_eq!(summary[0].aliased_parameters, vec!["IS", "VT", "CJO"]);
+    assert_eq!(summary[5].kind, ModelCardKind::Nmos);
+    assert_eq!(summary[5].canonical_parameter_count, 18);
+    assert_eq!(summary[5].accepted_name_count, 25);
+    assert_eq!(summary[5].aliased_parameter_count, 6);
+    assert_eq!(summary[5].max_alias_count, 3);
+    assert_eq!(
+        summary[5].aliased_parameters,
+        vec!["VT0", "LAMBDA", "N_SUB", "T_NOM", "CBS", "CBD"]
+    );
+    assert_eq!(summary.last().unwrap().kind, ModelCardKind::Pmos);
+
+    let table = format_model_card_supported_parameter_coverage_summary_table();
+    let lines = table.lines().collect::<Vec<_>>();
+    assert_eq!(
+        lines[0],
+        "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters"
+    );
+    assert_eq!(lines[1], "D\t7\t11\t3\t3\tIS|VT|CJO");
+    assert_eq!(
+        lines.last().unwrap(),
+        &"PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
+    );
+    let records = model_card_supported_parameter_coverage_summary_records();
+    assert_eq!(records.len(), 7);
+    assert_eq!(records[0]["kind"], "D");
+    assert_eq!(records[0]["canonical_parameter_count"], "7");
+    assert_eq!(records[0]["accepted_name_count"], "11");
+    assert_eq!(records[0]["aliased_parameter_count"], "3");
+    assert_eq!(records[0]["max_alias_count"], "3");
+    assert_eq!(records[0]["aliased_parameters"], "IS|VT|CJO");
+    assert!(format_model_card_supported_parameter_coverage_summary_csv().starts_with(
+        "kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,7,11,3,3,IS|VT|CJO\n"
+    ));
+    let json = format_model_card_supported_parameter_coverage_summary_json();
+    assert!(json.starts_with(
+        "[{\"kind\":\"D\",\"canonical_parameter_count\":\"7\",\"accepted_name_count\":\"11\",\"aliased_parameter_count\":\"3\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"IS|VT|CJO\"}"
+    ));
+    assert!(json.ends_with(
+        "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"18\",\"accepted_name_count\":\"25\",\"aliased_parameter_count\":\"6\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|N_SUB|T_NOM|CBS|CBD\"}]\n"
     ));
 }
 
