@@ -2,6 +2,15 @@
 
 ## 0.14.0
 
+### Security (review-driven)
+
+- Arity guards on `equal?` and boolean `&`/`|`/`^`: these became reachable with
+  ZERO args via the new `send` surface (`obj.send(:equal?)`, `true.send(:&)`),
+  where indexing `args[0]` was a raw Go index-out-of-range panic (catchable only
+  as `StandardError`, or a native crash if uncaught). They now raise a typed
+  `ArgumentError` ("wrong number of arguments (given 0, expected 1)") — matching
+  Ruby. Regression: `send_zero_arg_method_raises_argument_error_not_native_panic`.
+
 ### Added — M6 universal Object metaprogramming (send / tap / then / respond_to? / boolean &|^)
 
 Parity-fill: M6 shipped in the Python + TypeScript `sir-runtime-oop` backends;

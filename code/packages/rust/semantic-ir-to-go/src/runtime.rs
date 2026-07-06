@@ -1391,6 +1391,13 @@ func _sir_object_method(recv Value, name string, args []Value) (Value, bool) {
 		// value (Ruby interns them); the shared handles (`*Seq`/`*Map`/
 		// `*SirInstance`) compare by pointer identity — Go `==` on interface
 		// values does exactly this for these cases.  NEVER reflection.
+		// Arity guard: `equal?` is newly reachable with zero args via `send`
+		// (`obj.send(:equal?)`), so index `args[0]` only after checking length
+		// — Ruby raises a catchable `ArgumentError`, not a native Go panic.
+		if len(args) == 0 {
+			panic(_sir_new_error("ArgumentError",
+				Value("wrong number of arguments (given 0, expected 1)")))
+		}
 		return _sir_value_identical(recv, args[0]), true
 	case "respond_to?":
 		// M6 honesty: true iff dispatch on `recv` resolves the named method,
@@ -1529,6 +1536,16 @@ func _sir_meta_method(recv Value, name string, args []Value) (Value, bool) {
 // are falsy, everything else — `0`, `""` — is truthy).  So `true & nil` is
 // `false` and `false | 0` is `true`.  `^` is logical XOR.
 func _sir_bool_method(recv bool, name string, args []Value) (Value, bool) {
+	switch name {
+	case "&", "|", "^":
+		// Arity guard: these are newly reachable with zero args via `send`
+		// (`true.send(:&)`), so require the operand before indexing `args[0]`
+		// — Ruby raises a catchable `ArgumentError`, not a native Go panic.
+		if len(args) == 0 {
+			panic(_sir_new_error("ArgumentError",
+				Value("wrong number of arguments (given 0, expected 1)")))
+		}
+	}
 	switch name {
 	case "&":
 		return recv && _sir_truthy(args[0]), true

@@ -226,6 +226,59 @@ fn unknown_send_module() -> Module {
     program(vec![main])
 }
 
+// `obj.send(:equal?)` — `send` with a name but NO further args — makes the
+// universal `equal?` reachable with zero operands.  The arity guard must
+// surface a typed `ArgumentError` (Ruby's wrong-number-of-arguments) via the
+// `_sir_new_error` floor, NOT a raw Go `index out of range` panic.  (Same
+// shape as `unknown_send_fails_cleanly`: assert the controlled error message,
+// which — unlike a native runtime panic — is a `SirError` a `rescue` catches.)
+fn send_zero_arg_arity_module() -> Module {
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![print_stmt(method(
+                seq(vec![ilit(1)]),
+                "send",
+                vec![sym("equal?")],
+            ))],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+    program(vec![main])
+}
+
+#[test]
+fn send_zero_arg_method_raises_argument_error_not_native_panic() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&send_zero_arg_arity_module()).expect("compiles to Go");
+    let run_out = run_go(&artifact.source, "send_zero_arg");
+    assert!(
+        !run_out.status.success(),
+        "zero-arg send(:equal?) must raise, not succeed; stdout: {}",
+        String::from_utf8_lossy(&run_out.stdout)
+    );
+    let stderr = String::from_utf8_lossy(&run_out.stderr);
+    // The typed ArgumentError floor, NOT a raw Go slice panic.
+    assert!(
+        stderr.contains("ArgumentError") && stderr.contains("wrong number of arguments"),
+        "expected a typed ArgumentError; stderr:\n{stderr}"
+    );
+    assert!(
+        !stderr.contains("index out of range"),
+        "the arity guard must prevent a native index-out-of-range panic; stderr:\n{stderr}"
+    );
+}
+
 fn go_available() -> bool {
     Command::new("go")
         .arg("version")
