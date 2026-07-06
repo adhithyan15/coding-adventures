@@ -22,15 +22,71 @@ struct VoidElementCrossAxisCase {
     suites: &'static [(&'static str, &'static str, &'static str)],
 }
 
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
-    ("adoption01-dat-13", "void-in-table"),
-    ("noscript01-dat-332", "metadata-void-elements"),
-    ("menuitem-element-dat-311", "body-void-elements"),
-    ("noscript01-dat-338", "stray-void-end-tags"),
-    ("tests19-dat-1086", "void-foreign-boundary"),
-    ("tests7-dat-17", "void-in-select"),
-    ("tests6-dat-27", "void-fragment-context"),
-    ("template-dat-494", "legacy-void-elements"),
+struct VoidElementRepairEvidence {
+    id: &'static str,
+    source: &'static str,
+    axis: &'static str,
+    data_snippet: &'static str,
+    fragment_context: Option<&'static str>,
+}
+
+const POST_PARSE_REPAIR_EVIDENCE: &[VoidElementRepairEvidence] = &[
+    VoidElementRepairEvidence {
+        id: "adoption01-dat-13",
+        source: "adoption01.dat:13",
+        axis: "void-in-table",
+        data_snippet: "<a><svg><tr><input></a>",
+        fragment_context: None,
+    },
+    VoidElementRepairEvidence {
+        id: "noscript01-dat-332",
+        source: "noscript01.dat:332",
+        axis: "metadata-void-elements",
+        data_snippet: "<head><noscript><basefont><!--foo--></noscript>",
+        fragment_context: None,
+    },
+    VoidElementRepairEvidence {
+        id: "menuitem-element-dat-311",
+        source: "menuitem-element.dat:311",
+        axis: "body-void-elements",
+        data_snippet: "<!DOCTYPE html><body><menuitem>A<hr>B",
+        fragment_context: None,
+    },
+    VoidElementRepairEvidence {
+        id: "noscript01-dat-338",
+        source: "noscript01.dat:338",
+        axis: "stray-void-end-tags",
+        data_snippet: "<head><noscript></br><!--foo--></noscript>",
+        fragment_context: None,
+    },
+    VoidElementRepairEvidence {
+        id: "tests19-dat-1086",
+        source: "tests19.dat:1086",
+        axis: "void-foreign-boundary",
+        data_snippet: "<!doctype html><svg></svg><frameset><frame>",
+        fragment_context: None,
+    },
+    VoidElementRepairEvidence {
+        id: "tests7-dat-17",
+        source: "tests7.dat:17",
+        axis: "void-in-select",
+        data_snippet: "<!doctype html><select><input>X",
+        fragment_context: None,
+    },
+    VoidElementRepairEvidence {
+        id: "tests6-dat-27",
+        source: "tests6.dat:27",
+        axis: "void-fragment-context",
+        data_snippet: "foo<col>",
+        fragment_context: Some("colgroup"),
+    },
+    VoidElementRepairEvidence {
+        id: "template-dat-494",
+        source: "template.dat:494",
+        axis: "legacy-void-elements",
+        data_snippet: "<frameset><template><frame></frame></template></frameset>",
+        fragment_context: None,
+    },
 ];
 const VOID_IN_SELECT_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
     (
@@ -245,18 +301,40 @@ fn whatwg_void_element_audit_tracks_post_parse_repair_evidence() {
         .map(|case| (case.source.clone(), case))
         .collect::<HashMap<_, _>>();
 
-    for (case_id, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
-        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
-            panic!("post-parse repair evidence case `{case_id}` should be audited")
+    for evidence in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(evidence.id).unwrap_or_else(|| {
+            panic!(
+                "post-parse repair evidence case `{}` should be audited",
+                evidence.id
+            )
         });
         assert_eq!(
-            audit_case.axis, *expected_axis,
-            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+            audit_case.source, evidence.source,
+            "post-parse repair evidence case `{}` should stay tied to its smoke fixture row",
+            evidence.id
+        );
+        assert_eq!(
+            audit_case.axis, evidence.axis,
+            "post-parse repair evidence case `{}` should stay on its focused audit axis",
+            evidence.id
         );
 
         let source_case = smoke_cases
-            .get(&audit_case.source)
-            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+            .get(evidence.source)
+            .unwrap_or_else(|| panic!("case `{}` should exist in smoke fixture", evidence.id));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "post-parse repair evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
+        if let Some(fragment_context) = evidence.fragment_context {
+            assert_eq!(
+                source_case.fragment_context.as_deref(),
+                Some(fragment_context),
+                "post-parse repair evidence row `{}` should keep its html5lib fragment context",
+                evidence.id
+            );
+        }
         let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
             panic!(
                 "case `{}` ({}) parse failed: {error}",
