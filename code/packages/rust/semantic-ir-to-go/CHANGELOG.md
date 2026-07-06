@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.14.0
+
+### Security (review-driven)
+
+- Arity guards on `equal?` and boolean `&`/`|`/`^`: these became reachable with
+  ZERO args via the new `send` surface (`obj.send(:equal?)`, `true.send(:&)`),
+  where indexing `args[0]` was a raw Go index-out-of-range panic (catchable only
+  as `StandardError`, or a native crash if uncaught). They now raise a typed
+  `ArgumentError` ("wrong number of arguments (given 0, expected 1)") — matching
+  Ruby. Regression: `send_zero_arg_method_raises_argument_error_not_native_panic`.
+
+### Added — M6 universal Object metaprogramming (send / tap / then / respond_to? / boolean &|^)
+
+Parity-fill: M6 shipped in the Python + TypeScript `sir-runtime-oop` backends;
+this ports the SAME surface into the Go runtime's method-dispatch path
+(`_sir_call_method`), so a translated Ruby program's `send`/`tap`/`then`/
+`respond_to?` and boolean `&`/`|`/`^` now execute on the Go backend instead of
+hitting the `NoMethodError` floor.
+
+- **`send`/`__send__`/`public_send`** — the first argument names a method; the
+  dispatcher re-enters `_sir_call_method` with that name and the remaining args
+  (a trailing block survives as a trailing arg). **Security ([[dynamic-dispatch-rce]]):**
+  the dynamic name is coerced to a string and used ONLY as the key into the
+  SAME explicit catalog/switch a normal call walks — an unknown name surfaces
+  the ordinary `NoMethodError`. NEVER Go `reflect`/`MethodByName` on the
+  source-derived name.
+- **`tap`** — yields the receiver to the block and returns the RECEIVER; a
+  block-less `tap` returns the receiver (v0 Enumerator-less floor).
+- **`then`/`yield_self`** — yields the receiver and returns the BLOCK RESULT;
+  block-less returns the receiver.
+- **`respond_to?`** — true iff dispatch resolves the name, consulting the same
+  reflective / `define_method` / type-specific + universal catalog tiers a real
+  call uses (`_sir_responds_to` + per-catalog `_sir_*_responds` predicates kept
+  in lockstep with the dispatch switches). Out-of-catalog → honest `false`.
+- **Boolean `&`/`|`/`^`** on `true`/`false` — Ruby's EAGER (non-short-circuit)
+  logical operators, coercing the argument by SIR truthiness (`true & nil` is
+  `false`, `false | 0` is `true`, `^` is XOR).
+- Also filled the universal `Object` table: `inspect`, `equal?` (identity —
+  value-equal for interned primitives, pointer-equal for `*Seq`/`*Map`/
+  `*SirInstance`), `freeze`/`frozen?`, `dup`/`clone` (shallow copy of the
+  mutable handles), and `nil.to_a == []` / `Array#to_a == self`.
+- Exec-proof via `go run` (`tests/compile_and_run_m6_meta.rs`):
+  `"hello".send(:upcase)` → `HELLO`, `[1,2,3].send(:map,&blk)` → `[2,4,6]`,
+  `5.tap{…}` → `5`, `5.then{|x|x*2}` → `10`, `respond_to?` true/false honesty,
+  the boolean operators, and an unknown `send(:bogus)` failing cleanly through
+  the NoMethodError floor (no reflection).
+
+
 ## 0.13.2
 
 ### Fixed — `or`/`and` builtins (Ruby `||`/`&&`) were unimplemented
