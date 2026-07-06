@@ -623,12 +623,15 @@ the existing shared `cas-*` crate, not a reimplementation:
 |------|---------|--------|
 | `Simplify` | `Simplify[x + 0]` | `x` |
 | `Simplify` | `Simplify[2 + 3]` | `5` |
+| `Expand` | `Expand[(x + 1)^2]` | `1 + x + x + x*x` |
 
-`Simplify` calls `cas-simplify`'s existing `simplify()` — the exact function
-Macsyma's own `simplify()` surface function calls — so Wolfram and Macsyma
-agree on every simplification this crate can perform. Further heads
-(`Expand`, `Factor`, `Solve`, `D`, `Integrate`, …) land one at a time, each
-its own item.
+`Simplify` calls `cas-simplify`'s existing `simplify()`; `Expand` calls its
+existing `expand()` (distributes `Mul` over `Add`/`Sub`, expands bounded
+non-negative integer `Pow`, does **not** collect like terms — see
+`cas-simplify`'s own docs). Both are the exact functions Macsyma's own
+`simplify()`/`expand()` surface functions call — so Wolfram and Macsyma
+agree on every result this crate can produce. Further heads (`Factor`,
+`Solve`, `D`, `Integrate`, …) land one at a time, each its own item.
 
 ## Robustness
 
@@ -705,8 +708,9 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   whole expression only. Depth-bounded, loop-free, panic-free. Alternatives /
   conditions / `PatternTest` / sequences / `Repeated` / `Replace` level specs /
   `ReplaceRepeated` (`//.`) deferred to W-20. No grammar change.
-- **Future** — the full `cas-*` function surface under Wolfram names
-  (`Simplify`, `Expand`, `Factor`, `Solve`, …).
+- **Future** — the rest of the `cas-*` function surface under Wolfram names
+  (`Factor`, `Solve`, `D`, `Integrate`, …) — `Simplify` and `Expand` are
+  delivered, see the W-22 section above.
 
 ## Testing
 

@@ -93,12 +93,13 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   (with `checked_mul`) before allocation (§19.5). No grammar change.
 - **W-22 — the `cas-*` function surface under Wolfram names.** *(in
   progress — see §24.)* Wires the existing `cas-*` crates in one head at a
-  time, starting with `Simplify` (a thin call into `cas-simplify`'s
-  `simplify()`, the same function Macsyma's own `simplify()` calls, so the
-  two languages agree on every simplification this crate can perform).
-  Remaining: `Expand`, `Factor`, `Solve`, `D`, `Integrate`, each its own
-  item — no grammar change for any of them (all ordinary `Head[args]` forms
-  the existing grammar already parses).
+  time: `Simplify` (a thin call into `cas-simplify`'s `simplify()`) and
+  `Expand` (a thin call into `cas-simplify`'s `expand()`) are both
+  delivered — each the same function its Macsyma counterpart calls, so the
+  two languages agree on every result this crate can produce. Remaining:
+  `Factor`, `Solve`, `D`, `Integrate`, each its own item — no grammar
+  change for any of them (all ordinary `Head[args]` forms the existing
+  grammar already parses).
 
 ## §3 The supported surface (the grammar)
 
@@ -2097,7 +2098,7 @@ it). `ReplaceRepeated` retains its §22.4 hard iteration cap
 (`REPLACE_GROWTH_NODE_CAP`) — the `//.` operator lowers to the very same head, so
 the DoS bounds apply identically whether written as operator or `Head[args]`.
 
-## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify` (in progress)
+## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify`, `Expand` (in progress)
 
 W-22 starts closing §2's previously unnumbered "Future" item: wiring the
 existing `cas-*` algorithm crates under Wolfram's own head names. Unlike
@@ -2126,25 +2127,38 @@ Simplify[x + 0]     (* x *)
 Simplify[2 + 3]     (* 5 *)
 ```
 
-### §24.2 Remaining (not yet delivered)
+### §24.2 `Expand` (delivered)
+
+`Expand[expr]` is a thin call into `cas_simplify::expand(expr)` — **the
+exact function** Macsyma's own `expand()` surface function calls
+(`macsyma-runtime`'s `expand_handler`), including its internal
+`EXPAND_MAX_POW`/`EXPAND_MAX_TERMS` DoS guards (a faithful port of the
+Python reference's general recursive-distributor path: distributes `Mul`
+over `Add`/`Sub`, expands bounded non-negative integer `Pow` via
+square-and-multiply, guarded against the doubly-exponential term-count
+blowup a multi-term base can hit). No algorithm or guard is reimplemented
+for Wolfram; a test pins both languages' call sites to agree on the same
+input, exactly like `Simplify`'s §24.1 parity test.
+
+Like `Simplify` and every W-5+ built-in, `Expand` is an ordinary eager
+`Head[args]` form requiring exactly one argument; any other arity leaves
+the form unevaluated.
+
+```
+Expand[(x + 1)^2]           (* 1 + x + x + x*x *)
+Expand[(x + 1) * (x + 2)]   (* 2 + x + 2*x + x*x *)
+```
+
+**Honest scope note (inherited from `cas-simplify`, not a Wolfram-specific
+gap):** `expand` does not collect like terms — e.g. `Expand[(x+1)^2]`
+produces `1 + x + x + x*x`, not the fully-collected `1 + 2*x + x^2` —
+tracked as a separate follow-up (see `cas-simplify`'s own module docs).
+
+### §24.3 Remaining (not yet delivered)
 
 `Factor`, `Solve`, `D`, `Integrate`, and the rest of §2's original list —
 each is a separate future item, no grammar change required for any of them
 (all are ordinary `Head[args]` forms the existing grammar already parses).
-
-**`Expand` — the blocker is now cleared, wiring is the remaining step.**
-Macsyma's own `expand()` had no dedicated handler backing its `Expand` head
-in `symbolic-vm`'s `build_handler_table` (verified empirically:
-`expand((x+1)^2)` returned unevaluated) — that gap is now fixed via
-`cas_simplify::expand`, a faithful port of the Python reference's general
-recursive-distributor path (distributes `Mul` over `Add`/`Sub`, expands
-bounded non-negative integer `Pow`, guarded against the doubly-exponential
-term-count blowup square-and-multiply can hit on a multi-term base). Wiring
-Wolfram's `Expand[...]` is now the same thin `call the shared function` shape
-as `Simplify[...]` was. **Honest scope note (inherited from `cas-simplify`,
-not a Wolfram-specific gap):** `expand` does not collect like terms — e.g.
-`Expand[(x+1)^2]` will produce `1 + x + x + x*x`, not the fully-collected
-`1 + 2*x + x^2` — tracked as a separate follow-up.
 
 ### §6 References
 
