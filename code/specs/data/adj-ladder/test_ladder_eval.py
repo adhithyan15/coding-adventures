@@ -124,6 +124,7 @@ SELF_CONTAINED_RUNGS = (
     "rung84_intraocular_pressure",
     "rung85_wound_closure",
     "rung86_joint_fluid",
+    "rung87_complement_titer",
 )
 
 
