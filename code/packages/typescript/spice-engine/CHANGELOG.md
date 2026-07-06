@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `modelCardSupportedParameterCoverageDashboard`,
+  `formatModelCardSupportedParameterCoverageDashboardTable`,
+  `modelCardSupportedParameterCoverageDashboardRecords`,
+  `formatModelCardSupportedParameterCoverageDashboardCsv`, and
+  `formatModelCardSupportedParameterCoverageDashboardJson`, stable per-kind
+  supported-parameter coverage dashboard rows with actual versus expected
+  counts plus gate issue fields, matching Python and Rust.
 - Add `modelCardSupportedParameterCoverageGate`,
   `formatModelCardSupportedParameterCoverageGateReport`,
   `formatModelCardSupportedParameterCoverageGateIssueTable`,

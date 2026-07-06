@@ -279,6 +279,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table,
     format_model_card_supported_parameter_coverage_csv,
+    format_model_card_supported_parameter_coverage_dashboard_csv,
+    format_model_card_supported_parameter_coverage_dashboard_json,
+    format_model_card_supported_parameter_coverage_dashboard_table,
     format_model_card_supported_parameter_coverage_gate_issue_csv,
     format_model_card_supported_parameter_coverage_gate_issue_json,
     format_model_card_supported_parameter_coverage_gate_issue_table,
@@ -324,6 +327,8 @@ from spice_engine import (
     measure_transient_when_probe,
     measure_transient_when_probe_counted,
     model_card_supported_parameter_coverage,
+    model_card_supported_parameter_coverage_dashboard,
+    model_card_supported_parameter_coverage_dashboard_records,
     model_card_supported_parameter_coverage_gate,
     model_card_supported_parameter_coverage_gate_issue_records,
     model_card_supported_parameter_coverage_records,
@@ -577,6 +582,106 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
     assert (
         json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
         == records
+    )
+
+
+def test_model_card_supported_parameter_coverage_dashboard_exports_are_stable() -> None:
+    coverage = model_card_supported_parameter_coverage()
+    dashboard = model_card_supported_parameter_coverage_dashboard(coverage)
+    assert len(dashboard) == 7
+    assert dashboard[0].kind == "D"
+    assert dashboard[0].passed is True
+    assert dashboard[0].canonical_parameter_count == 7
+    assert dashboard[0].expected_canonical_parameter_count == 7
+    assert dashboard[0].accepted_name_count == 11
+    assert dashboard[0].expected_accepted_name_count == 11
+    assert dashboard[0].aliased_parameter_count == 3
+    assert dashboard[0].expected_aliased_parameter_count == 3
+    assert dashboard[0].max_alias_count == 3
+    assert dashboard[0].expected_max_alias_count == 3
+    assert dashboard[0].issue_count == 0
+    assert dashboard[0].issue_fields == ()
+    assert dashboard[5].kind == "NMOS"
+    assert dashboard[5].canonical_parameter_count == 18
+    assert dashboard[5].accepted_name_count == 25
+    assert dashboard[5].issue_count == 0
+
+    table = format_model_card_supported_parameter_coverage_dashboard_table(coverage)
+    assert (
+        table.splitlines()[0]
+        == "kind\tpassed\tcanonical_parameter_count\t"
+        "expected_canonical_parameter_count\taccepted_name_count\t"
+        "expected_accepted_name_count\taliased_parameter_count\t"
+        "expected_aliased_parameter_count\tmax_alias_count\t"
+        "expected_max_alias_count\tissue_count\tissue_fields"
+    )
+    assert table.splitlines()[1] == "D\ttrue\t7\t7\t11\t11\t3\t3\t3\t3\t0\t"
+    assert (
+        table.splitlines()[-1]
+        == "PMOS\ttrue\t18\t18\t25\t25\t6\t6\t3\t3\t0\t"
+    )
+    records = model_card_supported_parameter_coverage_dashboard_records(coverage)
+    assert len(records) == 7
+    assert records[0] == {
+        "kind": "D",
+        "passed": "true",
+        "canonical_parameter_count": "7",
+        "expected_canonical_parameter_count": "7",
+        "accepted_name_count": "11",
+        "expected_accepted_name_count": "11",
+        "aliased_parameter_count": "3",
+        "expected_aliased_parameter_count": "3",
+        "max_alias_count": "3",
+        "expected_max_alias_count": "3",
+        "issue_count": "0",
+        "issue_fields": "",
+    }
+    assert format_model_card_supported_parameter_coverage_dashboard_csv(
+        coverage
+    ).startswith(
+        "kind,passed,canonical_parameter_count,expected_canonical_parameter_count,"
+        "accepted_name_count,expected_accepted_name_count,aliased_parameter_count,"
+        "expected_aliased_parameter_count,max_alias_count,expected_max_alias_count,"
+        "issue_count,issue_fields\n"
+        "D,true,7,7,11,11,3,3,3,3,0,\n"
+    )
+    assert (
+        json.loads(format_model_card_supported_parameter_coverage_dashboard_json(coverage))
+        == records
+    )
+
+
+def test_model_card_supported_parameter_coverage_dashboard_reports_missing_alias_family() -> None:
+    trimmed = tuple(
+        row
+        for row in model_card_supported_parameter_coverage()
+        if not (row.kind == "NMOS" and row.canonical_parameter == "VT0")
+    )
+
+    dashboard = model_card_supported_parameter_coverage_dashboard(trimmed)
+    nmos = next(row for row in dashboard if row.kind == "NMOS")
+
+    assert nmos.passed is False
+    assert nmos.canonical_parameter_count == 17
+    assert nmos.expected_canonical_parameter_count == 18
+    assert nmos.accepted_name_count == 22
+    assert nmos.expected_accepted_name_count == 25
+    assert nmos.aliased_parameter_count == 5
+    assert nmos.expected_aliased_parameter_count == 6
+    assert nmos.max_alias_count == 2
+    assert nmos.expected_max_alias_count == 3
+    assert nmos.issue_count == 4
+    assert nmos.issue_fields == (
+        "canonical_parameter_count",
+        "accepted_name_count",
+        "aliased_parameter_count",
+        "max_alias_count",
+    )
+    assert (
+        "NMOS\tfalse\t17\t18\t22\t25\t5\t6\t2\t3\t4\t"
+        "canonical_parameter_count|accepted_name_count|"
+        "aliased_parameter_count|max_alias_count"
+        in format_model_card_supported_parameter_coverage_dashboard_table(trimmed)
     )
 
 

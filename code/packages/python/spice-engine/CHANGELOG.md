@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Model-card supported-parameter coverage dashboard** —
+  `model_card_supported_parameter_coverage_dashboard()`,
+  `format_model_card_supported_parameter_coverage_dashboard_table()`,
+  `model_card_supported_parameter_coverage_dashboard_records()`,
+  `format_model_card_supported_parameter_coverage_dashboard_csv()`, and
+  `format_model_card_supported_parameter_coverage_dashboard_json()` now expose
+  per-kind actual versus expected coverage counts plus gate issue fields for
+  Mosaic/browser dashboards, matching Rust and TypeScript.
+
 - **Model-card supported-parameter coverage gate** —
   `model_card_supported_parameter_coverage_gate()`,
   `format_model_card_supported_parameter_coverage_gate_report()`,
