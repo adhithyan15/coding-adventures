@@ -258,6 +258,13 @@ transient fixture columns plus missing/extra-analysis inventories.
 `device_model_reference_deck_audit_gate()` and
 `format_device_model_reference_deck_audit_gate_report()` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
+`device_model_reference_deck_audit_gate_coverage_digest()`,
+`format_device_model_reference_deck_audit_gate_coverage_digest_table()`,
+`device_model_reference_deck_audit_gate_coverage_digest_records()`,
+`format_device_model_reference_deck_audit_gate_coverage_digest_csv()`, and
+`format_device_model_reference_deck_audit_gate_coverage_digest_json()` expose a
+one-row release-dashboard digest with expected, covered, and missing pair
+counts plus issue-field inventories.
 `format_device_model_reference_deck_audit_gate_issue_table()`,
 `device_model_reference_deck_audit_gate_issue_records()`,
 `format_device_model_reference_deck_audit_gate_issue_csv()`, and

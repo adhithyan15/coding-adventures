@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `deviceModelReferenceDeckAuditGateCoverageDigest`,
+  `formatDeviceModelReferenceDeckAuditGateCoverageDigestTable`,
+  `deviceModelReferenceDeckAuditGateCoverageDigestRecords`,
+  `formatDeviceModelReferenceDeckAuditGateCoverageDigestCsv`, and
+  `formatDeviceModelReferenceDeckAuditGateCoverageDigestJson`, stable one-row
+  audit gate coverage digest exports for release dashboards, matching Python
+  and Rust.
 - Add `deviceModelReferenceDeckAuditGateIssueSummary`,
   `formatDeviceModelReferenceDeckAuditGateIssueSummaryTable`,
   `deviceModelReferenceDeckAuditGateIssueSummaryRecords`,

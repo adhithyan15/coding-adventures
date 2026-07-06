@@ -2962,6 +2962,17 @@ pub struct DeviceModelReferenceDeckAuditGateReport {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditGateCoverageDigest {
+    pub passed: bool,
+    pub fixture_count: usize,
+    pub expected_pair_count: usize,
+    pub covered_pair_count: usize,
+    pub missing_pair_count: usize,
+    pub issue_count: usize,
+    pub issue_fields: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeviceModelReferenceDeckAuditGateIssueSummary {
     pub field: String,
     pub issue_count: usize,
@@ -4901,6 +4912,76 @@ pub fn format_device_model_reference_deck_audit_gate_report(
         }
     }
     lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_gate_coverage_digest(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> DeviceModelReferenceDeckAuditGateCoverageDigest {
+    let expected_pair_count = report.expected_kinds.len() * report.expected_analyses.len();
+    let missing_pair_count = report
+        .issues
+        .iter()
+        .filter(|issue| issue.field == "coverage")
+        .count();
+    let issue_fields = report
+        .issues
+        .iter()
+        .map(|issue| issue.field.clone())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+
+    DeviceModelReferenceDeckAuditGateCoverageDigest {
+        passed: report.passed,
+        fixture_count: report.fixture_count,
+        expected_pair_count,
+        covered_pair_count: expected_pair_count.saturating_sub(missing_pair_count),
+        missing_pair_count,
+        issue_count: report.issues.len(),
+        issue_fields,
+    }
+}
+
+pub fn format_device_model_reference_deck_audit_gate_coverage_digest_table(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    let digest = device_model_reference_deck_audit_gate_coverage_digest(report);
+    [
+        "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\tmissing_pair_count\tissue_count\tissue_fields".to_string(),
+        format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            digest.passed,
+            digest.fixture_count,
+            digest.expected_pair_count,
+            digest.covered_pair_count,
+            digest.missing_pair_count,
+            digest.issue_count,
+            digest.issue_fields.join(",")
+        ),
+    ]
+    .join("\n")
+}
+
+pub fn device_model_reference_deck_audit_gate_coverage_digest_records(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_gate_coverage_digest_table(report))
+}
+
+pub fn format_device_model_reference_deck_audit_gate_coverage_digest_csv(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    format_deck_table_csv(
+        &format_device_model_reference_deck_audit_gate_coverage_digest_table(report),
+    )
+}
+
+pub fn format_device_model_reference_deck_audit_gate_coverage_digest_json(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    format_deck_table_json(
+        &format_device_model_reference_deck_audit_gate_coverage_digest_table(report),
+    )
 }
 
 pub fn format_device_model_reference_deck_audit_gate_issue_table(

@@ -189,6 +189,8 @@ from spice_engine import (
     device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_gate_coverage_digest,
+    device_model_reference_deck_audit_gate_coverage_digest_records,
     device_model_reference_deck_audit_gate_issue_records,
     device_model_reference_deck_audit_gate_issue_summary,
     device_model_reference_deck_audit_gate_issue_summary_records,
@@ -258,6 +260,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_analysis_summary_json,
     format_device_model_reference_deck_audit_analysis_summary_table,
     format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_coverage_digest_csv,
+    format_device_model_reference_deck_audit_gate_coverage_digest_json,
+    format_device_model_reference_deck_audit_gate_coverage_digest_table,
     format_device_model_reference_deck_audit_gate_issue_csv,
     format_device_model_reference_deck_audit_gate_issue_json,
     format_device_model_reference_deck_audit_gate_issue_summary_csv,
@@ -892,6 +897,21 @@ def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:
         "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\n"
         "true\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
     )
+    digest = device_model_reference_deck_audit_gate_coverage_digest(report)
+    assert digest.passed is True
+    assert digest.fixture_count == 20
+    assert digest.expected_pair_count == 20
+    assert digest.covered_pair_count == 20
+    assert digest.missing_pair_count == 0
+    assert digest.issue_count == 0
+    assert digest.issue_fields == ()
+    assert format_device_model_reference_deck_audit_gate_coverage_digest_table(
+        report
+    ) == (
+        "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\t"
+        "missing_pair_count\tissue_count\tissue_fields\n"
+        "true\t20\t20\t20\t0\t0\t"
+    )
 
 
 def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> None:
@@ -969,6 +989,50 @@ def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> No
             format_device_model_reference_deck_audit_gate_issue_summary_json(report)
         )
         == summary_records
+    )
+    digest = device_model_reference_deck_audit_gate_coverage_digest(report)
+    assert digest.passed is False
+    assert digest.fixture_count == 19
+    assert digest.expected_pair_count == 20
+    assert digest.covered_pair_count == 19
+    assert digest.missing_pair_count == 1
+    assert digest.issue_count == 1
+    assert digest.issue_fields == ("coverage",)
+    digest_records = device_model_reference_deck_audit_gate_coverage_digest_records(
+        report
+    )
+    assert digest_records == [
+        {
+            "passed": "false",
+            "fixture_count": "19",
+            "expected_pair_count": "20",
+            "covered_pair_count": "19",
+            "missing_pair_count": "1",
+            "issue_count": "1",
+            "issue_fields": "coverage",
+        }
+    ]
+    assert format_device_model_reference_deck_audit_gate_coverage_digest_table(
+        report
+    ) == (
+        "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\t"
+        "missing_pair_count\tissue_count\tissue_fields\n"
+        "false\t19\t20\t19\t1\t1\tcoverage"
+    )
+    assert format_device_model_reference_deck_audit_gate_coverage_digest_csv(
+        report
+    ) == (
+        "passed,fixture_count,expected_pair_count,covered_pair_count,"
+        "missing_pair_count,issue_count,issue_fields\n"
+        "false,19,20,19,1,1,coverage\n"
+    )
+    assert (
+        json.loads(
+            format_device_model_reference_deck_audit_gate_coverage_digest_json(
+                report
+            )
+        )
+        == digest_records
     )
 
 

@@ -246,6 +246,13 @@ fixture columns plus missing/extra-analysis inventories.
 `deviceModelReferenceDeckAuditGate` and
 `formatDeviceModelReferenceDeckAuditGateReport` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
+`deviceModelReferenceDeckAuditGateCoverageDigest`,
+`formatDeviceModelReferenceDeckAuditGateCoverageDigestTable`,
+`deviceModelReferenceDeckAuditGateCoverageDigestRecords`,
+`formatDeviceModelReferenceDeckAuditGateCoverageDigestCsv`, and
+`formatDeviceModelReferenceDeckAuditGateCoverageDigestJson` expose a one-row
+release-dashboard digest with expected, covered, and missing pair counts plus
+issue-field inventories.
 `formatDeviceModelReferenceDeckAuditGateIssueTable`,
 `deviceModelReferenceDeckAuditGateIssueRecords`,
 `formatDeviceModelReferenceDeckAuditGateIssueCsv`, and

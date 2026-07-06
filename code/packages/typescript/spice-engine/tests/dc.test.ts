@@ -27,6 +27,8 @@ import {
   deviceModelReferenceDeckAuditAnalysisSummaryRecords,
   deviceModelReferenceDeckAuditFixtures,
   deviceModelReferenceDeckAuditGate,
+  deviceModelReferenceDeckAuditGateCoverageDigest,
+  deviceModelReferenceDeckAuditGateCoverageDigestRecords,
   deviceModelReferenceDeckAuditGateIssueRecords,
   deviceModelReferenceDeckAuditGateIssueSummary,
   deviceModelReferenceDeckAuditGateIssueSummaryRecords,
@@ -47,6 +49,9 @@ import {
   formatDeviceModelReferenceDeckAuditAnalysisSummaryJson,
   formatDeviceModelReferenceDeckAuditAnalysisSummaryTable,
   formatDeviceModelReferenceDeckAuditCsv,
+  formatDeviceModelReferenceDeckAuditGateCoverageDigestCsv,
+  formatDeviceModelReferenceDeckAuditGateCoverageDigestJson,
+  formatDeviceModelReferenceDeckAuditGateCoverageDigestTable,
   formatDeviceModelReferenceDeckAuditGateIssueCsv,
   formatDeviceModelReferenceDeckAuditGateIssueJson,
   formatDeviceModelReferenceDeckAuditGateIssueSummaryCsv,
@@ -472,6 +477,19 @@ describe("dcOp", () => {
     expect(formatDeviceModelReferenceDeckAuditGateReport(report)).toBe(
       "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\ntrue\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0",
     );
+    const digest = deviceModelReferenceDeckAuditGateCoverageDigest(report);
+    expect(digest).toStrictEqual({
+      passed: true,
+      fixtureCount: 20,
+      expectedPairCount: 20,
+      coveredPairCount: 20,
+      missingPairCount: 0,
+      issueCount: 0,
+      issueFields: [],
+    });
+    expect(formatDeviceModelReferenceDeckAuditGateCoverageDigestTable(report)).toBe(
+      "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\tmissing_pair_count\tissue_count\tissue_fields\ntrue\t20\t20\t20\t0\t0\t",
+    );
   });
 
   it("reports missing reference deck audit gate coverage", () => {
@@ -528,6 +546,35 @@ describe("dcOp", () => {
       "field,issue_count,fixture_names,messages\ncoverage,1,NMOS:tran,missing required NMOS tran reference-deck audit row\n",
     );
     expect(JSON.parse(formatDeviceModelReferenceDeckAuditGateIssueSummaryJson(report))).toStrictEqual(summaryRecords);
+    const digest = deviceModelReferenceDeckAuditGateCoverageDigest(report);
+    expect(digest).toStrictEqual({
+      passed: false,
+      fixtureCount: 19,
+      expectedPairCount: 20,
+      coveredPairCount: 19,
+      missingPairCount: 1,
+      issueCount: 1,
+      issueFields: ["coverage"],
+    });
+    const digestRecords = deviceModelReferenceDeckAuditGateCoverageDigestRecords(report);
+    expect(digestRecords).toStrictEqual([
+      {
+        passed: "false",
+        fixture_count: "19",
+        expected_pair_count: "20",
+        covered_pair_count: "19",
+        missing_pair_count: "1",
+        issue_count: "1",
+        issue_fields: "coverage",
+      },
+    ]);
+    expect(formatDeviceModelReferenceDeckAuditGateCoverageDigestTable(report)).toBe(
+      "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\tmissing_pair_count\tissue_count\tissue_fields\nfalse\t19\t20\t19\t1\t1\tcoverage",
+    );
+    expect(formatDeviceModelReferenceDeckAuditGateCoverageDigestCsv(report)).toBe(
+      "passed,fixture_count,expected_pair_count,covered_pair_count,missing_pair_count,issue_count,issue_fields\nfalse,19,20,19,1,1,coverage\n",
+    );
+    expect(JSON.parse(formatDeviceModelReferenceDeckAuditGateCoverageDigestJson(report))).toStrictEqual(digestRecords);
   });
 
   it("rejects non-Level-1 MOS model cards explicitly", () => {

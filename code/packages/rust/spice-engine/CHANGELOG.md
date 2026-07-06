@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_gate_coverage_digest`,
+  `format_device_model_reference_deck_audit_gate_coverage_digest_table`,
+  `device_model_reference_deck_audit_gate_coverage_digest_records`,
+  `format_device_model_reference_deck_audit_gate_coverage_digest_csv`, and
+  `format_device_model_reference_deck_audit_gate_coverage_digest_json`, stable
+  one-row audit gate coverage digest exports for release dashboards, matching
+  Python and TypeScript.
 - Add `device_model_reference_deck_audit_gate_issue_summary`,
   `format_device_model_reference_deck_audit_gate_issue_summary_table`,
   `device_model_reference_deck_audit_gate_issue_summary_records`,
