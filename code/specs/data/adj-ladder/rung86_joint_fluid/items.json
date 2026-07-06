@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 86 \u2014 rheumatology joint-fluid index from four stated quantities (a NEW panel: rheumatology / joint-fluid). From a synovial rate to multiply by the joint span and the effusion factor (a three-factor product) and an aspiration drain to subtract, compute the joint fluid (synovial_rate*joint_span*effusion_factor-aspiration_drain), the gross product (synovial_rate*joint_span*effusion_factor), or the base product (synovial_rate*joint_span). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, THREE-FACTOR PRODUCT MINUS A TERM a*b*c-d (multiply a by b by c, subtract d, so a*b*c-d = ((a*b*c)-d); distinct from every prior product shape, which multiplied only two observed factors, e.g. rung-80 a*b-c/d and rung-85 a*b-c-d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via * and - \u2014 no constant leaks, and neither the gross product, the base product, nor any fluid figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: taking the aspiration drain off the effusion factor inside the third factor (a*b*(c-d), a wrong grouping) and pairing the four quantities into two products (a*b-c*d, a wrong pairing). The core confusion tested is that a*b*c-d is ((a*b*c)-d), not a*b*(c-d) and not a*b-c*d.",
+  "items": [
+    {
+      "id": "r86jfl-01",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 3 times a joint span of 3 times an effusion factor of 4, with an aspiration drain of 2 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(3)\nobserve joint_span(3)\nobserve effusion_factor(4)\nobserve aspiration_drain(2)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r86jfl-02",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 3 times a joint span of 3 times an effusion factor of 4, with an aspiration drain of 2 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(3)\nobserve joint_span(3)\nobserve effusion_factor(4)\nobserve aspiration_drain(2)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r86jfl-03",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 3 times a joint span of 3 times an effusion factor of 4, with an aspiration drain of 2 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(3)\nobserve joint_span(3)\nobserve effusion_factor(4)\nobserve aspiration_drain(2)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r86jfl-04",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 4 times a joint span of 4 times an effusion factor of 5, with an aspiration drain of 3 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(4)\nobserve joint_span(4)\nobserve effusion_factor(5)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 77,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r86jfl-05",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 4 times a joint span of 4 times an effusion factor of 5, with an aspiration drain of 3 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(4)\nobserve joint_span(4)\nobserve effusion_factor(5)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 77,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r86jfl-06",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 4 times a joint span of 4 times an effusion factor of 5, with an aspiration drain of 3 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(4)\nobserve joint_span(4)\nobserve effusion_factor(5)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 77,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r86jfl-07",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 5 times a joint span of 2 times an effusion factor of 4, with an aspiration drain of 2 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(5)\nobserve joint_span(2)\nobserve effusion_factor(4)\nobserve aspiration_drain(2)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r86jfl-08",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 5 times a joint span of 2 times an effusion factor of 4, with an aspiration drain of 2 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(5)\nobserve joint_span(2)\nobserve effusion_factor(4)\nobserve aspiration_drain(2)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r86jfl-09",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 5 times a joint span of 2 times an effusion factor of 4, with an aspiration drain of 2 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(5)\nobserve joint_span(2)\nobserve effusion_factor(4)\nobserve aspiration_drain(2)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r86jfl-10",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 5 times a joint span of 5 times an effusion factor of 6, with an aspiration drain of 4 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(5)\nobserve joint_span(5)\nobserve effusion_factor(6)\nobserve aspiration_drain(4)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 146,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r86jfl-11",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 5 times a joint span of 5 times an effusion factor of 6, with an aspiration drain of 4 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(5)\nobserve joint_span(5)\nobserve effusion_factor(6)\nobserve aspiration_drain(4)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 146,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r86jfl-12",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 5 times a joint span of 5 times an effusion factor of 6, with an aspiration drain of 4 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(5)\nobserve joint_span(5)\nobserve effusion_factor(6)\nobserve aspiration_drain(4)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 146,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r86jfl-13",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 7 times a joint span of 3 times an effusion factor of 5, with an aspiration drain of 3 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(7)\nobserve joint_span(3)\nobserve effusion_factor(5)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 102,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r86jfl-14",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 7 times a joint span of 3 times an effusion factor of 5, with an aspiration drain of 3 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(7)\nobserve joint_span(3)\nobserve effusion_factor(5)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 102,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r86jfl-15",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 7 times a joint span of 3 times an effusion factor of 5, with an aspiration drain of 3 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(7)\nobserve joint_span(3)\nobserve effusion_factor(5)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 102,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r86jfl-16",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 6 times a joint span of 7 times an effusion factor of 7, with an aspiration drain of 5 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(6)\nobserve joint_span(7)\nobserve effusion_factor(7)\nobserve aspiration_drain(5)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 289,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 294,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r86jfl-17",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 6 times a joint span of 7 times an effusion factor of 7, with an aspiration drain of 5 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(6)\nobserve joint_span(7)\nobserve effusion_factor(7)\nobserve aspiration_drain(5)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 289,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 294,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r86jfl-18",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 6 times a joint span of 7 times an effusion factor of 7, with an aspiration drain of 5 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(6)\nobserve joint_span(7)\nobserve effusion_factor(7)\nobserve aspiration_drain(5)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 289,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 294,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r86jfl-19",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 4 times a joint span of 5 times an effusion factor of 6, with an aspiration drain of 3 carried off. What is the net joint fluid (the three-factor product minus the aspiration drain)?",
+      "program": "observe synovial_rate(4)\nobserve joint_span(5)\nobserve effusion_factor(6)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span * effusion_factor - aspiration_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 117,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r86jfl-20",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 4 times a joint span of 5 times an effusion factor of 6, with an aspiration drain of 3 carried off. What is the the gross product (the synovial rate times the joint span times the effusion factor, before draining)?",
+      "program": "observe synovial_rate(4)\nobserve joint_span(5)\nobserve effusion_factor(6)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span * effusion_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 117,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r86jfl-21",
+      "qtype": "joint_fluid_index",
+      "stem": "A joint is filled at a synovial rate of 4 times a joint span of 5 times an effusion factor of 6, with an aspiration drain of 3 carried off. What is the the base product (the synovial rate times the joint span, before the effusion factor)?",
+      "program": "observe synovial_rate(4)\nobserve joint_span(5)\nobserve effusion_factor(6)\nobserve aspiration_drain(3)\nlet answer = synovial_rate * joint_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 117,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

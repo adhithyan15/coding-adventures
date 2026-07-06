@@ -123,6 +123,7 @@ SELF_CONTAINED_RUNGS = (
     "rung83_hepatic_clearance",
     "rung84_intraocular_pressure",
     "rung85_wound_closure",
+    "rung86_joint_fluid",
 )
 
 
