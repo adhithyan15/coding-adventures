@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_service_execution_safety_brief` tool descriptor for read-only
+  Chief go/no-go packets over existing D23 service-execution readiness, safety,
+  runtime-pressure, authorization, command-risk, and capability-grant evidence.
 - `smart_home.list_platform_access_review` and
   `smart_home.get_platform_access_review_summary` tool descriptors for read-only
   Chief platform access rollups over existing D23 command-risk,

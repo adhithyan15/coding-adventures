@@ -297,6 +297,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_system_health_brief`
 - `smart_home.get_operator_action_brief`
 - `smart_home.get_service_execution_readiness_brief`
+- `smart_home.get_service_execution_safety_brief`
 - `smart_home.get_remediation_plan`
 - `smart_home.get_operations_brief`
 - `smart_home.get_safety_brief`

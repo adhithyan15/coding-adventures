@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_service_execution_safety_brief`, a read-only Chief
+  adapter that composes existing D23 service-execution readiness, safety,
+  runtime-pressure, authorization, command-risk, and capability-grant evidence
+  into one go/no-go packet without dispatching commands or owning smart-home
+  state.
 - Added `smart_home.get_service_execution_readiness_brief`, a read-only Chief
   adapter tool that composes existing D23 controller handoff, command-risk,
   authorization-gap, and capability-grant signals into one Home
