@@ -1128,6 +1128,8 @@ fn oop_module(methods: Vec<Function>, main_stmts: Vec<Stmt>) -> Module {
             Feature::Strings,
             Feature::DynamicTyping,
             Feature::Constants,
+            // M6 tests pass a `send`/`respond_to?` name as a `SymLit`.
+            Feature::Symbols,
             // `@x = v` lowers to an `Assign`, which the validator counts
             // as a mutable binding.
             Feature::MutableBindings,
@@ -2007,5 +2009,208 @@ fn t3_array_fetch_with_default_returns_default() {
     );
     if let Some(stdout) = run_module(&module, "t3_fetch_default") {
         assert_eq!(stdout, "42", "fetch with a default must return it, not raise");
+    }
+}
+
+// ── M6: universal Object metaprogramming surface (run under `node`) ────
+//
+// `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`, `respond_to?`,
+// and boolean `&`/`|`/`^` are mixed into EVERY receiver (Ruby Kernel/Object).
+// These prove the ported JS behaviour matches the Python/TS references, and —
+// load-bearing — that `send`'s dynamic name routes through the SAME dispatch
+// gate (an unknown name raises NoMethodError; a gadget name never runs host
+// code), never `recv[name]`/reflection.
+
+/// A one-param top-level function `name(v) { <stmts>; return <value> }`, the
+/// shape a `tap`/`then` block is hoisted into.
+fn block_fn(name: &str, stmts: Vec<Stmt>, value: Expr) -> Function {
+    func(name, vec![param("v")], stmts, value)
+}
+
+/// `send(:meth, args…)` on an INSTANCE routes to the user method table.
+///   class Greeter; def greet(who); print("hi " + who); end; end
+///   Greeter.new.send(:greet, "sam")   →   "hi sam"
+#[test]
+fn m6_send_routes_to_instance_method() {
+    // def greet(who); print("hi " + who); end
+    let greet = func(
+        "Greeter__greet",
+        vec![param("who")],
+        vec![print(bc("+", vec![str_("hi "), param_ref("who")]))],
+        Expr::NilLit { span: sp() },
+    );
+    let make = bc("__new__", vec![str_("Greeter")]);
+    // obj.send(:greet, "sam")  →  __method__(obj, "send", :greet, "sam")
+    let sent = bc(
+        "__method__",
+        vec![make, str_("send"), Expr::SymLit { name: "greet".into(), span: sp() }, str_("sam")],
+    );
+    let main = vec![
+        def_method("Greeter", "greet", "Greeter__greet"),
+        Stmt::ExprStmt { expr: sent, span: sp() },
+    ];
+    let module = oop_module(vec![greet], main);
+    if let Some(stdout) = run_module(&module, "m6_send_instance") {
+        assert_eq!(stdout, "hi sam");
+    }
+}
+
+/// `send` with a STRING name and a primitive receiver routes through the
+/// native-method allowlist: `"hello".send("upcase")` → "HELLO".
+#[test]
+fn m6_send_string_name_on_primitive() {
+    let sent = bc("__method__", vec![str_("hello"), str_("send"), str_("upcase")]);
+    let module = module_with_main(
+        vec![print(sent)],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings, Feature::DynamicTyping],
+    );
+    if let Some(stdout) = run_module(&module, "m6_send_upcase") {
+        assert_eq!(stdout, "HELLO");
+    }
+}
+
+/// SECURITY: `send` of an UNKNOWN / gadget name raises NoMethodError — the
+/// dynamic name is gated by the SAME allowlist a direct call uses, so node
+/// exits non-zero and the `"return 1"` payload is never synthesised/run.
+#[test]
+fn m6_send_unknown_name_raises_no_method_error() {
+    // "x".send("constructor", "return 1")  → NoMethodError (gadget blocked).
+    let gadget = bc(
+        "__method__",
+        vec![str_("x"), str_("send"), str_("constructor"), str_("return 1")],
+    );
+    let module = module_with_main(
+        vec![print(gadget)],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings, Feature::DynamicTyping],
+    );
+    if let Some(stderr) = run_module_expecting_failure(&module, "m6_send_gadget") {
+        assert!(
+            stderr.contains("NoMethodError") || stderr.contains("undefined method"),
+            "send of a gadget name must raise NoMethodError, got stderr:\n{stderr}"
+        );
+    }
+}
+
+/// `tap` yields the receiver to the block (side effect) and returns the
+/// RECEIVER.  `print( 7.tap { |v| print("tap") } )` prints `tap` then `7`.
+#[test]
+fn m6_tap_runs_block_and_returns_receiver() {
+    // block: def _tap(v); print("tap"); end
+    let blk = block_fn("m6_tap_blk", vec![print(str_("tap"))], Expr::NilLit { span: sp() });
+    let tap_call = bc(
+        "__method__",
+        vec![int(7), str_("tap"), method_closure("m6_tap_blk")],
+    );
+    let module = oop_module(vec![blk], vec![print(tap_call)]);
+    if let Some(stdout) = run_module(&module, "m6_tap") {
+        // Block ran first (prints "tap"), then tap's result (the receiver 7).
+        assert_eq!(stdout, "tap\n7");
+    }
+}
+
+/// `then`/`yield_self` yields the receiver and returns the BLOCK'S RESULT.
+///   print( 7.then { |v| v + 1 } )   →   8
+#[test]
+fn m6_then_returns_block_result() {
+    // block: def _then(v); v + 1; end
+    let blk = block_fn("m6_then_blk", vec![], bc("+", vec![param_ref("v"), int(1)]));
+    let then_call = bc(
+        "__method__",
+        vec![int(7), str_("then"), method_closure("m6_then_blk")],
+    );
+    let module = oop_module(vec![blk], vec![print(then_call)]);
+    if let Some(stdout) = run_module(&module, "m6_then") {
+        assert_eq!(stdout, "8");
+    }
+}
+
+/// `yield_self` is `then`'s alias — same "return the block result" rule.
+#[test]
+fn m6_yield_self_returns_block_result() {
+    let blk = block_fn("m6_ys_blk", vec![], bc("+", vec![param_ref("v"), int(10)]));
+    let call = bc(
+        "__method__",
+        vec![int(5), str_("yield_self"), method_closure("m6_ys_blk")],
+    );
+    let module = oop_module(vec![blk], vec![print(call)]);
+    if let Some(stdout) = run_module(&module, "m6_yield_self") {
+        assert_eq!(stdout, "15");
+    }
+}
+
+/// `respond_to?` is honest: true for a name dispatch resolves, false
+/// otherwise — checked against the SAME allowlist/method table dispatch uses.
+#[test]
+fn m6_respond_to_reports_dispatchable_names() {
+    // print("x".respond_to?(:upcase))  → true   (allowlisted native)
+    // print("x".respond_to?(:nope))    → false  (not resolvable)
+    // print("x".respond_to?(:tap))     → true   (universal M6)
+    let r_upcase = bc(
+        "__method__",
+        vec![str_("x"), str_("respond_to?"), Expr::SymLit { name: "upcase".into(), span: sp() }],
+    );
+    let r_nope = bc(
+        "__method__",
+        vec![str_("x"), str_("respond_to?"), Expr::SymLit { name: "nope".into(), span: sp() }],
+    );
+    let r_tap = bc(
+        "__method__",
+        vec![str_("x"), str_("respond_to?"), Expr::SymLit { name: "tap".into(), span: sp() }],
+    );
+    let module = module_with_main(
+        vec![print(r_upcase), print(r_nope), print(r_tap)],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings, Feature::DynamicTyping, Feature::Constants, Feature::Symbols],
+    );
+    if let Some(stdout) = run_module(&module, "m6_respond_to") {
+        // The runtime renders booleans as Lisp `#t`/`#f` via `format`.
+        assert_eq!(stdout, "#t\n#f\n#t");
+    }
+}
+
+/// `respond_to?` on an INSTANCE consults the user method table honestly.
+#[test]
+fn m6_respond_to_on_instance() {
+    let bark = func("Pup__bark", vec![], vec![], str_("woof"));
+    let make = bc("__new__", vec![str_("Pup")]);
+    // print(obj.respond_to?(:bark))  → true ; print(obj.respond_to?(:meow)) → false
+    let r_bark = bc(
+        "__method__",
+        vec![make.clone(), str_("respond_to?"), Expr::SymLit { name: "bark".into(), span: sp() }],
+    );
+    let r_meow = bc(
+        "__method__",
+        vec![make, str_("respond_to?"), Expr::SymLit { name: "meow".into(), span: sp() }],
+    );
+    let main = vec![
+        def_method("Pup", "bark", "Pup__bark"),
+        print(r_bark),
+        print(r_meow),
+    ];
+    let module = oop_module(vec![bark], main);
+    if let Some(stdout) = run_module(&module, "m6_respond_to_instance") {
+        assert_eq!(stdout, "#t\n#f");
+    }
+}
+
+/// Boolean `&`/`|`/`^` on a `true`/`false` receiver — Ruby's eager logical
+/// operators (non-short-circuiting), coercing the operand by SIR truthiness.
+#[test]
+fn m6_boolean_operators() {
+    // true & false → #f ; true | false → #t ; true ^ true → #f ; false | 0 → #t
+    let and = bc("__method__", vec![Expr::BoolLit { value: true, span: sp() }, str_("&"), Expr::BoolLit { value: false, span: sp() }]);
+    let or = bc("__method__", vec![Expr::BoolLit { value: true, span: sp() }, str_("|"), Expr::BoolLit { value: false, span: sp() }]);
+    let xor = bc("__method__", vec![Expr::BoolLit { value: true, span: sp() }, str_("^"), Expr::BoolLit { value: true, span: sp() }]);
+    // 0 is TRUTHY in SIR/Ruby, so `false | 0` is true.
+    let or_zero = bc("__method__", vec![Expr::BoolLit { value: false, span: sp() }, str_("|"), int(0)]);
+    let module = module_with_main(
+        vec![print(and), print(or), print(xor), print(or_zero)],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings, Feature::DynamicTyping],
+    );
+    if let Some(stdout) = run_module(&module, "m6_bool_ops") {
+        assert_eq!(stdout, "#f\n#t\n#f\n#t");
     }
 }

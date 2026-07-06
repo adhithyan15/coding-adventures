@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.12.0
+
+### Added — M6 universal Object metaprogramming surface (send/tap/then/respond_to?)
+
+Parity fill: the M6 Kernel/Object surface already shipped in the Python and
+TypeScript backends is now ported to the JS OOP runtime (`callMethod` in
+`src/runtime.rs`), matching those references' return-value rules exactly. These
+methods are mixed into EVERY receiver — primitives, arrays, hashes, and
+user-defined `SirInstance`s alike.
+
+- **`send` / `__send__` / `public_send`** — the first argument (a Symbol or
+  string) names a method; dispatch re-enters `callMethod` with that name and the
+  remaining args, so `x.send(:upcase)` is exactly `x.upcase` and a trailing
+  block survives. **Security-critical (the C3 dynamic-dispatch RCE lesson):** the
+  dynamic name routes through the SAME gate a direct call uses — the explicit
+  `(class, method)` `Map` for a `SirInstance`, the fixed `METHOD_ALLOWLIST` for a
+  primitive. There is NO `recv[name]`, `eval`, `new Function`, or host reflection
+  on the source-derived name; an unknown/gadget name (`constructor`, `__proto__`,
+  …) raises `NoMethodError` exactly as a direct call would, and no payload runs.
+- **`tap`** — yields the receiver to the block (side effect), returns the
+  RECEIVER.
+- **`then` / `yield_self`** — yields the receiver, returns the BLOCK'S RESULT;
+  a block-less `then` returns the receiver (matching the Python v0 floor).
+- **`respond_to?`** — true iff dispatch would resolve the name, checked against
+  the same method table / allowlist dispatch uses (a new `respondsTo` helper), so
+  it never lies — a name not resolvable is both a `NoMethodError` on call and
+  `respond_to? == false`.
+- **Boolean `&` / `|` / `^`** on a `true`/`false` receiver — Ruby's *eager*
+  (non-short-circuiting) logical operators, distinct from the lazy `&&`/`||`
+  keywords, coercing the operand by SIR truthiness (`true & nil == false`,
+  `false | 0 == true`).
+
+Dispatch integrates with the existing JS `callMethod` model: M6 names are
+recognised BEFORE the native-method allowlist (so `tap`/`send`/… are not wrongly
+rejected as unknown natives), a `SirInstance` still resolves a user override of
+`send`/`tap` first, and everything remains an explicit table/Set lookup —
+cycle-safe and reflection-free. Verified end-to-end under Node (8 new
+`run_with_node` tests covering send-to-instance, send-of-string-name-on-primitive,
+send-of-gadget-name → NoMethodError, tap/then/yield_self return rules,
+respond_to? true/false on primitive and instance, and the boolean operators) plus
+a runtime-shape unit test asserting the surface is present and gadget-free.
+
+
 ## 0.11.3
 
 ### Fixed — Ruby String methods whose names differ from JS natives (`upcase`/…)

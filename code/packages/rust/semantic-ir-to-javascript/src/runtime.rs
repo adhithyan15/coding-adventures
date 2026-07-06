@@ -459,6 +459,123 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "end_with?": "endsWith",
     "include?": "includes",
   };
+
+  // ── M6: universal Object metaprogramming surface ───────────────
+  //
+  // Ruby's Kernel / Object mixes a handful of methods into EVERY object,
+  // independent of the receiver's type.  M6 ports the same four groups the
+  // Python / TypeScript backends carry, matching their return-value rules
+  // exactly:
+  //
+  //   • `send` / `__send__` / `public_send` — the FIRST argument (a Symbol or
+  //     string) names a method; re-enter dispatch with that name + the
+  //     remaining args.  SECURITY-CRITICAL (the C3 RCE lesson): the dynamic
+  //     name routes through the SAME `callMethod` — so a SirInstance goes
+  //     through the explicit `(class, method)` Map, and a primitive goes
+  //     through the fixed `METHOD_ALLOWLIST`.  We NEVER do `recv[name]`, `eval`,
+  //     `new Function`, or any host reflection on the source-derived name; an
+  //     unknown name floors to the same `NoMethodError` a direct call raises.
+  //   • `tap` — yields the receiver to the block, returns the RECEIVER (the
+  //     "run a side effect, keep the value" pipeline method).
+  //   • `then` / `yield_self` — yields the receiver to the block, returns the
+  //     BLOCK'S RESULT (functional "pipe into a block"); block-less `then`
+  //     returns the receiver (matching Python's v0 floor).
+  //   • `respond_to?` — true iff dispatch on the receiver would resolve the
+  //     named method, checked against the SAME tables/allowlist dispatch uses
+  //     (`respondsTo` below), so it stays honest.
+  //   • boolean `&` / `|` / `^` on a `true`/`false` receiver — Ruby's *eager*
+  //     (non-short-circuiting) logical operators, distinct from the lazy
+  //     `&&`/`||` keywords; the operand is coerced by SIR `truthy`.
+  //
+  // The names below are recognised BEFORE the native-method allowlist gate, so
+  // they resolve on primitives (which the allowlist would otherwise reject) and
+  // on SirInstances (after a user override misses).  `respond_to?` reporting is
+  // driven by `respondsTo`, never by probing `recv[name]`.
+  const SEND_METHODS = new Set(["send", "__send__", "public_send"]);
+  const OBJECT_BLOCK_METHODS = new Set(["tap", "then", "yield_self"]);
+  const BOOL_METHODS = new Set(["&", "|", "^"]);
+
+  // Coerce a `respond_to?` / `send` name argument (a `Sym`, a `":m"`-ish
+  // string, or a bare name) to the plain method name used as the dispatch key.
+  function methodNameArg(arg) {
+    if (arg instanceof Sym) { return arg.name; }
+    return String(arg);
+  }
+
+  // Whether dispatch on `recv` would resolve `name` — checked against the SAME
+  // structures `callMethod` uses, so `respond_to?` never lies:
+  //   • a SirInstance: the user method table walking its MRO/ancestry;
+  //   • any receiver: the universal M6 surface (send family + tap/then/
+  //     yield_self + respond_to?), and — on a boolean — the eager operators;
+  //   • a primitive: the native-method allowlist (after Ruby→native aliasing).
+  // This is pure DATA lookup (Set membership + `Map.get` on a `(class, method)`
+  // key), never `recv[name]` / reflection — a name like `constructor` is inert.
+  function respondsTo(recv, name) {
+    if (recv instanceof SirInstance) {
+      if (resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined) {
+        return true;
+      }
+    }
+    if (name === "respond_to?" || SEND_METHODS.has(name) || OBJECT_BLOCK_METHODS.has(name)) {
+      return true;
+    }
+    if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
+    // A primitive resolves a name iff it (or its Ruby→native alias) is on the
+    // method allowlist AND the native member is actually a function on `recv`.
+    if (!(recv instanceof SirInstance)) {
+      const native = Object.prototype.hasOwnProperty.call(RUBY_METHOD_ALIASES, name)
+        ? RUBY_METHOD_ALIASES[name]
+        : name;
+      if (name === "length" || name === "fetch") { return true; }
+      if (METHOD_ALLOWLIST.has(native)) {
+        return recv != null && typeof recv[native] === "function";
+      }
+    }
+    return false;
+  }
+
+  // Eager boolean operators on a `true`/`false` receiver.  Returns the sentinel
+  // `BOOL_MISS` when `name` is not an operator (or called with no operand) so
+  // the caller can fall through — mirroring Python/TS `_MISS`.
+  const BOOL_MISS = Symbol("bool-miss");
+  function boolMethod(recv, name, args) {
+    if (!BOOL_METHODS.has(name) || args.length === 0) { return BOOL_MISS; }
+    const other = truthy(args[0]);
+    if (name === "&") { return recv && other; }
+    if (name === "|") { return recv || other; }
+    return recv !== other; // "^"
+  }
+
+  // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
+  // `name` is not an M6 method, so `callMethod` continues to its type-specific
+  // paths.  `rawArgs` is the UN-unwrapped argument list — a trailing block is
+  // still a `__Sir.Closure`, invoked via `applyClosure`; `send` forwards the raw
+  // args so a forwarded block survives as a Closure.
+  const M6_MISS = Symbol("m6-miss");
+  function objectMetaMethod(recv, name, rawArgs) {
+    // `send`/`__send__`/`public_send`: the first arg names a method; re-enter
+    // dispatch with the remaining args.  An empty arg list has no method to
+    // name — fall through to the NoMethodError floor.  Routing recurses through
+    // `callMethod`, so the security gate (allowlist / method table) is reused.
+    if (SEND_METHODS.has(name) && rawArgs.length > 0) {
+      return callMethod(recv, methodNameArg(rawArgs[0]), ...rawArgs.slice(1));
+    }
+    if (name === "respond_to?") {
+      return respondsTo(recv, methodNameArg(rawArgs[0]));
+    }
+    // `tap`/`then`/`yield_self` with an actual trailing Closure block.  `tap`
+    // returns the receiver; `then`/`yield_self` return the block's result.
+    const last = rawArgs[rawArgs.length - 1];
+    if (OBJECT_BLOCK_METHODS.has(name) && rawArgs.length > 0 && last instanceof Closure) {
+      if (name === "tap") { applyClosure(last, [recv]); return recv; }
+      return applyClosure(last, [recv]); // then / yield_self
+    }
+    // Block-less `tap`/`then`/`yield_self` returns the receiver (Ruby returns an
+    // Enumerator; v0 floor, matching Python/TS).
+    if (OBJECT_BLOCK_METHODS.has(name)) { return recv; }
+    return M6_MISS;
+  }
+
   function callMethod(recv, name, ...rawArgs) {
     const args = rawArgs.map(unwrapArg);
     // ── user-defined-class dispatch (O3) ─────────────────────────
@@ -471,12 +588,34 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // `(class, method)` key; a name like `constructor` simply misses.
     if (recv instanceof SirInstance) {
       const fn = resolveMethod(methodTable, recv.sirClass, name, includedModules);
-      if (fn === undefined) {
-        raiseError("NoMethodError",
-          "undefined method `" + name + "` for an instance of `" +
-          recv.sirClass + "`");
+      if (fn !== undefined) {
+        // A user-defined method (incl. a user override of `send`/`tap`/…) wins.
+        return applyWithSelf(fn, recv, args);
       }
-      return applyWithSelf(fn, recv, args);
+      // No user method — fall through to the universal M6 surface (send/tap/
+      // then/yield_self/respond_to?), then raise NoMethodError if M6 misses too.
+      const meta = objectMetaMethod(recv, name, rawArgs);
+      if (meta !== M6_MISS) { return meta; }
+      raiseError("NoMethodError",
+        "undefined method `" + name + "` for an instance of `" +
+        recv.sirClass + "`");
+    }
+    // ── M6: universal metaprogramming on a NON-instance receiver ──
+    // `send`/`tap`/`then`/`yield_self`/`respond_to?` resolve on EVERY receiver
+    // (primitives included), and must be recognised BEFORE the native-method
+    // allowlist below — otherwise a name like `tap` or `send`, which is not a
+    // native JS method, would be wrongly rejected as a NoMethodError.  Dispatch
+    // routes through `objectMetaMethod` (send recurses via `callMethod`, so the
+    // security gate is reused — no `recv[name]` / reflection on the name).
+    {
+      const meta = objectMetaMethod(recv, name, rawArgs);
+      if (meta !== M6_MISS) { return meta; }
+    }
+    // Eager boolean operators (`&`/`|`/`^`) on a `true`/`false` receiver —
+    // Ruby's non-short-circuiting logical ops, distinct from `&&`/`||`.
+    if (typeof recv === "boolean") {
+      const b = boolMethod(recv, name, args);
+      if (b !== BOOL_MISS) { return b; }
     }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
@@ -1159,6 +1298,32 @@ mod tests {
         assert!(RUNTIME.contains("function classDescription(recv)"));
         // The old JS-native TypeError floor for the allowlist miss is gone.
         assert!(!RUNTIME.contains("is not an allowed collection method"));
+    }
+
+    #[test]
+    fn runtime_defines_m6_universal_metaprogramming_surface() {
+        // M6: send/tap/then/yield_self/respond_to? + boolean &/|/^ are mixed
+        // into EVERY receiver, ported to match the Python/TS references.
+        assert!(RUNTIME.contains(r#"const SEND_METHODS = new Set(["send", "__send__", "public_send"]);"#));
+        assert!(RUNTIME.contains(r#"const OBJECT_BLOCK_METHODS = new Set(["tap", "then", "yield_self"]);"#));
+        assert!(RUNTIME.contains(r#"const BOOL_METHODS = new Set(["&", "|", "^"]);"#));
+        assert!(RUNTIME.contains("function objectMetaMethod("));
+        assert!(RUNTIME.contains("function respondsTo("));
+        assert!(RUNTIME.contains("function boolMethod("));
+        // `tap` returns the receiver; `then`/`yield_self` return the block result.
+        assert!(RUNTIME.contains(r#"if (name === "tap") { applyClosure(last, [recv]); return recv; }"#));
+        assert!(RUNTIME.contains("return applyClosure(last, [recv]); // then / yield_self"));
+
+        // SECURITY (the C3 RCE lesson): `send` routes the DYNAMIC name back
+        // through `callMethod` — the SAME allowlist / method-table gate a direct
+        // call uses — NEVER `recv[name]` / `eval` / `new Function` on the name.
+        assert!(RUNTIME.contains("return callMethod(recv, methodNameArg(rawArgs[0]), ...rawArgs.slice(1));"));
+        assert!(!RUNTIME.contains("new Function("));
+        assert!(!RUNTIME.contains("eval("));
+        // `respond_to?` checks the same tables dispatch uses (method table for a
+        // SirInstance, the allowlist for a primitive) — not a probe of recv[name].
+        assert!(RUNTIME.contains("resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"));
+        assert!(RUNTIME.contains("METHOD_ALLOWLIST.has(native)"));
     }
 
     #[test]
