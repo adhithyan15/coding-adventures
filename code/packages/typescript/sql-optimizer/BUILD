@@ -4,6 +4,7 @@ cd ../lexer && npm ci --quiet
 cd ../grammar-tools && npm ci --quiet
 cd ../parser && npm ci --quiet
 cd ../directed-graph && npm ci --quiet
+cd ../cli-builder && npm ci --quiet
 cd ../state-machine && npm ci --quiet
 cd ../sql-planner && npm ci --quiet
 npm ci --quiet
