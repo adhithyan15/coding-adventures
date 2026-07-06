@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Model-card unsupported-parameter diagnostics** —
+  `model_card_unsupported_parameter_issues()`,
+  `format_model_card_unsupported_parameter_issue_table()`,
+  `model_card_unsupported_parameter_issue_records()`,
+  `format_model_card_unsupported_parameter_issue_csv()`, and
+  `format_model_card_unsupported_parameter_issue_json()` now expose retained
+  unsupported model-card parameters as stable diagnostics, matching Rust and
+  TypeScript.
+
 - **Device model reference-deck audit gate coverage digest** —
   `device_model_reference_deck_audit_gate_coverage_digest()`,
   `format_device_model_reference_deck_audit_gate_coverage_digest_table()`,

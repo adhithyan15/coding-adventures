@@ -191,6 +191,12 @@ with optional `HARMONICS=` and `FROM=` controls.
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
 alias surface for diode, BJT, JFET, and Level-1 MOS cards.
+`modelCardUnsupportedParameterIssues`,
+`formatModelCardUnsupportedParameterIssueTable`,
+`modelCardUnsupportedParameterIssueRecords`,
+`formatModelCardUnsupportedParameterIssueCsv`, and
+`formatModelCardUnsupportedParameterIssueJson` expose retained unsupported
+model-card keys as stable diagnostics for parser and UI surfaces.
 `deviceModelAuditFixtures` returns the canonical cross-language fixture cards
 used to keep the TypeScript, Python, and Rust ports aligned.
 `deviceModelBehaviorAuditFixtures` extends those cards into runnable one-device

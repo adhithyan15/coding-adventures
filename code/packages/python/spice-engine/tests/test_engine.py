@@ -278,6 +278,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_summary_json,
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table,
+    format_model_card_unsupported_parameter_issue_csv,
+    format_model_card_unsupported_parameter_issue_json,
+    format_model_card_unsupported_parameter_issue_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
     format_digital_event_stream_vcd,
@@ -310,6 +313,8 @@ from spice_engine import (
     measure_transient_probe,
     measure_transient_when_probe,
     measure_transient_when_probe_counted,
+    model_card_unsupported_parameter_issue_records,
+    model_card_unsupported_parameter_issues,
     mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
@@ -396,6 +401,33 @@ def test_model_card_aliases_build_device_instances() -> None:
     diode_model = diode_from_model_card("D1", "a", "k", diode_card)
     assert diode_card.parameters == {"IS": 2.0e-14, "CJO": 1.5e-12, "TT": 4.0e-9}
     assert diode_card.unsupported_parameters == ("RS",)
+    diode_issues = model_card_unsupported_parameter_issues(diode_card)
+    assert len(diode_issues) == 1
+    assert diode_issues[0].model_name == "Dfast"
+    assert diode_issues[0].kind == "D"
+    assert diode_issues[0].parameter == "RS"
+    assert diode_issues[0].message == "unsupported D model-card parameter RS"
+    assert format_model_card_unsupported_parameter_issue_table(diode_card) == (
+        "model_name\tkind\tparameter\tmessage\n"
+        "Dfast\tD\tRS\tunsupported D model-card parameter RS"
+    )
+    diode_issue_records = model_card_unsupported_parameter_issue_records(diode_card)
+    assert diode_issue_records == [
+        {
+            "model_name": "Dfast",
+            "kind": "D",
+            "parameter": "RS",
+            "message": "unsupported D model-card parameter RS",
+        }
+    ]
+    assert format_model_card_unsupported_parameter_issue_csv(diode_card) == (
+        "model_name,kind,parameter,message\n"
+        "Dfast,D,RS,unsupported D model-card parameter RS\n"
+    )
+    assert (
+        json.loads(format_model_card_unsupported_parameter_issue_json(diode_card))
+        == diode_issue_records
+    )
     assert diode_model.Is == pytest.approx(2.0e-14)
     assert diode_model.Cjo == pytest.approx(1.5e-12)
     assert diode_model.Tt == pytest.approx(4.0e-9)

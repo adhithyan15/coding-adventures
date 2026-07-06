@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `model_card_unsupported_parameter_issues`,
+  `format_model_card_unsupported_parameter_issue_table`,
+  `model_card_unsupported_parameter_issue_records`,
+  `format_model_card_unsupported_parameter_issue_csv`, and
+  `format_model_card_unsupported_parameter_issue_json`, stable diagnostics for
+  retained unsupported model-card parameters, matching Python and TypeScript.
 - Add `device_model_reference_deck_audit_gate_coverage_digest`,
   `format_device_model_reference_deck_audit_gate_coverage_digest_table`,
   `device_model_reference_deck_audit_gate_coverage_digest_records`,

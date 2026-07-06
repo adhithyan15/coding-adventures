@@ -67,6 +67,9 @@ import {
   formatDeviceModelReferenceDeckAuditSummaryJson,
   formatDeviceModelReferenceDeckAuditSummaryTable,
   formatDeviceModelReferenceDeckAuditTable,
+  formatModelCardUnsupportedParameterIssueCsv,
+  formatModelCardUnsupportedParameterIssueJson,
+  formatModelCardUnsupportedParameterIssueTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
   inductor,
@@ -74,6 +77,8 @@ import {
   jfetFromModelCard,
   measureDcSweepDeck,
   measureDcSweepProbe,
+  modelCardUnsupportedParameterIssueRecords,
+  modelCardUnsupportedParameterIssues,
   mosfet,
   mosfetFromModelCard,
   normalizeModelCard,
@@ -110,6 +115,31 @@ describe("dcOp", () => {
     const diodeModel = diodeFromModelCard("D1", "a", "k", diodeCard);
     expect(diodeCard.parameters).toStrictEqual({ IS: 2.0e-14, CJO: 1.5e-12, TT: 4.0e-9 });
     expect(diodeCard.unsupportedParameters).toStrictEqual(["RS"]);
+    const diodeIssues = modelCardUnsupportedParameterIssues(diodeCard);
+    expect(diodeIssues).toStrictEqual([
+      {
+        modelName: "Dfast",
+        kind: "D",
+        parameter: "RS",
+        message: "unsupported D model-card parameter RS",
+      },
+    ]);
+    expect(formatModelCardUnsupportedParameterIssueTable(diodeCard)).toBe(
+      "model_name\tkind\tparameter\tmessage\nDfast\tD\tRS\tunsupported D model-card parameter RS",
+    );
+    const diodeIssueRecords = modelCardUnsupportedParameterIssueRecords(diodeCard);
+    expect(diodeIssueRecords).toStrictEqual([
+      {
+        model_name: "Dfast",
+        kind: "D",
+        parameter: "RS",
+        message: "unsupported D model-card parameter RS",
+      },
+    ]);
+    expect(formatModelCardUnsupportedParameterIssueCsv(diodeCard)).toBe(
+      "model_name,kind,parameter,message\nDfast,D,RS,unsupported D model-card parameter RS\n",
+    );
+    expect(JSON.parse(formatModelCardUnsupportedParameterIssueJson(diodeCard))).toStrictEqual(diodeIssueRecords);
     expectClose(diodeModel.saturationCurrent, 2.0e-14);
     expectClose(diodeModel.junctionCapacitance, 1.5e-12);
     expectClose(diodeModel.transitTime, 4.0e-9);
