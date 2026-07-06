@@ -53,6 +53,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S3 — target → `NodeRef` exposure** | The depth-add on S1+S2: both bound each target's **bytes** (a `Span`) but not the target **node**. `Document::node_for_span(span) -> Option<NodeRef>` returns the walked body node whose span **exactly equals** `span` (half-open equality of start **and** end; *equality*, not `node_at`'s containment) — or `None` for a span that is no walked node's own (empty doc, un-walked preamble/metadata, fabricated span). Thin accessors `ref_target_node(&ResolvedRef)`, `cite_target_node(&ResolvedCite)`, `label_def_node(&LabelDef)` take a resolved record and hand back the node, so a caller can read its `kind()` and — for a `Block` — descend into its children (a `\ref`→section enumerates its paragraphs; a `\ref`→figure reaches its caption). **Verified reachability:** every S1/S2 target span matches exactly one walked node (zero collisions); a `\ref`→section/figure/table yields a `NodeRef::Block`, an inline `\eqref`→`\label` a `NodeRef::Inline` (`CrossRef`), and — the once-uncertain case — a `\cite`→`\bibitem` **is** walked (an `Inline::Raw` inside the `thebibliography`), so `cite_target_node` returns `Some`, not `None`. Purely additive (S1/S2 result types keep owned `Span`s, no lifetimes; the `NodeRef` is fetched on demand); tie-break = first-in-pre-order (defensive, does not fire). Numbering + external BibTeX remain out of scope. Total & panic-free, reuses the bounded `walk`. | ✅ |
 | **LTXDOC03 S4 — document numbering (hierarchical sections + flat float counters)** | `Document::number_labels() -> Numbering` — the number a `\ref` *prints*, computed in one `walk` (LaTeX's second `.aux` pass, done statically). **Section numbers** are hierarchical with deeper-reset: a numbered `\section`…`\subparagraph` increments its depth's counter, resets deeper depths to `0`, and renders the dotted join from the top level down (`1`, `1.1`, `1.2`, `1.2.1`, `2`); a starred `\section*` (`numbered == false`) fires no counter and is skipped. **Float counters** are flat and independent: every `figure` advances a running figure counter (`1, 2, …`), every `table` its own (`1, 2, …`) — labeled *or not* (a `\label` only captures the value; an unlabeled figure between two labeled ones takes `2`). Missing-parent rule: a document that starts deep renders honest leading `0`s (a lone `\subsection` → `0.1`), a plain top-level `\section` → `1`. Returns one owned `NumberedLabel { key, kind, number }` per defined numberable label, with `number_for(key)`; `ref_number(&ResolvedRef) -> Option<String>` ties S1 resolution to S4 numbering (`\ref{sec:intro}` → `"1.2"`). Equation numbers, citation `[1]` numbers, and other counters deferred to S5+. Pure, additive, tree-unchanged; fixed 7-slot counter array (no unchecked indexing). Total & panic-free, reuses the bounded `walk`. | ✅ |
 | **LTXDOC03 S5 — citation numbering (bracketed bibliography numbers)** | `Document::number_citations() -> CitationNumbering` — the bracketed number a `\cite` *prints* (`[2]`), the citation-family analogue of S4's `ref_number`. In the default numeric/unsorted style each `\bibitem` is numbered by its **listing position**, so S5 numbers S2's already-ordered winning `entries` by index: `entries[0]` → `[1]`, `entries[1]` → `[2]`, …. A first-`\bibitem`-wins **duplicate** is in `duplicate_entries`, not `entries`, so it consumes **no** number and the entries after it are unshifted (`a, b, c` + a later dup `\bibitem{a}` keeps `c` at `[3]`). A **dangling** `\cite` is in S2's `unresolved`, so it has no entry and `number_for` returns `None` (LaTeX's `[?]`). Returns one owned `NumberedCitation { key, ordinal, number }` per numbered entry, with `number_for(key) -> Option<&str>`; `cite_number(&ResolvedCite) -> Option<String>` ties S2 resolution to S5 numbering (`\cite{foo}` → `"[2]"`). Bracket style single-sourced in one helper. Equation numbers (blocked on `DisplayMath` carrying no label field), author-year/natbib sorted styles, and external `.bib` remain future rungs. Pure, additive, tree-unchanged. Total & panic-free. | ✅ |
+| **LTXDOC03 S6 — the cross-reference report (consumer composing S1/S2/S4/S5)** | `Document::cross_reference_report() -> CrossReferenceReport` — the consumer rung that proves the passes **compose**: it walks S1's resolved `\ref`s and S2's resolved `\cite`s and assembles an owned, plain-data report where each entry carries its rendered **number** (S4/S5) alongside key/command/kind. **No new AST walk** — it numbers each family **once** (`number_labels`/`number_citations`) then looks each key up (never per-item re-numbering). Produces `refs: Vec<RefEntry { key, command, kind, number }>` (one per resolved **and numbered** `\ref`, in S1 order — a resolved `\ref` to an *unnumbered* inline/equation label is **omitted**), `cites: Vec<CiteEntry { key, number }>` (one per resolved `\cite` key, in S2 order), and `dangling_refs`/`dangling_cites: Vec<String>` (S1/S2 `unresolved` keys — LaTeX's `??`/`[?]`, surfaced **separately**). `CrossReferenceReport::to_plain_text() -> String` renders a stable, pinned string (`\ref{k} -> Section 1.2` / `\cite{k} -> [2]` lines, optional `Dangling …:` footers, joined by `\n`, no trailing newline; empty → `(no cross-references)`). Pure composition, reads S1–S5 unchanged, tree untouched. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -89,8 +90,13 @@ of scope (in-document `thebibliography` only). **S5 assigns the bracketed number
 (`Document::number_citations` + `cite_number`) — the citation-family analogue of `ref_number`:
 numbering S2's listing-ordered `entries` by index so the first `\bibitem` is `[1]`, the second `[2]`,
 … (first-`\bibitem`-wins duplicates consume no number; dangling `\cite`s are unnumbered), so
-`\cite{foo}` resolves to `"[2]"`. Equation numbers (blocked on the `DisplayMath` AST carrying no
-label field), author-year/natbib sorted styles, and external `.bib` remain future rungs.
+`\cite{foo}` resolves to `"[2]"`. **S6 assembles the cross-reference report**
+(`Document::cross_reference_report`) — the consumer that **composes** S1/S2/S4/S5 into one owned
+artifact: every resolved `\ref` and `\cite` with its rendered number (`\ref{sec:intro} ->
+Section 1.2`, `\cite{smith} -> [2]`), dangling refs/cites surfaced separately, plus a stable
+`to_plain_text()` rendering — adding no new AST walk (each family numbered once, then looked up).
+Equation numbers (blocked on the `DisplayMath` AST carrying no label field), author-year/natbib
+sorted styles, and external `.bib` remain future rungs.
 
 ## The Document layer (LTXDOC01)
 
@@ -397,6 +403,58 @@ unshifted); a dangling `\cite` has no entry, so `number_for` returns `None` (LaT
 numbers (blocked on the `DisplayMath` AST carrying no label field), author-year/natbib sorted styles,
 and external `.bib` databases remain future rungs. Like S4, S5 is pure, additive analysis — it never
 mutates the tree, so the S1–S4 outputs are unchanged.
+
+### The cross-reference report (LTXDOC03 S6)
+
+S1–S5 each produced their own result type; S6 is the **consumer** that composes them into one
+auditable artifact. `Document::cross_reference_report()` walks S1's resolved `\ref`s and S2's resolved
+`\cite`s and returns an owned report where each entry carries its rendered number (from S4/S5). It
+adds no new AST walk — it numbers each family once and looks each key up:
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+See Section~\ref{sec:intro} and \cite{lamport}. Also \ref{nope} and \cite{ghost}.
+
+\begin{thebibliography}{9}
+\bibitem{knuth} Knuth, D. The TeXbook. 1984.
+\bibitem{lamport} Lamport, L. LaTeX. 1986.
+\end{thebibliography}\end{document}";
+let doc = parse_document(src).unwrap();
+
+let rep = doc.cross_reference_report();
+
+// Each resolved reference carries its S4 number, kind, and command.
+assert_eq!(rep.refs.len(), 1);
+assert_eq!(rep.refs[0].key, "sec:intro");
+assert_eq!(rep.refs[0].number, "1"); // \ref{sec:intro} → Section 1
+
+// Each resolved citation carries its S5 bracketed number.
+assert_eq!(rep.cites.len(), 1);
+assert_eq!(rep.cites[0].key, "lamport");
+assert_eq!(rep.cites[0].number, "[2]"); // the second \bibitem
+
+// Dangling refs/cites are surfaced separately (LaTeX's `??` / `[?]`).
+assert_eq!(rep.dangling_refs, vec!["nope".to_string()]);
+assert_eq!(rep.dangling_cites, vec!["ghost".to_string()]);
+
+// A stable, human-readable rendering (pinned format):
+assert_eq!(
+    rep.to_plain_text(),
+    "\\ref{sec:intro} -> Section 1\n\
+     \\cite{lamport} -> [2]\n\
+     Dangling references: nope\n\
+     Dangling citations: ghost",
+);
+```
+
+`cross_reference_report()` returns a `CrossReferenceReport { refs, cites, dangling_refs,
+dangling_cites }` with `RefEntry { key, command, kind, number }` and `CiteEntry { key, number }`. A
+resolved `\ref` to an *unnumbered* inline/equation label is omitted from `refs` (it has no S4 number —
+deferred), so every row carries a real number. Like S1–S5, S6 is pure, additive analysis — it reads
+the prior passes and mutates nothing, so their outputs are unchanged.
 
 ## Usage
 

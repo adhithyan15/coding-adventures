@@ -1428,6 +1428,296 @@ impl Document {
     }
 }
 
+// =================================================================================================
+// LTXDOC03 S6 — the cross-reference report (the consumer that composes S1/S2/S4/S5).
+//
+// S1 bound each `\ref` to its `\label`; S2 bound each `\cite` to its `\bibitem`; S4 numbered the
+// labels; S5 numbered the citations. Each pass produced its own owned result type, but **nothing yet
+// assembles them into a single consumer-facing artifact**. S6 is that assembly: one method that walks
+// S1's resolved `\ref`s and S2's resolved `\cite`s and produces an **owned, plain-data report** where
+// each entry carries its rendered *number* (from S4/S5) alongside its key/command/kind. It is the
+// payoff rung — the proof that the five analysis passes *compose* into an auditable whole, exactly the
+// shape a byte-provenance consumer wants: "here is every cross-reference in this document, what it
+// points at, and the number it prints."
+//
+// ## What S6 is, and (just as importantly) what it is *not*
+//
+// S6 is a **pure consumer**. It adds **no new AST walk** of its own: it calls S1
+// ([`resolve_references`](Document::resolve_references)) and S2
+// ([`resolve_citations`](Document::resolve_citations)) — each of which already reuses the bounded
+// [`Document::walk`] — and S4 ([`number_labels`](Document::number_labels)) / S5
+// ([`number_citations`](Document::number_citations)) to number each family **once**, then *looks each
+// key up* in the resulting number table. So the whole report costs a constant number of the existing
+// bounded passes (never a per-entry re-numbering — the anti-pattern the S4/S5 convenience methods
+// [`ref_number`](Document::ref_number) / [`cite_number`](Document::cite_number) warn about when called
+// in a loop). There is no new parsing, no AST change, no new recursion.
+//
+// ## The two families, side by side
+//
+// | family | source pass (binding) | number pass | report entry |
+// |--------|-----------------------|-------------|--------------|
+// | `\ref`  | S1 `ResolvedRef { key, command, kind }` | S4 `Numbering::number_for(key)` | [`RefEntry`]  |
+// | `\cite` | S2 `ResolvedCite { key }`               | S5 `CitationNumbering::number_for(key)` | [`CiteEntry`] |
+//
+// ## Dangling references and citations — surfaced *separately* (the "??" / "[?]" markers)
+//
+// A `\ref{missing}` (no such `\label`) lands in S1's `unresolved`; a `\cite{ghost}` (no such
+// `\bibitem`) lands in S2's `unresolved`. These are LaTeX's tell-tale `??` (undefined reference) and
+// `[?]` (undefined citation) markers. S6 does **not** silently drop them and does **not** fold them in
+// among the resolved entries with some fake number — it surfaces them in their **own** vectors
+// ([`dangling_refs`](CrossReferenceReport::dangling_refs) /
+// [`dangling_cites`](CrossReferenceReport::dangling_cites)), each holding just the offending *key*. A
+// consumer building a "problems" list reads exactly those two vectors; a consumer building the
+// resolved cross-reference index reads `refs`/`cites`. This separation is the deliberate, documented
+// choice (the alternative — one list with `number: Option<String>` — buries the distinction inside a
+// field the caller must remember to check; two vectors make "resolved vs dangling" a *type-level*
+// fact).
+//
+// ## The one subtlety: a *resolved* `\ref` whose target is not *numbered*
+//
+// Every entry in S1's `resolved` has a matching `\label` — but not every `\label` is *numbered*. S4
+// numbers sections and figure/table floats; an **inline `\label`** (typically an equation label) is
+// deliberately left unnumbered (deferred to a future equation-numbering rung — see S4/S5). So a
+// `\ref{eq:x}` to an inline `\label{eq:x}` *resolves* (it is in S1's `resolved`) yet has **no** S4
+// number. S6's rule for such an entry: **omit it from `refs`**. The report's `refs` therefore lists
+// exactly the `\ref`s that both resolve *and* carry a printable number — the ones a consumer can
+// render as "see Section 1.2". (An unnumbered-but-resolved `\ref` is neither a *dangling* reference —
+// its label exists — nor a *renderable* one, so it belongs in neither `refs` nor `dangling_refs`; it
+// is simply below S4's numbering horizon and reappears once equation numbering ships. Documenting this
+// keeps the report honest: every row in `refs` has a real number, no placeholder.) Citations have no
+// analogous gap — every *resolved* `\cite` names a winning `\bibitem`, which S5 always numbers — so
+// every S2-resolved cite becomes a [`CiteEntry`].
+//
+// ## What stays OUT of S6 (inherited honest boundaries)
+//
+// - **Equation numbers** — deferred at S4/S5 (an equation body is an opaque [`Block::DisplayMath`]
+//   string with no label field); a `\ref` to an equation label is therefore *omitted* from `refs`
+//   (see above), not invented.
+// - **Author-year / natbib sorted citation styles** and **external `.bib`/`.bbl` databases** — out of
+//   scope at S2/S5, so out of scope here too (S6 reports only what those passes resolved).
+//
+// ## The result types and the rendered report
+//
+// [`Document::cross_reference_report`] returns a [`CrossReferenceReport`]: `refs` (one [`RefEntry`]
+// per numbered resolved `\ref`, in S1 pre-order), `cites` (one [`CiteEntry`] per resolved `\cite`, in
+// S2 pre-order), and the two dangling-key vectors. All owned plain data (`String`s + `Copy`
+// [`LabelKind`]), mirroring S4/S5, so the report outlives any borrow of the source and can be
+// stored/serialized. [`CrossReferenceReport::to_plain_text`] renders it to a stable, deterministic,
+// human-readable string (the exact format is pinned in that method's docs and in the tests).
+// =================================================================================================
+
+/// A **human-readable name** for a label kind, capitalised for the plain-text report: `"Section"`,
+/// `"Table"`, `"Figure"`, `"Inline"`. This is the display form S6 prints (`\ref{s:i} -> Section 1`),
+/// distinct from [`LabelKind::as_str`]'s lowercase structural name (`"section"`). Kept as a single
+/// helper so the capitalisation convention lives in exactly one place. Pure and total — a fixed match,
+/// no allocation beyond the returned `&'static str`, no panic.
+fn kind_display_name(kind: LabelKind) -> &'static str {
+    match kind {
+        LabelKind::Section => "Section",
+        LabelKind::Table => "Table",
+        LabelKind::Figure => "Figure",
+        LabelKind::Inline => "Inline",
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// The report record types (plain, Clone-able, owned data — mirroring S4/S5's owned-String rows).
+// -------------------------------------------------------------------------------------------------
+
+/// One **resolved-and-numbered reference** row of the cross-reference report: a `\ref`/`\eqref`/
+/// `\pageref` that both resolved (S1) *and* carries a rendered S4 number. It fuses S1's binding
+/// (`key`, `command`, `kind`) with S4's `number` — everything a consumer needs to render "see
+/// Section 1.2" without re-consulting the passes.
+///
+/// - `key` — the referenced label key, verbatim (`"sec:intro"`), from S1's [`ResolvedRef::key`].
+/// - `command` — the reference command used (`"ref"`, `"eqref"`, or `"pageref"`), from
+///   [`ResolvedRef::command`].
+/// - `kind` — the [`LabelKind`] of the node the reference points at (section / table / figure), from
+///   [`ResolvedRef::target_kind`]. (An [`LabelKind::Inline`] target is *not* numbered by S4, so it
+///   never becomes a `RefEntry` — see the S6 module docs — hence in practice `kind` is one of
+///   Section/Table/Figure.)
+/// - `number` — the rendered number S4 assigns the target (`"1.2"`, `"3"`, …), from
+///   [`Numbering::number_for`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RefEntry {
+    /// The referenced label key, verbatim, without braces (`"sec:intro"`).
+    pub key: String,
+    /// The reference command used (`"ref"`, `"eqref"`, or `"pageref"`).
+    pub command: String,
+    /// The kind of node the reference resolved to (section / table / figure).
+    pub kind: LabelKind,
+    /// The rendered number the target prints (`"1.2"`, `"3"`, …), from S4.
+    pub number: String,
+}
+
+/// One **resolved-and-numbered citation** row of the cross-reference report: a `\cite` key that
+/// resolved (S2) and carries its rendered S5 bracketed number. Every resolved `\cite` yields a
+/// `CiteEntry` (unlike references, there is no "resolved-but-unnumbered" gap — a winning `\bibitem` is
+/// always numbered by S5).
+///
+/// - `key` — the citation key, verbatim (`"smith2020"`), from S2's [`ResolvedCite::key`]. A multi-key
+///   `\cite{a,b}` produces one `CiteEntry` **per key** (S2 already split them), so `a` and `b` are two
+///   separate rows.
+/// - `number` — the rendered bracketed number S5 assigns the entry (`"[1]"`, `"[2]"`, …), from
+///   [`CitationNumbering::number_for`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CiteEntry {
+    /// The citation key, verbatim, without braces (`"smith2020"`).
+    pub key: String,
+    /// The rendered bracketed number the citation prints (`"[1]"`, `"[2]"`, …), from S5.
+    pub number: String,
+}
+
+/// The full result of [`Document::cross_reference_report`]: the assembled cross-reference report — the
+/// consumer artifact that composes S1 (resolve refs) + S2 (resolve cites) + S4 (label numbers) + S5
+/// (citation numbers) into one auditable table. All plain, owned data (`String`s + `Copy`
+/// [`LabelKind`]), so the report outlives any borrow of the source and can be stored/serialized,
+/// mirroring S1/S2/S4/S5's owned aggregates.
+///
+/// **Ordering.** `refs` is in S1 pre-order (the order the `\ref`s appear in the body, filtered to the
+/// numbered ones); `cites` is in S2 pre-order (body order, one row per key of each `\cite`);
+/// `dangling_refs` is in S1's `unresolved` order and `dangling_cites` in S2's `unresolved` order.
+/// Every ordering is deterministic and source-derived, so the report (and its
+/// [`to_plain_text`](CrossReferenceReport::to_plain_text) rendering) is stable across runs.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct CrossReferenceReport {
+    /// One row per **resolved and numbered** `\ref`, in S1 pre-order. A resolved `\ref` whose target
+    /// is an (unnumbered) inline/equation label is *omitted* (it has no S4 number — see the S6 docs).
+    pub refs: Vec<RefEntry>,
+    /// One row per **resolved** `\cite` key, in S2 pre-order (one per key of a multi-key `\cite`).
+    pub cites: Vec<CiteEntry>,
+    /// The keys of **dangling** `\ref`s (S1's `unresolved`) — LaTeX's `??` undefined references.
+    pub dangling_refs: Vec<String>,
+    /// The keys of **dangling** `\cite`s (S2's `unresolved`) — LaTeX's `[?]` undefined citations.
+    pub dangling_cites: Vec<String>,
+}
+
+impl CrossReferenceReport {
+    /// Render this report to a **stable, deterministic, human-readable** plain-text string (LTXDOC03
+    /// S6). The exact format — pinned so tests and consumers can rely on it byte-for-byte:
+    ///
+    /// - One line per resolved reference, in `refs` order:
+    ///   `` \ref{<key>} -> <Kind> <number> `` — e.g. `` \ref{sec:intro} -> Section 1.2 ``. The
+    ///   command shown is always `\ref` (the canonical reference form) regardless of the actual
+    ///   `\eqref`/`\pageref` spelling, so the line names the *binding*, not the surface command;
+    ///   `<Kind>` is the capitalised kind name ([`kind_display_name`]).
+    /// - One line per resolved citation, in `cites` order:
+    ///   `` \cite{<key>} -> <number> `` — e.g. `` \cite{smith} -> [2] ``.
+    /// - **Only if** `dangling_refs` is non-empty, a footer line:
+    ///   `Dangling references: <k1>, <k2>, …` (keys joined by `", "`, in order).
+    /// - **Only if** `dangling_cites` is non-empty, a footer line:
+    ///   `Dangling citations: <k1>, <k2>, …`.
+    ///
+    /// Lines are joined by a single `\n` with **no trailing newline** and no trailing whitespace on
+    /// any line. An **empty report** (no refs, cites, or dangling keys) renders the fixed string
+    /// `"(no cross-references)"` so the output is never the empty string (a stable, greppable
+    /// "nothing here" marker). Sections appear in a fixed order — resolved refs, resolved cites,
+    /// dangling refs, dangling cites — so the whole rendering is a pure function of the report.
+    ///
+    /// Total & panic-free: string building only (no indexing, no `unwrap`), allocating just the output
+    /// `String`.
+    pub fn to_plain_text(&self) -> String {
+        let mut lines: Vec<String> = Vec::new();
+
+        // Resolved references: `\ref{key} -> Kind number`.
+        for r in &self.refs {
+            lines.push(format!(r"\ref{{{}}} -> {} {}", r.key, kind_display_name(r.kind), r.number));
+        }
+        // Resolved citations: `\cite{key} -> number`.
+        for c in &self.cites {
+            lines.push(format!(r"\cite{{{}}} -> {}", c.key, c.number));
+        }
+        // Dangling footers, each only when non-empty (keys joined by ", ").
+        if !self.dangling_refs.is_empty() {
+            lines.push(format!("Dangling references: {}", self.dangling_refs.join(", ")));
+        }
+        if !self.dangling_cites.is_empty() {
+            lines.push(format!("Dangling citations: {}", self.dangling_cites.join(", ")));
+        }
+
+        if lines.is_empty() {
+            // A stable, greppable marker so the rendering is never the empty string.
+            "(no cross-references)".to_string()
+        } else {
+            lines.join("\n")
+        }
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// The report assembly.
+// -------------------------------------------------------------------------------------------------
+
+impl Document {
+    /// Assemble the **cross-reference report** for this document (LTXDOC03 S6) — the consumer artifact
+    /// that composes S1/S2/S4/S5 into one owned, auditable table.
+    ///
+    /// The assembly, with **no new AST walk** (each family is numbered **once**, then looked up):
+    ///
+    /// 1. Run S1 [`resolve_references`](Document::resolve_references) and number the labels **once**
+    ///    with S4 [`number_labels`](Document::number_labels). For each [`ResolvedRef`], look its `key`
+    ///    up in the [`Numbering`] via [`number_for`](Numbering::number_for): a `Some(number)` becomes a
+    ///    [`RefEntry`] (key + command + kind + number); a `None` (a resolved `\ref` to an *unnumbered*
+    ///    inline/equation label — see the S6 module docs) is **omitted**. S1's `unresolved` keys become
+    ///    [`dangling_refs`](CrossReferenceReport::dangling_refs).
+    /// 2. Run S2 [`resolve_citations`](Document::resolve_citations) and number the entries **once** with
+    ///    S5 [`number_citations`](Document::number_citations). For each [`ResolvedCite`], look its `key`
+    ///    up in the [`CitationNumbering`] → a [`CiteEntry`] (key + bracketed number). (A resolved cite
+    ///    always names a winning entry, which S5 always numbers, so this lookup is `Some` in practice;
+    ///    a defensive `None` is simply skipped, never a panic.) S2's `unresolved` keys become
+    ///    [`dangling_cites`](CrossReferenceReport::dangling_cites).
+    ///
+    /// **Numbered once, not per-item.** Numbering the two families a single time (then O(1)-ish
+    /// `number_for` lookups) is deliberate: it avoids the per-entry re-numbering the
+    /// [`ref_number`](Document::ref_number) / [`cite_number`](Document::cite_number) convenience
+    /// methods do (fine for a one-off, wasteful in a loop). So the report costs a *constant* number of
+    /// the existing bounded passes — S1, S2, S4, S5 — no more.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; it only *calls* the S1/S2/
+    /// S4/S5 passes (each of which reuses the bounded [`Document::walk`]) and copies owned data out of
+    /// their results — introducing no new recursion. Borrows `self` immutably; the returned
+    /// [`CrossReferenceReport`] is owned plain data, so it outlives any borrow of the source. The tree
+    /// is **not** mutated — the report is pure composition, leaving S1–S5 outputs byte-for-byte
+    /// unchanged.
+    pub fn cross_reference_report(&self) -> CrossReferenceReport {
+        // ---- References (S1 binding × S4 numbering) ----
+        let references = self.resolve_references();
+        let label_numbers = self.number_labels(); // numbered ONCE, reused for every lookup below.
+
+        let mut refs: Vec<RefEntry> = Vec::new();
+        for r in &references.resolved {
+            // A resolved `\ref` with an S4 number becomes a row; a resolved-but-unnumbered one
+            // (inline/equation label — deferred) is omitted, so every row carries a real number.
+            if let Some(number) = label_numbers.number_for(&r.key) {
+                refs.push(RefEntry {
+                    key: r.key.clone(),
+                    command: r.command.clone(),
+                    kind: r.target_kind,
+                    number: number.to_string(),
+                });
+            }
+        }
+        let dangling_refs: Vec<String> =
+            references.unresolved.iter().map(|u| u.key.clone()).collect();
+
+        // ---- Citations (S2 binding × S5 numbering) ----
+        let citations = self.resolve_citations();
+        let cite_numbers = self.number_citations(); // numbered ONCE, reused for every lookup below.
+
+        let mut cites: Vec<CiteEntry> = Vec::new();
+        for c in &citations.resolved {
+            // A resolved cite always names a winning, numbered entry; a defensive `None` is skipped.
+            if let Some(number) = cite_numbers.number_for(&c.key) {
+                cites.push(CiteEntry { key: c.key.clone(), number: number.to_string() });
+            }
+        }
+        let dangling_cites: Vec<String> =
+            citations.unresolved.iter().map(|u| u.key.clone()).collect();
+
+        CrossReferenceReport { refs, cites, dangling_refs, dangling_cites }
+    }
+}
+
 // -------------------------------------------------------------------------------------------------
 // Tests.
 // -------------------------------------------------------------------------------------------------
@@ -2489,6 +2779,181 @@ See Section~\ref{sec:intro} and \cite{smith2020}.
         assert!(
             doc.cite_target_node(&cites_before.resolved[0]).is_some(),
             "S3 lookup still resolves after citation numbering"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S6 — the cross-reference report (consumer composing S1/S2/S4/S5).
+    // ---------------------------------------------------------------------------------------------
+
+    /// Parse `src` and build its cross-reference report — the shared S6 harness.
+    fn report(src: &str) -> CrossReferenceReport {
+        parse_document(src).expect("parse").cross_reference_report()
+    }
+
+    #[test]
+    fn report_composes_a_ref_and_a_cite_with_their_numbers() {
+        // A doc with BOTH a labeled `\section`+`\ref` AND a `thebibliography`+`\cite`: the report
+        // fuses S1's binding with S4's number for the ref, and S2's binding with S5's number for the
+        // cite — one RefEntry (Section 1) and one CiteEntry ([2]).
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+See Section~\ref{s:i} and \cite{b}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\end{thebibliography}\end{document}";
+        let rep = report(src);
+
+        // One resolved-and-numbered reference, EVERY field exact.
+        assert_eq!(rep.refs.len(), 1, "one numbered ref");
+        assert_eq!(rep.refs[0].key, "s:i");
+        assert_eq!(rep.refs[0].command, "ref");
+        assert_eq!(rep.refs[0].kind, LabelKind::Section);
+        assert_eq!(rep.refs[0].number, "1");
+
+        // One resolved-and-numbered citation, EVERY field exact (the SECOND \bibitem → [2]).
+        assert_eq!(rep.cites.len(), 1, "one numbered cite");
+        assert_eq!(rep.cites[0].key, "b");
+        assert_eq!(rep.cites[0].number, "[2]");
+
+        // No dangling entries.
+        assert!(rep.dangling_refs.is_empty());
+        assert!(rep.dangling_cites.is_empty());
+    }
+
+    #[test]
+    fn report_to_plain_text_renders_the_exact_pinned_string() {
+        // LOAD-BEARING: the plain-text rendering is a stable, pinned multi-line string — a resolved
+        // ref line and a resolved cite line, joined by a single `\n`, no trailing newline.
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+See Section~\ref{s:i} and \cite{b}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\end{thebibliography}\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text(),
+            "\\ref{s:i} -> Section 1\n\\cite{b} -> [2]",
+            "the pinned resolved-only rendering"
+        );
+    }
+
+    #[test]
+    fn report_surfaces_dangling_refs_and_cites_separately() {
+        // A dangling `\ref{nope}` and dangling `\cite{ghost}` appear in the dangling vecs (exact
+        // keys), NOT in `refs`/`cites`; the plain-text footer lists them.
+        let src = r"\begin{document}See \ref{nope} and \cite{ghost}.\end{document}";
+        let rep = report(src);
+
+        assert!(rep.refs.is_empty(), "the dangling ref is NOT a resolved row");
+        assert!(rep.cites.is_empty(), "the dangling cite is NOT a resolved row");
+        assert_eq!(rep.dangling_refs, vec!["nope".to_string()], "dangling ref key surfaced");
+        assert_eq!(rep.dangling_cites, vec!["ghost".to_string()], "dangling cite key surfaced");
+
+        // The plain-text footer lists both dangling families, no resolved lines above them.
+        assert_eq!(
+            rep.to_plain_text(),
+            "Dangling references: nope\nDangling citations: ghost",
+            "the pinned dangling-only rendering"
+        );
+    }
+
+    #[test]
+    fn report_numbers_each_key_of_a_multi_key_cite() {
+        // A multi-key `\cite{a,b}` → two CiteEntry rows numbered [1] and [2] (each key looks up its
+        // own entry's list position).
+        let src = r"\begin{document}See \cite{a,b}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\end{thebibliography}\end{document}";
+        let rep = report(src);
+
+        assert_eq!(rep.cites.len(), 2, "one row per key of the multi-key \\cite");
+        assert_eq!(rep.cites[0].key, "a");
+        assert_eq!(rep.cites[0].number, "[1]");
+        assert_eq!(rep.cites[1].key, "b");
+        assert_eq!(rep.cites[1].number, "[2]");
+        assert!(rep.refs.is_empty());
+        assert!(rep.dangling_cites.is_empty());
+
+        // Both cite lines render in order.
+        assert_eq!(
+            rep.to_plain_text(),
+            "\\cite{a} -> [1]\n\\cite{b} -> [2]",
+            "both multi-key cite lines, in order"
+        );
+    }
+
+    #[test]
+    fn report_omits_resolved_but_unnumbered_inline_label_ref() {
+        // A `\ref{eq:x}` to an INLINE `\label{eq:x}` resolves (S1) but has NO S4 number (inline labels
+        // are deferred): it is OMITTED from `refs` (neither a numbered row nor a dangling one). A
+        // numbered section ref alongside proves the numbered one IS included.
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+The identity \label{eq:x} holds. See \ref{s:i} and \eqref{eq:x}.\end{document}";
+        let rep = report(src);
+
+        // Only the section ref is a numbered row; the inline-label ref is omitted.
+        assert_eq!(rep.refs.len(), 1, "the unnumbered inline-label ref is omitted");
+        assert_eq!(rep.refs[0].key, "s:i");
+        assert_eq!(rep.refs[0].number, "1");
+        // And it is NOT reported as dangling either (its label exists — it is simply unnumbered).
+        assert!(!rep.dangling_refs.contains(&"eq:x".to_string()), "resolved, so not dangling");
+        assert!(rep.dangling_refs.is_empty());
+    }
+
+    #[test]
+    fn report_empty_document_is_empty_and_renders_stable_marker_no_panic() {
+        // An empty document → an entirely empty report, and `to_plain_text` renders the pinned
+        // "(no cross-references)" marker (never the empty string), with no panic.
+        let rep = report(r"\begin{document}\end{document}");
+        assert_eq!(rep, CrossReferenceReport::default(), "empty doc → empty report");
+        assert_eq!(
+            rep.to_plain_text(),
+            "(no cross-references)",
+            "empty report renders the stable marker"
+        );
+    }
+
+    #[test]
+    fn report_does_not_mutate_the_tree_s1_through_s5_unchanged() {
+        // REGRESSION: the report is pure composition — building it leaves S1/S2/S3/S4/S5 outputs
+        // byte-for-byte unchanged (the tree is never mutated).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+See Section~\ref{sec:intro} and \cite{smith2020}.
+
+\begin{thebibliography}{9}
+\bibitem{smith2020} Smith, J. Title. 2020.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let refs_before = doc.resolve_references();
+        let cites_before = doc.resolve_citations();
+        let num_before = doc.number_labels();
+        let cite_num_before = doc.number_citations();
+
+        // Build the report (exercises the S6 composition).
+        let rep = doc.cross_reference_report();
+        assert_eq!(rep.refs.len(), 1);
+        assert_eq!(rep.cites.len(), 1);
+
+        // S1–S5 outputs are all untouched, and an S3 node lookup still agrees.
+        assert_eq!(doc.resolve_references(), refs_before, "S1 output unchanged by S6");
+        assert_eq!(doc.resolve_citations(), cites_before, "S2 output unchanged by S6");
+        assert_eq!(doc.number_labels(), num_before, "S4 output unchanged by S6");
+        assert_eq!(doc.number_citations(), cite_num_before, "S5 output unchanged by S6");
+        assert!(
+            doc.ref_target_node(&refs_before.resolved[0]).is_some(),
+            "S3 lookup still resolves after building the report"
         );
     }
 }
