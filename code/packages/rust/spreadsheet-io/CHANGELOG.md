@@ -29,6 +29,13 @@ All notable changes to `spreadsheet-io` are documented here.
   panic-free parsing, because JSON here is untrusted input — malformed bytes must
   be an `IoError`, never a crash.
 
+### Security
+- **DoS guard (depth):** a deeply-nested document (`[[[…]]]`) fed to `load_json`
+  would have overflowed the native stack via the recursive parser — an
+  uncatchable process abort. Fixed in `json-parser` (recursion now capped at
+  `DEFAULT_MAX_RULE_DEPTH`); pinned here by `tests/deep_nesting_dos.rs`, which
+  proves a 100 000-deep array resolves to `IoError::Json` in milliseconds.
+
 ## [0.3.0] — SSIO-CSV: delimited text (CSV / TSV) load & save
 
 ### Added

@@ -1,14 +1,21 @@
 //! JSON parser backed by compiled parser grammar.
 
 use coding_adventures_json_lexer::{tokenize_json, try_tokenize_json};
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 mod _grammar;
 
 pub fn create_json_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_json(source);
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    // Cap recursion depth. `GrammarParser::new` defaults to *no* cap
+    // (`usize::MAX`), and `parse_rule` recurses once per nesting level, so a
+    // deeply-nested document like `[[[…]]]` would otherwise overflow the native
+    // thread stack — an **uncatchable** SIGSEGV that kills the process before
+    // any `Result` could report it. At 128 the parser instead returns a clean
+    // depth-limit error (surfaced here as a catchable `panic!`); beyond ~200 in
+    // a debug build the stack overflows, so the cap sits safely below that.
+    GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH)
 }
 
 pub fn parse_json(source: &str) -> GrammarASTNode {
@@ -24,10 +31,16 @@ pub fn parse_json(source: &str) -> GrammarASTNode {
 /// an error to handle, not a crash. Both the tokenise and parse steps are
 /// fallible here (the panicking [`parse_json`]/`tokenize_json` remain for
 /// pre-validated input).
+///
+/// The parser is depth-capped at [`DEFAULT_MAX_RULE_DEPTH`], so an adversarial
+/// deeply-nested document (`[[[…]]]`) is refused with an ordinary `Err` rather
+/// than overflowing the native stack — the property that makes this genuinely
+/// safe on untrusted bytes.
 pub fn try_parse_json(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_json(source)?;
     let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
+        .with_max_depth(DEFAULT_MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| e.to_string())
 }
@@ -288,6 +301,16 @@ mod tests {
         assert!(try_parse_json("{not json").is_err());
         assert!(try_parse_json("[1, 2,").is_err());
         assert!(try_parse_json("").is_err());
+    }
+
+    /// A deeply-nested document must be REFUSED with an `Err`, not overflow the
+    /// native stack. The recursive-descent parser recurses once per nesting
+    /// level, so without the `DEFAULT_MAX_RULE_DEPTH` cap this input would
+    /// SIGSEGV the whole process (uncatchable). With the cap it returns cleanly.
+    #[test]
+    fn test_try_parse_deep_nesting_is_err_not_crash() {
+        let deep = "[".repeat(100_000) + &"]".repeat(100_000);
+        assert!(try_parse_json(&deep).is_err());
     }
 
     /// JSON allows arbitrary whitespace between tokens. The parser should
