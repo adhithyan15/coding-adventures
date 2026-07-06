@@ -64,8 +64,12 @@ use cas_pattern_matching::Bindings;
 // W-22: the shared `cas-*` algorithm surface, under Wolfram names. `simplify`
 // is the same canonical-form + constant-folding + identity-rule pass Macsyma's
 // `simplify_handler` calls (`macsyma-runtime/src/lib.rs`) — reused verbatim,
-// not reimplemented, per MA04 §2's "Future" item.
-use cas_simplify::simplify;
+// not reimplemented, per MA04 §2's "Future" item. `expand` is the second head:
+// the same distribute-then-simplify pass Macsyma's `expand_handler` calls
+// (`macsyma-runtime/src/lib.rs`) — also reused verbatim, including its own
+// internal term-count/exponent DoS guards, so Wolfram gets that hardening for
+// free.
+use cas_simplify::{expand, simplify};
 
 /// Iteration cap passed to [`cas_simplify::simplify`]. Matches the constant
 /// Macsyma's own `simplify_handler` uses (`macsyma-runtime/src/lib.rs`) — the
@@ -245,11 +249,13 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Sqrt".to_string(), handler_fn(sqrt_handler));
 
     // W-22 cas-* algorithm surface under Wolfram names (MA04 §2 "Future" item,
-    // now in progress). `Simplify` is the first entry — an ordinary eager
-    // `Head[args]` form reusing `cas-simplify` verbatim. Further heads
-    // (`Expand`, `Factor`, `Solve`, `D`, `Integrate`, ...) are added one at a
-    // time, each its own PR, per HML00's one-item-per-PR discipline.
+    // now in progress). `Simplify` was the first entry; `Expand` is the
+    // second — both ordinary eager `Head[args]` forms reusing `cas-simplify`
+    // verbatim. Further heads (`Factor`, `Solve`, `D`, `Integrate`, ...) are
+    // added one at a time, each its own PR, per HML00's one-item-per-PR
+    // discipline.
     m.insert("Simplify".to_string(), handler_fn(simplify_handler));
+    m.insert("Expand".to_string(), handler_fn(expand_handler));
 
     // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
     // each handler evaluates ONLY its subject and matches against the *literal*
@@ -3247,6 +3253,28 @@ fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     simplify(expr.args[0].clone(), SIMPLIFY_MAX_ITERATIONS)
 }
 
+/// `Expand[expr]` → the fully distributed polynomial form: every
+/// `(a + b) * c`-shaped product is multiplied out into a flat sum of terms,
+/// then the result is fixed-pointed through the same simplifier `Simplify`
+/// uses so constants fold and identities collapse. Does **not** collect like
+/// terms (e.g. `Expand[x + x]` stays `x + x`, it does not become `2 x`) —
+/// that is a separate, not-yet-implemented `cas_simplify::expand` capability
+/// (see MA04 §24.2), not a Wolfram-wiring limitation.
+///
+/// A thin call into [`cas_simplify::expand`] — the exact function Macsyma's
+/// `expand_handler` calls (`macsyma-runtime/src/lib.rs`), reused verbatim so
+/// Wolfram and Macsyma agree on every expansion this crate can perform,
+/// including the internal `EXPAND_MAX_POW`/`EXPAND_MAX_TERMS` DoS guards —
+/// no new guard is needed here. Requires exactly one argument (the
+/// eagerly-evaluated expression); any other arity leaves the form
+/// unevaluated, matching every other W-22/W-15 built-in's fail-soft contract.
+fn expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    expand(expr.args[0].clone())
+}
+
 // ---------------------------------------------------------------------------
 // W-12 string builtins
 // ---------------------------------------------------------------------------
@@ -5967,6 +5995,75 @@ mod tests {
                 vec![apply(sym(ADD), vec![sym("x"), int(0)])]
             )),
             sym("x")
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-22 cas-* algorithm surface — Expand
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn expand_distributes_products_over_sums() {
+        // Expand[(x+1)^2] -> 1 + x + x + x*x (no like-term collection -- the
+        // same honest, documented scope as Macsyma's `expand()`, see
+        // `expand_distributes_polynomial_multiplication` in
+        // `macsyma-runtime/tests/test_runtime.rs`).
+        let x = sym("x");
+        let squared = apply(
+            sym(symbolic_ir::POW),
+            vec![apply(sym(ADD), vec![x.clone(), int(1)]), int(2)],
+        );
+        assert_eq!(
+            run("Expand", vec![squared]),
+            apply(
+                sym(ADD),
+                vec![
+                    int(1),
+                    x.clone(),
+                    x.clone(),
+                    apply(sym(MUL), vec![x.clone(), x])
+                ],
+            )
+        );
+    }
+
+    #[test]
+    fn expand_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's Expand and Macsyma's expand() call the exact same
+        // cas_simplify::expand -- this pins that the Wolfram wiring doesn't
+        // diverge from the reference call.
+        let expr = apply(
+            sym(MUL),
+            vec![apply(sym(ADD), vec![sym("x"), int(1)]), sym("y")],
+        );
+        assert_eq!(run("Expand", vec![expr.clone()]), cas_simplify::expand(expr));
+    }
+
+    #[test]
+    fn expand_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Expand", vec![]), apply(sym("Expand"), vec![]));
+        assert_eq!(
+            run("Expand", vec![int(1), int(2)]),
+            apply(sym("Expand"), vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn expand_dispatches_end_to_end_through_the_wolfram_backend() {
+        // (x+1)*(x+2) fully distributes through the full parser -> lower ->
+        // backend path, exactly mirroring `simplify_dispatches_end_to_end_
+        // through_the_wolfram_backend` above.
+        let x = sym("x");
+        let product = apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![x.clone(), int(1)]),
+                apply(sym(ADD), vec![x.clone(), int(2)]),
+            ],
+        );
+        assert_eq!(
+            eval_full(apply(sym("Expand"), vec![product.clone()])),
+            cas_simplify::expand(product)
         );
     }
 

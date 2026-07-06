@@ -4,6 +4,36 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.0] — 2026-07-05
+
+The **W-22** deliverable (MA04 §2), second head: `Expand`. The blocker
+noted in 0.18.0's release ("Remaining: `Expand`, `Factor`, ...") is now
+cleared — a prior fix (`macsyma-runtime`, "add `cas_simplify::expand`,
+wire it as Macsyma's `Expand` handler") gave `cas-simplify` a real
+`expand()` function; this release wires it under the Wolfram head name the
+same thin way `Simplify` was wired.
+
+### Added (W-22 — `Expand`)
+
+- `Expand[expr]` — a thin call into `cas-simplify`'s existing `expand()`
+  (distributes `Mul` over `Add`/`Sub`, expands bounded non-negative integer
+  `Pow` via square-and-multiply), the exact function Macsyma's own
+  `expand()` surface function calls, including its internal
+  `EXPAND_MAX_POW`/`EXPAND_MAX_TERMS` DoS guards. No new algorithm or guard
+  — Wolfram and Macsyma now agree on every expansion this crate can
+  perform, by construction (a shared test pins the two call sites to the
+  same result on the same input, mirroring `Simplify`'s parity test).
+- Honest scope note (inherited from `cas-simplify`, not new to this
+  release): `Expand` does not collect like terms —
+  `Expand[(x+1)^2]` produces `1 + x + x + x*x`, not `1 + 2*x + x^2`.
+
+### Tests
+
+- 4 new tests: product-over-sum distribution, Wolfram/Macsyma call-site
+  parity, wrong-arity fail-soft (unevaluated), and one end-to-end test
+  through the full parser → lower → `WolframBackend` path — mirroring the
+  four `Simplify` tests added in 0.18.0.
+
 ## [0.18.0] — 2026-07-03
 
 The **W-22** deliverable (MA04 §2): the first head of the previously
