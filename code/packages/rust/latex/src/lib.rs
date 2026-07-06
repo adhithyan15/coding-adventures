@@ -82,6 +82,7 @@ mod lexer;
 mod macros;
 mod math;
 mod parser;
+mod references;
 mod structure;
 mod tables;
 mod text;
@@ -97,6 +98,9 @@ pub use ast::{document_to_latex, ListItem, ListKind, Node, NodeKind, SectionLeve
 pub use document::{
     build_document, parse_document, Block, Caption, DocListItem, Document, DocumentClass, Inline,
     Metadata, NodeRef, Package, Preamble, Provenance,
+};
+pub use references::{
+    Duplicate, LabelDef, LabelKind, ReferenceResolution, ResolvedRef, UnresolvedRef, REF_COMMANDS,
 };
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};

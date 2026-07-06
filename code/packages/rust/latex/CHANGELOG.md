@@ -2,6 +2,50 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.37.0] — 2026-07-06
+
+### Added — cross-reference resolution: label table + `\ref` binding (LTXDOC03 S1)
+
+The first document-feature slice on top of the now-complete LTXDOC02 precise-spans work: a pure,
+additive **resolution pass** over a parsed `Document` that binds each cross-reference to the label
+that defines it, with byte spans on **both** sides. This is the static, single-pass analogue of
+LaTeX's two-pass `.aux` machinery — but it binds *structure* (which defining node, at which source
+bytes) rather than computing numbers/pages.
+
+- **New module `references` (`src/references.rs`)**, re-exported from the crate root:
+  `Document::resolve_references(&self) -> ReferenceResolution`. Two linear passes over the existing
+  bounded `Document::walk` traversal — no parser/fold/`walk`/`node_at`/span changes, no new
+  recursion.
+- **Label table (definitions).** Collects every DEFINED label in pre-order from two sources:
+  (a) **hoisted** section/table/figure labels (`Block::Section`/`Table`/`Figure` `label: Some(key)`,
+  span = the block's span), tagged `LabelKind::Section`/`Table`/`Figure`; and (b) **inline**
+  `\label{key}` (`Inline::CrossRef { command: "label" }`, span = the cross-ref's span), tagged
+  `LabelKind::Inline`.
+- **Duplicate detection, first-def-wins.** A key defined more than once records the **first**
+  definition as the winner (references resolve against it) and every later one as a `Duplicate`
+  (LaTeX's *"Label `x' multiply defined"*). Never panics, never drops.
+- **Reference resolution.** For every reference-family cross-ref — `REF_COMMANDS = {"ref", "eqref",
+  "pageref"}` — looks the target up in the label table: found → `ResolvedRef` (the reference's own
+  `ref_span` **and** the target definition's `target_span` + `target_kind`); missing → `UnresolvedRef`
+  (the dangling key + `ref_span`, LaTeX's *"Reference `x' undefined"*).
+- **`\cite` deferred (out of scope for S1).** A citation resolves against a **bibliography**, a
+  separate table from the `\label` one, so it is a later rung: the ref pass treats `\cite` as neither
+  resolved nor unresolved. (`\label` is likewise excluded from the *reference* side — it defines, it
+  does not use.)
+- **Public API (all `Clone`-able plain data; spans `Copy`, keys owned `String`s):** `LabelKind`,
+  `LabelDef`, `Duplicate`, `ResolvedRef`, `UnresolvedRef`, `ReferenceResolution` (with a
+  `definition(key)` lookup helper), and the `REF_COMMANDS` constant.
+- **10 new tests** (all in `#[cfg(test)]`): `\ref`→section resolves and *both* spans slice back to
+  the exact source (the load-bearing assertion), `\ref`→figure float resolves with `Figure` kind,
+  an inline `\label`→`\eqref` resolves, a dangling `\ref` is unresolved with the correct ref-span, a
+  twice-defined key is a duplicate with first-def-wins resolution, `\cite` is excluded from both
+  ref tables, `\pageref` resolves like `\ref`, a `table` float label resolves with `Table` kind, the
+  `definition()` helper, and an empty/label-free document yields empty results without panicking.
+
+Total & panic-free (no `unwrap`/`expect`/unchecked indexing), no `unsafe`, `MAX_DEPTH`-bounded
+(reuses `walk`), and the `to_latex` round-trip fixed point is untouched (this pass is pure analysis —
+it never mutates the tree). New spec `LTXDOC03-cross-reference-resolution.md`.
+
 ## [0.36.0] — 2026-07-05
 
 ### Added — precise byte-coverage capstone; LTXDOC02 arc COMPLETE (LTXDOC02 S5)
