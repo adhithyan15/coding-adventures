@@ -528,6 +528,7 @@ members = [
     "polynomial",
     "protobuf",
     "fsrs",
+    "unicode-normalize",
     "python-bridge",
     "python-lexer",
     "python-parser",
