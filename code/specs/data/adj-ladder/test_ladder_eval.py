@@ -120,6 +120,7 @@ SELF_CONTAINED_RUNGS = (
     "rung80_gi_motility",
     "rung81_cardiac_perfusion",
     "rung82_gfr_estimation",
+    "rung83_hepatic_clearance",
 )
 
 
