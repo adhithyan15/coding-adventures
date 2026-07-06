@@ -107,6 +107,7 @@ Chief of Staff job/session/agent
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, morning-brief, platform-brief, pending-work, attention-overview,
+     system-health, operator-action, service-execution readiness,
      remediation-plan, operations-brief, safety-brief, readiness-brief,
      maintenance-brief, incident-brief, recovery-brief, escalation-brief,
      continuity-brief, desired-state, and pairing-session inventory reads
@@ -295,6 +296,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_attention_overview`
 - `smart_home.get_system_health_brief`
 - `smart_home.get_operator_action_brief`
+- `smart_home.get_service_execution_readiness_brief`
 - `smart_home.get_remediation_plan`
 - `smart_home.get_operations_brief`
 - `smart_home.get_safety_brief`

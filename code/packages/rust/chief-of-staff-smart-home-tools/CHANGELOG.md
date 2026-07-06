@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_service_execution_readiness_brief`, a read-only Chief
+  adapter tool that composes existing D23 controller handoff, command-risk,
+  authorization-gap, and capability-grant signals into one Home
+  Assistant-style service execution gate without dispatching commands or owning
+  smart-home state.
 - Added `smart_home.list_platform_event_ops_review` and
   `smart_home.get_platform_event_ops_review_summary`, read-only Chief adapter
   tools that roll up existing D23 event delivery, event log, and pending-work
