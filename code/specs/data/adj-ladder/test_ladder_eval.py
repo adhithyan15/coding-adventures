@@ -121,6 +121,7 @@ SELF_CONTAINED_RUNGS = (
     "rung81_cardiac_perfusion",
     "rung82_gfr_estimation",
     "rung83_hepatic_clearance",
+    "rung84_intraocular_pressure",
 )
 
 

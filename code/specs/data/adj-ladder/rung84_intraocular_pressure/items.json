@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 84 \u2014 ophthalmology intraocular-pressure index from four stated quantities (a NEW panel: ophthalmology / intraocular-pressure). From an aqueous inflow and a venous bias to sum, a resistance factor to scale that sum by, and an outflow drain to subtract, compute the intraocular pressure ((aqueous_inflow+venous_bias)*resistance_factor-outflow_drain), the gross pressure ((aqueous_inflow+venous_bias)*resistance_factor), or the inflow sum (aqueous_inflow+venous_bias). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, GROUPED-SUM PRODUCT MINUS A TERM (a+b)*c-d (sum a and b, times c, subtract d, so (a+b)*c-d = ((a+b)*c)-d; distinct from rung-68 (a+b)*c/d = ((a+b)*c)/d and from rung-81 (a+b)/c-d = ((a+b)/c)-d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via +, *, and - \u2014 no constant leaks, and neither the gross pressure, the inflow sum, nor any pressure figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: taking the outflow drain off the resistance factor inside the second factor ((a+b)*(c-d), a wrong grouping) and mis-signing the grouped sum ((a-b)*c-d, a wrong grouping). The core confusion tested is that (a+b)*c-d is ((a+b)*c)-d, not (a+b)*(c-d) and not (a-b)*c-d.",
+  "items": [
+    {
+      "id": "r84iop-01",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 6 plus a venous bias of 2, this summed inflow building against a resistance factor of 5, with an outflow drain of 3 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(6)\nobserve venous_bias(2)\nobserve resistance_factor(5)\nobserve outflow_drain(3)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r84iop-02",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 6 plus a venous bias of 2, this summed inflow building against a resistance factor of 5, with an outflow drain of 3 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(6)\nobserve venous_bias(2)\nobserve resistance_factor(5)\nobserve outflow_drain(3)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r84iop-03",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 6 plus a venous bias of 2, this summed inflow building against a resistance factor of 5, with an outflow drain of 3 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(6)\nobserve venous_bias(2)\nobserve resistance_factor(5)\nobserve outflow_drain(3)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r84iop-04",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 8 plus a venous bias of 2, this summed inflow building against a resistance factor of 6, with an outflow drain of 4 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(8)\nobserve venous_bias(2)\nobserve resistance_factor(6)\nobserve outflow_drain(4)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r84iop-05",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 8 plus a venous bias of 2, this summed inflow building against a resistance factor of 6, with an outflow drain of 4 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(8)\nobserve venous_bias(2)\nobserve resistance_factor(6)\nobserve outflow_drain(4)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r84iop-06",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 8 plus a venous bias of 2, this summed inflow building against a resistance factor of 6, with an outflow drain of 4 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(8)\nobserve venous_bias(2)\nobserve resistance_factor(6)\nobserve outflow_drain(4)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r84iop-07",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 5 plus a venous bias of 3, this summed inflow building against a resistance factor of 7, with an outflow drain of 4 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(5)\nobserve venous_bias(3)\nobserve resistance_factor(7)\nobserve outflow_drain(4)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r84iop-08",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 5 plus a venous bias of 3, this summed inflow building against a resistance factor of 7, with an outflow drain of 4 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(5)\nobserve venous_bias(3)\nobserve resistance_factor(7)\nobserve outflow_drain(4)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r84iop-09",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 5 plus a venous bias of 3, this summed inflow building against a resistance factor of 7, with an outflow drain of 4 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(5)\nobserve venous_bias(3)\nobserve resistance_factor(7)\nobserve outflow_drain(4)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r84iop-10",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 9 plus a venous bias of 3, this summed inflow building against a resistance factor of 6, with an outflow drain of 4 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(9)\nobserve venous_bias(3)\nobserve resistance_factor(6)\nobserve outflow_drain(4)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 68,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r84iop-11",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 9 plus a venous bias of 3, this summed inflow building against a resistance factor of 6, with an outflow drain of 4 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(9)\nobserve venous_bias(3)\nobserve resistance_factor(6)\nobserve outflow_drain(4)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r84iop-12",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 9 plus a venous bias of 3, this summed inflow building against a resistance factor of 6, with an outflow drain of 4 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(9)\nobserve venous_bias(3)\nobserve resistance_factor(6)\nobserve outflow_drain(4)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r84iop-13",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 10 plus a venous bias of 4, this summed inflow building against a resistance factor of 7, with an outflow drain of 5 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(10)\nobserve venous_bias(4)\nobserve resistance_factor(7)\nobserve outflow_drain(5)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 98,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 93,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 37,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r84iop-14",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 10 plus a venous bias of 4, this summed inflow building against a resistance factor of 7, with an outflow drain of 5 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(10)\nobserve venous_bias(4)\nobserve resistance_factor(7)\nobserve outflow_drain(5)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 93,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 98,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 37,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r84iop-15",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 10 plus a venous bias of 4, this summed inflow building against a resistance factor of 7, with an outflow drain of 5 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(10)\nobserve venous_bias(4)\nobserve resistance_factor(7)\nobserve outflow_drain(5)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 93,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 98,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r84iop-16",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 7 plus a venous bias of 5, this summed inflow building against a resistance factor of 8, with an outflow drain of 6 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(7)\nobserve venous_bias(5)\nobserve resistance_factor(8)\nobserve outflow_drain(6)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r84iop-17",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 7 plus a venous bias of 5, this summed inflow building against a resistance factor of 8, with an outflow drain of 6 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(7)\nobserve venous_bias(5)\nobserve resistance_factor(8)\nobserve outflow_drain(6)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r84iop-18",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 7 plus a venous bias of 5, this summed inflow building against a resistance factor of 8, with an outflow drain of 6 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(7)\nobserve venous_bias(5)\nobserve resistance_factor(8)\nobserve outflow_drain(6)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r84iop-19",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 8 plus a venous bias of 6, this summed inflow building against a resistance factor of 9, with an outflow drain of 5 carried off. What is the net intraocular pressure (the scaled inflow sum minus the outflow drain)?",
+      "program": "observe aqueous_inflow(8)\nobserve venous_bias(6)\nobserve resistance_factor(9)\nobserve outflow_drain(5)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor - outflow_drain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 126,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 121,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r84iop-20",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 8 plus a venous bias of 6, this summed inflow building against a resistance factor of 9, with an outflow drain of 5 carried off. What is the the gross pressure (the summed inflow times the resistance factor, before draining)?",
+      "program": "observe aqueous_inflow(8)\nobserve venous_bias(6)\nobserve resistance_factor(9)\nobserve outflow_drain(5)\nlet answer = (aqueous_inflow + venous_bias) * resistance_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 121,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 126,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r84iop-21",
+      "qtype": "intraocular_pressure_index",
+      "stem": "An eye is fed by an aqueous inflow of 8 plus a venous bias of 6, this summed inflow building against a resistance factor of 9, with an outflow drain of 5 carried off. What is the the inflow sum (the aqueous inflow plus the venous bias)?",
+      "program": "observe aqueous_inflow(8)\nobserve venous_bias(6)\nobserve resistance_factor(9)\nobserve outflow_drain(5)\nlet answer = aqueous_inflow + venous_bias\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 121,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 126,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
