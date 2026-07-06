@@ -18,6 +18,13 @@ struct RubyCrossAxisCase {
     suites: &'static [(&'static str, &'static str, &'static str)],
 }
 
+struct RubyRepairEvidence {
+    id: &'static str,
+    source: &'static str,
+    axis: &'static str,
+    data_snippet: &'static str,
+}
+
 const RUBY_SHELL_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
     (
         "document-shell",
@@ -86,7 +93,12 @@ const RUBY_CROSS_AXIS_CASES: &[RubyCrossAxisCase] = &[
         suites: RUBY_BLOCK_CROSS_AXIS_SUITES,
     },
 ];
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[("ruby-dat-387", "rt-boundary")];
+const POST_PARSE_REPAIR_EVIDENCE: &[RubyRepairEvidence] = &[RubyRepairEvidence {
+    id: "ruby-dat-387",
+    source: "ruby.dat:387",
+    axis: "rt-boundary",
+    data_snippet: "<html><ruby>a<rb>b<rt></ruby></html>",
+}];
 
 #[derive(Debug, Deserialize)]
 struct RubyAuditSuite {
@@ -249,18 +261,32 @@ fn whatwg_ruby_audit_tracks_post_parse_repair_evidence() {
         .map(|case| (case.source.clone(), case))
         .collect::<HashMap<_, _>>();
 
-    for (case_id, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
-        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
-            panic!("post-parse repair evidence case `{case_id}` should be audited")
+    for evidence in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(evidence.id).unwrap_or_else(|| {
+            panic!(
+                "post-parse repair evidence case `{}` should be audited",
+                evidence.id
+            )
         });
         assert_eq!(
-            audit_case.axis, *expected_axis,
-            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+            audit_case.source, evidence.source,
+            "post-parse repair evidence case `{}` should stay tied to its smoke fixture row",
+            evidence.id
+        );
+        assert_eq!(
+            audit_case.axis, evidence.axis,
+            "post-parse repair evidence case `{}` should stay on its focused audit axis",
+            evidence.id
         );
 
         let source_case = smoke_cases
-            .get(&audit_case.source)
-            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+            .get(evidence.source)
+            .unwrap_or_else(|| panic!("case `{}` should exist in smoke fixture", evidence.id));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "post-parse repair evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
         let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
             panic!(
                 "case `{}` ({}) parse failed: {error}",
