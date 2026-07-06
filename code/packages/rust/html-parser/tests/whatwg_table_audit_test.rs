@@ -23,13 +23,50 @@ struct CrossAxisRepairCase {
     suites: &'static [(&'static str, &'static str, &'static str)],
 }
 
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
-    ("adoption01-dat-6", "foster-parenting"),
-    ("tests26-dat-4", "cell-boundary"),
-    ("tests26-dat-1251", "cell-boundary"),
-    ("tricky01-dat-6", "cell-boundary"),
-    ("tricky01-dat-7", "row-group-boundary"),
-    ("tricky01-dat-8", "cell-boundary"),
+struct TableRepairEvidence {
+    id: &'static str,
+    source: &'static str,
+    axis: &'static str,
+    data_snippet: &'static str,
+}
+
+const POST_PARSE_REPAIR_EVIDENCE: &[TableRepairEvidence] = &[
+    TableRepairEvidence {
+        id: "adoption01-dat-6",
+        source: "adoption01.dat:6",
+        axis: "foster-parenting",
+        data_snippet: "<table><a>1<p>2</a>3</p>",
+    },
+    TableRepairEvidence {
+        id: "tests26-dat-4",
+        source: "tests26.dat:4",
+        axis: "cell-boundary",
+        data_snippet: "<b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3",
+    },
+    TableRepairEvidence {
+        id: "tests26-dat-1251",
+        source: "tests26.dat:1251",
+        axis: "cell-boundary",
+        data_snippet: "<b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3",
+    },
+    TableRepairEvidence {
+        id: "tricky01-dat-6",
+        source: "tricky01.dat:6",
+        axis: "cell-boundary",
+        data_snippet: "<table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+    },
+    TableRepairEvidence {
+        id: "tricky01-dat-7",
+        source: "tricky01.dat:7",
+        axis: "row-group-boundary",
+        data_snippet: "<table><tr><p><a><p>You should see this text.",
+    },
+    TableRepairEvidence {
+        id: "tricky01-dat-8",
+        source: "tricky01.dat:8",
+        axis: "cell-boundary",
+        data_snippet: "This page contains an insanely badly-nested tag sequence.",
+    },
 ];
 const DUPLICATE_FOSTERED_NOBR_ROWS: &[(&str, &str)] = &[("tests26-dat-4", "tests26-dat-1251")];
 const FOSTERED_NOBR_REPAIR_CASE_IDS: &[&str] = &["tests26-dat-4", "tests26-dat-1251"];
@@ -255,18 +292,32 @@ fn whatwg_table_audit_tracks_post_parse_repair_evidence() {
         .map(|case| (case.source.clone(), case))
         .collect::<HashMap<_, _>>();
 
-    for (case_id, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
-        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
-            panic!("post-parse repair evidence case `{case_id}` should be audited")
+    for evidence in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(evidence.id).unwrap_or_else(|| {
+            panic!(
+                "post-parse repair evidence case `{}` should be audited",
+                evidence.id
+            )
         });
         assert_eq!(
-            audit_case.axis, *expected_axis,
-            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+            audit_case.source, evidence.source,
+            "post-parse repair evidence case `{}` should stay tied to its smoke fixture row",
+            evidence.id
+        );
+        assert_eq!(
+            audit_case.axis, evidence.axis,
+            "post-parse repair evidence case `{}` should stay on its focused audit axis",
+            evidence.id
         );
 
         let source_case = smoke_cases
-            .get(&audit_case.source)
-            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+            .get(evidence.source)
+            .unwrap_or_else(|| panic!("case `{}` should exist in smoke fixture", evidence.id));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "post-parse repair evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
         let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
             panic!(
                 "case `{}` ({}) parse failed: {error}",
