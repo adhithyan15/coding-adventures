@@ -39,6 +39,10 @@ use spice_engine::{
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table, format_measurement_table,
     format_model_card_supported_parameter_coverage_csv,
+    format_model_card_supported_parameter_coverage_gate_issue_csv,
+    format_model_card_supported_parameter_coverage_gate_issue_json,
+    format_model_card_supported_parameter_coverage_gate_issue_table,
+    format_model_card_supported_parameter_coverage_gate_report,
     format_model_card_supported_parameter_coverage_json,
     format_model_card_supported_parameter_coverage_summary_csv,
     format_model_card_supported_parameter_coverage_summary_json,
@@ -48,7 +52,9 @@ use spice_engine::{
     format_model_card_unsupported_parameter_issue_json,
     format_model_card_unsupported_parameter_issue_table, format_temperature_dc_table,
     jfet_from_model_card, measure_dc_sweep_deck, measure_dc_sweep_probe,
-    model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_records,
+    model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_gate,
+    model_card_supported_parameter_coverage_gate_issue_records,
+    model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
     model_card_supported_parameter_coverage_summary_records,
     model_card_unsupported_parameter_issue_records, model_card_unsupported_parameter_issues,
@@ -175,6 +181,83 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
     ));
     assert!(json.ends_with(
         "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"18\",\"accepted_name_count\":\"25\",\"aliased_parameter_count\":\"6\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|N_SUB|T_NOM|CBS|CBD\"}]\n"
+    ));
+}
+
+#[test]
+fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
+    let coverage = model_card_supported_parameter_coverage();
+    let report = model_card_supported_parameter_coverage_gate(&coverage);
+    assert!(report.passed);
+    assert_eq!(report.kind_count, 7);
+    assert_eq!(report.expected_kind_count, 7);
+    assert_eq!(report.canonical_parameter_count, 67);
+    assert_eq!(report.expected_canonical_parameter_count, 67);
+    assert_eq!(report.accepted_name_count, 113);
+    assert_eq!(report.aliased_parameter_count, 33);
+    assert_eq!(report.max_alias_count, 4);
+    assert!(report.issues.is_empty());
+    assert_eq!(
+        format_model_card_supported_parameter_coverage_gate_report(&report),
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t67\t67\t113\t33\t4\t0"
+    );
+    assert_eq!(
+        format_model_card_supported_parameter_coverage_gate_issue_table(&report),
+        "kind\tfield\tmessage"
+    );
+    assert!(model_card_supported_parameter_coverage_gate_issue_records(&report).is_empty());
+    assert_eq!(
+        format_model_card_supported_parameter_coverage_gate_issue_csv(&report),
+        "kind,field,message\n"
+    );
+    assert_eq!(
+        format_model_card_supported_parameter_coverage_gate_issue_json(&report),
+        "[]\n"
+    );
+}
+
+#[test]
+fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
+    let coverage = model_card_supported_parameter_coverage()
+        .into_iter()
+        .filter(|row| !(row.kind == ModelCardKind::Nmos && row.canonical_parameter == "VT0"))
+        .collect::<Vec<_>>();
+    let report = model_card_supported_parameter_coverage_gate(&coverage);
+
+    assert!(!report.passed);
+    assert_eq!(report.kind_count, 7);
+    assert_eq!(report.canonical_parameter_count, 66);
+    assert_eq!(report.accepted_name_count, 110);
+    assert_eq!(report.aliased_parameter_count, 32);
+    assert_eq!(report.max_alias_count, 4);
+    assert_eq!(report.issues.len(), 4);
+    assert_eq!(report.issues[0].kind, "NMOS");
+    assert_eq!(report.issues[0].field, "canonical_parameter_count");
+    assert_eq!(
+        report.issues[0].message,
+        "expected NMOS to expose 18 canonical supported parameters, found 17"
+    );
+    assert_eq!(report.issues.last().unwrap().field, "max_alias_count");
+    assert_eq!(
+        report.issues.last().unwrap().message,
+        "expected NMOS max alias count 3, found 2"
+    );
+    assert_eq!(
+        format_model_card_supported_parameter_coverage_gate_report(&report),
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t66\t67\t110\t32\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+    );
+    let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
+    assert_eq!(records[0]["kind"], "NMOS");
+    assert_eq!(records[0]["field"], "canonical_parameter_count");
+    assert_eq!(
+        records[0]["message"],
+        "expected NMOS to expose 18 canonical supported parameters, found 17"
+    );
+    assert!(format_model_card_supported_parameter_coverage_gate_issue_csv(&report).starts_with(
+        "kind,field,message\nNMOS,canonical_parameter_count,\"expected NMOS to expose 18 canonical supported parameters, found 17\"\n"
+    ));
+    assert!(format_model_card_supported_parameter_coverage_gate_issue_json(&report).starts_with(
+        "[{\"kind\":\"NMOS\",\"field\":\"canonical_parameter_count\",\"message\":\"expected NMOS to expose 18 canonical supported parameters, found 17\"}"
     ));
 }
 

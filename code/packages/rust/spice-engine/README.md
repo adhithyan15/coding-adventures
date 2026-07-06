@@ -140,6 +140,14 @@ Level-1 MOS cards as stable dashboard/export rows.
 `format_model_card_supported_parameter_coverage_summary_csv`, and
 `format_model_card_supported_parameter_coverage_summary_json` condense that
 catalog by model kind for compact release dashboards and Mosaic UI inventories.
+`model_card_supported_parameter_coverage_gate`,
+`format_model_card_supported_parameter_coverage_gate_report`,
+`format_model_card_supported_parameter_coverage_gate_issue_table`,
+`model_card_supported_parameter_coverage_gate_issue_records`,
+`format_model_card_supported_parameter_coverage_gate_issue_csv`, and
+`format_model_card_supported_parameter_coverage_gate_issue_json` validate the
+expected seven-kind, 67-row supported-parameter catalog and expose stable issue
+rows for release automation.
 `device_model_audit_fixtures` returns the canonical cross-language fixture
 cards used to keep the Rust, Python, and TypeScript ports aligned.
 `device_model_behavior_audit_fixtures` extends those cards into runnable

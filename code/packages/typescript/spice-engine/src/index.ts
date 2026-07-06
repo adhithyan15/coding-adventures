@@ -1773,6 +1773,24 @@ export interface ModelCardSupportedParameterCoverageSummary {
   readonly aliasedParameters: readonly string[];
 }
 
+export interface ModelCardSupportedParameterCoverageGateIssue {
+  readonly kind: string;
+  readonly field: string;
+  readonly message: string;
+}
+
+export interface ModelCardSupportedParameterCoverageGateReport {
+  readonly passed: boolean;
+  readonly kindCount: number;
+  readonly expectedKindCount: number;
+  readonly canonicalParameterCount: number;
+  readonly expectedCanonicalParameterCount: number;
+  readonly acceptedNameCount: number;
+  readonly aliasedParameterCount: number;
+  readonly maxAliasCount: number;
+  readonly issues: readonly ModelCardSupportedParameterCoverageGateIssue[];
+}
+
 export interface DeviceModelBehaviorFixture {
   readonly name: string;
   readonly kind: ModelCardKind;
@@ -1945,6 +1963,17 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
   "NMOS",
   "PMOS",
 ];
+const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
+  Record<ModelCardKind, readonly [number, number, number, number]>
+> = {
+  D: [7, 11, 3, 3],
+  NPN: [7, 15, 4, 4],
+  PNP: [7, 15, 4, 4],
+  NJF: [5, 11, 5, 3],
+  PJF: [5, 11, 5, 3],
+  NMOS: [18, 25, 6, 3],
+  PMOS: [18, 25, 6, 3],
+};
 
 export interface Vccs {
   readonly kind: "vccs";
@@ -7959,8 +7988,9 @@ export function formatModelCardSupportedParameterCoverageJson(): string {
   return formatDeckTableJson(formatModelCardSupportedParameterCoverageTable());
 }
 
-export function modelCardSupportedParameterCoverageSummary(): readonly ModelCardSupportedParameterCoverageSummary[] {
-  const coverage = modelCardSupportedParameterCoverage();
+function modelCardSupportedParameterCoverageSummaryFrom(
+  coverage: readonly ModelCardSupportedParameterCoverage[],
+): readonly ModelCardSupportedParameterCoverageSummary[] {
   return MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS.map((kind) => {
     const rows = coverage.filter((row) => row.kind === kind);
     const aliasedParameters = rows
@@ -7975,6 +8005,10 @@ export function modelCardSupportedParameterCoverageSummary(): readonly ModelCard
       aliasedParameters,
     };
   });
+}
+
+export function modelCardSupportedParameterCoverageSummary(): readonly ModelCardSupportedParameterCoverageSummary[] {
+  return modelCardSupportedParameterCoverageSummaryFrom(modelCardSupportedParameterCoverage());
 }
 
 export function formatModelCardSupportedParameterCoverageSummaryTable(): string {
@@ -8003,6 +8037,129 @@ export function formatModelCardSupportedParameterCoverageSummaryCsv(): string {
 
 export function formatModelCardSupportedParameterCoverageSummaryJson(): string {
   return formatDeckTableJson(formatModelCardSupportedParameterCoverageSummaryTable());
+}
+
+export function modelCardSupportedParameterCoverageGate(
+  coverage: readonly ModelCardSupportedParameterCoverage[] = modelCardSupportedParameterCoverage(),
+): ModelCardSupportedParameterCoverageGateReport {
+  const issues: ModelCardSupportedParameterCoverageGateIssue[] = [];
+  const actualKinds: string[] = [];
+  for (const row of coverage) {
+    if (!actualKinds.includes(row.kind)) {
+      actualKinds.push(row.kind);
+    }
+  }
+  if (actualKinds.join("\u0000") !== MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS.join("\u0000")) {
+    issues.push({
+      kind: "catalog",
+      field: "kind_order",
+      message: `expected model-card supported-parameter coverage kinds ${MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS.join(
+        ",",
+      )}, found ${actualKinds.join(",")}`,
+    });
+  }
+
+  const summaries = modelCardSupportedParameterCoverageSummaryFrom(coverage);
+  for (const kind of MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS) {
+    const summary = summaries.find((candidate) => candidate.kind === kind)!;
+    const [expectedCanonical, expectedAccepted, expectedAliased, expectedMaxAlias] =
+      MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES[kind];
+    if (summary.canonicalParameterCount !== expectedCanonical) {
+      issues.push({
+        kind,
+        field: "canonical_parameter_count",
+        message: `expected ${kind} to expose ${expectedCanonical} canonical supported parameters, found ${summary.canonicalParameterCount}`,
+      });
+    }
+    if (summary.acceptedNameCount !== expectedAccepted) {
+      issues.push({
+        kind,
+        field: "accepted_name_count",
+        message: `expected ${kind} to expose ${expectedAccepted} accepted model-card names, found ${summary.acceptedNameCount}`,
+      });
+    }
+    if (summary.aliasedParameterCount !== expectedAliased) {
+      issues.push({
+        kind,
+        field: "aliased_parameter_count",
+        message: `expected ${kind} to expose ${expectedAliased} alias-bearing parameters, found ${summary.aliasedParameterCount}`,
+      });
+    }
+    if (summary.maxAliasCount !== expectedMaxAlias) {
+      issues.push({
+        kind,
+        field: "max_alias_count",
+        message: `expected ${kind} max alias count ${expectedMaxAlias}, found ${summary.maxAliasCount}`,
+      });
+    }
+  }
+
+  return {
+    passed: issues.length === 0,
+    kindCount: actualKinds.length,
+    expectedKindCount: MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS.length,
+    canonicalParameterCount: coverage.length,
+    expectedCanonicalParameterCount: Object.values(
+      MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES,
+    ).reduce((total, [canonicalCount]) => total + canonicalCount, 0),
+    acceptedNameCount: coverage.reduce((total, row) => total + row.aliasCount, 0),
+    aliasedParameterCount: coverage.filter((row) => row.aliasCount > 1).length,
+    maxAliasCount: coverage.reduce((maximum, row) => Math.max(maximum, row.aliasCount), 0),
+    issues,
+  };
+}
+
+export function formatModelCardSupportedParameterCoverageGateReport(
+  report: ModelCardSupportedParameterCoverageGateReport = modelCardSupportedParameterCoverageGate(),
+): string {
+  const lines = [
+    "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count",
+    [
+      String(report.passed),
+      report.kindCount,
+      report.expectedKindCount,
+      report.canonicalParameterCount,
+      report.expectedCanonicalParameterCount,
+      report.acceptedNameCount,
+      report.aliasedParameterCount,
+      report.maxAliasCount,
+      report.issues.length,
+    ].join("\t"),
+  ];
+  if (report.issues.length > 0) {
+    lines.push("kind\tfield\tmessage");
+    for (const issue of report.issues) {
+      lines.push([issue.kind, issue.field, issue.message].join("\t"));
+    }
+  }
+  return lines.join("\n");
+}
+
+export function formatModelCardSupportedParameterCoverageGateIssueTable(
+  report: ModelCardSupportedParameterCoverageGateReport = modelCardSupportedParameterCoverageGate(),
+): string {
+  return [
+    "kind\tfield\tmessage",
+    ...report.issues.map((issue) => [issue.kind, issue.field, issue.message].join("\t")),
+  ].join("\n");
+}
+
+export function modelCardSupportedParameterCoverageGateIssueRecords(
+  report: ModelCardSupportedParameterCoverageGateReport = modelCardSupportedParameterCoverageGate(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatModelCardSupportedParameterCoverageGateIssueTable(report));
+}
+
+export function formatModelCardSupportedParameterCoverageGateIssueCsv(
+  report: ModelCardSupportedParameterCoverageGateReport = modelCardSupportedParameterCoverageGate(),
+): string {
+  return formatDeckTableCsv(formatModelCardSupportedParameterCoverageGateIssueTable(report));
+}
+
+export function formatModelCardSupportedParameterCoverageGateIssueJson(
+  report: ModelCardSupportedParameterCoverageGateReport = modelCardSupportedParameterCoverageGate(),
+): string {
+  return formatDeckTableJson(formatModelCardSupportedParameterCoverageGateIssueTable(report));
 }
 
 export function diodeFromModelCard(
