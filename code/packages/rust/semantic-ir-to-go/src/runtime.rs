@@ -987,8 +987,17 @@ func _sir_seq_index(seq Value, index Value) Value {
 		panic("seq-index on non-sequence: " + _sir_format(seq))
 	}
 	i := _sir_as_int(index)
-	if i < 0 || int(i) >= len(s.Items) {
-		panic("sequence index out of range: " + strconv.FormatInt(i, 10))
+	// Ruby `arr[i]` (the `[]` index op, NOT `arr.fetch(i)`): a negative index
+	// counts from the end (`arr[-1]` is the last element); an index that still
+	// falls outside `0 .. len-1` returns **nil** — it does NOT raise.  (Only
+	// `fetch` raises IndexError.)  This matches the sir spec and the Python/
+	// JS/TS/Rust backends; previously Go panicked on any OOB, diverging.
+	n := int64(len(s.Items))
+	if i < 0 {
+		i += n
+	}
+	if i < 0 || i >= n {
+		return nil
 	}
 	return s.Items[i]
 }
@@ -1787,6 +1796,18 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 		// element).  We raise the TYPED `SirError` via `_sir_new_error` +
 		// `panic` (the same entry point an explicit `raise` uses), so a
 		// translated `rescue IndexError` matches.
+		//
+		// A NON-integer index (`arr.fetch("x")`) raises a typed, catchable
+		// `TypeError` ("no implicit conversion of String into Integer"),
+		// matching Ruby — rather than the raw `_sir_as_int` "expected int"
+		// panic (which surfaced only as a generic StandardError).
+		switch args[0].(type) {
+		case int64, int:
+			// integer index — proceed
+		default:
+			panic(_sir_new_error("TypeError",
+				Value("no implicit conversion of "+_sir_ruby_class_name(args[0])+" into Integer")))
+		}
 		i := _sir_as_int(args[0])
 		n := int64(len(recv.Items))
 		idx := i
