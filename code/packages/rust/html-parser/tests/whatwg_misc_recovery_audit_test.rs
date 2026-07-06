@@ -6,39 +6,57 @@ use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
 const WHATWG_MISC_RECOVERY_AUDIT: &str = include_str!("fixtures/whatwg-misc-recovery-audit.json");
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str, &str)] = &[
-    (
-        "comments01-dat-79",
-        "comments01.dat:79",
-        "xml-pi-looking-markup",
-    ),
-    (
-        "domjs-unsafe-dat-147",
-        "domjs-unsafe.dat:147",
-        "duplicate-doctype-recovery",
-    ),
-    (
-        "html5test-com-dat-283",
-        "html5test-com.dat:283",
-        "bogus-comment-and-cdata",
-    ),
-    (
-        "plain-text-unsafe-dat-356",
-        "plain-text-unsafe.dat:356",
-        "text-whitespace-shell",
-    ),
-    ("tests1-dat-601", "tests1.dat:601", "malformed-tag-open"),
-    (
-        "tests19-dat-1021",
-        "tests19.dat:1021",
-        "legacy-compat-elements",
-    ),
-    (
-        "webkit01-dat-8",
-        "webkit01.dat:8",
-        "custom-element-recovery",
-    ),
+const POST_PARSE_REPAIR_EVIDENCE: &[MiscRecoveryEvidence] = &[
+    MiscRecoveryEvidence {
+        id: "comments01-dat-79",
+        source: "comments01.dat:79",
+        axis: "xml-pi-looking-markup",
+        data_snippet: r#"<?xml version="1.0">Hi"#,
+    },
+    MiscRecoveryEvidence {
+        id: "domjs-unsafe-dat-147",
+        source: "domjs-unsafe.dat:147",
+        axis: "duplicate-doctype-recovery",
+        data_snippet: "<!DOCTYPE html><!DOCTYPE html>",
+    },
+    MiscRecoveryEvidence {
+        id: "html5test-com-dat-283",
+        source: "html5test-com.dat:283",
+        axis: "bogus-comment-and-cdata",
+        data_snippet: "<!--foo--bar-->",
+    },
+    MiscRecoveryEvidence {
+        id: "plain-text-unsafe-dat-356",
+        source: "plain-text-unsafe.dat:356",
+        axis: "text-whitespace-shell",
+        data_snippet: "\0",
+    },
+    MiscRecoveryEvidence {
+        id: "tests1-dat-601",
+        source: "tests1.dat:601",
+        axis: "malformed-tag-open",
+        data_snippet: "<",
+    },
+    MiscRecoveryEvidence {
+        id: "tests19-dat-1021",
+        source: "tests19.dat:1021",
+        axis: "legacy-compat-elements",
+        data_snippet: r#"<!doctype html><isindex type="hidden">"#,
+    },
+    MiscRecoveryEvidence {
+        id: "webkit01-dat-8",
+        source: "webkit01.dat:8",
+        axis: "custom-element-recovery",
+        data_snippet: r#"<foo bar="baz"></foo><potato quack="duck"></potato>"#,
+    },
 ];
+
+struct MiscRecoveryEvidence {
+    id: &'static str,
+    source: &'static str,
+    axis: &'static str,
+    data_snippet: &'static str,
+}
 
 #[derive(Debug, Deserialize)]
 struct MiscRecoveryAuditSuite {
@@ -118,22 +136,32 @@ fn whatwg_misc_recovery_audit_tracks_post_parse_repair_evidence() {
         .map(|case| (case.source.clone(), case))
         .collect::<HashMap<_, _>>();
 
-    for (case_id, expected_source, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
-        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
-            panic!("post-parse repair evidence case `{case_id}` should be audited")
+    for evidence in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(evidence.id).unwrap_or_else(|| {
+            panic!(
+                "post-parse repair evidence case `{}` should be audited",
+                evidence.id
+            )
         });
         assert_eq!(
-            audit_case.source, *expected_source,
-            "post-parse repair evidence case `{case_id}` should stay tied to its smoke fixture row"
+            audit_case.source, evidence.source,
+            "post-parse repair evidence case `{}` should stay tied to its smoke fixture row",
+            evidence.id
         );
         assert_eq!(
-            audit_case.axis, *expected_axis,
-            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+            audit_case.axis, evidence.axis,
+            "post-parse repair evidence case `{}` should stay on its focused audit axis",
+            evidence.id
         );
 
         let source_case = smoke_cases
-            .get(*expected_source)
-            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+            .get(evidence.source)
+            .unwrap_or_else(|| panic!("case `{}` should exist in smoke fixture", evidence.id));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "post-parse repair evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
         let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
             panic!(
                 "case `{}` ({}) parse failed: {error}",
