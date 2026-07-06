@@ -50,6 +50,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC02 S5 — precise byte-coverage capstone (arc COMPLETE)** | the capstone `capstone_every_body_byte_resolves_to_tightest_covering_node` proves, over the same LTXDOC01 D6 representative corpus, that **every** non-whitespace body byte (a) resolves (`node_at(b).is_some()`) AND (b) resolves to the **tightest-covering** walked node — no *other* walked node whose span is a strict subset also contains the byte. Honest, not overclaimed: the load-bearing gate is tightest-covering, **not** "always a `Text` leaf" — structural bytes (`\section`/`\item`/`\begin{…}` machinery, inter-child delimiters) legitimately resolve to their enclosing composite, which is the tightest cover there (a soft signal records that the *majority* of content bytes still land on leaves). No `node_at`/parser/fold logic change (S1–S4 already made spans precise + `node_at` leaf-resolving); pure test rung. Corpus fixed/bounded ⇒ O(len), not a DoS. **Completes the LTXDOC02 precise-per-token-spans arc.** | ✅ |
 | **LTXDOC03 S1 — cross-reference resolution (label table + `\ref` binding)** | `Document::resolve_references() -> ReferenceResolution` — a pure, additive pass (no parser/fold/`walk`/`node_at`/span change) that binds each cross-reference to the `\label` that defines it, **with byte spans on both sides**. Collects the label table from hoisted section/table/figure labels (`Block::…{ label: Some(k) }`) and inline `\label{k}` (`Inline::CrossRef`); resolves the reference family `{ref, eqref, pageref}` against it → `ResolvedRef` (ref-span **and** target def-span + `LabelKind`) or `UnresolvedRef` (dangling key + ref-span); reports `Duplicate` keys with **first-def-wins**. `\cite` is a separate table, bound by S2. The static analogue of LaTeX's two-pass `.aux` machinery, binding *structure* not numbers/pages. Total & panic-free, reuses the bounded `walk` (no new recursion). | ✅ |
 | **LTXDOC03 S2 — `\cite` → bibliography binding** | `Document::resolve_citations() -> CitationResolution` — the *parallel* pass to S1 for the **citation** family, binding each `\cite` key to the `\bibitem` that defines it, **with byte spans on both sides**. Collects the bibliography table from every `\bibitem{k}` inside a `thebibliography` environment (`BibEntry { key, span }`, span = the tight `\bibitem{k}` construct), first-entry-wins with `DuplicateBib`; then, for each `\cite` (the `CITE_COMMAND` family), splits `target` on commas into individual trimmed keys and resolves each → `ResolvedCite` (the shared `\cite` `cite_span` **and** the entry's `entry_span`) or `UnresolvedCite` (dangling key + `cite_span`). A multi-key `\cite{a,b,c}` yields one record **per key**, all sharing that `\cite`'s span; `\cite[note]{k}` keeps the note out of the key. External `.bib`/BibTeX databases and citation numbering stay out of scope (in-document `thebibliography` only). Disjoint from and non-interfering with S1. Total & panic-free, reuses the bounded `walk` + a `MAX_DEPTH`-bounded env descent. | ✅ |
+| **LTXDOC03 S3 — target → `NodeRef` exposure** | The depth-add on S1+S2: both bound each target's **bytes** (a `Span`) but not the target **node**. `Document::node_for_span(span) -> Option<NodeRef>` returns the walked body node whose span **exactly equals** `span` (half-open equality of start **and** end; *equality*, not `node_at`'s containment) — or `None` for a span that is no walked node's own (empty doc, un-walked preamble/metadata, fabricated span). Thin accessors `ref_target_node(&ResolvedRef)`, `cite_target_node(&ResolvedCite)`, `label_def_node(&LabelDef)` take a resolved record and hand back the node, so a caller can read its `kind()` and — for a `Block` — descend into its children (a `\ref`→section enumerates its paragraphs; a `\ref`→figure reaches its caption). **Verified reachability:** every S1/S2 target span matches exactly one walked node (zero collisions); a `\ref`→section/figure/table yields a `NodeRef::Block`, an inline `\eqref`→`\label` a `NodeRef::Inline` (`CrossRef`), and — the once-uncertain case — a `\cite`→`\bibitem` **is** walked (an `Inline::Raw` inside the `thebibliography`), so `cite_target_node` returns `Some`, not `None`. Purely additive (S1/S2 result types keep owned `Span`s, no lifetimes; the `NodeRef` is fetched on demand); tie-break = first-in-pre-order (defensive, does not fire). Numbering + external BibTeX remain out of scope. Total & panic-free, reuses the bounded `walk`. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -74,8 +75,12 @@ duplicate and dangling references. **S2 ships `\cite` → bibliography binding**
 (`Document::resolve_citations`) — the parallel pass that binds each `\cite` key to the `\bibitem`
 inside a `thebibliography` environment, multi-key `\cite{a,b,c}` aware (one binding per key, all
 sharing the `\cite` span), first-entry-wins for duplicate `\bibitem`s, and dangling `\cite`s
-reported. External `.bib`/BibTeX databases and citation numbering remain out of scope (in-document
-`thebibliography` only).
+reported. **S3 lifts both bindings from bytes to nodes** (`Document::node_for_span` +
+`ref_target_node`/`cite_target_node`/`label_def_node`) — given a resolved reference/citation, hand
+back the actual walked `NodeRef` so a consumer can read its `kind()` and descend into a `Block`'s
+children (a verified reachability check confirmed every target — including the `\cite`→`\bibitem`
+inside `thebibliography` — is a walked node). External `.bib`/BibTeX databases and citation numbering
+remain out of scope (in-document `thebibliography` only).
 
 ## The Document layer (LTXDOC01)
 
@@ -271,6 +276,44 @@ one `\cite` span); `\cite[note]{k}` keeps the `[note]` out of the key; a duplica
 `DuplicateBib` with **first-entry-wins**. Only an **in-document** `thebibliography`/`\bibitem`
 bibliography is bound — an external `.bib`/BibTeX database and citation numbering/sorting stay out of
 scope (a `\cite` whose key lives only in a `.bib` is reported unresolved here).
+
+### Target → `NodeRef` exposure (LTXDOC03 S3)
+
+S1/S2 bind each target's **bytes** (a `Span`); S3 hands back the actual target **node**, so a
+consumer can read its `kind()` and — for a `Block` — descend into its children. The primitive is
+`Document::node_for_span(span)` (the walked node whose span **exactly equals** `span`, else `None`);
+the ergonomic accessors take a resolved record and return its node.
+
+```rust
+use latex::{parse_document, NodeRef, Block};
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+First paragraph. See Section~\ref{sec:intro}.\end{document}";
+let doc = parse_document(src).unwrap();
+let refs = doc.resolve_references();
+
+// S1 bound the ref's *bytes*; S3 hands back the *node*.
+let r = &refs.resolved[0];
+let node = doc.ref_target_node(r).expect("the resolved target is a walked node");
+assert_eq!(node.kind(), "Section");
+
+// It is the REAL section block — descend into the paragraphs it owns.
+if let NodeRef::Block(Block::Section { body, .. }) = node {
+    assert!(body.iter().any(|b| matches!(b, Block::Paragraph(..))));
+}
+
+// A span that is no walked node's own → `None` (never a panic).
+assert!(doc.node_for_span(latex::Span::new(9000, 9001)).is_none());
+```
+
+`cite_target_node(&ResolvedCite)` returns the `\bibitem` node (an `Inline::Raw`, kind `"Raw"` — the
+bibitem inside `thebibliography` **is** walked) and `label_def_node(&LabelDef)` returns a
+definition's node. Every S1/S2 target span matches exactly one walked node, so these return `Some`
+for any genuine reference/citation; `None` is reserved for the honest edge (empty docs, un-walked
+preamble/metadata, fabricated spans). The lookup is span-**equality** (not `node_at`'s containment),
+with a first-in-pre-order tie-break that no real target hits. The S1/S2 result types are unchanged
+(they keep owned `Span`s) — the `NodeRef` is fetched on demand, so S3 is purely additive.
 
 ## Usage
 

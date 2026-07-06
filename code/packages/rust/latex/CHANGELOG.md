@@ -2,6 +2,58 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.39.0] — 2026-07-06
+
+### Added — cross-reference resolution: target → `NodeRef` exposure (LTXDOC03 S3)
+
+The natural depth-add on S1+S2. Both prior slices bound each `\ref`/`\cite` to the **bytes** of its
+target (a `Span`) but not the target **node** itself. S3 exposes the actual walked `NodeRef` for a
+resolved reference/citation (and for a label/bib definition), so a consumer can read the target's
+`kind()` and — for a `Block` — descend into its children (a `\ref` to a section can now enumerate the
+section's paragraphs; a `\ref` to a figure can reach its caption). No new parsing, numbering, or I/O
+— pure, additive analysis over the existing `Document::walk`.
+
+- **New load-bearing primitive:** `Document::node_for_span(&self, span: Span) -> Option<NodeRef<'_>>`
+  — returns the walked body node whose span **exactly equals** `span` (half-open equality of *both*
+  `start` and `end`), or `None` if no walked node matches. This is *equality*, not *containment*
+  (containment is `node_at`'s job, S4): a resolved S1/S2 target span is, by construction, some walked
+  node's own span, so equality is the correct predicate. O(nodes) — one reuse of the bounded `walk`,
+  no new recursion, panic-free.
+- **Ergonomic accessors (take a resolved record, return the node):**
+  `Document::ref_target_node(&self, r: &ResolvedRef)`, `Document::cite_target_node(&self, c:
+  &ResolvedCite)`, and `Document::label_def_node(&self, d: &LabelDef)` — each a thin wrapper over
+  `node_for_span`. The caller never hand-threads spans.
+- **Purely additive — S1/S2 result types unchanged.** `ResolvedRef`/`ResolvedCite`/`LabelDef`/… still
+  carry only owned `Span`s (no lifetimes), so a resolution still outlives any borrow of the source;
+  the `NodeRef` is fetched **on demand** through these `Document` methods (a `NodeRef` borrows the
+  doc, so it cannot live on the owned result types). A regression test asserts calling the S3
+  accessors leaves the S1/S2 resolutions byte-for-byte identical.
+- **Reachability — verified, not assumed.** An exploratory parse confirmed **every** S1/S2 target
+  span corresponds to **exactly one** walked node (zero identical-span collisions among walked nodes):
+  a `\ref`→section/figure/table yields the `NodeRef::Block` (kind `"Section"`/`"Figure"`/`"Table"`);
+  an inline `\eqref`→`\label` yields the `NodeRef::Inline` (kind `"CrossRef"`); and — the one
+  genuinely uncertain case — a `\cite`→`\bibitem` **is** reachable: the `\bibitem` inside a
+  `thebibliography` `Block::Environment` survives D2 as an `Inline::Raw` command inside a
+  `Block::Paragraph`, which `walk` visits, so `cite_target_node` returns `Some(NodeRef::Inline)` (kind
+  `"Raw"`), **not** `None`.
+- **`None` is a documented, total outcome.** `node_for_span` returns `None` for any span that is not
+  some walked body node's own span — an empty document, a preamble/metadata region (deliberately not
+  walked), or a fabricated span between nodes — never a panic. Because every *resolved* target is a
+  walked node, the accessors never return `None` for a genuine reference/citation in a well-formed
+  document; `None` is reserved for the honest edge.
+- **Tie-break (defensive, does not fire in practice).** If two walked nodes ever shared an identical
+  span, `node_for_span` returns the **first in pre-order** (the outermost/earliest). No real target
+  hits this — it is documented for determinism, not because callers reach it.
+- **9 new tests** (all `#[cfg(test)]`, load-bearing — assert the NODE, not just `is_some`): a
+  `\ref`→section returns the real `Block::Section` and we descend into its title + owned paragraph; a
+  `\ref`→figure reaches its caption text; an inline `\eqref` returns the `CrossRef` inline
+  span-matching `\label{eq:x}`; a `\cite`→`\bibitem` returns the walked `Inline::Raw` slicing back to
+  exactly `\bibitem{key}`; `label_def_node` returns the defining node; a non-matching span → `None`
+  (no panic); `node_for_span(target_span)` agrees with `ref_target_node`; empty-document lookups →
+  `None`; and the S1/S2-unchanged additivity regression.
+- **Out of scope (future rungs):** citation/reference *numbering* and *external BibTeX* remain
+  deferred, as in S1/S2.
+
 ## [0.38.0] — 2026-07-06
 
 ### Added — cross-reference resolution: `\cite` → bibliography binding (LTXDOC03 S2)
