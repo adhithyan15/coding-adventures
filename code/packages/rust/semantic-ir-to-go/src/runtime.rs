@@ -1251,6 +1251,13 @@ func _sir_call_method(recv Value, name string, args []Value) Value {
 			defer _sir_pop_self()
 			return _sir_apply(fn, args)
 		}
+		// M6: `send`/`tap`/`then` apply to a user instance too, AFTER its own
+		// methods (so a user-defined `send`/`tap` override wins, resolution
+		// order #2).  These recurse / apply a block, so route them here before
+		// the universal Object fallback.
+		if v, ok := _sir_meta_method(recv, name, args); ok {
+			return v
+		}
 		// Universal Object methods (class/nil?/==/…) still apply to an
 		// instance; anything else is the controlled NoMethodError floor.
 		if v, ok := _sir_object_method(recv, name, args); ok {
@@ -1271,8 +1278,12 @@ func _sir_call_method(recv Value, name string, args []Value) Value {
 			return v
 		}
 	case bool:
-		// bool has no dedicated catalog here beyond the universal
-		// methods handled below; fall through.
+		// M6: `TrueClass`/`FalseClass` logical operators (`&`/`|`/`^`)
+		// resolve BEFORE the universal Object table so `true & false`
+		// runs rather than bottoming out at NoMethodError.
+		if v, ok := _sir_bool_method(r, name, args); ok {
+			return v
+		}
 	case int64, int, float64:
 		if v, ok := _sir_numeric_method(recv, name, args); ok {
 			return v
@@ -1285,6 +1296,14 @@ func _sir_call_method(recv Value, name string, args []Value) Value {
 		if v, ok := _sir_hash_method(r, name, args); ok {
 			return v
 		}
+	}
+	// M6 universal metaprogramming (`send`/`tap`/`then`/`yield_self`):
+	// dispatched AFTER the type-specific catalogs (so a catalog method of the
+	// same name wins) and BEFORE the universal Object fallback.  `send`
+	// re-enters dispatch with a dynamic name; `tap`/`then` apply a trailing
+	// block.  See `_sir_meta_method`.
+	if v, ok := _sir_meta_method(recv, name, args); ok {
+		return v
 	}
 	// Universal Object methods available on every receiver.
 	if v, ok := _sir_object_method(recv, name, args); ok {
@@ -1352,10 +1371,300 @@ func _sir_object_method(recv Value, name string, args []Value) (Value, bool) {
 		return _sir_ruby_class_name(recv), true
 	case "to_s":
 		return _sir_ruby_to_s(recv), true
+	case "inspect":
+		// Ruby `inspect` renders a debuggable form: strings are quoted,
+		// `nil`/`true`/`false` are their keywords.  `_sir_format` already
+		// produces the debug surface for collections/strings; the only
+		// divergence from `_sir_format` is booleans (`#t`/`#f` → true/false)
+		// and nil (already `nil`), so route through it after fixing bools.
+		if b, ok := recv.(bool); ok {
+			if b {
+				return "true", true
+			}
+			return "false", true
+		}
+		return _sir_format(recv), true
 	case "itself":
+		return recv, true
+	case "equal?":
+		// Ruby `equal?` is object identity.  Immutable primitives compare by
+		// value (Ruby interns them); the shared handles (`*Seq`/`*Map`/
+		// `*SirInstance`) compare by pointer identity — Go `==` on interface
+		// values does exactly this for these cases.  NEVER reflection.
+		return _sir_value_identical(recv, args[0]), true
+	case "respond_to?":
+		// M6 honesty: true iff dispatch on `recv` resolves the named method,
+		// consulting the SAME reflective/`define_method`/catalog tiers a real
+		// call uses (see `_sir_responds_to`).  The name is coerced from a
+		// Symbol/string argument and used only as a map/switch KEY — never to
+		// reflect a Go method.
+		if len(args) == 0 {
+			return false, true
+		}
+		return _sir_responds_to(recv, _sir_method_name(args[0])), true
+	case "freeze":
+		// v0 has no true immutability — identity-returning, matching Ruby's
+		// API shape (`freeze` returns the receiver).
+		return recv, true
+	case "frozen?":
+		// v0: only the always-frozen immutable primitives report frozen.
+		switch recv.(type) {
+		case nil, bool, int64, int, float64, *Symbol:
+			return true, true
+		}
+		return false, true
+	case "dup", "clone":
+		// Shallow copy for the mutable handles; primitives are their own dup.
+		switch r := recv.(type) {
+		case *Seq:
+			out := make([]Value, len(r.Items))
+			copy(out, r.Items)
+			return &Seq{Items: out}, true
+		case *Map:
+			out := make([]MapEntry, len(r.Entries))
+			copy(out, r.Entries)
+			return &Map{Entries: out}, true
+		}
+		return recv, true
+	case "to_a":
+		// Ruby: `nil.to_a == []`, `Array#to_a == self`; other receivers have
+		// no universal `to_a`, so miss and fall through to the honest floor.
+		if recv == nil {
+			return &Seq{Items: []Value{}}, true
+		}
+		if s, ok := recv.(*Seq); ok {
+			return s, true
+		}
+		return nil, false
+	case "tap":
+		// Block-less `tap` (no trailing `Closure` reached `_sir_meta_method`)
+		// still returns the receiver — Ruby's Enumerator-less v0 floor.
+		return recv, true
+	case "then", "yield_self":
+		// Block-less `then`/`yield_self` returns the receiver (v0 floor).
 		return recv, true
 	}
 	return nil, false
+}
+
+// Object identity for `equal?`.  Immutable primitives (nil/bool/int/float/
+// Symbol/string) are compared by VALUE — Ruby interns these, so two `:sym`
+// or two `5`s are the same object.  The mutable handles (`*Seq`/`*Map`/
+// `*SirInstance`/`*Closure`) are compared by POINTER identity via Go `==`
+// on the interface, which is exactly reference identity for pointer types.
+func _sir_value_identical(a Value, b Value) bool {
+	switch a.(type) {
+	case nil, bool, int64, int, float64, string, *Symbol:
+		return _sir_value_eq(a, b)
+	}
+	return a == b
+}
+
+// Coerce a `respond_to?`/`send` first argument (a `*Symbol`, a `":m"`-ish
+// string, or a bare name) to the plain method name used as the catalog key.
+// The result is used ONLY as a switch/map key — never to reflect a Go method
+// (the C3 dynamic-dispatch RCE lesson).
+func _sir_method_name(arg Value) string {
+	switch a := arg.(type) {
+	case *Symbol:
+		return a.Name
+	case string:
+		return a
+	}
+	return _sir_ruby_to_s(arg)
+}
+
+// ── M6 universal metaprogramming: send / tap / then / yield_self ───────
+//
+// These are Ruby Kernel/Object methods that apply to EVERY receiver and are
+// special because they either re-enter dispatch with a dynamic name (`send`)
+// or drive a trailing block (`tap`/`then`).  They are split out of
+// `_sir_object_method` (which is value-returning, block-unaware) because
+// `send` recurses through `_sir_call_method` and the block methods need the
+// peeled-off `*Closure`.  Dispatched by `_sir_call_method` after the
+// type-specific catalogs; a block-less `tap`/`then` MISSES here and falls
+// through to `_sir_object_method`'s receiver-identity floor.
+//
+// SECURITY (the C3 RCE lesson): `send`'s dynamic name is taken from the first
+// argument, coerced to a string by `_sir_method_name`, and handed to
+// `_sir_call_method` — the SAME explicit catalog/switch a normal call walks.
+// An unknown name therefore surfaces the ordinary NoMethodError floor.  The
+// name is NEVER used to reflect a Go method/field (no `reflect.MethodByName`).
+func _sir_meta_method(recv Value, name string, args []Value) (Value, bool) {
+	switch name {
+	case "send", "__send__", "public_send":
+		// First arg names the method; re-enter dispatch with the remaining
+		// args (a trailing block survives as a trailing arg).  An empty arg
+		// list bottoms out at the honest floor rather than raising.
+		if len(args) == 0 {
+			return nil, false
+		}
+		return _sir_call_method(recv, _sir_method_name(args[0]), args[1:]), true
+	case "tap":
+		// `tap` yields the receiver to the block and returns the RECEIVER
+		// (the "peek in a pipeline" method).  Only with a trailing block;
+		// block-less `tap` misses → `_sir_object_method` returns the receiver.
+		if _, block := _sir_split_block(args); block != nil {
+			_sir_apply(block, []Value{recv})
+			return recv, true
+		}
+		return nil, false
+	case "then", "yield_self":
+		// `then`/`yield_self` yields the receiver and returns the BLOCK RESULT
+		// (functional "pipe into a block").  Block-less → miss → floor returns
+		// the receiver.
+		if _, block := _sir_split_block(args); block != nil {
+			return _sir_apply(block, []Value{recv}), true
+		}
+		return nil, false
+	}
+	return nil, false
+}
+
+// ── M6 boolean logic: TrueClass/FalseClass `&`/`|`/`^` ─────────────────
+//
+// Ruby's `&`/`|`/`^` on a boolean are EAGER (non-short-circuiting) logical
+// operators — every operand is evaluated, unlike the lazy `&&`/`||`
+// keywords — and they coerce the argument by Ruby truthiness (`nil`/`false`
+// are falsy, everything else — `0`, `""` — is truthy).  So `true & nil` is
+// `false` and `false | 0` is `true`.  `^` is logical XOR.
+func _sir_bool_method(recv bool, name string, args []Value) (Value, bool) {
+	switch name {
+	case "&":
+		return recv && _sir_truthy(args[0]), true
+	case "|":
+		return recv || _sir_truthy(args[0]), true
+	case "^":
+		return recv != _sir_truthy(args[0]), true
+	}
+	return nil, false
+}
+
+// ── M6 respond_to? — dispatch-honest membership ────────────────────────
+//
+// Whether dispatch on `recv` resolves `name`, consulting the SAME tiers a
+// real call walks: the reflective built-ins, the user `define_method` table
+// (for a `*SirInstance`), and the type-specific + universal catalogs.  This
+// is the honest discriminator behind `respond_to?` — a catalog method → true,
+// an out-of-catalog method → false (and that call returns the NoMethodError
+// floor).  `name` is an explicit membership KEY only, never reflection.
+func _sir_responds_to(recv Value, name string) bool {
+	// Reflective built-ins the frontend/`class` support on every receiver.
+	switch name {
+	case "is_a?", "kind_of?", "instance_of?", "class":
+		return true
+	}
+	// Universal Object + M6 metaprogramming methods (every receiver).
+	if _sir_object_responds(name) {
+		return true
+	}
+	// A user instance: consult its class ancestry method table.
+	if inst, ok := recv.(*SirInstance); ok {
+		if _, found := _sir_resolve_instance_method(inst.Class, name); found {
+			return true
+		}
+		return false
+	}
+	// `nil.to_a == []` is a universal method only for the nil receiver.
+	if recv == nil && name == "to_a" {
+		return true
+	}
+	// Type-specific catalogs — mirror `_sir_call_method`'s receiver switch.
+	switch recv.(type) {
+	case string:
+		return _sir_string_responds(name)
+	case *Symbol:
+		return _sir_symbol_responds(name)
+	case bool:
+		switch name {
+		case "&", "|", "^":
+			return true
+		}
+		return false
+	case int64, int, float64:
+		return _sir_numeric_responds(name)
+	case *Seq:
+		return _sir_array_responds(name)
+	case *Map:
+		return _sir_hash_responds(name)
+	}
+	return false
+}
+
+// The universal names resolved on EVERY receiver by `_sir_object_method` +
+// `_sir_meta_method`.  Kept in lockstep with those switches.
+func _sir_object_responds(name string) bool {
+	switch name {
+	case "nil?", "==", "!=", "class", "to_s", "inspect", "itself",
+		"equal?", "respond_to?", "freeze", "frozen?", "dup", "clone",
+		"send", "__send__", "public_send", "tap", "then", "yield_self":
+		return true
+	case "to_a":
+		// `to_a` is universal only for nil/Array; the collection catalogs
+		// report it for their own receivers, so keep it out of the universal
+		// set and let the type-specific `_sir_*_responds` decide.
+		return false
+	}
+	return false
+}
+
+// The following `_sir_*_responds` predicates mirror EXACTLY the `case`
+// labels of the matching catalog switch, so `respond_to?` stays honest as
+// the catalogs grow.  They list block-taking method names too (a real call
+// resolves them when a block is present).
+func _sir_string_responds(name string) bool {
+	switch name {
+	case "length", "size", "upcase", "downcase", "reverse", "strip",
+		"lstrip", "rstrip", "empty?", "include?", "start_with?", "end_with?",
+		"split", "chars", "to_i", "to_f", "to_sym":
+		return true
+	}
+	return false
+}
+
+func _sir_symbol_responds(name string) bool {
+	switch name {
+	case "to_s", "to_sym", "length", "size", "upcase", "downcase", "empty?":
+		return true
+	}
+	return false
+}
+
+func _sir_numeric_responds(name string) bool {
+	switch name {
+	case "times", "abs", "to_i", "to_f", "even?", "odd?", "zero?",
+		"positive?", "negative?", "succ", "next", "pred":
+		return true
+	}
+	return false
+}
+
+func _sir_array_responds(name string) bool {
+	switch name {
+	// Non-block Array methods.
+	case "length", "size", "count", "first", "last", "empty?", "include?",
+		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
+		"join", "fetch", "to_a":
+		return true
+	// Block-taking Array/Enumerable methods.
+	case "each", "map", "collect", "select", "filter", "reject", "reduce",
+		"inject", "find", "detect", "any?", "all?", "none?":
+		return true
+	}
+	return false
+}
+
+func _sir_hash_responds(name string) bool {
+	switch name {
+	// Non-block Hash methods.
+	case "keys", "values", "has_key?", "key?", "include?", "member?",
+		"has_value?", "value?", "size", "length", "empty?", "fetch":
+		return true
+	// Block-taking Hash methods.
+	case "each", "each_pair", "map", "select", "filter", "reject":
+		return true
+	}
+	return false
 }
 
 // ── Array (*Seq) catalog ───────────────────────────────────────
