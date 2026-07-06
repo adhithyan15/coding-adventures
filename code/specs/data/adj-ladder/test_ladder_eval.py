@@ -117,6 +117,7 @@ SELF_CONTAINED_RUNGS = (
     "rung77_gas_uptake",
     "rung78_insulin_titration",
     "rung79_transfusion_load",
+    "rung80_gi_motility",
 )
 
 
