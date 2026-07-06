@@ -2,6 +2,35 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.36.0] — 2026-07-05
+
+### Added — precise byte-coverage capstone; LTXDOC02 arc COMPLETE (LTXDOC02 S5)
+
+The **capstone** of the precise-per-token-spans arc. Over the LTXDOC01 D6 representative
+multi-construct corpus (`CAPSTONE_SRC`: a titled `article` with abstract, `\section`, `\textbf`,
+inline `$…$` + display `equation` math, an `itemize`, a `tabular` in a `table` float, a `figure`
+with caption+label, and a `\cite`), the new test proves the strong invariant the whole S1–S4 arc
+was built to earn:
+
+- **New capstone test `capstone_every_body_byte_resolves_to_tightest_covering_node`.** For **every**
+  non-whitespace body byte `b`, it asserts (a) `node_at(b).is_some()` — it resolves — AND (b) the
+  resolved node `n` is the **tightest-covering** walked node: no *other* walked node `m` whose span
+  is a strict subset of `n`'s span (`m.start >= n.start && m.end <= n.end && m.span != n.span`) also
+  contains `b`. This is the precise counterpart of D6's earlier *region-scoped* coverage test
+  (`capstone_byte_coverage_body_region`), which only asserted that *some* node owns each byte.
+- **Honest, not overclaimed.** The load-bearing assertion is **tightest-covering**, *not*
+  "every byte is a `Text` leaf". Structural bytes (the `\section` / `\item` / `\begin{…}` machinery)
+  and inter-child delimiters legitimately resolve to their enclosing composite (Section / List /
+  Environment), which is genuinely the tightest cover there. The test additionally records that the
+  *majority* of content bytes land on real leaves as a soft, non-load-bearing signal.
+- **No `node_at`/parser/fold logic changed.** S1–S4 already made spans precise and `node_at`
+  leaf-resolving; S5 is a pure test rung that formally verifies the tightest-covering invariant over
+  the whole representative corpus.
+
+The corpus is fixed and bounded, so iterating every body byte is O(len), not a DoS. Round-trip fixed
+point, totality/no-panic, no `unsafe`, and `MAX_DEPTH`-bounded recursion all preserved. Spec
+`LTXDOC02-precise-token-spans.md` §5 S5 marked shipped and the arc marked **COMPLETE**.
+
 ## [0.35.0] — 2026-07-04
 
 ### Changed — precise `node_at` + region-coarse caveat retired for body nodes (LTXDOC02 S4)

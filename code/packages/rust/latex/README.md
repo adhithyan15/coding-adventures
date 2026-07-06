@@ -47,20 +47,23 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC02 S2 — spanned recognition passes** | the opt-in recognition passes now give each *synthesised* node the exact union of its constituents' real S1 spans: `recognize_structure` (`Section`/`CrossRef`/`Preamble`/`Styled` = recognizing command ∪ each argument), `recognize_accents` (`Accent` = command ∪ argument), `recognize_tables` (`Tabular` = `\begin{tabular}…\end{tabular}` ∪ every cell; `List` = `\begin{env}…\end{env}` ∪ every item). `&src[node.span()]` slices back to the exact source extent for a Section (heading through owned body), an Accent, a Tabular, and an itemize List. Unions over real child spans (never substring search); `to_latex` + round-trip-modulo-spans unchanged. Document-fold precision = S3. | ✅ |
 | **LTXDOC02 S3 — precise Document fold** | `build_document` reads each source `Node`'s carried, precise span instead of the coarse enclosing `region`, so **every body `Block`/`Inline` span is now the node's tight source range**: `&src[inline.span]` slices back to exactly a `Text` run's word, a `\textbf{…}`, an inline `$…$`, a `\cite{…}`. Composites union their children's real spans (`Paragraph` = ∪ its inlines; `Section` = heading ∪ owned body; `List`/`Tabular`/`Environment`/`Figure` = the `\begin…\end` extent; captioned `table` float = tabular ∪ float; `DocListItem` = term ∪ body; `Caption` = ∪ its content). The `region` parameter is deleted from the fold helpers (a fallback-only seed survives on `lower_blocks`). Preamble/`DocumentClass`/`Package` stay honestly preamble-region-coarse (classified, not walked). `to_latex` + round-trip-modulo-spans unchanged; precise `node_at` + coverage capstone = S4/S5. | ✅ |
 | **LTXDOC02 S4 — precise `node_at`, region-coarse caveat retired** | with S3's tight body spans, `Document::node_at(byte)` **formally** resolves to the **true per-token leaf** — the narrowest node whose *precise* span contains the byte (ties → deepest in pre-order): a byte inside `widgets` → the `Text` run owning `widgets` (not the enclosing `Paragraph`/`Section`); a byte inside a `\section` title → the title inline (not the whole `Section`). Docs-and-tests rung (no `node_at`/`walk` logic change): retired the region-coarse hedging on `node_at`/`Provenance`/`walk`/module note for **body** nodes, kept the honest coarse note on `Preamble`/`DocumentClass`/`Package`. New leaf-resolution tests + an honest body byte-coverage test (every non-whitespace body byte resolves to a node whose precise span contains it, on a representative input; whole-corpus tightest-leaf capstone = S5). | ✅ |
+| **LTXDOC02 S5 — precise byte-coverage capstone (arc COMPLETE)** | the capstone `capstone_every_body_byte_resolves_to_tightest_covering_node` proves, over the same LTXDOC01 D6 representative corpus, that **every** non-whitespace body byte (a) resolves (`node_at(b).is_some()`) AND (b) resolves to the **tightest-covering** walked node — no *other* walked node whose span is a strict subset also contains the byte. Honest, not overclaimed: the load-bearing gate is tightest-covering, **not** "always a `Text` leaf" — structural bytes (`\section`/`\item`/`\begin{…}` machinery, inter-child delimiters) legitimately resolve to their enclosing composite, which is the tightest cover there (a soft signal records that the *majority* of content bytes still land on leaves). No `node_at`/parser/fold logic change (S1–S4 already made spans precise + `node_at` leaf-resolving); pure test rung. Corpus fixed/bounded ⇒ O(len), not a DoS. **Completes the LTXDOC02 precise-per-token-spans arc.** | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
 tables/lists (D1) → preamble/body skeleton (D2) → sectioning forest (D3) → metadata + inline
 normalization (D4) → floats/code/display-math (D5) → provenance API + byte-coverage capstone (D6).
-The **precise per-token spans** arc (LTXDOC02) is now under way: **S1 shipped spanned L1 nodes**
+The **precise per-token spans** arc (LTXDOC02) is now **complete** 🎉: **S1 shipped spanned L1 nodes**
 (`parse()` retains the exact byte range it already computed for each node), **S2 shipped spanned
 recognition passes** (each synthesised `Section`/`CrossRef`/`Preamble`/`Styled`/`Accent`/`Tabular`/
 `List` node carries the exact union of its constituents' spans), **S3 shipped the precise
 Document fold** (every body `Block`/`Inline` span is now the node's tight source range, composites
-union their children's real spans, and the coarse `region` plumbing is deleted), and **S4 retired
+union their children's real spans, and the coarse `region` plumbing is deleted), **S4 retired
 the region-coarse caveat for body nodes** (`node_at(byte)` now formally resolves to the true
-per-token leaf; preamble/metadata stay honestly coarse) — with S5 (the whole-corpus
-tightest-covering-leaf coverage capstone) to follow.
+per-token leaf; preamble/metadata stay honestly coarse), and **S5 shipped the precise byte-coverage
+capstone** — over the representative corpus, every non-whitespace body byte resolves to the
+*tightest-covering* walked node (no strictly-narrower walked node also covers it), stated honestly as
+tightest-covering rather than leaf-only.
 
 ## The Document layer (LTXDOC01)
 
@@ -180,10 +183,13 @@ deepest node in pre-order). A byte inside `widgets` resolves to the `Text` run o
 to the enclosing `Paragraph`/`Section`; a byte inside a `\section` title resolves to the title
 inline, not the whole `Section`. This holds for **body** nodes (the ones `walk` visits);
 `Preamble`/`DocumentClass`/`Package` stay honestly preamble-region-coarse (classified out of
-directives, not walked, and `node_at` never resolves into them). The current capstone byte-coverage
-test asserts every non-whitespace byte inside the document **body region** is owned by ≥1 walked
-node; the **whole-corpus** tightest-covering-leaf capstone (proving no strictly-narrower node exists
-for any body byte) is **S5**.
+directives, not walked, and `node_at` never resolves into them). The region-scoped capstone
+byte-coverage test asserts every non-whitespace byte inside the document **body region** is owned by
+≥1 walked node; and as of 0.36.0 (**S5**, arc complete) the whole-corpus capstone
+`capstone_every_body_byte_resolves_to_tightest_covering_node` strengthens this to
+**tightest-covering** — every non-whitespace body byte resolves to the innermost walked node, with
+no strictly-narrower walked node also covering it (stated honestly as tightest-covering, since
+structural bytes legitimately resolve to their enclosing composite rather than a `Text` leaf).
 
 ## Usage
 
