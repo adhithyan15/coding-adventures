@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 83 \u2014 hepatology hepatic-clearance index from four stated quantities (a NEW panel: hepatology / clearance). From a portal load, an uptake rate to multiply by the sinusoid flow, and a clearance divisor to divide that product by before subtracting, compute the hepatic clearance (portal_load - uptake_rate*sinusoid_flow/clearance_divisor), the extraction load (uptake_rate*sinusoid_flow/clearance_divisor), or the uptake product (uptake_rate*sinusoid_flow). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, TERM MINUS A PRODUCT-QUOTIENT a-b*c/d (multiply b by c, divide by d, subtract from a, so a-b*c/d = a-((b*c)/d); distinct from rung-73 a-b/c*d = a-(b/c)*d and from rungs 34/35's sums/differences of two full products) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via -, *, and / \u2014 no constant leaks, and neither the extraction load, the uptake product, nor any clearance figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: subtracting the uptake rate from the portal load FIRST then scaling ((a-b)*c/d, rung-67's shape, a wrong grouping) and reordering the product-quotient to divide before multiplying (a-b/c*d, rung-73's shape, a wrong grouping). The core confusion tested is that a-b*c/d is a-((b*c)/d), not (a-b)*c/d and not a-b/c*d.",
+  "items": [
+    {
+      "id": "r83hcl-01",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 30 and extracts at an uptake rate of 4 times a sinusoid flow of 6, spread over a clearance divisor of 3. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(30)\nobserve uptake_rate(4)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(3)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 52.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 28.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r83hcl-02",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 30 and extracts at an uptake rate of 4 times a sinusoid flow of 6, spread over a clearance divisor of 3. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(30)\nobserve uptake_rate(4)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(3)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 52.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 28.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r83hcl-03",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 30 and extracts at an uptake rate of 4 times a sinusoid flow of 6, spread over a clearance divisor of 3. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(30)\nobserve uptake_rate(4)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(3)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 52.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 28.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r83hcl-04",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 40 and extracts at an uptake rate of 6 times a sinusoid flow of 5, spread over a clearance divisor of 2. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(40)\nobserve uptake_rate(6)\nobserve sinusoid_flow(5)\nobserve clearance_divisor(2)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 85.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 37.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r83hcl-05",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 40 and extracts at an uptake rate of 6 times a sinusoid flow of 5, spread over a clearance divisor of 2. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(40)\nobserve uptake_rate(6)\nobserve sinusoid_flow(5)\nobserve clearance_divisor(2)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 85.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 37.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r83hcl-06",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 40 and extracts at an uptake rate of 6 times a sinusoid flow of 5, spread over a clearance divisor of 2. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(40)\nobserve uptake_rate(6)\nobserve sinusoid_flow(5)\nobserve clearance_divisor(2)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 85.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 37.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r83hcl-07",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 36 and extracts at an uptake rate of 8 times a sinusoid flow of 3, spread over a clearance divisor of 4. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(36)\nobserve uptake_rate(8)\nobserve sinusoid_flow(3)\nobserve clearance_divisor(4)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r83hcl-08",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 36 and extracts at an uptake rate of 8 times a sinusoid flow of 3, spread over a clearance divisor of 4. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(36)\nobserve uptake_rate(8)\nobserve sinusoid_flow(3)\nobserve clearance_divisor(4)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r83hcl-09",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 36 and extracts at an uptake rate of 8 times a sinusoid flow of 3, spread over a clearance divisor of 4. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(36)\nobserve uptake_rate(8)\nobserve sinusoid_flow(3)\nobserve clearance_divisor(4)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.333333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r83hcl-10",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 48 and extracts at an uptake rate of 10 times a sinusoid flow of 6, spread over a clearance divisor of 5. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(48)\nobserve uptake_rate(10)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(5)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 39.666666666666664,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r83hcl-11",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 48 and extracts at an uptake rate of 10 times a sinusoid flow of 6, spread over a clearance divisor of 5. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(48)\nobserve uptake_rate(10)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(5)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 45.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 39.666666666666664,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r83hcl-12",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 48 and extracts at an uptake rate of 10 times a sinusoid flow of 6, spread over a clearance divisor of 5. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(48)\nobserve uptake_rate(10)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(5)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 45.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 39.666666666666664,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r83hcl-13",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 60 and extracts at an uptake rate of 12 times a sinusoid flow of 4, spread over a clearance divisor of 6. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(60)\nobserve uptake_rate(12)\nobserve sinusoid_flow(4)\nobserve clearance_divisor(6)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 52.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r83hcl-14",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 60 and extracts at an uptake rate of 12 times a sinusoid flow of 4, spread over a clearance divisor of 6. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(60)\nobserve uptake_rate(12)\nobserve sinusoid_flow(4)\nobserve clearance_divisor(6)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 52.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r83hcl-15",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 60 and extracts at an uptake rate of 12 times a sinusoid flow of 4, spread over a clearance divisor of 6. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(60)\nobserve uptake_rate(12)\nobserve sinusoid_flow(4)\nobserve clearance_divisor(6)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 52.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 42.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r83hcl-16",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 45 and extracts at an uptake rate of 5 times a sinusoid flow of 8, spread over a clearance divisor of 4. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(45)\nobserve uptake_rate(5)\nobserve sinusoid_flow(8)\nobserve clearance_divisor(4)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r83hcl-17",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 45 and extracts at an uptake rate of 5 times a sinusoid flow of 8, spread over a clearance divisor of 4. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(45)\nobserve uptake_rate(5)\nobserve sinusoid_flow(8)\nobserve clearance_divisor(4)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r83hcl-18",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 45 and extracts at an uptake rate of 5 times a sinusoid flow of 8, spread over a clearance divisor of 4. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(45)\nobserve uptake_rate(5)\nobserve sinusoid_flow(8)\nobserve clearance_divisor(4)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r83hcl-19",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 54 and extracts at an uptake rate of 9 times a sinusoid flow of 6, spread over a clearance divisor of 3. What is the net hepatic clearance (the portal load minus the extraction load)?",
+      "program": "observe portal_load(54)\nobserve uptake_rate(9)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(3)\nlet answer = portal_load - uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r83hcl-20",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 54 and extracts at an uptake rate of 9 times a sinusoid flow of 6, spread over a clearance divisor of 3. What is the the extraction load (uptake rate times the sinusoid flow, over the clearance divisor)?",
+      "program": "observe portal_load(54)\nobserve uptake_rate(9)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(3)\nlet answer = uptake_rate * sinusoid_flow / clearance_divisor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 49.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r83hcl-21",
+      "qtype": "hepatic_clearance_index",
+      "stem": "A liver is presented with a portal load of 54 and extracts at an uptake rate of 9 times a sinusoid flow of 6, spread over a clearance divisor of 3. What is the the uptake product (uptake rate times the sinusoid flow)?",
+      "program": "observe portal_load(54)\nobserve uptake_rate(9)\nobserve sinusoid_flow(6)\nobserve clearance_divisor(3)\nlet answer = uptake_rate * sinusoid_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
