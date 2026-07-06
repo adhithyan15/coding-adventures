@@ -94,6 +94,12 @@ fn is_ref_command(command: &str) -> bool {
     REF_COMMANDS.contains(&command)
 }
 
+/// The placeholder number an equation label carries in the S6 report while equation **numbering** is
+/// deferred to LTXDOC03 S8. It is `"?"` — echoing LaTeX's `??` for an as-yet-unresolved number — so a
+/// resolved `\eqref` renders a stable, greppable line (`\ref{eq:e} -> Equation ?`) instead of being
+/// omitted. S8 will replace this with the real `\theequation` counter value.
+pub const EQUATION_NUMBER_PLACEHOLDER: &str = "?";
+
 // -------------------------------------------------------------------------------------------------
 // What a label defines: the owner "kind" tag.
 // -------------------------------------------------------------------------------------------------
@@ -108,6 +114,7 @@ fn is_ref_command(command: &str) -> bool {
 /// | [`Section`](LabelKind::Section) | a `\section`…`\label` hoisted onto [`Block::Section`] | `\ref{sec:intro}` → a heading |
 /// | [`Table`](LabelKind::Table)     | a `table` float's `\label` hoisted onto [`Block::Table`] | `\ref{tab:data}` → a table |
 /// | [`Figure`](LabelKind::Figure)   | a `figure` float's `\label` hoisted onto [`Block::Figure`] | `\ref{fig:plot}` → a figure |
+/// | [`Equation`](LabelKind::Equation) | a **non-starred** display-math env's `\label` lifted onto [`Block::DisplayMath`] | `\eqref{eq:e}` → an equation |
 /// | [`Inline`](LabelKind::Inline)   | a non-hoisted inline `\label{…}` ([`Inline::CrossRef`]) | `\eqref{eq:x}` → an equation's label |
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LabelKind {
@@ -117,6 +124,13 @@ pub enum LabelKind {
     Table,
     /// A `\label` hoisted onto a [`Block::Figure`] float.
     Figure,
+    /// A `\label` lifted out of a **non-starred** display-math environment (`equation`, `align`,
+    /// `gather`, `multline`, `eqnarray`) onto its [`Block::DisplayMath`] (LTXDOC03 S7). Starred forms
+    /// (`equation*`, …) are unnumbered and never carry this kind. The equation **number** is deferred
+    /// to S8, so an `Equation` label carries a placeholder number in the S6 report (see
+    /// [`Document::number_labels`]); it is still a real definition, so an `\eqref` to it **resolves**
+    /// and is no longer omitted from the cross-reference report.
+    Equation,
     /// A bare inline `\label{…}` that was not hoisted onto any float/section — an
     /// [`Inline::CrossRef`] with `command == "label"` (e.g. a label after an `equation`).
     Inline,
@@ -131,6 +145,7 @@ impl LabelKind {
             LabelKind::Section => "section",
             LabelKind::Table => "table",
             LabelKind::Figure => "figure",
+            LabelKind::Equation => "equation",
             LabelKind::Inline => "inline",
         }
     }
@@ -323,6 +338,12 @@ fn block_label(block: &Block) -> Option<(String, LabelKind, Span)> {
         }
         Block::Figure { label: Some(key), span, .. } => {
             Some((key.clone(), LabelKind::Figure, *span))
+        }
+        // LTXDOC03 S7: a `\label` lifted out of a **non-starred** display-math environment onto its
+        // `Block::DisplayMath`. Only the non-starred forms carry a `Some(label)` (the lowering sets
+        // `label: None` for `equation*`/`\[…\]`/`$$…$$`), so a `Some` here is always numbered.
+        Block::DisplayMath { label: Some(key), span, .. } => {
+            Some((key.clone(), LabelKind::Equation, *span))
         }
         _ => None,
     }
@@ -943,9 +964,11 @@ impl Document {
 // S4 numbers **sections** (hierarchical) and **figure/table floats** (flat) — the counters whose
 // values a `\ref` most commonly prints. It deliberately does **not** yet assign:
 //
-// - **Equation numbers** — `equation`/`align` bodies are kept as opaque [`Block::DisplayMath`]
-//   source strings (never parsed here), and `\label`s inside them are inline labels with no counter
-//   context. Numbering them needs an equation counter threaded through the math island — an S5 rung.
+// - **Equation numbers** — as of S7 a **non-starred** display-math env's `\label` is *lifted* onto
+//   its [`Block::DisplayMath`] and recorded here as a [`LabelKind::Equation`] row, so an `\eqref` to
+//   it **resolves** and is no longer omitted from the S6 report. But the equation **counter**
+//   (`\theequation`) is still deferred: the row carries the [`EQUATION_NUMBER_PLACEHOLDER`] (`"?"`)
+//   rather than a real number. Assigning the true equation number is S8.
 // - **Citation `[1]` numbers** — the order-of-first-appearance number `\cite` prints in a numeric
 //   bibliography style. That is a *citation-order* traversal over S2's resolution, a separate rung.
 // - **Other `\label`-able counters** — `enumerate` item numbers, theorem/footnote counters, etc.
@@ -1215,6 +1238,17 @@ impl Document {
                         record(key, LabelKind::Table, n.to_string());
                     }
                 }
+                // LTXDOC03 S7: a **non-starred** display-math env's lifted `\label` is a real,
+                // resolvable equation label. The equation **counter** (`\theequation`) is deferred to
+                // S8, so we record the row with the placeholder number `EQUATION_NUMBER_PLACEHOLDER`
+                // (`"?"`, echoing LaTeX's `??` for an as-yet-unnumbered target). Recording the row —
+                // rather than skipping it as we do for `LabelKind::Inline` — is the whole point of S7:
+                // it makes `number_for(key)` return `Some`, so the S6 report *includes* an `\eqref` to
+                // this equation instead of omitting it. Starred forms set `label: None` (see the D5
+                // lowering), so they never reach here.
+                Block::DisplayMath { label: Some(key), .. } => {
+                    record(key, LabelKind::Equation, EQUATION_NUMBER_PLACEHOLDER.to_string());
+                }
                 // Any other block carries no counter S4 assigns.
                 _ => {}
             }
@@ -1281,12 +1315,10 @@ impl Document {
 // S5 numbers **in-document `thebibliography` citations only**, in the default numeric/unsorted style.
 // It deliberately does **not** yet assign:
 //
-// - **Equation numbers** — the other candidate for this rung, but the AST does not model them: an
-//   equation body is kept as an opaque [`Block::DisplayMath`] *raw source string* with **no** `label`
-//   field (an equation's `\label` is buried inside that string, not a resolvable label def), so
-//   per-equation numbering would need fuzzy string heuristics. Citation numbering is well-defined on
-//   S2's clean owned data, so S5 does citations; equation numbering stays a documented future rung
-//   (blocked on the `DisplayMath` AST shape carrying no label field).
+// - **Equation numbers** — as of S7 the AST *does* model an equation label: a non-starred
+//   display-math env's `\label` is lifted onto [`Block::DisplayMath::label`], and it resolves and is
+//   reported (with the [`EQUATION_NUMBER_PLACEHOLDER`]). What remains deferred is the equation
+//   **counter** (`\theequation`) that would replace that placeholder with a real number — an S8 rung.
 // - **Author-year / natbib sorted styles.** `plainnat`/`abbrvnat`/`alpha` renumber or re-*label*
 //   entries (`[Smith2020]`, `[Smi20]`) and often **sort** the list, changing the number a key prints.
 //   S5 models only the *listing-order numeric* style; sorted/author-year styles are a later rung.
@@ -1476,23 +1508,23 @@ impl Document {
 // ## The one subtlety: a *resolved* `\ref` whose target is not *numbered*
 //
 // Every entry in S1's `resolved` has a matching `\label` — but not every `\label` is *numbered*. S4
-// numbers sections and figure/table floats; an **inline `\label`** (typically an equation label) is
-// deliberately left unnumbered (deferred to a future equation-numbering rung — see S4/S5). So a
-// `\ref{eq:x}` to an inline `\label{eq:x}` *resolves* (it is in S1's `resolved`) yet has **no** S4
-// number. S6's rule for such an entry: **omit it from `refs`**. The report's `refs` therefore lists
-// exactly the `\ref`s that both resolve *and* carry a printable number — the ones a consumer can
-// render as "see Section 1.2". (An unnumbered-but-resolved `\ref` is neither a *dangling* reference —
-// its label exists — nor a *renderable* one, so it belongs in neither `refs` nor `dangling_refs`; it
-// is simply below S4's numbering horizon and reappears once equation numbering ships. Documenting this
-// keeps the report honest: every row in `refs` has a real number, no placeholder.) Citations have no
-// analogous gap — every *resolved* `\cite` names a winning `\bibitem`, which S5 always numbers — so
-// every S2-resolved cite becomes a [`CiteEntry`].
+// numbers sections, figure/table floats, and (as of S7) **non-starred display-math equation labels**.
+// A **bare inline `\label`** (a `\label` not lifted onto any block — [`LabelKind::Inline`]) is still
+// deliberately left unnumbered. So a `\ref{eq:x}` to a *bare inline* `\label{eq:x}` *resolves* (it is
+// in S1's `resolved`) yet has **no** S4 number, and S6's rule for such an entry is: **omit it from
+// `refs`**. An equation label lifted out of a `\begin{equation}` (S7), by contrast, *is* numbered — it
+// carries the [`EQUATION_NUMBER_PLACEHOLDER`] (`"?"`) until S8 assigns the real counter — so an
+// `\eqref` to it is **included** in `refs` (rendering `\ref{eq:e} -> Equation ?`) rather than omitted.
+// (A bare-inline unnumbered-but-resolved `\ref` is neither *dangling* — its label exists — nor
+// *renderable*, so it belongs in neither `refs` nor `dangling_refs`; it reappears once inline-label
+// numbering ships.) Citations have no analogous gap — every *resolved* `\cite` names a winning
+// `\bibitem`, which S5 always numbers — so every S2-resolved cite becomes a [`CiteEntry`].
 //
 // ## What stays OUT of S6 (inherited honest boundaries)
 //
-// - **Equation numbers** — deferred at S4/S5 (an equation body is an opaque [`Block::DisplayMath`]
-//   string with no label field); a `\ref` to an equation label is therefore *omitted* from `refs`
-//   (see above), not invented.
+// - **Equation counter values** — S7 lifts and *resolves* equation labels (they appear in `refs` with
+//   the [`EQUATION_NUMBER_PLACEHOLDER`]), but the true `\theequation` number is deferred to S8. A
+//   *bare inline* `\label` (not in a numbered display-math env) is still omitted from `refs`.
 // - **Author-year / natbib sorted citation styles** and **external `.bib`/`.bbl` databases** — out of
 //   scope at S2/S5, so out of scope here too (S6 reports only what those passes resolved).
 //
@@ -1516,6 +1548,7 @@ fn kind_display_name(kind: LabelKind) -> &'static str {
         LabelKind::Section => "Section",
         LabelKind::Table => "Table",
         LabelKind::Figure => "Figure",
+        LabelKind::Equation => "Equation",
         LabelKind::Inline => "Inline",
     }
 }
@@ -1532,12 +1565,13 @@ fn kind_display_name(kind: LabelKind) -> &'static str {
 /// - `key` — the referenced label key, verbatim (`"sec:intro"`), from S1's [`ResolvedRef::key`].
 /// - `command` — the reference command used (`"ref"`, `"eqref"`, or `"pageref"`), from
 ///   [`ResolvedRef::command`].
-/// - `kind` — the [`LabelKind`] of the node the reference points at (section / table / figure), from
-///   [`ResolvedRef::target_kind`]. (An [`LabelKind::Inline`] target is *not* numbered by S4, so it
-///   never becomes a `RefEntry` — see the S6 module docs — hence in practice `kind` is one of
-///   Section/Table/Figure.)
+/// - `kind` — the [`LabelKind`] of the node the reference points at (section / table / figure /
+///   equation), from [`ResolvedRef::target_kind`]. (A bare [`LabelKind::Inline`] target is *not*
+///   numbered by S4, so it never becomes a `RefEntry` — see the S6 module docs — hence in practice
+///   `kind` is one of Section/Table/Figure/Equation.)
 /// - `number` — the rendered number S4 assigns the target (`"1.2"`, `"3"`, …), from
-///   [`Numbering::number_for`].
+///   [`Numbering::number_for`]. For a [`LabelKind::Equation`] this is the
+///   [`EQUATION_NUMBER_PLACEHOLDER`] (`"?"`) until S8 wires the equation counter.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RefEntry {
     /// The referenced label key, verbatim, without braces (`"sec:intro"`).
@@ -1732,6 +1766,47 @@ mod tests {
         let doc = parse_document(src).expect("parse");
         let res = doc.resolve_references();
         (src.to_string(), res)
+    }
+
+    #[test]
+    fn s7_equation_label_is_registered_as_equation_kind() {
+        // LTXDOC03 S7: a `\label` in a non-starred `equation` env is a real label def tagged Equation.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}\end{document}";
+        let (_src, res) = resolve(src);
+        assert_eq!(res.definitions.len(), 1, "one equation label defined");
+        let def = &res.definitions[0];
+        assert_eq!(def.key, "eq:e");
+        assert_eq!(def.kind, LabelKind::Equation);
+        assert_eq!(def.kind.as_str(), "equation");
+    }
+
+    #[test]
+    fn s7_starred_equation_registers_no_label() {
+        // A starred `equation*` lifts no label, so there is NO definition (and the ref dangles).
+        let src = r"\begin{document}\begin{equation*} E = mc^2 \label{eq:e} \end{equation*} \ref{eq:e}\end{document}";
+        let (_src, res) = resolve(src);
+        assert_eq!(res.definitions.len(), 0, "starred env defines no equation label");
+        assert_eq!(res.unresolved.len(), 1, "the ref has nothing to resolve against");
+        assert_eq!(res.unresolved[0].key, "eq:e");
+    }
+
+    #[test]
+    fn s7_eqref_to_equation_is_included_in_cross_reference_report() {
+        // The whole point of S7: a resolved `\eqref`/`\ref` to a lifted equation label is now INCLUDED
+        // in the S6 report (rendered `\ref{eq:e} -> Equation ?`), no longer omitted.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} See \eqref{eq:e} and \ref{eq:e}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        assert_eq!(report.refs.len(), 2, "both \\eqref and \\ref are included");
+        for entry in &report.refs {
+            assert_eq!(entry.key, "eq:e");
+            assert_eq!(entry.kind, LabelKind::Equation);
+            assert_eq!(entry.number, "?", "equation number is the S8-deferred placeholder");
+        }
+        assert!(report.dangling_refs.is_empty(), "nothing dangles");
+        // The rendered report lines name the binding as `Equation ?`.
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\ref{eq:e} -> Equation ?\n\\ref{eq:e} -> Equation ?");
     }
 
     #[test]

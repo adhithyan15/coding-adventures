@@ -281,8 +281,15 @@ pub enum Block {
     /// `equation`/`align`/`gather`, D5) — kept as its source string (delegated to the math frontend
     /// on demand, never parsed here).
     DisplayMath {
-        /// The exact inner math source.
+        /// The exact inner math source, with any lifted `\label{…}` **removed** (see `label`).
         source: String,
+        /// The lifted equation label key (LTXDOC03 S7), `Some(key)` only for a **non-starred** named
+        /// display-math environment (`equation`, `align`, `gather`, `multline`, `eqnarray`) whose body
+        /// contained a `\label{key}`. Lifting it here (out of `source`) turns it into a real,
+        /// resolvable [`LabelKind::Equation`](crate::references::LabelKind::Equation) definition, so an
+        /// `\eqref` to it is no longer omitted from the S6 cross-reference report. It is `None` for the
+        /// starred forms (`equation*`, …, which are unnumbered) and for `\[…\]`/`$$…$$` islands.
+        label: Option<String>,
         /// Precise span (S3): the display-math island's extent (`\[…\]`, `$$…$$`, or the named
         /// `\begin{equation}`…`\end{equation}`).
         span: Span,
@@ -1153,7 +1160,11 @@ fn lower_block(node: Node) -> Block {
             label: None,
             span, // the `\begin{tabular}`…`\end{tabular}` extent (S2).
         },
-        NodeKind::Math { display: true, content } => Block::DisplayMath { source: content, span },
+        // `\[…\]` / `$$…$$` display islands never carry a lifted label (they are unnumbered here —
+        // only named non-starred display-math *environments* lift a `\label`, in `lower_environment`).
+        NodeKind::Math { display: true, content } => {
+            Block::DisplayMath { source: content, label: None, span }
+        }
         // A `verbatim`/`verbatim*` environment is lexed raw (catcodes suspended) into a
         // `VerbatimEnv` node; its content is source code, not marked-up LaTeX, so we keep it
         // **unparsed** as a `CodeBlock` (D5).
@@ -1207,6 +1218,46 @@ fn is_display_math_env(name: &str) -> bool {
     )
 }
 
+/// The **numbered** (non-starred) display-math environments — those whose equations LaTeX numbers and
+/// that therefore support a `\label`/`\eqref` (LTXDOC03 S7). This is exactly [`is_display_math_env`]
+/// minus the starred forms (`equation*`, `align*`, `gather*`, `multline*`, `eqnarray*`, and the always
+/// unnumbered `displaymath`). Only these lift their `\label` onto the [`Block::DisplayMath`]; the
+/// starred forms keep `label: None` (matching LaTeX, where a starred equation is unnumbered so a
+/// `\label` inside it has no number to point at).
+fn is_numbered_display_math_env(name: &str) -> bool {
+    matches!(name, "equation" | "align" | "gather" | "multline" | "eqnarray")
+}
+
+/// Lift the **first** `\label{key}` out of a numbered display-math environment's body (LTXDOC03 S7),
+/// returning `(Some(key), body-without-that-label)` — or `(None, body)` when there is no `\label`.
+///
+/// A `\label{key}` inside a text-mode `\begin{equation}` wrapper parses (at the LTX01 node level) as a
+/// [`NodeKind::CrossRef`] with `command == "label"` sitting in the body node list — the parser already
+/// recognises `\label`/`\ref`/`\eqref` as cross-reference constructs (see [`NodeKind::CrossRef`]). The
+/// display-math body is never lowered to blocks/inlines (it is rendered straight back to a source
+/// string), so we scan the *raw* nodes here, remove the first such `label` cross-ref, and recover its
+/// key by rendering the `target` node list with [`document_to_latex`] — the same faithful round-trip
+/// the S1 ref pass uses for a cross-ref target, so an awkward key survives verbatim. **Total &
+/// panic-free**: no `unwrap`/`expect`, no unchecked indexing; a construct that is not a `label`
+/// cross-ref is left in the body untouched (nothing is lifted, nothing is dropped).
+fn extract_display_math_label(body: Vec<Node>) -> (Option<String>, Vec<Node>) {
+    let mut key: Option<String> = None;
+    let mut remaining: Vec<Node> = Vec::with_capacity(body.len());
+    for node in body {
+        if key.is_none() {
+            if let NodeKind::CrossRef { command, target, .. } = &node.kind {
+                if command == "label" {
+                    // Recover the key verbatim (no braces), then drop this `\label` node.
+                    key = Some(document_to_latex(target));
+                    continue;
+                }
+            }
+        }
+        remaining.push(node);
+    }
+    (key, remaining)
+}
+
 /// Classify a `\begin{name}…\end{name}` environment into its D5 [`Block`], recursing the body
 /// through the same bounded [`lower_blocks`] fold every other block-list uses (so nesting and
 /// sectioning work uniformly inside floats/quotes). **Total & panic-free**: no `unwrap`/`expect`,
@@ -1218,7 +1269,7 @@ fn is_display_math_env(name: &str) -> bool {
 /// | `figure`, `figure*` | [`Block::Figure`] (body minus `\caption`/`\label`) |
 /// | `table`, `table*` | the inner [`Block::Table`] with the float's `\caption`/`\label` attached (or [`Block::Figure`] if no tabular inside) |
 /// | `quote`, `quotation` | [`Block::Quote`] |
-/// | display-math envs (see [`is_display_math_env`]) | [`Block::DisplayMath`] (source kept, unparsed) |
+/// | display-math envs (see [`is_display_math_env`]) | [`Block::DisplayMath`] (source kept, unparsed; a non-starred env's `\label` lifted onto the block — S7) |
 /// | `lstlisting` | [`Block::CodeBlock`] (body rendered back to source text) |
 /// | any other | [`Block::Environment`] (recursed) — unchanged from D2 |
 fn lower_environment(name: String, body: Vec<Node>, env_span: Span) -> Block {
@@ -1232,7 +1283,19 @@ fn lower_environment(name: String, body: Vec<Node>, env_span: Span) -> Block {
     // nodes back to source (the parser accepted the math tokens as ordinary nodes, since these
     // are *text-mode* `\begin{equation}` wrappers) and trim the outer whitespace the wrapper adds.
     if is_display_math_env(&name) {
-        return Block::DisplayMath { source: render_nodes(&body).trim().to_string(), span: env_span };
+        // LTXDOC03 S7 — lift a `\label{…}` out of a **non-starred** display-math environment's body
+        // onto the block, so it becomes a real, resolvable equation label. Starred forms
+        // (`equation*`, …) are unnumbered in LaTeX, so we never lift their labels (a `\label` in a
+        // starred body is meaningless in LaTeX too). `render_nodes` runs over the body **with the
+        // `\label` node removed**, so the lifted key is not left duplicated in `source`.
+        let label = if is_numbered_display_math_env(&name) {
+            let (key, remaining) = extract_display_math_label(body);
+            let source = render_nodes(&remaining).trim().to_string();
+            return Block::DisplayMath { source, label: key, span: env_span };
+        } else {
+            None
+        };
+        return Block::DisplayMath { source: render_nodes(&body).trim().to_string(), label, span: env_span };
     }
     // `lstlisting` is *not* lexed raw (only `verbatim`/`verbatim*` are), so its body parsed as
     // ordinary nodes; render it back to source to recover the listing text. (A perfectly faithful
@@ -1695,11 +1758,27 @@ impl Block {
                 out.push_str(verbatim);
                 out.push_str("\\end{verbatim}");
             }
-            Block::DisplayMath { source, .. } => {
-                out.push_str("$$");
-                out.push_str(source);
-                out.push_str("$$");
-            }
+            Block::DisplayMath { source, label, .. } => match label {
+                // A lifted-label equation must re-emit as `\begin{equation}…\label{key}\end{equation}`
+                // (not `$$…$$`), so re-parsing re-lifts the `\label` and the AST is a fixed point
+                // (LTXDOC03 S7). The `$$…$$` form goes through `NodeKind::Math` → `label: None`, so it
+                // would silently drop the label — hence the split. A space separates the body from the
+                // `\label` so the re-lift's `render_nodes(...).trim()` reproduces the same `source`.
+                Some(key) => {
+                    out.push_str("\\begin{equation}");
+                    out.push_str(source);
+                    out.push_str(" \\label{");
+                    out.push_str(key);
+                    out.push('}');
+                    out.push_str("\\end{equation}");
+                }
+                // A label-free display island round-trips through `$$…$$` as before.
+                None => {
+                    out.push_str("$$");
+                    out.push_str(source);
+                    out.push_str("$$");
+                }
+            },
             Block::Quote(body, _) => {
                 out.push_str("\\begin{quote}");
                 write_blocks(body, out);
@@ -1760,7 +1839,9 @@ impl Block {
             },
             Block::CodeBlock { verbatim, .. } => Block::CodeBlock { verbatim: verbatim.clone(), span: z },
             Block::Quote(body, _) => Block::Quote(body.iter().map(|b| b.strip_spans(z)).collect(), z),
-            Block::DisplayMath { source, .. } => Block::DisplayMath { source: source.clone(), span: z },
+            Block::DisplayMath { source, label, .. } => {
+                Block::DisplayMath { source: source.clone(), label: label.clone(), span: z }
+            }
             Block::Environment { name, body, .. } => Block::Environment {
                 name: name.clone(),
                 body: body.iter().map(|b| b.strip_spans(z)).collect(),
@@ -2655,6 +2736,60 @@ mod tests {
         let al = parse_document(r"\begin{document}\begin{align}a &= b \\ c &= d\end{align}\end{document}")
             .expect("parse");
         assert!(al.body.iter().any(|b| matches!(b, Block::DisplayMath { .. })));
+    }
+
+    #[test]
+    fn s7_equation_label_is_lifted_onto_display_math() {
+        // LTXDOC03 S7: a `\label` inside a non-starred `equation` env is lifted onto the block and
+        // REMOVED from the source string (not left duplicated).
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let dm = doc.body.iter().find(|b| matches!(b, Block::DisplayMath { .. })).expect("display math");
+        if let Block::DisplayMath { source, label, .. } = dm {
+            assert_eq!(label.as_deref(), Some("eq:e"), "the label is lifted onto the block");
+            assert_eq!(source, "E = mc^2", "the source is the math body WITHOUT the \\label");
+        } else {
+            panic!("expected DisplayMath");
+        }
+    }
+
+    #[test]
+    fn s7_starred_equation_does_not_lift_a_label() {
+        // Starred display-math envs are unnumbered, so their `\label` stays inside the source string
+        // and `label` is None — no equation label def is created.
+        let src = r"\begin{document}\begin{equation*} E = mc^2 \label{eq:e} \end{equation*}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let dm = doc.body.iter().find(|b| matches!(b, Block::DisplayMath { .. })).expect("display math");
+        if let Block::DisplayMath { source, label, .. } = dm {
+            assert_eq!(*label, None, "a starred env lifts no label");
+            assert_eq!(source, r"E = mc^2 \label{eq:e}", "starred body keeps the \\label verbatim");
+        } else {
+            panic!("expected DisplayMath");
+        }
+    }
+
+    #[test]
+    fn s7_display_island_dollar_dollar_has_no_label() {
+        // A `$$…$$` / `\[…\]` island never lifts a label (label: None), unchanged from before S7.
+        let src = r"\begin{document}$$ x = y $$\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let dm = doc.body.iter().find(|b| matches!(b, Block::DisplayMath { .. })).expect("display math");
+        assert!(matches!(dm, Block::DisplayMath { label: None, .. }), "island has label: None");
+    }
+
+    #[test]
+    fn s7_labelled_equation_round_trips_through_to_latex() {
+        // A lifted-label equation must be a to_latex fixed point: re-parsing re-lifts an EQUAL label
+        // and source (it re-emits as `\begin{equation}…\label{…}\end{equation}`, not `$$…$$`).
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let rendered = doc.to_latex();
+        assert!(
+            rendered.contains(r"\begin{equation}") && rendered.contains(r"\label{eq:e}"),
+            "re-emits equation with its label: {rendered:?}"
+        );
+        let redoc = parse_document(&rendered).expect("re-parse");
+        assert_eq!(doc.strip_spans(), redoc.strip_spans(), "S7 lifted-label round-trip fixed point");
     }
 
     #[test]
