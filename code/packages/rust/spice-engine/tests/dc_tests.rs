@@ -38,10 +38,14 @@ use spice_engine::{
     format_device_model_reference_deck_audit_summary_json,
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table, format_measurement_table,
+    format_model_card_supported_parameter_coverage_csv,
+    format_model_card_supported_parameter_coverage_json,
+    format_model_card_supported_parameter_coverage_table,
     format_model_card_unsupported_parameter_issue_csv,
     format_model_card_unsupported_parameter_issue_json,
     format_model_card_unsupported_parameter_issue_table, format_temperature_dc_table,
     jfet_from_model_card, measure_dc_sweep_deck, measure_dc_sweep_probe,
+    model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_records,
     model_card_unsupported_parameter_issue_records, model_card_unsupported_parameter_issues,
     mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
     resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
@@ -74,6 +78,47 @@ fn model_card_type_aliases_are_normalized() {
         normalize_model_card_type("pch").unwrap(),
         ModelCardKind::Pmos
     );
+}
+
+#[test]
+fn model_card_supported_parameter_coverage_exports_are_stable() {
+    let coverage = model_card_supported_parameter_coverage();
+    assert_eq!(coverage.len(), 67);
+    assert_eq!(coverage[0].kind, ModelCardKind::Diode);
+    assert_eq!(coverage[0].canonical_parameter, "IS");
+    assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
+    assert_eq!(coverage[0].alias_count, 2);
+    assert_eq!(coverage.last().unwrap().kind, ModelCardKind::Pmos);
+    assert_eq!(coverage.last().unwrap().canonical_parameter, "MJ");
+    assert_eq!(coverage.last().unwrap().accepted_names, vec!["MJ"]);
+
+    let table = format_model_card_supported_parameter_coverage_table();
+    let lines = table.lines().collect::<Vec<_>>();
+    assert_eq!(
+        lines[0],
+        "kind\tcanonical_parameter\taccepted_names\talias_count"
+    );
+    assert_eq!(lines[1], "D\tIS\tIS|JS\t2");
+    assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
+    assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
+    let records = model_card_supported_parameter_coverage_records();
+    assert_eq!(records.len(), 67);
+    assert_eq!(records[0]["kind"], "D");
+    assert_eq!(records[0]["canonical_parameter"], "IS");
+    assert_eq!(records[0]["accepted_names"], "IS|JS");
+    assert_eq!(records[0]["alias_count"], "2");
+    assert!(format_model_card_supported_parameter_coverage_csv()
+        .starts_with("kind,canonical_parameter,accepted_names,alias_count\nD,IS,IS|JS,2\n"));
+    let json = format_model_card_supported_parameter_coverage_json();
+    assert!(json.starts_with(
+        "[{\"kind\":\"D\",\"canonical_parameter\":\"IS\",\"accepted_names\":\"IS|JS\",\"alias_count\":\"2\"}"
+    ));
+    assert!(json.contains(
+        "{\"kind\":\"NMOS\",\"canonical_parameter\":\"VT0\",\"accepted_names\":\"VT0|VTO|VTH\",\"alias_count\":\"3\"}"
+    ));
+    assert!(json.ends_with(
+        "{\"kind\":\"PMOS\",\"canonical_parameter\":\"MJ\",\"accepted_names\":\"MJ\",\"alias_count\":\"1\"}]\n"
+    ));
 }
 
 #[test]

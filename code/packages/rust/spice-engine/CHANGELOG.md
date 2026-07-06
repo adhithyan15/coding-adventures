@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `model_card_supported_parameter_coverage`,
+  `format_model_card_supported_parameter_coverage_table`,
+  `model_card_supported_parameter_coverage_records`,
+  `format_model_card_supported_parameter_coverage_csv`, and
+  `format_model_card_supported_parameter_coverage_json`, stable supported
+  model-card parameter and alias catalog exports, matching Python and
+  TypeScript.
 - Add `model_card_unsupported_parameter_issues`,
   `format_model_card_unsupported_parameter_issue_table`,
   `model_card_unsupported_parameter_issue_records`,

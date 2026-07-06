@@ -67,6 +67,9 @@ import {
   formatDeviceModelReferenceDeckAuditSummaryJson,
   formatDeviceModelReferenceDeckAuditSummaryTable,
   formatDeviceModelReferenceDeckAuditTable,
+  formatModelCardSupportedParameterCoverageCsv,
+  formatModelCardSupportedParameterCoverageJson,
+  formatModelCardSupportedParameterCoverageTable,
   formatModelCardUnsupportedParameterIssueCsv,
   formatModelCardUnsupportedParameterIssueJson,
   formatModelCardUnsupportedParameterIssueTable,
@@ -77,6 +80,8 @@ import {
   jfetFromModelCard,
   measureDcSweepDeck,
   measureDcSweepProbe,
+  modelCardSupportedParameterCoverage,
+  modelCardSupportedParameterCoverageRecords,
   modelCardUnsupportedParameterIssueRecords,
   modelCardUnsupportedParameterIssues,
   mosfet,
@@ -103,6 +108,41 @@ describe("dcOp", () => {
     expect(normalizeModelCardType("diode")).toBe("D");
     expect(normalizeModelCardType("n-jfet")).toBe("NJF");
     expect(normalizeModelCardType("pch")).toBe("PMOS");
+  });
+
+  it("exports stable model-card supported parameter coverage", () => {
+    const coverage = modelCardSupportedParameterCoverage();
+    expect(coverage).toHaveLength(67);
+    expect(coverage[0]).toStrictEqual({
+      kind: "D",
+      canonicalParameter: "IS",
+      acceptedNames: ["IS", "JS"],
+      aliasCount: 2,
+    });
+    expect(coverage.at(-1)).toStrictEqual({
+      kind: "PMOS",
+      canonicalParameter: "MJ",
+      acceptedNames: ["MJ"],
+      aliasCount: 1,
+    });
+
+    const table = formatModelCardSupportedParameterCoverageTable();
+    expect(table.split("\n")[0]).toBe("kind\tcanonical_parameter\taccepted_names\talias_count");
+    expect(table.split("\n")[1]).toBe("D\tIS\tIS|JS\t2");
+    expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
+    expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
+    const records = modelCardSupportedParameterCoverageRecords();
+    expect(records).toHaveLength(67);
+    expect(records[0]).toStrictEqual({
+      kind: "D",
+      canonical_parameter: "IS",
+      accepted_names: "IS|JS",
+      alias_count: "2",
+    });
+    expect(formatModelCardSupportedParameterCoverageCsv()).toMatch(
+      /^kind,canonical_parameter,accepted_names,alias_count\nD,IS,IS\|JS,2\n/,
+    );
+    expect(JSON.parse(formatModelCardSupportedParameterCoverageJson())).toStrictEqual(records);
   });
 
   it("normalizes model-card aliases into device instances", () => {

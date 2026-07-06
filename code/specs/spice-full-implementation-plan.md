@@ -33,16 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model reference-deck audit gate issue exports.
+1. Device model supported-parameter coverage exports.
    - Status: current PR completion candidate.
-   - Add Python, Rust, and TypeScript helpers that turn the device-model
-     reference-deck audit release gate's issue rows into stable table,
-     header-keyed record, CSV, and compact JSON exports.
-   - Preserve `fixture_name`, `field`, and `message` columns for browser
-     dashboards, release automation, and reference-deck comparison tools
-     without requiring callers to split the multi-section gate report.
-   - Keep the existing pass/fail gate behavior unchanged while locking the
-     negative missing-coverage case across the three packages.
+   - Add Python, Rust, and TypeScript helpers that expose accepted model-card
+     parameter aliases as stable table, header-keyed record, CSV, and compact
+     JSON exports.
+   - Generate the catalog from the same alias maps used by model-card
+     normalization, preserving D, BJT, JFET, and Level-1 MOS canonical
+     parameters plus accepted names for browser dashboards, release
+     automation, and deck-tooling UIs.
+   - Keep normalization behavior unchanged while locking the 67-row
+     cross-language coverage catalog, first/last aliases, and the NMOS `VT0`
+     alias family across the three packages.
 
 ## Completed Slices
 

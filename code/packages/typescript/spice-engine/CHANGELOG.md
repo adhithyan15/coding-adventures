@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `modelCardSupportedParameterCoverage`,
+  `formatModelCardSupportedParameterCoverageTable`,
+  `modelCardSupportedParameterCoverageRecords`,
+  `formatModelCardSupportedParameterCoverageCsv`, and
+  `formatModelCardSupportedParameterCoverageJson`, stable supported
+  model-card parameter and alias catalog exports, matching Python and Rust.
 - Add `modelCardUnsupportedParameterIssues`,
   `formatModelCardUnsupportedParameterIssueTable`,
   `modelCardUnsupportedParameterIssueRecords`,

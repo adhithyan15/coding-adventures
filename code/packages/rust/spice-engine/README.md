@@ -127,6 +127,13 @@ BJT, and Level-1 MOSFET models before running an analysis.
 `format_model_card_unsupported_parameter_issue_csv`, and
 `format_model_card_unsupported_parameter_issue_json` expose retained
 unsupported model-card keys as stable diagnostics for parser and UI surfaces.
+`model_card_supported_parameter_coverage`,
+`format_model_card_supported_parameter_coverage_table`,
+`model_card_supported_parameter_coverage_records`,
+`format_model_card_supported_parameter_coverage_csv`, and
+`format_model_card_supported_parameter_coverage_json` expose the supported
+canonical model-card parameters and accepted aliases for D, BJT, JFET, and
+Level-1 MOS cards as stable dashboard/export rows.
 `device_model_audit_fixtures` returns the canonical cross-language fixture
 cards used to keep the Rust, Python, and TypeScript ports aligned.
 `device_model_behavior_audit_fixtures` extends those cards into runnable
