@@ -159,10 +159,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
     if (a instanceof Map && b instanceof Map) {
       if (a.size !== b.size) { return false; }
+      // Same cycle guard as the array branch: two DISTINCT but structurally
+      // equal self-referential hashes (`a={}; a[:k]=a; b={}; b[:k]=b`) would
+      // otherwise recurse forever through their values (the `===` fast-path
+      // only covers the reference-identical case).  Record the LEFT map on
+      // the active compare path and short-circuit on re-encounter.
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      let ok = true;
       for (const [k, v] of a) {
-        if (!b.has(k) || !sirEqualSeen(v, b.get(k), seen)) { return false; }
+        if (!b.has(k) || !sirEqualSeen(v, b.get(k), seen)) { ok = false; break; }
       }
-      return true;
+      seen.delete(a);
+      return ok;
     }
     return false;
   }
