@@ -2,6 +2,46 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.41.0] — 2026-07-06
+
+### Added — cross-reference resolution: citation numbering (LTXDOC03 S5)
+
+The bracketed number a `\cite` actually *prints* — the `[2]` in "as shown in [2]". S4 numbered
+sections and floats but explicitly left **citations** unnumbered; S5 fills that gap over the
+bibliography S2 already resolved. It is the citation-family analogue of S4's `Document::ref_number`.
+
+- **Listing-order bibliography numbers.** In the default numeric/unsorted style, each `\bibitem` is
+  numbered by its **position in the list**: the first is `[1]`, the second `[2]`, …. S5 numbers S2's
+  already-ordered winning `entries` by their index — `entries[0]` → `[1]`, `entries[1]` → `[2]` — so
+  the number matches LaTeX's list position exactly.
+- **First-`\bibitem`-wins duplicates consume no number.** A key defined by two `\bibitem`s puts the
+  first in `entries` and the second in `duplicate_entries`; the losing duplicate is not in `entries`,
+  so it neither adds a row nor advances the counter — a re-declared entry is numbered the same as its
+  first declaration, and the entries after it are **unshifted** (with `a, b, c` and a later duplicate
+  `\bibitem{a}`, `c` stays `[3]`, not `[4]`).
+- **Dangling `\cite`s are unnumbered.** A `\cite{missing}` whose key has no `\bibitem` is in S2's
+  `unresolved`, so it carries no `ResolvedCite` and there is no entry to number — `number_for` returns
+  `None` (LaTeX's `[?]` case), never a panic.
+- **Bracket style single-sourced.** The `[n]` rendering lives in one `render_cite_number` helper.
+- **New API.** `Document::number_citations() -> CitationNumbering { entries: Vec<NumberedCitation> }`
+  with `NumberedCitation { key, ordinal, number }` (owned `String`s + `Copy` ordinal, mirroring S4's
+  `Numbering`/`NumberedLabel`); `CitationNumbering::number_for(key) -> Option<&str>` (allocation-free
+  lookup); and the S2→S5 payoff `Document::cite_number(&ResolvedCite) -> Option<String>` returning a
+  resolved `\cite`'s bracketed number (`"[2]"`), or `None` for a non-entry key (total, never a panic).
+- **Additive & pure.** S1-S4 result types are unchanged; S5 reads S2's `CitationResolution` and
+  produces a new owned aggregate, mutating nothing about the tree or any prior pass.
+
+### Deferred (honest boundary, unchanged from S4)
+
+- **Equation numbers** remain future work: an equation body is an opaque `Block::DisplayMath` raw
+  source string with **no** `label` field (an equation's `\label` is buried inside that string, not a
+  resolvable label def), so per-equation numbering would need fuzzy string heuristics. Citation
+  numbering is well-defined on S2's clean owned data, so S5 does citations; equation numbering stays a
+  documented future rung blocked on the `DisplayMath` AST shape.
+- **Author-year / natbib sorted styles** (`plainnat`, `alpha`, …) that renumber, re-*label*, or sort
+  entries, and **external `.bib`/`.bbl` databases** (S5 does no file I/O, parses no BibTeX), also
+  remain future rungs.
+
 ## [0.40.0] — 2026-07-06
 
 ### Added — cross-reference resolution: document numbering (LTXDOC03 S4)

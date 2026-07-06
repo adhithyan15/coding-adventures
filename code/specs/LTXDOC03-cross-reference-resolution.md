@@ -417,3 +417,97 @@ two labeled ones makes the second labeled one `3` (every float advances); `ref_n
 missing-parent rule); a plain top-level `\section` → `1`; an inline `\label` is **not** numbered
 (deferred); and a regression that numbering leaves the S1/S2/S3 outputs byte-for-byte unchanged (the
 tree is never mutated).
+
+## 11. S5 — citation numbering (bracketed bibliography numbers)
+
+S4 numbered **sections and floats** — the counters a `\ref` most commonly prints — but explicitly
+left **citations** unnumbered. S5 fills that gap: it assigns the bracketed number LaTeX prints for a
+`\cite` (the `[2]` in "as shown in [2]") over the bibliography **S2 already resolved**. It is the
+citation-family analogue of S4's `ref_number`: where S4 tied S1 resolution to a section/float number,
+S5 ties S2 resolution to a bibliography number.
+
+**Why citations, not equations, for this rung.** Equation numbering was the other candidate, but the
+AST does not cleanly model it: an equation body is kept as an opaque `Block::DisplayMath { source:
+String, span }` — a **raw unparsed string** with **no** `label` field, so an equation's `\label` is
+buried inside `source`, not a resolvable label def. Per-equation numbering would need fuzzy string
+heuristics. Citation numbering, by contrast, is well-defined and fully testable over S2's clean owned
+data, so S5 does citations; equation numbering stays a documented future rung (§11.4).
+
+### 11.1 The LaTeX citation-numbering model
+
+In the default **numeric, unsorted** bibliography style (`plain`-family, a hand-written
+`thebibliography`, or `unsrt`), every `\bibitem` is numbered by its **position in the list**: the
+first `\bibitem` is `[1]`, the second `[2]`, …. On the first `latex` run each `\bibitem{key}` writes a
+`\bibcite{key}{n}` line into `document.aux`; on the second run each `\cite{key}` reads `n` back and
+prints it **in square brackets**. A multi-key `\cite{a,c}` prints both numbers (`[1, 3]`); a `\cite`
+whose key has no `\bibitem` prints the tell-tale `[?]` and warns *"Citation `key' undefined"*.
+
+S5 is the static, single-pass, in-document analogue: a flat counter over S2's **already-ordered**
+winning entry list. No `.aux`, no second parse — S5 numbers `CitationResolution::entries` by their
+index. An exploratory parse confirmed `entries` is in `\bibitem` **listing order** (`entries[0]` is
+the first `\bibitem` in the source), so entry `entries[i]` renders as `[i + 1]`.
+
+### 11.2 The three rules (each confirmed against S2's data)
+
+1. **Listing-order numbering.** `entries[i]` → `i + 1`, rendered bracketed. Because S2 collects
+   `\bibitem`s in pre-order, the index matches LaTeX's list position exactly.
+2. **First-`\bibitem`-wins duplicates consume no number.** A key defined by two `\bibitem`s puts the
+   first in `entries` and the second in `duplicate_entries` — the losing duplicate is **not** in
+   `entries`, so it never advances the counter. Confirmed by exploration: with entries `a, b, c` and a
+   later duplicate `\bibitem{a}`, `entries == [a, b, c]` and `c` is still `[3]` (not pushed to `[4]`).
+   This mirrors LaTeX: a re-declared `\bibitem` is numbered the same as the first, consuming no slot.
+3. **Dangling `\cite`s are unnumbered.** A `\cite{missing}` whose key has no `\bibitem` is in S2's
+   `unresolved`, so it carries no `ResolvedCite` and there is no entry to number — `number_for`
+   returns `None` (the `[?]` case), never a panic.
+
+The bracket rendering (`n` → `"[n]"`) is single-sourced in one `render_cite_number` helper, so the
+bracket convention lives in exactly one place.
+
+### 11.3 Public API
+
+```rust
+impl Document {
+    /// One `NumberedCitation { key, ordinal, number }` per numbered bibliography key, in `\bibitem`
+    /// listing order. Losing duplicates and dangling cites are omitted.
+    pub fn number_citations(&self) -> CitationNumbering;
+    /// The bracketed number a resolved `\cite` prints — `number_citations().number_for(c.key)`; ties
+    /// S2 → S5. `None` for a non-entry key (total, never a panic).
+    pub fn cite_number(&self, c: &ResolvedCite) -> Option<String>;
+}
+
+pub struct CitationNumbering { pub entries: Vec<NumberedCitation> }
+impl CitationNumbering { pub fn number_for(&self, key: &str) -> Option<&str>; }
+
+pub struct NumberedCitation { pub key: String, pub ordinal: usize, pub number: String }
+```
+
+`CitationNumbering`/`NumberedCitation` are dedicated, owned-`String` result types mirroring S4's
+`Numbering`/`NumberedLabel` (owned `String`s + `Copy` ordinal), so a numbering outlives any borrow of
+the source. `cite_number` is the **payoff**: `\cite{foo}` → `"[2]"`, closing the loop from S2
+resolution to S5 numbering. (A caller numbering *many* cites should call `number_citations` once and
+reuse it; `cite_number` re-numbers per call.)
+
+### 11.4 What is DEFERRED (honest boundary, mirroring S1–S4)
+
+- **Equation numbers** — blocked on the AST shape: an equation body is an opaque
+  `Block::DisplayMath` **raw source string** with no `label` field (the `\label` is buried inside the
+  string), so per-equation numbering would need fuzzy string heuristics. A future rung.
+- **Author-year / natbib sorted styles** — `plainnat`/`abbrvnat`/`alpha` renumber, re-*label*
+  (`[Smith2020]`, `[Smi20]`), and often **sort** the entry list, changing the number a key prints. S5
+  models only the listing-order numeric style; sorted/author-year styles are a later rung.
+- **External `.bib` databases** — as with S2, only an in-document `thebibliography` is numbered; a
+  `\bibliography{refs}` reading an external `.bib`/`.bbl` is not (no file I/O, no BibTeX parsing). A
+  key that lives only in an external database is *unresolved* by S2, hence unnumbered here.
+
+### 11.5 Verification (S5)
+
+`cargo test -p latex` green (7 new `references` S5 tests); `cargo clippy -p latex --all-targets
+-- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build
+-p latex --no-default-features` builds. No `cargo fmt`, no grammar regen. The tests assert the
+**actual bracketed string**: three `\bibitem`s → `number_for("a")=="[1]"`, `"b"=="[2]"`, `"c"=="[3]"`
+(listing order); `cite_number` for a resolved `\cite{b}` → `"[2]"` (the load-bearing S2→S5 payoff); a
+multi-key `\cite{a,c}` numbers its resolved records to `"[1]"` and `"[3]"`; a dangling `\cite{missing}`
+→ `number_for("missing")` is `None` (no panic); a later duplicate `\bibitem{a}` does not renumber or
+shift the others (`b` stays `"[2]"`, `c` stays `"[3]"`) and consumes no number; an empty document /
+document with no `thebibliography` → empty numbering; and a regression that citation numbering leaves
+the S1/S2/S3/S4 outputs byte-for-byte unchanged (the tree is never mutated).

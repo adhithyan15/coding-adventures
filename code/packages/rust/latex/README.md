@@ -52,6 +52,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S2 — `\cite` → bibliography binding** | `Document::resolve_citations() -> CitationResolution` — the *parallel* pass to S1 for the **citation** family, binding each `\cite` key to the `\bibitem` that defines it, **with byte spans on both sides**. Collects the bibliography table from every `\bibitem{k}` inside a `thebibliography` environment (`BibEntry { key, span }`, span = the tight `\bibitem{k}` construct), first-entry-wins with `DuplicateBib`; then, for each `\cite` (the `CITE_COMMAND` family), splits `target` on commas into individual trimmed keys and resolves each → `ResolvedCite` (the shared `\cite` `cite_span` **and** the entry's `entry_span`) or `UnresolvedCite` (dangling key + `cite_span`). A multi-key `\cite{a,b,c}` yields one record **per key**, all sharing that `\cite`'s span; `\cite[note]{k}` keeps the note out of the key. External `.bib`/BibTeX databases and citation numbering stay out of scope (in-document `thebibliography` only). Disjoint from and non-interfering with S1. Total & panic-free, reuses the bounded `walk` + a `MAX_DEPTH`-bounded env descent. | ✅ |
 | **LTXDOC03 S3 — target → `NodeRef` exposure** | The depth-add on S1+S2: both bound each target's **bytes** (a `Span`) but not the target **node**. `Document::node_for_span(span) -> Option<NodeRef>` returns the walked body node whose span **exactly equals** `span` (half-open equality of start **and** end; *equality*, not `node_at`'s containment) — or `None` for a span that is no walked node's own (empty doc, un-walked preamble/metadata, fabricated span). Thin accessors `ref_target_node(&ResolvedRef)`, `cite_target_node(&ResolvedCite)`, `label_def_node(&LabelDef)` take a resolved record and hand back the node, so a caller can read its `kind()` and — for a `Block` — descend into its children (a `\ref`→section enumerates its paragraphs; a `\ref`→figure reaches its caption). **Verified reachability:** every S1/S2 target span matches exactly one walked node (zero collisions); a `\ref`→section/figure/table yields a `NodeRef::Block`, an inline `\eqref`→`\label` a `NodeRef::Inline` (`CrossRef`), and — the once-uncertain case — a `\cite`→`\bibitem` **is** walked (an `Inline::Raw` inside the `thebibliography`), so `cite_target_node` returns `Some`, not `None`. Purely additive (S1/S2 result types keep owned `Span`s, no lifetimes; the `NodeRef` is fetched on demand); tie-break = first-in-pre-order (defensive, does not fire). Numbering + external BibTeX remain out of scope. Total & panic-free, reuses the bounded `walk`. | ✅ |
 | **LTXDOC03 S4 — document numbering (hierarchical sections + flat float counters)** | `Document::number_labels() -> Numbering` — the number a `\ref` *prints*, computed in one `walk` (LaTeX's second `.aux` pass, done statically). **Section numbers** are hierarchical with deeper-reset: a numbered `\section`…`\subparagraph` increments its depth's counter, resets deeper depths to `0`, and renders the dotted join from the top level down (`1`, `1.1`, `1.2`, `1.2.1`, `2`); a starred `\section*` (`numbered == false`) fires no counter and is skipped. **Float counters** are flat and independent: every `figure` advances a running figure counter (`1, 2, …`), every `table` its own (`1, 2, …`) — labeled *or not* (a `\label` only captures the value; an unlabeled figure between two labeled ones takes `2`). Missing-parent rule: a document that starts deep renders honest leading `0`s (a lone `\subsection` → `0.1`), a plain top-level `\section` → `1`. Returns one owned `NumberedLabel { key, kind, number }` per defined numberable label, with `number_for(key)`; `ref_number(&ResolvedRef) -> Option<String>` ties S1 resolution to S4 numbering (`\ref{sec:intro}` → `"1.2"`). Equation numbers, citation `[1]` numbers, and other counters deferred to S5+. Pure, additive, tree-unchanged; fixed 7-slot counter array (no unchecked indexing). Total & panic-free, reuses the bounded `walk`. | ✅ |
+| **LTXDOC03 S5 — citation numbering (bracketed bibliography numbers)** | `Document::number_citations() -> CitationNumbering` — the bracketed number a `\cite` *prints* (`[2]`), the citation-family analogue of S4's `ref_number`. In the default numeric/unsorted style each `\bibitem` is numbered by its **listing position**, so S5 numbers S2's already-ordered winning `entries` by index: `entries[0]` → `[1]`, `entries[1]` → `[2]`, …. A first-`\bibitem`-wins **duplicate** is in `duplicate_entries`, not `entries`, so it consumes **no** number and the entries after it are unshifted (`a, b, c` + a later dup `\bibitem{a}` keeps `c` at `[3]`). A **dangling** `\cite` is in S2's `unresolved`, so it has no entry and `number_for` returns `None` (LaTeX's `[?]`). Returns one owned `NumberedCitation { key, ordinal, number }` per numbered entry, with `number_for(key) -> Option<&str>`; `cite_number(&ResolvedCite) -> Option<String>` ties S2 resolution to S5 numbering (`\cite{foo}` → `"[2]"`). Bracket style single-sourced in one helper. Equation numbers (blocked on `DisplayMath` carrying no label field), author-year/natbib sorted styles, and external `.bib` remain future rungs. Pure, additive, tree-unchanged. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -84,8 +85,12 @@ inside `thebibliography` — is a walked node). **S4 assigns the numbers a `\ref
 (`Document::number_labels` + `ref_number`) — hierarchical section numbers with deeper-reset (`1.2.1`,
 `\section*` skipped) and independent flat figure/table counters (every float advancing its counter,
 labeled or not), so `\ref{sec:intro}` resolves to `"1.2"`. External `.bib`/BibTeX databases stay out
-of scope (in-document `thebibliography` only); equation numbers, citation `[1]` numbers, and other
-counters are deferred to S5+.
+of scope (in-document `thebibliography` only). **S5 assigns the bracketed number a `\cite` prints**
+(`Document::number_citations` + `cite_number`) — the citation-family analogue of `ref_number`:
+numbering S2's listing-ordered `entries` by index so the first `\bibitem` is `[1]`, the second `[2]`,
+… (first-`\bibitem`-wins duplicates consume no number; dangling `\cite`s are unnumbered), so
+`\cite{foo}` resolves to `"[2]"`. Equation numbers (blocked on the `DisplayMath` AST carrying no
+label field), author-year/natbib sorted styles, and external `.bib` remain future rungs.
 
 ## The Document layer (LTXDOC01)
 
@@ -352,9 +357,46 @@ assert_eq!(doc.ref_number(r), Some("1.1".to_string())); // \ref{sec:scope} → "
 
 `number_labels()` returns a `Numbering` of one `NumberedLabel { key, kind, number }` per defined,
 numberable label (section/figure/table). A document that starts deep applies the documented
-missing-parent rule (a lone leading `\subsection` numbers `0.1`). Inline/equation labels, citation
-`[1]` numbers, and other counters (enumerate/theorem/…) are deferred to S5+. Numbering is pure,
-additive analysis — it never mutates the tree, so the S1/S2/S3 outputs are unchanged.
+missing-parent rule (a lone leading `\subsection` numbers `0.1`). Inline/equation labels and other
+counters (enumerate/theorem/…) are deferred to S5+. Numbering is pure, additive analysis — it never
+mutates the tree, so the S1/S2/S3 outputs are unchanged.
+
+### Citation numbering (LTXDOC03 S5)
+
+S2 binds each `\cite` to its `\bibitem`, but not the **bracketed number** it prints (`[2]`). S5
+assigns those — the citation-family analogue of S4's `ref_number`. In the default numeric/unsorted
+style each `\bibitem` is numbered by its **listing position**, so S5 numbers S2's already-ordered
+winning entries by index (`entries[0]` → `[1]`, `entries[1]` → `[2]`, …). `Document::cite_number` is
+the payoff — the bracketed number a resolved `\cite` prints:
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}As shown in \cite{knuth} and \cite{lamport}.
+
+\begin{thebibliography}{9}
+\bibitem{knuth} Knuth, D. The TeXbook. 1984.
+\bibitem{lamport} Lamport, L. LaTeX. 1986.
+\end{thebibliography}\end{document}";
+let doc = parse_document(src).unwrap();
+
+// Number every bibliography entry, then look one up:
+let num = doc.number_citations();
+assert_eq!(num.number_for("knuth"), Some("[1]"));   // first \bibitem
+assert_eq!(num.number_for("lamport"), Some("[2]")); // second \bibitem
+
+// The payoff: a resolved `\cite` → the number it prints.
+let cites = doc.resolve_citations();
+let c = cites.resolved.iter().find(|c| c.key == "lamport").unwrap();
+assert_eq!(doc.cite_number(c), Some("[2]".to_string())); // \cite{lamport} → "[2]"
+```
+
+`number_citations()` returns a `CitationNumbering` of one `NumberedCitation { key, ordinal, number }`
+per numbered entry. A first-`\bibitem`-wins duplicate consumes no number (later entries stay
+unshifted); a dangling `\cite` has no entry, so `number_for` returns `None` (LaTeX's `[?]`). Equation
+numbers (blocked on the `DisplayMath` AST carrying no label field), author-year/natbib sorted styles,
+and external `.bib` databases remain future rungs. Like S4, S5 is pure, additive analysis — it never
+mutates the tree, so the S1–S4 outputs are unchanged.
 
 ## Usage
 
