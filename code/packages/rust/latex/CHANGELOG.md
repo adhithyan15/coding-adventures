@@ -2,6 +2,55 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.38.0] — 2026-07-06
+
+### Added — cross-reference resolution: `\cite` → bibliography binding (LTXDOC03 S2)
+
+The second document-feature slice, the *parallel* pass to S1 for the **other** cross-reference
+family: `\cite`, which resolves against a **bibliography** (`thebibliography` / `\bibitem`) rather
+than the `\label` table. Like S1, this is a pure, additive, single-pass analogue of LaTeX's two-pass
+`.aux` machinery — it binds each citation *key* to the `\bibitem` that defines it with byte spans on
+**both** sides, but never computes a citation number/sort order (BibTeX/`.bbl` territory).
+
+- **Extends the `references` module** with `Document::resolve_citations(&self) -> CitationResolution`
+  — a *separate* aggregate from S1's `ReferenceResolution`, reflecting that labels and bibliographies
+  are two independent tables. Reuses the existing bounded `Document::walk` plus a `MAX_DEPTH`-bounded
+  environment descent; no parser/fold/`walk`/`node_at`/span changes, no new *unbounded* recursion.
+- **Bibliography table (entries).** Collects every `\bibitem{key}` **inside a `thebibliography`
+  environment** in pre-order (a `\bibitem` surfaces as an `Inline::Raw`-wrapped generic
+  `NodeKind::Command`, since `recognize_structure` does not fold it). Each `BibEntry` records the
+  key and the **`\bibitem{key}` construct's own tight span** (`&src[span]` slices back to exactly
+  `\bibitem{key}` — the trailing author/title/year prose has no entry delimiter, so it is not
+  attributed; the honest, defensible span).
+- **Duplicate detection, first-entry-wins.** A key defined by two `\bibitem`s records the **first**
+  as the winner (citations resolve against it) and the later one as a `DuplicateBib` (LaTeX's
+  *"Citation `x' multiply defined"*). Never panics, never drops.
+- **Citation resolution, multi-key aware.** For every `\cite` (the `CITE_COMMAND` family), the
+  `target` is split on commas into individual trimmed, non-empty keys, each resolved
+  *independently*: found → `ResolvedCite` (the `\cite`'s own `cite_span` **and** the entry's
+  `entry_span`); missing → `UnresolvedCite` (dangling key + `cite_span`, LaTeX's *"Citation `x'
+  undefined"*). A multi-key `\cite{a,b,c}` yields one record **per key**, all sharing that one
+  `\cite`'s span, so a caller sees both per-key resolution and which source `\cite` each came from.
+  `\cite[note]{key}` keeps the note in the cross-ref's separate `note` field — the key stays exactly
+  `key`.
+- **External BibTeX still out of scope (honest boundary).** Only an **in-document**
+  `thebibliography`/`\bibitem` bibliography is bound — no `.bib`/`.bbl` file I/O, no BibTeX parse, no
+  citation numbering/sorting. A `\cite` whose key lives only in an external `.bib` is reported
+  unresolved here.
+- **Non-interfering with S1.** The two passes read disjoint command families (`\cite` vs
+  `\ref`/`\eqref`/`\pageref`/`\label`) and produce disjoint result types; a regression test asserts a
+  document with **both** `\ref`/`\label` and `\cite`/`\bibitem` resolves each cleanly with no leakage.
+- **New public API (all `Clone`-able plain data; spans `Copy`, keys owned `String`s):** `BibEntry`,
+  `DuplicateBib`, `ResolvedCite`, `UnresolvedCite`, `CitationResolution` (with an `entry(key)` lookup
+  helper), and the `CITE_COMMAND` constant.
+- **10 new tests** (all in `#[cfg(test)]`): a `\cite`→`\bibitem` resolves and *both* spans slice back
+  to the exact source (load-bearing), a multi-key `\cite{a,b}` → two bindings sharing the `\cite`
+  span, a mixed `\cite{known,unknown}` → one resolved + one unresolved from the same span,
+  `\cite[p. 3]{key}` resolves with the note not conflated into the key, a dangling `\cite{ghost}` is
+  unresolved, a duplicate `\bibitem{dup}` → first-entry-wins, a `\cite` with no bibliography is
+  unresolved (no panic), an empty document yields empty results, the `entry(key)` helper, and the
+  S1/S2 coexistence regression.
+
 ## [0.37.0] — 2026-07-06
 
 ### Added — cross-reference resolution: label table + `\ref` binding (LTXDOC03 S1)

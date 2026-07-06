@@ -1,4 +1,4 @@
-# LTXDOC03 — cross-reference resolution (label table + `\ref` binding)
+# LTXDOC03 — cross-reference resolution (label table + `\ref` binding; `\cite` → bibliography)
 
 ## 1. Motivation
 
@@ -14,7 +14,9 @@ consumer needs, not just structure/provenance plumbing. **S1** is cross-referenc
 pure analysis pass over a parsed `Document` that binds each cross-reference to the `\label` that
 defines it, with byte spans on **both** sides. It is the piece that turns "two independent spans" into
 "a resolved edge from the reference's bytes to the defining node's bytes" — exactly the source→source
-correlation the ADJ byte-provenance north star audits against.
+correlation the ADJ byte-provenance north star audits against. **S2** (§8) extends the same binding
+to the *other* cross-reference family — `\cite`↔`\bibitem` — resolving citations against the
+in-document bibliography.
 
 ## 2. The LaTeX `.aux` two-pass model this mimics
 
@@ -57,15 +59,22 @@ run LaTeX and we do **not** compute numbers/pages — we bind *structure*: for e
   of the **reference family** `{ref, eqref, pageref}` against the table (resolved → ref-span + def-span
   + kind; unresolved → dangling key + ref-span); a public `Document::resolve_references` returning
   `Clone`-able plain data.
+- **In (S2 — see §8):** a bibliography table collected from every `\bibitem{key}` inside a
+  `thebibliography` environment; duplicate-entry detection with **first-entry-wins**; resolution of
+  the **citation family** `{cite}` against the table, splitting a multi-key `\cite{a,b,c}` into
+  per-key bindings; a public `Document::resolve_citations` returning `Clone`-able plain data.
 - **Out (deferred to later rungs):**
-  - **`\cite` / bibliography binding.** A citation resolves against a **bibliography**
-    (`\bibitem` / `thebibliography` / a `.bib` file), an entirely separate table from the `\label`
-    one. Binding it is its own rung; S1 treats `\cite` as neither a resolvable reference nor a
-    dangling one.
-  - **Numbers/pages.** We bind *structure* (the defining node + its bytes), not the rendered "3.2" /
-    page number a full `.aux` pass would compute.
-  - **Forward-reference ordering nuance, `\nameref`, `cleveref`'s `\cref`, hyperref anchors.** All
-    later slices; S1 is the core `\ref`↔`\label` binding.
+  - **`\cite` was deferred in S1; it is now bound in S2 (§8).** The bullet remains only to note that
+    the *S1* label pass still treats `\cite` as neither a resolvable reference nor a dangling one —
+    citations are the *separate* S2 table.
+  - **Numbers/pages / citation numbering.** We bind *structure* (the defining node + its bytes), not
+    the rendered "3.2" / page number / citation number a full `.aux` + BibTeX pass would compute.
+  - **External BibTeX databases.** Only an **in-document** `thebibliography`/`\bibitem` bibliography
+    is bound (S2). A `.bib` file read via `\bibliography{…}`, or an un-`\input`-ed `.bbl`, is out of
+    scope — no file I/O, no BibTeX parse.
+  - **Forward-reference ordering nuance, `\nameref`, `cleveref`'s `\cref`, natbib
+    `\citep`/`\citet`, hyperref anchors.** All later slices; S1 is the core `\ref`↔`\label` binding
+    and S2 the core `\cite`↔`\bibitem` binding.
 
 ## 5. Public API
 
@@ -132,4 +141,90 @@ citing text to the cited structure. That is precisely the source→source correl
 byte-provenance pipeline (the north-star consumer) audits against: a claim that quotes "as shown in
 Section 3" can be traced, through the resolved reference, back to the specific section it names — not
 by string-matching, but by the document's own cross-reference graph. `\cite`/bibliography binding
-(deferred) extends the same guarantee to citations in a later rung.
+(S2, §8) extends the same guarantee to citations.
+
+## 8. S2 — `\cite` → bibliography binding
+
+S2 is the **parallel pass** to S1 for the *other* cross-reference family. LaTeX keeps two
+independent cross-reference tables: the `\label`/`\ref` table (S1, the `.aux` `\newlabel`/`\ref`
+machinery) and the **bibliography** — `\bibitem{key}` entries inside a `thebibliography` environment,
+cited by `\cite{key}`. Where S1 binds `\ref`↔`\label`, S2 binds `\cite`↔`\bibitem`, with byte spans
+on **both** sides, and is the static single-pass analogue of LaTeX's `\bibcite` `.aux` dance (it
+binds *structure*, never a citation number/sort order — that is BibTeX/`.bbl` territory).
+
+### 8.1 Scope
+
+- **In (S2):** a bibliography table collected from every `\bibitem{key}` inside a `thebibliography`
+  environment (span = the `\bibitem{key}` construct's own tight bytes); duplicate-entry detection
+  with **first-entry-wins**; resolution of the **citation family** `{cite}` against the table, with a
+  multi-key `\cite{a,b,c}` split on commas into per-key bindings (each carrying that one `\cite`'s
+  span); a public `Document::resolve_citations` returning `Clone`-able plain data.
+- **Out (S2):** external `.bib`/BibTeX databases and un-`\input`-ed `.bbl` files (no file I/O, no
+  BibTeX parse — in-document `thebibliography`/`\bibitem` only); citation **numbering**/sorting;
+  natbib `\citep`/`\citet`/`\citeauthor` (only plain `\cite` is folded to `Inline::CrossRef` today).
+
+### 8.2 How the constructs surface (confirmed against the parsed AST)
+
+- `\begin{thebibliography}{9}…\end{thebibliography}` → `Block::Environment { name:
+  "thebibliography", body, span }`.
+- `\bibitem{key}` → an `Inline::Raw(Node { kind: Command { name: "bibitem", arguments: [[key]] } },
+  span)` — a *generic* command (`recognize_structure` does not fold `\bibitem`), **not** an
+  `Inline::CrossRef`. The key is `arguments[0]` rendered back to source; the span covers exactly
+  `\bibitem{key}`. The trailing author/title/year prose parses as *separate* sibling `Text`/`Space`
+  inlines with no delimiter marking entry boundaries, so the entry span is the `\bibitem{key}`
+  construct only (the honest, tightest attributable range).
+- `\cite{a,b,c}` → **one** `Inline::CrossRef { command: "cite", target: "a,b,c" }`; the multi-key
+  list is a single comma-joined `target` string. `\cite[p. 3]{key}` keeps the `[p. 3]` in the
+  cross-ref's separate `note` field with `target == "key"`.
+
+### 8.3 Public API
+
+A method on `Document`, plus the plain record types it returns (all `Clone`, `PartialEq`, `Eq`; spans
+are `Copy`, keys are owned `String`s; the aggregate derives `Default`):
+
+```rust
+impl Document {
+    pub fn resolve_citations(&self) -> CitationResolution;
+}
+
+pub const CITE_COMMAND: &str = "cite";
+
+pub struct BibEntry       { pub key: String, pub span: Span }              // \bibitem{key}, span = its bytes
+pub struct DuplicateBib   { pub key: String, pub span: Span }              // later, losing \bibitem
+pub struct ResolvedCite   { pub key: String, pub cite_span: Span, pub entry_span: Span }
+pub struct UnresolvedCite { pub key: String, pub cite_span: Span }
+
+pub struct CitationResolution {
+    pub entries:           Vec<BibEntry>,        // winning (first) \bibitems, pre-order — the table
+    pub duplicate_entries: Vec<DuplicateBib>,    // later (losing) \bibitems of already-defined keys
+    pub resolved:          Vec<ResolvedCite>,    // per-key bindings that found an entry
+    pub unresolved:        Vec<UnresolvedCite>,  // per-key dangling citations
+}                                                // + CitationResolution::entry(key) -> Option<&BibEntry>
+```
+
+**Multi-key, shared cite-span.** One `\cite{a,b,c}` yields one `ResolvedCite`/`UnresolvedCite`
+**per key**, all sharing that `\cite`'s `cite_span`, so a caller sees per-key resolution *and* which
+source `\cite` each key came from (group by `cite_span`). Empty keys (from `\cite{a,,b}` / a trailing
+comma / `\cite{}`) are skipped.
+
+**First-entry-wins.** If a key is defined by more than one `\bibitem`, the **first** (in walk
+pre-order) is the winner citations resolve against; every later one is a `DuplicateBib`.
+
+**Citation family only.** Only `\cite` (`CITE_COMMAND`) resolves against the bibliography;
+`\ref`/`\eqref`/`\pageref`/`\label` are the S1 label family and are excluded. The two passes read
+disjoint command families and produce disjoint result types, so they never interfere.
+
+### 8.4 Verification (S2)
+
+`cargo test -p latex` green (10 new `references` S2 tests); `cargo clippy -p latex --all-targets
+-- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build
+-p latex --no-default-features` builds. No `cargo fmt`, no grammar regen. The load-bearing test is
+that a **resolved entry span slices back to exactly `\bibitem{key}`** and the **cite span slices back
+to exactly the `\cite{…}` construct** — not merely `.is_some()`. The suite also pins: a multi-key
+`\cite{a,b}` → two bindings sharing the `\cite` span with distinct entry spans, a mixed
+`\cite{known,unknown}` → one resolved + one unresolved from the same span, `\cite[p. 3]{key}`
+resolving with the note not conflated into the key, a dangling `\cite{ghost}` recorded, first-entry-
+wins under a duplicate `\bibitem`, a `\cite` with no bibliography reported unresolved without
+panicking, an empty document yielding empty results, and a regression that S1's `resolve_references`
+and S2's `resolve_citations` coexist on a document with **both** families without disturbing each
+other.
