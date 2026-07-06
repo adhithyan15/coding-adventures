@@ -68,6 +68,10 @@ import {
   formatDeviceModelReferenceDeckAuditSummaryTable,
   formatDeviceModelReferenceDeckAuditTable,
   formatModelCardSupportedParameterCoverageCsv,
+  formatModelCardSupportedParameterCoverageGateIssueCsv,
+  formatModelCardSupportedParameterCoverageGateIssueJson,
+  formatModelCardSupportedParameterCoverageGateIssueTable,
+  formatModelCardSupportedParameterCoverageGateReport,
   formatModelCardSupportedParameterCoverageJson,
   formatModelCardSupportedParameterCoverageSummaryCsv,
   formatModelCardSupportedParameterCoverageSummaryJson,
@@ -84,6 +88,8 @@ import {
   measureDcSweepDeck,
   measureDcSweepProbe,
   modelCardSupportedParameterCoverage,
+  modelCardSupportedParameterCoverageGate,
+  modelCardSupportedParameterCoverageGateIssueRecords,
   modelCardSupportedParameterCoverageRecords,
   modelCardSupportedParameterCoverageSummary,
   modelCardSupportedParameterCoverageSummaryRecords,
@@ -193,6 +199,76 @@ describe("dcOp", () => {
       /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,7,11,3,3,IS\|VT\|CJO\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageSummaryJson())).toStrictEqual(records);
+  });
+
+  it("passes the current model-card supported parameter coverage gate", () => {
+    const report = modelCardSupportedParameterCoverageGate();
+
+    expect(report).toStrictEqual({
+      passed: true,
+      kindCount: 7,
+      expectedKindCount: 7,
+      canonicalParameterCount: 67,
+      expectedCanonicalParameterCount: 67,
+      acceptedNameCount: 113,
+      aliasedParameterCount: 33,
+      maxAliasCount: 4,
+      issues: [],
+    });
+    expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t67\t67\t113\t33\t4\t0",
+    );
+    expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
+      "kind\tfield\tmessage",
+    );
+    expect(modelCardSupportedParameterCoverageGateIssueRecords(report)).toStrictEqual([]);
+    expect(formatModelCardSupportedParameterCoverageGateIssueCsv(report)).toBe(
+      "kind,field,message\n",
+    );
+    expect(JSON.parse(formatModelCardSupportedParameterCoverageGateIssueJson(report))).toStrictEqual(
+      [],
+    );
+  });
+
+  it("reports missing model-card supported parameter alias families", () => {
+    const trimmed = modelCardSupportedParameterCoverage().filter(
+      (row) => !(row.kind === "NMOS" && row.canonicalParameter === "VT0"),
+    );
+
+    const report = modelCardSupportedParameterCoverageGate(trimmed);
+
+    expect(report.passed).toBe(false);
+    expect(report.kindCount).toBe(7);
+    expect(report.canonicalParameterCount).toBe(66);
+    expect(report.acceptedNameCount).toBe(110);
+    expect(report.aliasedParameterCount).toBe(32);
+    expect(report.maxAliasCount).toBe(4);
+    expect(report.issues).toHaveLength(4);
+    expect(report.issues[0]).toStrictEqual({
+      kind: "NMOS",
+      field: "canonical_parameter_count",
+      message: "expected NMOS to expose 18 canonical supported parameters, found 17",
+    });
+    expect(report.issues.at(-1)).toStrictEqual({
+      kind: "NMOS",
+      field: "max_alias_count",
+      message: "expected NMOS max alias count 3, found 2",
+    });
+    expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t66\t67\t110\t32\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+    );
+    const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
+    expect(records[0]).toStrictEqual({
+      kind: "NMOS",
+      field: "canonical_parameter_count",
+      message: "expected NMOS to expose 18 canonical supported parameters, found 17",
+    });
+    expect(formatModelCardSupportedParameterCoverageGateIssueCsv(report)).toMatch(
+      /^kind,field,message\nNMOS,canonical_parameter_count,"expected NMOS to expose 18 canonical supported parameters, found 17"\n/,
+    );
+    expect(JSON.parse(formatModelCardSupportedParameterCoverageGateIssueJson(report))).toStrictEqual(
+      records,
+    );
   });
 
   it("normalizes model-card aliases into device instances", () => {

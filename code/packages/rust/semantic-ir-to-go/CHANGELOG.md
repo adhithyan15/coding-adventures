@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.15.0
+
+### Added — Array collection-method parity (min / max / sum / uniq / flatten / compact / each_with_index)
+
+Parity-fill: these Ruby `Array` methods already shipped in the Python + TypeScript
+`sir-runtime-oop` backends; this ports the SAME surface into the Go runtime's
+array dispatch, so a translated Ruby program now executes them on the Go backend
+instead of hitting the `NoMethodError` floor. `to_a` was already present and is
+unchanged. Semantics match the Python/TS reference impls exactly.
+
+- **`min` / `max`** (non-block, v0) — element-wise extremum via `_sir_value_lt`
+  (Ruby's `<`/`>`); empty array ⇒ nil. Dispatched in `_sir_array_method`.
+- **`sum`** — folds with the polymorphic `_sir_plus` over an initial value
+  (default `0`, or the supplied `sum(init)` argument), preserving int/float;
+  empty array ⇒ the initial value. Dispatched in `_sir_array_method`.
+- **`uniq`** — order-preserving de-duplication via structural value-equality
+  (`_sir_value_eq`); returns a fresh `*Seq`. Dispatched in `_sir_array_method`.
+- **`flatten`** — recursively flattens nested `*Seq` into a fresh flat `*Seq`.
+  **Cycle-guarded** (CWE-674, uncontrolled recursion): the new
+  `_sir_flatten_into` helper threads a `visited` set of `*Seq` handle pointers
+  on the active recursion path — mirroring `_sir_puts_one` — so a self-referential
+  array (`a = []; a << a`) terminates instead of overflowing the Go stack.
+  Sibling (non-cyclic) occurrences still flatten in full.
+- **`compact`** — fresh `*Seq` with nil elements removed. Dispatched in
+  `_sir_array_method`.
+- **`each_with_index`** — block-taking; yields `(element, index)` pairs and
+  returns the receiver. Dispatched in `_sir_array_block_method`.
+- `_sir_array_responds` now advertises all of the above for `respond_to?` parity.
+
+Execution proof: `tests/compile_and_run_array_methods.rs`
+(`array_methods_compile_and_run`) hand-builds SIR exercising each method, emits
+Go, runs it under `go run`, and diffs stdout against the Python/TS reference
+values (`[3,1,2].max` → 3, `[1,2,2,3,1].uniq` → `[1,2,3]`, `[[1,[2]],3].flatten`
+→ `[1,2,3]`, `[1,nil,2,nil].compact` → `[1,2]`, `[1,2,3].sum` → 6,
+`[10,20].each_with_index` → `0:10`/`1:20` then the returned receiver).
+
 ## 0.14.0
 
 ### Security (review-driven)

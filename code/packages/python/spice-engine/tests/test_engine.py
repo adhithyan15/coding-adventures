@@ -279,6 +279,10 @@ from spice_engine import (
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table,
     format_model_card_supported_parameter_coverage_csv,
+    format_model_card_supported_parameter_coverage_gate_issue_csv,
+    format_model_card_supported_parameter_coverage_gate_issue_json,
+    format_model_card_supported_parameter_coverage_gate_issue_table,
+    format_model_card_supported_parameter_coverage_gate_report,
     format_model_card_supported_parameter_coverage_json,
     format_model_card_supported_parameter_coverage_summary_csv,
     format_model_card_supported_parameter_coverage_summary_json,
@@ -320,6 +324,8 @@ from spice_engine import (
     measure_transient_when_probe,
     measure_transient_when_probe_counted,
     model_card_supported_parameter_coverage,
+    model_card_supported_parameter_coverage_gate,
+    model_card_supported_parameter_coverage_gate_issue_records,
     model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
     model_card_supported_parameter_coverage_summary_records,
@@ -484,6 +490,92 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_summary_json())
+        == records
+    )
+
+
+def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -> None:
+    report = model_card_supported_parameter_coverage_gate()
+    assert report.passed is True
+    assert report.kind_count == 7
+    assert report.expected_kind_count == 7
+    assert report.canonical_parameter_count == 67
+    assert report.expected_canonical_parameter_count == 67
+    assert report.accepted_name_count == 113
+    assert report.aliased_parameter_count == 33
+    assert report.max_alias_count == 4
+    assert report.issues == ()
+    assert format_model_card_supported_parameter_coverage_gate_report(report) == (
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
+        "expected_canonical_parameter_count\taccepted_name_count\t"
+        "aliased_parameter_count\tmax_alias_count\tissue_count\n"
+        "true\t7\t7\t67\t67\t113\t33\t4\t0"
+    )
+    assert (
+        format_model_card_supported_parameter_coverage_gate_issue_table(report)
+        == "kind\tfield\tmessage"
+    )
+    assert model_card_supported_parameter_coverage_gate_issue_records(report) == []
+    assert (
+        format_model_card_supported_parameter_coverage_gate_issue_csv(report)
+        == "kind,field,message\n"
+    )
+    assert (
+        json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
+        == []
+    )
+
+
+def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_family() -> None:
+    trimmed = tuple(
+        row
+        for row in model_card_supported_parameter_coverage()
+        if not (row.kind == "NMOS" and row.canonical_parameter == "VT0")
+    )
+
+    report = model_card_supported_parameter_coverage_gate(trimmed)
+
+    assert report.passed is False
+    assert report.kind_count == 7
+    assert report.canonical_parameter_count == 66
+    assert report.accepted_name_count == 110
+    assert report.aliased_parameter_count == 32
+    assert report.max_alias_count == 4
+    assert len(report.issues) == 4
+    assert report.issues[0].kind == "NMOS"
+    assert report.issues[0].field == "canonical_parameter_count"
+    assert report.issues[0].message == (
+        "expected NMOS to expose 18 canonical supported parameters, found 17"
+    )
+    assert report.issues[-1].field == "max_alias_count"
+    assert report.issues[-1].message == "expected NMOS max alias count 3, found 2"
+    assert format_model_card_supported_parameter_coverage_gate_report(report) == (
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
+        "expected_canonical_parameter_count\taccepted_name_count\t"
+        "aliased_parameter_count\tmax_alias_count\tissue_count\n"
+        "false\t7\t7\t66\t67\t110\t32\t4\t4\n"
+        "kind\tfield\tmessage\n"
+        "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
+        "supported parameters, found 17\n"
+        "NMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card "
+        "names, found 22\n"
+        "NMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing "
+        "parameters, found 5\n"
+        "NMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+    )
+    records = model_card_supported_parameter_coverage_gate_issue_records(report)
+    assert records[0] == {
+        "kind": "NMOS",
+        "field": "canonical_parameter_count",
+        "message": "expected NMOS to expose 18 canonical supported parameters, found 17",
+    }
+    assert format_model_card_supported_parameter_coverage_gate_issue_csv(report).startswith(
+        "kind,field,message\n"
+        'NMOS,canonical_parameter_count,"expected NMOS to expose 18 canonical '
+        'supported parameters, found 17"\n'
+    )
+    assert (
+        json.loads(format_model_card_supported_parameter_coverage_gate_issue_json(report))
         == records
     )
 

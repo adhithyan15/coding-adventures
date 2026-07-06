@@ -2876,6 +2876,26 @@ pub struct ModelCardSupportedParameterCoverageSummary {
     pub aliased_parameters: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModelCardSupportedParameterCoverageGateIssue {
+    pub kind: String,
+    pub field: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModelCardSupportedParameterCoverageGateReport {
+    pub passed: bool,
+    pub kind_count: usize,
+    pub expected_kind_count: usize,
+    pub canonical_parameter_count: usize,
+    pub expected_canonical_parameter_count: usize,
+    pub accepted_name_count: usize,
+    pub aliased_parameter_count: usize,
+    pub max_alias_count: usize,
+    pub issues: Vec<ModelCardSupportedParameterCoverageGateIssue>,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeviceModelBehaviorFixture {
     pub name: String,
@@ -3056,6 +3076,21 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: &[ModelCardKind] = &[
     ModelCardKind::Pjf,
     ModelCardKind::Nmos,
     ModelCardKind::Pmos,
+];
+const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
+    ModelCardKind,
+    usize,
+    usize,
+    usize,
+    usize,
+)] = &[
+    (ModelCardKind::Diode, 7, 11, 3, 3),
+    (ModelCardKind::Npn, 7, 15, 4, 4),
+    (ModelCardKind::Pnp, 7, 15, 4, 4),
+    (ModelCardKind::Njf, 5, 11, 5, 3),
+    (ModelCardKind::Pjf, 5, 11, 5, 3),
+    (ModelCardKind::Nmos, 18, 25, 6, 3),
+    (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
 const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -3328,9 +3363,9 @@ pub fn format_model_card_supported_parameter_coverage_json() -> String {
     format_deck_table_json(&format_model_card_supported_parameter_coverage_table())
 }
 
-pub fn model_card_supported_parameter_coverage_summary(
+fn model_card_supported_parameter_coverage_summary_from(
+    coverage: &[ModelCardSupportedParameterCoverage],
 ) -> Vec<ModelCardSupportedParameterCoverageSummary> {
-    let coverage = model_card_supported_parameter_coverage();
     MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS
         .iter()
         .map(|kind| {
@@ -3353,6 +3388,11 @@ pub fn model_card_supported_parameter_coverage_summary(
             }
         })
         .collect()
+}
+
+pub fn model_card_supported_parameter_coverage_summary(
+) -> Vec<ModelCardSupportedParameterCoverageSummary> {
+    model_card_supported_parameter_coverage_summary_from(&model_card_supported_parameter_coverage())
 }
 
 pub fn format_model_card_supported_parameter_coverage_summary_table() -> String {
@@ -3388,6 +3428,177 @@ pub fn format_model_card_supported_parameter_coverage_summary_csv() -> String {
 
 pub fn format_model_card_supported_parameter_coverage_summary_json() -> String {
     format_deck_table_json(&format_model_card_supported_parameter_coverage_summary_table())
+}
+
+pub fn model_card_supported_parameter_coverage_gate(
+    coverage: &[ModelCardSupportedParameterCoverage],
+) -> ModelCardSupportedParameterCoverageGateReport {
+    let expected_kinds = MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS;
+    let expected_summaries = MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES;
+    let mut issues = Vec::new();
+    let mut actual_kinds = Vec::new();
+    for row in coverage {
+        if !actual_kinds.contains(&row.kind) {
+            actual_kinds.push(row.kind);
+        }
+    }
+
+    if actual_kinds != expected_kinds {
+        issues.push(ModelCardSupportedParameterCoverageGateIssue {
+            kind: "catalog".to_string(),
+            field: "kind_order".to_string(),
+            message: format!(
+                "expected model-card supported-parameter coverage kinds {}, found {}",
+                expected_kinds
+                    .iter()
+                    .map(|kind| kind.as_str())
+                    .collect::<Vec<_>>()
+                    .join(","),
+                actual_kinds
+                    .iter()
+                    .map(|kind| kind.as_str())
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ),
+        });
+    }
+
+    let summaries = model_card_supported_parameter_coverage_summary_from(coverage);
+    for (kind, expected_canonical, expected_accepted, expected_aliased, expected_max_alias) in
+        expected_summaries
+    {
+        if let Some(summary) = summaries.iter().find(|summary| summary.kind == *kind) {
+            if summary.canonical_parameter_count != *expected_canonical {
+                issues.push(ModelCardSupportedParameterCoverageGateIssue {
+                    kind: kind.as_str().to_string(),
+                    field: "canonical_parameter_count".to_string(),
+                    message: format!(
+                        "expected {} to expose {} canonical supported parameters, found {}",
+                        kind.as_str(),
+                        expected_canonical,
+                        summary.canonical_parameter_count
+                    ),
+                });
+            }
+            if summary.accepted_name_count != *expected_accepted {
+                issues.push(ModelCardSupportedParameterCoverageGateIssue {
+                    kind: kind.as_str().to_string(),
+                    field: "accepted_name_count".to_string(),
+                    message: format!(
+                        "expected {} to expose {} accepted model-card names, found {}",
+                        kind.as_str(),
+                        expected_accepted,
+                        summary.accepted_name_count
+                    ),
+                });
+            }
+            if summary.aliased_parameter_count != *expected_aliased {
+                issues.push(ModelCardSupportedParameterCoverageGateIssue {
+                    kind: kind.as_str().to_string(),
+                    field: "aliased_parameter_count".to_string(),
+                    message: format!(
+                        "expected {} to expose {} alias-bearing parameters, found {}",
+                        kind.as_str(),
+                        expected_aliased,
+                        summary.aliased_parameter_count
+                    ),
+                });
+            }
+            if summary.max_alias_count != *expected_max_alias {
+                issues.push(ModelCardSupportedParameterCoverageGateIssue {
+                    kind: kind.as_str().to_string(),
+                    field: "max_alias_count".to_string(),
+                    message: format!(
+                        "expected {} max alias count {}, found {}",
+                        kind.as_str(),
+                        expected_max_alias,
+                        summary.max_alias_count
+                    ),
+                });
+            }
+        }
+    }
+
+    ModelCardSupportedParameterCoverageGateReport {
+        passed: issues.is_empty(),
+        kind_count: actual_kinds.len(),
+        expected_kind_count: expected_kinds.len(),
+        canonical_parameter_count: coverage.len(),
+        expected_canonical_parameter_count: expected_summaries
+            .iter()
+            .map(|(_, canonical_count, _, _, _)| canonical_count)
+            .sum(),
+        accepted_name_count: coverage.iter().map(|row| row.alias_count).sum(),
+        aliased_parameter_count: coverage.iter().filter(|row| row.alias_count > 1).count(),
+        max_alias_count: coverage
+            .iter()
+            .map(|row| row.alias_count)
+            .max()
+            .unwrap_or(0),
+        issues,
+    }
+}
+
+pub fn format_model_card_supported_parameter_coverage_gate_report(
+    report: &ModelCardSupportedParameterCoverageGateReport,
+) -> String {
+    let mut lines = vec![
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count"
+            .to_string(),
+        format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            report.passed,
+            report.kind_count,
+            report.expected_kind_count,
+            report.canonical_parameter_count,
+            report.expected_canonical_parameter_count,
+            report.accepted_name_count,
+            report.aliased_parameter_count,
+            report.max_alias_count,
+            report.issues.len()
+        ),
+    ];
+    if !report.issues.is_empty() {
+        lines.push("kind\tfield\tmessage".to_string());
+        lines.extend(
+            report
+                .issues
+                .iter()
+                .map(|issue| format!("{}\t{}\t{}", issue.kind, issue.field, issue.message)),
+        );
+    }
+    lines.join("\n")
+}
+
+pub fn format_model_card_supported_parameter_coverage_gate_issue_table(
+    report: &ModelCardSupportedParameterCoverageGateReport,
+) -> String {
+    let mut lines = vec!["kind\tfield\tmessage".to_string()];
+    lines.extend(
+        report
+            .issues
+            .iter()
+            .map(|issue| format!("{}\t{}\t{}", issue.kind, issue.field, issue.message)),
+    );
+    lines.join("\n")
+}
+
+pub fn model_card_supported_parameter_coverage_gate_issue_records(
+    report: &ModelCardSupportedParameterCoverageGateReport,
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_model_card_supported_parameter_coverage_gate_issue_table(report))
+}
+
+pub fn format_model_card_supported_parameter_coverage_gate_issue_csv(
+    report: &ModelCardSupportedParameterCoverageGateReport,
+) -> String {
+    format_deck_table_csv(&format_model_card_supported_parameter_coverage_gate_issue_table(report))
+}
+
+pub fn format_model_card_supported_parameter_coverage_gate_issue_json(
+    report: &ModelCardSupportedParameterCoverageGateReport,
+) -> String {
+    format_deck_table_json(&format_model_card_supported_parameter_coverage_gate_issue_table(report))
 }
 
 fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {

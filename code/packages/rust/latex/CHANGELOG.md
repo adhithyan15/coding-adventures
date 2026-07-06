@@ -2,6 +2,41 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.43.0] — 2026-07-06
+
+### Added — cross-reference resolution: equation-label lifting (LTXDOC03 S7)
+
+Closes the one gap S6 left open. A `\ref`/`\eqref` to a `\label` that sits **inside** a display-math
+environment (`\begin{equation} E=mc^2 \label{eq:e} \end{equation}`) *resolved* in S1 but had **no** S4
+number, because `Block::DisplayMath` kept its whole body as one raw `source` string — the `\label` was
+swallowed into that string and never became a real label definition. So S6's `cross_reference_report()`
+**omitted** such refs (they were neither dangling nor renderable). S7 fixes exactly that.
+
+- **Lifts the `\label` out of the env body.** For a **non-starred** display-math environment
+  (`equation`, `align`, `gather`, `multline`, `eqnarray` — *not* the starred `equation*`/… forms, which
+  are unnumbered in LaTeX), the D5 lowering now pulls the first `\label{key}` out of the env body onto
+  the block and **removes** it from `source` (no duplication). `\begin{equation} E = mc^2 \label{eq:e}
+  \end{equation}` → `DisplayMath { source: "E = mc^2", label: Some("eq:e") }`.
+- **New `LabelKind::Equation`.** The lifted label is registered — in the *same* collection pass that
+  registers section/figure/table labels — as a real `LabelDef` tagged `LabelKind::Equation`
+  (`as_str()` → `"equation"`, display name `"Equation"`). So an `\eqref{eq:e}`/`\ref{eq:e}` now
+  **resolves** to it.
+- **`DisplayMath` carries the label.** `Block::DisplayMath` gains a `label: Option<String>` field,
+  mirroring how `Block::Figure`/`Block::Table` carry their lifted label. It is `Some` only for the
+  non-starred named-env path; the starred forms and the `\[…\]`/`$$…$$` islands keep `label: None`
+  (unchanged behaviour).
+- **No longer omitted from the S6 report.** A resolved `\ref`/`\eqref` to an equation label is now
+  **included** in `cross_reference_report().refs`, rendering `\ref{eq:e} -> Equation ?`.
+- **Numbering deferred to S8.** S7 does *not* wire the equation counter (`\theequation`). The equation
+  label carries the placeholder number `EQUATION_NUMBER_PLACEHOLDER` (`"?"`, echoing LaTeX's `??`) in
+  the report — enough to make it resolvable-and-reported; the real number is a future S8 rung.
+- **Round-trip preserved.** `Document::to_latex()` re-emits a lifted-label equation as
+  `\begin{equation}<body> \label{key}\end{equation}` (not `$$…$$`, which would drop the label), so
+  `parse(doc.to_latex())` re-lifts to an equal AST — the round-trip fixed point still holds.
+- **New/changed API.** `LabelKind::Equation`; `Block::DisplayMath { source, label, span }` (added
+  `label`); `pub const EQUATION_NUMBER_PLACEHOLDER: &str = "?"`, exported from the crate root. Additive
+  and pure: no existing S1–S6 behaviour changed except that equation-label refs stop being omitted.
+
 ## [0.42.0] — 2026-07-06
 
 ### Added — cross-reference resolution: the cross-reference report (LTXDOC03 S6)

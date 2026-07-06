@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add `modelCardSupportedParameterCoverageGate`,
+  `formatModelCardSupportedParameterCoverageGateReport`,
+  `formatModelCardSupportedParameterCoverageGateIssueTable`,
+  `modelCardSupportedParameterCoverageGateIssueRecords`,
+  `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
+  `formatModelCardSupportedParameterCoverageGateIssueJson`, stable release-gate
+  checks and issue exports for the seven-kind, 67-row supported model-card
+  parameter catalog, matching Python and Rust.
 - Add `modelCardSupportedParameterCoverageSummary`,
   `formatModelCardSupportedParameterCoverageSummaryTable`,
   `modelCardSupportedParameterCoverageSummaryRecords`,

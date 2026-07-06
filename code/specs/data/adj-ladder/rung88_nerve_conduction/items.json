@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 88 \u2014 neurology nerve-conduction index from four stated quantities (a NEW panel: neurology / nerve-conduction). From a conduction velocity to multiply by the segment span and the myelin gain (a three-factor product) and a baseline latency to add, compute the nerve conduction (conduction_velocity*segment_span*myelin_gain+baseline_latency), the gross product (conduction_velocity*segment_span*myelin_gain), or the base product (conduction_velocity*segment_span). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, THREE-FACTOR PRODUCT PLUS A TERM a*b*c+d (multiply a by b by c, add d, so a*b*c+d = ((a*b*c)+d); it completes the three-factor-product trio with rung-86 a*b*c-d and rung-87 a*b*c/d, and no prior addition shape added a bare term to a three-factor product \u2014 every earlier add, e.g. rung-69 a*b/c+d and rung-79 a*b+c/d, added to at most two observed factors) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via * and + \u2014 no constant leaks, and neither the gross product, the base product, nor any conduction figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: adding the baseline latency to the myelin gain inside the third factor (a*b*(c+d), a wrong grouping) and pairing the four quantities into two products (a*b+c*d, a wrong pairing). The core confusion tested is that a*b*c+d is ((a*b*c)+d), not a*b*(c+d) and not a*b+c*d.",
+  "items": [
+    {
+      "id": "r88ncv-01",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 3 times a segment span of 4 times a myelin gain of 2, with a baseline latency of 3 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(3)\nobserve segment_span(4)\nobserve myelin_gain(2)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r88ncv-02",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 3 times a segment span of 4 times a myelin gain of 2, with a baseline latency of 3 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(3)\nobserve segment_span(4)\nobserve myelin_gain(2)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r88ncv-03",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 3 times a segment span of 4 times a myelin gain of 2, with a baseline latency of 3 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(3)\nobserve segment_span(4)\nobserve myelin_gain(2)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r88ncv-04",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 4 times a segment span of 3 times a myelin gain of 3, with a baseline latency of 2 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(4)\nobserve segment_span(3)\nobserve myelin_gain(3)\nobserve baseline_latency(2)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r88ncv-05",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 4 times a segment span of 3 times a myelin gain of 3, with a baseline latency of 2 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(4)\nobserve segment_span(3)\nobserve myelin_gain(3)\nobserve baseline_latency(2)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r88ncv-06",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 4 times a segment span of 3 times a myelin gain of 3, with a baseline latency of 2 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(4)\nobserve segment_span(3)\nobserve myelin_gain(3)\nobserve baseline_latency(2)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r88ncv-07",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 5 times a segment span of 4 times a myelin gain of 2, with a baseline latency of 5 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(5)\nobserve segment_span(4)\nobserve myelin_gain(2)\nobserve baseline_latency(5)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r88ncv-08",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 5 times a segment span of 4 times a myelin gain of 2, with a baseline latency of 5 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(5)\nobserve segment_span(4)\nobserve myelin_gain(2)\nobserve baseline_latency(5)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r88ncv-09",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 5 times a segment span of 4 times a myelin gain of 2, with a baseline latency of 5 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(5)\nobserve segment_span(4)\nobserve myelin_gain(2)\nobserve baseline_latency(5)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r88ncv-10",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 6 times a segment span of 2 times a myelin gain of 4, with a baseline latency of 3 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(6)\nobserve segment_span(2)\nobserve myelin_gain(4)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 51,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r88ncv-11",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 6 times a segment span of 2 times a myelin gain of 4, with a baseline latency of 3 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(6)\nobserve segment_span(2)\nobserve myelin_gain(4)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 51,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r88ncv-12",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 6 times a segment span of 2 times a myelin gain of 4, with a baseline latency of 3 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(6)\nobserve segment_span(2)\nobserve myelin_gain(4)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 51,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r88ncv-13",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 4 times a segment span of 5 times a myelin gain of 3, with a baseline latency of 2 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(4)\nobserve segment_span(5)\nobserve myelin_gain(3)\nobserve baseline_latency(2)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r88ncv-14",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 4 times a segment span of 5 times a myelin gain of 3, with a baseline latency of 2 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(4)\nobserve segment_span(5)\nobserve myelin_gain(3)\nobserve baseline_latency(2)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r88ncv-15",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 4 times a segment span of 5 times a myelin gain of 3, with a baseline latency of 2 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(4)\nobserve segment_span(5)\nobserve myelin_gain(3)\nobserve baseline_latency(2)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r88ncv-16",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 7 times a segment span of 3 times a myelin gain of 2, with a baseline latency of 3 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(7)\nobserve segment_span(3)\nobserve myelin_gain(2)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r88ncv-17",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 7 times a segment span of 3 times a myelin gain of 2, with a baseline latency of 3 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(7)\nobserve segment_span(3)\nobserve myelin_gain(2)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r88ncv-18",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 7 times a segment span of 3 times a myelin gain of 2, with a baseline latency of 3 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(7)\nobserve segment_span(3)\nobserve myelin_gain(2)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r88ncv-19",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 5 times a segment span of 6 times a myelin gain of 4, with a baseline latency of 3 added on. What is the net nerve conduction (the three-factor product plus the baseline latency)?",
+      "program": "observe conduction_velocity(5)\nobserve segment_span(6)\nobserve myelin_gain(4)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain + baseline_latency\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 123,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r88ncv-20",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 5 times a segment span of 6 times a myelin gain of 4, with a baseline latency of 3 added on. What is the the gross product (the conduction velocity times the segment span times the myelin gain, before the baseline)?",
+      "program": "observe conduction_velocity(5)\nobserve segment_span(6)\nobserve myelin_gain(4)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span * myelin_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 123,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r88ncv-21",
+      "qtype": "nerve_conduction_index",
+      "stem": "A nerve study reads a conduction velocity of 5 times a segment span of 6 times a myelin gain of 4, with a baseline latency of 3 added on. What is the the base product (the conduction velocity times the segment span, before the myelin gain)?",
+      "program": "observe conduction_velocity(5)\nobserve segment_span(6)\nobserve myelin_gain(4)\nobserve baseline_latency(3)\nlet answer = conduction_velocity * segment_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 123,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

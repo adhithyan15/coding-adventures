@@ -545,13 +545,15 @@ when called in a loop). No new parsing, no AST change, no new recursion.
    deliberate: two vectors make "resolved vs dangling" a *type-level* fact, rather than burying it in a
    `number: Option<String>` field the caller must remember to check.
 2. **A resolved `\ref` whose target is not numbered is omitted.** Every entry in S1's `resolved` has a
-   matching `\label`, but not every `\label` is *numbered*: S4 numbers sections and figure/table
-   floats, but an **inline `\label`** (typically an equation label) is deliberately unnumbered
-   (deferred to a future equation-numbering rung). So a `\ref{eq:x}` to an inline `\label{eq:x}`
-   *resolves* yet has **no** S4 number. S6 **omits** such an entry from `refs`, so every row in `refs`
-   carries a real number (no placeholder). It is neither *dangling* (its label exists) nor
-   *renderable*; it reappears once equation numbering ships. Citations have no analogous gap — a
-   winning `\bibitem` is always S5-numbered — so every resolved `\cite` becomes a `CiteEntry`.
+   matching `\label`, but not every `\label` is *numbered*: S4 numbers sections, figure/table floats,
+   and (as of S7, §13) **non-starred display-math equation labels**. A **bare-inline `\label`** (a
+   `\label` not lifted onto any block — `LabelKind::Inline`) is still deliberately unnumbered. So a
+   `\ref{eq:x}` to a *bare-inline* `\label{eq:x}` *resolves* yet has **no** S4 number, and S6 **omits**
+   it from `refs` (it is neither *dangling* — its label exists — nor *renderable*). An **equation**
+   label lifted out of a `\begin{equation}` (S7) *is* numbered — with the `EQUATION_NUMBER_PLACEHOLDER`
+   (`"?"`) until S8 — so an `\eqref` to it is **included** in `refs` (`\ref{eq:e} -> Equation ?`).
+   Citations have no analogous gap — a winning `\bibitem` is always S5-numbered — so every resolved
+   `\cite` becomes a `CiteEntry`.
 3. **Multi-key `\cite` yields one row per key.** S2 already split `\cite{a,b}` into per-key
    `ResolvedCite`s, so S6 emits one `CiteEntry` per key, each numbered independently (`a`→`[1]`,
    `b`→`[2]`).
@@ -626,3 +628,86 @@ numbered `[1]`/`[2]`; a resolved-but-unnumbered inline-label `\ref` is omitted f
 dangling); an empty document → an empty report with `to_plain_text()` == `"(no cross-references)"` (no
 panic); and a regression that building the report leaves the S1/S2/S3/S4/S5 outputs byte-for-byte
 unchanged (the tree is never mutated).
+
+## 13. S7 — equation-label lifting
+
+### 13.1 The gap S7 closes
+
+S1 *resolves* a `\ref`/`\eqref` to a `\label` that sits **inside** a display-math environment
+(`\begin{equation} E=mc^2 \label{eq:e} \end{equation}`), but that reference had **no** S4 number, so
+S6 (§12.2, rule 2) **omitted** it from `refs` — it was neither dangling nor renderable. The root cause
+is in the D5 lowering: `Block::DisplayMath` keeps its whole env body as one raw `source: String`, and
+`render_nodes(&body)` renders the `\label{eq:e}` **into** that string. The label is therefore swallowed
+— it never becomes a real label definition, so it has no `LabelKind`, no counter, and no report row.
+
+Empirically (the D5 lowering, before S7): `\begin{equation} E=mc^2 \label{eq:e} \end{equation}` →
+`DisplayMath { source: "E=mc^2 \\label{eq:e}" }`, and the label table has **no** entry for `eq:e`.
+
+### 13.2 What S7 does (and does not)
+
+S7 fixes exactly this one gap for a **non-starred** display-math environment — `equation`, `align`,
+`gather`, `multline`, `eqnarray` (the numbered forms). It does **not** touch the starred forms
+(`equation*`, `align*`, `gather*`, `multline*`, `eqnarray*`) or `displaymath`, which are **unnumbered**
+in LaTeX, nor the `\[…\]`/`$$…$$` islands (which lower via `NodeKind::Math`).
+
+- **Lift the `\label` out of the env body.** In `lower_environment`, a numbered display-math env's body
+  is scanned for the first `\label{key}` (a `NodeKind::CrossRef { command: "label", target }` at the
+  LTX01 node level); it is **removed** from the body, its key recovered verbatim via
+  `document_to_latex(target)`, and the remaining nodes are rendered to `source`. So the `\label` is
+  **not** left duplicated in `source`.
+- **`Block::DisplayMath` carries the lifted key.** A new field `label: Option<String>`, mirroring how
+  `Block::Figure`/`Block::Table` carry their lifted `\label`. It is `Some` **only** for the non-starred
+  named-env path; starred envs, `displaymath`, and `\[…\]`/`$$…$$` set `label: None` (no behaviour
+  change for them).
+- **A new numbered `LabelKind::Equation`.** `as_str()` → `"equation"`, `kind_display_name` → `"Equation"`.
+  The lifted label is registered as a real `LabelDef` in the **same** collection pass
+  (`block_label`/`collect_definitions`) that registers section/figure/table labels, so an
+  `\eqref{eq:e}`/`\ref{eq:e}` now **resolves** to it (S1) and reaches the S6 report.
+- **Included in the S6 report (no longer omitted).** `number_labels` records an `Equation` row so that
+  `Numbering::number_for(key)` returns `Some`, and `cross_reference_report()` therefore emits a
+  `RefEntry` (rendered `\ref{eq:e} -> Equation ?`) instead of dropping it.
+
+### 13.3 Numbering deferred to S8
+
+S7 is **just** the lifting + a resolvable `LabelKind::Equation`; it does **not** wire the equation
+counter (`\theequation`). Because a report row requires a number, the `Equation` row carries the
+placeholder `EQUATION_NUMBER_PLACEHOLDER` — the constant `"?"` (echoing LaTeX's `??` for an
+as-yet-unresolved number), exported from the crate root. S8 will replace this with the real per-equation
+counter value. This is consistent with S6's existing honesty rule: a *bare-inline* `\label` (a `\label`
+not lifted onto any block) is still `LabelKind::Inline`, still unnumbered, and still omitted from `refs`.
+
+### 13.4 Round-trip fixed point preserved
+
+`Document::to_latex()` previously re-emitted every `DisplayMath` as `$$source$$`. A lifted-label
+equation re-emitted that way would **drop** the label (the `$$…$$` form lowers via `NodeKind::Math` →
+`label: None`), breaking the round-trip. So `to_latex` now re-emits a *lifted-label* `DisplayMath` as
+`\begin{equation}<source> \label{<key>}\end{equation}`, and a label-free one as `$$source$$` (unchanged).
+Re-parsing then re-lifts to an equal AST, so `parse(doc.to_latex())` is a fixed point (modulo spans).
+
+### 13.5 Public API (added in S7)
+
+```rust
+// references.rs
+pub enum LabelKind { Section, Table, Figure, Equation /* new */, Inline }
+pub const EQUATION_NUMBER_PLACEHOLDER: &str = "?";
+
+// document.rs
+pub enum Block {
+    DisplayMath { source: String, label: Option<String> /* new */, span: Span },
+    // …
+}
+```
+
+Both are exported from the crate root. The change is **additive**: no S1–S6 result type is removed and
+no existing behaviour changes, except that a resolved equation-label reference stops being omitted.
+
+### 13.6 Verification (S7)
+
+`cargo test -p latex` green (4 new S7 tests: an `equation` env lifts `\label` onto the block with the
+exact `source` `"E = mc^2"` and `label: Some("eq:e")`; a starred `equation*` yields `label: None` and
+registers **no** equation label; a lifted equation label is a `LabelKind::Equation` def whose
+`as_str()` is `"equation"`; an `\eqref`/`\ref` to it is **included** in `cross_reference_report()` with
+number `"?"`, rendering `\ref{eq:e} -> Equation ?`; and a `to_latex()` round-trip re-lifts to an equal
+AST). `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
+-p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.

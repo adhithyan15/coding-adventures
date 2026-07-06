@@ -33,18 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model supported-parameter coverage summaries.
+1. Device model supported-parameter coverage gate.
    - Status: current PR completion candidate.
-   - Add Python, Rust, and TypeScript helpers that condense the supported
-     model-card parameter alias catalog by model kind as stable table,
-     header-keyed record, CSV, and compact JSON exports.
-   - Preserve the D, BJT, JFET, and Level-1 MOS kind ordering while reporting
-     canonical parameter counts, accepted-name counts, alias-bearing parameter
-     counts, max alias depth, and aliased canonical parameter inventories for
-     browser dashboards, release automation, and deck-tooling UIs.
-   - Keep normalization and the underlying 67-row coverage catalog unchanged
-     while locking the seven-row cross-language summary and MOS Level-1 alias
-     families across the three packages.
+   - Add Python, Rust, and TypeScript helpers that validate the supported
+     model-card parameter alias catalog against the expected seven model kinds,
+     67 canonical rows, 113 accepted names, alias-bearing parameter totals, and
+     max alias depth.
+   - Expose a stable pass/fail gate report plus issue table, header-keyed
+     records, CSV, and compact JSON exports for release automation, browser
+     dashboards, and deck-tooling UIs.
+   - Keep normalization, the 67-row catalog, and the seven-row summary
+     unchanged while locking a negative missing-NMOS-`VT0` alias-family gate
+     issue across the three packages.
 
 ## Completed Slices
 
@@ -2911,6 +2911,18 @@ the Rust, Python, and TypeScript surfaces together.
      automation, and deck-tooling UIs.
    - Cross-language tests lock the 67-row coverage catalog, first/last aliases,
      and the NMOS `VT0` alias family across the three packages.
+
+209. Device model supported-parameter coverage summaries.
+   - Status: completed in PR 7667.
+   - Python, Rust, and TypeScript now expose per-model-kind supported parameter
+     alias summaries as stable table, header-keyed record, CSV, and compact
+     JSON exports.
+   - The summary preserves D, BJT, JFET, and Level-1 MOS kind ordering while
+     reporting canonical parameter counts, accepted-name counts,
+     alias-bearing parameter counts, max alias depth, and aliased canonical
+     parameter inventories.
+   - Cross-language tests lock the seven-row summary and MOS Level-1 alias
+     families without changing normalization or the underlying 67-row catalog.
 
 ## Backlog
 

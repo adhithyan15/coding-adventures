@@ -1670,11 +1670,12 @@ func _sir_array_responds(name string) bool {
 	// Non-block Array methods.
 	case "length", "size", "count", "first", "last", "empty?", "include?",
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
+		"min", "max", "sum", "uniq", "flatten", "compact",
 		"join", "fetch", "to_a":
 		return true
 	// Block-taking Array/Enumerable methods.
-	case "each", "map", "collect", "select", "filter", "reject", "reduce",
-		"inject", "find", "detect", "any?", "all?", "none?":
+	case "each", "each_with_index", "map", "collect", "select", "filter",
+		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?":
 		return true
 	}
 	return false
@@ -1823,10 +1824,102 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 					strconv.FormatInt(-n, 10)+"..."+strconv.FormatInt(n, 10))))
 		}
 		return recv.Items[idx], true
+	case "min", "max":
+		// Ruby `Array#min`/`#max` (no block, v0): element-wise extremum via
+		// `<`/`>` (modelled by `_sir_value_lt`).  Empty array ⇒ nil.  We seed
+		// with element 0 and keep the running extremum, matching the TS
+		// `reduce` and Python `min`/`max` references.
+		if len(recv.Items) == 0 {
+			return nil, true
+		}
+		best := recv.Items[0]
+		for _, x := range recv.Items[1:] {
+			if name == "min" {
+				if _sir_value_lt(x, best) {
+					best = x
+				}
+			} else if _sir_value_lt(best, x) {
+				best = x
+			}
+		}
+		return best, true
+	case "sum":
+		// Ruby `Array#sum`: fold with polymorphic `+` over an initial value
+		// (default 0, or the supplied `sum(init)` argument), preserving
+		// int/float exactly as `_sir_plus` does.  Empty array ⇒ the initial
+		// value (0 by default).  Matches the Python/TS references, which start
+		// `total` at `args[0] if args else 0` and accumulate with `+`.
+		var acc Value = int64(0)
+		if len(args) > 0 {
+			acc = args[0]
+		}
+		for _, x := range recv.Items {
+			acc = _sir_plus([]Value{acc, x})
+		}
+		return acc, true
+	case "uniq":
+		// Order-preserving de-duplication using structural value-equality
+		// (`_sir_value_eq`), matching the reference `_uniq`.  Fresh slice.
+		out := []Value{}
+		for _, x := range recv.Items {
+			dup := false
+			for _, y := range out {
+				if _sir_value_eq(x, y) {
+					dup = true
+					break
+				}
+			}
+			if !dup {
+				out = append(out, x)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "flatten":
+		// Recursively flatten nested `*Seq` into a fresh flat `*Seq`.  A
+		// `*Seq` is a shared, mutable handle, so a program can build a *cyclic*
+		// array (`a = []; a << a`); an unguarded recursive flatten would
+		// overflow the Go stack (CWE-674).  We thread a `visited` set of the
+		// `*Seq` pointers on the active flatten path — exactly as `_sir_puts`
+		// does — and skip a handle already on its own path (a self-cycle
+		// contributes nothing, terminating the recursion).  Non-cyclic nested
+		// arrays flatten in full because each handle is removed from `visited`
+		// on exit, so sibling occurrences are unaffected.
+		out := []Value{}
+		_sir_flatten_into(&out, recv, make(map[Value]bool))
+		return &Seq{Items: out}, true
+	case "compact":
+		// Fresh array with nil elements removed (Ruby `Array#compact`).
+		out := []Value{}
+		for _, x := range recv.Items {
+			if x != nil {
+				out = append(out, x)
+			}
+		}
+		return &Seq{Items: out}, true
 	case "to_a":
 		return recv, true
 	}
 	return nil, false
+}
+
+// Cycle-guarded recursive flatten helper for `Array#flatten`.  Appends the
+// leaf (non-`*Seq`) elements of `seq` to `*out` in order, recursing into
+// nested `*Seq` handles.  `visited` holds the `*Seq` pointers currently on the
+// active recursion path; a handle already present is a self-cycle and is
+// skipped rather than recursed into (mirrors `_sir_puts_one`'s guard).
+func _sir_flatten_into(out *[]Value, seq *Seq, visited map[Value]bool) {
+	if visited[Value(seq)] {
+		return
+	}
+	visited[Value(seq)] = true
+	for _, item := range seq.Items {
+		if s, ok := item.(*Seq); ok {
+			_sir_flatten_into(out, s, visited)
+		} else {
+			*out = append(*out, item)
+		}
+	}
+	delete(visited, Value(seq))
 }
 
 // Block-taking Array/Enumerable methods.  `block` is applied via
@@ -1837,6 +1930,13 @@ func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closur
 	case "each":
 		for _, x := range recv.Items {
 			_sir_apply(block, []Value{x})
+		}
+		return recv, true
+	case "each_with_index":
+		// Yields `(element, index)` pairs and returns the receiver, matching
+		// the Python/TS `enumerate`-style references.
+		for i, x := range recv.Items {
+			_sir_apply(block, []Value{x, int64(i)})
 		}
 		return recv, true
 	case "map", "collect":
