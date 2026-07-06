@@ -119,6 +119,7 @@ SELF_CONTAINED_RUNGS = (
     "rung79_transfusion_load",
     "rung80_gi_motility",
     "rung81_cardiac_perfusion",
+    "rung82_gfr_estimation",
 )
 
 

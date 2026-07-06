@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 82 \u2014 nephrology GFR-estimation index from four stated quantities (a NEW panel: nephrology / GFR-estimation). From a filtration rate, a reabsorption rate to subtract, a transit time to divide the net by, and a secretion offset to add, compute the estimated GFR ((filtration_rate-reabsorption_rate)/transit_time + secretion_offset), the net clearance ((filtration_rate-reabsorption_rate)/transit_time), or the net filtered load (filtration_rate-reabsorption_rate). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, GROUPED-DIFFERENCE QUOTIENT PLUS A TERM (a-b)/c+d (form the parenthesised difference, divide by c, then add d, so (a-b)/c+d = ((a-b)/c)+d; the mirror of rung-81 (a+b)/c-d which summed the group and subtracted the term) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via -, /, and + \u2014 no constant leaks, and neither the net clearance, the net filtered load, nor any GFR figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: adding the secretion offset INSIDE the denominator ((a-b)/(c+d), a wrong grouping) and flipping the net difference to a SUM ((a+b)/c+d, a wrong grouping). The core confusion tested is that (a-b)/c+d is ((a-b)/c)+d, not (a-b)/(c+d) and not (a+b)/c+d.",
+  "items": [
+    {
+      "id": "r82gfr-01",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 30, reabsorbs at a reabsorption rate of 6 over a transit time of 4, then adds a secretion offset of 2. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(30)\nobserve reabsorption_rate(6)\nobserve transit_time(4)\nobserve secretion_offset(2)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r82gfr-02",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 30, reabsorbs at a reabsorption rate of 6 over a transit time of 4, then adds a secretion offset of 2. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(30)\nobserve reabsorption_rate(6)\nobserve transit_time(4)\nobserve secretion_offset(2)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r82gfr-03",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 30, reabsorbs at a reabsorption rate of 6 over a transit time of 4, then adds a secretion offset of 2. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(30)\nobserve reabsorption_rate(6)\nobserve transit_time(4)\nobserve secretion_offset(2)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r82gfr-04",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 40, reabsorbs at a reabsorption rate of 10 over a transit time of 5, then adds a secretion offset of 3. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(40)\nobserve reabsorption_rate(10)\nobserve transit_time(5)\nobserve secretion_offset(3)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r82gfr-05",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 40, reabsorbs at a reabsorption rate of 10 over a transit time of 5, then adds a secretion offset of 3. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(40)\nobserve reabsorption_rate(10)\nobserve transit_time(5)\nobserve secretion_offset(3)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r82gfr-06",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 40, reabsorbs at a reabsorption rate of 10 over a transit time of 5, then adds a secretion offset of 3. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(40)\nobserve reabsorption_rate(10)\nobserve transit_time(5)\nobserve secretion_offset(3)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r82gfr-07",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 48, reabsorbs at a reabsorption rate of 12 over a transit time of 6, then adds a secretion offset of 2. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(48)\nobserve reabsorption_rate(12)\nobserve transit_time(6)\nobserve secretion_offset(2)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r82gfr-08",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 48, reabsorbs at a reabsorption rate of 12 over a transit time of 6, then adds a secretion offset of 2. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(48)\nobserve reabsorption_rate(12)\nobserve transit_time(6)\nobserve secretion_offset(2)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r82gfr-09",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 48, reabsorbs at a reabsorption rate of 12 over a transit time of 6, then adds a secretion offset of 2. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(48)\nobserve reabsorption_rate(12)\nobserve transit_time(6)\nobserve secretion_offset(2)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r82gfr-10",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 24, reabsorbs at a reabsorption rate of 4 over a transit time of 5, then adds a secretion offset of 4. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(24)\nobserve reabsorption_rate(4)\nobserve transit_time(5)\nobserve secretion_offset(4)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.2222222222222223,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r82gfr-11",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 24, reabsorbs at a reabsorption rate of 4 over a transit time of 5, then adds a secretion offset of 4. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(24)\nobserve reabsorption_rate(4)\nobserve transit_time(5)\nobserve secretion_offset(4)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2222222222222223,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r82gfr-12",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 24, reabsorbs at a reabsorption rate of 4 over a transit time of 5, then adds a secretion offset of 4. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(24)\nobserve reabsorption_rate(4)\nobserve transit_time(5)\nobserve secretion_offset(4)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2222222222222223,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r82gfr-13",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 54, reabsorbs at a reabsorption rate of 6 over a transit time of 8, then adds a secretion offset of 3. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(54)\nobserve reabsorption_rate(6)\nobserve transit_time(8)\nobserve secretion_offset(3)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.363636363636363,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r82gfr-14",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 54, reabsorbs at a reabsorption rate of 6 over a transit time of 8, then adds a secretion offset of 3. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(54)\nobserve reabsorption_rate(6)\nobserve transit_time(8)\nobserve secretion_offset(3)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.363636363636363,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r82gfr-15",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 54, reabsorbs at a reabsorption rate of 6 over a transit time of 8, then adds a secretion offset of 3. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(54)\nobserve reabsorption_rate(6)\nobserve transit_time(8)\nobserve secretion_offset(3)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.363636363636363,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r82gfr-16",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 36, reabsorbs at a reabsorption rate of 12 over a transit time of 4, then adds a secretion offset of 5. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(36)\nobserve reabsorption_rate(12)\nobserve transit_time(4)\nobserve secretion_offset(5)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r82gfr-17",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 36, reabsorbs at a reabsorption rate of 12 over a transit time of 4, then adds a secretion offset of 5. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(36)\nobserve reabsorption_rate(12)\nobserve transit_time(4)\nobserve secretion_offset(5)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r82gfr-18",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 36, reabsorbs at a reabsorption rate of 12 over a transit time of 4, then adds a secretion offset of 5. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(36)\nobserve reabsorption_rate(12)\nobserve transit_time(4)\nobserve secretion_offset(5)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r82gfr-19",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 60, reabsorbs at a reabsorption rate of 15 over a transit time of 9, then adds a secretion offset of 2. What is the estimated GFR (the net clearance plus the secretion offset)?",
+      "program": "observe filtration_rate(60)\nobserve reabsorption_rate(15)\nobserve transit_time(9)\nobserve secretion_offset(2)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time + secretion_offset\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.090909090909091,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r82gfr-20",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 60, reabsorbs at a reabsorption rate of 15 over a transit time of 9, then adds a secretion offset of 2. What is the the net clearance (net filtered load over the transit time)?",
+      "program": "observe filtration_rate(60)\nobserve reabsorption_rate(15)\nobserve transit_time(9)\nobserve secretion_offset(2)\nlet answer = (filtration_rate - reabsorption_rate) / transit_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.090909090909091,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r82gfr-21",
+      "qtype": "gfr_estimation_index",
+      "stem": "A kidney filters at a filtration rate of 60, reabsorbs at a reabsorption rate of 15 over a transit time of 9, then adds a secretion offset of 2. What is the the net filtered load (filtration rate minus the reabsorption rate)?",
+      "program": "observe filtration_rate(60)\nobserve reabsorption_rate(15)\nobserve transit_time(9)\nobserve secretion_offset(2)\nlet answer = filtration_rate - reabsorption_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.090909090909091,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
