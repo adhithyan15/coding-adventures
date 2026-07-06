@@ -1237,6 +1237,197 @@ impl Document {
     }
 }
 
+// =================================================================================================
+// LTXDOC03 S5 — citation numbering (bracketed bibliography numbers over S2's resolution).
+//
+// S1 numbered nothing; S2 bound each `\cite` to its `\bibitem`; S4 numbered *sections and floats*
+// but explicitly left **citations** unnumbered. S5 fills that gap: it assigns the bracketed number
+// LaTeX prints for a `\cite` — the `[2]` in "as shown in [2]" — over the bibliography S2 already
+// resolved. It is the citation-family analogue of S4's [`Document::ref_number`].
+//
+// ## LaTeX's citation-numbering model (the `.aux` dance, numbered style)
+//
+// In the default *numeric, unsorted* bibliography style (`plain`-family, hand-written
+// `thebibliography`, or `unsrt`), every `\bibitem` is numbered by its **position in the list**: the
+// first `\bibitem` is `[1]`, the second `[2]`, the third `[3]`, …. On the first `latex` run each
+// `\bibitem{key}` fires the `enumiv`/bibliography counter and writes a `\bibcite{key}{n}` line into
+// `document.aux`; on the second run every `\cite{key}` reads `n` back and prints it in **brackets**.
+// A `\cite` to two keys, `\cite{a,c}`, prints both numbers, `[1, 3]`. A `\cite` whose key has no
+// `\bibitem` prints the tell-tale `[?]` and warns *"Citation `key' undefined"*.
+//
+// S5 is the static, single-pass, in-document analogue: a flat counter over S2's **already-ordered**
+// winning entry list. No `.aux`, no second parse — we number [`CitationResolution::entries`] by their
+// index (the exploratory parse confirmed `entries` is in `\bibitem` *listing order*), rendering entry
+// `entries[0]` as `[1]`, `entries[1]` as `[2]`, and so on.
+//
+// ## The three rules S5 implements (each confirmed against S2's data)
+//
+// 1. **Listing-order numbering.** `entries[i]` → `i + 1`, rendered bracketed. Because S2 collects
+//    `\bibitem`s in pre-order (source order), `entries[0]` *is* the first `\bibitem` in the source, so
+//    the index-based number matches LaTeX's list position exactly.
+// 2. **First-`\bibitem`-wins duplicates consume no number.** A key defined by two `\bibitem`s puts the
+//    *first* in `entries` and the *second* in [`CitationResolution::duplicate_entries`] — the losing
+//    duplicate is **not** in `entries`, so it never advances the counter. Confirmed: with entries
+//    `a, b, c` and a later duplicate `\bibitem{a}`, `entries == [a, b, c]` and `c` is still `[3]` (the
+//    duplicate did not push it to `[4]`). This mirrors LaTeX: a re-declared `\bibitem` warns and is
+//    numbered *the same* as the first — it does not consume a fresh slot.
+// 3. **Dangling `\cite`s are unnumbered.** A `\cite{missing}` whose key has no `\bibitem` is in
+//    [`CitationResolution::unresolved`], so it carries no [`ResolvedCite`] and there is no entry to
+//    number — [`CitationNumbering::number_for`] returns `None` for it (never a panic). This is the
+//    `[?]` case, the honest boundary S1-S4 all draw around undefined keys.
+//
+// ## What S5 numbers, and what is DEFERRED (the honest boundary)
+//
+// S5 numbers **in-document `thebibliography` citations only**, in the default numeric/unsorted style.
+// It deliberately does **not** yet assign:
+//
+// - **Equation numbers** — the other candidate for this rung, but the AST does not model them: an
+//   equation body is kept as an opaque [`Block::DisplayMath`] *raw source string* with **no** `label`
+//   field (an equation's `\label` is buried inside that string, not a resolvable label def), so
+//   per-equation numbering would need fuzzy string heuristics. Citation numbering is well-defined on
+//   S2's clean owned data, so S5 does citations; equation numbering stays a documented future rung
+//   (blocked on the `DisplayMath` AST shape carrying no label field).
+// - **Author-year / natbib sorted styles.** `plainnat`/`abbrvnat`/`alpha` renumber or re-*label*
+//   entries (`[Smith2020]`, `[Smi20]`) and often **sort** the list, changing the number a key prints.
+//   S5 models only the *listing-order numeric* style; sorted/author-year styles are a later rung.
+// - **External `.bib` databases.** As with S2, only an in-document `thebibliography` is numbered; a
+//   `\bibliography{refs}` reading an external `.bib`/`.bbl` is not (S5 does no file I/O, parses no
+//   BibTeX). A `\cite` whose key lives only in an external database is *unresolved* by S2, hence
+//   unnumbered here.
+//
+// ## The result type and payoff
+//
+// [`Document::number_citations`] returns a [`CitationNumbering`]: one owned row per numbered
+// bibliography key, carrying its raw ordinal (`1`, `2`, …) and its rendered bracketed number (`"[1]"`,
+// `"[2]"`, …). It mirrors S4's [`Numbering`] shape (owned `String`s + `Copy` ordinal) and provides a
+// [`number_for`](CitationNumbering::number_for) lookup. [`Document::cite_number`] is the S2→S5 payoff
+// convenience: given a resolved `\cite` (S2's [`ResolvedCite`]), return that citation's bracketed
+// number — closing the loop `\cite{foo}` → `"[2]"`.
+//
+// **Additive & pure.** The S1-S4 result types are unchanged; S5 reads S2's [`CitationResolution`] and
+// produces a new owned aggregate, mutating nothing about the tree or any prior pass.
+// =================================================================================================
+
+/// Render an entry's raw ordinal as the bracketed LaTeX citation number: `1` → `"[1]"`, `2` → `"[2]"`.
+///
+/// The single source of the bracket style — `\cite` prints its entry's number **in square brackets**
+/// in the default numeric style, and every S5 rendering funnels through here so the bracket convention
+/// lives in exactly one place (if a future rung needs a different delimiter, it changes only this
+/// helper). Pure and total: a `usize` format, no allocation beyond the returned `String`, no panic.
+fn render_cite_number(ordinal: usize) -> String {
+    format!("[{ordinal}]")
+}
+
+// -------------------------------------------------------------------------------------------------
+// The record types (plain, Clone-able, owned data — parallel to S4's NumberedLabel/Numbering).
+// -------------------------------------------------------------------------------------------------
+
+/// One **numbered citation**: a bibliography `key`, its raw `ordinal` (1-based list position), and the
+/// rendered bracketed `number` LaTeX would print for a `\cite` to it. This is one row of S5's citation
+/// numbering table — the static analogue of an `.aux` `\bibcite{key}{n}` line, capturing the number in
+/// its printed bracketed form.
+///
+/// The `ordinal` is the entry's 1-based position in the (listing-order) winning entry list —
+/// `entries[0]` → `1`, `entries[1]` → `2`, …; the `number` is that ordinal rendered through
+/// [`render_cite_number`] (`"[1]"`, `"[2]"`, …). Both are exposed: the `ordinal` for callers that want
+/// the bare count (to re-render in a different style, or sort), the `number` for the ready-to-print
+/// bracketed string a `\cite` emits.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NumberedCitation {
+    /// The citation key, verbatim, without braces (`"smith2020"`).
+    pub key: String,
+    /// The entry's 1-based ordinal — its position in the `\bibitem` listing (`1`, `2`, …).
+    pub ordinal: usize,
+    /// The rendered bracketed number LaTeX would print for a `\cite` to this key (`"[1]"`, `"[2]"`, …).
+    pub number: String,
+}
+
+/// The full result of [`Document::number_citations`]: the citation-numbering table — one
+/// [`NumberedCitation`] row per **numbered bibliography key** (the winning `\bibitem`s, in listing
+/// order; dangling `\cite`s and losing duplicates are omitted). All plain, owned data (keys + numbers
+/// are `String`s, ordinals are `Copy`), so the numbering outlives any borrow of the source and can be
+/// stored/serialized — mirroring S4's [`Numbering`].
+///
+/// **Ordering.** `entries` is in `\bibitem` **listing order** (the pre-order S2 collected the winning
+/// entries in), so the table reads top-to-bottom like the bibliography and each row's `ordinal` is
+/// just its index + 1. Only winning entries appear: a duplicate `\bibitem` (in S2's
+/// [`CitationResolution::duplicate_entries`]) does **not** add a row and does **not** advance the
+/// count — exactly as LaTeX numbers a re-declared entry the same as its first declaration.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct CitationNumbering {
+    /// One row per numbered bibliography key, in `\bibitem` listing order.
+    pub entries: Vec<NumberedCitation>,
+}
+
+impl CitationNumbering {
+    /// The rendered bracketed number of `key`, if it is a numbered bibliography entry, else `None`.
+    /// Linear over `entries` (small: one row per distinct entry); no allocation. `&str` borrow into
+    /// the owned row.
+    pub fn number_for(&self, key: &str) -> Option<&str> {
+        self.entries.iter().find(|e| e.key == key).map(|e| e.number.as_str())
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// The citation-numbering pass.
+// -------------------------------------------------------------------------------------------------
+
+impl Document {
+    /// Number every bibliography entry with its bracketed `\cite` number (LTXDOC03 S5).
+    ///
+    /// Built directly on S2: it runs [`resolve_citations`](Document::resolve_citations), then numbers
+    /// the winning [`CitationResolution::entries`] by their **listing-order index** — `entries[0]` →
+    /// `[1]`, `entries[1]` → `[2]`, …. Because S2 collects `\bibitem`s in source pre-order, the index
+    /// matches LaTeX's list position exactly (the default numeric/unsorted style).
+    ///
+    /// A losing duplicate `\bibitem` (in [`CitationResolution::duplicate_entries`]) is **not** in
+    /// `entries`, so it neither adds a row nor advances the counter — a re-declared entry is numbered
+    /// the same as its first declaration, consuming no fresh slot. A dangling `\cite` has no entry, so
+    /// it is simply absent from the table (unnumbered).
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; the ordinal comes from
+    /// `enumerate` over `entries` (bounded by the number of distinct entries), reusing S2's bounded
+    /// collection (no new recursion). Borrows `self` immutably; the returned [`CitationNumbering`] is
+    /// owned plain data (keys + numbers copied out, ordinals `Copy`), so it outlives any borrow of the
+    /// source. The tree is **not** mutated — numbering is pure analysis, leaving S1-S4 outputs
+    /// byte-for-byte unchanged.
+    pub fn number_citations(&self) -> CitationNumbering {
+        let resolution = self.resolve_citations();
+        let entries = resolution
+            .entries
+            .iter()
+            .enumerate()
+            .map(|(index, entry)| {
+                // 1-based ordinal: `entries[0]` is `[1]`. `index + 1` cannot overflow in any real
+                // document (the entry count is bounded by the parsed tree), and `saturating_add`
+                // keeps it total even at the theoretical `usize::MAX` edge.
+                let ordinal = index.saturating_add(1);
+                NumberedCitation {
+                    key: entry.key.clone(),
+                    ordinal,
+                    number: render_cite_number(ordinal),
+                }
+            })
+            .collect();
+        CitationNumbering { entries }
+    }
+
+    /// The rendered bracketed **number** a resolved citation prints (LTXDOC03 S5) — the payoff that
+    /// ties S2 resolution to S5 numbering: given a [`ResolvedCite`] (`\cite{foo}`'s binding to its
+    /// `\bibitem`), return that entry's number (`"[2]"`), or `None` if the key is not a numbered entry
+    /// — a **documented, total** outcome, never a panic. (In practice a genuine [`ResolvedCite`]
+    /// *always* names a winning entry, so `None` is the honest edge — e.g. a hand-built `ResolvedCite`
+    /// with a key no `\bibitem` defines.)
+    ///
+    /// Convenience over [`number_citations`](Document::number_citations): it numbers the document, then
+    /// looks the citation's `key` up. (A caller numbering *many* citations should call
+    /// `number_citations` **once** and reuse the [`CitationNumbering`]; this method re-numbers per
+    /// call, which is O(entries) each — fine for a one-off lookup.)
+    pub fn cite_number(&self, c: &ResolvedCite) -> Option<String> {
+        self.number_citations().number_for(&c.key).map(str::to_string)
+    }
+}
+
 // -------------------------------------------------------------------------------------------------
 // Tests.
 // -------------------------------------------------------------------------------------------------
@@ -2131,6 +2322,173 @@ See Section~\ref{sec:intro} and \cite{smith2020}.
         assert!(
             doc.ref_target_node(&refs_before.resolved[0]).is_some(),
             "S3 lookup still resolves after numbering"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S5 — citation numbering (bracketed bibliography numbers).
+    // ---------------------------------------------------------------------------------------------
+
+    /// Parse `src` and number its citations — the shared S5 harness.
+    fn number_cites(src: &str) -> CitationNumbering {
+        parse_document(src).expect("parse").number_citations()
+    }
+
+    #[test]
+    fn bibitems_number_by_listing_order() {
+        // Three `\bibitem`s in a `thebibliography` number `[1]`, `[2]`, `[3]` in listing order —
+        // the exact bracketed strings LaTeX prints for a `\cite` to each.
+        let src = r"\begin{document}\cite{a} \cite{b} \cite{c}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\bibitem{c} C. Third. 2003.
+\end{thebibliography}\end{document}";
+        let num = number_cites(src);
+
+        assert_eq!(num.entries.len(), 3, "three numbered entries");
+        // LOAD-BEARING: the exact bracketed strings, in listing order.
+        assert_eq!(num.number_for("a"), Some("[1]"), "first \\bibitem is [1]");
+        assert_eq!(num.number_for("b"), Some("[2]"), "second \\bibitem is [2]");
+        assert_eq!(num.number_for("c"), Some("[3]"), "third \\bibitem is [3]");
+
+        // The raw ordinals are the 1-based list positions.
+        assert_eq!(num.entries[0].ordinal, 1);
+        assert_eq!(num.entries[1].ordinal, 2);
+        assert_eq!(num.entries[2].ordinal, 3);
+        // Rows are in listing order (keys read top-to-bottom like the bibliography).
+        let keys: Vec<&str> = num.entries.iter().map(|e| e.key.as_str()).collect();
+        assert_eq!(keys, ["a", "b", "c"]);
+    }
+
+    #[test]
+    fn cite_number_ties_s2_resolution_to_s5_numbering() {
+        // THE PAYOFF: a resolved `\cite{b}` (S2) numbers to "[2]" (S5) — the second `\bibitem`.
+        let src = r"\begin{document}As shown in \cite{b}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let cites = doc.resolve_citations();
+        assert_eq!(cites.resolved.len(), 1, "the \\cite{{b}} resolves");
+        let c = &cites.resolved[0];
+        assert_eq!(c.key, "b");
+        // LOAD-BEARING: S2's resolved cite → S5's bracketed number.
+        assert_eq!(doc.cite_number(c).as_deref(), Some("[2]"), "\\cite{{b}} prints [2]");
+    }
+
+    #[test]
+    fn multi_key_cite_numbers_each_key_independently() {
+        // A multi-key `\cite{a,c}` → its two resolved records number to "[1]" and "[3]" respectively
+        // (each key looks up its own entry's list position).
+        let src = r"\begin{document}See \cite{a,c}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\bibitem{c} C. Third. 2003.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let cites = doc.resolve_citations();
+        assert_eq!(cites.resolved.len(), 2, "both keys of \\cite{{a,c}} resolve");
+        let ca = cites.resolved.iter().find(|c| c.key == "a").expect("a resolves");
+        let cc = cites.resolved.iter().find(|c| c.key == "c").expect("c resolves");
+        assert_eq!(doc.cite_number(ca).as_deref(), Some("[1]"), "a is [1]");
+        assert_eq!(doc.cite_number(cc).as_deref(), Some("[3]"), "c is [3]");
+    }
+
+    #[test]
+    fn dangling_cite_key_is_not_numbered_no_panic() {
+        // A `\cite{missing}` is in S2's `unresolved` (no ResolvedCite), so there is nothing to
+        // number. `number_for("missing")` is None — the honest `[?]` edge, no panic.
+        let src = r"\begin{document}See \cite{missing}.
+
+\begin{thebibliography}{9}
+\bibitem{real} Real. Actual. 2000.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let num = doc.number_citations();
+        assert_eq!(num.number_for("real"), Some("[1]"), "the real entry is [1]");
+        assert!(num.number_for("missing").is_none(), "a dangling key has no number");
+
+        // And the dangling `\cite` really is unresolved (so there is no ResolvedCite to pass to
+        // cite_number in the first place).
+        let cites = doc.resolve_citations();
+        assert!(cites.resolved.is_empty(), "nothing resolves");
+        assert_eq!(cites.unresolved.len(), 1);
+        assert_eq!(cites.unresolved[0].key, "missing");
+    }
+
+    #[test]
+    fn duplicate_bibitem_consumes_no_number_others_unshifted() {
+        // A re-declared `\bibitem{a}` later in the list is a losing duplicate: it does NOT renumber
+        // or shift the others (b stays "[2]", c stays "[3]"), and consumes no number of its own.
+        let src = r"\begin{document}\cite{a} \cite{b} \cite{c}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\bibitem{c} C. Third. 2003.
+\bibitem{a} A. Duplicate later. 2099.
+\end{thebibliography}\end{document}";
+        let num = number_cites(src);
+
+        // Exactly three numbered entries — the duplicate did NOT add a fourth row.
+        assert_eq!(num.entries.len(), 3, "the duplicate \\bibitem{{a}} consumes no number");
+        assert_eq!(num.number_for("a"), Some("[1]"), "a keeps its first-declaration number [1]");
+        assert_eq!(num.number_for("b"), Some("[2]"), "b is unshifted at [2]");
+        assert_eq!(num.number_for("c"), Some("[3]"), "c is unshifted at [3] (not pushed to [4])");
+    }
+
+    #[test]
+    fn empty_document_yields_empty_citation_numbering_no_panic() {
+        // An empty document, and one with no `thebibliography`, both yield empty numbering, no panic.
+        assert_eq!(
+            number_cites(r"\begin{document}\end{document}"),
+            CitationNumbering::default(),
+            "empty doc → empty citation numbering"
+        );
+        assert_eq!(
+            number_cites(r"\begin{document}Text with \cite{x} but no bibliography.\end{document}"),
+            CitationNumbering::default(),
+            "no bibliography → no numbered entries"
+        );
+    }
+
+    #[test]
+    fn citation_numbering_does_not_mutate_the_tree_s1_s2_s3_s4_unchanged() {
+        // REGRESSION: citation numbering is pure analysis — running it leaves S1/S2/S3/S4 outputs
+        // byte-for-byte unchanged (the tree is never mutated).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+See Section~\ref{sec:intro} and \cite{smith2020}.
+
+\begin{thebibliography}{9}
+\bibitem{smith2020} Smith, J. Title. 2020.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let refs_before = doc.resolve_references();
+        let cites_before = doc.resolve_citations();
+        let num_before = doc.number_labels();
+
+        // Number the citations (exercises the S5 pass).
+        let cite_num = doc.number_citations();
+        assert_eq!(cite_num.number_for("smith2020"), Some("[1]"));
+
+        // S1/S2/S4 outputs are untouched, and S3 node lookup still agrees.
+        assert_eq!(doc.resolve_references(), refs_before, "S1 output unchanged by S5");
+        assert_eq!(doc.resolve_citations(), cites_before, "S2 output unchanged by S5");
+        assert_eq!(doc.number_labels(), num_before, "S4 output unchanged by S5");
+        assert!(
+            doc.cite_target_node(&cites_before.resolved[0]).is_some(),
+            "S3 lookup still resolves after citation numbering"
         );
     }
 }
