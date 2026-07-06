@@ -1852,6 +1852,13 @@ export interface DeviceModelReferenceDeckAuditGateReport {
   readonly issues: readonly DeviceModelReferenceDeckAuditIssue[];
 }
 
+export interface DeviceModelReferenceDeckAuditGateIssueSummary {
+  readonly field: string;
+  readonly issueCount: number;
+  readonly fixtureNames: readonly string[];
+  readonly messages: readonly string[];
+}
+
 export interface DeviceModelReferenceDeckAuditSummary {
   readonly kind: ModelCardKind | string;
   readonly fixtureCount: number;
@@ -9101,6 +9108,71 @@ export function formatDeviceModelReferenceDeckAuditGateIssueJson(
   report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
 ): string {
   return formatDeckTableJson(formatDeviceModelReferenceDeckAuditGateIssueTable(report));
+}
+
+export function deviceModelReferenceDeckAuditGateIssueSummary(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): readonly DeviceModelReferenceDeckAuditGateIssueSummary[] {
+  const groups = new Map<string, DeviceModelReferenceDeckAuditIssue[]>();
+  for (const issue of report.issues) {
+    const rows = groups.get(issue.field) ?? [];
+    rows.push(issue);
+    groups.set(issue.field, rows);
+  }
+
+  return [...groups.keys()].sort().map((field) => {
+    const issues = groups.get(field) ?? [];
+    const fixtureNames: string[] = [];
+    const messages: string[] = [];
+    for (const issue of issues) {
+      if (!fixtureNames.includes(issue.fixtureName)) {
+        fixtureNames.push(issue.fixtureName);
+      }
+      if (!messages.includes(issue.message)) {
+        messages.push(issue.message);
+      }
+    }
+    return {
+      field,
+      issueCount: issues.length,
+      fixtureNames,
+      messages,
+    };
+  });
+}
+
+export function formatDeviceModelReferenceDeckAuditGateIssueSummaryTable(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return [
+    "field\tissue_count\tfixture_names\tmessages",
+    ...deviceModelReferenceDeckAuditGateIssueSummary(report).map((summary) =>
+      [
+        summary.field,
+        summary.issueCount.toString(),
+        summary.fixtureNames.join(","),
+        summary.messages.join(","),
+      ].join("\t"),
+    ),
+  ].join("\n");
+}
+
+export function deviceModelReferenceDeckAuditGateIssueSummaryRecords(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditGateIssueSummaryTable(report));
+}
+
+export function formatDeviceModelReferenceDeckAuditGateIssueSummaryCsv(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditGateIssueSummaryTable(report));
+}
+
+export function formatDeviceModelReferenceDeckAuditGateIssueSummaryJson(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditGateIssueSummaryTable(report));
 }
 
 export function vccs(

@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Device model reference-deck audit gate issue summaries** —
+  `device_model_reference_deck_audit_gate_issue_summary()`,
+  `format_device_model_reference_deck_audit_gate_issue_summary_table()`,
+  `device_model_reference_deck_audit_gate_issue_summary_records()`,
+  `format_device_model_reference_deck_audit_gate_issue_summary_csv()`, and
+  `format_device_model_reference_deck_audit_gate_issue_summary_json()` now
+  expose grouped gate issue counts for reference-deck audit dashboards,
+  matching Rust and TypeScript.
+
 - **Berkeley SPICE syntax facade** —
   `parse_berkeley_syntax()` now mirrors the Rust Berkeley logical-card parser
   contract with embedded grammar metadata, normalized continuation cards,

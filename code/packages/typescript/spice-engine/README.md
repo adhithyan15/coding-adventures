@@ -252,6 +252,13 @@ kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
 `formatDeviceModelReferenceDeckAuditGateIssueJson` expose the gate's issue
 rows as stable table, record, CSV, and compact JSON payloads for release
 dashboards.
+`deviceModelReferenceDeckAuditGateIssueSummary`,
+`formatDeviceModelReferenceDeckAuditGateIssueSummaryTable`,
+`deviceModelReferenceDeckAuditGateIssueSummaryRecords`,
+`formatDeviceModelReferenceDeckAuditGateIssueSummaryCsv`, and
+`formatDeviceModelReferenceDeckAuditGateIssueSummaryJson` aggregate those gate
+issues by field with issue counts, affected fixtures, and messages for compact
+CI dashboards.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.
