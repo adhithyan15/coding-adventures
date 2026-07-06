@@ -228,3 +228,102 @@ wins under a duplicate `\bibitem`, a `\cite` with no bibliography reported unres
 panicking, an empty document yielding empty results, and a regression that S1's `resolve_references`
 and S2's `resolve_citations` coexist on a document with **both** families without disturbing each
 other.
+
+## 9. S3 — target → `NodeRef` exposure
+
+S1 and S2 each bind a cross-reference to the **bytes** of its target: a `ResolvedRef` carries
+`target_span: Span`, a `ResolvedCite` carries `entry_span: Span`, a `LabelDef`/`BibEntry` carries
+`span: Span`. A `Span` is a source-byte range you can *slice* (`&src[span]`) — but it is not the
+target **node**, so a consumer cannot ask "what *kind* of node is this?" or "walk into the section's
+paragraphs / the figure's caption". S3 is the natural depth-add on S1+S2: given a resolved target's
+span, hand back the actual walked `NodeRef`, so the caller can read its `kind()` and — for a
+`NodeRef::Block` — descend into its children. No new parsing, no numbering, no I/O — pure, additive
+analysis over the existing `Document::walk`.
+
+### 9.1 Scope
+
+- **In (S3):** a span→node lookup primitive `Document::node_for_span(span) -> Option<NodeRef>`, and
+  three thin accessors that take a resolved S1/S2 record and return its node —
+  `ref_target_node(&ResolvedRef)`, `cite_target_node(&ResolvedCite)`, `label_def_node(&LabelDef)`.
+- **Out (S3):** everything S1/S2 already excluded — citation/reference **numbering**, **external
+  BibTeX**, natbib families, hyperref anchors — remains deferred to later rungs. S3 changes no parser,
+  fold, `walk`, `node_at`, or span logic, and does **not** alter the S1/S2 result types.
+
+### 9.2 The lookup: span-equality against the body walk
+
+`node_for_span` walks the body (`Document::walk`, pre-order) and returns the node whose
+`span()` **exactly equals** the requested span — half-open equality of *both* `start` and `end`. This
+is deliberately **equality**, not **containment**: a resolved S1/S2 target span is, by construction,
+some walked node's own span (S1 recorded a block's or a cross-ref's span; S2 recorded a `\bibitem`'s
+`Inline::Raw` span), so the node we want is the one that *is* that span, not merely one that
+*encloses* it. Containment — "which leaf owns this arbitrary byte?" — is `Document::node_at`'s job
+(S4), a different question. The lookup is O(nodes): one reuse of the bounded `walk`, no new recursion.
+
+**Tie-break (defensive).** If two walked nodes ever shared an identical span, `node_for_span` returns
+the **first in pre-order** — the outermost/earliest, since `walk` yields a parent before its children
+and an earlier sibling before a later one. The exploratory parse (below) found **zero** such
+collisions among real targets, so this rule is documented for determinism, not because callers reach
+it.
+
+### 9.3 Reachability (confirmed against the parsed AST, not assumed)
+
+An exploratory parse over a document exercising every target family confirmed that **every** S1/S2
+target span corresponds to **exactly one** walked node — there were zero pairs of distinct walked
+nodes sharing an identical span:
+
+| target | walked node it resolves to | reachable? |
+|--------|----------------------------|------------|
+| `\ref`→`\section` (hoisted label) | the `Block::Section` | **yes** — `NodeRef::Block`, `kind()=="Section"` |
+| `\ref`→`figure` float | the `Block::Figure` | **yes** — `kind()=="Figure"` |
+| `\ref`→`table` float | the `Block::Table` | **yes** — `kind()=="Table"` |
+| `\eqref`→ inline `\label` | the `Inline::CrossRef` | **yes** — `NodeRef::Inline`, `kind()=="CrossRef"` |
+| `\cite`→`\bibitem` | the `Inline::Raw` `\bibitem` command | **yes** — `kind()=="Raw"` (see below) |
+
+**The `\bibitem` target *is* walked** — the one genuinely uncertain case, so it was *verified*, not
+assumed. A `\bibitem{key}` sits inside a `thebibliography` `Block::Environment`, whose body `walk`
+descends into; the `\bibitem` survives D2 as an `Inline::Raw` command inside a `Block::Paragraph`,
+which `walk` visits. Its span therefore matches a walked node and `cite_target_node` returns
+`Some(NodeRef::Inline(..))` (`kind()=="Raw"`), **not** `None`.
+
+**When `None` is returned.** `node_for_span` returns `None` for any span that is *not* some walked
+body node's own span: a span from an empty document, a preamble/metadata span (those regions are
+classified out of directives and deliberately **not** walked — see `Document::walk`), or any
+caller-fabricated span landing between nodes. This is a **documented, total** outcome — never a panic.
+Because every *resolved* S1/S2 target span is a walked node's span, the accessors never return `None`
+for a genuinely resolved reference/citation in a well-formed document; `None` is reserved for the
+honest edge.
+
+### 9.4 Public API
+
+```rust
+impl Document {
+    /// The walked body node whose span EXACTLY equals `span`, else `None`. First-in-pre-order on tie.
+    pub fn node_for_span(&self, span: Span) -> Option<NodeRef<'_>>;
+    /// The target node of a resolved reference (= `node_for_span(r.target_span)`).
+    pub fn ref_target_node(&self, r: &ResolvedRef) -> Option<NodeRef<'_>>;
+    /// The `\bibitem` node of a resolved citation (= `node_for_span(c.entry_span)`).
+    pub fn cite_target_node(&self, c: &ResolvedCite) -> Option<NodeRef<'_>>;
+    /// The defining node of a label definition (= `node_for_span(d.span)`).
+    pub fn label_def_node(&self, d: &LabelDef) -> Option<NodeRef<'_>>;
+}
+```
+
+**Additivity & borrowing.** The S1/S2 result types (`ResolvedRef`, `ResolvedCite`, `LabelDef`,
+`BibEntry`, …) are **unchanged** — they still carry only owned `Span`s (no lifetimes), so a resolution
+still outlives any borrow of the source. A `NodeRef` borrows the doc, so it cannot live on those owned
+types; instead it is fetched **on demand** through these `Document` methods, keeping S3 purely
+additive and lifetime-clean.
+
+### 9.5 Verification (S3)
+
+`cargo test -p latex` green (9 new `references` S3 tests); `cargo clippy -p latex --all-targets
+-- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build
+-p latex --no-default-features` builds. No `cargo fmt`, no grammar regen. The load-bearing tests
+assert the **actual node**, not just `.is_some()`: a `\ref`→section returns the real `Block::Section`
+and we descend into its title inlines + owned paragraph; a `\ref`→figure reaches its caption text; an
+inline `\eqref` returns the `CrossRef` inline whose span slices back to `\label{eq:x}`; a
+`\cite`→`\bibitem` returns the walked `Inline::Raw` whose span slices back to exactly
+`\bibitem{key}`. The suite also pins: `label_def_node` returns the defining node, a non-matching span
+→ `None` (no panic), `node_for_span(target_span)` agrees with `ref_target_node`, empty-document
+lookups → `None`, and a regression that exercising the S3 accessors leaves S1's `resolve_references`
+and S2's `resolve_citations` outputs byte-for-byte unchanged.

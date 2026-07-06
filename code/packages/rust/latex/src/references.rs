@@ -745,6 +745,140 @@ fn resolve_cites(
     (resolved, unresolved)
 }
 
+// =================================================================================================
+// LTXDOC03 S3 — target → NodeRef exposure.
+//
+// S1 bound each `\ref` to the *bytes* of its `\label`'s node (a [`Span`]); S2 bound each `\cite` to
+// the *bytes* of its `\bibitem`'s node. Both hand back a [`Span`] — a source-byte range you can
+// slice — but **not** the node itself. So a consumer that resolves `\ref{sec:intro}` learns *where*
+// the section is in the source, yet cannot ask "what *kind* of node is this?" or "walk into the
+// section's paragraphs". S3 closes that gap: given a resolved target's [`Span`], it hands back the
+// actual walked [`NodeRef`], so the caller can read its [`kind`](NodeRef::kind) and — for a
+// [`NodeRef::Block`] — descend into its children (a `\ref` to a section can now enumerate the
+// section's paragraphs; a `\ref` to a figure can reach its caption text).
+//
+// ## The lookup: span-equality against the body walk
+//
+// The primitive is [`Document::node_for_span`]: it walks the body ([`Document::walk`], pre-order) and
+// returns the node whose [`span`](NodeRef::span) **exactly equals** the requested one — half-open
+// equality of *both* `start` and `end`. This is deliberately *equality*, not *containment*: a
+// resolved target's span is, by construction, some walked node's own span (S1 recorded a block's or
+// cross-ref's span; S2 recorded a `\bibitem`'s `Inline::Raw` span), so the node we want is the one
+// that *is* that span, not merely one that *encloses* it. (Containment is [`Document::node_at`]'s job,
+// S4 — a different question: "which leaf owns this arbitrary byte?".)
+//
+// ## Reachability — which targets yield a node, which yield `None`
+//
+// The exploratory parse (recorded in the S3 spec) confirmed that **every** S1/S2 target span
+// corresponds to **exactly one** walked node — there were *zero* pairs of distinct walked nodes
+// sharing an identical span — so the lookup is unambiguous in practice:
+//
+// | target | walked node it resolves to | reachable? |
+// |--------|----------------------------|------------|
+// | `\ref`→`\section` (hoisted label) | the [`Block::Section`] | **yes** ([`NodeRef::Block`], kind `"Section"`) |
+// | `\ref`→`figure` float | the [`Block::Figure`] | **yes** (kind `"Figure"`) |
+// | `\ref`→`table` float | the [`Block::Table`] | **yes** (kind `"Table"`) |
+// | `\eqref`→ inline `\label` | the [`Inline::CrossRef`] | **yes** ([`NodeRef::Inline`], kind `"CrossRef"`) |
+// | `\cite`→`\bibitem` | the [`Inline::Raw`] `\bibitem` command | **yes** (kind `"Raw"`) — see below |
+//
+// **The `\bibitem` target *is* walked.** A `\bibitem{key}` sits inside a `thebibliography`
+// [`Block::Environment`], whose body [`Document::walk`] descends into; the `\bibitem` survives D2 as an
+// [`Inline::Raw`] command inside a [`Block::Paragraph`], which `walk` visits. So its span **does**
+// match a walked node and [`Document::cite_target_node`] returns `Some(NodeRef::Inline(..))` (kind
+// `"Raw"`), *not* `None`. (This was the one genuinely uncertain case — bibitems could have lived in a
+// non-walked region — so it was verified rather than assumed.)
+//
+// **When `None` is returned.** `node_for_span` returns `None` for any span that is *not* some walked
+// body node's own span: a span from an empty document, a preamble/metadata span (those regions are
+// classified out of directives and deliberately **not** walked — see [`Document::walk`]), or any
+// caller-fabricated span that lands between nodes. This is a *documented, total* outcome — never a
+// panic — so a caller can treat "no node" as an ordinary result. Because every S1/S2 *resolved*
+// target span is a walked node's span, the accessors below never return `None` for a genuinely
+// resolved reference/citation in a well-formed document; `None` is reserved for the honest edge
+// (fabricated spans, empty docs).
+//
+// ## Tie-break (defensive, does not fire in practice)
+//
+// If two walked nodes ever shared an identical span, `node_for_span` returns the **first in pre-order**
+// — the outermost/earliest, since `walk` yields a parent before its children and an earlier sibling
+// before a later one. The exploratory parse found no such collision for real targets, so this rule is
+// a defensive tie-break for totality, not a behaviour real callers hit; it is documented so the choice
+// is deterministic rather than incidental.
+//
+// ## Additivity, borrowing, and bounds
+//
+// S3 is **purely additive**: the S1/S2 result types ([`ResolvedRef`], [`ResolvedCite`], [`LabelDef`],
+// [`BibEntry`], …) are **unchanged** — they still carry only owned [`Span`]s (no lifetimes), so a
+// resolution still outlives any borrow of the source. The [`NodeRef`] is fetched *on demand* through
+// these [`Document`] methods (a `NodeRef` borrows the doc, so it cannot live on the owned result
+// types). Each lookup is O(nodes) — one reuse of the bounded [`Document::walk`] — introducing no new
+// recursion, no allocation beyond `walk`'s own vector, and no panic (no `unwrap`/`expect`, no unchecked
+// indexing).
+// =================================================================================================
+
+impl Document {
+    /// The walked body node whose [`span`](NodeRef::span) **exactly equals** `span` (half-open
+    /// equality of *both* `start` and `end`), or `None` if no walked node matches (LTXDOC03 S3).
+    ///
+    /// This is the load-bearing primitive under S3's ergonomic accessors ([`ref_target_node`],
+    /// [`cite_target_node`], [`label_def_node`]). It answers "**which node** *is* these bytes?" —
+    /// distinct from [`node_at`](Document::node_at)'s "which leaf *contains* this byte?" (containment,
+    /// S4). A resolved S1/S2 target span is, by construction, some walked node's own span, so equality
+    /// is the right predicate here.
+    ///
+    /// **Reachability & `None`.** Every S1/S2 *resolved* target — a section/table/figure block, an
+    /// inline `\label`, or a `\bibitem` [`Inline::Raw`] — is a walked body node, so this returns
+    /// `Some` for them. It returns `None` for a span that is not any walked node's own span: an empty
+    /// document, a preamble/metadata region (not walked — see [`walk`](Document::walk)), or a
+    /// fabricated span between nodes. `None` is an ordinary, documented result, never a panic.
+    ///
+    /// **Tie-break.** If two walked nodes ever shared an identical span (none do for real targets —
+    /// the exploratory parse found zero collisions), the **first in pre-order** wins (the outermost /
+    /// earliest, since `walk` yields parents before children and earlier siblings first).
+    ///
+    /// **Total, O(nodes), panic-free.** One reuse of the bounded [`walk`](Document::walk) — no new
+    /// recursion, no `unwrap`/`expect`, no unchecked indexing.
+    pub fn node_for_span(&self, span: Span) -> Option<NodeRef<'_>> {
+        // `find` yields the first (pre-order) node whose span equals `span` — the documented
+        // tie-break — and short-circuits once found.
+        self.walk().find(|node| node.span() == span)
+    }
+
+    /// The actual target **node** a resolved reference points at (LTXDOC03 S3) — the section, figure,
+    /// table, or inline `\label` [`NodeRef`] whose span is `r.target_span`, or `None` if that span is
+    /// not a walked node (it always is for a genuinely [`ResolvedRef`], so `None` is the honest edge —
+    /// see [`node_for_span`](Document::node_for_span)).
+    ///
+    /// This lifts S1's byte-level binding to a node-level one: from `r.target_span` (the target's
+    /// *bytes*) to the target *node*, so the caller can read its [`kind`](NodeRef::kind) and, for a
+    /// [`NodeRef::Block`], descend into its children — e.g. `ref_target_node` for a `\ref{sec:intro}`
+    /// yields the [`Block::Section`], from which one can enumerate the section's paragraphs.
+    pub fn ref_target_node(&self, r: &ResolvedRef) -> Option<NodeRef<'_>> {
+        self.node_for_span(r.target_span)
+    }
+
+    /// The actual target **node** a resolved citation points at (LTXDOC03 S3) — the `\bibitem`
+    /// [`Inline::Raw`] [`NodeRef`] (kind `"Raw"`) whose span is `c.entry_span`, or `None` if that span
+    /// is not a walked node (it always is for a genuinely [`ResolvedCite`] — the `\bibitem` inside a
+    /// `thebibliography` *is* walked, as the exploratory parse confirmed — so `None` is the honest
+    /// edge).
+    ///
+    /// This lifts S2's byte-level binding to a node-level one: from `c.entry_span` (the entry's
+    /// *bytes*) to the `\bibitem` node itself.
+    pub fn cite_target_node(&self, c: &ResolvedCite) -> Option<NodeRef<'_>> {
+        self.node_for_span(c.entry_span)
+    }
+
+    /// The defining **node** of a label definition (LTXDOC03 S3) — the section/table/figure
+    /// [`NodeRef::Block`] or inline `\label` [`NodeRef::Inline`] whose span is `d.span`, or `None` if
+    /// that span is not a walked node (it always is for a genuine [`LabelDef`], so `None` is the honest
+    /// edge). The definition-side companion to [`ref_target_node`](Document::ref_target_node): given a
+    /// row of the label table, hand back the node that *defines* it.
+    pub fn label_def_node(&self, d: &LabelDef) -> Option<NodeRef<'_>> {
+        self.node_for_span(d.span)
+    }
+}
+
 // -------------------------------------------------------------------------------------------------
 // Tests.
 // -------------------------------------------------------------------------------------------------
@@ -1211,5 +1345,203 @@ See Section~\ref{sec:intro} and \cite{smith2020}.
         assert!(cites.unresolved.is_empty(), "\\ref is NOT a dangling cite");
         // The `sec:intro` label key never leaks into the citation table.
         assert!(cites.entry("sec:intro").is_none(), "a \\label key is not a bib entry");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S3 — target → NodeRef exposure.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn ref_target_node_for_section_is_the_real_section_block() {
+        // A `\ref{sec:intro}` → `\section` resolves (S1), and `ref_target_node` returns the ACTUAL
+        // `Block::Section` node — kind "Section", span slices back to the `\section` source — and we
+        // can DESCEND into it (its `body`/`title` are populated), proving it is the real node, not a
+        // hollow handle.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+First paragraph of the intro. See Section~\ref{sec:intro}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+
+        let r = &refs.resolved[0];
+        let node = doc.ref_target_node(r).expect("resolved ref must yield its target node");
+
+        // It is a Block, of the Section kind, whose span slices back to the defining `\section`.
+        assert_eq!(node.kind(), "Section", "target node is the section block");
+        let NodeRef::Block(Block::Section { title, body, .. }) = node else {
+            panic!("expected a Section block, got {}", node.kind());
+        };
+        let span = node.span();
+        assert!(
+            src[span.start..span.end].starts_with(r"\section{Intro}"),
+            "the node's span slices back to the defining \\section"
+        );
+        // DESCEND: the section's title inline is reachable (the real "Intro" heading), and its owned
+        // body carries the following paragraph — a hollow handle could not expose these.
+        assert!(!title.is_empty(), "the section's title inlines are reachable");
+        assert!(
+            body.iter().any(|b| matches!(b, Block::Paragraph(..))),
+            "the section owns the following paragraph (we can walk into its children)"
+        );
+    }
+
+    #[test]
+    fn ref_target_node_for_figure_reaches_its_caption() {
+        // A `\ref{fig:plot}` → figure: `ref_target_node` returns the figure Block; kind == "Figure",
+        // and we can reach its caption text — proving descent into the real float.
+        let src = r"\begin{document}\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:plot}\end{figure}
+
+As shown in Figure~\ref{fig:plot}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+
+        let r = &refs.resolved[0];
+        let node = doc.ref_target_node(r).expect("resolved figure ref must yield its node");
+
+        assert_eq!(node.kind(), "Figure");
+        let NodeRef::Block(Block::Figure { caption, .. }) = node else {
+            panic!("expected a Figure block, got {}", node.kind());
+        };
+        // DESCEND: the figure's caption is reachable and holds the "A plot" text — we slice the
+        // caption's text inline back to source to prove we reached the real caption content.
+        let cap = caption.as_ref().expect("the figure carries a \\caption");
+        let has_plot_text = cap.content.iter().any(|i| match i {
+            Inline::Text(t, _) => t.contains("plot"),
+            _ => false,
+        });
+        assert!(has_plot_text, "the figure's caption text ('A plot') is reachable via the node");
+    }
+
+    #[test]
+    fn ref_target_node_for_inline_label_is_the_crossref_inline() {
+        // An inline `\eqref{eq:x}` → inline `\label` CrossRef: `ref_target_node` returns the
+        // `NodeRef::Inline` for that CrossRef (kind "CrossRef"), span-matching the `\label{eq:x}`.
+        let src = r"\begin{document}The identity \label{eq:x} holds.
+
+By \eqref{eq:x} we conclude.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+
+        let r = &refs.resolved[0];
+        let node = doc.ref_target_node(r).expect("resolved eqref must yield the inline label node");
+
+        assert_eq!(node.kind(), "CrossRef", "an inline \\label target is a CrossRef inline");
+        assert!(matches!(node, NodeRef::Inline(Inline::CrossRef { .. })));
+        let span = node.span();
+        assert_eq!(
+            &src[span.start..span.end],
+            r"\label{eq:x}",
+            "the node's span slices back to the inline \\label"
+        );
+    }
+
+    #[test]
+    fn cite_target_node_is_the_walked_bibitem_raw_inline() {
+        // A `\cite{smith2020}` → `\bibitem`: the exploratory parse confirmed the `\bibitem` inside a
+        // `thebibliography` IS walked (as an `Inline::Raw` command). So `cite_target_node` returns
+        // `Some` — kind "Raw", span slicing back to exactly `\bibitem{smith2020}`.
+        let src = r"\begin{document}As in \cite{smith2020}.
+
+\begin{thebibliography}{9}
+\bibitem{smith2020} Smith, J. A Title. 2020.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let cites = doc.resolve_citations();
+
+        let c = &cites.resolved[0];
+        let node = doc
+            .cite_target_node(c)
+            .expect("a \\bibitem IS walked, so the cite target node must resolve");
+
+        assert_eq!(node.kind(), "Raw", "a \\bibitem lowers to an Inline::Raw command");
+        assert!(matches!(node, NodeRef::Inline(Inline::Raw(..))));
+        let span = node.span();
+        assert_eq!(
+            &src[span.start..span.end],
+            r"\bibitem{smith2020}",
+            "the bibitem node's span slices back to exactly the \\bibitem construct"
+        );
+    }
+
+    #[test]
+    fn label_def_node_returns_the_defining_node() {
+        // `label_def_node` (the definition-side companion) returns the node that DEFINES a label —
+        // here the `Block::Section`.
+        let src = r"\begin{document}\section{Body}\label{sec:body}
+
+Text.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+
+        let def = &refs.definitions[0];
+        let node = doc.label_def_node(def).expect("a definition's node must resolve");
+        assert_eq!(node.kind(), "Section");
+        assert_eq!(node.span(), def.span, "the def node's span is the definition's span");
+    }
+
+    #[test]
+    fn node_for_span_with_no_matching_span_returns_none() {
+        // A span that matches NO walked node → `None` (no panic). We fabricate a span well past the
+        // end of the source, which no node can own.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+Body.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        // A span between two nodes / off the end matches nothing.
+        assert!(doc.node_for_span(Span::new(9000, 9001)).is_none(), "no walked node → None");
+        // A zero-width off-by-one span (start of one node, but not its end) also matches nothing.
+        assert!(doc.node_for_span(Span::new(16, 17)).is_none(), "half-open equality is exact");
+    }
+
+    #[test]
+    fn node_for_span_agrees_with_ref_target_node() {
+        // `node_for_span(r.target_span)` returns the SAME node as `ref_target_node(r)` — the accessor
+        // is a thin wrapper over the primitive.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+Body. See \ref{sec:intro}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+        let r = &refs.resolved[0];
+
+        let via_primitive = doc.node_for_span(r.target_span);
+        let via_accessor = doc.ref_target_node(r);
+        assert_eq!(via_primitive, via_accessor, "accessor == node_for_span(target_span)");
+        assert!(via_primitive.is_some(), "the resolved target IS a walked node");
+    }
+
+    #[test]
+    fn empty_document_node_lookups_yield_none_no_panic() {
+        // An empty document has no walked nodes; any span lookup yields `None` and never panics.
+        let doc = parse_document(r"\begin{document}\end{document}").expect("parse");
+        assert!(doc.node_for_span(Span::new(0, 0)).is_none());
+        assert!(doc.node_for_span(Span::new(5, 10)).is_none());
+    }
+
+    #[test]
+    fn s3_is_purely_additive_s1_s2_outputs_unchanged() {
+        // REGRESSION: the S3 methods are purely additive — calling them does not perturb the S1/S2
+        // resolutions, which remain byte-for-byte what they were before S3.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+See Section~\ref{sec:intro} and \cite{smith2020}.
+
+\begin{thebibliography}{9}
+\bibitem{smith2020} Smith, J. Title. 2020.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let refs_before = doc.resolve_references();
+        let cites_before = doc.resolve_citations();
+
+        // Exercise every S3 accessor.
+        let _ = doc.ref_target_node(&refs_before.resolved[0]);
+        let _ = doc.cite_target_node(&cites_before.resolved[0]);
+        let _ = doc.label_def_node(&refs_before.definitions[0]);
+        let _ = doc.node_for_span(refs_before.resolved[0].target_span);
+
+        // Re-resolving yields the identical result (nothing mutated).
+        assert_eq!(doc.resolve_references(), refs_before, "S1 output unchanged by S3");
+        assert_eq!(doc.resolve_citations(), cites_before, "S2 output unchanged by S3");
     }
 }
