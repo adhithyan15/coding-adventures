@@ -337,6 +337,8 @@ pub const SMART_HOME_GET_READINESS_BRIEF_TOOL_ID: &str = "smart_home.get_readine
 pub const SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID: &str = "smart_home.get_maintenance_brief";
 pub const SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID: &str = "smart_home.get_incident_brief";
 pub const SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID: &str = "smart_home.get_recovery_brief";
+pub const SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID: &str =
+    "smart_home.get_recovery_readiness_brief";
 pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
 pub const SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID: &str = "smart_home.get_escalation_brief";
 pub const SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID: &str = "smart_home.get_continuity_brief";
@@ -2553,6 +2555,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_recovery_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_recovery_readiness_brief_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
                 }
                 SMART_HOME_GET_MORNING_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6746,6 +6756,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_maintenance_brief_definition(),
         get_incident_brief_definition(),
         get_recovery_brief_definition(),
+        get_recovery_readiness_brief_definition(),
         get_morning_brief_definition(),
         get_escalation_brief_definition(),
         get_continuity_brief_definition(),
@@ -8378,6 +8389,64 @@ fn get_recovery_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "stages",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_recovery_readiness_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID,
+        "Get smart-home recovery readiness brief",
+        "Compose existing D23 recovery, service-execution safety, rollback, observability, incident, guardrail, compliance, attestation, evidence, and exception summaries into one Chief return-to-normal readiness packet without dispatching commands or mutating smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("recovery_ready", JsonSchema::Boolean),
+                SchemaProperty::new("service_execution_safe", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("next_action", JsonSchema::Any),
+                SchemaProperty::new(
+                    "readiness_gates",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("recovery_brief", JsonSchema::Any),
+                SchemaProperty::new("service_execution_safety", JsonSchema::Any),
+                SchemaProperty::new("activation_recovery", JsonSchema::Any),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "recovery_ready",
+                "service_execution_safe",
+                "requires_human_review",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "summary",
+                "next_action",
+                "readiness_gates",
+                "recovery_brief",
+                "service_execution_safety",
+                "activation_recovery",
                 "source_tools",
             ],
             false,
@@ -48372,6 +48441,96 @@ fn get_recovery_brief_output_handler_output(
     ))
 }
 
+fn get_recovery_readiness_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let recovery =
+        get_recovery_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let service_execution_safety =
+        get_service_execution_safety_brief_output_handler_output(runtime, principal_id, now_ms)?
+            .output;
+    let empty_arguments = object([]);
+    let rollback = get_integration_activation_rollback_summary_output_handler_output(
+        integration_activation_rollback_query(&empty_arguments)?,
+    )
+    .output;
+    let observability = get_integration_activation_observability_summary_output_handler_output(
+        integration_activation_observability_query(&empty_arguments)?,
+    )
+    .output;
+    let incident = get_integration_activation_incident_summary_output_handler_output(
+        integration_activation_incident_query(&empty_arguments)?,
+    )
+    .output;
+    let guardrail = get_integration_activation_guardrail_summary_output_handler_output(
+        integration_activation_guardrail_query(&empty_arguments)?,
+    )
+    .output;
+    let compliance = get_integration_activation_compliance_summary_output_handler_output(
+        integration_activation_compliance_query(&empty_arguments)?,
+    )
+    .output;
+    let attestation = get_integration_activation_attestation_summary_output_handler_output(
+        integration_activation_attestation_query(&empty_arguments)?,
+    )
+    .output;
+    let evidence = get_integration_activation_evidence_ledger_summary_output_handler_output(
+        integration_activation_evidence_ledger_query(&empty_arguments)?,
+    )
+    .output;
+    let exception = get_integration_activation_exception_ledger_summary_output_handler_output(
+        integration_activation_exception_ledger_query(&empty_arguments)?,
+    )
+    .output;
+
+    let output = recovery_readiness_brief_output_json(
+        now_ms,
+        &recovery,
+        &service_execution_safety,
+        &rollback,
+        &observability,
+        &incident,
+        &guardrail,
+        &compliance,
+        &attestation,
+        &evidence,
+        &exception,
+    );
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(&output, &["ready"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let total_attention_count =
+        morning_brief_integer_at(&output, &["total_attention_count"]).unwrap_or(0);
+    let total_blocked_count =
+        morning_brief_integer_at(&output, &["total_blocked_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["next_action", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_recovery_readiness_brief")),
+            ("status", string(&status)),
+            ("ready", JsonValue::Bool(ready)),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("total_attention_count", integer(total_attention_count)),
+            ("total_blocked_count", integer(total_blocked_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_morning_brief_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -54323,6 +54482,726 @@ fn recovery_brief_reason(
     } else {
         "recovery_clear"
     }
+}
+
+fn recovery_readiness_brief_output_json(
+    generated_at_ms: u64,
+    recovery: &JsonValue,
+    service_execution_safety: &JsonValue,
+    rollback: &JsonValue,
+    observability: &JsonValue,
+    incident: &JsonValue,
+    guardrail: &JsonValue,
+    compliance: &JsonValue,
+    attestation: &JsonValue,
+    evidence: &JsonValue,
+    exception: &JsonValue,
+) -> JsonValue {
+    let rollback_summary = morning_brief_field_clone(rollback, "summary");
+    let observability_summary = morning_brief_field_clone(observability, "summary");
+    let incident_summary = morning_brief_field_clone(incident, "summary");
+    let guardrail_summary = morning_brief_field_clone(guardrail, "summary");
+    let compliance_summary = morning_brief_field_clone(compliance, "summary");
+    let attestation_summary = morning_brief_field_clone(attestation, "summary");
+    let evidence_summary = morning_brief_field_clone(evidence, "summary");
+    let exception_summary = morning_brief_field_clone(exception, "summary");
+
+    let recovery_ready = morning_brief_bool_at(recovery, &["ready"]).unwrap_or(false);
+    let service_execution_safe =
+        morning_brief_bool_at(service_execution_safety, &["service_execution_safe"])
+            .unwrap_or(false);
+    let rollback_ready =
+        morning_brief_bool_at(&rollback_summary, &["rollback_ready"]).unwrap_or(false);
+    let observability_ready =
+        morning_brief_bool_at(&observability_summary, &["observability_ready"]).unwrap_or(false);
+    let incident_ready =
+        recovery_readiness_all_ready(&incident_summary, "total_briefs", "briefs_incident_ready");
+    let guardrails_clear = !recovery_readiness_summary_bool(&guardrail_summary, "has_blockers")
+        && !recovery_readiness_summary_bool(&guardrail_summary, "requires_attention");
+    let compliance_ready = recovery_readiness_summary_status_ready(&compliance_summary)
+        && recovery_readiness_summary_integer(&compliance_summary, "exception_required_records")
+            == 0
+        && recovery_readiness_summary_integer(&compliance_summary, "blocked_records") == 0;
+    let attestation_ready =
+        recovery_readiness_all_ready(
+            &attestation_summary,
+            "total_records",
+            "attestation_ready_records",
+        ) && recovery_readiness_summary_integer(&attestation_summary, "blocked_records") == 0;
+    let evidence_ready =
+        recovery_readiness_all_ready(&evidence_summary, "total_records", "evidence_ready_records")
+            && recovery_readiness_summary_integer(&evidence_summary, "blocked_records") == 0;
+    let exception_clear =
+        recovery_readiness_summary_integer(&exception_summary, "exception_required_records") == 0
+            && recovery_readiness_summary_integer(&exception_summary, "signoff_pending_records")
+                == 0
+            && recovery_readiness_summary_integer(&exception_summary, "blocked_records") == 0;
+
+    let recovery_attention =
+        recovery_readiness_output_integer(recovery, "total_recovery_actions") as usize;
+    let recovery_blocked =
+        recovery_readiness_output_integer(recovery, "blocked_recovery_actions") as usize;
+    let service_attention =
+        recovery_readiness_output_integer(service_execution_safety, "total_attention_count")
+            as usize;
+    let service_blocked =
+        recovery_readiness_output_integer(service_execution_safety, "total_blocked_count") as usize;
+    let rollback_attention =
+        recovery_readiness_summary_integer(&rollback_summary, "plans_requiring_attention") as usize;
+    let rollback_blocked =
+        recovery_readiness_summary_integer(&rollback_summary, "plans_blocking_activation") as usize;
+    let observability_attention =
+        recovery_readiness_summary_integer(&observability_summary, "probes_requiring_attention")
+            as usize;
+    let observability_blocked =
+        recovery_readiness_summary_integer(&observability_summary, "blocked_probes") as usize;
+    let incident_attention =
+        recovery_readiness_summary_integer(&incident_summary, "briefs_requiring_attention")
+            as usize;
+    let incident_blocked =
+        recovery_readiness_summary_integer(&incident_summary, "briefs_blocking_activation")
+            as usize;
+    let guardrail_attention =
+        recovery_readiness_summary_integer(&guardrail_summary, "checks_requiring_attention")
+            as usize;
+    let guardrail_blocked =
+        recovery_readiness_summary_integer(&guardrail_summary, "blocked_checks") as usize;
+    let compliance_attention =
+        recovery_readiness_summary_integer(&compliance_summary, "records_requiring_attention")
+            as usize
+            + recovery_readiness_summary_integer(&compliance_summary, "exception_required_records")
+                as usize
+            + recovery_readiness_summary_integer(&compliance_summary, "reviewer_required_records")
+                as usize;
+    let compliance_blocked =
+        recovery_readiness_summary_integer(&compliance_summary, "blocked_records") as usize;
+    let attestation_attention =
+        recovery_readiness_summary_integer(&attestation_summary, "records_requiring_attention")
+            as usize
+            + recovery_readiness_summary_integer(&attestation_summary, "signoff_required_records")
+                as usize;
+    let attestation_blocked =
+        recovery_readiness_summary_integer(&attestation_summary, "blocked_records") as usize;
+    let evidence_attention =
+        recovery_readiness_summary_integer(&evidence_summary, "records_requiring_attention")
+            as usize
+            + recovery_readiness_summary_integer(&evidence_summary, "exception_pending_records")
+                as usize;
+    let evidence_blocked =
+        recovery_readiness_summary_integer(&evidence_summary, "blocked_records") as usize;
+    let exception_attention =
+        recovery_readiness_summary_integer(&exception_summary, "records_requiring_attention")
+            as usize
+            + recovery_readiness_summary_integer(&exception_summary, "exception_required_records")
+                as usize
+            + recovery_readiness_summary_integer(&exception_summary, "signoff_pending_records")
+                as usize;
+    let exception_blocked =
+        recovery_readiness_summary_integer(&exception_summary, "blocked_records") as usize;
+
+    let activation_attention = rollback_attention
+        + observability_attention
+        + incident_attention
+        + guardrail_attention
+        + compliance_attention
+        + attestation_attention
+        + evidence_attention
+        + exception_attention;
+    let activation_blocked = rollback_blocked
+        + observability_blocked
+        + incident_blocked
+        + guardrail_blocked
+        + compliance_blocked
+        + attestation_blocked
+        + evidence_blocked
+        + exception_blocked;
+    let total_attention_count = recovery_attention + service_attention + activation_attention;
+    let total_blocked_count = recovery_blocked + service_blocked + activation_blocked;
+    let requires_human_review = morning_brief_bool_at(recovery, &["requires_human_review"])
+        .unwrap_or(false)
+        || morning_brief_bool_at(service_execution_safety, &["requires_human_review"])
+            .unwrap_or(false)
+        || compliance_attention > 0
+        || attestation_attention > 0
+        || exception_attention > 0;
+    let recovery_readiness_ready = recovery_ready
+        && service_execution_safe
+        && rollback_ready
+        && observability_ready
+        && incident_ready
+        && guardrails_clear
+        && compliance_ready
+        && attestation_ready
+        && evidence_ready
+        && exception_clear
+        && total_blocked_count == 0;
+    let status = recovery_readiness_status(
+        recovery_readiness_ready,
+        total_blocked_count,
+        requires_human_review,
+        total_attention_count,
+    );
+    let next_tool = recovery_readiness_next_tool(
+        recovery,
+        service_execution_safety,
+        &rollback_summary,
+        &observability_summary,
+        &incident_summary,
+        &guardrail_summary,
+        &compliance_summary,
+        &attestation_summary,
+        &evidence_summary,
+        &exception_summary,
+        total_blocked_count,
+        total_attention_count,
+    );
+    let next_action =
+        recovery_readiness_next_action(next_tool, status, recovery, service_execution_safety);
+    let next_owner_lane =
+        recovery_readiness_owner_lane(next_tool, recovery, service_execution_safety);
+    let next_reason = recovery_readiness_reason(
+        recovery_ready,
+        service_execution_safe,
+        rollback_ready,
+        observability_ready,
+        incident_ready,
+        guardrails_clear,
+        compliance_ready,
+        attestation_ready,
+        evidence_ready,
+        exception_clear,
+        total_blocked_count,
+        requires_human_review,
+        total_attention_count,
+    );
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(status == "ready")),
+        ("recovery_ready", JsonValue::Bool(recovery_ready)),
+        (
+            "service_execution_safe",
+            JsonValue::Bool(service_execution_safe),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(total_blocked_count > 0)),
+        (
+            "total_attention_count",
+            integer(total_attention_count as i64),
+        ),
+        ("total_blocked_count", integer(total_blocked_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 recovery and service-execution primitives; it does not dispatch services or own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "recovery_status",
+                    string(morning_brief_string_at(recovery, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "service_execution_safety_status",
+                    string(
+                        morning_brief_string_at(service_execution_safety, &["status"])
+                            .unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "activation_rollback_status",
+                    string(
+                        morning_brief_string_at(&rollback_summary, &["overall_status"])
+                            .unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "activation_observability_status",
+                    string(
+                        morning_brief_string_at(&observability_summary, &["overall_status"])
+                            .unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "activation_guardrail_status",
+                    string(
+                        morning_brief_string_at(&guardrail_summary, &["overall_status"])
+                            .unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "activation_compliance_status",
+                    string(
+                        morning_brief_string_at(&compliance_summary, &["overall_status"])
+                            .unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "activation_attention_count",
+                    integer(activation_attention as i64),
+                ),
+                (
+                    "activation_blocked_count",
+                    integer(activation_blocked as i64),
+                ),
+                ("next_tool", string(next_tool)),
+                ("next_action", string(next_action)),
+                ("next_owner_lane", string(next_owner_lane)),
+                ("next_reason", string(next_reason)),
+            ]),
+        ),
+        (
+            "next_action",
+            object([
+                ("recommended_tool", string(next_tool)),
+                ("recommended_action", string(next_action)),
+                ("owner_lane", string(next_owner_lane)),
+                ("reason", string(next_reason)),
+            ]),
+        ),
+        (
+            "readiness_gates",
+            JsonValue::Array(vec![
+                recovery_readiness_gate_json(
+                    "runtime_recovery",
+                    "Runtime recovery",
+                    recovery_ready,
+                    recovery_attention,
+                    recovery_blocked,
+                    morning_brief_next_tool_from_output(
+                        recovery,
+                        SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+                    ),
+                    morning_brief_next_action_from_output(
+                        recovery,
+                        "inspect_recovery_brief",
+                    ),
+                    recovery.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "service_execution_safety",
+                    "Service execution safety",
+                    service_execution_safe,
+                    service_attention,
+                    service_blocked,
+                    morning_brief_next_tool_from_output(
+                        service_execution_safety,
+                        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+                    ),
+                    morning_brief_next_action_from_output(
+                        service_execution_safety,
+                        "review_service_execution_safety",
+                    ),
+                    service_execution_safety.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "rollback_observability",
+                    "Rollback and observability",
+                    rollback_ready && observability_ready && incident_ready,
+                    rollback_attention + observability_attention + incident_attention,
+                    rollback_blocked + observability_blocked + incident_blocked,
+                    if rollback_blocked > 0 || rollback_attention > 0 || !rollback_ready {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID
+                    } else if observability_blocked > 0
+                        || observability_attention > 0
+                        || !observability_ready
+                    {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID
+                    } else {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID
+                    },
+                    if rollback_ready && observability_ready && incident_ready {
+                        "monitor_recovery_observability"
+                    } else {
+                        "close_recovery_observability_gaps"
+                    },
+                    object([
+                        ("rollback", rollback_summary.clone()),
+                        ("observability", observability_summary.clone()),
+                        ("incident", incident_summary.clone()),
+                    ]),
+                ),
+                recovery_readiness_gate_json(
+                    "guardrails",
+                    "Activation guardrails",
+                    guardrails_clear,
+                    guardrail_attention,
+                    guardrail_blocked,
+                    SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID,
+                    if guardrails_clear {
+                        "monitor_activation_guardrails"
+                    } else {
+                        "clear_activation_guardrails"
+                    },
+                    guardrail_summary.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "compliance_evidence",
+                    "Compliance evidence",
+                    compliance_ready && attestation_ready && evidence_ready && exception_clear,
+                    compliance_attention
+                        + attestation_attention
+                        + evidence_attention
+                        + exception_attention,
+                    compliance_blocked
+                        + attestation_blocked
+                        + evidence_blocked
+                        + exception_blocked,
+                    if exception_attention > 0 || exception_blocked > 0 || !exception_clear {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID
+                    } else if evidence_attention > 0 || evidence_blocked > 0 || !evidence_ready {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID
+                    } else if attestation_attention > 0
+                        || attestation_blocked > 0
+                        || !attestation_ready
+                    {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_ATTESTATION_SUMMARY_TOOL_ID
+                    } else {
+                        SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID
+                    },
+                    if compliance_ready && attestation_ready && evidence_ready && exception_clear {
+                        "monitor_recovery_evidence"
+                    } else {
+                        "close_recovery_evidence_gaps"
+                    },
+                    object([
+                        ("compliance", compliance_summary.clone()),
+                        ("attestation", attestation_summary.clone()),
+                        ("evidence", evidence_summary.clone()),
+                        ("exception", exception_summary.clone()),
+                    ]),
+                ),
+            ]),
+        ),
+        ("recovery_brief", recovery.clone()),
+        (
+            "service_execution_safety",
+            service_execution_safety.clone(),
+        ),
+        (
+            "activation_recovery",
+            object([
+                ("rollback", rollback_summary),
+                ("observability", observability_summary),
+                ("incident", incident_summary),
+                ("guardrail", guardrail_summary),
+                ("compliance", compliance_summary),
+                ("attestation", attestation_summary),
+                ("evidence", evidence_summary),
+                ("exception", exception_summary),
+            ]),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_ATTESTATION_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn recovery_readiness_gate_json(
+    gate_id: &str,
+    label: &str,
+    ready: bool,
+    attention_count: usize,
+    blocked_count: usize,
+    recommended_tool: &str,
+    recommended_action: &str,
+    summary: JsonValue,
+) -> JsonValue {
+    object([
+        ("gate_id", string(gate_id)),
+        ("label", string(label)),
+        (
+            "status",
+            string(operations_brief_section_status(
+                ready,
+                attention_count,
+                blocked_count,
+            )),
+        ),
+        ("ready", JsonValue::Bool(ready && blocked_count == 0)),
+        ("attention_count", integer(attention_count as i64)),
+        ("blocked_count", integer(blocked_count as i64)),
+        ("has_blockers", JsonValue::Bool(blocked_count > 0)),
+        ("recommended_tool", string(recommended_tool)),
+        ("recommended_action", string(recommended_action)),
+        ("summary", summary),
+    ])
+}
+
+fn recovery_readiness_status(
+    ready: bool,
+    total_blocked_count: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if total_blocked_count > 0 {
+        "blocked"
+    } else if requires_human_review {
+        "review_required"
+    } else if ready {
+        "ready"
+    } else if total_attention_count > 0 {
+        "recovering"
+    } else {
+        "monitoring"
+    }
+}
+
+fn recovery_readiness_next_tool<'a>(
+    recovery: &'a JsonValue,
+    service_execution_safety: &'a JsonValue,
+    rollback_summary: &JsonValue,
+    observability_summary: &JsonValue,
+    incident_summary: &JsonValue,
+    guardrail_summary: &JsonValue,
+    compliance_summary: &JsonValue,
+    attestation_summary: &JsonValue,
+    evidence_summary: &JsonValue,
+    exception_summary: &JsonValue,
+    total_blocked_count: usize,
+    total_attention_count: usize,
+) -> &'a str {
+    let recovery_needs_attention = !morning_brief_bool_at(recovery, &["ready"]).unwrap_or(false)
+        || recovery_readiness_output_integer(recovery, "total_recovery_actions") > 0
+        || recovery_readiness_output_integer(recovery, "blocked_recovery_actions") > 0;
+    if recovery_needs_attention {
+        return morning_brief_next_tool_from_output(
+            recovery,
+            SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+        );
+    }
+
+    let service_needs_attention =
+        !morning_brief_bool_at(service_execution_safety, &["service_execution_safe"])
+            .unwrap_or(false)
+            || recovery_readiness_output_integer(service_execution_safety, "total_attention_count")
+                > 0
+            || recovery_readiness_output_integer(service_execution_safety, "total_blocked_count")
+                > 0;
+    if service_needs_attention {
+        return morning_brief_next_tool_from_output(
+            service_execution_safety,
+            SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+        );
+    }
+
+    if recovery_readiness_summary_integer(exception_summary, "blocked_records") > 0
+        || recovery_readiness_summary_integer(exception_summary, "exception_required_records") > 0
+        || recovery_readiness_summary_integer(exception_summary, "signoff_pending_records") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(evidence_summary, "blocked_records") > 0
+        || recovery_readiness_summary_integer(evidence_summary, "exception_pending_records") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(attestation_summary, "blocked_records") > 0
+        || recovery_readiness_summary_integer(attestation_summary, "signoff_required_records") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_ATTESTATION_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(compliance_summary, "blocked_records") > 0
+        || recovery_readiness_summary_integer(compliance_summary, "exception_required_records") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(guardrail_summary, "blocked_checks") > 0
+        || recovery_readiness_summary_integer(guardrail_summary, "checks_requiring_attention") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(incident_summary, "briefs_requiring_attention") > 0
+        || recovery_readiness_summary_integer(incident_summary, "briefs_blocking_activation") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(
+        observability_summary,
+        "probes_requiring_attention",
+    ) > 0
+        || recovery_readiness_summary_integer(observability_summary, "blocked_probes") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID
+    } else if recovery_readiness_summary_integer(rollback_summary, "plans_requiring_attention") > 0
+        || recovery_readiness_summary_integer(rollback_summary, "plans_blocking_activation") > 0
+    {
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID
+    } else if total_blocked_count > 0 || total_attention_count > 0 {
+        SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID
+    } else {
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID
+    }
+}
+
+fn recovery_readiness_next_action<'a>(
+    next_tool: &str,
+    status: &str,
+    recovery: &'a JsonValue,
+    service_execution_safety: &'a JsonValue,
+) -> &'a str {
+    if morning_brief_next_tool_from_output(recovery, SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID)
+        == next_tool
+    {
+        return morning_brief_next_action_from_output(recovery, "inspect_recovery_brief");
+    }
+    if morning_brief_next_tool_from_output(
+        service_execution_safety,
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+    ) == next_tool
+    {
+        return morning_brief_next_action_from_output(
+            service_execution_safety,
+            "review_service_execution_safety",
+        );
+    }
+
+    match next_tool {
+        SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID => "inspect_recovery_brief",
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID => "review_service_execution_safety",
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID => {
+            "close_rollback_readiness_gaps"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID => {
+            "close_observability_readiness_gaps"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID => {
+            "close_activation_incident_gaps"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID => {
+            "clear_activation_guardrails"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID => {
+            "close_compliance_evidence_gaps"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_ATTESTATION_SUMMARY_TOOL_ID => {
+            "collect_recovery_attestations"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID => {
+            "complete_recovery_evidence_ledger"
+        }
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID => {
+            "resolve_recovery_exceptions"
+        }
+        _ if status == "ready" => "monitor_recovery_readiness",
+        _ => "inspect_recovery_readiness",
+    }
+}
+
+fn recovery_readiness_owner_lane<'a>(
+    next_tool: &str,
+    recovery: &'a JsonValue,
+    service_execution_safety: &'a JsonValue,
+) -> &'a str {
+    if morning_brief_next_tool_from_output(recovery, SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID)
+        == next_tool
+    {
+        return morning_brief_next_owner_lane_from_output(recovery, "operations");
+    }
+    if morning_brief_next_tool_from_output(
+        service_execution_safety,
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+    ) == next_tool
+    {
+        return morning_brief_next_owner_lane_from_output(service_execution_safety, "policy");
+    }
+
+    match next_tool {
+        SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID => "operations",
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID => "policy",
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID
+        | SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID
+        | SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID => "recovery",
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID => "platform",
+        SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID
+        | SMART_HOME_GET_INTEGRATION_ACTIVATION_ATTESTATION_SUMMARY_TOOL_ID
+        | SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID
+        | SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID => "audit",
+        _ => "chief",
+    }
+}
+
+fn recovery_readiness_reason(
+    recovery_ready: bool,
+    service_execution_safe: bool,
+    rollback_ready: bool,
+    observability_ready: bool,
+    incident_ready: bool,
+    guardrails_clear: bool,
+    compliance_ready: bool,
+    attestation_ready: bool,
+    evidence_ready: bool,
+    exception_clear: bool,
+    total_blocked_count: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if !recovery_ready {
+        "runtime_recovery_not_ready"
+    } else if !service_execution_safe {
+        "service_execution_not_safe"
+    } else if !rollback_ready {
+        "rollback_not_ready"
+    } else if !observability_ready {
+        "observability_not_ready"
+    } else if !incident_ready {
+        "incident_not_ready"
+    } else if !guardrails_clear {
+        "activation_guardrails_not_clear"
+    } else if !compliance_ready {
+        "compliance_not_ready"
+    } else if !attestation_ready {
+        "attestations_not_ready"
+    } else if !evidence_ready {
+        "evidence_not_ready"
+    } else if !exception_clear {
+        "exceptions_not_clear"
+    } else if total_blocked_count > 0 {
+        "recovery_readiness_blockers"
+    } else if requires_human_review {
+        "human_review_required"
+    } else if total_attention_count > 0 {
+        "recovery_readiness_attention"
+    } else {
+        "recovery_readiness_clear"
+    }
+}
+
+fn recovery_readiness_output_integer(output: &JsonValue, field: &str) -> i64 {
+    morning_brief_integer_at(output, &[field]).unwrap_or(0)
+}
+
+fn recovery_readiness_summary_integer(summary: &JsonValue, field: &str) -> i64 {
+    morning_brief_integer_at(summary, &[field]).unwrap_or(0)
+}
+
+fn recovery_readiness_summary_bool(summary: &JsonValue, field: &str) -> bool {
+    morning_brief_bool_at(summary, &[field]).unwrap_or(false)
+}
+
+fn recovery_readiness_summary_status_ready(summary: &JsonValue) -> bool {
+    matches!(
+        morning_brief_string_at(summary, &["overall_status"]),
+        Some("ready") | Some("empty")
+    )
+}
+
+fn recovery_readiness_all_ready(summary: &JsonValue, total_field: &str, ready_field: &str) -> bool {
+    let total = recovery_readiness_summary_integer(summary, total_field);
+    let ready = recovery_readiness_summary_integer(summary, ready_field);
+    total == 0 || ready >= total
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -93914,7 +94793,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 318);
+        assert_eq!(definitions.len(), 319);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -94825,9 +95704,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            310
+            311
         );
         assert_eq!(
             export
@@ -96859,6 +97741,125 @@ mod tests {
     }
 
     #[test]
+    fn recovery_readiness_brief_wraps_recovery_execution_and_activation_evidence() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-readiness-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-recovery-readiness-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-recovery-readiness-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-recovery-readiness-brief",
+            SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("blocked")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "recovery_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "service_execution_safe"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(output, "total_blocked_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 recovery and service-execution primitives; it does not dispatch services or own smart-home controller state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let next_action = field(output, "next_action").unwrap();
+        assert_eq!(
+            field(next_action, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(next_action, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(next_action, "owner_lane"), Some(&string("policy")));
+        assert_eq!(
+            field(next_action, "reason"),
+            Some(&string("runtime_recovery_not_ready"))
+        );
+
+        assert_eq!(
+            array_len(field(output, "readiness_gates").unwrap()),
+            Some(5)
+        );
+        let runtime_gate = array_item(field(output, "readiness_gates").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(runtime_gate, "gate_id"),
+            Some(&string("runtime_recovery"))
+        );
+        assert_eq!(field(runtime_gate, "status"), Some(&string("blocked")));
+        assert_eq!(
+            field(runtime_gate, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        let activation_recovery = field(output, "activation_recovery").unwrap();
+        assert!(field(activation_recovery, "rollback").is_some());
+        assert!(field(activation_recovery, "observability").is_some());
+        assert!(field(activation_recovery, "guardrail").is_some());
+        assert!(field(activation_recovery, "evidence").is_some());
+        assert!(field(output, "recovery_brief").is_some());
+        assert!(field(output, "service_execution_safety").is_some());
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(10));
+    }
+
+    #[test]
     fn morning_brief_prioritizes_daily_blockers_from_existing_briefs() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -98855,11 +99856,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(318))
+            Some(&integer(319))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(310))
+            Some(&integer(311))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
