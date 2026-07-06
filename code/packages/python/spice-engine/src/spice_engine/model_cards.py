@@ -170,6 +170,16 @@ class DeviceModelReferenceDeckAuditGateReport:
 
 
 @dataclass(frozen=True, slots=True)
+class DeviceModelReferenceDeckAuditGateIssueSummary:
+    """A compact grouped summary of reference-deck audit gate issues."""
+
+    field: str
+    issue_count: int
+    fixture_names: tuple[str, ...]
+    messages: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class DeviceModelReferenceDeckAuditSummary:
     """A compact per-model-family summary of reference-deck audit coverage."""
 
@@ -1799,4 +1809,81 @@ def format_device_model_reference_deck_audit_gate_issue_json(
 
     return format_deck_table_json(
         format_device_model_reference_deck_audit_gate_issue_table(report)
+    )
+
+
+def device_model_reference_deck_audit_gate_issue_summary(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> tuple[DeviceModelReferenceDeckAuditGateIssueSummary, ...]:
+    """Return grouped audit gate issue counts for release dashboards."""
+
+    gate_report = device_model_reference_deck_audit_gate() if report is None else report
+    groups: dict[str, list[DeviceModelReferenceDeckAuditIssue]] = {}
+    for issue in gate_report.issues:
+        groups.setdefault(issue.field, []).append(issue)
+
+    summaries: list[DeviceModelReferenceDeckAuditGateIssueSummary] = []
+    for field in sorted(groups):
+        issues = groups[field]
+        fixture_names: list[str] = []
+        messages: list[str] = []
+        for issue in issues:
+            if issue.fixture_name not in fixture_names:
+                fixture_names.append(issue.fixture_name)
+            if issue.message not in messages:
+                messages.append(issue.message)
+        summaries.append(
+            DeviceModelReferenceDeckAuditGateIssueSummary(
+                field=field,
+                issue_count=len(issues),
+                fixture_names=tuple(fixture_names),
+                messages=tuple(messages),
+            )
+        )
+    return tuple(summaries)
+
+
+def format_device_model_reference_deck_audit_gate_issue_summary_table(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return stable tab-separated grouped issue rows for the audit gate."""
+
+    lines = ["field\tissue_count\tfixture_names\tmessages"]
+    lines.extend(
+        (
+            f"{summary.field}\t{summary.issue_count}\t"
+            f"{','.join(summary.fixture_names)}\t{','.join(summary.messages)}"
+        )
+        for summary in device_model_reference_deck_audit_gate_issue_summary(report)
+    )
+    return "\n".join(lines)
+
+
+def device_model_reference_deck_audit_gate_issue_summary_records(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for grouped audit gate issue rows."""
+
+    return deck_table_records(
+        format_device_model_reference_deck_audit_gate_issue_summary_table(report)
+    )
+
+
+def format_device_model_reference_deck_audit_gate_issue_summary_csv(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return grouped audit gate issue rows as RFC 4180-style CSV."""
+
+    return format_deck_table_csv(
+        format_device_model_reference_deck_audit_gate_issue_summary_table(report)
+    )
+
+
+def format_device_model_reference_deck_audit_gate_issue_summary_json(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return compact JSON records for grouped audit gate issue rows."""
+
+    return format_deck_table_json(
+        format_device_model_reference_deck_audit_gate_issue_summary_table(report)
     )

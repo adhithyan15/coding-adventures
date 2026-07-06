@@ -264,6 +264,13 @@ kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
 `format_device_model_reference_deck_audit_gate_issue_json()` expose the gate's
 issue rows as stable table, record, CSV, and compact JSON payloads for release
 dashboards.
+`device_model_reference_deck_audit_gate_issue_summary()`,
+`format_device_model_reference_deck_audit_gate_issue_summary_table()`,
+`device_model_reference_deck_audit_gate_issue_summary_records()`,
+`format_device_model_reference_deck_audit_gate_issue_summary_csv()`, and
+`format_device_model_reference_deck_audit_gate_issue_summary_json()` aggregate
+those gate issues by field with issue counts, affected fixtures, and messages
+for compact CI dashboards.
 
 `DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
 first mixed-signal bridge surface: digital event streams can drive finite-edge

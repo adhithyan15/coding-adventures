@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `deviceModelReferenceDeckAuditGateIssueSummary`,
+  `formatDeviceModelReferenceDeckAuditGateIssueSummaryTable`,
+  `deviceModelReferenceDeckAuditGateIssueSummaryRecords`,
+  `formatDeviceModelReferenceDeckAuditGateIssueSummaryCsv`, and
+  `formatDeviceModelReferenceDeckAuditGateIssueSummaryJson`, stable grouped
+  issue exports for reference-deck audit gate dashboards, matching Python and
+  Rust.
 - Add `parseBerkeleySyntax`, a Berkeley SPICE logical-card facade with
   embedded grammar metadata, normalized continuation cards, source spans,
   token streams, stable diagnostics, and analysis inventory, matching Python

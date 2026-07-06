@@ -190,6 +190,8 @@ from spice_engine import (
     device_model_reference_deck_audit_fixtures,
     device_model_reference_deck_audit_gate,
     device_model_reference_deck_audit_gate_issue_records,
+    device_model_reference_deck_audit_gate_issue_summary,
+    device_model_reference_deck_audit_gate_issue_summary_records,
     device_model_reference_deck_audit_matrix,
     device_model_reference_deck_audit_matrix_records,
     device_model_reference_deck_audit_records,
@@ -258,6 +260,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_csv,
     format_device_model_reference_deck_audit_gate_issue_csv,
     format_device_model_reference_deck_audit_gate_issue_json,
+    format_device_model_reference_deck_audit_gate_issue_summary_csv,
+    format_device_model_reference_deck_audit_gate_issue_summary_json,
+    format_device_model_reference_deck_audit_gate_issue_summary_table,
     format_device_model_reference_deck_audit_gate_issue_table,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
@@ -928,6 +933,43 @@ def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> No
         "NMOS:tran,coverage,missing required NMOS tran reference-deck audit row\n"
     )
     assert json.loads(format_device_model_reference_deck_audit_gate_issue_json(report)) == records
+    summary = device_model_reference_deck_audit_gate_issue_summary(report)
+    assert len(summary) == 1
+    assert summary[0].field == "coverage"
+    assert summary[0].issue_count == 1
+    assert summary[0].fixture_names == ("NMOS:tran",)
+    assert summary[0].messages == (
+        "missing required NMOS tran reference-deck audit row",
+    )
+    assert format_device_model_reference_deck_audit_gate_issue_summary_table(
+        report
+    ) == (
+        "field\tissue_count\tfixture_names\tmessages\n"
+        "coverage\t1\tNMOS:tran\tmissing required NMOS tran reference-deck audit row"
+    )
+    summary_records = device_model_reference_deck_audit_gate_issue_summary_records(
+        report
+    )
+    assert summary_records == [
+        {
+            "field": "coverage",
+            "issue_count": "1",
+            "fixture_names": "NMOS:tran",
+            "messages": "missing required NMOS tran reference-deck audit row",
+        }
+    ]
+    assert format_device_model_reference_deck_audit_gate_issue_summary_csv(
+        report
+    ) == (
+        "field,issue_count,fixture_names,messages\n"
+        "coverage,1,NMOS:tran,missing required NMOS tran reference-deck audit row\n"
+    )
+    assert (
+        json.loads(
+            format_device_model_reference_deck_audit_gate_issue_summary_json(report)
+        )
+        == summary_records
+    )
 
 
 def test_transient_diode_junction_capacitance_slows_current_step() -> None:

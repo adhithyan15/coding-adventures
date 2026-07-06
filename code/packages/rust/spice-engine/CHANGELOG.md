@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_gate_issue_summary`,
+  `format_device_model_reference_deck_audit_gate_issue_summary_table`,
+  `device_model_reference_deck_audit_gate_issue_summary_records`,
+  `format_device_model_reference_deck_audit_gate_issue_summary_csv`, and
+  `format_device_model_reference_deck_audit_gate_issue_summary_json`, stable
+  grouped issue exports for reference-deck audit gate dashboards, matching
+  Python and TypeScript.
 - Add `format_device_model_reference_deck_audit_gate_issue_table`,
   `device_model_reference_deck_audit_gate_issue_records`,
   `format_device_model_reference_deck_audit_gate_issue_csv`, and

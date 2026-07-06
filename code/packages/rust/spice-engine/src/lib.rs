@@ -2962,6 +2962,14 @@ pub struct DeviceModelReferenceDeckAuditGateReport {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceModelReferenceDeckAuditGateIssueSummary {
+    pub field: String,
+    pub issue_count: usize,
+    pub fixture_names: Vec<String>,
+    pub messages: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeviceModelReferenceDeckAuditSummary {
     pub kind: String,
     pub fixture_count: usize,
@@ -4930,6 +4938,75 @@ pub fn format_device_model_reference_deck_audit_gate_issue_json(
     format_deck_table_json(&format_device_model_reference_deck_audit_gate_issue_table(
         report,
     ))
+}
+
+pub fn device_model_reference_deck_audit_gate_issue_summary(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> Vec<DeviceModelReferenceDeckAuditGateIssueSummary> {
+    let mut groups: BTreeMap<String, Vec<&DeviceModelReferenceDeckAuditIssue>> = BTreeMap::new();
+    for issue in &report.issues {
+        groups.entry(issue.field.clone()).or_default().push(issue);
+    }
+
+    groups
+        .into_iter()
+        .map(|(field, issues)| {
+            let mut fixture_names = Vec::new();
+            let mut messages = Vec::new();
+            for issue in &issues {
+                if !fixture_names.contains(&issue.fixture_name) {
+                    fixture_names.push(issue.fixture_name.clone());
+                }
+                if !messages.contains(&issue.message) {
+                    messages.push(issue.message.clone());
+                }
+            }
+            DeviceModelReferenceDeckAuditGateIssueSummary {
+                field,
+                issue_count: issues.len(),
+                fixture_names,
+                messages,
+            }
+        })
+        .collect()
+}
+
+pub fn format_device_model_reference_deck_audit_gate_issue_summary_table(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    let mut lines = vec!["field\tissue_count\tfixture_names\tmessages".to_string()];
+    for summary in device_model_reference_deck_audit_gate_issue_summary(report) {
+        lines.push(format!(
+            "{}\t{}\t{}\t{}",
+            summary.field,
+            summary.issue_count,
+            summary.fixture_names.join(","),
+            summary.messages.join(",")
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_gate_issue_summary_records(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_gate_issue_summary_table(report))
+}
+
+pub fn format_device_model_reference_deck_audit_gate_issue_summary_csv(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    format_deck_table_csv(
+        &format_device_model_reference_deck_audit_gate_issue_summary_table(report),
+    )
+}
+
+pub fn format_device_model_reference_deck_audit_gate_issue_summary_json(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    format_deck_table_json(
+        &format_device_model_reference_deck_audit_gate_issue_summary_table(report),
+    )
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
