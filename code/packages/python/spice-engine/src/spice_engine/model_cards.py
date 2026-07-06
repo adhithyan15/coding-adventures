@@ -1756,3 +1756,47 @@ def format_device_model_reference_deck_audit_gate_report(
             for issue in report.issues
         )
     return "\n".join(lines)
+
+
+def format_device_model_reference_deck_audit_gate_issue_table(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return stable tab-separated issue rows for the audit release gate."""
+
+    gate_report = device_model_reference_deck_audit_gate() if report is None else report
+    lines = ["fixture_name\tfield\tmessage"]
+    lines.extend(
+        f"{issue.fixture_name}\t{issue.field}\t{issue.message}"
+        for issue in gate_report.issues
+    )
+    return "\n".join(lines)
+
+
+def device_model_reference_deck_audit_gate_issue_records(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for audit gate issue rows."""
+
+    return deck_table_records(
+        format_device_model_reference_deck_audit_gate_issue_table(report)
+    )
+
+
+def format_device_model_reference_deck_audit_gate_issue_csv(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return audit gate issue rows as RFC 4180-style CSV."""
+
+    return format_deck_table_csv(
+        format_device_model_reference_deck_audit_gate_issue_table(report)
+    )
+
+
+def format_device_model_reference_deck_audit_gate_issue_json(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return compact JSON records for audit gate issue rows."""
+
+    return format_deck_table_json(
+        format_device_model_reference_deck_audit_gate_issue_table(report)
+    )

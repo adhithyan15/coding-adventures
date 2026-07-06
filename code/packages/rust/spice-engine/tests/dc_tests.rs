@@ -6,15 +6,18 @@ use spice_engine::{
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_analysis_summary,
     device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures, device_model_reference_deck_audit_gate,
-    device_model_reference_deck_audit_matrix, device_model_reference_deck_audit_matrix_records,
-    device_model_reference_deck_audit_records, device_model_reference_deck_audit_summary,
-    device_model_reference_deck_audit_summary_records, device_model_temperature_audit_fixtures,
-    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table,
+    device_model_reference_deck_audit_gate_issue_records, device_model_reference_deck_audit_matrix,
+    device_model_reference_deck_audit_matrix_records, device_model_reference_deck_audit_records,
+    device_model_reference_deck_audit_summary, device_model_reference_deck_audit_summary_records,
+    device_model_temperature_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
+    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
     format_device_model_reference_deck_audit_analysis_summary_csv,
     format_device_model_reference_deck_audit_analysis_summary_json,
     format_device_model_reference_deck_audit_analysis_summary_table,
     format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_issue_csv,
+    format_device_model_reference_deck_audit_gate_issue_json,
+    format_device_model_reference_deck_audit_gate_issue_table,
     format_device_model_reference_deck_audit_gate_report,
     format_device_model_reference_deck_audit_json,
     format_device_model_reference_deck_audit_matrix_csv,
@@ -659,6 +662,27 @@ fn device_model_reference_deck_audit_gate_reports_missing_coverage() {
     assert!(table.contains("fixture_name\tfield\tmessage"));
     assert!(
         table.contains("NMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row")
+    );
+
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_issue_table(&report),
+        "fixture_name\tfield\tmessage\nNMOS:tran\tcoverage\tmissing required NMOS tran reference-deck audit row"
+    );
+    let records = device_model_reference_deck_audit_gate_issue_records(&report);
+    assert_eq!(records.len(), 1);
+    assert_eq!(records[0]["fixture_name"], "NMOS:tran");
+    assert_eq!(records[0]["field"], "coverage");
+    assert_eq!(
+        records[0]["message"],
+        "missing required NMOS tran reference-deck audit row"
+    );
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_issue_csv(&report),
+        "fixture_name,field,message\nNMOS:tran,coverage,missing required NMOS tran reference-deck audit row\n"
+    );
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_issue_json(&report),
+        "[{\"fixture_name\":\"NMOS:tran\",\"field\":\"coverage\",\"message\":\"missing required NMOS tran reference-deck audit row\"}]\n"
     );
 }
 

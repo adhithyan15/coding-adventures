@@ -4895,6 +4895,43 @@ pub fn format_device_model_reference_deck_audit_gate_report(
     lines.join("\n")
 }
 
+pub fn format_device_model_reference_deck_audit_gate_issue_table(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    let mut lines = vec!["fixture_name\tfield\tmessage".to_string()];
+    for issue in &report.issues {
+        lines.push(format!(
+            "{}\t{}\t{}",
+            issue.fixture_name, issue.field, issue.message
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn device_model_reference_deck_audit_gate_issue_records(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_device_model_reference_deck_audit_gate_issue_table(
+        report,
+    ))
+}
+
+pub fn format_device_model_reference_deck_audit_gate_issue_csv(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    format_deck_table_csv(&format_device_model_reference_deck_audit_gate_issue_table(
+        report,
+    ))
+}
+
+pub fn format_device_model_reference_deck_audit_gate_issue_json(
+    report: &DeviceModelReferenceDeckAuditGateReport,
+) -> String {
+    format_deck_table_json(&format_device_model_reference_deck_audit_gate_issue_table(
+        report,
+    ))
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompatibilityOracle {
     pub reference: String,

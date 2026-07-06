@@ -246,6 +246,12 @@ fixture columns plus missing/extra-analysis inventories.
 `deviceModelReferenceDeckAuditGate` and
 `formatDeviceModelReferenceDeckAuditGateReport` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
+`formatDeviceModelReferenceDeckAuditGateIssueTable`,
+`deviceModelReferenceDeckAuditGateIssueRecords`,
+`formatDeviceModelReferenceDeckAuditGateIssueCsv`, and
+`formatDeviceModelReferenceDeckAuditGateIssueJson` expose the gate's issue
+rows as stable table, record, CSV, and compact JSON payloads for release
+dashboards.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

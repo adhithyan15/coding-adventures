@@ -180,6 +180,12 @@ transient fixture columns plus missing/extra-analysis inventories.
 `device_model_reference_deck_audit_gate` and
 `format_device_model_reference_deck_audit_gate_report` validate the required
 kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
+`format_device_model_reference_deck_audit_gate_issue_table`,
+`device_model_reference_deck_audit_gate_issue_records`,
+`format_device_model_reference_deck_audit_gate_issue_csv`, and
+`format_device_model_reference_deck_audit_gate_issue_json` expose the gate's
+issue rows as stable table, record, CSV, and compact JSON payloads for release
+dashboards.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full

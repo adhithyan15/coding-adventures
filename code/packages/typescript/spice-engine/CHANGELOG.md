@@ -6,6 +6,11 @@
   embedded grammar metadata, normalized continuation cards, source spans,
   token streams, stable diagnostics, and analysis inventory, matching Python
   and Rust for frontend/parser-tooling consumers.
+- Add `formatDeviceModelReferenceDeckAuditGateIssueTable`,
+  `deviceModelReferenceDeckAuditGateIssueRecords`,
+  `formatDeviceModelReferenceDeckAuditGateIssueCsv`, and
+  `formatDeviceModelReferenceDeckAuditGateIssueJson`, stable machine-readable
+  exports for reference-deck audit gate issue rows, matching Python and Rust.
 - Add `deviceModelReferenceDeckAuditMatrix`,
   `formatDeviceModelReferenceDeckAuditMatrixTable`,
   `deviceModelReferenceDeckAuditMatrixRecords`,

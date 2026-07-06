@@ -10,6 +10,14 @@
   source spans, token streams, stable diagnostics, and analysis inventory for
   frontend and parser-tooling consumers.
 
+- **Device model reference-deck audit gate issue exports** —
+  `format_device_model_reference_deck_audit_gate_issue_table()`,
+  `device_model_reference_deck_audit_gate_issue_records()`,
+  `format_device_model_reference_deck_audit_gate_issue_csv()`, and
+  `format_device_model_reference_deck_audit_gate_issue_json()` now expose
+  stable machine-readable issue rows from the reference-deck audit release
+  gate, matching Rust and TypeScript.
+
 - **Device model reference-deck audit matrix dashboards** —
   `device_model_reference_deck_audit_matrix()`,
   `format_device_model_reference_deck_audit_matrix_table()`,

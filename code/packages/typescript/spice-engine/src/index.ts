@@ -9074,6 +9074,35 @@ export function formatDeviceModelReferenceDeckAuditGateReport(
   return lines.join("\n");
 }
 
+export function formatDeviceModelReferenceDeckAuditGateIssueTable(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return [
+    "fixture_name\tfield\tmessage",
+    ...report.issues.map((issue) =>
+      [issue.fixtureName, issue.field, issue.message].join("\t"),
+    ),
+  ].join("\n");
+}
+
+export function deviceModelReferenceDeckAuditGateIssueRecords(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditGateIssueTable(report));
+}
+
+export function formatDeviceModelReferenceDeckAuditGateIssueCsv(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditGateIssueTable(report));
+}
+
+export function formatDeviceModelReferenceDeckAuditGateIssueJson(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditGateIssueTable(report));
+}
+
 export function vccs(
   name: string,
   positive: string,
