@@ -5,8 +5,19 @@ use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
+const WHATWG_BLOCK_BOUNDARY_AUDIT: &str = include_str!("fixtures/whatwg-block-boundary-audit.json");
+const WHATWG_DOCUMENT_SHELL_AUDIT: &str = include_str!("fixtures/whatwg-document-shell-audit.json");
+const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
+    include_str!("fixtures/whatwg-form-interactive-audit.json");
+const WHATWG_FORMATTING_AUDIT: &str = include_str!("fixtures/whatwg-formatting-audit.json");
+const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-audit.json");
+const WHATWG_LEGACY_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-legacy-element-audit.json");
+const WHATWG_PARAGRAPH_AUDIT: &str = include_str!("fixtures/whatwg-paragraph-audit.json");
 const WHATWG_POST_PARSE_REPAIR_AUDIT: &str =
     include_str!("fixtures/whatwg-post-parse-repair-audit.json");
+const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
+const WHATWG_TREE_INSERTION_AUDIT: &str = include_str!("fixtures/whatwg-tree-insertion-audit.json");
+const WHATWG_VOID_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-void-element-audit.json");
 
 struct PostParseRepairEvidence {
     id: &'static str,
@@ -54,6 +65,163 @@ const POST_PARSE_REPAIR_EVIDENCE: &[PostParseRepairEvidence] = &[
     },
 ];
 
+struct PostParseRepairCrossAxisEvidence {
+    id: &'static str,
+    suites: &'static [(&'static str, &'static str, &'static str)],
+}
+
+const POST_PARSE_REPAIR_CROSS_AXIS_EVIDENCE: &[PostParseRepairCrossAxisEvidence] = &[
+    PostParseRepairCrossAxisEvidence {
+        id: "adoption01-dat-6",
+        suites: &[
+            (
+                "form-interactive",
+                WHATWG_FORM_INTERACTIVE_AUDIT,
+                "interactive-formatting",
+            ),
+            (
+                "formatting",
+                WHATWG_FORMATTING_AUDIT,
+                "interactive-formatting-boundary",
+            ),
+            (
+                "paragraph",
+                WHATWG_PARAGRAPH_AUDIT,
+                "paragraph-table-boundary",
+            ),
+            ("table", WHATWG_TABLE_AUDIT, "foster-parenting"),
+            (
+                "tree-insertion",
+                WHATWG_TREE_INSERTION_AUDIT,
+                "adoption-agency",
+            ),
+        ],
+    },
+    PostParseRepairCrossAxisEvidence {
+        id: "tests26-dat-4",
+        suites: &[
+            (
+                "document-shell",
+                WHATWG_DOCUMENT_SHELL_AUDIT,
+                "body-frameset-boundary",
+            ),
+            (
+                "form-interactive",
+                WHATWG_FORM_INTERACTIVE_AUDIT,
+                "interactive-formatting",
+            ),
+            (
+                "formatting",
+                WHATWG_FORMATTING_AUDIT,
+                "interactive-formatting-boundary",
+            ),
+            ("head-body", WHATWG_HEAD_BODY_AUDIT, "body-boundary"),
+            ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+        ],
+    },
+    PostParseRepairCrossAxisEvidence {
+        id: "tests26-dat-1251",
+        suites: &[
+            (
+                "document-shell",
+                WHATWG_DOCUMENT_SHELL_AUDIT,
+                "body-frameset-boundary",
+            ),
+            (
+                "form-interactive",
+                WHATWG_FORM_INTERACTIVE_AUDIT,
+                "interactive-formatting",
+            ),
+            (
+                "formatting",
+                WHATWG_FORMATTING_AUDIT,
+                "interactive-formatting-boundary",
+            ),
+            ("head-body", WHATWG_HEAD_BODY_AUDIT, "body-boundary"),
+            ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+        ],
+    },
+    PostParseRepairCrossAxisEvidence {
+        id: "tricky01-dat-6",
+        suites: &[
+            (
+                "block-boundary",
+                WHATWG_BLOCK_BOUNDARY_AUDIT,
+                "block-table-boundary",
+            ),
+            (
+                "formatting",
+                WHATWG_FORMATTING_AUDIT,
+                "adoption-agency-formatting",
+            ),
+            (
+                "legacy-element",
+                WHATWG_LEGACY_ELEMENT_AUDIT,
+                "tricky-parser-recovery",
+            ),
+            ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+            ("void-element", WHATWG_VOID_ELEMENT_AUDIT, "void-in-table"),
+        ],
+    },
+    PostParseRepairCrossAxisEvidence {
+        id: "tricky01-dat-7",
+        suites: &[
+            (
+                "form-interactive",
+                WHATWG_FORM_INTERACTIVE_AUDIT,
+                "interactive-formatting",
+            ),
+            (
+                "formatting",
+                WHATWG_FORMATTING_AUDIT,
+                "interactive-formatting-boundary",
+            ),
+            (
+                "legacy-element",
+                WHATWG_LEGACY_ELEMENT_AUDIT,
+                "tricky-parser-recovery",
+            ),
+            (
+                "paragraph",
+                WHATWG_PARAGRAPH_AUDIT,
+                "paragraph-table-boundary",
+            ),
+            ("table", WHATWG_TABLE_AUDIT, "row-group-boundary"),
+        ],
+    },
+    PostParseRepairCrossAxisEvidence {
+        id: "tricky01-dat-8",
+        suites: &[
+            (
+                "block-boundary",
+                WHATWG_BLOCK_BOUNDARY_AUDIT,
+                "block-table-boundary",
+            ),
+            (
+                "form-interactive",
+                WHATWG_FORM_INTERACTIVE_AUDIT,
+                "interactive-formatting",
+            ),
+            (
+                "formatting",
+                WHATWG_FORMATTING_AUDIT,
+                "interactive-formatting-boundary",
+            ),
+            (
+                "legacy-element",
+                WHATWG_LEGACY_ELEMENT_AUDIT,
+                "tricky-parser-recovery",
+            ),
+            (
+                "paragraph",
+                WHATWG_PARAGRAPH_AUDIT,
+                "paragraph-table-boundary",
+            ),
+            ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+        ],
+    },
+];
+
 #[derive(Debug, Deserialize)]
 struct PostParseRepairAuditSuite {
     format: String,
@@ -66,6 +234,19 @@ struct PostParseRepairAuditSuite {
 
 #[derive(Debug, Deserialize)]
 struct PostParseRepairAuditCase {
+    id: String,
+    source: String,
+    axis: String,
+    reason: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct GenericAuditSuite {
+    cases: Vec<GenericAuditCase>,
+}
+
+#[derive(Debug, Deserialize)]
+struct GenericAuditCase {
     id: String,
     source: String,
     axis: String,
@@ -171,9 +352,54 @@ fn whatwg_post_parse_repair_audit_tracks_post_parse_repair_evidence() {
     }
 }
 
+#[test]
+fn whatwg_post_parse_repair_audit_keeps_repair_rows_cross_axis() {
+    let suite = load_suite();
+    let repair_cases = suite
+        .cases
+        .iter()
+        .map(|case| (case.id.as_str(), case))
+        .collect::<HashMap<_, _>>();
+
+    for evidence in POST_PARSE_REPAIR_CROSS_AXIS_EVIDENCE {
+        let repair_case = repair_cases
+            .get(evidence.id)
+            .unwrap_or_else(|| panic!("post-parse repair audit should include `{}`", evidence.id));
+
+        for (suite_name, fixture, expected_axis) in evidence.suites {
+            let audit_case = generic_audit_case(fixture, suite_name, evidence.id);
+            assert_eq!(
+                audit_case.axis, *expected_axis,
+                "`{suite_name}` should keep repair row `{}` on its focused axis",
+                evidence.id
+            );
+            assert_eq!(
+                audit_case.source, repair_case.source,
+                "`{suite_name}` should point repair row `{}` at the same html5lib source",
+                evidence.id
+            );
+            assert!(
+                !repair_case.reason.is_empty() && !audit_case.reason.is_empty(),
+                "cross-axis repair row `{}` should keep fixture reasons",
+                evidence.id
+            );
+        }
+    }
+}
+
 fn load_suite() -> PostParseRepairAuditSuite {
     serde_json::from_str(WHATWG_POST_PARSE_REPAIR_AUDIT)
         .expect("WHATWG post-parse repair audit fixture should parse")
+}
+
+fn generic_audit_case(fixture: &str, suite_name: &str, case_id: &str) -> GenericAuditCase {
+    let suite = serde_json::from_str::<GenericAuditSuite>(fixture)
+        .unwrap_or_else(|error| panic!("`{suite_name}` audit fixture should parse: {error}"));
+    suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == case_id)
+        .unwrap_or_else(|| panic!("`{suite_name}` should audit repair row `{case_id}`"))
 }
 
 fn assert_axis_count(suite: &PostParseRepairAuditSuite, axis: &str, minimum: usize) {
