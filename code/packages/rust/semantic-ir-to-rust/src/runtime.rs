@@ -1838,6 +1838,13 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let needle = pos.first().cloned().unwrap_or(Value::Nil);
                 Value::Bool(entries_rc.borrow().iter().any(|(k, _)| value_eq(k, &needle)))
             }
+            // `Hash#has_value?`/`value?` — membership over the *values*, using
+            // the same structural `value_eq` the key side uses.  Ruby returns a
+            // plain boolean (never raises).
+            "has_value?" | "value?" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                Value::Bool(entries_rc.borrow().iter().any(|(_, v)| value_eq(v, &needle)))
+            }
             // `Hash#fetch(k)` is the STRICT keyed read: unlike `hash[k]`
             // (which returns `nil` for a missing key), a `fetch` of an
             // absent key raises `KeyError` in Ruby.  We surface a typed
@@ -1863,10 +1870,99 @@ pub const RUNTIME: &str = r##"mod __sir {
                     },
                 }
             }
+            // `Hash#to_a` — the association list as an array of 2-element
+            // `[k, v]` arrays, in insertion order.
+            "to_a" => seq_lit(
+                entries_rc
+                    .borrow()
+                    .iter()
+                    .map(|(k, v)| seq_lit(vec![k.clone(), v.clone()]))
+                    .collect(),
+            ),
+            // `Hash#dig(k, …)` — nested fetch: read `self[k0]`, then dig the
+            // remaining keys into that value.  Any missing level (or a
+            // non-diggable intermediate) short-circuits to `nil`, matching
+            // Ruby.  A bare `dig(k)` degenerates to the lenient keyed read.
+            "dig" => {
+                let hit = pos.first().and_then(|needle| {
+                    entries_rc
+                        .borrow()
+                        .iter()
+                        .find(|(k, _)| value_eq(k, needle))
+                        .map(|(_, v)| v.clone())
+                });
+                match hit {
+                    None => Value::Nil,
+                    Some(v) if pos.len() <= 1 => v,
+                    // Recurse the tail keys through the general dispatcher, so
+                    // a nested Hash/Array each dig their own way.
+                    Some(v) => call_method(v, "dig", pos[1..].to_vec()),
+                }
+            }
+            // `Hash#merge(other)` — a FRESH hash of self's pairs overlaid with
+            // `other`'s (other wins on a key collision).  `map_lit`'s
+            // last-write-wins over the concatenated entries gives exactly that,
+            // and builds a brand-new backing `Vec` so neither `self` nor
+            // `other` is aliased or mutated.
+            "merge" => {
+                let mut merged: Vec<(Value, Value)> = entries_rc.borrow().clone();
+                if let Some(Value::Map(other)) = pos.first() {
+                    merged.extend(other.borrow().iter().cloned());
+                }
+                map_lit(merged)
+            }
+            // `Hash#delete(k)` — remove the first entry whose key equals `k`,
+            // returning its value (or `nil` when absent).  Mutates `self`.  The
+            // slot index is resolved under a short read borrow that is dropped
+            // before the mutating `remove`, so no borrow overlaps.
+            "delete" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                let idx = entries_rc.borrow().iter().position(|(k, _)| value_eq(k, &needle));
+                match idx {
+                    Some(i) => entries_rc.borrow_mut().remove(i).1,
+                    None => Value::Nil,
+                }
+            }
+            // `Hash#clear` — empty `self` in place and return it (Ruby returns
+            // the now-empty receiver).
+            "clear" => {
+                entries_rc.borrow_mut().clear();
+                recv
+            }
+            // `Hash#invert` — a FRESH hash with keys and values swapped.
+            // Building through `map_lit` gives Ruby's last-write-wins when two
+            // keys shared a value, and never aliases `self`.
+            "invert" => {
+                let swapped: Vec<(Value, Value)> = entries_rc
+                    .borrow()
+                    .iter()
+                    .map(|(k, v)| (v.clone(), k.clone()))
+                    .collect();
+                map_lit(swapped)
+            }
             "each" | "each_pair" => {
                 if let Some(b) = &block {
                     for (k, v) in entries_rc.borrow().clone() {
                         apply_closure(b, vec![k, v]);
+                    }
+                }
+                recv
+            }
+            // `Hash#each_key` / `each_value` — yield just the key (resp. value)
+            // of every pair, returning `self`.  Entries are snapshot-cloned
+            // before the loop so no `borrow()` is held across `apply_closure`.
+            "each_key" => {
+                if let Some(b) = &block {
+                    for (k, _) in entries_rc.borrow().clone() {
+                        apply_closure(b, vec![k]);
+                    }
+                }
+                recv
+            }
+            "each_value" => {
+                if let Some(b) = &block {
+                    for (_, v) in entries_rc.borrow().clone() {
+                        apply_closure(b, vec![v]);
                     }
                 }
                 recv
@@ -1889,6 +1985,21 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .clone()
                         .into_iter()
                         .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(kept)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#reject` — the complement of `select`: keep pairs for which
+            // the block is FALSY, in a fresh hash.  Snapshot-clone first so no
+            // borrow is held across the block call.
+            "reject" => match &block {
+                Some(b) => {
+                    let kept: Vec<(Value, Value)> = entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|(k, v)| !truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
                         .collect();
                     Value::Map(Rc::new(RefCell::new(kept)))
                 }
