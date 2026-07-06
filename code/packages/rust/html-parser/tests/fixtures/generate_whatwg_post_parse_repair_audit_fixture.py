@@ -21,6 +21,14 @@ DEFAULT_OUTPUT = FIXTURE_DIR / "whatwg-post-parse-repair-audit.json"
 
 CASE_GROUPS = (
     {
+        "axis": "adoption-table-foster-parenting",
+        "reason": (
+            "remaining repair evidence for adoption-agency formatting inside "
+            "table foster-parenting recovery"
+        ),
+        "sources": ("adoption01.dat:6",),
+    },
+    {
         "axis": "fostered-nobr-cell-continuation",
         "reason": (
             "remaining finish-time recovery for fostered nobr continuation "
@@ -38,6 +46,22 @@ CASE_GROUPS = (
             "nested table sequence"
         ),
         "sources": ("tricky01.dat:8",),
+    },
+    {
+        "axis": "tricky-center-table-void-recovery",
+        "reason": (
+            "remaining repair evidence for center, font, and void-element "
+            "recovery through table cell insertion modes"
+        ),
+        "sources": ("tricky01.dat:6",),
+    },
+    {
+        "axis": "tricky-paragraph-rowgroup-recovery",
+        "reason": (
+            "remaining repair evidence for paragraph and anchor recovery "
+            "crossing table row-group insertion modes"
+        ),
+        "sources": ("tricky01.dat:7",),
     },
 )
 
@@ -124,7 +148,8 @@ def build_fixture(sources: list[str]) -> dict[str, object]:
         "format": "whatwg-html-post-parse-repair-audit/v1",
         "description": (
             "Focused parser audit over the remaining html5lib tree-construction "
-            "cases that justify finish-time post-parse repair shims."
+            "cases that justify post-parse repair shims or adjacent repair "
+            "coverage."
         ),
         "source_fixture": "html5lib-tree-construction-smoke.dat",
         "case_count": len(selected),
