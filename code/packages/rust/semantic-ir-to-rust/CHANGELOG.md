@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.14.0 — M6 universal metaprogramming surface (send / tap / then / respond_to?)
+
+Ports the **M6** universal `Object`/`Kernel` metaprogramming surface — already
+merged in the Python and TypeScript backends (`sir-runtime-oop`) — to the Rust
+backend's inlined `__sir` runtime, so a metaprogramming program produces
+identical output on every backend. Runtime-only change (no core semantic-IR, no
+frontend, no emitter change): the frontend already lowers `recv.send(:m, …)`,
+`recv.tap { … }`, etc. to the `__method__` dispatch envelope; this milestone
+teaches `call_method` to resolve them.
+
+- **`send` / `__send__` / `public_send`** — the first argument NAMES a method;
+  dispatch RE-ENTERS `call_method` with that name plus the remaining args (a
+  trailing block survives as a trailing arg). Placed first so it applies to
+  EVERY receiver kind (primitive, collection, user instance) uniformly. A
+  user-defined `send` override on an instance wins (resolution order).
+  - **SECURITY ([[dynamic-dispatch-rce]]):** the dynamic name feeds back
+    through the SAME explicit, closed `call_method` a direct `recv.meth` call
+    takes — it indexes the identical hand-written catalogs / `METHOD_TABLE`, so
+    an unknown name bottoms out at the identical typed `NoMethodError`. There is
+    NO reflective lookup on the source-derived string; the name is inert data
+    that can only ever select an arm we spelled out.
+- **`tap { |x| … }`** — yields the receiver for a side effect, returns the
+  RECEIVER. **`then` / `yield_self { |x| … }`** — yields the receiver, returns
+  the BLOCK RESULT (block-less → the receiver, the v0 Enumerator-less floor).
+- **`respond_to?(:m)`** — true iff dispatch on the receiver resolves `m`,
+  consulting the SAME catalogs / user method table a real call walks (honest: a
+  `true` name is exactly one a real call would run; a `false` name is exactly
+  one that would raise `NoMethodError`). An explicit membership test, never
+  reflection. On a user instance it uses the same `resolve_instance_method`
+  ancestry/MRO walk `dispatch_user_method` uses.
+- **Boolean `&` / `|` / `^`** on a `true`/`false` receiver — Ruby's EAGER
+  (non-short-circuiting) logical operators, distinct from the lazy `&&`/`||`
+  keywords; the operand is coerced by Ruby truthiness (`true & nil == false`).
+- `dispatch_user_method` now falls through to the M6 universal methods on a
+  user-method miss (instead of raising immediately), so `instance.respond_to?` /
+  `.tap` / `.then` / `.to_s` resolve on instances too; only a name none of these
+  claim is a genuine `NoMethodError`.
+- New `compile_and_run_metaprogramming` exec proof (6 tests): `send` dispatches
+  through the catalog (primitive + collection + user instance), unknown `send`
+  raises a catchable `NoMethodError`, `tap` returns the receiver while `then`/
+  `yield_self` return the block result, `respond_to?` reports catalog membership
+  honestly, and boolean `&`/`|`/`^` match Ruby. Plus a `runtime.rs` unit-test
+  witness for the emitted M6 surface. All 123 lib + exec tests green, no new
+  warnings.
+
+
 ## 0.13.2
 
 ### Fixed — `or`/`and` builtins (Ruby `||`/`&&`) were unimplemented
