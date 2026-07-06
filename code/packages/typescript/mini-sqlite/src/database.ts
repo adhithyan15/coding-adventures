@@ -1,26 +1,27 @@
-import {
-  execute as executeSelect,
-  TableNotFoundError,
-  type DataSource,
-  type QueryResult,
-  type Row,
-  type SqlValue,
-} from "@coding-adventures/sql-execution-engine";
+/**
+ * Level 1 InMemoryDatabase — routes ALL SQL through the full pipeline:
+ *
+ *   sql-parser → sql-planner → sql-optimizer → sql-codegen → sql-vm
+ *
+ * This replaces the Level 0 implementation that used sql-execution-engine for
+ * SELECT and a hand-rolled regex parser for DML/DDL.
+ */
+
+import { parseSQL } from "coding-adventures-sql-parser";
+import { plan, PlanError } from "@coding-adventures/sql-planner";
+import { optimize } from "@coding-adventures/sql-optimizer";
+import { compile, CodegenError } from "@coding-adventures/sql-codegen";
+import { execute as vmExecute, VmError } from "@coding-adventures/sql-vm";
+import type { Database } from "@coding-adventures/sql-vm";
+import type { SqlValue } from "@coding-adventures/sql-codegen";
 import {
   IntegrityError,
   OperationalError,
   ProgrammingError,
   translateError,
 } from "./errors.js";
-import type {
-  CreateTableStatement,
-  DeleteStatement,
-  DropTableStatement,
-  InsertStatement,
-  UpdateStatement,
-} from "./sql.js";
 
-const ROW_ID = "__mini_sqlite_rowid";
+export type { SqlValue };
 
 export interface StatementResult {
   columns: string[];
@@ -28,27 +29,44 @@ export interface StatementResult {
   rowsAffected: number;
 }
 
-interface TableData {
+// ---------------------------------------------------------------------------
+// Snapshot type for transaction rollback
+// ---------------------------------------------------------------------------
+
+type TableSnapshot = {
   columns: string[];
-  rows: Row[];
-}
+  rows: Array<Record<string, SqlValue>>;
+};
+type Snapshot = Map<string, TableSnapshot>;
 
-type Snapshot = Map<string, TableData>;
+// ---------------------------------------------------------------------------
+// InMemoryDatabase
+// ---------------------------------------------------------------------------
 
-export class InMemoryDatabase implements DataSource {
-  private tables = new Map<string, TableData>();
+export class InMemoryDatabase {
+  /** The live table store passed to sql-vm. */
+  private db: Database = new Map();
 
-  schema(tableName: string): string[] {
-    return [...this.getTable(tableName).columns];
-  }
-
-  scan(tableName: string): Row[] {
-    return this.getTable(tableName).rows.map((row) => ({ ...row }));
+  execute(sql: string): StatementResult {
+    try {
+      const ast = parseSQL(sql);
+      const logical = plan(ast);
+      const optimized = optimize(logical);
+      const program = compile(optimized);
+      const result = vmExecute(program, this.db);
+      return {
+        columns: result.columns,
+        rows: result.rows,
+        rowsAffected: result.rowsAffected,
+      };
+    } catch (error) {
+      throw translateLevel1Error(error);
+    }
   }
 
   snapshot(): Snapshot {
-    const copy = new Map<string, TableData>();
-    for (const [name, table] of this.tables) {
+    const copy: Snapshot = new Map();
+    for (const [name, table] of this.db) {
       copy.set(name, {
         columns: [...table.columns],
         rows: table.rows.map((row) => ({ ...row })),
@@ -57,174 +75,34 @@ export class InMemoryDatabase implements DataSource {
     return copy;
   }
 
-  restore(snapshot: Snapshot): void {
-    this.tables = new Map<string, TableData>();
-    for (const [name, table] of snapshot) {
-      this.tables.set(name, {
+  restore(snap: Snapshot): void {
+    this.db = new Map();
+    for (const [name, table] of snap) {
+      this.db.set(name, {
         columns: [...table.columns],
         rows: table.rows.map((row) => ({ ...row })),
       });
     }
   }
-
-  createTable(stmt: CreateTableStatement): StatementResult {
-    const key = normalizeName(stmt.table);
-    if (this.tables.has(key)) {
-      if (stmt.ifNotExists) return emptyResult();
-      throw new OperationalError(`table already exists: ${stmt.table}`);
-    }
-    const seen = new Set<string>();
-    for (const column of stmt.columns) {
-      const normalized = normalizeName(column);
-      if (seen.has(normalized)) {
-        throw new ProgrammingError(`duplicate column: ${column}`);
-      }
-      seen.add(normalized);
-    }
-    this.tables.set(key, { columns: [...stmt.columns], rows: [] });
-    return emptyResult();
-  }
-
-  dropTable(stmt: DropTableStatement): StatementResult {
-    const key = normalizeName(stmt.table);
-    if (!this.tables.has(key)) {
-      if (stmt.ifExists) return emptyResult();
-      throw new OperationalError(`no such table: ${stmt.table}`);
-    }
-    this.tables.delete(key);
-    return emptyResult();
-  }
-
-  insert(stmt: InsertStatement): StatementResult {
-    const table = this.getTable(stmt.table);
-    const insertColumns = stmt.columns ?? table.columns;
-    this.assertKnownColumns(table, insertColumns);
-
-    for (const values of stmt.rows) {
-      if (values.length !== insertColumns.length) {
-        throw new IntegrityError(
-          `INSERT expected ${insertColumns.length} values, got ${values.length}`,
-        );
-      }
-      const row = Object.fromEntries(table.columns.map((column) => [column, null])) as Row;
-      insertColumns.forEach((column, index) => {
-        row[column] = values[index];
-      });
-      table.rows.push(row);
-    }
-
-    return {
-      columns: [],
-      rows: [],
-      rowsAffected: stmt.rows.length,
-    };
-  }
-
-  update(stmt: UpdateStatement): StatementResult {
-    const table = this.getTable(stmt.table);
-    this.assertKnownColumns(table, [...stmt.assignments.keys()]);
-    const rowIds = this.matchingRowIds(stmt.table, stmt.where);
-    for (const rowId of rowIds) {
-      const row = table.rows[rowId];
-      for (const [column, value] of stmt.assignments) row[column] = value;
-    }
-    return {
-      columns: [],
-      rows: [],
-      rowsAffected: rowIds.length,
-    };
-  }
-
-  delete(stmt: DeleteStatement): StatementResult {
-    const table = this.getTable(stmt.table);
-    const rowIds = new Set(this.matchingRowIds(stmt.table, stmt.where));
-    table.rows = table.rows.filter((_, index) => !rowIds.has(index));
-    return {
-      columns: [],
-      rows: [],
-      rowsAffected: rowIds.size,
-    };
-  }
-
-  select(sql: string): StatementResult {
-    try {
-      const result = executeSelect(sql, this);
-      return queryToStatementResult(result);
-    } catch (error) {
-      throw translateError(error);
-    }
-  }
-
-  private matchingRowIds(tableName: string, whereSql: string | null): number[] {
-    const table = this.getTable(tableName);
-    if (!whereSql) return table.rows.map((_, index) => index);
-    const source = new RowIdDataSource(tableName, table);
-    try {
-      const result = executeSelect(
-        `SELECT ${ROW_ID} FROM ${tableName} WHERE ${whereSql}`,
-        source,
-      );
-      return result.rows.map((row) => Number(row[ROW_ID]));
-    } catch (error) {
-      throw translateError(error);
-    }
-  }
-
-  private getTable(tableName: string): TableData {
-    const table = this.tables.get(normalizeName(tableName));
-    if (!table) throw new OperationalError(`no such table: ${tableName}`);
-    return table;
-  }
-
-  private assertKnownColumns(table: TableData, columns: string[]): void {
-    const known = new Set(table.columns.map(normalizeName));
-    for (const column of columns) {
-      if (!known.has(normalizeName(column))) {
-        throw new OperationalError(`no such column: ${column}`);
-      }
-    }
-  }
 }
 
-class RowIdDataSource implements DataSource {
-  constructor(
-    private readonly tableName: string,
-    private readonly table: TableData,
-  ) {}
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
-  schema(tableName: string): string[] {
-    this.assertTable(tableName);
-    return [...this.table.columns, ROW_ID];
-  }
-
-  scan(tableName: string): Row[] {
-    this.assertTable(tableName);
-    return this.table.rows.map((row, index) => ({ ...row, [ROW_ID]: index }));
-  }
-
-  private assertTable(tableName: string): void {
-    if (normalizeName(tableName) !== normalizeName(this.tableName)) {
-      throw new TableNotFoundError(tableName);
+function translateLevel1Error(error: unknown): OperationalError | ProgrammingError | IntegrityError {
+  if (error instanceof OperationalError) return error;
+  if (error instanceof ProgrammingError) return error;
+  if (error instanceof IntegrityError) return error;
+  if (error instanceof VmError || error instanceof PlanError || error instanceof CodegenError) {
+    const msg = (error as globalThis.Error).message.toLowerCase();
+    if (msg.includes("table") || msg.includes("no such")) {
+      return new OperationalError((error as globalThis.Error).message);
     }
+    if (msg.includes("column")) {
+      return new OperationalError((error as globalThis.Error).message);
+    }
+    return new ProgrammingError((error as globalThis.Error).message);
   }
-}
-
-function queryToStatementResult(result: QueryResult): StatementResult {
-  return {
-    columns: result.columns,
-    rows: result.rows.map((row) => result.columns.map((column) => row[column] ?? null)),
-    rowsAffected: -1,
-  };
-}
-
-function normalizeName(name: string): string {
-  return name.toLowerCase();
-}
-
-function emptyResult(): StatementResult {
-  return {
-    columns: [],
-    rows: [],
-    rowsAffected: 0,
-  };
+  return translateError(error) as OperationalError;
 }

@@ -83,6 +83,12 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
       lineNumber: 29,
     },
     {
+      name: "CONCAT",
+      pattern: "||",
+      isRegex: false,
+      lineNumber: 29,
+    },
+    {
       name: "PLUS",
       pattern: "+",
       isRegex: false,

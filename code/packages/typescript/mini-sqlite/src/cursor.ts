@@ -1,4 +1,4 @@
-import type { SqlValue } from "@coding-adventures/sql-execution-engine";
+import type { SqlValue } from "./database.js";
 import type { ParameterValue } from "./binding.js";
 import type { Connection, RowTuple } from "./connection.js";
 import { ProgrammingError } from "./errors.js";

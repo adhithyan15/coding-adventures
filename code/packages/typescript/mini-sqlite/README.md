@@ -1,10 +1,15 @@
 # mini-sqlite (TypeScript)
 
-TypeScript Level 0 port of the Python `mini-sqlite` facade.
+TypeScript Level 1 in-memory SQL database facade.
 
-This package is intentionally small: it provides an in-memory database facade,
-qmark parameter binding, cursor fetch helpers, and DDL/DML storage. SELECT
-queries are delegated to `@coding-adventures/sql-execution-engine`.
+All SQL — DDL, DML, and SELECT — is routed through the full Level 1 pipeline:
+
+```
+sql-parser → sql-planner → sql-optimizer → sql-codegen → sql-vm
+```
+
+This package provides the `Connection` / `Cursor` interface familiar from
+Python's DB-API 2.0, qmark parameter binding, and snapshot-based transactions.
 
 ## Usage
 
@@ -25,17 +30,20 @@ const rows = conn
 console.log(rows); // [["Alice"]]
 ```
 
-## Supported in Level 0
+## Supported in Level 1
 
 - `connect(":memory:")`
 - qmark placeholders (`?`)
 - `CREATE TABLE [IF NOT EXISTS]`
 - `DROP TABLE [IF EXISTS]`
-- `INSERT INTO ... VALUES`
+- `INSERT INTO ... VALUES` (multi-row)
 - `UPDATE ... SET ... [WHERE ...]`
 - `DELETE FROM ... [WHERE ...]`
-- `SELECT ...` through the TypeScript SQL execution engine
+- `SELECT` with `WHERE`, `GROUP BY`, `HAVING`, `ORDER BY`, `LIMIT`/`OFFSET`,
+  `DISTINCT`, aggregate functions (COUNT, SUM, MIN, MAX, AVG), scalar
+  functions (UPPER, LOWER, LENGTH, ABS, ROUND, SUBSTR, TRIM, etc.)
 - `commit()` and `rollback()` using in-memory snapshots
+- `cursor.rowcount` reflects affected rows for DML; `-1` for SELECT/DDL
 
 File-backed connections are reserved for a later port of the SQLite storage
 backend and currently raise `NotSupportedError`.
