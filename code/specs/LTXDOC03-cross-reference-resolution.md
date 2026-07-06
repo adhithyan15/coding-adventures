@@ -511,3 +511,118 @@ multi-key `\cite{a,c}` numbers its resolved records to `"[1]"` and `"[3]"`; a da
 shift the others (`b` stays `"[2]"`, `c` stays `"[3]"`) and consumes no number; an empty document /
 document with no `thebibliography` → empty numbering; and a regression that citation numbering leaves
 the S1/S2/S3/S4 outputs byte-for-byte unchanged (the tree is never mutated).
+
+## 12. S6 — the cross-reference report (consumer composing S1/S2/S4/S5)
+
+S1 bound each `\ref`; S2 bound each `\cite`; S4 numbered the labels; S5 numbered the citations. Each
+pass produced its own owned result type, but **nothing yet assembles them into a single
+consumer-facing artifact**. S6 is that assembly: one method that walks S1's resolved `\ref`s and S2's
+resolved `\cite`s and produces an **owned, plain-data report** where each entry carries its rendered
+*number* (from S4/S5) alongside its key/command/kind. It is the **payoff rung** — the proof that the
+five analysis passes *compose* into an auditable whole, exactly the shape a byte-provenance consumer
+wants: "here is every cross-reference in this document, what it points at, and the number it prints."
+
+### 12.1 A pure consumer — no new AST walk
+
+S6 adds **no new walk** of its own. It calls S1 (`resolve_references`) and S2 (`resolve_citations`) —
+each of which already reuses the bounded `Document::walk` — and S4 (`number_labels`) / S5
+(`number_citations`) to number each family **once**, then *looks each key up* in the resulting number
+table. So the whole report costs a *constant* number of the existing bounded passes (never a per-entry
+re-numbering — the anti-pattern the S4/S5 convenience methods `ref_number`/`cite_number` warn about
+when called in a loop). No new parsing, no AST change, no new recursion.
+
+| family | source pass (binding) | number pass | report entry |
+|--------|-----------------------|-------------|--------------|
+| `\ref`  | S1 `ResolvedRef { key, command, target_kind }` | S4 `Numbering::number_for(key)` | `RefEntry`  |
+| `\cite` | S2 `ResolvedCite { key }`                      | S5 `CitationNumbering::number_for(key)` | `CiteEntry` |
+
+### 12.2 The three rules
+
+1. **Dangling refs/cites surfaced separately.** A `\ref{missing}` (S1's `unresolved`) and a
+   `\cite{ghost}` (S2's `unresolved`) — LaTeX's `??` (undefined reference) and `[?]` (undefined
+   citation) markers — are **not** dropped and **not** folded in among the resolved entries with a fake
+   number. They go in their own `dangling_refs` / `dangling_cites` key vectors. This separation is
+   deliberate: two vectors make "resolved vs dangling" a *type-level* fact, rather than burying it in a
+   `number: Option<String>` field the caller must remember to check.
+2. **A resolved `\ref` whose target is not numbered is omitted.** Every entry in S1's `resolved` has a
+   matching `\label`, but not every `\label` is *numbered*: S4 numbers sections and figure/table
+   floats, but an **inline `\label`** (typically an equation label) is deliberately unnumbered
+   (deferred to a future equation-numbering rung). So a `\ref{eq:x}` to an inline `\label{eq:x}`
+   *resolves* yet has **no** S4 number. S6 **omits** such an entry from `refs`, so every row in `refs`
+   carries a real number (no placeholder). It is neither *dangling* (its label exists) nor
+   *renderable*; it reappears once equation numbering ships. Citations have no analogous gap — a
+   winning `\bibitem` is always S5-numbered — so every resolved `\cite` becomes a `CiteEntry`.
+3. **Multi-key `\cite` yields one row per key.** S2 already split `\cite{a,b}` into per-key
+   `ResolvedCite`s, so S6 emits one `CiteEntry` per key, each numbered independently (`a`→`[1]`,
+   `b`→`[2]`).
+
+### 12.3 Public API
+
+```rust
+impl Document {
+    /// Assemble the cross-reference report: composes S1 (resolve refs) + S2 (resolve cites) + S4
+    /// (label numbers) + S5 (citation numbers) into one owned artifact. No new AST walk — each
+    /// family is numbered once, then looked up. Total & panic-free; the tree is not mutated.
+    pub fn cross_reference_report(&self) -> CrossReferenceReport;
+}
+
+pub struct CrossReferenceReport {
+    pub refs: Vec<RefEntry>,         // one per resolved & numbered `\ref`, in S1 pre-order
+    pub cites: Vec<CiteEntry>,       // one per resolved `\cite` key, in S2 pre-order
+    pub dangling_refs: Vec<String>,  // keys of unresolved `\ref` (S1's `unresolved`) — LaTeX's `??`
+    pub dangling_cites: Vec<String>, // keys of unresolved `\cite` (S2's `unresolved`) — LaTeX's `[?]`
+}
+impl CrossReferenceReport {
+    /// Render a stable, deterministic, human-readable report (see §12.4 for the pinned format).
+    pub fn to_plain_text(&self) -> String;
+}
+
+pub struct RefEntry  { pub key: String, pub command: String, pub kind: LabelKind, pub number: String }
+pub struct CiteEntry { pub key: String, pub number: String }
+```
+
+All plain, owned data (`String`s + `Copy` `LabelKind`), mirroring S4/S5, so the report outlives any
+borrow of the source and can be stored/serialized. `RefEntry`, `CiteEntry`, and `CrossReferenceReport`
+are exported from the crate root.
+
+### 12.4 The pinned plain-text format
+
+`to_plain_text()` renders a stable string a test can pin byte-for-byte:
+
+- One line per resolved reference, in `refs` order: `\ref{<key>} -> <Kind> <number>` (e.g.
+  `\ref{sec:intro} -> Section 1.2`). The command shown is always `\ref` (naming the *binding*, not the
+  surface `\eqref`/`\pageref` spelling); `<Kind>` is the capitalised kind name (`Section`/`Table`/
+  `Figure`).
+- One line per resolved citation, in `cites` order: `\cite{<key>} -> <number>` (e.g.
+  `\cite{smith} -> [2]`).
+- **Only if** non-empty, a footer `Dangling references: <k1>, <k2>, …` (keys joined by `", "`).
+- **Only if** non-empty, a footer `Dangling citations: <k1>, <k2>, …`.
+
+Lines are joined by a single `\n` with **no trailing newline** and no trailing whitespace. An **empty**
+report renders the fixed marker `(no cross-references)` (never the empty string). Sections appear in a
+fixed order (resolved refs, resolved cites, dangling refs, dangling cites), so the rendering is a pure
+function of the report.
+
+### 12.5 What is DEFERRED (honest boundary, inherited from S4/S5)
+
+- **Equation numbers** — a `\ref` to an equation/inline label is *omitted* from `refs` (S4 does not
+  number those yet — an equation body is an opaque `Block::DisplayMath` string with no label field), not
+  invented.
+- **Author-year / natbib sorted citation styles** and **external `.bib`/`.bbl` databases** — out of
+  scope at S2/S5, so the report covers only what those passes resolved (in-document `thebibliography`,
+  numeric/unsorted style).
+
+### 12.6 Verification (S6)
+
+`cargo test -p latex` green (7 new `references` S6 tests); `cargo clippy -p latex --all-targets
+-- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build
+-p latex --no-default-features` builds. No `cargo fmt`, no grammar regen. The tests assert the
+**actual composed data and rendered strings**: a doc with both a labeled `\section`+`\ref` and a
+`thebibliography`+`\cite` → one `RefEntry` (key `"s:i"`, command `"ref"`, kind `Section`, number
+`"1"`) and one `CiteEntry` (key `"b"`, number `"[2]"`), each field exact; `to_plain_text()` renders the
+pinned multi-line string; a dangling `\ref{nope}`/`\cite{ghost}` appear in `dangling_refs`/
+`dangling_cites` (not in `refs`/`cites`) and in the footer; a multi-key `\cite{a,b}` → two `CiteEntry`s
+numbered `[1]`/`[2]`; a resolved-but-unnumbered inline-label `\ref` is omitted from `refs` (and not
+dangling); an empty document → an empty report with `to_plain_text()` == `"(no cross-references)"` (no
+panic); and a regression that building the report leaves the S1/S2/S3/S4/S5 outputs byte-for-byte
+unchanged (the tree is never mutated).

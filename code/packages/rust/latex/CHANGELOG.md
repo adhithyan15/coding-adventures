@@ -2,6 +2,53 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.42.0] — 2026-07-06
+
+### Added — cross-reference resolution: the cross-reference report (LTXDOC03 S6)
+
+The **consumer** rung that proves S1–S5 compose. S1 bound each `\ref`, S2 each `\cite`, S4 numbered
+the labels, S5 numbered the citations — but nothing yet **assembled** them into a single
+consumer-facing artifact. S6 is that assembly: one method that walks S1's resolved `\ref`s and S2's
+resolved `\cite`s and produces an owned, plain-data report where each entry carries its rendered
+**number** (from S4/S5) alongside its key/command/kind. No new AST walk, no new parsing.
+
+- **Composes the five passes.** `Document::cross_reference_report()` runs S1 + S2, numbers each family
+  **once** with S4 (`number_labels`) / S5 (`number_citations`), then *looks each key up* in the
+  resulting number table — never a per-entry re-numbering (the anti-pattern `ref_number`/`cite_number`
+  warn about in a loop). The whole report costs a constant number of the existing bounded passes.
+- **Two resolved families.** A resolved `\ref` with an S4 number → a `RefEntry { key, command, kind,
+  number }` (`\ref{sec:intro}` → Section `"1.2"`); a resolved `\cite` key → a `CiteEntry { key,
+  number }` (`\cite{b}` → `"[2]"`). A multi-key `\cite{a,b}` yields one `CiteEntry` per key (S2 already
+  split them), numbered `[1]`/`[2]` independently.
+- **Dangling refs/cites surfaced *separately*.** A `\ref{missing}` (S1's `unresolved`) and a
+  `\cite{ghost}` (S2's `unresolved`) — LaTeX's `??` / `[?]` undefined markers — go in their own
+  `dangling_refs` / `dangling_cites` key vectors, never folded in among the resolved entries. This
+  makes "resolved vs dangling" a type-level fact rather than a field the caller must remember to check.
+- **The one subtlety, documented.** A resolved `\ref` to an *inline/equation* `\label` (which S4 leaves
+  unnumbered — deferred) has no number, so it is **omitted** from `refs` (it is neither dangling — its
+  label exists — nor renderable). Every row in `refs` therefore carries a real number, no placeholder.
+  Citations have no analogous gap (a winning `\bibitem` is always S5-numbered).
+- **A stable plain-text rendering.** `CrossReferenceReport::to_plain_text()` renders a deterministic,
+  pinned string: `\ref{<key>} -> <Kind> <number>` lines, then `\cite{<key>} -> <number>` lines, then
+  optional `Dangling references: …` / `Dangling citations: …` footers — joined by single `\n`, no
+  trailing newline. An empty report renders the fixed marker `(no cross-references)` (never the empty
+  string).
+- **New API.** `Document::cross_reference_report() -> CrossReferenceReport { refs: Vec<RefEntry>,
+  cites: Vec<CiteEntry>, dangling_refs: Vec<String>, dangling_cites: Vec<String> }` with `RefEntry`,
+  `CiteEntry`, and `CrossReferenceReport::to_plain_text() -> String`. All owned plain data (`String`s +
+  `Copy` `LabelKind`), mirroring S4/S5, exported from the crate root.
+- **Pure & additive.** The S1–S5 result types are unchanged; S6 only *reads* their results and copies
+  owned data out, mutating nothing about the tree or any prior pass. Total & panic-free (no
+  `unwrap`/`expect`, no unchecked indexing), reusing the bounded passes (no new recursion).
+
+### Deferred (honest boundary, inherited from S4/S5)
+
+- **Equation numbers** — a `\ref` to an equation/inline label is omitted from the report (S4 does not
+  number those yet; an equation body is an opaque `Block::DisplayMath` string with no label field).
+- **Author-year / natbib sorted citation styles** and **external `.bib`/`.bbl` databases** — out of
+  scope at S2/S5, so the report covers only what those passes resolved (in-document `thebibliography`,
+  numeric/unsorted style).
+
 ## [0.41.0] — 2026-07-06
 
 ### Added — cross-reference resolution: citation numbering (LTXDOC03 S5)
