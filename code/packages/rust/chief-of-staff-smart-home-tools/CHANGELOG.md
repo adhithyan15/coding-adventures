@@ -78,6 +78,10 @@ All notable changes to this package will be documented in this file.
   composes existing D23 controller handoff, runtime snapshot, pending-work,
   attention, remediation, and topology signals into a one-screen operations
   handoff without owning smart-home state.
+- Added `smart_home.get_system_health_brief`, a read-only Chief adapter tool
+  that composes existing D23 runtime, event, command, authorization,
+  desired-state, transition, and supervision health signals into one system
+  triage packet without owning smart-home state.
 - Added `smart_home.get_remediation_plan`, a read-only Chief adapter tool that
   turns existing D23 runtime pending-work, audit, desired-state, state-transition,
   and supervision remediation signals into ordered operator steps without owning

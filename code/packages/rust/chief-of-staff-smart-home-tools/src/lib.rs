@@ -323,6 +323,7 @@ pub const SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID: &str =
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pending_work_summary";
 pub const SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID: &str = "smart_home.get_attention_overview";
+pub const SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID: &str = "smart_home.get_system_health_brief";
 pub const SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID: &str = "smart_home.get_remediation_plan";
 pub const SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID: &str = "smart_home.get_operations_brief";
 pub const SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID: &str = "smart_home.get_safety_brief";
@@ -2486,6 +2487,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_attention_overview_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_system_health_brief_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
                 }
                 SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6696,6 +6705,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_snapshot_definition(),
         get_pending_work_summary_definition(),
         get_attention_overview_definition(),
+        get_system_health_brief_definition(),
         get_remediation_plan_definition(),
         get_operations_brief_definition(),
         get_safety_brief_definition(),
@@ -7770,6 +7780,60 @@ fn get_attention_overview_definition() -> ToolDefinition {
                 "summary",
                 "pending_work",
                 "lanes",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_system_health_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID,
+        "Get smart-home system health brief",
+        "Compose Chief-visible D23 runtime, event, command, authorization, desired-state, transition, and supervision health into one read-only triage brief without mutating smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("system_posture", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("is_idle", JsonSchema::Boolean),
+                SchemaProperty::new("requires_attention", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("runtime", JsonSchema::Any),
+                SchemaProperty::new(
+                    "triage_lanes",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("next_action", JsonSchema::Any),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "system_posture",
+                "ready",
+                "is_idle",
+                "requires_attention",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "summary",
+                "runtime",
+                "triage_lanes",
+                "next_action",
                 "source_tools",
             ],
             false,
@@ -46586,6 +46650,116 @@ fn get_attention_overview_output_handler_output(
     ))
 }
 
+fn get_system_health_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let snapshot_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::GetRuntimeSnapshot,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::RuntimeSnapshot(snapshot) = snapshot_output else {
+        return Err(ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            "system health brief expected runtime snapshot output",
+        ));
+    };
+
+    let (_, command_risk) = command_risk_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_command_risk_audit_query(),
+    )?;
+    let (_, authorization_gap) = authorization_gap_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_authorization_gap_audit_query(),
+    )?;
+    let (_, event_delivery) = event_delivery_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_event_delivery_audit_query(),
+    )?;
+    let (_, desired_state_drift) = desired_state_drift_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_desired_state_drift_audit_query(),
+    )?;
+    let (_, state_transition) = state_transition_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_state_transition_audit_query(),
+    )?;
+    let (_, supervision_remediation) = supervision_remediation_rows(
+        runtime,
+        principal_id,
+        now_ms,
+        &default_supervision_remediation_query(),
+    )?;
+
+    let pending_work = snapshot.pending_work_summary();
+    let total_attention_count = attention_overview_total_attention_count(
+        &snapshot,
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    );
+    let total_blocked_count = attention_overview_total_blocked_count(
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    );
+    let is_idle = total_attention_count == 0 && !snapshot.has_pending_work();
+    let status = system_health_brief_status(is_idle, total_attention_count, total_blocked_count);
+    let next_tool = attention_overview_next_tool(
+        &pending_work,
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    );
+
+    Ok(ToolHandlerOutput::new(system_health_brief_output_json(
+        &snapshot,
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    ))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_system_health_brief")),
+            ("status", string(status)),
+            (
+                "total_attention_count",
+                integer(total_attention_count as i64),
+            ),
+            ("total_blocked_count", integer(total_blocked_count as i64)),
+            ("next_tool", string(next_tool)),
+        ]),
+    ))
+}
+
 fn get_remediation_plan_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -50840,6 +51014,232 @@ fn attention_overview_output_json(
             attention_string_array(&[
                 SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
                 SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn system_health_brief_output_json(
+    snapshot: &RuntimeReadSnapshot,
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gap: &AuthorizationGapAuditSummary,
+    event_delivery: &EventDeliveryAuditSummary,
+    desired_state_drift: &DesiredStateDriftAuditSummary,
+    state_transition: &StateTransitionAuditSummary,
+    supervision_remediation: &SupervisionRemediationSummary,
+) -> JsonValue {
+    let pending_work = snapshot.pending_work_summary();
+    let total_attention_count = attention_overview_total_attention_count(
+        snapshot,
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+    let total_blocked_count = attention_overview_total_blocked_count(
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+    let has_blockers = total_blocked_count > 0;
+    let is_idle = total_attention_count == 0 && !snapshot.has_pending_work();
+    let status = system_health_brief_status(is_idle, total_attention_count, total_blocked_count);
+    let next_tool = attention_overview_next_tool(
+        &pending_work,
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+    let next_action = system_health_brief_next_action(
+        &pending_work,
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+
+    object([
+        ("generated_at_ms", integer(snapshot.generated_at_ms as i64)),
+        ("status", string(status)),
+        (
+            "system_posture",
+            string(system_health_brief_posture(status)),
+        ),
+        ("ready", JsonValue::Bool(status == "healthy")),
+        ("is_idle", JsonValue::Bool(is_idle)),
+        (
+            "requires_attention",
+            JsonValue::Bool(total_attention_count > 0 || snapshot.has_pending_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        (
+            "total_attention_count",
+            integer(total_attention_count as i64),
+        ),
+        ("total_blocked_count", integer(total_blocked_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "runtime_pending_work_count",
+                    integer(pending_work.total_pending_work_count() as i64),
+                ),
+                (
+                    "event_delivery_attention_count",
+                    integer(event_delivery.requires_attention_rows as i64),
+                ),
+                (
+                    "command_risk_attention_count",
+                    integer(command_risk.requires_attention_rows as i64),
+                ),
+                (
+                    "authorization_attention_count",
+                    integer(authorization_gap.requires_attention_rows as i64),
+                ),
+                (
+                    "desired_state_attention_count",
+                    integer(desired_state_drift.requires_attention_rows as i64),
+                ),
+                (
+                    "state_transition_attention_count",
+                    integer(state_transition.requires_attention_rows as i64),
+                ),
+                (
+                    "supervision_attention_count",
+                    integer(supervision_remediation.requires_attention_rows as i64),
+                ),
+                ("next_tool", string(next_tool)),
+                ("next_action", string(next_action)),
+            ]),
+        ),
+        (
+            "runtime",
+            object([
+                ("snapshot", runtime_read_snapshot_json(snapshot)),
+                ("pending_work", pending_work_summary_json(&pending_work)),
+            ]),
+        ),
+        (
+            "triage_lanes",
+            JsonValue::Array(vec![
+                operations_brief_section_json(
+                    "runtime",
+                    "Runtime pending work",
+                    pending_work.is_idle(),
+                    pending_work.total_pending_work_count(),
+                    0,
+                    SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                    remediation_plan_pending_work_action(&pending_work),
+                    pending_work_summary_json(&pending_work),
+                ),
+                operations_brief_section_json(
+                    "event_delivery",
+                    "Event delivery",
+                    !event_delivery.has_event_delivery_pressure(),
+                    event_delivery.requires_attention_rows,
+                    event_delivery.blocked_rows,
+                    SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID,
+                    remediation_plan_event_delivery_action(event_delivery),
+                    event_delivery_audit_summary_json(event_delivery),
+                ),
+                operations_brief_section_json(
+                    "command_risk",
+                    "Command risk",
+                    !command_risk.has_command_risks(),
+                    command_risk.requires_attention_rows,
+                    command_risk.blocked_rows,
+                    SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+                    remediation_plan_command_action(command_risk),
+                    command_risk_audit_summary_json(command_risk),
+                ),
+                operations_brief_section_json(
+                    "authorization",
+                    "Authorization gaps",
+                    !authorization_gap.has_authorization_gaps(),
+                    authorization_gap.requires_attention_rows,
+                    authorization_gap.blocked_rows,
+                    SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+                    remediation_plan_authorization_action(authorization_gap),
+                    authorization_gap_audit_summary_json(authorization_gap),
+                ),
+                operations_brief_section_json(
+                    "desired_state",
+                    "Desired state drift",
+                    !desired_state_drift.has_desired_state_risks(),
+                    desired_state_drift.requires_attention_rows,
+                    desired_state_drift.blocked_rows,
+                    SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID,
+                    remediation_plan_desired_state_action(desired_state_drift),
+                    desired_state_drift_audit_summary_json(desired_state_drift),
+                ),
+                operations_brief_section_json(
+                    "state_transition",
+                    "State transition work",
+                    !state_transition.has_state_transition_work(),
+                    state_transition.requires_attention_rows,
+                    state_transition.blocked_rows,
+                    SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID,
+                    remediation_plan_state_transition_action(state_transition),
+                    state_transition_audit_summary_json(state_transition),
+                ),
+                operations_brief_section_json(
+                    "supervision",
+                    "Supervision remediation",
+                    !supervision_remediation.has_supervision_remediation(),
+                    supervision_remediation.requires_attention_rows,
+                    supervision_remediation.blocked_rows,
+                    SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID,
+                    remediation_plan_supervision_action(supervision_remediation),
+                    supervision_remediation_summary_json(supervision_remediation),
+                ),
+            ]),
+        ),
+        (
+            "next_action",
+            object([
+                ("tool_id", string(next_tool)),
+                ("action", string(next_action)),
+                (
+                    "owner_lane",
+                    string(system_health_brief_owner_lane(next_tool)),
+                ),
+                (
+                    "reason",
+                    string(system_health_brief_next_reason(
+                        total_attention_count,
+                        total_blocked_count,
+                    )),
+                ),
+            ]),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
                 SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID,
                 SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
                 SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
@@ -58759,6 +59159,90 @@ fn attention_overview_status(is_idle: bool, has_blockers: bool) -> &'static str 
         "idle"
     } else {
         "attention"
+    }
+}
+
+fn system_health_brief_status(
+    is_idle: bool,
+    total_attention_count: usize,
+    total_blocked_count: usize,
+) -> &'static str {
+    if total_blocked_count > 0 {
+        "blocked"
+    } else if total_attention_count > 0 {
+        "attention"
+    } else if is_idle {
+        "healthy"
+    } else {
+        "monitor"
+    }
+}
+
+fn system_health_brief_posture(status: &str) -> &'static str {
+    match status {
+        "blocked" => "blocked",
+        "attention" => "degraded",
+        "healthy" => "nominal",
+        _ => "monitoring",
+    }
+}
+
+fn system_health_brief_next_action(
+    pending_work: &RuntimePendingWorkSummary,
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gap: &AuthorizationGapAuditSummary,
+    event_delivery: &EventDeliveryAuditSummary,
+    desired_state_drift: &DesiredStateDriftAuditSummary,
+    state_transition: &StateTransitionAuditSummary,
+    supervision_remediation: &SupervisionRemediationSummary,
+) -> &'static str {
+    if authorization_gap.has_blockers() || authorization_gap.has_authorization_gaps() {
+        remediation_plan_authorization_action(authorization_gap)
+    } else if command_risk.has_blockers() || command_risk.has_command_risks() {
+        remediation_plan_command_action(command_risk)
+    } else if supervision_remediation.has_blockers()
+        || supervision_remediation.has_supervision_remediation()
+    {
+        remediation_plan_supervision_action(supervision_remediation)
+    } else if state_transition.has_blockers() || state_transition.has_state_transition_work() {
+        remediation_plan_state_transition_action(state_transition)
+    } else if desired_state_drift.has_blockers() || desired_state_drift.has_desired_state_risks() {
+        remediation_plan_desired_state_action(desired_state_drift)
+    } else if event_delivery.has_blockers()
+        || event_delivery.has_event_delivery_pressure()
+        || pending_work.has_event_backlog()
+    {
+        remediation_plan_event_delivery_action(event_delivery)
+    } else if pending_work.has_supervision_pressure() || !pending_work.is_idle() {
+        remediation_plan_pending_work_action(pending_work)
+    } else {
+        "monitor_system_health"
+    }
+}
+
+fn system_health_brief_owner_lane(next_tool: &str) -> &'static str {
+    match next_tool {
+        SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID => "policy",
+        SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID => "safety",
+        SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID => "supervision",
+        SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID => "state",
+        SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID => "desired_state",
+        SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID => "event_ops",
+        SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID => "runtime",
+        _ => "operator",
+    }
+}
+
+fn system_health_brief_next_reason(
+    total_attention_count: usize,
+    total_blocked_count: usize,
+) -> &'static str {
+    if total_blocked_count > 0 {
+        "blocked_signal"
+    } else if total_attention_count > 0 {
+        "attention_signal"
+    } else {
+        "nominal_signal"
     }
 }
 
@@ -91450,7 +91934,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 314);
+        assert_eq!(definitions.len(), 315);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -91477,6 +91961,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID));
@@ -92351,7 +92838,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            306
+            307
         );
         assert_eq!(
             export
@@ -93045,6 +93532,7 @@ mod tests {
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID).is_some());
         assert!(
@@ -93459,6 +93947,85 @@ mod tests {
         assert_eq!(
             field(pending_lane, "recommended_tool"),
             Some(&string(SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID))
+        );
+    }
+
+    #[test]
+    fn system_health_brief_summarizes_runtime_pressure() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .register_discovery_worker_schedule(
+                ScheduledDiscoveryWorker::new(
+                    DiscoveryWorkerId::trusted("hue-mdns-system-health"),
+                    IntegrationId::trusted("hue"),
+                    DiscoveryWorkerKind::MdnsScan,
+                    5_000,
+                    250,
+                    1_050,
+                )
+                .with_source(DiscoverySource::Mdns)
+                .with_network_interface("en0")
+                .with_metadata(MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY, "_hue._tcp.local"),
+            )
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-system-health"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let request = request(
+            "call-system-health-brief",
+            SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID,
+            object([]),
+            1_250,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("blocked")));
+        assert_eq!(field(output, "system_posture"), Some(&string("blocked")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() > 0);
+        assert_eq!(array_len(field(output, "triage_lanes").unwrap()), Some(7));
+
+        let runtime_section = array_item(field(output, "triage_lanes").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(runtime_section, "section_id"),
+            Some(&string("runtime"))
+        );
+        assert!(integer_value(field(runtime_section, "attention_count").unwrap()).unwrap() > 0);
+        assert_eq!(
+            field(runtime_section, "recommended_tool"),
+            Some(&string(SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID))
+        );
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert!(field(field(output, "runtime").unwrap(), "snapshot").is_some());
+        let next_action = field(output, "next_action").unwrap();
+        assert_eq!(
+            field(next_action, "reason"),
+            Some(&string("blocked_signal"))
         );
     }
 
@@ -96009,11 +96576,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(314))
+            Some(&integer(315))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(306))
+            Some(&integer(307))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
