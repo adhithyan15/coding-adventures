@@ -1679,6 +1679,128 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 acc
             }
+            // ── aggregate / reshape Array methods (non-block) ─────
+            //
+            // `min`/`max`: element-wise via the runtime's numeric ordering
+            // (`num_lt`, the same source of truth `sort`/`<` use).  An empty
+            // array yields `nil` (Ruby `[].min == nil`).  We snapshot the
+            // vector first (no borrow held across the fold) and keep the
+            // FIRST element on a tie, matching a stable left-fold.
+            "min" => {
+                let snapshot = items_rc.borrow().clone();
+                let mut iter = snapshot.into_iter();
+                match iter.next() {
+                    Some(mut best) => {
+                        for item in iter {
+                            if num_lt(&item, &best) {
+                                best = item;
+                            }
+                        }
+                        best
+                    }
+                    None => Value::Nil,
+                }
+            }
+            "max" => {
+                let snapshot = items_rc.borrow().clone();
+                let mut iter = snapshot.into_iter();
+                match iter.next() {
+                    Some(mut best) => {
+                        for item in iter {
+                            if num_lt(&best, &item) {
+                                best = item;
+                            }
+                        }
+                        best
+                    }
+                    None => Value::Nil,
+                }
+            }
+            // `sum`: numeric fold seeded at `0` (or the explicit seed arg,
+            // matching Ruby `sum(init)` and the Python/TS reference's
+            // `total = args[0] if args else 0`).  Each step reuses `plus`,
+            // so integer-only inputs stay `Int` while any float promotes to
+            // `Float` — `[].sum == 0`, `[1,2,3].sum == 6`, `[1.5,2].sum == 3.5`.
+            "sum" => {
+                let seed = pos.into_iter().next().unwrap_or(Value::Int(0));
+                let snapshot = items_rc.borrow().clone();
+                let mut acc = seed;
+                for item in snapshot {
+                    acc = plus(vec![acc, item]);
+                }
+                acc
+            }
+            // `uniq`: first-occurrence-order de-duplication using the
+            // runtime's structural `value_eq` (so `[1, 1.0]` collapses and
+            // `[[1],[1]]` collapses too).  A fresh `Vec`; the snapshot is
+            // taken up front so no borrow is held while we scan `out`.
+            "uniq" => {
+                let snapshot = items_rc.borrow().clone();
+                let mut out: Vec<Value> = Vec::new();
+                for item in snapshot {
+                    if !out.iter().any(|kept| value_eq(kept, &item)) {
+                        out.push(item);
+                    }
+                }
+                seq_lit(out)
+            }
+            // `flatten`: recursively splice nested `Seq`s into one flat,
+            // freshly-allocated `Seq`.  CYCLE GUARD: a `visited` set of seq
+            // handle-addresses (the same discipline `puts`/`format`/`value_eq`
+            // use) bounds the walk so a self-referential array terminates —
+            // a handle already on the stack is treated as already-flattened
+            // and skipped rather than re-entered.  Every level snapshots its
+            // items (dropping the `RefCell` borrow) BEFORE recursing, so no
+            // borrow is ever held across a re-entrant call.
+            "flatten" => {
+                fn flatten_into(
+                    items: &Rc<RefCell<Vec<Value>>>,
+                    out: &mut Vec<Value>,
+                    visited: &mut std::collections::HashSet<usize>,
+                ) {
+                    let id = seq_handle_id(items);
+                    if !visited.insert(id) {
+                        return;
+                    }
+                    let snapshot = items.borrow().clone();
+                    for item in snapshot {
+                        match item {
+                            Value::Seq(inner) => flatten_into(&inner, out, visited),
+                            other => out.push(other),
+                        }
+                    }
+                    visited.remove(&id);
+                }
+                let mut out: Vec<Value> = Vec::new();
+                let mut visited: std::collections::HashSet<usize> =
+                    std::collections::HashSet::new();
+                flatten_into(&items_rc, &mut out, &mut visited);
+                seq_lit(out)
+            }
+            // `compact`: a fresh `Seq` with every `nil` removed.
+            "compact" => seq_lit(
+                items_rc
+                    .borrow()
+                    .iter()
+                    .filter(|x| !matches!(x, Value::Nil))
+                    .cloned()
+                    .collect(),
+            ),
+            // `to_a`: Ruby `Array#to_a` returns the receiver itself (identity),
+            // so downstream mutation is observed — we hand back `recv`.
+            "to_a" => recv,
+            // `each_with_index`: yields `(element, index)` to the block via
+            // `apply_closure` and returns the receiver.  The item is cloned
+            // out of the snapshot BEFORE the block runs, so no `RefCell`
+            // borrow is held across the (re-entrant) closure call.
+            "each_with_index" => {
+                if let Some(b) = &block {
+                    for (index, item) in items_rc.borrow().clone().into_iter().enumerate() {
+                        apply_closure(b, vec![item, Value::Int(index as i64)]);
+                    }
+                }
+                recv
+            }
             _ => no_method_error(&recv, name),
         }
     }
