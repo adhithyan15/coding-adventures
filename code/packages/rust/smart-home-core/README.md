@@ -153,6 +153,8 @@ Current scope:
   command results from checkpointed runtime event history
 - D18D platform event-ops review descriptors for Chief-visible rollups over
   event delivery, event-log, and pending-work primitives
+- D18D recovery-readiness descriptor for Chief-visible return-to-normal gates
+  over recovery, service-execution safety, activation, and evidence primitives
 - D18D authorization-audit tool descriptors for listing decisions and compact
   allow/deny summaries
 - D18D capability-grant tool descriptors for listing grant rows and compact

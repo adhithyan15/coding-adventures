@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_recovery_readiness_brief`, a read-only Chief adapter
+  that composes existing D23 recovery, service-execution safety, activation
+  rollback, observability, guardrail, compliance, attestation, evidence, and
+  exception summaries into one return-to-normal readiness packet without
+  dispatching commands or owning smart-home state.
 - Added `smart_home.get_service_execution_safety_brief`, a read-only Chief
   adapter that composes existing D23 service-execution readiness, safety,
   runtime-pressure, authorization, command-risk, and capability-grant evidence

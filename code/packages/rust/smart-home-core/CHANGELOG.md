@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_recovery_readiness_brief` tool descriptor for read-only Chief
+  return-to-normal readiness packets over existing D23 recovery,
+  service-execution safety, activation rollback, observability, guardrail,
+  compliance, attestation, evidence, and exception evidence.
 - `smart_home.get_service_execution_safety_brief` tool descriptor for read-only
   Chief go/no-go packets over existing D23 service-execution readiness, safety,
   runtime-pressure, authorization, command-risk, and capability-grant evidence.

@@ -305,6 +305,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_maintenance_brief`
 - `smart_home.get_incident_brief`
 - `smart_home.get_recovery_brief`
+- `smart_home.get_recovery_readiness_brief`
 - `smart_home.get_morning_brief`
 - `smart_home.get_escalation_brief`
 - `smart_home.get_continuity_brief`
