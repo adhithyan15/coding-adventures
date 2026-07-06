@@ -17,6 +17,12 @@ struct PostParseRepairEvidence {
 
 const POST_PARSE_REPAIR_EVIDENCE: &[PostParseRepairEvidence] = &[
     PostParseRepairEvidence {
+        id: "adoption01-dat-6",
+        source: "adoption01.dat:6",
+        axis: "adoption-table-foster-parenting",
+        data_snippet: "<table><a>1<p>2</a>3</p>",
+    },
+    PostParseRepairEvidence {
         id: "tests26-dat-4",
         source: "tests26.dat:4",
         axis: "fostered-nobr-cell-continuation",
@@ -33,6 +39,18 @@ const POST_PARSE_REPAIR_EVIDENCE: &[PostParseRepairEvidence] = &[
         source: "tricky01.dat:8",
         axis: "insanely-badly-nested-table-sequence",
         data_snippet: "This page contains an insanely badly-nested tag sequence.",
+    },
+    PostParseRepairEvidence {
+        id: "tricky01-dat-6",
+        source: "tricky01.dat:6",
+        axis: "tricky-center-table-void-recovery",
+        data_snippet: "<table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+    },
+    PostParseRepairEvidence {
+        id: "tricky01-dat-7",
+        source: "tricky01.dat:7",
+        axis: "tricky-paragraph-rowgroup-recovery",
+        data_snippet: "<table><tr><p><a><p>You should see this text.",
     },
 ];
 
@@ -62,9 +80,12 @@ fn whatwg_post_parse_repair_audit_fixture_parses() {
     assert_eq!(suite.source_fixture, "html5lib-tree-construction-smoke.dat");
     assert!(!suite.description.is_empty());
     assert_eq!(suite.case_count, suite.cases.len());
-    assert_eq!(suite.case_count, 3);
+    assert_eq!(suite.case_count, 6);
+    assert_axis_count(&suite, "adoption-table-foster-parenting", 1);
     assert_axis_count(&suite, "fostered-nobr-cell-continuation", 2);
     assert_axis_count(&suite, "insanely-badly-nested-table-sequence", 1);
+    assert_axis_count(&suite, "tricky-center-table-void-recovery", 1);
+    assert_axis_count(&suite, "tricky-paragraph-rowgroup-recovery", 1);
 }
 
 #[test]
