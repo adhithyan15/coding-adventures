@@ -144,25 +144,32 @@ fn compose(a: char, b: char) -> Option<char> {
 
 /// Reorder combining marks into canonical order (UAX #15 "Canonical Ordering").
 ///
-/// Within any run, two *adjacent* characters are swapped when the earlier one
-/// has a strictly greater nonzero combining class than the later one. Repeating
-/// this to a fixed point yields a stable sort of each combining-mark run by CCC,
-/// which is exactly the canonical order.
+/// The rule: within each maximal run of consecutive combining marks (nonzero
+/// combining class), sort the marks by combining class, keeping the original
+/// order among marks of *equal* class (a stable sort). Starters (class 0) never
+/// move and act as run boundaries.
+///
+/// We implement this directly as a per-run stable sort, which is `O(n log n)`.
+/// A naive fixed-point adjacent-swap ("bubble") would give identical output —
+/// it only ever swaps a strictly-greater class past a smaller one, i.e. a stable
+/// sort — but is `O(n²)` on a long descending-class run, which is an attacker-
+/// controllable denial-of-service vector (combining marks are only 2 bytes each,
+/// so a modest input yields tens of thousands of them). Sorting each run avoids
+/// that blow-up while producing byte-identical results.
 fn canonical_order(chars: &mut [char]) {
-    if chars.len() < 2 {
-        return;
-    }
-    let mut swapped = true;
-    while swapped {
-        swapped = false;
-        for i in 1..chars.len() {
-            let a = ccc(chars[i - 1]);
-            let b = ccc(chars[i]);
-            if a != 0 && b != 0 && a > b {
-                chars.swap(i - 1, i);
-                swapped = true;
-            }
+    let mut i = 0;
+    while i < chars.len() {
+        if ccc(chars[i]) == 0 {
+            i += 1;
+            continue;
         }
+        // Extend a maximal run of nonzero-class (combining) characters.
+        let start = i;
+        while i < chars.len() && ccc(chars[i]) != 0 {
+            i += 1;
+        }
+        // `slice::sort_by_key` is stable, so equal-class marks keep their order.
+        chars[start..i].sort_by_key(|&c| ccc(c));
     }
 }
 
@@ -320,6 +327,32 @@ mod tests {
         // (0323, 0301) because 220 < 230.
         let s = "a\u{0301}\u{0323}";
         assert_eq!(nfd(s), "a\u{0323}\u{0301}");
+    }
+
+    #[test]
+    fn canonical_ordering_is_stable_within_equal_class() {
+        // A run of marks across several classes, including two of equal class,
+        // must sort by class and keep equal-class marks in their original order.
+        // Classes: 0301=230, 0316=220, 0323=220, 0308=230.
+        // Expected order: the two 220s first (0316 before 0323, preserving input
+        // order), then the two 230s (0301 before 0308).
+        let s = "a\u{0301}\u{0316}\u{0323}\u{0308}";
+        assert_eq!(nfd(s), "a\u{0316}\u{0323}\u{0301}\u{0308}");
+    }
+
+    #[test]
+    fn long_mark_run_orders_without_blowup() {
+        // Regression guard for the canonical-ordering DoS: a long descending-class
+        // run must normalize correctly (and, with the per-run sort, quickly).
+        let s: String = std::iter::repeat_n('\u{0301}', 1000)
+            .chain(std::iter::repeat_n('\u{0316}', 1000))
+            .collect();
+        let out = nfd(&s);
+        // All 1000 class-220 marks come before all 1000 class-230 marks.
+        let expected: String = std::iter::repeat_n('\u{0316}', 1000)
+            .chain(std::iter::repeat_n('\u{0301}', 1000))
+            .collect();
+        assert_eq!(out, expected);
     }
 
     #[test]
