@@ -125,6 +125,7 @@ SELF_CONTAINED_RUNGS = (
     "rung85_wound_closure",
     "rung86_joint_fluid",
     "rung87_complement_titer",
+    "rung88_nerve_conduction",
 )
 
 
