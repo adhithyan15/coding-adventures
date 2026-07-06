@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/mini-sqlite",
-  "version": "0.2.0",
-  "description": "Mini-SQLite for TypeScript — Level 1 full SQL pipeline (planner → optimizer → codegen → vm)",
+  "name": "@coding-adventures/sql-planner",
+  "version": "0.1.0",
+  "description": "SQL query planner — converts a parsed SQL AST into a typed LogicalPlan tree",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -9,14 +9,10 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
-  "keywords": ["sql", "sqlite", "database", "education"],
+  "keywords": ["sql", "planner", "query-plan", "relational-algebra", "education"],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/sql-vm": "file:../sql-vm",
-    "@coding-adventures/sql-codegen": "file:../sql-codegen",
-    "@coding-adventures/sql-optimizer": "file:../sql-optimizer",
-    "@coding-adventures/sql-planner": "file:../sql-planner",
     "coding-adventures-sql-parser": "file:../sql-parser",
     "coding-adventures-sql-lexer": "file:../sql-lexer",
     "@coding-adventures/lexer": "file:../lexer",

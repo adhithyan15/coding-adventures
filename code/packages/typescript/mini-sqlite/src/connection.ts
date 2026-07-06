@@ -1,9 +1,9 @@
-import type { SqlValue } from "@coding-adventures/sql-execution-engine";
+import type { SqlValue } from "@coding-adventures/sql-codegen";
 import { bindParameters, type ParameterValue } from "./binding.js";
 import { Cursor } from "./cursor.js";
 import { InMemoryDatabase, type StatementResult } from "./database.js";
 import { NotSupportedError, ProgrammingError } from "./errors.js";
-import { firstKeyword, parseMutatingStatement } from "./sql.js";
+import { firstKeyword } from "./sql.js";
 
 export interface ConnectOptions {
   autocommit?: boolean;
@@ -57,6 +57,8 @@ export class Connection {
     const bound = bindParameters(sql, parameters);
     const keyword = firstKeyword(bound);
 
+    // Transaction control is handled here so snapshot management stays in the
+    // connection layer and does not flow through the SQL pipeline.
     if (keyword === "BEGIN") {
       this.ensureSnapshot();
       return { columns: [], rows: [], rowsAffected: 0 };
@@ -69,22 +71,18 @@ export class Connection {
       this.rollback();
       return { columns: [], rows: [], rowsAffected: 0 };
     }
-    if (keyword === "SELECT") return this.database.select(bound);
 
-    this.ensureSnapshot();
-    const stmt = parseMutatingStatement(bound);
-    switch (stmt.kind) {
-      case "create":
-        return this.database.createTable(stmt);
-      case "drop":
-        return this.database.dropTable(stmt);
-      case "insert":
-        return this.database.insert(stmt);
-      case "update":
-        return this.database.update(stmt);
-      case "delete":
-        return this.database.delete(stmt);
-    }
+    // Mutating statements require a snapshot for rollback support.
+    const isMutating =
+      keyword === "INSERT" ||
+      keyword === "UPDATE" ||
+      keyword === "DELETE" ||
+      keyword === "CREATE" ||
+      keyword === "DROP";
+
+    if (isMutating) this.ensureSnapshot();
+
+    return this.database.execute(bound);
   }
 
   private ensureSnapshot(): void {
@@ -103,7 +101,7 @@ export function connect(
   options: ConnectOptions = {},
 ): Connection {
   if (database !== ":memory:") {
-    throw new NotSupportedError("TypeScript mini-sqlite supports only :memory: in Level 0");
+    throw new NotSupportedError("TypeScript mini-sqlite supports only :memory:");
   }
   return new Connection(options.autocommit ?? false);
 }

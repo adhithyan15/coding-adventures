@@ -44,9 +44,11 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "literal", value: "ALL" },
         ] } },
       { type: "rule_reference", name: "select_list" },
-      { type: "literal", value: "FROM" },
-      { type: "rule_reference", name: "table_ref" },
-      { type: "repetition", element: { type: "rule_reference", name: "join_clause" } },
+      { type: "optional", element: { type: "sequence", elements: [
+          { type: "literal", value: "FROM" },
+          { type: "rule_reference", name: "table_ref" },
+          { type: "repetition", element: { type: "rule_reference", name: "join_clause" } },
+        ] } },
       { type: "optional", element: { type: "rule_reference", name: "where_clause" } },
       { type: "optional", element: { type: "rule_reference", name: "group_clause" } },
       { type: "optional", element: { type: "rule_reference", name: "having_clause" } },
@@ -447,6 +449,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "group", element: { type: "alternation", choices: [
               { type: "literal", value: "+" },
               { type: "literal", value: "-" },
+              { type: "token_reference", name: "CONCAT" },
             ] } },
           { type: "rule_reference", name: "multiplicative" },
         ] } },

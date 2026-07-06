@@ -7,8 +7,5 @@ cd ../directed-graph && npm ci --quiet
 cd ../cli-builder && npm ci --quiet
 cd ../state-machine && npm ci --quiet
 cd ../sql-planner && npm ci --quiet
-cd ../sql-optimizer && npm ci --quiet
-cd ../sql-codegen && npm ci --quiet
-cd ../sql-vm && npm ci --quiet
 npm ci --quiet
 npx vitest run --coverage
