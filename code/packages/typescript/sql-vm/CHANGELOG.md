@@ -1,5 +1,16 @@
 # Changelog - @coding-adventures/sql-vm
 
+## [0.1.1] - 2026-07-06
+
+### Security
+- **ReDoS fix** (`sqlLike`): replaced regex-based LIKE matching (`%`→`.*`) with
+  a DP-based O(m×n) implementation that has no catastrophic-backtracking risk.
+  A crafted pattern like `%a%a%a…%a%` against a near-miss string could previously
+  cause exponential backtracking in V8's regex engine and stall the event loop.
+- **Information disclosure** (`openTable`): sanitised table names in
+  `"no such table: …"` error messages to strip non-identifier characters,
+  preventing log-injection via attacker-controlled table names.
+
 ## [0.1.0] - 2026-07-06
 
 ### Added

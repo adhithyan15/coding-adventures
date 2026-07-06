@@ -568,7 +568,7 @@ class SqlVm {
   private openTable(table: string): Array<Record<string, SqlValue>> {
     if (table === "__dual__") return [{}]; // single empty row
     const tableData = this.db.get(table);
-    if (!tableData) throw new VmError(`no such table: ${table}`);
+    if (!tableData) throw new VmError(`no such table: ${table.replace(/[^A-Za-z0-9_.]/g, "?")}`);
     return tableData.rows;
   }
 
@@ -768,9 +768,28 @@ function sqlEquals(a: SqlValue, b: SqlValue): boolean {
 }
 
 function sqlLike(value: string, pattern: string): boolean {
-  const re = pattern
-    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    .replace(/%/g, ".*")
-    .replace(/_/g, ".");
-  return new RegExp(`^${re}$`, "i").test(value);
+  // DP-based matching: avoids ReDoS that a %→.* regex expansion would cause.
+  // % matches any sequence of characters (including empty); _ matches any one.
+  // O(m×n) time and space; no backtracking.
+  const v = value.toLowerCase();
+  const p = pattern.toLowerCase();
+  const m = v.length;
+  const n = p.length;
+  const dp: boolean[][] = Array.from({ length: m + 1 }, () =>
+    new Array(n + 1).fill(false)
+  );
+  dp[0][0] = true;
+  for (let j = 1; j <= n; j++) {
+    if (p[j - 1] === "%") dp[0][j] = dp[0][j - 1];
+  }
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (p[j - 1] === "%") {
+        dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+      } else if (p[j - 1] === "_" || p[j - 1] === v[i - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      }
+    }
+  }
+  return dp[m][n];
 }
