@@ -6,6 +6,8 @@ use spice_engine::{
     device_model_behavior_audit_fixtures, device_model_reference_deck_audit_analysis_summary,
     device_model_reference_deck_audit_analysis_summary_records,
     device_model_reference_deck_audit_fixtures, device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_gate_coverage_digest,
+    device_model_reference_deck_audit_gate_coverage_digest_records,
     device_model_reference_deck_audit_gate_issue_records,
     device_model_reference_deck_audit_gate_issue_summary,
     device_model_reference_deck_audit_gate_issue_summary_records,
@@ -18,6 +20,9 @@ use spice_engine::{
     format_device_model_reference_deck_audit_analysis_summary_json,
     format_device_model_reference_deck_audit_analysis_summary_table,
     format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_coverage_digest_csv,
+    format_device_model_reference_deck_audit_gate_coverage_digest_json,
+    format_device_model_reference_deck_audit_gate_coverage_digest_table,
     format_device_model_reference_deck_audit_gate_issue_csv,
     format_device_model_reference_deck_audit_gate_issue_json,
     format_device_model_reference_deck_audit_gate_issue_summary_csv,
@@ -647,6 +652,18 @@ fn device_model_reference_deck_audit_gate_report_is_stable() {
         format_device_model_reference_deck_audit_gate_report(&report),
         "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\ntrue\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
     );
+    let digest = device_model_reference_deck_audit_gate_coverage_digest(&report);
+    assert!(digest.passed);
+    assert_eq!(digest.fixture_count, 20);
+    assert_eq!(digest.expected_pair_count, 20);
+    assert_eq!(digest.covered_pair_count, 20);
+    assert_eq!(digest.missing_pair_count, 0);
+    assert_eq!(digest.issue_count, 0);
+    assert!(digest.issue_fields.is_empty());
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_coverage_digest_table(&report),
+        "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\tmissing_pair_count\tissue_count\tissue_fields\ntrue\t20\t20\t20\t0\t0\t"
+    );
 }
 
 #[test]
@@ -719,6 +736,35 @@ fn device_model_reference_deck_audit_gate_reports_missing_coverage() {
     assert_eq!(
         format_device_model_reference_deck_audit_gate_issue_summary_json(&report),
         "[{\"field\":\"coverage\",\"issue_count\":\"1\",\"fixture_names\":\"NMOS:tran\",\"messages\":\"missing required NMOS tran reference-deck audit row\"}]\n"
+    );
+    let digest = device_model_reference_deck_audit_gate_coverage_digest(&report);
+    assert!(!digest.passed);
+    assert_eq!(digest.fixture_count, 19);
+    assert_eq!(digest.expected_pair_count, 20);
+    assert_eq!(digest.covered_pair_count, 19);
+    assert_eq!(digest.missing_pair_count, 1);
+    assert_eq!(digest.issue_count, 1);
+    assert_eq!(digest.issue_fields, vec!["coverage"]);
+    let digest_records = device_model_reference_deck_audit_gate_coverage_digest_records(&report);
+    assert_eq!(digest_records.len(), 1);
+    assert_eq!(digest_records[0]["passed"], "false");
+    assert_eq!(digest_records[0]["fixture_count"], "19");
+    assert_eq!(digest_records[0]["expected_pair_count"], "20");
+    assert_eq!(digest_records[0]["covered_pair_count"], "19");
+    assert_eq!(digest_records[0]["missing_pair_count"], "1");
+    assert_eq!(digest_records[0]["issue_count"], "1");
+    assert_eq!(digest_records[0]["issue_fields"], "coverage");
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_coverage_digest_table(&report),
+        "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\tmissing_pair_count\tissue_count\tissue_fields\nfalse\t19\t20\t19\t1\t1\tcoverage"
+    );
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_coverage_digest_csv(&report),
+        "passed,fixture_count,expected_pair_count,covered_pair_count,missing_pair_count,issue_count,issue_fields\nfalse,19,20,19,1,1,coverage\n"
+    );
+    assert_eq!(
+        format_device_model_reference_deck_audit_gate_coverage_digest_json(&report),
+        "[{\"passed\":\"false\",\"fixture_count\":\"19\",\"expected_pair_count\":\"20\",\"covered_pair_count\":\"19\",\"missing_pair_count\":\"1\",\"issue_count\":\"1\",\"issue_fields\":\"coverage\"}]\n"
     );
 }
 

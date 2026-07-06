@@ -170,6 +170,19 @@ class DeviceModelReferenceDeckAuditGateReport:
 
 
 @dataclass(frozen=True, slots=True)
+class DeviceModelReferenceDeckAuditGateCoverageDigest:
+    """A one-row health digest for reference-deck audit gate coverage."""
+
+    passed: bool
+    fixture_count: int
+    expected_pair_count: int
+    covered_pair_count: int
+    missing_pair_count: int
+    issue_count: int
+    issue_fields: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class DeviceModelReferenceDeckAuditGateIssueSummary:
     """A compact grouped summary of reference-deck audit gate issues."""
 
@@ -1766,6 +1779,79 @@ def format_device_model_reference_deck_audit_gate_report(
             for issue in report.issues
         )
     return "\n".join(lines)
+
+
+def device_model_reference_deck_audit_gate_coverage_digest(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> DeviceModelReferenceDeckAuditGateCoverageDigest:
+    """Return one-row audit gate coverage counts for release dashboards."""
+
+    gate_report = device_model_reference_deck_audit_gate() if report is None else report
+    expected_pair_count = len(gate_report.expected_kinds) * len(
+        gate_report.expected_analyses
+    )
+    missing_pair_count = sum(
+        1 for issue in gate_report.issues if issue.field == "coverage"
+    )
+    return DeviceModelReferenceDeckAuditGateCoverageDigest(
+        passed=gate_report.passed,
+        fixture_count=gate_report.fixture_count,
+        expected_pair_count=expected_pair_count,
+        covered_pair_count=max(expected_pair_count - missing_pair_count, 0),
+        missing_pair_count=missing_pair_count,
+        issue_count=len(gate_report.issues),
+        issue_fields=tuple(sorted({issue.field for issue in gate_report.issues})),
+    )
+
+
+def format_device_model_reference_deck_audit_gate_coverage_digest_table(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return a stable tab-separated one-row audit gate coverage digest."""
+
+    digest = device_model_reference_deck_audit_gate_coverage_digest(report)
+    return "\n".join(
+        [
+            "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\t"
+            "missing_pair_count\tissue_count\tissue_fields",
+            (
+                f"{str(digest.passed).lower()}\t{digest.fixture_count}\t"
+                f"{digest.expected_pair_count}\t{digest.covered_pair_count}\t"
+                f"{digest.missing_pair_count}\t{digest.issue_count}\t"
+                f"{','.join(digest.issue_fields)}"
+            ),
+        ]
+    )
+
+
+def device_model_reference_deck_audit_gate_coverage_digest_records(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for the audit gate coverage digest."""
+
+    return deck_table_records(
+        format_device_model_reference_deck_audit_gate_coverage_digest_table(report)
+    )
+
+
+def format_device_model_reference_deck_audit_gate_coverage_digest_csv(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return the audit gate coverage digest as RFC 4180-style CSV."""
+
+    return format_deck_table_csv(
+        format_device_model_reference_deck_audit_gate_coverage_digest_table(report)
+    )
+
+
+def format_device_model_reference_deck_audit_gate_coverage_digest_json(
+    report: DeviceModelReferenceDeckAuditGateReport | None = None,
+) -> str:
+    """Return compact JSON records for the audit gate coverage digest."""
+
+    return format_deck_table_json(
+        format_device_model_reference_deck_audit_gate_coverage_digest_table(report)
+    )
 
 
 def format_device_model_reference_deck_audit_gate_issue_table(

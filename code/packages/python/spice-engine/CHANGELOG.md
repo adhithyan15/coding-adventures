@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Device model reference-deck audit gate coverage digest** —
+  `device_model_reference_deck_audit_gate_coverage_digest()`,
+  `format_device_model_reference_deck_audit_gate_coverage_digest_table()`,
+  `device_model_reference_deck_audit_gate_coverage_digest_records()`,
+  `format_device_model_reference_deck_audit_gate_coverage_digest_csv()`, and
+  `format_device_model_reference_deck_audit_gate_coverage_digest_json()` now
+  expose one-row coverage health exports for release dashboards, matching Rust
+  and TypeScript.
+
 - **Device model reference-deck audit gate issue summaries** —
   `device_model_reference_deck_audit_gate_issue_summary()`,
   `format_device_model_reference_deck_audit_gate_issue_summary_table()`,

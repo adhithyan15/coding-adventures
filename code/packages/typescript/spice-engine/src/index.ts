@@ -1852,6 +1852,16 @@ export interface DeviceModelReferenceDeckAuditGateReport {
   readonly issues: readonly DeviceModelReferenceDeckAuditIssue[];
 }
 
+export interface DeviceModelReferenceDeckAuditGateCoverageDigest {
+  readonly passed: boolean;
+  readonly fixtureCount: number;
+  readonly expectedPairCount: number;
+  readonly coveredPairCount: number;
+  readonly missingPairCount: number;
+  readonly issueCount: number;
+  readonly issueFields: readonly string[];
+}
+
 export interface DeviceModelReferenceDeckAuditGateIssueSummary {
   readonly field: string;
   readonly issueCount: number;
@@ -9079,6 +9089,59 @@ export function formatDeviceModelReferenceDeckAuditGateReport(
     }
   }
   return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditGateCoverageDigest(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): DeviceModelReferenceDeckAuditGateCoverageDigest {
+  const expectedPairCount = report.expectedKinds.length * report.expectedAnalyses.length;
+  const missingPairCount = report.issues.filter((issue) => issue.field === "coverage").length;
+  const issueFields = [...new Set(report.issues.map((issue) => issue.field))].sort();
+  return {
+    passed: report.passed,
+    fixtureCount: report.fixtureCount,
+    expectedPairCount,
+    coveredPairCount: Math.max(expectedPairCount - missingPairCount, 0),
+    missingPairCount,
+    issueCount: report.issues.length,
+    issueFields,
+  };
+}
+
+export function formatDeviceModelReferenceDeckAuditGateCoverageDigestTable(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  const digest = deviceModelReferenceDeckAuditGateCoverageDigest(report);
+  return [
+    "passed\tfixture_count\texpected_pair_count\tcovered_pair_count\tmissing_pair_count\tissue_count\tissue_fields",
+    [
+      String(digest.passed),
+      digest.fixtureCount.toString(),
+      digest.expectedPairCount.toString(),
+      digest.coveredPairCount.toString(),
+      digest.missingPairCount.toString(),
+      digest.issueCount.toString(),
+      digest.issueFields.join(","),
+    ].join("\t"),
+  ].join("\n");
+}
+
+export function deviceModelReferenceDeckAuditGateCoverageDigestRecords(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditGateCoverageDigestTable(report));
+}
+
+export function formatDeviceModelReferenceDeckAuditGateCoverageDigestCsv(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditGateCoverageDigestTable(report));
+}
+
+export function formatDeviceModelReferenceDeckAuditGateCoverageDigestJson(
+  report: DeviceModelReferenceDeckAuditGateReport = deviceModelReferenceDeckAuditGate(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditGateCoverageDigestTable(report));
 }
 
 export function formatDeviceModelReferenceDeckAuditGateIssueTable(
