@@ -5,8 +5,15 @@ use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
+const WHATWG_DOCUMENT_SHELL_AUDIT: &str = include_str!("fixtures/whatwg-document-shell-audit.json");
+const WHATWG_FOREIGN_AUDIT: &str = include_str!("fixtures/whatwg-foreign-audit.json");
+const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
+    include_str!("fixtures/whatwg-form-interactive-audit.json");
 const WHATWG_FRAMESET_AUDIT: &str = include_str!("fixtures/whatwg-frameset-audit.json");
+const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-audit.json");
 const WHATWG_LEGACY_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-legacy-element-audit.json");
+const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
+const WHATWG_VOID_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-void-element-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tricky01-dat-3", "tricky-parser-recovery"),
     ("tricky01-dat-8", "tricky-parser-recovery"),
@@ -34,13 +41,70 @@ const PENDING_SPEC_BOUNDARY_EVIDENCE: &[PendingSpecBoundaryCase] = &[
         data_snippet: "<table><tr><td><svg><desc><td></desc><circle>",
     },
 ];
-const PENDING_SPEC_FRAMESET_CROSS_AXIS_CASES: &[(&str, &str)] =
-    &[("pending-spec-changes-dat-346", "body-compatibility")];
+const PENDING_SPEC_CROSS_AXIS_CASES: &[PendingSpecCrossAxisCase] = &[
+    PendingSpecCrossAxisCase {
+        id: "pending-spec-changes-plain-text-unsafe-dat-345",
+        suites: &[
+            (
+                "document-shell",
+                WHATWG_DOCUMENT_SHELL_AUDIT,
+                "body-frameset-boundary",
+            ),
+            ("head-body", WHATWG_HEAD_BODY_AUDIT, "body-boundary"),
+            ("table", WHATWG_TABLE_AUDIT, "foster-parenting"),
+        ],
+    },
+    PendingSpecCrossAxisCase {
+        id: "pending-spec-changes-dat-346",
+        suites: &[
+            (
+                "document-shell",
+                WHATWG_DOCUMENT_SHELL_AUDIT,
+                "body-frameset-boundary",
+            ),
+            (
+                "form-interactive",
+                WHATWG_FORM_INTERACTIVE_AUDIT,
+                "form-control",
+            ),
+            ("frameset", WHATWG_FRAMESET_AUDIT, "body-compatibility"),
+            (
+                "head-body",
+                WHATWG_HEAD_BODY_AUDIT,
+                "body-frameset-transition",
+            ),
+            (
+                "void-element",
+                WHATWG_VOID_ELEMENT_AUDIT,
+                "body-void-elements",
+            ),
+        ],
+    },
+    PendingSpecCrossAxisCase {
+        id: "pending-spec-changes-dat-347",
+        suites: &[
+            ("foreign", WHATWG_FOREIGN_AUDIT, "table-foreign-boundary"),
+            ("table", WHATWG_TABLE_AUDIT, "caption-colgroup"),
+        ],
+    },
+    PendingSpecCrossAxisCase {
+        id: "pending-spec-changes-dat-348",
+        suites: &[
+            ("foreign", WHATWG_FOREIGN_AUDIT, "html-integration-point"),
+            ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+        ],
+    },
+];
 
 struct PendingSpecBoundaryCase {
     id: &'static str,
     source: &'static str,
     data_snippet: &'static str,
+}
+
+struct PendingSpecCrossAxisCase {
+    id: &'static str,
+    suites: &'static [(&'static str, &'static str, &'static str)],
 }
 
 #[derive(Debug, Deserialize)]
@@ -221,45 +285,56 @@ fn whatwg_legacy_element_audit_tracks_pending_spec_boundary_evidence() {
 }
 
 #[test]
-fn whatwg_legacy_element_audit_keeps_pending_spec_frameset_case_cross_axis() {
+fn whatwg_legacy_element_audit_keeps_pending_spec_cases_cross_axis() {
     let legacy_suite = load_suite();
-    let frameset_suite: GenericAuditSuite = serde_json::from_str(WHATWG_FRAMESET_AUDIT)
-        .expect("WHATWG frameset audit fixture should parse");
 
-    for (case_id, expected_frameset_axis) in PENDING_SPEC_FRAMESET_CROSS_AXIS_CASES {
+    for cross_axis_case in PENDING_SPEC_CROSS_AXIS_CASES {
         let legacy_case = legacy_suite
             .cases
             .iter()
-            .find(|case| case.id == *case_id)
-            .unwrap_or_else(|| panic!("legacy audit should include `{case_id}`"));
-        let frameset_case = frameset_suite
-            .cases
-            .iter()
-            .find(|case| case.id == *case_id)
-            .unwrap_or_else(|| panic!("frameset audit should include `{case_id}`"));
+            .find(|case| case.id == cross_axis_case.id)
+            .unwrap_or_else(|| panic!("legacy audit should include `{}`", cross_axis_case.id));
 
         assert_eq!(
             legacy_case.axis, "pending-spec-boundary",
-            "legacy audit should keep `{case_id}` on its pending spec axis"
+            "legacy audit should keep `{}` on its pending spec axis",
+            cross_axis_case.id
         );
-        assert_eq!(
-            frameset_case.axis, *expected_frameset_axis,
-            "frameset audit should keep `{case_id}` on its frameset-specific axis"
-        );
-        assert_eq!(
-            legacy_case.source, frameset_case.source,
-            "cross-axis pending spec case `{case_id}` should point at the same WHATWG source row"
-        );
-        assert!(
-            !legacy_case.reason.is_empty() && !frameset_case.reason.is_empty(),
-            "cross-axis pending spec case `{case_id}` should keep fixture reasons"
-        );
+
+        for (suite_name, fixture, expected_axis) in cross_axis_case.suites {
+            let audit_case = generic_audit_case(fixture, suite_name, cross_axis_case.id);
+            assert_eq!(
+                audit_case.axis, *expected_axis,
+                "`{suite_name}` should keep pending spec row `{}` on its focused axis",
+                cross_axis_case.id
+            );
+            assert_eq!(
+                legacy_case.source, audit_case.source,
+                "`{suite_name}` should point pending spec row `{}` at the same WHATWG source row",
+                cross_axis_case.id
+            );
+            assert!(
+                !legacy_case.reason.is_empty() && !audit_case.reason.is_empty(),
+                "cross-axis pending spec case `{}` should keep fixture reasons",
+                cross_axis_case.id
+            );
+        }
     }
 }
 
 fn load_suite() -> LegacyElementAuditSuite {
     serde_json::from_str(WHATWG_LEGACY_ELEMENT_AUDIT)
         .expect("WHATWG legacy/edge element audit fixture should parse")
+}
+
+fn generic_audit_case(fixture: &str, suite_name: &str, case_id: &str) -> GenericAuditCase {
+    let suite = serde_json::from_str::<GenericAuditSuite>(fixture)
+        .unwrap_or_else(|error| panic!("`{suite_name}` audit fixture should parse: {error}"));
+    suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == case_id)
+        .unwrap_or_else(|| panic!("`{suite_name}` should audit pending spec case `{case_id}`"))
 }
 
 fn assert_axis_count(suite: &LegacyElementAuditSuite, axis: &str, minimum: usize) {
