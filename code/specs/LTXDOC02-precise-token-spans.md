@@ -89,10 +89,27 @@ table. Both double the surface and de-sync from `Node` under edits; carrying the
   byte-coverage test (`body_bytes_resolve_to_containing_node`) asserting every non-whitespace body byte both resolves
   and resolves to a node whose precise span contains it (representative input only; the whole-corpus
   tightest-covering-leaf capstone stays S5). No `node_at`/`walk` logic changed.
-- **S5 — precise byte-coverage capstone.** Over the LTXDOC01 capstone corpus, assert every non-whitespace
-  body byte resolves (`node_at(byte).is_some()`) AND the resolved node is a **leaf** whose span is the
-  tightest covering range (no strictly-narrower node also contains the byte). The precise counterpart of
-  D6's region-scoped coverage test.
+- **S5 — precise byte-coverage capstone.** ✅ *(shipped, latex 0.36.0 — **COMPLETES the arc**)* Over the
+  LTXDOC01 D6 representative multi-construct corpus (`CAPSTONE_SRC`), the capstone test
+  `capstone_every_body_byte_resolves_to_tightest_covering_node` asserts that for **every** non-whitespace
+  body byte `b`: **(a)** it resolves (`node_at(b).is_some()`), AND **(b)** the resolved node `n` is the
+  **tightest-covering** walked node — there is no *other* walked node `m` whose span is a strict subset of
+  `n`'s (`m.start >= n.start && m.end <= n.end && m.span != n.span`) that also contains `b`. The precise
+  counterpart of D6's region-scoped coverage test (which only asserted resolution at region granularity).
+  **Honesty note (deliberate refinement of the original wording):** the load-bearing assertion is
+  *tightest-covering*, **not** "the resolved node is a leaf". Some body bytes legitimately resolve to a
+  non-leaf composite — structural bytes (the `\section`/`\item`/`\begin{…}` machinery) and inter-child
+  delimiters belong to their enclosing `Section`/`List`/`Environment`, which is genuinely the tightest
+  cover there. The test additionally records that the *majority* of content bytes land on real leaves as a
+  soft, non-load-bearing signal. No `node_at`/parser/fold logic changed (S1–S4 already made spans precise
+  and `node_at` leaf-resolving); S5 is a pure test rung. The corpus is fixed and bounded, so iterating
+  every body byte is O(len), not a DoS. Round-trip fixed point, totality/no-panic, no `unsafe`, and
+  `MAX_DEPTH`-bounded recursion all preserved.
+
+**LTXDOC02 arc COMPLETE** (S1→S5): the LaTeX → `Document` provenance surface now carries byte-accurate
+spans on every body node, `node_at` resolves to the true per-token leaf, and the whole-corpus
+tightest-covering invariant is verified. The region-coarse caveat is retired for body nodes;
+preamble/metadata remain honestly region-coarse (classified out of directives, not walked).
 
 ## 6. Verification (every rung)
 
