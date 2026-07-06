@@ -316,6 +316,10 @@ pub const SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID: &str =
     "smart_home.list_platform_access_review";
 pub const SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID: &str =
     "smart_home.get_platform_access_review_summary";
+pub const SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID: &str =
+    "smart_home.list_platform_event_ops_review";
+pub const SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_platform_event_ops_review_summary";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pending_work_summary";
 pub const SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID: &str = "smart_home.get_attention_overview";
@@ -2436,6 +2440,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID => {
                     let query = platform_access_review_query(&arguments)?;
                     get_platform_access_review_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID => {
+                    let query = platform_event_ops_review_query(&arguments)?;
+                    list_platform_event_ops_review_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID => {
+                    let query = platform_event_ops_review_query(&arguments)?;
+                    get_platform_event_ops_review_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6669,6 +6691,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_platform_evidence_ledger_summary_definition(),
         list_platform_access_review_definition(),
         get_platform_access_review_summary_definition(),
+        list_platform_event_ops_review_definition(),
+        get_platform_event_ops_review_summary_definition(),
         get_runtime_snapshot_definition(),
         get_pending_work_summary_definition(),
         get_attention_overview_definition(),
@@ -7565,6 +7589,66 @@ fn get_platform_access_review_summary_definition() -> ToolDefinition {
         "Get smart-home platform access review summary",
         "Return compact Chief-facing platform access risk, authorization blocker, command failure, and capability grant review pressure counts from existing D23 runtime primitives.",
         platform_access_review_query_schema(),
+        object_schema(
+            vec![SchemaProperty::new("summary", JsonSchema::Any)],
+            vec!["summary"],
+            false,
+        ),
+    )
+}
+
+fn platform_event_ops_review_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("event_kind", JsonSchema::String),
+            SchemaProperty::new("event_kinds", string_array_schema()),
+            SchemaProperty::new("subscription_id", JsonSchema::String),
+            SchemaProperty::new("filter", JsonSchema::Any),
+            SchemaProperty::new("from_checkpoint", JsonSchema::Integer),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("risk_action", JsonSchema::String),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        Vec::new(),
+        false,
+    )
+}
+
+fn platform_event_ops_review_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "platform_event_ops_review",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["platform_event_ops_review", "summary", "count"],
+        false,
+    )
+}
+
+fn list_platform_event_ops_review_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID,
+        "List smart-home platform event ops review",
+        "List Chief-facing event-ops review rows over existing D23 event delivery, event log, and pending-work runtime primitives without draining queues or mutating event state.",
+        platform_event_ops_review_query_schema(),
+        platform_event_ops_review_list_output_schema(),
+    )
+}
+
+fn get_platform_event_ops_review_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID,
+        "Get smart-home platform event ops review summary",
+        "Return compact Chief-facing event delivery backlog, event-log pressure, and runtime pending-work counts from existing D23 runtime primitives.",
+        platform_event_ops_review_query_schema(),
         object_schema(
             vec![SchemaProperty::new("summary", JsonSchema::Any)],
             vec!["summary"],
@@ -11418,6 +11502,26 @@ struct PlatformAccessReviewQuery {
     limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum PlatformEventOpsReviewKind {
+    EventDelivery,
+    EventLog,
+    PendingWork,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct PlatformEventOpsReviewQuery {
+    event_kinds: Vec<PlatformEventOpsReviewKind>,
+    subscription_id: Option<RuntimeSubscriptionId>,
+    filter: Option<RuntimeEventFilter>,
+    from_checkpoint: Option<u64>,
+    risk_lane: Option<String>,
+    risk_action: Option<String>,
+    requires_attention_only: bool,
+    blocked_only: bool,
+    limit: Option<usize>,
+}
+
 fn platform_access_review_query(
     arguments: &JsonValue,
 ) -> Result<PlatformAccessReviewQuery, ToolCallError> {
@@ -11439,6 +11543,30 @@ fn platform_access_review_query(
         blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
         denials_only: optional_bool(arguments, "denials_only")?.unwrap_or(false),
         grant_review_only: optional_bool(arguments, "grant_review_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn platform_event_ops_review_query(
+    arguments: &JsonValue,
+) -> Result<PlatformEventOpsReviewQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(PlatformEventOpsReviewQuery {
+        event_kinds: optional_string_list(arguments, "event_kind", "event_kinds")?
+            .into_iter()
+            .map(|kind| parse_platform_event_ops_review_kind(&kind))
+            .collect::<Result<Vec<_>, _>>()?,
+        subscription_id: optional_string(arguments, "subscription_id")?
+            .map(RuntimeSubscriptionId::trusted),
+        filter: optional_field(arguments, "filter")
+            .map(parse_event_filter)
+            .transpose()?,
+        from_checkpoint: optional_u64(arguments, "from_checkpoint")?,
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        risk_action: optional_string(arguments, "risk_action")?,
+        requires_attention_only: optional_bool(arguments, "requires_attention_only")?
+            .unwrap_or(false),
+        blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -11489,6 +11617,43 @@ fn default_event_delivery_audit_query() -> EventDeliveryAuditQuery {
         risk_action: None,
         limit: None,
     }
+}
+
+fn default_platform_event_ops_event_delivery_query(
+    query: &PlatformEventOpsReviewQuery,
+) -> EventDeliveryAuditQuery {
+    let mut subscription_query = RuntimeSubscriptionQuery::new();
+    if let Some(subscription_id) = &query.subscription_id {
+        subscription_query = subscription_query.for_subscription(subscription_id.clone());
+    }
+    if let Some(filter) = &query.filter {
+        subscription_query = subscription_query.matching(filter.clone());
+    }
+    if query.requires_attention_only || query.blocked_only {
+        subscription_query = subscription_query.with_min_queued_events(1);
+    }
+
+    EventDeliveryAuditQuery {
+        subscription_query,
+        requires_attention_only: query.requires_attention_only || query.blocked_only,
+        risk_lane: query.risk_lane.clone(),
+        risk_action: query.risk_action.clone(),
+        limit: None,
+    }
+}
+
+fn default_platform_event_ops_event_log_query(
+    query: &PlatformEventOpsReviewQuery,
+) -> RuntimeEventQuery {
+    let mut event_query = RuntimeEventQuery::new();
+    if let Some(filter) = &query.filter {
+        event_query = event_query.matching(filter.clone());
+    }
+    if let Some(from_checkpoint) = query.from_checkpoint {
+        event_query = event_query
+            .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(from_checkpoint));
+    }
+    event_query
 }
 
 fn default_desired_state_drift_audit_query() -> DesiredStateDriftAuditQuery {
@@ -38727,6 +38892,686 @@ fn event_delivery_row_rank(row: &EventDeliveryAuditRow) -> u8 {
     } else {
         0
     }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+enum PlatformEventOpsReviewRecord {
+    EventDelivery(EventDeliveryAuditRow),
+    EventLog(RuntimeEventLogSummary),
+    PendingWork(RuntimePendingWorkSummary),
+}
+
+impl PlatformEventOpsReviewRecord {
+    fn review_kind(&self) -> PlatformEventOpsReviewKind {
+        match self {
+            Self::EventDelivery(_) => PlatformEventOpsReviewKind::EventDelivery,
+            Self::EventLog(_) => PlatformEventOpsReviewKind::EventLog,
+            Self::PendingWork(_) => PlatformEventOpsReviewKind::PendingWork,
+        }
+    }
+
+    fn review_id(&self) -> String {
+        format!(
+            "{}:{}",
+            platform_event_ops_review_kind_label(self.review_kind()),
+            self.source_id()
+        )
+    }
+
+    fn source(&self) -> &'static str {
+        match self {
+            Self::EventDelivery(_) => "event_delivery_audit",
+            Self::EventLog(_) => "event_log",
+            Self::PendingWork(_) => "pending_work_summary",
+        }
+    }
+
+    fn source_id(&self) -> String {
+        match self {
+            Self::EventDelivery(row) => row.audit_id.clone(),
+            Self::EventLog(summary) => event_log_source_id(summary),
+            Self::PendingWork(_) => "pending_work_summary".to_string(),
+        }
+    }
+
+    fn subscription_id(&self) -> Option<&RuntimeSubscriptionId> {
+        match self {
+            Self::EventDelivery(row) => Some(&row.subscription_id),
+            Self::EventLog(_) | Self::PendingWork(_) => None,
+        }
+    }
+
+    fn queued_events(&self) -> usize {
+        match self {
+            Self::EventDelivery(row) => row.queued_events,
+            Self::EventLog(_) | Self::PendingWork(_) => 0,
+        }
+    }
+
+    fn event_log_total_events(&self) -> usize {
+        match self {
+            Self::EventLog(summary) => summary.total_events,
+            Self::EventDelivery(_) | Self::PendingWork(_) => 0,
+        }
+    }
+
+    fn total_pending_work_count(&self) -> usize {
+        match self {
+            Self::PendingWork(summary) => summary.total_pending_work_count(),
+            Self::EventDelivery(_) | Self::EventLog(_) => 0,
+        }
+    }
+
+    fn risk_lane(&self) -> &'static str {
+        match self {
+            Self::EventDelivery(row) => row.risk_lane,
+            Self::EventLog(summary) => platform_event_ops_event_log_lane_action(summary).0,
+            Self::PendingWork(summary) => platform_event_ops_pending_work_lane_action(summary).0,
+        }
+    }
+
+    fn risk_action(&self) -> &'static str {
+        match self {
+            Self::EventDelivery(row) => row.risk_action,
+            Self::EventLog(summary) => platform_event_ops_event_log_lane_action(summary).1,
+            Self::PendingWork(summary) => platform_event_ops_pending_work_lane_action(summary).1,
+        }
+    }
+
+    fn blocked(&self) -> bool {
+        match self {
+            Self::EventDelivery(row) => row.blocked,
+            Self::EventLog(_) => false,
+            Self::PendingWork(summary) => summary.has_event_backlog(),
+        }
+    }
+
+    fn requires_attention(&self) -> bool {
+        match self {
+            Self::EventDelivery(row) => row.requires_attention,
+            Self::EventLog(summary) => platform_event_ops_event_log_requires_attention(summary),
+            Self::PendingWork(summary) => !summary.is_idle(),
+        }
+    }
+
+    fn source_record_json(&self) -> JsonValue {
+        match self {
+            Self::EventDelivery(row) => event_delivery_audit_row_json(row),
+            Self::EventLog(summary) => event_log_summary_json(summary),
+            Self::PendingWork(summary) => pending_work_summary_json(summary),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct PlatformEventOpsReviewSummary {
+    total_rows: usize,
+    event_delivery_rows: usize,
+    event_log_rows: usize,
+    pending_work_rows: usize,
+    subscription_count: usize,
+    backlogged_subscription_rows: usize,
+    queued_events: usize,
+    max_queued_events: usize,
+    command_result_delivery_rows: usize,
+    command_results: usize,
+    supervision_event_delivery_rows: usize,
+    supervision_events: usize,
+    event_log_total_events: usize,
+    event_log_command_results: usize,
+    event_log_bridge_health_events: usize,
+    event_log_state_expired_events: usize,
+    event_log_desired_state_drift_events: usize,
+    event_log_worker_restart_events: usize,
+    event_backlog_count: usize,
+    backlogged_subscription_count: usize,
+    total_pending_work_count: usize,
+    pending_supervision_work_count: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+}
+
+impl PlatformEventOpsReviewSummary {
+    fn from_records(records: &[PlatformEventOpsReviewRecord]) -> Self {
+        let mut summary = Self::default();
+        let mut subscriptions = BTreeSet::new();
+        for record in records {
+            summary.total_rows += 1;
+            match record {
+                PlatformEventOpsReviewRecord::EventDelivery(row) => {
+                    summary.event_delivery_rows += 1;
+                    subscriptions.insert(row.subscription_id.as_str().to_string());
+                    summary.queued_events += row.queued_events;
+                    summary.max_queued_events = summary.max_queued_events.max(row.queued_events);
+                    if row.queued_events > 0 {
+                        summary.backlogged_subscription_rows += 1;
+                    }
+                    if row.delivery_summary.command_results > 0 {
+                        summary.command_result_delivery_rows += 1;
+                        summary.command_results += row.delivery_summary.command_results;
+                    }
+                    if row.delivery_summary.has_supervision_events() {
+                        summary.supervision_event_delivery_rows += 1;
+                        summary.supervision_events +=
+                            row.delivery_summary.desired_state_drift_events
+                                + row.delivery_summary.worker_restart_events;
+                    }
+                }
+                PlatformEventOpsReviewRecord::EventLog(event_log) => {
+                    summary.event_log_rows += 1;
+                    summary.event_log_total_events += event_log.total_events;
+                    summary.event_log_command_results += event_log.command_results;
+                    summary.event_log_bridge_health_events += event_log.bridge_health_events;
+                    summary.event_log_state_expired_events += event_log.state_expired_events;
+                    summary.event_log_desired_state_drift_events +=
+                        event_log.desired_state_drift_events;
+                    summary.event_log_worker_restart_events += event_log.worker_restart_events;
+                }
+                PlatformEventOpsReviewRecord::PendingWork(pending_work) => {
+                    summary.pending_work_rows += 1;
+                    summary.event_backlog_count += pending_work.event_backlog_count;
+                    summary.backlogged_subscription_count +=
+                        pending_work.backlogged_subscription_count;
+                    summary.total_pending_work_count += pending_work.total_pending_work_count();
+                    summary.pending_supervision_work_count +=
+                        platform_event_ops_pending_supervision_count(pending_work);
+                }
+            }
+            if record.blocked() {
+                summary.blocked_rows += 1;
+            }
+            if record.requires_attention() {
+                summary.requires_attention_rows += 1;
+            }
+        }
+        summary.subscription_count = subscriptions.len();
+        summary
+    }
+
+    fn status(&self) -> &'static str {
+        if self.blocked_rows > 0 {
+            "blocked"
+        } else if self.requires_attention_rows > 0 {
+            "review"
+        } else {
+            "ready"
+        }
+    }
+
+    fn ready(&self) -> bool {
+        self.blocked_rows == 0
+    }
+
+    fn has_event_ops_pressure(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_event_backlog(&self) -> bool {
+        self.queued_events > 0
+            || self.event_backlog_count > 0
+            || self.backlogged_subscription_count > 0
+            || self.backlogged_subscription_rows > 0
+    }
+
+    fn has_command_result_pressure(&self) -> bool {
+        self.command_results > 0 || self.event_log_command_results > 0
+    }
+
+    fn has_supervision_pressure(&self) -> bool {
+        self.supervision_events > 0
+            || self.event_log_desired_state_drift_events > 0
+            || self.event_log_worker_restart_events > 0
+            || self.pending_supervision_work_count > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+
+    fn recommended_action(&self) -> &'static str {
+        if self.has_event_backlog() {
+            "drain_event_backlog"
+        } else if self.pending_supervision_work_count > 0 {
+            "review_runtime_pending_work"
+        } else if self.has_supervision_pressure() {
+            "inspect_supervision_events"
+        } else if self.has_command_result_pressure() {
+            "inspect_command_results"
+        } else if self.event_log_bridge_health_events > 0 || self.event_log_state_expired_events > 0
+        {
+            "inspect_state_events"
+        } else if self.requires_attention_rows > 0 {
+            "review_platform_event_ops"
+        } else {
+            "monitor_platform_event_ops"
+        }
+    }
+}
+
+fn list_platform_event_ops_review_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: PlatformEventOpsReviewQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut records, summary) =
+        platform_event_ops_review_records(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        records.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "platform_event_ops_review",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(platform_event_ops_review_record_json)
+                    .collect(),
+            ),
+        ),
+        ("summary", platform_event_ops_review_summary_json(&summary)),
+        ("count", integer(records.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_platform_event_ops_review")),
+            ("count", integer(records.len() as i64)),
+            ("status", string(summary.status())),
+            ("ready", JsonValue::Bool(summary.ready())),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("queued_events", integer(summary.queued_events as i64)),
+            (
+                "total_pending_work_count",
+                integer(summary.total_pending_work_count as i64),
+            ),
+            ("next_action", string(summary.recommended_action())),
+        ]),
+    ))
+}
+
+fn get_platform_event_ops_review_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: PlatformEventOpsReviewQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = platform_event_ops_review_records(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        platform_event_ops_review_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_platform_event_ops_review_summary")),
+            ("status", string(summary.status())),
+            ("ready", JsonValue::Bool(summary.ready())),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("queued_events", integer(summary.queued_events as i64)),
+            (
+                "total_pending_work_count",
+                integer(summary.total_pending_work_count as i64),
+            ),
+            ("next_action", string(summary.recommended_action())),
+        ]),
+    ))
+}
+
+fn platform_event_ops_review_records(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &PlatformEventOpsReviewQuery,
+) -> Result<
+    (
+        Vec<PlatformEventOpsReviewRecord>,
+        PlatformEventOpsReviewSummary,
+    ),
+    ToolCallError,
+> {
+    let mut records = Vec::new();
+    if platform_event_ops_review_query_includes(query, PlatformEventOpsReviewKind::EventDelivery) {
+        let delivery_query = default_platform_event_ops_event_delivery_query(query);
+        let (rows, _) =
+            event_delivery_audit_rows(runtime, principal_id.clone(), now_ms, &delivery_query)?;
+        records.extend(
+            rows.into_iter()
+                .map(PlatformEventOpsReviewRecord::EventDelivery),
+        );
+    }
+    if platform_event_ops_review_query_includes(query, PlatformEventOpsReviewKind::EventLog) {
+        let event_log_query = default_platform_event_ops_event_log_query(query);
+        let output = runtime
+            .execute_read_tool(
+                principal_id.clone(),
+                RuntimeReadToolRequest::InspectEventLog {
+                    query: event_log_query,
+                },
+                now_ms,
+            )
+            .map_err(runtime_error)?;
+        let RuntimeReadToolOutput::EventLog { summary, .. } = output else {
+            return Err(ToolCallError::new(
+                ToolErrorKind::ToolExecutionError,
+                "platform event ops review expected event log output",
+            ));
+        };
+        records.push(PlatformEventOpsReviewRecord::EventLog(summary));
+    }
+    if platform_event_ops_review_query_includes(query, PlatformEventOpsReviewKind::PendingWork) {
+        let output = runtime
+            .execute_read_tool(
+                principal_id,
+                RuntimeReadToolRequest::GetRuntimeSnapshot,
+                now_ms,
+            )
+            .map_err(runtime_error)?;
+        let RuntimeReadToolOutput::RuntimeSnapshot(snapshot) = output else {
+            return Err(ToolCallError::new(
+                ToolErrorKind::ToolExecutionError,
+                "platform event ops review expected runtime snapshot output",
+            ));
+        };
+        records.push(PlatformEventOpsReviewRecord::PendingWork(
+            snapshot.pending_work_summary(),
+        ));
+    }
+
+    records.retain(|record| platform_event_ops_review_record_matches(record, query));
+    records.sort_by(|left, right| {
+        platform_event_ops_review_record_rank(right)
+            .cmp(&platform_event_ops_review_record_rank(left))
+            .then_with(|| {
+                platform_event_ops_review_record_time(right)
+                    .cmp(&platform_event_ops_review_record_time(left))
+            })
+            .then_with(|| left.review_id().cmp(&right.review_id()))
+    });
+    let summary = PlatformEventOpsReviewSummary::from_records(&records);
+    Ok((records, summary))
+}
+
+fn platform_event_ops_review_query_includes(
+    query: &PlatformEventOpsReviewQuery,
+    kind: PlatformEventOpsReviewKind,
+) -> bool {
+    query.event_kinds.is_empty() || query.event_kinds.contains(&kind)
+}
+
+fn platform_event_ops_review_record_matches(
+    record: &PlatformEventOpsReviewRecord,
+    query: &PlatformEventOpsReviewQuery,
+) -> bool {
+    if !platform_event_ops_review_query_includes(query, record.review_kind()) {
+        return false;
+    }
+    if query.requires_attention_only && !record.requires_attention() {
+        return false;
+    }
+    if query.blocked_only && !record.blocked() {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| record.risk_lane() != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .risk_action
+        .as_ref()
+        .is_some_and(|risk_action| record.risk_action() != risk_action.as_str())
+    {
+        return false;
+    }
+    true
+}
+
+fn platform_event_ops_review_record_rank(record: &PlatformEventOpsReviewRecord) -> u8 {
+    if record.blocked() {
+        5
+    } else if matches!(
+        record,
+        PlatformEventOpsReviewRecord::PendingWork(summary) if summary.has_event_backlog()
+    ) {
+        4
+    } else if record.requires_attention() {
+        3
+    } else if record.event_log_total_events() > 0 || record.total_pending_work_count() > 0 {
+        1
+    } else {
+        0
+    }
+}
+
+fn platform_event_ops_review_record_time(record: &PlatformEventOpsReviewRecord) -> u64 {
+    match record {
+        PlatformEventOpsReviewRecord::EventLog(summary) => summary.latest_sequence.unwrap_or(0),
+        PlatformEventOpsReviewRecord::EventDelivery(_)
+        | PlatformEventOpsReviewRecord::PendingWork(_) => 0,
+    }
+}
+
+fn platform_event_ops_review_kind_label(kind: PlatformEventOpsReviewKind) -> &'static str {
+    match kind {
+        PlatformEventOpsReviewKind::EventDelivery => "event_delivery",
+        PlatformEventOpsReviewKind::EventLog => "event_log",
+        PlatformEventOpsReviewKind::PendingWork => "pending_work",
+    }
+}
+
+fn platform_event_ops_event_log_lane_action(
+    summary: &RuntimeEventLogSummary,
+) -> (&'static str, &'static str) {
+    if summary.has_supervision_events() {
+        ("supervision_event_log", "inspect_supervision_events")
+    } else if summary.has_command_results() {
+        ("command_result_event_log", "inspect_command_results")
+    } else if summary.bridge_health_events > 0 || summary.state_expired_events > 0 {
+        ("state_event_log", "inspect_state_events")
+    } else {
+        ("event_log", "monitor_event_log")
+    }
+}
+
+fn platform_event_ops_event_log_requires_attention(summary: &RuntimeEventLogSummary) -> bool {
+    summary.has_command_results()
+        || summary.has_supervision_events()
+        || summary.bridge_health_events > 0
+        || summary.state_expired_events > 0
+}
+
+fn platform_event_ops_pending_work_lane_action(
+    summary: &RuntimePendingWorkSummary,
+) -> (&'static str, &'static str) {
+    if summary.has_event_backlog() {
+        ("event_backlog", "drain_event_backlog")
+    } else if summary.has_supervision_pressure() {
+        ("runtime_pending_work", "review_runtime_pending_work")
+    } else {
+        ("pending_work", "monitor_pending_work")
+    }
+}
+
+fn platform_event_ops_pending_supervision_count(summary: &RuntimePendingWorkSummary) -> usize {
+    summary.discovery_worker_due_count
+        + summary.unhealthy_discovery_worker_count
+        + summary.restart_due_count
+        + summary.unhealthy_worker_count
+        + summary.expiring_pairing_session_count
+        + summary.stale_optimistic_state_count
+        + summary.state_refresh_target_count
+}
+
+fn event_log_source_id(summary: &RuntimeEventLogSummary) -> String {
+    match (summary.first_sequence, summary.latest_sequence) {
+        (Some(first_sequence), Some(latest_sequence)) => {
+            format!("event_log:{first_sequence}:{latest_sequence}")
+        }
+        _ => "event_log:empty".to_string(),
+    }
+}
+
+fn platform_event_ops_review_record_json(record: &PlatformEventOpsReviewRecord) -> JsonValue {
+    object([
+        ("review_id", string(record.review_id())),
+        (
+            "event_ops_kind",
+            string(platform_event_ops_review_kind_label(record.review_kind())),
+        ),
+        ("source", string(record.source())),
+        ("source_id", string(record.source_id())),
+        (
+            "subscription_id",
+            record
+                .subscription_id()
+                .map(|subscription_id| string(subscription_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("queued_events", integer(record.queued_events() as i64)),
+        (
+            "event_log_total_events",
+            integer(record.event_log_total_events() as i64),
+        ),
+        (
+            "total_pending_work_count",
+            integer(record.total_pending_work_count() as i64),
+        ),
+        ("risk_lane", string(record.risk_lane())),
+        ("risk_action", string(record.risk_action())),
+        ("blocked", JsonValue::Bool(record.blocked())),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention()),
+        ),
+        ("source_record", record.source_record_json()),
+    ])
+}
+
+fn platform_event_ops_review_summary_json(summary: &PlatformEventOpsReviewSummary) -> JsonValue {
+    object([
+        ("status", string(summary.status())),
+        ("ready", JsonValue::Bool(summary.ready())),
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "event_delivery_rows",
+            integer(summary.event_delivery_rows as i64),
+        ),
+        ("event_log_rows", integer(summary.event_log_rows as i64)),
+        (
+            "pending_work_rows",
+            integer(summary.pending_work_rows as i64),
+        ),
+        (
+            "subscription_count",
+            integer(summary.subscription_count as i64),
+        ),
+        (
+            "backlogged_subscription_rows",
+            integer(summary.backlogged_subscription_rows as i64),
+        ),
+        ("queued_events", integer(summary.queued_events as i64)),
+        (
+            "max_queued_events",
+            integer(summary.max_queued_events as i64),
+        ),
+        (
+            "command_result_delivery_rows",
+            integer(summary.command_result_delivery_rows as i64),
+        ),
+        ("command_results", integer(summary.command_results as i64)),
+        (
+            "supervision_event_delivery_rows",
+            integer(summary.supervision_event_delivery_rows as i64),
+        ),
+        (
+            "supervision_events",
+            integer(summary.supervision_events as i64),
+        ),
+        (
+            "event_log_total_events",
+            integer(summary.event_log_total_events as i64),
+        ),
+        (
+            "event_log_command_results",
+            integer(summary.event_log_command_results as i64),
+        ),
+        (
+            "event_log_bridge_health_events",
+            integer(summary.event_log_bridge_health_events as i64),
+        ),
+        (
+            "event_log_state_expired_events",
+            integer(summary.event_log_state_expired_events as i64),
+        ),
+        (
+            "event_log_desired_state_drift_events",
+            integer(summary.event_log_desired_state_drift_events as i64),
+        ),
+        (
+            "event_log_worker_restart_events",
+            integer(summary.event_log_worker_restart_events as i64),
+        ),
+        (
+            "event_backlog_count",
+            integer(summary.event_backlog_count as i64),
+        ),
+        (
+            "backlogged_subscription_count",
+            integer(summary.backlogged_subscription_count as i64),
+        ),
+        (
+            "total_pending_work_count",
+            integer(summary.total_pending_work_count as i64),
+        ),
+        (
+            "pending_supervision_work_count",
+            integer(summary.pending_supervision_work_count as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        (
+            "has_event_ops_pressure",
+            JsonValue::Bool(summary.has_event_ops_pressure()),
+        ),
+        (
+            "has_event_backlog",
+            JsonValue::Bool(summary.has_event_backlog()),
+        ),
+        (
+            "has_command_result_pressure",
+            JsonValue::Bool(summary.has_command_result_pressure()),
+        ),
+        (
+            "has_supervision_pressure",
+            JsonValue::Bool(summary.has_supervision_pressure()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("next_action", string(summary.recommended_action())),
+        (
+            "source_tools",
+            JsonValue::Array(vec![
+                string(SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID),
+                string(SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID),
+                string(SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID),
+            ]),
+        ),
+    ])
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -84229,6 +85074,27 @@ fn parse_platform_access_review_kind(
     }
 }
 
+fn parse_platform_event_ops_review_kind(
+    label: &str,
+) -> Result<PlatformEventOpsReviewKind, ToolCallError> {
+    match label {
+        "event_delivery"
+        | "delivery"
+        | "subscription"
+        | "subscriptions"
+        | "subscription_backlog" => Ok(PlatformEventOpsReviewKind::EventDelivery),
+        "event_log" | "events" | "history" | "event_history" => {
+            Ok(PlatformEventOpsReviewKind::EventLog)
+        }
+        "pending_work" | "pending" | "runtime_pending_work" => {
+            Ok(PlatformEventOpsReviewKind::PendingWork)
+        }
+        _ => Err(validation_error(format!(
+            "unknown platform event ops review kind `{label}`"
+        ))),
+    }
+}
+
 fn parse_authorization_outcome(label: &str) -> Result<AuthorizationOutcome, ToolCallError> {
     match label {
         "allowed" | "allow" => Ok(AuthorizationOutcome::Allowed),
@@ -90584,7 +91450,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 312);
+        assert_eq!(definitions.len(), 314);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -91485,7 +92351,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            304
+            306
         );
         assert_eq!(
             export
@@ -92195,6 +93061,13 @@ mod tests {
             smart_home_tool_definition(SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID)
                 .is_some()
         );
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID).is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID).is_some());
@@ -95136,11 +96009,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(312))
+            Some(&integer(314))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(304))
+            Some(&integer(306))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -111592,6 +112465,197 @@ mod tests {
         let journal_summary = journal.summary();
         assert_eq!(journal_summary.invocation_count, 6);
         assert_eq!(journal_summary.completed_count, 6);
+    }
+
+    #[test]
+    fn platform_event_ops_review_tools_roll_up_runtime_event_pressure_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let subscribe_commands_request = request(
+            "call-subscribe-commands-for-platform-event-ops-review",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("commands")),
+                ("filter", object([("filter_type", string("commands"))])),
+            ]),
+            2_000,
+        );
+        let subscribe_commands_trace = tool_runtime.invoke_with_events(&subscribe_commands_request);
+        assert!(subscribe_commands_trace.result.ok);
+
+        let subscribe_supervision_request = request(
+            "call-subscribe-supervision-for-platform-event-ops-review",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("supervision")),
+                ("filter", object([("filter_type", string("supervision"))])),
+            ]),
+            2_001,
+        );
+        let subscribe_supervision_trace =
+            tool_runtime.invoke_with_events(&subscribe_supervision_request);
+        assert!(subscribe_supervision_trace.result.ok);
+
+        let set_desired_state_request = request(
+            "call-set-desired-state-for-platform-event-ops-review",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(false)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            2_010,
+        );
+        let set_desired_state_trace = tool_runtime.invoke_with_events(&set_desired_state_request);
+        assert!(set_desired_state_trace.result.ok);
+
+        let reconcile_request = request(
+            "call-reconcile-for-platform-event-ops-review",
+            SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID,
+            object([]),
+            2_020,
+        );
+        let reconcile_trace = tool_runtime.invoke_with_events(&reconcile_request);
+        assert!(reconcile_trace.result.ok);
+
+        let list_request = request(
+            "call-list-platform-event-ops-review",
+            SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("limit", integer(10)),
+            ]),
+            2_030,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let rows = field(list_output, "platform_event_ops_review").unwrap();
+        assert!(
+            array_len(rows).unwrap() >= 4,
+            "event ops review should include delivery rows plus event log and pending work rows"
+        );
+        let summary = field(list_output, "summary").unwrap();
+        assert!(
+            integer_value(field(summary, "event_delivery_rows").unwrap()).unwrap() >= 2,
+            "event delivery rows should surface command and supervision backlogs"
+        );
+        assert_eq!(field(summary, "event_log_rows"), Some(&integer(1)));
+        assert_eq!(field(summary, "pending_work_rows"), Some(&integer(1)));
+        assert!(
+            integer_value(field(summary, "queued_events").unwrap()).unwrap() >= 2,
+            "queued command and supervision events should roll into event ops"
+        );
+        assert!(
+            integer_value(field(summary, "event_log_total_events").unwrap()).unwrap() >= 2,
+            "event log row should expose runtime history pressure"
+        );
+        assert!(
+            integer_value(field(summary, "total_pending_work_count").unwrap()).unwrap() >= 1,
+            "pending work row should expose backlog pressure"
+        );
+        assert_eq!(
+            field(summary, "has_event_ops_pressure"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(summary, "has_event_backlog"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(summary, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("drain_event_backlog"))
+        );
+
+        let JsonValue::Array(rows) = rows else {
+            panic!("platform_event_ops_review should be an array");
+        };
+        assert!(rows
+            .iter()
+            .any(|row| field(row, "source") == Some(&string("event_log"))
+                && field(row, "risk_lane") == Some(&string("supervision_event_log"))
+                && field(row, "requires_attention") == Some(&JsonValue::Bool(true))));
+        assert!(rows.iter().any(|row| field(row, "source")
+            == Some(&string("pending_work_summary"))
+            && field(row, "risk_lane") == Some(&string("event_backlog"))
+            && field(row, "blocked") == Some(&JsonValue::Bool(true))));
+
+        let summary_request = request(
+            "call-platform-event-ops-pending-work-summary",
+            SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID,
+            object([("event_kind", string("pending_work"))]),
+            2_031,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "event_delivery_rows"), Some(&integer(0)));
+        assert_eq!(field(rollup, "event_log_rows"), Some(&integer(0)));
+        assert_eq!(field(rollup, "pending_work_rows"), Some(&integer(1)));
+        assert_eq!(
+            field(rollup, "has_event_backlog"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(rollup, "next_action"),
+            Some(&string("drain_event_backlog"))
+        );
+
+        assert!(
+            runtime
+                .borrow()
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("commands"))
+                .unwrap()
+                >= 1,
+            "event ops review must not drain command subscription"
+        );
+        assert!(
+            runtime
+                .borrow()
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("supervision"))
+                .unwrap()
+                >= 1,
+            "event ops review must not drain supervision subscription"
+        );
     }
 
     #[test]

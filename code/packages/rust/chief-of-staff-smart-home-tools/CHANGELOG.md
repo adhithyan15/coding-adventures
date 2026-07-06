@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.list_platform_event_ops_review` and
+  `smart_home.get_platform_event_ops_review_summary`, read-only Chief adapter
+  tools that roll up existing D23 event delivery, event log, and pending-work
+  primitives without draining queues or owning smart-home state.
 - Added `smart_home.list_platform_access_review` and
   `smart_home.get_platform_access_review_summary`, read-only Chief adapter tools
   that roll up existing D23 command-risk, authorization-gap, authorization
