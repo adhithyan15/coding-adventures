@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `modelCardUnsupportedParameterIssues`,
+  `formatModelCardUnsupportedParameterIssueTable`,
+  `modelCardUnsupportedParameterIssueRecords`,
+  `formatModelCardUnsupportedParameterIssueCsv`, and
+  `formatModelCardUnsupportedParameterIssueJson`, stable diagnostics for
+  retained unsupported model-card parameters, matching Python and Rust.
 - Add `deviceModelReferenceDeckAuditGateCoverageDigest`,
   `formatDeviceModelReferenceDeckAuditGateCoverageDigestTable`,
   `deviceModelReferenceDeckAuditGateCoverageDigestRecords`,

@@ -38,12 +38,16 @@ use spice_engine::{
     format_device_model_reference_deck_audit_summary_json,
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table, format_measurement_table,
-    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
-    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
-    normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
-    Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
-    CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
-    ModelCardKind, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
+    format_model_card_unsupported_parameter_issue_csv,
+    format_model_card_unsupported_parameter_issue_json,
+    format_model_card_unsupported_parameter_issue_table, format_temperature_dc_table,
+    jfet_from_model_card, measure_dc_sweep_deck, measure_dc_sweep_probe,
+    model_card_unsupported_parameter_issue_records, model_card_unsupported_parameter_issues,
+    mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
+    resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
+    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
+    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
     SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
     Waveform, XInstance,
 };
@@ -89,6 +93,36 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*diode_card.parameters.get("IS").unwrap(), 2.0e-14);
     assert_close(*diode_card.parameters.get("CJO").unwrap(), 1.5e-12);
     assert_eq!(diode_card.unsupported_parameters, vec!["RS".to_string()]);
+    let diode_issues = model_card_unsupported_parameter_issues(&diode_card);
+    assert_eq!(diode_issues.len(), 1);
+    assert_eq!(diode_issues[0].model_name, "Dfast");
+    assert_eq!(diode_issues[0].kind, ModelCardKind::Diode);
+    assert_eq!(diode_issues[0].parameter, "RS");
+    assert_eq!(
+        diode_issues[0].message,
+        "unsupported D model-card parameter RS"
+    );
+    assert_eq!(
+        format_model_card_unsupported_parameter_issue_table(&diode_card),
+        "model_name\tkind\tparameter\tmessage\nDfast\tD\tRS\tunsupported D model-card parameter RS"
+    );
+    let diode_issue_records = model_card_unsupported_parameter_issue_records(&diode_card);
+    assert_eq!(diode_issue_records.len(), 1);
+    assert_eq!(diode_issue_records[0]["model_name"], "Dfast");
+    assert_eq!(diode_issue_records[0]["kind"], "D");
+    assert_eq!(diode_issue_records[0]["parameter"], "RS");
+    assert_eq!(
+        diode_issue_records[0]["message"],
+        "unsupported D model-card parameter RS"
+    );
+    assert_eq!(
+        format_model_card_unsupported_parameter_issue_csv(&diode_card),
+        "model_name,kind,parameter,message\nDfast,D,RS,unsupported D model-card parameter RS\n"
+    );
+    assert_eq!(
+        format_model_card_unsupported_parameter_issue_json(&diode_card),
+        "[{\"model_name\":\"Dfast\",\"kind\":\"D\",\"parameter\":\"RS\",\"message\":\"unsupported D model-card parameter RS\"}]\n"
+    );
     assert_close(diode_model.saturation_current, 2.0e-14);
     assert_close(diode_model.junction_capacitance, 1.5e-12);
     assert_close(diode_model.transit_time, 4.0e-9);

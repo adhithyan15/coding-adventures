@@ -1750,6 +1750,13 @@ export interface NormalizedModelCard {
   readonly unsupportedParameters: readonly string[];
 }
 
+export interface ModelCardUnsupportedParameterIssue {
+  readonly modelName: string;
+  readonly kind: ModelCardKind;
+  readonly parameter: string;
+  readonly message: string;
+}
+
 export interface DeviceModelBehaviorFixture {
   readonly name: string;
   readonly kind: ModelCardKind;
@@ -7840,6 +7847,46 @@ export function normalizeModelCard(
     }
   }
   return { name, kind, parameters: normalized, unsupportedParameters: unsupported };
+}
+
+export function modelCardUnsupportedParameterIssues(
+  model: NormalizedModelCard,
+): readonly ModelCardUnsupportedParameterIssue[] {
+  return model.unsupportedParameters.map((parameter) => ({
+    modelName: model.name,
+    kind: model.kind,
+    parameter,
+    message: `unsupported ${model.kind} model-card parameter ${parameter}`,
+  }));
+}
+
+export function formatModelCardUnsupportedParameterIssueTable(
+  model: NormalizedModelCard,
+): string {
+  return [
+    "model_name\tkind\tparameter\tmessage",
+    ...modelCardUnsupportedParameterIssues(model).map((issue) =>
+      [issue.modelName, issue.kind, issue.parameter, issue.message].join("\t"),
+    ),
+  ].join("\n");
+}
+
+export function modelCardUnsupportedParameterIssueRecords(
+  model: NormalizedModelCard,
+): Array<Record<string, string>> {
+  return deckTableRecords(formatModelCardUnsupportedParameterIssueTable(model));
+}
+
+export function formatModelCardUnsupportedParameterIssueCsv(
+  model: NormalizedModelCard,
+): string {
+  return formatDeckTableCsv(formatModelCardUnsupportedParameterIssueTable(model));
+}
+
+export function formatModelCardUnsupportedParameterIssueJson(
+  model: NormalizedModelCard,
+): string {
+  return formatDeckTableJson(formatModelCardUnsupportedParameterIssueTable(model));
 }
 
 export function diodeFromModelCard(

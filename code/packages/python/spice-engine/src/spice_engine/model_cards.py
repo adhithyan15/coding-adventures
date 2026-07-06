@@ -41,6 +41,16 @@ class NormalizedModelCard:
 
 
 @dataclass(frozen=True, slots=True)
+class ModelCardUnsupportedParameterIssue:
+    """A stable diagnostic row for an unsupported model-card parameter."""
+
+    model_name: str
+    kind: str
+    parameter: str
+    message: str
+
+
+@dataclass(frozen=True, slots=True)
 class DeviceModelBehaviorFixture:
     """A runnable device-model reference fixture with a stable DC probe window."""
 
@@ -399,6 +409,63 @@ def normalize_model_card(
         kind=kind,
         parameters=normalized,
         unsupported_parameters=tuple(unsupported),
+    )
+
+
+def model_card_unsupported_parameter_issues(
+    model: NormalizedModelCard,
+) -> tuple[ModelCardUnsupportedParameterIssue, ...]:
+    """Return stable unsupported-parameter diagnostics for a model card."""
+
+    return tuple(
+        ModelCardUnsupportedParameterIssue(
+            model_name=model.name,
+            kind=model.kind,
+            parameter=parameter,
+            message=f"unsupported {model.kind} model-card parameter {parameter}",
+        )
+        for parameter in model.unsupported_parameters
+    )
+
+
+def format_model_card_unsupported_parameter_issue_table(
+    model: NormalizedModelCard,
+) -> str:
+    """Return unsupported model-card parameter diagnostics as a stable table."""
+
+    lines = ["model_name\tkind\tparameter\tmessage"]
+    lines.extend(
+        f"{issue.model_name}\t{issue.kind}\t{issue.parameter}\t{issue.message}"
+        for issue in model_card_unsupported_parameter_issues(model)
+    )
+    return "\n".join(lines)
+
+
+def model_card_unsupported_parameter_issue_records(
+    model: NormalizedModelCard,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for unsupported model-card parameters."""
+
+    return deck_table_records(format_model_card_unsupported_parameter_issue_table(model))
+
+
+def format_model_card_unsupported_parameter_issue_csv(
+    model: NormalizedModelCard,
+) -> str:
+    """Return unsupported model-card parameter diagnostics as CSV."""
+
+    return format_deck_table_csv(
+        format_model_card_unsupported_parameter_issue_table(model)
+    )
+
+
+def format_model_card_unsupported_parameter_issue_json(
+    model: NormalizedModelCard,
+) -> str:
+    """Return compact JSON records for unsupported model-card parameters."""
+
+    return format_deck_table_json(
+        format_model_card_unsupported_parameter_issue_table(model)
     )
 
 

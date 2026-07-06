@@ -2850,6 +2850,14 @@ pub struct NormalizedModelCard {
     pub unsupported_parameters: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModelCardUnsupportedParameterIssue {
+    pub model_name: String,
+    pub kind: ModelCardKind,
+    pub parameter: String,
+    pub message: String,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeviceModelBehaviorFixture {
     pub name: String,
@@ -3147,6 +3155,57 @@ pub fn normalize_model_card(
         parameters: normalized,
         unsupported_parameters: unsupported,
     })
+}
+
+pub fn model_card_unsupported_parameter_issues(
+    model: &NormalizedModelCard,
+) -> Vec<ModelCardUnsupportedParameterIssue> {
+    model
+        .unsupported_parameters
+        .iter()
+        .map(|parameter| ModelCardUnsupportedParameterIssue {
+            model_name: model.name.clone(),
+            kind: model.kind,
+            parameter: parameter.clone(),
+            message: format!(
+                "unsupported {} model-card parameter {}",
+                model.kind.as_str(),
+                parameter
+            ),
+        })
+        .collect()
+}
+
+pub fn format_model_card_unsupported_parameter_issue_table(model: &NormalizedModelCard) -> String {
+    let mut lines = vec!["model_name\tkind\tparameter\tmessage".to_string()];
+    lines.extend(
+        model_card_unsupported_parameter_issues(model)
+            .into_iter()
+            .map(|issue| {
+                format!(
+                    "{}\t{}\t{}\t{}",
+                    issue.model_name,
+                    issue.kind.as_str(),
+                    issue.parameter,
+                    issue.message
+                )
+            }),
+    );
+    lines.join("\n")
+}
+
+pub fn model_card_unsupported_parameter_issue_records(
+    model: &NormalizedModelCard,
+) -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_model_card_unsupported_parameter_issue_table(model))
+}
+
+pub fn format_model_card_unsupported_parameter_issue_csv(model: &NormalizedModelCard) -> String {
+    format_deck_table_csv(&format_model_card_unsupported_parameter_issue_table(model))
+}
+
+pub fn format_model_card_unsupported_parameter_issue_json(model: &NormalizedModelCard) -> String {
+    format_deck_table_json(&format_model_card_unsupported_parameter_issue_table(model))
 }
 
 fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {
