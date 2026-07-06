@@ -6,7 +6,8 @@
 //! workbook is byte-identical) and cover the documented edge cases.
 
 use super::{
-    load_csv, load_tsv, load_xls, load_xlsx, save_csv, save_tsv, save_xls, save_xlsx,
+    load_csv, load_json, load_tsv, load_xls, load_xlsx, save_csv, save_json, save_tsv, save_xls,
+    save_xlsx,
 };
 use spreadsheet_core::{CellAddress, CellValue, SheetId, Workbook};
 
@@ -564,6 +565,168 @@ fn csv_to_xlsx_bridge() {
     // A CSV loaded into the engine can be saved right back out as a real .xlsx —
     // the whole point of a single hub: any format in, any format out.
     let wb = load_csv(b"h1,h2\n1,two\n").unwrap();
+    let xlsx = save_xlsx(&wb);
+    assert_eq!(&xlsx[..2], b"PK");
+    let reopened = load_xlsx(&xlsx).unwrap();
+    let s = reopened.sheet_id("Sheet1").unwrap();
+    assert_eq!(reopened.get_value(s, CellAddress::new(2, 1)), Some(CellValue::Number(1.0)));
+    assert_eq!(reopened.get_value(s, CellAddress::new(2, 2)), Some(CellValue::Text("two".into())));
+}
+
+// =========================================================================
+// JSON (array-of-objects records) — SSIO-JSON
+// =========================================================================
+
+#[test]
+fn json_records_load_header_and_rows() {
+    // The canonical shape: a top-level array of objects. Keys become the header
+    // row (in first-seen order); each object becomes a data row.
+    let wb =
+        load_json(br#"[{"region":"East","sales":200},{"region":"West","sales":340}]"#).unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Text("region".into()));
+    assert_eq!(cell(&wb, "B1"), CellValue::Text("sales".into()));
+    assert_eq!(cell(&wb, "A2"), CellValue::Text("East".into()));
+    assert_eq!(cell(&wb, "B2"), CellValue::Number(200.0)); // JSON integer → Number
+    assert_eq!(cell(&wb, "A3"), CellValue::Text("West".into()));
+    assert_eq!(cell(&wb, "B3"), CellValue::Number(340.0));
+}
+
+#[test]
+fn json_records_round_trip() {
+    // records → workbook → records is byte-stable for a uniform table.
+    let src = br#"[{"region":"East","sales":200},{"region":"West","sales":340}]"#;
+    let wb = load_json(src).unwrap();
+    let out = save_json(&wb);
+    assert_eq!(
+        String::from_utf8(out.clone()).unwrap(),
+        r#"[{"region":"East","sales":200},{"region":"West","sales":340}]"#,
+        "got {}",
+        String::from_utf8_lossy(&out)
+    );
+    // Reloading yields the same values.
+    let wb2 = load_json(&out).unwrap();
+    assert_eq!(cell(&wb2, "B3"), CellValue::Number(340.0));
+}
+
+#[test]
+fn json_value_kinds_map_to_cell_kinds() {
+    // Each JSON scalar maps to its matching cell kind; null → blank.
+    let wb = load_json(br#"[{"n":3.5,"s":"hi","b":true,"z":null}]"#).unwrap();
+    assert_eq!(cell(&wb, "A2"), CellValue::Number(3.5)); // float stays float
+    assert_eq!(cell(&wb, "B2"), CellValue::Text("hi".into()));
+    assert_eq!(cell(&wb, "C2"), CellValue::Boolean(true));
+    assert_eq!(cell(&wb, "D2"), CellValue::Empty); // null → blank cell
+}
+
+#[test]
+fn json_ragged_records_get_union_header() {
+    // A later record introducing a new key still gets a column; a record missing
+    // a key leaves that cell blank.
+    let wb = load_json(br#"[{"a":1},{"a":2,"b":9}]"#).unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Text("a".into()));
+    assert_eq!(cell(&wb, "B1"), CellValue::Text("b".into()));
+    assert_eq!(cell(&wb, "B2"), CellValue::Empty); // first record had no "b"
+    assert_eq!(cell(&wb, "B3"), CellValue::Number(9.0));
+}
+
+#[test]
+fn json_nested_value_becomes_json_text() {
+    // A nested object/array has no flat cell, so it is stored as compact JSON.
+    let wb = load_json(br#"[{"tags":[1,2],"meta":{"k":"v"}}]"#).unwrap();
+    assert_eq!(cell(&wb, "A2"), CellValue::Text("[1,2]".into()));
+    assert_eq!(cell(&wb, "B2"), CellValue::Text(r#"{"k":"v"}"#.into()));
+}
+
+#[test]
+fn json_array_of_arrays_is_a_grid() {
+    // A positional grid, no header row.
+    let wb = load_json(br#"[[1,2],[3,4]]"#).unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Number(1.0));
+    assert_eq!(cell(&wb, "B1"), CellValue::Number(2.0));
+    assert_eq!(cell(&wb, "A2"), CellValue::Number(3.0));
+    assert_eq!(cell(&wb, "B2"), CellValue::Number(4.0));
+}
+
+#[test]
+fn json_array_of_scalars_is_a_column() {
+    let wb = load_json(br#"[10,20,30]"#).unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Number(10.0));
+    assert_eq!(cell(&wb, "A2"), CellValue::Number(20.0));
+    assert_eq!(cell(&wb, "A3"), CellValue::Number(30.0));
+}
+
+#[test]
+fn json_single_object_is_header_plus_one_row() {
+    let wb = load_json(br#"{"x":1,"y":2}"#).unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Text("x".into()));
+    assert_eq!(cell(&wb, "B1"), CellValue::Text("y".into()));
+    assert_eq!(cell(&wb, "A2"), CellValue::Number(1.0));
+    assert_eq!(cell(&wb, "B2"), CellValue::Number(2.0));
+}
+
+#[test]
+fn json_top_level_scalar_is_one_cell() {
+    let wb = load_json(br#"42"#).unwrap();
+    assert_eq!(cell(&wb, "A1"), CellValue::Number(42.0));
+}
+
+#[test]
+fn json_save_flattens_formula_to_value() {
+    // Like the other flat writers, a formula exports as its computed value.
+    let mut wb = Workbook::new();
+    let s = wb.add_sheet("Sheet1");
+    wb.set_value(s, CellAddress::new(1, 1), CellValue::Text("total".into()));
+    wb.set_value(s, CellAddress::new(2, 1), CellValue::Number(0.0));
+    wb.set_formula(s, CellAddress::new(2, 1), "=6*7").unwrap();
+    wb.recalc_all();
+    assert_eq!(String::from_utf8(save_json(&wb)).unwrap(), r#"[{"total":42}]"#);
+}
+
+#[test]
+fn json_save_far_corner_is_sparse() {
+    // A header plus one far-flung cell must not blow up: the writer walks
+    // populated cells, not the used-range area.
+    let mut wb = Workbook::new();
+    let s = wb.add_sheet("Sheet1");
+    wb.set_value(s, CellAddress::new(1, 1), CellValue::Text("k".into()));
+    wb.set_value(s, CellAddress::new(1_048_576, 1), CellValue::Number(9.0));
+    wb.recalc_all();
+    // One data row (the far one); header key "k".
+    assert_eq!(String::from_utf8(save_json(&wb)).unwrap(), r#"[{"k":9}]"#);
+}
+
+#[test]
+fn json_empty_array_is_empty_workbook() {
+    let wb = load_json(b"[]").unwrap();
+    let s = wb.sheet_id("Sheet1").unwrap();
+    assert!(wb.used_range(s).is_none());
+    assert_eq!(save_json(&wb), b"[]");
+}
+
+#[test]
+fn json_load_rejects_malformed_input() {
+    // Untrusted input: a malformed document is an error, never a panic.
+    match load_json(b"{not json") {
+        Ok(_) => panic!("malformed JSON must not load"),
+        Err(e) => {
+            assert!(matches!(e, super::IoError::Json(_)));
+            assert!(e.to_string().contains("failed to load JSON"));
+        }
+    }
+}
+
+#[test]
+fn json_load_rejects_invalid_utf8() {
+    match load_json(&[0xff, 0xfe, 0x00]) {
+        Ok(_) => panic!("invalid UTF-8 must not load as JSON"),
+        Err(e) => assert!(matches!(e, super::IoError::Json(_))),
+    }
+}
+
+#[test]
+fn json_to_xlsx_bridge() {
+    // JSON records in, a real .xlsx out — the single-hub promise across formats.
+    let wb = load_json(br#"[{"h1":1,"h2":"two"}]"#).unwrap();
     let xlsx = save_xlsx(&wb);
     assert_eq!(&xlsx[..2], b"PK");
     let reopened = load_xlsx(&xlsx).unwrap();

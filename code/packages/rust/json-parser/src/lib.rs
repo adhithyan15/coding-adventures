@@ -1,6 +1,6 @@
 //! JSON parser backed by compiled parser grammar.
 
-use coding_adventures_json_lexer::tokenize_json;
+use coding_adventures_json_lexer::{tokenize_json, try_tokenize_json};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
@@ -16,6 +16,20 @@ pub fn parse_json(source: &str) -> GrammarASTNode {
     parser
         .parse()
         .unwrap_or_else(|e| panic!("JSON parse failed: {e}"))
+}
+
+/// Like [`parse_json`], but returns any lexer/parser error instead of panicking.
+///
+/// Use this on **untrusted** JSON (a file, a request body): malformed input is
+/// an error to handle, not a crash. Both the tokenise and parse steps are
+/// fallible here (the panicking [`parse_json`]/`tokenize_json` remain for
+/// pre-validated input).
+pub fn try_parse_json(source: &str) -> Result<GrammarASTNode, String> {
+    let tokens = try_tokenize_json(source)?;
+    let grammar = _grammar::parser_grammar();
+    GrammarParser::new(tokens, grammar)
+        .parse()
+        .map_err(|e| e.to_string())
 }
 
 #[cfg(test)]
@@ -254,6 +268,27 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 14: Whitespace handling
     // -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
+    // Test: panic-free parsing of untrusted input
+    // -----------------------------------------------------------------------
+
+    /// `try_parse_json` returns `Ok` for valid input, matching `parse_json`.
+    #[test]
+    fn test_try_parse_ok() {
+        let ast = try_parse_json("{\"key\": 42}").expect("valid JSON should parse");
+        assert_eq!(ast.rule_name, "value");
+    }
+
+    /// `try_parse_json` returns `Err` — never panics — on malformed input. This
+    /// is the property that makes it safe on untrusted bytes (files, uploads).
+    #[test]
+    fn test_try_parse_malformed_is_err() {
+        // Unterminated object, stray tokens, and empty input must all be errors.
+        assert!(try_parse_json("{not json").is_err());
+        assert!(try_parse_json("[1, 2,").is_err());
+        assert!(try_parse_json("").is_err());
+    }
 
     /// JSON allows arbitrary whitespace between tokens. The parser should
     /// handle prettified JSON the same as minified JSON.
