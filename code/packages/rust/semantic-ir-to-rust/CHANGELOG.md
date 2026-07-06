@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.15.0 — Array aggregate / reshape parity (min / max / sum / uniq / flatten / compact / to_a / each_with_index)
+
+Ports the remaining `Array`/`Enumerable` aggregate and reshape methods —
+already present in the Python and TypeScript backends (`sir-runtime-oop`) — to
+the Rust backend's inlined `__sir` runtime, so a collection program produces
+identical output on every backend. Runtime-only change (no core semantic-IR, no
+frontend, no emitter change): the frontend already lowers `arr.min`, `arr.uniq`,
+`arr.each_with_index { … }`, etc. to the `__method__` dispatch envelope; this
+teaches `array_method` to resolve them via new EXPLICIT `match` arms (never
+reflection — [[dynamic-dispatch-rce]]).
+
+All eight were ABSENT before this change; each is newly added:
+
+- **`min` / `max`** — element-wise via the runtime's numeric ordering
+  (`num_lt`, the same source of truth `sort`/`<` use); an empty array yields
+  `nil`. A stable left-fold keeps the first element on a tie. The vector is
+  snapshotted before folding so no `RefCell` borrow is held across the scan.
+- **`sum`** — numeric fold seeded at `0` (or the explicit `sum(init)` seed arg,
+  matching the Python/TS reference). Each step reuses `plus`, so integer-only
+  inputs stay `Int` while any float promotes to `Float`; `[].sum == 0`.
+- **`uniq`** — first-occurrence-order de-duplication using the runtime's
+  structural `value_eq` (so `[1, 1.0]` collapses, as do equal nested arrays),
+  into a fresh `Vec`.
+- **`flatten`** — recursively splices nested `Seq`s into one freshly-allocated
+  flat `Seq`. **CYCLE GUARD:** a `visited` set of seq handle-addresses (the
+  same discipline `puts`/`format`/`value_eq` use) bounds the walk so a
+  self-referential array terminates; every level snapshots its items — dropping
+  the `RefCell` borrow — BEFORE recursing, so no borrow is ever held across a
+  re-entrant call and no input handle is aliased into the result.
+- **`compact`** — a fresh `Seq` with every `nil` removed.
+- **`to_a`** — returns the receiver itself (Ruby `Array#to_a` identity).
+- **`each_with_index`** — yields `(element, index)` to the block via
+  `apply_closure` and returns the receiver; each element is cloned out of the
+  snapshot BEFORE the block runs, so no `RefCell` borrow is held across the
+  (re-entrant) closure call.
+- New `compile_and_run_array_aggregates` exec proof: hand-builds SIR for
+  `[3,1,2].max`/`.min`, `[1,2,3].sum`, `[1,2,2,3].uniq`, `[[1,[2]],3].flatten`,
+  `[1,nil,2].compact`, `[1,2,3].to_a`, and `[10,20].each_with_index { |x,i| … }`,
+  emits Rust, compiles it with `rustc`, and diffs stdout against the values the
+  Python/TS reference produces for the same module.
+
 ## 0.14.0 — M6 universal metaprogramming surface (send / tap / then / respond_to?)
 
 Ports the **M6** universal `Object`/`Kernel` metaprogramming surface — already
