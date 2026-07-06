@@ -100,8 +100,9 @@ pub use document::{
     Metadata, NodeRef, Package, Preamble, Provenance,
 };
 pub use references::{
-    BibEntry, CitationResolution, Duplicate, DuplicateBib, LabelDef, LabelKind, ReferenceResolution,
-    ResolvedCite, ResolvedRef, UnresolvedCite, UnresolvedRef, CITE_COMMAND, REF_COMMANDS,
+    BibEntry, CitationResolution, Duplicate, DuplicateBib, LabelDef, LabelKind, NumberedLabel,
+    Numbering, ReferenceResolution, ResolvedCite, ResolvedRef, UnresolvedCite, UnresolvedRef,
+    CITE_COMMAND, REF_COMMANDS,
 };
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};
