@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Model-card supported-parameter coverage** —
+  `model_card_supported_parameter_coverage()`,
+  `format_model_card_supported_parameter_coverage_table()`,
+  `model_card_supported_parameter_coverage_records()`,
+  `format_model_card_supported_parameter_coverage_csv()`, and
+  `format_model_card_supported_parameter_coverage_json()` now expose the
+  supported canonical model-card parameters and accepted aliases as stable
+  catalog exports, matching Rust and TypeScript.
+
 - **Model-card unsupported-parameter diagnostics** —
   `model_card_unsupported_parameter_issues()`,
   `format_model_card_unsupported_parameter_issue_table()`,

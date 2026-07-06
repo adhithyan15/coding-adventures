@@ -1757,6 +1757,13 @@ export interface ModelCardUnsupportedParameterIssue {
   readonly message: string;
 }
 
+export interface ModelCardSupportedParameterCoverage {
+  readonly kind: ModelCardKind;
+  readonly canonicalParameter: string;
+  readonly acceptedNames: readonly string[];
+  readonly aliasCount: number;
+}
+
 export interface DeviceModelBehaviorFixture {
   readonly name: string;
   readonly kind: ModelCardKind;
@@ -1920,6 +1927,15 @@ const REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES = [
   "noise",
   "tran",
 ] as const;
+const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = [
+  "D",
+  "NPN",
+  "PNP",
+  "NJF",
+  "PJF",
+  "NMOS",
+  "PMOS",
+];
 
 export interface Vccs {
   readonly kind: "vccs";
@@ -7887,6 +7903,51 @@ export function formatModelCardUnsupportedParameterIssueJson(
   model: NormalizedModelCard,
 ): string {
   return formatDeckTableJson(formatModelCardUnsupportedParameterIssueTable(model));
+}
+
+export function modelCardSupportedParameterCoverage(): readonly ModelCardSupportedParameterCoverage[] {
+  const rows: ModelCardSupportedParameterCoverage[] = [];
+  for (const kind of MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS) {
+    const grouped: Array<{ canonicalParameter: string; acceptedNames: string[] }> = [];
+    for (const [acceptedName, canonical] of Object.entries(parameterAliases(kind))) {
+      const existing = grouped.find((entry) => entry.canonicalParameter === canonical);
+      if (existing === undefined) {
+        grouped.push({ canonicalParameter: canonical, acceptedNames: [acceptedName] });
+      } else {
+        existing.acceptedNames.push(acceptedName);
+      }
+    }
+    rows.push(
+      ...grouped.map((entry) => ({
+        kind,
+        canonicalParameter: entry.canonicalParameter,
+        acceptedNames: entry.acceptedNames,
+        aliasCount: entry.acceptedNames.length,
+      })),
+    );
+  }
+  return rows;
+}
+
+export function formatModelCardSupportedParameterCoverageTable(): string {
+  return [
+    "kind\tcanonical_parameter\taccepted_names\talias_count",
+    ...modelCardSupportedParameterCoverage().map((row) =>
+      [row.kind, row.canonicalParameter, row.acceptedNames.join("|"), row.aliasCount].join("\t"),
+    ),
+  ].join("\n");
+}
+
+export function modelCardSupportedParameterCoverageRecords(): Array<Record<string, string>> {
+  return deckTableRecords(formatModelCardSupportedParameterCoverageTable());
+}
+
+export function formatModelCardSupportedParameterCoverageCsv(): string {
+  return formatDeckTableCsv(formatModelCardSupportedParameterCoverageTable());
+}
+
+export function formatModelCardSupportedParameterCoverageJson(): string {
+  return formatDeckTableJson(formatModelCardSupportedParameterCoverageTable());
 }
 
 export function diodeFromModelCard(

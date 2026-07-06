@@ -278,6 +278,9 @@ from spice_engine import (
     format_device_model_reference_deck_audit_summary_json,
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table,
+    format_model_card_supported_parameter_coverage_csv,
+    format_model_card_supported_parameter_coverage_json,
+    format_model_card_supported_parameter_coverage_table,
     format_model_card_unsupported_parameter_issue_csv,
     format_model_card_unsupported_parameter_issue_json,
     format_model_card_unsupported_parameter_issue_table,
@@ -313,6 +316,8 @@ from spice_engine import (
     measure_transient_probe,
     measure_transient_when_probe,
     measure_transient_when_probe_counted,
+    model_card_supported_parameter_coverage,
+    model_card_supported_parameter_coverage_records,
     model_card_unsupported_parameter_issue_records,
     model_card_unsupported_parameter_issues,
     mosfet_from_model_card,
@@ -390,6 +395,36 @@ def test_model_card_type_aliases_are_normalized() -> None:
     assert normalize_model_card_type("diode") == "D"
     assert normalize_model_card_type("n-jfet") == "NJF"
     assert normalize_model_card_type("pch") == "PMOS"
+
+
+def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
+    coverage = model_card_supported_parameter_coverage()
+    assert len(coverage) == 67
+    assert coverage[0].kind == "D"
+    assert coverage[0].canonical_parameter == "IS"
+    assert coverage[0].accepted_names == ("IS", "JS")
+    assert coverage[0].alias_count == 2
+    assert coverage[-1].kind == "PMOS"
+    assert coverage[-1].canonical_parameter == "MJ"
+    assert coverage[-1].accepted_names == ("MJ",)
+
+    table = format_model_card_supported_parameter_coverage_table()
+    assert table.splitlines()[0] == "kind\tcanonical_parameter\taccepted_names\talias_count"
+    assert table.splitlines()[1] == "D\tIS\tIS|JS\t2"
+    assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
+    assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
+    records = model_card_supported_parameter_coverage_records()
+    assert len(records) == 67
+    assert records[0] == {
+        "kind": "D",
+        "canonical_parameter": "IS",
+        "accepted_names": "IS|JS",
+        "alias_count": "2",
+    }
+    assert format_model_card_supported_parameter_coverage_csv().startswith(
+        "kind,canonical_parameter,accepted_names,alias_count\nD,IS,IS|JS,2\n"
+    )
+    assert json.loads(format_model_card_supported_parameter_coverage_json()) == records
 
 
 def test_model_card_aliases_build_device_instances() -> None:

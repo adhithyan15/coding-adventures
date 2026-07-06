@@ -2858,6 +2858,14 @@ pub struct ModelCardUnsupportedParameterIssue {
     pub message: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ModelCardSupportedParameterCoverage {
+    pub kind: ModelCardKind,
+    pub canonical_parameter: String,
+    pub accepted_names: Vec<String>,
+    pub alias_count: usize,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeviceModelBehaviorFixture {
     pub name: String,
@@ -3030,6 +3038,85 @@ const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: &[ModelCardKind] = &[
 ];
 const REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES: &[&str] =
     &["op", "temperature", "ac", "noise", "tran"];
+const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: &[ModelCardKind] = &[
+    ModelCardKind::Diode,
+    ModelCardKind::Npn,
+    ModelCardKind::Pnp,
+    ModelCardKind::Njf,
+    ModelCardKind::Pjf,
+    ModelCardKind::Nmos,
+    ModelCardKind::Pmos,
+];
+const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
+    ("IS", "IS"),
+    ("JS", "IS"),
+    ("VT", "VT"),
+    ("V_T", "VT"),
+    ("N", "N"),
+    ("BV", "BV"),
+    ("IBV", "IBV"),
+    ("CJO", "CJO"),
+    ("CJ", "CJO"),
+    ("CJ0", "CJO"),
+    ("TT", "TT"),
+];
+const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
+    ("IS", "IS"),
+    ("BF", "BF"),
+    ("BETA", "BF"),
+    ("BETA_F", "BF"),
+    ("HFE", "BF"),
+    ("VT", "VT"),
+    ("V_T", "VT"),
+    ("CJE", "CJE"),
+    ("CJE0", "CJE"),
+    ("CBE", "CJE"),
+    ("CJC", "CJC"),
+    ("CJC0", "CJC"),
+    ("CBC", "CJC"),
+    ("TF", "TF"),
+    ("TR", "TR"),
+];
+const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
+    ("BETA", "BETA"),
+    ("BET", "BETA"),
+    ("VTO", "VTO"),
+    ("VT0", "VTO"),
+    ("VTH", "VTO"),
+    ("LAMBDA", "LAMBDA"),
+    ("LAM", "LAMBDA"),
+    ("CGS", "CGS"),
+    ("CGS0", "CGS"),
+    ("CGD", "CGD"),
+    ("CGD0", "CGD"),
+];
+const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
+    ("LEVEL", "LEVEL"),
+    ("VT0", "VT0"),
+    ("VTO", "VT0"),
+    ("VTH", "VT0"),
+    ("KP", "KP"),
+    ("LAMBDA", "LAMBDA"),
+    ("LAM", "LAMBDA"),
+    ("GAMMA", "GAMMA"),
+    ("PHI", "PHI"),
+    ("W", "W"),
+    ("L", "L"),
+    ("IS", "IS"),
+    ("NSUB", "N_SUB"),
+    ("N_SUB", "N_SUB"),
+    ("TNOM", "T_NOM"),
+    ("T_NOM", "T_NOM"),
+    ("CGSO", "CGSO"),
+    ("CGDO", "CGDO"),
+    ("CGBO", "CGBO"),
+    ("CBS", "CBS"),
+    ("CJS", "CBS"),
+    ("CBD", "CBD"),
+    ("CJD", "CBD"),
+    ("PB", "PB"),
+    ("MJ", "MJ"),
+];
 
 fn model_type_key(text: &str) -> String {
     text.trim()
@@ -3068,58 +3155,21 @@ pub fn normalize_model_card_type(model_type: &str) -> Result<ModelCardKind, Spic
     }
 }
 
-fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static str> {
+fn model_card_parameter_alias_entries(
+    kind: ModelCardKind,
+) -> &'static [(&'static str, &'static str)] {
     match kind {
-        ModelCardKind::Diode => match key {
-            "IS" | "JS" => Some("IS"),
-            "VT" | "V_T" => Some("VT"),
-            "N" => Some("N"),
-            "BV" => Some("BV"),
-            "IBV" => Some("IBV"),
-            "CJO" | "CJ" | "CJ0" => Some("CJO"),
-            "TT" => Some("TT"),
-            _ => None,
-        },
-        ModelCardKind::Npn | ModelCardKind::Pnp => match key {
-            "IS" => Some("IS"),
-            "BF" | "BETA" | "BETA_F" | "HFE" => Some("BF"),
-            "VT" | "V_T" => Some("VT"),
-            "CJE" | "CJE0" | "CBE" => Some("CJE"),
-            "CJC" | "CJC0" | "CBC" => Some("CJC"),
-            "TF" => Some("TF"),
-            "TR" => Some("TR"),
-            _ => None,
-        },
-        ModelCardKind::Njf | ModelCardKind::Pjf => match key {
-            "BETA" | "BET" => Some("BETA"),
-            "VTO" | "VT0" | "VTH" => Some("VTO"),
-            "LAMBDA" | "LAM" => Some("LAMBDA"),
-            "CGS" | "CGS0" => Some("CGS"),
-            "CGD" | "CGD0" => Some("CGD"),
-            _ => None,
-        },
-        ModelCardKind::Nmos | ModelCardKind::Pmos => match key {
-            "LEVEL" => Some("LEVEL"),
-            "VT0" | "VTO" | "VTH" => Some("VT0"),
-            "KP" => Some("KP"),
-            "LAMBDA" | "LAM" => Some("LAMBDA"),
-            "GAMMA" => Some("GAMMA"),
-            "PHI" => Some("PHI"),
-            "W" => Some("W"),
-            "L" => Some("L"),
-            "IS" => Some("IS"),
-            "NSUB" | "N_SUB" => Some("N_SUB"),
-            "TNOM" | "T_NOM" => Some("T_NOM"),
-            "CGSO" => Some("CGSO"),
-            "CGDO" => Some("CGDO"),
-            "CGBO" => Some("CGBO"),
-            "CBS" | "CJS" => Some("CBS"),
-            "CBD" | "CJD" => Some("CBD"),
-            "PB" => Some("PB"),
-            "MJ" => Some("MJ"),
-            _ => None,
-        },
+        ModelCardKind::Diode => DIODE_PARAMETER_ALIAS_ENTRIES,
+        ModelCardKind::Npn | ModelCardKind::Pnp => BJT_PARAMETER_ALIAS_ENTRIES,
+        ModelCardKind::Njf | ModelCardKind::Pjf => JFET_PARAMETER_ALIAS_ENTRIES,
+        ModelCardKind::Nmos | ModelCardKind::Pmos => MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES,
     }
+}
+
+fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static str> {
+    model_card_parameter_alias_entries(kind)
+        .iter()
+        .find_map(|&(accepted_name, canonical)| (accepted_name == key).then_some(canonical))
 }
 
 pub fn normalize_model_card(
@@ -3206,6 +3256,66 @@ pub fn format_model_card_unsupported_parameter_issue_csv(model: &NormalizedModel
 
 pub fn format_model_card_unsupported_parameter_issue_json(model: &NormalizedModelCard) -> String {
     format_deck_table_json(&format_model_card_unsupported_parameter_issue_table(model))
+}
+
+pub fn model_card_supported_parameter_coverage() -> Vec<ModelCardSupportedParameterCoverage> {
+    let mut rows = Vec::new();
+    for kind in MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS {
+        let mut grouped: Vec<(&str, Vec<&str>)> = Vec::new();
+        for &(accepted_name, canonical) in model_card_parameter_alias_entries(*kind) {
+            if let Some((_, accepted_names)) = grouped
+                .iter_mut()
+                .find(|(candidate, _)| *candidate == canonical)
+            {
+                accepted_names.push(accepted_name);
+            } else {
+                grouped.push((canonical, vec![accepted_name]));
+            }
+        }
+        rows.extend(
+            grouped
+                .into_iter()
+                .map(
+                    |(canonical_parameter, accepted_names)| ModelCardSupportedParameterCoverage {
+                        kind: *kind,
+                        canonical_parameter: canonical_parameter.to_string(),
+                        alias_count: accepted_names.len(),
+                        accepted_names: accepted_names.into_iter().map(str::to_string).collect(),
+                    },
+                ),
+        );
+    }
+    rows
+}
+
+pub fn format_model_card_supported_parameter_coverage_table() -> String {
+    let mut lines = vec!["kind\tcanonical_parameter\taccepted_names\talias_count".to_string()];
+    lines.extend(
+        model_card_supported_parameter_coverage()
+            .into_iter()
+            .map(|row| {
+                format!(
+                    "{}\t{}\t{}\t{}",
+                    row.kind.as_str(),
+                    row.canonical_parameter,
+                    row.accepted_names.join("|"),
+                    row.alias_count
+                )
+            }),
+    );
+    lines.join("\n")
+}
+
+pub fn model_card_supported_parameter_coverage_records() -> Vec<BTreeMap<String, String>> {
+    deck_table_records(&format_model_card_supported_parameter_coverage_table())
+}
+
+pub fn format_model_card_supported_parameter_coverage_csv() -> String {
+    format_deck_table_csv(&format_model_card_supported_parameter_coverage_table())
+}
+
+pub fn format_model_card_supported_parameter_coverage_json() -> String {
+    format_deck_table_json(&format_model_card_supported_parameter_coverage_table())
 }
 
 fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {

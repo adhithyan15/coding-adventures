@@ -51,6 +51,16 @@ class ModelCardUnsupportedParameterIssue:
 
 
 @dataclass(frozen=True, slots=True)
+class ModelCardSupportedParameterCoverage:
+    """A stable catalog row for supported model-card parameter aliases."""
+
+    kind: str
+    canonical_parameter: str
+    accepted_names: tuple[str, ...]
+    alias_count: int
+
+
+@dataclass(frozen=True, slots=True)
 class DeviceModelBehaviorFixture:
     """A runnable device-model reference fixture with a stable DC probe window."""
 
@@ -249,6 +259,15 @@ _REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES = (
     "ac",
     "noise",
     "tran",
+)
+_MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
+    "D",
+    "NPN",
+    "PNP",
+    "NJF",
+    "PJF",
+    "NMOS",
+    "PMOS",
 )
 
 
@@ -467,6 +486,56 @@ def format_model_card_unsupported_parameter_issue_json(
     return format_deck_table_json(
         format_model_card_unsupported_parameter_issue_table(model)
     )
+
+
+def model_card_supported_parameter_coverage() -> tuple[ModelCardSupportedParameterCoverage, ...]:
+    """Return the supported model-card parameter alias catalog."""
+
+    rows: list[ModelCardSupportedParameterCoverage] = []
+    for kind in _MODEL_CARD_SUPPORTED_PARAMETER_KINDS:
+        grouped: dict[str, list[str]] = {}
+        for accepted_name, canonical in _parameter_aliases(kind).items():
+            grouped.setdefault(canonical, []).append(accepted_name)
+        rows.extend(
+            ModelCardSupportedParameterCoverage(
+                kind=kind,
+                canonical_parameter=canonical,
+                accepted_names=tuple(accepted_names),
+                alias_count=len(accepted_names),
+            )
+            for canonical, accepted_names in grouped.items()
+        )
+    return tuple(rows)
+
+
+def format_model_card_supported_parameter_coverage_table() -> str:
+    """Return supported model-card parameters as a stable table."""
+
+    lines = ["kind\tcanonical_parameter\taccepted_names\talias_count"]
+    lines.extend(
+        f"{row.kind}\t{row.canonical_parameter}\t"
+        f"{'|'.join(row.accepted_names)}\t{row.alias_count}"
+        for row in model_card_supported_parameter_coverage()
+    )
+    return "\n".join(lines)
+
+
+def model_card_supported_parameter_coverage_records() -> list[dict[str, str]]:
+    """Return header-keyed records for supported model-card parameters."""
+
+    return deck_table_records(format_model_card_supported_parameter_coverage_table())
+
+
+def format_model_card_supported_parameter_coverage_csv() -> str:
+    """Return supported model-card parameter coverage as CSV."""
+
+    return format_deck_table_csv(format_model_card_supported_parameter_coverage_table())
+
+
+def format_model_card_supported_parameter_coverage_json() -> str:
+    """Return compact JSON records for supported model-card parameter coverage."""
+
+    return format_deck_table_json(format_model_card_supported_parameter_coverage_table())
 
 
 def diode_from_model_card(
