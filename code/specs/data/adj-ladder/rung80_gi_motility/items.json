@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 80 \u2014 gastroenterology motility net-transit index from four stated quantities (a NEW panel: gastroenterology / motility). From a bolus size to propel, a contraction count to multiply by, a reflux volume to divide, and a reflux spacing to divide it by, compute the net transit (bolus_size*contraction_count - reflux_volume/reflux_spacing), the propelled component (bolus_size*contraction_count), or the reflux component (reflux_volume/reflux_spacing). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT MINUS A QUOTIENT a*b-c/d (two INDEPENDENT binary terms \u2014 a pure product and a pure quotient \u2014 with the quotient subtracted from the product, multiply/divide before subtract; the minus-counterpart of rung-79 a*b+c/d and the operand-order mirror of rung-78 a/b-c*d, completing the 2x2 of {product-first, quotient-first} x {+,-}; contrast rungs 69-74 which chained the +/- and */\u00f7 through a SHARED operand; here the two sides of the - are disjoint 2-operand terms, so a*b-c/d = (a*b)-(c/d), not (a*b-c)/d and not a/b-c*d) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, /, and - \u2014 no constant leaks, and neither the propelled component, the reflux component, nor any net figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: SUBTRACTING the reflux volume from the propelled volume and then dividing the WHOLE difference by the reflux spacing ((a*b-c)/d, a wrong grouping) and SWAPPING the multiply and divide between the two pairs (a/b-c*d, a wrong grouping). The core confusion tested is that a*b-c/d is (a*b)-(c/d), not (a*b-c)/d and not a/b-c*d.",
+  "items": [
+    {
+      "id": "r80gim-01",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 48 through a contraction count of 2, against a reflux volume of 3 spread over a reflux spacing of 4. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(48)\nobserve contraction_count(2)\nobserve reflux_volume(3)\nobserve reflux_spacing(4)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 95.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r80gim-02",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 48 through a contraction count of 2, against a reflux volume of 3 spread over a reflux spacing of 4. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(48)\nobserve contraction_count(2)\nobserve reflux_volume(3)\nobserve reflux_spacing(4)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 95.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r80gim-03",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 48 through a contraction count of 2, against a reflux volume of 3 spread over a reflux spacing of 4. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(48)\nobserve contraction_count(2)\nobserve reflux_volume(3)\nobserve reflux_spacing(4)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 95.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r80gim-04",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 60 through a contraction count of 3, against a reflux volume of 2 spread over a reflux spacing of 5. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(60)\nobserve contraction_count(3)\nobserve reflux_volume(2)\nobserve reflux_spacing(5)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 179.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r80gim-05",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 60 through a contraction count of 3, against a reflux volume of 2 spread over a reflux spacing of 5. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(60)\nobserve contraction_count(3)\nobserve reflux_volume(2)\nobserve reflux_spacing(5)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 179.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 180,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r80gim-06",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 60 through a contraction count of 3, against a reflux volume of 2 spread over a reflux spacing of 5. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(60)\nobserve contraction_count(3)\nobserve reflux_volume(2)\nobserve reflux_spacing(5)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 179.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r80gim-07",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 72 through a contraction count of 4, against a reflux volume of 2 spread over a reflux spacing of 6. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(72)\nobserve contraction_count(4)\nobserve reflux_volume(2)\nobserve reflux_spacing(6)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 288,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 287.6666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 47.666666666666664,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r80gim-08",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 72 through a contraction count of 4, against a reflux volume of 2 spread over a reflux spacing of 6. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(72)\nobserve contraction_count(4)\nobserve reflux_volume(2)\nobserve reflux_spacing(6)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 287.6666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 288,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 47.666666666666664,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r80gim-09",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 72 through a contraction count of 4, against a reflux volume of 2 spread over a reflux spacing of 6. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(72)\nobserve contraction_count(4)\nobserve reflux_volume(2)\nobserve reflux_spacing(6)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 287.6666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 288,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 47.666666666666664,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r80gim-10",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 54 through a contraction count of 2, against a reflux volume of 5 spread over a reflux spacing of 3. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(54)\nobserve contraction_count(2)\nobserve reflux_volume(5)\nobserve reflux_spacing(3)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 108,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 34.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 106.33333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r80gim-11",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 54 through a contraction count of 2, against a reflux volume of 5 spread over a reflux spacing of 3. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(54)\nobserve contraction_count(2)\nobserve reflux_volume(5)\nobserve reflux_spacing(3)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 108,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 106.33333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r80gim-12",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 54 through a contraction count of 2, against a reflux volume of 5 spread over a reflux spacing of 3. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(54)\nobserve contraction_count(2)\nobserve reflux_volume(5)\nobserve reflux_spacing(3)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 106.33333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 108,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34.333333333333336,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r80gim-13",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 40 through a contraction count of 2, against a reflux volume of 3 spread over a reflux spacing of 5. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(40)\nobserve contraction_count(2)\nobserve reflux_volume(3)\nobserve reflux_spacing(5)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 79.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r80gim-14",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 40 through a contraction count of 2, against a reflux volume of 3 spread over a reflux spacing of 5. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(40)\nobserve contraction_count(2)\nobserve reflux_volume(3)\nobserve reflux_spacing(5)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 79.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r80gim-15",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 40 through a contraction count of 2, against a reflux volume of 3 spread over a reflux spacing of 5. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(40)\nobserve contraction_count(2)\nobserve reflux_volume(3)\nobserve reflux_spacing(5)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 79.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r80gim-16",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 90 through a contraction count of 5, against a reflux volume of 2 spread over a reflux spacing of 6. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(90)\nobserve contraction_count(5)\nobserve reflux_volume(2)\nobserve reflux_spacing(6)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 449.6666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 74.66666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r80gim-17",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 90 through a contraction count of 5, against a reflux volume of 2 spread over a reflux spacing of 6. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(90)\nobserve contraction_count(5)\nobserve reflux_volume(2)\nobserve reflux_spacing(6)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 449.6666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 74.66666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r80gim-18",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 90 through a contraction count of 5, against a reflux volume of 2 spread over a reflux spacing of 6. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(90)\nobserve contraction_count(5)\nobserve reflux_volume(2)\nobserve reflux_spacing(6)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 449.6666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 74.66666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r80gim-19",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 66 through a contraction count of 3, against a reflux volume of 4 spread over a reflux spacing of 4. What is the net forward transit (the propelled component minus the reflux component)?",
+      "program": "observe bolus_size(66)\nobserve contraction_count(3)\nobserve reflux_volume(4)\nobserve reflux_spacing(4)\nlet answer = bolus_size * contraction_count - reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 198,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 197.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r80gim-20",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 66 through a contraction count of 3, against a reflux volume of 4 spread over a reflux spacing of 4. What is the the propelled component (bolus size times the contraction count)?",
+      "program": "observe bolus_size(66)\nobserve contraction_count(3)\nobserve reflux_volume(4)\nobserve reflux_spacing(4)\nlet answer = bolus_size * contraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 197.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 198,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r80gim-21",
+      "qtype": "gi_motility_transit",
+      "stem": "Peristalsis propels a bolus size of 66 through a contraction count of 3, against a reflux volume of 4 spread over a reflux spacing of 4. What is the the reflux component (reflux volume over the reflux spacing)?",
+      "program": "observe bolus_size(66)\nobserve contraction_count(3)\nobserve reflux_volume(4)\nobserve reflux_spacing(4)\nlet answer = reflux_volume / reflux_spacing\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 197.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 198,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
