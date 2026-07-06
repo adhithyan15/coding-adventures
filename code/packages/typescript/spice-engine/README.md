@@ -204,6 +204,12 @@ model-card keys as stable diagnostics for parser and UI surfaces.
 `formatModelCardSupportedParameterCoverageJson` expose the supported canonical
 model-card parameters and accepted aliases for D, BJT, JFET, and Level-1 MOS
 cards as stable dashboard/export rows.
+`modelCardSupportedParameterCoverageSummary`,
+`formatModelCardSupportedParameterCoverageSummaryTable`,
+`modelCardSupportedParameterCoverageSummaryRecords`,
+`formatModelCardSupportedParameterCoverageSummaryCsv`, and
+`formatModelCardSupportedParameterCoverageSummaryJson` condense that catalog by
+model kind for compact release dashboards and Mosaic UI inventories.
 `deviceModelAuditFixtures` returns the canonical cross-language fixture cards
 used to keep the TypeScript, Python, and Rust ports aligned.
 `deviceModelBehaviorAuditFixtures` extends those cards into runnable one-device

@@ -69,6 +69,9 @@ import {
   formatDeviceModelReferenceDeckAuditTable,
   formatModelCardSupportedParameterCoverageCsv,
   formatModelCardSupportedParameterCoverageJson,
+  formatModelCardSupportedParameterCoverageSummaryCsv,
+  formatModelCardSupportedParameterCoverageSummaryJson,
+  formatModelCardSupportedParameterCoverageSummaryTable,
   formatModelCardSupportedParameterCoverageTable,
   formatModelCardUnsupportedParameterIssueCsv,
   formatModelCardUnsupportedParameterIssueJson,
@@ -82,6 +85,8 @@ import {
   measureDcSweepProbe,
   modelCardSupportedParameterCoverage,
   modelCardSupportedParameterCoverageRecords,
+  modelCardSupportedParameterCoverageSummary,
+  modelCardSupportedParameterCoverageSummaryRecords,
   modelCardUnsupportedParameterIssueRecords,
   modelCardUnsupportedParameterIssues,
   mosfet,
@@ -143,6 +148,51 @@ describe("dcOp", () => {
       /^kind,canonical_parameter,accepted_names,alias_count\nD,IS,IS\|JS,2\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageJson())).toStrictEqual(records);
+  });
+
+  it("exports stable model-card supported parameter coverage summaries", () => {
+    const summary = modelCardSupportedParameterCoverageSummary();
+    expect(summary).toHaveLength(7);
+    expect(summary[0]).toStrictEqual({
+      kind: "D",
+      canonicalParameterCount: 7,
+      acceptedNameCount: 11,
+      aliasedParameterCount: 3,
+      maxAliasCount: 3,
+      aliasedParameters: ["IS", "VT", "CJO"],
+    });
+    expect(summary[5]).toStrictEqual({
+      kind: "NMOS",
+      canonicalParameterCount: 18,
+      acceptedNameCount: 25,
+      aliasedParameterCount: 6,
+      maxAliasCount: 3,
+      aliasedParameters: ["VT0", "LAMBDA", "N_SUB", "T_NOM", "CBS", "CBD"],
+    });
+    expect(summary.at(-1)?.kind).toBe("PMOS");
+
+    const table = formatModelCardSupportedParameterCoverageSummaryTable();
+    expect(table.split("\n")[0]).toBe(
+      "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters",
+    );
+    expect(table.split("\n")[1]).toBe("D\t7\t11\t3\t3\tIS|VT|CJO");
+    expect(table.split("\n").at(-1)).toBe(
+      "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
+    );
+    const records = modelCardSupportedParameterCoverageSummaryRecords();
+    expect(records).toHaveLength(7);
+    expect(records[0]).toStrictEqual({
+      kind: "D",
+      canonical_parameter_count: "7",
+      accepted_name_count: "11",
+      aliased_parameter_count: "3",
+      max_alias_count: "3",
+      aliased_parameters: "IS|VT|CJO",
+    });
+    expect(formatModelCardSupportedParameterCoverageSummaryCsv()).toMatch(
+      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,7,11,3,3,IS\|VT\|CJO\n/,
+    );
+    expect(JSON.parse(formatModelCardSupportedParameterCoverageSummaryJson())).toStrictEqual(records);
   });
 
   it("normalizes model-card aliases into device instances", () => {

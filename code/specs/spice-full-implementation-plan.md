@@ -33,18 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model supported-parameter coverage exports.
+1. Device model supported-parameter coverage summaries.
    - Status: current PR completion candidate.
-   - Add Python, Rust, and TypeScript helpers that expose accepted model-card
-     parameter aliases as stable table, header-keyed record, CSV, and compact
-     JSON exports.
-   - Generate the catalog from the same alias maps used by model-card
-     normalization, preserving D, BJT, JFET, and Level-1 MOS canonical
-     parameters plus accepted names for browser dashboards, release
-     automation, and deck-tooling UIs.
-   - Keep normalization behavior unchanged while locking the 67-row
-     cross-language coverage catalog, first/last aliases, and the NMOS `VT0`
-     alias family across the three packages.
+   - Add Python, Rust, and TypeScript helpers that condense the supported
+     model-card parameter alias catalog by model kind as stable table,
+     header-keyed record, CSV, and compact JSON exports.
+   - Preserve the D, BJT, JFET, and Level-1 MOS kind ordering while reporting
+     canonical parameter counts, accepted-name counts, alias-bearing parameter
+     counts, max alias depth, and aliased canonical parameter inventories for
+     browser dashboards, release automation, and deck-tooling UIs.
+   - Keep normalization and the underlying 67-row coverage catalog unchanged
+     while locking the seven-row cross-language summary and MOS Level-1 alias
+     families across the three packages.
 
 ## Completed Slices
 
@@ -2899,6 +2899,18 @@ the Rust, Python, and TypeScript surfaces together.
    - Cross-language tests lock the four expected matrix rows, CSV/JSON
      exports, and a negative missing `NMOS:tran` matrix case so dashboard
      consumers can inspect coverage without scanning every fixture row.
+
+208. Device model supported-parameter coverage exports.
+   - Status: completed in PR 7662.
+   - Python, Rust, and TypeScript now expose accepted model-card parameter
+     aliases as stable table, header-keyed record, CSV, and compact JSON
+     exports.
+   - The catalog is generated from the same alias maps used by model-card
+     normalization, preserving D, BJT, JFET, and Level-1 MOS canonical
+     parameters plus accepted names for browser dashboards, release
+     automation, and deck-tooling UIs.
+   - Cross-language tests lock the 67-row coverage catalog, first/last aliases,
+     and the NMOS `VT0` alias family across the three packages.
 
 ## Backlog
 
