@@ -292,6 +292,52 @@ fn lenient_index_reads_return_nil_no_overraise() {
     );
 }
 
+/// #66 — the SIR-native `SeqIndex` primitive (`arr[i]`, distinct from the OO
+/// `[]` method) must ALSO return nil out of bounds and let a negative index
+/// count from the end — it previously panicked on any OOB.  Prints
+/// `nil` / last / first / `nil` / in-range and exits 0.
+#[test]
+fn native_seq_index_out_of_bounds_returns_nil_and_negatives_wrap() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let arr = || seq(vec![ilit(10), ilit(20), ilit(30)]);
+    let at = |i: i64| Expr::SeqIndex {
+        seq: Box::new(arr()),
+        index: Box::new(ilit(i)),
+        span: s(),
+    };
+    let stmts = vec![
+        print_stmt(at(5)),  // OOB high → nil
+        print_stmt(at(-1)), // last     → 30
+        print_stmt(at(-3)), // first    → 10
+        print_stmt(at(-9)), // OOB low  → nil
+        print_stmt(at(1)),  // in range → 20
+    ];
+    let src = compile(&module_from_main(stmts, &[])).expect("compile").source;
+    let Some((stdout, ok)) = compile_and_run(&src, "native_seq_index_nil") else { return };
+    assert!(ok, "arr[oob] must not panic (exit 0); stdout={stdout:?}");
+    assert_eq!(
+        stdout.lines().collect::<Vec<_>>(),
+        vec!["nil", "30", "10", "nil", "20"],
+        "native SeqIndex OOB/negative handling wrong; got {stdout:?}"
+    );
+}
+
+/// #67 — `[1, 2].fetch("x")` (non-integer index) raises a catchable `TypeError`
+/// ("no implicit conversion of String into Integer") → caught → `8`, instead of
+/// the uncatchable `as_i64` "expected int" panic.
+#[test]
+fn array_fetch_non_integer_index_raises_type_error() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let fault = method(seq(vec![ilit(1), ilit(2)]), "fetch", vec![slit("x")]);
+    assert_typed_rescue_catches(fault, "TypeError", 8, "fetch_non_int_type_error");
+}
+
 /// `fetch` WITH a default arg does not raise: `[1].fetch(9, 42)` → `42`, and
 /// `{}.fetch("k", 42)` → `42`.  Confirms we do not over-raise when Ruby would
 /// return the default.

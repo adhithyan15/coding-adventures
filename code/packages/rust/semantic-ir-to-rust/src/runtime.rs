@@ -818,12 +818,20 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn seq_index(seq: &Value, index: &Value) -> Value {
         match seq {
             Value::Seq(items) => {
-                let i = as_i64(index);
+                let raw = as_i64(index);
                 let items = items.borrow();
-                if i < 0 || (i as usize) >= items.len() {
-                    panic!("sequence index out of range: {} (len {})", i, items.len());
+                let len = items.len() as i64;
+                // Ruby `arr[i]` (the `[]` op, NOT `arr.fetch(i)`): a negative
+                // index counts from the end (`-1` ⇒ last); an index still
+                // outside `0 .. len-1` returns `nil` — it does NOT raise (only
+                // `fetch` raises IndexError).  Previously this panicked on any
+                // OOB, diverging from Ruby and the other backends.
+                let idx = if raw < 0 { raw + len } else { raw };
+                if idx < 0 || idx >= len {
+                    Value::Nil
+                } else {
+                    items[idx as usize].clone()
                 }
-                items[i as usize].clone()
             }
             other => panic!("seq-index on non-sequence: {}", format(other)),
         }
@@ -1535,6 +1543,20 @@ pub const RUNTIME: &str = r##"mod __sir {
             // matches.  A supplied default arg (`fetch(i, default)`) is
             // returned instead of raising, matching Ruby.
             "fetch" => {
+                // Ruby `Array#fetch`: a non-integer index raises a catchable
+                // `TypeError` ("no implicit conversion of X into Integer"),
+                // matching Ruby — NOT the uncatchable `as_i64` "expected int"
+                // panic.  Checked before borrowing so no borrow is held across
+                // the raise/unwind.
+                if !matches!(pos.first(), Some(Value::Int(_))) {
+                    let cls = ruby_class_name(pos.first().unwrap_or(&Value::Nil));
+                    raise(
+                        "TypeError",
+                        Value::Str(Rc::from(
+                            format!("no implicit conversion of {} into Integer", cls).as_str(),
+                        )),
+                    );
+                }
                 let items = items_rc.borrow();
                 let len = items.len() as i64;
                 let raw = as_i64(pos.first().unwrap_or(&Value::Nil));
