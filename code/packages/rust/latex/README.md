@@ -48,7 +48,8 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC02 S3 — precise Document fold** | `build_document` reads each source `Node`'s carried, precise span instead of the coarse enclosing `region`, so **every body `Block`/`Inline` span is now the node's tight source range**: `&src[inline.span]` slices back to exactly a `Text` run's word, a `\textbf{…}`, an inline `$…$`, a `\cite{…}`. Composites union their children's real spans (`Paragraph` = ∪ its inlines; `Section` = heading ∪ owned body; `List`/`Tabular`/`Environment`/`Figure` = the `\begin…\end` extent; captioned `table` float = tabular ∪ float; `DocListItem` = term ∪ body; `Caption` = ∪ its content). The `region` parameter is deleted from the fold helpers (a fallback-only seed survives on `lower_blocks`). Preamble/`DocumentClass`/`Package` stay honestly preamble-region-coarse (classified, not walked). `to_latex` + round-trip-modulo-spans unchanged; precise `node_at` + coverage capstone = S4/S5. | ✅ |
 | **LTXDOC02 S4 — precise `node_at`, region-coarse caveat retired** | with S3's tight body spans, `Document::node_at(byte)` **formally** resolves to the **true per-token leaf** — the narrowest node whose *precise* span contains the byte (ties → deepest in pre-order): a byte inside `widgets` → the `Text` run owning `widgets` (not the enclosing `Paragraph`/`Section`); a byte inside a `\section` title → the title inline (not the whole `Section`). Docs-and-tests rung (no `node_at`/`walk` logic change): retired the region-coarse hedging on `node_at`/`Provenance`/`walk`/module note for **body** nodes, kept the honest coarse note on `Preamble`/`DocumentClass`/`Package`. New leaf-resolution tests + an honest body byte-coverage test (every non-whitespace body byte resolves to a node whose precise span contains it, on a representative input; whole-corpus tightest-leaf capstone = S5). | ✅ |
 | **LTXDOC02 S5 — precise byte-coverage capstone (arc COMPLETE)** | the capstone `capstone_every_body_byte_resolves_to_tightest_covering_node` proves, over the same LTXDOC01 D6 representative corpus, that **every** non-whitespace body byte (a) resolves (`node_at(b).is_some()`) AND (b) resolves to the **tightest-covering** walked node — no *other* walked node whose span is a strict subset also contains the byte. Honest, not overclaimed: the load-bearing gate is tightest-covering, **not** "always a `Text` leaf" — structural bytes (`\section`/`\item`/`\begin{…}` machinery, inter-child delimiters) legitimately resolve to their enclosing composite, which is the tightest cover there (a soft signal records that the *majority* of content bytes still land on leaves). No `node_at`/parser/fold logic change (S1–S4 already made spans precise + `node_at` leaf-resolving); pure test rung. Corpus fixed/bounded ⇒ O(len), not a DoS. **Completes the LTXDOC02 precise-per-token-spans arc.** | ✅ |
-| **LTXDOC03 S1 — cross-reference resolution (label table + `\ref` binding)** | `Document::resolve_references() -> ReferenceResolution` — a pure, additive pass (no parser/fold/`walk`/`node_at`/span change) that binds each cross-reference to the `\label` that defines it, **with byte spans on both sides**. Collects the label table from hoisted section/table/figure labels (`Block::…{ label: Some(k) }`) and inline `\label{k}` (`Inline::CrossRef`); resolves the reference family `{ref, eqref, pageref}` against it → `ResolvedRef` (ref-span **and** target def-span + `LabelKind`) or `UnresolvedRef` (dangling key + ref-span); reports `Duplicate` keys with **first-def-wins**. `\cite` is deferred (bibliography = a separate table, a later rung). The static analogue of LaTeX's two-pass `.aux` machinery, binding *structure* not numbers/pages. Total & panic-free, reuses the bounded `walk` (no new recursion). | ✅ |
+| **LTXDOC03 S1 — cross-reference resolution (label table + `\ref` binding)** | `Document::resolve_references() -> ReferenceResolution` — a pure, additive pass (no parser/fold/`walk`/`node_at`/span change) that binds each cross-reference to the `\label` that defines it, **with byte spans on both sides**. Collects the label table from hoisted section/table/figure labels (`Block::…{ label: Some(k) }`) and inline `\label{k}` (`Inline::CrossRef`); resolves the reference family `{ref, eqref, pageref}` against it → `ResolvedRef` (ref-span **and** target def-span + `LabelKind`) or `UnresolvedRef` (dangling key + ref-span); reports `Duplicate` keys with **first-def-wins**. `\cite` is a separate table, bound by S2. The static analogue of LaTeX's two-pass `.aux` machinery, binding *structure* not numbers/pages. Total & panic-free, reuses the bounded `walk` (no new recursion). | ✅ |
+| **LTXDOC03 S2 — `\cite` → bibliography binding** | `Document::resolve_citations() -> CitationResolution` — the *parallel* pass to S1 for the **citation** family, binding each `\cite` key to the `\bibitem` that defines it, **with byte spans on both sides**. Collects the bibliography table from every `\bibitem{k}` inside a `thebibliography` environment (`BibEntry { key, span }`, span = the tight `\bibitem{k}` construct), first-entry-wins with `DuplicateBib`; then, for each `\cite` (the `CITE_COMMAND` family), splits `target` on commas into individual trimmed keys and resolves each → `ResolvedCite` (the shared `\cite` `cite_span` **and** the entry's `entry_span`) or `UnresolvedCite` (dangling key + `cite_span`). A multi-key `\cite{a,b,c}` yields one record **per key**, all sharing that `\cite`'s span; `\cite[note]{k}` keeps the note out of the key. External `.bib`/BibTeX databases and citation numbering stay out of scope (in-document `thebibliography` only). Disjoint from and non-interfering with S1. Total & panic-free, reuses the bounded `walk` + a `MAX_DEPTH`-bounded env descent. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -69,7 +70,12 @@ tightest-covering rather than leaf-only.
 The **document-feature** arc (LTXDOC03) now builds on that precise-span foundation: **S1 ships
 cross-reference resolution** (`Document::resolve_references`) — a pure, additive pass that binds each
 `\ref`/`\eqref`/`\pageref` to the `\label` that defines it, with byte spans on both sides, reporting
-duplicate and dangling references. `\cite`/bibliography binding is a deferred later rung.
+duplicate and dangling references. **S2 ships `\cite` → bibliography binding**
+(`Document::resolve_citations`) — the parallel pass that binds each `\cite` key to the `\bibitem`
+inside a `thebibliography` environment, multi-key `\cite{a,b,c}` aware (one binding per key, all
+sharing the `\cite` span), first-entry-wins for duplicate `\bibitem`s, and dangling `\cite`s
+reported. External `.bib`/BibTeX databases and citation numbering remain out of scope (in-document
+`thebibliography` only).
 
 ## The Document layer (LTXDOC01)
 
@@ -226,10 +232,45 @@ assert!(src[r.target_span.start..r.target_span.end].starts_with(r"\section{Intro
 assert_eq!(res.unresolved[0].key, "missing");
 ```
 
-The reference family is `{ref, eqref, pageref}`; `\cite` is deferred (it resolves against a
-bibliography — a separate table — in a later rung), and a multiply-defined key is reported as a
-`Duplicate` with **first-def-wins** for resolution. A resolved `\ref` therefore points at the exact
-defining node's source bytes — the source→source correlation the ADJ byte-provenance pipeline audits.
+The reference family is `{ref, eqref, pageref}`; `\cite` resolves against a *separate* table
+(the bibliography — see S2 below), and a multiply-defined key is reported as a `Duplicate` with
+**first-def-wins** for resolution. A resolved `\ref` therefore points at the exact defining node's
+source bytes — the source→source correlation the ADJ byte-provenance pipeline audits.
+
+### `\cite` → bibliography binding (LTXDOC03 S2)
+
+The parallel pass, `Document::resolve_citations()`, binds each `\cite` key to the `\bibitem` that
+defines it inside a `thebibliography` environment — the citation-family analogue of the S1 label
+pass, likewise carrying byte spans on both sides and never computing a citation number. It is
+disjoint from and non-interfering with S1 (the two read separate command families).
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}See \cite{a,b} and \cite{ghost}.
+
+\begin{thebibliography}{9}
+\bibitem{a} Author A. First. 2001.
+\bibitem{b} Author B. Second. 2002.
+\end{thebibliography}\end{document}";
+let doc = parse_document(src).unwrap();
+let res = doc.resolve_citations();
+
+// `\cite{a,b}` is ONE construct with two keys → two bindings sharing the same `cite_span`.
+assert_eq!(res.resolved.len(), 2);
+assert_eq!(res.resolved[0].cite_span, res.resolved[1].cite_span);
+// Each resolves to its own `\bibitem` span.
+assert_eq!(&src[res.resolved[0].entry_span.start..res.resolved[0].entry_span.end], r"\bibitem{a}");
+
+// `\cite{ghost}` is dangling (LaTeX's "Citation `ghost' undefined").
+assert_eq!(res.unresolved[0].key, "ghost");
+```
+
+A multi-key `\cite{a,b,c}` splits on commas and resolves each key independently (all sharing the
+one `\cite` span); `\cite[note]{k}` keeps the `[note]` out of the key; a duplicate `\bibitem` is a
+`DuplicateBib` with **first-entry-wins**. Only an **in-document** `thebibliography`/`\bibitem`
+bibliography is bound — an external `.bib`/BibTeX database and citation numbering/sorting stay out of
+scope (a `\cite` whose key lives only in a `.bib` is reported unresolved here).
 
 ## Usage
 
