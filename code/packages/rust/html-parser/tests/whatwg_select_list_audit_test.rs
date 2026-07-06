@@ -23,13 +23,57 @@ struct SelectInTableCrossAxisCase {
     suites: &'static [(&'static str, &'static str, &'static str)],
 }
 
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
-    ("tables01-dat-442", "select-in-table"),
-    ("template-dat-475", "option-implied-end"),
-    ("tests1-dat-600", "optgroup-boundary"),
-    ("tests1-dat-675", "stray-select-end-tags"),
-    ("tests-innerhtml-1-dat-75", "select-fragment-context"),
-    ("tests2-dat-40", "select-shell"),
+struct SelectListRepairEvidence {
+    id: &'static str,
+    source: &'static str,
+    axis: &'static str,
+    data_snippet: &'static str,
+    fragment_context: Option<&'static str>,
+}
+
+const POST_PARSE_REPAIR_EVIDENCE: &[SelectListRepairEvidence] = &[
+    SelectListRepairEvidence {
+        id: "tables01-dat-442",
+        source: "tables01.dat:442",
+        axis: "select-in-table",
+        data_snippet: "<table><select><option>3</select></table>",
+        fragment_context: None,
+    },
+    SelectListRepairEvidence {
+        id: "template-dat-475",
+        source: "template.dat:475",
+        axis: "option-implied-end",
+        data_snippet: "<template><option></option></select><option></option></template>",
+        fragment_context: None,
+    },
+    SelectListRepairEvidence {
+        id: "tests1-dat-600",
+        source: "tests1.dat:600",
+        axis: "optgroup-boundary",
+        data_snippet: "<!DOCTYPE html>A<option>B<optgroup>C<select>D</option>E",
+        fragment_context: None,
+    },
+    SelectListRepairEvidence {
+        id: "tests1-dat-675",
+        source: "tests1.dat:675",
+        axis: "stray-select-end-tags",
+        data_snippet: "</strong></b></em></i></u></strike></s></blink></tt></pre></big></small></font></select>",
+        fragment_context: None,
+    },
+    SelectListRepairEvidence {
+        id: "tests-innerhtml-1-dat-75",
+        source: "tests_innerHTML_1.dat:75",
+        axis: "select-fragment-context",
+        data_snippet: "</select><option>",
+        fragment_context: Some("select"),
+    },
+    SelectListRepairEvidence {
+        id: "tests2-dat-40",
+        source: "tests2.dat:40",
+        axis: "select-shell",
+        data_snippet: "<!DOCTYPE html><datalist><option>foo</datalist>bar",
+        fragment_context: None,
+    },
 ];
 const TABLE_SELECT_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
     (
@@ -251,18 +295,41 @@ fn whatwg_select_list_audit_tracks_post_parse_repair_evidence() {
         .map(|case| (case.source.clone(), case))
         .collect::<HashMap<_, _>>();
 
-    for (case_id, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
-        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
-            panic!("post-parse repair evidence case `{case_id}` should be audited")
+    for evidence in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(evidence.id).unwrap_or_else(|| {
+            panic!(
+                "post-parse repair evidence case `{}` should be audited",
+                evidence.id
+            )
         });
         assert_eq!(
-            audit_case.axis, *expected_axis,
-            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+            audit_case.source, evidence.source,
+            "post-parse repair evidence case `{}` should stay tied to its smoke fixture row",
+            evidence.id
+        );
+        assert_eq!(
+            audit_case.axis, evidence.axis,
+            "post-parse repair evidence case `{}` should stay on its focused audit axis",
+            evidence.id
         );
 
         let source_case = smoke_cases
             .get(&audit_case.source)
-            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+            .unwrap_or_else(|| panic!("case `{}` should exist in smoke fixture", evidence.id));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "post-parse repair evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
+        if let Some(fragment_context) = evidence.fragment_context {
+            assert_eq!(
+                source_case.fragment_context.as_deref(),
+                Some(fragment_context),
+                "post-parse repair evidence row `{}` should keep its html5lib fragment context",
+                evidence.id
+            );
+        }
+
         let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
             panic!(
                 "case `{}` ({}) parse failed: {error}",
