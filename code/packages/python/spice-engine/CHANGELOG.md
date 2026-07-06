@@ -4,6 +4,17 @@
 
 ### Added
 
+- **Model-card supported-parameter coverage gate** —
+  `model_card_supported_parameter_coverage_gate()`,
+  `format_model_card_supported_parameter_coverage_gate_report()`,
+  `format_model_card_supported_parameter_coverage_gate_issue_table()`,
+  `model_card_supported_parameter_coverage_gate_issue_records()`,
+  `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
+  `format_model_card_supported_parameter_coverage_gate_issue_json()` now
+  validate the expected seven-kind, 67-row supported-parameter catalog and
+  expose stable issue rows for release automation, matching Rust and
+  TypeScript.
+
 - **Model-card supported-parameter coverage summaries** —
   `model_card_supported_parameter_coverage_summary()`,
   `format_model_card_supported_parameter_coverage_summary_table()`,

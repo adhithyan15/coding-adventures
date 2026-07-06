@@ -73,6 +73,30 @@ class ModelCardSupportedParameterCoverageSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class ModelCardSupportedParameterCoverageGateIssue:
+    """A stable release-gate issue row for supported-parameter coverage."""
+
+    kind: str
+    field: str
+    message: str
+
+
+@dataclass(frozen=True, slots=True)
+class ModelCardSupportedParameterCoverageGateReport:
+    """Release-gate report for supported model-card parameter coverage."""
+
+    passed: bool
+    kind_count: int
+    expected_kind_count: int
+    canonical_parameter_count: int
+    expected_canonical_parameter_count: int
+    accepted_name_count: int
+    aliased_parameter_count: int
+    max_alias_count: int
+    issues: tuple[ModelCardSupportedParameterCoverageGateIssue, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class DeviceModelBehaviorFixture:
     """A runnable device-model reference fixture with a stable DC probe window."""
 
@@ -281,6 +305,15 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
     "NMOS",
     "PMOS",
 )
+_MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
+    "D": (7, 11, 3, 3),
+    "NPN": (7, 15, 4, 4),
+    "PNP": (7, 15, 4, 4),
+    "NJF": (5, 11, 5, 3),
+    "PJF": (5, 11, 5, 3),
+    "NMOS": (18, 25, 6, 3),
+    "PMOS": (18, 25, 6, 3),
+}
 
 
 _MODEL_TYPE_ALIASES: dict[str, str] = {
@@ -550,12 +583,11 @@ def format_model_card_supported_parameter_coverage_json() -> str:
     return format_deck_table_json(format_model_card_supported_parameter_coverage_table())
 
 
-def model_card_supported_parameter_coverage_summary() -> tuple[
+def _model_card_supported_parameter_coverage_summary_from(
+    coverage: Sequence[ModelCardSupportedParameterCoverage],
+) -> tuple[
     ModelCardSupportedParameterCoverageSummary, ...
 ]:
-    """Return compact per-kind supported parameter alias coverage summaries."""
-
-    coverage = model_card_supported_parameter_coverage()
     rows: list[ModelCardSupportedParameterCoverageSummary] = []
     for kind in _MODEL_CARD_SUPPORTED_PARAMETER_KINDS:
         kind_rows = tuple(row for row in coverage if row.kind == kind)
@@ -573,6 +605,16 @@ def model_card_supported_parameter_coverage_summary() -> tuple[
             )
         )
     return tuple(rows)
+
+
+def model_card_supported_parameter_coverage_summary() -> tuple[
+    ModelCardSupportedParameterCoverageSummary, ...
+]:
+    """Return compact per-kind supported parameter alias coverage summaries."""
+
+    return _model_card_supported_parameter_coverage_summary_from(
+        model_card_supported_parameter_coverage()
+    )
 
 
 def format_model_card_supported_parameter_coverage_summary_table() -> str:
@@ -612,6 +654,181 @@ def format_model_card_supported_parameter_coverage_summary_json() -> str:
 
     return format_deck_table_json(
         format_model_card_supported_parameter_coverage_summary_table()
+    )
+
+
+def model_card_supported_parameter_coverage_gate(
+    coverage: Sequence[ModelCardSupportedParameterCoverage] | None = None,
+) -> ModelCardSupportedParameterCoverageGateReport:
+    """Validate supported model-card parameter coverage for release automation."""
+
+    rows = model_card_supported_parameter_coverage() if coverage is None else tuple(coverage)
+    expected_kinds = _MODEL_CARD_SUPPORTED_PARAMETER_KINDS
+    expected_summaries = _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES
+    issues: list[ModelCardSupportedParameterCoverageGateIssue] = []
+    actual_kinds: list[str] = []
+    for row in rows:
+        if row.kind not in actual_kinds:
+            actual_kinds.append(row.kind)
+
+    if tuple(actual_kinds) != expected_kinds:
+        issues.append(
+            ModelCardSupportedParameterCoverageGateIssue(
+                "catalog",
+                "kind_order",
+                (
+                    "expected model-card supported-parameter coverage kinds "
+                    f"{','.join(expected_kinds)}, found {','.join(actual_kinds)}"
+                ),
+            )
+        )
+
+    summary_by_kind = {
+        row.kind: row
+        for row in _model_card_supported_parameter_coverage_summary_from(rows)
+    }
+    for kind in expected_kinds:
+        summary = summary_by_kind[kind]
+        (
+            expected_canonical_count,
+            expected_accepted_count,
+            expected_aliased_count,
+            expected_max_alias_count,
+        ) = expected_summaries[kind]
+        if summary.canonical_parameter_count != expected_canonical_count:
+            issues.append(
+                ModelCardSupportedParameterCoverageGateIssue(
+                    kind,
+                    "canonical_parameter_count",
+                    (
+                        f"expected {kind} to expose {expected_canonical_count} "
+                        "canonical supported parameters, found "
+                        f"{summary.canonical_parameter_count}"
+                    ),
+                )
+            )
+        if summary.accepted_name_count != expected_accepted_count:
+            issues.append(
+                ModelCardSupportedParameterCoverageGateIssue(
+                    kind,
+                    "accepted_name_count",
+                    (
+                        f"expected {kind} to expose {expected_accepted_count} "
+                        f"accepted model-card names, found {summary.accepted_name_count}"
+                    ),
+                )
+            )
+        if summary.aliased_parameter_count != expected_aliased_count:
+            issues.append(
+                ModelCardSupportedParameterCoverageGateIssue(
+                    kind,
+                    "aliased_parameter_count",
+                    (
+                        f"expected {kind} to expose {expected_aliased_count} "
+                        "alias-bearing parameters, found "
+                        f"{summary.aliased_parameter_count}"
+                    ),
+                )
+            )
+        if summary.max_alias_count != expected_max_alias_count:
+            issues.append(
+                ModelCardSupportedParameterCoverageGateIssue(
+                    kind,
+                    "max_alias_count",
+                    (
+                        f"expected {kind} max alias count {expected_max_alias_count}, "
+                        f"found {summary.max_alias_count}"
+                    ),
+                )
+            )
+
+    return ModelCardSupportedParameterCoverageGateReport(
+        passed=not issues,
+        kind_count=len(actual_kinds),
+        expected_kind_count=len(expected_kinds),
+        canonical_parameter_count=len(rows),
+        expected_canonical_parameter_count=sum(
+            expected[0] for expected in expected_summaries.values()
+        ),
+        accepted_name_count=sum(row.alias_count for row in rows),
+        aliased_parameter_count=sum(1 for row in rows if row.alias_count > 1),
+        max_alias_count=max((row.alias_count for row in rows), default=0),
+        issues=tuple(issues),
+    )
+
+
+def format_model_card_supported_parameter_coverage_gate_report(
+    report: ModelCardSupportedParameterCoverageGateReport | None = None,
+) -> str:
+    """Return a stable tab-separated supported-parameter coverage gate report."""
+
+    gate_report = model_card_supported_parameter_coverage_gate() if report is None else report
+    lines = [
+        (
+            "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
+            "expected_canonical_parameter_count\taccepted_name_count\t"
+            "aliased_parameter_count\tmax_alias_count\tissue_count"
+        ),
+        (
+            f"{str(gate_report.passed).lower()}\t{gate_report.kind_count}\t"
+            f"{gate_report.expected_kind_count}\t"
+            f"{gate_report.canonical_parameter_count}\t"
+            f"{gate_report.expected_canonical_parameter_count}\t"
+            f"{gate_report.accepted_name_count}\t"
+            f"{gate_report.aliased_parameter_count}\t"
+            f"{gate_report.max_alias_count}\t{len(gate_report.issues)}"
+        ),
+    ]
+    if gate_report.issues:
+        lines.append("kind\tfield\tmessage")
+        lines.extend(
+            f"{issue.kind}\t{issue.field}\t{issue.message}"
+            for issue in gate_report.issues
+        )
+    return "\n".join(lines)
+
+
+def format_model_card_supported_parameter_coverage_gate_issue_table(
+    report: ModelCardSupportedParameterCoverageGateReport | None = None,
+) -> str:
+    """Return stable supported-parameter coverage gate issue rows."""
+
+    gate_report = model_card_supported_parameter_coverage_gate() if report is None else report
+    lines = ["kind\tfield\tmessage"]
+    lines.extend(
+        f"{issue.kind}\t{issue.field}\t{issue.message}"
+        for issue in gate_report.issues
+    )
+    return "\n".join(lines)
+
+
+def model_card_supported_parameter_coverage_gate_issue_records(
+    report: ModelCardSupportedParameterCoverageGateReport | None = None,
+) -> list[dict[str, str]]:
+    """Return header-keyed records for supported-parameter coverage gate issues."""
+
+    return deck_table_records(
+        format_model_card_supported_parameter_coverage_gate_issue_table(report)
+    )
+
+
+def format_model_card_supported_parameter_coverage_gate_issue_csv(
+    report: ModelCardSupportedParameterCoverageGateReport | None = None,
+) -> str:
+    """Return supported-parameter coverage gate issues as CSV."""
+
+    return format_deck_table_csv(
+        format_model_card_supported_parameter_coverage_gate_issue_table(report)
+    )
+
+
+def format_model_card_supported_parameter_coverage_gate_issue_json(
+    report: ModelCardSupportedParameterCoverageGateReport | None = None,
+) -> str:
+    """Return compact JSON records for supported-parameter coverage gate issues."""
+
+    return format_deck_table_json(
+        format_model_card_supported_parameter_coverage_gate_issue_table(report)
     )
 
 

@@ -210,6 +210,14 @@ cards as stable dashboard/export rows.
 `formatModelCardSupportedParameterCoverageSummaryCsv`, and
 `formatModelCardSupportedParameterCoverageSummaryJson` condense that catalog by
 model kind for compact release dashboards and Mosaic UI inventories.
+`modelCardSupportedParameterCoverageGate`,
+`formatModelCardSupportedParameterCoverageGateReport`,
+`formatModelCardSupportedParameterCoverageGateIssueTable`,
+`modelCardSupportedParameterCoverageGateIssueRecords`,
+`formatModelCardSupportedParameterCoverageGateIssueCsv`, and
+`formatModelCardSupportedParameterCoverageGateIssueJson` validate the expected
+seven-kind, 67-row supported-parameter catalog and expose stable issue rows for
+release automation.
 `deviceModelAuditFixtures` returns the canonical cross-language fixture cards
 used to keep the TypeScript, Python, and Rust ports aligned.
 `deviceModelBehaviorAuditFixtures` extends those cards into runnable one-device
