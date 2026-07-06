@@ -2,6 +2,30 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.10] - 2026-07-07
+
+### Fixed — division now floors (Ruby `Integer#/`) and true-divides floats (`Float#/`), SIR21 §E3
+
+`div` used a single `int(a / b)`, which got Ruby's polymorphic `/` wrong two ways:
+
+- **Integer division truncated toward zero** instead of flooring toward −∞ —
+  `div(-7, 2)` gave `-3`, but Ruby (and the Rust oracle's
+  [`DivOp::Floor`](../../rust/sir-conformance/src/oracle.rs)) say `-4`.
+- **Float division was silently floored to an `int`** — `div(7.0, 2)` gave `3`,
+  but Ruby's `Float#/` true-divides to `3.5`. A latent bug the truncating form
+  masked, since the corpus exercised no float division.
+
+`div` now dispatches on operand type (explicit `isinstance`, never reflection —
+matching the `add`/`mul` style): two ints floor via Python's `//` (which also
+rounds toward −∞, so it matches the oracle exactly on every sign combination);
+anything involving a float true-divides via `/`. `bool` is excluded from the
+integer path. The typed division-by-zero (T1) behaviour is unchanged.
+
+This closes the **Python arm** of the division frontier captured in
+`sir-conformance`'s `tests/division.rs`; `python_division_is_ruby_floor_faithful`
+there is the non-ignored end-to-end regression guard. (JavaScript, Go and Rust
+remain to be made floor-faithful.)
+
 ## [0.1.9] - 2026-07-07
 
 ### Added — source-language display convention (SIR display-convention spec)
