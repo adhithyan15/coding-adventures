@@ -2,6 +2,45 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.40.0] — 2026-07-06
+
+### Added — cross-reference resolution: document numbering (LTXDOC03 S4)
+
+The number a `\ref` actually *prints*. S1 bound each `\ref` to its target's **bytes** and S3 lifted
+that to the target **node**, but neither gives the rendered **number** ("Section 1.2", "Figure 3").
+S4 assigns those numbers in one walk over the parsed `Document` — the static analogue of LaTeX's
+second `.aux` pass, computing each numbered target's value directly (no `.aux` file, no second parse).
+
+- **Hierarchical section numbers with deeper-reset.** A numbered `\section`…`\subparagraph` shares a
+  nested counter family: incrementing a coarser level **resets every finer one to 0**, and the number
+  is the dotted join from the top level down to that depth — `1`, `1.1`, `1.2`, `1.2.1`, `2`. A
+  starred `\section*` (`numbered == false`) fires **no** counter and is skipped, so the next numbered
+  section keeps the number it would have had (a `\section*` between `1` and the next `\section` leaves
+  it `2`, not `3`).
+- **Flat, independent float counters.** `figure` and `table` each own a running counter that only
+  increments: figures `1, 2, 3, …`, tables their **own** `1, 2, 3, …` (a table after two figures is
+  `1`, not `3`). **Every** float advances its counter — labeled or not — mirroring LaTeX, where a
+  `\label` merely *captures* the value; an unlabeled figure between two labeled ones takes `2`, so the
+  labeled ones read `1` and `3`.
+- **Missing-parent rule (a document that starts deep).** A `\subsection` before any `\section` has no
+  opened parent, so its parent counter sits at its initial `0`; we render from the `\section` depth
+  down, surfacing an honest leading `0` — a lone leading `\subsection` numbers `0.1`, a lone
+  `\subsubsection` `0.0.1`. A plain top-level `\section` is just `1` (it *is* the reference depth). The
+  rule is documented, deterministic, and total — never a panic on the degenerate input.
+- **New public API.** `Document::number_labels(&self) -> Numbering` returns one owned `NumberedLabel`
+  row per **defined, numberable** label key (section/figure/table), each carrying its `LabelKind` and
+  rendered `number: String`, with a `Numbering::number_for(key) -> Option<&str>` lookup. The payoff
+  convenience `Document::ref_number(&self, r: &ResolvedRef) -> Option<String>` ties S1 resolution to
+  S4 numbering: `\ref{sec:intro}` → `"1.2"`. Inline/equation labels carry no S4 counter and are
+  omitted (deferred to S5).
+- **Deferred to S5+ (honest boundary).** Equation numbers, citation `[1]` order-of-first-appearance
+  numbers, and other `\label`-able counters (enumerate items, theorems, footnotes) are **not** yet
+  assigned — each needs a per-environment counter context S4 does not thread.
+- **Pure, additive analysis.** No new parsing, no I/O, no tree mutation; reuses the bounded
+  `Document::walk` (no new recursion), a fixed-size 7-slot counter array (no unchecked indexing), and
+  no `unwrap`/`expect`. A regression test asserts numbering leaves the S1/S2/S3 outputs byte-for-byte
+  unchanged. `to_latex` round-trip fixed point preserved.
+
 ## [0.39.0] — 2026-07-06
 
 ### Added — cross-reference resolution: target → `NodeRef` exposure (LTXDOC03 S3)

@@ -327,3 +327,93 @@ inline `\eqref` returns the `CrossRef` inline whose span slices back to `\label{
 → `None` (no panic), `node_for_span(target_span)` agrees with `ref_target_node`, empty-document
 lookups → `None`, and a regression that exercising the S3 accessors leaves S1's `resolve_references`
 and S2's `resolve_citations` outputs byte-for-byte unchanged.
+
+## 10. S4 — document numbering (hierarchical sections + flat float counters)
+
+S1 bound each `\ref` to its target's **bytes**; S3 lifted that to the target **node**. Neither gives
+the rendered **number** a `\ref` prints — the "1.2" in "see Section~1.2", the "3" in "Figure~3". S4
+assigns those numbers: it is the static, single-pass analogue of LaTeX's **second `.aux` pass**. On
+the first `latex` run each `\refstepcounter` (fired by every numbered `\section`/`figure`/`table`/…)
+writes the counter value into `document.aux` next to the label; on the second run `\ref{key}` reads it
+back. S4 does the same binding **in one walk** over the already-parsed `Document` — no `.aux` file, no
+second parse — computing each numbered target's value directly. S3's target-node exposure is what
+unblocks it: the counters are assigned by walking exactly the nodes S3 made addressable.
+
+### 10.1 The two counter models
+
+1. **Hierarchical section counters (deeper-reset).** `\part` … `\subparagraph` share a nested counter
+   family: incrementing a coarser counter **resets every finer one to 0**. The printed number is the
+   dotted join of the counters from the top level down to that heading's depth: `1`, `1.1`, `1.2`,
+   `1.2.1`, `2`. `rank(level)` (0 = `\part` … 6 = `\subparagraph`, mirroring the D3 sectioning-fold
+   rank) is the array index a heading increments and the depth its number is joined to.
+2. **Flat float counters (no reset, no hierarchy).** `figure` and `table` each own an *independent*
+   running counter that only increments: figures `1, 2, 3, …`, tables their **own** `1, 2, 3, …` (a
+   table after two figures is `1`, not `3`).
+
+**Every float consumes a counter — labeled or not.** LaTeX advances a float's counter every time the
+float appears; a `\label` merely *captures* the current value. So an unlabeled figure between two
+labeled ones still takes a number: the labeled ones read `1` and `3`, the unlabeled one having taken
+`2`. S4 walks **every** `Block::Figure`/`Block::Table` and advances its counter, exposing the value
+only for the labeled ones. **Starred `\section*`** (`numbered == false`) is the opposite: it fires no
+counter and is **skipped**, so the following numbered section keeps the number it would have had.
+
+### 10.2 The missing-parent rule (a document that starts deep)
+
+A well-formed document opens with a top-level heading, but nothing stops an author writing a
+`\subsection` before any `\section`. An exploratory parse confirmed such a document parses fine (a
+lone `Block::Section { level: Subsection, numbered: true, .. }`), and its parent `\section` counter
+sits at its initial **0**. **S4's rule: treat a missing parent as 0** — we render from the `\section`
+depth (rank 2, the article default top-numbered level) down to the heading, surfacing the un-opened
+parent slots' honest `0`. So a lone leading `\subsection` numbers **`0.1`**, a lone `\subsubsection`
+**`0.0.1`**; a plain top-level `\section` is just **`1`** (it *is* the reference depth, no parent to
+zero-fill). This is total (no panic), deterministic, and honestly reflects "no parent section opened
+yet" rather than silently inventing a `1` the source never wrote — the faithful, auditable choice for
+a byte-provenance model. (It is a documented convention, not a LaTeX fact: the point is that S4 picks
+a rule and sticks to it on degenerate input rather than crashing.)
+
+### 10.3 Public API
+
+```rust
+impl Document {
+    /// One `NumberedLabel { key, kind, number }` per DEFINED numberable label (section/figure/table),
+    /// in pre-order. Inline/equation labels carry no S4 counter and are omitted (deferred to S5).
+    pub fn number_labels(&self) -> Numbering;
+    /// The number a resolved `\ref` prints — `number_labels().number_for(r.key)`; ties S1 → S4.
+    pub fn ref_number(&self, r: &ResolvedRef) -> Option<String>;
+}
+
+pub struct Numbering { pub labels: Vec<NumberedLabel> }
+impl Numbering { pub fn number_for(&self, key: &str) -> Option<&str>; }
+
+pub struct NumberedLabel { pub key: String, pub kind: LabelKind, pub number: String }
+```
+
+`Numbering`/`NumberedLabel` are dedicated, owned-`String` result types mirroring S1's
+`ReferenceResolution` and S2's `CitationResolution`, so a numbering outlives any borrow of the source.
+`ref_number` is the **payoff**: `\ref{sec:intro}` → `"1.2"`, closing the loop from S1 resolution to
+S4 numbering. Only the **first** definition of a duplicated key is numbered (matching S1's
+first-definition-wins).
+
+### 10.4 What is DEFERRED (honest boundary, mirroring S1/S2/S3)
+
+- **Equation numbers** — `equation`/`align` bodies are opaque `Block::DisplayMath` source strings
+  (never parsed here); numbering needs an equation counter threaded through the math island. S5.
+- **Citation `[1]` numbers** — the order-of-first-appearance number a numeric bibliography style
+  prints; a citation-order traversal over S2's resolution. A separate rung.
+- **Other `\label`-able counters** — `enumerate` item numbers, theorem/footnote counters — each needs
+  a per-environment counter context. S5+.
+
+### 10.5 Verification (S4)
+
+`cargo test -p latex` green (12 new `references` S4 tests); `cargo clippy -p latex --all-targets
+-- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build
+-p latex --no-default-features` builds. No `cargo fmt`, no grammar regen. The tests assert the
+**actual number string**: nested `\section`/`\subsection`/`\subsection`/`\section` → `1`/`1.1`/`1.2`/
+`2` (deeper-reset); a `\section*` between two numbered sections leaves the second `2` not `3`; two
+labeled figures → `1`/`2` and a labeled table → `1` (independent counter); an unlabeled figure between
+two labeled ones makes the second labeled one `3` (every float advances); `ref_number` for
+`\ref{s:b}` (a subsection under a section) → `"1.1"` (the load-bearing S1→S4 payoff); an undefined key
+→ `None` (no panic); an empty document → empty numbering; a lone leading `\subsection` → `0.1` (the
+missing-parent rule); a plain top-level `\section` → `1`; an inline `\label` is **not** numbered
+(deferred); and a regression that numbering leaves the S1/S2/S3 outputs byte-for-byte unchanged (the
+tree is never mutated).

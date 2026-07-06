@@ -67,7 +67,7 @@
 //! This is pure *analysis* over the tree — it changes nothing about the parser, the fold,
 //! [`Document::walk`], [`Document::node_at`], any span, or the `to_latex` round-trip fixed point.
 
-use crate::ast::{Node, NodeKind};
+use crate::ast::{Node, NodeKind, SectionLevel};
 use crate::document::{Block, Document, Inline, NodeRef};
 use crate::document_to_latex;
 use crate::token::Span;
@@ -879,6 +879,364 @@ impl Document {
     }
 }
 
+// =================================================================================================
+// LTXDOC03 S4 — document numbering (hierarchical section numbers + flat float counters).
+//
+// S1 bound each `\ref` to the *bytes* of its `\label`'s node; S3 lifted that to the target *node*.
+// Neither gives the **rendered number** a `\ref` prints — the "1.2" in "see Section~1.2", the "3" in
+// "Figure~3". S4 assigns those numbers. It is the static, single-pass analogue of LaTeX's **second
+// `.aux` pass**: on the first `latex` run each `\refstepcounter` (fired by every numbered `\section`,
+// `figure`, `table`, …) writes the counter's value into `document.aux` next to the label; on the
+// second run `\ref{key}` reads that value back. We do the same binding **in one walk** over the
+// already-parsed [`Document`] — no `.aux` file, no second parse — computing each numbered target's
+// value directly.
+//
+// ## The two counter models LaTeX uses, and which we implement
+//
+// LaTeX has two shapes of counter, and S4 models both:
+//
+// 1. **Hierarchical section counters (with deeper-reset).** `\part` … `\subparagraph` share a
+//    *nested* counter family: incrementing a coarser counter **resets every finer one to zero**. So
+//    after `\section` (→ `1`), a `\subsection` is `1.1`, another is `1.2`, and the *next* `\section`
+//    bumps to `2` **and** resets the subsection counter, so its first child is `2.1` again. The
+//    printed number is the **dotted join** of the counters from the top level down to this heading's
+//    depth: `1`, `1.1`, `1.2`, `1.2.1`, `2`. (Real LaTeX starts the dotted join at the *class's*
+//    top-numbered level — `\section` for `article`, `\chapter` for `report`/`book` — and omits
+//    levels above it. We do **not** know the class here, so we join from the coarsest level that has
+//    actually been *seen* down to this heading's depth; see the missing-parent rule below.)
+//
+// 2. **Flat float counters (no reset, no hierarchy).** `figure` and `table` each own an *independent*
+//    running counter that only ever **increments**: figures are `1, 2, 3, …` in document order, and
+//    tables are their **own** `1, 2, 3, …` — a `table` after two figures is `1`, not `3`. (In
+//    `article` these are document-global; in `report`/`book` they reset per chapter, which — being a
+//    class-dependent, chapter-scoped rule we cannot see — S4 does *not* model. The honest, class-free
+//    choice is a single global run per float type.)
+//
+// ## Every float consumes a counter — labeled or not
+//
+// LaTeX advances a float's counter **every time** the float appears; a `\label` merely *captures*
+// whatever the counter reads at that moment. So an **unlabeled** figure between two labeled ones
+// still consumes a number: the labeled figures come out `1` and `3`, with the unlabeled one having
+// silently taken `2`. S4 mirrors this exactly — we walk **every** [`Block::Figure`]/[`Block::Table`]
+// and advance its counter, then *expose* the value only for the ones that carry a `label`. (Starred
+// unnumbered sections are the opposite case: `\section*` sets `numbered == false`, fires no counter,
+// and is **skipped** entirely — the following numbered `\section` keeps the number it would have had.)
+//
+// ## The missing-parent rule (a document that starts deep)
+//
+// A well-formed document opens with a top-level heading, but nothing *stops* an author writing a
+// `\subsection` before any `\section` — the exploratory parse confirmed such a document parses fine
+// (a lone `Block::Section { level: Subsection, numbered: true, .. }`). Its parent `\section` counter
+// was never incremented, so it sits at its initial **0**. S4's rule: **treat a missing parent as 0**
+// (we never clamp it away, and we never skip the heading). We render from the `\section` depth (the
+// article default top-numbered level) down to the heading, so the un-opened parent slots surface
+// their honest `0`: a lone leading `\subsection` numbers **`0.1`**, a lone `\subsubsection` **`0.0.1`**.
+// A plain top-level `\section` itself is just **`1`** (it *is* the reference depth, so there is no
+// parent to zero-fill). This is total (no panic), deterministic, and honestly reflects "no parent
+// section has been opened yet" — surfacing the `0` rather than silently inventing a `1` the source
+// never wrote, the faithful, auditable choice for a byte-provenance model. (The exact leading-zero
+// depth is a documented convention, not a LaTeX fact — LaTeX would warn and print `0.1` too, but the
+// point is that S4 *picks a rule and sticks to it* rather than panicking on the degenerate input.)
+//
+// ## What S4 numbers, and what is DEFERRED
+//
+// S4 numbers **sections** (hierarchical) and **figure/table floats** (flat) — the counters whose
+// values a `\ref` most commonly prints. It deliberately does **not** yet assign:
+//
+// - **Equation numbers** — `equation`/`align` bodies are kept as opaque [`Block::DisplayMath`]
+//   source strings (never parsed here), and `\label`s inside them are inline labels with no counter
+//   context. Numbering them needs an equation counter threaded through the math island — an S5 rung.
+// - **Citation `[1]` numbers** — the order-of-first-appearance number `\cite` prints in a numeric
+//   bibliography style. That is a *citation-order* traversal over S2's resolution, a separate rung.
+// - **Other `\label`-able counters** — `enumerate` item numbers, theorem/footnote counters, etc.
+//   These need per-environment counter contexts; also S5+.
+//
+// This honest boundary mirrors S1/S2/S3: we assign only the numbers we can compute *faithfully* from
+// the parsed structure, and name the rest as future work rather than guessing.
+//
+// ## The result type
+//
+// [`Document::number_labels`] returns a [`Numbering`]: one owned row per **defined label key**,
+// carrying the label's [`LabelKind`] and its rendered number `String`. It mirrors S1/S2's dedicated,
+// owned-`String` result types (so it outlives any borrow of the source) and provides a
+// [`number_for`](Numbering::number_for) lookup. [`Document::ref_number`] is the payoff convenience:
+// given a [`ResolvedRef`] (S1), it returns that reference's target's rendered number — closing the
+// loop `\ref{sec:intro}` → `"1.2"`.
+// =================================================================================================
+
+/// The number of hierarchical section-counter slots: one per [`SectionLevel`] rank, `\part` (0)
+/// through `\subparagraph` (6). A fixed-size array of exactly this many `u32`s carries the live
+/// section counters through the numbering walk — no growth, no allocation, no unchecked indexing.
+const SECTION_DEPTHS: usize = 7;
+
+/// The **rank** (0-based depth) of a sectioning level: `0` for the coarsest (`\part`) up to `6` for
+/// the finest (`\subparagraph`). This is the index into the section-counter array a heading of that
+/// level increments, and the depth down to which its dotted number is joined.
+///
+/// | level | rank |
+/// |-------|------|
+/// | `Part` | 0 |
+/// | `Chapter` | 1 |
+/// | `Section` | 2 |
+/// | `Subsection` | 3 |
+/// | `Subsubsection` | 4 |
+/// | `Paragraph` | 5 |
+/// | `Subparagraph` | 6 |
+///
+/// This mirrors [`document::rank`](crate::document)'s private sectioning-fold rank (they must agree —
+/// both are the [`SectionLevel`] declaration order), kept as a local copy so S4 does not need that
+/// private helper exported. A pure lookup: it cannot panic and allocates nothing.
+fn section_rank(level: SectionLevel) -> usize {
+    match level {
+        SectionLevel::Part => 0,
+        SectionLevel::Chapter => 1,
+        SectionLevel::Section => 2,
+        SectionLevel::Subsection => 3,
+        SectionLevel::Subsubsection => 4,
+        SectionLevel::Paragraph => 5,
+        SectionLevel::Subparagraph => 6,
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// The record types (plain, Clone-able, owned data — parallel to S1/S2's result rows).
+// -------------------------------------------------------------------------------------------------
+
+/// One **numbered label**: a defined label `key`, the [`LabelKind`] of the node it defines, and the
+/// rendered **number** LaTeX would print for a `\ref` to it. This is one row of S4's numbering table
+/// — the static analogue of an `.aux` `\newlabel{key}{{number}{page}…}` line, capturing the number
+/// (not the page).
+///
+/// The `number` is already rendered to its display string: a dotted section number (`"1"`, `"1.2"`,
+/// `"1.2.1"`, or `"0.1"` for a lone-deep heading — see the missing-parent rule) for a
+/// [`LabelKind::Section`], or a flat float count (`"1"`, `"2"`, …) for a [`LabelKind::Figure`] /
+/// [`LabelKind::Table`]. A [`LabelKind::Inline`] label carries **no** counter S4 assigns (its target
+/// is typically an equation — deferred to S5), so inline labels are **omitted** from the numbering
+/// table entirely (see [`Document::number_labels`]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NumberedLabel {
+    /// The label key, verbatim, without braces (`"sec:intro"`).
+    pub key: String,
+    /// What kind of node this label defines (section / figure / table).
+    pub kind: LabelKind,
+    /// The rendered number LaTeX would print for a `\ref` to this label (`"1.2"`, `"3"`, …).
+    pub number: String,
+}
+
+/// The full result of [`Document::number_labels`]: the numbering table — one [`NumberedLabel`] row
+/// per **defined, numberable** label key (sections + figure/table floats; inline/equation labels are
+/// omitted, deferred to S5). All plain, owned data (keys + numbers are `String`s), so the numbering
+/// outlives any borrow of the source and can be stored/serialized — mirroring S1's
+/// [`ReferenceResolution`] and S2's [`CitationResolution`].
+///
+/// **Ordering.** `labels` is in [`Document::walk`] pre-order — the source order the labels' defining
+/// nodes appear in — so the table reads top-to-bottom like the document. As with S1's "first
+/// definition wins", only the **first** definition of a duplicated key is numbered (the value the
+/// winning [`LabelDef`] would carry); a later duplicate does not add a second row.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct Numbering {
+    /// One row per defined, numberable label key, in pre-order.
+    pub labels: Vec<NumberedLabel>,
+}
+
+impl Numbering {
+    /// The rendered number of `key`, if it is a defined numberable label, else `None`. Linear over
+    /// `labels` (small: one row per distinct label); no allocation. `&str` borrow into the owned row.
+    pub fn number_for(&self, key: &str) -> Option<&str> {
+        self.labels.iter().find(|l| l.key == key).map(|l| l.number.as_str())
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// The numbering pass.
+// -------------------------------------------------------------------------------------------------
+
+/// A small carrier for the live counters during the numbering walk: the hierarchical section
+/// counters (one slot per rank) plus the two independent flat float counters. Kept as a struct so the
+/// single walk threads exactly one mutable state, and each `step_*` method reads like the LaTeX
+/// operation it mimics.
+struct Counters {
+    /// The hierarchical section counters, `section[rank]` = the current value at that depth. All
+    /// start at `0`; a coarser step resets every finer slot (deeper-reset).
+    section: [u32; SECTION_DEPTHS],
+    /// The flat `figure` counter — only ever increments (one global run).
+    figure: u32,
+    /// The flat `table` counter — only ever increments (one global run), independent of `figure`.
+    table: u32,
+}
+
+impl Counters {
+    /// Fresh counters — every section depth, the figure counter, and the table counter at `0` (no
+    /// heading/float seen yet).
+    fn new() -> Self {
+        Counters { section: [0; SECTION_DEPTHS], figure: 0, table: 0 }
+    }
+
+    /// Advance the section counters for a numbered heading at `rank`, and render its dotted number.
+    ///
+    /// The LaTeX `\refstepcounter{<level>}` semantics, in three steps:
+    /// 1. **Increment** `section[rank]` by one.
+    /// 2. **Reset** every *finer* slot (`rank+1 ..`) to `0` — the deeper-reset that makes the next
+    ///    `\section` restart its subsections at `1`.
+    /// 3. **Render** the dotted join from the coarsest *opened* ancestor down to this depth (see
+    ///    [`render_section`]) — `1`, `1.1`, `1.2.1` for opened parents, and a single leading `0` for
+    ///    a lone deep heading whose parent was never opened (the missing-parent rule → `0.1`).
+    fn step_section(&mut self, rank: usize) -> String {
+        // `rank` is always a valid index (`section_rank` yields 0..=6, and the array has 7 slots),
+        // but guard defensively so no unchecked indexing can ever panic.
+        if rank >= SECTION_DEPTHS {
+            return String::new();
+        }
+        self.section[rank] = self.section[rank].saturating_add(1);
+        for slot in self.section.iter_mut().skip(rank + 1) {
+            *slot = 0;
+        }
+        render_section(&self.section, rank)
+    }
+
+    /// Advance and return the flat `figure` counter (`1` on the first figure, `2` on the next, …).
+    fn step_figure(&mut self) -> u32 {
+        self.figure = self.figure.saturating_add(1);
+        self.figure
+    }
+
+    /// Advance and return the flat `table` counter, independent of the figure counter.
+    fn step_table(&mut self) -> u32 {
+        self.table = self.table.saturating_add(1);
+        self.table
+    }
+}
+
+/// The rank of `\section` — the `article` class's top *numbered* sectioning level, and S4's
+/// class-free reference depth for the missing-parent rule (see [`render_section`]).
+const SECTION_LEVEL_RANK: usize = 2;
+
+/// Render a section's dotted number from the counter array, for a heading at `rank`.
+///
+/// The dotted join runs from a **start depth** down to `rank` inclusive. The start depth is chosen so
+/// that opened parents appear with their real values and a document that starts deep shows honest
+/// leading `0`s for the un-opened parents (the missing-parent rule):
+///
+/// - **Opened ancestor present.** If any ancestor slot (`0..rank`) is non-zero, start at the
+///   **coarsest** such slot. Every in-between slot is then included with its current value. So under
+///   `\section` (slot 2 = `1`), a first `\subsection` (slot 3) joins `section[2..=3]` = `1.1`, and a
+///   nested `\subsubsection` joins `section[2..=4]` = `1.2.1`.
+/// - **No ancestor opened, and this heading is at or above `\section`** (`rank <= `[`SECTION_LEVEL_RANK`]).
+///   Start at `rank` itself — a plain top-level `\section`/`\chapter`/`\part` is just its own number,
+///   `1`, with no spurious leading `0`.
+/// - **No ancestor opened, but this heading is *deeper* than `\section`** (a document that starts
+///   deep). The missing-parent rule: start at [`SECTION_LEVEL_RANK`] (the `\section` depth), so the
+///   un-opened section counter renders as a leading `0`. A lone leading `\subsection` (rank 3) reads
+///   `section[2..=3]` = `0.1`; a lone `\subsubsection` (rank 4) reads `0.0.1`. Each un-opened parent
+///   contributes an honest `0` rather than inventing a `1` the source never wrote.
+///
+/// Total: every index used is within `0..SECTION_DEPTHS` (range-checked), so no unchecked indexing.
+fn render_section(section: &[u32; SECTION_DEPTHS], rank: usize) -> String {
+    // Guard (mirrors `step_section`): an out-of-range rank renders empty rather than indexing wild.
+    if rank >= SECTION_DEPTHS {
+        return String::new();
+    }
+    // The coarsest opened (non-zero) ancestor slot strictly above this heading, if any.
+    let first_nonzero = (0..rank).find(|&i| section[i] != 0);
+    let start = match first_nonzero {
+        // An opened ancestor: the number naturally begins there.
+        Some(i) => i,
+        // No opened ancestor: a heading at/above `\section` is just its own number; a deeper one
+        // (document starts deep) begins at the `\section` depth so un-opened parents read `0`.
+        None if rank <= SECTION_LEVEL_RANK => rank,
+        None => SECTION_LEVEL_RANK,
+    };
+    // Join `section[start..=rank]` with dots. `start <= rank < SECTION_DEPTHS`, so the slice is in
+    // bounds; iterating the sub-slice (rather than indexing by a range variable) is the panic-free,
+    // allocation-minimal way to render the dotted number.
+    section[start..=rank].iter().map(u32::to_string).collect::<Vec<_>>().join(".")
+}
+
+impl Document {
+    /// Assign every defined, numberable label its rendered **number** (LTXDOC03 S4).
+    ///
+    /// Walks the body **once** in [`Document::walk`] pre-order, threading a single [`Counters`]
+    /// state. For each block:
+    ///
+    /// - a **numbered** [`Block::Section`] (`numbered == true`) increments its depth's section
+    ///   counter, resets deeper depths, and — if it carries a hoisted `label` — records that label's
+    ///   dotted number. A **starred** `\section*` (`numbered == false`) is skipped: it fires no
+    ///   counter and is never numbered.
+    /// - **every** [`Block::Figure`] advances the flat figure counter; **every** [`Block::Table`]
+    ///   advances the flat table counter (labeled or not — a `\label` only *captures* the value). A
+    ///   figure/table that carries a `label` records that label's flat number.
+    ///
+    /// Inline (`\label` in prose / after an equation) labels carry **no** S4 counter — their target
+    /// is typically an equation, deferred to S5 — so they are **omitted** from the returned
+    /// [`Numbering`]. Only the first definition of a duplicated key is numbered (matching S1's
+    /// first-definition-wins).
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (the counter array is
+    /// fixed-size and every index is range-checked); reuses the bounded [`Document::walk`] (no new
+    /// recursion). Borrows `self` immutably; the returned [`Numbering`] is owned plain data (keys +
+    /// numbers copied out), so it outlives any borrow of the source. The tree is **not** mutated —
+    /// numbering is pure analysis, leaving S1/S2/S3 outputs byte-for-byte unchanged.
+    pub fn number_labels(&self) -> Numbering {
+        let mut counters = Counters::new();
+        let mut labels: Vec<NumberedLabel> = Vec::new();
+
+        // Record the first definition of each key only (first-wins, matching S1).
+        let mut record = |key: &str, kind: LabelKind, number: String| {
+            if !labels.iter().any(|l| l.key == key) {
+                labels.push(NumberedLabel { key: key.to_string(), kind, number });
+            }
+        };
+
+        for node in self.walk() {
+            let NodeRef::Block(block) = node else {
+                continue; // Only blocks carry the section/float counters S4 assigns.
+            };
+            match block {
+                // A numbered section: step the counter (reset deeper), number its label if any.
+                Block::Section { level, numbered: true, label, .. } => {
+                    let number = counters.step_section(section_rank(*level));
+                    if let Some(key) = label {
+                        record(key, LabelKind::Section, number);
+                    }
+                }
+                // A starred `\section*`: fires no counter, is never numbered — skipped.
+                Block::Section { numbered: false, .. } => {}
+                // Every figure advances the flat figure counter (labeled or not).
+                Block::Figure { label, .. } => {
+                    let n = counters.step_figure();
+                    if let Some(key) = label {
+                        record(key, LabelKind::Figure, n.to_string());
+                    }
+                }
+                // Every table advances the independent flat table counter (labeled or not).
+                Block::Table { label, .. } => {
+                    let n = counters.step_table();
+                    if let Some(key) = label {
+                        record(key, LabelKind::Table, n.to_string());
+                    }
+                }
+                // Any other block carries no counter S4 assigns.
+                _ => {}
+            }
+        }
+
+        Numbering { labels }
+    }
+
+    /// The rendered **number** a resolved reference prints (LTXDOC03 S4) — the payoff that ties S1
+    /// resolution to S4 numbering: given a [`ResolvedRef`] (`\ref{sec:intro}`), return its target's
+    /// number (`"1.2"`), or `None` if the target is not a numberable label (an inline/equation label,
+    /// deferred to S5) — a **documented, total** outcome, never a panic.
+    ///
+    /// Convenience over [`number_labels`](Document::number_labels): it numbers the document, then
+    /// looks the reference's `key` up. (A caller numbering *many* references should call
+    /// `number_labels` once and reuse the [`Numbering`]; this method re-numbers per call, which is
+    /// O(nodes) each — fine for a one-off lookup.)
+    pub fn ref_number(&self, r: &ResolvedRef) -> Option<String> {
+        self.number_labels().number_for(&r.key).map(str::to_string)
+    }
+}
+
 // -------------------------------------------------------------------------------------------------
 // Tests.
 // -------------------------------------------------------------------------------------------------
@@ -1543,5 +1901,236 @@ See Section~\ref{sec:intro} and \cite{smith2020}.
         // Re-resolving yields the identical result (nothing mutated).
         assert_eq!(doc.resolve_references(), refs_before, "S1 output unchanged by S3");
         assert_eq!(doc.resolve_citations(), cites_before, "S2 output unchanged by S3");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S4 — document numbering (hierarchical sections + flat float counters).
+    // ---------------------------------------------------------------------------------------------
+
+    /// Parse `src` and number its labels — the shared S4 harness.
+    fn number(src: &str) -> Numbering {
+        parse_document(src).expect("parse").number_labels()
+    }
+
+    #[test]
+    fn nested_sections_number_hierarchically_with_deeper_reset() {
+        // \section{A} = 1, \subsection{B} = 1.1, \subsection{C} = 1.2, \section{D} = 2.
+        // The two `\n\n` after each `\label` keep it a lone paragraph so LTXDOC01 hoists it.
+        let src = r"\begin{document}\section{A}\label{s:a}
+
+\subsection{B}\label{s:b}
+
+\subsection{C}\label{s:c}
+
+\section{D}\label{s:d}
+
+Body.\end{document}";
+        let num = number(src);
+
+        assert_eq!(num.number_for("s:a"), Some("1"), "first section is 1");
+        assert_eq!(num.number_for("s:b"), Some("1.1"), "first subsection under 1 is 1.1");
+        assert_eq!(num.number_for("s:c"), Some("1.2"), "second subsection is 1.2");
+        assert_eq!(num.number_for("s:d"), Some("2"), "the next section bumps to 2 (deeper reset)");
+
+        // All four are Section-kind rows, in source (pre-order).
+        assert_eq!(num.labels.len(), 4);
+        assert!(num.labels.iter().all(|l| l.kind == LabelKind::Section));
+        assert_eq!(num.labels[0].key, "s:a");
+        assert_eq!(num.labels[3].key, "s:d");
+    }
+
+    #[test]
+    fn subsubsection_nests_three_deep() {
+        // \section = 1, \subsection = 1.1, \subsubsection = 1.1.1.
+        let src = r"\begin{document}\section{A}\label{s:a}
+
+\subsection{B}\label{s:b}
+
+\subsubsection{C}\label{s:c}
+
+Text.\end{document}";
+        let num = number(src);
+        assert_eq!(num.number_for("s:a"), Some("1"));
+        assert_eq!(num.number_for("s:b"), Some("1.1"));
+        assert_eq!(num.number_for("s:c"), Some("1.1.1"));
+    }
+
+    #[test]
+    fn starred_section_consumes_no_number() {
+        // A `\section*{Unnumbered}` between two numbered sections does NOT advance the counter: the
+        // following numbered section is still 2, not 3.
+        let src = r"\begin{document}\section{First}\label{s:1}
+
+\section*{Unnumbered}
+
+\section{Third}\label{s:3}
+
+Body.\end{document}";
+        let num = number(src);
+
+        assert_eq!(num.number_for("s:1"), Some("1"), "first numbered section is 1");
+        assert_eq!(
+            num.number_for("s:3"),
+            Some("2"),
+            "the starred section consumed no number, so this is 2 (not 3)"
+        );
+        // The starred section carries no label and contributes no row.
+        assert_eq!(num.labels.len(), 2, "only the two numbered sections are numbered");
+    }
+
+    #[test]
+    fn figures_and_tables_are_independent_flat_counters() {
+        // Two labeled figures → 1 and 2; a labeled table → 1 (its OWN counter, not continuing figs).
+        let src = r"\begin{document}\begin{figure}\includegraphics{a.png}\caption{A}\label{fig:a}\end{figure}
+
+\begin{figure}\includegraphics{b.png}\caption{B}\label{fig:b}\end{figure}
+
+\begin{table}\begin{tabular}{lc}x & y\end{tabular}\caption{T}\label{tab:t}\end{table}
+
+Body.\end{document}";
+        let num = number(src);
+
+        assert_eq!(num.number_for("fig:a"), Some("1"), "first figure is 1");
+        assert_eq!(num.number_for("fig:b"), Some("2"), "second figure is 2");
+        assert_eq!(num.number_for("tab:t"), Some("1"), "the table is 1 on its OWN counter");
+
+        // Kinds are right.
+        assert_eq!(num.labels.iter().find(|l| l.key == "fig:a").map(|l| l.kind), Some(LabelKind::Figure));
+        assert_eq!(num.labels.iter().find(|l| l.key == "tab:t").map(|l| l.kind), Some(LabelKind::Table));
+    }
+
+    #[test]
+    fn unlabeled_float_still_consumes_a_number() {
+        // An UNlabeled figure between two labeled figures: the labeled ones come out 1 and 3 (the
+        // unlabeled figure silently took 2) — proving every float advances the counter.
+        let src = r"\begin{document}\begin{figure}\includegraphics{a.png}\caption{A}\label{fig:a}\end{figure}
+
+\begin{figure}\includegraphics{mid.png}\caption{Mid}\end{figure}
+
+\begin{figure}\includegraphics{c.png}\caption{C}\label{fig:c}\end{figure}
+
+Body.\end{document}";
+        let num = number(src);
+
+        assert_eq!(num.number_for("fig:a"), Some("1"), "first labeled figure is 1");
+        assert_eq!(
+            num.number_for("fig:c"),
+            Some("3"),
+            "the unlabeled figure consumed 2, so the next labeled one is 3"
+        );
+        // Only the two LABELED figures are numbered rows; the unlabeled one has no key to record.
+        assert_eq!(num.labels.len(), 2, "only labeled floats appear in the table");
+    }
+
+    #[test]
+    fn ref_number_ties_s1_resolution_to_s4_numbering() {
+        // LOAD-BEARING payoff: a `\ref{s:b}` to a `\subsection` under a `\section` prints "1.1".
+        let src = r"\begin{document}\section{A}\label{s:a}
+
+\subsection{B}\label{s:b}
+
+See Section~\ref{s:b}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+
+        // The `\ref{s:b}` resolved (S1) …
+        let r = refs.resolved.iter().find(|r| r.key == "s:b").expect("the \\ref{s:b} resolves");
+        // … and its target's rendered number (S4) is "1.1".
+        assert_eq!(
+            doc.ref_number(r),
+            Some("1.1".to_string()),
+            "\\ref{{s:b}} → its subsection's number 1.1"
+        );
+    }
+
+    #[test]
+    fn ref_number_for_undefined_key_is_none_no_panic() {
+        // A `\ref` to a key with no definition → its number is None (no panic).
+        let src = r"\begin{document}See \ref{nope} here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let refs = doc.resolve_references();
+        // The dangling ref is not in `resolved`, so we synthesize a ResolvedRef-shaped lookup via the
+        // Numbering directly: an undefined key has no number.
+        assert!(doc.number_labels().number_for("nope").is_none(), "undefined key → no number");
+        assert!(refs.resolved.is_empty(), "and it never resolved in the first place");
+    }
+
+    #[test]
+    fn empty_document_yields_empty_numbering_no_panic() {
+        // An empty document → empty numbering, no panic.
+        let num = number(r"\begin{document}\end{document}");
+        assert_eq!(num, Numbering::default(), "empty doc → empty numbering");
+        assert!(num.number_for("anything").is_none());
+    }
+
+    #[test]
+    fn lone_deep_subsection_uses_documented_missing_parent_rule() {
+        // The missing-parent rule: a document that starts with a `\subsection` (no `\section` opened)
+        // numbers it "0.1" — one honest leading `0` for the un-opened parent section.
+        let src = r"\begin{document}\subsection{Deep}\label{s:deep}
+
+Text.\end{document}";
+        let num = number(src);
+        assert_eq!(
+            num.number_for("s:deep"),
+            Some("0.1"),
+            "a lone leading \\subsection numbers as 0.1 (missing parent = 0)"
+        );
+    }
+
+    #[test]
+    fn plain_top_level_section_is_just_one() {
+        // A plain top-level `\section` (no ancestors) is "1", NOT "0.1" — it is itself the reference
+        // depth, so there is no parent to zero-fill (the counterpart of the missing-parent rule).
+        let src = r"\begin{document}\section{Top}\label{s:top}
+
+Text.\end{document}";
+        let num = number(src);
+        assert_eq!(num.number_for("s:top"), Some("1"), "a plain top-level section is 1");
+    }
+
+    #[test]
+    fn inline_and_equation_labels_are_not_numbered_yet() {
+        // An inline `\label` (deferred to S5) is NOT numbered — it does not appear in the table, and
+        // its number lookup is None (documented, total). We keep a numbered section alongside to prove
+        // the section IS numbered while the inline label is skipped.
+        let src = r"\begin{document}\section{S}\label{sec:s}
+
+The identity \label{eq:x} holds here.
+
+Text.\end{document}";
+        let num = number(src);
+        assert_eq!(num.number_for("sec:s"), Some("1"), "the section is numbered");
+        assert!(num.number_for("eq:x").is_none(), "the inline \\label is deferred to S5 (not numbered)");
+        assert_eq!(num.labels.len(), 1, "only the section label is a numbered row");
+    }
+
+    #[test]
+    fn numbering_does_not_mutate_the_tree_s1_s2_s3_unchanged() {
+        // REGRESSION: numbering is pure analysis — running it leaves S1/S2/S3 outputs byte-for-byte
+        // unchanged (the tree is never mutated).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+See Section~\ref{sec:intro} and \cite{smith2020}.
+
+\begin{thebibliography}{9}
+\bibitem{smith2020} Smith, J. Title. 2020.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let refs_before = doc.resolve_references();
+        let cites_before = doc.resolve_citations();
+
+        // Number the labels (exercises the S4 walk).
+        let num = doc.number_labels();
+        assert_eq!(num.number_for("sec:intro"), Some("1"));
+
+        // S1/S2 outputs are untouched, and S3 node lookup still agrees.
+        assert_eq!(doc.resolve_references(), refs_before, "S1 output unchanged by S4");
+        assert_eq!(doc.resolve_citations(), cites_before, "S2 output unchanged by S4");
+        assert!(
+            doc.ref_target_node(&refs_before.resolved[0]).is_some(),
+            "S3 lookup still resolves after numbering"
+        );
     }
 }

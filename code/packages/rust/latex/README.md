@@ -51,6 +51,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S1 — cross-reference resolution (label table + `\ref` binding)** | `Document::resolve_references() -> ReferenceResolution` — a pure, additive pass (no parser/fold/`walk`/`node_at`/span change) that binds each cross-reference to the `\label` that defines it, **with byte spans on both sides**. Collects the label table from hoisted section/table/figure labels (`Block::…{ label: Some(k) }`) and inline `\label{k}` (`Inline::CrossRef`); resolves the reference family `{ref, eqref, pageref}` against it → `ResolvedRef` (ref-span **and** target def-span + `LabelKind`) or `UnresolvedRef` (dangling key + ref-span); reports `Duplicate` keys with **first-def-wins**. `\cite` is a separate table, bound by S2. The static analogue of LaTeX's two-pass `.aux` machinery, binding *structure* not numbers/pages. Total & panic-free, reuses the bounded `walk` (no new recursion). | ✅ |
 | **LTXDOC03 S2 — `\cite` → bibliography binding** | `Document::resolve_citations() -> CitationResolution` — the *parallel* pass to S1 for the **citation** family, binding each `\cite` key to the `\bibitem` that defines it, **with byte spans on both sides**. Collects the bibliography table from every `\bibitem{k}` inside a `thebibliography` environment (`BibEntry { key, span }`, span = the tight `\bibitem{k}` construct), first-entry-wins with `DuplicateBib`; then, for each `\cite` (the `CITE_COMMAND` family), splits `target` on commas into individual trimmed keys and resolves each → `ResolvedCite` (the shared `\cite` `cite_span` **and** the entry's `entry_span`) or `UnresolvedCite` (dangling key + `cite_span`). A multi-key `\cite{a,b,c}` yields one record **per key**, all sharing that `\cite`'s span; `\cite[note]{k}` keeps the note out of the key. External `.bib`/BibTeX databases and citation numbering stay out of scope (in-document `thebibliography` only). Disjoint from and non-interfering with S1. Total & panic-free, reuses the bounded `walk` + a `MAX_DEPTH`-bounded env descent. | ✅ |
 | **LTXDOC03 S3 — target → `NodeRef` exposure** | The depth-add on S1+S2: both bound each target's **bytes** (a `Span`) but not the target **node**. `Document::node_for_span(span) -> Option<NodeRef>` returns the walked body node whose span **exactly equals** `span` (half-open equality of start **and** end; *equality*, not `node_at`'s containment) — or `None` for a span that is no walked node's own (empty doc, un-walked preamble/metadata, fabricated span). Thin accessors `ref_target_node(&ResolvedRef)`, `cite_target_node(&ResolvedCite)`, `label_def_node(&LabelDef)` take a resolved record and hand back the node, so a caller can read its `kind()` and — for a `Block` — descend into its children (a `\ref`→section enumerates its paragraphs; a `\ref`→figure reaches its caption). **Verified reachability:** every S1/S2 target span matches exactly one walked node (zero collisions); a `\ref`→section/figure/table yields a `NodeRef::Block`, an inline `\eqref`→`\label` a `NodeRef::Inline` (`CrossRef`), and — the once-uncertain case — a `\cite`→`\bibitem` **is** walked (an `Inline::Raw` inside the `thebibliography`), so `cite_target_node` returns `Some`, not `None`. Purely additive (S1/S2 result types keep owned `Span`s, no lifetimes; the `NodeRef` is fetched on demand); tie-break = first-in-pre-order (defensive, does not fire). Numbering + external BibTeX remain out of scope. Total & panic-free, reuses the bounded `walk`. | ✅ |
+| **LTXDOC03 S4 — document numbering (hierarchical sections + flat float counters)** | `Document::number_labels() -> Numbering` — the number a `\ref` *prints*, computed in one `walk` (LaTeX's second `.aux` pass, done statically). **Section numbers** are hierarchical with deeper-reset: a numbered `\section`…`\subparagraph` increments its depth's counter, resets deeper depths to `0`, and renders the dotted join from the top level down (`1`, `1.1`, `1.2`, `1.2.1`, `2`); a starred `\section*` (`numbered == false`) fires no counter and is skipped. **Float counters** are flat and independent: every `figure` advances a running figure counter (`1, 2, …`), every `table` its own (`1, 2, …`) — labeled *or not* (a `\label` only captures the value; an unlabeled figure between two labeled ones takes `2`). Missing-parent rule: a document that starts deep renders honest leading `0`s (a lone `\subsection` → `0.1`), a plain top-level `\section` → `1`. Returns one owned `NumberedLabel { key, kind, number }` per defined numberable label, with `number_for(key)`; `ref_number(&ResolvedRef) -> Option<String>` ties S1 resolution to S4 numbering (`\ref{sec:intro}` → `"1.2"`). Equation numbers, citation `[1]` numbers, and other counters deferred to S5+. Pure, additive, tree-unchanged; fixed 7-slot counter array (no unchecked indexing). Total & panic-free, reuses the bounded `walk`. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -79,8 +80,12 @@ reported. **S3 lifts both bindings from bytes to nodes** (`Document::node_for_sp
 `ref_target_node`/`cite_target_node`/`label_def_node`) — given a resolved reference/citation, hand
 back the actual walked `NodeRef` so a consumer can read its `kind()` and descend into a `Block`'s
 children (a verified reachability check confirmed every target — including the `\cite`→`\bibitem`
-inside `thebibliography` — is a walked node). External `.bib`/BibTeX databases and citation numbering
-remain out of scope (in-document `thebibliography` only).
+inside `thebibliography` — is a walked node). **S4 assigns the numbers a `\ref` prints**
+(`Document::number_labels` + `ref_number`) — hierarchical section numbers with deeper-reset (`1.2.1`,
+`\section*` skipped) and independent flat figure/table counters (every float advancing its counter,
+labeled or not), so `\ref{sec:intro}` resolves to `"1.2"`. External `.bib`/BibTeX databases stay out
+of scope (in-document `thebibliography` only); equation numbers, citation `[1]` numbers, and other
+counters are deferred to S5+.
 
 ## The Document layer (LTXDOC01)
 
@@ -314,6 +319,42 @@ for any genuine reference/citation; `None` is reserved for the honest edge (empt
 preamble/metadata, fabricated spans). The lookup is span-**equality** (not `node_at`'s containment),
 with a first-in-pre-order tie-break that no real target hits. The S1/S2 result types are unchanged
 (they keep owned `Span`s) — the `NodeRef` is fetched on demand, so S3 is purely additive.
+
+### Document numbering (LTXDOC03 S4)
+
+S1–S3 bind each `\ref` to its target's bytes and node, but not the **number** it prints. S4 assigns
+those numbers — LaTeX's second `.aux` pass, done in one walk over the parsed `Document`:
+hierarchical **section** numbers (`1`, `1.1`, `1.2`, `2`, with deeper-reset on each coarser step, and
+`\section*` skipped), and independent flat **figure**/**table** counters (each `1, 2, 3, …`, every
+float advancing its counter whether labeled or not). `Document::ref_number` is the payoff — the number
+a resolved `\ref` prints:
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+\subsection{Scope}\label{sec:scope}
+
+See Section~\ref{sec:scope}.\end{document}";
+let doc = parse_document(src).unwrap();
+
+// Number every defined label, then look one up:
+let num = doc.number_labels();
+assert_eq!(num.number_for("sec:intro"), Some("1"));
+assert_eq!(num.number_for("sec:scope"), Some("1.1")); // subsection under section 1
+
+// The payoff: a resolved `\ref` → the number it prints.
+let refs = doc.resolve_references();
+let r = refs.resolved.iter().find(|r| r.key == "sec:scope").unwrap();
+assert_eq!(doc.ref_number(r), Some("1.1".to_string())); // \ref{sec:scope} → "1.1"
+```
+
+`number_labels()` returns a `Numbering` of one `NumberedLabel { key, kind, number }` per defined,
+numberable label (section/figure/table). A document that starts deep applies the documented
+missing-parent rule (a lone leading `\subsection` numbers `0.1`). Inline/equation labels, citation
+`[1]` numbers, and other counters (enumerate/theorem/…) are deferred to S5+. Numbering is pure,
+additive analysis — it never mutates the tree, so the S1/S2/S3 outputs are unchanged.
 
 ## Usage
 
