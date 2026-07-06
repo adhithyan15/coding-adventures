@@ -102,7 +102,8 @@ pub use document::{
 pub use references::{
     BibEntry, CiteEntry, CitationResolution, CrossReferenceReport, Duplicate, DuplicateBib,
     LabelDef, LabelKind, NumberedLabel, Numbering, RefEntry, ReferenceResolution, ResolvedCite,
-    ResolvedRef, UnresolvedCite, UnresolvedRef, CITE_COMMAND, REF_COMMANDS,
+    ResolvedRef, UnresolvedCite, UnresolvedRef, CITE_COMMAND, EQUATION_NUMBER_PLACEHOLDER,
+    REF_COMMANDS,
 };
 pub use catcode::{catcode, Catcode};
 pub use error::{LexError, ParseError};
