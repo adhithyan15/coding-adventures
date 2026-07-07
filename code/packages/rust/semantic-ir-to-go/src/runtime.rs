@@ -1691,7 +1691,8 @@ func _sir_array_responds(name string) bool {
 	// Non-block Array methods.
 	case "length", "size", "count", "first", "last", "empty?", "include?",
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
-		"min", "max", "sum", "uniq", "flatten", "compact",
+		"min", "max", "sum", "uniq", "flatten", "compact", "zip", "rotate",
+		"to_h", "tally",
 		"join", "fetch", "to_a":
 		return true
 	// Block-taking Array/Enumerable methods.
@@ -1919,6 +1920,73 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 			}
 		}
 		return &Seq{Items: out}, true
+	case "zip":
+		// `a.zip(b, c, ...)` -> an Array of tuples `[a[i], b[i], ...]`, length =
+		// `len(a)`; a shorter operand pads with nil. Non-array operands are
+		// treated as empty (pad-only), never raising.
+		others := make([]*Seq, 0, len(args))
+		for _, o := range args {
+			if zs, ok := o.(*Seq); ok {
+				others = append(others, zs)
+			} else {
+				others = append(others, &Seq{Items: nil})
+			}
+		}
+		zipped := make([]Value, len(recv.Items))
+		for i, x := range recv.Items {
+			tuple := make([]Value, 0, len(others)+1)
+			tuple = append(tuple, x)
+			for _, o := range others {
+				if i < len(o.Items) {
+					tuple = append(tuple, o.Items[i])
+				} else {
+					tuple = append(tuple, nil)
+				}
+			}
+			zipped[i] = &Seq{Items: tuple}
+		}
+		return &Seq{Items: zipped}, true
+	case "rotate":
+		// `a.rotate(n=1)` -> elements rotated left by n (negative rotates right);
+		// the modulo wraps so any n terminates without panicking.
+		n := int64(1)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		length := int64(len(recv.Items))
+		if length == 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		shift := ((n % length) + length) % length
+		rot := make([]Value, 0, length)
+		rot = append(rot, recv.Items[shift:]...)
+		rot = append(rot, recv.Items[:shift]...)
+		return &Seq{Items: rot}, true
+	case "to_h":
+		// `[[k, v], ...].to_h` -> a Hash. Each 2-element Array contributes a pair;
+		// anything else is skipped (Ruby raises TypeError - deferred to the typed-
+		// error cascade; the never-raise floor keeps a controlled result here).
+		keys := []Value{}
+		vals := []Value{}
+		for _, x := range recv.Items {
+			if pair, ok := x.(*Seq); ok && len(pair.Items) == 2 {
+				keys = append(keys, pair.Items[0])
+				vals = append(vals, pair.Items[1])
+			}
+		}
+		return _sir_map_lit(keys, vals), true
+	case "tally":
+		// `a.tally` -> a Hash of element -> occurrence count, in first-seen order.
+		// Keys use structural value-equality (via `_sir_map_get`).
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, x := range recv.Items {
+			n := int64(0)
+			if c, ok := _sir_map_get(acc, x).(int64); ok {
+				n = c
+			}
+			_sir_map_set(acc, x, n+1)
+		}
+		return acc, true
 	case "to_a":
 		return recv, true
 	}
