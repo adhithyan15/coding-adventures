@@ -1379,6 +1379,121 @@ impl Document {
         }
         lines.join("\n")
     }
+
+    /// Resolve every `\nameref{key}` in the body to the **name** (title/caption text) of its target
+    /// (LTXDOC03 S13).
+    ///
+    /// ## What `\nameref` is, and why it needs its own pass
+    ///
+    /// The `nameref` package's `\nameref{key}` prints the *textual name* of a label's owner rather
+    /// than its number: a `\nameref{sec:intro}` typesets **"Introduction"** (the section's title), not
+    /// "Section 1"; a `\nameref{fig:p}` typesets the figure's **caption text**. It is the name-valued
+    /// sibling of `\ref` (number-valued) and `\pageref` (page-valued).
+    ///
+    /// Crucially, `"nameref"` is **not** in [`REF_COMMANDS`] — the S1 resolver deliberately binds only
+    /// `\ref`/`\eqref`/`\pageref`, so a `\nameref` appears in *neither*
+    /// [`ReferenceResolution::resolved`] nor [`ReferenceResolution::unresolved`]. (The scratch parse
+    /// confirmed this: `\nameref{sec:intro}` lowers to `Inline::CrossRef { command: "nameref", target:
+    /// "sec:intro", .. }`, and `resolve_references()` returns it in no table.) That is *why* S13 is a
+    /// brand-new method rather than a tweak to the resolver — it reads the same `\label` table S1
+    /// builds, but answers a different question (*what is it called?* not *what number is it?*), and
+    /// touches no S1–S12 output.
+    ///
+    /// ## The walk (mirrors S12's `list_of_floats` shape)
+    ///
+    /// One document-order [`Document::walk`], collecting every `Inline::CrossRef` whose `command` is
+    /// `"nameref"`. Each key is resolved against the winning label table
+    /// ([`ReferenceResolution::definition`], the same first-wins table `\ref` uses), then the target's
+    /// **name** is read from its defining node:
+    ///
+    /// - [`LabelKind::Section`] → the section's `title` inlines, flattened via
+    ///   [`flatten_inlines_to_text`] (the exact descent S12 uses for captions): `\nameref{sec:intro}`
+    ///   → `Introduction`.
+    /// - [`LabelKind::Figure`] / [`LabelKind::Table`] → the float's `\caption` text via the shared
+    ///   [`caption_text`] (so a `\nameref` and the List-of-Floats entry read the *same* caption). A
+    ///   float with no caption yields the same `(no caption)` marker `caption_text` returns.
+    /// - [`LabelKind::Equation`] / [`LabelKind::Inline`] → these carry **no** textual name (an
+    ///   equation/bare `\label` has a number, not a title), so they render the fixed marker
+    ///   `(no name)`. This is the honest boundary: `\nameref` to a nameless target is well-defined but
+    ///   has nothing to print.
+    /// - a key that **no** `\label` defines → the fixed placeholder `(undefined nameref: <key>)` (the
+    ///   name-valued analogue of LaTeX's `??`, echoing S1's honest "undefined" boundary).
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// One line per `\nameref`, in body pre-order, formatted `\nameref{<key>} -> <name>` (mirroring the
+    /// `\ref{k} -> …` arrow style of the S6 report). Lines are joined by `\n` with **no** trailing
+    /// newline. A document with **no** `\nameref` at all returns the fixed marker `(no namerefs)`.
+    ///
+    /// Concretely, for
+    /// `\section{Introduction}\label{sec:intro} … \nameref{sec:intro} … \nameref{fig:p} … \nameref{nope}`:
+    ///
+    /// ```text
+    /// \nameref{sec:intro} -> Introduction
+    /// \nameref{fig:p} -> A plot
+    /// \nameref{nope} -> (undefined nameref: nope)
+    /// ```
+    ///
+    /// ## Additive by construction
+    ///
+    /// S13 is a brand-new method that reads existing blocks and the S1 label table; it mutates nothing
+    /// and changes no S1–S12 output (`\nameref` was already parsed into `Inline::CrossRef` and already
+    /// ignored by the resolver). Like S11/S12 it is a method the caller invokes directly (real LaTeX
+    /// gates `\nameref` on loading the `nameref` package, which is not modelled here).
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; reuses the bounded
+    /// [`Document::walk`], the S1 [`Document::resolve_references`] table, and the S3
+    /// [`Document::label_def_node`] accessor. Borrows `self` immutably and returns owned `String` data.
+    pub fn resolve_namerefs(&self) -> String {
+        // The winning label table `\ref` resolves against — first definition of each key wins. We
+        // build it once and share it across every `\nameref` lookup below.
+        let refs = self.resolve_references();
+
+        let mut lines: Vec<String> = Vec::new();
+        for node in self.walk() {
+            // Only an inline `\nameref{key}` cross-ref carries a nameref key.
+            let NodeRef::Inline(Inline::CrossRef { command, target, .. }) = node else {
+                continue;
+            };
+            if command != "nameref" {
+                continue; // A `\ref`/`\eqref`/`\pageref`/`\cite`/`\label` is not a nameref.
+            }
+
+            // Resolve the key to its winning definition, then read that node's textual name.
+            let name = match refs.definition(target) {
+                None => format!("(undefined nameref: {target})"),
+                Some(def) => self.nameref_name(def),
+            };
+            lines.push(format!("\\nameref{{{target}}} -> {name}"));
+        }
+
+        if lines.is_empty() {
+            return "(no namerefs)".to_string();
+        }
+        lines.join("\n")
+    }
+
+    /// The **name text** a `\nameref` prints for a resolved label definition (LTXDOC03 S13 helper).
+    ///
+    /// Given the winning [`LabelDef`], reach its defining node via [`Document::label_def_node`] (the S3
+    /// span→node accessor) and read the target's name:
+    ///
+    /// - a [`Block::Section`] → its `title` inlines flattened by [`flatten_inlines_to_text`];
+    /// - a [`Block::Figure`]/[`Block::Table`] → its `\caption` via [`caption_text`];
+    /// - anything else (an equation/inline label, or the honest edge where the span is not a walked
+    ///   node) → the fixed `(no name)` marker.
+    ///
+    /// Kept separate so the walk in [`Document::resolve_namerefs`] stays a flat collect + render.
+    /// Pure and total: no panic, one owned `String` out.
+    fn nameref_name(&self, def: &LabelDef) -> String {
+        match self.label_def_node(def) {
+            Some(NodeRef::Block(Block::Section { title, .. })) => flatten_inlines_to_text(title),
+            Some(NodeRef::Block(Block::Figure { caption, .. }))
+            | Some(NodeRef::Block(Block::Table { caption, .. })) => caption_text(caption),
+            // An equation/inline label (or a non-walked span) has a number, not a name.
+            _ => "(no name)".to_string(),
+        }
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -1393,9 +1508,25 @@ fn caption_text(caption: &Option<crate::document::Caption>) -> String {
     let Some(cap) = caption else {
         return "(no caption)".to_string();
     };
-    // Flatten the caption inlines to visible text. Composite font inlines recurse into their
-    // wrapped content; math/cross-ref/accent/other inlines contribute no plain text (matching the
-    // caption-reaching test's text view).
+    flatten_inlines_to_text(&cap.content)
+}
+
+/// Flatten a run of inlines to their **visible plain text**, trimmed (LTXDOC03 S12/S13).
+///
+/// The single descent shared by [`caption_text`] (S12, float captions) and
+/// [`Document::resolve_namerefs`] (S13, section titles) so both name-rendering paths agree on
+/// exactly which inlines contribute text and how:
+///
+/// - [`Inline::Text`] / [`Inline::Code`] → their string verbatim;
+/// - [`Inline::Space`] → a single ASCII space;
+/// - [`Inline::Strong`] / [`Inline::Emph`] / [`Inline::Styled`] → **recurse** into the wrapped
+///   content (a `\textbf{Intro}` heading reads as `Intro`, dropping only the font wrapper);
+/// - every other inline (math, cross-ref, accent, raw) contributes **no** plain text.
+///
+/// Leading/trailing whitespace is trimmed, so `\caption{ x }` and `\section{ Intro }` both read as
+/// their tight text. Returns owned `String` data (one allocation for the accumulator), so the
+/// result outlives any borrow of the source.
+fn flatten_inlines_to_text(inlines: &[Inline]) -> String {
     fn flatten(inlines: &[Inline], out: &mut String) {
         for i in inlines {
             match i {
@@ -1409,7 +1540,7 @@ fn caption_text(caption: &Option<crate::document::Caption>) -> String {
         }
     }
     let mut s = String::new();
-    flatten(&cap.content, &mut s);
+    flatten(inlines, &mut s);
     s.trim().to_string()
 }
 
@@ -3574,5 +3705,90 @@ See Section~\ref{s:i} and \cite{b}.
 Body text with no floats.\end{document}";
         let doc = parse_document(src).expect("parse");
         assert_eq!(doc.list_of_floats(), "(no floats)");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S13 — `\nameref` resolution to a target's title/caption text.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s13_resolves_section_and_figure_names() {
+        // A `\nameref{sec:intro}` → the section's TITLE ("Introduction"); a `\nameref{fig:p}` → the
+        // figure's CAPTION text ("A plot"). Both render `\nameref{key} -> <name>`, in body order.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+See \nameref{sec:intro} and \nameref{fig:p}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+    }
+
+    #[test]
+    fn s13_undefined_key_renders_placeholder() {
+        // A `\nameref{nope}` whose key no `\label` defines renders the fixed `(undefined nameref: …)`
+        // placeholder — the name-valued analogue of LaTeX's `??`. A resolved section name precedes it,
+        // proving the two branches coexist in one deterministic report.
+        let src = r"\begin{document}\section{Methods}\label{sec:m}
+
+See \nameref{sec:m} and \nameref{nope}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:m} -> Methods\n\\nameref{nope} -> (undefined nameref: nope)"
+        );
+    }
+
+    #[test]
+    fn s13_equation_and_inline_targets_have_no_name() {
+        // A `\nameref` to an EQUATION label (a number, not a title) and to a bare inline `\label`
+        // (likewise nameless) both render the fixed `(no name)` marker — the honest boundary.
+        let src = r"\begin{document}\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+Text \label{marker}. See \nameref{eq:e} and \nameref{marker}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{eq:e} -> (no name)\n\\nameref{marker} -> (no name)"
+        );
+    }
+
+    #[test]
+    fn s13_no_namerefs_returns_marker() {
+        // A document with `\ref` but NO `\nameref` returns the fixed `(no namerefs)` marker — a plain
+        // `\ref` is not a nameref, so it never appears in this report.
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+See Section~\ref{s:i}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolve_namerefs(), "(no namerefs)");
+    }
+
+    #[test]
+    fn s13_is_additive_leaves_s1_s12_outputs_unchanged() {
+        // S13 reads the document but changes nothing: `\nameref` is absent from BOTH resolved and
+        // unresolved ref tables (it is not a REF_COMMAND), and the S12 list_of_floats is unaffected.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+See Section~\ref{sec:intro}, \nameref{sec:intro}, and \nameref{fig:p}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        let refs = doc.resolve_references();
+        // Exactly ONE resolved ref (the `\ref{sec:intro}`); the two `\nameref`s are in neither table.
+        assert_eq!(refs.resolved.len(), 1, "only the \\ref resolves; \\namerefs are not REF_COMMANDS");
+        assert_eq!(refs.resolved[0].command, "ref");
+        assert!(refs.unresolved.is_empty(), "no undefined refs; \\namerefs are not tabled here either");
+
+        // S12 output is unchanged by S13's presence.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+
+        // And S13 itself renders both namerefs correctly.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
     }
 }

@@ -2,6 +2,46 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.49.0] — 2026-07-07
+
+### Added — `\nameref` resolution to a target's name text (LTXDOC03 S13)
+
+A **new** public method `Document::resolve_namerefs(&self) -> String` that resolves every
+`\nameref{key}` in the body to the **name** (title/caption text) of its target — the `nameref`
+package's name-valued sibling of `\ref` (number-valued) and `\pageref` (page-valued). A
+`\nameref{sec:intro}` yields the section's title (`Introduction`), not "Section 1"; a
+`\nameref{fig:p}` yields the figure's caption text. Every S1–S12 output is left **byte-for-byte
+unchanged**; S13 is purely additive.
+
+- **`\nameref` is not a `REF_COMMAND`.** The S1 resolver binds only `\ref`/`\eqref`/`\pageref`, so a
+  `\nameref` appears in *neither* the resolved *nor* the unresolved reference table. Confirmed by an
+  AST probe: `\nameref{sec:intro}` lowers to `Inline::CrossRef { command: "nameref", target:
+  "sec:intro", .. }`, and `resolve_references()` returns it in no table. That is *why* S13 is a brand
+  new method rather than a tweak to `REF_COMMANDS` — it reads the same `\label` table S1 builds but
+  answers a different question (*what is it called?*), touching no existing output.
+- **One line per `\nameref`, in body order, formatted `\nameref{<key>} -> <name>`** (mirroring the
+  S6 `\ref{k} -> …` arrow). A single document-order `walk()` collects every `nameref` cross-ref, then
+  each key is resolved against the winning label table (`ReferenceResolution::definition`, the same
+  first-wins table `\ref` uses) and the target's name read from its defining node via the S3
+  `label_def_node` accessor.
+- **Name text per kind.** A `Section` target → its `title` inlines flattened; a `Figure`/`Table`
+  target → its `\caption` via the S12 `caption_text` helper (so a `\nameref` and the List-of-Floats
+  entry read the *same* caption). An `Equation`/`Inline` target carries no name (a number, not a
+  title) → the fixed marker `(no name)`. An undefined key → `(undefined nameref: <key>)`. A document
+  with no `\nameref` at all → `(no namerefs)`.
+- **Shared flatten helper.** S12's caption-flattening descent (`Text`/`Code` verbatim, `Space` → one
+  space, `Strong`/`Emph`/`Styled` recursed, trimmed) is factored into a module-level
+  `flatten_inlines_to_text(&[Inline]) -> String`, reused by both `caption_text` (captions) and
+  `resolve_namerefs` (section titles) so the two name-rendering paths can never drift.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; reuses the bounded `walk()`,
+  the S1 `resolve_references` table, and the S3 `label_def_node` accessor. Borrows `self` immutably,
+  returns owned `String`.
+
+Five `s13_*` tests pin the exact rendered strings: section+figure names, an undefined-key
+placeholder, equation/inline `(no name)`, the empty `(no namerefs)` marker, and an additivity
+check that `\namerefs` stay out of the resolved/unresolved ref tables and leave `list_of_floats`
+unchanged.
+
 ## [0.48.0] — 2026-07-07
 
 ### Added — List of Figures / List of Tables index (LTXDOC03 S12)

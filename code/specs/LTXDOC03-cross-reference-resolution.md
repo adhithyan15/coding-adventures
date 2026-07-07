@@ -1083,3 +1083,77 @@ float-free document returning `(no floats)`). All prior S1–S11 tests pass unch
 latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green;
 `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new
 dependencies.
+
+## 19. S13 — `\nameref` resolution to a target's name (`resolve_namerefs`)
+
+### 19.1 Motivation
+
+`\ref` prints a target's **number** ("Section 1"), `\pageref` prints its **page**. The `nameref`
+package's `\nameref{key}` prints its **name** — a section's *title*, a float's *caption text*. It is the
+name-valued sibling of the number- and page-valued references S1–S12 already model. S13 answers the
+question `\nameref` asks: *what is this label's target called?*
+
+### 19.2 Why a new method, not a change to `REF_COMMANDS`
+
+`"nameref"` is deliberately **not** in `REF_COMMANDS = ["ref", "eqref", "pageref"]`. An AST probe
+confirms `\nameref{sec:intro}` lowers to `Inline::CrossRef { command: "nameref", target: "sec:intro",
+note: None, span }` — the key is fully recoverable — and that `resolve_references()` returns it in
+**neither** the resolved **nor** the unresolved table (it is not a `REF_COMMAND`, so the S1 resolver
+skips it entirely). Adding `"nameref"` to `REF_COMMANDS` would change S1–S12 output (a `\nameref` would
+suddenly appear in the resolved/unresolved tables and the S6 report), violating additivity. So S13 is a
+**new public method** that reads the same S1 `\label` table but answers a *different* question, leaving
+every S1–S12 output — including `to_latex()`'s round-trip fixed point — byte-for-byte unchanged.
+
+### 19.3 What S13 does — `Document::resolve_namerefs(&self) -> String`
+
+A single document-order walk (`Document::walk`) collects every `Inline::CrossRef` whose `command` is
+`"nameref"`. Each key is resolved against the **winning** label table (`ReferenceResolution::definition`,
+the same first-definition-wins table `\ref` resolves against, built once via `resolve_references`), then
+the target's **name** is read from its defining node (reached by the S3 `label_def_node` accessor):
+
+- a `Block::Section` target → its `title` inlines flattened to visible text via a module-level
+  `flatten_inlines_to_text(&[Inline]) -> String` (`Text`/`Code` verbatim, `Space` → one space,
+  `Strong`/`Emph`/`Styled` recursed, trimmed);
+- a `Block::Figure`/`Block::Table` target → its `\caption` text via the **shared** `caption_text`
+  helper (so a `\nameref` and the S12 List-of-Floats entry read the *same* caption; an uncaptioned
+  float yields the `(no caption)` marker `caption_text` returns);
+- a `LabelKind::Equation`/`LabelKind::Inline` target → the fixed marker `(no name)` (an equation or a
+  bare `\label` has a *number*, not a title — the honest boundary);
+- a key that **no** `\label` defines → the fixed placeholder `(undefined nameref: <key>)` (the
+  name-valued analogue of LaTeX's `??`).
+
+To keep S12's caption descent and S13's title descent from ever diverging, the flatten logic previously
+nested inside `caption_text` is factored into the module-level `flatten_inlines_to_text`, which **both**
+`caption_text` and `resolve_namerefs` call.
+
+### 19.4 Assembly rules
+
+- One line per `\nameref`, in body pre-order, formatted `\nameref{<key>} -> <name>` (mirroring the S6
+  `\ref{k} -> …` arrow).
+- Lines are joined by `\n` with **no** trailing newline.
+- A document with **no** `\nameref` at all returns the fixed marker `(no namerefs)`.
+
+Example (a section, a captioned figure, and an undefined key):
+
+```text
+\nameref{sec:intro} -> Introduction
+\nameref{fig:p} -> A plot
+\nameref{nope} -> (undefined nameref: nope)
+```
+
+### 19.5 Public API (added in S13)
+
+One new method: `Document::resolve_namerefs(&self) -> String`, plus a private `nameref_name(&LabelDef)`
+helper and the module-level `flatten_inlines_to_text` (factored out of `caption_text`). No existing
+type, field, counter, or signature changes; `REF_COMMANDS` is **unchanged**; no AST or grammar change;
+no new dependency, no `unsafe`, no I/O.
+
+### 19.6 Verification (S13)
+
+`cargo test -p latex` green (5 new S13 tests: a section+figure resolving to `Introduction` / `A plot`;
+an undefined key rendering `(undefined nameref: nope)`; an equation + inline label both rendering
+`(no name)`; a `\ref`-only document returning `(no namerefs)`; and an additivity check that the two
+`\namerefs` stay out of the resolved/unresolved ref tables and `list_of_floats` is unchanged). All prior
+S1–S12 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
+`cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
+`cargo fmt`, no grammar regen, no new dependencies.
