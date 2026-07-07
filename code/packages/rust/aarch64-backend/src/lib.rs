@@ -175,6 +175,7 @@ impl RegAlloc {
 // | `getchar`     | `int32_t __twig_getchar(void)`                | yes     |
 // | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
 // | `input_i64`   | `int64_t __twig_input_i64(void)`              | yes     |
+// | `input_str`   | `int64_t __twig_input_str(void)` (E4-dyn str handle) | yes |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
 // | `alloc_bytes` | `int64_t __twig_alloc_bytes(int64_t n)`       | yes     |
 // | `lispy_cons`  | `uint64_t __twig_lispy_cons(uint64_t, uint64_t)` | yes  |
@@ -195,6 +196,11 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
     BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
+    // E4-dyn: BASIC string `INPUT A$` — reads a whole line as a runtime string.
+    // Same 0-arg / returns-i64 shape as `input_i64`; the returned i64 is the
+    // handle (base address) of a `[i64 len][bytes]` heap block, carried in x0
+    // like any other pointer-as-i64 (`alloc_bytes`/`str_eq`), so no new lowering.
+    BuiltinSig { name: "input_str",    n_args: 0, returns: true  },
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },

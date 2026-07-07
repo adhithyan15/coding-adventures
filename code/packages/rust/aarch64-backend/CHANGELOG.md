@@ -1,5 +1,14 @@
 # Changelog — `aarch64-backend`
 
+## 0.21.0 — 2026-07-07 — E4-dyn: `input_str` in V1_BUILTINS (BASIC string INPUT)
+
+Adds `input_str` (BASIC string `INPUT A$`) to `V1_BUILTINS` as a
+0-arg/returns-i64 entry — the exact shape of `input_i64`. The helper
+`__twig_input_str` returns an i64 handle to a `[i64 len][bytes]` heap block; the
+pointer rides `x0` like any `alloc_bytes`/`str_eq` result, so **no codegen
+change** — only the table entry. Run-verified via `lang-aot`'s `lang_matrix`
+(`10 INPUT A$ / 20 PRINT A$ / 30 END`, stdin `"OK"` → `OK`).
+
 ## 0.20.0 — 2026-07-01 — Large-frame split prologue/epilogue (AL-multidim)
 
 **Problem**: ALGOL 60 programs that use a 2D array emit many IIR variables
