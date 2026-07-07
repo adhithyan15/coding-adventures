@@ -57,6 +57,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S7 — equation-label lifting** | `Block::DisplayMath` gains a `label: Option<String>` and `LabelKind` gains an `Equation` variant. For a **non-starred** display-math environment (`equation`/`align`/`gather`/`multline`/`eqnarray` — not the starred forms), the D5 lowering now **lifts** the `\label{key}` out of the env body onto the block (removing it from `source`, no duplication) and registers it as a real `LabelKind::Equation` definition in the same pass as section/figure/table labels. So an `\eqref{eq:e}`/`\ref{eq:e}` to an in-equation label now **resolves** and is **included** in the S6 report (`\ref{eq:e} -> Equation ?`) instead of being omitted. The equation **number** (`\theequation`) is deferred to S8: the report carries the placeholder `EQUATION_NUMBER_PLACEHOLDER` (`"?"`). `to_latex()` re-emits a lifted-label equation as `\begin{equation}…\label{…}\end{equation}` so the round-trip fixed point holds. Starred forms and `\[…\]`/`$$…$$` keep `label: None`. Pure, additive; total & panic-free. | ✅ |
 | **LTXDOC03 S8 — equation numbering** | `Counters` gains a flat `equation: u32` field and a `step_equation()` method (mirroring `step_figure`/`step_table` — pre-increment, saturating, one monotonic run **independent** of section/figure/table). In the `Block::DisplayMath { label: Some(key), .. }` arm of `number_labels`, S7's placeholder is replaced with `counters.step_equation().to_string()`, so a lifted equation label now carries a **real** sequential number in document order (`1`, `2`, …). The S6 report prints `\ref{eq:e} -> Equation 1` (was `Equation ?`). Equation numbering is independent of the section/figure/table counters. **Limitation:** because `Block::DisplayMath` carries no `numbered` flag (the D5 lowering sets `label: None` for both starred envs and `\[…\]`/`$$…$$` islands), only **labelled** equations step the counter — an unlabelled numbered equation between two labelled ones is not yet counted (needs an AST change, deferred). `\eqref` parenthesisation (`(1)` vs `1`) is also deferred to a later slice; S8 is counter-only. Pure, additive, tree-unchanged; total & panic-free. | ✅ |
 | **LTXDOC03 S9 — `\eqref` parenthesisation** | `CrossReferenceReport::to_plain_text` now mirrors amsmath's `\eqref` for the one case that matters: a resolved reference whose `command == "eqref"` **and** `kind == LabelKind::Equation` renders `\eqref{eq:e} -> Equation (1)` — the `\eqref` spelling is kept and the number is **parenthesised**. Every other reference — all `\ref`, all `\pageref`, and any `\eqref` to a **non-equation** kind — is byte-for-byte unchanged from S8: canonical `\ref` prefix, bare number (`\ref{sec:intro} -> Section 1.2`). `RefEntry.command` (the surface spelling) was already retained by S1, so S9 is a pure rendering split in one `format!` — no AST change, no new field, no re-numbering; `to_latex()` stays a fixed point. Pure, additive; total & panic-free. | ✅ |
+| **LTXDOC03 S10 — distinct `\pageref` rendering** | `CrossReferenceReport::to_plain_text` gains a **third** rendering branch so a resolved `\pageref` no longer renders identically to a `\ref`. A `\pageref{key}` asks "what **page** is the target on" — a different question from `\ref`'s "what **number** is the target" — but the crate has **no page model**, so it cannot compute a real page number. A resolved reference whose `command == "pageref"` (to **any** target kind) now renders `\pageref{sec:i} -> page ?` — the `\pageref` spelling is kept and the kind/number are replaced by the fixed literal placeholder `page ?` (the `?` mirrors LaTeX's own `??` for an unresolved page reference; it means "page number not modelled", not the kind, not the number). Branch precedence: (1) `\eqref` to Equation → parenthesised (S9); (2) `\pageref` any kind → `page ?` (S10); (3) else → `\ref{key} -> Kind N` (S8). So `\ref` and `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines change. Pure rendering branch — no AST change, no re-numbering, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -525,10 +526,41 @@ assert_eq!(
 );
 ```
 
-Only `command == "eqref"` **and** `kind == LabelKind::Equation` diverges: all `\ref`, all `\pageref`,
-and any `\eqref` to a non-equation kind still render with the canonical `\ref` prefix and a bare number
-(`\ref{sec:intro} -> Section 1.2`). `RefEntry.command` (the surface spelling) was already retained by
+Only `command == "eqref"` **and** `kind == LabelKind::Equation` diverges under S9: all `\ref` and any
+`\eqref` to a non-equation kind still render with the canonical `\ref` prefix and a bare number
+(`\ref{sec:intro} -> Section 1.2`). (`\pageref` diverges separately under S10, below.)
+`RefEntry.command` (the surface spelling) was already retained by
 S1, so S9 is a pure rendering split — no AST change, no re-numbering, `to_latex()` still a fixed point.
+
+### distinct `\pageref` rendering (LTXDOC03 S10)
+
+A `\pageref{key}` asks "what **page** is the target on" — a fundamentally different question from
+`\ref`'s "what **number** is the target". Through S9 the report conflated the two: a resolved
+`\pageref` rendered **identically** to a `\ref` (`\ref{sec:i} -> Section 1`). The crate has **no page
+model**, so it cannot compute a real page number, but S10 renders the page family *honestly and
+distinctly*: a resolved `\pageref` (to **any** target kind) keeps its `\pageref` spelling and prints
+the fixed literal placeholder `page ?` (the `?` mirrors LaTeX's own `??` for an unresolved page
+reference — it means "page number not modelled", not the kind, not the number).
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:i} \ref{sec:i} \pageref{sec:i}\end{document}";
+let doc = parse_document(src).unwrap();
+
+// The `\ref` is unchanged (bare number); the `\pageref` now diverges to the honest placeholder.
+assert_eq!(
+    doc.cross_reference_report().to_plain_text(),
+    "\\ref{sec:i} -> Section 1\n\
+     \\pageref{sec:i} -> page ?",
+);
+```
+
+Branch precedence in the render loop is (1) `\eqref` to Equation → parenthesised (S9); (2) `\pageref`
+any kind → `page ?` (S10); (3) else → `\ref{key} -> Kind N` (S8). A `\pageref` ignores the
+eqref/Equation special-case entirely — a `\pageref` to an equation still renders `page ?`, never
+`Equation (1)`. So `\ref` and `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines
+change. Pure rendering branch — no AST change, no re-numbering, `to_latex()` still a fixed point.
 
 ## Usage
 

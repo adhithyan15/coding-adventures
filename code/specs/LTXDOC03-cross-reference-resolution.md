@@ -811,10 +811,10 @@ kind* already carried by `RefEntry`:
 - **`\eqref` to an equation** — a `RefEntry` with `command == "eqref"` **and**
   `kind == LabelKind::Equation` renders `\eqref{eq:e} -> Equation (1)`: the `\eqref` spelling is kept
   and the number is **parenthesised**, mirroring how amsmath's `\eqref` typesets `(1)`.
-- **Everything else** — all `\ref`, all `\pageref`, and any `\eqref` to a **non-equation** kind —
-  renders exactly as through S8: the canonical `\ref` prefix and a **bare** number,
-  `\ref{sec:intro} -> Section 1.2`. The `\ref` prefix names the *binding*, not the surface command (a
-  `\pageref` still shows as `\ref`), unchanged.
+- **Everything else** — all `\ref`, all `\pageref` (superseded by S10, §16), and any `\eqref` to a
+  **non-equation** kind — renders exactly as through S8: the canonical `\ref` prefix and a **bare**
+  number, `\ref{sec:intro} -> Section 1.2`. The `\ref` prefix names the *binding*, not the surface
+  command, unchanged.
 
 Only the one amsmath case diverges; the else-branch is byte-for-byte the S8 line. The `\cite`,
 dangling-ref, dangling-cite, and empty-report branches of `to_plain_text` are untouched.
@@ -847,6 +847,83 @@ a sibling `\ref` to the same equation stays bare (`\eqref{eq:e} -> Equation (1)`
 unchanged from S8); two `\eqref`s to two equations number sequentially and each parenthesises
 (`\eqref{eq:a} -> Equation (1)` then `\eqref{eq:b} -> Equation (2)`) — plus the updated S7 report test,
 whose first (`\eqref`) line now asserts `\eqref{eq:e} -> Equation (1)`).
+`cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
+`cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
+`cargo fmt`, no grammar regen, no new dependencies.
+
+## 16. S10 — distinct `\pageref` rendering
+
+### 16.1 The gap S10 closes
+
+S9 (§15) split the report rendering so an `\eqref` to an equation parenthesises its number, but it
+left the **page** reference family conflated with the **number** reference family. A `\pageref{key}`
+asks a fundamentally different question from `\ref{key}`: `\ref` asks "what **number** is the target"
+(a section number, figure number, …), while `\pageref` asks "what **page** is the target printed on".
+LaTeX resolves these against two different values in the `.aux` `\newlabel` record. Through S9 the S6
+report ignored the distinction and rendered a resolved `\pageref` **identically** to a `\ref` —
+`\ref{key} -> Kind number` — so `\pageref{sec:i}` printed `\ref{sec:i} -> Section 1`, silently
+answering the *number* question for a command that asked the *page* question. S10 closes that gap.
+
+### 16.2 What S10 does — an honest page placeholder
+
+The crate has **no page model**: it parses and numbers *structure*, never lays out pages, so it cannot
+compute a real page number for any label. S10 therefore does not invent one — it renders the page
+family **distinctly and honestly** with a fixed placeholder. S10 is a **rendering-only** change
+confined to `CrossReferenceReport::to_plain_text` (§12.4), adding a **third** branch to the
+resolved-refs loop, tried in this precedence order:
+
+1. **`\eqref` to an equation** — `command == "eqref"` **and** `kind == LabelKind::Equation` renders
+   `\eqref{eq:e} -> Equation (1)` (S9, §15.2, unchanged).
+2. **`\pageref` to any kind** — a `RefEntry` with `command == "pageref"` (regardless of target kind —
+   Section/Table/Figure/Equation/Inline) renders `\pageref{sec:i} -> page ?`: the `\pageref` spelling
+   is kept and the kind/number are replaced by the fixed literal placeholder `page ?`. The `?` mirrors
+   LaTeX's own `??` for an unresolved page reference (and the S7 number-placeholder `"?"`): it means
+   "page number not modelled" — **not** the kind, **not** the number. Because a page reference is
+   about *location*, not *identity*, the target's kind and number are irrelevant to this rendering.
+3. **Everything else** — all `\ref` and any `\eqref` to a **non-equation** kind — renders exactly as
+   through S8: the canonical `\ref` prefix and a **bare** number, `\ref{sec:intro} -> Section 1.2`.
+
+Precedence matters. Branch (1) before (2) is moot (an `\eqref` is never a `\pageref`), but (2) before
+(3) is what makes **every** `\pageref` diverge from the S8 `\ref` line. So `\ref` and `\eqref` outputs
+are byte-for-byte unchanged from S9; **only** `\pageref` lines change (previously `\ref{key} -> Kind
+N`, now `\pageref{key} -> page ?`). The `\cite`, dangling-ref, dangling-cite, and empty-report
+branches of `to_plain_text` are untouched.
+
+### 16.3 `RefEntry.command` was already retained by S1
+
+As with S9, no struct or AST change is needed. `RefEntry` has carried `pub command: String` (the
+surface spelling `"ref"` / `"eqref"` / `"pageref"`) since S1, and `cross_reference_report` (§12) has
+always populated it. S10 simply reads `command == "pageref"` — a field it had been folding into the
+else-branch — so it is a pure rendering branch in one loop, no new field, no numbering change, no AST
+walk.
+
+### 16.4 Additive, and `to_latex()` unchanged
+
+S10 touches only report rendering, not the tree: `to_latex()` remains a fixed point (S10 does not
+touch the AST at all). Every S1–S9 output byte is unchanged **except** the one thing S10 is about — a
+resolved `\pageref` line, which now reads `\pageref{key} -> page ?` instead of `\ref{key} -> Kind N`.
+
+### 16.5 What is DEFERRED (honest boundary)
+
+A **real page number** is out of scope: it requires a page-layout model (line/page breaking, float
+placement, `\pagebreak`, class geometry) the crate does not have and does not intend to add at this
+rung. The `page ?` placeholder is the honest terminus for the page family until such a model exists,
+exactly as `Equation ?` was S7's honest terminus before S8 wired the equation counter.
+
+### 16.6 Public API (added in S10)
+
+No public type or signature changes: `RefEntry`, `CrossReferenceReport`, `cross_reference_report`, and
+`to_plain_text` keep their existing shapes. The only observable change is the rendered text of a
+resolved `\pageref` line (now `\pageref{key} -> page ?`). The change is **additive** and byte-for-byte
+compatible with S1–S9 except for that one line.
+
+### 16.7 Verification (S10)
+
+`cargo test -p latex` green (3 new S10 tests: a `\pageref` to a labelled section renders
+`\pageref{sec:i} -> page ?` (not `\ref{sec:i} -> Section 1`); a doc with both `\ref` and `\pageref` to
+the same section renders `\ref{sec:i} -> Section 1` then `\pageref{sec:i} -> page ?`, proving `\ref` is
+unchanged and `\pageref` now diverges; a `\pageref` to a labelled equation still renders
+`\pageref{eq:e} -> page ?`, proving `\pageref` ignores the S9 eqref/Equation special-case).
 `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
 `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
 `cargo fmt`, no grammar regen, no new dependencies.
