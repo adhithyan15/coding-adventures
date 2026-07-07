@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.17.0 — Ruby Symbol method-catalog parity
+
+Adds a hand-implemented Ruby Symbol catalog (`symbolMethod`) to the emitted JS
+runtime for `Sym` receivers, dispatched by an **explicit `switch` on the
+source-derived name** (never `recv[name]`) ahead of the native allowlist. This
+completes JS's core method-dispatch surface (Numeric + String + Hash + Symbol).
+
+Methods: `to_s` (name string), `to_sym` (self), `inspect` (`:`-prefixed form),
+`length`/`size` (rune count), `empty?`, `upcase`/`downcase`/`capitalize`
+(Ruby-faithfully returning a **new Symbol**, e.g. `:foo.upcase == :FOO`), and
+`to_proc` (a Closure that dispatches `.name(rest…)` on its first argument —
+routed back through `callMethod`'s allowlist/method-table gate, never
+`recv[name]`, per the C3 RCE discipline). `respond_to?` is kept honest via
+`SYMBOL_METHODS`.
+
+Verified end-to-end under Node (`run_with_node`): the emitted JS executes and
+matches Ruby-faithful output for the catalog.
+
+(Stacked on the v0.16.0 display-convention change.)
+
 ## 0.16.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 Mirrors the Rust/Go backends' display-convention increment (SIR

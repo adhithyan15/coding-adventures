@@ -2366,3 +2366,33 @@ fn twig_source_keeps_lisp_booleans() {
         assert_eq!(stdout, "#t\n#f", "non-Ruby source keeps the default Lisp #t/#f");
     }
 }
+
+// ── Ruby Symbol method catalog (hand-implemented, explicit dispatch) ──
+//
+// Exercises the `symbolMethod` catalog end-to-end under Node.  Ruby's case
+// methods return a new SYMBOL (`:foo.upcase == :FOO`), `to_s` a string,
+// `inspect` the `:`-prefixed form — all via the explicit Sym switch (never
+// `recv[name]`).
+fn sym(name: &str) -> Expr {
+    Expr::SymLit { name: name.into(), span: sp() }
+}
+
+#[test]
+fn symbol_catalog_methods() {
+    let stmts = vec![
+        print(method(sym("hello"), "to_s", vec![])),       // hello
+        print(method(sym("hello"), "upcase", vec![])),     // HELLO (a Symbol → bare name)
+        print(method(sym("hello"), "length", vec![])),     // 5
+        print(method(sym("hello"), "inspect", vec![])),    // :hello
+        print(method(sym("FOO"), "downcase", vec![])),     // foo
+        print(method(sym("hello"), "capitalize", vec![])), // Hello
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Symbols, Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "symcatalog") {
+        assert_eq!(stdout, "hello\nHELLO\n5\n:hello\nfoo\nHello");
+    }
+}
