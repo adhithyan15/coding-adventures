@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.9] - 2026-07-07
+
+### Added — CLOC12.170 PR2: object spread `{...o}` flows through the SIMPLE pipeline (gap-SpreadProperty)
+
+With the `javascript-parser` bridge now converting `{...o}` →
+`ObjectMember::Spread` (v0.34.0), a file containing an object spread no longer
+falls back to WHITESPACE_ONLY — it flows through the full SIMPLE pipeline
+(parser → typed-AST bridge → passes → emitter). New end-to-end diff fixture
+`tests/diff/simple-objspread/` (`f({...o, x: 1 + 2});` → `f({...o,x:3});`): the
+spread `...o` round-trips as the first member — proving the bridge produced a
+real `ObjectMember::Spread` node — while the sibling member value `1 + 2` folds
+to `3`, proving the passes walked *into* the object members rather than
+re-emitting the source verbatim. Version bump only; no CLI-surface change.
+(gap-SpreadProperty)
+
 ## [0.234.8] - 2026-07-07
 
 ### Added — CLOC12.169 PR2: `import(x)` flows through the SIMPLE pipeline (gap-170)
