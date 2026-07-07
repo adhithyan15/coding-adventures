@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 94 \u2014 toxin combined-clearance total from four stated quantities (a NEW panel: toxicology / combined-clearance). From a renal fraction and a hepatic fraction that add into the organ sum and a perfusion rate and a filtration rate that add into the flow sum, compute the combined clearance ((renal_fraction+hepatic_fraction)*(perfusion_rate+filtration_rate)), the organ sum (renal_fraction+hepatic_fraction), or the flow sum (perfusion_rate+filtration_rate). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A PRODUCT OF TWO SUMS (a+b)*(c+d) (add a and b, add c and d, multiply the two sums, so (a+b)*(c+d) = ((a+b)*(c+d)); this COMPLETES the binomial-product family \u2014 rung-89 (a+b)*(c-d) was sum-times-difference, rung-90 (a-b)*(c-d) difference-times-difference, and the sum-times-sum corner was never shipped; no prior shape multiplied TWO independent sums, e.g. rung-84 (a+b)*c-d multiplied one sum by a bare factor and rung-34 a*b+c*d added two products) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via + and * \u2014 no constant leaks, and neither the organ sum, the flow sum, nor any total figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: multiplying the parallel pairs and dropping the cross terms (a*c+b*d, the classic FOIL error) and multiplying the diagonal pairs (a*d+b*c, a wrong pairing). The core confusion tested is that (a+b)*(c+d) is ((a+b)*(c+d)), not a*c+b*d and not a*d+b*c.",
+  "items": [
+    {
+      "id": "r94tox-01",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 3, all times a perfusion rate of 4 plus a filtration rate of 5. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(3)\nobserve perfusion_rate(4)\nobserve filtration_rate(5)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r94tox-02",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 3, all times a perfusion rate of 4 plus a filtration rate of 5. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(3)\nobserve perfusion_rate(4)\nobserve filtration_rate(5)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r94tox-03",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 3, all times a perfusion rate of 4 plus a filtration rate of 5. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(3)\nobserve perfusion_rate(4)\nobserve filtration_rate(5)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r94tox-04",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 4, all times a perfusion rate of 3 plus a filtration rate of 5. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(4)\nobserve perfusion_rate(3)\nobserve filtration_rate(5)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r94tox-05",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 4, all times a perfusion rate of 3 plus a filtration rate of 5. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(4)\nobserve perfusion_rate(3)\nobserve filtration_rate(5)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r94tox-06",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 4, all times a perfusion rate of 3 plus a filtration rate of 5. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(4)\nobserve perfusion_rate(3)\nobserve filtration_rate(5)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r94tox-07",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 3 plus a hepatic fraction of 5, all times a perfusion rate of 2 plus a filtration rate of 4. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(3)\nobserve hepatic_fraction(5)\nobserve perfusion_rate(2)\nobserve filtration_rate(4)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r94tox-08",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 3 plus a hepatic fraction of 5, all times a perfusion rate of 2 plus a filtration rate of 4. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(3)\nobserve hepatic_fraction(5)\nobserve perfusion_rate(2)\nobserve filtration_rate(4)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r94tox-09",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 3 plus a hepatic fraction of 5, all times a perfusion rate of 2 plus a filtration rate of 4. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(3)\nobserve hepatic_fraction(5)\nobserve perfusion_rate(2)\nobserve filtration_rate(4)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r94tox-10",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 5, all times a perfusion rate of 3 plus a filtration rate of 6. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(5)\nobserve perfusion_rate(3)\nobserve filtration_rate(6)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 63,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r94tox-11",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 5, all times a perfusion rate of 3 plus a filtration rate of 6. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(5)\nobserve perfusion_rate(3)\nobserve filtration_rate(6)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 63,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r94tox-12",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 5, all times a perfusion rate of 3 plus a filtration rate of 6. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(5)\nobserve perfusion_rate(3)\nobserve filtration_rate(6)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 63,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r94tox-13",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 4 plus a hepatic fraction of 2, all times a perfusion rate of 6 plus a filtration rate of 3. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(4)\nobserve hepatic_fraction(2)\nobserve perfusion_rate(6)\nobserve filtration_rate(3)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r94tox-14",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 4 plus a hepatic fraction of 2, all times a perfusion rate of 6 plus a filtration rate of 3. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(4)\nobserve hepatic_fraction(2)\nobserve perfusion_rate(6)\nobserve filtration_rate(3)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r94tox-15",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 4 plus a hepatic fraction of 2, all times a perfusion rate of 6 plus a filtration rate of 3. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(4)\nobserve hepatic_fraction(2)\nobserve perfusion_rate(6)\nobserve filtration_rate(3)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r94tox-16",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 3 plus a hepatic fraction of 2, all times a perfusion rate of 6 plus a filtration rate of 4. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(3)\nobserve hepatic_fraction(2)\nobserve perfusion_rate(6)\nobserve filtration_rate(4)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r94tox-17",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 3 plus a hepatic fraction of 2, all times a perfusion rate of 6 plus a filtration rate of 4. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(3)\nobserve hepatic_fraction(2)\nobserve perfusion_rate(6)\nobserve filtration_rate(4)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r94tox-18",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 3 plus a hepatic fraction of 2, all times a perfusion rate of 6 plus a filtration rate of 4. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(3)\nobserve hepatic_fraction(2)\nobserve perfusion_rate(6)\nobserve filtration_rate(4)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r94tox-19",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 6, all times a perfusion rate of 4 plus a filtration rate of 3. What is the combined clearance capacity (the organ sum times the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(6)\nobserve perfusion_rate(4)\nobserve filtration_rate(3)\nlet answer = (renal_fraction + hepatic_fraction) * (perfusion_rate + filtration_rate)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r94tox-20",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 6, all times a perfusion rate of 4 plus a filtration rate of 3. What is the the organ sum (the renal fraction plus the hepatic fraction, before multiplying by the flow sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(6)\nobserve perfusion_rate(4)\nobserve filtration_rate(3)\nlet answer = renal_fraction + hepatic_fraction\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r94tox-21",
+      "qtype": "toxin_clearance_total",
+      "stem": "A clearance study records a renal fraction of 2 plus a hepatic fraction of 6, all times a perfusion rate of 4 plus a filtration rate of 3. What is the the flow sum (the perfusion rate plus the filtration rate, before multiplying by the organ sum)?",
+      "program": "observe renal_fraction(2)\nobserve hepatic_fraction(6)\nobserve perfusion_rate(4)\nobserve filtration_rate(3)\nlet answer = perfusion_rate + filtration_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
