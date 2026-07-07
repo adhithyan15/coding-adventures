@@ -132,6 +132,7 @@ SELF_CONTAINED_RUNGS = (
     "rung92_gi_absorption",
     "rung93_insulin_dosing",
     "rung94_toxin_clearance",
+    "rung95_acoustic_reflex",
 )
 
 

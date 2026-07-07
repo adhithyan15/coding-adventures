@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 95 \u2014 acoustic-reflex net drive from four stated quantities (a NEW panel: audiology / acoustic-reflex). From a stimulus level minus a threshold level for the sensation drive and an ipsi gain plus a contra gain for the total pathway gain, compute the net reflex ((stimulus_level-threshold_level)*(ipsi_gain+contra_gain)), the sensation drive (stimulus_level-threshold_level), or the gain sum (ipsi_gain+contra_gain). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A DIFFERENCE TIMES A SUM (a-b)*(c+d) (subtract b from a, add c and d, multiply the difference by the sum, so (a-b)*(c+d) = ((a-b)*(c+d)); this COMPLETES the binomial-product 4-corner square \u2014 rung-89 (a+b)*(c-d) sum-times-difference, rung-90 (a-b)*(c-d) difference-times-difference, rung-94 (a+b)*(c+d) sum-times-sum, and difference-times-sum was the last corner; no prior shape multiplied a difference by a sum, e.g. rung-84 (a+b)*c-d multiplied a sum by a bare factor and rung-35 a*b-c*d subtracted two products) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via -, + and * \u2014 no constant leaks, and neither the sensation drive, the gain sum, nor any net figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: distributing only the ipsi gain and leaving the contra gain added bare ((a-b)*c+d, a wrong grouping) and multiplying the whole stimulus by the gain sum before subtracting the bare threshold (a*(c+d)-b, a wrong pairing). The core confusion tested is that (a-b)*(c+d) is ((a-b)*(c+d)), not (a-b)*c+d and not a*(c+d)-b. Every stimulus exceeds its threshold by at least two, so all figures stay strictly positive.",
+  "items": [
+    {
+      "id": "r95reflex-01",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 2, all times an ipsi gain of 3 plus a contra gain of 4. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(2)\nobserve ipsi_gain(3)\nobserve contra_gain(4)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r95reflex-02",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 2, all times an ipsi gain of 3 plus a contra gain of 4. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(2)\nobserve ipsi_gain(3)\nobserve contra_gain(4)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r95reflex-03",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 2, all times an ipsi gain of 3 plus a contra gain of 4. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(2)\nobserve ipsi_gain(3)\nobserve contra_gain(4)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r95reflex-04",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 6 minus a threshold level of 2, all times an ipsi gain of 2 plus a contra gain of 5. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(6)\nobserve threshold_level(2)\nobserve ipsi_gain(2)\nobserve contra_gain(5)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r95reflex-05",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 6 minus a threshold level of 2, all times an ipsi gain of 2 plus a contra gain of 5. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(6)\nobserve threshold_level(2)\nobserve ipsi_gain(2)\nobserve contra_gain(5)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r95reflex-06",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 6 minus a threshold level of 2, all times an ipsi gain of 2 plus a contra gain of 5. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(6)\nobserve threshold_level(2)\nobserve ipsi_gain(2)\nobserve contra_gain(5)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r95reflex-07",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 3, all times an ipsi gain of 4 plus a contra gain of 2. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(3)\nobserve ipsi_gain(4)\nobserve contra_gain(2)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r95reflex-08",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 3, all times an ipsi gain of 4 plus a contra gain of 2. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(3)\nobserve ipsi_gain(4)\nobserve contra_gain(2)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r95reflex-09",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 3, all times an ipsi gain of 4 plus a contra gain of 2. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(3)\nobserve ipsi_gain(4)\nobserve contra_gain(2)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r95reflex-10",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 7 minus a threshold level of 2, all times an ipsi gain of 3 plus a contra gain of 5. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(7)\nobserve threshold_level(2)\nobserve ipsi_gain(3)\nobserve contra_gain(5)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r95reflex-11",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 7 minus a threshold level of 2, all times an ipsi gain of 3 plus a contra gain of 5. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(7)\nobserve threshold_level(2)\nobserve ipsi_gain(3)\nobserve contra_gain(5)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r95reflex-12",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 7 minus a threshold level of 2, all times an ipsi gain of 3 plus a contra gain of 5. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(7)\nobserve threshold_level(2)\nobserve ipsi_gain(3)\nobserve contra_gain(5)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r95reflex-13",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 6 minus a threshold level of 4, all times an ipsi gain of 2 plus a contra gain of 3. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(6)\nobserve threshold_level(4)\nobserve ipsi_gain(2)\nobserve contra_gain(3)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r95reflex-14",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 6 minus a threshold level of 4, all times an ipsi gain of 2 plus a contra gain of 3. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(6)\nobserve threshold_level(4)\nobserve ipsi_gain(2)\nobserve contra_gain(3)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r95reflex-15",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 6 minus a threshold level of 4, all times an ipsi gain of 2 plus a contra gain of 3. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(6)\nobserve threshold_level(4)\nobserve ipsi_gain(2)\nobserve contra_gain(3)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r95reflex-16",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 8 minus a threshold level of 2, all times an ipsi gain of 5 plus a contra gain of 3. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(8)\nobserve threshold_level(2)\nobserve ipsi_gain(5)\nobserve contra_gain(3)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 62,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r95reflex-17",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 8 minus a threshold level of 2, all times an ipsi gain of 5 plus a contra gain of 3. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(8)\nobserve threshold_level(2)\nobserve ipsi_gain(5)\nobserve contra_gain(3)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 62,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r95reflex-18",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 8 minus a threshold level of 2, all times an ipsi gain of 5 plus a contra gain of 3. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(8)\nobserve threshold_level(2)\nobserve ipsi_gain(5)\nobserve contra_gain(3)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 62,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r95reflex-19",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 2, all times an ipsi gain of 4 plus a contra gain of 6. What is the net acoustic reflex (the sensation drive times the gain sum)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(2)\nobserve ipsi_gain(4)\nobserve contra_gain(6)\nlet answer = (stimulus_level - threshold_level) * (ipsi_gain + contra_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r95reflex-20",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 2, all times an ipsi gain of 4 plus a contra gain of 6. What is the the sensation drive (the stimulus level minus the threshold level, before multiplying by the gain sum)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(2)\nobserve ipsi_gain(4)\nobserve contra_gain(6)\nlet answer = stimulus_level - threshold_level\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r95reflex-21",
+      "qtype": "acoustic_reflex_net",
+      "stem": "An acoustic-reflex study records a stimulus level of 5 minus a threshold level of 2, all times an ipsi gain of 4 plus a contra gain of 6. What is the the gain sum (the ipsi gain plus the contra gain, before multiplying by the sensation drive)?",
+      "program": "observe stimulus_level(5)\nobserve threshold_level(2)\nobserve ipsi_gain(4)\nobserve contra_gain(6)\nlet answer = ipsi_gain + contra_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
