@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.32.1] - 2026-07-07
+
+### Added — CLOC12.168 PR3: CodePrinter `import.meta` conformance port
+
+Ports upstream `CodePrinterTest`'s `import.meta` printing cases into
+`tests/upstream/code_printer_import_meta_test.rs` (the twenty-first CodePrinter
+port), isolating `emit_import_meta` + the `PREC_PRIMARY` classification that
+landed with `Expression::ImportMeta` (CLOC12.168 PR1). 6 hand-constructed-AST
+cases: the bare `import.meta`, member object (`import.meta.url`), call argument
+(`f(import.meta)`), member chain (`import.meta.a.b`), method call
+(`import.meta.m()`), and a binary parent (`import.meta+1`) — all print the leaf
+bare, confirming it composes paren-free at primary strength (the internal
+`.meta` is part of the spelling, not a member access). Registered via an
+explicit `[[test]]` entry per CLOC12.01 §3. Test-only; no library change.
+
+
 ## [0.32.0] - 2026-07-07
 
 ### Added — CLOC12.168: `emit_import_meta` (`import.meta`)
