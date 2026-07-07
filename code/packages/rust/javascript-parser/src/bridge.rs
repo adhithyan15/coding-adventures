@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
-        MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, Property,
+        ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, Property,
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -1347,6 +1347,15 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         "member_expression" => convert_member_expression(node),
         "primary_expression" => convert_primary_expression(node),
 
+        // `import.meta` — the module meta-property (CLOC12.168 PR2, gap-169).
+        // The grammar emits a dedicated `import_meta` leaf whose children are the
+        // three bare tokens `[Token("import"), Token("."), Token("meta")]` (no
+        // Node child). It lowers to the atomic `Expression::ImportMeta` leaf, the
+        // sibling of `new.target`: the `.meta` is part of the fixed spelling, not
+        // a member access, so nothing is walked. Previously fell through to the
+        // `other =>` internal-error arm (dropping the file to WHITESPACE_ONLY).
+        "import_meta" => convert_import_meta(node),
+
         // Literals
         "array_literal" => convert_array_literal(node),
         "object_literal" => convert_object_literal(node),
@@ -1406,8 +1415,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         | "async_generator_expression"
         | "class_expression"
         | "tagged_template_expression"
-        | "new_target_expression"
-        | "import_meta_expression" => Err(unsupported(node)),
+        | "new_target_expression" => Err(unsupported(node)),
 
         other => Err(BridgeError::InternalError {
             msg: format!("unknown expression rule '{other}'"),
@@ -2127,6 +2135,26 @@ fn convert_argument(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
         node
     };
     convert_expression(target)
+}
+
+// -------------------------------------------------------------------------
+// import.meta (CLOC12.168 PR2, gap-169)
+// -------------------------------------------------------------------------
+
+/// `import.meta` — the module meta-property. The grammar emits a dedicated
+/// `import_meta` leaf whose children are the three bare tokens
+/// `[Token("import"), Token("."), Token("meta")]` (no Node child), so — exactly
+/// like `new.target` — there is no object / property to fold; the whole thing
+/// is one atomic primary. It lowers to the `Expression::ImportMeta` leaf: the
+/// `.meta` is part of the fixed spelling, NOT a member access. We take the
+/// `import` token's `cv` as the node's provenance (the meta-property is a single
+/// conceptual read).
+fn convert_import_meta(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+    let cv = match node.children.first() {
+        Some(ASTNodeOrToken::Token(t)) => t.cv.clone(),
+        _ => None,
+    };
+    Ok(Expression::ImportMeta(ImportMeta { cv }))
 }
 
 // -------------------------------------------------------------------------
@@ -3161,6 +3189,49 @@ mod tests {
             ),
             other => panic!("expected MemberExpression; got {:?}", other),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // import.meta (CLOC12.168 PR2, gap-169)
+    // -----------------------------------------------------------------------
+
+    /// `import.meta` — the module meta-property, the sibling of `new.target`.
+    /// The grammar emits a dedicated `import_meta` leaf (`[Token("import"),
+    /// Token("."), Token("meta")]`, no Node child); the bridge intercepts it as
+    /// an atomic `ImportMeta` leaf (the `.meta` is spelling, not member access).
+    /// A bare `import.meta;` parses standalone here. Previously the rule fell
+    /// through to the internal-error arm, dropping the file to WHITESPACE_ONLY.
+    #[test]
+    fn import_meta_meta_property() {
+        let p = bridge_ok("import.meta;");
+        assert!(
+            matches!(only_expr(&p), Expression::ImportMeta(_)),
+            "expected ImportMeta; got {:?}",
+            only_expr(&p)
+        );
+    }
+
+    /// `import.meta.url` — the canonical use, as the object of a member access.
+    /// The meta-property becomes the object of the outer member, pinning that
+    /// the leaf slots into the suffix-fold like any other base primary.
+    #[test]
+    fn import_meta_as_member_object() {
+        let p = bridge_ok("import.meta.url;");
+        match only_expr(&p) {
+            Expression::MemberExpression(m) => assert!(
+                matches!(&*m.object, Expression::ImportMeta(_)),
+                "expected ImportMeta object; got {:?}",
+                m.object
+            ),
+            other => panic!("expected MemberExpression; got {:?}", other),
+        }
+    }
+
+    /// `f(import.meta)` — the meta-property as a call argument bridges cleanly
+    /// (a plain primary operand), proving it is handled in nested position too.
+    #[test]
+    fn import_meta_as_call_argument() {
+        let _ = bridge_ok("f(import.meta);");
     }
 
     // -----------------------------------------------------------------------

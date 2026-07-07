@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.7] - 2026-07-07
+
+### Added — CLOC12.168 PR2: `import.meta` flows through the SIMPLE pipeline (gap-169)
+
+With the `javascript-parser` bridge now converting `import.meta` →
+`Expression::ImportMeta` (v0.32.0), a file containing `import.meta` no longer
+falls back to WHITESPACE_ONLY — it flows through the full SIMPLE pipeline
+(parser → typed-AST bridge → passes → emitter). New end-to-end diff fixture
+`tests/diff/simple-importmeta/` (`f(import.meta, 1 + 2);` → `f(import.meta,3);`):
+`import.meta` round-trips as the first argument while the second argument
+`1 + 2` folds to `3`, proving the pipeline ran rather than re-emitting the
+source verbatim. Version bump only; no CLI-surface change. (gap-169)
+
+
 ## [0.234.6] - 2026-07-07
 
 ### Added — CLOC12.167 PR2: `new.target` end-to-end fixture

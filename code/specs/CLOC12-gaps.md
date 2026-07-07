@@ -2170,19 +2170,35 @@ references no ordinary identifier and has no sub-expression). Atomic node PR1:
 node + emit + all nine downstream pass arms land together so the workspace
 never breaks.
 
-### gap-169 — bridge declines `import.meta` (`ImportMeta`) — **OPEN (bridge slice pending, CLOC12.168 PR2)**
+### gap-169 — bridge declines `import.meta` (`ImportMeta`) — **RESOLVED (javascript-parser 0.32.0, CLOC12.168 PR2)**
 
-The `javascript-parser` bridge does not yet convert `import.meta` to
-`Expression::ImportMeta`, so any file containing it drops to WHITESPACE_ONLY.
-The atomic node PR (CLOC12.168 PR1) lands the node + emit + pass traversals so
-the typed AST and every downstream pass can already represent and print an
-`import.meta`; the **PR2 bridge slice** wires the grammar production through
-(the shape parallels `new.target` — a `member_expression` with an `import`
-token followed by `.` `meta`, distinguished from an ordinary member access by
-the reserved `import` token and the absence of a Node object). Whether any
-grammar work is required (as with `await`, gap-165) or the token is already
-produced and merely declined (as with `new.target`, gap-168) is determined
-during PR2. The **PR3** CodePrinter conformance port follows.
+The `javascript-parser` bridge previously did not convert `import.meta` to
+`Expression::ImportMeta`, so any file containing it dropped to WHITESPACE_ONLY.
+The atomic node PR (CLOC12.168 PR1) landed the node + emit + pass traversals so
+the typed AST and every downstream pass could already represent and print an
+`import.meta`.
+
+**Probe divergence from the recipe.** The grammar was expected (by analogy with
+`new.target`, gap-168) to fold `import.meta` into a `member_expression` with an
+`import` token base. A probe showed otherwise: the grammar emits a **dedicated
+`import_meta` leaf** whose children are the three bare tokens `[Token("import"),
+Token("."), Token("meta")]` with no Node child — and this rule was *not* listed
+in the bridge's expression dispatch, so it fell through to the `other =>`
+internal-error arm (worse than a graceful decline). Note the pre-existing
+`import_meta_expression` decline arm was a **different, never-emitted rule
+name** — dead code; PR2 removed it. **Like `new.target` and unlike `await`
+(gap-165), no grammar work was required** — the token was already produced.
+
+**Fix (CLOC12.168 PR2):** a new `convert_import_meta` and an `"import_meta"`
+dispatch arm lower the leaf to `Expression::ImportMeta` (the `import` token's
+`cv` becomes provenance; the `.meta` is spelling, not a member access). 3 new
+bridge unit tests (`import.meta;` → `ImportMeta`; `import.meta.url;` → member
+access whose object is `ImportMeta`; `f(import.meta);` in argument position)
+plus the closurec end-to-end diff fixture `tests/diff/simple-importmeta/`
+(`f(import.meta, 1 + 2);` → `f(import.meta,3);` at SIMPLE — `import.meta`
+round-trips and the argument folds, proving the pipeline ran rather than
+falling back to WHITESPACE_ONLY). The **PR3** CodePrinter conformance port is a
+separate slice.
 
 
 ## CLOC12.167 — `NewTarget` (`new.target`): atomic node + emit + passes (PR1)
