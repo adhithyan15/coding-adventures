@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.14.1
+
+**JS loader file open/save wrappers + rebuilt `.wasm` (SSIO PR5).** The Rust ABI
+already exported the file functions in 0.14.0; this exposes them through the JS
+loader so a host can actually call them:
+
+- `js/spreadsheet-engine-wasm.mjs` (and the browser `wasm-loader.js`) gain binary
+  marshalling helpers `writeBytes` / `readBytes` (file bytes are NOT UTF-8, so
+  they bypass the text encoder/decoder that `writeStr`/`readResult` use) and
+  workbook methods `openXlsx`/`saveXlsx`/`openXls`/`saveXls`/`openCsv`/`saveCsv`/
+  `openTsv`/`saveTsv`/`openJson`/`saveJson`. `open*(u8)` returns `true` iff the
+  bytes were a readable file of that format (the document is untouched on
+  `false`); `save*()` returns a `Uint8Array` the host downloads.
+- Rebuilt the committed `pkg/spreadsheet_engine.wasm` so it contains the 0.14.0
+  file exports (the previously-committed artifact predated them).
+- New `js/smoke-files.mjs`: a Node round-trip harness over the real `.wasm` —
+  `.xlsx` (formula stays live), `.xls`, `.csv`/`.tsv`, `.json`, and a
+  bad-bytes-preserves-document guard.
+
 ## 0.14.0
 
 **File open / save over the ABI — bytes in, bytes out (SSIO PR4).** New

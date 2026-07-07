@@ -136,7 +136,19 @@
         <button type="button" data-layout="desktop">Desktop</button>
         <button type="button" data-layout="touch">Touch</button>
       </span>
+      <!-- File open/save: the whole point of routing every format through the
+           one engine — open a real .xlsx/.xls/.csv/.tsv/.json the user picked,
+           edit it live, save it back. Bytes cross to/from the WASM engine via
+           the loader's open*/save* methods. -->
+      <span class="seg-label">File</span>
+      <span class="seg" id="seg-file">
+        <button type="button" id="btn-open">Open…</button>
+        <button type="button" data-save="xlsx">Save .xlsx</button>
+        <button type="button" data-save="csv">Save .csv</button>
+        <button type="button" data-save="json">Save .json</button>
+      </span>
     </div>
+    <input type="file" id="file-open" accept=".xlsx,.xls,.csv,.tsv,.json" style="display: none">
 
     <!--
       ===== FormulaBar (compiled) =====
@@ -771,6 +783,63 @@
   }
 
   // ----- Boot ----------------------------------------------------------
+  // ----- File open / save (bytes ↔ the one engine) ---------------------
+  // Open reads the picked file's raw bytes and hands them to the engine
+  // open*() for its extension; a successful open REPLACES the workbook, so we
+  // re-render the grid + formula bar. Save serializes the current workbook to
+  // the chosen format and downloads it. This is the whole "open a real .xlsx,
+  // edit it live, save it back" round-trip — over the one Rust engine, in the
+  // browser, from a static file. (The visible grid is a fixed A1:E5 window, so
+  // a file whose data lands there shows immediately; the workbook holds the
+  // rest either way.)
+  const OPENERS = {
+    xlsx: (wb, b) => wb.openXlsx(b), xls: (wb, b) => wb.openXls(b),
+    csv: (wb, b) => wb.openCsv(b), tsv: (wb, b) => wb.openTsv(b),
+    json: (wb, b) => wb.openJson(b),
+  };
+  const SAVERS = { xlsx: (wb) => wb.saveXlsx(), csv: (wb) => wb.saveCsv(), json: (wb) => wb.saveJson() };
+  const MIME = {
+    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    csv: "text/csv",
+    json: "application/json",
+  };
+  function downloadBytes(bytes, name, mime) {
+    const blob = new Blob([bytes], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+  function wireFileButtons() {
+    const fileInput = document.getElementById("file-open");
+    document.getElementById("btn-open").addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const ext = (file.name.split(".").pop() || "").toLowerCase();
+      // Own-property lookup only: a file named `x.__proto__` / `x.constructor`
+      // must resolve to "unsupported", never a prototype value.
+      const open = Object.prototype.hasOwnProperty.call(OPENERS, ext) ? OPENERS[ext] : null;
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      // A failed open returns false and leaves the document untouched.
+      if (!open || !open(workbook, bytes)) {
+        window.alert(`Could not open "${file.name}" — unsupported or malformed ${ext || "file"}.`);
+      } else {
+        selRow = 0; selCol = 1; editRow = -1; // reset selection into the opened doc
+        renderFormulaBar();
+        render();
+      }
+      fileInput.value = ""; // let the same file be re-picked
+    });
+    document.getElementById("seg-file").addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-save]");
+      if (!b) return;
+      const fmt = b.getAttribute("data-save");
+      downloadBytes(SAVERS[fmt](workbook), `spreadsheet.${fmt}`, MIME[fmt]);
+    });
+  }
+
   async function boot() {
     // Wait for the WASM engine to instantiate, then bind it and seed the
     // workbook. (WebAssembly compilation of a >4 KB module must be async on
@@ -784,6 +853,7 @@
     renderFormulaBar();  // build the formula bar + wire its input
     render();            // render the grid over the seeded workbook
     wireSwitcher();      // enable the theme/layout toggles
+    wireFileButtons();   // enable File → Open / Save .xlsx/.csv/.json
   }
 
   if (document.readyState === "loading") {
