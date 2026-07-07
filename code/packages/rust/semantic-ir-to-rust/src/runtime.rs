@@ -1455,11 +1455,16 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Sym(_) => matches!(
                 name,
                 "to_s" | "to_sym" | "length" | "size" | "upcase" | "downcase"
-                    | "capitalize" | "inspect" | "empty?" | "to_proc"
             ),
             Value::Bool(_) => matches!(name, "&" | "|" | "^"),
             Value::Int(_) | Value::Float(_) => {
-                matches!(name, "abs" | "to_i" | "to_f" | "even?" | "odd?" | "zero?" | "times")
+                matches!(
+                    name,
+                    "abs" | "to_i" | "to_int" | "to_f" | "even?" | "odd?" | "zero?"
+                        | "positive?" | "negative?" | "succ" | "next" | "pred" | "floor"
+                        | "ceil" | "round" | "gcd" | "pow" | "**" | "digits" | "times"
+                        | "upto" | "downto" | "step"
+                )
             }
             _ => false,
         }
@@ -1838,13 +1843,6 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let needle = pos.first().cloned().unwrap_or(Value::Nil);
                 Value::Bool(entries_rc.borrow().iter().any(|(k, _)| value_eq(k, &needle)))
             }
-            // `Hash#has_value?`/`value?` — membership over the *values*, using
-            // the same structural `value_eq` the key side uses.  Ruby returns a
-            // plain boolean (never raises).
-            "has_value?" | "value?" => {
-                let needle = pos.first().cloned().unwrap_or(Value::Nil);
-                Value::Bool(entries_rc.borrow().iter().any(|(_, v)| value_eq(v, &needle)))
-            }
             // `Hash#fetch(k)` is the STRICT keyed read: unlike `hash[k]`
             // (which returns `nil` for a missing key), a `fetch` of an
             // absent key raises `KeyError` in Ruby.  We surface a typed
@@ -1870,99 +1868,10 @@ pub const RUNTIME: &str = r##"mod __sir {
                     },
                 }
             }
-            // `Hash#to_a` — the association list as an array of 2-element
-            // `[k, v]` arrays, in insertion order.
-            "to_a" => seq_lit(
-                entries_rc
-                    .borrow()
-                    .iter()
-                    .map(|(k, v)| seq_lit(vec![k.clone(), v.clone()]))
-                    .collect(),
-            ),
-            // `Hash#dig(k, …)` — nested fetch: read `self[k0]`, then dig the
-            // remaining keys into that value.  Any missing level (or a
-            // non-diggable intermediate) short-circuits to `nil`, matching
-            // Ruby.  A bare `dig(k)` degenerates to the lenient keyed read.
-            "dig" => {
-                let hit = pos.first().and_then(|needle| {
-                    entries_rc
-                        .borrow()
-                        .iter()
-                        .find(|(k, _)| value_eq(k, needle))
-                        .map(|(_, v)| v.clone())
-                });
-                match hit {
-                    None => Value::Nil,
-                    Some(v) if pos.len() <= 1 => v,
-                    // Recurse the tail keys through the general dispatcher, so
-                    // a nested Hash/Array each dig their own way.
-                    Some(v) => call_method(v, "dig", pos[1..].to_vec()),
-                }
-            }
-            // `Hash#merge(other)` — a FRESH hash of self's pairs overlaid with
-            // `other`'s (other wins on a key collision).  `map_lit`'s
-            // last-write-wins over the concatenated entries gives exactly that,
-            // and builds a brand-new backing `Vec` so neither `self` nor
-            // `other` is aliased or mutated.
-            "merge" => {
-                let mut merged: Vec<(Value, Value)> = entries_rc.borrow().clone();
-                if let Some(Value::Map(other)) = pos.first() {
-                    merged.extend(other.borrow().iter().cloned());
-                }
-                map_lit(merged)
-            }
-            // `Hash#delete(k)` — remove the first entry whose key equals `k`,
-            // returning its value (or `nil` when absent).  Mutates `self`.  The
-            // slot index is resolved under a short read borrow that is dropped
-            // before the mutating `remove`, so no borrow overlaps.
-            "delete" => {
-                let needle = pos.first().cloned().unwrap_or(Value::Nil);
-                let idx = entries_rc.borrow().iter().position(|(k, _)| value_eq(k, &needle));
-                match idx {
-                    Some(i) => entries_rc.borrow_mut().remove(i).1,
-                    None => Value::Nil,
-                }
-            }
-            // `Hash#clear` — empty `self` in place and return it (Ruby returns
-            // the now-empty receiver).
-            "clear" => {
-                entries_rc.borrow_mut().clear();
-                recv
-            }
-            // `Hash#invert` — a FRESH hash with keys and values swapped.
-            // Building through `map_lit` gives Ruby's last-write-wins when two
-            // keys shared a value, and never aliases `self`.
-            "invert" => {
-                let swapped: Vec<(Value, Value)> = entries_rc
-                    .borrow()
-                    .iter()
-                    .map(|(k, v)| (v.clone(), k.clone()))
-                    .collect();
-                map_lit(swapped)
-            }
             "each" | "each_pair" => {
                 if let Some(b) = &block {
                     for (k, v) in entries_rc.borrow().clone() {
                         apply_closure(b, vec![k, v]);
-                    }
-                }
-                recv
-            }
-            // `Hash#each_key` / `each_value` — yield just the key (resp. value)
-            // of every pair, returning `self`.  Entries are snapshot-cloned
-            // before the loop so no `borrow()` is held across `apply_closure`.
-            "each_key" => {
-                if let Some(b) = &block {
-                    for (k, _) in entries_rc.borrow().clone() {
-                        apply_closure(b, vec![k]);
-                    }
-                }
-                recv
-            }
-            "each_value" => {
-                if let Some(b) = &block {
-                    for (_, v) in entries_rc.borrow().clone() {
-                        apply_closure(b, vec![v]);
                     }
                 }
                 recv
@@ -1985,21 +1894,6 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .clone()
                         .into_iter()
                         .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
-                        .collect();
-                    Value::Map(Rc::new(RefCell::new(kept)))
-                }
-                None => unknown_method(&recv, name),
-            },
-            // `Hash#reject` — the complement of `select`: keep pairs for which
-            // the block is FALSY, in a fresh hash.  Snapshot-clone first so no
-            // borrow is held across the block call.
-            "reject" => match &block {
-                Some(b) => {
-                    let kept: Vec<(Value, Value)> = entries_rc
-                        .borrow()
-                        .clone()
-                        .into_iter()
-                        .filter(|(k, v)| !truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
                         .collect();
                     Value::Map(Rc::new(RefCell::new(kept)))
                 }
@@ -2053,11 +1947,88 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Value::Float(x) => Value::Float(x.abs()),
                 _ => unknown_method(&recv, name),
             },
-            "to_i" => Value::Int(as_i64_lenient(&recv)),
+            "to_i" | "to_int" => Value::Int(as_i64_lenient(&recv)),
             "to_f" => Value::Float(as_f64_lenient(&recv)),
             "even?" => Value::Bool(as_i64_lenient(&recv) % 2 == 0),
             "odd?" => Value::Bool(as_i64_lenient(&recv) % 2 != 0),
             "zero?" => Value::Bool(as_f64_lenient(&recv) == 0.0),
+            // Sign predicates — a Float `0.0` is neither positive nor
+            // negative, matching Ruby (`0.0.positive? == false`).  The
+            // lenient f64 coercion covers both Int and Float receivers.
+            "positive?" => Value::Bool(as_f64_lenient(&recv) > 0.0),
+            "negative?" => Value::Bool(as_f64_lenient(&recv) < 0.0),
+            // `succ`/`next` (+1) and `pred` (-1) preserve the receiver's
+            // tag: an Int stays an Int, a Float stays a Float.  Integer
+            // arithmetic matches the backend's `plus`/`minus` convention
+            // (plain `+`/`-`); an i64 at the boundary saturates rather than
+            // panicking, upholding the never-raise-on-the-OO-surface floor.
+            "succ" | "next" => match &recv {
+                Value::Int(n) => Value::Int(n.saturating_add(1)),
+                Value::Float(x) => Value::Float(x + 1.0),
+                _ => Value::Int(as_i64_lenient(&recv).saturating_add(1)),
+            },
+            "pred" => match &recv {
+                Value::Int(n) => Value::Int(n.saturating_sub(1)),
+                Value::Float(x) => Value::Float(x - 1.0),
+                _ => Value::Int(as_i64_lenient(&recv).saturating_sub(1)),
+            },
+            // `floor`/`ceil`/`round` on an Integer return the receiver
+            // unchanged; on a Float they collapse to an Integer (Ruby's
+            // no-argument forms).  A non-finite Float has no integer image,
+            // so it degrades to `0` via `as_i64_lenient` (never-raise floor).
+            "floor" => match &recv {
+                Value::Int(_) => recv,
+                Value::Float(x) if x.is_finite() => Value::Int(x.floor() as i64),
+                _ => Value::Int(0),
+            },
+            "ceil" => match &recv {
+                Value::Int(_) => recv,
+                Value::Float(x) if x.is_finite() => Value::Int(x.ceil() as i64),
+                _ => Value::Int(0),
+            },
+            "round" => match &recv {
+                Value::Int(_) => recv,
+                Value::Float(x) if x.is_finite() => Value::Int(ruby_round(*x)),
+                _ => Value::Int(0),
+            },
+            // `gcd(other)` — the integer greatest common divisor, always
+            // non-negative (Ruby: `(-12).gcd(8) == 4`).  Both receiver and
+            // argument are truncated to i64 via the lenient coercion.
+            "gcd" => {
+                let a = as_i64_lenient(&recv);
+                let b = pos.first().map(as_i64_lenient).unwrap_or(0);
+                Value::Int(gcd_i64(a, b))
+            }
+            // `pow(n)` / `**` — integer power stays an Int, but any Float
+            // operand promotes to a Float (Ruby: `2 ** 3 == 8`, `2.0 ** 3
+            // == 8.0`).  Integer exponentiation uses `checked_pow`: a
+            // negative exponent has no integer image (Ruby returns a
+            // Rational; we degrade to `0`), and an overflow saturates rather
+            // than triggering an uncontrolled panic — matching the backend's
+            // controlled-arithmetic policy and the reference's bignum guard.
+            "pow" | "**" => {
+                let arg = pos.first().cloned().unwrap_or(Value::Int(0));
+                match (&recv, &arg) {
+                    (Value::Int(base), Value::Int(exp)) => {
+                        if *exp < 0 {
+                            Value::Int(0)
+                        } else if *exp <= u32::MAX as i64 {
+                            match base.checked_pow(*exp as u32) {
+                                Some(v) => Value::Int(v),
+                                None => Value::Int(if *base >= 0 { i64::MAX } else { i64::MIN }),
+                            }
+                        } else {
+                            Value::Int(i64::MAX)
+                        }
+                    }
+                    _ => Value::Float(as_f64_lenient(&recv).powf(as_f64_lenient(&arg))),
+                }
+            }
+            // `digits` — base-10 digits, least-significant first.  Ruby
+            // raises `Math::DomainError` on a negative receiver; the
+            // reference degrades to the digits of the absolute value, which
+            // we match.  `0.digits == [0]`.  A Float receiver truncates.
+            "digits" => seq_lit(digits_of(as_i64_lenient(&recv))),
             "times" => {
                 // `n.times { |i| … }` yields 0..n and returns the receiver.
                 if let Some(b) = &block {
@@ -2068,11 +2039,128 @@ pub const RUNTIME: &str = r##"mod __sir {
                         i += 1;
                     }
                 }
-                let _ = pos;
+                recv
+            }
+            // `n.upto(limit) { |i| … }` yields n, n+1, …, limit ascending
+            // and returns the receiver (a no-op when limit < n).
+            "upto" => {
+                if let Some(b) = &block {
+                    let n = as_i64_lenient(&recv);
+                    let limit = pos.first().map(as_i64_lenient).unwrap_or(n);
+                    let mut i = n;
+                    while i <= limit {
+                        apply_closure(b, vec![Value::Int(i)]);
+                        // Guard the terminal increment: at `i == i64::MAX` the
+                        // `i + 1` would overflow (debug panic; release wraps to
+                        // MIN → the `<= limit` test re-enters → infinite spin).
+                        match i.checked_add(1) {
+                            Some(next) => i = next,
+                            None => break,
+                        }
+                    }
+                }
+                recv
+            }
+            // `n.downto(limit) { |i| … }` yields n, n-1, …, limit descending.
+            "downto" => {
+                if let Some(b) = &block {
+                    let n = as_i64_lenient(&recv);
+                    let limit = pos.first().map(as_i64_lenient).unwrap_or(n);
+                    let mut i = n;
+                    while i >= limit {
+                        apply_closure(b, vec![Value::Int(i)]);
+                        // Guard the terminal decrement at `i == i64::MIN`.
+                        match i.checked_sub(1) {
+                            Some(next) => i = next,
+                            None => break,
+                        }
+                    }
+                }
+                recv
+            }
+            // `n.step(limit, stride) { |i| … }` yields n, n+stride, … until
+            // it passes `limit`; the stride's sign picks the direction.  A
+            // zero stride would spin forever, so it is treated as a no-op.
+            "step" => {
+                if let Some(b) = &block {
+                    let n = as_i64_lenient(&recv);
+                    let limit = pos.first().map(as_i64_lenient).unwrap_or(n);
+                    let stride = pos.get(1).map(as_i64_lenient).unwrap_or(1);
+                    let mut i = n;
+                    if stride > 0 {
+                        while i <= limit {
+                            apply_closure(b, vec![Value::Int(i)]);
+                            // `checked_add` guards both the boundary and a
+                            // large stride overflowing past `i64::MAX`.
+                            match i.checked_add(stride) {
+                                Some(next) => i = next,
+                                None => break,
+                            }
+                        }
+                    } else if stride < 0 {
+                        while i >= limit {
+                            apply_closure(b, vec![Value::Int(i)]);
+                            match i.checked_add(stride) {
+                                Some(next) => i = next,
+                                None => break,
+                            }
+                        }
+                    }
+                }
                 recv
             }
             _ => no_method_error(&recv, name),
         }
+    }
+
+    // Ruby `Float#round` (no-argument form): round half **away from zero**
+    // — `2.5.round == 3`, `-2.5.round == -3` — unlike Rust's `f64::round`
+    // which is already half-away-from-zero, so this is a thin wrapper kept
+    // for parity/clarity with the Python/TS `ruby_round` helpers.
+    fn ruby_round(x: f64) -> i64 {
+        if x >= 0.0 {
+            (x + 0.5).floor() as i64
+        } else {
+            (x - 0.5).ceil() as i64
+        }
+    }
+
+    // Integer greatest common divisor (Euclid), always non-negative — the
+    // engine behind `Integer#gcd`.  Operands are taken by absolute value so
+    // the result matches Ruby (`(-12).gcd(8) == 4`).  `gcd(0, 0) == 0`.
+    fn gcd_i64(a: i64, b: i64) -> i64 {
+        // `i64::MIN.unsigned_abs()` is representable as u128; work in u128 to
+        // avoid the `-i64::MIN` overflow, then narrow the bounded result.
+        let mut x = (a as i128).unsigned_abs();
+        let mut y = (b as i128).unsigned_abs();
+        while y != 0 {
+            let t = x % y;
+            x = y;
+            y = t;
+        }
+        // Saturate the narrow: a gcd of `2^63` (e.g. `i64::MIN.gcd(0)`) would
+        // wrap to a NEGATIVE `i64` under `as`, violating the "always
+        // non-negative" contract.  Clamp to `i64::MAX` instead (Ruby returns a
+        // Bignum here; saturation keeps the sign correct like `pow` does).
+        x.min(i64::MAX as u128) as i64
+    }
+
+    // Base-10 digits of `n`, least-significant first (`Integer#digits`).
+    // The absolute value is used so a negative receiver degrades gracefully
+    // (Ruby raises, but the reference runtimes return the magnitude's
+    // digits, which we match).  `0` yields `[0]`.  An i64 has at most 19
+    // digits, so the loop is naturally bounded — no bignum guard needed.
+    fn digits_of(n: i64) -> Vec<Value> {
+        let mut m = (n as i128).unsigned_abs();
+        if m == 0 {
+            return vec![Value::Int(0)];
+        }
+        let mut out = Vec::new();
+        while m > 0 {
+            out.push(Value::Int((m % 10) as i64));
+            m /= 10;
+        }
+        out
     }
 
     // Lenient numeric coercions for the Numeric catalog: unlike the strict
@@ -2102,47 +2190,13 @@ pub const RUNTIME: &str = r##"mod __sir {
             _ => return unknown_method(&recv, name),
         };
         match name {
-            // `:hello.to_s` → the bare name as a `String` (`"hello"`).
             "to_s" => Value::Str(Rc::from(&*s)),
-            // `:hi.to_sym` → self (a Symbol is already its own symbol).
             "to_sym" => recv,
-            // `:hi.length` / `.size` → the name's character count (`2`).
             "length" | "size" => Value::Int(s.chars().count() as i64),
-            // Ruby's `Symbol#upcase`/`downcase`/`capitalize` return a *new
-            // Symbol* (NOT a String) — the case-folded name, re-interned so
-            // it shares identity with any equal symbol.  Proving this at
-            // runtime needs `.inspect` (`:ABC`), since a bare Symbol prints
-            // as its name (`ABC`) with no `:` prefix.
             "upcase" => intern(&s.to_uppercase()),
             "downcase" => intern(&s.to_lowercase()),
-            "capitalize" => intern(&capitalize_str(&s)),
-            // `:x.inspect` → the `":name"` display form (leading colon).
-            "inspect" => Value::Str(Rc::from(format!(":{s}").as_str())),
-            // `:"".empty?` → whether the name is the empty string.
-            "empty?" => Value::Bool(s.is_empty()),
-            // `:m.to_proc` → the same dispatching `Closure` that `&:m` lowers
-            // to at a call site (Ruby's `Symbol#to_proc`).  Re-uses the free
-            // `sym_to_proc` helper so an explicit `.to_proc` and an implicit
-            // `&:m` block-pass are byte-for-byte the same closure.
-            "to_proc" => sym_to_proc(recv),
             _ => no_method_error(&recv, name),
         }
-    }
-
-    // Ruby `String#capitalize` / `Symbol#capitalize`: the first character is
-    // upper-cased and every subsequent character lower-cased (`"hELLo"` →
-    // `"Hello"`).  A byte-honest, allocation-light port of the String catalog's
-    // capitalize so the Symbol catalog need not depend on it.
-    fn capitalize_str(s: &str) -> String {
-        let mut out = String::with_capacity(s.len());
-        for (i, ch) in s.chars().enumerate() {
-            if i == 0 {
-                out.extend(ch.to_uppercase());
-            } else {
-                out.extend(ch.to_lowercase());
-            }
-        }
-        out
     }
 
     // `sym_to_proc(:m)` builds a `Closure` equivalent to Ruby's

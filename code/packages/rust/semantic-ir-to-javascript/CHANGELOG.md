@@ -1,45 +1,5 @@
 # Changelog
 
-## 0.13.0
-
-### Added — Ruby `Array` collection methods (`sum`/`min`/`max`/`uniq`/`flatten`/`compact`/`each_with_index`/`to_a`)
-
-Parity fill for the JS backend's array dispatch. The JS backend dispatches
-array methods through a `METHOD_ALLOWLIST` of NATIVE JS method names plus a
-`RUBY_METHOD_ALIASES` table (calling `recv[name]` only for allowlisted native
-methods). The everyday Ruby `Array` methods below are NOT native JS array
-methods, so a translated `[1,2,3].sum` previously missed the allowlist and
-raised `NoMethodError`. They are now handled as **explicit Ruby-semantic
-special cases in `callMethod`** — a fixed `name ===` dispatch block guarded by
-`Array.isArray(recv)`, placed AHEAD of the native-method allowlist (mirroring
-how `.fetch` / the typed-error methods are special-cased). Dispatch is never
-`recv[name]` / `eval` / reflection on the source-derived name, so the
-RCE-hardened allowlist gate is completely untouched (a name like `constructor`
-still falls through to it and is rejected).
-
-- **`sum`** — numeric sum folded through the runtime's polymorphic `plus`
-  helper (so int/float promotion matches `+` everywhere else); empty array →
-  `0`; an optional seed arg (`sum(s)`) is the starting accumulator.
-- **`min` / `max`** — element-wise extreme by the SIR `<` order (native `<` on
-  numbers/strings, the same comparison the `"<"` builtin uses); an empty array
-  → `nil` (matching Ruby, not JS `Math.min([])` = `Infinity`).
-- **`uniq`** — first-occurrence dedup into a FRESH array by SIR VALUE equality
-  (a new `sirEqual` helper: `===` for primitives, STRUCTURAL for arrays/maps —
-  so two equal-but-distinct arrays count as one, matching Ruby, unlike JS
-  `===` on references). Cycle-guarded.
-- **`flatten`** — DEEP recursive flatten into a FRESH array (Ruby's `flatten`
-  is deep; JS `.flat()` is shallow). Cycle-guarded: a self-referential array
-  raises a typed, rescuable `ArgumentError: tried to flatten recursive array`
-  (matching Ruby) rather than infinite-looping (CWE-674).
-- **`compact`** — a new array with `nil` (null/undefined) elements removed.
-- **`each_with_index`** — applies the trailing block `Closure` with
-  `(element, index)` for each element, in order, and returns the receiver.
-- **`to_a`** — identity on an array (returns self).
-
-New runtime helpers: `sirEqual` (structural, cycle-guarded value equality) and
-`flattenDeep` (cycle-guarded deep flatten). Both reuse the `seen`-Set discipline
-`format` / `putsOne` already use for cyclic-structure safety.
-
 ## 0.12.0
 
 ### Added — M6 universal Object metaprogramming surface (send/tap/then/respond_to?)

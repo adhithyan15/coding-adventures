@@ -133,15 +133,6 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   `PREC_PRIMARY` and prints as the bare keyword. Node + `closure-emitter` +
   all pass traversals land in one atomic PR; the bridge-enable + conformance
   port follow.
-- `NewTarget` (CLOC12.167) — the `new.target` meta-property: the reserved-word
-  **leaf** sibling of `this` / `super`, reading the constructor a function was
-  invoked with (`undefined` for a plain call). `NewTarget { cv }` — no operand,
-  the same shape as `Super`. Spelled with two tokens plus a dot in source, but
-  the `.` is part of the spelling (not a member access), so it is modelled as
-  an atomic leaf node rather than a `MemberExpression`; the renaming passes
-  never touch it. It tags at `PREC_PRIMARY` and the emitter prints the literal
-  spelling `new.target`. Node + `closure-emitter` + all pass traversals land in
-  one atomic PR; the bridge-enable + conformance port follow.
 
 ## What's coming (follow-up PRs)
 

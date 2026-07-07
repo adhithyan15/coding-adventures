@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-json-parser"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2021"
 description = "JSON parser — parses JSON source text into an AST using the grammar-driven parser and the json.grammar file"
 

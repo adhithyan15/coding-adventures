@@ -4,11 +4,6 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
-- Added `smart_home.get_command_lifecycle_brief`, a read-only Chief adapter
-  that joins D23 command-result, command-risk, authorization-gap,
-  service-execution safety, recovery readiness, and runtime maintenance
-  closeout signals into one command lifecycle gate without dispatching commands
-  or owning smart-home state.
 - Added `smart_home.get_recovery_readiness_brief`, a read-only Chief adapter
   that composes existing D23 recovery, service-execution safety, activation
   rollback, observability, guardrail, compliance, attestation, evidence, and
