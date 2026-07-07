@@ -1271,7 +1271,9 @@ def _string_method(recv: str, name: str, args: list[Val]) -> Val:
         # single space rather than raising, holding the never-raise floor.
         width = int(args[0]) if args and isinstance(args[0], (int, float)) else 0
         pad = args[1] if len(args) > 1 and isinstance(args[1], str) and args[1] else " "
-        deficit = width - len(recv)
+        # Clamp the padding to `_MAX_REPEAT_LEN` — the same DoS bound `_str_repeat`
+        # uses — so a hostile width (e.g. ``"".ljust(10**12)``) cannot OOM the host.
+        deficit = min(width - len(recv), _MAX_REPEAT_LEN)
         if deficit <= 0:
             return recv
         if name == "ljust":
