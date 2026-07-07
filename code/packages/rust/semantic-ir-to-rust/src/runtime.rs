@@ -1448,7 +1448,9 @@ pub const RUNTIME: &str = r##"mod __sir {
                 "length" | "size" | "first" | "last" | "[]" | "reverse" | "sort" | "join"
                     | "include?" | "push" | "append" | "pop" | "fetch" | "each" | "map"
                     | "collect" | "select" | "filter" | "reject" | "find" | "detect" | "any?"
-                    | "all?" | "none?" | "reduce" | "inject"
+                    | "all?" | "none?" | "reduce" | "inject" | "sort_by" | "min_by" | "max_by"
+                    | "group_by" | "partition" | "flat_map" | "collect_concat" | "take_while"
+                    | "drop_while" | "count" | "each_with_object"
             ),
             Value::Map(_) => matches!(
                 name,
@@ -1695,6 +1697,185 @@ pub const RUNTIME: &str = r##"mod __sir {
                     acc = apply_closure(b, vec![acc, item.clone()]);
                 }
                 acc
+            }
+            // `sort_by { |x| key }` — sort by the block-computed key using the
+            // runtime's numeric ordering (`num_lt`), stable on ties.  The keys
+            // are computed once (Schwartzian) so the block runs O(n), not
+            // O(n log n), times.
+            "sort_by" => match &block {
+                Some(b) => {
+                    // Snapshot into an owned Vec FIRST so no borrow of the
+                    // receiver's cell is held while the block runs — a block
+                    // that mutates the same array must not double-borrow-panic.
+                    let snapshot = items_rc.borrow().clone();
+                    let mut keyed: Vec<(Value, Value)> = snapshot
+                        .into_iter()
+                        .map(|item| (apply_closure(b, vec![item.clone()]), item))
+                        .collect();
+                    keyed.sort_by(|(ka, _), (kb, _)| {
+                        if num_lt(ka, kb) {
+                            std::cmp::Ordering::Less
+                        } else if num_lt(kb, ka) {
+                            std::cmp::Ordering::Greater
+                        } else {
+                            std::cmp::Ordering::Equal
+                        }
+                    });
+                    seq_lit(keyed.into_iter().map(|(_, item)| item).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `min_by`/`max_by { |x| key }` — the element with the smallest /
+            // largest block key.  First element wins a tie (strict `<`); an
+            // empty array yields `nil`.
+            "min_by" | "max_by" => match &block {
+                Some(b) => {
+                    let want_min = name == "min_by";
+                    let snapshot = items_rc.borrow().clone();
+                    let mut best: Option<(Value, Value)> = None;
+                    for item in snapshot {
+                        let k = apply_closure(b, vec![item.clone()]);
+                        let take = match &best {
+                            None => true,
+                            Some((bk, _)) => {
+                                if want_min {
+                                    num_lt(&k, bk)
+                                } else {
+                                    num_lt(bk, &k)
+                                }
+                            }
+                        };
+                        if take {
+                            best = Some((k, item));
+                        }
+                    }
+                    best.map(|(_, item)| item).unwrap_or(Value::Nil)
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `group_by { |x| key }` — a Hash mapping each block key to the
+            // Array of elements that produced it, in first-seen key order and
+            // element order.
+            "group_by" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    let acc = map_lit(vec![]);
+                    for item in snapshot {
+                        let k = apply_closure(b, vec![item.clone()]);
+                        let bucket = match map_get(&acc, &k) {
+                            seq @ Value::Seq(_) => seq,
+                            _ => seq_lit(vec![]),
+                        };
+                        if let Value::Seq(inner) = &bucket {
+                            inner.borrow_mut().push(item);
+                        }
+                        map_set(&acc, k, bucket);
+                    }
+                    acc
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `partition { |x| pred }` — `[matching, non_matching]`, each a
+            // fresh Array, preserving order.
+            "partition" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    let mut yes = Vec::new();
+                    let mut no = Vec::new();
+                    for item in snapshot {
+                        if truthy(&apply_closure(b, vec![item.clone()])) {
+                            yes.push(item);
+                        } else {
+                            no.push(item);
+                        }
+                    }
+                    seq_lit(vec![seq_lit(yes), seq_lit(no)])
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `flat_map { |x| … }` — map then concatenate one level: an Array
+            // result splices its elements, a scalar is appended as-is.
+            "flat_map" | "collect_concat" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    let mut out = Vec::new();
+                    for item in snapshot {
+                        match apply_closure(b, vec![item]) {
+                            Value::Seq(inner) => out.extend(inner.borrow().clone()),
+                            other => out.push(other),
+                        }
+                    }
+                    seq_lit(out)
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `take_while` / `drop_while { |x| pred }` — the leading run for
+            // which the block is truthy (and the remainder after it).
+            "take_while" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    let mut out = Vec::new();
+                    for item in snapshot {
+                        if truthy(&apply_closure(b, vec![item.clone()])) {
+                            out.push(item);
+                        } else {
+                            break;
+                        }
+                    }
+                    seq_lit(out)
+                }
+                None => unknown_method(&recv, name),
+            },
+            "drop_while" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    let mut out = Vec::new();
+                    let mut dropping = true;
+                    for item in snapshot {
+                        if dropping && truthy(&apply_closure(b, vec![item.clone()])) {
+                            continue;
+                        }
+                        dropping = false;
+                        out.push(item);
+                    }
+                    seq_lit(out)
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `count` — with a block, the number of truthy results; with an
+            // argument, the count `==` to it; with neither, the length.
+            "count" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    let n = snapshot
+                        .into_iter()
+                        .filter(|it| truthy(&apply_closure(b, vec![it.clone()])))
+                        .count();
+                    Value::Int(n as i64)
+                }
+                None => match pos.first() {
+                    Some(needle) => {
+                        let needle = needle.clone();
+                        Value::Int(
+                            items_rc.borrow().iter().filter(|x| value_eq(x, &needle)).count() as i64,
+                        )
+                    }
+                    None => Value::Int(items_rc.borrow().len() as i64),
+                },
+            },
+            // `each_with_object(obj) { |x, obj| … }` — yields each element with
+            // the memo object and returns the (mutated) memo.
+            "each_with_object" => {
+                let b = match &block {
+                    Some(b) => b,
+                    None => return unknown_method(&recv, name),
+                };
+                let obj = pos.into_iter().next().unwrap_or(Value::Nil);
+                let snapshot = items_rc.borrow().clone();
+                for item in snapshot {
+                    apply_closure(b, vec![item, obj.clone()]);
+                }
+                obj
             }
             // ── aggregate / reshape Array methods (non-block) ─────
             //

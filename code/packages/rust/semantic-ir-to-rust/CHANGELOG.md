@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.20.0 — Array block-method breadth (sort_by / group_by / partition / …)
+
+Extends the emitted runtime's `array_method` catalog with the common
+block-taking Ruby `Enumerable`/`Array` methods that were missing, and grows the
+`respond_to?` table to match:
+
+- `sort_by { |x| key }` — key-sorted (Schwartzian: block runs O(n), stable).
+- `min_by` / `max_by { |x| key }` — element with the extremal block key
+  (first-on-tie; `nil` on empty).
+- `group_by { |x| key }` — a Hash of key → Array of elements.
+- `partition { |x| pred }` — `[matching, non_matching]`.
+- `flat_map` / `collect_concat { |x| … }` — map then splice one level.
+- `take_while` / `drop_while { |x| pred }` — the leading truthy run / remainder.
+- `count` — block (truthy count), argument (`==` count), or bare (length).
+- `each_with_object(memo) { |x, memo| … }` — folds into and returns the memo.
+
+Ordering reuses the runtime's numeric `<` (`num_lt`); a block-less call floors
+to the existing `NoMethodError` (Ruby returns an Enumerator, a v0 cut-line).
+Verified end-to-end under `rustc`.
+
 ## 0.19.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 First increment of the SIR display-convention spec (`code/specs/sir-display-convention.md`).
