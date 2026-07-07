@@ -52,16 +52,40 @@ def eq(a: Any, b: Any) -> bool:
     return bool(a == b)
 
 
+# ── source-language display convention (SIR display-convention spec) ──
+#
+# The default convention is ``"lisp"`` (Twig/Scheme: booleans as ``#t`` / ``#f``),
+# matching this library's original behaviour.  A Ruby-sourced emitted program
+# calls :func:`set_display_convention` with ``"ruby"`` once at startup so
+# ``puts true`` prints ``true``.  Module-level state (each emitted program is its
+# own process) keeps ``to_display`` and every call site convention-aware without
+# threading a parameter through the whole display path.
+_DISPLAY_CONVENTION = "lisp"
+
+
+def set_display_convention(name: str) -> None:
+    """Select the value-display convention: ``"ruby"`` or ``"lisp"`` (default).
+
+    An unrecognised name falls back to the ``"lisp"`` default rather than
+    raising, so a forward-compatible emitter can never crash an older runtime."""
+    global _DISPLAY_CONVENTION
+    _DISPLAY_CONVENTION = "ruby" if name == "ruby" else "lisp"
+
+
 def to_display(v: Any) -> str:
     """SIR display form of a value.
 
-    Distinct from ``repr``: ``nil`` prints as ``nil``, booleans as
-    ``#t`` / ``#f``, a symbol as its bare name, a pair as a Lisp list.
-    Everything else falls back to ``str`` (which renders ints/floats/
-    sequences/maps natively, and pairs via :meth:`Pair.__repr__`)."""
+    Distinct from ``repr``: ``nil`` prints as ``nil``, a symbol as its bare
+    name, a pair as a Lisp list.  Booleans follow the active display convention
+    (see :func:`set_display_convention`): ``true`` / ``false`` under ``"ruby"``,
+    else the default Lisp ``#t`` / ``#f``.  Everything else falls back to
+    ``str`` (which renders ints/floats/sequences/maps natively, and pairs via
+    :meth:`Pair.__repr__`)."""
     if v is None:
         return "nil"
     if isinstance(v, bool):
+        if _DISPLAY_CONVENTION == "ruby":
+            return "true" if v else "false"
         return "#t" if v else "#f"
     if isinstance(v, Symbol):
         return v.name
