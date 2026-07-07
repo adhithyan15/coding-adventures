@@ -683,6 +683,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const STRING_METHODS = new Set([
     "capitalize", "chomp", "chars", "bytes", "sub", "gsub", "to_i", "to_f",
     "to_sym", "to_s", "empty?", "index", "reverse", "size",
+    "ljust", "rjust", "center", "swapcase",
   ]);
   // Ruby `String#to_i` / `#to_f`: parse a LEADING numeric prefix (optional
   // sign, digits, and — for to_f — a fractional/exponent part), yielding 0 when
@@ -758,6 +759,44 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           return recv.split(args[0]).join(args[1]);
         }
         return recv;
+      }
+      case "ljust":
+      case "rjust":
+      case "center": {
+        // Ruby String#ljust/#rjust/#center(width, pad = " "): pad to `width`
+        // RUNES using `pad` cyclically; `width <= current rune length` returns
+        // the string unchanged; `center` puts an odd extra pad rune on the
+        // RIGHT.  An empty pad degrades to a single space (never-raise floor).
+        const width = args.length > 0 ? Math.trunc(numArg(args[0])) : 0;
+        let pad = " ";
+        if (args.length > 1 && typeof args[1] === "string" && args[1] !== "") {
+          pad = args[1];
+        }
+        const cps = [...recv];
+        if (width <= cps.length) { return recv; }
+        const total = width - cps.length;
+        const pr = [...pad];
+        const buildPad = (n) => {
+          let out = "";
+          for (let i = 0; i < n; i++) { out += pr[i % pr.length]; }
+          return out;
+        };
+        if (name === "ljust") { return recv + buildPad(total); }
+        if (name === "rjust") { return buildPad(total) + recv; }
+        const left = Math.floor(total / 2);
+        return buildPad(left) + recv + buildPad(total - left);
+      }
+      case "swapcase": {
+        // Flip the case of each ASCII letter (leaving non-letters and non-ASCII
+        // code points untouched).  Iterating the string yields whole runes.
+        let out = "";
+        for (const ch of recv) {
+          const c = ch.codePointAt(0);
+          if (c >= 65 && c <= 90) { out += String.fromCodePoint(c + 32); }
+          else if (c >= 97 && c <= 122) { out += String.fromCodePoint(c - 32); }
+          else { out += ch; }
+        }
+        return out;
       }
     }
     return STR_MISS;

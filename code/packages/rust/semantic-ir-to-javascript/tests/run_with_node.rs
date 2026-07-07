@@ -2283,6 +2283,31 @@ fn string_catalog_methods() {
     }
 }
 
+// v0.19.0 justify / swapcase String methods.  `ljust`/`rjust`/`center` pad in
+// RUNES with a cyclic pad (center's odd extra pad on the RIGHT); a `width` no
+// larger than the string is a no-op; `swapcase` flips ASCII case.  All route
+// through the explicit `stringMethod` switch (never `recv[name]`).
+#[test]
+fn string_justify_swapcase_methods() {
+    let stmts = vec![
+        print(method(str_("hi"), "ljust", vec![int(5)])),                 // "hi   "
+        print(method(str_("hi"), "ljust", vec![int(5), str_("*")])),      // hi***
+        print(method(str_("hi"), "rjust", vec![int(5), str_("*")])),      // ***hi
+        print(method(str_("hi"), "center", vec![int(6), str_("*")])),     // **hi**
+        print(method(str_("hi"), "center", vec![int(5), str_("*")])),     // *hi**
+        print(method(str_("abc"), "ljust", vec![int(1)])),                // abc (no-op)
+        print(method(str_("abcdef"), "ljust", vec![int(10), str_("xy")])), // abcdefxyxy
+        print(method(str_("Hello World"), "swapcase", vec![])),           // hELLO wORLD
+    ];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "strjustify") {
+        assert_eq!(
+            stdout,
+            "hi   \nhi***\n***hi\n**hi**\n*hi**\nabc\nabcdefxyxy\nhELLO wORLD"
+        );
+    }
+}
+
 // ── Ruby Hash method catalog (hand-implemented, explicit dispatch) ──
 //
 // Exercises the `hashMethod` catalog end-to-end under Node: `keys`/`values`/
