@@ -459,6 +459,19 @@ pub fn emit_module(m: &Module) -> String {
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str(RUNTIME);
+    // Source-language display convention (SIR display-convention spec): a
+    // Ruby-sourced module selects the Ruby boolean form (`true`/`false`) once
+    // at startup via the namespace-imported `__Sir`; every other source
+    // language keeps the default Lisp `#t`/`#f`, so existing Twig output is
+    // unchanged.
+    //
+    // SECURITY: the emitted argument is a hardcoded `"ruby"` literal chosen by
+    // an exact `== "ruby"` comparison — never text derived from
+    // `source_language` or any other source-controlled field — so this can
+    // never inject into the emitted TypeScript.
+    if m.metadata.source_language.as_deref() == Some("ruby") {
+        out.push_str("__Sir.setDisplayConvention(\"ruby\");\n");
+    }
     // Only OOP-using modules import the OOP runtime, so a pure
     // arithmetic module gains no dependency on it.
     if uses_oop(m) {
@@ -2630,6 +2643,47 @@ mod tests {
         assert!(out.contains(r#"import * as __Sir from "@coding-adventures/sir-runtime-core";"#));
         assert!(out.contains("function main()"));
         assert!(out.contains("const __sir_result: __Sir.Val = main();"));
+        // A non-Ruby module must NOT emit the display-convention setter.
+        assert!(
+            !out.contains("setDisplayConvention"),
+            "twig module must keep the default Lisp display; got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn emit_display_convention_ruby_selects_ruby_booleans() {
+        // A Ruby-sourced module emits the display-convention setter once so
+        // `puts true` renders `true`; a non-Ruby module (above) does not.
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("ruby")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(
+            out.contains(r#"__Sir.setDisplayConvention("ruby");"#),
+            "ruby module must select the Ruby display convention; got:\n{out}"
+        );
     }
 
     #[test]

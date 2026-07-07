@@ -19,7 +19,15 @@
 
 export { Sym, intern } from "./symbols.js";
 export { Pair, cons, car, cdr, isPair } from "./pairs.js";
-export { truthy, isNull, isNumber, isSymbol, eq, toDisplay } from "./values.js";
+export {
+  truthy,
+  isNull,
+  isNumber,
+  isSymbol,
+  eq,
+  toDisplay,
+  setDisplayConvention,
+} from "./values.js";
 export type { Val, ClosureLike } from "./values.js";
 export { add, sub, mul, div, lt, gt } from "./arithmetic.js";
 export {
