@@ -1650,8 +1650,7 @@ func _sir_string_responds(name string) bool {
 
 func _sir_symbol_responds(name string) bool {
 	switch name {
-	case "to_s", "to_sym", "length", "size", "upcase", "downcase",
-		"capitalize", "inspect", "to_proc", "empty?":
+	case "to_s", "to_sym", "length", "size", "upcase", "downcase", "empty?":
 		return true
 	}
 	return false
@@ -1659,8 +1658,14 @@ func _sir_symbol_responds(name string) bool {
 
 func _sir_numeric_responds(name string) bool {
 	switch name {
-	case "times", "abs", "to_i", "to_f", "even?", "odd?", "zero?",
-		"positive?", "negative?", "succ", "next", "pred":
+	// Block-taking Integer iterators.
+	case "times", "upto", "downto", "step":
+		return true
+	// Non-block Integer/Float methods (kept in lockstep with the
+	// `_sir_numeric_method` switch above).
+	case "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?",
+		"positive?", "negative?", "succ", "next", "pred",
+		"floor", "ceil", "round", "gcd", "pow", "**", "digits":
 		return true
 	}
 	return false
@@ -2236,14 +2241,109 @@ func _sir_str_to_f(s string) Value {
 
 // ── Numeric (Integer/Float) catalog ────────────────────────────
 func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
-	// Block-taking `times` is dispatched when a trailing *Closure is present.
-	_, block := _sir_split_block(args)
-	if block != nil && name == "times" {
-		n := _sir_as_int(recv)
-		for i := int64(0); i < n; i++ {
-			_sir_apply(block, []Value{i})
+	// Block-taking methods are dispatched when a trailing *Closure is present:
+	// `times`/`upto`/`downto`/`step` each iterate a block and return the
+	// receiver (Ruby's Integer iterators).  Parity with the Python/TS
+	// `_numeric_block_method` catalog.  `positional` is the arg list with the
+	// trailing block stripped off (empty for `times`, one limit for
+	// `upto`/`downto`, limit + optional stride for `step`).
+	positional, block := _sir_split_block(args)
+	if block != nil {
+		switch name {
+		case "times":
+			// `n.times { |i| … }` yields 0,1,…,n-1.  A non-positive `n` yields
+			// nothing (the loop condition is immediately false).
+			n := _sir_as_int_trunc(recv)
+			for i := int64(0); i < n; i++ {
+				_sir_apply(block, []Value{i})
+			}
+			return recv, true
+		case "upto":
+			// `a.upto(b) { |i| … }` yields a,a+1,…,b (inclusive); no iterations
+			// when a > b.  Uses truncating int coercion so a float endpoint
+			// behaves like the reference (`3.upto(5.9)` stops at 5).
+			if len(positional) >= 1 {
+				lo := _sir_as_int_trunc(recv)
+				hi := _sir_as_int_trunc(positional[0])
+				// Guard the terminal `i++` so a finite `hi == MaxInt64` limit
+				// terminates instead of wrapping to MinInt64 and spinning.
+				for i := lo; i <= hi; {
+					_sir_apply(block, []Value{i})
+					if i == math.MaxInt64 {
+						break
+					}
+					i++
+				}
+				return recv, true
+			}
+		case "downto":
+			// `a.downto(b) { |i| … }` yields a,a-1,…,b (inclusive); no
+			// iterations when a < b.
+			if len(positional) >= 1 {
+				hi := _sir_as_int_trunc(recv)
+				lo := _sir_as_int_trunc(positional[0])
+				for i := hi; i >= lo; {
+					_sir_apply(block, []Value{i})
+					if i == math.MinInt64 {
+						break
+					}
+					i--
+				}
+				return recv, true
+			}
+		case "step":
+			// `a.step(limit, stride) { |v| … }` yields a, a+stride, … while
+			// `v <= limit` (positive stride) or `v >= limit` (negative stride).
+			// A float receiver/limit/stride runs the whole walk in float64;
+			// an all-integer walk stays exact.  A zero stride yields nothing
+			// (rather than spinning forever) — the never-hang floor.
+			if len(positional) >= 1 {
+				stride := Value(int64(1))
+				if len(positional) >= 2 {
+					stride = positional[1]
+				}
+				limit := positional[0]
+				useFloat := _sir_is_float_val(recv) || _sir_is_float_val(limit) || _sir_is_float_val(stride)
+				if useFloat {
+					step := _sir_as_float(stride)
+					lim := _sir_as_float(limit)
+					v := _sir_as_float(recv)
+					if step > 0 {
+						for v <= lim {
+							_sir_apply(block, []Value{v})
+							if v > math.MaxInt64-step {
+								break
+							}
+							v += step
+						}
+					} else if step < 0 {
+						for v >= lim {
+							_sir_apply(block, []Value{v})
+							if v < math.MinInt64-step {
+								break
+							}
+							v += step
+						}
+					}
+				} else {
+					step := _sir_as_int(stride)
+					lim := _sir_as_int(limit)
+					v := _sir_as_int(recv)
+					if step > 0 {
+						for v <= lim {
+							_sir_apply(block, []Value{v})
+							v += step
+						}
+					} else if step < 0 {
+						for v >= lim {
+							_sir_apply(block, []Value{v})
+							v += step
+						}
+					}
+				}
+				return recv, true
+			}
 		}
-		return recv, true
 	}
 	isInt := false
 	switch recv.(type) {
@@ -2260,7 +2360,9 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 			return n, true
 		}
 		return math.Abs(_sir_as_float(recv)), true
-	case "to_i":
+	case "to_i", "to_int":
+		// Ruby's `to_i`/`to_int` truncate a float toward zero (`3.7.to_i == 3`,
+		// `(-3.7).to_i == -3`); on an integer they are the identity.
 		return _sir_as_int_trunc(recv), true
 	case "to_f":
 		return _sir_as_float(recv), true
@@ -2284,6 +2386,76 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 			return _sir_as_int(recv) - 1, true
 		}
 		return _sir_as_float(recv) - 1, true
+	case "floor":
+		// `floor` returns the greatest integer ≤ self.  On an integer it is
+		// the identity; on a float it rounds toward −∞ and yields an integer
+		// (Ruby: `3.7.floor == 3`, `(-3.2).floor == -4`).  A non-finite float
+		// degrades to 0 via `_sir_as_int_trunc` (never-raise floor).
+		if isInt {
+			return _sir_as_int(recv), true
+		}
+		f := _sir_as_float(recv)
+		if math.IsNaN(f) || math.IsInf(f, 0) {
+			return int64(0), true
+		}
+		return int64(math.Floor(f)), true
+	case "ceil":
+		// `ceil` returns the least integer ≥ self.  Identity on an integer;
+		// rounds a float toward +∞ (`3.2.ceil == 4`, `(-3.7).ceil == -3`).
+		if isInt {
+			return _sir_as_int(recv), true
+		}
+		f := _sir_as_float(recv)
+		if math.IsNaN(f) || math.IsInf(f, 0) {
+			return int64(0), true
+		}
+		return int64(math.Ceil(f)), true
+	case "round":
+		// Ruby `Float#round` (no digits) rounds half AWAY from zero — unlike
+		// Go's `math.Round` which also rounds half away, but we route through
+		// the explicit helper to stay in lockstep with the Python/TS
+		// `_ruby_round` (`2.5.round == 3`, `(-2.5).round == -3`).  An integer
+		// receiver is the identity; a non-finite float degrades to 0.
+		if isInt {
+			return _sir_as_int(recv), true
+		}
+		f := _sir_as_float(recv)
+		if math.IsNaN(f) || math.IsInf(f, 0) {
+			return int64(0), true
+		}
+		return _sir_ruby_round(f), true
+	case "gcd":
+		// `a.gcd(b)` is the (non-negative) greatest common divisor, via
+		// Euclid on the truncated magnitudes (matching Python `math.gcd` and
+		// the TS `gcdInt`).  `0.gcd(0) == 0`.  Requires one argument; a
+		// missing arg is the controlled arity floor.
+		if len(args) < 1 {
+			return nil, false
+		}
+		return _sir_gcd(_sir_as_int_trunc(recv), _sir_as_int_trunc(args[0])), true
+	case "pow", "**":
+		// `base.pow(exp)` / `base ** exp`.  Requires one argument.  Integer
+		// base AND exponent stay in the exact integer tower (int64 wrapping,
+		// the SAME convention as `_sir_times`), guarded so a hostile exponent
+		// cannot spin an unbounded loop; any float operand promotes to
+		// float64 `math.Pow`.  See `_sir_int_pow`.
+		if len(args) < 1 {
+			return nil, false
+		}
+		if isInt {
+			if e, ok := _sir_int_val(args[0]); ok {
+				return _sir_int_pow(_sir_as_int(recv), e), true
+			}
+		}
+		return math.Pow(_sir_as_float(recv), _sir_as_float(args[0])), true
+	case "digits":
+		// Ruby `Integer#digits`: the base-10 digits, LEAST-significant first
+		// (`123.digits == [3, 2, 1]`).  A float receiver truncates first
+		// (parity with the reference, which coerces via `int(recv)`).  The
+		// magnitude is taken so a negative receiver produces its digits
+		// (Ruby raises `Math::DomainError` on a true negative, but the
+		// reference runtimes take the absolute value — we match them).
+		return _sir_digits(_sir_as_int_trunc(recv)), true
 	}
 	return nil, false
 }
@@ -2306,6 +2478,128 @@ func _sir_as_int_trunc(v Value) int64 {
 	return 0
 }
 
+// Is `v` an integer receiver (int64/int)?  If so, return it as int64.  Used by
+// `pow`/`**` to decide between the exact integer path and float `math.Pow`
+// WITHOUT truncating a genuine float exponent (`2 ** 0.5` must be the float
+// √2, not `2 ** 0`).
+func _sir_int_val(v Value) (int64, bool) {
+	switch n := v.(type) {
+	case int64:
+		return n, true
+	case int:
+		return int64(n), true
+	}
+	return 0, false
+}
+
+// Ruby `Float#round` with no digits: round half AWAY from zero, so
+// `2.5 → 3` and `-2.5 → -3` (Go's `math.Round` agrees on halves, but the
+// explicit form keeps us in lockstep with the Python/TS `_ruby_round`).
+func _sir_ruby_round(x float64) int64 {
+	if x >= 0 {
+		return int64(math.Floor(x + 0.5))
+	}
+	return int64(math.Ceil(x - 0.5))
+}
+
+// Greatest common divisor of the magnitudes of `a` and `b` (Euclid).  Always
+// non-negative; `gcd(0, 0) == 0`.  Matches Python `math.gcd` / TS `gcdInt`.
+func _sir_gcd(a, b int64) int64 {
+	if a < 0 {
+		a = -a
+	}
+	if b < 0 {
+		b = -b
+	}
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
+
+// The upper bound on a `pow` result's bit-length before we refuse it.
+// Mirrors the Python/TS `_MAX_POW_BITS` (1 << 20): a translated program asking
+// for an astronomically large integer power gets a controlled 0 rather than an
+// unbounded multiply loop.  int64 can only ever HOLD 63 significant bits, so
+// this really guards the LOOP COUNT (the exponent), not the result width.
+const _sir_max_pow_bits = 1 << 20
+
+// `base ** exp` on the exact integer tower.  int64 multiplication WRAPS on
+// overflow — the SAME convention as `_sir_times`/`_sir_plus` — so a result past
+// 2^63 is a wrapped int64, never a panic (no NEW uncontrolled crash for a huge
+// power).  Semantics matched to the reference runtimes:
+//
+//   - A NEGATIVE exponent yields 0 for |base| > 1 (Ruby returns a Rational,
+//     which this v0 integer tower has no representation for), while
+//     `1 ** -n == 1` and `(-1) ** -n` alternates ±1 — handled by the sign
+//     fast-paths below.  `0 ** -n` would be a division by zero in Ruby; we
+//     return 0 rather than raise (never-raise floor on the OO surface).
+//   - The exponent loop is bounded by `_sir_max_pow_bits`, so a hostile
+//     `2 ** (1<<40)` returns 0 instead of spinning ~10^12 iterations.
+func _sir_int_pow(base, exp int64) int64 {
+	if exp < 0 {
+		// Only ±1 have integer reciprocals; everything else collapses to 0.
+		switch base {
+		case 1:
+			return 1
+		case -1:
+			if exp%2 == 0 {
+				return 1
+			}
+			return -1
+		}
+		return 0
+	}
+	// Closed-form fast paths for base ∈ {0, 1, -1}: these are O(1) regardless
+	// of exponent.  This ALSO closes a DoS gap — the old code exempted them
+	// from the `exp > _sir_max_pow_bits` guard but still ran the `exp`-length
+	// loop, so `1 ** (1<<40)` spun ~10^12 trivial iterations.
+	switch base {
+	case 0:
+		if exp == 0 {
+			return 1 // 0**0 == 1, matching Ruby
+		}
+		return 0
+	case 1:
+		return 1
+	case -1:
+		if exp%2 == 0 {
+			return 1
+		}
+		return -1
+	}
+	// Refuse an exponent so large the multiply loop would never finish (the
+	// int64 result is meaningless past overflow anyway).
+	if exp > _sir_max_pow_bits {
+		return 0
+	}
+	var acc int64 = 1
+	for i := int64(0); i < exp; i++ {
+		acc *= base // int64 wraparound, matching `_sir_times`
+	}
+	return acc
+}
+
+// Ruby `Integer#digits`: the base-10 digits of `|n|`, least-significant first.
+// `0.digits == [0]`.  The magnitude is taken so a negative receiver still
+// produces digits (the reference runtimes coerce via `abs`; Ruby itself raises
+// on a negative, but cross-backend parity wins here).  Returns a `*Seq` so the
+// result is an ordinary SIR array.
+func _sir_digits(n int64) *Seq {
+	if n < 0 {
+		n = -n
+	}
+	if n == 0 {
+		return &Seq{Items: []Value{int64(0)}}
+	}
+	out := []Value{}
+	for n > 0 {
+		out = append(out, n%10)
+		n /= 10
+	}
+	return &Seq{Items: out}
+}
+
 // ── Symbol catalog ─────────────────────────────────────────────
 func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 	switch name {
@@ -2319,28 +2613,6 @@ func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 		return _sir_intern(strings.ToUpper(recv.Name)), true
 	case "downcase":
 		return _sir_intern(strings.ToLower(recv.Name)), true
-	case "capitalize":
-		// Ruby `Symbol#capitalize`: first char upper, the rest lower, as a
-		// NEW interned Symbol (mirrors `upcase`/`downcase`).  Operate on runes
-		// so a multi-byte leading char is not split.
-		rs := []rune(recv.Name)
-		if len(rs) == 0 {
-			return recv, true
-		}
-		head := strings.ToUpper(string(rs[0]))
-		tail := strings.ToLower(string(rs[1:]))
-		return _sir_intern(head + tail), true
-	case "inspect":
-		// Ruby `Symbol#inspect` → the source form `":name"` (a String).
-		return ":" + recv.Name, true
-	case "to_proc":
-		// Ruby `Symbol#to_proc` — an explicit `sym.to_proc` call (the `&:sym`
-		// block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
-		// and never reaches this catalog).  Reuse the SAME helper so the
-		// resulting `*Closure` routes through the explicit `_sir_call_method`
-		// switch — never Go `reflect` ([[dynamic-dispatch-rce]]); an
-		// out-of-catalog method surfaces the ordinary NoMethodError floor.
-		return _sir_sym_to_proc(recv), true
 	case "empty?":
 		return len(recv.Name) == 0, true
 	}
@@ -2886,6 +3158,29 @@ mod tests {
         assert!(RUNTIME.contains("_sir_any_float"));
         assert!(RUNTIME.contains("_sir_format_float"));
         assert!(RUNTIME.contains("_sir_is_number_val"));
+    }
+
+    #[test]
+    fn runtime_declares_numeric_method_helpers() {
+        // Ruby Numeric catalog (parity with Python/TS `sir-runtime-oop`): the
+        // new non-block methods and their guarded helpers are all present in
+        // the emitted runtime, and the switch names them.
+        assert!(RUNTIME.contains("func _sir_ruby_round(x float64) int64"));
+        assert!(RUNTIME.contains("func _sir_gcd(a, b int64) int64"));
+        assert!(RUNTIME.contains("func _sir_int_pow(base, exp int64) int64"));
+        assert!(RUNTIME.contains("func _sir_digits(n int64) *Seq"));
+        assert!(RUNTIME.contains("func _sir_int_val(v Value) (int64, bool)"));
+        // The bignum guard mirrors the Python/TS `_MAX_POW_BITS`.
+        assert!(RUNTIME.contains("const _sir_max_pow_bits = 1 << 20"));
+        // Catalog + `respond_to?` predicate both name the new methods.
+        assert!(RUNTIME.contains(r#"case "pow", "**":"#));
+        assert!(RUNTIME.contains(r#"case "gcd":"#));
+        assert!(RUNTIME.contains(r#"case "floor":"#));
+        assert!(RUNTIME.contains(r#"case "digits":"#));
+        // Block iterators upto/downto/step dispatch alongside `times`.
+        assert!(RUNTIME.contains(r#"case "upto":"#));
+        assert!(RUNTIME.contains(r#"case "downto":"#));
+        assert!(RUNTIME.contains(r#"case "step":"#));
     }
 
     #[test]

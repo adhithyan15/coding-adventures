@@ -2137,49 +2137,6 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
-## CLOC12.167 — `NewTarget` (`new.target`): atomic node + emit + passes (PR1)
-
-Adds `Expression::NewTarget { cv }` to `javascript-ast` (0.26.0) — the
-`new.target` meta-property, the reserved-word **leaf** sibling of `this` /
-`super`. It reads the constructor a function was invoked with (`undefined` for
-a plain call; the constructor for a `new` call). Like `this` / `super` it is
-the simplest possible node: no operand, no axis, the same shape as `Super` /
-`ThisExpression`.
-
-Although `new.target` is spelled with **two tokens plus a dot** in source, it
-is semantically an *atomic* meta-property — the `.` is part of the spelling,
-not a member access — so it is modelled as its own leaf variant rather than a
-`MemberExpression`. It can never be a variable name, so the renaming passes
-must exclude it structurally.
-
-**Emit (`closure-emitter` 0.31.0).** `emit_new_target` writes the literal
-ten-character spelling `new.target`. `new.target` tags at `PREC_PRIMARY` — the
-tightest level, like `this` — so it never needs wrapping in any parent
-(`new.target.x`, `f(new.target)`, `new.target+1` all print bare) and never
-forces a paren around an operand (it has none).
-
-**Passes (PATCH bumps).** The three rebuild passes (`constant-fold`, `dce`,
-`fold-control-flow`) clone the leaf through unchanged like the literals;
-`fold-control-flow` also gains a `NewTarget` arm in its `expression_cv`
-accessor. The six traversal passes get a no-op arm (`new.target` binds/
-references no ordinary identifier and has no sub-expression). Atomic node PR1:
-node + emit + all nine downstream pass arms land together so the workspace
-never breaks.
-
-### gap-168 — bridge declines `new.target` (`NewTarget`) — pending (CLOC12.167 PR2)
-
-The `javascript-parser` bridge returns `UnsupportedSyntax { rule: "NewTarget" }`
-in `convert_member_expression` (the `new`-token region: `has_token(node, "new")`
-&& a child token whose value is `"target"`), so any file containing
-`new.target` currently drops to WHITESPACE_ONLY. Like `this` (gap-166) and
-`super` (gap-167) — and **unlike `await` (gap-165)** — `new.target` is already
-parseable: there is a dedicated `new_target_expression` grammar rule and the
-bridge *reaches* and explicitly declines it, so PR2 is a pure bridge slice with
-**no grammar work required**: swap the decline for
-`Ok(Expression::NewTarget(NewTarget { cv: … }))`, mirroring the `super` fix.
-Tracked for CLOC12.167 PR2.
-
-
 ## CLOC12.166 — `Super` (`super`): atomic node + emit + passes (PR1)
 
 Adds `Expression::Super { cv }` to `javascript-ast` (0.25.0) — the `super`

@@ -148,12 +148,6 @@ catalog by model kind for compact release dashboards and Mosaic UI inventories.
 `format_model_card_supported_parameter_coverage_gate_issue_json` validate the
 expected seven-kind, 67-row supported-parameter catalog and expose stable issue
 rows for release automation.
-`model_card_supported_parameter_coverage_dashboard`,
-`format_model_card_supported_parameter_coverage_dashboard_table`,
-`model_card_supported_parameter_coverage_dashboard_records`,
-`format_model_card_supported_parameter_coverage_dashboard_csv`, and
-`format_model_card_supported_parameter_coverage_dashboard_json` combine the
-per-kind summary counts with gate issue fields for Mosaic/browser dashboards.
 `device_model_audit_fixtures` returns the canonical cross-language fixture
 cards used to keep the Rust, Python, and TypeScript ports aligned.
 `device_model_behavior_audit_fixtures` extends those cards into runnable

@@ -33,18 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model supported-parameter coverage dashboard.
+1. Device model supported-parameter coverage gate.
    - Status: current PR completion candidate.
-   - Add Python, Rust, and TypeScript helpers that combine supported
-     model-card parameter coverage summaries with release-gate issue fields
-     into per-kind dashboard rows.
-   - Expose stable table, header-keyed record, CSV, and compact JSON exports
-     carrying actual versus expected canonical-parameter, accepted-name,
-     alias-bearing, max-alias, pass/fail, issue-count, and issue-field data for
-     Mosaic/browser dashboards and release automation.
-   - Keep normalization, the 67-row catalog, the seven-row summary, and the
-     gate semantics unchanged while locking a negative missing-NMOS-`VT0`
-     dashboard row across the three packages.
+   - Add Python, Rust, and TypeScript helpers that validate the supported
+     model-card parameter alias catalog against the expected seven model kinds,
+     67 canonical rows, 113 accepted names, alias-bearing parameter totals, and
+     max alias depth.
+   - Expose a stable pass/fail gate report plus issue table, header-keyed
+     records, CSV, and compact JSON exports for release automation, browser
+     dashboards, and deck-tooling UIs.
+   - Keep normalization, the 67-row catalog, and the seven-row summary
+     unchanged while locking a negative missing-NMOS-`VT0` alias-family gate
+     issue across the three packages.
 
 ## Completed Slices
 
@@ -2923,17 +2923,6 @@ the Rust, Python, and TypeScript surfaces together.
      parameter inventories.
    - Cross-language tests lock the seven-row summary and MOS Level-1 alias
      families without changing normalization or the underlying 67-row catalog.
-
-210. Device model supported-parameter coverage gate.
-   - Status: completed in PR 7675.
-   - Python, Rust, and TypeScript now expose supported-parameter coverage gate
-     reports plus stable issue table, header-keyed record, CSV, and compact JSON
-     exports.
-   - The gate validates the expected seven model kinds, 67 canonical rows, 113
-     accepted names, alias-bearing parameter totals, and max alias depth.
-   - Cross-language tests lock the passing current catalog and a negative
-     missing-NMOS-`VT0` alias-family gate issue without changing normalization
-     or the underlying catalog/summary surfaces.
 
 ## Backlog
 
