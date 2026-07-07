@@ -69,6 +69,25 @@ describe("predicates and display", () => {
     expect(sir.toDisplay("hi")).toBe("hi");
   });
 
+  it("display convention: Ruby booleans", () => {
+    // Default is Lisp (`#t`/`#f`); a Ruby-sourced program selects
+    // `true`/`false`. Restore the default so module state does not leak.
+    try {
+      sir.setDisplayConvention("ruby");
+      expect(sir.toDisplay(true)).toBe("true");
+      expect(sir.toDisplay(false)).toBe("false");
+      // Non-boolean forms are convention-independent.
+      expect(sir.toDisplay(null)).toBe("nil");
+      expect(sir.toDisplay(sir.intern("sym"))).toBe("sym");
+      // An unrecognised convention falls back to the Lisp default.
+      sir.setDisplayConvention("klingon");
+      expect(sir.toDisplay(true)).toBe("#t");
+    } finally {
+      sir.setDisplayConvention("lisp");
+    }
+    expect(sir.toDisplay(true)).toBe("#t");
+  });
+
   it("print returns null and writes display form", () => {
     const lines: string[] = [];
     const spy = vi.spyOn(console, "log").mockImplementation((s: string) => {
