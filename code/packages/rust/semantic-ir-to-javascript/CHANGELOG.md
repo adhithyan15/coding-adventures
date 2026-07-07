@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.16.0 — source-language display convention: Ruby booleans (`true`/`false`)
+
+Mirrors the Rust/Go backends' display-convention increment (SIR
+display-convention spec) to JavaScript. A **Ruby**-sourced module now renders
+booleans as `true`/`false` instead of the Twig/Lisp `#t`/`#f`, so a translated
+`puts true` prints `true`.
+
+Mechanism: the runtime carries a `const SIR_DISPLAY_RUBY` (a
+`__SIR_DISPLAY_RUBY__` placeholder); the emitter substitutes `true`/`false`
+from `Module.metadata.source_language` (`== "ruby"` → `true`, else `false`).
+`formatSeen` branches the boolean arm on it. The default is the Lisp form, so
+all existing non-Ruby (Twig) output is **byte-for-byte unchanged**.
+
+Scope: booleans only; `nil`, symbols, string `inspect` quoting, and the Ruby
+hash `=>` element form remain follow-ups per the spec's rollout. Verified
+end-to-end under Node: Ruby source → `true\nfalse`; Twig source → `#t\n#f`.
+
 ## 0.15.0 — Ruby Hash method-catalog parity
 
 Adds a hand-implemented Ruby Hash catalog (`hashMethod`) to the emitted JS

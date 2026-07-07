@@ -100,7 +100,17 @@ pub fn emit_module(m: &Module) -> String {
     // Strict mode goes first (after the banner comment) so the whole
     // file — including the inlined runtime — runs under strict semantics.
     out.push_str("\"use strict\";\n\n");
-    out.push_str(RUNTIME);
+    // Substitute the display-convention placeholder (SIR display-convention
+    // spec): a Ruby-sourced module renders booleans as `true`/`false`; every
+    // other source language keeps the default Lisp `#t`/`#f`, so existing Twig
+    // output is unchanged.
+    //
+    // SECURITY: the replacement value MUST remain a hardcoded literal selected
+    // by a boolean — never text derived from `source_language` or any other
+    // source-controlled field — so this substitution can never inject into the
+    // emitted JavaScript.
+    let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
+    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
     emit_ancestry_registration(&mut out, m);
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {

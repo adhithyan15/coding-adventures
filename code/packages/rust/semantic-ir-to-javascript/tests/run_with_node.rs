@@ -2319,3 +2319,50 @@ fn hash_catalog_methods() {
         assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]");
     }
 }
+
+// ── source-language display convention: Ruby booleans (SIR spec) ──
+//
+// A Ruby-sourced module renders booleans as `true`/`false`; every other
+// source language keeps the default Lisp `#t`/`#f`.  Proven end-to-end under
+// Node for both conventions.
+fn bool_display_module(source_language: &str) -> Module {
+    let stmts = vec![
+        print(Expr::BoolLit { value: true, span: sp() }),
+        print(Expr::BoolLit { value: false, span: sp() }),
+    ];
+    Module {
+        name: "dispbool".into(),
+        manifest: FeatureManifest::from_features(&[]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language(source_language)
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    }
+}
+
+#[test]
+fn ruby_source_prints_true_false() {
+    if let Some(stdout) = run_module(&bool_display_module("ruby"), "dispruby") {
+        assert_eq!(stdout, "true\nfalse", "Ruby source must render booleans as true/false");
+    }
+}
+
+#[test]
+fn twig_source_keeps_lisp_booleans() {
+    if let Some(stdout) = run_module(&bool_display_module("twig"), "disptwig") {
+        assert_eq!(stdout, "#t\n#f", "non-Ruby source keeps the default Lisp #t/#f");
+    }
+}
