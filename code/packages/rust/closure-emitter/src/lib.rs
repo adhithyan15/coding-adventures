@@ -79,7 +79,7 @@ use coding_adventures_javascript_ast::{
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
-    Super, NewTarget,
+    Super, NewTarget, ImportMeta,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1143,6 +1143,7 @@ impl<'a> Emitter<'a> {
             Expression::ThisExpression(t) => self.emit_this(t),
             Expression::Super(s) => self.emit_super(s),
             Expression::NewTarget(n) => self.emit_new_target(n),
+            Expression::ImportMeta(n) => self.emit_import_meta(n),
         }
         if needs_parens {
             self.write_str(")");
@@ -1662,6 +1663,17 @@ impl<'a> Emitter<'a> {
         self.write_str("new.target");
     }
 
+    /// `import.meta` — the module meta-property, a leaf like `new.target`. It is
+    /// spelled with three tokens plus a dot, so the emit is the literal eleven
+    /// characters `import.meta` (after recording the source-map anchor). As a
+    /// `PREC_PRIMARY` leaf it is only ever followed by a member/call token or a
+    /// punctuator, never by another word that would fuse; the internal `.` is
+    /// part of the spelling, not a member access, so no operand is walked.
+    fn emit_import_meta(&mut self, n: &ImportMeta) {
+        self.maybe_map(&n.cv);
+        self.write_str("import.meta");
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -2048,7 +2060,12 @@ fn expr_prec(e: &Expression) -> u8 {
         // spelling that binds at the tightest level, like `this`. It never
         // needs wrapping and never forces a paren around an operand (it has
         // none). The internal `.` is part of the spelling, not member access.
-        | Expression::NewTarget(_) => PREC_PRIMARY,
+        | Expression::NewTarget(_)
+        // `import.meta` is the module meta-property, the sibling of
+        // `new.target`: an atomic three-token spelling that binds at the
+        // tightest level. Same primary treatment — never wrapped, never forces
+        // a paren; the internal `.meta` is part of the spelling, not access.
+        | Expression::ImportMeta(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
         // Update (`++x` / `x++`) binds a hair tighter than the pure unary
@@ -5213,5 +5230,40 @@ mod tests {
     fn new_target_under_binary_parent_is_bare() {
         let e = binary(BinaryOperator::Add, new_target_expr(), num(1.0));
         assert_eq!(emit_expr(e), "new.target+1;");
+    }
+
+    // =================================================================
+    // ImportMeta (`import.meta`) — CLOC12.168
+    // =================================================================
+
+    /// Build an `ImportMeta`.
+    fn import_meta_expr() -> Expression {
+        Expression::ImportMeta(ImportMeta { cv: None })
+    }
+
+    /// `import.meta` — the module meta-property, printed as its literal spelling.
+    #[test]
+    fn import_meta_emits_literal_spelling() {
+        assert_eq!(emit_expr(import_meta_expr()), "import.meta;");
+    }
+
+    /// `import.meta.url` — `import.meta` is a primary, so a member parent needs
+    /// no parens (the trailing `.url` is a real member access on top of it).
+    #[test]
+    fn import_meta_as_member_object_is_bare() {
+        assert_eq!(emit_expr(member(import_meta_expr(), "url", false)), "import.meta.url;");
+    }
+
+    /// `f(import.meta)` — as a call argument it is a plain primary operand.
+    #[test]
+    fn import_meta_as_call_argument_is_bare() {
+        assert_eq!(emit_expr(call(ident("f"), vec![import_meta_expr()])), "f(import.meta);");
+    }
+
+    /// `import.meta+1` — even a binary parent leaves the primary bare.
+    #[test]
+    fn import_meta_under_binary_parent_is_bare() {
+        let e = binary(BinaryOperator::Add, import_meta_expr(), num(1.0));
+        assert_eq!(emit_expr(e), "import.meta+1;");
     }
 }

@@ -2137,6 +2137,54 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.168 — `ImportMeta` (`import.meta`): atomic node + emit + passes (PR1)
+
+Adds `Expression::ImportMeta { cv }` to `javascript-ast` (0.27.0) — the
+`import.meta` module meta-property exposing host-provided metadata about the
+current module (canonically `import.meta.url`). It is the direct **sibling of
+`NewTarget`**: ESTree models both `new.target` and `import.meta` as
+`MetaProperty` nodes, so `import.meta` gets its own atomic leaf variant here
+rather than being a member access of an `import` identifier — `import` is a
+reserved word and there is no such identifier to access.
+
+It is modelled as its own variant (not `MemberExpression { object: Identifier
+"import", property: "meta" }`) for the same reason `NewTarget` / `Super` /
+`this` are: the spelling contains reserved words that can never be renamed, so
+the renaming passes (`rename`, `rename-globals`, `rename-properties`) must never
+touch it. A dedicated variant lets those passes exclude it structurally.
+
+**Emit (`closure-emitter` 0.32.0).** `emit_import_meta` writes the bare
+eleven-character spelling `import.meta`. It tags at `PREC_PRIMARY` — the
+tightest level, like `this` / `super` / `new.target` — so it never needs
+wrapping in any parent (`import.meta.url`, `f(import.meta)`, `import.meta+1` all
+print bare) and never forces a paren around an operand (it carries none). The
+internal `.meta` is part of the fixed spelling, NOT a member access; a genuine
+property read like `import.meta.url` wraps this leaf in an outer
+`MemberExpression`.
+
+**Passes (PATCH bumps).** The three rebuild passes (`constant-fold`, `dce`,
+`fold-control-flow`) clone the leaf through unchanged like the literals;
+`fold-control-flow` also gains an `ImportMeta` arm in its `expression_cv`
+accessor. The six traversal passes get a no-op arm (`import.meta` binds/
+references no ordinary identifier and has no sub-expression). Atomic node PR1:
+node + emit + all nine downstream pass arms land together so the workspace
+never breaks.
+
+### gap-169 — bridge declines `import.meta` (`ImportMeta`) — **OPEN (bridge slice pending, CLOC12.168 PR2)**
+
+The `javascript-parser` bridge does not yet convert `import.meta` to
+`Expression::ImportMeta`, so any file containing it drops to WHITESPACE_ONLY.
+The atomic node PR (CLOC12.168 PR1) lands the node + emit + pass traversals so
+the typed AST and every downstream pass can already represent and print an
+`import.meta`; the **PR2 bridge slice** wires the grammar production through
+(the shape parallels `new.target` — a `member_expression` with an `import`
+token followed by `.` `meta`, distinguished from an ordinary member access by
+the reserved `import` token and the absence of a Node object). Whether any
+grammar work is required (as with `await`, gap-165) or the token is already
+produced and merely declined (as with `new.target`, gap-168) is determined
+during PR2. The **PR3** CodePrinter conformance port follows.
+
+
 ## CLOC12.167 — `NewTarget` (`new.target`): atomic node + emit + passes (PR1)
 
 Adds `Expression::NewTarget { cv }` to `javascript-ast` (0.26.0) — the

@@ -1168,6 +1168,7 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
         | Expression::ThisExpression(_)
         | Expression::Super(_)
         | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {
