@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.19.0 — source-language display convention: Ruby booleans (`true`/`false`)
+
+First increment of the SIR display-convention spec (`code/specs/sir-display-convention.md`).
+A **Ruby**-sourced module now renders booleans as `true`/`false` instead of the
+Twig/Lisp `#t`/`#f`, so a translated `puts true` prints `true`.
+
+Mechanism: the runtime carries a compile-time `const SIR_DISPLAY_RUBY` (a
+`__SIR_DISPLAY_RUBY__` placeholder); the emitter substitutes `true`/`false`
+from `Module.metadata.source_language` (`== "ruby"` → `true`, else `false`).
+`format` branches the boolean arm on it. The default is the Lisp form, so all
+existing non-Ruby (Twig) output is **byte-for-byte unchanged** (every prior
+golden still passes). The branch is a `const`, so it folds at compile time —
+zero per-call cost.
+
+Scope: booleans only (the flagship divergence). `nil`, symbols, string
+`inspect` quoting, and the Ruby hash `=>` element form remain follow-ups per
+the spec's rollout. Verified end-to-end under `rustc`: Ruby source →
+`true\nfalse\n`; Twig source → `#t\n#f\n`.
+
 ## 0.18.0 — Numeric + String method-catalog parity
 
 Expands the emitted Rust runtime's `numeric_method` and `string_method`
