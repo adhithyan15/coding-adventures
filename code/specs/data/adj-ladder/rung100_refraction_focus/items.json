@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 100 \u2014 refraction focus ratio from four stated quantities (a NEW panel: ophthalmology / refraction-focus). From a near power plus a far power for the combined power, a cornea factor times a lens factor for the optical scaling, and the combined power divided by the optical scaling, compute the focus ratio ((near_power+far_power)/(cornea_factor*lens_factor)), the combined power (near_power+far_power), or the optical scaling (cornea_factor*lens_factor). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A SUM OVER A PRODUCT (a+b)/(c*d) (add a and b, multiply c and d, divide the sum by the product, so (a+b)/(c*d) = ((a+b)/(c*d)); the FIRST time the ladder divides a bare SUM by a bare PRODUCT \u2014 the SIBLING of rung-99 (a*b)/(c+d) which multiplied the numerator and summed the denominator; rung-37 (a+b)/(c+d) divided a sum by a sum, rung-87 a*b*c/d divided a triple product by a single term) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via +, *, and / \u2014 no constant leaks, and neither the combined power, the optical scaling, nor any focus figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the far power is divided and the near power is added outside (a+b/(c*d), a wrong grouping) and multiplying the numerator terms while summing the denominator terms ((a*b)/(c+d), a wrong pairing). The core confusion tested is that (a+b)/(c*d) is ((a+b)/(c*d)), not a+b/(c*d) and not (a*b)/(c+d). Every observed quantity is at least two, so every denominator is nonzero and all figures stay strictly positive; the focus ratio is dimensionless and may land below or above one.",
+  "items": [
+    {
+      "id": "r100focus-01",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 4, divided by a cornea factor of 2 times a lens factor of 2. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(4)\nobserve cornea_factor(2)\nobserve lens_factor(2)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r100focus-02",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 4, divided by a cornea factor of 2 times a lens factor of 2. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(4)\nobserve cornea_factor(2)\nobserve lens_factor(2)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r100focus-03",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 4, divided by a cornea factor of 2 times a lens factor of 2. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(4)\nobserve cornea_factor(2)\nobserve lens_factor(2)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r100focus-04",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 10, divided by a cornea factor of 2 times a lens factor of 3. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(10)\nobserve cornea_factor(2)\nobserve lens_factor(3)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r100focus-05",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 10, divided by a cornea factor of 2 times a lens factor of 3. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(10)\nobserve cornea_factor(2)\nobserve lens_factor(3)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r100focus-06",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 10, divided by a cornea factor of 2 times a lens factor of 3. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(10)\nobserve cornea_factor(2)\nobserve lens_factor(3)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r100focus-07",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 2, divided by a cornea factor of 2 times a lens factor of 4. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(2)\nobserve cornea_factor(2)\nobserve lens_factor(4)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r100focus-08",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 2, divided by a cornea factor of 2 times a lens factor of 4. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(2)\nobserve cornea_factor(2)\nobserve lens_factor(4)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r100focus-09",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 2, divided by a cornea factor of 2 times a lens factor of 4. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(2)\nobserve cornea_factor(2)\nobserve lens_factor(4)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r100focus-10",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 3, divided by a cornea factor of 3 times a lens factor of 3. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(3)\nobserve cornea_factor(3)\nobserve lens_factor(3)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r100focus-11",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 3, divided by a cornea factor of 3 times a lens factor of 3. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(3)\nobserve cornea_factor(3)\nobserve lens_factor(3)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r100focus-12",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 3, divided by a cornea factor of 3 times a lens factor of 3. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(3)\nobserve cornea_factor(3)\nobserve lens_factor(3)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r100focus-13",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 5, divided by a cornea factor of 2 times a lens factor of 5. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(5)\nobserve cornea_factor(2)\nobserve lens_factor(5)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r100focus-14",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 5, divided by a cornea factor of 2 times a lens factor of 5. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(5)\nobserve cornea_factor(2)\nobserve lens_factor(5)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r100focus-15",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 5, divided by a cornea factor of 2 times a lens factor of 5. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(5)\nobserve cornea_factor(2)\nobserve lens_factor(5)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r100focus-16",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 6, divided by a cornea factor of 2 times a lens factor of 6. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(6)\nobserve cornea_factor(2)\nobserve lens_factor(6)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r100focus-17",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 6, divided by a cornea factor of 2 times a lens factor of 6. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(6)\nobserve cornea_factor(2)\nobserve lens_factor(6)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r100focus-18",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 6, divided by a cornea factor of 2 times a lens factor of 6. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(6)\nobserve cornea_factor(2)\nobserve lens_factor(6)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r100focus-19",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 7, divided by a cornea factor of 3 times a lens factor of 5. What is the total focus ratio (the combined power divided by the optical scaling)?",
+      "program": "observe near_power(2)\nobserve far_power(7)\nobserve cornea_factor(3)\nobserve lens_factor(5)\nlet answer = (near_power + far_power) / (cornea_factor * lens_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.466666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r100focus-20",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 7, divided by a cornea factor of 3 times a lens factor of 5. What is the the combined power (the near power plus the far power, the numerator before dividing)?",
+      "program": "observe near_power(2)\nobserve far_power(7)\nobserve cornea_factor(3)\nobserve lens_factor(5)\nlet answer = near_power + far_power\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.466666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r100focus-21",
+      "qtype": "refraction_focus_ratio",
+      "stem": "A refraction study records a near power of 2 plus a far power of 7, divided by a cornea factor of 3 times a lens factor of 5. What is the the optical scaling (the cornea factor times the lens factor, the denominator the focus is measured against)?",
+      "program": "observe near_power(2)\nobserve far_power(7)\nobserve cornea_factor(3)\nobserve lens_factor(5)\nlet answer = cornea_factor * lens_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.466666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
