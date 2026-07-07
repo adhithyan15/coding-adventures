@@ -406,3 +406,61 @@ fn array_block_methods_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+/// String/symbol ordering: `sort`/`min`/`max`/`<` on non-numeric values must
+/// compare lexicographically and NEVER panic (the pre-fix `num_lt` fed strings
+/// to `as_f64`, which panicked — so a Ruby string sort crashed the program).
+fn string_ordering_demo() -> Module {
+    let strs = || seq(vec![slit("banana"), slit("apple"), slit("cherry")]);
+    let main_stmts = vec![
+        print_stmt(method(strs(), "sort", vec![])),         // [apple, banana, cherry]
+        print_stmt(method(strs(), "min", vec![])),          // apple
+        print_stmt(method(strs(), "max", vec![])),          // cherry
+        print_stmt(call("<", vec![slit("apple"), slit("banana")])), // #t
+        // Mixed, genuinely-uncomparable `<` must NOT panic — returns #f.
+        print_stmt(call("<", vec![slit("apple"), ilit(1)])), // #f
+    ];
+    demo_module(main_stmts, vec![])
+}
+
+#[test]
+fn string_ordering_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let artifact = compile(&string_ordering_demo()).expect("module should compile to Rust source");
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_strord_{nonce}.rs"));
+    let bin_path = dir.join(format!("sir_strord_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker") && (stderr.contains("not found") || stderr.contains("No such file")) {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!("emitted Rust failed to compile:\n{stderr}\n--- source ---\n{}", artifact.source);
+    }
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(run_out.status.success(), "binary exited non-zero (string sort must not panic):\n{}", String::from_utf8_lossy(&run_out.stderr));
+    let stdout = String::from_utf8_lossy(&run_out.stdout).replace("\r\n", "\n");
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec!["[apple, banana, cherry]", "apple", "cherry", "#t", "#f"],
+        "unexpected output; full stdout:\n{stdout}"
+    );
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}

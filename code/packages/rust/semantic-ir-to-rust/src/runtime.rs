@@ -479,7 +479,20 @@ pub const RUNTIME: &str = r##"mod __sir {
     fn num_lt(a: &Value, b: &Value) -> bool {
         match (a, b) {
             (Value::Int(x), Value::Int(y)) => x < y,
-            _ => as_f64(a) < as_f64(b),
+            // Strings and symbols compare lexicographically (Ruby `<`/`sort`).
+            (Value::Str(x), Value::Str(y)) => x < y,
+            (Value::Sym(x), Value::Sym(y)) => x < y,
+            (Value::Int(_) | Value::Float(_), Value::Int(_) | Value::Float(_)) => {
+                as_f64(a) < as_f64(b)
+            }
+            // Mixed / uncomparable types: no defined order.  We return `false`
+            // rather than feeding a non-number to `as_f64` (which panicked) —
+            // upholding the never-panic-on-the-OO-surface invariant.  `sort`/
+            // `min`/`max`/`sort_by` then keep a stable order; the `<`/`>`
+            // operators yield `false` (Ruby raises `ArgumentError` on a
+            // genuinely uncomparable `<` — the typed-error refinement is a
+            // separate follow-up).
+            _ => false,
         }
     }
 
