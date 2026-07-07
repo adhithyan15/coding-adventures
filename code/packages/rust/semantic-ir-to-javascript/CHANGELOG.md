@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.19.0 — more String methods: `ljust` / `rjust` / `center` / `swapcase`
+
+Extends the inlined JS runtime's `stringMethod` switch (and the `STRING_METHODS`
+`respond_to?` set):
+
+- `ljust(width, pad = " ")` / `rjust(...)` / `center(...)` — pad to `width`
+  **runes** using `pad` cyclically; `width <= length` returns the string
+  unchanged; `center` puts an odd extra pad rune on the RIGHT (Ruby's rule).
+  An empty pad degrades to a single space (never-raise floor).
+- `swapcase` — flips the case of each ASCII letter (rune-aware; non-letters and
+  non-ASCII code points pass through).
+
+Dispatch stays an explicit `switch (name)` — never `recv[name]`. Verified
+end-to-end under Node.
+
 ## 0.18.0 — Ruby Array / Enumerable method catalog
 
 Adds a hand-implemented Ruby Array/Enumerable catalog (`arrayMethod`) to the
