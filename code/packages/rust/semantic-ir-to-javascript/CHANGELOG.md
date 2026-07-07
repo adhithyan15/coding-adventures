@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.15.0 — Ruby Hash method-catalog parity
+
+Adds a hand-implemented Ruby Hash catalog (`hashMethod`) to the emitted JS
+runtime for `Map` receivers, dispatched by an **explicit `switch` on the
+source-derived name** (never `recv[name]`) ahead of the native allowlist. This
+also fixes a latent bug: `keys`/`values` previously mis-routed to the native
+`Map.prototype.keys()`/`values()`, which return lazy iterators rather than the
+Ruby Arrays a translated program expects.
+
+Methods: `keys`, `values`, `size`/`length`, `empty?`, `has_key?`/`key?`/
+`include?`/`member?`, `has_value?`/`value?`, `to_a` (Array of `[k, v]` pairs),
+`merge` (non-mutating), `dig` (nested, nil on miss), `invert`, `delete`
+(mutating, returns removed value), `store`, and block-taking `each`/`each_pair`,
+`map`, `select`/`filter`/`reject`. Value comparison uses `===` (exact for
+primitives / strings / interned symbols — deep-equal is a follow-up).
+`respond_to?` kept honest via `HASH_METHODS`. `fetch` (raising) is unchanged.
+
+Verified end-to-end under Node (`run_with_node`): keys/values/to_a as real
+Arrays, `dig`, a `merge`-chain, and `delete` mutation all Ruby-faithful.
+
+(Stacked on the v0.14.0 String-catalog change.)
+
 ## 0.14.0 — Ruby String method-catalog parity
 
 Adds a hand-implemented Ruby String catalog (`stringMethod`) to the emitted JS
