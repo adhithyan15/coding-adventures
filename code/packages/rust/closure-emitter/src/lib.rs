@@ -79,7 +79,7 @@ use coding_adventures_javascript_ast::{
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
-    Super, NewTarget, ImportMeta,
+    Super, NewTarget, ImportMeta, ImportExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1140,6 +1140,7 @@ impl<'a> Emitter<'a> {
             Expression::SpreadElement(s) => self.emit_spread(s),
             Expression::YieldExpression(y) => self.emit_yield(y),
             Expression::AwaitExpression(a) => self.emit_await(a),
+            Expression::ImportExpression(e) => self.emit_import_expression(e),
             Expression::ThisExpression(t) => self.emit_this(t),
             Expression::Super(s) => self.emit_super(s),
             Expression::NewTarget(n) => self.emit_new_target(n),
@@ -1631,6 +1632,26 @@ impl<'a> Emitter<'a> {
         self.emit_expression_inner(&a.argument, PREC_UNARY);
     }
 
+    /// Emit an `ImportExpression` — a dynamic `import(specifier)`.
+    ///
+    /// This is the `import` keyword immediately followed by a *literal*
+    /// parenthesised argument — syntactically a call-like primary. Unlike
+    /// `await` (a word-shaped unary), no separator is needed after the keyword:
+    /// the `(` follows `import` directly (`import(x)`, never `import (x)`). The
+    /// `source` sits inside the literal parens, so it is emitted at
+    /// `PREC_ASSIGNMENT` (the same level as a call argument): a looser *sequence*
+    /// specifier wraps (`import((a,b))`), everything else prints bare
+    /// (`import("m")`, `import(a.b)`, `import(f())`). The wrapping of the *whole*
+    /// import in a tighter parent is a non-issue — as a `PREC_PRIMARY` node it
+    /// is already atomic, so `import(x).then(f)` and `(await import(x))` compose
+    /// without extra parens.
+    fn emit_import_expression(&mut self, e: &ImportExpression) {
+        self.maybe_map(&e.cv);
+        self.write_str("import(");
+        self.emit_expression_inner(&e.source, PREC_ASSIGNMENT);
+        self.write_str(")");
+    }
+
     /// `this` — a bare reserved-word keyword. It carries no operand, so the
     /// emit is simply the four characters `this` (after recording the source
     /// map anchor). No trailing separator is needed: as a `PREC_PRIMARY`
@@ -2065,7 +2086,12 @@ fn expr_prec(e: &Expression) -> u8 {
         // `new.target`: an atomic three-token spelling that binds at the
         // tightest level. Same primary treatment — never wrapped, never forces
         // a paren; the internal `.meta` is part of the spelling, not access.
-        | Expression::ImportMeta(_) => PREC_PRIMARY,
+        | Expression::ImportMeta(_)
+        // A dynamic `import(x)` is the `import` keyword plus a *literal*
+        // parenthesised argument — a call-like primary. The parens make it
+        // atomic from the outside, so it binds at the tightest level like a
+        // `CallExpression`: `import(x).then(f)` composes without extra parens.
+        | Expression::ImportExpression(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
         // Update (`++x` / `x++`) binds a hair tighter than the pure unary
@@ -5265,5 +5291,54 @@ mod tests {
     fn import_meta_under_binary_parent_is_bare() {
         let e = binary(BinaryOperator::Add, import_meta_expr(), num(1.0));
         assert_eq!(emit_expr(e), "import.meta+1;");
+    }
+
+    // =================================================================
+    // ImportExpression (dynamic `import(x)`) — CLOC12.169
+    // =================================================================
+
+    /// Build a dynamic `import(source)`.
+    fn import_expr(source: Expression) -> Expression {
+        Expression::ImportExpression(ImportExpression { cv: None, source: Box::new(source) })
+    }
+
+    /// `import("m")` — a string-literal specifier prints inside the literal
+    /// parens with no surrounding space.
+    #[test]
+    fn import_expression_string_specifier() {
+        assert_eq!(emit_expr(import_expr(string("m"))), "import(\"m\");");
+    }
+
+    /// `import(x)` — an identifier specifier.
+    #[test]
+    fn import_expression_identifier_specifier() {
+        assert_eq!(emit_expr(import_expr(ident("x"))), "import(x);");
+    }
+
+    /// `import(a+b)` — a binary specifier prints bare inside the parens (it is
+    /// tighter than a sequence, so it needs no inner wrapping).
+    #[test]
+    fn import_expression_binary_specifier_is_bare() {
+        let e = import_expr(binary(BinaryOperator::Add, ident("a"), ident("b")));
+        assert_eq!(emit_expr(e), "import(a+b);");
+    }
+
+    /// `import((a,b))` — a *sequence* specifier is looser than assignment, so it
+    /// wraps in its own parens inside the import argument.
+    #[test]
+    fn import_expression_sequence_specifier_wraps() {
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("a"), ident("b")],
+        });
+        assert_eq!(emit_expr(import_expr(seq)), "import((a,b));");
+    }
+
+    /// `import(x).then(f)` — the whole import is a `PREC_PRIMARY` call-like
+    /// primary, so a member/call parent composes without wrapping it.
+    #[test]
+    fn import_expression_as_member_object_is_bare() {
+        let e = call(member(import_expr(ident("x")), "then", false), vec![ident("f")]);
+        assert_eq!(emit_expr(e), "import(x).then(f);");
     }
 }

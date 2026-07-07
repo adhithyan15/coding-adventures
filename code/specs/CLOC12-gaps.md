@@ -2137,6 +2137,56 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.169 — `ImportExpression` (dynamic `import(x)`): atomic node + emit + passes (PR1)
+
+Adds `Expression::ImportExpression { cv, source }` to `javascript-ast` (0.28.0)
+— a **dynamic `import(specifier)`**, the runtime module-loading form that
+returns a promise for the module namespace. It is distinct from a static
+`import` *declaration* (a statement) and from the `import.meta` meta-property
+(the `ImportMeta` leaf, CLOC12.168). ESTree names this node `ImportExpression`
+with a single `source` operand.
+
+This is the first **compound** Expression node in the recent run of reserved-word
+leaf primaries (`this` / `super` / `new.target` / `import.meta`): it carries one
+sub-expression, the module specifier, so `source` is a non-optional
+`Box<Expression>` — the same single-operand shape as `AwaitExpression`
+(`import()` with no argument is a syntax error). There is no second axis
+(the import-attributes / options-bag proposal is not modelled).
+
+**Emit (`closure-emitter` 0.33.0).** `emit_import_expression` prints the
+`import` keyword immediately followed by a *literal* parenthesised argument — a
+call-like primary. Unlike the word-shaped unary `await`, no separator follows
+the keyword (`import(x)`, never `import (x)`). The `source` sits inside the
+literal parens, emitted at `PREC_ASSIGNMENT` (the call-argument level): a looser
+*sequence* specifier wraps (`import((a,b))`), everything else prints bare
+(`import("m")`, `import(a.b)`, `import(f())`). The whole node tags at
+`PREC_PRIMARY` — atomic from the outside, like a `CallExpression` — so a
+member/call parent composes without extra parens (`import(x).then(f)`).
+
+**Passes (PATCH bumps).** Unlike the leaf primaries (whose pass arms are no-ops),
+a dynamic import has a child, so every pass **recurses into `source`** exactly
+like the sibling `AwaitExpression` arm: the three rebuild passes
+(`constant-fold`, `dce`, `fold-control-flow`) rebuild `ImportExpression` with a
+folded `source` (and `fold-control-flow` returns its `cv` from the
+`expression_cv` accessor); the six traversal passes (`inline`,
+`inline-variables`, `rename`, `rename-globals`, `rename-properties`,
+`scope-analyzer`) visit / rewrite the `source` sub-expression. Atomic node PR1:
+node + emit + all nine downstream pass arms land together so the workspace never
+breaks.
+
+### gap-170 — bridge declines dynamic `import(x)` (`ImportExpression`) — **OPEN (bridge slice pending, CLOC12.169 PR2)**
+
+The `javascript-parser` bridge does not yet convert a dynamic `import(x)` to
+`Expression::ImportExpression`, so any file containing one drops to
+WHITESPACE_ONLY. The atomic node PR (CLOC12.169 PR1) lands the node + emit + pass
+recursion so the typed AST and every downstream pass can already represent,
+optimise-through, and print a dynamic import; the **PR2 bridge slice** wires the
+grammar production through. Whether grammar work is required (as with `await`,
+gap-165) or the rule is already produced and merely declined / mis-dispatched
+(as with `import.meta`, gap-169) is determined by a PR2 probe. The **PR3**
+CodePrinter conformance port follows.
+
+
 ## CLOC12.168 — `ImportMeta` (`import.meta`): atomic node + emit + passes (PR1)
 
 Adds `Expression::ImportMeta { cv }` to `javascript-ast` (0.27.0) — the

@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.14.12] - 2026-07-07
+
+### Changed — CLOC12.169: `ImportExpression` exhaustive-match arm
+
+Added an `Expression::ImportExpression` case so the pass stays exhaustive over the new `javascript-ast` single-operand variant (part of the CLOC12.169 atomic node PR1). A dynamic `import(source)` carries one sub-expression (the module specifier), so the pass recurses into `source` exactly like the sibling `AwaitExpression` arm. No behaviour change to any existing node.
+
+
 ## [0.14.11] - 2026-07-07
 
 ### Changed — CLOC12.168: `ImportMeta` exhaustive-match arm
