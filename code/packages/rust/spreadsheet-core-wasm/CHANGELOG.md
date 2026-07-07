@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.15.0
+
+**Open & save CSV / TSV / JSON through the session (SSIOJSON01 wiring).** Extends
+the `.xlsx`/`.xls` file methods added in 0.14.0 with the delimited-text and JSON
+formats, so every front-end can open and save those too through the one facade.
+
+- `load_csv_bytes` / `load_tsv_bytes` / `load_json_bytes` `(&[u8]) -> bool` — open a
+  `.csv` / `.tsv` / `.json` file as the current document, reusing the same
+  snapshot path as the `.xlsx` methods (parse via `spreadsheet-io` into a fresh
+  engine workbook, serialize to canonical JSON, `deserialize`) — so the open is
+  undoable and rebuilds the formula-bar echo. Returns `false` on invalid UTF-8 /
+  malformed JSON (panic-free); a failed open leaves the document untouched.
+- `save_csv_bytes` / `save_tsv_bytes` / `save_json_bytes` `(&self) -> Vec<u8>` —
+  serialize the current document's first sheet to that format's bytes (RFC-4180
+  CSV; JSON array-of-record-objects). Pure computation.
+- Lower-fidelity than `.xlsx` in the ways `spreadsheet-io` documents (one sheet;
+  formulas flatten to their computed value), inherent to the formats.
+- 4 tests: CSV+TSV round-trip through the session, JSON records round-trip, and a
+  bad-bytes-preserves-document guard.
+
 ## 0.14.0
 
 **Open & save real spreadsheet files (SSIO03).** The session can now open and
