@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.31.0] - 2026-07-07
+
+### Added — CLOC12.167 PR2: bridge `new.target` → `Expression::NewTarget` (closes gap-168)
+
+The bridge now converts the `new.target` meta-property to
+`Expression::NewTarget { cv }` instead of declining it (dragging the whole file
+to WHITESPACE_ONLY). The grammar emits `new.target` as three bare tokens
+`[Token("new"), Token("."), Token("target")]` inside a `member_expression` with
+**no Node child** — probed and confirmed, not routed through the dedicated
+`new_target_expression` rule — so `convert_member_expression` distinguishes it
+from the argumented `new X(args)` constructor (which always has a Node callee)
+on `nodes.is_empty()`. A `new_target` flag (`nodes.is_empty() &&
+has_token("new") && has_token("target")`) relaxes the empty-nodes guard
+(mirroring the `super`-token base of gap-167) and the meta-property returns the
+atomic `NewTarget` leaf, taking the `new` token's `cv` as provenance — the `.`
+is part of the fixed spelling, not a member access, so there is nothing to
+fold. `new.target` was already parseable (a bare `new.target;` parses
+standalone), so this is a pure bridge slice — **no grammar work**. 3 new bridge
+tests (`new_target_meta_property`, `new_target_in_function_return`,
+`new_target_as_member_object`); 147 pass.
+
 ## [0.30.0] - 2026-07-04
 
 ### Added — CLOC12.166 PR2: bridge `super` → `Expression::Super` (closes gap-167)

@@ -2166,18 +2166,32 @@ references no ordinary identifier and has no sub-expression). Atomic node PR1:
 node + emit + all nine downstream pass arms land together so the workspace
 never breaks.
 
-### gap-168 — bridge declines `new.target` (`NewTarget`) — pending (CLOC12.167 PR2)
+### gap-168 — bridge declines `new.target` (`NewTarget`) — RESOLVED (CLOC12.167 PR2, javascript-parser 0.31.0)
 
-The `javascript-parser` bridge returns `UnsupportedSyntax { rule: "NewTarget" }`
-in `convert_member_expression` (the `new`-token region: `has_token(node, "new")`
-&& a child token whose value is `"target"`), so any file containing
-`new.target` currently drops to WHITESPACE_ONLY. Like `this` (gap-166) and
-`super` (gap-167) — and **unlike `await` (gap-165)** — `new.target` is already
-parseable: there is a dedicated `new_target_expression` grammar rule and the
-bridge *reaches* and explicitly declines it, so PR2 is a pure bridge slice with
-**no grammar work required**: swap the decline for
-`Ok(Expression::NewTarget(NewTarget { cv: … }))`, mirroring the `super` fix.
-Tracked for CLOC12.167 PR2.
+The `javascript-parser` bridge now converts `new.target` to
+`Ok(Expression::NewTarget(NewTarget { cv: … }))` in `convert_member_expression`
+instead of declining it (which dragged any file containing `new.target` to
+WHITESPACE_ONLY). Like `this` (gap-166) and `super` (gap-167) — and **unlike
+`await` (gap-165)** — `new.target` was already parseable, so PR2 was a pure
+bridge slice with **no grammar work**.
+
+**Divergence from this spec's earlier assumption (corrected by probe).** The
+prior draft claimed a dedicated `new_target_expression` grammar rule that the
+bridge reached and declined. Probing the actual parse tree showed otherwise:
+`new.target` lowers to a **`member_expression` whose children are three bare
+tokens** `[Token("new"), Token("."), Token("target")]` with **no Node child**
+(the standalone `new_target_expression` rule is not the path the parser takes
+for `new.target`). The fix therefore mirrors the `super`-token base rather than
+a top-level rule decline: a `new_target` flag (`nodes.is_empty() &&
+has_token("new") && has_token("target")`) relaxes the empty-nodes guard and
+returns the atomic `NewTarget` leaf, distinguishing the meta-property from the
+argumented `new X(args)` constructor (which always carries a Node callee) on
+`nodes.is_empty()`. The `new` token's `cv` becomes the node's provenance — the
+`.` is fixed spelling, not a member access. Verified end-to-end: bridge tests
+`new_target_meta_property` / `new_target_in_function_return` /
+`new_target_as_member_object` (147 pass), and closurec e2e fixture
+`tests/diff/simple-newtarget/` (`f(new.target, 1 + 2);` → `f(new.target,3);`,
+closurec 0.234.6).
 
 
 ## CLOC12.166 — `Super` (`super`): atomic node + emit + passes (PR1)

@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.6] - 2026-07-07
+
+### Added — CLOC12.167 PR2: `new.target` end-to-end fixture
+
+The `new.target` meta-property now flows through the full SIMPLE pipeline (via
+the javascript-parser 0.31.0 bridge) instead of falling back to WHITESPACE_ONLY
+(gap-168, now closed). New e2e diff fixture `tests/diff/simple-newtarget/`
+proving `f(new.target, 1 + 2);` → `f(new.target,3);` at SIMPLE: the `new.target`
+meta-property round-trips (the bridge produced a real `NewTarget` node) and the
+argument `1 + 2` folds to `3` (a WHITESPACE_ONLY fallback would leave
+`f(new.target, 1 + 2)` unfolded). Version bumped to 0.234.6 (cli.spec.json +
+help-markdown fixture synced).
+
 ## [0.234.5] - 2026-07-04
 
 ### Added — CLOC12.166 PR2: `super` end-to-end fixture
