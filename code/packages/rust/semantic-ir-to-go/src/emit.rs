@@ -70,7 +70,17 @@ pub fn emit_module(m: &Module) -> String {
     // case future minimal runtimes drop them).  Actually no:
     // blank-imports would have side effects; just rely on the
     // runtime.
-    out.push_str(RUNTIME);
+    // Substitute the display-convention placeholder (SIR display-convention
+    // spec): a Ruby-sourced module renders booleans as `true`/`false`; every
+    // other source language keeps the default Lisp `#t`/`#f`, so existing Twig
+    // output is unchanged.
+    //
+    // SECURITY: the replacement value MUST remain a hardcoded literal selected
+    // by a boolean — never text derived from `source_language` or any other
+    // source-controlled field — so this substitution can never inject into the
+    // emitted Go.
+    let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
+    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');

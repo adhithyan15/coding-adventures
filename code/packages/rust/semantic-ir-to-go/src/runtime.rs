@@ -7,6 +7,15 @@
 //! "unused import" rule is satisfied for every generated file.
 
 pub const RUNTIME: &str = r##"// ── inlined SIR runtime ────────────────────────────────────────
+
+// Source-language display convention (SIR display-convention spec).  The
+// emitter substitutes `__SIR_DISPLAY_RUBY__` with `true` when the module's
+// `source_language` is Ruby, else `false` (the default Twig/Lisp form).  The
+// display path (`_sir_format`) reads this to render a boolean as Ruby
+// `true`/`false` rather than the Lisp `#t`/`#f`.  A compile-time `const` → the
+// Go compiler folds the branch away; existing Twig output is unchanged.
+const _sir_display_ruby = __SIR_DISPLAY_RUBY__
+
 type Value interface{}
 
 type Symbol struct {
@@ -772,7 +781,13 @@ func _sir_format_d(v Value, visited map[Value]bool) string {
 	}
 	if b, ok := v.(bool); ok {
 		if b {
+			if _sir_display_ruby {
+				return "true"
+			}
 			return "#t"
+		}
+		if _sir_display_ruby {
+			return "false"
 		}
 		return "#f"
 	}
