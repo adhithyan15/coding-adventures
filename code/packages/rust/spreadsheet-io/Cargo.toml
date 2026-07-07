@@ -1,8 +1,8 @@
 [package]
 name = "spreadsheet-io"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "The adapter layer that unifies every spreadsheet/tabular file format onto a single in-memory model: load/save .xlsx, legacy .xls, and CSV/TSV straight to and from the spreadsheet-core engine VisiCalc computes on (SSIO01-03)"
+description = "The adapter layer that unifies every spreadsheet/tabular file format onto a single in-memory model: load/save .xlsx, legacy .xls, CSV/TSV, and JSON straight to and from the spreadsheet-core engine VisiCalc computes on (SSIO01-03)"
 license = "MIT"
 
 [dependencies]
@@ -12,3 +12,6 @@ coding-adventures-xlsx-writer = { path = "../xlsx-writer" }
 xls = { path = "../xls" }
 xls-writer = { path = "../xls-writer" }
 coding-adventures-csv-parser = { path = "../csv-parser" }
+coding-adventures-json-parser = { path = "../json-parser" }
+coding-adventures-json-value = { path = "../json-value" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
