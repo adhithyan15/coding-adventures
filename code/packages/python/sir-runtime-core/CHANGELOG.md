@@ -2,6 +2,20 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.9] - 2026-07-07
+
+### Added — source-language display convention (SIR display-convention spec)
+
+- `set_display_convention(name)` selects the value-display convention:
+  `"ruby"` renders booleans as `true`/`false`; any other name (the default)
+  keeps the Lisp `#t`/`#f`. `to_display` now branches its boolean arm on the
+  active convention. Module-level state — an emitted Ruby program calls the
+  setter once at startup (each program is its own process). The default is
+  unchanged, so all existing behaviour and callers are byte-for-byte identical
+  until the setter is invoked. Mirrors the Rust/Go/JS backends' boolean
+  display-convention increment. `nil`, symbol, and pair forms are unaffected
+  (convention-independent for now; follow-ups per the spec rollout).
+
 ## [0.1.8] - 2026-07-01
 
 ### Added — typed division-by-zero (T1 of sir-typed-runtime-errors)
