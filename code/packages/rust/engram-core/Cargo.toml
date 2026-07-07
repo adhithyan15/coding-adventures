@@ -13,7 +13,7 @@ fsrs = { path = "../fsrs" }
 regex = "1"
 serde = { version = "1", features = ["derive"], optional = true }
 serde_json = "1"
-unicode-normalize = { path = "../unicode-normalize" }
+unicode-normalization = "0.1"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.4.2", features = ["wasm_js"] }

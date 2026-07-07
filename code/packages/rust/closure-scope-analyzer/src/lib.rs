@@ -853,7 +853,6 @@ fn walk_expression(
         // scope analysis — so it introduces and references nothing.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
-        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             walk_expression(&be.left, ctx, analysis, pending);
