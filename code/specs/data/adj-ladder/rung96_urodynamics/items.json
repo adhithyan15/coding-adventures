@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 96 \u2014 urodynamics detrusor work from four stated quantities (a NEW panel: urology / urodynamics). From a vesical pressure minus an abdominal pressure for the detrusor pressure, a flow rate that scales it, and a baseline tone added on, compute the detrusor work ((vesical_pressure-abdominal_pressure)*flow_rate+baseline_tone), the detrusor pressure (vesical_pressure-abdominal_pressure), or the scaled detrusor drive ((vesical_pressure-abdominal_pressure)*flow_rate). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A DIFFERENCE TIMES A FACTOR, PLUS A TERM (a-b)*c+d (subtract b from a, multiply the difference by c, add d, so (a-b)*c+d = (((a-b)*c)+d); this is the SIGN-FLIP SIBLING of rung-84 (a+b)*c-d, which summed the inner terms and subtracted the trailing term \u2014 rung-96 takes the difference and adds; no prior shape multiplied a binomial DIFFERENCE by a bare factor and added a term, e.g. rung-67 (a-b)*c/d divided a difference-product by a term and rung-95 (a-b)*(c+d) multiplied a difference by a sum) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via -, * and + \u2014 no constant leaks, and neither the detrusor pressure, the scaled detrusor drive, nor any work figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the parentheses so the flow rate multiplies only the abdominal pressure (a-b*c+d, a wrong grouping) and adding the bare detrusor pressure while multiplying the flow rate into the baseline tone ((a-b)+c*d, a wrong pairing). The core confusion tested is that (a-b)*c+d is (((a-b)*c)+d), not a-b*c+d and not (a-b)+c*d. Every vesical pressure exceeds its abdominal pressure by at least two and the tables keep the abdominal-times-flow product below the vesical-plus-tone sum, so all figures stay strictly positive.",
+  "items": [
+    {
+      "id": "r96urodyn-01",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 8 minus an abdominal pressure of 3, times a flow rate of 2, plus a baseline tone of 4. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(8)\nobserve abdominal_pressure(3)\nobserve flow_rate(2)\nobserve baseline_tone(4)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r96urodyn-02",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 8 minus an abdominal pressure of 3, times a flow rate of 2, plus a baseline tone of 4. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(8)\nobserve abdominal_pressure(3)\nobserve flow_rate(2)\nobserve baseline_tone(4)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r96urodyn-03",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 8 minus an abdominal pressure of 3, times a flow rate of 2, plus a baseline tone of 4. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(8)\nobserve abdominal_pressure(3)\nobserve flow_rate(2)\nobserve baseline_tone(4)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r96urodyn-04",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 9 minus an abdominal pressure of 2, times a flow rate of 3, plus a baseline tone of 5. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(9)\nobserve abdominal_pressure(2)\nobserve flow_rate(3)\nobserve baseline_tone(5)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r96urodyn-05",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 9 minus an abdominal pressure of 2, times a flow rate of 3, plus a baseline tone of 5. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(9)\nobserve abdominal_pressure(2)\nobserve flow_rate(3)\nobserve baseline_tone(5)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r96urodyn-06",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 9 minus an abdominal pressure of 2, times a flow rate of 3, plus a baseline tone of 5. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(9)\nobserve abdominal_pressure(2)\nobserve flow_rate(3)\nobserve baseline_tone(5)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 22,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r96urodyn-07",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 7 minus an abdominal pressure of 4, times a flow rate of 2, plus a baseline tone of 5. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(7)\nobserve abdominal_pressure(4)\nobserve flow_rate(2)\nobserve baseline_tone(5)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r96urodyn-08",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 7 minus an abdominal pressure of 4, times a flow rate of 2, plus a baseline tone of 5. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(7)\nobserve abdominal_pressure(4)\nobserve flow_rate(2)\nobserve baseline_tone(5)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r96urodyn-09",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 7 minus an abdominal pressure of 4, times a flow rate of 2, plus a baseline tone of 5. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(7)\nobserve abdominal_pressure(4)\nobserve flow_rate(2)\nobserve baseline_tone(5)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r96urodyn-10",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 10 minus an abdominal pressure of 3, times a flow rate of 2, plus a baseline tone of 6. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(10)\nobserve abdominal_pressure(3)\nobserve flow_rate(2)\nobserve baseline_tone(6)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r96urodyn-11",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 10 minus an abdominal pressure of 3, times a flow rate of 2, plus a baseline tone of 6. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(10)\nobserve abdominal_pressure(3)\nobserve flow_rate(2)\nobserve baseline_tone(6)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r96urodyn-12",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 10 minus an abdominal pressure of 3, times a flow rate of 2, plus a baseline tone of 6. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(10)\nobserve abdominal_pressure(3)\nobserve flow_rate(2)\nobserve baseline_tone(6)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r96urodyn-13",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 6 minus an abdominal pressure of 2, times a flow rate of 4, plus a baseline tone of 5. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(6)\nobserve abdominal_pressure(2)\nobserve flow_rate(4)\nobserve baseline_tone(5)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r96urodyn-14",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 6 minus an abdominal pressure of 2, times a flow rate of 4, plus a baseline tone of 5. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(6)\nobserve abdominal_pressure(2)\nobserve flow_rate(4)\nobserve baseline_tone(5)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r96urodyn-15",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 6 minus an abdominal pressure of 2, times a flow rate of 4, plus a baseline tone of 5. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(6)\nobserve abdominal_pressure(2)\nobserve flow_rate(4)\nobserve baseline_tone(5)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r96urodyn-16",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 11 minus an abdominal pressure of 4, times a flow rate of 2, plus a baseline tone of 3. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(11)\nobserve abdominal_pressure(4)\nobserve flow_rate(2)\nobserve baseline_tone(3)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r96urodyn-17",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 11 minus an abdominal pressure of 4, times a flow rate of 2, plus a baseline tone of 3. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(11)\nobserve abdominal_pressure(4)\nobserve flow_rate(2)\nobserve baseline_tone(3)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r96urodyn-18",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 11 minus an abdominal pressure of 4, times a flow rate of 2, plus a baseline tone of 3. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(11)\nobserve abdominal_pressure(4)\nobserve flow_rate(2)\nobserve baseline_tone(3)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r96urodyn-19",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 8 minus an abdominal pressure of 2, times a flow rate of 5, plus a baseline tone of 4. What is the total detrusor work (the detrusor pressure times the flow rate, plus the baseline tone)?",
+      "program": "observe vesical_pressure(8)\nobserve abdominal_pressure(2)\nobserve flow_rate(5)\nobserve baseline_tone(4)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate + baseline_tone\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r96urodyn-20",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 8 minus an abdominal pressure of 2, times a flow rate of 5, plus a baseline tone of 4. What is the the detrusor pressure (the vesical pressure minus the abdominal pressure, before multiplying by the flow rate)?",
+      "program": "observe vesical_pressure(8)\nobserve abdominal_pressure(2)\nobserve flow_rate(5)\nobserve baseline_tone(4)\nlet answer = vesical_pressure - abdominal_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r96urodyn-21",
+      "qtype": "urodynamics_detrusor_work",
+      "stem": "A urodynamics study records a vesical pressure of 8 minus an abdominal pressure of 2, times a flow rate of 5, plus a baseline tone of 4. What is the the scaled detrusor drive (the detrusor pressure times the flow rate, before adding the baseline tone)?",
+      "program": "observe vesical_pressure(8)\nobserve abdominal_pressure(2)\nobserve flow_rate(5)\nobserve baseline_tone(4)\nlet answer = (vesical_pressure - abdominal_pressure) * flow_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

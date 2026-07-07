@@ -133,6 +133,7 @@ SELF_CONTAINED_RUNGS = (
     "rung93_insulin_dosing",
     "rung94_toxin_clearance",
     "rung95_acoustic_reflex",
+    "rung96_urodynamics",
 )
 
 
