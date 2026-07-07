@@ -35,7 +35,15 @@ from .runtime import (
     sir_puts,
 )
 from .symbols import Symbol, intern
-from .values import eq, is_null, is_number, is_symbol, to_display, truthy
+from .values import (
+    eq,
+    is_null,
+    is_number,
+    is_symbol,
+    set_display_convention,
+    to_display,
+    truthy,
+)
 
 # Inject core's richer ``to_display`` into the (dependency-free) pairs package
 # so a ``Pair`` renders as a Lisp list (``(1 2 3)``, ``#t``/``nil``/symbols)
@@ -52,6 +60,7 @@ __all__ = [
     "truthy",
     "eq",
     "to_display",
+    "set_display_convention",
     "is_null",
     "is_number",
     "is_symbol",

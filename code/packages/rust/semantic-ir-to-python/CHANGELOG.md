@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.9.0 — source-language display convention: Ruby booleans (`true`/`false`)
+
+Emits the display-convention selection (SIR display-convention spec) for the
+Python backend. A **Ruby**-sourced module now emits, once after the core
+runtime import, `_sir_set_display_convention("ruby")`, so a translated
+`puts true` prints `true` instead of the Twig/Lisp `#t`. Requires
+`coding-adventures-sir-runtime-core` ≥ 0.1.9 (which adds
+`set_display_convention`).
+
+Non-Ruby modules emit **nothing extra** — no setter call, no additional import
+— so existing Twig output is byte-for-byte unchanged. The emitted argument is a
+hardcoded `"ruby"` literal chosen by an exact `source_language == "ruby"` check
+(never source-derived → no injection).
+
+Scope: booleans only (the flagship divergence); `nil`, symbols, string
+`inspect` quoting, and the Ruby hash `=>` form remain follow-ups per the spec.
+Verified end-to-end under `python` against the real runtime library: Ruby
+convention → `true`/`false`; default → `#t`/`#f`.
+
 ## 0.8.0 — mixin emit arms: `include` / `extend` (MX2 of sir-mixins)
 
 ### Added

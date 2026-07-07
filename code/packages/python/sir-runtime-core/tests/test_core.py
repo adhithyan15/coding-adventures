@@ -94,6 +94,25 @@ def test_to_display_forms() -> None:
     assert sir.to_display("hi") == "hi"
 
 
+def test_display_convention_ruby_booleans() -> None:
+    # The default convention is Lisp (`#t`/`#f`); a Ruby-sourced program
+    # selects `true`/`false`.  Restore the default afterwards so the module
+    # state does not leak into other tests.
+    try:
+        sir.set_display_convention("ruby")
+        assert sir.to_display(True) == "true"
+        assert sir.to_display(False) == "false"
+        # Non-boolean forms are convention-independent.
+        assert sir.to_display(None) == "nil"
+        assert sir.to_display(sir.intern("sym")) == "sym"
+        # An unrecognised convention falls back to the Lisp default.
+        sir.set_display_convention("klingon")
+        assert sir.to_display(True) == "#t"
+    finally:
+        sir.set_display_convention("lisp")
+    assert sir.to_display(True) == "#t"
+
+
 def test_print_uses_display(capsys: pytest.CaptureFixture[str]) -> None:
     assert sir.print(None) is None
     out = capsys.readouterr().out
