@@ -343,6 +343,8 @@ pub const SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID: &str =
     "smart_home.get_command_lifecycle_brief";
 pub const SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID: &str =
     "smart_home.get_command_audit_dossier";
+pub const SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID: &str =
+    "smart_home.get_command_resolution_brief";
 pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
 pub const SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID: &str = "smart_home.get_escalation_brief";
 pub const SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID: &str = "smart_home.get_continuity_brief";
@@ -2579,6 +2581,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_command_audit_dossier_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
+                }
+                SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_command_resolution_brief_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6779,6 +6789,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_recovery_readiness_brief_definition(),
         get_command_lifecycle_brief_definition(),
         get_command_audit_dossier_definition(),
+        get_command_resolution_brief_definition(),
         get_morning_brief_definition(),
         get_escalation_brief_definition(),
         get_continuity_brief_definition(),
@@ -8605,6 +8616,72 @@ fn get_command_audit_dossier_definition() -> ToolDefinition {
                 "platform_access_review",
                 "platform_event_ops_review",
                 "platform_evidence_ledger",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_command_resolution_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID,
+        "Get smart-home command resolution brief",
+        "Compose existing D23 command audit, remediation-plan, operator-action, and closeout-retention summaries into one Chief command resolution packet without dispatching commands, draining event queues, or mutating smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("command_resolution_ready", JsonSchema::Boolean),
+                SchemaProperty::new("command_audit_ready", JsonSchema::Boolean),
+                SchemaProperty::new("remediation_ready", JsonSchema::Boolean),
+                SchemaProperty::new("operator_action_ready", JsonSchema::Boolean),
+                SchemaProperty::new("closeout_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "resolution_sections",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("command_audit_dossier", JsonSchema::Any),
+                SchemaProperty::new("remediation_plan", JsonSchema::Any),
+                SchemaProperty::new("operator_action_brief", JsonSchema::Any),
+                SchemaProperty::new("closeout_retention_ledger", JsonSchema::Any),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "command_resolution_ready",
+                "command_audit_ready",
+                "remediation_ready",
+                "operator_action_ready",
+                "closeout_ready",
+                "requires_human_review",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "summary",
+                "decision",
+                "resolution_sections",
+                "command_audit_dossier",
+                "remediation_plan",
+                "operator_action_brief",
+                "closeout_retention_ledger",
                 "source_tools",
             ],
             false,
@@ -48847,6 +48924,62 @@ fn get_command_audit_dossier_output_handler_output(
     ))
 }
 
+fn get_command_resolution_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let command_audit =
+        get_command_audit_dossier_output_handler_output(runtime, principal_id.clone(), now_ms)?
+            .output;
+    let remediation_plan =
+        get_remediation_plan_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let operator_action =
+        get_operator_action_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?
+            .output;
+    let closeout_retention =
+        get_closeout_retention_ledger_output_handler_output(runtime, principal_id, now_ms)?.output;
+
+    let output = command_resolution_brief_output_json(
+        now_ms,
+        &command_audit,
+        &remediation_plan,
+        &operator_action,
+        &closeout_retention,
+    );
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(&output, &["ready"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let total_attention_count =
+        morning_brief_integer_at(&output, &["total_attention_count"]).unwrap_or(0);
+    let total_blocked_count =
+        morning_brief_integer_at(&output, &["total_blocked_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_command_resolution_brief")),
+            ("status", string(&status)),
+            ("ready", JsonValue::Bool(ready)),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("total_attention_count", integer(total_attention_count)),
+            ("total_blocked_count", integer(total_blocked_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_morning_brief_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -56006,6 +56139,308 @@ fn command_audit_dossier_next_step(
             "monitor_command_audit_dossier".to_string(),
             "chief".to_string(),
             "command_audit_clear".to_string(),
+        )
+    }
+}
+
+fn command_resolution_brief_output_json(
+    generated_at_ms: u64,
+    command_audit: &JsonValue,
+    remediation_plan: &JsonValue,
+    operator_action: &JsonValue,
+    closeout_retention: &JsonValue,
+) -> JsonValue {
+    let command_audit_ready = morning_brief_bool_at(command_audit, &["ready"]).unwrap_or(false);
+    let remediation_ready = morning_brief_bool_at(remediation_plan, &["is_idle"]).unwrap_or(false)
+        && !morning_brief_bool_at(remediation_plan, &["has_plan"]).unwrap_or(true)
+        && !morning_brief_bool_at(remediation_plan, &["has_blockers"]).unwrap_or(false);
+    let operator_action_ready = morning_brief_bool_at(operator_action, &["is_idle"])
+        .unwrap_or(false)
+        && !morning_brief_bool_at(operator_action, &["has_actions"]).unwrap_or(true)
+        && !morning_brief_bool_at(operator_action, &["has_blockers"]).unwrap_or(false);
+    let closeout_ready = morning_brief_bool_at(closeout_retention, &["ready"]).unwrap_or(false);
+
+    let command_attention =
+        morning_brief_integer_at(command_audit, &["total_attention_count"]).unwrap_or(0);
+    let command_blocked =
+        morning_brief_integer_at(command_audit, &["total_blocked_count"]).unwrap_or(0);
+    let remediation_attention =
+        morning_brief_integer_at(remediation_plan, &["total_attention_count"]).unwrap_or(0);
+    let remediation_blocked =
+        morning_brief_integer_at(remediation_plan, &["summary", "total_blocked_count"])
+            .unwrap_or(0);
+    let operator_attention =
+        morning_brief_integer_at(operator_action, &["total_attention_count"]).unwrap_or(0);
+    let operator_blocked =
+        morning_brief_integer_at(operator_action, &["total_blocked_count"]).unwrap_or(0);
+    let closeout_attention = morning_brief_integer_at(closeout_retention, &["action_entry_count"])
+        .unwrap_or(0)
+        + morning_brief_integer_at(closeout_retention, &["review_entry_count"]).unwrap_or(0);
+    let closeout_blocked =
+        morning_brief_integer_at(closeout_retention, &["hold_entry_count"]).unwrap_or(0);
+
+    let total_attention_count =
+        command_attention + remediation_attention + operator_attention + closeout_attention;
+    let total_blocked_count =
+        command_blocked + remediation_blocked + operator_blocked + closeout_blocked;
+    let requires_human_review = morning_brief_bool_at(command_audit, &["requires_human_review"])
+        .unwrap_or(false)
+        || morning_brief_bool_at(closeout_retention, &["requires_human_review"]).unwrap_or(false);
+    let command_resolution_ready = command_audit_ready
+        && remediation_ready
+        && operator_action_ready
+        && closeout_ready
+        && total_blocked_count == 0;
+    let status = command_lifecycle_status(
+        command_resolution_ready,
+        total_blocked_count as usize,
+        requires_human_review,
+        total_attention_count as usize,
+    );
+    let (next_tool, next_action, next_owner_lane, next_reason) = command_resolution_next_step(
+        command_audit,
+        remediation_plan,
+        operator_action,
+        closeout_retention,
+        command_audit_ready,
+        remediation_ready,
+        operator_action_ready,
+        closeout_ready,
+        command_blocked,
+        remediation_blocked,
+        operator_blocked,
+        closeout_blocked,
+        total_attention_count,
+    );
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(command_resolution_ready)),
+        (
+            "command_resolution_ready",
+            JsonValue::Bool(command_resolution_ready),
+        ),
+        ("command_audit_ready", JsonValue::Bool(command_audit_ready)),
+        ("remediation_ready", JsonValue::Bool(remediation_ready)),
+        (
+            "operator_action_ready",
+            JsonValue::Bool(operator_action_ready),
+        ),
+        ("closeout_ready", JsonValue::Bool(closeout_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(total_blocked_count > 0)),
+        ("total_attention_count", integer(total_attention_count)),
+        ("total_blocked_count", integer(total_blocked_count)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 command audit, remediation, operator-action, and closeout-retention signals; it does not dispatch commands, drain event queues, or own smart-home state.",
+                    ),
+                ),
+                (
+                    "command_audit_status",
+                    string(morning_brief_string_at(command_audit, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "remediation_status",
+                    string(morning_brief_string_at(remediation_plan, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "operator_action_status",
+                    string(morning_brief_string_at(operator_action, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "closeout_status",
+                    string(morning_brief_string_at(closeout_retention, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "remediation_steps",
+                    morning_brief_field_clone(remediation_plan, "total_steps"),
+                ),
+                (
+                    "operator_actions",
+                    morning_brief_field_clone(operator_action, "total_action_count"),
+                ),
+                (
+                    "closeout_ledger_entries",
+                    morning_brief_field_clone(closeout_retention, "ledger_entry_count"),
+                ),
+                ("next_tool", string(&next_tool)),
+                ("next_action", string(&next_action)),
+                ("next_owner_lane", string(&next_owner_lane)),
+                ("next_reason", string(&next_reason)),
+            ]),
+        ),
+        (
+            "decision",
+            object([
+                ("recommendation", string(status)),
+                ("recommended_tool", string(&next_tool)),
+                ("recommended_action", string(&next_action)),
+                ("owner_lane", string(&next_owner_lane)),
+                ("reason", string(&next_reason)),
+            ]),
+        ),
+        (
+            "resolution_sections",
+            JsonValue::Array(vec![
+                recovery_readiness_gate_json(
+                    "command_audit",
+                    "Command audit",
+                    command_audit_ready,
+                    command_attention as usize,
+                    command_blocked as usize,
+                    SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID,
+                    morning_brief_string_at(command_audit, &["decision", "recommended_action"])
+                        .unwrap_or("review_command_audit"),
+                    command_audit.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "remediation_plan",
+                    "Remediation plan",
+                    remediation_ready,
+                    remediation_attention as usize,
+                    remediation_blocked as usize,
+                    SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                    morning_brief_string_at(remediation_plan, &["summary", "next_action"])
+                        .unwrap_or("review_remediation_plan"),
+                    remediation_plan.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "operator_action",
+                    "Operator action",
+                    operator_action_ready,
+                    operator_attention as usize,
+                    operator_blocked as usize,
+                    SMART_HOME_GET_OPERATOR_ACTION_BRIEF_TOOL_ID,
+                    morning_brief_string_at(operator_action, &["summary", "next_action"])
+                        .unwrap_or("review_operator_actions"),
+                    operator_action.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "closeout_retention",
+                    "Closeout retention",
+                    closeout_ready,
+                    closeout_attention as usize,
+                    closeout_blocked as usize,
+                    SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID,
+                    morning_brief_string_at(closeout_retention, &["decision", "recommended_action"])
+                        .unwrap_or("review_closeout_retention"),
+                    closeout_retention.clone(),
+                ),
+            ]),
+        ),
+        ("command_audit_dossier", command_audit.clone()),
+        ("remediation_plan", remediation_plan.clone()),
+        ("operator_action_brief", operator_action.clone()),
+        ("closeout_retention_ledger", closeout_retention.clone()),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATOR_ACTION_BRIEF_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn command_resolution_next_step(
+    command_audit: &JsonValue,
+    remediation_plan: &JsonValue,
+    operator_action: &JsonValue,
+    closeout_retention: &JsonValue,
+    command_audit_ready: bool,
+    remediation_ready: bool,
+    operator_action_ready: bool,
+    closeout_ready: bool,
+    command_blocked: i64,
+    remediation_blocked: i64,
+    operator_blocked: i64,
+    closeout_blocked: i64,
+    total_attention_count: i64,
+) -> (String, String, String, String) {
+    if command_blocked > 0 || !command_audit_ready {
+        return (
+            morning_brief_string_at(command_audit, &["decision", "recommended_tool"])
+                .unwrap_or(SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID)
+                .to_string(),
+            morning_brief_string_at(command_audit, &["decision", "recommended_action"])
+                .unwrap_or("review_command_audit")
+                .to_string(),
+            morning_brief_string_at(command_audit, &["decision", "owner_lane"])
+                .unwrap_or("runtime")
+                .to_string(),
+            morning_brief_string_at(command_audit, &["decision", "reason"])
+                .unwrap_or("command_audit_not_ready")
+                .to_string(),
+        );
+    }
+    if remediation_blocked > 0 || !remediation_ready {
+        return (
+            morning_brief_string_at(remediation_plan, &["summary", "next_tool"])
+                .unwrap_or(SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID)
+                .to_string(),
+            morning_brief_string_at(remediation_plan, &["summary", "next_action"])
+                .unwrap_or("review_remediation_plan")
+                .to_string(),
+            morning_brief_string_at(remediation_plan, &["summary", "next_owner_lane"])
+                .unwrap_or("operations")
+                .to_string(),
+            "remediation_plan_open".to_string(),
+        );
+    }
+    if operator_blocked > 0 || !operator_action_ready {
+        return (
+            morning_brief_string_at(operator_action, &["summary", "next_tool"])
+                .unwrap_or(SMART_HOME_GET_OPERATOR_ACTION_BRIEF_TOOL_ID)
+                .to_string(),
+            morning_brief_string_at(operator_action, &["summary", "next_action"])
+                .unwrap_or("review_operator_actions")
+                .to_string(),
+            morning_brief_string_at(operator_action, &["summary", "next_owner_lane"])
+                .unwrap_or("operator")
+                .to_string(),
+            "operator_action_open".to_string(),
+        );
+    }
+    if closeout_blocked > 0 || !closeout_ready {
+        return (
+            morning_brief_string_at(closeout_retention, &["decision", "recommended_tool"])
+                .unwrap_or(SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID)
+                .to_string(),
+            morning_brief_string_at(closeout_retention, &["decision", "recommended_action"])
+                .unwrap_or("review_closeout_retention")
+                .to_string(),
+            morning_brief_string_at(closeout_retention, &["decision", "owner_lane"])
+                .unwrap_or("chief")
+                .to_string(),
+            morning_brief_string_at(closeout_retention, &["decision", "reason"])
+                .unwrap_or("closeout_retention_not_ready")
+                .to_string(),
+        );
+    }
+    if total_attention_count > 0 {
+        (
+            SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID.to_string(),
+            "review_command_resolution_attention".to_string(),
+            "chief".to_string(),
+            "command_resolution_attention".to_string(),
+        )
+    } else {
+        (
+            SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID.to_string(),
+            "monitor_command_resolution".to_string(),
+            "chief".to_string(),
+            "command_resolution_clear".to_string(),
         )
     }
 }
@@ -95857,7 +96292,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 321);
+        assert_eq!(definitions.len(), 322);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -96777,9 +97212,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            313
+            314
         );
         assert_eq!(
             export
@@ -98654,6 +99092,185 @@ mod tests {
                 .unwrap()
                 >= 1,
             "command audit dossier must not drain command subscriptions"
+        );
+    }
+
+    #[test]
+    fn command_resolution_brief_wraps_audit_remediation_operator_and_closeout_signals() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-resolution-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-command-resolution-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-command-resolution-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let subscribe_commands = tool_runtime.invoke_with_events(&request(
+            "call-subscribe-commands-for-command-resolution-brief",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("commands")),
+                ("filter", object([("filter_type", string("commands"))])),
+            ]),
+            2_002,
+        ));
+        assert!(subscribe_commands.result.ok);
+
+        let accepted_command = tool_runtime.invoke_with_events(&request(
+            "call-command-resolution-accepted-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+                ("idempotency_key", string("command-resolution-accepted")),
+            ]),
+            2_003,
+        ));
+        assert!(accepted_command.result.ok);
+
+        let set_desired_state = tool_runtime.invoke_with_events(&request(
+            "call-set-desired-state-for-command-resolution-brief",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(false)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            2_010,
+        ));
+        assert!(set_desired_state.result.ok);
+
+        let reconcile = tool_runtime.invoke_with_events(&request(
+            "call-reconcile-for-command-resolution-brief",
+            SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID,
+            object([]),
+            2_020,
+        ));
+        assert!(reconcile.result.ok);
+
+        let request = request(
+            "call-command-resolution-brief",
+            SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID,
+            object([]),
+            2_030,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "command_resolution_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(output, "total_blocked_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 command audit, remediation, operator-action, and closeout-retention signals; it does not dispatch commands, drain event queues, or own smart-home state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(
+            field(decision, "reason"),
+            Some(&string("missing_capability_grants"))
+        );
+
+        let command_audit = field(output, "command_audit_dossier").unwrap();
+        assert_eq!(field(command_audit, "status"), Some(&string("hold")));
+        let remediation = field(output, "remediation_plan").unwrap();
+        assert!(integer_value(field(remediation, "total_steps").unwrap()).unwrap() >= 1);
+        let operator_action = field(output, "operator_action_brief").unwrap();
+        assert!(integer_value(field(operator_action, "total_action_count").unwrap()).unwrap() >= 1);
+        let closeout = field(output, "closeout_retention_ledger").unwrap();
+        assert!(integer_value(field(closeout, "ledger_entry_count").unwrap()).unwrap() >= 1);
+
+        assert_eq!(
+            array_len(field(output, "resolution_sections").unwrap()),
+            Some(4)
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(4));
+        assert!(
+            runtime
+                .borrow()
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("commands"))
+                .unwrap()
+                >= 1,
+            "command resolution brief must not drain command subscriptions"
         );
     }
 
@@ -101236,11 +101853,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(321))
+            Some(&integer(322))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(313))
+            Some(&integer(314))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
