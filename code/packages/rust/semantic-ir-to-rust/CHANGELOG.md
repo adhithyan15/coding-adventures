@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.21.0 — string/symbol ordering: no-panic `num_lt` comparator
+
+Fixes a reachable panic on the OO surface: the runtime's ordering primitive
+`num_lt` (used by the `<`/`>` operators and by `sort`/`min`/`max`/`sort_by`/
+`min_by`/`max_by`) fell through to `as_f64` for any non-`Int` pair, which
+**panics** on a string, symbol, nil, etc. So a valid Ruby `["b", "a"].sort` or
+`"a" < "b"` crashed the emitted program.
+
+`num_lt` now compares strings and symbols **lexicographically**, numbers
+numerically, and returns `false` (a stable, defined order — never a panic) for
+a genuinely mixed/uncomparable pair. `sort`/`min`/`max`/`sort_by`/… therefore
+work on string/symbol arrays, and the `<`/`>` operators no longer crash on a
+non-numeric operand. (Ruby raises `ArgumentError` on a genuinely uncomparable
+`<`; that typed-error refinement is a separate follow-up — this change removes
+the uncontrolled panic.)
+
+Verified end-to-end under `rustc`: `["banana","apple","cherry"].sort` →
+`[apple, banana, cherry]`, string `min`/`max`, `"apple" < "banana"` → true, and
+a mixed `"apple" < 1` → false (no panic).
+
 ## 0.20.0 — Array block-method breadth (sort_by / group_by / partition / …)
 
 Extends the emitted runtime's `array_method` catalog with the common
