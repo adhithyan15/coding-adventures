@@ -520,6 +520,21 @@ describe("built-in method catalog: String (M1c)", () => {
     expect(callMethod("abc", "reverse")).toBe("cba");
   });
 
+  it("justify (ljust / rjust / center) and swapcase", () => {
+    // pad to `width` runes with a cyclic pad; center's odd extra pad on the
+    // RIGHT; width <= length is a no-op.
+    expect(callMethod("hi", "ljust", 5)).toBe("hi   ");
+    expect(callMethod("hi", "ljust", 5, "*")).toBe("hi***");
+    expect(callMethod("hi", "rjust", 5, "*")).toBe("***hi");
+    expect(callMethod("hi", "center", 6, "*")).toBe("**hi**");
+    expect(callMethod("hi", "center", 5, "*")).toBe("*hi**");
+    expect(callMethod("abc", "ljust", 1)).toBe("abc");
+    expect(callMethod("abcdef", "ljust", 10, "xy")).toBe("abcdefxyxy");
+    // swapcase flips each ASCII letter, leaving other characters untouched.
+    expect(callMethod("Hello World", "swapcase")).toBe("hELLO wORLD");
+    expect(callMethod("a1B!c", "swapcase")).toBe("A1b!C");
+  });
+
   it("strip family and chomp", () => {
     expect(callMethod("  hi  ", "strip")).toBe("hi");
     expect(callMethod("  hi  ", "lstrip")).toBe("hi  ");
