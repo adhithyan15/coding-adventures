@@ -2396,3 +2396,101 @@ fn symbol_catalog_methods() {
         assert_eq!(stdout, "hello\nHELLO\n5\n:hello\nfoo\nHello");
     }
 }
+
+// ── Ruby Array / Enumerable catalog (arrayMethod) ──────────────────────
+//
+// JS arrays previously had NO Ruby Array catalog — only native JS methods via
+// the allowlist — so `select`/`reject`/`inject`/`any?` were unsupported and
+// `sort` was lexicographic (wrong for numbers). This proves the new explicit
+// `arrayMethod` catalog end-to-end under Node.
+fn arr(items: Vec<Expr>) -> Expr {
+    Expr::SeqLit { items, span: sp() }
+}
+
+fn array_catalog_module() -> Module {
+    // Block bodies referenced by the MakeClosures.
+    let block_fns = vec![
+        func("__ba_even", vec![param("x")], vec![], method(param_ref("x"), "even?", vec![])),
+        func("__ba_id", vec![param("x")], vec![], param_ref("x")),
+        func(
+            "__ba_pair",
+            vec![param("x")],
+            vec![],
+            arr(vec![param_ref("x"), param_ref("x")]),
+        ),
+        func(
+            "__ba_lt3",
+            vec![param("x")],
+            vec![],
+            bc("<", vec![param_ref("x"), int(3)]),
+        ),
+        func(
+            "__ba_add",
+            vec![param("a"), param("x")],
+            vec![],
+            bc("+", vec![param_ref("a"), param_ref("x")]),
+        ),
+    ];
+    let a1234 = || arr(vec![int(1), int(2), int(3), int(4)]);
+    let a312 = || arr(vec![int(3), int(1), int(2)]);
+    let stmts = vec![
+        print(method(a312(), "sort", vec![])),                                   // [1, 2, 3]
+        print(method(a1234(), "select", vec![method_closure("__ba_even")])),     // [2, 4]
+        print(method(a1234(), "reject", vec![method_closure("__ba_even")])),     // [1, 3]
+        print(method(a1234(), "inject", vec![method_closure("__ba_add")])),      // 10
+        print(method(a312(), "sort_by", vec![method_closure("__ba_id")])),       // [1, 2, 3]
+        print(method(a1234(), "partition", vec![method_closure("__ba_even")])),  // [[2, 4], [1, 3]]
+        print(method(
+            arr(vec![int(1), int(2), int(3)]),
+            "flat_map",
+            vec![method_closure("__ba_pair")],
+        )), // [1, 1, 2, 2, 3, 3]
+        print(method(a1234(), "take_while", vec![method_closure("__ba_lt3")])),  // [1, 2]
+        print(method(a1234(), "count", vec![method_closure("__ba_even")])),      // 2
+        print(method(a312(), "min", vec![])),                                    // 1
+        print(method(a312(), "max", vec![])),                                    // 3
+        print(method(arr(vec![int(1), int(2), int(3)]), "sum", vec![])),         // 6
+        print(method(arr(vec![int(1), int(1), int(2), int(3)]), "uniq", vec![])), // [1, 2, 3]
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    Module {
+        name: "arrcat".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Closures,
+            Feature::Strings,
+            Feature::Symbols,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    }
+}
+
+#[test]
+fn array_catalog_methods() {
+    if let Some(stdout) = run_module(&array_catalog_module(), "arrcat") {
+        assert_eq!(
+            stdout,
+            "[1, 2, 3]\n[2, 4]\n[1, 3]\n10\n[1, 2, 3]\n[[2, 4], [1, 3]]\n\
+             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n6\n[1, 2, 3]"
+        );
+    }
+}
