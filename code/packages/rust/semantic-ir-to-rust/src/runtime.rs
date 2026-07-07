@@ -1463,7 +1463,12 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "collect" | "select" | "filter" | "reject" | "find" | "detect" | "any?"
                     | "all?" | "none?" | "reduce" | "inject" | "sort_by" | "min_by" | "max_by"
                     | "group_by" | "partition" | "flat_map" | "collect_concat" | "take_while"
-                    | "drop_while" | "count" | "each_with_object"
+                    | "drop_while" | "count" | "each_with_object" | "each_with_index"
+                    // aggregate / reshape non-block methods (all dispatch in
+                    // `array_method` above; previously under-reported here)
+                    | "min" | "max" | "sum" | "uniq" | "flatten" | "compact" | "to_a"
+                    // this PR: more non-block Array methods
+                    | "zip" | "rotate" | "to_h" | "tally"
             ),
             Value::Map(_) => matches!(
                 name,
@@ -2011,6 +2016,85 @@ pub const RUNTIME: &str = r##"mod __sir {
                     }
                 }
                 recv
+            }
+            // `zip(*others)` — an Array of tuples: the i-th tuple is
+            // `[self[i], others[0][i], others[1][i], …]`.  The result length
+            // is the RECEIVER's; a shorter (or non-Array) operand pads with
+            // `nil`.  `[1,2,3].zip([4,5,6]) == [[1,4],[2,5],[3,6]]`.  Each
+            // operand is snapshotted into an owned Vec once, so no `RefCell`
+            // borrow is held while we build the tuples.
+            "zip" => {
+                let snapshot = items_rc.borrow().clone();
+                let others: Vec<Vec<Value>> = pos
+                    .iter()
+                    .map(|o| match o {
+                        Value::Seq(inner) => inner.borrow().clone(),
+                        _ => Vec::new(),
+                    })
+                    .collect();
+                let mut out: Vec<Value> = Vec::with_capacity(snapshot.len());
+                for (i, item) in snapshot.into_iter().enumerate() {
+                    let mut tuple: Vec<Value> = Vec::with_capacity(others.len() + 1);
+                    tuple.push(item);
+                    for o in &others {
+                        tuple.push(o.get(i).cloned().unwrap_or(Value::Nil));
+                    }
+                    out.push(seq_lit(tuple));
+                }
+                seq_lit(out)
+            }
+            // `rotate(n = 1)` — a fresh Array with the elements shifted left by
+            // `n` (a NEGATIVE `n` rotates right).  The modulo wraps so ANY `n`
+            // terminates; the empty-array early return keeps the divisor
+            // strictly positive (no divide-by-zero, no negative slice index).
+            // `[1,2,3,4,5].rotate(2) == [3,4,5,1,2]`.
+            "rotate" => {
+                let snapshot = items_rc.borrow().clone();
+                let len = snapshot.len() as i64;
+                if len == 0 {
+                    return seq_lit(vec![]);
+                }
+                let n = pos.first().map(as_i64).unwrap_or(1);
+                // Rust `%` keeps the dividend's sign, so `+ len` then `% len`
+                // normalises any `n` (including negatives) into `[0, len)`.
+                let shift = (((n % len) + len) % len) as usize;
+                let mut out: Vec<Value> = Vec::with_capacity(snapshot.len());
+                out.extend_from_slice(&snapshot[shift..]);
+                out.extend_from_slice(&snapshot[..shift]);
+                seq_lit(out)
+            }
+            // `to_h` — read each element as a `[key, value]` pair and build a
+            // Hash.  A non-pair element (not a 2-element Array) is SKIPPED,
+            // upholding the never-raise floor (Ruby raises `TypeError`; we
+            // degrade instead).  Later duplicate keys overwrite earlier ones,
+            // matching `Hash` insertion semantics.
+            "to_h" => {
+                let snapshot = items_rc.borrow().clone();
+                let acc = map_lit(vec![]);
+                for item in snapshot {
+                    if let Value::Seq(inner) = &item {
+                        let pair = inner.borrow().clone();
+                        if pair.len() == 2 {
+                            map_set(&acc, pair[0].clone(), pair[1].clone());
+                        }
+                    }
+                }
+                acc
+            }
+            // `tally` — a Hash mapping each distinct element to how many times
+            // it occurs, in first-seen order, keyed by the Map's structural
+            // `value_eq`.  `["a","b","a"].tally == {"a"=>2, "b"=>1}`.
+            "tally" => {
+                let snapshot = items_rc.borrow().clone();
+                let acc = map_lit(vec![]);
+                for item in snapshot {
+                    let n = match map_get(&acc, &item) {
+                        Value::Int(c) => c,
+                        _ => 0,
+                    };
+                    map_set(&acc, item, Value::Int(n + 1));
+                }
+                acc
             }
             _ => no_method_error(&recv, name),
         }

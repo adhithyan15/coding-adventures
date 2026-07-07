@@ -265,3 +265,146 @@ fn array_aggregates_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+/// The v0.22.0 **more non-block Array methods**: `zip`, `rotate`, `to_h`,
+/// `tally`.  Same dispatch envelope, same explicit `(type, name)` catalog.
+/// Assertions stay integer-keyed and never PRINT a `nil` / string element, so
+/// the proof is independent of the display convention (this module's
+/// `source_language` is `"test"`, i.e. the Lisp default):
+///
+///   * `[1, 2, 3].zip([4, 5, 6])`         → `[[1, 4], [2, 5], [3, 6]]`
+///   * `[1, 2, 3].zip([7]).length`        → `3`  (result length = receiver's)
+///   * `[1, 2, 3].zip([7]).last.length`   → `2`  (short operand PADS to 2-tuple)
+///   * `[1, 2, 3, 4, 5].rotate(2)`        → `[3, 4, 5, 1, 2]`
+///   * `[1, 2, 3].rotate`                 → `[2, 3, 1]`  (default n = 1)
+///   * `[1, 2, 3].rotate(-1)`             → `[3, 1, 2]`  (negative rotates right)
+///   * `[[1, 10], [2, 20]].to_h.fetch(2)` → `20`  (pairs → Hash)
+///   * `[1, 1, 2, 1].tally.fetch(1)`      → `3`   (occurrence count)
+///   * `[1, 1, 2, 1].tally.fetch(2)`      → `1`
+fn more_methods_demo() -> Module {
+    // `[1, 2, 3].zip([7])` — a 3-element receiver, 1-element operand.
+    let short_zip =
+        method(seq(vec![ilit(1), ilit(2), ilit(3)]), "zip", vec![seq(vec![ilit(7)])]);
+
+    let main_stmts = vec![
+        // 1. equal-length zip
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "zip",
+            vec![seq(vec![ilit(4), ilit(5), ilit(6)])],
+        )),
+        // 2. result length is the receiver's
+        print_stmt(method(short_zip.clone(), "length", vec![])),
+        // 3. a short operand pads the tuple to width 2 (checked via length,
+        //    NOT by printing the padding `nil`)
+        print_stmt(method(method(short_zip, "last", vec![]), "length", vec![])),
+        // 4. rotate(2)
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]),
+            "rotate",
+            vec![ilit(2)],
+        )),
+        // 5. rotate with the default n = 1
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "rotate", vec![])),
+        // 6. negative n rotates right
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "rotate", vec![ilit(-1)])),
+        // 7. to_h then look a value up by key
+        print_stmt(method(
+            method(
+                seq(vec![seq(vec![ilit(1), ilit(10)]), seq(vec![ilit(2), ilit(20)])]),
+                "to_h",
+                vec![],
+            ),
+            "fetch",
+            vec![ilit(2)],
+        )),
+        // 8/9. tally then read two counts
+        print_stmt(method(
+            method(seq(vec![ilit(1), ilit(1), ilit(2), ilit(1)]), "tally", vec![]),
+            "fetch",
+            vec![ilit(1)],
+        )),
+        print_stmt(method(
+            method(seq(vec![ilit(1), ilit(1), ilit(2), ilit(1)]), "tally", vec![]),
+            "fetch",
+            vec![ilit(2)],
+        )),
+    ];
+
+    demo_module(main_stmts, vec![])
+}
+
+#[test]
+fn array_more_methods_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&more_methods_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_array_more_{nonce}.rs"));
+    let bin_path = dir.join(format!(
+        "sir_array_more_{nonce}{}",
+        if cfg!(windows) { ".exe" } else { "" }
+    ));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd
+        .arg(&src_path)
+        .arg("-o")
+        .arg(&bin_path)
+        .output()
+        .expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 4], [2, 5], [3, 6]]", // zip (equal length)
+            "3",                        // zip result length = receiver's
+            "2",                        // short operand pads tuple to width 2
+            "[3, 4, 5, 1, 2]",          // rotate(2)
+            "[2, 3, 1]",                // rotate (default 1)
+            "[3, 1, 2]",                // rotate(-1) (right)
+            "20",                       // to_h.fetch(2)
+            "3",                        // tally.fetch(1)
+            "1",                        // tally.fetch(2)
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}

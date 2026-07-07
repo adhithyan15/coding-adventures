@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.22.0 — more Array methods: `zip` / `rotate` / `to_h` / `tally`
+
+Extends the emitted Rust runtime's `array_method` catalog (and the `Value::Seq`
+`respond_to?` table) with four more common non-block Array methods:
+
+- `zip(*others)` — Array of tuples `[a[i], b[i], …]`, length = the receiver's;
+  a shorter (or non-Array) operand pads with `nil`.
+- `rotate(n = 1)` — a fresh Array rotated left by `n` (a negative `n` rotates
+  right); the modulo wraps so any `n` terminates and the empty-array early
+  return keeps the divisor positive (no divide-by-zero, no negative slice index).
+- `to_h` — `[[k, v], …]` → Hash (only 2-element-array elements; others skipped,
+  matching the never-raise floor).
+- `tally` — Hash of element → occurrence count, first-seen order, keyed by the
+  Map's structural `value_eq`.
+
+Also **fills a pre-existing `respond_to?` under-report** for the `Value::Seq`
+aggregate methods that already dispatch but were not listed (`min`, `max`,
+`sum`, `uniq`, `flatten`, `compact`, `to_a`, `each_with_index`), so the table is
+now faithful to `array_method`.
+
+Dispatch stays an explicit `(type, name)` match — no reflection. Verified
+end-to-end: emitted Rust compiled with `rustc` and executed, output diffed
+against the Python/TS reference.
+
 ## 0.21.0 — string/symbol ordering: no-panic `num_lt` comparator
 
 Fixes a reachable panic on the OO surface: the runtime's ordering primitive
