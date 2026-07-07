@@ -526,6 +526,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // A string resolves the hand-implemented Ruby String catalog (in lockstep
     // with `stringMethod`'s case labels), ahead of the native gate.
     if (typeof recv === "string" && STRING_METHODS.has(name)) { return true; }
+    // A Hash (`Map`) resolves the hand-implemented Ruby Hash catalog (in
+    // lockstep with `hashMethod`'s case labels), ahead of the native gate.
+    if (recv instanceof Map && HASH_METHODS.has(name)) { return true; }
     // A primitive resolves a name iff it (or its Ruby→native alias) is on the
     // method allowlist AND the native member is actually a function on `recv`.
     if (!(recv instanceof SirInstance)) {
@@ -747,6 +750,102 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return STR_MISS;
   }
 
+  // ── Ruby Hash catalog (`Map` receiver) ─────────────────────────
+  // A Ruby Hash is a JS `Map` (insertion-ordered).  Hand-implemented by an
+  // EXPLICIT `switch` on the source-derived `name` (never `recv[name]`) ahead of
+  // the native allowlist — Ruby's `keys`/`values`/`to_a` must return real
+  // Arrays (native `Map.keys()` yields a lazy iterator, not a Ruby Array), and
+  // `each`/`merge`/`dig`/`invert`/… have no faithful native equivalent.  Value
+  // comparison (`has_value?`/`invert`) uses `===`: exact for primitives,
+  // strings, and interned symbols — the v0 floor (deep-equal of nested values
+  // is a follow-up).  `HASH_METHODS` mirrors these labels for `respond_to?`.
+  const HASH_MISS = Symbol("hash-miss");
+  const HASH_METHODS = new Set([
+    "keys", "values", "size", "length", "empty?", "has_key?", "key?",
+    "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
+    "invert", "delete", "store", "each", "each_pair", "map", "select",
+    "filter", "reject",
+  ]);
+  function hashMethod(recv, name, args) {
+    switch (name) {
+      case "keys": return [...recv.keys()];
+      case "values": return [...recv.values()];
+      case "size": case "length": return recv.size;
+      case "empty?": return recv.size === 0;
+      case "has_key?": case "key?": case "include?": case "member?":
+        return recv.has(args[0]);
+      case "has_value?": case "value?": {
+        for (const v of recv.values()) { if (v === args[0]) { return true; } }
+        return false;
+      }
+      case "to_a": {
+        // Array of `[key, value]` two-element Arrays, in insertion order.
+        const out = [];
+        for (const [k, v] of recv) { out.push([k, v]); }
+        return out;
+      }
+      case "merge": {
+        // Non-mutating: a fresh Map with `other`'s entries overlaid (last wins).
+        const out = new Map(recv);
+        if (args[0] instanceof Map) { for (const [k, v] of args[0]) { out.set(k, v); } }
+        return out;
+      }
+      case "dig": {
+        // Walk one key per argument, nil the moment a level is missing; a
+        // non-diggable intermediate stops the walk.
+        let cur = recv;
+        for (const k of args) {
+          if (cur instanceof Map) { cur = cur.has(k) ? cur.get(k) : null; }
+          else if (Array.isArray(cur) && typeof k === "number") { cur = cur[k] ?? null; }
+          else { return null; }
+          if (cur === null) { return null; }
+        }
+        return cur;
+      }
+      case "invert": {
+        const out = new Map();
+        for (const [k, v] of recv) { out.set(v, k); }
+        return out;
+      }
+      case "delete": {
+        // Ruby `delete` MUTATES and returns the removed value (nil if absent).
+        if (recv.has(args[0])) { const v = recv.get(args[0]); recv.delete(args[0]); return v; }
+        return null;
+      }
+      case "store": {
+        // Ruby `store(k, v)` (alias `[]=`): mutates, returns the value.
+        recv.set(args[0], args[1]);
+        return args[1];
+      }
+      case "each": case "each_pair": {
+        // Yields (key, value); returns the receiver.
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") { for (const [k, v] of recv) { blk(k, v); } }
+        return recv;
+      }
+      case "map": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return []; }
+        const out = [];
+        for (const [k, v] of recv) { out.push(blk(k, v)); }
+        return out;
+      }
+      case "select": case "filter": case "reject": {
+        // Ruby `select`/`reject` return a new Hash of the kept pairs.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const keepWhenTruthy = name !== "reject";
+        const out = new Map();
+        for (const [k, v] of recv) {
+          const t = truthy(blk(k, v));
+          if (keepWhenTruthy ? t : !t) { out.set(k, v); }
+        }
+        return out;
+      }
+    }
+    return HASH_MISS;
+  }
+
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
   // `name` is not an M6 method, so `callMethod` continues to its type-specific
   // paths.  `rawArgs` is the UN-unwrapped argument list — a trailing block is
@@ -832,6 +931,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (typeof recv === "string") {
       const sm = stringMethod(recv, name, args);
       if (sm !== STR_MISS) { return sm; }
+    }
+    // Ruby Hash catalog on a `Map` receiver — explicit-switch dispatch (no
+    // `recv[name]`) ahead of the native allowlist, so `keys`/`values`/`to_a`
+    // return real Arrays and `each`/`merge`/`dig`/… resolve faithfully.
+    if (recv instanceof Map) {
+      const hm = hashMethod(recv, name, args);
+      if (hm !== HASH_MISS) { return hm; }
     }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.

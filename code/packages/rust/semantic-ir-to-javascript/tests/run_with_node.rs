@@ -2282,3 +2282,40 @@ fn string_catalog_methods() {
         assert_eq!(stdout, "Hello\ncba\nheLlo\nheLLo\n42\nhi\n6\n[a, b, c]");
     }
 }
+
+// ── Ruby Hash method catalog (hand-implemented, explicit dispatch) ──
+//
+// Exercises the `hashMethod` catalog end-to-end under Node: `keys`/`values`/
+// `to_a` must return real Arrays (not native Map iterators), `dig`/`merge`
+// resolve faithfully, and `delete` mutates the receiver — all routed through
+// the explicit Map switch (never `recv[name]`).
+#[test]
+fn hash_catalog_methods() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs
+            .into_iter()
+            .map(|(k, v)| MapEntry { key: str_(k), value: v })
+            .collect(),
+        span: sp(),
+    };
+    let stmts = vec![
+        let_("m", mk(vec![("a", int(1)), ("b", int(2))])),
+        print(method(local("m"), "keys", vec![])),   // [a, b]
+        print(method(local("m"), "values", vec![])), // [1, 2]
+        print(method(local("m"), "size", vec![])),   // 2
+        print(method(local("m"), "to_a", vec![])),   // [[a, 1], [b, 2]]
+        print(method(local("m"), "dig", vec![str_("b")])), // 2
+        print(method(
+            method(local("m"), "merge", vec![mk(vec![("c", int(3))])]),
+            "keys",
+            vec![],
+        )), // [a, b, c]
+        print(method(local("m"), "delete", vec![str_("a")])), // 1 (mutates m)
+        print(method(local("m"), "keys", vec![])),            // [b]
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Maps, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "hashcatalog") {
+        assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]");
+    }
+}
