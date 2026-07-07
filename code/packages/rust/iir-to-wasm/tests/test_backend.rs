@@ -2196,3 +2196,27 @@ fn e4dyn_wasm_string_procedure_return_and_call_result_print() {
     // Well-formed module.
     encode_module(&wm).expect("encoding failed");
 }
+
+/// E4-dyn: BASIC string `INPUT A$` lowers `call_builtin "input_str"` (a `str`
+/// result) to a call to the imported `env.__input_str`, and the module declares
+/// that import. The `str` result + `mov` must pass the validator's str-type gate,
+/// and the encoded module must reference the import by name.
+#[test]
+fn input_str_lowers_and_declares_env_import() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("t".into()),
+            vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t".into())], "str"),
+        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+    ]);
+    assert!(validate_for_wasm(&m).is_empty(),
+        "str call_builtin \"input_str\" + str mov must validate for WASM");
+    let bytes = lower_and_encode(&m);
+    // The import name "__input_str" appears verbatim in the wasm import section.
+    let needle = b"__input_str";
+    assert!(
+        bytes.windows(needle.len()).any(|w| w == needle),
+        "encoded module must declare the env.__input_str import"
+    );
+}

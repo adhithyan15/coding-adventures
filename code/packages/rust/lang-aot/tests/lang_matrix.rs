@@ -2381,14 +2381,16 @@ const PROGRAMS: &[Prog] = &[
     //   • Llvm — the same `@__twig_input_str()` from the AOT archive; `iir-to-llvm`
     //     lowers `call_builtin "input_str"` to `call i64 @__twig_input_str()` and
     //     carries the handle as an i64 (str→i64 at boundaries, E4d-2b).
-    // WASM (`env.__input_str` writing the block into linear memory) is the last
-    // remaining column. Stdin "OK\n" → A$ = "OK" → prints "OK".
+    // WASM (E4d): `env.__input_str(block, max)` writes the whole `[i32 len][bytes]`
+    // block into linear memory; iir-to-wasm bump-allocates the block from
+    // `__array_bump` and passes its base. With this column BASIC string `INPUT A$`
+    // runs on **all seven backends**. Stdin "OK\n" → A$ = "OK" → prints "OK".
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -2832,6 +2834,71 @@ impl wasm_execution::HostFunction for InputI64Func {
     }
 }
 
+/// `env.__input_str(i32 block, i32 max) -> ()` — WASM host import for BASIC string
+/// `INPUT A$` (E4-dyn). Drains one line from the stdin buffer (bytes up to the next
+/// `\n`, newline consumed but not stored) and writes the WHOLE runtime-string block
+/// `[i32 len][bytes]` into linear memory at `block`: an `i32` length header
+/// (`store_i32`) then the bytes (`store_i32_8`). The length is capped at `max` (the
+/// codegen reserved a `[i32 len][max bytes]` region); a longer line is truncated —
+/// the V1 permissive contract. The handle the module keeps is `block`; `print_str`
+/// reads the length back with `i32.load` at it. The wasm sibling of the native
+/// `__twig_input_str` C helper.
+struct InputStrFunc {
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+}
+
+impl wasm_execution::HostFunction for InputStrFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32, wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let block = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__input_str: missing block ptr"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        let max = args.get(1)
+            .ok_or_else(|| wasm_execution::TrapError::new("__input_str: missing max"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        if block < 0 || max < 0 {
+            return Err(wasm_execution::TrapError::new("__input_str: negative block/max"));
+        }
+        let memory = memory
+            .ok_or_else(|| wasm_execution::TrapError::new("__input_str: no linear memory"))?;
+        let base = usize::try_from(block)
+            .map_err(|_| wasm_execution::TrapError::new("__input_str: block overflow"))?;
+        // Drain one line from the shared stdin buffer.
+        let mut line = Vec::new();
+        {
+            let mut buf = self.input.lock().expect("lang-matrix wasm stdin buffer poisoned");
+            loop {
+                match buf.pop_front() {
+                    None | Some(b'\n') => break,
+                    Some(b) => line.push(b),
+                }
+            }
+        }
+        // Cap at `max` (the codegen reserved [i32 len][max bytes]); truncate a longer line.
+        let len = line.len().min(max as usize);
+        // Length header (i32) then the bytes.
+        memory.store_i32(base, len as i32)?;
+        for (i, &b) in line.iter().take(len).enumerate() {
+            memory.store_i32_8(base + 4 + i, b as i32)?;
+        }
+        Ok(vec![])
+    }
+}
+
 // AL8 transcendentals — stateless `HostFunction` adapters for `env.__sin`,
 // `env.__cos`, `env.__ln`, `env.__exp`.  Each takes one f64 and returns one f64,
 // delegating to Rust's `f64::*` methods (which call the platform libm).
@@ -3038,6 +3105,11 @@ impl wasm_execution::HostInterface for PrintHost {
             // BA-INPUT: `env.__input_i64` reads a full line from the stdin buffer
             // and parses it as an i64; used by BASIC `INPUT X`.
             ("env", "__input_i64") => Some(Box::new(InputI64Func {
+                input: std::sync::Arc::clone(&self.input),
+            })),
+            // E4-dyn: `env.__input_str` reads a line and writes a `[i32 len][bytes]`
+            // block into linear memory; used by BASIC string `INPUT A$`.
+            ("env", "__input_str") => Some(Box::new(InputStrFunc {
                 input: std::sync::Arc::clone(&self.input),
             })),
             // AL8 transcendentals: env.__sin/cos/ln/exp are f64→f64 host imports.
