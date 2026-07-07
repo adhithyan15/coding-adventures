@@ -2955,6 +2955,19 @@ mod tests {
         assert!(RUNTIME.contains("func _sir_string_method("));
         assert!(RUNTIME.contains("func _sir_numeric_method("));
         assert!(RUNTIME.contains("func _sir_symbol_method("));
+        // Ruby Symbol catalog arms (parity with Python/TS + task-mandated
+        // `capitalize`/`to_proc`).
+        for arm in &[
+            "case \"to_s\":",
+            "case \"to_sym\":",
+            "case \"upcase\":",
+            "case \"downcase\":",
+            "case \"capitalize\":",
+            "case \"inspect\":",
+            "case \"to_proc\":",
+        ] {
+            assert!(RUNTIME.contains(arm), "symbol catalog missing `{}`", arm);
+        }
         assert!(RUNTIME.contains("undefined method"));
     }
 

@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.16.0
+
+### Added — Ruby Symbol method catalog completion (`capitalize` / `inspect` / `to_proc`)
+
+Parity-fill: the Python + TypeScript `sir-runtime-oop` Symbol catalogs already
+expose `inspect`; this ports it into the Go runtime's `_sir_symbol_method`
+switch and adds the two task-mandated Ruby Symbol methods `capitalize` and
+`to_proc`, so a translated Ruby program's Symbol calls execute on the Go
+backend instead of hitting the `NoMethodError` floor.
+
+- **`inspect`** — returns the source form `":name"` (a String). Matches the
+  Python/TS reference semantics.
+- **`capitalize`** — returns a NEW interned `*Symbol` whose name has an
+  uppercase first char and a lowercase remainder (rune-aware, mirroring the
+  existing `upcase`/`downcase` arms).
+- **`to_proc`** — an explicit `sym.to_proc` call returns a `*Closure` built by
+  the SAME `_sir_sym_to_proc` helper the `&:sym` block-pass form uses. The
+  resulting proc routes each application through the explicit
+  `_sir_call_method` switch — NEVER Go `reflect` ([[dynamic-dispatch-rce]]); an
+  out-of-catalog method surfaces the ordinary `NoMethodError`. Note: the
+  `&:sym` block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
+  (see `try_emit_block_pass` in `emit.rs`) and never reaches this catalog arm;
+  `to_proc` is added for the explicit-call path and full correctness.
+- `_sir_symbol_responds` (`respond_to?`) updated to include `capitalize`,
+  `inspect`, and `to_proc`.
+
+Exec-proof: `tests/compile_and_run_symbol_methods.rs` runs the emitted Go under
+a real `go run` toolchain and asserts `:hello.to_s`→"hello", `:hi.length`→"2",
+`:abc.upcase`→"ABC", `:ABC.downcase`→"abc", `:hELLO.capitalize`→"Hello",
+`:x.inspect`→":x", `[1,2,3].map(&:to_s).join`→"123" (block-pass form), and
+`[4,5,6].map(:to_s.to_proc).join`→"456" (explicit catalog `to_proc`).
+
 ## 0.15.0
 
 ### Added — Array collection-method parity (min / max / sum / uniq / flatten / compact / each_with_index)

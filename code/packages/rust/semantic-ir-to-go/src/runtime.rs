@@ -1650,7 +1650,8 @@ func _sir_string_responds(name string) bool {
 
 func _sir_symbol_responds(name string) bool {
 	switch name {
-	case "to_s", "to_sym", "length", "size", "upcase", "downcase", "empty?":
+	case "to_s", "to_sym", "length", "size", "upcase", "downcase",
+		"capitalize", "inspect", "to_proc", "empty?":
 		return true
 	}
 	return false
@@ -2318,6 +2319,28 @@ func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 		return _sir_intern(strings.ToUpper(recv.Name)), true
 	case "downcase":
 		return _sir_intern(strings.ToLower(recv.Name)), true
+	case "capitalize":
+		// Ruby `Symbol#capitalize`: first char upper, the rest lower, as a
+		// NEW interned Symbol (mirrors `upcase`/`downcase`).  Operate on runes
+		// so a multi-byte leading char is not split.
+		rs := []rune(recv.Name)
+		if len(rs) == 0 {
+			return recv, true
+		}
+		head := strings.ToUpper(string(rs[0]))
+		tail := strings.ToLower(string(rs[1:]))
+		return _sir_intern(head + tail), true
+	case "inspect":
+		// Ruby `Symbol#inspect` → the source form `":name"` (a String).
+		return ":" + recv.Name, true
+	case "to_proc":
+		// Ruby `Symbol#to_proc` — an explicit `sym.to_proc` call (the `&:sym`
+		// block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
+		// and never reaches this catalog).  Reuse the SAME helper so the
+		// resulting `*Closure` routes through the explicit `_sir_call_method`
+		// switch — never Go `reflect` ([[dynamic-dispatch-rce]]); an
+		// out-of-catalog method surfaces the ordinary NoMethodError floor.
+		return _sir_sym_to_proc(recv), true
 	case "empty?":
 		return len(recv.Name) == 0, true
 	}
