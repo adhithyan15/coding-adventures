@@ -67,9 +67,12 @@ variable-variable concat on the equality branch path, and
 `IF A$ + B$ <> "NO"` proves the sibling inequality branch path. `LET B$ = A$ + "K"; PRINT B$` stores the variable-backed
 concat directly into another scalar string slot, and
 `LET B$ = A$ + "B" + "C"; PRINT B$` proves chained left-associative concat
-through repeated E4 `str_concat`. Richer dynamic string storage, string arrays,
-and string `INPUT` remain follow-ups. See
-[CHANGELOG.md](CHANGELOG.md) for the full table.
+through repeated E4 `str_concat`. `INPUT A$` (E4-dyn) reads a whole line from
+the host as a **runtime string** via `call_builtin "input_str"` — the compiler
+cannot fold it, so `PRINT A$` prints whatever stdin supplied; it is proven on
+the dynamic VM/JIT columns, with the static/managed columns' host read-a-line
+primitive to follow. Richer dynamic string storage and string arrays remain
+follow-ups. See [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
 single-line user functions, `DIM` arrays, `READ`/`DATA`/`RESTORE`, and
