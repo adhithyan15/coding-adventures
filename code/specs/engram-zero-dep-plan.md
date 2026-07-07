@@ -84,15 +84,38 @@ Effort: S ≈ ½ day, M ≈ 1–2 days, L ≈ several days / multiple PRs.
   tests were `scheduler.rs:564,599`, which now exercise the zero-dep crate.
 
 ### Phase C — Unicode + non-`re` regex (removes `unicode-normalization`, most of `regex`) — M
-- New shared Unicode tables: combining-class / `is_combining_mark`,
-  `\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}`, canonical decomposition, NFC composition.
-- Hand-write HTML-tag scanners + `*`/`_` glob matcher (replaces most regex uses).
-- Wire NFD-fold (template + `nc:` search) and NFC dedup onto the tables.
+- **C1 — ✅ DONE (removes `unicode-normalization`).** New zero-dep
+  `code/packages/rust/unicode-normalize` (Unicode 17.0.0): NFD/NFC + combining
+  class + `is_combining_mark`, generated tables + algorithmic Hangul. Cross-verified
+  vs the live upstream crate across **every scalar value** (~1.1M code points) +
+  200k random strings — zero mismatches. engram-core swapped (2 `use` lines +
+  Cargo.toml); 167 tests pass; `unicode-normalization` gone.
+- **C2 — ✅ PARTIAL (tag-strip scanner only).** New `engram-core::html_scan`
+  reimplements the `<[^>]+>` tag-strip (`DUPLICATE_HTML_TAGS`) as an explicit
+  scanner, byte-verified vs the live `regex` across 300k random strings. The
+  `regex` **dep stays** (still used by the media pattern + the search-match
+  pipeline).
+  - **Scope correction:** the *media* pattern
+    (`DUPLICATE_HTML_MEDIA_TAGS`) and the `*`/`_` glob were originally slated as
+    hand-scanners here, but they rely on regex **backtracking** that is a rabbit
+    hole to hand-emulate (quoted values crossing `>`; alternation × trailing-`>`
+    backtracking; `\s*` overlapping `[^ >]`). The right mechanism is the general
+    engine below — so media/glob/whole-word/`re:` **all move to Phase D**, which
+    now removes `regex` in one coherent step.
+- Character classes (`\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}`) to add if/when the
+  regex engine needs them; `is_combining_mark` (Mark) already shipped in C1.
 
-### Phase D — `re:` regex engine (removes `regex` entirely) — L
-- Mini backtracking/NFA engine for the subset Anki users type in `re:` search
-  (`. * + ? [] () | ^ $ \d \w`, case-insensitive) + whole-word Unicode boundary.
-- Consider feature-gating/deferring `re:` if it lets `regex` drop after Phase C.
+### Phase D — zero-dep regex engine (removes `regex` entirely) — L
+- Build a small zero-dep backtracking/NFA regex engine covering the exact subset
+  engram-core uses: literals, `.`, `* + ?`, `[]`/`[^]`, `()`, `|`, `^ $`,
+  `\d \w \s`, case-insensitive + dot-all flags, capture groups, and
+  `replace_all` — enough to execute **all** current patterns: the media tag
+  pattern, the glob-compiled search patterns, whole-word Unicode boundary, and
+  user `re:` search.
+- Cross-verify against the live `regex` on every current pattern + random
+  corpora, then swap all `Regex`/`RegexBuilder`/`regex::escape` uses and **drop
+  `regex`**. This subsumes the C2 media/glob work (byte-exactness by correct
+  engine semantics, not per-pattern hand-emulation).
 
 ### Phase E — sqlite-file reader (unblocks rusqlite-free **import**) — L (PRs A1–A5)
 Per `code/specs/storage-sqlite.md` + the Python `storage-sqlite` port:

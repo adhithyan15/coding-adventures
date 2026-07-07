@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### HTML tag-strip no longer uses `regex` (zero-dep step)
+
+`rendered_search_text` (search) stripped HTML tags with the `regex` pattern
+`(?is)<[^>]+>`. That step is now the hand-written `html_scan::strip_tags`
+scanner, byte-for-byte verified against the live `regex` across 300k random
+strings. The `regex` dependency is **not yet removed** — the media-tag pattern
+and the search-match pipeline (glob/whole-word/`re:`) still use it and are
+scheduled for the zero-dep regex engine (Phase D). Part of the Engram
+zero-dependency program (`code/specs/engram-zero-dep-plan.md`, Phase C2).
+
+### Removed third-party `unicode-normalization` — NFD/NFC is now zero-dep
+
+Accent-stripping and canonical de-duplication in `search.rs` and `template.rs`
+used the third-party `unicode-normalization` crate for `nfd()`, `nfc()`, and
+`is_combining_mark`. That dependency is now the repository's own zero-dependency
+`unicode-normalize` crate (`code/packages/rust/unicode-normalize`), a from-scratch
+NFD/NFC implementation for Unicode 17.0.0. The consumed surface is identical
+(`UnicodeNormalize` trait + `char::is_combining_mark`), so the swap is a two-line
+`use` change plus the `Cargo.toml` dependency.
+
+Before the cutover a cross-check asserted the new crate matches the live upstream
+crate across **every Unicode scalar value** (~1.1M code points) and 200,000
+random multi-character strings — zero mismatches. All 167 `engram-core` tests
+pass unchanged; `unicode-normalization` is gone from the dependency tree.
+
 ### Removed third-party `fsrs` — FSRS scheduling is now zero-dep
 
 FSRS-6 review scheduling (`scheduler.rs`) and retrievability ranking
