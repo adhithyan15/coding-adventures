@@ -138,7 +138,7 @@ pub use expression::{
     ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
     LogicalOperator, MemberExpression,
     NewExpression,
-    NullLiteral, NumericLiteral, ObjectExpression, Property, PropertyKey, PropertyKind,
+    NullLiteral, NumericLiteral, ObjectExpression, ObjectMember, Property, PropertyKey, PropertyKind,
     SequenceExpression, SpreadElement,
     StringLiteral, TaggedTemplateExpression, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
     UndefinedLiteral, UpdateExpression, UpdateOperator,

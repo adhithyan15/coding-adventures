@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.29.0] - 2026-07-07
+
+### Added — CLOC12.170: object spread `{...o}` via `ObjectMember` (gap-SpreadProperty)
+
+Object literals now model **object spread** `{...o}` (ES2018). This is the
+first *structural* change to an existing node: `ObjectExpression.properties`
+changes from `Vec<Property>` to `Vec<ObjectMember>`, where
+
+```rust
+pub enum ObjectMember { Property(Property), Spread(SpreadElement) }
+```
+
+reusing the existing `SpreadElement { cv, argument }` for the spread arm (the
+same node the call/array spread uses — ESTree names both `SpreadElement`). The
+enum keeps `Property` and `Spread` members in ONE ordered vector because the
+order is observable (`{a: 1, ...o, b: 2}` — a later member overrides an earlier
+key, and a spread may sit before, between, or after plain properties); a side
+channel would lose the interleaving and miscompile override semantics.
+Serialised `#[serde(untagged)]`: the `Property` arm carries its own
+`"type": "Property"` tag and the `Spread` arm carries `SpreadElement`'s
+`argument`, so a member round-trips unambiguously (new
+`object_member_spread_round_trips` test). This is the **node-only** PR1 — the
+`javascript-parser` bridge still declines `{...o}` (gap-SpreadProperty), and the
+emitter + all nine downstream passes gain their `ObjectMember` match arms in the
+same atomic change so the workspace never has a broken `match`.
+
 ## [0.28.0] - 2026-07-07
 
 ### Added — CLOC12.169: `Expression::ImportExpression` (dynamic `import(x)`)

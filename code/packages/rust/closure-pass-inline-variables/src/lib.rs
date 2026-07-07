@@ -108,7 +108,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam,
-    Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
+    Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — constant-fold first, so a folded
@@ -786,13 +786,23 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &prop.key {
-                        count_uses_expr(e, name, count);
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &prop.key {
+                                count_uses_expr(e, name, count);
+                            }
+                        }
+                        count_uses_expr(&prop.value, name, count);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        count_uses_expr(&s.argument, name, count);
                     }
                 }
-                count_uses_expr(&prop.value, name, count);
             }
         }
         // Count uses of `name` inside a function *value*'s body, exactly
@@ -1089,15 +1099,25 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &mut oe.properties {
-                // A computed key `[expr]` is a use position; a plain
-                // identifier / string / number key is a property name.
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &mut prop.key {
-                        changed |= propagate_in_expr(e, cand);
+            for member in &mut oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        // A computed key `[expr]` is a use position; a plain
+                        // identifier / string / number key is a property name.
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &mut prop.key {
+                                changed |= propagate_in_expr(e, cand);
+                            }
+                        }
+                        changed |= propagate_in_expr(&mut prop.value, cand);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        changed |= propagate_in_expr(&mut s.argument, cand);
                     }
                 }
-                changed |= propagate_in_expr(&mut prop.value, cand);
             }
         }
         // Propagate the candidate into a function *value*'s body,

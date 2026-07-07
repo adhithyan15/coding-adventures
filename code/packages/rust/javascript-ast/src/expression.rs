@@ -796,16 +796,59 @@ pub struct ArrayExpression {
     pub elements: Vec<Option<Expression>>,
 }
 
-/// `{ key1: value1, key2: value2 }`. Property insertion order is
-/// preserved per ES2015+ — `Object.keys` is observable. Phase 1
-/// supports `Init` properties (`{k: v}`), getters, setters, shorthand
-/// `{k}`, and methods `{k() {}}`. Spread (`{...x}`) is Phase 2.
+/// `{ key1: value1, key2: value2 }`. Member insertion order is
+/// preserved per ES2015+ — `Object.keys` is observable. Supports
+/// `Init` properties (`{k: v}`), getters, setters, shorthand
+/// `{k}`, methods `{k() {}}`, and **object spread** `{...x}` (ES2018) —
+/// see [`ObjectMember`] for how the two member shapes intermix.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ObjectExpression {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
-    pub properties: Vec<Property>,
+    pub properties: Vec<ObjectMember>,
+}
+
+/// One entry in an [`ObjectExpression`]'s `properties` list — either a normal
+/// key/value [`Property`] or an object **spread** `...expr` (ES2018) that copies
+/// another object's own enumerable properties in.
+///
+/// # Why an enum rather than two parallel vectors
+///
+/// ESTree intermixes `Property` and `SpreadElement` nodes in the *same*
+/// `properties` array, and the order is **observable**: a later member's key
+/// overrides an earlier one, and a spread may sit before, between, or after
+/// plain properties (`{a: 1, ...o, b: 2}`). Modelling the list as a single
+/// `Vec<ObjectMember>` preserves that source order for every walker for free —
+/// splitting spreads into a side channel would lose the interleaving and
+/// silently miscompile override semantics.
+///
+/// # Why the spread reuses [`SpreadElement`]
+///
+/// The object-spread carries exactly what the call/array spread carries — a
+/// single `argument` expression and its provenance `cv` — and prints the same
+/// way (`...expr`). Reusing the existing node keeps one spread shape and one
+/// emit path (`emit_object_spread` mirrors `emit_spread`), rather than a
+/// near-duplicate struct. ESTree names both `SpreadElement`, so this matches
+/// the reference tree too.
+///
+/// ```text
+///   {a: 1}          → Property        a normal key/value member
+///   {...o}          → Spread          copy o's own enumerable props
+///   {a: 1, ...o}    → [Property, Spread]   order is observable
+/// ```
+///
+/// Serialised `#[serde(untagged)]`: the `Property` arm carries its own
+/// `"type": "Property"` tag and the `Spread` arm carries `SpreadElement`'s
+/// `argument` field, so a member deserialises unambiguously (only a spread has
+/// `argument`; only a property has `kind`/`key`/`value`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ObjectMember {
+    /// A normal `k: v` / shorthand / getter / setter / method property.
+    Property(Property),
+    /// An object spread `...expr`. Reuses [`SpreadElement`] (`{ cv, argument }`).
+    Spread(SpreadElement),
 }
 
 /// One entry of an [`ObjectExpression`]. ESTree calls this `Property`;
@@ -1601,7 +1644,7 @@ mod tests {
         // `{ foo: 1 }`.
         let e = Expression::ObjectExpression(ObjectExpression {
             cv: None,
-            properties: vec![Property {
+            properties: vec![ObjectMember::Property(Property {
                 cv: None,
                 kind: PropertyKind::Init,
                 key: PropertyKey::Identifier(Identifier {
@@ -1616,10 +1659,28 @@ mod tests {
                 computed: false,
                 shorthand: false,
                 method: false,
-            }],
+            })],
         });
         assert_eq!(e.clone(), roundtrip(e.clone()));
         assert_eq!(type_tag(&e), "ObjectExpression");
+    }
+
+    #[test]
+    fn object_member_spread_round_trips() {
+        // `{...o}` — an `ObjectMember::Spread` survives serialise→deserialise
+        // under the `#[serde(untagged)]` representation (only a spread carries
+        // `argument`; only a property carries `kind`/`key`/`value`).
+        let e = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![ObjectMember::Spread(SpreadElement {
+                cv: None,
+                argument: Box::new(Expression::Identifier(Identifier {
+                    cv: None,
+                    name: "o".to_string(),
+                })),
+            })],
+        });
+        assert_eq!(e.clone(), roundtrip(e.clone()));
     }
 
     #[test]

@@ -53,8 +53,8 @@ use coding_adventures_closure_emitter::{emit, EmitOptions};
 use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
     ArrayExpression, BindingTarget, Declaration, Expression, Identifier, NumericLiteral,
-    ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, SourceType,
-    Statement, VarKind, VariableDeclaration, VariableDeclarator,
+    ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind,
+    SourceType, Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use coding_adventures_type_sidecar::Sidecar;
@@ -94,14 +94,16 @@ fn obj(props: Vec<(&str, Expression)>) -> Expression {
         cv: None,
         properties: props
             .into_iter()
-            .map(|(k, v)| Property {
-                cv: None,
-                kind: PropertyKind::Init,
-                key: PropertyKey::Identifier(ident_name(k)),
-                value: Box::new(v),
-                computed: false,
-                shorthand: false,
-                method: false,
+            .map(|(k, v)| {
+                ObjectMember::Property(Property {
+                    cv: None,
+                    kind: PropertyKind::Init,
+                    key: PropertyKey::Identifier(ident_name(k)),
+                    value: Box::new(v),
+                    computed: false,
+                    shorthand: false,
+                    method: false,
+                })
             })
             .collect(),
     })

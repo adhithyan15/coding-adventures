@@ -77,7 +77,7 @@ use coding_adventures_javascript_ast::{
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
-    NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
+    NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
     DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
@@ -1288,25 +1288,32 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             properties: o
                 .properties
                 .iter()
-                .map(|p| Property {
-                    cv: p.cv.clone(),
-                    kind: p.kind,
-                    key: match &p.key {
-                        PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
-                        PropertyKey::StringLiteral(s) => {
-                            PropertyKey::StringLiteral(s.clone())
-                        }
-                        PropertyKey::NumericLiteral(n) => {
-                            PropertyKey::NumericLiteral(n.clone())
-                        }
-                        PropertyKey::Expression(e) => {
-                            PropertyKey::Expression(Box::new(dce_expression(e, st)))
-                        }
-                    },
-                    value: Box::new(dce_expression(&p.value, st)),
-                    computed: p.computed,
-                    shorthand: p.shorthand,
-                    method: p.method,
+                .map(|member| match member {
+                    ObjectMember::Property(p) => ObjectMember::Property(Property {
+                        cv: p.cv.clone(),
+                        kind: p.kind,
+                        key: match &p.key {
+                            PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            PropertyKey::StringLiteral(s) => {
+                                PropertyKey::StringLiteral(s.clone())
+                            }
+                            PropertyKey::NumericLiteral(n) => {
+                                PropertyKey::NumericLiteral(n.clone())
+                            }
+                            PropertyKey::Expression(e) => {
+                                PropertyKey::Expression(Box::new(dce_expression(e, st)))
+                            }
+                        },
+                        value: Box::new(dce_expression(&p.value, st)),
+                        computed: p.computed,
+                        shorthand: p.shorthand,
+                        method: p.method,
+                    }),
+                    // Object spread `...expr` — recurse into the spread argument.
+                    ObjectMember::Spread(s) => ObjectMember::Spread(SpreadElement {
+                        cv: s.cv.clone(),
+                        argument: Box::new(dce_expression(&s.argument, st)),
+                    }),
                 })
                 .collect(),
         }),

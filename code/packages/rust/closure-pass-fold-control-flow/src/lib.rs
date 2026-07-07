@@ -62,7 +62,7 @@ use coding_adventures_javascript_ast::{
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
-    MemberExpression, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
+    MemberExpression, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, UnaryExpression, UnaryOperator, UpdateExpression, VarKind, VariableDeclaration,
     DoWhileStatement, VariableDeclarator, WhileStatement,
 };
@@ -1475,25 +1475,32 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             properties: o
                 .properties
                 .iter()
-                .map(|p| Property {
-                    cv: p.cv.clone(),
-                    kind: p.kind,
-                    key: match &p.key {
-                        PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
-                        PropertyKey::StringLiteral(s) => {
-                            PropertyKey::StringLiteral(s.clone())
-                        }
-                        PropertyKey::NumericLiteral(n) => {
-                            PropertyKey::NumericLiteral(n.clone())
-                        }
-                        PropertyKey::Expression(e) => {
-                            PropertyKey::Expression(Box::new(fold_expression(e, st)))
-                        }
-                    },
-                    value: Box::new(fold_expression(&p.value, st)),
-                    computed: p.computed,
-                    shorthand: p.shorthand,
-                    method: p.method,
+                .map(|member| match member {
+                    ObjectMember::Property(p) => ObjectMember::Property(Property {
+                        cv: p.cv.clone(),
+                        kind: p.kind,
+                        key: match &p.key {
+                            PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            PropertyKey::StringLiteral(s) => {
+                                PropertyKey::StringLiteral(s.clone())
+                            }
+                            PropertyKey::NumericLiteral(n) => {
+                                PropertyKey::NumericLiteral(n.clone())
+                            }
+                            PropertyKey::Expression(e) => {
+                                PropertyKey::Expression(Box::new(fold_expression(e, st)))
+                            }
+                        },
+                        value: Box::new(fold_expression(&p.value, st)),
+                        computed: p.computed,
+                        shorthand: p.shorthand,
+                        method: p.method,
+                    }),
+                    // Object spread `...expr` — recurse into the spread argument.
+                    ObjectMember::Spread(s) => ObjectMember::Spread(SpreadElement {
+                        cv: s.cv.clone(),
+                        argument: Box::new(fold_expression(&s.argument, st)),
+                    }),
                 })
                 .collect(),
         }),

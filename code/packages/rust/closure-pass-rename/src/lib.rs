@@ -92,7 +92,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, BlockStatement, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionParam, Program, ProgramItem, PropertyKey, Statement, VarKind,
+    FunctionDeclaration, FunctionParam, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VarKind,
     VariableDeclaration,
 };
 
@@ -970,15 +970,25 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                match &prop.key {
-                    PropertyKey::Identifier(id) => {
-                        out.insert(id.name.clone());
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        match &prop.key {
+                            PropertyKey::Identifier(id) => {
+                                out.insert(id.name.clone());
+                            }
+                            PropertyKey::Expression(e) => collect_all_idents_expr(e, out),
+                            _ => {}
+                        }
+                        collect_all_idents_expr(&prop.value, out);
                     }
-                    PropertyKey::Expression(e) => collect_all_idents_expr(e, out),
-                    _ => {}
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        collect_all_idents_expr(&s.argument, out);
+                    }
                 }
-                collect_all_idents_expr(&prop.value, out);
             }
         }
         // A function *value* introduces its own name (if any), its params,
@@ -1285,16 +1295,26 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &mut oe.properties {
-                // Only a *computed* key `[expr]` is a use position; a
-                // plain identifier / string / number key is a property
-                // name, never rewritten.
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &mut prop.key {
-                        rewrite_uses_expr(e, map);
+            for member in &mut oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        // Only a *computed* key `[expr]` is a use position; a
+                        // plain identifier / string / number key is a property
+                        // name, never rewritten.
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &mut prop.key {
+                                rewrite_uses_expr(e, map);
+                            }
+                        }
+                        rewrite_uses_expr(&mut prop.value, map);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        rewrite_uses_expr(&mut s.argument, map);
                     }
                 }
-                rewrite_uses_expr(&mut prop.value, map);
             }
         }
         // A nested function *value* closes over the enclosing function's

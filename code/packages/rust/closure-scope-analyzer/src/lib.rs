@@ -69,7 +69,7 @@ use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
     AssignmentTarget, BindingTarget, BlockStatement, CvId, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionExpression, FunctionParam, Program, ProgramItem, Property, PropertyKey, Statement,
+    FunctionDeclaration, FunctionExpression, FunctionParam, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
 };
 use serde::{Deserialize, Serialize};
@@ -921,8 +921,18 @@ fn walk_expression(
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                walk_property(prop, ctx, analysis, pending);
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        walk_property(prop, ctx, analysis, pending);
+                    }
+                    // An object spread `...expr` reads `expr` in the current
+                    // scope (it binds nothing), so walk its argument like any
+                    // other sub-expression.
+                    ObjectMember::Spread(s) => {
+                        walk_expression(&s.argument, ctx, analysis, pending);
+                    }
+                }
             }
         }
         Expression::FunctionExpression(fe) => {

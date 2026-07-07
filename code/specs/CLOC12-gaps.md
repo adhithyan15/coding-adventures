@@ -1951,8 +1951,9 @@ closurec e2e diff fixture (`tests/diff/simple-spread/`) proving
 WHITESPACE_ONLY.
 
 **Scope:** object-spread `{...o}` in an object literal (`convert_property_definition`,
-gap tracked as `SpreadProperty`) remains declined — it is a *property*, a
-separate later slice; this PR is the call/array/`new` spread only.
+gap tracked as `SpreadProperty`) is a separate *property*-position slice, taken up
+in **CLOC12.170** (its node + emit landed in PR1; bridge in PR2). This PR is the
+call/array/`new` spread only.
 
 ## CLOC12.163 — `YieldExpression` (`yield` / `yield*`): atomic node + emit + passes (PR1)
 
@@ -2136,6 +2137,56 @@ the same staging used for the substitution-template slice (gap-157), which also
 shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
+
+## CLOC12.170 — object spread `{...o}` via `ObjectMember`: structural node + emit + passes (PR1)
+
+Object literals now model **object spread** `{...o}` (ES2018) — the `...expr`
+member that copies another object's own enumerable properties in. This is the
+FIRST *structural* node in the CLOC12 arc: rather than adding an `Expression`
+variant, it changes the shape of an existing node. `ObjectExpression.properties`
+goes from `Vec<Property>` to `Vec<ObjectMember>` (`javascript-ast` 0.29.0):
+
+```rust
+pub enum ObjectMember { Property(Property), Spread(SpreadElement) }
+```
+
+The spread arm **reuses** the existing `SpreadElement { cv, argument }` — the
+same node the call/array spread (CLOC12.162) uses, which ESTree also names
+`SpreadElement` — so there is one spread shape and one emit path. `Property` and
+`Spread` members share ONE ordered vector because the order is observable: in
+`{a: 1, ...o, b: 2}` a later member overrides an earlier key, and a spread may
+sit before, between, or after plain properties. A side channel would lose the
+interleaving and silently miscompile override semantics.
+
+`closure-emitter` (0.34.0) `emit_object` iterates the members and prints a
+spread via `emit_object_spread` — `...` then the argument at `PREC_ASSIGNMENT`
+with no interior space, mirroring the call/array `emit_spread`. The assignment
+precedence is the crux: an object-member position is an `AssignmentExpression`,
+so everything at or above assignment prints bare (`{...a}`, `{...a.b}`,
+`{...f()}`) while the one looser form — a **sequence** — wraps (`{...(a,b)}`),
+because a bare `...a,b` would spread only `a` and leave `,b` as a second
+(invalid) member slot. 5 emitter unit tests.
+
+All nine downstream pass/analysis crates gain their `ObjectMember` match arms —
+transform passes (`constant-fold`, `dce`, `fold-control-flow`) rebuild both
+member kinds and recurse into the spread `argument`; visitor passes (`inline`,
+`inline-variables`, `rename`, `rename-globals`, `rename-properties`,
+`scope-analyzer`) walk the spread `argument` like any read sub-expression
+(a spread has no property name, so the name-renaming passes never rename it).
+`Object.keys`/`Object.entries` constant-folds decline (return `None`) when any
+member is a spread, since a spread injects statically-unknown keys. All in ONE
+atomic commit so the workspace never has a broken `match`.
+
+### gap-SpreadProperty — bridge declines object spread `{...o}` — **OPEN (bridge slice pending, CLOC12.170 PR2)**
+
+The `javascript-parser` bridge's `convert_property_definition` still returns
+`UnsupportedSyntax` for a `...` spread property (the `has_token(node, "...")`
+guard), so a file containing `{...o}` drops to WHITESPACE_ONLY. PR1 lands the
+`ObjectMember` node + emit + pass recursion so the typed AST and every pass can
+already represent and print an object spread. **PR2** wires
+`convert_property_definition`'s spread branch to `ObjectMember::Spread` and adds
+a closurec e2e diff fixture; **PR3** ports the upstream CodePrinter object-spread
+conformance cases.
 
 ## CLOC12.169 — `ImportExpression` (dynamic `import(x)`): atomic node + emit + passes (PR1)
 
