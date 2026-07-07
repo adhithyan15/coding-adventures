@@ -1655,9 +1655,11 @@ func _sir_object_responds(name string) bool {
 // resolves them when a block is present).
 func _sir_string_responds(name string) bool {
 	switch name {
-	case "length", "size", "upcase", "downcase", "reverse", "strip",
-		"lstrip", "rstrip", "empty?", "include?", "start_with?", "end_with?",
-		"split", "chars", "to_i", "to_f", "to_sym":
+	case "length", "size", "upcase", "downcase", "capitalize", "reverse",
+		"strip", "lstrip", "rstrip", "chomp", "empty?", "include?",
+		"start_with?", "end_with?", "split", "chars", "bytes", "index",
+		"replace", "sub", "gsub", "to_i", "to_f", "to_sym",
+		"ljust", "rjust", "center", "swapcase":
 		return true
 	}
 	return false
@@ -2651,8 +2653,66 @@ func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
 		return _sir_str_to_f(recv), true
 	case "to_sym":
 		return _sir_intern(recv), true
+	case "ljust", "rjust", "center":
+		// Ruby String#ljust/#rjust/#center(width, pad = " "): pad to `width`
+		// RUNES using `pad` cyclically.  width <= the current rune length
+		// returns the string unchanged; center puts any odd extra pad on the
+		// RIGHT (Ruby's rule).  An empty pad degrades to a single space rather
+		// than raising, holding the never-raise floor.
+		width := int64(0)
+		if len(args) > 0 {
+			width = _sir_as_int_trunc(args[0])
+		}
+		pad := " "
+		if len(args) > 1 {
+			if p, ok := args[1].(string); ok && p != "" {
+				pad = p
+			}
+		}
+		cur := int64(len([]rune(recv)))
+		if width <= cur {
+			return recv, true
+		}
+		total := int(width - cur)
+		switch name {
+		case "ljust":
+			return recv + _sir_str_pad(pad, total), true
+		case "rjust":
+			return _sir_str_pad(pad, total) + recv, true
+		default: // center
+			left := total / 2
+			return _sir_str_pad(pad, left) + recv + _sir_str_pad(pad, total-left), true
+		}
+	case "swapcase":
+		// Ruby String#swapcase: flip the case of each ASCII letter (leaving
+		// non-letters and non-ASCII runes untouched).  Works on []rune so a
+		// multibyte string is never split mid-codepoint.
+		r := []rune(recv)
+		for i, c := range r {
+			if c >= 'A' && c <= 'Z' {
+				r[i] = c + 32
+			} else if c >= 'a' && c <= 'z' {
+				r[i] = c - 32
+			}
+		}
+		return string(r), true
 	}
 	return nil, false
+}
+
+// _sir_str_pad builds a padding string of exactly `n` runes by repeating
+// `pad` cyclically (truncating the final repeat).  `n <= 0` or an empty pad
+// yields "" — callers guarantee a non-empty pad, so this is purely defensive.
+func _sir_str_pad(pad string, n int) string {
+	if n <= 0 || pad == "" {
+		return ""
+	}
+	pr := []rune(pad)
+	out := make([]rune, 0, n)
+	for len(out) < n {
+		out = append(out, pr[len(out)%len(pr)])
+	}
+	return string(out)
 }
 
 // Ruby `String#to_i`: parse the longest leading (optionally-signed)
