@@ -1149,6 +1149,7 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         | Expression::ThisExpression(_)
         | Expression::Super(_)
         | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             classify_expr(&be.left, cls);
@@ -1436,6 +1437,7 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         | Expression::ThisExpression(_)
         | Expression::Super(_)
         | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             rewrite_expr(&mut be.left, map);

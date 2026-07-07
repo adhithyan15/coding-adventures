@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.32.0] - 2026-07-07
+
+### Added — CLOC12.168: `emit_import_meta` (`import.meta`)
+
+Added `emit_import_meta` + the `Expression::ImportMeta` dispatch arm + the `PREC_PRIMARY` classification for the new `import.meta` module meta-property (the leaf sibling of `new.target`, CLOC12.168 PR1). `import.meta` prints as its literal eleven-character spelling and binds at primary strength — never wrapped in any parent, never forcing a paren around an operand (it has none); the internal `.meta` is part of the spelling, not a member access. 4 hand-constructed-AST unit tests (`import.meta`, `import.meta.url`, `f(import.meta)`, `import.meta+1`). Part of the atomic node PR1 that lands the node + emit + all nine downstream pass arms together. (CLOC12.168)
+
+
 ## [0.31.1] - 2026-07-07
 
 ### Added — CLOC12.167 PR3: CodePrinter `new.target` conformance port

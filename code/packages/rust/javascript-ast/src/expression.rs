@@ -67,6 +67,7 @@ pub enum Expression {
     ThisExpression(ThisExpression),
     Super(Super),
     NewTarget(NewTarget),
+    ImportMeta(ImportMeta),
 }
 
 // ---------------------------------------------------------------------
@@ -682,6 +683,40 @@ pub struct NewTarget {
     pub cv: Option<CvId>,
 }
 
+/// `import.meta` — the module meta-property exposing host-provided metadata
+/// about the current module (e.g. `import.meta.url`). It is the sibling of
+/// [`NewTarget`]: ESTree models both as `MetaProperty` nodes, so `import.meta`
+/// gets its own atomic variant here rather than being a member access of an
+/// `import` identifier (`import` is a reserved word — there is no such
+/// identifier to access).
+///
+/// # Shape
+///
+/// `import.meta` is a **leaf** — like [`ThisExpression`], [`Super`] and
+/// [`NewTarget`] it carries no operand and no payload beyond its `cv`. In
+/// source it is spelled with three tokens (`import` `.` `meta`), but
+/// semantically it is one atomic meta-property. Because `import` can never be a
+/// variable name, the renaming passes (`rename`, `rename-globals`,
+/// `rename-properties`) must never touch it — a dedicated variant lets those
+/// passes exclude it structurally instead of string-matching the spelling.
+///
+/// # Precedence
+///
+/// `import.meta` binds at **primary** strength — the tightest level, exactly
+/// like `this` / `super` / `new.target`. It never needs wrapping in any parent
+/// context (`import.meta.url`, `f(import.meta)`, `import.meta+1` all print
+/// bare), and no parent operand ever forces a paren around it. The emitter tags
+/// it `PREC_PRIMARY` and prints the literal three-token spelling `import.meta`.
+/// The `.meta` is part of the fixed spelling, NOT a member access — a genuine
+/// property read such as `import.meta.url` wraps this leaf in an outer
+/// [`MemberExpression`].
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImportMeta {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+}
+
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the
 /// `property` is conventionally an [`Expression::Identifier`]);
 /// `computed = true` ↔ `obj[key]` (the `property` is any expression).
@@ -1154,6 +1189,21 @@ mod tests {
     #[test]
     fn new_target_untraced_omits_cv() {
         let n = Expression::NewTarget(NewTarget { cv: None });
+        let json = serde_json::to_string(&n).expect("serialize");
+        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(n.clone(), roundtrip(n));
+    }
+
+    #[test]
+    fn import_meta_roundtrips_traced() {
+        let n = Expression::ImportMeta(ImportMeta { cv: Some("importMeta.1".to_string()) });
+        assert_eq!(n.clone(), roundtrip(n.clone()));
+        assert_eq!(type_tag(&n), "ImportMeta");
+    }
+
+    #[test]
+    fn import_meta_untraced_omits_cv() {
+        let n = Expression::ImportMeta(ImportMeta { cv: None });
         let json = serde_json::to_string(&n).expect("serialize");
         assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
         assert_eq!(n.clone(), roundtrip(n));

@@ -854,6 +854,7 @@ fn walk_expression(
         | Expression::ThisExpression(_)
         | Expression::Super(_)
         | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             walk_expression(&be.left, ctx, analysis, pending);

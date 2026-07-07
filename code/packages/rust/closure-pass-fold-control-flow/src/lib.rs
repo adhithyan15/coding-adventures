@@ -282,6 +282,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         ThisExpression(t) => t.cv.clone(),
         Super(s) => s.cv.clone(),
         NewTarget(n) => n.cv.clone(),
+        ImportMeta(n) => n.cv.clone(),
         MemberExpression(e) => e.cv.clone(),
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
@@ -1366,6 +1367,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         | Expression::ThisExpression(_)
         | Expression::Super(_)
         | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {
