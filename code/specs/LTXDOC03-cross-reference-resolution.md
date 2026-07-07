@@ -1231,3 +1231,72 @@ still produce their exact prior strings). All prior S1–S13 tests pass unchange
 latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green;
 `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new
 dependencies.
+
+## 21. S15 — resolved citations grouped by their source `\cite` (`citations_by_source`)
+
+### 21.1 Motivation
+
+S2's `resolve_citations` returns `resolved: Vec<ResolvedCite>` **flattened per key** — a multi-key
+`\cite{a,b}` yields one row for `a` and one for `b`, each carrying that single `\cite`'s `cite_span`.
+That per-key shape is right for a resolver but loses, at a glance, *which keys travelled together in
+one `\cite`*. S15 answers the citation-family analogue of the question S11's `to_plain_text_by_kind`
+answers for references: *"grouped by the construct they came from, what resolved?"* — it re-assembles
+the per-key rows back into one line per source `\cite`.
+
+### 21.2 Why a new method — additive by construction
+
+S15 adds a **new public method** `Document::citations_by_source(&self) -> String`. It is a pure,
+read-only re-assembly of `resolve_citations().resolved` — grouping the rows by `cite_span`. It reuses
+that table verbatim (never re-walking the body or re-resolving keys), so the grouping can never drift
+from the S2 resolution it summarises. It mutates nothing and changes no S1–S14 output — including
+`to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S14 it is a method the caller invokes
+directly.
+
+### 21.3 The grouping and ordering rule
+
+Every `ResolvedCite` from one `\cite` shares that `\cite`'s `cite_span`, so grouping `resolved` by
+`cite_span` reconstructs "which resolved keys came from which `\cite`". Because `resolved` is already
+in body pre-order (and within one multi-key `\cite` in left-to-right key order), the **first
+appearance** of each distinct `cite_span` fixes that group's position — so the groups come out in
+source order of the `\cite`s, and keys within a group keep their left-to-right order. The
+implementation uses a `Vec<(Span, Vec<&str>)>` (not a hash map) precisely to keep that first-appearance
+order deterministic.
+
+### 21.4 The exact rendering contract — `Document::citations_by_source(&self) -> String`
+
+- One line per source `\cite` that resolved **≥ 1** key, in first-appearance (source) order of the
+  `\cite`s.
+- Each line is the citing command **reconstructed from its resolved keys**: `\cite{` + the group's
+  resolved keys joined by `", "` + `}`.
+- The keys are **only the resolved ones**, in their original left-to-right order. A **dangling** key
+  (one no `\bibitem` defines) never entered `resolved`, so it is **excluded**: a `\cite{a,ghost}`
+  where only `a` resolves renders `\cite{a}`, not `\cite{a,ghost}`. We reconstruct from resolved keys
+  rather than slice the raw `&src[cite_span]` precisely because the source text would still contain the
+  dangling `ghost`; the reconstruction shows exactly what *bound*.
+- Lines are joined by `\n` with **no** trailing newline (matching S11 `to_plain_text_by_kind`, S12
+  `list_of_floats`, S13 `resolve_namerefs`, S14 `list_summary`).
+- If there are **no** resolved citations (none present, or every cited key dangling), the fixed marker
+  `(no resolved citations)` is returned, so the output is never the empty string.
+
+Example (`\cite{smith2020, jones2019}` both defined, then `\cite{a, ghost}` with only `a` defined):
+
+```text
+\cite{smith2020, jones2019}
+\cite{a}
+```
+
+### 21.5 Public API (added in S15)
+
+One new method: `Document::citations_by_source(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_citations` and every S1–S14 method are unchanged; no AST or grammar
+change; no new dependency, no `unsafe`, no I/O.
+
+### 21.6 Verification (S15)
+
+`cargo test -p latex` green (4 new S15 tests: a doc grouping a multi-key `\cite{a,b}` and a separate
+`\cite{c}` into `\cite{a, b}\n\cite{c}`; a partial `\cite{a,ghost}` rendering only `\cite{a}`; an
+all-dangling doc returning the `(no resolved citations)` marker; and an additivity check that
+`to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, and `list_summary` all
+still produce their exact prior strings). All prior S1–S14 tests pass unchanged. `cargo clippy -p latex
+--all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
+build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.

@@ -1590,6 +1590,87 @@ impl Document {
         }
         lines.join("\n")
     }
+
+    /// The resolved citations **grouped by the source `\cite` they came from** (LTXDOC03 S15) — the
+    /// citation-family parallel of S11's `to_plain_text_by_kind` (which groups resolved *references*)
+    /// and S13's `resolve_namerefs` (one rendered line per target).
+    ///
+    /// ## What it does
+    ///
+    /// S2's [`Document::resolve_citations`] flattens a multi-key `\cite{a,b}` into *several*
+    /// [`ResolvedCite`] rows — one per key — every one carrying that single `\cite`'s
+    /// [`cite_span`](ResolvedCite::cite_span). This method reads only that `resolved` list and
+    /// re-assembles it: it groups the rows back by `cite_span` (so all keys of one `\cite` reunite)
+    /// and emits **one line per source `\cite`** that resolved at least one key.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Each line is the citing command **reconstructed from its resolved keys**:
+    /// `\cite{` + the group's keys joined by `", "` + `}`. The keys are **only the resolved ones**,
+    /// in their original left-to-right order — a *dangling* key (one no `\bibitem` defines) is
+    /// **excluded**, so a `\cite{a,ghost}` where only `a` resolves renders `\cite{a}`, not
+    /// `\cite{a,ghost}`. (We reconstruct rather than slice `&src[cite_span]` precisely because the
+    /// source text would still contain the dangling `ghost`; reconstruction shows exactly what
+    /// *bound*.)
+    ///
+    /// The groups appear in **first-appearance order of their `cite_span`** — i.e. the source order of
+    /// the `\cite`s (S2's `resolved` is already in body pre-order, so the first time each distinct
+    /// `cite_span` is seen fixes that group's position). Lines are joined by `\n` with **no** trailing
+    /// newline (matching S11's `to_plain_text_by_kind`, S12's `list_of_floats`, S13's
+    /// `resolve_namerefs`, and S14's `list_summary`).
+    ///
+    /// A document with **no** resolved citations — none present, or every cited key dangling — returns
+    /// the fixed marker `(no resolved citations)`, never the empty string (the same stable-marker
+    /// discipline S12/S13/S14 use).
+    ///
+    /// Concretely, for a body `\cite{smith2020, jones2019}` (both defined) then `\cite{a, ghost}`
+    /// (only `a` defined), against a bibliography defining `smith2020`, `jones2019`, `a`:
+    ///
+    /// ```text
+    /// \cite{smith2020, jones2019}
+    /// \cite{a}
+    /// ```
+    ///
+    /// ## Additive by construction
+    ///
+    /// S15 is a brand-new, read-only method that reuses [`resolve_citations`](Document::resolve_citations)
+    /// and mutates nothing; it changes no S1-S14 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// keys are already owned `String`s); a single pass over the already-bounded `resolved` list.
+    /// Borrows `self` immutably and returns owned `String` data, so the result outlives any borrow of
+    /// the source.
+    pub fn citations_by_source(&self) -> String {
+        // S2 already flattened every `\cite` into per-key `ResolvedCite` rows in body pre-order, each
+        // tagged with its source `\cite`'s span. We only read that list.
+        let resolution = self.resolve_citations();
+
+        // Group the resolved keys by their shared `cite_span`, preserving the FIRST-APPEARANCE order
+        // of the cite_spans (source order of the `\cite`s). A `Vec` of `(cite_span, keys)` — not a
+        // hash map — keeps that order deterministic and the code allocation-light (the number of
+        // distinct `\cite`s is small). Keys within a group stay in their existing left-to-right order.
+        let mut groups: Vec<(Span, Vec<&str>)> = Vec::new();
+        for cite in &resolution.resolved {
+            match groups.iter_mut().find(|(span, _)| *span == cite.cite_span) {
+                Some((_, keys)) => keys.push(&cite.key),
+                None => groups.push((cite.cite_span, vec![&cite.key])),
+            }
+        }
+
+        if groups.is_empty() {
+            // No `\cite` resolved a single key → the fixed marker, never the empty string.
+            return "(no resolved citations)".to_string();
+        }
+
+        // One line per source `\cite`: `\cite{` + resolved keys joined by `", "` + `}`. Dangling keys
+        // never entered `resolved`, so they are excluded here by construction.
+        groups
+            .iter()
+            .map(|(_, keys)| format!("\\cite{{{}}}", keys.join(", ")))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -3963,5 +4044,99 @@ See Section~\ref{sec:intro}, \nameref{sec:intro}, and \nameref{fig:p}.\end{docum
 
         // And S14 itself produces the per-kind census (one section, one figure, one equation).
         assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S15 — resolved citations grouped by their source `\cite` (`citations_by_source`).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s15_groups_by_cite() {
+        // A multi-key `\cite{a,b}` (both resolving) and a separate `\cite{c}`. The report reunites the
+        // two keys of the first `\cite` on ONE line and emits the second `\cite` on its own line, in
+        // source order.
+        let src = r"\begin{document}
+See \cite{a,b} and \cite{c}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+    }
+
+    #[test]
+    fn s15_multikey_partial() {
+        // A `\cite{a,ghost}` where `a` resolves and `ghost` is dangling → the line shows ONLY the
+        // resolved key (`\cite{a}`). We reconstruct from resolved keys, so the dangling `ghost` — which
+        // the raw source `\cite{a,ghost}` still contains — is excluded by construction.
+        let src = r"\begin{document}
+See \cite{a,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citations_by_source(), "\\cite{a}");
+    }
+
+    #[test]
+    fn s15_empty_returns_marker() {
+        // A document whose only `\cite` is entirely dangling (no `\bibitem` defines its key) has NO
+        // resolved citations → the fixed `(no resolved citations)` marker, never the empty string.
+        let src = r"\begin{document}
+See \cite{nope}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citations_by_source(), "(no resolved citations)");
+    }
+
+    #[test]
+    fn s15_is_additive_leaves_s1_s14_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a `\ref`, a `\nameref`,
+        // and two `\cite`s (one multi-key, one dangling key), S15 changes NONE of the S1-S14 outputs —
+        // it only reads `resolve_citations`.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+See Section~\ref{sec:intro}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — the resolved `\ref` and the three resolved `\cite`s with their `[n]`
+        // markers, plus the dangling `ghost` footer, all unchanged by S15.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — the single ref under its `Sections:` group, unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1"
+        );
+        // S12 list of floats — one figure line, unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — both namerefs render their names, unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — one section, one figure, one equation, unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+
+        // And S15 itself groups the resolved cites: `{a,b}` fully resolves; `{c,ghost}` keeps only `c`.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
     }
 }
