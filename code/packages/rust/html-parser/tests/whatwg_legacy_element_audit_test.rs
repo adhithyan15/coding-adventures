@@ -14,10 +14,25 @@ const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-aud
 const WHATWG_LEGACY_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-legacy-element-audit.json");
 const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
 const WHATWG_VOID_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-void-element-audit.json");
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
-    ("tricky01-dat-3", "tricky-parser-recovery"),
-    ("tricky01-dat-8", "tricky-parser-recovery"),
-    ("tricky01-dat-9", "tricky-parser-recovery"),
+const POST_PARSE_REPAIR_EVIDENCE: &[LegacyElementRepairEvidence] = &[
+    LegacyElementRepairEvidence {
+        id: "tricky01-dat-3",
+        source: "tricky01.dat:3",
+        axis: "tricky-parser-recovery",
+        data_snippet: "<p><font size=\"7\">First paragraph.</p>",
+    },
+    LegacyElementRepairEvidence {
+        id: "tricky01-dat-8",
+        source: "tricky01.dat:8",
+        axis: "tricky-parser-recovery",
+        data_snippet: "<CENTER><CENTER><TD></TD></TR><TR>",
+    },
+    LegacyElementRepairEvidence {
+        id: "tricky01-dat-9",
+        source: "tricky01.dat:9",
+        axis: "tricky-parser-recovery",
+        data_snippet: "<b><nobr><div>This text is in a div inside a nobr</nobr>",
+    },
 ];
 const PENDING_SPEC_BOUNDARY_EVIDENCE: &[PendingSpecBoundaryCase] = &[
     PendingSpecBoundaryCase {
@@ -99,6 +114,13 @@ const PENDING_SPEC_CROSS_AXIS_CASES: &[PendingSpecCrossAxisCase] = &[
 struct PendingSpecBoundaryCase {
     id: &'static str,
     source: &'static str,
+    data_snippet: &'static str,
+}
+
+struct LegacyElementRepairEvidence {
+    id: &'static str,
+    source: &'static str,
+    axis: &'static str,
     data_snippet: &'static str,
 }
 
@@ -198,18 +220,37 @@ fn whatwg_legacy_element_audit_tracks_post_parse_repair_evidence() {
         .map(|case| (case.source.clone(), case))
         .collect::<HashMap<_, _>>();
 
-    for (case_id, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
-        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
-            panic!("post-parse repair evidence case `{case_id}` should be audited")
+    for evidence in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(evidence.id).unwrap_or_else(|| {
+            panic!(
+                "post-parse repair evidence case `{}` should be audited",
+                evidence.id
+            )
         });
         assert_eq!(
-            audit_case.axis, *expected_axis,
-            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+            audit_case.source, evidence.source,
+            "post-parse repair evidence case `{}` should stay tied to its smoke fixture row",
+            evidence.id
+        );
+        assert_eq!(
+            audit_case.axis, evidence.axis,
+            "post-parse repair evidence case `{}` should stay on its focused audit axis",
+            evidence.id
+        );
+        assert!(
+            !audit_case.reason.is_empty(),
+            "post-parse repair evidence case `{}` should keep a fixture reason",
+            evidence.id
         );
 
         let source_case = smoke_cases
-            .get(&audit_case.source)
-            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+            .get(evidence.source)
+            .unwrap_or_else(|| panic!("case `{}` should exist in smoke fixture", evidence.source));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "post-parse repair evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
         let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
             panic!(
                 "case `{}` ({}) parse failed: {error}",
