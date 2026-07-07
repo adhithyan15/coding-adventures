@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.31.1] - 2026-07-07
+
+### Added — CLOC12.167 PR3: CodePrinter `new.target` conformance port
+
+Ports upstream `CodePrinterTest`'s `new.target` printing cases into
+`tests/upstream/code_printer_new_target_test.rs` (the twentieth CodePrinter
+port), isolating `emit_new_target` + the `PREC_PRIMARY` classification that
+landed with `Expression::NewTarget` (CLOC12.167 PR1). 6 hand-constructed-AST
+tests pin that `new.target` prints as the bare ten-character spelling and, as a
+reserved-word primary, composes without parens in every parent: bare
+(`new.target;`), member object (`new.target.x;`), call argument
+(`f(new.target);`), member chain (`new.target.a.b;`), method call
+(`new.target.m();`), and under a binary parent (`new.target+1;`). Registered as
+`[[test]] upstream_code_printer_new_target`; ATTRIBUTION header mirrors the
+`super` port. Emitter is driven from hand-constructed AST, so the port does not
+depend on the bridge (gap-168 bridge work is CLOC12.167 PR2, exercised in
+`javascript-parser`).
+
 ## [0.31.0] - 2026-07-04
 
 ### Added — CLOC12.167: emit `NewTarget` (`new.target`)
