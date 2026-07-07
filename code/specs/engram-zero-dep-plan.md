@@ -84,17 +84,10 @@ Effort: S ≈ ½ day, M ≈ 1–2 days, L ≈ several days / multiple PRs.
   tests were `scheduler.rs:564,599`, which now exercise the zero-dep crate.
 
 ### Phase C — Unicode + non-`re` regex (removes `unicode-normalization`, most of `regex`) — M
-- **C1 — ✅ DONE (removes `unicode-normalization`).** New zero-dep
-  `code/packages/rust/unicode-normalize` (Unicode 17.0.0): NFD/NFC + combining
-  class + `is_combining_mark`, generated tables + algorithmic Hangul. Cross-verified
-  vs the live upstream crate across **every scalar value** (~1.1M code points) +
-  200k random strings — zero mismatches. engram-core swapped (2 `use` lines +
-  Cargo.toml); 167 tests pass; `unicode-normalization` gone.
-- **C2 — TODO (removes most of `regex`).** Hand-write the HTML-tag scanner
-  (`<[^>]+>` strip + the duplicate-media-tag `replace_all`) and the `*`/`_` glob
-  matcher for search patterns. Leaves only the true `re:` engine for Phase D.
-- Character classes (`\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}`) to add if/when the
-  regex work needs them; `is_combining_mark` (Mark) already shipped in C1.
+- New shared Unicode tables: combining-class / `is_combining_mark`,
+  `\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}`, canonical decomposition, NFC composition.
+- Hand-write HTML-tag scanners + `*`/`_` glob matcher (replaces most regex uses).
+- Wire NFD-fold (template + `nc:` search) and NFC dedup onto the tables.
 
 ### Phase D — `re:` regex engine (removes `regex` entirely) — L
 - Mini backtracking/NFA engine for the subset Anki users type in `re:` search

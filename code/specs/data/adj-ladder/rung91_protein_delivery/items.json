@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 91 \u2014 nutrition protein-delivery total from four stated quantities (a NEW panel: nutrition / protein-delivery). From an oral protein and an enteral protein to add as two base terms and an infusion rate times infusion hours to add as a parenteral load, compute the total protein (oral_protein+enteral_protein+infusion_rate*infusion_hours), the oral-enteral sum (oral_protein+enteral_protein), or the parenteral load (infusion_rate*infusion_hours). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, TWO ADDED TERMS PLUS A PRODUCT a+b+c*d (add a and b, multiply c by d, add the three, so a+b+c*d = ((a+b)+(c*d)); the binomial-product family (rung-89 (a+b)*(c-d), rung-90 (a-b)*(c-d)) is COMPLETE, and no prior add/sub shape summed TWO independent added terms and a product in one flat chain \u2014 e.g. rung-79 a*b+c/d, rung-83 a-b*c/d attached one term to a single product) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via + and * \u2014 no constant leaks, and neither the oral-enteral sum, the parenteral load, nor any total figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: folding the middle sum into the product (a+(b+c)*d, a wrong grouping) and multiplying the wrong pair with the last term added bare (a+b*c+d, a wrong pairing). The core confusion tested is that a+b+c*d is ((a+b)+(c*d)), not a+(b+c)*d and not a+b*c+d.",
+  "items": [
+    {
+      "id": "r91prot-01",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 2, plus an infusion rate of 2 times infusion hours of 4. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(2)\nobserve infusion_rate(2)\nobserve infusion_hours(4)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r91prot-02",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 2, plus an infusion rate of 2 times infusion hours of 4. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(2)\nobserve infusion_rate(2)\nobserve infusion_hours(4)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r91prot-03",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 2, plus an infusion rate of 2 times infusion hours of 4. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(2)\nobserve infusion_rate(2)\nobserve infusion_hours(4)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r91prot-04",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 3, plus an infusion rate of 2 times infusion hours of 5. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(3)\nobserve infusion_rate(2)\nobserve infusion_hours(5)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r91prot-05",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 3, plus an infusion rate of 2 times infusion hours of 5. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(3)\nobserve infusion_rate(2)\nobserve infusion_hours(5)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r91prot-06",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 3, plus an infusion rate of 2 times infusion hours of 5. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(3)\nobserve infusion_rate(2)\nobserve infusion_hours(5)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r91prot-07",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 4, plus an infusion rate of 2 times infusion hours of 2. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(4)\nobserve infusion_rate(2)\nobserve infusion_hours(2)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r91prot-08",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 4, plus an infusion rate of 2 times infusion hours of 2. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(4)\nobserve infusion_rate(2)\nobserve infusion_hours(2)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r91prot-09",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 4, plus an infusion rate of 2 times infusion hours of 2. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(4)\nobserve infusion_rate(2)\nobserve infusion_hours(2)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r91prot-10",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 5, plus an infusion rate of 2 times infusion hours of 7. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(5)\nobserve infusion_rate(2)\nobserve infusion_hours(7)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 51,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r91prot-11",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 5, plus an infusion rate of 2 times infusion hours of 7. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(5)\nobserve infusion_rate(2)\nobserve infusion_hours(7)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 51,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r91prot-12",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 5, plus an infusion rate of 2 times infusion hours of 7. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(5)\nobserve infusion_rate(2)\nobserve infusion_hours(7)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 51,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r91prot-13",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 6, plus an infusion rate of 2 times infusion hours of 3. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(6)\nobserve infusion_rate(2)\nobserve infusion_hours(3)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r91prot-14",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 6, plus an infusion rate of 2 times infusion hours of 3. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(6)\nobserve infusion_rate(2)\nobserve infusion_hours(3)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r91prot-15",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 6, plus an infusion rate of 2 times infusion hours of 3. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(6)\nobserve infusion_rate(2)\nobserve infusion_hours(3)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r91prot-16",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 7, plus an infusion rate of 3 times infusion hours of 2. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(7)\nobserve infusion_rate(3)\nobserve infusion_hours(2)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r91prot-17",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 7, plus an infusion rate of 3 times infusion hours of 2. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(7)\nobserve infusion_rate(3)\nobserve infusion_hours(2)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r91prot-18",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 2 plus an enteral protein of 7, plus an infusion rate of 3 times infusion hours of 2. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(2)\nobserve enteral_protein(7)\nobserve infusion_rate(3)\nobserve infusion_hours(2)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r91prot-19",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 3 plus an enteral protein of 2, plus an infusion rate of 3 times infusion hours of 3. What is the total protein delivered (the oral and enteral protein plus the parenteral load)?",
+      "program": "observe oral_protein(3)\nobserve enteral_protein(2)\nobserve infusion_rate(3)\nobserve infusion_hours(3)\nlet answer = oral_protein + enteral_protein + infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r91prot-20",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 3 plus an enteral protein of 2, plus an infusion rate of 3 times infusion hours of 3. What is the the oral-enteral sum (the oral protein plus the enteral protein, before adding the parenteral load)?",
+      "program": "observe oral_protein(3)\nobserve enteral_protein(2)\nobserve infusion_rate(3)\nobserve infusion_hours(3)\nlet answer = oral_protein + enteral_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r91prot-21",
+      "qtype": "protein_delivery_total",
+      "stem": "A nutrition order records an oral protein of 3 plus an enteral protein of 2, plus an infusion rate of 3 times infusion hours of 3. What is the the parenteral load (the infusion rate times the infusion hours, before adding the oral and enteral protein)?",
+      "program": "observe oral_protein(3)\nobserve enteral_protein(2)\nobserve infusion_rate(3)\nobserve infusion_hours(3)\nlet answer = infusion_rate * infusion_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

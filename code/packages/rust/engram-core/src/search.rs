@@ -14,7 +14,7 @@ use regex::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use unicode_normalize::{char::is_combining_mark, UnicodeNormalize};
+use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
 
 static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

@@ -1455,7 +1455,6 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Sym(_) => matches!(
                 name,
                 "to_s" | "to_sym" | "length" | "size" | "upcase" | "downcase"
-                    | "capitalize" | "inspect" | "empty?" | "to_proc"
             ),
             Value::Bool(_) => matches!(name, "&" | "|" | "^"),
             Value::Int(_) | Value::Float(_) => {
@@ -1991,47 +1990,13 @@ pub const RUNTIME: &str = r##"mod __sir {
             _ => return unknown_method(&recv, name),
         };
         match name {
-            // `:hello.to_s` → the bare name as a `String` (`"hello"`).
             "to_s" => Value::Str(Rc::from(&*s)),
-            // `:hi.to_sym` → self (a Symbol is already its own symbol).
             "to_sym" => recv,
-            // `:hi.length` / `.size` → the name's character count (`2`).
             "length" | "size" => Value::Int(s.chars().count() as i64),
-            // Ruby's `Symbol#upcase`/`downcase`/`capitalize` return a *new
-            // Symbol* (NOT a String) — the case-folded name, re-interned so
-            // it shares identity with any equal symbol.  Proving this at
-            // runtime needs `.inspect` (`:ABC`), since a bare Symbol prints
-            // as its name (`ABC`) with no `:` prefix.
             "upcase" => intern(&s.to_uppercase()),
             "downcase" => intern(&s.to_lowercase()),
-            "capitalize" => intern(&capitalize_str(&s)),
-            // `:x.inspect` → the `":name"` display form (leading colon).
-            "inspect" => Value::Str(Rc::from(format!(":{s}").as_str())),
-            // `:"".empty?` → whether the name is the empty string.
-            "empty?" => Value::Bool(s.is_empty()),
-            // `:m.to_proc` → the same dispatching `Closure` that `&:m` lowers
-            // to at a call site (Ruby's `Symbol#to_proc`).  Re-uses the free
-            // `sym_to_proc` helper so an explicit `.to_proc` and an implicit
-            // `&:m` block-pass are byte-for-byte the same closure.
-            "to_proc" => sym_to_proc(recv),
             _ => no_method_error(&recv, name),
         }
-    }
-
-    // Ruby `String#capitalize` / `Symbol#capitalize`: the first character is
-    // upper-cased and every subsequent character lower-cased (`"hELLo"` →
-    // `"Hello"`).  A byte-honest, allocation-light port of the String catalog's
-    // capitalize so the Symbol catalog need not depend on it.
-    fn capitalize_str(s: &str) -> String {
-        let mut out = String::with_capacity(s.len());
-        for (i, ch) in s.chars().enumerate() {
-            if i == 0 {
-                out.extend(ch.to_uppercase());
-            } else {
-                out.extend(ch.to_lowercase());
-            }
-        }
-        out
     }
 
     // `sym_to_proc(:m)` builds a `Closure` equivalent to Ruby's

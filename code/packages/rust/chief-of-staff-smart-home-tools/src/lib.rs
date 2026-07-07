@@ -339,6 +339,10 @@ pub const SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID: &str = "smart_home.get_incident
 pub const SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID: &str = "smart_home.get_recovery_brief";
 pub const SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID: &str =
     "smart_home.get_recovery_readiness_brief";
+pub const SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID: &str =
+    "smart_home.get_command_lifecycle_brief";
+pub const SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID: &str =
+    "smart_home.get_command_audit_dossier";
 pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
 pub const SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID: &str = "smart_home.get_escalation_brief";
 pub const SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID: &str = "smart_home.get_continuity_brief";
@@ -2559,6 +2563,22 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_recovery_readiness_brief_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
+                }
+                SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_command_lifecycle_brief_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
+                }
+                SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_command_audit_dossier_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6757,6 +6777,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_incident_brief_definition(),
         get_recovery_brief_definition(),
         get_recovery_readiness_brief_definition(),
+        get_command_lifecycle_brief_definition(),
+        get_command_audit_dossier_definition(),
         get_morning_brief_definition(),
         get_escalation_brief_definition(),
         get_continuity_brief_definition(),
@@ -8447,6 +8469,142 @@ fn get_recovery_readiness_brief_definition() -> ToolDefinition {
                 "recovery_brief",
                 "service_execution_safety",
                 "activation_recovery",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_command_lifecycle_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID,
+        "Get smart-home command lifecycle brief",
+        "Compose existing D23 command-result, command-risk, authorization-gap, service-execution safety, recovery readiness, and runtime maintenance closeout summaries into one Chief command lifecycle gate without dispatching commands or mutating smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("command_lifecycle_ready", JsonSchema::Boolean),
+                SchemaProperty::new("command_results_ready", JsonSchema::Boolean),
+                SchemaProperty::new("authorization_ready", JsonSchema::Boolean),
+                SchemaProperty::new("service_execution_safe", JsonSchema::Boolean),
+                SchemaProperty::new("recovery_ready", JsonSchema::Boolean),
+                SchemaProperty::new("maintenance_closeout_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "lifecycle_gates",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("command_results", JsonSchema::Any),
+                SchemaProperty::new("command_risk", JsonSchema::Any),
+                SchemaProperty::new("authorization_gaps", JsonSchema::Any),
+                SchemaProperty::new("recovery_readiness", JsonSchema::Any),
+                SchemaProperty::new("maintenance_closeout", JsonSchema::Any),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "command_lifecycle_ready",
+                "command_results_ready",
+                "authorization_ready",
+                "service_execution_safe",
+                "recovery_ready",
+                "maintenance_closeout_ready",
+                "requires_human_review",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "summary",
+                "decision",
+                "lifecycle_gates",
+                "command_results",
+                "command_risk",
+                "authorization_gaps",
+                "recovery_readiness",
+                "maintenance_closeout",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_command_audit_dossier_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID,
+        "Get smart-home command audit dossier",
+        "Compose existing D23 command lifecycle, platform access-review, event-ops review, and platform evidence ledger summaries into one Chief command audit dossier without dispatching commands, draining event queues, or mutating smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("command_audit_ready", JsonSchema::Boolean),
+                SchemaProperty::new("command_lifecycle_ready", JsonSchema::Boolean),
+                SchemaProperty::new("platform_access_ready", JsonSchema::Boolean),
+                SchemaProperty::new("event_ops_ready", JsonSchema::Boolean),
+                SchemaProperty::new("evidence_ledger_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "audit_sections",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("command_lifecycle", JsonSchema::Any),
+                SchemaProperty::new("platform_access_review", JsonSchema::Any),
+                SchemaProperty::new("platform_event_ops_review", JsonSchema::Any),
+                SchemaProperty::new("platform_evidence_ledger", JsonSchema::Any),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "command_audit_ready",
+                "command_lifecycle_ready",
+                "platform_access_ready",
+                "event_ops_ready",
+                "evidence_ledger_ready",
+                "requires_human_review",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "summary",
+                "decision",
+                "audit_sections",
+                "command_lifecycle",
+                "platform_access_review",
+                "platform_event_ops_review",
+                "platform_evidence_ledger",
                 "source_tools",
             ],
             false,
@@ -48531,6 +48689,164 @@ fn get_recovery_readiness_brief_output_handler_output(
     ))
 }
 
+fn get_command_lifecycle_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let command_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::GetCommandResultSummary {
+                query: RuntimeCommandResultQuery::new(),
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::CommandResultSummary {
+        summary: command_results,
+    } = command_output
+    else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "command lifecycle brief expected command result summary output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let (_, command_risk) = command_risk_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_command_risk_audit_query(),
+    )?;
+    let (_, authorization_gaps) = authorization_gap_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_authorization_gap_audit_query(),
+    )?;
+    let recovery_readiness =
+        get_recovery_readiness_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?
+            .output;
+    let closeout_query = runtime_maintenance_closeout_query(&object([]))?;
+    let (_, maintenance_closeout) =
+        runtime_maintenance_closeout_packets(runtime, principal_id, now_ms, &closeout_query)?;
+
+    let output = command_lifecycle_brief_output_json(
+        now_ms,
+        &command_results,
+        &command_risk,
+        &authorization_gaps,
+        &recovery_readiness,
+        &maintenance_closeout,
+    );
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(&output, &["ready"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let total_attention_count =
+        morning_brief_integer_at(&output, &["total_attention_count"]).unwrap_or(0);
+    let total_blocked_count =
+        morning_brief_integer_at(&output, &["total_blocked_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_command_lifecycle_brief")),
+            ("status", string(&status)),
+            ("ready", JsonValue::Bool(ready)),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("total_attention_count", integer(total_attention_count)),
+            ("total_blocked_count", integer(total_blocked_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
+fn get_command_audit_dossier_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let command_lifecycle =
+        get_command_lifecycle_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?
+            .output;
+    let platform_access_review = get_platform_access_review_summary_output_handler_output(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        platform_access_review_query(&object([]))?,
+    )?
+    .output;
+    let platform_event_ops_review = get_platform_event_ops_review_summary_output_handler_output(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        platform_event_ops_review_query(&object([]))?,
+    )?
+    .output;
+    let platform_evidence_ledger = get_platform_evidence_ledger_summary_output_handler_output(
+        runtime,
+        principal_id,
+        now_ms,
+        platform_evidence_ledger_query(&object([]))?,
+    )?
+    .output;
+
+    let access_summary = morning_brief_field_clone(&platform_access_review, "summary");
+    let event_ops_summary = morning_brief_field_clone(&platform_event_ops_review, "summary");
+    let evidence_summary = morning_brief_field_clone(&platform_evidence_ledger, "summary");
+    let output = command_audit_dossier_output_json(
+        now_ms,
+        &command_lifecycle,
+        &access_summary,
+        &event_ops_summary,
+        &evidence_summary,
+    );
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(&output, &["ready"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let total_attention_count =
+        morning_brief_integer_at(&output, &["total_attention_count"]).unwrap_or(0);
+    let total_blocked_count =
+        morning_brief_integer_at(&output, &["total_blocked_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_command_audit_dossier")),
+            ("status", string(&status)),
+            ("ready", JsonValue::Bool(ready)),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("total_attention_count", integer(total_attention_count)),
+            ("total_blocked_count", integer(total_blocked_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_morning_brief_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -54944,6 +55260,754 @@ fn recovery_readiness_gate_json(
         ("recommended_action", string(recommended_action)),
         ("summary", summary),
     ])
+}
+
+fn command_lifecycle_brief_output_json(
+    generated_at_ms: u64,
+    command_results: &RuntimeCommandResultSummary,
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gaps: &AuthorizationGapAuditSummary,
+    recovery_readiness: &JsonValue,
+    maintenance_closeout: &RuntimeMaintenanceCloseoutSummary,
+) -> JsonValue {
+    let command_result_attention = command_results.failure_results();
+    let command_result_blocked = command_results.failure_results();
+    let command_results_ready = !command_results.has_failures();
+    let command_risk_attention = command_risk.requires_attention_rows;
+    let command_risk_blocked = command_risk.blocked_rows;
+    let command_risk_ready = !command_risk.has_command_risks() && !command_risk.has_blockers();
+    let authorization_attention = authorization_gaps.requires_attention_rows;
+    let authorization_blocked = authorization_gaps.blocked_rows;
+    let authorization_ready = !authorization_gaps.has_authorization_gaps()
+        && !authorization_gaps.has_missing_capability_gaps()
+        && !authorization_gaps.has_grant_review_pressure()
+        && !authorization_gaps.has_blockers()
+        && authorization_gaps.denied_decision_rows == 0;
+    let service_execution_safe =
+        morning_brief_bool_at(recovery_readiness, &["service_execution_safe"]).unwrap_or(false);
+    let recovery_ready =
+        morning_brief_bool_at(recovery_readiness, &["recovery_ready"]).unwrap_or(false);
+    let recovery_attention =
+        recovery_readiness_output_integer(recovery_readiness, "total_attention_count") as usize;
+    let recovery_blocked =
+        recovery_readiness_output_integer(recovery_readiness, "total_blocked_count") as usize;
+    let service_execution_safety =
+        morning_brief_field_clone(recovery_readiness, "service_execution_safety");
+    let service_attention =
+        recovery_readiness_output_integer(&service_execution_safety, "total_attention_count")
+            as usize;
+    let service_blocked =
+        recovery_readiness_output_integer(&service_execution_safety, "total_blocked_count")
+            as usize;
+    let maintenance_closeout_ready =
+        !maintenance_closeout.has_packets() || maintenance_closeout.closeout_ready();
+    let maintenance_closeout_attention = maintenance_closeout.release_hold_packets
+        + maintenance_closeout.operator_handoff_packets
+        + maintenance_closeout.lineage_repair_packets
+        + maintenance_closeout.requires_attention_runtime_actions
+        + maintenance_closeout.overdue_runtime_actions;
+    let maintenance_closeout_blocked = maintenance_closeout.release_blocking_packets
+        + maintenance_closeout.blocked_runtime_actions;
+    let requires_human_review =
+        morning_brief_bool_at(recovery_readiness, &["requires_human_review"]).unwrap_or(false)
+            || authorization_gaps.approval_gated_rows > 0
+            || authorization_gaps.has_grant_review_pressure()
+            || maintenance_closeout.operator_required_packets > 0;
+    let total_attention_count = command_result_attention
+        + command_risk_attention
+        + authorization_attention
+        + recovery_attention
+        + maintenance_closeout_attention;
+    let total_blocked_count = command_result_blocked
+        + command_risk_blocked
+        + authorization_blocked
+        + recovery_blocked
+        + maintenance_closeout_blocked;
+    let command_lifecycle_ready = command_results_ready
+        && command_risk_ready
+        && authorization_ready
+        && service_execution_safe
+        && recovery_ready
+        && maintenance_closeout_ready
+        && total_blocked_count == 0;
+    let status = command_lifecycle_status(
+        command_lifecycle_ready,
+        total_blocked_count,
+        requires_human_review,
+        total_attention_count,
+    );
+    let next_tool = command_lifecycle_next_tool(
+        command_results,
+        command_risk,
+        authorization_gaps,
+        service_execution_safe,
+        recovery_ready,
+        maintenance_closeout_ready,
+        maintenance_closeout,
+    );
+    let next_action = command_lifecycle_next_action(next_tool);
+    let next_owner_lane = command_lifecycle_next_owner_lane(next_tool);
+    let next_reason = command_lifecycle_next_reason(
+        command_results,
+        command_risk,
+        authorization_gaps,
+        service_execution_safe,
+        recovery_ready,
+        maintenance_closeout_ready,
+        maintenance_closeout,
+        requires_human_review,
+        total_attention_count,
+    );
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(command_lifecycle_ready)),
+        (
+            "command_lifecycle_ready",
+            JsonValue::Bool(command_lifecycle_ready),
+        ),
+        (
+            "command_results_ready",
+            JsonValue::Bool(command_results_ready),
+        ),
+        ("authorization_ready", JsonValue::Bool(authorization_ready)),
+        (
+            "service_execution_safe",
+            JsonValue::Bool(service_execution_safe),
+        ),
+        ("recovery_ready", JsonValue::Bool(recovery_ready)),
+        (
+            "maintenance_closeout_ready",
+            JsonValue::Bool(maintenance_closeout_ready),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(total_blocked_count > 0)),
+        (
+            "total_attention_count",
+            integer(total_attention_count as i64),
+        ),
+        ("total_blocked_count", integer(total_blocked_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 command, authorization, recovery, and closeout primitives; it does not dispatch commands or own smart-home state.",
+                    ),
+                ),
+                (
+                    "command_result_failures",
+                    integer(command_result_attention as i64),
+                ),
+                (
+                    "command_risk_rows",
+                    integer(command_risk.total_rows as i64),
+                ),
+                (
+                    "authorization_gap_rows",
+                    integer(authorization_gaps.total_rows as i64),
+                ),
+                (
+                    "recovery_readiness_status",
+                    string(morning_brief_string_at(recovery_readiness, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "runtime_maintenance_closeout_packets",
+                    integer(maintenance_closeout.total_packets as i64),
+                ),
+                ("next_tool", string(next_tool)),
+                ("next_action", string(next_action)),
+                ("next_owner_lane", string(next_owner_lane)),
+                ("next_reason", string(next_reason)),
+            ]),
+        ),
+        (
+            "decision",
+            object([
+                ("recommendation", string(status)),
+                ("recommended_tool", string(next_tool)),
+                ("recommended_action", string(next_action)),
+                ("owner_lane", string(next_owner_lane)),
+                ("reason", string(next_reason)),
+            ]),
+        ),
+        (
+            "lifecycle_gates",
+            JsonValue::Array(vec![
+                recovery_readiness_gate_json(
+                    "command_results",
+                    "Command results",
+                    command_results_ready,
+                    command_result_attention,
+                    command_result_blocked,
+                    SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID,
+                    if command_results_ready {
+                        "monitor_command_results"
+                    } else {
+                        "inspect_command_failures"
+                    },
+                    command_result_summary_json(command_results),
+                ),
+                recovery_readiness_gate_json(
+                    "command_risk",
+                    "Command risk",
+                    command_risk_ready,
+                    command_risk_attention,
+                    command_risk_blocked,
+                    SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+                    if command_risk_ready {
+                        "monitor_command_risk"
+                    } else {
+                        "inspect_command_risk"
+                    },
+                    command_risk_audit_summary_json(command_risk),
+                ),
+                recovery_readiness_gate_json(
+                    "authorization",
+                    "Authorization",
+                    authorization_ready,
+                    authorization_attention,
+                    authorization_blocked,
+                    SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+                    if authorization_ready {
+                        "monitor_authorization_gaps"
+                    } else {
+                        "draft_capability_grant_update"
+                    },
+                    authorization_gap_audit_summary_json(authorization_gaps),
+                ),
+                recovery_readiness_gate_json(
+                    "service_execution_safety",
+                    "Service execution safety",
+                    service_execution_safe,
+                    service_attention,
+                    service_blocked,
+                    SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+                    if service_execution_safe {
+                        "monitor_service_execution_safety"
+                    } else {
+                        "hold_service_execution"
+                    },
+                    service_execution_safety,
+                ),
+                recovery_readiness_gate_json(
+                    "recovery_readiness",
+                    "Recovery readiness",
+                    recovery_ready,
+                    recovery_attention,
+                    recovery_blocked,
+                    SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID,
+                    if recovery_ready {
+                        "monitor_recovery_readiness"
+                    } else {
+                        "complete_recovery_readiness"
+                    },
+                    recovery_readiness.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "maintenance_closeout",
+                    "Runtime maintenance closeout",
+                    maintenance_closeout_ready,
+                    maintenance_closeout_attention,
+                    maintenance_closeout_blocked,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID,
+                    if maintenance_closeout_ready {
+                        "monitor_runtime_closeout"
+                    } else {
+                        "complete_runtime_closeout"
+                    },
+                    runtime_maintenance_closeout_summary_json(maintenance_closeout),
+                ),
+            ]),
+        ),
+        (
+            "command_results",
+            command_result_summary_json(command_results),
+        ),
+        ("command_risk", command_risk_audit_summary_json(command_risk)),
+        (
+            "authorization_gaps",
+            authorization_gap_audit_summary_json(authorization_gaps),
+        ),
+        ("recovery_readiness", recovery_readiness.clone()),
+        (
+            "maintenance_closeout",
+            runtime_maintenance_closeout_summary_json(maintenance_closeout),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn command_lifecycle_status(
+    ready: bool,
+    total_blocked_count: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if total_blocked_count > 0 {
+        "hold"
+    } else if requires_human_review {
+        "review_required"
+    } else if total_attention_count > 0 {
+        "action_required"
+    } else if ready {
+        "ready"
+    } else {
+        "monitor"
+    }
+}
+
+fn command_lifecycle_next_tool(
+    command_results: &RuntimeCommandResultSummary,
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gaps: &AuthorizationGapAuditSummary,
+    service_execution_safe: bool,
+    recovery_ready: bool,
+    maintenance_closeout_ready: bool,
+    maintenance_closeout: &RuntimeMaintenanceCloseoutSummary,
+) -> &'static str {
+    if command_results.has_failures() {
+        SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID
+    } else if authorization_gaps.has_blockers()
+        || authorization_gaps.has_missing_capability_gaps()
+        || authorization_gaps.has_grant_review_pressure()
+        || authorization_gaps.denied_decision_rows > 0
+    {
+        SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID
+    } else if command_risk.has_blockers() || command_risk.has_command_risks() {
+        SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID
+    } else if !service_execution_safe {
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID
+    } else if !recovery_ready {
+        SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID
+    } else if !maintenance_closeout_ready || maintenance_closeout.has_closeout_work() {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID
+    } else {
+        SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID
+    }
+}
+
+fn command_lifecycle_next_action(next_tool: &str) -> &'static str {
+    match next_tool {
+        SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID => "inspect_command_failures",
+        SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID => "draft_capability_grant_update",
+        SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID => "inspect_command_risk",
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID => "hold_service_execution",
+        SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID => "complete_recovery_readiness",
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID => "complete_runtime_closeout",
+        SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID => "monitor_command_lifecycle",
+        _ => "monitor_command_lifecycle",
+    }
+}
+
+fn command_lifecycle_next_owner_lane(next_tool: &str) -> &'static str {
+    match next_tool {
+        SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID => "policy",
+        SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID => "safety",
+        SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID => "recovery",
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID => "release",
+        SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID | SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID => {
+            "runtime"
+        }
+        SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID => "chief",
+        _ => "chief",
+    }
+}
+
+fn command_lifecycle_next_reason(
+    command_results: &RuntimeCommandResultSummary,
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gaps: &AuthorizationGapAuditSummary,
+    service_execution_safe: bool,
+    recovery_ready: bool,
+    maintenance_closeout_ready: bool,
+    maintenance_closeout: &RuntimeMaintenanceCloseoutSummary,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if command_results.has_failures() {
+        "command_result_failures"
+    } else if authorization_gaps.has_missing_capability_gaps()
+        || authorization_gaps.denied_decision_rows > 0
+    {
+        "missing_capability_grants"
+    } else if authorization_gaps.has_grant_review_pressure() {
+        "capability_grant_review"
+    } else if authorization_gaps.has_blockers() || authorization_gaps.has_authorization_gaps() {
+        "authorization_gaps"
+    } else if command_risk.has_blockers() {
+        "command_risk_blockers"
+    } else if command_risk.has_command_risks() {
+        "command_risk_attention"
+    } else if !service_execution_safe {
+        "service_execution_not_safe"
+    } else if !recovery_ready {
+        "recovery_readiness_not_ready"
+    } else if !maintenance_closeout_ready || maintenance_closeout.has_closeout_work() {
+        "maintenance_closeout_work"
+    } else if requires_human_review {
+        "human_review_required"
+    } else if total_attention_count > 0 {
+        "command_lifecycle_attention"
+    } else {
+        "command_lifecycle_clear"
+    }
+}
+
+fn command_audit_dossier_output_json(
+    generated_at_ms: u64,
+    command_lifecycle: &JsonValue,
+    platform_access_review: &JsonValue,
+    platform_event_ops_review: &JsonValue,
+    platform_evidence_ledger: &JsonValue,
+) -> JsonValue {
+    let command_lifecycle_ready =
+        morning_brief_bool_at(command_lifecycle, &["ready"]).unwrap_or(false);
+    let platform_access_ready =
+        morning_brief_bool_at(platform_access_review, &["ready"]).unwrap_or(false);
+    let event_ops_ready =
+        morning_brief_bool_at(platform_event_ops_review, &["ready"]).unwrap_or(false);
+    let evidence_ledger_ready =
+        morning_brief_bool_at(platform_evidence_ledger, &["ready"]).unwrap_or(false);
+
+    let command_lifecycle_attention =
+        morning_brief_integer_at(command_lifecycle, &["total_attention_count"]).unwrap_or(0);
+    let command_lifecycle_blocked =
+        morning_brief_integer_at(command_lifecycle, &["total_blocked_count"]).unwrap_or(0);
+    let platform_access_attention =
+        morning_brief_integer_at(platform_access_review, &["requires_attention_rows"]).unwrap_or(0);
+    let platform_access_blocked =
+        morning_brief_integer_at(platform_access_review, &["blocked_rows"]).unwrap_or(0);
+    let event_ops_attention =
+        morning_brief_integer_at(platform_event_ops_review, &["requires_attention_rows"])
+            .unwrap_or(0);
+    let event_ops_blocked =
+        morning_brief_integer_at(platform_event_ops_review, &["blocked_rows"]).unwrap_or(0);
+    let evidence_attention =
+        morning_brief_integer_at(platform_evidence_ledger, &["records_requiring_attention"])
+            .unwrap_or(0);
+    let evidence_blocked =
+        morning_brief_integer_at(platform_evidence_ledger, &["blocked_records"]).unwrap_or(0);
+
+    let total_attention_count = command_lifecycle_attention
+        + platform_access_attention
+        + event_ops_attention
+        + evidence_attention;
+    let total_blocked_count =
+        command_lifecycle_blocked + platform_access_blocked + event_ops_blocked + evidence_blocked;
+    let requires_human_review =
+        morning_brief_bool_at(command_lifecycle, &["requires_human_review"]).unwrap_or(false)
+            || morning_brief_integer_at(platform_access_review, &["approval_gated_rows"])
+                .unwrap_or(0)
+                > 0
+            || morning_brief_integer_at(platform_access_review, &["grant_review_rows"])
+                .unwrap_or(0)
+                > 0;
+    let command_audit_ready = command_lifecycle_ready
+        && platform_access_ready
+        && event_ops_ready
+        && evidence_ledger_ready
+        && total_blocked_count == 0;
+    let status = command_lifecycle_status(
+        command_audit_ready,
+        total_blocked_count as usize,
+        requires_human_review,
+        total_attention_count as usize,
+    );
+    let (next_tool, next_action, next_owner_lane, next_reason) = command_audit_dossier_next_step(
+        command_lifecycle,
+        platform_access_review,
+        platform_event_ops_review,
+        platform_evidence_ledger,
+        command_lifecycle_ready,
+        platform_access_ready,
+        event_ops_ready,
+        evidence_ledger_ready,
+        command_lifecycle_blocked,
+        platform_access_blocked,
+        event_ops_blocked,
+        evidence_blocked,
+        total_attention_count,
+    );
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(command_audit_ready)),
+        (
+            "command_audit_ready",
+            JsonValue::Bool(command_audit_ready),
+        ),
+        (
+            "command_lifecycle_ready",
+            JsonValue::Bool(command_lifecycle_ready),
+        ),
+        (
+            "platform_access_ready",
+            JsonValue::Bool(platform_access_ready),
+        ),
+        ("event_ops_ready", JsonValue::Bool(event_ops_ready)),
+        (
+            "evidence_ledger_ready",
+            JsonValue::Bool(evidence_ledger_ready),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(total_blocked_count > 0)),
+        ("total_attention_count", integer(total_attention_count)),
+        ("total_blocked_count", integer(total_blocked_count)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 command lifecycle, access-review, event-ops, and evidence-ledger summaries; it does not dispatch commands, drain event queues, or own smart-home state.",
+                    ),
+                ),
+                (
+                    "command_lifecycle_status",
+                    string(morning_brief_string_at(command_lifecycle, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "platform_access_status",
+                    string(morning_brief_string_at(platform_access_review, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "event_ops_status",
+                    string(morning_brief_string_at(platform_event_ops_review, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "evidence_ledger_status",
+                    string(morning_brief_string_at(platform_evidence_ledger, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "platform_access_rows",
+                    morning_brief_field_clone(platform_access_review, "total_rows"),
+                ),
+                (
+                    "event_ops_rows",
+                    morning_brief_field_clone(platform_event_ops_review, "total_rows"),
+                ),
+                (
+                    "evidence_records",
+                    morning_brief_field_clone(platform_evidence_ledger, "total_records"),
+                ),
+                ("next_tool", string(&next_tool)),
+                ("next_action", string(&next_action)),
+                ("next_owner_lane", string(&next_owner_lane)),
+                ("next_reason", string(&next_reason)),
+            ]),
+        ),
+        (
+            "decision",
+            object([
+                ("recommendation", string(status)),
+                ("recommended_tool", string(&next_tool)),
+                ("recommended_action", string(&next_action)),
+                ("owner_lane", string(&next_owner_lane)),
+                ("reason", string(&next_reason)),
+            ]),
+        ),
+        (
+            "audit_sections",
+            JsonValue::Array(vec![
+                recovery_readiness_gate_json(
+                    "command_lifecycle",
+                    "Command lifecycle",
+                    command_lifecycle_ready,
+                    command_lifecycle_attention as usize,
+                    command_lifecycle_blocked as usize,
+                    SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID,
+                    morning_brief_string_at(command_lifecycle, &["decision", "recommended_action"])
+                        .unwrap_or("monitor_command_lifecycle"),
+                    command_lifecycle.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "platform_access_review",
+                    "Platform access review",
+                    platform_access_ready,
+                    platform_access_attention as usize,
+                    platform_access_blocked as usize,
+                    SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID,
+                    if platform_access_ready {
+                        "monitor_platform_access"
+                    } else {
+                        "review_platform_access"
+                    },
+                    platform_access_review.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "platform_event_ops_review",
+                    "Platform event ops review",
+                    event_ops_ready,
+                    event_ops_attention as usize,
+                    event_ops_blocked as usize,
+                    SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID,
+                    if event_ops_ready {
+                        "monitor_event_ops"
+                    } else {
+                        "review_event_ops"
+                    },
+                    platform_event_ops_review.clone(),
+                ),
+                recovery_readiness_gate_json(
+                    "platform_evidence_ledger",
+                    "Platform evidence ledger",
+                    evidence_ledger_ready,
+                    evidence_attention as usize,
+                    evidence_blocked as usize,
+                    SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID,
+                    morning_brief_string_at(platform_evidence_ledger, &["next_action"])
+                        .unwrap_or("review_platform_evidence"),
+                    platform_evidence_ledger.clone(),
+                ),
+            ]),
+        ),
+        ("command_lifecycle", command_lifecycle.clone()),
+        (
+            "platform_access_review",
+            platform_access_review.clone(),
+        ),
+        (
+            "platform_event_ops_review",
+            platform_event_ops_review.clone(),
+        ),
+        (
+            "platform_evidence_ledger",
+            platform_evidence_ledger.clone(),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID,
+                SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn command_audit_dossier_next_step(
+    command_lifecycle: &JsonValue,
+    platform_access_review: &JsonValue,
+    platform_event_ops_review: &JsonValue,
+    platform_evidence_ledger: &JsonValue,
+    command_lifecycle_ready: bool,
+    platform_access_ready: bool,
+    event_ops_ready: bool,
+    evidence_ledger_ready: bool,
+    command_lifecycle_blocked: i64,
+    platform_access_blocked: i64,
+    event_ops_blocked: i64,
+    evidence_blocked: i64,
+    total_attention_count: i64,
+) -> (String, String, String, String) {
+    if command_lifecycle_blocked > 0 || !command_lifecycle_ready {
+        return (
+            morning_brief_string_at(command_lifecycle, &["decision", "recommended_tool"])
+                .unwrap_or(SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID)
+                .to_string(),
+            morning_brief_string_at(command_lifecycle, &["decision", "recommended_action"])
+                .unwrap_or("inspect_command_lifecycle")
+                .to_string(),
+            morning_brief_string_at(command_lifecycle, &["decision", "owner_lane"])
+                .unwrap_or("runtime")
+                .to_string(),
+            morning_brief_string_at(command_lifecycle, &["decision", "reason"])
+                .unwrap_or("command_lifecycle_not_ready")
+                .to_string(),
+        );
+    }
+    if platform_access_blocked > 0 || !platform_access_ready {
+        return (
+            SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID.to_string(),
+            morning_brief_string_at(platform_access_review, &["next_action"])
+                .unwrap_or("review_platform_access")
+                .to_string(),
+            "policy".to_string(),
+            if morning_brief_integer_at(platform_access_review, &["denied_decision_rows"])
+                .unwrap_or(0)
+                > 0
+                || morning_brief_integer_at(platform_access_review, &["missing_capability_rows"])
+                    .unwrap_or(0)
+                    > 0
+            {
+                "platform_access_gaps".to_string()
+            } else {
+                "platform_access_review_not_ready".to_string()
+            },
+        );
+    }
+    if event_ops_blocked > 0 || !event_ops_ready {
+        return (
+            SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID.to_string(),
+            morning_brief_string_at(platform_event_ops_review, &["next_action"])
+                .unwrap_or("review_event_ops")
+                .to_string(),
+            "runtime".to_string(),
+            if morning_brief_bool_at(platform_event_ops_review, &["has_event_backlog"])
+                .unwrap_or(false)
+            {
+                "event_ops_backlog".to_string()
+            } else {
+                "event_ops_review_not_ready".to_string()
+            },
+        );
+    }
+    if evidence_blocked > 0 || !evidence_ledger_ready {
+        return (
+            morning_brief_string_at(platform_evidence_ledger, &["next_tool"])
+                .unwrap_or(SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID)
+                .to_string(),
+            morning_brief_string_at(platform_evidence_ledger, &["next_action"])
+                .unwrap_or("review_platform_evidence")
+                .to_string(),
+            morning_brief_string_at(platform_evidence_ledger, &["next_owner_lane"])
+                .unwrap_or("chief_adapter")
+                .to_string(),
+            morning_brief_string_at(platform_evidence_ledger, &["decision", "reason"])
+                .unwrap_or("platform_evidence_not_ready")
+                .to_string(),
+        );
+    }
+    if total_attention_count > 0 {
+        (
+            SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID.to_string(),
+            "review_command_audit_attention".to_string(),
+            "chief".to_string(),
+            "command_audit_attention".to_string(),
+        )
+    } else {
+        (
+            SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID.to_string(),
+            "monitor_command_audit_dossier".to_string(),
+            "chief".to_string(),
+            "command_audit_clear".to_string(),
+        )
+    }
 }
 
 fn recovery_readiness_status(
@@ -94793,7 +95857,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 319);
+        assert_eq!(definitions.len(), 321);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -95707,9 +96771,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            311
+            313
         );
         assert_eq!(
             export
@@ -97275,6 +98345,316 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
         assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(8));
+    }
+
+    #[test]
+    fn command_lifecycle_brief_wraps_command_authorization_recovery_and_closeout_signals() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-lifecycle-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-command-lifecycle-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-command-lifecycle-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let accepted_command = tool_runtime.invoke_with_events(&request(
+            "call-command-lifecycle-accepted-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+                ("idempotency_key", string("command-lifecycle-accepted")),
+            ]),
+            2_002,
+        ));
+        assert!(accepted_command.result.ok);
+
+        let request = request(
+            "call-command-lifecycle-brief",
+            SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID,
+            object([]),
+            2_003,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "command_lifecycle_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(output, "total_blocked_count").unwrap()).unwrap() >= 1);
+
+        let command_results = field(output, "command_results").unwrap();
+        assert!(integer_value(field(command_results, "accepted_results").unwrap()).unwrap() >= 1);
+        assert_eq!(
+            field(command_results, "has_failures"),
+            Some(&JsonValue::Bool(false))
+        );
+        let authorization_gaps = field(output, "authorization_gaps").unwrap();
+        assert!(
+            integer_value(field(authorization_gaps, "denied_decision_rows").unwrap()).unwrap() >= 1
+        );
+        assert!(
+            integer_value(field(authorization_gaps, "total_missing_capabilities").unwrap())
+                .unwrap()
+                >= 1
+        );
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 command, authorization, recovery, and closeout primitives; it does not dispatch commands or own smart-home state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(
+            field(decision, "reason"),
+            Some(&string("missing_capability_grants"))
+        );
+
+        assert_eq!(
+            array_len(field(output, "lifecycle_gates").unwrap()),
+            Some(6)
+        );
+        let authorization_gate = array_item(field(output, "lifecycle_gates").unwrap(), 2).unwrap();
+        assert_eq!(
+            field(authorization_gate, "gate_id"),
+            Some(&string("authorization"))
+        );
+        assert_eq!(
+            field(authorization_gate, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(7));
+    }
+
+    #[test]
+    fn command_audit_dossier_wraps_lifecycle_access_event_and_evidence_ledgers() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-audit-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-command-audit-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-command-audit-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let subscribe_commands = tool_runtime.invoke_with_events(&request(
+            "call-subscribe-commands-for-command-audit-dossier",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("commands")),
+                ("filter", object([("filter_type", string("commands"))])),
+            ]),
+            2_002,
+        ));
+        assert!(subscribe_commands.result.ok);
+
+        let accepted_command = tool_runtime.invoke_with_events(&request(
+            "call-command-audit-accepted-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+                ("idempotency_key", string("command-audit-accepted")),
+            ]),
+            2_003,
+        ));
+        assert!(accepted_command.result.ok);
+
+        let set_desired_state = tool_runtime.invoke_with_events(&request(
+            "call-set-desired-state-for-command-audit-dossier",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(false)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            2_010,
+        ));
+        assert!(set_desired_state.result.ok);
+
+        let reconcile = tool_runtime.invoke_with_events(&request(
+            "call-reconcile-for-command-audit-dossier",
+            SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID,
+            object([]),
+            2_020,
+        ));
+        assert!(reconcile.result.ok);
+
+        let request = request(
+            "call-command-audit-dossier",
+            SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID,
+            object([]),
+            2_030,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "command_audit_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(output, "total_blocked_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 command lifecycle, access-review, event-ops, and evidence-ledger summaries; it does not dispatch commands, drain event queues, or own smart-home state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(
+            field(decision, "reason"),
+            Some(&string("missing_capability_grants"))
+        );
+
+        let lifecycle = field(output, "command_lifecycle").unwrap();
+        assert_eq!(field(lifecycle, "status"), Some(&string("hold")));
+        let access = field(output, "platform_access_review").unwrap();
+        assert!(integer_value(field(access, "denied_decision_rows").unwrap()).unwrap() >= 1);
+        let event_ops = field(output, "platform_event_ops_review").unwrap();
+        assert!(
+            integer_value(field(event_ops, "queued_events").unwrap()).unwrap() >= 1,
+            "command audit dossier should surface queued command-event pressure"
+        );
+        let evidence = field(output, "platform_evidence_ledger").unwrap();
+        assert!(integer_value(field(evidence, "source_record_count").unwrap()).unwrap() >= 1);
+
+        assert_eq!(array_len(field(output, "audit_sections").unwrap()), Some(4));
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(7));
+        assert!(
+            runtime
+                .borrow()
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("commands"))
+                .unwrap()
+                >= 1,
+            "command audit dossier must not drain command subscriptions"
+        );
     }
 
     #[test]
@@ -99856,11 +101236,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(319))
+            Some(&integer(321))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(311))
+            Some(&integer(313))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
