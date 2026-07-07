@@ -441,6 +441,7 @@ fn expr_node_count(expr: &Expression) -> usize {
         // other leaves (which this arm counts as 0 sub-nodes).
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => 0,
         Expression::BinaryExpression(be) => expr_node_count(&be.left) + expr_node_count(&be.right),
         Expression::LogicalExpression(le) => expr_node_count(&le.left) + expr_node_count(&le.right),
@@ -759,6 +760,7 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // predicates leave it conservative.)
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             collect_binding_idents_expr(&be.left, out);
@@ -1046,6 +1048,7 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         // predicates leave it conservative.)
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             tally_expr(&be.left, cand, t);
@@ -1389,6 +1392,7 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
         // predicates leave it conservative.)
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             changed |= inline_in_expr(&mut be.left, cand);
@@ -1522,6 +1526,7 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         // predicates leave it conservative.)
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             substitute(&mut be.left, map);
@@ -2043,6 +2048,7 @@ fn expr_collect_mutated_params(
         // predicates leave it conservative.)
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
     }
 }
@@ -3394,6 +3400,7 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // predicates leave it conservative.)
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             rename_in_expr(&mut be.left, map);

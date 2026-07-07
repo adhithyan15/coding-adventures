@@ -732,6 +732,7 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
         // `this` binds no variable name — nothing to count or propagate into.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             count_uses_expr(&be.left, name, count);
@@ -1035,6 +1036,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         // `this` binds no variable name — nothing to count or propagate into.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             changed |= propagate_in_expr(&mut be.left, cand);

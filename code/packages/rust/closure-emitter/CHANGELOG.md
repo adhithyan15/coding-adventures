@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.31.0] - 2026-07-04
+
+### Added — CLOC12.167: emit `NewTarget` (`new.target`)
+
+Added `emit_new_target` (prints the literal two-token spelling `new.target` after recording its source-map anchor) and classified `Expression::NewTarget` at `PREC_PRIMARY` in `expr_prec` — a meta-property primary like `this` / `super`. As a primary leaf it never needs wrapping and never forces a paren around an operand; the internal `.` is part of the spelling, not a member access. Four unit tests. (CLOC12.167)
+
+
 ## [0.30.1] - 2026-07-04
 
 ### Added — CLOC12.166 PR3: CodePrinter `super` conformance port
