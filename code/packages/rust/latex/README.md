@@ -60,6 +60,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S10 — distinct `\pageref` rendering** | `CrossReferenceReport::to_plain_text` gains a **third** rendering branch so a resolved `\pageref` no longer renders identically to a `\ref`. A `\pageref{key}` asks "what **page** is the target on" — a different question from `\ref`'s "what **number** is the target" — but the crate has **no page model**, so it cannot compute a real page number. A resolved reference whose `command == "pageref"` (to **any** target kind) now renders `\pageref{sec:i} -> page ?` — the `\pageref` spelling is kept and the kind/number are replaced by the fixed literal placeholder `page ?` (the `?` mirrors LaTeX's own `??` for an unresolved page reference; it means "page number not modelled", not the kind, not the number). Branch precedence: (1) `\eqref` to Equation → parenthesised (S9); (2) `\pageref` any kind → `page ?` (S10); (3) else → `\ref{key} -> Kind N` (S8). So `\ref` and `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines change. Pure rendering branch — no AST change, no re-numbering, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S11 — grouped-by-kind cross-reference report** | `CrossReferenceReport::to_plain_text_by_kind() -> String` — a **new, separate** method that renders the **same** resolved references as `to_plain_text` but **grouped under fixed-order kind subheadings** (Sections, Figures, Tables, Equations, Inline — regardless of source order), each subheading followed by two-space-indented ref lines in the report's existing pre-order. Kinds with zero resolved refs are omitted entirely. The per-line rendering is the **identical** S8/S9/S10 rule — factored into a shared private `render_resolved_ref(&RefEntry)` that **both** `to_plain_text` and `to_plain_text_by_kind` call, so the flat and grouped reports can never drift (`to_plain_text` output is byte-for-byte unchanged). Only resolved refs are grouped (no citations, no dangling footers); zero resolved refs → the fixed marker `(no resolved references)`. A `\pageref` groups under its **target kind**. Pure report-assembly over data the report already holds — no AST/struct/numbering change, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S12 — List of Figures / List of Tables index** | `Document::list_of_floats() -> String` — a **new** method that renders the document's **List of Figures** and **List of Tables** (LaTeX's `\listoffigures` / `\listoftables`, as plain text) directly from the floats. A single document-order walk threads the **same** `Counters` float counters as `number_labels`, so each float's line number equals its S4 flat figure/table number (a labeled float's List-of number and its `\ref` number agree; figures numbered `1, 2, …`, tables independently from `1`). Each line is `<n>. <caption text>`, where the caption text is the plain rendering of the float's `\caption{…}` inlines (text/code verbatim, space as a single space, font-wrapper content recursively, trimmed — the same descent the caption-reaching test proves), via a private `caption_text(&Option<Caption>)` helper; a float with **no** `\caption` renders the fixed placeholder `(no caption)` so every float still gets a numbered line. The `List of Figures` heading is emitted only when there is ≥1 figure, `List of Tables` only when ≥1 table; a document with no floats → the fixed marker `(no floats)`. Lines joined by `\n`, no trailing newline. Real LaTeX gates these on `\listoffigures` / `\listoftables` commands (not parser-recognised here), so — like S11 — S12 is a method the caller invokes; every S1–S11 output is byte-for-byte unchanged. Pure assembly over existing blocks + the existing float walk — no AST/grammar/counter change, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S13 — `\nameref` resolution to a target's name** | `Document::resolve_namerefs() -> String` — a **new** method that resolves every `\nameref{key}` to the **name** (title/caption text) of its target — the name-valued sibling of `\ref` (number) and `\pageref` (page). `\nameref` is **not** a `REF_COMMAND`, so it appears in neither the resolved nor unresolved ref table (an AST probe confirms it lowers to `Inline::CrossRef { command: "nameref", .. }`); S13 reads the same S1 `\label` table but answers "*what is it called?*", so it is purely additive. One document-order walk collects each `nameref` cross-ref; the key is resolved against the winning label table and the name read from its defining node via the S3 `label_def_node` accessor — a `Section` → its title inlines flattened, a `Figure`/`Table` → its `\caption` via the shared `caption_text` helper (S12's flatten factored into a module-level `flatten_inlines_to_text`, reused by both so they can never drift). An `Equation`/`Inline` target (a number, not a title) → `(no name)`; an undefined key → `(undefined nameref: <key>)`; no `\nameref` at all → `(no namerefs)`. Each line is `\nameref{<key>} -> <name>`, joined by `\n`, no trailing newline. Every S1–S12 output is byte-for-byte unchanged. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -604,6 +605,40 @@ to a section sits under `Sections:`). A report with zero resolved refs renders t
 `(no resolved references)` — the S11 analogue of `to_plain_text`'s `(no cross-references)`. Pure
 report-assembly over data the report already holds — no AST/struct/numbering change, `to_latex()`
 still a fixed point.
+
+### `\nameref` resolution to a target's name (LTXDOC03 S13)
+
+`\ref` prints a target's **number** ("Section 1"); `\pageref` prints its **page**. The `nameref`
+package's `\nameref` prints its **name** — a section's title, a float's caption text. `resolve_namerefs`
+is a **new** method that answers exactly that: it walks the body, finds every `\nameref{key}`, resolves
+the key against the same S1 `\label` table `\ref` uses, and renders the target's name. Because
+`\nameref` is **not** a `REF_COMMAND`, it appears in neither the resolved nor the unresolved reference
+table — S13 reads the same table but asks a different question, so it changes no S1–S12 output.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\caption{A plot}\label{fig:p}\end{figure}
+
+See \nameref{sec:intro}, \nameref{fig:p}, and \nameref{nope}.\end{document}";
+let doc = parse_document(src).unwrap();
+
+// One `\nameref{key} -> <name>` line per reference, in body order.
+assert_eq!(
+    doc.resolve_namerefs(),
+    "\\nameref{sec:intro} -> Introduction\n\
+     \\nameref{fig:p} -> A plot\n\
+     \\nameref{nope} -> (undefined nameref: nope)",
+);
+```
+
+A `Section` target resolves to its title text; a `Figure`/`Table` to its `\caption` text (via the
+**same** `caption_text` descent S12's List-of-Floats uses, so the two agree). An `Equation`/inline-label
+target has a number, not a name, so it renders `(no name)`; an undefined key renders
+`(undefined nameref: <key>)`; a document with no `\nameref` at all renders `(no namerefs)`. Pure
+assembly over existing blocks + the S1 label table — no AST/grammar change, `to_latex()` still a fixed
+point.
 
 ## Usage
 
