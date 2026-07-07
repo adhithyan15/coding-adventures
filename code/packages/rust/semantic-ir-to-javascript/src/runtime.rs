@@ -45,6 +45,13 @@
 /// declarations start on their own line.
 pub const RUNTIME: &str = r##"const __Sir = (() => {
   "use strict";
+  // Source-language display convention (SIR display-convention spec).  The
+  // emitter substitutes `__SIR_DISPLAY_RUBY__` with `true` when the module's
+  // `source_language` is Ruby, else `false` (the default Twig/Lisp form).  The
+  // display path (`formatSeen`) reads this to render a boolean as Ruby
+  // `true`/`false` rather than the Lisp `#t`/`#f`; existing Twig output is
+  // unchanged.
+  const SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -107,8 +114,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   function format(v) { return formatSeen(v, new Set()); }
   function formatSeen(v, seen) {
     if (v === null || v === undefined) { return "nil"; }
-    if (v === true) { return "#t"; }
-    if (v === false) { return "#f"; }
+    if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
+    if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
     if (typeof v === "string") { return v; }
     if (typeof v === "number") { return String(v); }
     if (v instanceof Sym) { return v.name; }
