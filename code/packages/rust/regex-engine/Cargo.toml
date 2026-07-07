@@ -1,0 +1,11 @@
+[package]
+name = "regex-engine"
+version = "0.1.0"
+edition = "2021"
+description = "A small, zero-dependency, linear-time (Thompson NFA / Pike VM) regular-expression engine — the subset the Engram flashcard search needs — reimplemented from scratch to keep the Engram stack free of third-party crates."
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]
+regex = "1"

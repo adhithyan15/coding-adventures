@@ -529,6 +529,7 @@ members = [
     "protobuf",
     "fsrs",
     "unicode-normalize",
+    "regex-engine",
     "python-bridge",
     "python-lexer",
     "python-parser",

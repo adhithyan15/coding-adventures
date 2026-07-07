@@ -105,17 +105,33 @@ Effort: S ≈ ½ day, M ≈ 1–2 days, L ≈ several days / multiple PRs.
 - Character classes (`\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}`) to add if/when the
   regex engine needs them; `is_combining_mark` (Mark) already shipped in C1.
 
-### Phase D — zero-dep regex engine (removes `regex` entirely) — L
-- Build a small zero-dep backtracking/NFA regex engine covering the exact subset
-  engram-core uses: literals, `.`, `* + ?`, `[]`/`[^]`, `()`, `|`, `^ $`,
-  `\d \w \s`, case-insensitive + dot-all flags, capture groups, and
-  `replace_all` — enough to execute **all** current patterns: the media tag
-  pattern, the glob-compiled search patterns, whole-word Unicode boundary, and
-  user `re:` search.
-- Cross-verify against the live `regex` on every current pattern + random
-  corpora, then swap all `Regex`/`RegexBuilder`/`regex::escape` uses and **drop
-  `regex`**. This subsumes the C2 media/glob work (byte-exactness by correct
-  engine semantics, not per-pattern hand-emulation).
+### Phase D — zero-dep regex engine (removes `regex` entirely) — L (PRs D0–D4)
+Build a small zero-dep **Pike VM** (Thompson NFA) regex engine — linear-time, so
+DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
+- **D0 — ✅ DONE (`is_match` core).** New `code/packages/rust/regex-engine`:
+  parser → bytecode → Pike VM. Supports literals, `.`, `\d\D\w\W\s\S` (ASCII),
+  `[]`/`[^]` ranges, `()`/`(?:)`, `|`, `*+?` and `{m,n}` (greedy/lazy), `^$`,
+  `\b\B`, `(?i)`/`(?s)`, `case_insensitive`. Public surface = `Regex`,
+  `RegexBuilder`, `is_match`. Cross-verified vs live `regex` (`(?-u)`) across
+  **100k+ random (pattern,input) pairs** + CI sweep — zero `is_match`
+  divergences. Iterative epsilon-closure (no stack overflow) + compile-size cap
+  (no `{0,huge}` blowup). Not yet wired.
+- **D1 — Unicode classes.** Generate Unicode tables for `\w\d\s` (Unicode mode)
+  and `\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}` (same generator approach as
+  `unicode-normalize`); cross-verify vs `regex` default (Unicode) mode.
+- **D2 — swap the boolean uses.** Point `re:` (`build_search_regex`), whole-word
+  (`build_whole_word_regex`), and glob (`search_pattern_regex_source`) at the new
+  engine's `is_match`. Provide a `regex_engine::escape` for the glob builder.
+  `regex` stays only for the media `replace_all`.
+- **D3 — match extents.** Add `find`/`captures`/`replace_all` to the engine,
+  solving the **nullable-loop** priority problem (e.g. `(a?)*`) so extents match
+  `regex` byte-for-byte; cross-verify find + replace_all on random corpora.
+- **D4 — swap media + drop `regex`.** Point `DUPLICATE_HTML_MEDIA_TAGS` at the
+  engine's `replace_all` (byte-verified vs the old regex on the corpus from C2),
+  then remove `regex` from `engram-core`'s Cargo.toml. **`regex` gone.**
+- Rationale for the split: `is_match` (D0) is the bulk of engram's use and is
+  cross-verifiable independently; extents (D3) are a genuinely separate, harder
+  sub-problem, so they get their own PR rather than blocking the core.
 
 ### Phase E — sqlite-file reader (unblocks rusqlite-free **import**) — L (PRs A1–A5)
 Per `code/specs/storage-sqlite.md` + the Python `storage-sqlite` port:
