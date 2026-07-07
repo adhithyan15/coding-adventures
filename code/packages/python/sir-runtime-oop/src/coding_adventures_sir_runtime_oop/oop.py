@@ -591,9 +591,19 @@ _ARRAY_BLOCK_METHODS = frozenset(
         "find",
         "detect",
         "flat_map",
+        "collect_concat",
         "any?",
         "all?",
         "none?",
+        "sort_by",
+        "min_by",
+        "max_by",
+        "group_by",
+        "partition",
+        "take_while",
+        "drop_while",
+        "count",
+        "each_with_object",
     }
 )
 
@@ -984,7 +994,7 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
             if truthy(apply(block, [item])):
                 return item
         return None
-    if name == "flat_map":
+    if name in ("flat_map", "collect_concat"):
         out: list[Val] = []
         for item in recv:
             mapped = apply(block, [item])
@@ -999,6 +1009,60 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
         return all(truthy(apply(block, [item])) for item in recv)
     if name == "none?":
         return not any(truthy(apply(block, [item])) for item in recv)
+    if name == "sort_by":
+        # Sort by the block-computed key (Ruby ``sort_by``).  Python's sort is
+        # stable, matching Ruby.  A key that is not mutually comparable raises
+        # ``TypeError`` — identical to the plain ``sort`` arm above.
+        return sorted(recv, key=lambda item: apply(block, [item]))
+    if name in ("min_by", "max_by"):
+        if not recv:
+            return None
+        chooser = min if name == "min_by" else max
+        return chooser(recv, key=lambda item: apply(block, [item]))
+    if name == "group_by":
+        # A Hash (Python ``dict``) of block key -> list of elements, in
+        # first-seen key order.  Keys must be hashable, consistent with the
+        # backend's dict-based Hash model.
+        groups: dict[Val, list[Val]] = {}
+        for item in recv:
+            groups.setdefault(apply(block, [item]), []).append(item)
+        return groups
+    if name == "partition":
+        yes: list[Val] = []
+        no: list[Val] = []
+        for item in recv:
+            (yes if truthy(apply(block, [item])) else no).append(item)
+        return [yes, no]
+    if name == "take_while":
+        out2: list[Val] = []
+        for item in recv:
+            if truthy(apply(block, [item])):
+                out2.append(item)
+            else:
+                break
+        return out2
+    if name == "drop_while":
+        out3: list[Val] = []
+        dropping = True
+        for item in recv:
+            if dropping and truthy(apply(block, [item])):
+                continue
+            dropping = False
+            out3.append(item)
+        return out3
+    if name == "count":
+        # ``count { |x| pred }`` — number of truthy results.  (The argument and
+        # bare forms are handled by the non-block ``_array_method``.)
+        return sum(1 for item in recv if truthy(apply(block, [item])))
+    if name == "each_with_object":
+        # ``each_with_object(memo) { |x, memo| … }`` — yields each element with
+        # the memo and returns the (mutated) memo.
+        if not args:
+            return recv
+        memo = args[0]
+        for item in recv:
+            apply(block, [item, memo])
+        return memo
     return _MISS
 
 

@@ -342,6 +342,36 @@ def test_find_detect_and_flat_map() -> None:
     ]
 
 
+def test_array_block_breadth() -> None:
+    # sort_by / min_by / max_by — keyed by the block result.
+    assert oop.call_method([3, 1, 2], "sort_by", Closure(lambda x: x)) == [1, 2, 3]
+    assert oop.call_method(["aaa", "a", "aa"], "sort_by", Closure(len)) == ["a", "aa", "aaa"]
+    assert oop.call_method([3, 1, 2], "min_by", Closure(lambda x: x)) == 1
+    assert oop.call_method([3, 1, 2], "max_by", Closure(lambda x: x)) == 3
+    assert oop.call_method([], "min_by", Closure(lambda x: x)) is None
+    # group_by — a Hash of key -> matching elements.
+    assert oop.call_method([1, 2, 3, 4], "group_by", Closure(lambda x: x % 2 == 0)) == {
+        False: [1, 3],
+        True: [2, 4],
+    }
+    # partition — [matching, non_matching].
+    assert oop.call_method([1, 2, 3, 4], "partition", Closure(lambda x: x % 2 == 0)) == [
+        [2, 4],
+        [1, 3],
+    ]
+    # collect_concat is an alias of flat_map.
+    assert oop.call_method([1, 2], "collect_concat", Closure(lambda x: [x, x])) == [1, 1, 2, 2]
+    # take_while / drop_while — leading truthy run and the remainder.
+    assert oop.call_method([1, 2, 3, 4], "take_while", Closure(lambda x: x < 3)) == [1, 2]
+    assert oop.call_method([1, 2, 3, 4], "drop_while", Closure(lambda x: x < 3)) == [3, 4]
+    # count { block } — number of truthy results.
+    assert oop.call_method([1, 2, 3, 4], "count", Closure(lambda x: x % 2 == 0)) == 2
+    # each_with_object — folds into and returns the memo.
+    assert oop.call_method(
+        [1, 2, 3], "each_with_object", [], Closure(lambda x, o: o.append(x * 10))
+    ) == [10, 20, 30]
+
+
 def test_any_all_none_use_sir_truthiness() -> None:
     assert oop.call_method([1, 2, 3], "any?", Closure(lambda x: x > 2)) is True
     assert oop.call_method([1, 2, 3], "any?", Closure(lambda x: x > 9)) is False
