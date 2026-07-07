@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.25.10] - 2026-07-04
+
+### Changed — CLOC12.167: `NewTarget` exhaustive-match arm
+
+Added an `Expression::NewTarget` case so the pass stays exhaustive over the new `javascript-ast` leaf variant (part of the CLOC12.167 atomic node PR1). `new.target` is a leaf meta-property with no sub-expression and is never itself a constant, so it clones through unchanged alongside the literals (and, in fold-control-flow, returns its own `cv` from the `expression_cv` accessor). No behaviour change to any existing node.
+
+
 ## [0.25.9] - 2026-07-04
 
 ### Changed — CLOC12.166: `Super` exhaustive-match arm

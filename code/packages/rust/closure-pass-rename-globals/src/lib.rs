@@ -637,6 +637,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // `this` binds no global name — nothing to collect or rename.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             collect_all_idents_expr(&be.left, out);
@@ -961,6 +962,7 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // `this` binds no global name — nothing to collect or rename.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
             rename_apply_expr(&mut be.left, map);

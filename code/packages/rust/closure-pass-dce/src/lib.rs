@@ -1167,6 +1167,7 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
         // its own, so it clones through like the literals.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
+        | Expression::NewTarget(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {

@@ -79,7 +79,7 @@ use coding_adventures_javascript_ast::{
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
-    Super,
+    Super, NewTarget,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1142,6 +1142,7 @@ impl<'a> Emitter<'a> {
             Expression::AwaitExpression(a) => self.emit_await(a),
             Expression::ThisExpression(t) => self.emit_this(t),
             Expression::Super(s) => self.emit_super(s),
+            Expression::NewTarget(n) => self.emit_new_target(n),
         }
         if needs_parens {
             self.write_str(")");
@@ -1650,6 +1651,17 @@ impl<'a> Emitter<'a> {
         self.write_str("super");
     }
 
+    /// `new.target` — the meta-property, a leaf like `this` / `super`. It is
+    /// spelled with two tokens plus a dot, so the emit is the literal ten
+    /// characters `new.target` (after recording the source-map anchor). As a
+    /// `PREC_PRIMARY` leaf it is only ever followed by a member/call token or a
+    /// punctuator, never by another word that would fuse; the internal `.` is
+    /// part of the spelling, not a member access, so no operand is walked.
+    fn emit_new_target(&mut self, n: &NewTarget) {
+        self.maybe_map(&n.cv);
+        self.write_str("new.target");
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -2031,7 +2043,12 @@ fn expr_prec(e: &Expression) -> u8 {
         // keyword that binds at the tightest level. It is only ever the object
         // of a member access or a call callee (`super.m()`, `super[k]`,
         // `super()`) — all of which compose paren-free at primary strength.
-        | Expression::Super(_) => PREC_PRIMARY,
+        | Expression::Super(_)
+        // `new.target` is a meta-property primary — an atomic two-token
+        // spelling that binds at the tightest level, like `this`. It never
+        // needs wrapping and never forces a paren around an operand (it has
+        // none). The internal `.` is part of the spelling, not member access.
+        | Expression::NewTarget(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
         // Update (`++x` / `x++`) binds a hair tighter than the pure unary
@@ -5161,5 +5178,40 @@ mod tests {
     fn super_under_binary_parent_is_bare() {
         let e = binary(BinaryOperator::Add, super_expr(), num(1.0));
         assert_eq!(emit_expr(e), "super+1;");
+    }
+
+    // =================================================================
+    // NewTarget (`new.target`) — CLOC12.167
+    // =================================================================
+
+    /// Build a `NewTarget`.
+    fn new_target_expr() -> Expression {
+        Expression::NewTarget(NewTarget { cv: None })
+    }
+
+    /// `new.target` — the meta-property, printed as its literal spelling.
+    #[test]
+    fn new_target_emits_literal_spelling() {
+        assert_eq!(emit_expr(new_target_expr()), "new.target;");
+    }
+
+    /// `new.target.x` — `new.target` is a primary, so a member parent needs no
+    /// parens (the trailing `.x` is a real member access on top of it).
+    #[test]
+    fn new_target_as_member_object_is_bare() {
+        assert_eq!(emit_expr(member(new_target_expr(), "x", false)), "new.target.x;");
+    }
+
+    /// `f(new.target)` — as a call argument it is a plain primary operand.
+    #[test]
+    fn new_target_as_call_argument_is_bare() {
+        assert_eq!(emit_expr(call(ident("f"), vec![new_target_expr()])), "f(new.target);");
+    }
+
+    /// `new.target+1` — even a binary parent leaves the primary bare.
+    #[test]
+    fn new_target_under_binary_parent_is_bare() {
+        let e = binary(BinaryOperator::Add, new_target_expr(), num(1.0));
+        assert_eq!(emit_expr(e), "new.target+1;");
     }
 }
