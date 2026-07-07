@@ -33,18 +33,19 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model supported-parameter coverage gate.
+1. Rust Berkeley Mosaic acknowledgement-record summary.
    - Status: current PR completion candidate.
-   - Add Python, Rust, and TypeScript helpers that validate the supported
-     model-card parameter alias catalog against the expected seven model kinds,
-     67 canonical rows, 113 accepted names, alias-bearing parameter totals, and
-     max alias depth.
-   - Expose a stable pass/fail gate report plus issue table, header-keyed
-     records, CSV, and compact JSON exports for release automation, browser
-     dashboards, and deck-tooling UIs.
-   - Keep normalization, the 67-row catalog, and the seven-row summary
-     unchanged while locking a negative missing-NMOS-`VT0` alias-family gate
-     issue across the three packages.
+   - Add a Rust-only Berkeley app-deck shell dashboard surface that wraps
+     runtime activation receipt journal summary handoff receipt acknowledgement
+     record receipt acknowledgement records into compact summary/status-card
+     payloads for Mosaic and WebAssembly product shells.
+   - Expose native and JSON helpers with stable schema version, summary ID,
+     summarize/defer disposition, summary action, deterministic steps, compact
+     summarized/deferred counts, nested acknowledgement-record payload, and
+     capability metadata.
+   - Preserve the public Berkeley parser contract and Python/TypeScript parser
+     parity while extending the Rust app facade as an app-substrate acceleration
+     layer.
 
 ## Completed Slices
 
@@ -2923,6 +2924,29 @@ the Rust, Python, and TypeScript surfaces together.
      parameter inventories.
    - Cross-language tests lock the seven-row summary and MOS Level-1 alias
      families without changing normalization or the underlying 67-row catalog.
+
+210. Device model supported-parameter coverage gate.
+   - Status: completed in PR 7675.
+   - Python, Rust, and TypeScript now expose supported-parameter coverage gate
+     reports plus stable issue table, header-keyed record, CSV, and compact JSON
+     exports.
+   - The gate validates the expected seven model kinds, 67 canonical rows, 113
+     accepted names, alias-bearing parameter totals, and max alias depth.
+   - Cross-language tests lock the passing current catalog and a negative
+     missing-NMOS-`VT0` alias-family gate issue without changing normalization
+     or the underlying catalog/summary surfaces.
+
+211. Device model supported-parameter coverage dashboard.
+   - Status: completed in PR 7690.
+   - Python, Rust, and TypeScript now expose supported-parameter coverage
+     dashboard rows plus stable table, header-keyed record, CSV, and compact
+     JSON exports.
+   - The dashboard combines supported-parameter summary counts with release-gate
+     issue fields for expected versus actual canonical-parameter, accepted-name,
+     alias-bearing, and max-alias coverage.
+   - Cross-language tests lock the passing current dashboard and a negative
+     missing-NMOS-`VT0` dashboard row without changing normalization, the
+     67-row catalog, the seven-row summary, or the gate semantics.
 
 ## Backlog
 
