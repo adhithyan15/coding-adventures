@@ -52,6 +52,8 @@ Chief of Staff job/session/agent
      recovery-readiness, and maintenance closeout signals
   -> command audit dossier over lifecycle, access-review, event-ops, and
      evidence-ledger signals without draining event queues
+  -> command resolution brief over audit, remediation, operator-action, and
+     closeout-retention signals without dispatching commands or draining queues
   -> escalation brief over morning, blocker, review, and owner-lane signals
   -> continuity brief over escalation, recovery, and operator handoff signals
   -> operator readiness brief over continuity lanes and handoff decisions
@@ -312,6 +314,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_recovery_readiness_brief`
 - `smart_home.get_command_lifecycle_brief`
 - `smart_home.get_command_audit_dossier`
+- `smart_home.get_command_resolution_brief`
 - `smart_home.get_morning_brief`
 - `smart_home.get_escalation_brief`
 - `smart_home.get_continuity_brief`
