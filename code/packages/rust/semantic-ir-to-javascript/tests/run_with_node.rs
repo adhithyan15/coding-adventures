@@ -2308,6 +2308,29 @@ fn string_justify_swapcase_methods() {
     }
 }
 
+// v0.20.0 slice-selection Array methods: `take`, `drop`, `values_at`.  All are
+// index-clamped / bounds-guarded and route through the explicit `arrayMethod`
+// switch (never `recv[name]`).
+#[test]
+fn array_take_drop_values_at_methods() {
+    let stmts = vec![
+        print(method(seq(vec![int(1), int(2), int(3), int(4), int(5)]), "take", vec![int(2)])), // [1, 2]
+        print(method(seq(vec![int(1), int(2), int(3)]), "take", vec![int(9)])), // [1, 2, 3] (clamp)
+        print(method(seq(vec![int(1), int(2), int(3), int(4), int(5)]), "drop", vec![int(2)])), // [3, 4, 5]
+        print(method(seq(vec![int(1), int(2), int(3)]), "drop", vec![int(9)])), // [] (n >= len)
+        print(method(
+            seq(vec![int(10), int(20), int(30)]),
+            "values_at",
+            vec![int(0), int(2), int(-1)],
+        )), // [10, 30, 30]
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "arrtakedrop") {
+        assert_eq!(stdout, "[1, 2]\n[1, 2, 3]\n[3, 4, 5]\n[]\n[10, 30, 30]");
+    }
+}
+
 // ── Ruby Hash method catalog (hand-implemented, explicit dispatch) ──
 //
 // Exercises the `hashMethod` catalog end-to-end under Node: `keys`/`values`/

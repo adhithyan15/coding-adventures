@@ -955,6 +955,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "sort", "sort_by", "min", "max", "min_by", "max_by", "group_by",
     "partition", "flat_map", "collect_concat", "take_while", "drop_while",
     "each_with_object", "sum", "uniq", "first", "last", "empty?", "to_a",
+    "take", "drop", "values_at",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -1089,6 +1090,27 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           ? recv.slice(Math.max(0, recv.length - args[0]))
           : (recv.length ? recv[recv.length - 1] : null);
       case "empty?": return recv.length === 0;
+      case "take": case "drop": {
+        // `take(n)` / `drop(n)` — the first / all-but-first `n` elements.  `n`
+        // is clamped to `[0, len]` (`n <= 0` -> 0, `n > len` -> len).  Ruby
+        // raises `ArgumentError` on a negative `n`; the never-raise floor
+        // treats it as 0.  `recv.slice` never throws for in-range bounds.
+        let n = typeof args[0] === "number" ? Math.trunc(args[0]) : 0;
+        if (n < 0) { n = 0; }
+        if (n > recv.length) { n = recv.length; }
+        return name === "take" ? recv.slice(0, n) : recv.slice(n);
+      }
+      case "values_at": {
+        // `values_at(*idxs)` — the element at each index, folding a negative
+        // index from the end once; an out-of-range index yields `null`.
+        const out = [];
+        for (const a of args) {
+          let idx = typeof a === "number" ? Math.trunc(a) : 0;
+          if (idx < 0) { idx += recv.length; }
+          out.push(idx >= 0 && idx < recv.length ? recv[idx] : null);
+        }
+        return out;
+      }
       case "to_a": return recv;
     }
     return ARR_MISS;
