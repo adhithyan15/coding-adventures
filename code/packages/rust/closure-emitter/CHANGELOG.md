@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.33.1] - 2026-07-07
+
+### Added — CLOC12.169 PR3: CodePrinter dynamic `import()` conformance port
+
+Ports upstream `CodePrinterTest`'s dynamic-`import()` printing cases into
+`tests/upstream/code_printer_import_expression_test.rs` (the twenty-second
+CodePrinter port), isolating `emit_import_expression` + the `PREC_PRIMARY`
+classification that landed with `Expression::ImportExpression` (CLOC12.169 PR1).
+5 hand-constructed-AST cases exercise the two forces that drive the printing:
+(1) the specifier prints at `PREC_ASSIGNMENT` inside the literal parens — a
+string (`import("m")`), identifier (`import(x)`), and binary (`import(a+b)`)
+specifier all print bare, while a looser *sequence* specifier must wrap
+(`import((a,b))`); and (2) the whole node is a `PREC_PRIMARY` leaf, so a
+member/call parent composes without extra parens (`import(x).then(f)`). Emitter
+code unchanged — test-only conformance port. (CLOC12.169)
+
+
 ## [0.33.0] - 2026-07-07
 
 ### Added — CLOC12.169: `emit_import_expression` (dynamic `import(x)`)
