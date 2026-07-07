@@ -1015,3 +1015,71 @@ excluded; and a guard that `to_plain_text()` still returns its exact prior pinne
 S1–S10 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
 `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
 `cargo fmt`, no grammar regen, no new dependencies.
+
+## 18. S12 — a List of Figures / List of Tables index (`list_of_floats`)
+
+### 18.1 Motivation
+
+S1–S11 answer *"where does this reference point, and what number/kind is its target?"* S12 asks the
+**dual** question a reader browsing the front matter asks: *"what figures and tables does this document
+contain, in order?"* — LaTeX's `\listoffigures` / `\listoftables`. Those two commands print a numbered
+table of every float's caption, in document order. S12 renders that index as plain text.
+
+### 18.2 Why a new method, not a gated render
+
+Real LaTeX only prints these lists where the author writes `\listoffigures` / `\listoftables`. But
+those are **not** parser-recognised commands in this crate (a grep finds no lowering for them), so
+there is no `Block` to gate on. Exactly as S11 did with its grouped report, S12 is therefore exposed as
+a **new public method** the caller invokes directly, rendering the index from the document's floats.
+Being a brand-new method, S12 is **additive by construction**: it reads existing blocks, mutates
+nothing, and leaves every S1–S11 output — including `to_latex()`'s round-trip fixed point — byte-for-
+byte unchanged.
+
+### 18.3 What S12 does — `Document::list_of_floats(&self) -> String`
+
+A single document-order walk (`Document::walk`) threads the **same** `Counters` float counters that
+`number_labels` (S4) uses:
+
+- **Every** `Block::Figure` steps the flat figure counter and emits a line `<n>. <caption text>`, where
+  `<n>` is the counter's value at that float. Because it is the *same* counter walk as S4, a labeled
+  figure's List-of number equals its `\ref` number — the two renderings can never drift.
+- **Every** `Block::Table` does the same against the independent flat table counter (numbered from `1`).
+- **Caption text** is the plain rendering of the float's `\caption{…}` inlines, via a private
+  `caption_text(&Option<Caption>) -> String` helper: `Inline::Text`/`Inline::Code` runs verbatim,
+  `Inline::Space` as a single space, and the text *inside* font wrappers (`Strong`/`Emph`/`Styled`)
+  recursively; math / cross-ref / accent inlines contribute no plain text. The result is trimmed. This
+  is the same descent the `ref_target_node_for_figure_reaches_its_caption` test exercises.
+- A float carrying **no** `\caption` renders the fixed placeholder `(no caption)`, so every float still
+  gets its own numbered line and the numbering stays aligned with the real float count.
+
+### 18.4 Assembly rules
+
+- The `List of Figures` heading + its lines are emitted **only** when there is ≥1 figure.
+- The `List of Tables` heading + its lines are emitted **only** when there is ≥1 table.
+- If the document has **no** floats at all, the method returns the fixed marker `"(no floats)"`.
+- Lines are joined by `\n` with **no** trailing newline and no trailing whitespace.
+
+Example (two captioned figures, one captioned table):
+
+```text
+List of Figures
+1. First plot
+2. Second plot
+List of Tables
+1. Data table
+```
+
+### 18.5 Public API (added in S12)
+
+One new method: `Document::list_of_floats(&self) -> String`, plus a private `caption_text` helper. No
+existing type, field, counter, or signature changes; no AST or grammar change; no new dependency, no
+`unsafe`, no I/O.
+
+### 18.6 Verification (S12)
+
+`cargo test -p latex` green (3 new S12 tests: two figures + a table listed in order with the exact
+`List of Figures … List of Tables` string; an uncaptioned figure rendering `1. (no caption)`; a
+float-free document returning `(no floats)`). All prior S1–S11 tests pass unchanged. `cargo clippy -p
+latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green;
+`cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new
+dependencies.

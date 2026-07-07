@@ -1297,6 +1297,120 @@ impl Document {
     pub fn ref_number(&self, r: &ResolvedRef) -> Option<String> {
         self.number_labels().number_for(&r.key).map(str::to_string)
     }
+
+    /// The document's **List of Figures / List of Tables** index (LTXDOC03 S12) — the analogue of
+    /// LaTeX's `\listoffigures` / `\listoftables`, rendered as plain text.
+    ///
+    /// ## What it produces
+    ///
+    /// Two optional blocks, each a heading followed by one numbered line per float, in **document
+    /// order**:
+    ///
+    /// ```text
+    /// List of Figures
+    /// 1. <figure 1 caption text>
+    /// 2. <figure 2 caption text>
+    /// List of Tables
+    /// 1. <table 1 caption text>
+    /// 2. <table 2 caption text>
+    /// ```
+    ///
+    /// - **Every** [`Block::Figure`] gets a line (labeled or not) numbered `1, 2, 3, …`; then the
+    ///   same, independently, for **every** [`Block::Table`]. The numbering mirrors S4 exactly: a
+    ///   float's line number is the flat float counter's value at that float, so a `\ref` to a
+    ///   labeled float and its List-of index agree. We reuse the same [`Counters`] float walk as
+    ///   [`number_labels`](Document::number_labels) so the two can never drift.
+    /// - Each line is `<n>. <caption text>`. The **caption text** is the plain rendering of the
+    ///   float's `\caption{…}` inlines (text, spaces, and the text inside `\textbf`/`\emph`/other
+    ///   font wrappers — the same descent [`ref_target_node`] proves reaches a figure's caption). A
+    ///   float that carries **no** `\caption` renders the fixed placeholder `(no caption)`, so the
+    ///   numbering stays aligned with the real float count — every float still gets a numbered line.
+    /// - The `List of Figures` heading is emitted **only** when there is ≥1 figure; `List of Tables`
+    ///   **only** when there is ≥1 table. If the document has **no** floats at all, the fixed marker
+    ///   `"(no floats)"` is returned.
+    /// - Lines are joined by `\n` with **no** trailing newline and no trailing whitespace.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S12 is a brand-new method that reads the existing document blocks; it mutates nothing and
+    /// changes no S1–S11 output. Real LaTeX gates the lists on a `\listoffigures` / `\listoftables`
+    /// command, but those are not parser-recognized commands here, so — like S11's grouped report —
+    /// S12 is exposed as a method the caller invokes directly rather than a gated render.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; reuses the bounded
+    /// [`Document::walk`] and the fixed-size [`Counters`]. Borrows `self` immutably and returns owned
+    /// `String` data, so the result outlives any borrow of the source.
+    pub fn list_of_floats(&self) -> String {
+        // Two independent, ordered lists — figures and tables — built in a single document-order
+        // walk that threads the same `Counters` `number_labels` uses, so the line numbers match S4.
+        let mut figures: Vec<String> = Vec::new();
+        let mut tables: Vec<String> = Vec::new();
+        let mut counters = Counters::new();
+
+        for node in self.walk() {
+            let NodeRef::Block(block) = node else {
+                continue; // Only float blocks carry the caption + counter S12 renders.
+            };
+            match block {
+                Block::Figure { caption, .. } => {
+                    let n = counters.step_figure();
+                    figures.push(format!("{n}. {}", caption_text(caption)));
+                }
+                Block::Table { caption, .. } => {
+                    let n = counters.step_table();
+                    tables.push(format!("{n}. {}", caption_text(caption)));
+                }
+                _ => {}
+            }
+        }
+
+        // Assemble: each list is emitted only when non-empty, heading first. Both empty → marker.
+        if figures.is_empty() && tables.is_empty() {
+            return "(no floats)".to_string();
+        }
+        let mut lines: Vec<String> = Vec::new();
+        if !figures.is_empty() {
+            lines.push("List of Figures".to_string());
+            lines.extend(figures);
+        }
+        if !tables.is_empty() {
+            lines.push("List of Tables".to_string());
+            lines.extend(tables);
+        }
+        lines.join("\n")
+    }
+}
+
+/// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
+///
+/// `Some(caption)` → the caption's inlines flattened to their visible text: [`Inline::Text`] runs
+/// verbatim, [`Inline::Space`] as a single space, and the text *inside* font wrappers
+/// (`\textbf`/`\emph`/`\texttt`/other `Styled`) recursively — the same descent the caption test
+/// exercises. Leading/trailing whitespace is trimmed so a `\caption{ x }` reads as `x`. `None` (no
+/// `\caption`) → the fixed placeholder `(no caption)`, which keeps every float on its own numbered
+/// line so the List-of numbering stays aligned with the real float count.
+fn caption_text(caption: &Option<crate::document::Caption>) -> String {
+    let Some(cap) = caption else {
+        return "(no caption)".to_string();
+    };
+    // Flatten the caption inlines to visible text. Composite font inlines recurse into their
+    // wrapped content; math/cross-ref/accent/other inlines contribute no plain text (matching the
+    // caption-reaching test's text view).
+    fn flatten(inlines: &[Inline], out: &mut String) {
+        for i in inlines {
+            match i {
+                Inline::Text(t, _) => out.push_str(t),
+                Inline::Space(_) => out.push(' '),
+                Inline::Strong(c, _) | Inline::Emph(c, _) => flatten(c, out),
+                Inline::Styled { content, .. } => flatten(content, out),
+                Inline::Code(t, _) => out.push_str(t),
+                _ => {}
+            }
+        }
+    }
+    let mut s = String::new();
+    flatten(&cap.content, &mut s);
+    s.trim().to_string()
 }
 
 // =================================================================================================
@@ -3424,5 +3538,41 @@ See Section~\ref{s:i} and \cite{b}.
             "\\ref{s:i} -> Section 1\n\\cite{b} -> [2]",
             "flat to_plain_text() output is byte-for-byte unchanged by S11"
         );
+    }
+
+    // -- LTXDOC03 S12 — the List of Figures / List of Tables index (`list_of_floats`). ------------
+
+    #[test]
+    fn s12_lists_figures_and_tables_in_order() {
+        // Two captioned figures then a captioned table → a `List of Figures` block numbered 1,2 in
+        // document order, followed by a `List of Tables` block numbered from 1 (independent counter).
+        // Each line is `<n>. <caption text>`, captions rendered as their plain text.
+        let src = r"\begin{document}\begin{figure}\includegraphics{p.png}\caption{First plot}\label{fig:a}\end{figure}
+\begin{figure}\includegraphics{q.png}\caption{Second plot}\label{fig:b}\end{figure}
+\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{Data table}\end{table}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.list_of_floats(),
+            "List of Figures\n1. First plot\n2. Second plot\nList of Tables\n1. Data table",
+        );
+    }
+
+    #[test]
+    fn s12_uncaptioned_float_uses_placeholder() {
+        // A figure with NO `\caption` still gets a numbered line — its caption text renders as the
+        // fixed `(no caption)` placeholder, so numbering stays aligned with the real float count.
+        let src = r"\begin{document}\begin{figure}\includegraphics{p.png}\label{fig:a}\end{figure}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. (no caption)");
+    }
+
+    #[test]
+    fn s12_empty_returns_marker() {
+        // A document with no floats at all → the fixed `(no floats)` marker (neither heading emitted).
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+Body text with no floats.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_of_floats(), "(no floats)");
     }
 }

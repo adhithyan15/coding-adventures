@@ -2,6 +2,38 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.48.0] — 2026-07-07
+
+### Added — List of Figures / List of Tables index (LTXDOC03 S12)
+
+A **new** public method `Document::list_of_floats(&self) -> String` that renders the document's
+**List of Figures** and **List of Tables** — LaTeX's `\listoffigures` / `\listoftables`, as plain
+text — directly from the document's floats. Real LaTeX gates these on a `\listoffigures` /
+`\listoftables` command, but those are not parser-recognised commands here, so — like S11's grouped
+report — S12 is exposed as a method the caller invokes rather than a gated render. Every S1–S11
+output is left **byte-for-byte unchanged**; S12 is purely additive.
+
+- **Every float gets a numbered line, in document order.** A single document-order walk threads the
+  same `Counters` float counters `number_labels` uses, so each float's line number equals the flat
+  figure/table counter's value at that float — a labeled float's List-of number and its `\ref`
+  number agree, and the two renderings can never drift. Figures are numbered `1, 2, 3, …`; tables
+  are numbered independently from `1`.
+- **`<n>. <caption text>` per line.** The caption text is the plain rendering of the float's
+  `\caption{…}` inlines — `Text`/`Code` runs verbatim, `Space` as a single space, and the text
+  inside font wrappers (`\textbf`/`\emph`/`\texttt`/other `Styled`) recursively, then trimmed. This
+  is the same descent the `ref_target_node_for_figure_reaches_its_caption` test exercises, factored
+  into a private `caption_text(&Option<Caption>) -> String` helper.
+- **Uncaptioned floats keep their line.** A float with **no** `\caption` renders the fixed
+  placeholder `(no caption)`, so every float still gets a numbered line and the numbering stays
+  aligned with the real float count.
+- **Optional blocks, distinct empty marker.** The `List of Figures` heading is emitted **only** when
+  there is ≥1 figure; `List of Tables` **only** when there is ≥1 table. A document with **no** floats
+  returns the fixed marker `"(no floats)"`. Lines are joined by `\n` with no trailing newline.
+- **Additive, no AST/grammar/counter change.** A pure assembly method over existing document blocks,
+  the existing `Counters` float walk, and existing caption extraction. No new field, no new counter
+  type, no new dependency, no `unsafe`, no I/O; `to_latex()` remains a fixed point. 3 new S12 tests;
+  version bump 0.47.0 → 0.48.0.
+
 ## [0.47.0] — 2026-07-07
 
 ### Added — cross-reference report: grouped-by-kind rendering (LTXDOC03 S11)
