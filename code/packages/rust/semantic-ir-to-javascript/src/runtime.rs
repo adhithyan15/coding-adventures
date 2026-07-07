@@ -126,6 +126,77 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return String(v);
   }
 
+  // ── SIR value equality (structural, for `uniq`) ────────────────
+  // Ruby's `Array#uniq` dedups by `eql?`/`hash`, i.e. VALUE equality: two
+  // equal-but-distinct arrays (`[1,2]` and a separate `[1,2]`) count as one.
+  // Primitives compare with `===` — the same op the `"="`/`case_eq` builtins
+  // use, so `uniq` agrees with `==` everywhere else.  Arrays and Maps compare
+  // STRUCTURALLY (element-/entry-wise), matching Ruby, since JS `===` on two
+  // distinct-but-equal arrays is `false`.  Cycle safety: a program can build a
+  // self-referential array (`a = []; a << a`), so the recursive array walk is
+  // guarded by a `seen` set of the (a, b) pairs already on the compare path —
+  // a re-encountered pair is treated as equal (the cycle has matched so far),
+  // which terminates instead of recursing forever (CWE-674).  `Sym`/`Pair`/
+  // `Closure` fall back to reference identity (`===`), matching how the rest
+  // of the runtime treats them as opaque.
+  function sirEqual(a, b) { return sirEqualSeen(a, b, new Set()); }
+  function sirEqualSeen(a, b, seen) {
+    if (a === b) { return true; }
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) { return false; }
+      // Cycle guard: record the LEFT array reference on the active compare
+      // path.  Re-encountering it means we are inside a self-referential
+      // structure whose elements have matched so far — treat as equal and
+      // stop recursing, so a cyclic array terminates instead of looping.
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      let ok = true;
+      for (let i = 0; i < a.length; i++) {
+        if (!sirEqualSeen(a[i], b[i], seen)) { ok = false; break; }
+      }
+      seen.delete(a);
+      return ok;
+    }
+    if (a instanceof Map && b instanceof Map) {
+      if (a.size !== b.size) { return false; }
+      // Same cycle guard as the array branch: two DISTINCT but structurally
+      // equal self-referential hashes (`a={}; a[:k]=a; b={}; b[:k]=b`) would
+      // otherwise recurse forever through their values (the `===` fast-path
+      // only covers the reference-identical case).  Record the LEFT map on
+      // the active compare path and short-circuit on re-encounter.
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      let ok = true;
+      for (const [k, v] of a) {
+        if (!b.has(k) || !sirEqualSeen(v, b.get(k), seen)) { ok = false; break; }
+      }
+      seen.delete(a);
+      return ok;
+    }
+    return false;
+  }
+
+  // ── deep flatten (Ruby `Array#flatten`) ────────────────────────
+  // Ruby's `flatten` recursively splices EVERY nested array into a single
+  // flat array, into a FRESH result (no aliasing / mutation of any input).
+  // Cycle safety mirrors `putsOne`/`format`: a self-referential array must
+  // not infinite-loop (CWE-674).  `seen` holds the array references on the
+  // active flatten path; an array already on the path is a cycle — real Ruby
+  // raises `ArgumentError: tried to flatten recursive array`, so we do too
+  // (a typed, rescuable error), rather than hanging or emitting a placeholder.
+  function flattenDeep(arr, out, seen) {
+    if (seen.has(arr)) {
+      raiseError("ArgumentError", "tried to flatten recursive array");
+    }
+    seen.add(arr);
+    for (const el of arr) {
+      if (Array.isArray(el)) { flattenDeep(el, out, seen); }
+      else { out.push(el); }
+    }
+    seen.delete(arr);
+    return out;
+  }
+
   // ── builtins dispatch table ────────────────────────────────────
   // Reached only for builtins the emitter did not specialise inline
   // (e.g. a variadic `+`, or a builtin referenced as a value via
@@ -665,6 +736,79 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       }
       // A `.fetch` on any other receiver has no Ruby-collection meaning
       // here; fall through to the unknown-method NoMethodError below.
+    }
+    // ── Ruby Array collection methods NOT native to JS arrays ─────
+    // `sum`/`min`/`max`/`uniq`/`flatten`/`compact`/`each_with_index`/`to_a`
+    // are everyday Ruby `Array` methods with NO 1:1 native JS equivalent (JS
+    // has `Math.min`/`.flat`/… but their semantics diverge — `flat` is
+    // shallow-by-default, `Math.min([])` is `Infinity` not `nil`, there is no
+    // native `uniq`/`compact`/`sum`/`each_with_index`).  So — exactly like
+    // `.fetch` above — they are handled HERE, ahead of the native-method
+    // allowlist, as EXPLICIT Ruby-semantic special cases.  Dispatch is a
+    // fixed `name ===` test on an `Array.isArray(recv)` receiver: never
+    // `recv[name]`, `eval`, or reflection on the source-derived name, so the
+    // RCE-hardened allowlist gate below is completely untouched (a name like
+    // `constructor` still falls through to it and is rejected).
+    if (Array.isArray(recv)) {
+      // `sum` — numeric sum; empty → 0 (or the seed).  A seed arg (`sum(s)`)
+      // is the starting accumulator, matching Ruby.  We fold through the
+      // runtime's polymorphic `plus`, so int/float promotion (and, per Ruby,
+      // string/array concat when a matching seed is given) is consistent with
+      // `+` everywhere else.
+      if (name === "sum") {
+        let acc = args.length >= 1 ? args[0] : 0;
+        for (const el of recv) { acc = plus(acc, el); }
+        return acc;
+      }
+      // `min` / `max` — element-wise extreme by the SIR `<` order (the same
+      // comparison the `"<"` builtin uses: native `<` on numbers/strings).
+      // An EMPTY array has no extreme → `nil` (null), matching Ruby.
+      if (name === "min" || name === "max") {
+        if (recv.length === 0) { return null; }
+        let best = recv[0];
+        for (let i = 1; i < recv.length; i++) {
+          const el = recv[i];
+          // `max` keeps the larger, `min` the smaller.  Strict `<` so an
+          // equal element does not displace the earlier one (stable).
+          if (name === "max" ? best < el : el < best) { best = el; }
+        }
+        return best;
+      }
+      // `uniq` — first-occurrence dedup by SIR VALUE equality (`sirEqual`),
+      // into a FRESH array (no mutation / aliasing of the receiver).  A later
+      // element equal to one already kept is dropped.
+      if (name === "uniq") {
+        const out = [];
+        for (const el of recv) {
+          if (!out.some((k) => sirEqual(k, el))) { out.push(el); }
+        }
+        return out;
+      }
+      // `flatten` — DEEP recursive flatten into a FRESH array, cycle-guarded
+      // (a self-referential array raises ArgumentError rather than looping).
+      if (name === "flatten") {
+        return flattenDeep(recv, [], new Set());
+      }
+      // `compact` — a NEW array with the nils (null / undefined) removed.
+      if (name === "compact") {
+        return recv.filter((el) => el !== null && el !== undefined);
+      }
+      // `each_with_index` — apply the trailing block Closure with
+      // `(element, index)` for each element, in order, and return the
+      // RECEIVER (Ruby returns self).  A block-less call returns the receiver
+      // too (Ruby returns an Enumerator; v0 floor).  The block arrives as the
+      // last RAW arg (an un-unwrapped `Closure`), invoked via `applyClosure`.
+      if (name === "each_with_index") {
+        const block = rawArgs[rawArgs.length - 1];
+        if (block instanceof Closure) {
+          for (let i = 0; i < recv.length; i++) {
+            applyClosure(block, [recv[i], i]);
+          }
+        }
+        return recv;
+      }
+      // `to_a` on an array is the identity (returns self), matching Ruby.
+      if (name === "to_a") { return recv; }
     }
     // Normalise a differently-spelled Ruby method name to its JS-native
     // equivalent (`upcase` → `toUpperCase`).  Unknown names pass through
@@ -1324,6 +1468,44 @@ mod tests {
         // SirInstance, the allowlist for a primitive) — not a probe of recv[name].
         assert!(RUNTIME.contains("resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"));
         assert!(RUNTIME.contains("METHOD_ALLOWLIST.has(native)"));
+    }
+
+    #[test]
+    fn runtime_defines_ruby_array_collection_methods() {
+        // Parity fill: the Ruby Array methods with NO 1:1 native JS equivalent
+        // (`sum`/`min`/`max`/`uniq`/`flatten`/`compact`/`each_with_index`/`to_a`)
+        // are special-cased in `callMethod`, ahead of the native allowlist, on
+        // an `Array.isArray(recv)` receiver.  Each name must be recognised.
+        assert!(RUNTIME.contains(r#"if (name === "sum")"#));
+        assert!(RUNTIME.contains(r#"if (name === "min" || name === "max")"#));
+        assert!(RUNTIME.contains(r#"if (name === "uniq")"#));
+        assert!(RUNTIME.contains(r#"if (name === "flatten")"#));
+        assert!(RUNTIME.contains(r#"if (name === "compact")"#));
+        assert!(RUNTIME.contains(r#"if (name === "each_with_index")"#));
+        assert!(RUNTIME.contains(r#"if (name === "to_a")"#));
+
+        // The helpers the special-cases reuse.
+        assert!(RUNTIME.contains("function sirEqual("));
+        assert!(RUNTIME.contains("function flattenDeep("));
+
+        // SECURITY: dispatch is a fixed `name ===` test on `Array.isArray`,
+        // NEVER a reflective `recv[name]` / eval on the source-derived name —
+        // the RCE-hardened allowlist gate is untouched.
+        assert!(!RUNTIME.contains("new Function("));
+        assert!(!RUNTIME.contains("eval("));
+
+        // `sum` folds through the polymorphic `plus` (int/float promotion).
+        assert!(RUNTIME.contains("acc = plus(acc, el);"));
+        // `min`/`max` floor an empty array to `nil` (null), matching Ruby.
+        assert!(RUNTIME.contains("if (recv.length === 0) { return null; }"));
+        // `uniq` dedups by SIR VALUE equality, not JS `===` on references.
+        assert!(RUNTIME.contains("!out.some((k) => sirEqual(k, el))"));
+        // `flatten` is cycle-guarded: a self-referential array raises a typed,
+        // rescuable ArgumentError rather than looping forever (CWE-674).
+        assert!(RUNTIME.contains(r#"raiseError("ArgumentError", "tried to flatten recursive array")"#));
+        // `each_with_index` invokes the trailing Closure block with (el, i) and
+        // returns the receiver.
+        assert!(RUNTIME.contains("applyClosure(block, [recv[i], i]);"));
     }
 
     #[test]
