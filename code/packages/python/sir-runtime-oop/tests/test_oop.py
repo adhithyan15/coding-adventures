@@ -486,6 +486,21 @@ def test_string_length_case_reverse() -> None:
     assert oop.call_method("abc", "reverse") == "cba"
 
 
+def test_string_justify_and_swapcase() -> None:
+    # ljust/rjust/center pad to `width` chars with a cyclic pad; center's odd
+    # extra pad goes on the RIGHT (Ruby's rule); width <= len is a no-op.
+    assert oop.call_method("hi", "ljust", 5) == "hi   "
+    assert oop.call_method("hi", "ljust", 5, "*") == "hi***"
+    assert oop.call_method("hi", "rjust", 5, "*") == "***hi"
+    assert oop.call_method("hi", "center", 6, "*") == "**hi**"
+    assert oop.call_method("hi", "center", 5, "*") == "*hi**"
+    assert oop.call_method("abc", "ljust", 1) == "abc"
+    assert oop.call_method("abcdef", "ljust", 10, "xy") == "abcdefxyxy"
+    # swapcase flips each ASCII letter, leaving other characters untouched.
+    assert oop.call_method("Hello World", "swapcase") == "hELLO wORLD"
+    assert oop.call_method("a1B!c", "swapcase") == "A1b!C"
+
+
 def test_string_strip_family_and_chomp() -> None:
     assert oop.call_method("  hi  ", "strip") == "hi"
     assert oop.call_method("  hi  ", "lstrip") == "hi  "
