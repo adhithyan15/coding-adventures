@@ -429,3 +429,83 @@ fn array_block_methods_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+/// More non-block Array methods: `zip`, `rotate`, `to_h`, `tally`.
+fn array_more_module() -> Module {
+    let stmts = vec![
+        // [1,2,3].zip([4,5,6]) -> [[1, 4], [2, 5], [3, 6]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "zip",
+            vec![seq(vec![ilit(4), ilit(5), ilit(6)])],
+        )),
+        // [1,2,3,4,5].rotate(2) -> [3, 4, 5, 1, 2]
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]), "rotate", vec![ilit(2)])),
+        // [1,2,3].rotate -> [2, 3, 1]
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "rotate", vec![])),
+        // [["a",1],["b",2]].to_h -> {a=>1, b=>2}  (keys via Hash#keys)
+        print_stmt(method(
+            method(
+                seq(vec![
+                    seq(vec![slit("a"), ilit(1)]),
+                    seq(vec![slit("b"), ilit(2)]),
+                ]),
+                "to_h",
+                vec![],
+            ),
+            "keys",
+            vec![],
+        )), // [a, b]
+        // [1,1,2,3,3,3].tally -> {1=>2, 2=>1, 3=>3}  (values via Hash#values)
+        print_stmt(method(
+            method(
+                seq(vec![ilit(1), ilit(1), ilit(2), ilit(3), ilit(3), ilit(3)]),
+                "tally",
+                vec![],
+            ),
+            "values",
+            vec![],
+        )), // [2, 1, 3]
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+    program(vec![main])
+}
+
+#[test]
+fn array_more_methods_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&array_more_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "arrmore");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 4], [2, 5], [3, 6]]", // zip
+            "[3, 4, 5, 1, 2]",          // rotate(2)
+            "[2, 3, 1]",                // rotate
+            "[a, b]",                   // to_h -> keys
+            "[2, 1, 3]",                // tally -> values
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}

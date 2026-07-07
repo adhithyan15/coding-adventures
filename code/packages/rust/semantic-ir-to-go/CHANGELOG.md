@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.21.0 — more Array methods: `zip` / `rotate` / `to_h` / `tally`
+
+Extends the emitted Go runtime's non-block `Array` catalog and the
+`respond_to?` table:
+
+- `zip(*others)` — Array of tuples `[a[i], b[i], …]`, length = the receiver's;
+  a shorter operand pads with nil; a non-array operand is treated as empty.
+- `rotate(n = 1)` — elements rotated left by `n` (a negative `n` rotates
+  right); the modulo wraps so any `n` terminates without panicking.
+- `to_h` — `[[k, v], …]` → a Hash (2-element-array elements only; others
+  skipped, matching the never-raise floor).
+- `tally` — a Hash of element → occurrence count, first-seen order, keyed by
+  structural value-equality.
+
+Verified end-to-end under `go run`.
+
 ## 0.20.0 — Array block-method breadth (sort_by / group_by / partition / …)
 
 Mirrors the Rust backend's array block-method batch to Go: extends
