@@ -1086,13 +1086,20 @@ struct Counters {
     figure: u32,
     /// The flat `table` counter — only ever increments (one global run), independent of `figure`.
     table: u32,
+    /// The flat `equation` counter (`\theequation`) — only ever increments (one global run),
+    /// independent of `section`/`figure`/`table`. LaTeX numbers display equations in pure document
+    /// order, so — exactly like `figure`/`table` — this is a single monotonic run rather than a
+    /// section-scoped or hierarchical value. (Real LaTeX *can* reset `\theequation` per section under
+    /// classes/packages that redefine it, but the `article` default is a flat run, which is what S8
+    /// models.)
+    equation: u32,
 }
 
 impl Counters {
-    /// Fresh counters — every section depth, the figure counter, and the table counter at `0` (no
-    /// heading/float seen yet).
+    /// Fresh counters — every section depth, the figure counter, the table counter, and the equation
+    /// counter at `0` (no heading/float/equation seen yet).
     fn new() -> Self {
-        Counters { section: [0; SECTION_DEPTHS], figure: 0, table: 0 }
+        Counters { section: [0; SECTION_DEPTHS], figure: 0, table: 0, equation: 0 }
     }
 
     /// Advance the section counters for a numbered heading at `rank`, and render its dotted number.
@@ -1127,6 +1134,15 @@ impl Counters {
     fn step_table(&mut self) -> u32 {
         self.table = self.table.saturating_add(1);
         self.table
+    }
+
+    /// Advance and return the flat `equation` counter (`\theequation`), independent of the
+    /// section/figure/table counters — the S8 payoff. Mirrors [`step_figure`](Counters::step_figure)
+    /// exactly: pre-increment (saturating, so a pathological run can never wrap/panic) and return the
+    /// new value, so the first equation numbers `1`, the next `2`, in pure document order.
+    fn step_equation(&mut self) -> u32 {
+        self.equation = self.equation.saturating_add(1);
+        self.equation
     }
 }
 
@@ -1238,16 +1254,28 @@ impl Document {
                         record(key, LabelKind::Table, n.to_string());
                     }
                 }
-                // LTXDOC03 S7: a **non-starred** display-math env's lifted `\label` is a real,
-                // resolvable equation label. The equation **counter** (`\theequation`) is deferred to
-                // S8, so we record the row with the placeholder number `EQUATION_NUMBER_PLACEHOLDER`
-                // (`"?"`, echoing LaTeX's `??` for an as-yet-unnumbered target). Recording the row —
-                // rather than skipping it as we do for `LabelKind::Inline` — is the whole point of S7:
-                // it makes `number_for(key)` return `Some`, so the S6 report *includes* an `\eqref` to
-                // this equation instead of omitting it. Starred forms set `label: None` (see the D5
-                // lowering), so they never reach here.
+                // LTXDOC03 S8: a **non-starred** display-math env's lifted `\label` is a real,
+                // resolvable equation label — and now a **numbered** one. We step the flat equation
+                // counter (`\theequation`) and record the row with the real sequential number, so the
+                // S6 report prints `Equation 3` rather than the S7 placeholder `Equation ?`. Recording
+                // the row — rather than skipping it as we do for `LabelKind::Inline` — is what makes
+                // `number_for(key)` return `Some`, so the S6 report *includes* an `\eqref` to this
+                // equation. Starred forms set `label: None` (see the D5 lowering), so they never reach
+                // here.
+                //
+                // LaTeX-fidelity limitation: in real LaTeX *every* non-starred display equation
+                // consumes the equation counter whether or not it carries a `\label` (like figures and
+                // tables — the `\label` only *captures* an already-stepped value). Our AST, however,
+                // only marks the **labelled** non-starred case: [`Block::DisplayMath`] carries no
+                // `numbered` flag, and the D5 lowering sets `label: None` for *both* starred envs and
+                // unlabelled islands (`\[…\]`, `$$…$$`), so an unlabelled-but-numbered `equation` env
+                // is indistinguishable from an unnumbered island here. We therefore step the counter
+                // **only** for labelled equations. Consequence: if an unlabelled numbered equation
+                // sits between two labelled ones, the second labelled equation's number will be one
+                // lower than a full LaTeX run would assign. Closing this gap needs a `numbered: bool`
+                // on `Block::DisplayMath` (an AST change) and is left to a later slice.
                 Block::DisplayMath { label: Some(key), .. } => {
-                    record(key, LabelKind::Equation, EQUATION_NUMBER_PLACEHOLDER.to_string());
+                    record(key, LabelKind::Equation, counters.step_equation().to_string());
                 }
                 // Any other block carries no counter S4 assigns.
                 _ => {}
@@ -1630,11 +1658,18 @@ impl CrossReferenceReport {
     /// Render this report to a **stable, deterministic, human-readable** plain-text string (LTXDOC03
     /// S6). The exact format — pinned so tests and consumers can rely on it byte-for-byte:
     ///
-    /// - One line per resolved reference, in `refs` order:
-    ///   `` \ref{<key>} -> <Kind> <number> `` — e.g. `` \ref{sec:intro} -> Section 1.2 ``. The
-    ///   command shown is always `\ref` (the canonical reference form) regardless of the actual
-    ///   `\eqref`/`\pageref` spelling, so the line names the *binding*, not the surface command;
-    ///   `<Kind>` is the capitalised kind name ([`kind_display_name`]).
+    /// - One line per resolved reference, in `refs` order. There are two renderings (LTXDOC03 S9):
+    ///   - An `\eqref` whose target is an **equation** renders amsmath-style, keeping the `\eqref`
+    ///     spelling and **parenthesising** the number:
+    ///     `` \eqref{<key>} -> <Kind> (<number>) `` — e.g. `` \eqref{eq:e} -> Equation (1) ``. This
+    ///     mirrors how amsmath's `\eqref` typesets the equation number as `(1)`.
+    ///   - Every **other** resolved reference — all `\ref`, all `\pageref`, and any `\eqref` to a
+    ///     **non-equation** kind — renders with the canonical `\ref` prefix and a **bare** number:
+    ///     `` \ref{<key>} -> <Kind> <number> `` — e.g. `` \ref{sec:intro} -> Section 1.2 ``. The
+    ///     `\ref` prefix here names the *binding*, not the surface command (a `\pageref` still shows
+    ///     as `\ref`), unchanged from S8.
+    ///
+    ///   In both renderings `<Kind>` is the capitalised kind name ([`kind_display_name`]).
     /// - One line per resolved citation, in `cites` order:
     ///   `` \cite{<key>} -> <number> `` — e.g. `` \cite{smith} -> [2] ``.
     /// - **Only if** `dangling_refs` is non-empty, a footer line:
@@ -1653,9 +1688,35 @@ impl CrossReferenceReport {
     pub fn to_plain_text(&self) -> String {
         let mut lines: Vec<String> = Vec::new();
 
-        // Resolved references: `\ref{key} -> Kind number`.
+        // Resolved references.
+        //
+        // Two renderings, keyed off the *surface command* + *target kind* (LTXDOC03 S9):
+        //
+        //   * An `\eqref` whose target is an **equation** renders amsmath-style — the `\eqref`
+        //     spelling is kept and the number is **parenthesised**:
+        //     `\eqref{eq:e} -> Equation (1)`.  (`\eqref` on `article`'s equation counter typesets
+        //     "(1)", so the report mirrors that surface form.)
+        //   * Every other resolved reference — all `\ref`, all `\pageref`, and any `\eqref` to a
+        //     **non-equation** kind — renders exactly as it did through S8: the canonical `\ref`
+        //     prefix and a **bare** number, `\ref{sec:intro} -> Section 1.2`.
+        //
+        // Only the one amsmath case diverges; the else-branch is byte-for-byte the S8 line.
         for r in &self.refs {
-            lines.push(format!(r"\ref{{{}}} -> {} {}", r.key, kind_display_name(r.kind), r.number));
+            if r.command == "eqref" && r.kind == LabelKind::Equation {
+                lines.push(format!(
+                    r"\eqref{{{}}} -> {} ({})",
+                    r.key,
+                    kind_display_name(r.kind),
+                    r.number
+                ));
+            } else {
+                lines.push(format!(
+                    r"\ref{{{}}} -> {} {}",
+                    r.key,
+                    kind_display_name(r.kind),
+                    r.number
+                ));
+            }
         }
         // Resolved citations: `\cite{key} -> number`.
         for c in &self.cites {
@@ -1792,8 +1853,9 @@ mod tests {
 
     #[test]
     fn s7_eqref_to_equation_is_included_in_cross_reference_report() {
-        // The whole point of S7: a resolved `\eqref`/`\ref` to a lifted equation label is now INCLUDED
-        // in the S6 report (rendered `\ref{eq:e} -> Equation ?`), no longer omitted.
+        // The whole point of S7: a resolved `\eqref`/`\ref` to a lifted equation label is INCLUDED in
+        // the S6 report, no longer omitted. S8 upgrade: the number it renders is now the real
+        // sequential equation number (`Equation 1`), not the S7 placeholder (`Equation ?`).
         let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} See \eqref{eq:e} and \ref{eq:e}.\end{document}";
         let doc = parse_document(src).expect("parse");
         let report = doc.cross_reference_report();
@@ -1801,12 +1863,100 @@ mod tests {
         for entry in &report.refs {
             assert_eq!(entry.key, "eq:e");
             assert_eq!(entry.kind, LabelKind::Equation);
-            assert_eq!(entry.number, "?", "equation number is the S8-deferred placeholder");
+            assert_eq!(entry.number, "1", "S8: the equation carries the real counter value");
         }
         assert!(report.dangling_refs.is_empty(), "nothing dangles");
-        // The rendered report lines name the binding as `Equation ?`.
+        // The rendered report lines name the binding. Under S9 the `\eqref` (first, in source order)
+        // parenthesises its number and keeps the `\eqref` spelling; the plain `\ref` stays bare.
         let text = report.to_plain_text();
-        assert_eq!(text, "\\ref{eq:e} -> Equation ?\n\\ref{eq:e} -> Equation ?");
+        assert_eq!(text, "\\eqref{eq:e} -> Equation (1)\n\\ref{eq:e} -> Equation 1");
+    }
+
+    #[test]
+    fn s9_eqref_to_equation_parenthesises_its_number() {
+        // LTXDOC03 S9: an `\eqref` to an equation renders amsmath-style — `\eqref` spelling kept and
+        // the number parenthesised — while a sibling `\ref` to the same equation stays a bare number.
+        // The source lists `\eqref` BEFORE `\ref`, so that is the report's `refs` (S1 pre-order) order.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} See \eqref{eq:e} and \ref{eq:e}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\eqref{eq:e} -> Equation (1)\n\\ref{eq:e} -> Equation 1");
+    }
+
+    #[test]
+    fn s9_ref_to_equation_is_a_bare_number() {
+        // A plain `\ref` (not `\eqref`) to an equation is UNCHANGED from S8: `\ref` prefix, bare
+        // number, no parentheses. S9 only touches the `\eqref`-to-equation case.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} See \ref{eq:e}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\ref{eq:e} -> Equation 1");
+    }
+
+    #[test]
+    fn s9_two_eqrefs_number_sequentially_and_each_parenthesises() {
+        // Two labelled equations number 1 then 2 (S8 sequential counter); each `\eqref` to them
+        // parenthesises its own number, so the report reads `(1)` then `(2)`.
+        let src = r"\begin{document}\begin{equation} a = 1 \label{eq:a} \end{equation}\begin{equation} b = 2 \label{eq:b} \end{equation} See \eqref{eq:a} and \eqref{eq:b}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\eqref{eq:a} -> Equation (1)\n\\eqref{eq:b} -> Equation (2)");
+    }
+
+    #[test]
+    fn s8_single_equation_numbers_as_one() {
+        // A single lifted equation label numbers as "1" — the S8 counter's first value.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let numbering = doc.number_labels();
+        assert_eq!(numbering.number_for("eq:e"), Some("1"));
+    }
+
+    #[test]
+    fn s8_two_equations_number_sequentially_in_document_order() {
+        // Two lifted equation labels, in document order, number "1" then "2" — a pure monotonic run.
+        let src = r"\begin{document}\begin{equation} a = 1 \label{eq:a} \end{equation}\begin{equation} b = 2 \label{eq:b} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let numbering = doc.number_labels();
+        assert_eq!(numbering.number_for("eq:a"), Some("1"), "first equation is 1");
+        assert_eq!(numbering.number_for("eq:b"), Some("2"), "second equation is 2");
+    }
+
+    #[test]
+    fn s8_equation_counter_is_independent_of_section_counter() {
+        // A `\section` before the equation numbers as "1" (section counter), but the equation still
+        // numbers "1" — the equation counter is independent of the section counter.
+        let src = r"\begin{document}\section{Intro}\label{sec:i} \begin{equation} E = mc^2 \label{eq:e} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let numbering = doc.number_labels();
+        assert_eq!(numbering.number_for("sec:i"), Some("1"), "the section is 1");
+        assert_eq!(numbering.number_for("eq:e"), Some("1"), "the equation is still 1, not perturbed");
+    }
+
+    #[test]
+    fn s8_equation_counter_is_independent_of_figure_counter() {
+        // A figure BETWEEN two equations must not perturb the equation sequence: eq:a=1, eq:b=2, with
+        // the figure numbering "1" on its own independent (flat figure) counter.
+        let src = r"\begin{document}\begin{equation} a = 1 \label{eq:a} \end{equation}\begin{figure}\caption{F}\label{fig:f}\end{figure}\begin{equation} b = 2 \label{eq:b} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let numbering = doc.number_labels();
+        assert_eq!(numbering.number_for("eq:a"), Some("1"), "first equation is 1");
+        assert_eq!(numbering.number_for("fig:f"), Some("1"), "the figure is 1 on its own counter");
+        assert_eq!(numbering.number_for("eq:b"), Some("2"), "second equation is 2, figure did not perturb it");
+    }
+
+    #[test]
+    fn s8_labelled_equation_to_latex_round_trip_is_a_fixed_point() {
+        // S8 is pure analysis (numbering), leaving the tree unchanged: a labelled equation still
+        // round-trips through `to_latex()` byte-for-byte (unchanged from S7).
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let once = doc.to_latex();
+        let twice = parse_document(&once).expect("re-parse").to_latex();
+        assert_eq!(once, twice, "to_latex() is a fixed point for a labelled equation");
     }
 
     #[test]
