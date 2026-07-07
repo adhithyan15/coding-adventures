@@ -130,6 +130,7 @@ SELF_CONTAINED_RUNGS = (
     "rung90_spirometry_reserve",
     "rung91_protein_delivery",
     "rung92_gi_absorption",
+    "rung93_insulin_dosing",
 )
 
 
