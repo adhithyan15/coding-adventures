@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.17.0 — Ruby Hash-method parity (merge / to_a / dig / invert / delete / each_pair …)
+
+Fills the gaps in the Rust backend's inlined `__sir` runtime `Hash` catalog
+(`map_method`) so it matches the Python and TypeScript `sir-runtime-oop`
+reference method-for-method.  Runtime-only change: no core semantic-IR, no
+frontend, no emitter change — the frontend already lowers `hash.merge(other)`,
+`hash.each_pair { … }`, etc. to the `__method__` dispatch envelope; this bump
+teaches `map_method` to resolve the previously-missing names.
+
+Dispatch stays an EXPLICIT `match name` — never reflection ([[dynamic-dispatch-rce]]).
+
+- **Already present (unchanged):** `keys`, `values`, `[]`, `size`/`length`,
+  `has_key?`/`key?`/`include?`/`member?`, `fetch`, `each`/`each_pair`,
+  `map`/`collect`, `select`/`filter`.
+- **Added — non-block:**
+  - **`has_value?` / `value?`** — membership over the *values* via `value_eq`.
+  - **`to_a`** — the association list as `[[k, v], …]` in insertion order.
+  - **`dig(k, …)`** — NESTED fetch: reads `self[k0]`, then re-dispatches
+    `dig` for the remaining keys through `call_method`, so a nested Hash/Array
+    each dig their own way; any missing level short-circuits to `nil`.
+  - **`merge(other)`** — a FRESH hash (`map_lit` over concatenated entries,
+    last-write-wins ⇒ other wins on a key collision); neither `self` nor
+    `other` is aliased or mutated.
+  - **`delete(k)`** — removes the matching entry (mutates self), returns its
+    value or `nil`; the slot index is resolved under a short read borrow that
+    is dropped before the mutating `remove`.
+  - **`clear`** — empties `self` in place, returns it.
+  - **`invert`** — a FRESH key/value-swapped hash (`map_lit`, no aliasing).
+- **Added — block:**
+  - **`each_key` / `each_value`** — yield each key (resp. value), return self.
+  - **`reject`** — complement of `select` (keep pairs the block rejects), fresh
+    hash.
+
+  All block methods snapshot-clone the entries (`.borrow().clone()`) BEFORE
+  invoking the block, so no `RefCell` `borrow()` is held across `apply_closure`
+  (which can re-enter and mutate the same map).  Two-arg yields pass `[k, v]`.
+
+- **Tests:** `tests/compile_and_run_hash_methods.rs` — an exec-proof that
+  emits Rust for the new methods, compiles with `rustc`, runs it, and diffs
+  stdout against the Ruby/Python/TS reference values
+  (`merge`/`to_a`/`dig` nested + miss/`invert`/`delete`/`each_value` +
+  `each_pair` iteration order).
+
 ## 0.16.0 — Ruby `Symbol` method catalog (to_s / upcase / capitalize / inspect / to_proc / …)
 
 Completes the Rust backend's **`Symbol` method catalog** for parity with the
