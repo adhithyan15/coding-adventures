@@ -2896,22 +2896,6 @@ pub struct ModelCardSupportedParameterCoverageGateReport {
     pub issues: Vec<ModelCardSupportedParameterCoverageGateIssue>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ModelCardSupportedParameterCoverageDashboardRow {
-    pub kind: ModelCardKind,
-    pub passed: bool,
-    pub canonical_parameter_count: usize,
-    pub expected_canonical_parameter_count: usize,
-    pub accepted_name_count: usize,
-    pub expected_accepted_name_count: usize,
-    pub aliased_parameter_count: usize,
-    pub expected_aliased_parameter_count: usize,
-    pub max_alias_count: usize,
-    pub expected_max_alias_count: usize,
-    pub issue_count: usize,
-    pub issue_fields: Vec<String>,
-}
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeviceModelBehaviorFixture {
     pub name: String,
@@ -3615,112 +3599,6 @@ pub fn format_model_card_supported_parameter_coverage_gate_issue_json(
     report: &ModelCardSupportedParameterCoverageGateReport,
 ) -> String {
     format_deck_table_json(&format_model_card_supported_parameter_coverage_gate_issue_table(report))
-}
-
-pub fn model_card_supported_parameter_coverage_dashboard(
-    coverage: &[ModelCardSupportedParameterCoverage],
-) -> Vec<ModelCardSupportedParameterCoverageDashboardRow> {
-    let summaries = model_card_supported_parameter_coverage_summary_from(coverage);
-    let report = model_card_supported_parameter_coverage_gate(coverage);
-    let mut global_issue_fields = Vec::new();
-    for issue in report.issues.iter().filter(|issue| issue.kind == "catalog") {
-        if !global_issue_fields.contains(&issue.field) {
-            global_issue_fields.push(issue.field.clone());
-        }
-    }
-
-    MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES
-        .iter()
-        .map(
-            |(
-                kind,
-                expected_canonical_count,
-                expected_accepted_count,
-                expected_aliased_count,
-                expected_max_alias_count,
-            )| {
-                let summary = summaries
-                    .iter()
-                    .find(|summary| summary.kind == *kind)
-                    .expect("coverage summary should include every expected kind");
-                let mut issue_fields = global_issue_fields.clone();
-                for issue in report
-                    .issues
-                    .iter()
-                    .filter(|issue| issue.kind == kind.as_str())
-                {
-                    if !issue_fields.contains(&issue.field) {
-                        issue_fields.push(issue.field.clone());
-                    }
-                }
-                ModelCardSupportedParameterCoverageDashboardRow {
-                    kind: *kind,
-                    passed: issue_fields.is_empty(),
-                    canonical_parameter_count: summary.canonical_parameter_count,
-                    expected_canonical_parameter_count: *expected_canonical_count,
-                    accepted_name_count: summary.accepted_name_count,
-                    expected_accepted_name_count: *expected_accepted_count,
-                    aliased_parameter_count: summary.aliased_parameter_count,
-                    expected_aliased_parameter_count: *expected_aliased_count,
-                    max_alias_count: summary.max_alias_count,
-                    expected_max_alias_count: *expected_max_alias_count,
-                    issue_count: issue_fields.len(),
-                    issue_fields,
-                }
-            },
-        )
-        .collect()
-}
-
-pub fn format_model_card_supported_parameter_coverage_dashboard_table(
-    coverage: &[ModelCardSupportedParameterCoverage],
-) -> String {
-    let mut lines = vec![
-        "kind\tpassed\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\texpected_accepted_name_count\taliased_parameter_count\texpected_aliased_parameter_count\tmax_alias_count\texpected_max_alias_count\tissue_count\tissue_fields"
-            .to_string(),
-    ];
-    lines.extend(
-        model_card_supported_parameter_coverage_dashboard(coverage)
-            .into_iter()
-            .map(|row| {
-                format!(
-                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
-                    row.kind.as_str(),
-                    row.passed,
-                    row.canonical_parameter_count,
-                    row.expected_canonical_parameter_count,
-                    row.accepted_name_count,
-                    row.expected_accepted_name_count,
-                    row.aliased_parameter_count,
-                    row.expected_aliased_parameter_count,
-                    row.max_alias_count,
-                    row.expected_max_alias_count,
-                    row.issue_count,
-                    row.issue_fields.join("|")
-                )
-            }),
-    );
-    lines.join("\n")
-}
-
-pub fn model_card_supported_parameter_coverage_dashboard_records(
-    coverage: &[ModelCardSupportedParameterCoverage],
-) -> Vec<BTreeMap<String, String>> {
-    deck_table_records(&format_model_card_supported_parameter_coverage_dashboard_table(coverage))
-}
-
-pub fn format_model_card_supported_parameter_coverage_dashboard_csv(
-    coverage: &[ModelCardSupportedParameterCoverage],
-) -> String {
-    format_deck_table_csv(&format_model_card_supported_parameter_coverage_dashboard_table(coverage))
-}
-
-pub fn format_model_card_supported_parameter_coverage_dashboard_json(
-    coverage: &[ModelCardSupportedParameterCoverage],
-) -> String {
-    format_deck_table_json(
-        &format_model_card_supported_parameter_coverage_dashboard_table(coverage),
-    )
 }
 
 fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {

@@ -2,18 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2026-07-06
-
-### Added
-
-- `try_tokenize_json()` — like `tokenize_json()` but returns `Result<Vec<Token>, String>`
-  instead of panicking on a malformed input. Use it on **untrusted** bytes (a
-  file, a network payload) where malformed JSON is an ordinary error to handle,
-  not a reason to abort the process. The panicking `tokenize_json()` remains for
-  pre-validated input.
-- 2 tests: valid input returns `Ok`; a character the grammar cannot lex returns
-  `Err` (never panics).
-
 ## [0.1.0] - 2026-03-20
 
 ### Added

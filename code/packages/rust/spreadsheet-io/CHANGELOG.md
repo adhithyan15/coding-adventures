@@ -2,40 +2,6 @@
 
 All notable changes to `spreadsheet-io` are documented here.
 
-## [0.4.0] — SSIO-JSON: JSON (array-of-objects records) load & save
-
-### Added
-- `load_json(&[u8]) -> Result<Workbook, IoError>` — read JSON into a one-sheet
-  `Workbook`. The canonical shape is a top-level **array of objects** ("records"):
-  keys become row 1 (the union of keys across records, in first-seen order), each
-  object becomes a data row, a missing key is a blank cell. Also accepts array of
-  arrays (positional grid), array of scalars (single column), a single object
-  (header + one row), and a top-level scalar (single cell). A nested object/array
-  inside a value is stored as its compact JSON text.
-- `save_json(&wb) -> Vec<u8>` — serialize the **first** sheet as a JSON array of
-  record objects (row 1 = keys, each row below = one `{key: value}` object). The
-  inverse of the records load, so a records file round-trips. Formulas export as
-  their computed value; other sheets are dropped; empty/sheetless → `[]`. Walks
-  `populated_cells` **sparsely**, so a far-flung cell does not blow up.
-- `IoError::Json` variant.
-- 15 tests: header+rows load, records round-trip, value-kind mapping, ragged
-  union header, nested→JSON-text, array-of-arrays grid, array-of-scalars column,
-  single-object, top-level scalar, formula→value, sparse far-corner save, empty
-  array, malformed-input rejection (panic-free), invalid-UTF-8 rejection, and a
-  **JSON → .xlsx bridge**.
-
-### Depends on
-- `json-parser`'s new `try_parse_json` (and `json-lexer`'s `try_tokenize_json`):
-  panic-free parsing, because JSON here is untrusted input — malformed bytes must
-  be an `IoError`, never a crash.
-
-### Security
-- **DoS guard (depth):** a deeply-nested document (`[[[…]]]`) fed to `load_json`
-  would have overflowed the native stack via the recursive parser — an
-  uncatchable process abort. Fixed in `json-parser` (recursion now capped at
-  `DEFAULT_MAX_RULE_DEPTH`); pinned here by `tests/deep_nesting_dos.rs`, which
-  proves a 100 000-deep array resolves to `IoError::Json` in milliseconds.
-
 ## [0.3.0] — SSIO-CSV: delimited text (CSV / TSV) load & save
 
 ### Added

@@ -105,11 +105,26 @@ unsafe fn read_input(ptr: *const u8, len: usize) -> String {
     String::from_utf8_lossy(slice).into_owned()
 }
 
-/// Pack a result string into a freshly allocated `[len: u32 LE][bytes]` buffer
-/// and return its pointer. The caller (JS) frees it with `dealloc(ptr, 4 +
-/// len)`.
-fn pack(s: String) -> *mut u8 {
-    let bytes = s.into_bytes();
+/// Read a `(ptr, len)` input as **raw bytes** (a copy). Unlike [`read_input`],
+/// this does *not* run the bytes through lossy UTF-8 — a file like `.xlsx` or
+/// `.xls` is binary, and lossy decoding would replace every non-UTF-8 byte with
+/// U+FFFD and destroy the file. Use this for file bytes; use `read_input` for
+/// the text-string ABI (addresses, formulas).
+///
+/// # Safety
+/// `ptr` must point to `len` readable bytes (or be null with `len == 0`).
+unsafe fn read_input_bytes(ptr: *const u8, len: usize) -> Vec<u8> {
+    if ptr.is_null() || len == 0 {
+        return Vec::new();
+    }
+    std::slice::from_raw_parts(ptr, len).to_vec()
+}
+
+/// Pack raw bytes into a freshly allocated `[len: u32 LE][bytes]` buffer and
+/// return its pointer. The caller (JS) frees it with `dealloc(ptr, 4 + len)`.
+/// This is the byte-level primitive behind [`pack`]; it is also what the file
+/// exports return, since a saved `.xlsx`/`.xls` is binary, not a `String`.
+fn pack_bytes(bytes: Vec<u8>) -> *mut u8 {
     let payload_len = bytes.len();
     // Guard the length prefix add and the layout the same way `alloc` does:
     // return null on overflow / invalid layout rather than panicking (a panic
@@ -136,6 +151,12 @@ fn pack(s: String) -> *mut u8 {
         std::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr.add(4), payload_len);
         ptr
     }
+}
+
+/// Pack a result string into a `[len: u32 LE][bytes]` buffer — a thin UTF-8
+/// wrapper over [`pack_bytes`]. The caller frees it with `dealloc(ptr, 4 + len)`.
+fn pack(s: String) -> *mut u8 {
+    pack_bytes(s.into_bytes())
 }
 
 // ---------------------------------------------------------------------------
@@ -659,6 +680,112 @@ pub extern "C" fn changed_since(since: u64) -> *mut u8 {
 }
 
 // ---------------------------------------------------------------------------
+// File open / save exports — bytes in, bytes out.
+// ---------------------------------------------------------------------------
+//
+// These are the byte-oriented cousins of the string exports above. They let the
+// JS host open a real spreadsheet file the user picked and download the current
+// document as one — the whole point of routing every format through the one
+// engine. The wiring is uniform across all five formats:
+//
+//   - **load_<fmt>(ptr, len) -> u32**: the host `alloc`s a buffer, writes the
+//     file's raw bytes, and passes `(ptr, len)`. We read them as raw bytes
+//     (NOT lossy UTF-8 — `.xlsx`/`.xls` are binary), hand them to the session,
+//     and return `1` on success or `0` if the bytes aren't a readable file of
+//     that format. A failed open leaves the current document untouched.
+//   - **save_<fmt>() -> *mut u8**: serialize the current document to that
+//     format's bytes and return them packed as `[len: u32 LE][bytes]` (freed by
+//     the host with `dealloc(ptr, 4 + len)`), exactly like a string result —
+//     `pack_bytes` is binary-safe, so a ZIP or OLE2 file survives the trip.
+//
+// `.xlsx` keeps live formulas; the others are lower-fidelity per `spreadsheet-io`.
+
+/// Open `.xlsx` file bytes as the current document. Returns `1` on success, `0`
+/// if the bytes are not a readable `.xlsx`. See [`SpreadsheetSession::load_xlsx_bytes`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range (or `ptr` null with `len == 0`).
+#[no_mangle]
+pub unsafe extern "C" fn load_xlsx(ptr: *const u8, len: usize) -> u32 {
+    let bytes = read_input_bytes(ptr, len);
+    SESSION.with(|s| s.borrow_mut().load_xlsx_bytes(&bytes)) as u32
+}
+
+/// Save the current document to `.xlsx` file bytes, packed `[len][bytes]`.
+#[no_mangle]
+pub extern "C" fn save_xlsx() -> *mut u8 {
+    pack_bytes(SESSION.with(|s| s.borrow().save_xlsx_bytes()))
+}
+
+/// Open legacy `.xls` (BIFF8) file bytes. Returns `1`/`0` like [`load_xlsx`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range (or `ptr` null with `len == 0`).
+#[no_mangle]
+pub unsafe extern "C" fn load_xls(ptr: *const u8, len: usize) -> u32 {
+    let bytes = read_input_bytes(ptr, len);
+    SESSION.with(|s| s.borrow_mut().load_xls_bytes(&bytes)) as u32
+}
+
+/// Save the current document to legacy `.xls` bytes, packed `[len][bytes]`.
+#[no_mangle]
+pub extern "C" fn save_xls() -> *mut u8 {
+    pack_bytes(SESSION.with(|s| s.borrow().save_xls_bytes()))
+}
+
+/// Open `.csv` file bytes. Returns `1`/`0` (`0` on invalid UTF-8). See
+/// [`SpreadsheetSession::load_csv_bytes`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range (or `ptr` null with `len == 0`).
+#[no_mangle]
+pub unsafe extern "C" fn load_csv(ptr: *const u8, len: usize) -> u32 {
+    let bytes = read_input_bytes(ptr, len);
+    SESSION.with(|s| s.borrow_mut().load_csv_bytes(&bytes)) as u32
+}
+
+/// Save the current document's first sheet to `.csv` bytes, packed `[len][bytes]`.
+#[no_mangle]
+pub extern "C" fn save_csv() -> *mut u8 {
+    pack_bytes(SESSION.with(|s| s.borrow().save_csv_bytes()))
+}
+
+/// Open `.tsv` file bytes. Returns `1`/`0` like [`load_csv`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range (or `ptr` null with `len == 0`).
+#[no_mangle]
+pub unsafe extern "C" fn load_tsv(ptr: *const u8, len: usize) -> u32 {
+    let bytes = read_input_bytes(ptr, len);
+    SESSION.with(|s| s.borrow_mut().load_tsv_bytes(&bytes)) as u32
+}
+
+/// Save the current document's first sheet to `.tsv` bytes, packed `[len][bytes]`.
+#[no_mangle]
+pub extern "C" fn save_tsv() -> *mut u8 {
+    pack_bytes(SESSION.with(|s| s.borrow().save_tsv_bytes()))
+}
+
+/// Open `.json` file bytes (a top-level array of record objects → a table).
+/// Returns `1`/`0` (`0` on malformed JSON — parsing is panic-free). See
+/// [`SpreadsheetSession::load_json_bytes`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range (or `ptr` null with `len == 0`).
+#[no_mangle]
+pub unsafe extern "C" fn load_json(ptr: *const u8, len: usize) -> u32 {
+    let bytes = read_input_bytes(ptr, len);
+    SESSION.with(|s| s.borrow_mut().load_json_bytes(&bytes)) as u32
+}
+
+/// Save the current document's first sheet to `.json` bytes (array of record
+/// objects), packed `[len][bytes]`.
+#[no_mangle]
+pub extern "C" fn save_json() -> *mut u8 {
+    pack_bytes(SESSION.with(|s| s.borrow().save_json_bytes()))
+}
+
+// ---------------------------------------------------------------------------
 // Host-target tests: exercise the ABI exactly as the JS loader would, but in
 // Rust (so they run under `cargo test` with no WASM toolchain). We drive the
 // `(ptr, len)` protocol by hand to prove the marshalling and the alloc/dealloc
@@ -873,5 +1000,117 @@ mod tests {
 
         // A bad window surfaces an error object — never a panic/trap.
         assert_eq!(take(get_window(0, 0, 5, 5)), r##"{"error":"#REF!"}"##);
+    }
+
+    // -----------------------------------------------------------------------
+    // File open / save over the ABI (bytes in, bytes out).
+    // -----------------------------------------------------------------------
+
+    /// Copy raw bytes into module memory via `alloc` — the binary `put`, used
+    /// for file bytes (which are not necessarily UTF-8).
+    fn put_bytes(data: &[u8]) -> (*mut u8, usize) {
+        let ptr = alloc(data.len());
+        // SAFETY: `alloc` reserved `data.len()` writable bytes at `ptr`.
+        unsafe { std::ptr::copy_nonoverlapping(data.as_ptr(), ptr, data.len()) };
+        (ptr, data.len())
+    }
+
+    /// Read a `[len][bytes]` result buffer as raw bytes and free it — the binary
+    /// `take`, used for saved file bytes.
+    fn take_bytes(ptr: *mut u8) -> Vec<u8> {
+        // SAFETY: `ptr` points at a buffer produced by `pack_bytes`.
+        unsafe {
+            let len = u32::from_le_bytes([*ptr, *ptr.add(1), *ptr.add(2), *ptr.add(3)]) as usize;
+            let bytes = std::slice::from_raw_parts(ptr.add(4), len).to_vec();
+            dealloc(ptr, 4 + len);
+            bytes
+        }
+    }
+
+    #[test]
+    fn abi_xlsx_save_then_load_round_trips() {
+        reset();
+        set("A1", "10");
+        set("A2", "20");
+        set("A3", "=SUM(A1:A2)");
+        // Save over the ABI → real .xlsx bytes (a ZIP: "PK").
+        let bytes = take_bytes(save_xlsx());
+        assert_eq!(&bytes[..2], b"PK");
+        // Open them back through the ABI into a fresh document.
+        reset();
+        let (p, l) = put_bytes(&bytes);
+        let ok = unsafe { load_xlsx(p, l) };
+        unsafe { dealloc(p, l) };
+        assert_eq!(ok, 1, "our own .xlsx must load");
+        assert_eq!(value("A3"), r#"{"kind":"number","value":30.0}"#);
+        assert_eq!(raw("A3"), "=SUM(A1:A2)"); // still a live formula
+    }
+
+    #[test]
+    fn abi_xls_bytes_are_binary_safe() {
+        // The .xls magic starts with 0xD0 0xCF — a byte that lossy-UTF-8 reading
+        // would corrupt. This proves the file path uses raw bytes, not `pack`.
+        reset();
+        set("A1", "42");
+        let bytes = take_bytes(save_xls());
+        assert_eq!(&bytes[..4], &[0xD0, 0xCF, 0x11, 0xE0]);
+        reset();
+        let (p, l) = put_bytes(&bytes);
+        let ok = unsafe { load_xls(p, l) };
+        unsafe { dealloc(p, l) };
+        assert_eq!(ok, 1);
+        assert_eq!(value("A1"), r#"{"kind":"number","value":42.0}"#);
+    }
+
+    #[test]
+    fn abi_csv_and_tsv_round_trip() {
+        reset();
+        set("A1", "region");
+        set("B1", "sales");
+        set("A2", "East");
+        set("B2", "200");
+        let csv = take_bytes(save_csv());
+        assert_eq!(csv, b"region,sales\nEast,200");
+        reset();
+        let (p, l) = put_bytes(&csv);
+        assert_eq!(unsafe { load_csv(p, l) }, 1);
+        unsafe { dealloc(p, l) };
+        assert_eq!(value("B2"), r#"{"kind":"number","value":200.0}"#);
+
+        let tsv = take_bytes(save_tsv());
+        assert_eq!(tsv, b"region\tsales\nEast\t200");
+        reset();
+        let (p, l) = put_bytes(&tsv);
+        assert_eq!(unsafe { load_tsv(p, l) }, 1);
+        unsafe { dealloc(p, l) };
+        assert_eq!(value("A1"), r#"{"kind":"text","value":"region"}"#);
+    }
+
+    #[test]
+    fn abi_json_round_trips() {
+        reset();
+        let doc = br#"[{"region":"East","sales":200},{"region":"West","sales":340}]"#;
+        let (p, l) = put_bytes(doc);
+        assert_eq!(unsafe { load_json(p, l) }, 1);
+        unsafe { dealloc(p, l) };
+        assert_eq!(value("B3"), r#"{"kind":"number","value":340.0}"#);
+        let out = take_bytes(save_json());
+        assert_eq!(out, doc);
+    }
+
+    #[test]
+    fn abi_load_bad_file_returns_zero_and_preserves_document() {
+        // A failed open returns 0 and must not clobber the open document.
+        reset();
+        set("A1", "keepme");
+        let (p, l) = put_bytes(b"not a real file");
+        assert_eq!(unsafe { load_xlsx(p, l) }, 0);
+        assert_eq!(unsafe { load_xls(p, l) }, 0);
+        unsafe { dealloc(p, l) };
+        // Malformed JSON is panic-free → 0.
+        let (jp, jl) = put_bytes(b"{not json");
+        assert_eq!(unsafe { load_json(jp, jl) }, 0);
+        unsafe { dealloc(jp, jl) };
+        assert_eq!(value("A1"), r#"{"kind":"text","value":"keepme"}"#);
     }
 }
