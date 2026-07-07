@@ -1696,7 +1696,9 @@ func _sir_array_responds(name string) bool {
 		return true
 	// Block-taking Array/Enumerable methods.
 	case "each", "each_with_index", "map", "collect", "select", "filter",
-		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?":
+		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?",
+		"sort_by", "min_by", "max_by", "group_by", "partition", "flat_map",
+		"collect_concat", "take_while", "drop_while", "each_with_object":
 		return true
 	}
 	return false
@@ -2026,6 +2028,125 @@ func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closur
 			}
 		}
 		return true, true
+	case "sort_by":
+		// Sort by the block-computed key, stable on ties.  Keys are computed
+		// once (Schwartzian).  `_sir_value_lt` is the never-panic comparator.
+		type sbKV struct {
+			k Value
+			v Value
+		}
+		keyed := make([]sbKV, len(recv.Items))
+		for i, x := range recv.Items {
+			keyed[i] = sbKV{_sir_apply(block, []Value{x}), x}
+		}
+		sort.SliceStable(keyed, func(i, j int) bool {
+			return _sir_value_lt(keyed[i].k, keyed[j].k)
+		})
+		out := make([]Value, len(keyed))
+		for i := range keyed {
+			out[i] = keyed[i].v
+		}
+		return &Seq{Items: out}, true
+	case "min_by", "max_by":
+		// Element with the extremal block key (first-on-tie; nil on empty).
+		if len(recv.Items) == 0 {
+			return nil, true
+		}
+		wantMin := name == "min_by"
+		bestItem := recv.Items[0]
+		bestKey := _sir_apply(block, []Value{recv.Items[0]})
+		for _, x := range recv.Items[1:] {
+			k := _sir_apply(block, []Value{x})
+			take := false
+			if wantMin {
+				take = _sir_value_lt(k, bestKey)
+			} else {
+				take = _sir_value_lt(bestKey, k)
+			}
+			if take {
+				bestItem = x
+				bestKey = k
+			}
+		}
+		return bestItem, true
+	case "group_by":
+		// A Hash of block key → Array of elements, in first-seen order.
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, x := range recv.Items {
+			k := _sir_apply(block, []Value{x})
+			if seq, ok := _sir_map_get(acc, k).(*Seq); ok && seq != nil {
+				seq.Items = append(seq.Items, x)
+			} else {
+				_sir_map_set(acc, k, &Seq{Items: []Value{x}})
+			}
+		}
+		return acc, true
+	case "partition":
+		// `[matching, non_matching]`, each a fresh Array, order preserved.
+		yes := []Value{}
+		no := []Value{}
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				yes = append(yes, x)
+			} else {
+				no = append(no, x)
+			}
+		}
+		return &Seq{Items: []Value{&Seq{Items: yes}, &Seq{Items: no}}}, true
+	case "flat_map", "collect_concat":
+		// Map then splice one level: an Array result contributes its elements,
+		// a scalar is appended as-is.
+		out := []Value{}
+		for _, x := range recv.Items {
+			r := _sir_apply(block, []Value{x})
+			if s, ok := r.(*Seq); ok {
+				out = append(out, s.Items...)
+			} else {
+				out = append(out, r)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "take_while":
+		out := []Value{}
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				out = append(out, x)
+			} else {
+				break
+			}
+		}
+		return &Seq{Items: out}, true
+	case "drop_while":
+		out := []Value{}
+		dropping := true
+		for _, x := range recv.Items {
+			if dropping && _sir_truthy(_sir_apply(block, []Value{x})) {
+				continue
+			}
+			dropping = false
+			out = append(out, x)
+		}
+		return &Seq{Items: out}, true
+	case "count":
+		// `count { |x| pred }` — number of truthy results.
+		n := int64(0)
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				n++
+			}
+		}
+		return n, true
+	case "each_with_object":
+		// `each_with_object(memo) { |x, memo| … }` — yields each element with
+		// the memo and returns the (mutated) memo.
+		if len(args) == 0 {
+			return recv, true
+		}
+		obj := args[0]
+		for _, x := range recv.Items {
+			_sir_apply(block, []Value{x, obj})
+		}
+		return obj, true
 	}
 	return nil, false
 }

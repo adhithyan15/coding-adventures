@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.20.0 — Array block-method breadth (sort_by / group_by / partition / …)
+
+Mirrors the Rust backend's array block-method batch to Go: extends
+`_sir_array_block_method` with the common block-taking Ruby
+`Enumerable`/`Array` methods that were missing, and grows the `respond_to?`
+table to match.
+
+- `sort_by { |x| key }` — key-sorted (Schwartzian, stable).
+- `min_by` / `max_by { |x| key }` — extremal block key (first-on-tie; `nil` on
+  empty).
+- `group_by { |x| key }` — a Hash of key → Array of elements.
+- `partition { |x| pred }` — `[matching, non_matching]`.
+- `flat_map` / `collect_concat { |x| … }` — map then splice one level.
+- `take_while` / `drop_while { |x| pred }` — leading truthy run / remainder.
+- `count { |x| pred }` — number of truthy results (bare/arg forms unchanged).
+- `each_with_object(memo) { |x, memo| … }` — folds into and returns the memo.
+
+Ordering reuses `_sir_value_lt` — the never-panic comparator, so a non-numeric
+block key degrades to a stable order rather than raising (unlike a naive
+numeric coerce). A block-less call floors to `NoMethodError` (Ruby returns an
+Enumerator — a v0 cut-line). Verified end-to-end under `go run`.
+
 ## 0.19.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 Mirrors the Rust backend's first increment of the SIR display-convention spec
