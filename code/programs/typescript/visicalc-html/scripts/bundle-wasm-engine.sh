@@ -23,7 +23,11 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEMO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-REPO_ROOT="$(cd "$DEMO_DIR/../.." && pwd)"
+# The repo root is wherever `code/` lives. Ask git for it so this survives the
+# demo being relocated (it moved from demo/ into code/programs/typescript/ — a
+# hard-coded `../..` here silently resolved to code/programs and broke the
+# build). Fall back to walking up to the `code/` ancestor if git is unavailable.
+REPO_ROOT="$(cd "$SCRIPT_DIR" && git rev-parse --show-toplevel 2>/dev/null || (d="$DEMO_DIR"; while [ "$d" != "/" ] && [ ! -d "$d/code/packages" ]; do d="$(dirname "$d")"; done; echo "$d"))"
 
 WASM="$REPO_ROOT/code/packages/rust/spreadsheet-wasm/pkg/spreadsheet_engine.wasm"
 LOADER="$SCRIPT_DIR/wasm-loader.js"

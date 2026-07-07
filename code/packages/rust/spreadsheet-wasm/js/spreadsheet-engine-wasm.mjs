@@ -64,6 +64,34 @@ export function createEngine(wasmBytes) {
     if (len) ex.dealloc(ptr, len);
   }
 
+  // Binary variants of writeStr/readResult for FILE bytes. A .xlsx/.xls is a
+  // binary blob, not UTF-8, so it must not pass through the text encoder /
+  // decoder (which would corrupt it). Same `alloc` in / `[len][bytes]` out
+  // protocol, raw bytes.
+  function writeBytes(u8) {
+    if (u8.length === 0) return [0, 0];
+    const ptr = ex.alloc(u8.length);
+    mem().set(u8, ptr);
+    return [ptr, u8.length];
+  }
+  function readBytes(ptr) {
+    const m = mem();
+    const len =
+      (m[ptr] | (m[ptr + 1] << 8) | (m[ptr + 2] << 16) | (m[ptr + 3] << 24)) >>> 0;
+    // `slice` COPIES the bytes out before we `dealloc` (a `subarray` view would
+    // dangle once the buffer is freed / memory grows).
+    const out = m.slice(ptr + 4, ptr + 4 + len);
+    ex.dealloc(ptr, 4 + len);
+    return out;
+  }
+  const openFile = (fn, u8) => {
+    const [p, l] = writeBytes(u8 instanceof Uint8Array ? u8 : new Uint8Array(u8));
+    const ok = ex[fn](p, l);
+    freeInput(p, l);
+    return ok === 1;
+  };
+  const saveFile = (fn) => readBytes(ex[fn]());
+
   function call0(fn) {
     return readResult(ex[fn]());
   }
@@ -262,6 +290,22 @@ export function createEngine(wasmBytes) {
          */
         changedSince: (since) =>
           JSON.parse(readResult(ex.changed_since(BigInt(since)))),
+
+        // File open / save — bytes in, bytes out. open*(u8) replaces the
+        // document from the bytes of a file the user picked and returns true iff
+        // they were a readable file of that format (untouched on false). save*()
+        // returns the current document as that format's bytes (a Uint8Array).
+        // .xlsx keeps live formulas; .xls/.csv/.tsv/.json are lower-fidelity.
+        openXlsx: (u8) => openFile("load_xlsx", u8),
+        saveXlsx: () => saveFile("save_xlsx"),
+        openXls: (u8) => openFile("load_xls", u8),
+        saveXls: () => saveFile("save_xls"),
+        openCsv: (u8) => openFile("load_csv", u8),
+        saveCsv: () => saveFile("save_csv"),
+        openTsv: (u8) => openFile("load_tsv", u8),
+        saveTsv: () => saveFile("save_tsv"),
+        openJson: (u8) => openFile("load_json", u8),
+        saveJson: () => saveFile("save_json"),
       };
     },
   };

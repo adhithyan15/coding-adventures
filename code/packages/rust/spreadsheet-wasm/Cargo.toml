@@ -1,6 +1,6 @@
 [package]
 name = "spreadsheet-wasm"
-version = "0.14.0"
+version = "0.14.1"
 edition = "2021"
 description = "extern \"C\" + linear-memory WASM ABI over the spreadsheet-core-wasm JSON facade, including file open/save (.xlsx/.xls/.csv/.tsv/.json) bytes in/out"
 license = "MIT"
