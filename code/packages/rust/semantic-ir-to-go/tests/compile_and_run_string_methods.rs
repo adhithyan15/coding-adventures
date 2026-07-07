@@ -186,3 +186,79 @@ fn string_methods_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+fn ilit(v: i64) -> Expr {
+    Expr::IntLit { value: v, span: s() }
+}
+
+/// The v0.22.0 **justify / swapcase** String methods: `ljust`, `rjust`,
+/// `center`, `swapcase`.  Width is counted in RUNES; center puts an odd extra
+/// pad rune on the RIGHT; an omitted pad defaults to a space.  Assertions use a
+/// `*` pad where possible so the expected lines have no ambiguous trailing
+/// whitespace (the one default-space case keeps its trailing spaces explicitly).
+fn justify_module() -> Module {
+    let stmts = vec![
+        // ljust with the default space pad
+        print_stmt(method(slit("hi"), "ljust", vec![ilit(5)])),
+        // ljust with an explicit single-char pad
+        print_stmt(method(slit("hi"), "ljust", vec![ilit(5), slit("*")])),
+        // rjust
+        print_stmt(method(slit("hi"), "rjust", vec![ilit(5), slit("*")])),
+        // center, even total pad → symmetric
+        print_stmt(method(slit("hi"), "center", vec![ilit(6), slit("*")])),
+        // center, odd total pad → extra on the RIGHT
+        print_stmt(method(slit("hi"), "center", vec![ilit(5), slit("*")])),
+        // width <= length → unchanged
+        print_stmt(method(slit("abc"), "ljust", vec![ilit(1)])),
+        // multi-char pad cycles then truncates
+        print_stmt(method(slit("abcdef"), "ljust", vec![ilit(10), slit("xy")])),
+        // swapcase flips each ASCII letter
+        print_stmt(method(slit("Hello World"), "swapcase", vec![])),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![main])
+}
+
+#[test]
+fn string_more_methods_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&justify_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "justify");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "hi   ",         // "hi".ljust(5) — default space pad
+            "hi***",         // "hi".ljust(5, "*")
+            "***hi",         // "hi".rjust(5, "*")
+            "**hi**",        // "hi".center(6, "*")
+            "*hi**",         // "hi".center(5, "*") — extra pad on the right
+            "abc",           // "abc".ljust(1) — width <= length, unchanged
+            "abcdefxyxy",    // "abcdef".ljust(10, "xy") — pad cycles
+            "hELLO wORLD",   // "Hello World".swapcase
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}

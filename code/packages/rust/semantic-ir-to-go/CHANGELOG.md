@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.22.0 — more String methods: `ljust` / `rjust` / `center` / `swapcase`
+
+Extends the emitted Go runtime's `_sir_string_method` catalog (and its
+`respond_to?` table):
+
+- `ljust(width, pad = " ")` / `rjust(...)` / `center(...)` — pad to `width`
+  **runes** using `pad` cyclically; `width <= length` returns the string
+  unchanged; `center` puts an odd extra pad rune on the RIGHT (Ruby's rule).
+  An empty pad degrades to a single space rather than raising (never-raise
+  floor). New helper `_sir_str_pad` builds the exact-length cyclic padding.
+- `swapcase` — flips the case of each ASCII letter (rune-safe; non-letters and
+  non-ASCII runes pass through).
+
+Also **fills a pre-existing `respond_to?` under-report**: `capitalize`,
+`chomp`, `bytes`, `index`, `replace`, `sub`, `gsub` already dispatch in
+`_sir_string_method` but were unlisted; the table is now faithful.
+
+Verified end-to-end under `go run`.
+
 ## 0.21.0 — more Array methods: `zip` / `rotate` / `to_h` / `tally`
 
 Extends the emitted Go runtime's non-block `Array` catalog and the
