@@ -62,7 +62,8 @@ through `@coding-adventures/sir-runtime-exceptions`' explicit-string `raiseError
 The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md`)
 the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
-`min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a` — and the
+`min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a`,
+`take`/`drop`/`values_at` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
 `freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a` (`include?`/`index`/`==` use
 deep value equality), plus the **Kernel flow-control** group
