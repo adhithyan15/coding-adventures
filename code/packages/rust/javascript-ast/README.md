@@ -152,6 +152,17 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   passes never touch it. It tags at `PREC_PRIMARY` and the emitter prints the
   literal spelling `import.meta`. Node + `closure-emitter` + all pass traversals
   land in one atomic PR; the bridge-enable + conformance port follow.
+- `ImportExpression` (CLOC12.169) — a **dynamic `import(specifier)`**: the
+  runtime module-loading form that returns a promise (distinct from a static
+  `import` declaration and from the `ImportMeta` meta-property). `ImportExpression
+  { cv, source }` — a single-operand node (`source: Box<Expression>`, the module
+  specifier), the same shape as `AwaitExpression`. It is spelled as the `import`
+  keyword immediately followed by a parenthesised argument — a call-like primary
+  — so it tags at `PREC_PRIMARY` (atomic from the outside, like a call) and the
+  emitter prints `import(` + source + `)` with the source at assignment
+  precedence (inside literal parens). The nine passes recurse into `source` like
+  any other single-operand node. Node + `closure-emitter` + all pass arms land in
+  one atomic PR; the bridge-enable + conformance port follow.
 
 ## What's coming (follow-up PRs)
 

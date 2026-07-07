@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.33.0] - 2026-07-07
+
+### Added — CLOC12.169: `emit_import_expression` (dynamic `import(x)`)
+
+Added `emit_import_expression` + the `Expression::ImportExpression` dispatch arm + the `PREC_PRIMARY` classification for the new dynamic `import(specifier)` node (CLOC12.169 PR1). It prints the `import` keyword directly followed by a *literal* parenthesised argument — a call-like primary — with the `source` emitted at `PREC_ASSIGNMENT` (a call-argument level): a looser *sequence* specifier wraps (`import((a,b))`), everything else prints bare (`import("m")`, `import(a+b)`, `import(f())`). As a `PREC_PRIMARY` node the whole import is atomic, so a member/call parent composes without extra parens (`import(x).then(f)`). 5 hand-constructed-AST unit tests. Part of the atomic node PR1 that lands the node + emit + all nine downstream pass arms together. (CLOC12.169)
+
+
 ## [0.32.1] - 2026-07-07
 
 ### Added — CLOC12.168 PR3: CodePrinter `import.meta` conformance port

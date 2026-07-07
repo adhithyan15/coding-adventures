@@ -754,6 +754,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         Expression::SpreadElement(s) => collect_all_idents_expr(&s.argument, out),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { collect_all_idents_expr(a, out); } }
         Expression::AwaitExpression(a) => collect_all_idents_expr(&a.argument, out),
+        Expression::ImportExpression(e) => collect_all_idents_expr(&e.source, out),
     }
 }
 
@@ -1093,6 +1094,7 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::SpreadElement(s) => rename_apply_expr(&mut s.argument, map),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { rename_apply_expr(a, map); } }
         Expression::AwaitExpression(a) => rename_apply_expr(&mut a.argument, map),
+        Expression::ImportExpression(e) => rename_apply_expr(&mut e.source, map),
     }
 }
 

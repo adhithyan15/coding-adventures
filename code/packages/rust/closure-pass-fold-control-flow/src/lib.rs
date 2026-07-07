@@ -56,7 +56,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
-    AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression,
+    AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
@@ -279,6 +279,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         SpreadElement(e) => e.cv.clone(),
         YieldExpression(y) => y.cv.clone(),
         AwaitExpression(a) => a.cv.clone(),
+        ImportExpression(e) => e.cv.clone(),
         ThisExpression(t) => t.cv.clone(),
         Super(s) => s.cv.clone(),
         NewTarget(n) => n.cv.clone(),
@@ -1450,6 +1451,10 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::AwaitExpression(a) => Expression::AwaitExpression(AwaitExpression {
             cv: a.cv.clone(),
             argument: Box::new(fold_expression(&a.argument, st)),
+        }),
+        Expression::ImportExpression(e) => Expression::ImportExpression(ImportExpression {
+            cv: e.cv.clone(),
+            source: Box::new(fold_expression(&e.source, st)),
         }),
         Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
             cv: m.cv.clone(),

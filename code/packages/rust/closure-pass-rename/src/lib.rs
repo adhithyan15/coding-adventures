@@ -1035,6 +1035,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         Expression::SpreadElement(s) => collect_all_idents_expr(&s.argument, out),
         Expression::YieldExpression(y) => { if let Some(a) = &y.argument { collect_all_idents_expr(a, out); } }
         Expression::AwaitExpression(a) => collect_all_idents_expr(&a.argument, out),
+        Expression::ImportExpression(e) => collect_all_idents_expr(&e.source, out),
     }
 }
 
@@ -1355,6 +1356,7 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::SpreadElement(s) => rewrite_uses_expr(&mut s.argument, map),
         Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { rewrite_uses_expr(a, map); } }
         Expression::AwaitExpression(a) => rewrite_uses_expr(&mut a.argument, map),
+        Expression::ImportExpression(e) => rewrite_uses_expr(&mut e.source, map),
     }
 }
 

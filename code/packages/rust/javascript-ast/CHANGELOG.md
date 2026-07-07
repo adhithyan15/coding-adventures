@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.28.0] - 2026-07-07
+
+### Added — CLOC12.169: `Expression::ImportExpression` (dynamic `import(x)`)
+
+Added `Expression::ImportExpression` variant + `ImportExpression { cv, source }` struct — a **dynamic `import(specifier)`**, the runtime module-loading form (distinct from a static `import` declaration and from the `ImportMeta` meta-property). A single-operand node (`source: Box<Expression>`, the module specifier), the same shape as `AwaitExpression`; `import()` with no argument is a syntax error, so `source` is non-optional. It is a call-like primary (`import` keyword + parenthesised argument), tagging at `PREC_PRIMARY`. Re-exported from the crate root; 2 roundtrip/serde tests. Atomic node PR (PR1): the node + `closure-emitter` emit + all nine downstream pass arms (which recurse into `source`) land together so the workspace never breaks. (CLOC12.169)
+
+
 ## [0.27.0] - 2026-07-07
 
 ### Added — CLOC12.168: `Expression::ImportMeta` (`import.meta`)

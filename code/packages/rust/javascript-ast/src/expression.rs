@@ -68,6 +68,7 @@ pub enum Expression {
     Super(Super),
     NewTarget(NewTarget),
     ImportMeta(ImportMeta),
+    ImportExpression(ImportExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -582,6 +583,41 @@ pub struct AwaitExpression {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub argument: Box<Expression>,
+}
+
+/// A **dynamic `import()`** — `import(specifier)`, the runtime module-loading
+/// form that returns a promise for the module namespace (distinct from a static
+/// `import` *declaration*, and distinct from the [`ImportMeta`] meta-property).
+/// ESTree calls this node `ImportExpression`, with a single `source` operand.
+///
+/// # Shape
+///
+/// Unlike the reserved-word leaf primaries ([`ThisExpression`], [`Super`],
+/// [`NewTarget`], [`ImportMeta`]), a dynamic import **always** has exactly one
+/// operand — the module specifier — so `source` is a plain (non-optional)
+/// `Box<Expression>`. `import()` with no argument is a syntax error. There is no
+/// second axis (options-bag / attributes are a later proposal not modelled
+/// here).
+///
+/// # Precedence
+///
+/// `import(x)` is spelled as the `import` keyword immediately followed by a
+/// parenthesised argument — syntactically a **call-like primary**. The literal
+/// parens make the whole node atomic from the outside (it binds at
+/// `PREC_PRIMARY`, like a `CallExpression`: `import(x).then(f)`,
+/// `(await import(x))` compose without extra parens around the import itself).
+/// The `source` sits *inside* those literal parens, so it is emitted at the
+/// lowest (assignment) precedence and never needs its own wrapping — the parens
+/// are part of the `import(...)` spelling, not a precedence artifact.
+///
+/// Like the other operand-carrying nodes `source` is a `Box` so the
+/// `Expression` enum stays a fixed size regardless of nesting depth.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImportExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub source: Box<Expression>,
 }
 
 /// The `this` keyword — a primary expression that reads the current
@@ -1206,6 +1242,40 @@ mod tests {
         let n = Expression::ImportMeta(ImportMeta { cv: None });
         let json = serde_json::to_string(&n).expect("serialize");
         assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(n.clone(), roundtrip(n));
+    }
+
+    #[test]
+    fn import_expression_roundtrips_traced() {
+        // import("m") — a dynamic import with a string-literal specifier.
+        let n = Expression::ImportExpression(ImportExpression {
+            cv: Some("importExpr.1".to_string()),
+            source: Box::new(Expression::StringLiteral(StringLiteral {
+                cv: None,
+                value: "m".to_string(),
+                raw: "\"m\"".to_string(),
+            })),
+        });
+        assert_eq!(n.clone(), roundtrip(n.clone()));
+        assert_eq!(type_tag(&n), "ImportExpression");
+    }
+
+    #[test]
+    fn import_expression_untraced_omits_cv() {
+        let n = Expression::ImportExpression(ImportExpression {
+            cv: None,
+            source: Box::new(Expression::Identifier(Identifier {
+                cv: None,
+                name: "spec".to_string(),
+            })),
+        });
+        let json = serde_json::to_string(&n).expect("serialize");
+        // The node's own `cv` is omitted; the `source` operand is still present.
+        assert!(
+            json.starts_with("{\"type\":\"ImportExpression\",\"source\""),
+            "expected no node cv key; got {}",
+            json
+        );
         assert_eq!(n.clone(), roundtrip(n));
     }
 
