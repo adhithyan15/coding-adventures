@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add `model_card_supported_parameter_coverage_dashboard`,
+  `format_model_card_supported_parameter_coverage_dashboard_table`,
+  `model_card_supported_parameter_coverage_dashboard_records`,
+  `format_model_card_supported_parameter_coverage_dashboard_csv`, and
+  `format_model_card_supported_parameter_coverage_dashboard_json`, stable
+  per-kind supported-parameter coverage dashboard rows with actual versus
+  expected counts plus gate issue fields, matching Python and TypeScript.
 - Add `model_card_supported_parameter_coverage_gate`,
   `format_model_card_supported_parameter_coverage_gate_report`,
   `format_model_card_supported_parameter_coverage_gate_issue_table`,
