@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.18.0 — Numeric + String method-catalog parity
+
+Expands the emitted Rust runtime's `numeric_method` and `string_method`
+catalogs to Ruby parity, and grows the `respond_to?` tables to match.
+
+**Numeric (`Integer` / `Float`):** `to_int`, `positive?`, `negative?`,
+`succ` / `next`, `pred`, `floor`, `ceil`, `round` (banker-free Ruby
+round-half-up via `ruby_round`), `gcd` (overflow-saturating `gcd_i64`),
+`pow` / `**`, `digits` (`digits_of`), and the block-taking range walkers
+`upto` / `downto` / `step`. Counter arithmetic in the range walkers is
+`checked_add`/`checked_sub`-guarded so an `i64` boundary can never spin
+or panic.
+
+**String:** `capitalize`, `lstrip`, `rstrip`, `chomp`, `chars`, `bytes`,
+`start_with?`, `end_with?`, `index`, `replace`, `sub`, `gsub`,
+`to_i` / `to_f` (lenient leading-numeric parse via `str_to_i` / `str_to_f`),
+`to_sym`, and `empty?`. All arity-guard their optional arguments and
+degrade to a typed error rather than panicking.
+
+Dispatch remains receiver-type routed through explicit `match` arms — no
+reflection on source-derived method names.
+
+(Consolidates the previously-separate Numeric and String catalog PRs into
+one crate change to avoid intra-crate version churn. Note: the `0.16`
+Symbol and `0.17` Hash catalog code is already present on `main`; their
+CHANGELOG entries were dropped by an earlier bad merge and are tracked
+separately.)
+
 ## 0.15.0 — Array aggregate / reshape parity (min / max / sum / uniq / flatten / compact / to_a / each_with_index)
 
 Ports the remaining `Array`/`Enumerable` aggregate and reshape methods —
