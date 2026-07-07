@@ -48,6 +48,10 @@ Chief of Staff job/session/agent
      signals without draining queues or owning smart-home state
   -> recovery brief over incident, policy, runtime, state, and validation
      handoff signals
+  -> command lifecycle brief over command-result, command-risk, authorization,
+     recovery-readiness, and maintenance closeout signals
+  -> command audit dossier over lifecycle, access-review, event-ops, and
+     evidence-ledger signals without draining event queues
   -> escalation brief over morning, blocker, review, and owner-lane signals
   -> continuity brief over escalation, recovery, and operator handoff signals
   -> operator readiness brief over continuity lanes and handoff decisions
@@ -306,6 +310,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_incident_brief`
 - `smart_home.get_recovery_brief`
 - `smart_home.get_recovery_readiness_brief`
+- `smart_home.get_command_lifecycle_brief`
+- `smart_home.get_command_audit_dossier`
 - `smart_home.get_morning_brief`
 - `smart_home.get_escalation_brief`
 - `smart_home.get_continuity_brief`
