@@ -536,6 +536,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // A Hash (`Map`) resolves the hand-implemented Ruby Hash catalog (in
     // lockstep with `hashMethod`'s case labels), ahead of the native gate.
     if (recv instanceof Map && HASH_METHODS.has(name)) { return true; }
+    // A Symbol resolves the hand-implemented Ruby Symbol catalog (in lockstep
+    // with `symbolMethod`'s case labels), ahead of the native gate.
+    if (recv instanceof Sym && SYMBOL_METHODS.has(name)) { return true; }
     // A primitive resolves a name iff it (or its Ruby→native alias) is on the
     // method allowlist AND the native member is actually a function on `recv`.
     if (!(recv instanceof SirInstance)) {
@@ -853,6 +856,47 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return HASH_MISS;
   }
 
+  // ── Ruby Symbol catalog (`Sym` receiver) ───────────────────────
+  // Hand-implemented Ruby Symbol methods, dispatched by an EXPLICIT `switch` on
+  // the source-derived `name` (never `recv[name]`) ahead of the native
+  // allowlist.  Ruby's case methods (`upcase`/`downcase`/`capitalize`) return a
+  // new SYMBOL (`:foo.upcase == :FOO`), not a string; `to_s` returns the name
+  // string; `inspect` is the `:`-prefixed form.  `SYMBOL_METHODS` mirrors these
+  // labels for `respond_to?`.
+  const SYM_MISS = Symbol("sym-miss");
+  const SYMBOL_METHODS = new Set([
+    "to_s", "to_sym", "to_proc", "length", "size", "empty?", "upcase",
+    "downcase", "capitalize", "inspect",
+  ]);
+  function symbolMethod(recv, name, args) {
+    switch (name) {
+      case "to_s": return recv.name;
+      case "to_sym": return recv;
+      case "inspect": return ":" + recv.name;
+      case "length": case "size": return [...recv.name].length;
+      case "empty?": return recv.name.length === 0;
+      case "upcase": return new Sym(recv.name.toUpperCase());
+      case "downcase": return new Sym(recv.name.toLowerCase());
+      case "capitalize": {
+        const cps = [...recv.name];
+        if (cps.length === 0) { return new Sym(""); }
+        return new Sym(cps[0].toUpperCase() + cps.slice(1).join("").toLowerCase());
+      }
+      case "to_proc": {
+        // `:m.to_proc` → a Closure that dispatches `.m(rest…)` on its first
+        // argument.  The dynamic method name (`recv.name`) routes back through
+        // `callMethod` — the SAME allowlist / method-table gate a direct call
+        // uses — never `recv[name]` / reflection (the C3 RCE discipline).
+        const method = recv.name;
+        return new Closure((...a) => {
+          if (a.length === 0) { return null; }
+          return callMethod(a[0], method, ...a.slice(1));
+        });
+      }
+    }
+    return SYM_MISS;
+  }
+
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
   // `name` is not an M6 method, so `callMethod` continues to its type-specific
   // paths.  `rawArgs` is the UN-unwrapped argument list — a trailing block is
@@ -945,6 +989,12 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (recv instanceof Map) {
       const hm = hashMethod(recv, name, args);
       if (hm !== HASH_MISS) { return hm; }
+    }
+    // Ruby Symbol catalog on a `Sym` receiver — explicit-switch dispatch (no
+    // `recv[name]`) ahead of the native allowlist.
+    if (recv instanceof Sym) {
+      const ym = symbolMethod(recv, name, args);
+      if (ym !== SYM_MISS) { return ym; }
     }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
