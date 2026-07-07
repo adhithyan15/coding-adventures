@@ -571,6 +571,9 @@ _ARRAY_METHODS = frozenset(
         "to_a",
         "join",
         "fetch",
+        "take",
+        "drop",
+        "values_at",
     }
 )
 
@@ -960,6 +963,29 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
             "IndexError",
             f"index {index} outside of array bounds: {-length}...{length}",
         )
+    if name in ("take", "drop"):
+        # Ruby ``Array#take(n)`` / ``#drop(n)``: the first ``n`` elements, or all
+        # elements *after* the first ``n``.  ``n`` is clamped to ``[0, len]`` — Ruby
+        # raises ``ArgumentError`` on a negative ``n``, but the never-raise floor
+        # (mirroring the Go/Rust/JS runtimes) folds a negative count to 0, and
+        # Python slicing already saturates ``n > len``.  A non-numeric argument
+        # degrades to 0 rather than raising.
+        n = int(args[0]) if args and isinstance(args[0], (int, float)) else 0
+        if n < 0:
+            n = 0
+        return recv[:n] if name == "take" else recv[n:]
+    if name == "values_at":
+        # Ruby ``Array#values_at(*idxs)``: one element per index, with a negative
+        # index folded from the end **once**.  An out-of-range index yields ``nil``
+        # (``None``) rather than raising — matching the sibling backends.
+        length = len(recv)
+        out: list[Val] = []
+        for arg in args:
+            idx = int(arg) if isinstance(arg, (int, float)) else 0
+            if idx < 0:
+                idx += length
+            out.append(recv[idx] if 0 <= idx < length else None)
+        return out
     return _MISS
 
 

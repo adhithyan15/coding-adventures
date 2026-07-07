@@ -2,6 +2,21 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.14] - 2026-07-07
+
+### Added — Array slice-selection methods: `take` / `drop` / `values_at`
+
+Extends `_array_method` (and the `_ARRAY_METHODS` `respond_to?` catalog) with
+three more non-block Ruby Array methods, mirroring the Go/Rust/JS runtimes:
+
+- `take(n)` / `drop(n)` — the first `n` elements, or all elements *after* the
+  first `n`. `n` is clamped to `[0, len]`: Ruby raises `ArgumentError` on a
+  negative `n`, but the never-raise floor folds it to 0, and Python slicing
+  already saturates `n > len`. A non-numeric argument degrades to 0.
+- `values_at(*idxs)` — one element per index, with a negative index folded from
+  the end **once**; an out-of-range index yields `nil` (`None`) rather than
+  raising, matching the sibling backends.
+
 ## [0.1.13] - 2026-07-07
 
 ### Added — more String methods: `ljust` / `rjust` / `center` / `swapcase`
