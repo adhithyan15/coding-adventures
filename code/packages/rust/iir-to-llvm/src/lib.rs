@@ -730,6 +730,12 @@ pub fn lower_iir_to_llvm(
     // LANG-FULL E4: direct-literal `str_index` can emit `@llvm.trap` when a
     // compile-known index is out of bounds.
     let mut used_str_index = false;
+    // E4-dyn runtime string concatenation over non-literal operands lowers to a
+    // call to `@__twig_str_concat` (from the AOT archive). Set whenever any
+    // `str_concat` op appears; if it turns out to fold to a compile-time literal,
+    // the declare is simply unused (a declare with no call site is legal LLVM and
+    // creates no undefined-symbol reference at link time).
+    let mut used_str_concat = false;
     // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
@@ -762,6 +768,9 @@ pub fn lower_iir_to_llvm(
             }
             if i.op == "str_index" {
                 used_str_index = true;
+            }
+            if i.op == "str_concat" {
+                used_str_concat = true;
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
@@ -832,7 +841,7 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str {
+        || used_input_i64 || used_input_str || used_str_concat {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
@@ -868,6 +877,12 @@ pub fn lower_iir_to_llvm(
             // line and returns an i64 handle to a `[i64 len][bytes]` heap block — the
             // runtime-string repr `print_str` reads the length from at run time.
             out.push_str("declare i64 @__twig_input_str()\n");
+        }
+        if used_str_concat {
+            // `@__twig_str_concat` (E4-dyn) is provided by `twig_runtime.c`: reads both
+            // operands' `[i64 len][bytes]` headers and returns an i64 handle to a fresh
+            // joined block. Used when `str_concat` has a non-literal (runtime) operand.
+            out.push_str("declare i64 @__twig_str_concat(i64, i64)\n");
         }
     }
     if !used_lispy.is_empty() {
@@ -1698,7 +1713,7 @@ fn lower_instr(
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
-        "str_concat" => lower_str_concat(instr, state),
+        "str_concat" => lower_str_concat(instr, state, out),
         "str_slice" => lower_str_slice(instr, state, out),
         "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state, out),
@@ -1854,10 +1869,11 @@ fn lower_str_len(
 fn lower_str_concat(
     instr: &IIRInstr,
     state: &mut FnState,
+    out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_concat", state.fn_name)?.to_string();
     let left = match instr.srcs.first() {
-        Some(Operand::Var(s)) => s,
+        Some(Operand::Var(s)) => s.clone(),
         _ => {
             return Err(IIRLlvmError::InvalidOperand {
                 function: state.fn_name.into(),
@@ -1866,7 +1882,7 @@ fn lower_str_concat(
         }
     };
     let right = match instr.srcs.get(1) {
-        Some(Operand::Var(s)) => s,
+        Some(Operand::Var(s)) => s.clone(),
         _ => {
             return Err(IIRLlvmError::InvalidOperand {
                 function: state.fn_name.into(),
@@ -1874,28 +1890,50 @@ fn lower_str_concat(
             });
         }
     };
-    let left_value = state.str_values.get(left).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
+
+    // Literal fast path: when BOTH operands are compile-time string VALUES, the
+    // collection pre-pass already interned the joined literal — reuse its symbol so
+    // the result stays a known literal (downstream `str_len`/`str_index` keep folding).
+    if let (Some(left_value), Some(right_value)) =
+        (state.str_values.get(&left).cloned(), state.str_values.get(&right).cloned())
+    {
+        let value = format!("{left_value}{right_value}");
+        let info = state.string_literals.get(&value).ok_or_else(|| {
+            IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: format!("str_concat value {value:?} was not collected"),
+            }
+        })?;
+        state.env.insert(dest.clone(), info.symbol.clone());
+        state.str_lens.insert(dest.clone(), info.len);
+        state.str_values.insert(dest, value);
+        return Ok(());
+    }
+
+    // E4-dyn runtime path: at least one operand is a runtime string handle (an
+    // `INPUT` result, a call result, a branch-selected string) with no compile-time
+    // value. `env[operand]` holds the i64 handle to that operand's `[i64 len][bytes]`
+    // block; call `@__twig_str_concat`, which reads both headers and returns a handle
+    // to a fresh joined block. The result is a runtime string — stored ONLY in `env`,
+    // with no `str_lens`/`str_values` entry — so `str_len`/`print_str` on it read the
+    // length header at run time rather than folding a length that isn't known.
+    let left_handle = state.env.get(&left).cloned().ok_or_else(|| {
+        IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
-            detail: format!("str_concat left source {left:?} is not a string literal value"),
+            name: left.clone(),
         }
     })?;
-    let right_value = state.str_values.get(right).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
+    let right_handle = state.env.get(&right).cloned().ok_or_else(|| {
+        IIRLlvmError::UndefinedVariable {
             function: state.fn_name.into(),
-            detail: format!("str_concat right source {right:?} is not a string literal value"),
+            name: right.clone(),
         }
     })?;
-    let value = format!("{left_value}{right_value}");
-    let info = state.string_literals.get(&value).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
-            function: state.fn_name.into(),
-            detail: format!("str_concat value {value:?} was not collected"),
-        }
-    })?;
-    state.env.insert(dest.clone(), info.symbol.clone());
-    state.str_lens.insert(dest.clone(), info.len);
-    state.str_values.insert(dest, value);
+    let res = state.fresh("scc");
+    out.push_str(&format!(
+        "  {res} = call i64 @__twig_str_concat(i64 {left_handle}, i64 {right_handle})\n"
+    ));
+    state.env.insert(dest, res);
     Ok(())
 }
 

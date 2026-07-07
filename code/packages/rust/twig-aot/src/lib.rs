@@ -1860,28 +1860,44 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
-            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
-                lowered.push(instr);
-                continue;
-            };
-            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
-                lowered.push(instr);
-                continue;
-            };
-            let literal = format!("{left_literal}{right_literal}");
-            if !is_printable_ascii_str(&literal) {
-                lowered.push(instr);
-                continue;
+            let left_lit = strings.get(left).map(|(_, _, l)| l.clone());
+            let right_lit = strings.get(right).map(|(_, _, r)| r.clone());
+            // Compile-time fold: when BOTH operands are statically known literals and
+            // their concatenation is printable ASCII, bake the joined literal directly
+            // into the data segment — no runtime call, and the result is itself a known
+            // literal (so downstream `str_len`/`str_index` keep folding).
+            if let (Some(ll), Some(rl)) = (&left_lit, &right_lit) {
+                let literal = format!("{ll}{rl}");
+                if is_printable_ascii_str(&literal) {
+                    let (buf_var, len_var, lit) =
+                        push_aot_string_literal(&mut lowered, &mut next, literal);
+                    lowered.push(IIRInstr::new(
+                        "mov",
+                        Some(dest.clone()),
+                        vec![Operand::Var(buf_var)],
+                        "i64",
+                    ));
+                    strings.insert(dest.clone(), (dest, len_var, lit));
+                    continue;
+                }
             }
-
-            let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
+            // E4-dyn runtime path: at least one operand is a runtime string handle (an
+            // `INPUT` result, a call result, a branch-selected string) with no compile-
+            // time literal — or the joined literal isn't printable ASCII. Delegate to
+            // `__twig_str_concat(a, b)`, which reads both `[i64 len][bytes]` headers and
+            // returns a fresh block handle. `dest` is deliberately NOT recorded in
+            // `strings`, so downstream `print_str`/`str_len` take their runtime
+            // header-reading paths rather than folding a length that isn't known.
             lowered.push(IIRInstr::new(
-                "mov",
-                Some(dest.clone()),
-                vec![Operand::Var(buf_var)],
-                "i64",
+                "call_builtin",
+                Some(dest),
+                vec![
+                    Operand::Var("str_concat".into()),
+                    Operand::Var(left.clone()),
+                    Operand::Var(right.clone()),
+                ],
+                &instr.type_hint,
             ));
-            strings.insert(dest.clone(), (dest, len_var, lit));
             continue;
         }
 
@@ -3306,6 +3322,79 @@ mod tests {
                     && matches!(i.srcs.get(2), Some(Operand::Var(v)) if v == "b")
             ),
             "runtime str_eq should lower to call_builtin str_eq: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn runtime_str_concat_lowers_to_call_builtin_str_concat() {
+        // `str_concat` where at least one operand is a runtime string (a function
+        // parameter here — not in the `strings` literal map) must lower to
+        // `call_builtin "str_concat" a b → dest`, delegating to `__twig_str_concat`.
+        let mut f = IIRFunction::new(
+            "join",
+            vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+            "str",
+            vec![
+                IIRInstr::new("str_concat", Some("s".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "str"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_concat"),
+            "runtime str_concat should be removed by lowering: {:?}",
+            f.instructions
+        );
+        let call = f.instructions.iter().find(|i| i.dest.as_deref() == Some("s"));
+        assert!(
+            matches!(
+                call,
+                Some(i) if i.op == "call_builtin"
+                    && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "str_concat")
+                    && matches!(i.srcs.get(1), Some(Operand::Var(v)) if v == "a")
+                    && matches!(i.srcs.get(2), Some(Operand::Var(v)) if v == "b")
+            ),
+            "runtime str_concat should lower to call_builtin str_concat: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn literal_str_concat_still_folds_to_data_segment() {
+        // Regression guard for the fold FAST path: when BOTH operands are known
+        // printable literals, `str_concat` must still fold to a baked data-segment
+        // buffer (a `mov` from the literal buffer), NOT a runtime call_builtin.
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "str",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("OK".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("!".into())], "str"),
+                IIRInstr::new("str_concat", Some("s".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "str"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_concat"),
+            "literal str_concat should fold away, not survive: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal str_concat must NOT lower to a runtime call_builtin: {:?}",
             f.instructions
         );
     }

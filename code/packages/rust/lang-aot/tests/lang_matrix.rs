@@ -2398,30 +2398,37 @@ const PROGRAMS: &[Prog] = &[
     // the compiler could fold to a literal; here the concatenation can only happen at run
     // time. Stdin "OK\n!\n" → A$="OK", B$="!", and `PRINT A$ + B$` ⇒ "OK!".
     //
-    // This foothold proves the four columns whose `str_concat` is *already* a runtime
-    // operation — no new lowering needed:
+    // The four columns whose `str_concat` is *already* a runtime operation — no new
+    // lowering needed:
     //   • Vm / Jit — a `str` is a tagged `Value::Str`; concat allocates a fresh tagged
     //     string from the two operands' bytes, wholly at run time.
     //   • Jvm — the two `str` locals are `java.lang.String` references (the `astore`d
     //     results of `readLine()`); `str_concat` lowers to a `String` concat that builds
     //     a new `String` from them — the operands need no compile-time identity.
     //   • Clr — the same story with `System.String::Concat(string, string)`.
-    // The three columns whose `str_concat` is currently *literal-fold-only* are deferred
-    // to follow-up PRs, because each needs a genuine runtime-operand path:
-    //   • NativeAot — twig-aot only folds `str_concat` when BOTH operands are known
-    //     literals; the runtime helper `__twig_str_concat(a, b)` already exists in
-    //     twig_runtime.c, so the fix is to emit `call_builtin "str_concat"` (2-arg /
-    //     returns-i64 handle) when an operand isn't foldable and add it to `V1_BUILTINS`.
-    //   • Llvm — `str_concat` reads literal metadata today; the runtime path lowers to
-    //     `call i64 @__twig_str_concat(i64, i64)` against the same AOT archive symbol.
+    // The two **static** columns gain a genuine runtime-operand path in this cell — their
+    // `str_concat` was literal-fold-only before, so both now route a non-foldable concat
+    // to the runtime helper `__twig_str_concat(a, b)` (in `twig_runtime.c`), which reads
+    // both `[i64 len][bytes]` headers and returns a handle to a fresh joined block:
+    //   • NativeAot — twig-aot keeps the both-literal fold, but emits `call_builtin
+    //     "str_concat"` (2-arg / returns-i64) when an operand isn't foldable; the
+    //     aarch64/x86_64 backends add `str_concat` to `V1_BUILTINS` (same shape as
+    //     `str_eq`, so NO new codegen — the handles ride x0/x1 | RDI/RSI, result in
+    //     x0/RAX). aarch64 run-verified locally; x86_64 on CI.
+    //   • Llvm — `iir-to-llvm` keeps the literal fold, but lowers a runtime concat to
+    //     `%r = call i64 @__twig_str_concat(i64 a, i64 b)` against the AOT archive symbol
+    //     (str→i64 handle, E4d-2b), storing the result as a runtime string. Via clang.
+    // The last column whose `str_concat` is still literal-fold-only is deferred:
     //   • Wasm — no libc; a runtime concat must bump-allocate `[i32 len][bytes]` and copy
     //     both operands' bytes in linear memory (or call a host `env.__str_concat`).
+    // With NativeAot + Llvm, runtime `str_concat` runs on six of seven backends (WASM
+    // remains).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK!"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -2601,6 +2608,14 @@ int64_t __twig_input_str(void){char buf[4096];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<4095){buf[i++]=(char)c;}\
 int64_t* h=(int64_t*)malloc(8+(size_t)i);if(!h)return 0;\
 h[0]=(int64_t)i;if(i>0)memcpy((char*)h+8,buf,(size_t)i);\
+return (int64_t)(intptr_t)h;}\n\
+int64_t __twig_str_concat(int64_t a,int64_t b){\
+int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
+if(la<0)la=0;if(lb<0)lb=0;\
+int64_t* h=(int64_t*)malloc(8+(size_t)(la+lb));if(!h)return 0;\
+h[0]=la+lb;\
+if(la>0)memcpy((char*)h+8,(const char*)(intptr_t)a+8,(size_t)la);\
+if(lb>0)memcpy((char*)h+8+la,(const char*)(intptr_t)b+8,(size_t)lb);\
 return (int64_t)(intptr_t)h;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
@@ -2634,7 +2649,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     cmd.arg("-x").arg("ir").arg(&ll_path);
     // Link the generic I/O runtime iff the program actually uses print or input.
     if ll.contains("@__print_i64") || ll.contains("@__print_str")
-        || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str") {
+        || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
+        || ll.contains("@__twig_str_concat") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);

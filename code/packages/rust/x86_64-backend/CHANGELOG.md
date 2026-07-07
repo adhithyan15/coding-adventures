@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## 0.23.0 — 2026-07-07 — E4-dyn: `str_concat` in V1_BUILTINS (runtime string concat)
+
+`V1_BUILTINS` gains `str_concat { n_args: 2, returns: true }` — the runtime string
+concatenation helper `int64_t __twig_str_concat(int64_t a, int64_t b)`. Same
+2-arg / returns-i64 shape as `str_eq` (operand handles ride RDI/RSI, the result
+handle rides RAX), so the generic `call_builtin` marshaller needs **no new codegen**
+— only the table entry. Emitted by twig-aot when a `str_concat` operand is a runtime
+handle. Exercised by the `PRINT A$ + B$` matrix cell (x86_64 on CI).
+
 ## 0.22.0 — 2026-07-07 — E4-dyn: `input_str` in V1_BUILTINS (BASIC string INPUT)
 
 Adds `input_str` (BASIC string `INPUT A$`) to `V1_BUILTINS` as a

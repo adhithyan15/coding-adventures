@@ -323,6 +323,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
+    // E4-dyn runtime string concatenation.  `int64_t __twig_str_concat(int64_t a,
+    // int64_t b)` reads both `[i64 len][bytes]` headers and returns a handle to a
+    // fresh joined block.  Same 2-arg / returns-i64 shape as `str_eq` (operand handles
+    // ride RDI/RSI, the result handle rides RAX), so the generic `call_builtin`
+    // marshaller needs no new codegen — only this table entry.
+    BuiltinSig { name: "str_concat", n_args: 2, returns: true },
     // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
     BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
     BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },

@@ -2300,3 +2300,29 @@ fn input_str_lowers_to_twig_input_str_call() {
     assert!(ll.contains("declare i64 @__twig_input_str()"),
         "the @__twig_input_str extern must be declared; got:\n{ll}");
 }
+
+/// E4-dyn: `str_concat` over two RUNTIME string operands (here two `input_str`
+/// handles — neither is a compile-time literal) lowers to a call to the AOT helper
+/// `@__twig_str_concat(i64, i64)`, which reads both `[i64 len][bytes]` headers and
+/// returns a handle to a fresh joined block. The extern must be declared, and the
+/// runtime result must feed a runtime `str_len` (header read) without folding.
+#[test]
+fn runtime_str_concat_lowers_to_twig_str_concat_call() {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("a".into()),
+            vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("call_builtin", Some("b".into()),
+            vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("str_concat", Some("s".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+    assert!(validate_for_llvm(&module_with(f.clone())).is_empty(),
+        "runtime str_concat must validate");
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_str_concat(i64 "),
+        "runtime str_concat must call the runtime helper; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__twig_str_concat(i64, i64)"),
+        "the @__twig_str_concat extern must be declared; got:\n{ll}");
+}
