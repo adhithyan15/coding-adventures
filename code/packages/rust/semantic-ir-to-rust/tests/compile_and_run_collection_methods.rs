@@ -298,3 +298,111 @@ fn collection_methods_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+/// Block-taking Array methods added in the array-block-breadth batch:
+/// `sort_by`, `min_by`/`max_by`, `partition`, `flat_map`, `take_while`/
+/// `drop_while`, `count` (block + arg), and `each_with_object`.
+fn block_breadth_demo() -> Module {
+    let block_fns = vec![
+        block_fn("__blk_id", &["x"], param("x")),
+        block_fn("__blk_even", &["x"], method(param("x"), "even?", vec![])),
+        block_fn("__blk_pair", &["x"], seq(vec![param("x"), param("x")])),
+        block_fn("__blk_lt3", &["x"], call("<", vec![param("x"), ilit(3)])),
+        block_fn(
+            "__blk_ewo",
+            &["x", "o"],
+            method(param("o"), "push", vec![call("*", vec![param("x"), ilit(10)])]),
+        ),
+    ];
+    let main_stmts = vec![
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "sort_by", vec![block("__blk_id")])),
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "min_by", vec![block("__blk_id")])),
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "max_by", vec![block("__blk_id")])),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "partition",
+            vec![block("__blk_even")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "flat_map",
+            vec![block("__blk_pair")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "take_while",
+            vec![block("__blk_lt3")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "drop_while",
+            vec![block("__blk_lt3")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "count",
+            vec![block("__blk_even")],
+        )),
+        print_stmt(method(seq(vec![ilit(1), ilit(1), ilit(2), ilit(3)]), "count", vec![ilit(1)])),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "each_with_object",
+            vec![seq(vec![]), block("__blk_ewo")],
+        )),
+    ];
+    demo_module(main_stmts, block_fns)
+}
+
+#[test]
+fn array_block_methods_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let artifact = compile(&block_breadth_demo()).expect("module should compile to Rust source");
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_arrblk_{nonce}.rs"));
+    let bin_path = dir.join(format!("sir_arrblk_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker") && (stderr.contains("not found") || stderr.contains("No such file")) {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!("emitted Rust failed to compile:\n{stderr}\n--- source ---\n{}", artifact.source);
+    }
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(run_out.status.success(), "binary exited non-zero:\n{}", String::from_utf8_lossy(&run_out.stderr));
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[1, 2, 3]",           // sort_by { x }
+            "1",                   // min_by { x }
+            "3",                   // max_by { x }
+            "[[2, 4], [1, 3]]",    // partition { even? }
+            "[1, 1, 2, 2, 3, 3]",  // flat_map { [x, x] }
+            "[1, 2]",              // take_while { x < 3 }
+            "[3, 4]",              // drop_while { x < 3 }
+            "2",                   // count { even? }
+            "2",                   // count(1)
+            "[10, 20, 30]",        // each_with_object([]) { push x*10 }
+        ],
+        "unexpected output; full stdout:\n{stdout}"
+    );
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
