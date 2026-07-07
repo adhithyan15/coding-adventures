@@ -339,3 +339,93 @@ fn unknown_method_fails_cleanly() {
         "expected a controlled undefined-method panic; stderr:\n{stderr}"
     );
 }
+
+/// Block-taking Array methods added in the array-block-breadth batch.
+fn array_block_module() -> Module {
+    let id = lambda_fn("__blk_id", "x", var_p("x"));
+    let even = lambda_fn("__blk_even", "x", method(var_p("x"), "even?", vec![]));
+    let pair = lambda_fn("__blk_pair", "x", seq(vec![var_p("x"), var_p("x")]));
+    let lt3 = lambda_fn("__blk_lt3", "x", builtin("<", vec![var_p("x"), ilit(3)]));
+    let ewo = lambda_fn2(
+        "__blk_ewo",
+        "x",
+        "o",
+        method(var_p("o"), "push", vec![builtin("*", vec![var_p("x"), ilit(10)])]),
+    );
+    let stmts = vec![
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "sort_by", vec![closure("__blk_id")])),
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "min_by", vec![closure("__blk_id")])),
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "max_by", vec![closure("__blk_id")])),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "partition",
+            vec![closure("__blk_even")],
+        )),
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "flat_map", vec![closure("__blk_pair")])),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "take_while",
+            vec![closure("__blk_lt3")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "drop_while",
+            vec![closure("__blk_lt3")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+            "count",
+            vec![closure("__blk_even")],
+        )),
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3)]),
+            "each_with_object",
+            vec![seq(vec![]), closure("__blk_ewo")],
+        )),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+    program(vec![id, even, pair, lt3, ewo, main])
+}
+
+#[test]
+fn array_block_methods_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&array_block_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "arrblk");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[1, 2, 3]",          // sort_by { x }
+            "1",                  // min_by { x }
+            "3",                  // max_by { x }
+            "[[2, 4], [1, 3]]",   // partition { even? }
+            "[1, 1, 2, 2, 3, 3]", // flat_map { [x, x] }
+            "[1, 2]",             // take_while { x < 3 }
+            "[3, 4]",             // drop_while { x < 3 }
+            "2",                  // count { even? }
+            "[10, 20, 30]",       // each_with_object([]) { push x*10 }
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
