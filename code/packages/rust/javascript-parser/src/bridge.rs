@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
-        ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, Property,
+        ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, Property,
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -1356,6 +1356,18 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // `other =>` internal-error arm (dropping the file to WHITESPACE_ONLY).
         "import_meta" => convert_import_meta(node),
 
+        // `import(x)` — the dynamic-import call expression (CLOC12.169 PR2,
+        // gap-170). The grammar emits a dedicated `dynamic_import` node whose
+        // children are `[Token("import"), Token("("), Node(source_expr),
+        // Token(")")]` — a single operand (the module-specifier expression)
+        // wrapped in the `import( … )` spelling. It lowers to the compound
+        // `Expression::ImportExpression` node: unlike `import.meta` (an atomic
+        // leaf), this one recurses into its `source` child, so a fold inside the
+        // specifier (e.g. `import("a" + "b")` → `import("ab")`) propagates.
+        // Previously fell through to the `other =>` internal-error arm, dropping
+        // the file to WHITESPACE_ONLY.
+        "dynamic_import" => convert_dynamic_import(node),
+
         // Literals
         "array_literal" => convert_array_literal(node),
         "object_literal" => convert_object_literal(node),
@@ -2155,6 +2167,43 @@ fn convert_import_meta(node: &GrammarASTNode) -> Result<Expression, BridgeError>
         _ => None,
     };
     Ok(Expression::ImportMeta(ImportMeta { cv }))
+}
+
+// -------------------------------------------------------------------------
+// import(x) — dynamic import (CLOC12.169 PR2, gap-170)
+// -------------------------------------------------------------------------
+
+/// `import(x)` — the dynamic-`import()` call expression. The grammar emits a
+/// dedicated `dynamic_import` node with children
+/// `[Token("import"), Token("("), Node(source_expr), Token(")")]`: exactly one
+/// Node child — the module-specifier expression — flanked by the fixed
+/// `import( … )` spelling tokens. We convert that sole child via
+/// `convert_expression` and wrap it in the compound
+/// `Expression::ImportExpression`.
+///
+/// Unlike `import.meta` (an atomic *leaf* with no operand), this node has a
+/// real `source` operand the downstream passes walk into, so a fold inside the
+/// specifier propagates — e.g. `import("a" + "b")` collapses to `import("ab")`.
+/// We take the `import` token's `cv` as the node's provenance (the dynamic
+/// import is one conceptual construct, mirroring `convert_import_meta`).
+///
+/// `node_children` skips the three bare tokens, so the specifier is
+/// `node_children(node).first()`. If it is somehow absent (a malformed tree),
+/// we surface an internal error rather than silently dropping the operand.
+fn convert_dynamic_import(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+    let cv = match node.children.first() {
+        Some(ASTNodeOrToken::Token(t)) => t.cv.clone(),
+        _ => None,
+    };
+    let source_node = node_children(node)
+        .into_iter()
+        .next()
+        .ok_or_else(|| internal(node, "dynamic_import: no source expression"))?;
+    let source = convert_expression(source_node)?;
+    Ok(Expression::ImportExpression(ImportExpression {
+        cv,
+        source: Box::new(source),
+    }))
 }
 
 // -------------------------------------------------------------------------
@@ -3232,6 +3281,52 @@ mod tests {
     #[test]
     fn import_meta_as_call_argument() {
         let _ = bridge_ok("f(import.meta);");
+    }
+
+    // -----------------------------------------------------------------------
+    // import(x) — dynamic import (CLOC12.169 PR2, gap-170)
+    // -----------------------------------------------------------------------
+
+    /// `import("m")` — the canonical dynamic import of a string module specifier.
+    /// The grammar emits `dynamic_import` (`[Token("import"), Token("("),
+    /// Node(source), Token(")")]`); the bridge lowers it to the compound
+    /// `ImportExpression` whose `source` is the converted specifier — here a
+    /// `StringLiteral`. Previously the rule fell through to the internal-error
+    /// arm, dropping the file to WHITESPACE_ONLY.
+    #[test]
+    fn dynamic_import_string_specifier() {
+        let p = bridge_ok("import(\"m\");");
+        match only_expr(&p) {
+            Expression::ImportExpression(ie) => match &*ie.source {
+                Expression::StringLiteral(s) => assert_eq!(s.value, "m"),
+                other => panic!("expected StringLiteral source; got {:?}", other),
+            },
+            other => panic!("expected ImportExpression; got {:?}", other),
+        }
+    }
+
+    /// `import(x)` — a dynamic import of a *variable* specifier (computed at
+    /// runtime). Pins that the `source` operand is recursively converted, so a
+    /// non-literal specifier lowers to an `Identifier` rather than being dropped.
+    #[test]
+    fn dynamic_import_identifier_specifier() {
+        let p = bridge_ok("import(x);");
+        match only_expr(&p) {
+            Expression::ImportExpression(ie) => assert!(
+                matches!(&*ie.source, Expression::Identifier(_)),
+                "expected Identifier source; got {:?}",
+                ie.source
+            ),
+            other => panic!("expected ImportExpression; got {:?}", other),
+        }
+    }
+
+    /// `f(import("m"))` — the dynamic import as a call argument bridges cleanly
+    /// (a compound operand in nested position), proving it slots into the
+    /// argument list like any other expression.
+    #[test]
+    fn dynamic_import_as_call_argument() {
+        let _ = bridge_ok("f(import(\"m\"));");
     }
 
     // -----------------------------------------------------------------------
