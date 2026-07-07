@@ -1,6 +1,6 @@
 use std::collections::{BTreeSet, HashMap};
 
-use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+use unicode_normalize::{char::is_combining_mark, UnicodeNormalize};
 
 use crate::model::{
     Card, CardLineage, CardTemplate, GeneratedCard, Note, NoteType, TemplateRequirementMode,

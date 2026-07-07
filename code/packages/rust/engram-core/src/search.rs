@@ -14,7 +14,7 @@ use regex::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+use unicode_normalize::{char::is_combining_mark, UnicodeNormalize};
 
 static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
@@ -23,8 +23,6 @@ static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
     .expect("duplicate media tag regex should compile")
 });
 
-static DUPLICATE_HTML_TAGS: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?is)<[^>]+>").expect("html tag regex should compile"));
 const FSRS5_DEFAULT_DECAY: f64 = 0.5;
 const SECONDS_PER_DAY: i64 = 86_400;
 const ANKI_TYPE_NEW: i64 = 0;
@@ -2281,7 +2279,7 @@ fn rendered_search_text(value: &str) -> Cow<'_, str> {
             .map_or("", |capture| capture.as_str());
         format!(" {filename} ")
     });
-    let without_tags = DUPLICATE_HTML_TAGS.replace_all(&with_media, "");
+    let without_tags = crate::html_scan::strip_tags(&with_media);
     Cow::Owned(decode_search_html_entities(&without_tags))
 }
 
