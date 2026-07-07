@@ -8,6 +8,7 @@
 
 mod csv;
 mod history;
+mod html_scan;
 mod media;
 mod merge;
 mod model;

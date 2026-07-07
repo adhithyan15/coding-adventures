@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### HTML tag-strip no longer uses `regex` (zero-dep step)
+
+`rendered_search_text` (search) stripped HTML tags with the `regex` pattern
+`(?is)<[^>]+>`. That step is now the hand-written `html_scan::strip_tags`
+scanner, byte-for-byte verified against the live `regex` across 300k random
+strings. The `regex` dependency is **not yet removed** — the media-tag pattern
+and the search-match pipeline (glob/whole-word/`re:`) still use it and are
+scheduled for the zero-dep regex engine (Phase D). Part of the Engram
+zero-dependency program (`code/specs/engram-zero-dep-plan.md`, Phase C2).
+
 ### Removed third-party `unicode-normalization` — NFD/NFC is now zero-dep
 
 Accent-stripping and canonical de-duplication in `search.rs` and `template.rs`
