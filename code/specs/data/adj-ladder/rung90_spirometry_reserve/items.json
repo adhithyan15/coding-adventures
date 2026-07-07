@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 90 \u2014 pulmonary-function spirometry ventilatory reserve index from four stated quantities (a NEW panel: pulmonary-function / spirometry). From a forced volume and a residual volume whose difference is the usable capacity span and a peak flow and a trough flow whose difference is the flow span, compute the reserve index ((forced_volume-residual_volume)*(peak_flow-trough_flow)), the capacity span (forced_volume-residual_volume), or the flow span (peak_flow-trough_flow). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT OF TWO DIFFERENCES (a-b)*(c-d) (subtract b from a, subtract d from c, multiply the two groups, so (a-b)*(c-d) = ((a-b)*(c-d)); no prior shape multiplied a DIFFERENCE by another DIFFERENCE \u2014 every earlier binomial shape multiplied or divided a binomial by a single observed factor, and rung-89 (a+b)*(c-d) multiplied a SUM by a difference, never a difference by another difference) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via +, -, and * \u2014 no constant leaks, and neither the capacity span, the flow span, nor any reserve figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: subtracting the trough flow outside the product instead of inside the second factor ((a-b)*c-d, a wrong grouping) and summing the first pair instead of differencing it ((a+b)*(c-d), a wrong pairing). The core confusion tested is that (a-b)*(c-d) is ((a-b)*(c-d)), not (a-b)*c-d and not (a+b)*(c-d).",
+  "items": [
+    {
+      "id": "r90spr-01",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 4 minus a residual volume of 2, all scaled by a peak flow of 6 minus a trough flow of 2. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(4)\nobserve residual_volume(2)\nobserve peak_flow(6)\nobserve trough_flow(2)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r90spr-02",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 4 minus a residual volume of 2, all scaled by a peak flow of 6 minus a trough flow of 2. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(4)\nobserve residual_volume(2)\nobserve peak_flow(6)\nobserve trough_flow(2)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r90spr-03",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 4 minus a residual volume of 2, all scaled by a peak flow of 6 minus a trough flow of 2. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(4)\nobserve residual_volume(2)\nobserve peak_flow(6)\nobserve trough_flow(2)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r90spr-04",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 5 minus a residual volume of 2, all scaled by a peak flow of 7 minus a trough flow of 2. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(5)\nobserve residual_volume(2)\nobserve peak_flow(7)\nobserve trough_flow(2)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 35,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r90spr-05",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 5 minus a residual volume of 2, all scaled by a peak flow of 7 minus a trough flow of 2. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(5)\nobserve residual_volume(2)\nobserve peak_flow(7)\nobserve trough_flow(2)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r90spr-06",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 5 minus a residual volume of 2, all scaled by a peak flow of 7 minus a trough flow of 2. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(5)\nobserve residual_volume(2)\nobserve peak_flow(7)\nobserve trough_flow(2)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 35,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r90spr-07",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 5 minus a residual volume of 3, all scaled by a peak flow of 7 minus a trough flow of 3. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(5)\nobserve residual_volume(3)\nobserve peak_flow(7)\nobserve trough_flow(3)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r90spr-08",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 5 minus a residual volume of 3, all scaled by a peak flow of 7 minus a trough flow of 3. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(5)\nobserve residual_volume(3)\nobserve peak_flow(7)\nobserve trough_flow(3)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r90spr-09",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 5 minus a residual volume of 3, all scaled by a peak flow of 7 minus a trough flow of 3. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(5)\nobserve residual_volume(3)\nobserve peak_flow(7)\nobserve trough_flow(3)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r90spr-10",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 2, all scaled by a peak flow of 4 minus a trough flow of 2. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(2)\nobserve peak_flow(4)\nobserve trough_flow(2)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r90spr-11",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 2, all scaled by a peak flow of 4 minus a trough flow of 2. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(2)\nobserve peak_flow(4)\nobserve trough_flow(2)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r90spr-12",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 2, all scaled by a peak flow of 4 minus a trough flow of 2. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(2)\nobserve peak_flow(4)\nobserve trough_flow(2)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r90spr-13",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 3, all scaled by a peak flow of 8 minus a trough flow of 2. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(3)\nobserve peak_flow(8)\nobserve trough_flow(2)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r90spr-14",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 3, all scaled by a peak flow of 8 minus a trough flow of 2. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(3)\nobserve peak_flow(8)\nobserve trough_flow(2)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r90spr-15",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 3, all scaled by a peak flow of 8 minus a trough flow of 2. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(3)\nobserve peak_flow(8)\nobserve trough_flow(2)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r90spr-16",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 4, all scaled by a peak flow of 8 minus a trough flow of 3. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(4)\nobserve peak_flow(8)\nobserve trough_flow(3)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r90spr-17",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 4, all scaled by a peak flow of 8 minus a trough flow of 3. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(4)\nobserve peak_flow(8)\nobserve trough_flow(3)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r90spr-18",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 6 minus a residual volume of 4, all scaled by a peak flow of 8 minus a trough flow of 3. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(6)\nobserve residual_volume(4)\nobserve peak_flow(8)\nobserve trough_flow(3)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r90spr-19",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 7 minus a residual volume of 2, all scaled by a peak flow of 5 minus a trough flow of 2. What is the ventilatory reserve index (the capacity span times the flow span)?",
+      "program": "observe forced_volume(7)\nobserve residual_volume(2)\nobserve peak_flow(5)\nobserve trough_flow(2)\nlet answer = (forced_volume - residual_volume) * (peak_flow - trough_flow)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r90spr-20",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 7 minus a residual volume of 2, all scaled by a peak flow of 5 minus a trough flow of 2. What is the the capacity span (the forced volume minus the residual volume, before scaling by the flow span)?",
+      "program": "observe forced_volume(7)\nobserve residual_volume(2)\nobserve peak_flow(5)\nobserve trough_flow(2)\nlet answer = forced_volume - residual_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r90spr-21",
+      "qtype": "spirometry_reserve_index",
+      "stem": "A spirometry study reads a forced volume of 7 minus a residual volume of 2, all scaled by a peak flow of 5 minus a trough flow of 2. What is the the flow span (the peak flow minus the trough flow, before scaling by the capacity span)?",
+      "program": "observe forced_volume(7)\nobserve residual_volume(2)\nobserve peak_flow(5)\nobserve trough_flow(2)\nlet answer = peak_flow - trough_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 27,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
