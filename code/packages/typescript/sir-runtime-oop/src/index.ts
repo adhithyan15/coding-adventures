@@ -567,9 +567,19 @@ const ARRAY_BLOCK_METHODS = new Set<string>([
   "find",
   "detect",
   "flat_map",
+  "collect_concat",
   "any?",
   "all?",
   "none?",
+  "sort_by",
+  "min_by",
+  "max_by",
+  "group_by",
+  "partition",
+  "take_while",
+  "drop_while",
+  "count",
+  "each_with_object",
 ]);
 
 // Non-block `Hash` methods (M1c). Hash is a JS `Map`.
@@ -984,7 +994,8 @@ function arrayBlockMethod(
         if (truthy(apply(block, [item]))) return item;
       }
       return null;
-    case "flat_map": {
+    case "flat_map":
+    case "collect_concat": {
       const out: Val[] = [];
       for (const item of recv) {
         const mapped = apply(block, [item]);
@@ -999,6 +1010,80 @@ function arrayBlockMethod(
       return recv.every((item: Val) => truthy(apply(block, [item])));
     case "none?":
       return !recv.some((item: Val) => truthy(apply(block, [item])));
+    case "sort_by": {
+      // Sort by the block-computed key (Ruby `sort_by`); `<`/`>` keeps numbers
+      // numeric, matching the plain `sort` arm. Keys computed once (Schwartzian).
+      const keyed = recv.map((item: Val): [Val, Val] => [apply(block, [item]), item]);
+      keyed.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+      return keyed.map((pair) => pair[1]);
+    }
+    case "min_by":
+    case "max_by": {
+      if (recv.length === 0) return null;
+      const wantMin = name === "min_by";
+      let bestItem = recv[0];
+      let bestKey = apply(block, [recv[0]]);
+      for (let i = 1; i < recv.length; i++) {
+        const key = apply(block, [recv[i]]);
+        if (wantMin ? key < bestKey : key > bestKey) {
+          bestItem = recv[i];
+          bestKey = key;
+        }
+      }
+      return bestItem;
+    }
+    case "group_by": {
+      // A Hash (`Map`) of block key -> list of elements, in first-seen order.
+      const groups = new Map<Val, Val>();
+      for (const item of recv) {
+        const key = apply(block, [item]);
+        const bucket = groups.get(key);
+        if (Array.isArray(bucket)) bucket.push(item);
+        else groups.set(key, [item]);
+      }
+      return groups;
+    }
+    case "partition": {
+      const yes: Val[] = [];
+      const no: Val[] = [];
+      for (const item of recv) {
+        if (truthy(apply(block, [item]))) yes.push(item);
+        else no.push(item);
+      }
+      return [yes, no];
+    }
+    case "take_while": {
+      const out: Val[] = [];
+      for (const item of recv) {
+        if (truthy(apply(block, [item]))) out.push(item);
+        else break;
+      }
+      return out;
+    }
+    case "drop_while": {
+      const out: Val[] = [];
+      let dropping = true;
+      for (const item of recv) {
+        if (dropping && truthy(apply(block, [item]))) continue;
+        dropping = false;
+        out.push(item);
+      }
+      return out;
+    }
+    case "count":
+      // `count { |x| pred }` — number of truthy results (arg/bare forms are in
+      // the non-block `arrayMethod`).
+      return recv.reduce(
+        (n: number, item: Val) => (truthy(apply(block, [item])) ? n + 1 : n),
+        0,
+      );
+    case "each_with_object": {
+      // `each_with_object(memo) { |x, memo| … }` — folds into and returns memo.
+      if (args.length === 0) return recv;
+      const memo = args[0];
+      for (const item of recv) apply(block, [item, memo]);
+      return memo;
+    }
     default:
       return MISS;
   }
