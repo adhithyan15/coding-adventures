@@ -2562,7 +2562,12 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 							if v > math.MaxInt64-step {
 								break
 							}
+							prev := v
 							v += step
+							if v == prev {
+								// float stagnation (ulp >= step): the never-hang floor.
+								break
+							}
 						}
 					} else if step < 0 {
 						for v >= lim {
@@ -2570,7 +2575,12 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 							if v < math.MinInt64-step {
 								break
 							}
+							prev := v
 							v += step
+							if v == prev {
+								// float stagnation (ulp >= step): the never-hang floor.
+								break
+							}
 						}
 					}
 				} else {
