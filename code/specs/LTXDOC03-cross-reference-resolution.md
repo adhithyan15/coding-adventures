@@ -711,3 +711,83 @@ number `"?"`, rendering `\ref{eq:e} -> Equation ?`; and a `to_latex()` round-tri
 AST). `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
 -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 14. S8 — equation numbering
+
+### 14.1 The gap S8 closes
+
+S7 (§13) made a `\ref`/`\eqref` to a display-math `\label` *resolve* and appear in the S6 report, but
+it left the equation **number** unwired: the `Equation` row carried the placeholder
+`EQUATION_NUMBER_PLACEHOLDER` (`"?"`, §13.3), so `cross_reference_report()` rendered
+`\ref{eq:e} -> Equation ?`. S8 wires the real `\theequation` counter so the report prints
+`\ref{eq:e} -> Equation 1`.
+
+### 14.2 What S8 does — a flat equation counter
+
+The numbering walk (`Document::number_labels`) already threads a single `Counters` state through the
+pre-order `walk`, with a **hierarchical** section counter (`step_section`, deeper-reset) and two
+**flat** float counters (`step_figure`/`step_table`, one monotonic run each, incremented for *every*
+float in document order). S8 adds a third flat counter of exactly the same shape for equations:
+
+- **New `Counters` field.** `equation: u32`, initialised to `0` in `Counters::new()` alongside
+  `figure`/`table`.
+- **New `step_equation(&mut self) -> u32`.** Mirrors `step_figure`/`step_table` **exactly**:
+  pre-increment (saturating, so a pathological run never wraps or panics) and return the new value. So
+  the first equation numbers `1`, the next `2`, in pure document order — **independent** of the
+  section/figure/table counters (the `article` default, where `\theequation` is a flat run and is not
+  reset per section).
+- **The `Block::DisplayMath { label: Some(key), .. }` arm.** The single line
+  `record(key, LabelKind::Equation, EQUATION_NUMBER_PLACEHOLDER.to_string())` becomes
+  `record(key, LabelKind::Equation, counters.step_equation().to_string())`. Nothing else in the walk
+  changes; the `Equation` row now carries a real sequential number, so `Numbering::number_for(key)`
+  returns `Some("1")` and the S6 report renders `\ref{eq:e} -> Equation 1`.
+
+### 14.3 LaTeX-fidelity limitation — unlabelled numbered equations
+
+In real LaTeX **every** non-starred display equation consumes the equation counter whether or not it
+carries a `\label` — exactly like figures/tables, where the `\label` only *captures* an
+already-stepped value. Our AST, however, only marks the **labelled** non-starred case:
+`Block::DisplayMath` carries **no** `numbered: bool` flag, and the D5 lowering (§13.2) sets
+`label: None` for *both* starred envs (`equation*`, …) **and** unlabelled islands (`\[…\]`, `$$…$$`).
+So an unlabelled-but-numbered `equation` env is, at the numbering walk, indistinguishable from an
+unnumbered island — there is no state to key a step on. S8 therefore steps the counter **only** for
+labelled equations, in keeping with the "don't invent AST fields" constraint.
+
+**Consequence:** if an unlabelled numbered equation sits between two labelled ones, the second
+labelled equation's number is one lower than a full LaTeX run would assign. Closing this gap requires
+adding `numbered: bool` to `Block::DisplayMath` (an AST change) so the numbering walk can step for
+unlabelled numbered equations too, mirroring the figure/table "every float advances the counter"
+rule; that is deferred to a later slice.
+
+### 14.4 `\eqref` parenthesisation — deferred
+
+S8 is **counter-only**. The S6 report (§12.4) renders every reference as `\ref{key} -> Kind number`
+(canonical `\ref` spelling, bare number), so `\eqref` does **not** yet parenthesise to `(1)`. That
+surface distinction — amsmath's `\eqref` wrapping the number in parentheses — is a later slice and is
+out of scope for S8.
+
+### 14.5 `EQUATION_NUMBER_PLACEHOLDER` retained
+
+The constant stays defined and re-exported from the crate root (§13.5). Although its former **code**
+use in the numbering arm is replaced by the real counter, it is still referenced by the module's
+intra-doc links and remains available to the deferred `\eqref` work. It is a `pub` item, so removing
+its sole code use does not make it dead code.
+
+### 14.6 Public API (added in S8)
+
+No public type or signature changes: `Counters`/`step_equation` are private to `references.rs`, and
+`number_labels`/`Numbering`/`cross_reference_report` keep their existing signatures. The only
+observable change is that an `Equation` row's `number` is now a real sequential value (`"1"`, `"2"`,
+…) instead of the placeholder `"?"`. The change is **additive** and byte-for-byte compatible with
+S1–S7 except for that number.
+
+### 14.7 Verification (S8)
+
+`cargo test -p latex` green (5 new/updated tests: a single lifted equation label numbers `"1"`; two in
+document order number `"1"` then `"2"`; the equation counter is independent of the section counter (a
+`\section` before the equation leaves it `"1"`); the equation counter is independent of the figure
+counter (a figure between two equations leaves them `"1"`/`"2"` while the figure is its own `"1"`); the
+`to_latex()` round-trip for a labelled equation is still a fixed point; and the updated S7 report test
+now asserts `\ref{eq:e} -> Equation 1`). `cargo clippy -p latex --all-targets -- -D warnings` clean;
+downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features`
+builds. No `cargo fmt`, no grammar regen, no new dependencies.
