@@ -129,6 +129,7 @@ SELF_CONTAINED_RUNGS = (
     "rung89_skin_test_wheal",
     "rung90_spirometry_reserve",
     "rung91_protein_delivery",
+    "rung92_gi_absorption",
 )
 
 
