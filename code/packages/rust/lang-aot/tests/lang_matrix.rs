@@ -2359,17 +2359,27 @@ const PROGRAMS: &[Prog] = &[
     // then `mov`s the runtime handle into the `$`-variable's string slot; `PRINT A$`
     // consumes that slot through the shared E4 `print_str` op. This is the first
     // matrix proof that a runtime string can *originate at the input boundary*.
-    // It runs today on the already-dynamic VM/JIT columns (a tagged `Value::Str`
-    // read from the shared stdin buffer by the registered `input_str` closure);
-    // wiring the four subprocess/WASM columns' host read-a-line primitive
-    // (`__twig_input_str` / `env.__input_str` / `readLine` / `Console.ReadLine`)
-    // is the next slice of this arc. Stdin "OK\n" → A$ = "OK" → prints "OK".
+    // It runs on the dynamic VM/JIT columns (a tagged `Value::Str` read from the
+    // shared stdin buffer by the registered `input_str` closure) and the two
+    // **managed** columns whose `str` is already a host string object:
+    //   • JVM — `env.BasicRuntime.readLine()Ljava/lang/String;` returns a
+    //     `java.lang.String`, which is exactly how `str` is carried on the JVM
+    //     (`iir_type_to_jvm("str") = Ref`); the reference `astore`s into the slot.
+    //   • CLR — `System.Console.ReadLine()` returns a `System.String`, which is the
+    //     CLR representation of a `str` local; it stores straight in.
+    // Neither needed a new value-model — only a read-a-line host primitive that
+    // returns the backend's native string (mirroring the numeric `input_i64`'s
+    // `readLong` / `ReadLine`+`Int32.Parse`), so this is the string sibling of the
+    // numeric `INPUT X` cell above. Wiring the static columns' heap-string host
+    // primitive (`__twig_input_str` returning a `[i64 len][bytes]` handle on
+    // native/LLVM, `env.__input_str` writing into linear memory on WASM) is the
+    // next slice of this arc. Stdin "OK\n" → A$ = "OK" → prints "OK".
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -3131,7 +3141,14 @@ while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
 String s = sb.toString().trim(); \
 if(s.isEmpty()) return 0L; \
 return Long.parseLong(s); \
-} catch(Exception e){ return 0L; } } }";
+} catch(Exception e){ return 0L; } } \
+public static String readLine(){ try { \
+java.io.InputStream in = System.in; \
+StringBuilder sb = new StringBuilder(); \
+int c; \
+while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
+return sb.toString(); \
+} catch(Exception e){ return \"\"; } } }";
 
 /// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
 /// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +

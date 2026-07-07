@@ -1367,6 +1367,22 @@ fn emit_method(
                         );
                         store_var(il, &regs, dest)?;
                     }
+                    // `input_str` — BASIC's string `INPUT A$` (E4-dyn). Reads one
+                    // whole line from stdin *as the string value itself* — no
+                    // `Int32.Parse`, unlike `input_i64`. `Console.ReadLine()`
+                    // already returns a `System.String`, which is exactly the CLR
+                    // representation of a `str` local (`cil_local_type("str")`), so
+                    // the result stores straight into the `str`-typed dest. Like
+                    // `input_i64` this assumes input is present (the V1 permissive
+                    // contract): at EOF `ReadLine` yields `null`, matching how the
+                    // numeric sibling relies on a well-formed line.
+                    "input_str" => {
+                        let _ = writeln!(
+                            il,
+                            "    call string [System.Console]System.Console::ReadLine()"
+                        );
+                        store_var(il, &regs, dest)?;
+                    }
                     other => {
                         return Err(IIRClrError::UnsupportedOp {
                             function: f.name.clone(),
@@ -2598,6 +2614,31 @@ mod tests {
         assert!(
             il.contains("call int32 [System.Console]System.Console::Read()"),
             "getchar → Console.Read(); got:\n{il}"
+        );
+    }
+
+    /// E4-dyn: BASIC string `INPUT A$` lowers to `call_builtin "input_str"`,
+    /// which reads a whole line as the string value via `Console.ReadLine()` —
+    /// and, unlike numeric `input_i64`, does *not* parse it (`Int32.Parse` must
+    /// not appear). The `str` result stores into a `System.String` local.
+    #[test]
+    fn input_str_reads_line_via_console_readline() {
+        let instrs = vec![
+            IIRInstr::new("call_builtin", Some("s".into()), vec![Operand::Var("input_str".into())], "str"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call string [System.Console]System.Console::ReadLine()"),
+            "input_str → Console.ReadLine(); got:\n{il}"
+        );
+        assert!(
+            !il.contains("Int32::Parse"),
+            "input_str is a raw string read — it must NOT parse the line; got:\n{il}"
         );
     }
 

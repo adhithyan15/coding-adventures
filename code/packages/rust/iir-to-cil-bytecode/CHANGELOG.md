@@ -1,5 +1,21 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.38.0] — 2026-07-06 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
+
+BASIC's string `INPUT A$` (E4-dyn) now lowers on the CLR: the whole stdin line is
+read **as the string value itself**, not parsed as a number.
+
+- **Textual `il_text` emitter**: new `input_str` `call_builtin` arm — `call string
+  [System.Console]System.Console::ReadLine()`, then store into the `str`-typed
+  dest. Unlike numeric `input_i64` there is **no** `Int32.Parse`: `ReadLine`
+  already returns a `System.String`, which is exactly `cil_local_type("str")`.
+  Like `input_i64` this assumes input is present (the V1 permissive contract).
+- **Test**: `input_str_reads_line_via_console_readline` asserts the emitted `.il`
+  calls `Console.ReadLine()` and never `Int32.Parse`.
+
+Proven in `lang-aot`'s `lang_matrix` (`10 INPUT A$ / 20 PRINT A$ / 30 END`, stdin
+`"OK"` → `OK`) on the CLR column via real `ilasm`/`dotnet` in CI.
+
 ## [0.37.0] — 2026-06-30 (BA-INPUT: `input_i64` → `Console.ReadLine` + `Int32.Parse`)
 
 Added `"input_i64"` arm to the `call_builtin` handler in `il_text.rs`:

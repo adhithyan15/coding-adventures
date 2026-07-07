@@ -1,5 +1,26 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.29.0] — 2026-07-06 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
+
+BASIC's string `INPUT A$` (E4-dyn) now lowers to real JVM bytecode: a whole line
+is read from the host **as the string value itself**, a genuinely runtime string
+the compiler cannot fold.
+
+- **Validator** (`validate.rs`): the `str`-type gate now also accepts `str` on
+  `call_builtin` and `mov` (previously only `str_const`/`str_concat`/`str_slice`/
+  `call`/`ret`). `INPUT A$` emits a `str`-typed `call_builtin "input_str"` followed
+  by a `str`-typed `mov` into the `$`-variable's slot — both were rejected before.
+- **Lowering** (`lower.rs`): new `input_str` arm — `invokestatic
+  env/BasicRuntime.readLine()Ljava/lang/String;` then `astore` the returned
+  `String` reference into the `str`-typed dest slot (`iir_type_to_jvm("str") =
+  Ref`). This is the string sibling of `input_i64`'s `readLong()J` + `lstore`; a
+  `str` `mov` is a plain reference `aload`/`astore`.
+- **Test**: `call_builtin_input_str_and_str_mov_accepted` proves both ops clear
+  the whitelist and the `str`-type gate.
+
+Run-proven end to end in `lang-aot`'s `lang_matrix` (real `javac`/`java`):
+`10 INPUT A$ / 20 PRINT A$ / 30 END` with stdin `"OK"` prints `OK`.
+
 ## [0.28.0] — 2026-07-04 (LANG-FULL E4-dyn: `str` as a return value / call result)
 
 A runtime string that arrives as a function **return value** or **call result**
