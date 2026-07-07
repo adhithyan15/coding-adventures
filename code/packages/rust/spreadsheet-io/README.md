@@ -14,16 +14,18 @@ live workbook:
 
 ```text
   .xlsx ──load_xlsx────┐                              ┌────save_xlsx──▶ .xlsx
-  .xls  ──load_xls─────┤─▶  spreadsheet-core::Workbook ─┤────save_xls───▶ .xls
-  .csv/.tsv ─load_csv──┘        (THE model)             └────save_csv───▶ .csv/.tsv
+  .xls  ──load_xls─────┤                              ├────save_xls───▶ .xls
+  .csv/.tsv ─load_csv──┤─▶ spreadsheet-core::Workbook ─┤────save_csv───▶ .csv/.tsv
+  .json ──load_json────┘        (THE model)            └────save_json──▶ .json
 ```
 
-Modern `.xlsx` (SSIO01), legacy `.xls`/BIFF8 (SSIO02), and delimited `.csv`/`.tsv`
-(SSIOCSV01) are supported. `.xlsx` preserves live formulas; `.xls` and CSV are
-lower-fidelity (values only — see below). Because everything lands in the one
-`Workbook`, any format loads and any format saves: `load_csv` then `save_xlsx`
-converts a CSV to Excel, and a loaded sheet is queryable with SQL via
-`sql-spreadsheet-source`.
+Modern `.xlsx` (SSIO01), legacy `.xls`/BIFF8 (SSIO02), delimited `.csv`/`.tsv`
+(SSIOCSV01), and `.json` records (SSIOJSON01) are supported. `.xlsx` preserves
+live formulas; `.xls`, CSV, and JSON are lower-fidelity (values only — see below).
+Because everything lands in the one `Workbook`, any format loads and any format
+saves: `load_csv` then `save_xlsx` converts a CSV to Excel, `load_json` then
+`save_csv` flattens an API payload to a spreadsheet, and a loaded sheet is
+queryable with SQL via `sql-spreadsheet-source`.
 
 It is the *only* crate that depends on both the engine and the file-format
 codecs, so the engine never learns what a `.xlsx` is and each codec stays small.
@@ -74,12 +76,35 @@ cache one), booleans become `1`/`0`, and errors become their display text.
 Numbers and text round-trip exactly. Prefer `.xlsx` when formulas matter. See
 `code/specs/SSIO02-spreadsheet-io-xls.md`.
 
+## JSON (records) — SSIOJSON01
+
+JSON has no single canonical spreadsheet shape, so `load_json`/`save_json`
+standardize on the one nearly every data API emits: a top-level **array of
+objects** ("records"). Keys become the header row (the union of keys across
+records, in first-seen order); each object becomes a data row; a missing key is
+a blank cell:
+
+```text
+  [ {"region":"East","sales":200},        region | sales
+    {"region":"West","sales":340} ]  ──▶    East  |  200
+                                            West  |  340
+```
+
+`save_json` is the inverse (row 1 = keys, rows below = objects), so a records
+file round-trips. `load_json` also accepts an array of arrays (positional grid),
+an array of scalars (single column), a single object (header + one row), and a
+top-level scalar (single cell); a nested object/array inside a value is stored as
+its compact JSON text. Formulas export as their computed value and, like CSV,
+only the first sheet is written. `load_json` parses **panic-free** (malformed
+bytes are an `IoError::Json`, never a crash), since JSON is untrusted input. See
+`code/specs/SSIOJSON01-spreadsheet-io-json.md`.
+
 ## Where it sits
 
 ```
-spreadsheetml + xlsx-eval / xls   (read)  ─┐
-                                           ├─▶ spreadsheet-io ◀─▶ spreadsheet-core
-xlsx-writer / xls-writer          (write) ─┘                        (the engine)
+spreadsheetml + xlsx-eval / xls / csv-parser / json-parser  (read)  ─┐
+                                                                     ├─▶ spreadsheet-io ◀─▶ spreadsheet-core
+xlsx-writer / xls-writer / json-serializer                  (write) ─┘                        (the engine)
 ```
 
 Later milestones wire load/save into the `SpreadsheetSession` facade and surface

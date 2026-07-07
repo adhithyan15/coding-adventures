@@ -17,6 +17,18 @@ pub fn tokenize_json(source: &str) -> Vec<Token> {
         .unwrap_or_else(|e| panic!("JSON tokenization failed: {e}"))
 }
 
+/// Like [`tokenize_json`], but returns the lexer error instead of panicking.
+///
+/// Use this on **untrusted** input (a file, a network payload): malformed JSON
+/// is an ordinary error to handle, not a reason to abort the process. The
+/// panicking [`tokenize_json`] remains for callers that have already validated
+/// their input or want a hard failure.
+pub fn try_tokenize_json(source: &str) -> Result<Vec<Token>, String> {
+    create_json_lexer(source)
+        .tokenize()
+        .map_err(|e| e.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -364,6 +376,27 @@ mod tests {
         assert_eq!(pairs_arr.len(), 2);
         assert_eq!(pairs_arr[0].0, TokenType::LBracket);
         assert_eq!(pairs_arr[1].0, TokenType::RBracket);
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 18: panic-free tokenization of untrusted input
+    // -----------------------------------------------------------------------
+
+    /// `try_tokenize_json` returns `Ok` for valid input, matching the panicking
+    /// `tokenize_json`.
+    #[test]
+    fn test_try_tokenize_ok() {
+        let tokens = try_tokenize_json("[1, true, null]").expect("valid JSON should tokenize");
+        assert!(tokens.iter().any(|t| t.type_ == TokenType::LBracket));
+    }
+
+    /// `try_tokenize_json` returns `Err` — never panics — on a character the
+    /// JSON grammar cannot lex. This is the property that makes it safe on
+    /// untrusted bytes.
+    #[test]
+    fn test_try_tokenize_bad_char_is_err() {
+        // `@` is not part of any JSON token, so lexing must fail cleanly.
+        assert!(try_tokenize_json("@").is_err());
     }
 }
 
