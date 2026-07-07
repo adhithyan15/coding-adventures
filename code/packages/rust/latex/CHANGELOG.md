@@ -2,6 +2,69 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.45.0] — 2026-07-06
+
+### Added — cross-reference resolution: `\eqref` parenthesisation (LTXDOC03 S9)
+
+Closes the surface-form gap S8's "Deferred to S9" note flagged. amsmath's `\eqref{eq:e}` typesets the
+equation number **parenthesised** — `(1)` — whereas a plain `\ref{eq:e}` typesets a bare `1`. Through
+S8 the cross-reference report ignored the surface command and rendered every reference with the
+canonical `\ref` prefix and a bare number. S9 makes the report mirror amsmath for the one case that
+matters:
+
+- **`\eqref` to an equation parenthesises.** In `CrossReferenceReport::to_plain_text`, a resolved
+  reference whose `command == "eqref"` **and** whose `kind == LabelKind::Equation` now renders
+  `\eqref{eq:e} -> Equation (1)` — the `\eqref` spelling is kept and the number is wrapped in
+  parentheses.
+- **Everything else is byte-for-byte unchanged.** All `\ref`, all `\pageref`, and any `\eqref` to a
+  **non-equation** kind still render with the canonical `\ref` prefix and a bare number
+  (`\ref{sec:intro} -> Section 1.2`), exactly as through S8.
+- **Additive, no AST/struct/numbering change.** `RefEntry.command` (the surface spelling) was already
+  retained by S1 and populated by `cross_reference_report`, so S9 is a pure rendering split in one
+  `format!`. No AST change, no new field, no re-numbering; `to_latex()` remains a fixed point.
+
+## [0.44.0] — 2026-07-06
+
+### Added — cross-reference resolution: equation numbering (LTXDOC03 S8)
+
+Closes the numbering gap S7 left open. S7 made a `\ref`/`\eqref` to a display-math `\label` *resolve*
+and appear in the S6 cross-reference report, but the number it carried was the placeholder
+`EQUATION_NUMBER_PLACEHOLDER` (`"?"`) — the report printed `Equation ?`. S8 wires the real
+`\theequation` counter so the report prints `Equation 1`, `Equation 2`, … in document order.
+
+- **New flat equation counter.** `Counters` gains an `equation: u32` field (initialised to `0` in
+  `new()`) and a `step_equation(&mut self) -> u32` method that pre-increments (saturating) and returns
+  the new value — mirroring `step_figure`/`step_table` exactly. Equations are numbered on a single
+  monotonic run, **independent** of the section/figure/table counters (the `article` default, where
+  `\theequation` is not reset per section).
+- **Labelled equations get a real number.** In the `Block::DisplayMath { label: Some(key), .. }` arm of
+  `Document::number_labels`, the placeholder is replaced with `counters.step_equation().to_string()`.
+  A single labelled equation numbers `1`; two in document order number `1` then `2`; a `\section`,
+  figure, or table between/around them does not perturb the equation sequence (each counter is its own
+  run).
+- **S6 report now prints the number.** A resolved `\ref`/`\eqref` to an equation label renders
+  `\ref{eq:e} -> Equation 1` (was `-> Equation ?` in S7).
+- **`EQUATION_NUMBER_PLACEHOLDER` retained.** The constant stays `pub`/re-exported (still referenced by
+  the module's intra-doc links and available to S9+ `\eqref` parenthesisation); only its former
+  code use in the numbering arm is replaced.
+
+### Known limitation — unlabelled numbered equations
+
+In real LaTeX *every* non-starred display equation consumes the equation counter, `\label` or not
+(like figures/tables). Our AST only marks the **labelled** non-starred case: `Block::DisplayMath`
+carries no `numbered` flag, and the D5 lowering sets `label: None` for *both* starred envs and
+unlabelled islands (`\[…\]`, `$$…$$`), so an unlabelled-but-numbered `equation` env is
+indistinguishable from an unnumbered island. S8 therefore steps the counter **only** for labelled
+equations. Consequence: an unlabelled numbered equation sitting between two labelled ones leaves the
+second labelled one's number one lower than a full LaTeX run would assign. Closing this gap needs a
+`numbered: bool` on `Block::DisplayMath` (an AST change) and is deferred to a later slice.
+
+### Deferred to S9 — `\eqref` parenthesisation
+
+The S6 report renders every reference as `\ref{key} -> Kind number` (canonical `\ref` spelling,
+bare number), so `\eqref` does **not** yet parenthesise to `(1)`. That surface distinction is a
+later slice; S8 is counter-only.
+
 ## [0.43.0] — 2026-07-06
 
 ### Added — cross-reference resolution: equation-label lifting (LTXDOC03 S7)

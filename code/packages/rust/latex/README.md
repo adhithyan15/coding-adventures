@@ -55,6 +55,8 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S5 — citation numbering (bracketed bibliography numbers)** | `Document::number_citations() -> CitationNumbering` — the bracketed number a `\cite` *prints* (`[2]`), the citation-family analogue of S4's `ref_number`. In the default numeric/unsorted style each `\bibitem` is numbered by its **listing position**, so S5 numbers S2's already-ordered winning `entries` by index: `entries[0]` → `[1]`, `entries[1]` → `[2]`, …. A first-`\bibitem`-wins **duplicate** is in `duplicate_entries`, not `entries`, so it consumes **no** number and the entries after it are unshifted (`a, b, c` + a later dup `\bibitem{a}` keeps `c` at `[3]`). A **dangling** `\cite` is in S2's `unresolved`, so it has no entry and `number_for` returns `None` (LaTeX's `[?]`). Returns one owned `NumberedCitation { key, ordinal, number }` per numbered entry, with `number_for(key) -> Option<&str>`; `cite_number(&ResolvedCite) -> Option<String>` ties S2 resolution to S5 numbering (`\cite{foo}` → `"[2]"`). Bracket style single-sourced in one helper. Equation numbers (blocked on `DisplayMath` carrying no label field), author-year/natbib sorted styles, and external `.bib` remain future rungs. Pure, additive, tree-unchanged. Total & panic-free. | ✅ |
 | **LTXDOC03 S6 — the cross-reference report (consumer composing S1/S2/S4/S5)** | `Document::cross_reference_report() -> CrossReferenceReport` — the consumer rung that proves the passes **compose**: it walks S1's resolved `\ref`s and S2's resolved `\cite`s and assembles an owned, plain-data report where each entry carries its rendered **number** (S4/S5) alongside key/command/kind. **No new AST walk** — it numbers each family **once** (`number_labels`/`number_citations`) then looks each key up (never per-item re-numbering). Produces `refs: Vec<RefEntry { key, command, kind, number }>` (one per resolved **and numbered** `\ref`, in S1 order — a resolved `\ref` to an *unnumbered bare-inline* label is still **omitted**; an S7 equation label is included), `cites: Vec<CiteEntry { key, number }>` (one per resolved `\cite` key, in S2 order), and `dangling_refs`/`dangling_cites: Vec<String>` (S1/S2 `unresolved` keys — LaTeX's `??`/`[?]`, surfaced **separately**). `CrossReferenceReport::to_plain_text() -> String` renders a stable, pinned string (`\ref{k} -> Section 1.2` / `\cite{k} -> [2]` lines, optional `Dangling …:` footers, joined by `\n`, no trailing newline; empty → `(no cross-references)`). Pure composition, reads S1–S5 unchanged, tree untouched. Total & panic-free. | ✅ |
 | **LTXDOC03 S7 — equation-label lifting** | `Block::DisplayMath` gains a `label: Option<String>` and `LabelKind` gains an `Equation` variant. For a **non-starred** display-math environment (`equation`/`align`/`gather`/`multline`/`eqnarray` — not the starred forms), the D5 lowering now **lifts** the `\label{key}` out of the env body onto the block (removing it from `source`, no duplication) and registers it as a real `LabelKind::Equation` definition in the same pass as section/figure/table labels. So an `\eqref{eq:e}`/`\ref{eq:e}` to an in-equation label now **resolves** and is **included** in the S6 report (`\ref{eq:e} -> Equation ?`) instead of being omitted. The equation **number** (`\theequation`) is deferred to S8: the report carries the placeholder `EQUATION_NUMBER_PLACEHOLDER` (`"?"`). `to_latex()` re-emits a lifted-label equation as `\begin{equation}…\label{…}\end{equation}` so the round-trip fixed point holds. Starred forms and `\[…\]`/`$$…$$` keep `label: None`. Pure, additive; total & panic-free. | ✅ |
+| **LTXDOC03 S8 — equation numbering** | `Counters` gains a flat `equation: u32` field and a `step_equation()` method (mirroring `step_figure`/`step_table` — pre-increment, saturating, one monotonic run **independent** of section/figure/table). In the `Block::DisplayMath { label: Some(key), .. }` arm of `number_labels`, S7's placeholder is replaced with `counters.step_equation().to_string()`, so a lifted equation label now carries a **real** sequential number in document order (`1`, `2`, …). The S6 report prints `\ref{eq:e} -> Equation 1` (was `Equation ?`). Equation numbering is independent of the section/figure/table counters. **Limitation:** because `Block::DisplayMath` carries no `numbered` flag (the D5 lowering sets `label: None` for both starred envs and `\[…\]`/`$$…$$` islands), only **labelled** equations step the counter — an unlabelled numbered equation between two labelled ones is not yet counted (needs an AST change, deferred). `\eqref` parenthesisation (`(1)` vs `1`) is also deferred to a later slice; S8 is counter-only. Pure, additive, tree-unchanged; total & panic-free. | ✅ |
+| **LTXDOC03 S9 — `\eqref` parenthesisation** | `CrossReferenceReport::to_plain_text` now mirrors amsmath's `\eqref` for the one case that matters: a resolved reference whose `command == "eqref"` **and** `kind == LabelKind::Equation` renders `\eqref{eq:e} -> Equation (1)` — the `\eqref` spelling is kept and the number is **parenthesised**. Every other reference — all `\ref`, all `\pageref`, and any `\eqref` to a **non-equation** kind — is byte-for-byte unchanged from S8: canonical `\ref` prefix, bare number (`\ref{sec:intro} -> Section 1.2`). `RefEntry.command` (the surface spelling) was already retained by S1, so S9 is a pure rendering split in one `format!` — no AST change, no new field, no re-numbering; `to_latex()` stays a fixed point. Pure, additive; total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -98,9 +100,13 @@ Section 1.2`, `\cite{smith} -> [2]`), dangling refs/cites surfaced separately, p
 `to_plain_text()` rendering — adding no new AST walk (each family numbered once, then looked up).
 **S7 lifts equation labels**: a non-starred display-math env's `\label` is now pulled onto its
 `Block::DisplayMath { label }` and registered as a `LabelKind::Equation` definition, so an `\eqref`
-to it resolves and is included in the S6 report (`\ref{eq:e} -> Equation ?`) instead of omitted — the
-equation **number** carries the placeholder `EQUATION_NUMBER_PLACEHOLDER` (`"?"`) until S8 wires the
-`\theequation` counter. Author-year/natbib sorted styles and external `.bib` remain future rungs.
+to it resolves and is included in the S6 report instead of omitted. **S8 numbers equations**: a flat
+`step_equation()` counter (independent of section/figure/table, mirroring `step_figure`) assigns each
+lifted equation label a real sequential number in document order, so the S6 report prints
+`\ref{eq:e} -> Equation 1` (was `Equation ?`). Only **labelled** equations step the counter (the AST
+carries no `numbered` flag for unlabelled numbered equations — deferred), and `\eqref`
+parenthesisation is deferred to a later slice. Author-year/natbib sorted styles and external `.bib`
+remain future rungs.
 
 ## The Document layer (LTXDOC01)
 
@@ -371,8 +377,9 @@ assert_eq!(doc.ref_number(r), Some("1.1".to_string())); // \ref{sec:scope} → "
 `number_labels()` returns a `Numbering` of one `NumberedLabel { key, kind, number }` per defined,
 numberable label (section/figure/table). A document that starts deep applies the documented
 missing-parent rule (a lone leading `\subsection` numbers `0.1`). Bare-inline labels and other
-counters (enumerate/theorem/…) are deferred to S5+; a lifted **equation** label (S7) is numbered with
-the `EQUATION_NUMBER_PLACEHOLDER` (`"?"`) until S8. Numbering is pure, additive analysis — it never
+counters (enumerate/theorem/…) are deferred to S5+; a lifted **equation** label (S7) is numbered by a
+flat `step_equation()` counter (S8), independent of section/figure/table, so it prints a real
+sequential number (`1`, `2`, …). Numbering is pure, additive analysis — it never
 mutates the tree, so the S1/S2/S3 outputs are unchanged.
 
 ### Citation numbering (LTXDOC03 S5)
@@ -461,7 +468,7 @@ assert_eq!(
 `cross_reference_report()` returns a `CrossReferenceReport { refs, cites, dangling_refs,
 dangling_cites }` with `RefEntry { key, command, kind, number }` and `CiteEntry { key, number }`. A
 resolved `\ref` to an *unnumbered bare-inline* label is omitted from `refs` (it has no S4 number —
-deferred); an **equation** label (S7) is included with the placeholder number `"?"`. Like S1–S5, S6 is
+deferred); an **equation** label (S7) is included with its real number (S8), e.g. `Equation 1`. Like S1–S5, S6 is
 pure, additive analysis — it reads the prior passes and mutates nothing, so their outputs are unchanged.
 
 ### Equation-label lifting (LTXDOC03 S7)
@@ -475,7 +482,7 @@ definition, so the reference is now resolvable and reported:
 use latex::{parse_document, Block, LabelKind};
 
 let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}
-See \eqref{eq:e}.\end{document}";
+See \ref{eq:e}.\end{document}";
 let doc = parse_document(src).unwrap();
 
 // The `\label` is lifted onto the block; `source` no longer contains it.
@@ -483,18 +490,45 @@ let dm = doc.body.iter().find(|b| matches!(b, Block::DisplayMath { .. })).unwrap
 assert!(matches!(dm, Block::DisplayMath { source, label: Some(k), .. }
     if source == "E = mc^2" && k == "eq:e"));
 
-// It is a real Equation-kind definition, so the `\eqref` resolves and is REPORTED.
+// It is a real Equation-kind definition, so the `\ref` resolves and is REPORTED.
 let rep = doc.cross_reference_report();
 assert_eq!(rep.refs.len(), 1);
 assert_eq!(rep.refs[0].kind, LabelKind::Equation);
-assert_eq!(rep.refs[0].number, "?"); // EQUATION_NUMBER_PLACEHOLDER — real number is S8
-assert_eq!(rep.to_plain_text(), "\\ref{eq:e} -> Equation ?");
+assert_eq!(rep.refs[0].number, "1"); // real `\theequation` value (S8)
+assert_eq!(rep.to_plain_text(), "\\ref{eq:e} -> Equation 1");
 ```
 
 Starred forms (`equation*`, …) and `\[…\]`/`$$…$$` islands keep `label: None` (unnumbered in LaTeX,
-so unchanged). The equation **number** (`\theequation`) is deferred to S8; until then the label carries
-`EQUATION_NUMBER_PLACEHOLDER` (`"?"`). `to_latex()` re-emits a lifted-label equation as
+so unchanged). The equation **number** (`\theequation`) arrives in S8 (a real `1`, `2`, …), and its
+amsmath parenthesisation in S9 (below). `to_latex()` re-emits a lifted-label equation as
 `\begin{equation}…\label{…}\end{equation}`, so the round-trip fixed point holds.
+
+### `\eqref` parenthesisation (LTXDOC03 S9)
+
+amsmath's `\eqref{eq:e}` typesets the equation number **parenthesised** — `(1)` — where a plain
+`\ref{eq:e}` typesets a bare `1`. S9 makes the S6 report mirror that surface distinction for the one
+case that matters: an `\eqref` to an **equation** keeps its `\eqref` spelling and parenthesises the
+number; everything else is byte-for-byte the S8 line.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation}
+See \eqref{eq:e} and \ref{eq:e}.\end{document}";
+let doc = parse_document(src).unwrap();
+
+// The `\eqref` parenthesises; the sibling `\ref` to the same equation stays bare.
+assert_eq!(
+    doc.cross_reference_report().to_plain_text(),
+    "\\eqref{eq:e} -> Equation (1)\n\
+     \\ref{eq:e} -> Equation 1",
+);
+```
+
+Only `command == "eqref"` **and** `kind == LabelKind::Equation` diverges: all `\ref`, all `\pageref`,
+and any `\eqref` to a non-equation kind still render with the canonical `\ref` prefix and a bare number
+(`\ref{sec:intro} -> Section 1.2`). `RefEntry.command` (the surface spelling) was already retained by
+S1, so S9 is a pure rendering split — no AST change, no re-numbering, `to_latex()` still a fixed point.
 
 ## Usage
 
