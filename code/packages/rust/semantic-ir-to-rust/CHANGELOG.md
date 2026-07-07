@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.23.0 — slice-selection Array methods: `take` / `drop` / `values_at`
+
+Extends the emitted Rust runtime's `array_method` catalog (and the `Value::Seq`
+`respond_to?` table), mirroring the Go backend:
+
+- `take(n)` / `drop(n)` — a fresh Array of the first / all-but-first `n`
+  elements; `n` is clamped to `[0, len]` (`n <= 0` and `n > len` both saturate),
+  so the slice bounds are always valid. A negative `n` raises `ArgumentError` in
+  Ruby; the never-raise floor treats it as `0`.
+- `values_at(*idxs)` — a fresh Array of the element at each index, folding a
+  negative index from the end once; an out-of-range index yields `nil` (never
+  panics).
+
+Verified end-to-end: emitted Rust compiled with `rustc` and executed, output
+diffed against the reference.
+
 ## 0.22.0 — more Array methods: `zip` / `rotate` / `to_h` / `tally`
 
 Extends the emitted Rust runtime's `array_method` catalog (and the `Value::Seq`
