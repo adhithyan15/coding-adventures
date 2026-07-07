@@ -2,6 +2,29 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.12] - 2026-07-07
+
+### Added — Array block-method breadth (sort_by / group_by / partition / …)
+
+Extends `_array_block_method` with the common block-taking Ruby
+`Enumerable`/`Array` methods that were missing (map/select/reduce/find/flat_map
+were already present), and adds them to the `_ARRAY_BLOCK_METHODS` catalog so
+`respond_to?` stays honest. Mirrors the Rust/Go backends' array-block batch.
+
+- `sort_by { |x| key }` — key-sorted (stable, like Ruby).
+- `min_by` / `max_by { |x| key }` — extremal block key (`nil` on empty).
+- `group_by { |x| key }` — a Hash (dict) of key → list of elements.
+- `partition { |x| pred }` — `[matching, non_matching]`.
+- `collect_concat` — alias of `flat_map`.
+- `take_while` / `drop_while { |x| pred }` — leading truthy run / remainder.
+- `count { |x| pred }` — truthy count (arg/bare forms unchanged in
+  `_array_method`).
+- `each_with_object(memo) { |x, memo| … }` — folds into and returns the memo.
+
+Predicate results route through SIR `truthy`; a block-less call keeps the nil
+Enumerator floor. Ordering uses Python's native comparison (a non-mutually-
+comparable key raises `TypeError`, identical to the existing `sort` arm).
+
 ## [0.1.11] - 2026-07-02
 
 ### Added — mixins: `include` / `extend` + Ruby MRO (MX2 of sir-mixins)
