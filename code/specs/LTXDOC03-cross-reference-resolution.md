@@ -1157,3 +1157,77 @@ an undefined key rendering `(undefined nameref: nope)`; an equation + inline lab
 S1–S12 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
 `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
 `cargo fmt`, no grammar regen, no new dependencies.
+
+---
+
+## 20. S14 — per-kind census of the numbered-label table (`list_summary`)
+
+### 20.1 Motivation
+
+S1–S13 answer *"where does this reference point, what number/name is its target?"* — always per
+reference or per label. S14 asks the coarser, aggregate question a table-of-contents or a document
+overview needs: *"how many numbered labels of each kind does this document have?"* — a count of
+sections vs figures vs tables vs equations that carry a `\label`. It is the census over the table S4
+already built.
+
+### 20.2 Why a new method — additive by construction
+
+S14 adds a **new public method** `Document::list_summary(&self) -> String`. It is a pure, read-only
+tally of the rows `Document::number_labels()` returns, grouped by `LabelKind`. It reuses that table
+verbatim (never re-deriving counts from a fresh walk), so the census can never drift from the S4
+numbering it summarises. It mutates nothing and changes no S1–S13 output — including `to_latex()`'s
+round-trip fixed point — byte-for-byte.
+
+### 20.3 What S14 counts
+
+Only four kinds ever reach `number_labels()`: a numbered `\section` (`LabelKind::Section`), a
+`figure` (`Figure`), a `table` (`Table`), and a non-starred display `equation` label (`Equation`).
+A bare inline `\label{…}` (`LabelKind::Inline`) is **not** numbered — the numbering pass records no
+`Inline` rows — so it never appears in the table and is therefore **counted nowhere**. (Confirmed by
+reading the numbering pass and by an exploratory tally over a mixed fixture: a doc with two labeled
+sections, a figure, a table, an equation, and one bare inline `\label` yields exactly five numbered
+rows — Section, Section, Figure, Table, Equation — the inline label omitted.)
+
+### 20.4 The exact rendering contract — `Document::list_summary(&self) -> String`
+
+- One line per kind whose count is **≥ 1**, in this **fixed order** (deterministic, *not* document
+  order): **Sections, Figures, Tables, Equations**.
+- Each line is exactly `<Kind>: <count>` — `Sections: n`, `Figures: n`, `Tables: n`, `Equations: n`
+  — with a **fixed plural** label regardless of `n` (a single section still prints `Sections: 1`,
+  never `Section: 1`).
+- A kind whose count is **0 is omitted** entirely, mirroring S11's "kinds with 0 refs are omitted"
+  convention.
+- Lines are joined by `\n` with **no** trailing newline (matching S11 `to_plain_text_by_kind`, S12
+  `list_of_floats`, S13 `resolve_namerefs`).
+- If **all** counts are 0 (the document defines no numbered label at all), the fixed marker
+  `(no labels)` is returned, so the output is never the empty string.
+
+Example (two labeled sections, one labeled figure, one labeled table, one labeled equation):
+
+```text
+Sections: 2
+Figures: 1
+Tables: 1
+Equations: 1
+```
+
+A document whose only label is a bare inline `\label{marker}` renders `(no labels)` (that label is
+not numbered). A document with only three labeled sections renders just `Sections: 3` (the other
+three kinds are omitted).
+
+### 20.5 Public API (added in S14)
+
+One new method: `Document::list_summary(&self) -> String`. No existing type, field, counter, or
+signature changes; `number_labels` and every S1–S13 method are unchanged; no AST or grammar change;
+no new dependency, no `unsafe`, no I/O.
+
+### 20.6 Verification (S14)
+
+`cargo test -p latex` green (4 new S14 tests: a doc counting all four kinds
+`Sections: 2\nFigures: 1\nTables: 1\nEquations: 1`; a sections-only doc `Sections: 3` with zero-count
+kinds omitted; an equation/inline-only doc returning the `(no labels)` marker; and an additivity
+check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, and `resolve_namerefs` all
+still produce their exact prior strings). All prior S1–S13 tests pass unchanged. `cargo clippy -p
+latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green;
+`cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new
+dependencies.
