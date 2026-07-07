@@ -1,6 +1,30 @@
 # Changelog
 
+## 0.18.0 — Numeric + String method-catalog parity
 
+Expands the emitted Go runtime's `_sir_numeric_method` and
+`_sir_string_method` catalogs to Ruby parity, and grows the matching
+`_sir_numeric_responds` / `_sir_string_responds` predicates so
+`respond_to?` stays honest.
+
+**Numeric (`int64` / `float64`):** `to_int`, `positive?`, `negative?`,
+`succ` / `next`, `pred`, `floor`, `ceil`, `round` (`_sir_ruby_round`,
+round-half-up), `gcd` (`_sir_gcd`, overflow-safe), `pow` / `**`
+(`_sir_int_pow`, with a closed-form short-circuit for base ∈ {0, 1, −1}
+and a bit-width guard so a large exponent can't spin), `digits`
+(`_sir_digits`), and the block-taking walkers `upto` / `downto` / `step`
+(counter arithmetic guarded against `int64` boundary overflow).
+
+**String:** `capitalize`, `chomp`, `bytes`, `index`, `replace`, `sub`,
+`gsub` (literal, first/all-occurrence; no regex or back-reference
+expansion). All arity-guard their optional arguments (`len(args)` checks
+before any `args[0]`), returning `nil`/receiver rather than panicking.
+
+Dispatch stays receiver-type routed through explicit `switch` labels — no
+reflection on source-derived method names.
+
+(Consolidates the previously-separate Numeric and String catalog PRs into
+one crate change to avoid intra-crate version churn.)
 
 ## 0.16.0
 
