@@ -2,6 +2,39 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.50.0] — 2026-07-07
+
+### Added — per-kind census of the numbered-label table (LTXDOC03 S14)
+
+A **new** public method `Document::list_summary(&self) -> String` that renders a compact per-kind
+count of the document's **numbered** labels — how many sections, figures, tables, and equations
+carry a `\label`. It is a pure tally of the rows `number_labels()` returns, grouped by `LabelKind`,
+so the census can never drift from the S4 numbering it summarises. Every S1–S13 output is left
+**byte-for-byte unchanged**; S14 is purely additive and leaves the `to_latex()` round-trip fixed
+point intact.
+
+- **Counts exactly the numberable kinds.** Only a numbered `\section`, a `figure`, a `table`, and a
+  non-starred display `equation` label reach `number_labels()`, so those are the only kinds counted.
+  A bare inline `\label{…}` (`LabelKind::Inline`) is **not** numbered — it never appears in
+  `number_labels()` — and is therefore counted nowhere. Confirmed by reading the numbering pass
+  (it records no `Inline` rows) and by an exploratory tally over a mixed fixture.
+- **One line per non-zero kind, in a fixed order.** The output emits `"Sections: n"`, `"Figures: n"`,
+  `"Tables: n"`, `"Equations: n"` — in that fixed order (deterministic, never document order) — with
+  a **fixed plural** label regardless of `n` (a single section still prints `Sections: 1`). A kind
+  whose count is 0 is **omitted** entirely, mirroring S11's "kinds with 0 refs are omitted"
+  convention. Lines are joined by `\n` with **no** trailing newline (matching S11
+  `to_plain_text_by_kind`, S12 `list_of_floats`, S13 `resolve_namerefs`).
+- **Empty marker.** A document with **no** numbered label at all → the fixed marker `"(no labels)"`,
+  so the output is never the empty string (the same stable-marker discipline S12/S13 use).
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; a single pass over the
+  already-bounded numbering table. Borrows `self` immutably, returns owned `String`.
+
+Four `s14_*` tests pin the exact rendered strings: a doc counting all four kinds
+(`Sections: 2\nFigures: 1\nTables: 1\nEquations: 1`), a sections-only doc (`Sections: 3`, zero-count
+kinds omitted), an equation/inline-only doc returning the empty `(no labels)` marker, and an
+additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, and
+`resolve_namerefs` all still produce their exact prior strings.
+
 ## [0.49.0] — 2026-07-07
 
 ### Added — `\nameref` resolution to a target's name text (LTXDOC03 S13)

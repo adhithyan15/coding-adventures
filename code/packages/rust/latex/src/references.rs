@@ -1494,6 +1494,102 @@ impl Document {
             _ => "(no name)".to_string(),
         }
     }
+
+    /// A **per-kind census** of the numbered-label table (LTXDOC03 S14) — how many labels of each
+    /// kind this document defines, as a compact plain-text summary.
+    ///
+    /// ## What it counts, and where the numbers come from
+    ///
+    /// This is a pure *tally* of the rows [`number_labels`](Document::number_labels) returns, grouped
+    /// by [`LabelKind`]. That table is the S4 numbering table — one row per **defined, numberable**
+    /// label key — so S14 counts exactly the labels a `\ref` could print a number for. It reuses the
+    /// same table (never re-deriving the counts), so the census can never drift from the numbering it
+    /// summarises.
+    ///
+    /// Only four kinds ever reach that table: a numbered `\section`, a `figure`, a `table`, and a
+    /// non-starred display `equation` label. A bare inline `\label{…}` ([`LabelKind::Inline`]) is
+    /// **not** numbered, so it never appears in `number_labels` and is therefore **not** counted here
+    /// (this is confirmed by reading the numbering pass — it records `Inline` rows nowhere).
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// One line per kind whose count is `>= 1`, in this **fixed order** (chosen once, so the output is
+    /// deterministic and greppable — it never follows document order): **Sections, Figures, Tables,
+    /// Equations**. Each line is exactly `"<Kind>: <count>"` with a **fixed plural** label regardless
+    /// of the count (so a single section still prints `Sections: 1`, never `Section: 1`):
+    ///
+    /// ```text
+    /// Sections: 2
+    /// Figures: 1
+    /// Tables: 1
+    /// Equations: 1
+    /// ```
+    ///
+    /// A kind whose count is **0 is omitted** entirely (mirroring S11's "kinds with 0 refs are
+    /// omitted" convention), so a document with only labeled sections renders just the one
+    /// `Sections: N` line. Lines are joined by `\n` with **no** trailing newline (matching S11's
+    /// `to_plain_text_by_kind`, S12's `list_of_floats`, and S13's `resolve_namerefs`).
+    ///
+    /// If **all** counts are 0 — the document defines no numbered label at all — the fixed marker
+    /// `"(no labels)"` is returned, so the output is never the empty string (the same stable-marker
+    /// discipline S12/S13 use).
+    ///
+    /// | document | `list_summary()` |
+    /// |----------|------------------|
+    /// | 2 `\section`+`\label`, 1 fig, 1 table, 1 eq (all labeled) | `Sections: 2`⏎`Figures: 1`⏎`Tables: 1`⏎`Equations: 1` |
+    /// | 3 labeled sections, nothing else | `Sections: 3` |
+    /// | only a bare inline `\label{marker}` (not numbered) | `(no labels)` |
+    ///
+    /// ## Additive by construction
+    ///
+    /// S14 is a brand-new, read-only method that reuses [`number_labels`](Document::number_labels)
+    /// and mutates nothing; it changes no S1-S13 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; a single pass over the
+    /// already-bounded numbering table. Borrows `self` immutably and returns owned `String` data, so
+    /// the result outlives any borrow of the source.
+    pub fn list_summary(&self) -> String {
+        // Tally the numbering table by kind. Inline labels never reach this table (they are not
+        // numbered — see `number_labels`), so only the four numbered kinds can be non-zero.
+        let numbering = self.number_labels();
+        let mut sections = 0u32;
+        let mut figures = 0u32;
+        let mut tables = 0u32;
+        let mut equations = 0u32;
+        for label in &numbering.labels {
+            match label.kind {
+                LabelKind::Section => sections += 1,
+                LabelKind::Figure => figures += 1,
+                LabelKind::Table => tables += 1,
+                LabelKind::Equation => equations += 1,
+                // Not numbered, so never present here; counted nowhere.
+                LabelKind::Inline => {}
+            }
+        }
+
+        // Emit one line per non-zero kind in the FIXED order Sections, Figures, Tables, Equations
+        // (deterministic, not document order). The plural label is fixed regardless of count.
+        let mut lines: Vec<String> = Vec::new();
+        if sections >= 1 {
+            lines.push(format!("Sections: {sections}"));
+        }
+        if figures >= 1 {
+            lines.push(format!("Figures: {figures}"));
+        }
+        if tables >= 1 {
+            lines.push(format!("Tables: {tables}"));
+        }
+        if equations >= 1 {
+            lines.push(format!("Equations: {equations}"));
+        }
+
+        if lines.is_empty() {
+            // No numbered label at all → the fixed marker, never the empty string.
+            return "(no labels)".to_string();
+        }
+        lines.join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -3790,5 +3886,82 @@ See Section~\ref{sec:intro}, \nameref{sec:intro}, and \nameref{fig:p}.\end{docum
             doc.resolve_namerefs(),
             "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
         );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S14 — per-kind census of the numbered-label table (`list_summary`).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s14_counts_each_kind() {
+        // Two labeled sections, one labeled figure, one labeled table, one labeled equation. The
+        // census emits ONE line per kind (count >= 1) in the fixed order Sections, Figures, Tables,
+        // Equations, with the fixed plural label regardless of count.
+        let src = r"\begin{document}\section{One}\label{sec:a}
+\section{Two}\label{sec:b}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+\begin{table}\begin{tabular}{lc}a & b\end{tabular}\caption{Data}\label{tab:d}\end{table}
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+Text \label{marker} inline.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_summary(), "Sections: 2\nFigures: 1\nTables: 1\nEquations: 1");
+    }
+
+    #[test]
+    fn s14_omits_zero_kinds() {
+        // Only sections are labeled → ONLY the `Sections:` line appears; the zero-count Figures,
+        // Tables, and Equations lines are omitted entirely. Note the fixed plural even though there
+        // are two — and that a single labeled section would still print `Sections: 1`.
+        let src = r"\begin{document}\section{Alpha}\label{s:a}
+\section{Beta}\label{s:b}
+\section{Gamma}\label{s:c}
+
+Body text with no floats or equations.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_summary(), "Sections: 3");
+    }
+
+    #[test]
+    fn s14_empty_returns_marker() {
+        // A document with NO numbered labels at all (a bare inline `\label` is NOT numbered, so it
+        // never appears in `number_labels`) → the fixed `(no labels)` marker, never the empty string.
+        let src = r"\begin{document}Text \label{marker} with only a bare inline label.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_summary(), "(no labels)");
+    }
+
+    #[test]
+    fn s14_is_additive_leaves_s1_s13_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a `\ref`, and a
+        // `\nameref`, S14 changes NONE of the S1-S13 outputs — it only reads `number_labels`.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+See Section~\ref{sec:intro}, \nameref{sec:intro}, and \nameref{fig:p}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — the resolved `\ref` with its S4 number, nothing perturbed.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1"
+        );
+        // S11 grouped-by-kind report — the same single ref under its `Sections:` group.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1"
+        );
+        // S12 list of floats — one figure line, unaffected.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — both namerefs render their names, unaffected.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+
+        // And S14 itself produces the per-kind census (one section, one figure, one equation).
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
     }
 }
