@@ -539,6 +539,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // A Symbol resolves the hand-implemented Ruby Symbol catalog (in lockstep
     // with `symbolMethod`'s case labels), ahead of the native gate.
     if (recv instanceof Sym && SYMBOL_METHODS.has(name)) { return true; }
+    // An Array resolves the hand-implemented Ruby Array/Enumerable catalog (in
+    // lockstep with `arrayMethod`'s case labels), ahead of the native gate.
+    if (Array.isArray(recv) && ARRAY_METHODS.has(name)) { return true; }
     // A primitive resolves a name iff it (or its Ruby→native alias) is on the
     // method allowlist AND the native member is actually a function on `recv`.
     if (!(recv instanceof SirInstance)) {
@@ -897,6 +900,161 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return SYM_MISS;
   }
 
+  // ── Ruby Array / Enumerable catalog (Array receiver) ───────────
+  // A Ruby Array is a JS Array.  Hand-implemented by an EXPLICIT `switch` on
+  // the source-derived `name` (never `recv[name]`) so the Ruby-named methods
+  // (`select`/`reject`/`detect`/`inject`/`any?`/…) and the semantics-diverging
+  // ones (numeric `sort` — native JS `sort` is lexicographic; `min`/`max`;
+  // `sort_by`/`group_by`/`partition`/…) resolve.  A block arrives already
+  // unwrapped to a JS function as the trailing positional arg.  `ARR_MISS`
+  // falls through so native mutators/accessors keep working.  `ARRAY_METHODS`
+  // mirrors these labels for `respond_to?`.
+  const ARR_MISS = Symbol("arr-miss");
+  const ARRAY_METHODS = new Set([
+    "each", "each_with_index", "map", "collect", "select", "filter", "reject",
+    "find", "detect", "reduce", "inject", "any?", "all?", "none?", "count",
+    "sort", "sort_by", "min", "max", "min_by", "max_by", "group_by",
+    "partition", "flat_map", "collect_concat", "take_while", "drop_while",
+    "each_with_object", "sum", "uniq", "first", "last", "empty?", "to_a",
+  ]);
+  // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
+  // the same ordering the Ruby `sort` reference uses.
+  function arrCmp(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+  function arrayMethod(recv, name, args) {
+    // A trailing function positional is the block (`arr.map { … }`).
+    const blk = args.length > 0 && typeof args[args.length - 1] === "function"
+      ? args[args.length - 1]
+      : null;
+    switch (name) {
+      case "each":
+        if (blk) { for (const x of recv) { blk(x); } }
+        return recv;
+      case "each_with_index":
+        if (blk) { recv.forEach((x, i) => blk(x, i)); }
+        return recv;
+      case "map": case "collect":
+        return blk ? recv.map((x) => blk(x)) : ARR_MISS;
+      case "select": case "filter":
+        return blk ? recv.filter((x) => truthy(blk(x))) : ARR_MISS;
+      case "reject":
+        return blk ? recv.filter((x) => !truthy(blk(x))) : ARR_MISS;
+      case "find": case "detect": {
+        if (!blk) { return ARR_MISS; }
+        for (const x of recv) { if (truthy(blk(x))) { return x; } }
+        return null;
+      }
+      case "reduce": case "inject": {
+        if (!blk) { return ARR_MISS; }
+        // `reduce(seed) { … }` (args = [seed, block]) or `reduce { … }`.
+        let acc;
+        let start;
+        if (args.length >= 2) { acc = args[0]; start = 0; }
+        else if (recv.length > 0) { acc = recv[0]; start = 1; }
+        else { return null; }
+        for (let i = start; i < recv.length; i++) { acc = blk(acc, recv[i]); }
+        return acc;
+      }
+      case "any?": return blk ? recv.some((x) => truthy(blk(x))) : recv.some(truthy);
+      case "all?": return blk ? recv.every((x) => truthy(blk(x))) : recv.every(truthy);
+      case "none?": return blk ? !recv.some((x) => truthy(blk(x))) : !recv.some(truthy);
+      case "count":
+        if (blk) { return recv.reduce((n, x) => (truthy(blk(x)) ? n + 1 : n), 0); }
+        if (args.length > 0) { return recv.filter((x) => x === args[0]).length; }
+        return recv.length;
+      case "sort": return [...recv].sort(arrCmp);
+      case "sort_by": {
+        if (!blk) { return ARR_MISS; }
+        const keyed = recv.map((x) => [blk(x), x]);
+        keyed.sort((a, b) => arrCmp(a[0], b[0]));
+        return keyed.map((p) => p[1]);
+      }
+      case "min": return recv.length ? recv.reduce((a, b) => (b < a ? b : a)) : null;
+      case "max": return recv.length ? recv.reduce((a, b) => (b > a ? b : a)) : null;
+      case "min_by": case "max_by": {
+        if (!blk) { return ARR_MISS; }
+        if (recv.length === 0) { return null; }
+        const wantMin = name === "min_by";
+        let bestItem = recv[0];
+        let bestKey = blk(recv[0]);
+        for (let i = 1; i < recv.length; i++) {
+          const k = blk(recv[i]);
+          if (wantMin ? k < bestKey : k > bestKey) { bestItem = recv[i]; bestKey = k; }
+        }
+        return bestItem;
+      }
+      case "group_by": {
+        if (!blk) { return ARR_MISS; }
+        const groups = new Map();
+        for (const x of recv) {
+          const k = blk(x);
+          const bucket = groups.get(k);
+          if (bucket) { bucket.push(x); } else { groups.set(k, [x]); }
+        }
+        return groups;
+      }
+      case "partition": {
+        if (!blk) { return ARR_MISS; }
+        const yes = [];
+        const no = [];
+        for (const x of recv) { if (truthy(blk(x))) { yes.push(x); } else { no.push(x); } }
+        return [yes, no];
+      }
+      case "flat_map": case "collect_concat": {
+        if (!blk) { return ARR_MISS; }
+        const out = [];
+        for (const x of recv) {
+          const r = blk(x);
+          if (Array.isArray(r)) { out.push(...r); } else { out.push(r); }
+        }
+        return out;
+      }
+      case "take_while": {
+        if (!blk) { return ARR_MISS; }
+        const out = [];
+        for (const x of recv) { if (truthy(blk(x))) { out.push(x); } else { break; } }
+        return out;
+      }
+      case "drop_while": {
+        if (!blk) { return ARR_MISS; }
+        const out = [];
+        let dropping = true;
+        for (const x of recv) {
+          if (dropping && truthy(blk(x))) { continue; }
+          dropping = false;
+          out.push(x);
+        }
+        return out;
+      }
+      case "each_with_object": {
+        if (!blk) { return ARR_MISS; }
+        if (args.length < 2) { return recv; } // no memo supplied
+        const memo = args[0];
+        for (const x of recv) { blk(x, memo); }
+        return memo;
+      }
+      case "sum": {
+        let acc = args.length > 0 && typeof args[0] !== "function" ? args[0] : 0;
+        for (const x of recv) { acc = acc + (blk ? blk(x) : x); }
+        return acc;
+      }
+      case "uniq": {
+        const out = [];
+        const seen = new Set();
+        for (const x of recv) { if (!seen.has(x)) { seen.add(x); out.push(x); } }
+        return out;
+      }
+      case "first":
+        return args.length > 0 ? recv.slice(0, args[0]) : (recv.length ? recv[0] : null);
+      case "last":
+        return args.length > 0
+          ? recv.slice(Math.max(0, recv.length - args[0]))
+          : (recv.length ? recv[recv.length - 1] : null);
+      case "empty?": return recv.length === 0;
+      case "to_a": return recv;
+    }
+    return ARR_MISS;
+  }
+
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
   // `name` is not an M6 method, so `callMethod` continues to its type-specific
   // paths.  `rawArgs` is the UN-unwrapped argument list — a trailing block is
@@ -995,6 +1153,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (recv instanceof Sym) {
       const ym = symbolMethod(recv, name, args);
       if (ym !== SYM_MISS) { return ym; }
+    }
+    // Ruby Array (Enumerable) catalog on an Array receiver — explicit-switch
+    // dispatch (no `recv[name]`) ahead of the native allowlist.  A miss falls
+    // through so the native mutators/accessors (`push`/`pop`/`slice`/…) still
+    // resolve; the catalog owns the Ruby-named and semantics-diverging methods
+    // (`select`/`reject`/`inject`/`any?`/numeric `sort`/`sort_by`/…) that the
+    // raw JS array does not provide or provides differently.
+    if (Array.isArray(recv)) {
+      const am = arrayMethod(recv, name, args);
+      if (am !== ARR_MISS) { return am; }
     }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.

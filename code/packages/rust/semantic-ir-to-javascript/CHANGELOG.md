@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.18.0 — Ruby Array / Enumerable method catalog
+
+Adds a hand-implemented Ruby Array/Enumerable catalog (`arrayMethod`) to the
+emitted JS runtime, dispatched by an **explicit `switch` on the source-derived
+name** (never `recv[name]`) ahead of the native-method allowlist. JS arrays
+previously had **no** Ruby Array catalog — only native JS methods via the
+allowlist — so Ruby-named methods (`select`/`reject`/`inject`/`detect`/`any?`/
+…) were unsupported, and `sort` used JS's lexicographic default (wrong for
+numbers: `[10, 2].sort == [10, 2]`).
+
+Methods: `each`, `each_with_index`, `map`/`collect`, `select`/`filter`,
+`reject`, `find`/`detect`, `reduce`/`inject`, `any?`/`all?`/`none?`, `count`
+(block/arg/bare), `sort` (numeric via `<`/`>`), `sort_by`, `min`/`max`,
+`min_by`/`max_by`, `group_by` (→ a `Map` Hash), `partition`, `flat_map`/
+`collect_concat`, `take_while`/`drop_while`, `each_with_object`, `sum`
+(with optional init/block), `uniq`, `first`/`last` (with optional count),
+`empty?`, `to_a`. Predicates route through SIR `truthy`; a block-less block
+method falls through (`ARR_MISS`) so native mutators/accessors
+(`push`/`pop`/`slice`/…) still resolve. `respond_to?` kept honest via
+`ARRAY_METHODS`.
+
+Verified end-to-end under Node (`run_with_node`): numeric `sort`, the
+previously-missing `select`/`reject`/`inject`, and the full breadth set.
+
+(Stacked on the v0.17.0 Symbol-catalog change.)
+
 ## 0.17.0 — Ruby Symbol method-catalog parity
 
 Adds a hand-implemented Ruby Symbol catalog (`symbolMethod`) to the emitted JS
