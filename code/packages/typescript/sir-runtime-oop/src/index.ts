@@ -651,6 +651,10 @@ const STRING_METHODS = new Set<string>([
   "empty?",
   "*",
   "+",
+  "ljust",
+  "rjust",
+  "center",
+  "swapcase",
 ]);
 
 // Block-taking `String` methods (M1c); `each_char` yields one character.
@@ -1289,6 +1293,42 @@ function stringMethod(recv: string, name: string, args: Val[]): Val | typeof MIS
       return strRepeat(recv, args[0]);
     case "+":
       return recv + args[0];
+    case "ljust":
+    case "rjust":
+    case "center": {
+      // Ruby `String#ljust`/`#rjust`/`#center(width, pad = " ")`: pad to `width`
+      // CODE POINTS using `pad` cyclically; `width <= length` returns the string
+      // unchanged; `center` puts an odd extra pad rune on the RIGHT (Ruby's rule).
+      // An empty pad degrades to a single space (never-raise floor); the padding
+      // length is clamped to `MAX_REPEAT_LEN` (like `strRepeat`) to bound a DoS.
+      const width = typeof args[0] === "number" ? Math.trunc(args[0]) : 0;
+      const pad = typeof args[1] === "string" && args[1] !== "" ? args[1] : " ";
+      const cps = [...recv];
+      const deficit = Math.min(width - cps.length, MAX_REPEAT_LEN);
+      if (deficit <= 0) return recv;
+      const pr = [...pad];
+      const buildPad = (n: number): string => {
+        let out = "";
+        for (let i = 0; i < n; i++) out += pr[i % pr.length];
+        return out;
+      };
+      if (name === "ljust") return recv + buildPad(deficit);
+      if (name === "rjust") return buildPad(deficit) + recv;
+      const left = Math.floor(deficit / 2);
+      return buildPad(left) + recv + buildPad(deficit - left);
+    }
+    case "swapcase": {
+      // Flip the case of each ASCII letter (non-letters / non-ASCII untouched),
+      // iterating whole code points so astral runes are never split.
+      let out = "";
+      for (const ch of recv) {
+        const c = ch.codePointAt(0) as number;
+        if (c >= 65 && c <= 90) out += String.fromCodePoint(c + 32);
+        else if (c >= 97 && c <= 122) out += String.fromCodePoint(c - 32);
+        else out += ch;
+      }
+      return out;
+    }
     default:
       return MISS;
   }

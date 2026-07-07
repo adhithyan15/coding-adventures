@@ -2,6 +2,22 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.13] - 2026-07-07
+
+### Added — more String methods: `ljust` / `rjust` / `center` / `swapcase`
+
+Extends `stringMethod` (and the `STRING_METHODS` `respond_to?` set) with four
+more common non-block Ruby String methods, completing the cross-backend parity
+sweep (Go / JS / Rust / Python already have these):
+
+- `ljust(width, pad = " ")` / `rjust(...)` / `center(...)` — pad to `width`
+  code points using `pad` cyclically; `width <= length` returns the string
+  unchanged; `center` puts an odd extra pad rune on the **right** (Ruby's rule).
+  An empty pad degrades to a single space, and the padding length is clamped to
+  `MAX_REPEAT_LEN` (like `strRepeat`) to bound a DoS.
+- `swapcase` — flips each ASCII letter (non-letters / non-ASCII untouched),
+  iterating whole code points so astral runes are never split.
+
 ## [0.1.12] - 2026-07-07
 
 ### Added — Array block-method breadth (sort_by / group_by / partition / …)
