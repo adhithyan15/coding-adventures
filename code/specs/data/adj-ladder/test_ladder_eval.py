@@ -137,6 +137,7 @@ SELF_CONTAINED_RUNGS = (
     "rung97_amniotic_fluid",
     "rung98_segmental_pressure",
     "rung99_clearance_fraction",
+    "rung100_refraction_focus",
 )
 
 
