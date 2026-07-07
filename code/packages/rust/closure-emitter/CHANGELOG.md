@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.34.1] - 2026-07-07
+
+### Added — CLOC12.170 PR3: CodePrinter object-spread `{...o}` conformance port
+
+Ports upstream `CodePrinterTest`'s object-spread `{...o}` printing cases into
+`tests/upstream/code_printer_object_spread_test.rs` (the twenty-third CodePrinter
+port), isolating `emit_object_spread` + the `emit_object` member-iteration that
+landed with `ObjectMember` (CLOC12.170 PR1). 5 hand-constructed-AST cases
+exercise the two forces that drive the printing: (1) the spread argument prints
+at `PREC_ASSIGNMENT` inside the braces — an identifier (`{...a}`) and a call
+(`{...f()}`) print bare, while a looser *sequence* argument must wrap
+(`{...(a,b)}`); and (2) member order is preserved — `{...a, b: 1}` and
+`{a: 1, ...b}` print their members in source order (observable, since a later
+member overrides an earlier key). Emitter code unchanged — test-only conformance
+port. (CLOC12.170)
+
 ## [0.34.0] - 2026-07-07
 
 ### Added — CLOC12.170: emit object spread `{...o}` (`emit_object_spread`)
