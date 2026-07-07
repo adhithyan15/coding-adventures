@@ -54,7 +54,17 @@ pub fn emit_module(m: &Module) -> String {
     let mut out = String::new();
     emit_banner(&mut out, m);
     emit_allows(&mut out);
-    out.push_str(RUNTIME);
+    // Substitute the display-convention placeholder (SIR display-convention
+    // spec): a Ruby-sourced module renders booleans as `true`/`false`; every
+    // other source language keeps the default Lisp `#t`/`#f` form, so existing
+    // Twig output is unchanged.
+    //
+    // SECURITY: the replacement value MUST remain a hardcoded literal selected
+    // by a boolean — never text derived from `source_language` or any other
+    // source-controlled field — so this substitution can never inject into the
+    // emitted Rust.
+    let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
+    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');

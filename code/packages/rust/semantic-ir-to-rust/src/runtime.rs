@@ -19,6 +19,15 @@
 /// The full inlined runtime.  Always emitted verbatim.
 pub const RUNTIME: &str = r##"mod __sir {
     //! Runtime support — value model, builtins, helpers.
+
+    // Source-language display convention (SIR display-convention spec).  The
+    // emitter substitutes `__SIR_DISPLAY_RUBY__` with `true` when the module's
+    // `source_language` is Ruby, else `false` (the default Twig/Lisp form).
+    // `format` reads this to render a boolean as Ruby `true`/`false` rather
+    // than the Lisp `#t`/`#f`.  Kept a compile-time `const` so the branch folds
+    // away — zero per-call cost — and existing Twig output is byte-for-byte
+    // unchanged (the default is the Lisp form).
+    pub const SIR_DISPLAY_RUBY: bool = __SIR_DISPLAY_RUBY__;
     use std::cell::Cell;
     use std::cell::RefCell;
     use std::collections::HashMap;
@@ -641,8 +650,8 @@ pub const RUNTIME: &str = r##"mod __sir {
             // matching how Python/Ruby render `3.0`.  Non-finite values
             // print as `NaN` / `inf` / `-inf`.
             Value::Float(x) => format_float(*x),
-            Value::Bool(true) => "#t".to_string(),
-            Value::Bool(false) => "#f".to_string(),
+            Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else { "#t" }.to_string(),
+            Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else { "#f" }.to_string(),
             Value::Nil => "nil".to_string(),
             // Defensive: a `Missing` sentinel should be consumed by a
             // defaulted param's prologue before any value is printed, so
