@@ -2214,3 +2214,46 @@ fn m6_boolean_operators() {
         assert_eq!(stdout, "#f\n#t\n#f\n#t");
     }
 }
+
+// ── Ruby Numeric method catalog (hand-implemented, explicit dispatch) ──
+//
+// Exercises the `numericMethod` catalog end-to-end under Node: the emitted
+// JS must route `(-5).abs`, `12.gcd(18)`, `123.digits`, block-taking
+// `1.upto(3)`, … through the explicit numeric switch (never `recv[name]`)
+// and produce Ruby-faithful values.
+
+fn method(recv: Expr, name: &str, args: Vec<Expr>) -> Expr {
+    let mut a = vec![recv, str_(name)];
+    a.extend(args);
+    bc("__method__", a)
+}
+
+#[test]
+fn numeric_catalog_nonblock_methods() {
+    let stmts = vec![
+        print(method(int(-5), "abs", vec![])),        // 5
+        print(method(int(12), "gcd", vec![int(18)])), // 6
+        print(method(int(2), "pow", vec![int(8)])),   // 256
+        print(method(int(123), "digits", vec![])),    // [3, 2, 1]
+        print(method(float(3.2), "ceil", vec![])),    // 4
+        print(method(float(2.5), "round", vec![])),   // 3
+        print(method(int(5), "succ", vec![])),        // 6
+        print(method(int(5), "pred", vec![])),        // 4
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Floats, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "numcatalog") {
+        assert_eq!(stdout, "5\n6\n256\n[3, 2, 1]\n4\n3\n6\n4");
+    }
+}
+
+#[test]
+fn numeric_upto_runs_block() {
+    // def blk(i); print(i); end ; 1.upto(3) { |i| print i }  → 1,2,3
+    let blk = func("blk", vec![param("i")], vec![print(param_ref("i"))], Expr::NilLit { span: sp() });
+    let call = method(int(1), "upto", vec![int(3), method_closure("blk")]);
+    let module = oop_module(vec![blk], vec![Stmt::ExprStmt { expr: call, span: sp() }]);
+    if let Some(stdout) = run_module(&module, "numupto") {
+        assert_eq!(stdout, "1\n2\n3");
+    }
+}

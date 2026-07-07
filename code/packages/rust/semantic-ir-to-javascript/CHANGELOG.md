@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.13.0 — Ruby Numeric method-catalog parity
+
+Adds a hand-implemented Ruby Numeric catalog (`numericMethod`) to the emitted
+JS runtime, dispatched by an **explicit `switch` on the source-derived name**
+(never `recv[name]`) ahead of the native-method allowlist — so `gcd`/`digits`/
+`upto`/… resolve on a `number` receiver while `toString`/`toFixed` still fall
+through to the RCE-hardened allowlist. Brings JS toward the Go/Rust/Python
+Numeric surface.
+
+Methods: `abs`, `to_i`/`to_int`, `to_f`, `even?`, `odd?`, `zero?`,
+`positive?`, `negative?`, `succ`/`next`, `pred`, `floor`, `ceil`, `round`
+(Ruby round-half-away-from-zero via `rubyRound`), `gcd`, `pow`/`**`, `digits`,
+and the block-taking walkers `times`, `upto`, `downto`, `step`. A non-numeric
+argument degrades to `0` (`numArg`, the lenient never-raise floor); a zero/
+non-numeric `step` stride yields nothing rather than spinning. `respond_to?`
+is kept honest via `NUMERIC_METHODS` (mirrors the case labels exactly).
+
+Verified end-to-end under Node (`run_with_node`): the emitted JS executes and
+matches Ruby-faithful output for the catalog and a block-driven `upto`.
+
 ## 0.12.0
 
 ### Added — M6 universal Object metaprogramming surface (send/tap/then/respond_to?)

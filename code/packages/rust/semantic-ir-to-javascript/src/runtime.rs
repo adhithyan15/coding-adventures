@@ -520,6 +520,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return true;
     }
     if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
+    // A number resolves the hand-implemented Ruby Numeric catalog (kept in
+    // lockstep with `numericMethod`'s case labels), ahead of the native gate.
+    if (typeof recv === "number" && NUMERIC_METHODS.has(name)) { return true; }
     // A primitive resolves a name iff it (or its Ruby→native alias) is on the
     // method allowlist AND the native member is actually a function on `recv`.
     if (!(recv instanceof SirInstance)) {
@@ -544,6 +547,106 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (name === "&") { return recv && other; }
     if (name === "|") { return recv || other; }
     return recv !== other; // "^"
+  }
+
+  // ── Ruby Numeric catalog (Integer / Float) ─────────────────────
+  // Hand-implemented Ruby numeric methods that have no 1:1 JS-native
+  // spelling (`gcd`, `digits`, `upto`/`downto`/`step`, …).  Dispatched by an
+  // EXPLICIT `switch` on the source-derived `name` — never `recv[name]` — so
+  // no reflective gadget is reachable; the receiver is a primitive number and
+  // the native allowlist below still guards `toString`/`toFixed`.  A
+  // non-numeric argument degrades to 0 via `numArg` (the lenient
+  // never-raise-on-the-OO-surface floor), matching the Go/Rust/Python
+  // reference runtimes.  `NUMERIC_METHODS` mirrors these case labels EXACTLY so
+  // `respond_to?` stays honest as the catalog grows.
+  const NUM_MISS = Symbol("num-miss");
+  const NUMERIC_METHODS = new Set([
+    "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?", "positive?",
+    "negative?", "succ", "next", "pred", "floor", "ceil", "round", "gcd",
+    "pow", "**", "digits", "times", "upto", "downto", "step",
+  ]);
+  // Lenient numeric coercion: a non-number argument becomes 0 rather than
+  // producing NaN (which would silently break `<=`/`>=` loop guards).
+  function numArg(x) { return typeof x === "number" ? x : 0; }
+  // Ruby rounds half AWAY from zero (`2.5.round == 3`, `-2.5.round == -3`),
+  // unlike JS `Math.round` (half toward +∞).
+  function rubyRound(x) {
+    return x >= 0 ? Math.floor(x + 0.5) : Math.ceil(x - 0.5);
+  }
+  function gcdInt(a, b) {
+    a = Math.abs(Math.trunc(a));
+    b = Math.abs(Math.trunc(b));
+    while (b !== 0) { const t = a % b; a = b; b = t; }
+    return a;
+  }
+  function numericMethod(recv, name, args) {
+    switch (name) {
+      case "abs": return Math.abs(recv);
+      case "to_i": case "to_int": return Math.trunc(recv);
+      case "to_f": return recv;
+      case "even?": return Math.trunc(recv) % 2 === 0;
+      case "odd?": return Math.abs(Math.trunc(recv) % 2) === 1;
+      case "zero?": return recv === 0;
+      case "positive?": return recv > 0;
+      case "negative?": return recv < 0;
+      case "succ": case "next": return recv + 1;
+      case "pred": return recv - 1;
+      case "floor": return Math.floor(recv);
+      case "ceil": return Math.ceil(recv);
+      case "round": return rubyRound(recv);
+      case "gcd": return gcdInt(recv, numArg(args[0]));
+      case "pow": case "**": return Math.pow(recv, numArg(args[0]));
+      case "digits": {
+        // Base-10 digits, least-significant first (`123.digits == [3, 2, 1]`).
+        // A negative receiver is taken by magnitude (parity with the reference
+        // runtimes, which coerce via absolute value).
+        let n = Math.abs(Math.trunc(recv));
+        const out = [];
+        if (n === 0) { out.push(0); }
+        while (n > 0) { out.push(n % 10); n = Math.trunc(n / 10); }
+        return out;
+      }
+      case "times": {
+        // Block arg arrives already unwrapped to a JS function; a block-less
+        // call returns the receiver (v0 floor for Ruby's Enumerator).
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const n = Math.trunc(recv);
+          for (let i = 0; i < n; i++) { blk(i); }
+        }
+        return recv;
+      }
+      case "upto": {
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const hi = Math.trunc(numArg(args[0]));
+          for (let i = Math.trunc(recv); i <= hi; i++) { blk(i); }
+        }
+        return recv;
+      }
+      case "downto": {
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const lo = Math.trunc(numArg(args[0]));
+          for (let i = Math.trunc(recv); i >= lo; i--) { blk(i); }
+        }
+        return recv;
+      }
+      case "step": {
+        // `a.step(limit, stride=1) { |v| … }`.  A zero (or non-numeric → 0)
+        // stride yields nothing rather than spinning forever — the never-hang
+        // floor.  `args` is `[limit, block]` or `[limit, stride, block]`.
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const limit = numArg(args[0]);
+          const stride = args.length >= 3 ? numArg(args[1]) : 1;
+          if (stride > 0) { for (let v = recv; v <= limit; v += stride) { blk(v); } }
+          else if (stride < 0) { for (let v = recv; v >= limit; v += stride) { blk(v); } }
+        }
+        return recv;
+      }
+    }
+    return NUM_MISS;
   }
 
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
@@ -616,6 +719,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (typeof recv === "boolean") {
       const b = boolMethod(recv, name, args);
       if (b !== BOOL_MISS) { return b; }
+    }
+    // Ruby Numeric catalog on a `number` receiver — explicit-switch dispatch
+    // (no `recv[name]`) ahead of the native allowlist, so `gcd`/`digits`/
+    // `upto`/… resolve while `toString`/`toFixed` still fall through below.
+    if (typeof recv === "number") {
+      const nm = numericMethod(recv, name, args);
+      if (nm !== NUM_MISS) { return nm; }
     }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
