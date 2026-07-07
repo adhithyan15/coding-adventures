@@ -1,5 +1,14 @@
 # Changelog — `aarch64-backend`
 
+## 0.22.0 — 2026-07-07 — E4-dyn: `str_concat` in V1_BUILTINS (runtime string concat)
+
+`V1_BUILTINS` gains `str_concat { n_args: 2, returns: true }` — the runtime string
+concatenation helper `int64_t __twig_str_concat(int64_t a, int64_t b)`. Same
+2-arg / returns-i64 shape as `str_eq` (both operand handles ride x0/x1, the result
+handle rides x0), so the generic `call_builtin` marshaller needs **no new codegen**
+— only the table entry. Emitted by twig-aot when a `str_concat` operand is a runtime
+handle. Run-verified locally via the `PRINT A$ + B$` matrix cell (aarch64).
+
 ## 0.21.0 — 2026-07-07 — E4-dyn: `input_str` in V1_BUILTINS (BASIC string INPUT)
 
 Adds `input_str` (BASIC string `INPUT A$`) to `V1_BUILTINS` as a

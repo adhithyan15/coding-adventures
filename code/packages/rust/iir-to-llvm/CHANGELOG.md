@@ -1,5 +1,21 @@
 # Changelog — iir-to-llvm
 
+## [0.33.0] — 2026-07-07 (LANG-FULL E4-dyn: runtime `str_concat` → `@__twig_str_concat`)
+
+`lower_str_concat` gains a runtime-operand path. It keeps the compile-time literal
+fold (reuse the interned joined symbol so the result stays a known literal), but
+when either operand is a runtime string handle (not in `str_values`), it reads each
+operand's i64 handle from `env` and emits
+`%r = call i64 @__twig_str_concat(i64 a, i64 b)`, storing the result only in `env`
+(no `str_lens`/`str_values`) so `str_len`/`print_str` read the header at run time.
+The extern is declared under a `used_str_concat` flag (set whenever a `str_concat`
+op appears; an unused declare is legal LLVM and creates no undefined-symbol
+reference when everything folds).
+
+- Test: `runtime_str_concat_lowers_to_twig_str_concat_call` (two `input_str` handles
+  → `str_concat` → `str_len` asserts the call + declare are emitted). Run-verified
+  end-to-end via clang in the `PRINT A$ + B$` matrix cell.
+
 ## [0.32.0] — 2026-07-07 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
 
 - `input_str` added to `SUPPORTED_BUILTINS`; `call_builtin "input_str"` lowers to

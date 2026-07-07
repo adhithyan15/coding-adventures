@@ -1,5 +1,21 @@
 # Changelog — `twig-aot`
 
+## 0.30.0 — 2026-07-07 — E4-dyn: runtime `str_concat` → `call_builtin "str_concat"`
+
+`lower_string_literals_for_aot`'s `str_concat` handler now mirrors the proven
+`str_eq` path. It keeps the both-operands-literal **compile-time fold** (bake the
+joined literal into the data segment; the result stays a known literal so
+downstream `str_len`/`str_index` keep folding), but when either operand is a
+runtime string handle — an `INPUT` result, a call result, a branch-selected
+string — it emits `call_builtin "str_concat" a b → dest`, delegating to the
+existing `__twig_str_concat(a, b)` archive helper (which reads both `[i64 len]
+[bytes]` headers and returns a fresh joined block). `dest` is deliberately NOT
+recorded as a literal, so `print_str`/`str_len` on it take their runtime
+header-reading paths.
+
+- Tests: `runtime_str_concat_lowers_to_call_builtin_str_concat` +
+  `literal_str_concat_still_folds_to_data_segment` (fold fast-path regression guard).
+
 ## 0.29.0 — 2026-07-07 — E4-dyn: `__twig_input_str` runtime helper (BASIC string INPUT)
 
 Adds `int64_t __twig_input_str(void)` to `runtime/twig_runtime.c` — the string
