@@ -6,6 +6,21 @@
   card action menu group shortcut command palette search invocation receipt
   notification stack summary product handoff delivery package embed runtime
   activation receipt journal summary handoff receipt acknowledgement record
+  receipt acknowledgement record summaries for Mosaic and WebAssembly runtime
+  activation acknowledgement-record-receipt-acknowledgement-record closeout.
+  `BerkeleyAppDeck::app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_receipt_acknowledgement_record_summary()`,
+  `run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_receipt_acknowledgement_record_summary()`,
+  and their JSON helpers wrap runtime activation receipt journal summary
+  handoff receipt acknowledgement record receipt acknowledgement records with
+  stable summary IDs, summarize/defer dispositions, summary actions,
+  deterministic summary steps, nested
+  `embedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecordReceiptAcknowledgementRecord`,
+  and handoff-receipt-acknowledgement-record-receipt-acknowledgement-record-
+  summary capability metadata for product-shell WebAssembly status cards.
+- Add Berkeley SPICE app-deck shell dashboard dispatch queue lane tab panel
+  card action menu group shortcut command palette search invocation receipt
+  notification stack summary product handoff delivery package embed runtime
+  activation receipt journal summary handoff receipt acknowledgement record
   receipt acknowledgement records for Mosaic and WebAssembly runtime
   activation acknowledgement-record-receipt-acknowledgement closeout.
   `BerkeleyAppDeck::app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_journal_summary_handoff_receipt_acknowledgement_record_receipt_acknowledgement_record()`,
