@@ -135,6 +135,7 @@ SELF_CONTAINED_RUNGS = (
     "rung95_acoustic_reflex",
     "rung96_urodynamics",
     "rung97_amniotic_fluid",
+    "rung98_segmental_pressure",
 )
 
 
