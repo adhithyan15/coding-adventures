@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.8] - 2026-07-07
+
+### Added — CLOC12.169 PR2: `import(x)` flows through the SIMPLE pipeline (gap-170)
+
+With the `javascript-parser` bridge now converting `import(x)` →
+`Expression::ImportExpression` (v0.33.0), a file containing a dynamic import no
+longer falls back to WHITESPACE_ONLY — it flows through the full SIMPLE pipeline
+(parser → typed-AST bridge → passes → emitter). New end-to-end diff fixture
+`tests/diff/simple-importexpr/` (`f(import("m"), 1 + 2);` → `f(import("m"),3);`):
+`import("m")` round-trips as the first argument — proving the bridge produced a
+real `ImportExpression` node (a *compound* node with a real `source` operand,
+unlike the atomic `import.meta` leaf) — while the sibling argument `1 + 2` folds
+to `3`, proving the pipeline ran rather than re-emitting the source verbatim.
+Version bump only; no CLI-surface change. (gap-170)
+
 ## [0.234.7] - 2026-07-07
 
 ### Added — CLOC12.168 PR2: `import.meta` flows through the SIMPLE pipeline (gap-169)

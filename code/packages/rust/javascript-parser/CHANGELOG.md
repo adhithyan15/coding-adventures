@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.33.0] - 2026-07-07
+
+### Added — CLOC12.169 PR2: bridge `import(x)` → `Expression::ImportExpression` (closes gap-170)
+
+The bridge now converts the grammar's `dynamic_import` node into
+`Expression::ImportExpression` (the dynamic-`import()` call expression). Previously
+the `dynamic_import` rule — whose children are `[Token("import"), Token("("),
+Node(source_expr), Token(")")]` — fell through the expression dispatch to the
+`other =>` internal-error arm, dragging any file containing `import(x)` to
+WHITESPACE_ONLY. A new `convert_dynamic_import` extracts the sole Node child (the
+module-specifier expression, via `node_children`), converts it with
+`convert_expression`, and wraps it in `ImportExpression { cv, source }`. Unlike
+the atomic `import.meta` leaf (v0.32.0), this is a **compound** single-operand
+node: the `source` is recursively converted, so a fold inside the specifier
+(e.g. `import("a" + "b")` → `import("ab")`) propagates. The `import` token's `cv`
+becomes the node's provenance, mirroring `convert_import_meta`. 3 new bridge unit
+tests (`import("m")` → `ImportExpression` with a `StringLiteral` source;
+`import(x)` → `Identifier` source; `f(import("m"))` bridges in argument position).
+
 ## [0.32.0] - 2026-07-07
 
 ### Added — CLOC12.168 PR2: bridge `import.meta` → `Expression::ImportMeta` (closes gap-169)

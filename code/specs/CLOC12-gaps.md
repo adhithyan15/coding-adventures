@@ -2174,16 +2174,26 @@ folded `source` (and `fold-control-flow` returns its `cv` from the
 node + emit + all nine downstream pass arms land together so the workspace never
 breaks.
 
-### gap-170 — bridge declines dynamic `import(x)` (`ImportExpression`) — **OPEN (bridge slice pending, CLOC12.169 PR2)**
+### gap-170 — bridge declines dynamic `import(x)` (`ImportExpression`) — **RESOLVED (javascript-parser 0.33.0, CLOC12.169 PR2)**
 
-The `javascript-parser` bridge does not yet convert a dynamic `import(x)` to
-`Expression::ImportExpression`, so any file containing one drops to
-WHITESPACE_ONLY. The atomic node PR (CLOC12.169 PR1) lands the node + emit + pass
-recursion so the typed AST and every downstream pass can already represent,
-optimise-through, and print a dynamic import; the **PR2 bridge slice** wires the
-grammar production through. Whether grammar work is required (as with `await`,
-gap-165) or the rule is already produced and merely declined / mis-dispatched
-(as with `import.meta`, gap-169) is determined by a PR2 probe. The **PR3**
+The atomic node PR (CLOC12.169 PR1) landed the node + emit + pass recursion so the
+typed AST and every downstream pass can already represent, optimise-through, and
+print a dynamic import. The **PR2 probe** confirmed the grammar *already* produces
+a `dynamic_import` node with children `[Token("import"), Token("("),
+Node(source_expr), Token(")")]` — no grammar work was required (unlike `await`,
+gap-165); the bridge merely declined the unknown rule to the `other =>`
+internal-error arm, dragging any file containing `import(x)` to WHITESPACE_ONLY.
+
+**Fix (CLOC12.169 PR2):** a new `convert_dynamic_import` and a `"dynamic_import"`
+dispatch arm. Unlike the atomic `import.meta` leaf (gap-169), this is a
+**compound** single-operand node: the converter extracts the sole Node child (the
+module-specifier expression, via `node_children`), converts it recursively with
+`convert_expression`, and wraps it in `ImportExpression { cv, source }`. The
+recursion means a fold inside the specifier (`import("a" + "b")` → `import("ab")`)
+propagates. The `import` token's `cv` becomes the node's provenance, mirroring
+`convert_import_meta`. 3 bridge unit tests plus the closurec e2e diff fixture
+`tests/diff/simple-importexpr/` (`f(import("m"), 1 + 2);` → `f(import("m"),3);`)
+prove `import(x)` now flows through the full SIMPLE pipeline. The **PR3**
 CodePrinter conformance port follows.
 
 
