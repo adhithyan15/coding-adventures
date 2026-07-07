@@ -2367,19 +2367,28 @@ const PROGRAMS: &[Prog] = &[
     //     (`iir_type_to_jvm("str") = Ref`); the reference `astore`s into the slot.
     //   • CLR — `System.Console.ReadLine()` returns a `System.String`, which is the
     //     CLR representation of a `str` local; it stores straight in.
-    // Neither needed a new value-model — only a read-a-line host primitive that
-    // returns the backend's native string (mirroring the numeric `input_i64`'s
-    // `readLong` / `ReadLine`+`Int32.Parse`), so this is the string sibling of the
-    // numeric `INPUT X` cell above. Wiring the static columns' heap-string host
-    // primitive (`__twig_input_str` returning a `[i64 len][bytes]` handle on
-    // native/LLVM, `env.__input_str` writing into linear memory on WASM) is the
-    // next slice of this arc. Stdin "OK\n" → A$ = "OK" → prints "OK".
+    // The managed columns (JVM/CLR) needed no new value-model — only a read-a-line
+    // host primitive returning the backend's native string. The **static** columns
+    // (NativeAot, Llvm) carry a `str` as an i64 **handle** — the base address of a
+    // length-prefixed `[i64 len][bytes]` heap block (the same repr `str_eq` /
+    // `print_str` already read) — so they gain a host primitive that BUILDS such a
+    // block from the input line:
+    //   • NativeAot — `__twig_input_str()` in `twig_runtime.c` reads a line and
+    //     returns a handle to a fresh `alloc_bytes` block; the aarch64/x86_64
+    //     backends add it to their `V1_BUILTINS` table (0-arg / returns-i64, the
+    //     exact shape of `input_i64` — the returned pointer rides x0/RAX), so NO
+    //     new codegen. `print_str` reads the header length at run time.
+    //   • Llvm — the same `@__twig_input_str()` from the AOT archive; `iir-to-llvm`
+    //     lowers `call_builtin "input_str"` to `call i64 @__twig_input_str()` and
+    //     carries the handle as an i64 (str→i64 at boundaries, E4d-2b).
+    // WASM (`env.__input_str` writing the block into linear memory) is the last
+    // remaining column. Stdin "OK\n" → A$ = "OK" → prints "OK".
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -2547,12 +2556,17 @@ fn clang_ok() -> bool {
 /// when the emitted `.ll` actually references one of the symbols, so the bare
 /// expression-language programs still link a standalone `.ll`.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\n\
+    "#include <stdio.h>\n#include <stdint.h>\n#include <stdlib.h>\n#include <string.h>\n\
 void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
 void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n\
 int64_t __twig_input_i64(void){char buf[64];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<63){buf[i++]=(char)c;}buf[i]=0;\
-long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n";
+long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n\
+int64_t __twig_input_str(void){char buf[4096];int i=0;int c;\
+while((c=getchar())!=EOF&&c!='\\n'&&i<4095){buf[i++]=(char)c;}\
+int64_t* h=(int64_t*)malloc(8+(size_t)i);if(!h)return 0;\
+h[0]=(int64_t)i;if(i>0)memcpy((char*)h+8,buf,(size_t)i);\
+return (int64_t)(intptr_t)h;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
@@ -2584,7 +2598,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
     // Link the generic I/O runtime iff the program actually uses print or input.
-    if ll.contains("@__print_i64") || ll.contains("@__print_str") || ll.contains("@__twig_input_i64") {
+    if ll.contains("@__print_i64") || ll.contains("@__print_str")
+        || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);

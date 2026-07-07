@@ -207,6 +207,43 @@ int64_t __twig_alloc_bytes(int64_t n) {
     return (int64_t)(intptr_t)p;
 }
 
+/* __twig_input_str — read one line from stdin as an E4-dyn runtime string
+ * (LANG-FULL E4-dyn, BASIC `INPUT A$`).
+ *
+ * The string counterpart of `__twig_input_i64`: instead of parsing the line as
+ * a number, it keeps the whole line (minus the trailing newline) AS the string
+ * value.  It returns a handle to a fresh length-prefixed heap block — the SAME
+ * `[int64 len][bytes]` repr `__twig_print_string` / `__twig_str_eq` already
+ * consume — so `PRINT A$` reads the length from the header at run time.
+ *
+ * A single line is bounded by the fixed 4096-byte stack buffer; a longer line is
+ * truncated and its tail stays in the stdio buffer (consumed on the next read),
+ * mirroring `__twig_input_i64`'s 64-byte bound — the V1 permissive contract.
+ * On EOF the buffer is emptied, so this returns a handle to a zero-length
+ * ("") block (never a NULL handle), keeping a subsequent `print_str` safe.
+ */
+int64_t __twig_input_str(void) {
+    char buf[4096];
+    if (fgets(buf, sizeof(buf), stdin) == NULL) {
+        buf[0] = '\0';
+    }
+    size_t len = strlen(buf);
+    /* fgets keeps the terminating '\n'; a runtime string is the line content,
+     * so strip a single trailing newline (but not embedded ones). */
+    if (len > 0 && buf[len - 1] == '\n') {
+        len--;
+    }
+    /* Block = [int64 len][len bytes].  alloc_bytes(8+len) is always > 0 here
+     * (8-byte header even for the empty string), so the handle is non-NULL. */
+    int64_t handle = __twig_alloc_bytes((int64_t)(8 + len));
+    if (handle == 0) return 0;
+    *(int64_t *)handle = (int64_t)len;
+    if (len > 0) {
+        memcpy((char *)handle + 8, buf, len);
+    }
+    return handle;
+}
+
 /* ─── LANG-FULL E4-dyn: runtime (dynamic) string helpers ──────────────────
  *
  * A runtime string is the SAME length-prefixed heap block E5 arrays use:

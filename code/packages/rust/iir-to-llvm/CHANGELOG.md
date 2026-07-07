@@ -1,5 +1,21 @@
 # Changelog — iir-to-llvm
 
+## [0.32.0] — 2026-07-07 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
+
+- `input_str` added to `SUPPORTED_BUILTINS`; `call_builtin "input_str"` lowers to
+  `%v = call i64 @__twig_input_str()` (the AOT runtime helper) with a matching
+  `declare i64 @__twig_input_str()`. The i64 result is the runtime-string handle
+  (str→i64 at boundaries, E4d-2b), so a later `mov`/`print_str` reads the length
+  header at run time.
+- **Latent-bug fix:** the input/runtime `declare` block was gated on
+  `used_alloc_bytes || … || used_putchar || used_getchar`, which omitted
+  `used_input_i64`/`used_input_str` — so `@__twig_input_i64`/`@__twig_input_str`
+  were only declared as a side effect of an unrelated helper (e.g. `putchar`)
+  being present. A program that *only* reads input (no print/alloc) would emit
+  the `call` without the `declare`. The guard now includes both input flags.
+- Test `input_str_lowers_to_twig_input_str_call` (a minimal input-only function)
+  locks in both the lowering and the declare-guard fix.
+
 ## [0.31.0] — 2026-07-03 (LANG-FULL E4-dyn E4d-2b: runtime string as return value / call result)
 
 Extended the E4-dyn runtime-string support so a runtime string that arrives as a
