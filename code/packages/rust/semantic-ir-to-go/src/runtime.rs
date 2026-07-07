@@ -1650,8 +1650,7 @@ func _sir_string_responds(name string) bool {
 
 func _sir_symbol_responds(name string) bool {
 	switch name {
-	case "to_s", "to_sym", "length", "size", "upcase", "downcase",
-		"capitalize", "inspect", "to_proc", "empty?":
+	case "to_s", "to_sym", "length", "size", "upcase", "downcase", "empty?":
 		return true
 	}
 	return false
@@ -2087,8 +2086,153 @@ func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
 			return args[1], true
 		}
 		panic(_sir_new_error("KeyError", Value("key not found: "+_sir_format(args[0]))))
+	case "to_a":
+		// Ruby `Hash#to_a` → an Array of `[key, value]` two-element Arrays,
+		// in insertion order.  Each pair is its own fresh `*Seq`, so mutating
+		// one never touches the map's backing entries.
+		out := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			out[i] = &Seq{Items: []Value{e.Key, e.Val}}
+		}
+		return &Seq{Items: out}, true
+	case "dig":
+		// Ruby `Hash#dig(k, …)` — a NESTED lookup that walks one key per
+		// argument, returning nil the moment a level is missing (never
+		// raising).  A single argument degrades to a plain lookup, matching
+		// the Python/TS reference's single-level `dig`; extra arguments
+		// recurse into a nested `*Map` (or `*Seq`, via `Array#dig`) — Ruby
+		// digs through anything that itself responds to `dig`.
+		var cur Value = recv
+		for _, k := range args {
+			switch node := cur.(type) {
+			case *Map:
+				found := false
+				for _, e := range node.Entries {
+					if _sir_value_eq(e.Key, k) {
+						cur = e.Val
+						found = true
+						break
+					}
+				}
+				if !found {
+					return nil, true
+				}
+			case *Seq:
+				// `Array#dig` indexes by an integer key; anything else (or an
+				// out-of-range index) digs to nil rather than raising.
+				idx, ok := _sir_dig_index(k, len(node.Items))
+				if !ok {
+					return nil, true
+				}
+				cur = node.Items[idx]
+			default:
+				// The current level cannot be dug into (e.g. an Integer with
+				// keys still remaining) ⇒ nil, matching Ruby's TypeError-free
+				// never-raise floor on the OO surface.
+				return nil, true
+			}
+		}
+		return cur, true
+	case "store", "[]=":
+		// Ruby `Hash#store(k, v)` / `h[k] = v` — an in-place upsert that
+		// returns the stored value.  Overwrite an existing key in place;
+		// otherwise append, preserving insertion order.
+		for i, e := range recv.Entries {
+			if _sir_value_eq(e.Key, args[0]) {
+				recv.Entries[i].Val = args[1]
+				return args[1], true
+			}
+		}
+		recv.Entries = append(recv.Entries, MapEntry{Key: args[0], Val: args[1]})
+		return args[1], true
+	case "merge":
+		// Ruby `Hash#merge(other)` → a FRESH hash (self is NOT mutated).
+		// Self's entries come first (insertion order preserved); `other`
+		// then overwrites colliding keys in place and appends new ones.  We
+		// build a brand-new `[]MapEntry` so the result never aliases either
+		// input's backing slice.
+		m := &Map{Entries: make([]MapEntry, len(recv.Entries))}
+		copy(m.Entries, recv.Entries)
+		if other, ok := args[0].(*Map); ok {
+			for _, oe := range other.Entries {
+				replaced := false
+				for i, e := range m.Entries {
+					if _sir_value_eq(e.Key, oe.Key) {
+						m.Entries[i].Val = oe.Val
+						replaced = true
+						break
+					}
+				}
+				if !replaced {
+					m.Entries = append(m.Entries, MapEntry{Key: oe.Key, Val: oe.Val})
+				}
+			}
+		}
+		return m, true
+	case "delete":
+		// Ruby `Hash#delete(k)` — remove the entry IN PLACE and return its
+		// value, or nil when the key was absent.  We rebuild the slice
+		// without the matched index rather than shifting in place so the
+		// result stays a clean, insertion-ordered `[]MapEntry`.
+		for i, e := range recv.Entries {
+			if _sir_value_eq(e.Key, args[0]) {
+				val := e.Val
+				recv.Entries = append(recv.Entries[:i], recv.Entries[i+1:]...)
+				return val, true
+			}
+		}
+		return nil, true
+	case "clear":
+		// Ruby `Hash#clear` — empty self IN PLACE and return self.  A fresh
+		// empty slice (not `nil`) keeps later appends well-defined.
+		recv.Entries = []MapEntry{}
+		return recv, true
+	case "invert":
+		// Ruby `Hash#invert` → a FRESH hash with keys and values swapped.
+		// On duplicate original values the LAST wins (Ruby's documented
+		// behaviour), so a later collision overwrites the earlier entry in
+		// place.  The result is a brand-new `*Map` — no aliasing of self.
+		m := &Map{Entries: []MapEntry{}}
+		for _, e := range recv.Entries {
+			replaced := false
+			for i, ne := range m.Entries {
+				if _sir_value_eq(ne.Key, e.Val) {
+					m.Entries[i].Val = e.Key
+					replaced = true
+					break
+				}
+			}
+			if !replaced {
+				m.Entries = append(m.Entries, MapEntry{Key: e.Val, Val: e.Key})
+			}
+		}
+		return m, true
 	}
 	return nil, false
+}
+
+// Coerce a `Hash#dig` / `Array#dig` step key into a valid `*Seq` index.
+// Ruby indexes arrays by Integer, allowing Python-style negatives that count
+// from the end.  Returns the normalised in-range index and true, or false
+// when the key is not an integer or lands out of range (⇒ the dig yields
+// nil rather than raising).
+func _sir_dig_index(k Value, length int) (int, bool) {
+	var idx int
+	switch n := k.(type) {
+	case int64:
+		idx = int(n)
+	case int:
+		idx = n
+	default:
+		return 0, false
+	}
+	if idx < 0 {
+		idx += length
+	}
+	if idx < 0 || idx >= length {
+		return 0, false
+	}
+	return idx, true
 }
 
 func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure) (Value, bool) {
@@ -2096,6 +2240,20 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "each", "each_pair":
 		for _, e := range recv.Entries {
 			_sir_apply(block, []Value{e.Key, e.Val})
+		}
+		return recv, true
+	case "each_key":
+		// Ruby `Hash#each_key` yields ONE argument (the key) per entry and
+		// returns self.
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{e.Key})
+		}
+		return recv, true
+	case "each_value":
+		// Ruby `Hash#each_value` yields ONE argument (the value) per entry
+		// and returns self.
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{e.Val})
 		}
 		return recv, true
 	case "map":
@@ -2319,28 +2477,6 @@ func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 		return _sir_intern(strings.ToUpper(recv.Name)), true
 	case "downcase":
 		return _sir_intern(strings.ToLower(recv.Name)), true
-	case "capitalize":
-		// Ruby `Symbol#capitalize`: first char upper, the rest lower, as a
-		// NEW interned Symbol (mirrors `upcase`/`downcase`).  Operate on runes
-		// so a multi-byte leading char is not split.
-		rs := []rune(recv.Name)
-		if len(rs) == 0 {
-			return recv, true
-		}
-		head := strings.ToUpper(string(rs[0]))
-		tail := strings.ToLower(string(rs[1:]))
-		return _sir_intern(head + tail), true
-	case "inspect":
-		// Ruby `Symbol#inspect` → the source form `":name"` (a String).
-		return ":" + recv.Name, true
-	case "to_proc":
-		// Ruby `Symbol#to_proc` — an explicit `sym.to_proc` call (the `&:sym`
-		// block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
-		// and never reaches this catalog).  Reuse the SAME helper so the
-		// resulting `*Closure` routes through the explicit `_sir_call_method`
-		// switch — never Go `reflect` ([[dynamic-dispatch-rce]]); an
-		// out-of-catalog method surfaces the ordinary NoMethodError floor.
-		return _sir_sym_to_proc(recv), true
 	case "empty?":
 		return len(recv.Name) == 0, true
 	}

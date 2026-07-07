@@ -2,13 +2,6 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
-## [0.26.0] - 2026-07-04
-
-### Added — CLOC12.167: `Expression::NewTarget` (`new.target`)
-
-Added `Expression::NewTarget` variant + `NewTarget { cv }` struct — the `new.target` meta-property, a reserved-word **leaf** primary (same shape as `Super` / `ThisExpression`, no operand). Spelled with two tokens (`new` `.` `target`) in source but modelled as an atomic node rather than a member access, so the renaming passes never touch it. Re-exported from the crate root. Atomic node PR (PR1): the node + `closure-emitter` emit + all nine downstream pass match-arms land together so the workspace never breaks. (CLOC12.167)
-
-
 ## [0.25.0] - 2026-07-04
 
 ### Added — CLOC12.166: `Expression::Super` (`super`)

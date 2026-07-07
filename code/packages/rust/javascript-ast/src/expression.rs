@@ -66,7 +66,6 @@ pub enum Expression {
     AwaitExpression(AwaitExpression),
     ThisExpression(ThisExpression),
     Super(Super),
-    NewTarget(NewTarget),
 }
 
 // ---------------------------------------------------------------------
@@ -650,38 +649,6 @@ pub struct Super {
     pub cv: Option<CvId>,
 }
 
-/// The `new.target` meta-property — a primary that reads the constructor a
-/// function was invoked with (`undefined` for a plain call, the constructor
-/// for a `new` call):
-///
-/// ```text
-///   function F() { if (new.target) { … } }   // was F called with `new`?
-///   class C { constructor() { new.target } } // the actual (sub)class
-/// ```
-///
-/// # Shape
-///
-/// `new.target` is a **leaf** — like [`ThisExpression`] and [`Super`], it
-/// carries no operand and no payload beyond its `cv`. In source it is spelled
-/// with two tokens (`new` `.` `target`), but semantically it is an atomic
-/// meta-property, so ESTree models it as its own `MetaProperty`-style node
-/// (here `NewTarget`) rather than a member access. It can never be a variable
-/// name, so the renaming passes must never touch it — a dedicated variant lets
-/// those passes exclude it structurally.
-///
-/// # Precedence
-///
-/// `new.target` binds at **primary** strength — the tightest level, like
-/// `this` / `super`. It never needs wrapping in any parent context, and no
-/// parent operand ever forces a paren around it. The emitter tags it
-/// `PREC_PRIMARY` and prints the literal two-token spelling `new.target`.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct NewTarget {
-    #[serde(skip_serializing_if = "Option::is_none", default)]
-    pub cv: Option<CvId>,
-}
-
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the
 /// `property` is conventionally an [`Expression::Identifier`]);
 /// `computed = true` ↔ `obj[key]` (the `property` is any expression).
@@ -1142,21 +1109,6 @@ mod tests {
         let json = serde_json::to_string(&s).expect("serialize");
         assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
         assert_eq!(s.clone(), roundtrip(s));
-    }
-
-    #[test]
-    fn new_target_roundtrips_traced() {
-        let n = Expression::NewTarget(NewTarget { cv: Some("newTarget.1".to_string()) });
-        assert_eq!(n.clone(), roundtrip(n.clone()));
-        assert_eq!(type_tag(&n), "NewTarget");
-    }
-
-    #[test]
-    fn new_target_untraced_omits_cv() {
-        let n = Expression::NewTarget(NewTarget { cv: None });
-        let json = serde_json::to_string(&n).expect("serialize");
-        assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
-        assert_eq!(n.clone(), roundtrip(n));
     }
 
     #[test]

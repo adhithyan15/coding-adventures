@@ -1,39 +1,5 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
-## [0.36.0] — 2026-07-06 (LANG-FULL E4-dyn — string `INPUT A$` reads a runtime string)
-
-`INPUT A$` (a `$`-suffixed *string* variable) now reads a whole line from the
-host **as the string value itself** — a genuinely runtime string the compiler
-cannot fold, unlike every prior BA4 string cell where the literal was known at
-compile time.  This is the BASIC sibling of the E4-dyn foothold's
-branch-selected string and the ALGOL string-procedure result: the observable
-output depends on stdin, not on a folded constant.
-
-**Frontend (`src/lib.rs`):**
-- `emit_input` now branches per variable: a numeric `INPUT X` keeps the existing
-  `call_builtin "input_i64"` + coerce-to-scalar-type path (factored into
-  `emit_input_numeric`); a string `INPUT A$` takes the new `emit_input_string`
-  path.  It gets the name via `scalar_variable_name` (which still rejects a
-  subscripted `A(I)`) and dispatches on `is_basic_string_name`.
-- New `emit_input_string`: emits `call_builtin "input_str" -> t` at `type_hint
-  "str"` (the `str` sibling of `input_i64`), then `mov __basic_str_<stem> = t`
-  at `str`, so a later `PRINT A$` / `IF A$ = …` resolves the same string slot
-  through the shared E4 `print_str` / `str_eq` ops.  No new IIR op.
-- Module docs: the operations table and Strings section now describe string
-  `INPUT`; it is no longer listed as a BA4/E4 follow-up.
-
-**Tests:**
-- `compiles_input_string`: `INPUT A$ / PRINT A$` emits `call_builtin "input_str"`
-  (`str`-typed), `mov`s the temp into the string slot, keeps `$` out of every
-  backend-facing register, and the subsequent `PRINT A$` reads that slot via
-  `print_str`.
-
-**Matrix proof** lives in `lang-aot` (0.179.0): `10 INPUT A$ / 20 PRINT A$ / 30
-END` with stdin `"OK"` prints `OK` on the dynamic **VM/JIT** columns (a tagged
-`Value::Str` read from the shared stdin buffer by a registered `input_str`
-closure).  Wiring the four subprocess/WASM columns' host read-a-line primitive
-is the next slice of this arc.
-
 ## [0.35.0] — 2026-07-02 (LANG-FULL BA-DIM-2D — multi-dimensional DIM arrays)
 
 Dartmouth BASIC arrays can now be **multi-dimensional**: `DIM A(m,n)` (and

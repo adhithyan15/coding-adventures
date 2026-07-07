@@ -1,8 +1,0 @@
-[package]
-name = "unicode-normalize"
-version = "0.1.0"
-edition = "2021"
-description = "Zero-dependency Unicode canonical normalization (NFD/NFC) and combining-mark detection for Unicode 17.0.0, reimplemented from scratch to keep the Engram stack free of third-party crates."
-license = "MIT"
-
-[dependencies]
