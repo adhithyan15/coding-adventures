@@ -239,6 +239,15 @@ pub fn encode_i64_load(offset: u32) -> Vec<u8> {
     b
 }
 
+/// `i32.store` (0x36) — store a full i32 to `address + offset`. Stack: `[addr, val]`.
+/// Used by E4-dyn runtime `str_concat` to write the `[i32 len]` header of a fresh
+/// concatenated block.
+pub fn encode_i32_store(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x36u8, 0x00u8]; // i32.store, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
 /// `i64.store` (0x37) — store an i64 to `address + offset`. Stack: `[addr, val]`.
 pub fn encode_i64_store(offset: u32) -> Vec<u8> {
     let mut b = vec![0x37u8, 0x00u8]; // i64.store, align = 0

@@ -566,6 +566,34 @@ impl LinearMemory {
         self.data[offset..offset + data.len()].copy_from_slice(data);
         Ok(())
     }
+
+    /// Copy `len` bytes within linear memory — the `memory.copy` bulk-memory
+    /// primitive.  Both the source and destination ranges are bounds-checked
+    /// (either out of range traps, never panics), and `copy_within` gives the
+    /// correct overlap-safe (memmove) semantics the spec requires.  A zero-length
+    /// copy is a no-op even at the very end of memory (matching the spec).
+    pub fn copy(&mut self, dest: usize, src: usize, len: usize) -> Result<(), TrapError> {
+        if len == 0 {
+            return Ok(());
+        }
+        // Overflow-proof bounds check: compute each range end with `checked_add` so a
+        // huge `src`/`dest`/`len` can't wrap `offset + width` past `data.len()` and
+        // slip through (the ordinary `bounds_check` adds without checking). Defense in
+        // depth — the caller already truncates operands to 32 bits — so this method is
+        // safe against out-of-bounds indexing regardless of how it is invoked.
+        let src_end = src.checked_add(len);
+        let dest_end = dest.checked_add(len);
+        match (src_end, dest_end) {
+            (Some(se), Some(de)) if se <= self.data.len() && de <= self.data.len() => {
+                self.data.copy_within(src..se, dest);
+                Ok(())
+            }
+            _ => Err(TrapError::new(format!(
+                "out of bounds memory.copy: dest={dest}, src={src}, len={len}, memory_size={}",
+                self.data.len()
+            ))),
+        }
+    }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -891,6 +919,39 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             instructions.push(DecodedInstruction {
                 opcode: 0xFB,
                 operand: DecodedOperand::Gc { sub, type_idx, field_idx },
+            });
+            continue;
+        }
+
+        // ── Bulk-memory two-byte opcodes: `0xFC <sub-opcode> [immediates]` ─────
+        //
+        // Like the `0xFB` GC prefix, the MVP `get_opcode` table doesn't know the
+        // `0xFC` bulk-memory prefix, so we decode it explicitly.  We carry the
+        // sub-opcode in a plain `Int` operand; the `0xFC` handler dispatches on it.
+        //
+        //   sub   instruction   immediates
+        //   0x0A  memory.copy   <dst mem idx> <src mem idx>   (both 0 in our modules)
+        //   0x0B  memory.fill   <mem idx>
+        //
+        // Only `memory.copy` is emitted today (runtime `str_concat`); `memory.fill`
+        // is decoded (its one immediate consumed) so a future user round-trips, but
+        // the handler traps on any sub-opcode it doesn't implement.
+        if opcode_byte == 0xFC {
+            let sub = if offset < code.len() {
+                let s = code[offset];
+                offset += 1;
+                s
+            } else {
+                0
+            };
+            match sub {
+                0x0A => offset += 2, // memory.copy: dst + src memory-index bytes
+                0x0B => offset += 1, // memory.fill: one memory-index byte
+                _ => {}
+            }
+            instructions.push(DecodedInstruction {
+                opcode: 0xFC,
+                operand: DecodedOperand::Int(sub as i64),
             });
             continue;
         }
@@ -1634,6 +1695,39 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             other => {
                 return Err(VMError::GenericError(format!(
                     "unsupported WasmGC opcode 0xFB 0x{other:02X}"
+                )));
+            }
+        }
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // Bulk-memory prefix (0xFC) — `memory.copy` (E4-dyn runtime string concat).
+    //
+    // `memory.copy` takes three i32 operands pushed in order dest, src, size, so
+    // the value stack (bottom → top) is `[dest, src, size]`: pop size, then src,
+    // then dest.  It copies `size` bytes from `src` to `dest` within the single
+    // linear memory, overlap-safe.  Out-of-range (either endpoint) is a clean trap.
+    // Only sub-opcode 0x0A is implemented; any other 0xFC sub-opcode traps rather
+    // than silently misbehaving.
+    vm.register_context_opcode(0xFC, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let sub = operand_int(instr);
+        match sub {
+            0x0A => {
+                // `as u32 as usize` (never a bare `as usize`): a negative i32 must
+                // truncate to its 32-bit value, NOT sign-extend to a huge usize — the
+                // same guard every other memory op applies via `effective_addr`.
+                // Sign-extending here would let `offset + width` wrap past the bounds
+                // check and index out of bounds.
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                get_memory(ctx)?.copy(dest, src, n).map_err(VMError::from)?;
+            }
+            other => {
+                return Err(VMError::GenericError(format!(
+                    "unsupported bulk-memory opcode 0xFC 0x{other:02X}"
                 )));
             }
         }
@@ -5684,5 +5778,43 @@ mod tests {
         // Unterminated LEB128 (high bit set, no more bytes)
         let data = vec![0x80];
         assert!(decode_signed_64(&data, 0).is_err());
+    }
+
+    #[test]
+    fn memory_copy_decodes_as_one_0xfc_instruction() {
+        // `memory.copy` = 0xFC 0x0A 0x00 0x00 (sub-opcode + dst/src memory indices).
+        // The decoder must fold all four bytes into ONE instruction carrying the
+        // sub-opcode, not mis-read the trailing 0x00s as separate `unreachable`s.
+        let body = FunctionBody { locals: vec![], code: vec![0xFC, 0x0A, 0x00, 0x00, 0x0B] };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 2, "memory.copy (4 bytes) + end → 2 instrs: {instrs:?}");
+        assert_eq!(instrs[0].opcode, 0xFC);
+        assert!(
+            matches!(instrs[0].operand, DecodedOperand::Int(0x0A)),
+            "sub-opcode 0x0A must be carried in the operand: {:?}",
+            instrs[0].operand
+        );
+    }
+
+    #[test]
+    fn linear_memory_copy_moves_bytes_overlap_safe() {
+        let mut mem = LinearMemory::new(1, None);
+        mem.write_bytes(0, b"HELLO").unwrap();
+        // Non-overlapping forward copy: "HELLO" at 0 → 8.
+        mem.copy(8, 0, 5).unwrap();
+        assert_eq!(&mem.data[8..13], b"HELLO");
+        // Overlapping copy (dest > src, ranges overlap) must use memmove semantics.
+        mem.write_bytes(0, b"ABCDEF").unwrap();
+        mem.copy(2, 0, 4).unwrap(); // ABCDEF → AB ABCD
+        assert_eq!(&mem.data[0..6], b"ABABCD");
+        // Zero-length copy is always a no-op, even out of range.
+        assert!(mem.copy(999_999, 999_999, 0).is_ok());
+        // Out-of-range non-zero copy traps rather than panicking.
+        assert!(mem.copy(0, 0, 999_999).is_err());
+        // A sign-extended-negative operand (e.g. `-1i32 as u32 as usize`) must TRAP
+        // via checked arithmetic, not wrap `offset + width` past the bounds check.
+        assert!(mem.copy(u32::MAX as usize, 0, 1).is_err());
+        assert!(mem.copy(0, u32::MAX as usize, 1).is_err());
+        assert!(mem.copy(0, 0, u32::MAX as usize).is_err());
     }
 }

@@ -1,5 +1,22 @@
 # Changelog — iir-to-wasm
 
+## [0.32.0] — 2026-07-07 (LANG-FULL E4-dyn: runtime `str_concat` in linear memory)
+
+`str_concat` gains a runtime-operand path (it was literal-fold-only). When `dest`
+isn't in the module string table (an operand is a runtime handle), the concat is
+built entirely in wasm:
+
+- Bump-allocate a `[i32 len][bytes]` block from `__array_bump` (a `str_concat` op now
+  triggers the same memory + bump-global injection as an array op / `input_str`).
+- `i32.store` the length header (`la + lb`), then splice each operand's bytes with a
+  `memory.copy` (bulk-memory `0xFC 0x0A`) — `new+4 ← a+4` (`la` bytes), then
+  `new+4+la ← b+4` (`lb` bytes). Each length is re-read from its header with
+  `i32.load`, so the sequence needs **no scratch locals** (only the destination local
+  is written).
+- Both-literal concats keep the compile-time fold to a data-segment offset.
+- New codegen helpers: `encode_i32_store` (0x36) and `encode_memory_copy`
+  (`0xFC 0x0A 0x00 0x00`). Executed by `wasm-execution` ≥ 0.5.0.
+
 ## [0.31.0] — 2026-07-07 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
 
 `input_str` (BASIC string `INPUT A$`) now lowers on WASM — the final backend, so
