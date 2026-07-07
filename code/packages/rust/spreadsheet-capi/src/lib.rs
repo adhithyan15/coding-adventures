@@ -833,6 +833,212 @@ pub unsafe extern "C" fn sc_changed_since(s: *mut ScSession, since: u64) -> *mut
 }
 
 // ---------------------------------------------------------------------------
+// File open / save — bytes in, bytes out.
+// ---------------------------------------------------------------------------
+//
+// The byte-oriented cousins of the string exports above, so a C host can open a
+// real spreadsheet file the user picked and save the current document as one —
+// the whole point of routing every format through the one engine. File bytes are
+// binary (a `.xlsx` is a ZIP, a `.xls` an OLE2 compound file) and may contain
+// NUL, so they cross the ABI as an explicit `(ptr, len)` pair, NOT a C string:
+//
+//   - `sc_load_<fmt>(s, ptr, len) -> int`: read the file's bytes and replace the
+//     current document; return 1 on success or 0 if the bytes are not a readable
+//     file of that format (a failed open leaves the document untouched).
+//   - `sc_save_<fmt>(s, size_t *out_len) -> uint8_t *`: serialize the current
+//     document to that format's bytes; the length is written to `*out_len` and
+//     the buffer is freed with `sc_bytes_free(ptr, len)`. Returns NULL / writes 0
+//     for an empty document.
+//
+// `.xlsx` keeps live formulas; the others are lower-fidelity per `spreadsheet-io`.
+
+/// Read `len` input bytes into an owned `Vec<u8>` — the binary counterpart of
+/// [`read_cstr`]. Null (or zero length) becomes an empty vec.
+///
+/// # Safety
+/// `ptr` must be null, or point to `len` readable bytes.
+unsafe fn read_bytes(ptr: *const u8, len: usize) -> Vec<u8> {
+    if ptr.is_null() || len == 0 {
+        return Vec::new();
+    }
+    std::slice::from_raw_parts(ptr, len).to_vec()
+}
+
+/// Move a `Vec<u8>` out to the C caller as a heap buffer, writing its length to
+/// `*out_len`. Freed with [`sc_bytes_free`]`(ptr, len)`. Uses a boxed slice so
+/// capacity == length, letting the free reconstruct it exactly. Returns null
+/// (and writes 0) for an empty result.
+unsafe fn into_bytes(v: Vec<u8>, out_len: *mut usize) -> *mut u8 {
+    if v.is_empty() {
+        if !out_len.is_null() {
+            *out_len = 0;
+        }
+        return ptr::null_mut();
+    }
+    let boxed = v.into_boxed_slice(); // capacity == len
+    let len = boxed.len();
+    let raw = Box::into_raw(boxed) as *mut u8;
+    if !out_len.is_null() {
+        *out_len = len;
+    }
+    raw
+}
+
+/// Free a byte buffer returned by an `sc_save_*` function. `(ptr, len)` must be
+/// exactly what that call returned/wrote. Safe to call with `(NULL, 0)`.
+///
+/// # Safety
+/// `ptr` must be null, or a buffer from `sc_save_*` with the matching `len`.
+#[no_mangle]
+pub unsafe extern "C" fn sc_bytes_free(ptr: *mut u8, len: usize) {
+    if ptr.is_null() || len == 0 {
+        return;
+    }
+    // Reconstruct the boxed slice (capacity == len, as `into_bytes` produced it).
+    drop(Box::from_raw(std::ptr::slice_from_raw_parts_mut(ptr, len)));
+}
+
+/// Open `.xlsx` file bytes as the current document. Returns 1 on success, 0 if
+/// the bytes are not a readable `.xlsx` (or `s` is null). See
+/// [`SpreadsheetSession::load_xlsx_bytes`].
+///
+/// # Safety
+/// `s` must be a valid session; `(ptr, len)` a readable byte range (or null/0).
+#[no_mangle]
+pub unsafe extern "C" fn sc_load_xlsx(s: *mut ScSession, ptr: *const u8, len: usize) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.load_xlsx_bytes(&read_bytes(ptr, len)) as c_int
+}
+
+/// Save the current document to `.xlsx` bytes (see the module note).
+///
+/// # Safety
+/// `s` must be a valid session; `out_len` null or a writable `size_t`.
+#[no_mangle]
+pub unsafe extern "C" fn sc_save_xlsx(s: *mut ScSession, out_len: *mut usize) -> *mut u8 {
+    if s.is_null() {
+        if !out_len.is_null() {
+            *out_len = 0;
+        }
+        return ptr::null_mut();
+    }
+    into_bytes((*s).inner.save_xlsx_bytes(), out_len)
+}
+
+/// Open legacy `.xls` (BIFF8) file bytes. Returns 1/0 like [`sc_load_xlsx`].
+///
+/// # Safety
+/// `s` must be a valid session; `(ptr, len)` a readable byte range (or null/0).
+#[no_mangle]
+pub unsafe extern "C" fn sc_load_xls(s: *mut ScSession, ptr: *const u8, len: usize) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.load_xls_bytes(&read_bytes(ptr, len)) as c_int
+}
+
+/// Save the current document to legacy `.xls` bytes.
+///
+/// # Safety
+/// `s` must be a valid session; `out_len` null or a writable `size_t`.
+#[no_mangle]
+pub unsafe extern "C" fn sc_save_xls(s: *mut ScSession, out_len: *mut usize) -> *mut u8 {
+    if s.is_null() {
+        if !out_len.is_null() {
+            *out_len = 0;
+        }
+        return ptr::null_mut();
+    }
+    into_bytes((*s).inner.save_xls_bytes(), out_len)
+}
+
+/// Open `.csv` file bytes. Returns 1/0 (0 on invalid UTF-8). See
+/// [`SpreadsheetSession::load_csv_bytes`].
+///
+/// # Safety
+/// `s` must be a valid session; `(ptr, len)` a readable byte range (or null/0).
+#[no_mangle]
+pub unsafe extern "C" fn sc_load_csv(s: *mut ScSession, ptr: *const u8, len: usize) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.load_csv_bytes(&read_bytes(ptr, len)) as c_int
+}
+
+/// Save the current document's first sheet to `.csv` bytes.
+///
+/// # Safety
+/// `s` must be a valid session; `out_len` null or a writable `size_t`.
+#[no_mangle]
+pub unsafe extern "C" fn sc_save_csv(s: *mut ScSession, out_len: *mut usize) -> *mut u8 {
+    if s.is_null() {
+        if !out_len.is_null() {
+            *out_len = 0;
+        }
+        return ptr::null_mut();
+    }
+    into_bytes((*s).inner.save_csv_bytes(), out_len)
+}
+
+/// Open `.tsv` file bytes. Returns 1/0 like [`sc_load_csv`].
+///
+/// # Safety
+/// `s` must be a valid session; `(ptr, len)` a readable byte range (or null/0).
+#[no_mangle]
+pub unsafe extern "C" fn sc_load_tsv(s: *mut ScSession, ptr: *const u8, len: usize) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.load_tsv_bytes(&read_bytes(ptr, len)) as c_int
+}
+
+/// Save the current document's first sheet to `.tsv` bytes.
+///
+/// # Safety
+/// `s` must be a valid session; `out_len` null or a writable `size_t`.
+#[no_mangle]
+pub unsafe extern "C" fn sc_save_tsv(s: *mut ScSession, out_len: *mut usize) -> *mut u8 {
+    if s.is_null() {
+        if !out_len.is_null() {
+            *out_len = 0;
+        }
+        return ptr::null_mut();
+    }
+    into_bytes((*s).inner.save_tsv_bytes(), out_len)
+}
+
+/// Open `.json` file bytes (a top-level array of record objects → a table).
+/// Returns 1/0 (0 on malformed JSON — parsing is panic-free). See
+/// [`SpreadsheetSession::load_json_bytes`].
+///
+/// # Safety
+/// `s` must be a valid session; `(ptr, len)` a readable byte range (or null/0).
+#[no_mangle]
+pub unsafe extern "C" fn sc_load_json(s: *mut ScSession, ptr: *const u8, len: usize) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.load_json_bytes(&read_bytes(ptr, len)) as c_int
+}
+
+/// Save the current document's first sheet to `.json` bytes (array of records).
+///
+/// # Safety
+/// `s` must be a valid session; `out_len` null or a writable `size_t`.
+#[no_mangle]
+pub unsafe extern "C" fn sc_save_json(s: *mut ScSession, out_len: *mut usize) -> *mut u8 {
+    if s.is_null() {
+        if !out_len.is_null() {
+            *out_len = 0;
+        }
+        return ptr::null_mut();
+    }
+    into_bytes((*s).inner.save_json_bytes(), out_len)
+}
+
+// ---------------------------------------------------------------------------
 // Host-target tests: drive the C ABI from Rust (so they run under `cargo test`
 // without a C compiler). A separate test/smoke.c exercises the same calls from
 // real C through the built shared library; see build-capi.sh.
@@ -1067,6 +1273,117 @@ mod tests {
             assert_eq!(sc_current_revision(ptr::null_mut()), 0);
 
             sc_session_free(s);
+        }
+    }
+
+    /// Read + free an `sc_save_*` byte buffer into an owned `Vec<u8>`.
+    unsafe fn save_bytes(ptr: *mut u8, len: usize) -> Vec<u8> {
+        let out = if ptr.is_null() || len == 0 {
+            Vec::new()
+        } else {
+            std::slice::from_raw_parts(ptr, len).to_vec()
+        };
+        sc_bytes_free(ptr, len);
+        out
+    }
+
+    #[test]
+    fn c_abi_xlsx_bytes_round_trip_keeps_formula_live() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "10");
+            set(s, "A2", "20");
+            set(s, "A3", "=SUM(A1:A2)");
+            // Save → .xlsx bytes (a ZIP: "PK"), via the out-len ABI.
+            let mut len: usize = 0;
+            let bytes = save_bytes(sc_save_xlsx(s, &mut len), len);
+            assert_eq!(&bytes[..2], b"PK");
+            sc_session_free(s);
+
+            // Open those bytes in a fresh session; the formula is still live.
+            let s2 = sc_session_new();
+            assert_eq!(sc_load_xlsx(s2, bytes.as_ptr(), bytes.len()), 1);
+            assert_eq!(value(s2, "A3"), r#"{"kind":"number","value":30.0}"#);
+            assert_eq!(take(sc_get_raw(s2, CString::new("A3").unwrap().as_ptr())), "=SUM(A1:A2)");
+            set(s2, "A1", "110"); // edit a precedent → recomputes
+            assert_eq!(value(s2, "A3"), r#"{"kind":"number","value":130.0}"#);
+            sc_session_free(s2);
+        }
+    }
+
+    #[test]
+    fn c_abi_xls_bytes_are_binary_safe() {
+        // The .xls magic starts 0xD0 0xCF — bytes a C-string ABI would truncate
+        // at the first NUL. Proves the file path uses (ptr, len), not char*.
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "42");
+            let mut len: usize = 0;
+            let bytes = save_bytes(sc_save_xls(s, &mut len), len);
+            assert_eq!(&bytes[..4], &[0xD0, 0xCF, 0x11, 0xE0]);
+            sc_session_free(s);
+
+            let s2 = sc_session_new();
+            assert_eq!(sc_load_xls(s2, bytes.as_ptr(), bytes.len()), 1);
+            assert_eq!(value(s2, "A1"), r#"{"kind":"number","value":42.0}"#);
+            sc_session_free(s2);
+        }
+    }
+
+    #[test]
+    fn c_abi_csv_tsv_and_json_round_trip() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "region");
+            set(s, "B1", "sales");
+            set(s, "A2", "East");
+            set(s, "B2", "200");
+
+            let mut len: usize = 0;
+            let csv = save_bytes(sc_save_csv(s, &mut len), len);
+            assert_eq!(csv, b"region,sales\nEast,200");
+            let tsv = save_bytes(sc_save_tsv(s, &mut len), len);
+            assert_eq!(tsv, b"region\tsales\nEast\t200");
+            let json = save_bytes(sc_save_json(s, &mut len), len);
+            assert_eq!(json, br#"[{"region":"East","sales":200}]"#);
+            sc_session_free(s);
+
+            // Each reopens to the same values.
+            for (loader, data) in [
+                (sc_load_csv as unsafe extern "C" fn(_, _, _) -> _, csv),
+                (sc_load_tsv, tsv),
+            ] {
+                let s2 = sc_session_new();
+                assert_eq!(loader(s2, data.as_ptr(), data.len()), 1);
+                assert_eq!(value(s2, "B2"), r#"{"kind":"number","value":200.0}"#);
+                sc_session_free(s2);
+            }
+            let s3 = sc_session_new();
+            assert_eq!(sc_load_json(s3, json.as_ptr(), json.len()), 1);
+            assert_eq!(value(s3, "A1"), r#"{"kind":"text","value":"region"}"#);
+            assert_eq!(value(s3, "B2"), r#"{"kind":"number","value":200.0}"#);
+            sc_session_free(s3);
+        }
+    }
+
+    #[test]
+    fn c_abi_bad_file_returns_zero_and_null_handle_is_safe() {
+        unsafe {
+            // A bad/foreign file returns 0 and leaves the document untouched.
+            let s = sc_session_new();
+            set(s, "A1", "keepme");
+            let junk = b"not a real file";
+            assert_eq!(sc_load_xlsx(s, junk.as_ptr(), junk.len()), 0);
+            assert_eq!(sc_load_json(s, b"{bad".as_ptr(), 4), 0);
+            assert_eq!(value(s, "A1"), r#"{"kind":"text","value":"keepme"}"#);
+            sc_session_free(s);
+
+            // Null handle / null buffers never crash.
+            assert_eq!(sc_load_xlsx(ptr::null_mut(), junk.as_ptr(), junk.len()), 0);
+            let mut len: usize = 7;
+            assert!(sc_save_xlsx(ptr::null_mut(), &mut len).is_null());
+            assert_eq!(len, 0); // out_len zeroed on null handle
+            sc_bytes_free(ptr::null_mut(), 0); // no-op
         }
     }
 }

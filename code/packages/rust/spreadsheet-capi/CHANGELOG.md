@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.14.0
+
+**File open / save over the C ABI — bytes in, bytes out (SSIO PR6).** A native
+host can now open a real spreadsheet file the user picked and save the current
+document as one, over the one engine (mirrors the WASM `spreadsheet-wasm`
+exports).
+
+- `sc_load_xlsx` / `sc_load_xls` / `sc_load_csv` / `sc_load_tsv` / `sc_load_json`
+  `(ScSession *, const uint8_t *bytes, size_t len) -> int` — read a file's raw
+  bytes and replace the current document; `1` = opened, `0` = not a readable file
+  of that format (a failed open leaves the document untouched).
+- `sc_save_xlsx` / `sc_save_xls` / `sc_save_csv` / `sc_save_tsv` / `sc_save_json`
+  `(ScSession *, size_t *out_len) -> uint8_t *` — serialize the current document
+  to that format's bytes; the length is written to `*out_len`, the buffer freed
+  with `sc_bytes_free(ptr, len)`.
+- File bytes are **binary** (`.xlsx` = ZIP, `.xls` = OLE2) and may contain NUL,
+  so they cross as an explicit `(ptr, len)` pair — never a C string. New byte
+  marshalling: `read_bytes` (in) and `into_bytes` (out, a boxed slice so the free
+  reconstructs it exactly) + `sc_bytes_free`.
+- Header `include/spreadsheet.h` gains the declarations (`#include <stddef.h>`
+  for `size_t`).
+- 4 host-target tests: xlsx save→load keeps the formula live, an xls binary-safety
+  proof (0xD0 0xCF magic survives the byte path), CSV+TSV+JSON round-trips, and a
+  bad-file → `0` / null-handle safety guard.
+- `.xlsx` keeps live formulas; the others are lower-fidelity per `spreadsheet-io`.
+
 ## 0.13.0
 
 **Column widths & row heights (C ABI).** `sc_column_width` / `sc_row_height` →

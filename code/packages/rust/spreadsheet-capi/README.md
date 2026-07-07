@@ -33,6 +33,12 @@ char *sc_get_value(ScSession *s, const char *a1);                 /* value JSON 
 char *sc_get_raw(ScSession *s, const char *a1);                   /* typed source */
 char *sc_get_values(ScSession *s);                                /* {a1: value} */
 void  sc_string_free(char *p);
+
+/* File open / save — bytes in, bytes out (.xlsx/.xls/.csv/.tsv/.json). */
+int      sc_load_xlsx(ScSession *s, const uint8_t *bytes, size_t len); /* 1/0 */
+uint8_t *sc_save_xlsx(ScSession *s, size_t *out_len);                  /* free w/ sc_bytes_free */
+void     sc_bytes_free(uint8_t *ptr, size_t len);
+/* …and sc_load_xls/csv/tsv/json + sc_save_xls/csv/tsv/json, same shape. */
 ```
 
 **Memory contract:** every `char *` result is a heap-allocated, NUL-terminated
@@ -40,6 +46,14 @@ UTF-8 string the caller must free with `sc_string_free()` (not the C `free()` �
 different allocator). A NULL return signals an error. The value-JSON shape
 matches the TypeScript and WASM engines exactly, so every frontend parses
 identical output.
+
+**File open / save:** `sc_load_<fmt>(s, bytes, len)` opens a real spreadsheet
+file the user picked (returns `1`, or `0` if it isn't a readable file of that
+format — the open document is left untouched on failure); `sc_save_<fmt>(s,
+&out_len)` returns the current document serialized to that format's bytes (freed
+with `sc_bytes_free(ptr, out_len)`). File bytes are **binary** and may contain
+NUL, so they cross as an explicit `(ptr, len)` pair, never a C string. `.xlsx`
+keeps live formulas; `.xls`/CSV/TSV/JSON are lower-fidelity (values only).
 
 ## Build & test
 
