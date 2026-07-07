@@ -3451,6 +3451,24 @@ fn lower_function(
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_lstore(&mut code, dest_slot);
                     }
+                    "input_str" => {
+                        // BASIC string `INPUT A$` (E4-dyn): read a whole line *as
+                        // the string value itself* — no numeric parse, unlike
+                        // `input_i64`. The host `BasicRuntime.readLine()` returns a
+                        // `java.lang.String`, which is exactly how a `str` value is
+                        // carried on the JVM (`iir_type_to_jvm("str") = Ref`), so the
+                        // returned reference `astore`s straight into the `str`-typed
+                        // dest slot. `PRINT A$` then consumes it via the shared E4
+                        // string path. Like `input_i64` this assumes input is present
+                        // (V1 permissive contract).
+                        let dest_name = builtin_dest(instr, fname, "input_str")?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let mref = cp.add_methodref(
+                            BASIC_RUNTIME_CLASS, "readLine", "()Ljava/lang/String;");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                        emit_astore(&mut code, dest_slot);
+                    }
                     // ── McCarthy W4: the lisp predicates (F3–F5). ──
                     //
                     // The structural pass emits these as the *same* backend-agnostic

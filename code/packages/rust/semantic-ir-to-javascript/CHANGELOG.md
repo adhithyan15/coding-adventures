@@ -1,44 +1,83 @@
 # Changelog
 
-## 0.13.0
+## 0.16.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
-### Added — Ruby `Array` collection methods (`sum`/`min`/`max`/`uniq`/`flatten`/`compact`/`each_with_index`/`to_a`)
+Mirrors the Rust/Go backends' display-convention increment (SIR
+display-convention spec) to JavaScript. A **Ruby**-sourced module now renders
+booleans as `true`/`false` instead of the Twig/Lisp `#t`/`#f`, so a translated
+`puts true` prints `true`.
 
-Parity fill for the JS backend's array dispatch. The JS backend dispatches
-array methods through a `METHOD_ALLOWLIST` of NATIVE JS method names plus a
-`RUBY_METHOD_ALIASES` table (calling `recv[name]` only for allowlisted native
-methods). The everyday Ruby `Array` methods below are NOT native JS array
-methods, so a translated `[1,2,3].sum` previously missed the allowlist and
-raised `NoMethodError`. They are now handled as **explicit Ruby-semantic
-special cases in `callMethod`** — a fixed `name ===` dispatch block guarded by
-`Array.isArray(recv)`, placed AHEAD of the native-method allowlist (mirroring
-how `.fetch` / the typed-error methods are special-cased). Dispatch is never
-`recv[name]` / `eval` / reflection on the source-derived name, so the
-RCE-hardened allowlist gate is completely untouched (a name like `constructor`
-still falls through to it and is rejected).
+Mechanism: the runtime carries a `const SIR_DISPLAY_RUBY` (a
+`__SIR_DISPLAY_RUBY__` placeholder); the emitter substitutes `true`/`false`
+from `Module.metadata.source_language` (`== "ruby"` → `true`, else `false`).
+`formatSeen` branches the boolean arm on it. The default is the Lisp form, so
+all existing non-Ruby (Twig) output is **byte-for-byte unchanged**.
 
-- **`sum`** — numeric sum folded through the runtime's polymorphic `plus`
-  helper (so int/float promotion matches `+` everywhere else); empty array →
-  `0`; an optional seed arg (`sum(s)`) is the starting accumulator.
-- **`min` / `max`** — element-wise extreme by the SIR `<` order (native `<` on
-  numbers/strings, the same comparison the `"<"` builtin uses); an empty array
-  → `nil` (matching Ruby, not JS `Math.min([])` = `Infinity`).
-- **`uniq`** — first-occurrence dedup into a FRESH array by SIR VALUE equality
-  (a new `sirEqual` helper: `===` for primitives, STRUCTURAL for arrays/maps —
-  so two equal-but-distinct arrays count as one, matching Ruby, unlike JS
-  `===` on references). Cycle-guarded.
-- **`flatten`** — DEEP recursive flatten into a FRESH array (Ruby's `flatten`
-  is deep; JS `.flat()` is shallow). Cycle-guarded: a self-referential array
-  raises a typed, rescuable `ArgumentError: tried to flatten recursive array`
-  (matching Ruby) rather than infinite-looping (CWE-674).
-- **`compact`** — a new array with `nil` (null/undefined) elements removed.
-- **`each_with_index`** — applies the trailing block `Closure` with
-  `(element, index)` for each element, in order, and returns the receiver.
-- **`to_a`** — identity on an array (returns self).
+Scope: booleans only; `nil`, symbols, string `inspect` quoting, and the Ruby
+hash `=>` element form remain follow-ups per the spec's rollout. Verified
+end-to-end under Node: Ruby source → `true\nfalse`; Twig source → `#t\n#f`.
 
-New runtime helpers: `sirEqual` (structural, cycle-guarded value equality) and
-`flattenDeep` (cycle-guarded deep flatten). Both reuse the `seen`-Set discipline
-`format` / `putsOne` already use for cyclic-structure safety.
+## 0.15.0 — Ruby Hash method-catalog parity
+
+Adds a hand-implemented Ruby Hash catalog (`hashMethod`) to the emitted JS
+runtime for `Map` receivers, dispatched by an **explicit `switch` on the
+source-derived name** (never `recv[name]`) ahead of the native allowlist. This
+also fixes a latent bug: `keys`/`values` previously mis-routed to the native
+`Map.prototype.keys()`/`values()`, which return lazy iterators rather than the
+Ruby Arrays a translated program expects.
+
+Methods: `keys`, `values`, `size`/`length`, `empty?`, `has_key?`/`key?`/
+`include?`/`member?`, `has_value?`/`value?`, `to_a` (Array of `[k, v]` pairs),
+`merge` (non-mutating), `dig` (nested, nil on miss), `invert`, `delete`
+(mutating, returns removed value), `store`, and block-taking `each`/`each_pair`,
+`map`, `select`/`filter`/`reject`. Value comparison uses `===` (exact for
+primitives / strings / interned symbols — deep-equal is a follow-up).
+`respond_to?` kept honest via `HASH_METHODS`. `fetch` (raising) is unchanged.
+
+Verified end-to-end under Node (`run_with_node`): keys/values/to_a as real
+Arrays, `dig`, a `merge`-chain, and `delete` mutation all Ruby-faithful.
+
+(Stacked on the v0.14.0 String-catalog change.)
+
+## 0.14.0 — Ruby String method-catalog parity
+
+Adds a hand-implemented Ruby String catalog (`stringMethod`) to the emitted JS
+runtime, dispatched by an **explicit `switch` on the source-derived name**
+(never `recv[name]`) ahead of the native-method allowlist — so the methods with
+no JS-native spelling or with diverging semantics resolve, while the existing
+aliased natives (`upcase`→`toUpperCase`, `strip`→`trim`, …) still fall through.
+
+Methods: `capitalize`, `chomp`, `chars`, `bytes`, `to_i`, `to_f`, `to_sym`,
+`to_s`, `empty?`, `size`, `reverse` (rune-aware; JS strings have no native
+`reverse`), `index` (rune index), and literal `sub`/`gsub` (first/all
+occurrence, no regex or back-reference expansion — Ruby's string-argument
+semantics). Non-string arguments are guarded and degrade to the receiver/`nil`
+rather than throwing. `respond_to?` is kept honest via `STRING_METHODS`.
+
+Verified end-to-end under Node (`run_with_node`): the emitted JS executes and
+matches Ruby-faithful output for the catalog.
+
+(Stacked on the v0.13.0 Numeric-catalog change.)
+
+## 0.13.0 — Ruby Numeric method-catalog parity
+
+Adds a hand-implemented Ruby Numeric catalog (`numericMethod`) to the emitted
+JS runtime, dispatched by an **explicit `switch` on the source-derived name**
+(never `recv[name]`) ahead of the native-method allowlist — so `gcd`/`digits`/
+`upto`/… resolve on a `number` receiver while `toString`/`toFixed` still fall
+through to the RCE-hardened allowlist. Brings JS toward the Go/Rust/Python
+Numeric surface.
+
+Methods: `abs`, `to_i`/`to_int`, `to_f`, `even?`, `odd?`, `zero?`,
+`positive?`, `negative?`, `succ`/`next`, `pred`, `floor`, `ceil`, `round`
+(Ruby round-half-away-from-zero via `rubyRound`), `gcd`, `pow`/`**`, `digits`,
+and the block-taking walkers `times`, `upto`, `downto`, `step`. A non-numeric
+argument degrades to `0` (`numArg`, the lenient never-raise floor); a zero/
+non-numeric `step` stride yields nothing rather than spinning. `respond_to?`
+is kept honest via `NUMERIC_METHODS` (mirrors the case labels exactly).
+
+Verified end-to-end under Node (`run_with_node`): the emitted JS executes and
+matches Ruby-faithful output for the catalog and a block-driven `upto`.
 
 ## 0.12.0
 

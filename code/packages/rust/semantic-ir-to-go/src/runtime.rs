@@ -7,6 +7,15 @@
 //! "unused import" rule is satisfied for every generated file.
 
 pub const RUNTIME: &str = r##"// ── inlined SIR runtime ────────────────────────────────────────
+
+// Source-language display convention (SIR display-convention spec).  The
+// emitter substitutes `__SIR_DISPLAY_RUBY__` with `true` when the module's
+// `source_language` is Ruby, else `false` (the default Twig/Lisp form).  The
+// display path (`_sir_format`) reads this to render a boolean as Ruby
+// `true`/`false` rather than the Lisp `#t`/`#f`.  A compile-time `const` → the
+// Go compiler folds the branch away; existing Twig output is unchanged.
+const _sir_display_ruby = __SIR_DISPLAY_RUBY__
+
 type Value interface{}
 
 type Symbol struct {
@@ -772,7 +781,13 @@ func _sir_format_d(v Value, visited map[Value]bool) string {
 	}
 	if b, ok := v.(bool); ok {
 		if b {
+			if _sir_display_ruby {
+				return "true"
+			}
 			return "#t"
+		}
+		if _sir_display_ruby {
+			return "false"
 		}
 		return "#f"
 	}
@@ -1650,8 +1665,7 @@ func _sir_string_responds(name string) bool {
 
 func _sir_symbol_responds(name string) bool {
 	switch name {
-	case "to_s", "to_sym", "length", "size", "upcase", "downcase",
-		"capitalize", "inspect", "to_proc", "empty?":
+	case "to_s", "to_sym", "length", "size", "upcase", "downcase", "empty?":
 		return true
 	}
 	return false
@@ -1659,8 +1673,14 @@ func _sir_symbol_responds(name string) bool {
 
 func _sir_numeric_responds(name string) bool {
 	switch name {
-	case "times", "abs", "to_i", "to_f", "even?", "odd?", "zero?",
-		"positive?", "negative?", "succ", "next", "pred":
+	// Block-taking Integer iterators.
+	case "times", "upto", "downto", "step":
+		return true
+	// Non-block Integer/Float methods (kept in lockstep with the
+	// `_sir_numeric_method` switch above).
+	case "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?",
+		"positive?", "negative?", "succ", "next", "pred",
+		"floor", "ceil", "round", "gcd", "pow", "**", "digits":
 		return true
 	}
 	return false
@@ -2087,8 +2107,153 @@ func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
 			return args[1], true
 		}
 		panic(_sir_new_error("KeyError", Value("key not found: "+_sir_format(args[0]))))
+	case "to_a":
+		// Ruby `Hash#to_a` → an Array of `[key, value]` two-element Arrays,
+		// in insertion order.  Each pair is its own fresh `*Seq`, so mutating
+		// one never touches the map's backing entries.
+		out := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			out[i] = &Seq{Items: []Value{e.Key, e.Val}}
+		}
+		return &Seq{Items: out}, true
+	case "dig":
+		// Ruby `Hash#dig(k, …)` — a NESTED lookup that walks one key per
+		// argument, returning nil the moment a level is missing (never
+		// raising).  A single argument degrades to a plain lookup, matching
+		// the Python/TS reference's single-level `dig`; extra arguments
+		// recurse into a nested `*Map` (or `*Seq`, via `Array#dig`) — Ruby
+		// digs through anything that itself responds to `dig`.
+		var cur Value = recv
+		for _, k := range args {
+			switch node := cur.(type) {
+			case *Map:
+				found := false
+				for _, e := range node.Entries {
+					if _sir_value_eq(e.Key, k) {
+						cur = e.Val
+						found = true
+						break
+					}
+				}
+				if !found {
+					return nil, true
+				}
+			case *Seq:
+				// `Array#dig` indexes by an integer key; anything else (or an
+				// out-of-range index) digs to nil rather than raising.
+				idx, ok := _sir_dig_index(k, len(node.Items))
+				if !ok {
+					return nil, true
+				}
+				cur = node.Items[idx]
+			default:
+				// The current level cannot be dug into (e.g. an Integer with
+				// keys still remaining) ⇒ nil, matching Ruby's TypeError-free
+				// never-raise floor on the OO surface.
+				return nil, true
+			}
+		}
+		return cur, true
+	case "store", "[]=":
+		// Ruby `Hash#store(k, v)` / `h[k] = v` — an in-place upsert that
+		// returns the stored value.  Overwrite an existing key in place;
+		// otherwise append, preserving insertion order.
+		for i, e := range recv.Entries {
+			if _sir_value_eq(e.Key, args[0]) {
+				recv.Entries[i].Val = args[1]
+				return args[1], true
+			}
+		}
+		recv.Entries = append(recv.Entries, MapEntry{Key: args[0], Val: args[1]})
+		return args[1], true
+	case "merge":
+		// Ruby `Hash#merge(other)` → a FRESH hash (self is NOT mutated).
+		// Self's entries come first (insertion order preserved); `other`
+		// then overwrites colliding keys in place and appends new ones.  We
+		// build a brand-new `[]MapEntry` so the result never aliases either
+		// input's backing slice.
+		m := &Map{Entries: make([]MapEntry, len(recv.Entries))}
+		copy(m.Entries, recv.Entries)
+		if other, ok := args[0].(*Map); ok {
+			for _, oe := range other.Entries {
+				replaced := false
+				for i, e := range m.Entries {
+					if _sir_value_eq(e.Key, oe.Key) {
+						m.Entries[i].Val = oe.Val
+						replaced = true
+						break
+					}
+				}
+				if !replaced {
+					m.Entries = append(m.Entries, MapEntry{Key: oe.Key, Val: oe.Val})
+				}
+			}
+		}
+		return m, true
+	case "delete":
+		// Ruby `Hash#delete(k)` — remove the entry IN PLACE and return its
+		// value, or nil when the key was absent.  We rebuild the slice
+		// without the matched index rather than shifting in place so the
+		// result stays a clean, insertion-ordered `[]MapEntry`.
+		for i, e := range recv.Entries {
+			if _sir_value_eq(e.Key, args[0]) {
+				val := e.Val
+				recv.Entries = append(recv.Entries[:i], recv.Entries[i+1:]...)
+				return val, true
+			}
+		}
+		return nil, true
+	case "clear":
+		// Ruby `Hash#clear` — empty self IN PLACE and return self.  A fresh
+		// empty slice (not `nil`) keeps later appends well-defined.
+		recv.Entries = []MapEntry{}
+		return recv, true
+	case "invert":
+		// Ruby `Hash#invert` → a FRESH hash with keys and values swapped.
+		// On duplicate original values the LAST wins (Ruby's documented
+		// behaviour), so a later collision overwrites the earlier entry in
+		// place.  The result is a brand-new `*Map` — no aliasing of self.
+		m := &Map{Entries: []MapEntry{}}
+		for _, e := range recv.Entries {
+			replaced := false
+			for i, ne := range m.Entries {
+				if _sir_value_eq(ne.Key, e.Val) {
+					m.Entries[i].Val = e.Key
+					replaced = true
+					break
+				}
+			}
+			if !replaced {
+				m.Entries = append(m.Entries, MapEntry{Key: e.Val, Val: e.Key})
+			}
+		}
+		return m, true
 	}
 	return nil, false
+}
+
+// Coerce a `Hash#dig` / `Array#dig` step key into a valid `*Seq` index.
+// Ruby indexes arrays by Integer, allowing Python-style negatives that count
+// from the end.  Returns the normalised in-range index and true, or false
+// when the key is not an integer or lands out of range (⇒ the dig yields
+// nil rather than raising).
+func _sir_dig_index(k Value, length int) (int, bool) {
+	var idx int
+	switch n := k.(type) {
+	case int64:
+		idx = int(n)
+	case int:
+		idx = n
+	default:
+		return 0, false
+	}
+	if idx < 0 {
+		idx += length
+	}
+	if idx < 0 || idx >= length {
+		return 0, false
+	}
+	return idx, true
 }
 
 func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure) (Value, bool) {
@@ -2096,6 +2261,20 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "each", "each_pair":
 		for _, e := range recv.Entries {
 			_sir_apply(block, []Value{e.Key, e.Val})
+		}
+		return recv, true
+	case "each_key":
+		// Ruby `Hash#each_key` yields ONE argument (the key) per entry and
+		// returns self.
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{e.Key})
+		}
+		return recv, true
+	case "each_value":
+		// Ruby `Hash#each_value` yields ONE argument (the value) per entry
+		// and returns self.
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{e.Val})
 		}
 		return recv, true
 	case "map":
@@ -2136,6 +2315,18 @@ func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
 		return strings.ToUpper(recv), true
 	case "downcase":
 		return strings.ToLower(recv), true
+	case "capitalize":
+		// Ruby `String#capitalize`: first character upcased, the rest
+		// downcased (e.g. `"hELLO".capitalize == "Hello"`).  We work on
+		// `[]rune` so a multibyte first character upcases correctly and we
+		// never split a UTF-8 sequence mid-codepoint.
+		r := []rune(recv)
+		if len(r) == 0 {
+			return "", true
+		}
+		head := strings.ToUpper(string(r[0]))
+		tail := strings.ToLower(string(r[1:]))
+		return head + tail, true
 	case "reverse":
 		r := []rune(recv)
 		for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {
@@ -2148,6 +2339,26 @@ func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
 		return strings.TrimLeft(recv, " \t\r\n\f\v"), true
 	case "rstrip":
 		return strings.TrimRight(recv, " \t\r\n\f\v"), true
+	case "chomp":
+		// Ruby `String#chomp`: with an explicit separator argument, drop
+		// exactly that trailing suffix (once); with no argument, drop one
+		// trailing "\r\n", "\n", or "\r" (Ruby's default record separator).
+		if len(args) > 0 {
+			if sep, ok := args[0].(string); ok {
+				if sep != "" && strings.HasSuffix(recv, sep) {
+					return recv[:len(recv)-len(sep)], true
+				}
+				return recv, true
+			}
+			return recv, true
+		}
+		if strings.HasSuffix(recv, "\r\n") {
+			return recv[:len(recv)-2], true
+		}
+		if strings.HasSuffix(recv, "\n") || strings.HasSuffix(recv, "\r") {
+			return recv[:len(recv)-1], true
+		}
+		return recv, true
 	case "empty?":
 		return len(recv) == 0, true
 	case "include?":
@@ -2188,6 +2399,63 @@ func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
 			out[i] = string(c)
 		}
 		return &Seq{Items: out}, true
+	case "bytes":
+		// Ruby `String#bytes`: the raw UTF-8 byte values as integers.  A Go
+		// `string` is already UTF-8, so we iterate its bytes directly.
+		b := []byte(recv)
+		out := make([]Value, len(b))
+		for i, x := range b {
+			out[i] = int64(x)
+		}
+		return &Seq{Items: out}, true
+	case "index":
+		// Ruby `String#index`: the rune index of the first occurrence of the
+		// substring, or `nil` when absent.  `strings.Index` reports a *byte*
+		// offset, so we convert it to a rune count to match Ruby's character
+		// indexing on multibyte strings.
+		if len(args) > 0 {
+			if s, ok := args[0].(string); ok {
+				bi := strings.Index(recv, s)
+				if bi < 0 {
+					return nil, true
+				}
+				return int64(len([]rune(recv[:bi]))), true
+			}
+		}
+		return nil, true
+	case "replace":
+		// Ruby `String#replace` overwrites the entire content; for an
+		// immutable Go string that is simply the replacement value.
+		if len(args) > 0 {
+			if s, ok := args[0].(string); ok {
+				return s, true
+			}
+		}
+		return recv, true
+	case "sub":
+		// Ruby `String#sub` with string arguments: literal replacement of the
+		// FIRST occurrence only (n == 1).  `strings.Replace` inserts the
+		// replacement verbatim — no `$&`/`\1` back-reference expansion.
+		if len(args) >= 2 {
+			from, ok1 := args[0].(string)
+			to, ok2 := args[1].(string)
+			if ok1 && ok2 {
+				return strings.Replace(recv, from, to, 1), true
+			}
+		}
+		return recv, true
+	case "gsub":
+		// Ruby `String#gsub` with string arguments: literal replacement of
+		// ALL occurrences.  `strings.ReplaceAll` is verbatim (no regex, no
+		// back-reference expansion).
+		if len(args) >= 2 {
+			from, ok1 := args[0].(string)
+			to, ok2 := args[1].(string)
+			if ok1 && ok2 {
+				return strings.ReplaceAll(recv, from, to), true
+			}
+		}
+		return recv, true
 	case "to_i":
 		return _sir_str_to_i(recv), true
 	case "to_f":
@@ -2236,14 +2504,125 @@ func _sir_str_to_f(s string) Value {
 
 // ── Numeric (Integer/Float) catalog ────────────────────────────
 func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
-	// Block-taking `times` is dispatched when a trailing *Closure is present.
-	_, block := _sir_split_block(args)
-	if block != nil && name == "times" {
-		n := _sir_as_int(recv)
-		for i := int64(0); i < n; i++ {
-			_sir_apply(block, []Value{i})
+	// Block-taking methods are dispatched when a trailing *Closure is present:
+	// `times`/`upto`/`downto`/`step` each iterate a block and return the
+	// receiver (Ruby's Integer iterators).  Parity with the Python/TS
+	// `_numeric_block_method` catalog.  `positional` is the arg list with the
+	// trailing block stripped off (empty for `times`, one limit for
+	// `upto`/`downto`, limit + optional stride for `step`).
+	positional, block := _sir_split_block(args)
+	if block != nil {
+		switch name {
+		case "times":
+			// `n.times { |i| … }` yields 0,1,…,n-1.  A non-positive `n` yields
+			// nothing (the loop condition is immediately false).
+			n := _sir_as_int_trunc(recv)
+			for i := int64(0); i < n; i++ {
+				_sir_apply(block, []Value{i})
+			}
+			return recv, true
+		case "upto":
+			// `a.upto(b) { |i| … }` yields a,a+1,…,b (inclusive); no iterations
+			// when a > b.  Uses truncating int coercion so a float endpoint
+			// behaves like the reference (`3.upto(5.9)` stops at 5).
+			if len(positional) >= 1 {
+				lo := _sir_as_int_trunc(recv)
+				hi := _sir_as_int_trunc(positional[0])
+				// Guard the terminal `i++` so a finite `hi == MaxInt64` limit
+				// terminates instead of wrapping to MinInt64 and spinning.
+				for i := lo; i <= hi; {
+					_sir_apply(block, []Value{i})
+					if i == math.MaxInt64 {
+						break
+					}
+					i++
+				}
+				return recv, true
+			}
+		case "downto":
+			// `a.downto(b) { |i| … }` yields a,a-1,…,b (inclusive); no
+			// iterations when a < b.
+			if len(positional) >= 1 {
+				hi := _sir_as_int_trunc(recv)
+				lo := _sir_as_int_trunc(positional[0])
+				for i := hi; i >= lo; {
+					_sir_apply(block, []Value{i})
+					if i == math.MinInt64 {
+						break
+					}
+					i--
+				}
+				return recv, true
+			}
+		case "step":
+			// `a.step(limit, stride) { |v| … }` yields a, a+stride, … while
+			// `v <= limit` (positive stride) or `v >= limit` (negative stride).
+			// A float receiver/limit/stride runs the whole walk in float64;
+			// an all-integer walk stays exact.  A zero stride yields nothing
+			// (rather than spinning forever) — the never-hang floor.
+			if len(positional) >= 1 {
+				stride := Value(int64(1))
+				if len(positional) >= 2 {
+					stride = positional[1]
+				}
+				limit := positional[0]
+				useFloat := _sir_is_float_val(recv) || _sir_is_float_val(limit) || _sir_is_float_val(stride)
+				if useFloat {
+					step := _sir_as_float_lenient(stride)
+					lim := _sir_as_float_lenient(limit)
+					v := _sir_as_float(recv)
+					if step > 0 {
+						for v <= lim {
+							_sir_apply(block, []Value{v})
+							if v > math.MaxInt64-step {
+								break
+							}
+							prev := v
+							v += step
+							if v == prev {
+								// float stagnation (ulp >= step): the never-hang floor.
+								break
+							}
+						}
+					} else if step < 0 {
+						for v >= lim {
+							_sir_apply(block, []Value{v})
+							if v < math.MinInt64-step {
+								break
+							}
+							prev := v
+							v += step
+							if v == prev {
+								// float stagnation (ulp >= step): the never-hang floor.
+								break
+							}
+						}
+					}
+				} else {
+					step := _sir_as_int_trunc(stride)
+					lim := _sir_as_int_trunc(limit)
+					v := _sir_as_int(recv)
+					if step > 0 {
+						for v <= lim {
+							_sir_apply(block, []Value{v})
+							if v > math.MaxInt64-step {
+								break
+							}
+							v += step
+						}
+					} else if step < 0 {
+						for v >= lim {
+							_sir_apply(block, []Value{v})
+							if v < math.MinInt64-step {
+								break
+							}
+							v += step
+						}
+					}
+				}
+				return recv, true
+			}
 		}
-		return recv, true
 	}
 	isInt := false
 	switch recv.(type) {
@@ -2260,7 +2639,9 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 			return n, true
 		}
 		return math.Abs(_sir_as_float(recv)), true
-	case "to_i":
+	case "to_i", "to_int":
+		// Ruby's `to_i`/`to_int` truncate a float toward zero (`3.7.to_i == 3`,
+		// `(-3.7).to_i == -3`); on an integer they are the identity.
 		return _sir_as_int_trunc(recv), true
 	case "to_f":
 		return _sir_as_float(recv), true
@@ -2284,13 +2665,197 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 			return _sir_as_int(recv) - 1, true
 		}
 		return _sir_as_float(recv) - 1, true
+	case "floor":
+		// `floor` returns the greatest integer ≤ self.  On an integer it is
+		// the identity; on a float it rounds toward −∞ and yields an integer
+		// (Ruby: `3.7.floor == 3`, `(-3.2).floor == -4`).  A non-finite float
+		// degrades to 0 via `_sir_as_int_trunc` (never-raise floor).
+		if isInt {
+			return _sir_as_int(recv), true
+		}
+		f := _sir_as_float(recv)
+		if math.IsNaN(f) || math.IsInf(f, 0) {
+			return int64(0), true
+		}
+		return int64(math.Floor(f)), true
+	case "ceil":
+		// `ceil` returns the least integer ≥ self.  Identity on an integer;
+		// rounds a float toward +∞ (`3.2.ceil == 4`, `(-3.7).ceil == -3`).
+		if isInt {
+			return _sir_as_int(recv), true
+		}
+		f := _sir_as_float(recv)
+		if math.IsNaN(f) || math.IsInf(f, 0) {
+			return int64(0), true
+		}
+		return int64(math.Ceil(f)), true
+	case "round":
+		// Ruby `Float#round` (no digits) rounds half AWAY from zero — unlike
+		// Go's `math.Round` which also rounds half away, but we route through
+		// the explicit helper to stay in lockstep with the Python/TS
+		// `_ruby_round` (`2.5.round == 3`, `(-2.5).round == -3`).  An integer
+		// receiver is the identity; a non-finite float degrades to 0.
+		if isInt {
+			return _sir_as_int(recv), true
+		}
+		f := _sir_as_float(recv)
+		if math.IsNaN(f) || math.IsInf(f, 0) {
+			return int64(0), true
+		}
+		return _sir_ruby_round(f), true
+	case "gcd":
+		// `a.gcd(b)` is the (non-negative) greatest common divisor, via
+		// Euclid on the truncated magnitudes (matching Python `math.gcd` and
+		// the TS `gcdInt`).  `0.gcd(0) == 0`.  Requires one argument; a
+		// missing arg is the controlled arity floor.
+		if len(args) < 1 {
+			return nil, false
+		}
+		return _sir_gcd(_sir_as_int_trunc(recv), _sir_as_int_trunc(args[0])), true
+	case "pow", "**":
+		// `base.pow(exp)` / `base ** exp`.  Requires one argument.  Integer
+		// base AND exponent stay in the exact integer tower (int64 wrapping,
+		// the SAME convention as `_sir_times`), guarded so a hostile exponent
+		// cannot spin an unbounded loop; any float operand promotes to
+		// float64 `math.Pow`.  See `_sir_int_pow`.
+		if len(args) < 1 {
+			return nil, false
+		}
+		if isInt {
+			if e, ok := _sir_int_val(args[0]); ok {
+				return _sir_int_pow(_sir_as_int(recv), e), true
+			}
+		}
+		// `recv` is numeric on this dispatch path; a non-numeric exponent
+		// degrades to 0.0 (→ result 1.0) via the lenient coercion rather than
+		// panicking on the dispatch surface.
+		return math.Pow(_sir_as_float(recv), _sir_as_float_lenient(args[0])), true
+	case "digits":
+		// Ruby `Integer#digits`: the base-10 digits, LEAST-significant first
+		// (`123.digits == [3, 2, 1]`).  A float receiver truncates first
+		// (parity with the reference, which coerces via `int(recv)`).  The
+		// magnitude is taken so a negative receiver produces its digits
+		// (Ruby raises `Math::DomainError` on a true negative, but the
+		// reference runtimes take the absolute value — we match them).
+		return _sir_digits(_sir_as_int_trunc(recv)), true
 	}
 	return nil, false
+}
+
+func _sir_int_val(v Value) (int64, bool) {
+	switch n := v.(type) {
+	case int64:
+		return n, true
+	case int:
+		return int64(n), true
+	}
+	return 0, false
+}
+
+func _sir_ruby_round(x float64) int64 {
+	if x >= 0 {
+		return int64(math.Floor(x + 0.5))
+	}
+	return int64(math.Ceil(x - 0.5))
+}
+
+func _sir_gcd(a, b int64) int64 {
+	if a < 0 {
+		a = -a
+	}
+	if b < 0 {
+		b = -b
+	}
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
+
+// The upper bound on a `pow` result's bit-length before we refuse it.
+// Mirrors the Python/TS `_MAX_POW_BITS` (1 << 20): a translated program asking
+// for an astronomically large integer power gets a controlled 0 rather than an
+// unbounded multiply loop.  int64 can only ever HOLD 63 significant bits, so
+// this really guards the LOOP COUNT (the exponent), not the result width.
+const _sir_max_pow_bits = 1 << 20
+
+func _sir_int_pow(base, exp int64) int64 {
+	if exp < 0 {
+		// Only ±1 have integer reciprocals; everything else collapses to 0.
+		switch base {
+		case 1:
+			return 1
+		case -1:
+			if exp%2 == 0 {
+				return 1
+			}
+			return -1
+		}
+		return 0
+	}
+	// Closed-form fast paths for base ∈ {0, 1, -1}: these are O(1) regardless
+	// of exponent.  This ALSO closes a DoS gap — the old code exempted them
+	// from the `exp > _sir_max_pow_bits` guard but still ran the `exp`-length
+	// loop, so `1 ** (1<<40)` spun ~10^12 trivial iterations.
+	switch base {
+	case 0:
+		if exp == 0 {
+			return 1 // 0**0 == 1, matching Ruby
+		}
+		return 0
+	case 1:
+		return 1
+	case -1:
+		if exp%2 == 0 {
+			return 1
+		}
+		return -1
+	}
+	// Refuse an exponent so large the multiply loop would never finish (the
+	// int64 result is meaningless past overflow anyway).
+	if exp > _sir_max_pow_bits {
+		return 0
+	}
+	var acc int64 = 1
+	for i := int64(0); i < exp; i++ {
+		acc *= base // int64 wraparound, matching `_sir_times`
+	}
+	return acc
+}
+
+func _sir_digits(n int64) *Seq {
+	if n < 0 {
+		n = -n
+	}
+	if n == 0 {
+		return &Seq{Items: []Value{int64(0)}}
+	}
+	out := []Value{}
+	for n > 0 {
+		out = append(out, n%10)
+		n /= 10
+	}
+	return &Seq{Items: out}
 }
 
 // `to_i`-style truncation that also accepts a float receiver (Ruby's
 // `3.7.to_i == 3`, `even?`/`odd?` truncate first).  A non-finite float
 // degrades to 0 rather than panicking (never-raise floor).
+// Lenient float coercion for the numeric OO surface: a non-numeric
+// receiver/argument degrades to 0.0 instead of panicking, upholding the
+// never-raise-on-the-dispatch-surface invariant (mirrors _sir_as_int_trunc).
+func _sir_as_float_lenient(v Value) float64 {
+	switch n := v.(type) {
+	case int64:
+		return float64(n)
+	case int:
+		return float64(n)
+	case float64:
+		return n
+	}
+	return 0
+}
+
 func _sir_as_int_trunc(v Value) int64 {
 	switch n := v.(type) {
 	case int64:
@@ -2319,28 +2884,6 @@ func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 		return _sir_intern(strings.ToUpper(recv.Name)), true
 	case "downcase":
 		return _sir_intern(strings.ToLower(recv.Name)), true
-	case "capitalize":
-		// Ruby `Symbol#capitalize`: first char upper, the rest lower, as a
-		// NEW interned Symbol (mirrors `upcase`/`downcase`).  Operate on runes
-		// so a multi-byte leading char is not split.
-		rs := []rune(recv.Name)
-		if len(rs) == 0 {
-			return recv, true
-		}
-		head := strings.ToUpper(string(rs[0]))
-		tail := strings.ToLower(string(rs[1:]))
-		return _sir_intern(head + tail), true
-	case "inspect":
-		// Ruby `Symbol#inspect` → the source form `":name"` (a String).
-		return ":" + recv.Name, true
-	case "to_proc":
-		// Ruby `Symbol#to_proc` — an explicit `sym.to_proc` call (the `&:sym`
-		// block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
-		// and never reaches this catalog).  Reuse the SAME helper so the
-		// resulting `*Closure` routes through the explicit `_sir_call_method`
-		// switch — never Go `reflect` ([[dynamic-dispatch-rce]]); an
-		// out-of-catalog method surfaces the ordinary NoMethodError floor.
-		return _sir_sym_to_proc(recv), true
 	case "empty?":
 		return len(recv.Name) == 0, true
 	}

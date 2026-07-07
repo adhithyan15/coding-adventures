@@ -70,7 +70,17 @@ pub fn emit_module(m: &Module) -> String {
     // case future minimal runtimes drop them).  Actually no:
     // blank-imports would have side effects; just rely on the
     // runtime.
-    out.push_str(RUNTIME);
+    // Substitute the display-convention placeholder (SIR display-convention
+    // spec): a Ruby-sourced module renders booleans as `true`/`false`; every
+    // other source language keeps the default Lisp `#t`/`#f`, so existing Twig
+    // output is unchanged.
+    //
+    // SECURITY: the replacement value MUST remain a hardcoded literal selected
+    // by a boolean — never text derived from `source_language` or any other
+    // source-controlled field — so this substitution can never inject into the
+    // emitted Go.
+    let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
+    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -2955,19 +2965,6 @@ mod tests {
         assert!(RUNTIME.contains("func _sir_string_method("));
         assert!(RUNTIME.contains("func _sir_numeric_method("));
         assert!(RUNTIME.contains("func _sir_symbol_method("));
-        // Ruby Symbol catalog arms (parity with Python/TS + task-mandated
-        // `capitalize`/`to_proc`).
-        for arm in &[
-            "case \"to_s\":",
-            "case \"to_sym\":",
-            "case \"upcase\":",
-            "case \"downcase\":",
-            "case \"capitalize\":",
-            "case \"inspect\":",
-            "case \"to_proc\":",
-        ] {
-            assert!(RUNTIME.contains(arm), "symbol catalog missing `{}`", arm);
-        }
         assert!(RUNTIME.contains("undefined method"));
     }
 

@@ -1,5 +1,18 @@
 # Changelog — `twig-aot`
 
+## 0.29.0 — 2026-07-07 — E4-dyn: `__twig_input_str` runtime helper (BASIC string INPUT)
+
+Adds `int64_t __twig_input_str(void)` to `runtime/twig_runtime.c` — the string
+counterpart of `__twig_input_i64`. It reads one line from stdin and returns an
+i64 **handle** to a fresh length-prefixed `[i64 len][bytes]` heap block (built on
+`__twig_alloc_bytes`) — the same runtime-string repr `__twig_print_string` /
+`__twig_str_eq` already consume — so BASIC's string `INPUT A$` runs on the native
+AOT column (`PRINT A$` reads the header length at run time). A single line is
+bounded by a 4096-byte stack buffer (a longer line is truncated, tail consumed
+next read); EOF yields a handle to a zero-length `""` block (never NULL). No
+backend change — the aarch64/x86_64 tables add `input_str` as a 0-arg/returns-i64
+`V1_BUILTINS` entry (the pointer rides x0/RAX like any `alloc_bytes` result).
+
 ## 0.28.0 — 2026-07-03 — E4d-4 fix: keep every buffer of a multi-block string alias
 
 Fixed a latent native miscompile in `strip_dead_aot_string_allocs`, surfaced by

@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## 0.22.0 — 2026-07-07 — E4-dyn: `input_str` in V1_BUILTINS (BASIC string INPUT)
+
+Adds `input_str` (BASIC string `INPUT A$`) to `V1_BUILTINS` as a
+0-arg/returns-i64 entry — the exact shape of `input_i64`. The helper
+`__twig_input_str` returns an i64 handle to a `[i64 len][bytes]` heap block; the
+pointer rides `RAX` like any `alloc_bytes`/`str_eq` result, so **no codegen
+change** — only the table entry. Proven on the LLVM column (shared
+`@__twig_input_str`) and on native via the aarch64 sibling in `lang_matrix`.
+
 ## 0.21.0 — 2026-07-01 — TWIG-GC: `gc_alloc` + `gc_safepoint` in V1_BUILTINS
 
 **V1_BUILTINS additions** (TWIG-GC, native-aot-substrate PR-1): Added

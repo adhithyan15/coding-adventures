@@ -33,18 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Device model supported-parameter coverage dashboard.
+1. Rust Berkeley Mosaic acknowledgement-record summary digest.
    - Status: current PR completion candidate.
-   - Add Python, Rust, and TypeScript helpers that combine supported
-     model-card parameter coverage summaries with release-gate issue fields
-     into per-kind dashboard rows.
-   - Expose stable table, header-keyed record, CSV, and compact JSON exports
-     carrying actual versus expected canonical-parameter, accepted-name,
-     alias-bearing, max-alias, pass/fail, issue-count, and issue-field data for
-     Mosaic/browser dashboards and release automation.
-   - Keep normalization, the 67-row catalog, the seven-row summary, and the
-     gate semantics unchanged while locking a negative missing-NMOS-`VT0`
-     dashboard row across the three packages.
+   - Add a Rust-only Berkeley app-deck shell dashboard surface that wraps
+     runtime activation receipt journal summary handoff receipt acknowledgement
+     record receipt acknowledgement record summaries into compact digest/routing
+     payloads for Mosaic and WebAssembly product shells.
+   - Expose native and JSON helpers with stable schema version, digest ID,
+     route/hold disposition, digest action, badge label/tone, routing targets,
+     compact notification/count metadata, and capability metadata.
+   - Preserve the public Berkeley parser contract and Python/TypeScript parser
+     parity while extending the Rust app facade as an app-substrate acceleration
+     layer.
 
 ## Completed Slices
 
@@ -2934,6 +2934,31 @@ the Rust, Python, and TypeScript surfaces together.
    - Cross-language tests lock the passing current catalog and a negative
      missing-NMOS-`VT0` alias-family gate issue without changing normalization
      or the underlying catalog/summary surfaces.
+
+211. Device model supported-parameter coverage dashboard.
+   - Status: completed in PR 7690.
+   - Python, Rust, and TypeScript now expose supported-parameter coverage
+     dashboard rows plus stable table, header-keyed record, CSV, and compact
+     JSON exports.
+   - The dashboard combines supported-parameter summary counts with release-gate
+     issue fields for expected versus actual canonical-parameter, accepted-name,
+     alias-bearing, and max-alias coverage.
+   - Cross-language tests lock the passing current dashboard and a negative
+     missing-NMOS-`VT0` dashboard row without changing normalization, the
+     67-row catalog, the seven-row summary, or the gate semantics.
+
+212. Rust Berkeley Mosaic acknowledgement-record summary.
+   - Status: completed in PR 7700.
+   - Rust `spice-netlist-parser` now exposes Berkeley app-deck shell dashboard
+     acknowledgement-record summary surfaces plus JSON helpers that wrap runtime
+     activation receipt journal summary handoff receipt acknowledgement record
+     receipt acknowledgement records into compact status-card payloads for
+     Mosaic and WebAssembly product shells.
+   - The summary preserves stable schema version, summary ID, summarize/defer
+     disposition, summary action, deterministic steps, compact summarized/
+     deferred counts, nested acknowledgement-record payload, and capability
+     metadata while leaving the public Berkeley parser contract and
+     Python/TypeScript parser parity unchanged.
 
 ## Backlog
 

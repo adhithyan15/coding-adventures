@@ -791,3 +791,295 @@ counter (a figure between two equations leaves them `"1"`/`"2"` while the figure
 now asserts `\ref{eq:e} -> Equation 1`). `cargo clippy -p latex --all-targets -- -D warnings` clean;
 downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features`
 builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 15. S9 — `\eqref` parenthesisation
+
+### 15.1 The gap S9 closes
+
+S8 (§14) gave a lifted equation label a real number, so the S6 report prints `Equation 1`. But it
+rendered **every** reference identically — `\ref{key} -> Kind number` (canonical `\ref` spelling, bare
+number) — regardless of the surface command (§14.4). amsmath's `\eqref{eq:e}`, however, typesets the
+equation number **parenthesised** as `(1)`, whereas a plain `\ref{eq:e}` typesets a bare `1`. Through
+S8 that surface distinction was lost in the report. S9 closes it for the one case that matters.
+
+### 15.2 What S9 does — an amsmath-faithful rendering split
+
+S9 is a **rendering-only** change confined to `CrossReferenceReport::to_plain_text` (§12.4). The
+single resolved-refs `format!` becomes a two-branch split, keyed on the *surface command* + *target
+kind* already carried by `RefEntry`:
+
+- **`\eqref` to an equation** — a `RefEntry` with `command == "eqref"` **and**
+  `kind == LabelKind::Equation` renders `\eqref{eq:e} -> Equation (1)`: the `\eqref` spelling is kept
+  and the number is **parenthesised**, mirroring how amsmath's `\eqref` typesets `(1)`.
+- **Everything else** — all `\ref`, all `\pageref` (superseded by S10, §16), and any `\eqref` to a
+  **non-equation** kind — renders exactly as through S8: the canonical `\ref` prefix and a **bare**
+  number, `\ref{sec:intro} -> Section 1.2`. The `\ref` prefix names the *binding*, not the surface
+  command, unchanged.
+
+Only the one amsmath case diverges; the else-branch is byte-for-byte the S8 line. The `\cite`,
+dangling-ref, dangling-cite, and empty-report branches of `to_plain_text` are untouched.
+
+### 15.3 `RefEntry.command` was already retained by S1
+
+No struct or AST change is needed. `RefEntry` has carried `pub command: String` (the surface spelling
+`"ref"` / `"eqref"` / `"pageref"`) since S1, and `cross_reference_report` (§12) has always populated it
+via `command: r.command.clone()`. S9 simply *reads* that field it had been ignoring, so it is a pure
+rendering split in one `format!` — no new field, no numbering change, no AST walk.
+
+### 15.4 Additive, and `to_latex()` unchanged
+
+S9 touches only report rendering, not the tree: `to_latex()` remains a fixed point (S9 does not touch
+the AST at all). Every S1–S8 output byte is unchanged **except** the one thing S9 is about — the
+report line for an `\eqref`-to-equation reference, which gains its `\eqref` prefix and parentheses.
+
+### 15.5 Public API (added in S9)
+
+No public type or signature changes: `RefEntry`, `CrossReferenceReport`, `cross_reference_report`, and
+`to_plain_text` keep their existing shapes. The only observable change is the rendered text of an
+`\eqref`-to-equation line (now `\eqref{eq:e} -> Equation (1)`). The change is **additive** and
+byte-for-byte compatible with S1–S8 except for that one line.
+
+### 15.6 Verification (S9)
+
+`cargo test -p latex` green (3 new S9 tests: an `\eqref` to an equation parenthesises its number while
+a sibling `\ref` to the same equation stays bare (`\eqref{eq:e} -> Equation (1)` then
+`\ref{eq:e} -> Equation 1`); a lone `\ref` to an equation is a bare number (`\ref{eq:e} -> Equation 1`,
+unchanged from S8); two `\eqref`s to two equations number sequentially and each parenthesises
+(`\eqref{eq:a} -> Equation (1)` then `\eqref{eq:b} -> Equation (2)`) — plus the updated S7 report test,
+whose first (`\eqref`) line now asserts `\eqref{eq:e} -> Equation (1)`).
+`cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
+`cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
+`cargo fmt`, no grammar regen, no new dependencies.
+
+## 16. S10 — distinct `\pageref` rendering
+
+### 16.1 The gap S10 closes
+
+S9 (§15) split the report rendering so an `\eqref` to an equation parenthesises its number, but it
+left the **page** reference family conflated with the **number** reference family. A `\pageref{key}`
+asks a fundamentally different question from `\ref{key}`: `\ref` asks "what **number** is the target"
+(a section number, figure number, …), while `\pageref` asks "what **page** is the target printed on".
+LaTeX resolves these against two different values in the `.aux` `\newlabel` record. Through S9 the S6
+report ignored the distinction and rendered a resolved `\pageref` **identically** to a `\ref` —
+`\ref{key} -> Kind number` — so `\pageref{sec:i}` printed `\ref{sec:i} -> Section 1`, silently
+answering the *number* question for a command that asked the *page* question. S10 closes that gap.
+
+### 16.2 What S10 does — an honest page placeholder
+
+The crate has **no page model**: it parses and numbers *structure*, never lays out pages, so it cannot
+compute a real page number for any label. S10 therefore does not invent one — it renders the page
+family **distinctly and honestly** with a fixed placeholder. S10 is a **rendering-only** change
+confined to `CrossReferenceReport::to_plain_text` (§12.4), adding a **third** branch to the
+resolved-refs loop, tried in this precedence order:
+
+1. **`\eqref` to an equation** — `command == "eqref"` **and** `kind == LabelKind::Equation` renders
+   `\eqref{eq:e} -> Equation (1)` (S9, §15.2, unchanged).
+2. **`\pageref` to any kind** — a `RefEntry` with `command == "pageref"` (regardless of target kind —
+   Section/Table/Figure/Equation/Inline) renders `\pageref{sec:i} -> page ?`: the `\pageref` spelling
+   is kept and the kind/number are replaced by the fixed literal placeholder `page ?`. The `?` mirrors
+   LaTeX's own `??` for an unresolved page reference (and the S7 number-placeholder `"?"`): it means
+   "page number not modelled" — **not** the kind, **not** the number. Because a page reference is
+   about *location*, not *identity*, the target's kind and number are irrelevant to this rendering.
+3. **Everything else** — all `\ref` and any `\eqref` to a **non-equation** kind — renders exactly as
+   through S8: the canonical `\ref` prefix and a **bare** number, `\ref{sec:intro} -> Section 1.2`.
+
+Precedence matters. Branch (1) before (2) is moot (an `\eqref` is never a `\pageref`), but (2) before
+(3) is what makes **every** `\pageref` diverge from the S8 `\ref` line. So `\ref` and `\eqref` outputs
+are byte-for-byte unchanged from S9; **only** `\pageref` lines change (previously `\ref{key} -> Kind
+N`, now `\pageref{key} -> page ?`). The `\cite`, dangling-ref, dangling-cite, and empty-report
+branches of `to_plain_text` are untouched.
+
+### 16.3 `RefEntry.command` was already retained by S1
+
+As with S9, no struct or AST change is needed. `RefEntry` has carried `pub command: String` (the
+surface spelling `"ref"` / `"eqref"` / `"pageref"`) since S1, and `cross_reference_report` (§12) has
+always populated it. S10 simply reads `command == "pageref"` — a field it had been folding into the
+else-branch — so it is a pure rendering branch in one loop, no new field, no numbering change, no AST
+walk.
+
+### 16.4 Additive, and `to_latex()` unchanged
+
+S10 touches only report rendering, not the tree: `to_latex()` remains a fixed point (S10 does not
+touch the AST at all). Every S1–S9 output byte is unchanged **except** the one thing S10 is about — a
+resolved `\pageref` line, which now reads `\pageref{key} -> page ?` instead of `\ref{key} -> Kind N`.
+
+### 16.5 What is DEFERRED (honest boundary)
+
+A **real page number** is out of scope: it requires a page-layout model (line/page breaking, float
+placement, `\pagebreak`, class geometry) the crate does not have and does not intend to add at this
+rung. The `page ?` placeholder is the honest terminus for the page family until such a model exists,
+exactly as `Equation ?` was S7's honest terminus before S8 wired the equation counter.
+
+### 16.6 Public API (added in S10)
+
+No public type or signature changes: `RefEntry`, `CrossReferenceReport`, `cross_reference_report`, and
+`to_plain_text` keep their existing shapes. The only observable change is the rendered text of a
+resolved `\pageref` line (now `\pageref{key} -> page ?`). The change is **additive** and byte-for-byte
+compatible with S1–S9 except for that one line.
+
+### 16.7 Verification (S10)
+
+`cargo test -p latex` green (3 new S10 tests: a `\pageref` to a labelled section renders
+`\pageref{sec:i} -> page ?` (not `\ref{sec:i} -> Section 1`); a doc with both `\ref` and `\pageref` to
+the same section renders `\ref{sec:i} -> Section 1` then `\pageref{sec:i} -> page ?`, proving `\ref` is
+unchanged and `\pageref` now diverges; a `\pageref` to a labelled equation still renders
+`\pageref{eq:e} -> page ?`, proving `\pageref` ignores the S9 eqref/Equation special-case).
+`cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
+`cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
+`cargo fmt`, no grammar regen, no new dependencies.
+
+## 17. S11 — grouped-by-kind cross-reference report
+
+### 17.1 The gap S11 closes
+
+Through S10 the only rendering of the cross-reference report was `CrossReferenceReport::to_plain_text`
+(§12.4, S6): resolved references, one line each, in **flat source (pre-order)** order — the order the
+`\ref`s appear in the body. That is the right default for an audit trail, but it answers "in what order
+are things referenced?" rather than "**which sections / figures / equations** does this document
+cross-reference?". A reader who wants the latter must eyeball the flat list and mentally bucket it by
+kind. S11 closes that gap with a **new, separate** rendering that does the bucketing.
+
+### 17.2 What S11 does — a new sibling method, `to_plain_text_by_kind`
+
+S11 adds a **new public method** `CrossReferenceReport::to_plain_text_by_kind(&self) -> String`. It
+renders the **same** resolved references `to_plain_text` does, but **grouped under fixed-order kind
+subheadings** instead of flat source order. It does **not** touch `to_plain_text`: S11 is purely
+additive, a second lens on the same `refs` data.
+
+The exact format, pinned:
+
+1. **Fixed kind order.** Groups are emitted in the fixed order **Sections, Figures, Tables, Equations,
+   Inline** (`S11_KIND_ORDER`) — *regardless* of the order the references appear in the source.
+2. **Non-empty groups only.** For each kind with **≥1** resolved ref, a subheading line — the
+   **pluralised capitalised** kind name plus a colon (`Sections:`, `Figures:`, `Tables:`,
+   `Equations:`, `Inline:`, from the new `kind_group_heading` helper) — followed by **one line per
+   ref**. A kind with **zero** resolved refs is **omitted entirely** (no bare subheading).
+3. **Two-space-indented ref lines, shared rendering.** Each ref line is indented by **two spaces** then
+   rendered by the **shared** `render_resolved_ref(&RefEntry) -> String` helper — the *identical*
+   per-command rule `to_plain_text` uses (§16.2 S8/S9/S10): an `\eqref` to an equation →
+   `\eqref{eq:e} -> Equation (1)`; a `\pageref` (any kind) → `\pageref{key} -> page ?`; else
+   `\ref{key} -> Kind N`. Within a kind group the refs keep the report's existing **pre-order** (a
+   filter of `refs` for that kind, preserving order). A `\pageref` groups under its **target kind**
+   (e.g. a `\pageref` to a section appears in the `Sections:` group).
+4. **Resolved refs only.** Citations (`cites`) and the dangling footers (`dangling_refs`,
+   `dangling_cites`) are **not** included — this method stays focused on the kind-grouped resolved
+   refs; the flat `to_plain_text` remains the place for the full report.
+5. **Distinct empty marker.** If there are **zero** resolved refs at all, the method returns the fixed
+   string `"(no resolved references)"` — the S11 analogue of `to_plain_text`'s `"(no cross-references)"`
+   — so the output is never the empty string.
+
+Lines are joined by a single `\n` with **no trailing newline** and no trailing whitespace on any line.
+Example:
+
+```text
+Sections:
+  \ref{sec:intro} -> Section 1
+  \ref{sec:methods} -> Section 2
+Figures:
+  \ref{fig:plot} -> Figure 1
+Equations:
+  \eqref{eq:e} -> Equation (1)
+```
+
+### 17.3 The shared `render_resolved_ref` helper (no-drift guarantee)
+
+To guarantee the flat (S6) and grouped (S11) reports can never diverge on how a single ref line looks,
+the three precedence-ordered per-command renderings are **factored** out of `to_plain_text`'s loop into
+a private `render_resolved_ref(&RefEntry) -> String`. **Both** `to_plain_text` and
+`to_plain_text_by_kind` call it, so a `\ref`/`\eqref`/`\pageref` line is byte-for-byte the same wherever
+it appears. `to_plain_text` was refactored to call the helper **only** because its output stays
+byte-for-byte identical — the existing S6–S10 tests (`report_to_plain_text_renders_the_exact_pinned_string`,
+the `s9_`/`s10_` tests) pass unchanged, proving additivity.
+
+### 17.4 Additive, and `to_latex()` unchanged
+
+S11 is a pure report-assembly method over data the report already holds (`refs` with their `kind`
+`LabelKind`). No AST/grammar/counter change, no new struct or field, no new dependency, no `unsafe`, no
+I/O. `to_latex()` remains a fixed point (S11 does not touch the AST). Every S1–S10 output byte is
+unchanged — `to_plain_text` included.
+
+### 17.5 Public API (added in S11)
+
+One new method: `CrossReferenceReport::to_plain_text_by_kind(&self) -> String`. No existing type or
+signature changes; `RefEntry`, `CrossReferenceReport`, `cross_reference_report`, and `to_plain_text`
+keep their shapes and outputs.
+
+### 17.6 Verification (S11)
+
+`cargo test -p latex` green (5 new S11 tests: sections + a figure + an equation grouped in the fixed
+Sections/Figures/Equations order with two-space-indented lines and the real S4 numbers; the grouped
+lines obey the S9 `\eqref`-parenthesises and S10 `\pageref` → `page ?` rules, with a `\pageref` grouped
+under its target kind's group; a doc with no resolved refs → the `(no resolved references)` marker; a
+doc with only a dangling `\ref` and a `\cite` → still the marker, proving citations/dangling are
+excluded; and a guard that `to_plain_text()` still returns its exact prior pinned string). All prior
+S1–S10 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
+`cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
+`cargo fmt`, no grammar regen, no new dependencies.
+
+## 18. S12 — a List of Figures / List of Tables index (`list_of_floats`)
+
+### 18.1 Motivation
+
+S1–S11 answer *"where does this reference point, and what number/kind is its target?"* S12 asks the
+**dual** question a reader browsing the front matter asks: *"what figures and tables does this document
+contain, in order?"* — LaTeX's `\listoffigures` / `\listoftables`. Those two commands print a numbered
+table of every float's caption, in document order. S12 renders that index as plain text.
+
+### 18.2 Why a new method, not a gated render
+
+Real LaTeX only prints these lists where the author writes `\listoffigures` / `\listoftables`. But
+those are **not** parser-recognised commands in this crate (a grep finds no lowering for them), so
+there is no `Block` to gate on. Exactly as S11 did with its grouped report, S12 is therefore exposed as
+a **new public method** the caller invokes directly, rendering the index from the document's floats.
+Being a brand-new method, S12 is **additive by construction**: it reads existing blocks, mutates
+nothing, and leaves every S1–S11 output — including `to_latex()`'s round-trip fixed point — byte-for-
+byte unchanged.
+
+### 18.3 What S12 does — `Document::list_of_floats(&self) -> String`
+
+A single document-order walk (`Document::walk`) threads the **same** `Counters` float counters that
+`number_labels` (S4) uses:
+
+- **Every** `Block::Figure` steps the flat figure counter and emits a line `<n>. <caption text>`, where
+  `<n>` is the counter's value at that float. Because it is the *same* counter walk as S4, a labeled
+  figure's List-of number equals its `\ref` number — the two renderings can never drift.
+- **Every** `Block::Table` does the same against the independent flat table counter (numbered from `1`).
+- **Caption text** is the plain rendering of the float's `\caption{…}` inlines, via a private
+  `caption_text(&Option<Caption>) -> String` helper: `Inline::Text`/`Inline::Code` runs verbatim,
+  `Inline::Space` as a single space, and the text *inside* font wrappers (`Strong`/`Emph`/`Styled`)
+  recursively; math / cross-ref / accent inlines contribute no plain text. The result is trimmed. This
+  is the same descent the `ref_target_node_for_figure_reaches_its_caption` test exercises.
+- A float carrying **no** `\caption` renders the fixed placeholder `(no caption)`, so every float still
+  gets its own numbered line and the numbering stays aligned with the real float count.
+
+### 18.4 Assembly rules
+
+- The `List of Figures` heading + its lines are emitted **only** when there is ≥1 figure.
+- The `List of Tables` heading + its lines are emitted **only** when there is ≥1 table.
+- If the document has **no** floats at all, the method returns the fixed marker `"(no floats)"`.
+- Lines are joined by `\n` with **no** trailing newline and no trailing whitespace.
+
+Example (two captioned figures, one captioned table):
+
+```text
+List of Figures
+1. First plot
+2. Second plot
+List of Tables
+1. Data table
+```
+
+### 18.5 Public API (added in S12)
+
+One new method: `Document::list_of_floats(&self) -> String`, plus a private `caption_text` helper. No
+existing type, field, counter, or signature changes; no AST or grammar change; no new dependency, no
+`unsafe`, no I/O.
+
+### 18.6 Verification (S12)
+
+`cargo test -p latex` green (3 new S12 tests: two figures + a table listed in order with the exact
+`List of Figures … List of Tables` string; an uncaptioned figure rendering `1. (no caption)`; a
+float-free document returning `(no floats)`). All prior S1–S11 tests pass unchanged. `cargo clippy -p
+latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green;
+`cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new
+dependencies.

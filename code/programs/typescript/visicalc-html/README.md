@@ -111,6 +111,15 @@ total — so it cross-foots both ways.
   above the sheet. Flipping either swaps the mosaic-generated fragments **at
   runtime over the same engine workbook** — no reload, no lost edits: change a
   cell, toggle the theme, and your edit is still there.
+- A **File** toolbar (**Open… · Save .xlsx · Save .csv · Save .json**) opens a
+  real spreadsheet file the user picks (`.xlsx` / `.xls` / `.csv` / `.tsv` /
+  `.json`) and saves the current sheet back out — all through the **one Rust
+  engine** compiled to WASM, in the browser, from a static file. Open a real
+  `.xlsx`, watch its formulas stay **live** (edit an input, the totals
+  recompute), then download it again. A malformed / foreign file is rejected
+  without disturbing the open document. `.xlsx` preserves formulas; `.xls` / CSV
+  / TSV / JSON are lower-fidelity (values only). The visible grid is a fixed
+  `A1:E5` window, so an opened file whose data lands there shows immediately.
 
 ## Theme + layout switcher
 

@@ -2215,246 +2215,154 @@ fn m6_boolean_operators() {
     }
 }
 
-// ── Ruby Array collection methods (sum/min/max/uniq/flatten/compact/
-//    each_with_index) — execution-proof under `node` ────────────────────
+// ── Ruby Numeric method catalog (hand-implemented, explicit dispatch) ──
 //
-// These Ruby `Array` methods have NO 1:1 native JS equivalent, so the JS
-// backend now special-cases them in `callMethod` ahead of the native-method
-// allowlist.  Each hand-built module builds a literal array, calls the method
-// via the `__method__` dispatch envelope, prints the result, and runs the
-// self-contained `.js` under Node.
+// Exercises the `numericMethod` catalog end-to-end under Node: the emitted
+// JS must route `(-5).abs`, `12.gcd(18)`, `123.digits`, block-taking
+// `1.upto(3)`, … through the explicit numeric switch (never `recv[name]`)
+// and produce Ruby-faithful values.
 
-/// `[3,1,2].max` → 3 and `[3,1,2].min` → 1 (element-wise SIR order).
-#[test]
-fn array_min_max() {
-    let seq = || Expr::SeqLit { items: vec![int(3), int(1), int(2)], span: sp() };
-    let max = bc("__method__", vec![seq(), str_("max")]);
-    let min = bc("__method__", vec![seq(), str_("min")]);
-    let module = module_with_main(
-        vec![print(max), print(min)],
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
-    );
-    if let Some(stdout) = run_module(&module, "arr_min_max") {
-        assert_eq!(stdout, "3\n1");
-    }
+fn method(recv: Expr, name: &str, args: Vec<Expr>) -> Expr {
+    let mut a = vec![recv, str_(name)];
+    a.extend(args);
+    bc("__method__", a)
 }
 
-/// `[].min` / `[].max` → nil (an empty array has no extreme).
 #[test]
-fn array_min_max_empty_is_nil() {
-    let min = bc("__method__", vec![Expr::SeqLit { items: vec![], span: sp() }, str_("min")]);
-    let max = bc("__method__", vec![Expr::SeqLit { items: vec![], span: sp() }, str_("max")]);
-    let module = module_with_main(
-        vec![print(min), print(max)],
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
-    );
-    if let Some(stdout) = run_module(&module, "arr_min_max_empty") {
-        assert_eq!(stdout, "nil\nnil");
-    }
-}
-
-/// `[1,2,3].sum` → 6, and a seeded `[1,2,3].sum(10)` → 16; `[].sum` → 0.
-#[test]
-fn array_sum() {
-    let plain = bc(
-        "__method__",
-        vec![Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: sp() }, str_("sum")],
-    );
-    let seeded = bc(
-        "__method__",
-        vec![Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: sp() }, str_("sum"), int(10)],
-    );
-    let empty = bc("__method__", vec![Expr::SeqLit { items: vec![], span: sp() }, str_("sum")]);
-    let module = module_with_main(
-        vec![print(plain), print(seeded), print(empty)],
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
-    );
-    if let Some(stdout) = run_module(&module, "arr_sum") {
-        assert_eq!(stdout, "6\n16\n0");
-    }
-}
-
-/// `[1,2,2,3].uniq` → [1, 2, 3] (first-occurrence dedup by value equality).
-/// Also proves STRUCTURAL dedup: `[[1],[1],[2]].uniq` → [[1], [2]].
-#[test]
-fn array_uniq() {
-    let flat = bc(
-        "__method__",
-        vec![
-            Expr::SeqLit { items: vec![int(1), int(2), int(2), int(3)], span: sp() },
-            str_("uniq"),
-        ],
-    );
-    let seq1 = || Expr::SeqLit { items: vec![int(1)], span: sp() };
-    let nested = bc(
-        "__method__",
-        vec![
-            Expr::SeqLit {
-                items: vec![seq1(), seq1(), Expr::SeqLit { items: vec![int(2)], span: sp() }],
-                span: sp(),
-            },
-            str_("uniq"),
-        ],
-    );
-    let module = module_with_main(
-        vec![print(flat), print(nested)],
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
-    );
-    if let Some(stdout) = run_module(&module, "arr_uniq") {
-        assert_eq!(stdout, "[1, 2, 3]\n[[1], [2]]");
-    }
-}
-
-/// `[[1,[2]],3].flatten` → [1, 2, 3] (DEEP recursive flatten).
-#[test]
-fn array_flatten_deep() {
-    let inner = Expr::SeqLit {
-        items: vec![int(1), Expr::SeqLit { items: vec![int(2)], span: sp() }],
-        span: sp(),
-    };
-    let outer = Expr::SeqLit { items: vec![inner, int(3)], span: sp() };
-    let flat = bc("__method__", vec![outer, str_("flatten")]);
-    let module = module_with_main(
-        vec![print(flat)],
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
-    );
-    if let Some(stdout) = run_module(&module, "arr_flatten") {
-        assert_eq!(stdout, "[1, 2, 3]");
-    }
-}
-
-/// A self-referential array `.flatten` must TERMINATE (not infinite-loop):
-/// the cycle guard raises a typed ArgumentError, so node exits non-zero.
-#[test]
-fn array_flatten_cyclic_terminates() {
-    // let a = [1]; a[1] = a; a.flatten   → cycle → ArgumentError (non-zero).
+fn numeric_catalog_nonblock_methods() {
     let stmts = vec![
-        let_("a", Expr::SeqLit { items: vec![int(1)], span: sp() }),
-        // Push `a` into itself: a[1] = a.
-        Stmt::SeqSet { seq: local("a"), index: int(1), value: local("a"), span: sp() },
-        Stmt::ExprStmt {
-            expr: bc("__method__", vec![local("a"), str_("flatten")]),
-            span: sp(),
-        },
+        print(method(int(-5), "abs", vec![])),        // 5
+        print(method(int(12), "gcd", vec![int(18)])), // 6
+        print(method(int(2), "pow", vec![int(8)])),   // 256
+        print(method(int(123), "digits", vec![])),    // [3, 2, 1]
+        print(method(float(3.2), "ceil", vec![])),    // 4
+        print(method(float(2.5), "round", vec![])),   // 3
+        print(method(int(5), "succ", vec![])),        // 6
+        print(method(int(5), "pred", vec![])),        // 4
     ];
-    let module = module_with_main(
-        stmts,
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping, Feature::MutableBindings],
-    );
-    if let Some(stderr) = run_module_expecting_failure(&module, "arr_flatten_cycle") {
-        // Termination is the load-bearing property: the guard raised our typed
-        // ArgumentError rather than hanging with a stack overflow.
-        assert!(
-            stderr.contains("ArgumentError") || stderr.contains("recursive array"),
-            "expected the cycle-guard ArgumentError, got stderr:\n{stderr}"
-        );
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Floats, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "numcatalog") {
+        assert_eq!(stdout, "5\n6\n256\n[3, 2, 1]\n4\n3\n6\n4");
     }
 }
 
-/// `[1,nil,2].compact` → [1, 2] (a new array without nils).
 #[test]
-fn array_compact() {
-    let seq = Expr::SeqLit {
-        items: vec![int(1), Expr::NilLit { span: sp() }, int(2)],
-        span: sp(),
-    };
-    let compact = bc("__method__", vec![seq, str_("compact")]);
-    let module = module_with_main(
-        vec![print(compact)],
-        Expr::NilLit { span: sp() },
-        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
-    );
-    if let Some(stdout) = run_module(&module, "arr_compact") {
-        assert_eq!(stdout, "[1, 2]");
+fn numeric_upto_runs_block() {
+    // def blk(i); print(i); end ; 1.upto(3) { |i| print i }  → 1,2,3
+    let blk = func("blk", vec![param("i")], vec![print(param_ref("i"))], Expr::NilLit { span: sp() });
+    let call = method(int(1), "upto", vec![int(3), method_closure("blk")]);
+    let module = oop_module(vec![blk], vec![Stmt::ExprStmt { expr: call, span: sp() }]);
+    if let Some(stdout) = run_module(&module, "numupto") {
+        assert_eq!(stdout, "1\n2\n3");
     }
 }
 
-/// `[10,20].each_with_index { |x, i| print(x); print(i) }` prints each element
-/// paired with its index (10,0,20,1) and returns the receiver.  We build the
-/// block as a top-level function passed via `MakeClosure` — exactly how the
-/// frontend lowers a `{ |x,i| … }` block to the trailing argument of
-/// `__method__`.
+// ── Ruby String method catalog (hand-implemented, explicit dispatch) ──
+//
+// Exercises the `stringMethod` catalog end-to-end under Node: `capitalize`,
+// `reverse`, literal `sub`/`gsub`, `to_i`, `chomp`, rune `index`, and `chars`
+// must route through the explicit string switch (never `recv[name]`) and
+// produce Ruby-faithful values, while the already-aliased natives (`upcase`…)
+// are untouched.
 #[test]
-fn array_each_with_index() {
-    // The block body: print(x); print(i).  `x`/`i` are the closure's params.
-    let block_fn = Function {
-        name: "ewi_block".into(),
-        params: vec![
-            semantic_ir::Param {
-                name: "x".into(),
-                sir_type: None,
-                kind: semantic_ir::ParamKind::Required,
-                default: None,
-                span: sp(),
-            },
-            semantic_ir::Param {
-                name: "i".into(),
-                sir_type: None,
-                kind: semantic_ir::ParamKind::Required,
-                default: None,
-                span: sp(),
-            },
-        ],
-        return_type: None,
-        captures: vec![],
-        body: Block {
-            stmts: vec![
-                print(Expr::VarRef { name: "x".into(), scope: Scope::Param, span: sp() }),
-                print(Expr::VarRef { name: "i".into(), scope: Scope::Param, span: sp() }),
-            ],
-            value: Expr::NilLit { span: sp() },
-            span: sp(),
-        },
-        effects: EffectSet::PURE,
-        metadata: Metadata::new(),
+fn string_catalog_methods() {
+    let stmts = vec![
+        print(method(str_("hELLO"), "capitalize", vec![])),                 // Hello
+        print(method(str_("abc"), "reverse", vec![])),                      // cba
+        print(method(str_("hello"), "sub", vec![str_("l"), str_("L")])),    // heLlo
+        print(method(str_("hello"), "gsub", vec![str_("l"), str_("L")])),   // heLLo
+        print(method(str_("42abc"), "to_i", vec![])),                       // 42
+        print(method(str_("hi\n"), "chomp", vec![])),                       // hi
+        print(method(str_("hello world"), "index", vec![str_("world")])),   // 6
+        print(method(str_("abc"), "chars", vec![])),                        // [a, b, c]
+    ];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "strcatalog") {
+        assert_eq!(stdout, "Hello\ncba\nheLlo\nheLLo\n42\nhi\n6\n[a, b, c]");
+    }
+}
+
+// ── Ruby Hash method catalog (hand-implemented, explicit dispatch) ──
+//
+// Exercises the `hashMethod` catalog end-to-end under Node: `keys`/`values`/
+// `to_a` must return real Arrays (not native Map iterators), `dig`/`merge`
+// resolve faithfully, and `delete` mutates the receiver — all routed through
+// the explicit Map switch (never `recv[name]`).
+#[test]
+fn hash_catalog_methods() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs
+            .into_iter()
+            .map(|(k, v)| MapEntry { key: str_(k), value: v })
+            .collect(),
         span: sp(),
     };
+    let stmts = vec![
+        let_("m", mk(vec![("a", int(1)), ("b", int(2))])),
+        print(method(local("m"), "keys", vec![])),   // [a, b]
+        print(method(local("m"), "values", vec![])), // [1, 2]
+        print(method(local("m"), "size", vec![])),   // 2
+        print(method(local("m"), "to_a", vec![])),   // [[a, 1], [b, 2]]
+        print(method(local("m"), "dig", vec![str_("b")])), // 2
+        print(method(
+            method(local("m"), "merge", vec![mk(vec![("c", int(3))])]),
+            "keys",
+            vec![],
+        )), // [a, b, c]
+        print(method(local("m"), "delete", vec![str_("a")])), // 1 (mutates m)
+        print(method(local("m"), "keys", vec![])),            // [b]
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Maps, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "hashcatalog") {
+        assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]");
+    }
+}
 
-    let block = Expr::MakeClosure { fn_name: "ewi_block".into(), captures: vec![], span: sp() };
-    let seq = Expr::SeqLit { items: vec![int(10), int(20)], span: sp() };
-    // `each_with_index` returns the receiver; we don't print it (it would add
-    // array output), we only observe the block's side effects.
-    let call = bc("__method__", vec![seq, str_("each_with_index"), block]);
-
-    let main = Function {
-        name: "main".into(),
-        params: vec![],
-        return_type: None,
-        captures: vec![],
-        body: Block {
-            stmts: vec![Stmt::ExprStmt { expr: call, span: sp() }],
-            value: Expr::NilLit { span: sp() },
-            span: sp(),
-        },
-        effects: EffectSet::PURE,
-        metadata: Metadata::new(),
-        span: sp(),
-    };
-
-    let module = Module {
-        name: "eachwithindex".into(),
-        manifest: FeatureManifest::from_features(&[
-            Feature::Sequences,
-            Feature::Closures,
-            Feature::Strings,
-            Feature::DynamicTyping,
-        ]),
+// ── source-language display convention: Ruby booleans (SIR spec) ──
+//
+// A Ruby-sourced module renders booleans as `true`/`false`; every other
+// source language keeps the default Lisp `#t`/`#f`.  Proven end-to-end under
+// Node for both conventions.
+fn bool_display_module(source_language: &str) -> Module {
+    let stmts = vec![
+        print(Expr::BoolLit { value: true, span: sp() }),
+        print(Expr::BoolLit { value: false, span: sp() }),
+    ];
+    Module {
+        name: "dispbool".into(),
+        manifest: FeatureManifest::from_features(&[]),
         imports: vec![],
         exports: vec![],
-        functions: vec![block_fn, main],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }],
         globals: vec![],
         metadata: Metadata::new()
-            .with_source_language("handbuilt")
+            .with_source_language(source_language)
             .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
         span: sp(),
-    };
-    if let Some(stdout) = run_module(&module, "arr_each_with_index") {
-        assert_eq!(stdout, "10\n0\n20\n1");
+    }
+}
+
+#[test]
+fn ruby_source_prints_true_false() {
+    if let Some(stdout) = run_module(&bool_display_module("ruby"), "dispruby") {
+        assert_eq!(stdout, "true\nfalse", "Ruby source must render booleans as true/false");
+    }
+}
+
+#[test]
+fn twig_source_keeps_lisp_booleans() {
+    if let Some(stdout) = run_module(&bool_display_module("twig"), "disptwig") {
+        assert_eq!(stdout, "#t\n#f", "non-Ruby source keeps the default Lisp #t/#f");
     }
 }

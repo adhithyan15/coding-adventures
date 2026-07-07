@@ -127,6 +127,11 @@ SELF_CONTAINED_RUNGS = (
     "rung87_complement_titer",
     "rung88_nerve_conduction",
     "rung89_skin_test_wheal",
+    "rung90_spirometry_reserve",
+    "rung91_protein_delivery",
+    "rung92_gi_absorption",
+    "rung93_insulin_dosing",
+    "rung94_toxin_clearance",
 )
 
 

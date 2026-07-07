@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.14.1
+
+**JS loader file open/save wrappers + rebuilt `.wasm` (SSIO PR5).** The Rust ABI
+already exported the file functions in 0.14.0; this exposes them through the JS
+loader so a host can actually call them:
+
+- `js/spreadsheet-engine-wasm.mjs` (and the browser `wasm-loader.js`) gain binary
+  marshalling helpers `writeBytes` / `readBytes` (file bytes are NOT UTF-8, so
+  they bypass the text encoder/decoder that `writeStr`/`readResult` use) and
+  workbook methods `openXlsx`/`saveXlsx`/`openXls`/`saveXls`/`openCsv`/`saveCsv`/
+  `openTsv`/`saveTsv`/`openJson`/`saveJson`. `open*(u8)` returns `true` iff the
+  bytes were a readable file of that format (the document is untouched on
+  `false`); `save*()` returns a `Uint8Array` the host downloads.
+- Rebuilt the committed `pkg/spreadsheet_engine.wasm` so it contains the 0.14.0
+  file exports (the previously-committed artifact predated them).
+- New `js/smoke-files.mjs`: a Node round-trip harness over the real `.wasm` —
+  `.xlsx` (formula stays live), `.xls`, `.csv`/`.tsv`, `.json`, and a
+  bad-bytes-preserves-document guard.
+
+## 0.14.0
+
+**File open / save over the ABI — bytes in, bytes out (SSIO PR4).** New
+`extern "C"` exports let the JS host open a real spreadsheet file the user picked
+and download the current document as one, routing every format through the one
+engine:
+
+- `load_xlsx` / `load_xls` / `load_csv` / `load_tsv` / `load_json` `(ptr, len) -> u32`
+  — read the file's raw bytes from linear memory and replace the current
+  document; return `1` on success or `0` if the bytes aren't a readable file of
+  that format (a failed open leaves the document untouched).
+- `save_xlsx` / `save_xls` / `save_csv` / `save_tsv` / `save_json` `() -> *mut u8`
+  — serialize the current document to that format's bytes, returned packed as
+  `[len: u32 LE][bytes]` (freed with `dealloc(ptr, 4 + len)`), exactly like a
+  string result.
+- New binary-safe marshalling primitives: `read_input_bytes` reads a `(ptr, len)`
+  input as **raw bytes** (not lossy UTF-8 — critical, since `.xlsx`/`.xls` are
+  binary and lossy decoding would corrupt them), and `pack_bytes` packs raw bytes
+  with the length prefix. `pack(String)` is now a thin UTF-8 wrapper over it.
+- 5 host-target tests drive the `(ptr, len)` protocol by hand: xlsx save→load
+  round-trip (formula stays live), an xls binary-safety proof (0xD0 0xCF magic
+  survives), CSV+TSV and JSON round-trips, and a bad-file → `0` guard that leaves
+  the document intact.
+
+Thin wrappers over `spreadsheet-core-wasm` 0.15.0's `*_bytes` session methods.
+`.xlsx` keeps live formulas; the others are lower-fidelity per `spreadsheet-io`.
+
 ## 0.13.0
 
 **Column widths & row heights (wasm linear-mem exports).** `column_width(col)` /

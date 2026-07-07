@@ -2279,3 +2279,24 @@ fn e4dyn_str_len_of_runtime_string_reads_header() {
     assert!(ll.contains("inttoptr i64") && ll.contains("load i64, ptr %__slp"),
         "str_len of a runtime string must read the length header at run time:\n{ll}");
 }
+
+/// E4-dyn: BASIC string `INPUT A$` lowers `call_builtin "input_str"` to a call
+/// to the AOT runtime helper `@__twig_input_str()`, which returns an i64 handle
+/// to a `[i64 len][bytes]` heap block. The extern must be declared, and the
+/// `str`-typed result must not be rejected by the validator.
+#[test]
+fn input_str_lowers_to_twig_input_str_call() {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("t".into()),
+            vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+    ]);
+    assert!(validate_for_llvm(&module_with(f.clone())).is_empty(),
+        "str-typed input_str call_builtin must validate");
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_input_str()"),
+        "input_str must call the runtime helper; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__twig_input_str()"),
+        "the @__twig_input_str extern must be declared; got:\n{ll}");
+}

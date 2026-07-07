@@ -2137,6 +2137,70 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.168 — `ImportMeta` (`import.meta`): atomic node + emit + passes (PR1)
+
+Adds `Expression::ImportMeta { cv }` to `javascript-ast` (0.27.0) — the
+`import.meta` module meta-property exposing host-provided metadata about the
+current module (canonically `import.meta.url`). It is the direct **sibling of
+`NewTarget`**: ESTree models both `new.target` and `import.meta` as
+`MetaProperty` nodes, so `import.meta` gets its own atomic leaf variant here
+rather than being a member access of an `import` identifier — `import` is a
+reserved word and there is no such identifier to access.
+
+It is modelled as its own variant (not `MemberExpression { object: Identifier
+"import", property: "meta" }`) for the same reason `NewTarget` / `Super` /
+`this` are: the spelling contains reserved words that can never be renamed, so
+the renaming passes (`rename`, `rename-globals`, `rename-properties`) must never
+touch it. A dedicated variant lets those passes exclude it structurally.
+
+**Emit (`closure-emitter` 0.32.0).** `emit_import_meta` writes the bare
+eleven-character spelling `import.meta`. It tags at `PREC_PRIMARY` — the
+tightest level, like `this` / `super` / `new.target` — so it never needs
+wrapping in any parent (`import.meta.url`, `f(import.meta)`, `import.meta+1` all
+print bare) and never forces a paren around an operand (it carries none). The
+internal `.meta` is part of the fixed spelling, NOT a member access; a genuine
+property read like `import.meta.url` wraps this leaf in an outer
+`MemberExpression`.
+
+**Passes (PATCH bumps).** The three rebuild passes (`constant-fold`, `dce`,
+`fold-control-flow`) clone the leaf through unchanged like the literals;
+`fold-control-flow` also gains an `ImportMeta` arm in its `expression_cv`
+accessor. The six traversal passes get a no-op arm (`import.meta` binds/
+references no ordinary identifier and has no sub-expression). Atomic node PR1:
+node + emit + all nine downstream pass arms land together so the workspace
+never breaks.
+
+### gap-169 — bridge declines `import.meta` (`ImportMeta`) — **RESOLVED (javascript-parser 0.32.0, CLOC12.168 PR2)**
+
+The `javascript-parser` bridge previously did not convert `import.meta` to
+`Expression::ImportMeta`, so any file containing it dropped to WHITESPACE_ONLY.
+The atomic node PR (CLOC12.168 PR1) landed the node + emit + pass traversals so
+the typed AST and every downstream pass could already represent and print an
+`import.meta`.
+
+**Probe divergence from the recipe.** The grammar was expected (by analogy with
+`new.target`, gap-168) to fold `import.meta` into a `member_expression` with an
+`import` token base. A probe showed otherwise: the grammar emits a **dedicated
+`import_meta` leaf** whose children are the three bare tokens `[Token("import"),
+Token("."), Token("meta")]` with no Node child — and this rule was *not* listed
+in the bridge's expression dispatch, so it fell through to the `other =>`
+internal-error arm (worse than a graceful decline). Note the pre-existing
+`import_meta_expression` decline arm was a **different, never-emitted rule
+name** — dead code; PR2 removed it. **Like `new.target` and unlike `await`
+(gap-165), no grammar work was required** — the token was already produced.
+
+**Fix (CLOC12.168 PR2):** a new `convert_import_meta` and an `"import_meta"`
+dispatch arm lower the leaf to `Expression::ImportMeta` (the `import` token's
+`cv` becomes provenance; the `.meta` is spelling, not a member access). 3 new
+bridge unit tests (`import.meta;` → `ImportMeta`; `import.meta.url;` → member
+access whose object is `ImportMeta`; `f(import.meta);` in argument position)
+plus the closurec end-to-end diff fixture `tests/diff/simple-importmeta/`
+(`f(import.meta, 1 + 2);` → `f(import.meta,3);` at SIMPLE — `import.meta`
+round-trips and the argument folds, proving the pipeline ran rather than
+falling back to WHITESPACE_ONLY). The **PR3** CodePrinter conformance port is a
+separate slice.
+
+
 ## CLOC12.167 — `NewTarget` (`new.target`): atomic node + emit + passes (PR1)
 
 Adds `Expression::NewTarget { cv }` to `javascript-ast` (0.26.0) — the
@@ -2166,18 +2230,32 @@ references no ordinary identifier and has no sub-expression). Atomic node PR1:
 node + emit + all nine downstream pass arms land together so the workspace
 never breaks.
 
-### gap-168 — bridge declines `new.target` (`NewTarget`) — pending (CLOC12.167 PR2)
+### gap-168 — bridge declines `new.target` (`NewTarget`) — RESOLVED (CLOC12.167 PR2, javascript-parser 0.31.0)
 
-The `javascript-parser` bridge returns `UnsupportedSyntax { rule: "NewTarget" }`
-in `convert_member_expression` (the `new`-token region: `has_token(node, "new")`
-&& a child token whose value is `"target"`), so any file containing
-`new.target` currently drops to WHITESPACE_ONLY. Like `this` (gap-166) and
-`super` (gap-167) — and **unlike `await` (gap-165)** — `new.target` is already
-parseable: there is a dedicated `new_target_expression` grammar rule and the
-bridge *reaches* and explicitly declines it, so PR2 is a pure bridge slice with
-**no grammar work required**: swap the decline for
-`Ok(Expression::NewTarget(NewTarget { cv: … }))`, mirroring the `super` fix.
-Tracked for CLOC12.167 PR2.
+The `javascript-parser` bridge now converts `new.target` to
+`Ok(Expression::NewTarget(NewTarget { cv: … }))` in `convert_member_expression`
+instead of declining it (which dragged any file containing `new.target` to
+WHITESPACE_ONLY). Like `this` (gap-166) and `super` (gap-167) — and **unlike
+`await` (gap-165)** — `new.target` was already parseable, so PR2 was a pure
+bridge slice with **no grammar work**.
+
+**Divergence from this spec's earlier assumption (corrected by probe).** The
+prior draft claimed a dedicated `new_target_expression` grammar rule that the
+bridge reached and declined. Probing the actual parse tree showed otherwise:
+`new.target` lowers to a **`member_expression` whose children are three bare
+tokens** `[Token("new"), Token("."), Token("target")]` with **no Node child**
+(the standalone `new_target_expression` rule is not the path the parser takes
+for `new.target`). The fix therefore mirrors the `super`-token base rather than
+a top-level rule decline: a `new_target` flag (`nodes.is_empty() &&
+has_token("new") && has_token("target")`) relaxes the empty-nodes guard and
+returns the atomic `NewTarget` leaf, distinguishing the meta-property from the
+argumented `new X(args)` constructor (which always carries a Node callee) on
+`nodes.is_empty()`. The `new` token's `cv` becomes the node's provenance — the
+`.` is fixed spelling, not a member access. Verified end-to-end: bridge tests
+`new_target_meta_property` / `new_target_in_function_return` /
+`new_target_as_member_object` (147 pass), and closurec e2e fixture
+`tests/diff/simple-newtarget/` (`f(new.target, 1 + 2);` → `f(new.target,3);`,
+closurec 0.234.6).
 
 
 ## CLOC12.166 — `Super` (`super`): atomic node + emit + passes (PR1)

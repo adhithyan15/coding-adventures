@@ -315,7 +315,11 @@ const SUPPORTED_OPS: &[&str] = &[
 /// (unlike `print_i64`); `clang` links libc by default.
 /// `input_i64` — BASIC's `INPUT X` — lowers to `@__twig_input_i64()` from the
 /// AOT runtime archive, which reads a line from stdin and parses it as `int64_t`.
-const SUPPORTED_BUILTINS: &[&str] = &["print_i64", "putchar", "getchar", "input_i64"];
+/// `input_str` — BASIC's string `INPUT A$` (E4-dyn) — lowers to
+/// `@__twig_input_str()`, which reads a whole line and returns an i64 handle to a
+/// `[i64 len][bytes]` heap block (the runtime-string repr `print_str` reads).
+const SUPPORTED_BUILTINS: &[&str] =
+    &["print_i64", "putchar", "getchar", "input_i64", "input_str"];
 
 #[derive(Debug, Clone)]
 struct LlvmStringLiteralDef {
@@ -716,6 +720,9 @@ pub fn lower_iir_to_llvm(
     // BA-INPUT: BASIC's `INPUT X` lowers to `@__twig_input_i64()` from the AOT
     // runtime archive (reads a line, parses as int64_t; 0 on EOF/parse failure).
     let mut used_input_i64 = false;
+    // E4-dyn: BASIC string `INPUT A$` lowers to `@__twig_input_str()` (reads a
+    // line, returns an i64 handle to a `[i64 len][bytes]` heap block).
+    let mut used_input_str = false;
     let mut used_alloc_bytes = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
@@ -774,6 +781,7 @@ pub fn lower_iir_to_llvm(
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
+                        "input_str" => used_input_str = true,
                         _ => {
                             if let Some(b) = lispy_builtin(name) {
                                 if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
@@ -823,7 +831,8 @@ pub fn lower_iir_to_llvm(
         // LLVM intrinsic for pow; direct libm call is the canonical approach.
         out.push_str("declare double @pow(double, double)\n");
     }
-    if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar {
+    if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
+        || used_input_i64 || used_input_str {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
@@ -853,6 +862,12 @@ pub fn lower_iir_to_llvm(
             // reads one line from stdin and parses it as `int64_t`; returns 0 on
             // EOF or parse failure (V1 permissive contract).
             out.push_str("declare i64 @__twig_input_i64()\n");
+        }
+        if used_input_str {
+            // `@__twig_input_str` (E4-dyn) is provided by `twig_runtime.c`: reads one
+            // line and returns an i64 handle to a `[i64 len][bytes]` heap block — the
+            // runtime-string repr `print_str` reads the length from at run time.
+            out.push_str("declare i64 @__twig_input_str()\n");
         }
     }
     if !used_lispy.is_empty() {
@@ -3231,6 +3246,24 @@ fn lower_call_builtin(
         "input_i64" => {
             let dest = require_dest(instr, "input_i64", state.fn_name)?.to_string();
             out.push_str(&format!("  %{dest} = call i64 @__twig_input_i64()\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── input_str() -> v — BASIC string `INPUT A$` (E4-dyn) ─────────
+        //
+        // `@__twig_input_str()` (in `twig_runtime.c`) reads one line and returns
+        // an i64 **handle** — the base address of a `[i64 len][bytes]` heap
+        // block, the same runtime-string repr `print_str` reads the length from
+        // at run time. The handle goes straight into the dest register (no
+        // conversion — a str value is carried as its i64 handle on this backend,
+        // exactly like the E4-dyn branch-selected / call-result strings). A
+        // later `mov`/`print_str` consuming this dest has no compile-time length
+        // metadata, so it takes the runtime header-read path (E4d-2b).
+        //
+        //   srcs = [Var("input_str")], dest = v  →  %v = call i64 @__twig_input_str()
+        "input_str" => {
+            let dest = require_dest(instr, "input_str", state.fn_name)?.to_string();
+            out.push_str(&format!("  %{dest} = call i64 @__twig_input_str()\n"));
             state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }

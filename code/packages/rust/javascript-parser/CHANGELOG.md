@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.32.0] - 2026-07-07
+
+### Added — CLOC12.168 PR2: bridge `import.meta` → `Expression::ImportMeta` (closes gap-169)
+
+The bridge now converts the grammar's `import_meta` leaf into
+`Expression::ImportMeta` (the module meta-property, sibling of `new.target`).
+Previously the `import_meta` rule — whose children are the three bare tokens
+`[Token("import"), Token("."), Token("meta")]` with no Node child — fell through
+the expression dispatch to the `other =>` internal-error arm, dragging any file
+containing `import.meta` to WHITESPACE_ONLY. A new `convert_import_meta` lowers
+it to the atomic `ImportMeta` leaf (the `.meta` is part of the fixed spelling,
+not a member access; the `import` token's `cv` becomes the node's provenance),
+mirroring `new.target`. The dead `import_meta_expression` decline arm (a rule
+name the grammar never emits for this construct) is removed. 3 new bridge unit
+tests (`import.meta;` → `ImportMeta`; `import.meta.url;` → member access whose
+object is `ImportMeta`; `f(import.meta);` bridges in argument position). The
+closurec end-to-end diff fixture exercises the full SIMPLE pipeline. (gap-169)
+
+
+## [0.31.0] - 2026-07-07
+
+### Added — CLOC12.167 PR2: bridge `new.target` → `Expression::NewTarget` (closes gap-168)
+
+The bridge now converts the `new.target` meta-property to
+`Expression::NewTarget { cv }` instead of declining it (dragging the whole file
+to WHITESPACE_ONLY). The grammar emits `new.target` as three bare tokens
+`[Token("new"), Token("."), Token("target")]` inside a `member_expression` with
+**no Node child** — probed and confirmed, not routed through the dedicated
+`new_target_expression` rule — so `convert_member_expression` distinguishes it
+from the argumented `new X(args)` constructor (which always has a Node callee)
+on `nodes.is_empty()`. A `new_target` flag (`nodes.is_empty() &&
+has_token("new") && has_token("target")`) relaxes the empty-nodes guard
+(mirroring the `super`-token base of gap-167) and the meta-property returns the
+atomic `NewTarget` leaf, taking the `new` token's `cv` as provenance — the `.`
+is part of the fixed spelling, not a member access, so there is nothing to
+fold. `new.target` was already parseable (a bare `new.target;` parses
+standalone), so this is a pure bridge slice — **no grammar work**. 3 new bridge
+tests (`new_target_meta_property`, `new_target_in_function_return`,
+`new_target_as_member_object`); 147 pass.
+
 ## [0.30.0] - 2026-07-04
 
 ### Added — CLOC12.166 PR2: bridge `super` → `Expression::Super` (closes gap-167)

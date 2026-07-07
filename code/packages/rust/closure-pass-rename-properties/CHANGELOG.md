@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.12.11] - 2026-07-07
+
+### Changed — CLOC12.168: `ImportMeta` exhaustive-match arm
+
+Added an `Expression::ImportMeta` case so the pass stays exhaustive over the new `javascript-ast` leaf variant (part of the CLOC12.168 atomic node PR1). `import.meta` is a leaf meta-property with no sub-expression and is never itself a constant, so it clones through unchanged alongside the literals. No behaviour change to any existing node.
+
+
 ## [0.12.10] - 2026-07-04
 
 ### Changed — CLOC12.167: `NewTarget` exhaustive-match arm

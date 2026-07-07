@@ -895,6 +895,61 @@ impl SpreadsheetSession {
         spreadsheet_io::save_xls(&self.wb)
     }
 
+    // The delimited-text and JSON formats mirror the `.xlsx`/`.xls` pair above
+    // exactly: a load parses the bytes into a fresh engine workbook, serializes
+    // it to the engine's canonical JSON, and feeds that to `deserialize` (so the
+    // open is undoable and the formula-bar echo is rebuilt); a save is pure
+    // computation over the current workbook. They are lower-fidelity than
+    // `.xlsx` in the same ways `spreadsheet-io` documents (one sheet, formulas
+    // flatten to their computed value), which is inherent to the formats.
+
+    /// Open a `.csv` (comma-delimited) file as the current document. Each field
+    /// lands at its grid position; a numeric-looking field becomes a number,
+    /// else text. Returns `false` if the bytes are not valid UTF-8 / CSV.
+    pub fn load_csv_bytes(&mut self, bytes: &[u8]) -> bool {
+        match spreadsheet_io::load_csv(bytes) {
+            Ok(loaded) => self.deserialize(&loaded.serialize()),
+            Err(_) => false,
+        }
+    }
+
+    /// Serialize the current document's **first sheet** to `.csv` bytes (RFC
+    /// 4180 quoting; formulas as their computed value). Pure computation.
+    pub fn save_csv_bytes(&self) -> Vec<u8> {
+        spreadsheet_io::save_csv(&self.wb)
+    }
+
+    /// Open a `.tsv` (tab-delimited) file. Same semantics as
+    /// [`load_csv_bytes`](Self::load_csv_bytes) with a tab delimiter.
+    pub fn load_tsv_bytes(&mut self, bytes: &[u8]) -> bool {
+        match spreadsheet_io::load_tsv(bytes) {
+            Ok(loaded) => self.deserialize(&loaded.serialize()),
+            Err(_) => false,
+        }
+    }
+
+    /// Serialize the current document's first sheet to `.tsv` bytes.
+    pub fn save_tsv_bytes(&self) -> Vec<u8> {
+        spreadsheet_io::save_tsv(&self.wb)
+    }
+
+    /// Open a `.json` file as the current document. A top-level array of objects
+    /// is read as records (keys → header row, each object → a data row); other
+    /// shapes map as `spreadsheet-io` documents. Parsing is panic-free: returns
+    /// `false` on malformed JSON / invalid UTF-8. See [`load_csv_bytes`].
+    pub fn load_json_bytes(&mut self, bytes: &[u8]) -> bool {
+        match spreadsheet_io::load_json(bytes) {
+            Ok(loaded) => self.deserialize(&loaded.serialize()),
+            Err(_) => false,
+        }
+    }
+
+    /// Serialize the current document's first sheet to `.json` bytes — an array
+    /// of record objects (row 1 supplies the keys). Pure computation.
+    pub fn save_json_bytes(&self) -> Vec<u8> {
+        spreadsheet_io::save_json(&self.wb)
+    }
+
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
     /// the shape). A malformed address yields an `#REF!`-style error object
     /// rather than failing.
@@ -1346,6 +1401,62 @@ mod tests {
         assert!(s2.load_xls_bytes(&bytes), "our own .xls must open");
         assert_eq!(s2.get_value("A1"), r#"{"kind":"number","value":42.0}"#);
         assert_eq!(s2.get_value("A2"), r#"{"kind":"text","value":"world"}"#);
+    }
+
+    #[test]
+    fn csv_and_tsv_open_save_round_trip_through_session() {
+        // A CSV is a positional grid: numbers stay numeric, text stays text, and
+        // a formula flattens to its computed value on save.
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "region");
+        s.set_cell("B1", "sales");
+        s.set_cell("A2", "East");
+        s.set_cell("B2", "200");
+        s.set_cell("A3", "=A2"); // flattens to "East" text on save
+        let csv = s.save_csv_bytes();
+        assert_eq!(
+            String::from_utf8(csv.clone()).unwrap(),
+            "region,sales\nEast,200\nEast,"
+        );
+
+        let mut s2 = SpreadsheetSession::new();
+        assert!(s2.load_csv_bytes(&csv), "our own .csv must open");
+        assert_eq!(s2.get_value("A1"), r#"{"kind":"text","value":"region"}"#);
+        assert_eq!(s2.get_value("B2"), r#"{"kind":"number","value":200.0}"#);
+
+        // TSV is the same grid with tabs.
+        let tsv = s2.save_tsv_bytes();
+        assert_eq!(String::from_utf8(tsv.clone()).unwrap(), "region\tsales\nEast\t200\nEast\t");
+        let mut s3 = SpreadsheetSession::new();
+        assert!(s3.load_tsv_bytes(&tsv));
+        assert_eq!(s3.get_value("B2"), r#"{"kind":"number","value":200.0}"#);
+    }
+
+    #[test]
+    fn json_open_save_round_trip_through_session() {
+        // A records array round-trips: keys become the header row, each object a
+        // data row; save re-emits the array-of-objects shape.
+        let mut s = SpreadsheetSession::new();
+        assert!(s.load_json_bytes(br#"[{"region":"East","sales":200},{"region":"West","sales":340}]"#));
+        assert_eq!(s.get_value("A1"), r#"{"kind":"text","value":"region"}"#);
+        assert_eq!(s.get_value("B2"), r#"{"kind":"number","value":200.0}"#);
+        assert_eq!(s.get_value("B3"), r#"{"kind":"number","value":340.0}"#);
+        let json = s.save_json_bytes();
+        assert_eq!(
+            String::from_utf8(json).unwrap(),
+            r#"[{"region":"East","sales":200},{"region":"West","sales":340}]"#
+        );
+    }
+
+    #[test]
+    fn load_bad_text_formats_return_false_and_preserve_document() {
+        // A failed open must not clobber the open document. CSV accepts any
+        // UTF-8 as a grid, so only invalid UTF-8 / malformed JSON fail here.
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "keepme");
+        assert!(!s.load_csv_bytes(&[0xff, 0xfe])); // invalid UTF-8
+        assert!(!s.load_json_bytes(b"{not json")); // malformed, panic-free
+        assert_eq!(s.get_value("A1"), r#"{"kind":"text","value":"keepme"}"#);
     }
 
     #[test]

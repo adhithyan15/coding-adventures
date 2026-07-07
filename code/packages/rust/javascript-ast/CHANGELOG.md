@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.27.0] - 2026-07-07
+
+### Added — CLOC12.168: `Expression::ImportMeta` (`import.meta`)
+
+Added `Expression::ImportMeta` variant + `ImportMeta { cv }` struct — the `import.meta` module meta-property, the `MetaProperty` **leaf** sibling of `NewTarget` (same shape, no operand). Spelled with three tokens (`import` `.` `meta`) in source but modelled as an atomic node rather than a member access — `import` is a reserved word with no accessible identifier — so the renaming passes never touch it. Re-exported from the crate root. Atomic node PR (PR1): the node + `closure-emitter` emit + all nine downstream pass match-arms land together so the workspace never breaks. (CLOC12.168)
+
+
 ## [0.26.0] - 2026-07-04
 
 ### Added — CLOC12.167: `Expression::NewTarget` (`new.target`)

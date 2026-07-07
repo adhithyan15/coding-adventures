@@ -1297,6 +1297,120 @@ impl Document {
     pub fn ref_number(&self, r: &ResolvedRef) -> Option<String> {
         self.number_labels().number_for(&r.key).map(str::to_string)
     }
+
+    /// The document's **List of Figures / List of Tables** index (LTXDOC03 S12) — the analogue of
+    /// LaTeX's `\listoffigures` / `\listoftables`, rendered as plain text.
+    ///
+    /// ## What it produces
+    ///
+    /// Two optional blocks, each a heading followed by one numbered line per float, in **document
+    /// order**:
+    ///
+    /// ```text
+    /// List of Figures
+    /// 1. <figure 1 caption text>
+    /// 2. <figure 2 caption text>
+    /// List of Tables
+    /// 1. <table 1 caption text>
+    /// 2. <table 2 caption text>
+    /// ```
+    ///
+    /// - **Every** [`Block::Figure`] gets a line (labeled or not) numbered `1, 2, 3, …`; then the
+    ///   same, independently, for **every** [`Block::Table`]. The numbering mirrors S4 exactly: a
+    ///   float's line number is the flat float counter's value at that float, so a `\ref` to a
+    ///   labeled float and its List-of index agree. We reuse the same [`Counters`] float walk as
+    ///   [`number_labels`](Document::number_labels) so the two can never drift.
+    /// - Each line is `<n>. <caption text>`. The **caption text** is the plain rendering of the
+    ///   float's `\caption{…}` inlines (text, spaces, and the text inside `\textbf`/`\emph`/other
+    ///   font wrappers — the same descent [`ref_target_node`] proves reaches a figure's caption). A
+    ///   float that carries **no** `\caption` renders the fixed placeholder `(no caption)`, so the
+    ///   numbering stays aligned with the real float count — every float still gets a numbered line.
+    /// - The `List of Figures` heading is emitted **only** when there is ≥1 figure; `List of Tables`
+    ///   **only** when there is ≥1 table. If the document has **no** floats at all, the fixed marker
+    ///   `"(no floats)"` is returned.
+    /// - Lines are joined by `\n` with **no** trailing newline and no trailing whitespace.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S12 is a brand-new method that reads the existing document blocks; it mutates nothing and
+    /// changes no S1–S11 output. Real LaTeX gates the lists on a `\listoffigures` / `\listoftables`
+    /// command, but those are not parser-recognized commands here, so — like S11's grouped report —
+    /// S12 is exposed as a method the caller invokes directly rather than a gated render.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing; reuses the bounded
+    /// [`Document::walk`] and the fixed-size [`Counters`]. Borrows `self` immutably and returns owned
+    /// `String` data, so the result outlives any borrow of the source.
+    pub fn list_of_floats(&self) -> String {
+        // Two independent, ordered lists — figures and tables — built in a single document-order
+        // walk that threads the same `Counters` `number_labels` uses, so the line numbers match S4.
+        let mut figures: Vec<String> = Vec::new();
+        let mut tables: Vec<String> = Vec::new();
+        let mut counters = Counters::new();
+
+        for node in self.walk() {
+            let NodeRef::Block(block) = node else {
+                continue; // Only float blocks carry the caption + counter S12 renders.
+            };
+            match block {
+                Block::Figure { caption, .. } => {
+                    let n = counters.step_figure();
+                    figures.push(format!("{n}. {}", caption_text(caption)));
+                }
+                Block::Table { caption, .. } => {
+                    let n = counters.step_table();
+                    tables.push(format!("{n}. {}", caption_text(caption)));
+                }
+                _ => {}
+            }
+        }
+
+        // Assemble: each list is emitted only when non-empty, heading first. Both empty → marker.
+        if figures.is_empty() && tables.is_empty() {
+            return "(no floats)".to_string();
+        }
+        let mut lines: Vec<String> = Vec::new();
+        if !figures.is_empty() {
+            lines.push("List of Figures".to_string());
+            lines.extend(figures);
+        }
+        if !tables.is_empty() {
+            lines.push("List of Tables".to_string());
+            lines.extend(tables);
+        }
+        lines.join("\n")
+    }
+}
+
+/// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
+///
+/// `Some(caption)` → the caption's inlines flattened to their visible text: [`Inline::Text`] runs
+/// verbatim, [`Inline::Space`] as a single space, and the text *inside* font wrappers
+/// (`\textbf`/`\emph`/`\texttt`/other `Styled`) recursively — the same descent the caption test
+/// exercises. Leading/trailing whitespace is trimmed so a `\caption{ x }` reads as `x`. `None` (no
+/// `\caption`) → the fixed placeholder `(no caption)`, which keeps every float on its own numbered
+/// line so the List-of numbering stays aligned with the real float count.
+fn caption_text(caption: &Option<crate::document::Caption>) -> String {
+    let Some(cap) = caption else {
+        return "(no caption)".to_string();
+    };
+    // Flatten the caption inlines to visible text. Composite font inlines recurse into their
+    // wrapped content; math/cross-ref/accent/other inlines contribute no plain text (matching the
+    // caption-reaching test's text view).
+    fn flatten(inlines: &[Inline], out: &mut String) {
+        for i in inlines {
+            match i {
+                Inline::Text(t, _) => out.push_str(t),
+                Inline::Space(_) => out.push(' '),
+                Inline::Strong(c, _) | Inline::Emph(c, _) => flatten(c, out),
+                Inline::Styled { content, .. } => flatten(content, out),
+                Inline::Code(t, _) => out.push_str(t),
+                _ => {}
+            }
+        }
+    }
+    let mut s = String::new();
+    flatten(&cap.content, &mut s);
+    s.trim().to_string()
 }
 
 // =================================================================================================
@@ -1581,6 +1695,68 @@ fn kind_display_name(kind: LabelKind) -> &'static str {
     }
 }
 
+/// Render **one** resolved-reference [`RefEntry`] to its single plain-text line — the shared
+/// per-command rendering used by **both** [`CrossReferenceReport::to_plain_text`] (S6, flat pre-order)
+/// and [`CrossReferenceReport::to_plain_text_by_kind`] (S11, grouped-by-kind). Factoring the three
+/// precedence-ordered renderings into this one place is what guarantees the flat and grouped reports
+/// can **never** drift — they call the identical code, so a `\ref`/`\eqref`/`\pageref` line is
+/// byte-for-byte the same wherever it appears.
+///
+/// Three renderings, tried in this precedence order, keyed off the *surface command* + *target kind*
+/// (LTXDOC03 S9/S10):
+///
+///   1. An `\eqref` whose target is an **equation** renders amsmath-style — the `\eqref` spelling is
+///      kept and the number is **parenthesised**: `\eqref{eq:e} -> Equation (1)`. (`\eqref` on
+///      `article`'s equation counter typesets "(1)", so the report mirrors that surface form.) (S9.)
+///   2. Otherwise, a `\pageref` (to **any** kind) renders with the `\pageref` spelling and the literal
+///      placeholder `page ?`: `\pageref{sec:i} -> page ?`. A page reference asks *what page* the target
+///      is on; the crate has NO page model, so the target's kind and number are irrelevant — the
+///      honest fixed placeholder is `page ?` (the `?` mirrors LaTeX's own `??` for an unresolved page
+///      ref). (S10.)
+///   3. Every other resolved reference — all `\ref` and any `\eqref` to a **non-equation** kind —
+///      renders with the canonical `\ref` prefix and a **bare** number: `\ref{sec:intro} -> Section
+///      1.2`.
+///
+/// Pure and total: string building only (no indexing, no `unwrap`), allocating just the returned line.
+fn render_resolved_ref(r: &RefEntry) -> String {
+    if r.command == "eqref" && r.kind == LabelKind::Equation {
+        format!(r"\eqref{{{}}} -> {} ({})", r.key, kind_display_name(r.kind), r.number)
+    } else if r.command == "pageref" {
+        // No page model: a fixed, honest placeholder, independent of kind/number.
+        format!(r"\pageref{{{}}} -> page ?", r.key)
+    } else {
+        format!(r"\ref{{{}}} -> {} {}", r.key, kind_display_name(r.kind), r.number)
+    }
+}
+
+/// The **pluralised** capitalised subheading a kind gets in the S11 grouped report: `"Sections"`,
+/// `"Figures"`, `"Tables"`, `"Equations"`, `"Inline"`. Distinct from [`kind_display_name`]'s singular
+/// per-line form (`"Section"`) because the S11 subheading names a *group* of references. `Inline` has
+/// no natural plural here (it is not a numbered display kind), so it is left as-is. Pure, total, one
+/// fixed match.
+fn kind_group_heading(kind: LabelKind) -> &'static str {
+    match kind {
+        LabelKind::Section => "Sections",
+        LabelKind::Table => "Tables",
+        LabelKind::Figure => "Figures",
+        LabelKind::Equation => "Equations",
+        LabelKind::Inline => "Inline",
+    }
+}
+
+/// The **fixed kind order** the S11 grouped report emits its subheadings in — Sections, then Figures,
+/// then Tables, then Equations, then Inline — *regardless* of the source order references appear in.
+/// A group is only emitted if it has ≥1 resolved ref (see
+/// [`to_plain_text_by_kind`](CrossReferenceReport::to_plain_text_by_kind)); within a group the refs
+/// keep their pre-order.
+const S11_KIND_ORDER: [LabelKind; 5] = [
+    LabelKind::Section,
+    LabelKind::Figure,
+    LabelKind::Table,
+    LabelKind::Equation,
+    LabelKind::Inline,
+];
+
 // -------------------------------------------------------------------------------------------------
 // The report record types (plain, Clone-able, owned data — mirroring S4/S5's owned-String rows).
 // -------------------------------------------------------------------------------------------------
@@ -1658,11 +1834,26 @@ impl CrossReferenceReport {
     /// Render this report to a **stable, deterministic, human-readable** plain-text string (LTXDOC03
     /// S6). The exact format — pinned so tests and consumers can rely on it byte-for-byte:
     ///
-    /// - One line per resolved reference, in `refs` order:
-    ///   `` \ref{<key>} -> <Kind> <number> `` — e.g. `` \ref{sec:intro} -> Section 1.2 ``. The
-    ///   command shown is always `\ref` (the canonical reference form) regardless of the actual
-    ///   `\eqref`/`\pageref` spelling, so the line names the *binding*, not the surface command;
-    ///   `<Kind>` is the capitalised kind name ([`kind_display_name`]).
+    /// - One line per resolved reference, in `refs` order. There are **three** renderings, tried in
+    ///   this precedence order (LTXDOC03 S10):
+    ///   - An `\eqref` whose target is an **equation** renders amsmath-style, keeping the `\eqref`
+    ///     spelling and **parenthesising** the number:
+    ///     `` \eqref{<key>} -> <Kind> (<number>) `` — e.g. `` \eqref{eq:e} -> Equation (1) ``. This
+    ///     mirrors how amsmath's `\eqref` typesets the equation number as `(1)`. (S9, unchanged.)
+    ///   - Otherwise, a `\pageref` (to **any** kind — Section/Table/Figure/Equation/Inline) renders
+    ///     with the `\pageref` spelling and the literal placeholder `page ?`:
+    ///     `` \pageref{<key>} -> page ? `` — e.g. `` \pageref{sec:i} -> page ? ``. A `\pageref` asks
+    ///     *what page* its target is on, but the crate has **no page model**, so neither the target's
+    ///     kind nor its number is relevant; the honest, fixed placeholder is `page ?` (the `?` mirrors
+    ///     LaTeX's own `??` for an unresolved page reference, and the S7 number-placeholder pattern).
+    ///     (S10, NEW — previously a `\pageref` rendered identically to a `\ref`.)
+    ///   - Every **other** resolved reference — all `\ref` and any `\eqref` to a **non-equation**
+    ///     kind — renders with the canonical `\ref` prefix and a **bare** number:
+    ///     `` \ref{<key>} -> <Kind> <number> `` — e.g. `` \ref{sec:intro} -> Section 1.2 ``. The
+    ///     `\ref` prefix here names the *binding*, not the surface command, unchanged from S8.
+    ///
+    ///   In the first and third renderings `<Kind>` is the capitalised kind name
+    ///   ([`kind_display_name`]); the `\pageref` rendering carries no kind or number at all.
     /// - One line per resolved citation, in `cites` order:
     ///   `` \cite{<key>} -> <number> `` — e.g. `` \cite{smith} -> [2] ``.
     /// - **Only if** `dangling_refs` is non-empty, a footer line:
@@ -1681,9 +1872,11 @@ impl CrossReferenceReport {
     pub fn to_plain_text(&self) -> String {
         let mut lines: Vec<String> = Vec::new();
 
-        // Resolved references: `\ref{key} -> Kind number`.
+        // Resolved references — each rendered by the shared per-command helper
+        // [`render_resolved_ref`], so this S6 rendering and the S11 grouped rendering
+        // ([`to_plain_text_by_kind`](CrossReferenceReport::to_plain_text_by_kind)) can never drift.
         for r in &self.refs {
-            lines.push(format!(r"\ref{{{}}} -> {} {}", r.key, kind_display_name(r.kind), r.number));
+            lines.push(render_resolved_ref(r));
         }
         // Resolved citations: `\cite{key} -> number`.
         for c in &self.cites {
@@ -1700,6 +1893,71 @@ impl CrossReferenceReport {
         if lines.is_empty() {
             // A stable, greppable marker so the rendering is never the empty string.
             "(no cross-references)".to_string()
+        } else {
+            lines.join("\n")
+        }
+    }
+
+    /// Render the report's **resolved references only**, grouped under fixed-order kind subheadings
+    /// (LTXDOC03 S11). A *sibling* of [`to_plain_text`](CrossReferenceReport::to_plain_text) — it
+    /// leaves that flat rendering untouched — that re-organises the **same** resolved-ref lines from
+    /// source order into per-kind groups, so a reader can see "which sections / figures / equations
+    /// does this document cross-reference?" at a glance.
+    ///
+    /// The exact format, pinned so tests and consumers can rely on it byte-for-byte:
+    ///
+    /// - Kinds are emitted in a **fixed order** — **Sections, Figures, Tables, Equations, Inline** —
+    ///   *regardless* of the order references appear in the source (see [`S11_KIND_ORDER`]).
+    /// - For each kind with **≥1** resolved ref, a subheading line — the pluralised capitalised kind
+    ///   name plus a colon (`Sections:`, `Figures:`, `Tables:`, `Equations:`, `Inline:`, from
+    ///   [`kind_group_heading`]) — followed by **one line per ref**, each **indented by two spaces**
+    ///   then rendered by the **shared** [`render_resolved_ref`] helper — the *identical* per-command
+    ///   rule [`to_plain_text`](CrossReferenceReport::to_plain_text) uses, so an `\eqref` to an
+    ///   equation still reads `\eqref{eq:e} -> Equation (1)` and a `\pageref` still reads
+    ///   `\pageref{key} -> page ?`. Within a kind group the refs keep their existing pre-order (this
+    ///   filters [`refs`](CrossReferenceReport::refs) for that kind, preserving order).
+    ///
+    ///   ```text
+    ///   Sections:
+    ///     \ref{sec:intro} -> Section 1
+    ///     \ref{sec:methods} -> Section 2
+    ///   Figures:
+    ///     \ref{fig:plot} -> Figure 1
+    ///   ```
+    /// - A kind with **zero** resolved refs is **omitted entirely** — no empty subheading.
+    /// - Only resolved **references** are grouped; citations and the dangling footers are **not**
+    ///   included (this method stays focused on the kind-grouped resolved refs — the flat
+    ///   [`to_plain_text`](CrossReferenceReport::to_plain_text) remains the place for the full report).
+    /// - If there are **zero** resolved refs at all, the fixed string `"(no resolved references)"` is
+    ///   returned (a stable, greppable marker — the S11 analogue of `to_plain_text`'s
+    ///   `"(no cross-references)"`), so the output is never the empty string.
+    ///
+    /// Lines are joined by a single `\n` with **no trailing newline** and no trailing whitespace on any
+    /// line. The kind order is fixed and the within-group order is source-derived, so the whole
+    /// rendering is a pure function of the report.
+    ///
+    /// Total & panic-free: string building only (no indexing, no `unwrap`), allocating just the output
+    /// `String`.
+    pub fn to_plain_text_by_kind(&self) -> String {
+        let mut lines: Vec<String> = Vec::new();
+
+        // Walk the fixed kind order; for each kind, gather its refs in pre-order and, if any, emit a
+        // subheading followed by the two-space-indented per-ref lines (shared render helper).
+        for &kind in &S11_KIND_ORDER {
+            let group: Vec<&RefEntry> = self.refs.iter().filter(|r| r.kind == kind).collect();
+            if group.is_empty() {
+                continue; // omit empty kinds entirely — no bare subheading.
+            }
+            lines.push(format!("{}:", kind_group_heading(kind)));
+            for r in group {
+                // Two-space indent, then the SAME per-command line the flat report emits.
+                lines.push(format!("  {}", render_resolved_ref(r)));
+            }
+        }
+
+        if lines.is_empty() {
+            // A stable, greppable marker so the rendering is never the empty string.
+            "(no resolved references)".to_string()
         } else {
             lines.join("\n")
         }
@@ -1833,9 +2091,81 @@ mod tests {
             assert_eq!(entry.number, "1", "S8: the equation carries the real counter value");
         }
         assert!(report.dangling_refs.is_empty(), "nothing dangles");
-        // The rendered report lines name the binding as `Equation 1` (S8 real number).
+        // The rendered report lines name the binding. Under S9 the `\eqref` (first, in source order)
+        // parenthesises its number and keeps the `\eqref` spelling; the plain `\ref` stays bare.
         let text = report.to_plain_text();
-        assert_eq!(text, "\\ref{eq:e} -> Equation 1\n\\ref{eq:e} -> Equation 1");
+        assert_eq!(text, "\\eqref{eq:e} -> Equation (1)\n\\ref{eq:e} -> Equation 1");
+    }
+
+    #[test]
+    fn s9_eqref_to_equation_parenthesises_its_number() {
+        // LTXDOC03 S9: an `\eqref` to an equation renders amsmath-style — `\eqref` spelling kept and
+        // the number parenthesised — while a sibling `\ref` to the same equation stays a bare number.
+        // The source lists `\eqref` BEFORE `\ref`, so that is the report's `refs` (S1 pre-order) order.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} See \eqref{eq:e} and \ref{eq:e}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\eqref{eq:e} -> Equation (1)\n\\ref{eq:e} -> Equation 1");
+    }
+
+    #[test]
+    fn s9_ref_to_equation_is_a_bare_number() {
+        // A plain `\ref` (not `\eqref`) to an equation is UNCHANGED from S8: `\ref` prefix, bare
+        // number, no parentheses. S9 only touches the `\eqref`-to-equation case.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} See \ref{eq:e}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\ref{eq:e} -> Equation 1");
+    }
+
+    #[test]
+    fn s9_two_eqrefs_number_sequentially_and_each_parenthesises() {
+        // Two labelled equations number 1 then 2 (S8 sequential counter); each `\eqref` to them
+        // parenthesises its own number, so the report reads `(1)` then `(2)`.
+        let src = r"\begin{document}\begin{equation} a = 1 \label{eq:a} \end{equation}\begin{equation} b = 2 \label{eq:b} \end{equation} See \eqref{eq:a} and \eqref{eq:b}.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\eqref{eq:a} -> Equation (1)\n\\eqref{eq:b} -> Equation (2)");
+    }
+
+    #[test]
+    fn s10_pageref_renders_page_placeholder() {
+        // LTXDOC03 S10: a resolved `\pageref` to a labelled section renders with the `\pageref`
+        // spelling and the fixed `page ?` placeholder — NOT the S8 `\ref{...} -> Section 1` line.
+        // (The crate has no page model, so a page reference cannot report a real page number.)
+        let src = r"\begin{document}\section{Intro}\label{sec:i} \pageref{sec:i}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\pageref{sec:i} -> page ?");
+    }
+
+    #[test]
+    fn s10_ref_still_bare_and_pageref_distinct() {
+        // A doc with BOTH a `\ref` and a `\pageref` to the same section: the `\ref` is UNCHANGED from
+        // S8 (`\ref{sec:i} -> Section 1`) while the `\pageref` now diverges (`\pageref{sec:i} -> page
+        // ?`). `\ref` first in source order, so it is the report's first line (S1 pre-order).
+        let src = r"\begin{document}\section{Intro}\label{sec:i} \ref{sec:i} \pageref{sec:i}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\ref{sec:i} -> Section 1\n\\pageref{sec:i} -> page ?");
+    }
+
+    #[test]
+    fn s10_pageref_to_equation_is_still_page() {
+        // A `\pageref` to a labelled EQUATION ignores the `\eqref`-to-equation special-case entirely:
+        // it is a page reference, so it still renders `\pageref{eq:e} -> page ?` (no parentheses, no
+        // Equation kind, no number). This proves the `\pageref` branch takes precedence over the S8
+        // else-branch and is orthogonal to the S9 amsmath branch.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} \pageref{eq:e}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\pageref{eq:e} -> page ?");
     }
 
     #[test]
@@ -3112,5 +3442,137 @@ See Section~\ref{sec:intro} and \cite{smith2020}.
             doc.ref_target_node(&refs_before.resolved[0]).is_some(),
             "S3 lookup still resolves after building the report"
         );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S11 — the grouped-by-kind cross-reference report (`to_plain_text_by_kind`).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s11_groups_refs_by_kind_in_fixed_order() {
+        // Sections + a figure + an equation, referenced by `\ref`/`\eqref`. The grouped rendering
+        // emits the FIXED kind order (Sections, Figures, Equations here — Tables/Inline absent, so
+        // omitted), each subheading followed by two-space-indented ref lines in pre-order, with the
+        // real S4 numbers (sec:intro→1, sec:methods→2, fig:plot→1, eq:e→(1)).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+\section{Methods}\label{sec:methods}
+
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:plot}\end{figure}
+
+\begin{equation} a = 1 \label{eq:e} \end{equation}
+
+See \ref{sec:intro}, \ref{sec:methods}, \ref{fig:plot}, \eqref{eq:e}.\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\n  \\ref{sec:methods} -> Section 2\n\
+             Figures:\n  \\ref{fig:plot} -> Figure 1\n\
+             Equations:\n  \\eqref{eq:e} -> Equation (1)",
+            "the pinned grouped-by-kind rendering (fixed kind order, two-space indent)"
+        );
+    }
+
+    #[test]
+    fn s11_eqref_and_pageref_render_rules_hold_in_groups() {
+        // The grouped lines reuse the SAME shared per-command helper as the flat report:
+        //   - an `\eqref` to an equation shows `\eqref{eq:e} -> Equation (1)` under `Equations:`;
+        //   - a `\pageref` shows `\pageref{...} -> page ?` under its TARGET kind's group — here the
+        //     `\pageref{sec:intro}` targets a Section, so it sits in the `Sections:` group.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+\begin{equation} a = 1 \label{eq:e} \end{equation}
+
+See \ref{sec:intro}, \pageref{sec:intro}, \eqref{eq:e}.\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\n  \\pageref{sec:intro} -> page ?\n\
+             Equations:\n  \\eqref{eq:e} -> Equation (1)",
+            "grouped lines obey the S9 eqref-parenthesises and S10 pageref-placeholder rules"
+        );
+    }
+
+    #[test]
+    fn s11_empty_returns_marker() {
+        // A doc with no resolved refs → the fixed S11 empty marker (distinct from the flat report's
+        // "(no cross-references)").
+        let rep = report(r"\begin{document}\end{document}");
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "(no resolved references)",
+            "no resolved refs renders the stable S11 marker"
+        );
+    }
+
+    #[test]
+    fn s11_dangling_and_cites_do_not_appear_in_grouped_report() {
+        // A doc with a dangling `\ref{nope}` and a `\cite` but NO resolved refs → still the empty
+        // marker: the grouped method is focused on resolved refs only (no citations, no dangling
+        // footers).
+        let src = r"\begin{document}See \ref{nope} and \cite{ghost}.\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "(no resolved references)",
+            "citations and dangling keys are not part of the grouped resolved-ref report"
+        );
+    }
+
+    #[test]
+    fn s11_to_plain_text_unchanged() {
+        // GUARD (additivity/refactor): a representative doc's flat `to_plain_text()` still returns its
+        // exact prior S6 string, byte-for-byte, after the shared-helper refactor and the new S11
+        // method. If this line ever changes, the refactor broke additivity.
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+See Section~\ref{s:i} and \cite{b}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\end{thebibliography}\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text(),
+            "\\ref{s:i} -> Section 1\n\\cite{b} -> [2]",
+            "flat to_plain_text() output is byte-for-byte unchanged by S11"
+        );
+    }
+
+    // -- LTXDOC03 S12 — the List of Figures / List of Tables index (`list_of_floats`). ------------
+
+    #[test]
+    fn s12_lists_figures_and_tables_in_order() {
+        // Two captioned figures then a captioned table → a `List of Figures` block numbered 1,2 in
+        // document order, followed by a `List of Tables` block numbered from 1 (independent counter).
+        // Each line is `<n>. <caption text>`, captions rendered as their plain text.
+        let src = r"\begin{document}\begin{figure}\includegraphics{p.png}\caption{First plot}\label{fig:a}\end{figure}
+\begin{figure}\includegraphics{q.png}\caption{Second plot}\label{fig:b}\end{figure}
+\begin{table}\begin{tabular}{lc}a & b \\ c & d\end{tabular}\caption{Data table}\end{table}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.list_of_floats(),
+            "List of Figures\n1. First plot\n2. Second plot\nList of Tables\n1. Data table",
+        );
+    }
+
+    #[test]
+    fn s12_uncaptioned_float_uses_placeholder() {
+        // A figure with NO `\caption` still gets a numbered line — its caption text renders as the
+        // fixed `(no caption)` placeholder, so numbering stays aligned with the real float count.
+        let src = r"\begin{document}\begin{figure}\includegraphics{p.png}\label{fig:a}\end{figure}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. (no caption)");
+    }
+
+    #[test]
+    fn s12_empty_returns_marker() {
+        // A document with no floats at all → the fixed `(no floats)` marker (neither heading emitted).
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+Body text with no floats.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.list_of_floats(), "(no floats)");
     }
 }

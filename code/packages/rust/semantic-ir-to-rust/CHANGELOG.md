@@ -1,43 +1,51 @@
 # Changelog
 
-## 0.16.0 — Ruby `Symbol` method catalog (to_s / upcase / capitalize / inspect / to_proc / …)
+## 0.19.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
-Completes the Rust backend's **`Symbol` method catalog** for parity with the
-Python and TypeScript `sir-runtime-oop` reference. Runtime-only change (no core
-semantic-IR, no frontend, no emitter change): a `Value::Sym` receiver already
-routed to `symbol_method`; this release fills in the missing methods.
+First increment of the SIR display-convention spec (`code/specs/sir-display-convention.md`).
+A **Ruby**-sourced module now renders booleans as `true`/`false` instead of the
+Twig/Lisp `#t`/`#f`, so a translated `puts true` prints `true`.
 
-- **Added to `symbol_method`** (previously only `to_s`, `to_sym`,
-  `length`/`size`, `upcase`, `downcase`):
-  - **`capitalize`** — returns a **new interned `Symbol`** whose name is the
-    first char upper-cased and the rest lower-cased (`:hELLo.capitalize` →
-    `:Hello`), matching Ruby (a helper `capitalize_str` implements the fold).
-  - **`inspect`** — the `":name"` display form (leading colon), e.g.
-    `:x.inspect == ":x"`.
-  - **`empty?`** — whether the symbol's name is the empty string.
-  - **`to_proc`** — builds the SAME dispatching `Closure` that a `&:sym`
-    block-pass lowers to, by re-using the free `sym_to_proc` helper. So
-    `:to_s.to_proc` and `&:to_s` are byte-for-byte the same proc.
-- Like the reference, `upcase`/`downcase`/`capitalize` return a **Symbol**
-  (not a String). Since a bare `Value::Sym` prints as its name with no `:`,
-  the exec-proof test chains `.inspect` to observe the returned type.
-- **`respond_to?`** on a `Symbol` now reports the new names
-  (`capitalize`/`inspect`/`empty?`/`to_proc`) so the honesty invariant holds:
-  a name it reports `true` for is exactly one a real call runs.
-- **SECURITY ([[dynamic-dispatch-rce]]):** `to_proc`'s closure re-enters the
-  runtime through the SAME explicit, closed `call_method` — an unknown method
-  raises `NoMethodError`; there is no reflection on the source-derived name.
-- **`&:sym` is runtime-reachable:** the frontend lowers `&:to_s` to
-  `block_pass(SymLit("to_s"))`, which the emitter turns into
-  `sym_to_proc(intern("to_s"))`, so `Symbol#to_proc` is load-bearing (it is
-  NOT a frontend block-expansion). Proved end-to-end by
-  `[1,2,3].map(&:to_s).join(",") == "1,2,3"`.
-- **Test:** new exec-proof `tests/compile_and_run_symbol_methods.rs`
-  (`symbol_methods_compile_and_run`) — emits Rust, compiles with `rustc`, runs
-  the binary, and diffs stdout against the reference:
-  `:hello.to_s → "hello"`, `:hi.length → 2`, `:abc.upcase.inspect → ":ABC"`,
-  `:x.inspect → ":x"`, `:hELLo.capitalize.inspect → ":Hello"`,
-  `[1,2,3].map(&:to_s).join(",") → "1,2,3"`.
+Mechanism: the runtime carries a compile-time `const SIR_DISPLAY_RUBY` (a
+`__SIR_DISPLAY_RUBY__` placeholder); the emitter substitutes `true`/`false`
+from `Module.metadata.source_language` (`== "ruby"` → `true`, else `false`).
+`format` branches the boolean arm on it. The default is the Lisp form, so all
+existing non-Ruby (Twig) output is **byte-for-byte unchanged** (every prior
+golden still passes). The branch is a `const`, so it folds at compile time —
+zero per-call cost.
+
+Scope: booleans only (the flagship divergence). `nil`, symbols, string
+`inspect` quoting, and the Ruby hash `=>` element form remain follow-ups per
+the spec's rollout. Verified end-to-end under `rustc`: Ruby source →
+`true\nfalse\n`; Twig source → `#t\n#f\n`.
+
+## 0.18.0 — Numeric + String method-catalog parity
+
+Expands the emitted Rust runtime's `numeric_method` and `string_method`
+catalogs to Ruby parity, and grows the `respond_to?` tables to match.
+
+**Numeric (`Integer` / `Float`):** `to_int`, `positive?`, `negative?`,
+`succ` / `next`, `pred`, `floor`, `ceil`, `round` (banker-free Ruby
+round-half-up via `ruby_round`), `gcd` (overflow-saturating `gcd_i64`),
+`pow` / `**`, `digits` (`digits_of`), and the block-taking range walkers
+`upto` / `downto` / `step`. Counter arithmetic in the range walkers is
+`checked_add`/`checked_sub`-guarded so an `i64` boundary can never spin
+or panic.
+
+**String:** `capitalize`, `lstrip`, `rstrip`, `chomp`, `chars`, `bytes`,
+`start_with?`, `end_with?`, `index`, `replace`, `sub`, `gsub`,
+`to_i` / `to_f` (lenient leading-numeric parse via `str_to_i` / `str_to_f`),
+`to_sym`, and `empty?`. All arity-guard their optional arguments and
+degrade to a typed error rather than panicking.
+
+Dispatch remains receiver-type routed through explicit `match` arms — no
+reflection on source-derived method names.
+
+(Consolidates the previously-separate Numeric and String catalog PRs into
+one crate change to avoid intra-crate version churn. Note: the `0.16`
+Symbol and `0.17` Hash catalog code is already present on `main`; their
+CHANGELOG entries were dropped by an earlier bad merge and are tracked
+separately.)
 
 ## 0.15.0 — Array aggregate / reshape parity (min / max / sum / uniq / flatten / compact / to_a / each_with_index)
 

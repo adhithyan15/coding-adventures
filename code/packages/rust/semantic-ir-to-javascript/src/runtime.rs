@@ -45,6 +45,13 @@
 /// declarations start on their own line.
 pub const RUNTIME: &str = r##"const __Sir = (() => {
   "use strict";
+  // Source-language display convention (SIR display-convention spec).  The
+  // emitter substitutes `__SIR_DISPLAY_RUBY__` with `true` when the module's
+  // `source_language` is Ruby, else `false` (the default Twig/Lisp form).  The
+  // display path (`formatSeen`) reads this to render a boolean as Ruby
+  // `true`/`false` rather than the Lisp `#t`/`#f`; existing Twig output is
+  // unchanged.
+  const SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -107,8 +114,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   function format(v) { return formatSeen(v, new Set()); }
   function formatSeen(v, seen) {
     if (v === null || v === undefined) { return "nil"; }
-    if (v === true) { return "#t"; }
-    if (v === false) { return "#f"; }
+    if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
+    if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
     if (typeof v === "string") { return v; }
     if (typeof v === "number") { return String(v); }
     if (v instanceof Sym) { return v.name; }
@@ -124,77 +131,6 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return "[" + body + "]";
     }
     return String(v);
-  }
-
-  // ── SIR value equality (structural, for `uniq`) ────────────────
-  // Ruby's `Array#uniq` dedups by `eql?`/`hash`, i.e. VALUE equality: two
-  // equal-but-distinct arrays (`[1,2]` and a separate `[1,2]`) count as one.
-  // Primitives compare with `===` — the same op the `"="`/`case_eq` builtins
-  // use, so `uniq` agrees with `==` everywhere else.  Arrays and Maps compare
-  // STRUCTURALLY (element-/entry-wise), matching Ruby, since JS `===` on two
-  // distinct-but-equal arrays is `false`.  Cycle safety: a program can build a
-  // self-referential array (`a = []; a << a`), so the recursive array walk is
-  // guarded by a `seen` set of the (a, b) pairs already on the compare path —
-  // a re-encountered pair is treated as equal (the cycle has matched so far),
-  // which terminates instead of recursing forever (CWE-674).  `Sym`/`Pair`/
-  // `Closure` fall back to reference identity (`===`), matching how the rest
-  // of the runtime treats them as opaque.
-  function sirEqual(a, b) { return sirEqualSeen(a, b, new Set()); }
-  function sirEqualSeen(a, b, seen) {
-    if (a === b) { return true; }
-    if (Array.isArray(a) && Array.isArray(b)) {
-      if (a.length !== b.length) { return false; }
-      // Cycle guard: record the LEFT array reference on the active compare
-      // path.  Re-encountering it means we are inside a self-referential
-      // structure whose elements have matched so far — treat as equal and
-      // stop recursing, so a cyclic array terminates instead of looping.
-      if (seen.has(a)) { return true; }
-      seen.add(a);
-      let ok = true;
-      for (let i = 0; i < a.length; i++) {
-        if (!sirEqualSeen(a[i], b[i], seen)) { ok = false; break; }
-      }
-      seen.delete(a);
-      return ok;
-    }
-    if (a instanceof Map && b instanceof Map) {
-      if (a.size !== b.size) { return false; }
-      // Same cycle guard as the array branch: two DISTINCT but structurally
-      // equal self-referential hashes (`a={}; a[:k]=a; b={}; b[:k]=b`) would
-      // otherwise recurse forever through their values (the `===` fast-path
-      // only covers the reference-identical case).  Record the LEFT map on
-      // the active compare path and short-circuit on re-encounter.
-      if (seen.has(a)) { return true; }
-      seen.add(a);
-      let ok = true;
-      for (const [k, v] of a) {
-        if (!b.has(k) || !sirEqualSeen(v, b.get(k), seen)) { ok = false; break; }
-      }
-      seen.delete(a);
-      return ok;
-    }
-    return false;
-  }
-
-  // ── deep flatten (Ruby `Array#flatten`) ────────────────────────
-  // Ruby's `flatten` recursively splices EVERY nested array into a single
-  // flat array, into a FRESH result (no aliasing / mutation of any input).
-  // Cycle safety mirrors `putsOne`/`format`: a self-referential array must
-  // not infinite-loop (CWE-674).  `seen` holds the array references on the
-  // active flatten path; an array already on the path is a cycle — real Ruby
-  // raises `ArgumentError: tried to flatten recursive array`, so we do too
-  // (a typed, rescuable error), rather than hanging or emitting a placeholder.
-  function flattenDeep(arr, out, seen) {
-    if (seen.has(arr)) {
-      raiseError("ArgumentError", "tried to flatten recursive array");
-    }
-    seen.add(arr);
-    for (const el of arr) {
-      if (Array.isArray(el)) { flattenDeep(el, out, seen); }
-      else { out.push(el); }
-    }
-    seen.delete(arr);
-    return out;
   }
 
   // ── builtins dispatch table ────────────────────────────────────
@@ -591,6 +527,15 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return true;
     }
     if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
+    // A number resolves the hand-implemented Ruby Numeric catalog (kept in
+    // lockstep with `numericMethod`'s case labels), ahead of the native gate.
+    if (typeof recv === "number" && NUMERIC_METHODS.has(name)) { return true; }
+    // A string resolves the hand-implemented Ruby String catalog (in lockstep
+    // with `stringMethod`'s case labels), ahead of the native gate.
+    if (typeof recv === "string" && STRING_METHODS.has(name)) { return true; }
+    // A Hash (`Map`) resolves the hand-implemented Ruby Hash catalog (in
+    // lockstep with `hashMethod`'s case labels), ahead of the native gate.
+    if (recv instanceof Map && HASH_METHODS.has(name)) { return true; }
     // A primitive resolves a name iff it (or its Ruby→native alias) is on the
     // method allowlist AND the native member is actually a function on `recv`.
     if (!(recv instanceof SirInstance)) {
@@ -615,6 +560,297 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (name === "&") { return recv && other; }
     if (name === "|") { return recv || other; }
     return recv !== other; // "^"
+  }
+
+  // ── Ruby Numeric catalog (Integer / Float) ─────────────────────
+  // Hand-implemented Ruby numeric methods that have no 1:1 JS-native
+  // spelling (`gcd`, `digits`, `upto`/`downto`/`step`, …).  Dispatched by an
+  // EXPLICIT `switch` on the source-derived `name` — never `recv[name]` — so
+  // no reflective gadget is reachable; the receiver is a primitive number and
+  // the native allowlist below still guards `toString`/`toFixed`.  A
+  // non-numeric argument degrades to 0 via `numArg` (the lenient
+  // never-raise-on-the-OO-surface floor), matching the Go/Rust/Python
+  // reference runtimes.  `NUMERIC_METHODS` mirrors these case labels EXACTLY so
+  // `respond_to?` stays honest as the catalog grows.
+  const NUM_MISS = Symbol("num-miss");
+  const NUMERIC_METHODS = new Set([
+    "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?", "positive?",
+    "negative?", "succ", "next", "pred", "floor", "ceil", "round", "gcd",
+    "pow", "**", "digits", "times", "upto", "downto", "step",
+  ]);
+  // Lenient numeric coercion: a non-number argument becomes 0 rather than
+  // producing NaN (which would silently break `<=`/`>=` loop guards).
+  function numArg(x) { return typeof x === "number" ? x : 0; }
+  // Ruby rounds half AWAY from zero (`2.5.round == 3`, `-2.5.round == -3`),
+  // unlike JS `Math.round` (half toward +∞).
+  function rubyRound(x) {
+    return x >= 0 ? Math.floor(x + 0.5) : Math.ceil(x - 0.5);
+  }
+  function gcdInt(a, b) {
+    a = Math.abs(Math.trunc(a));
+    b = Math.abs(Math.trunc(b));
+    while (b !== 0) { const t = a % b; a = b; b = t; }
+    return a;
+  }
+  function numericMethod(recv, name, args) {
+    switch (name) {
+      case "abs": return Math.abs(recv);
+      case "to_i": case "to_int": return Math.trunc(recv);
+      case "to_f": return recv;
+      case "even?": return Math.trunc(recv) % 2 === 0;
+      case "odd?": return Math.abs(Math.trunc(recv) % 2) === 1;
+      case "zero?": return recv === 0;
+      case "positive?": return recv > 0;
+      case "negative?": return recv < 0;
+      case "succ": case "next": return recv + 1;
+      case "pred": return recv - 1;
+      case "floor": return Math.floor(recv);
+      case "ceil": return Math.ceil(recv);
+      case "round": return rubyRound(recv);
+      case "gcd": return gcdInt(recv, numArg(args[0]));
+      case "pow": case "**": return Math.pow(recv, numArg(args[0]));
+      case "digits": {
+        // Base-10 digits, least-significant first (`123.digits == [3, 2, 1]`).
+        // A negative receiver is taken by magnitude (parity with the reference
+        // runtimes, which coerce via absolute value).
+        let n = Math.abs(Math.trunc(recv));
+        const out = [];
+        if (n === 0) { out.push(0); }
+        while (n > 0) { out.push(n % 10); n = Math.trunc(n / 10); }
+        return out;
+      }
+      case "times": {
+        // Block arg arrives already unwrapped to a JS function; a block-less
+        // call returns the receiver (v0 floor for Ruby's Enumerator).
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const n = Math.trunc(recv);
+          for (let i = 0; i < n; i++) { blk(i); }
+        }
+        return recv;
+      }
+      case "upto": {
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const hi = Math.trunc(numArg(args[0]));
+          for (let i = Math.trunc(recv); i <= hi; i++) { blk(i); }
+        }
+        return recv;
+      }
+      case "downto": {
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const lo = Math.trunc(numArg(args[0]));
+          for (let i = Math.trunc(recv); i >= lo; i--) { blk(i); }
+        }
+        return recv;
+      }
+      case "step": {
+        // `a.step(limit, stride=1) { |v| … }`.  A zero (or non-numeric → 0)
+        // stride yields nothing rather than spinning forever — the never-hang
+        // floor.  `args` is `[limit, block]` or `[limit, stride, block]`.
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") {
+          const limit = numArg(args[0]);
+          const stride = args.length >= 3 ? numArg(args[1]) : 1;
+          if (stride > 0) { for (let v = recv; v <= limit; v += stride) { blk(v); } }
+          else if (stride < 0) { for (let v = recv; v >= limit; v += stride) { blk(v); } }
+        }
+        return recv;
+      }
+    }
+    return NUM_MISS;
+  }
+
+  // ── Ruby String catalog ────────────────────────────────────────
+  // Hand-implemented Ruby String methods that either have no JS-native
+  // equivalent (`capitalize`, `chomp`, `chars`, `bytes`, `to_sym`, …) or whose
+  // Ruby semantics DIVERGE from the native (Ruby `sub`/`gsub` are LITERAL
+  // first/all replacement with no regex or back-reference expansion; Ruby
+  // `index` is a rune index; Ruby `reverse` is rune-aware and, unlike arrays,
+  // has no JS-native String method at all).  Dispatched by an EXPLICIT `switch`
+  // on the source-derived `name` — never `recv[name]` — ahead of the native
+  // allowlist, so the already-aliased natives (`upcase`→`toUpperCase`, …) still
+  // fall through on `STR_MISS`.  `STRING_METHODS` mirrors these labels for an
+  // honest `respond_to?`.
+  const STR_MISS = Symbol("str-miss");
+  const STRING_METHODS = new Set([
+    "capitalize", "chomp", "chars", "bytes", "sub", "gsub", "to_i", "to_f",
+    "to_sym", "to_s", "empty?", "index", "reverse", "size",
+  ]);
+  // Ruby `String#to_i` / `#to_f`: parse a LEADING numeric prefix (optional
+  // sign, digits, and — for to_f — a fractional/exponent part), yielding 0 when
+  // there is no numeric prefix.  Never raises (the lenient OO floor).
+  function strToI(s) {
+    const m = /^[+-]?\d+/.exec(s.trimStart());
+    return m ? Math.trunc(Number(m[0])) : 0;
+  }
+  function strToF(s) {
+    const m = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?/.exec(s.trimStart());
+    return m ? Number(m[0]) : 0;
+  }
+  function stringMethod(recv, name, args) {
+    switch (name) {
+      case "to_s": return recv;
+      case "empty?": return recv.length === 0;
+      case "size": return [...recv].length; // rune count, mirrors Ruby length
+      case "reverse": return [...recv].reverse().join("");
+      case "chars": return [...recv];
+      case "bytes": {
+        // Raw UTF-8 byte values as integers (Ruby `String#bytes`).
+        const enc = new TextEncoder().encode(recv);
+        return Array.from(enc, (b) => b);
+      }
+      case "to_i": return strToI(recv);
+      case "to_f": return strToF(recv);
+      case "to_sym": return new Sym(recv);
+      case "capitalize": {
+        // First character upcased, the rest downcased; rune-aware so a leading
+        // multibyte char is not split.
+        const cps = [...recv];
+        if (cps.length === 0) { return ""; }
+        return cps[0].toUpperCase() + cps.slice(1).join("").toLowerCase();
+      }
+      case "chomp": {
+        // With an explicit separator, drop exactly that trailing suffix once;
+        // otherwise drop one trailing "\r\n", "\n", or "\r".
+        if (args.length > 0) {
+          const sep = args[0];
+          if (typeof sep === "string") {
+            return sep !== "" && recv.endsWith(sep)
+              ? recv.slice(0, recv.length - sep.length) : recv;
+          }
+          return recv;
+        }
+        if (recv.endsWith("\r\n")) { return recv.slice(0, -2); }
+        if (recv.endsWith("\n") || recv.endsWith("\r")) { return recv.slice(0, -1); }
+        return recv;
+      }
+      case "index": {
+        // Rune index of the first occurrence of the substring, or nil.
+        if (args.length > 0 && typeof args[0] === "string") {
+          const bi = recv.indexOf(args[0]);
+          if (bi < 0) { return null; }
+          return [...recv.slice(0, bi)].length; // byte offset → rune count
+        }
+        return null;
+      }
+      case "sub": {
+        // LITERAL replacement of the FIRST occurrence (no regex / no `$&`/`\1`).
+        if (args.length >= 2 && typeof args[0] === "string" && typeof args[1] === "string") {
+          const bi = recv.indexOf(args[0]);
+          if (bi < 0) { return recv; }
+          return recv.slice(0, bi) + args[1] + recv.slice(bi + args[0].length);
+        }
+        return recv;
+      }
+      case "gsub": {
+        // LITERAL replacement of ALL occurrences.  `split(from).join(to)` is
+        // verbatim (no regex), matching Ruby's string-argument `gsub`.
+        if (args.length >= 2 && typeof args[0] === "string" && typeof args[1] === "string") {
+          if (args[0] === "") { return recv; }
+          return recv.split(args[0]).join(args[1]);
+        }
+        return recv;
+      }
+    }
+    return STR_MISS;
+  }
+
+  // ── Ruby Hash catalog (`Map` receiver) ─────────────────────────
+  // A Ruby Hash is a JS `Map` (insertion-ordered).  Hand-implemented by an
+  // EXPLICIT `switch` on the source-derived `name` (never `recv[name]`) ahead of
+  // the native allowlist — Ruby's `keys`/`values`/`to_a` must return real
+  // Arrays (native `Map.keys()` yields a lazy iterator, not a Ruby Array), and
+  // `each`/`merge`/`dig`/`invert`/… have no faithful native equivalent.  Value
+  // comparison (`has_value?`/`invert`) uses `===`: exact for primitives,
+  // strings, and interned symbols — the v0 floor (deep-equal of nested values
+  // is a follow-up).  `HASH_METHODS` mirrors these labels for `respond_to?`.
+  const HASH_MISS = Symbol("hash-miss");
+  const HASH_METHODS = new Set([
+    "keys", "values", "size", "length", "empty?", "has_key?", "key?",
+    "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
+    "invert", "delete", "store", "each", "each_pair", "map", "select",
+    "filter", "reject",
+  ]);
+  function hashMethod(recv, name, args) {
+    switch (name) {
+      case "keys": return [...recv.keys()];
+      case "values": return [...recv.values()];
+      case "size": case "length": return recv.size;
+      case "empty?": return recv.size === 0;
+      case "has_key?": case "key?": case "include?": case "member?":
+        return recv.has(args[0]);
+      case "has_value?": case "value?": {
+        for (const v of recv.values()) { if (v === args[0]) { return true; } }
+        return false;
+      }
+      case "to_a": {
+        // Array of `[key, value]` two-element Arrays, in insertion order.
+        const out = [];
+        for (const [k, v] of recv) { out.push([k, v]); }
+        return out;
+      }
+      case "merge": {
+        // Non-mutating: a fresh Map with `other`'s entries overlaid (last wins).
+        const out = new Map(recv);
+        if (args[0] instanceof Map) { for (const [k, v] of args[0]) { out.set(k, v); } }
+        return out;
+      }
+      case "dig": {
+        // Walk one key per argument, nil the moment a level is missing; a
+        // non-diggable intermediate stops the walk.
+        let cur = recv;
+        for (const k of args) {
+          if (cur instanceof Map) { cur = cur.has(k) ? cur.get(k) : null; }
+          else if (Array.isArray(cur) && typeof k === "number") { cur = cur[k] ?? null; }
+          else { return null; }
+          if (cur === null) { return null; }
+        }
+        return cur;
+      }
+      case "invert": {
+        const out = new Map();
+        for (const [k, v] of recv) { out.set(v, k); }
+        return out;
+      }
+      case "delete": {
+        // Ruby `delete` MUTATES and returns the removed value (nil if absent).
+        if (recv.has(args[0])) { const v = recv.get(args[0]); recv.delete(args[0]); return v; }
+        return null;
+      }
+      case "store": {
+        // Ruby `store(k, v)` (alias `[]=`): mutates, returns the value.
+        recv.set(args[0], args[1]);
+        return args[1];
+      }
+      case "each": case "each_pair": {
+        // Yields (key, value); returns the receiver.
+        const blk = args[args.length - 1];
+        if (typeof blk === "function") { for (const [k, v] of recv) { blk(k, v); } }
+        return recv;
+      }
+      case "map": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return []; }
+        const out = [];
+        for (const [k, v] of recv) { out.push(blk(k, v)); }
+        return out;
+      }
+      case "select": case "filter": case "reject": {
+        // Ruby `select`/`reject` return a new Hash of the kept pairs.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const keepWhenTruthy = name !== "reject";
+        const out = new Map();
+        for (const [k, v] of recv) {
+          const t = truthy(blk(k, v));
+          if (keepWhenTruthy ? t : !t) { out.set(k, v); }
+        }
+        return out;
+      }
+    }
+    return HASH_MISS;
   }
 
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
@@ -688,6 +924,28 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       const b = boolMethod(recv, name, args);
       if (b !== BOOL_MISS) { return b; }
     }
+    // Ruby Numeric catalog on a `number` receiver — explicit-switch dispatch
+    // (no `recv[name]`) ahead of the native allowlist, so `gcd`/`digits`/
+    // `upto`/… resolve while `toString`/`toFixed` still fall through below.
+    if (typeof recv === "number") {
+      const nm = numericMethod(recv, name, args);
+      if (nm !== NUM_MISS) { return nm; }
+    }
+    // Ruby String catalog on a `string` receiver — explicit-switch dispatch (no
+    // `recv[name]`) ahead of the native allowlist, so `capitalize`/`gsub`/… and
+    // the semantics-diverging cases resolve while `toUpperCase`/`split`/… still
+    // fall through below via the alias table.
+    if (typeof recv === "string") {
+      const sm = stringMethod(recv, name, args);
+      if (sm !== STR_MISS) { return sm; }
+    }
+    // Ruby Hash catalog on a `Map` receiver — explicit-switch dispatch (no
+    // `recv[name]`) ahead of the native allowlist, so `keys`/`values`/`to_a`
+    // return real Arrays and `each`/`merge`/`dig`/… resolve faithfully.
+    if (recv instanceof Map) {
+      const hm = hashMethod(recv, name, args);
+      if (hm !== HASH_MISS) { return hm; }
+    }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
     if (name === "length" && args.length === 0) { return recv.length; }
@@ -736,79 +994,6 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       }
       // A `.fetch` on any other receiver has no Ruby-collection meaning
       // here; fall through to the unknown-method NoMethodError below.
-    }
-    // ── Ruby Array collection methods NOT native to JS arrays ─────
-    // `sum`/`min`/`max`/`uniq`/`flatten`/`compact`/`each_with_index`/`to_a`
-    // are everyday Ruby `Array` methods with NO 1:1 native JS equivalent (JS
-    // has `Math.min`/`.flat`/… but their semantics diverge — `flat` is
-    // shallow-by-default, `Math.min([])` is `Infinity` not `nil`, there is no
-    // native `uniq`/`compact`/`sum`/`each_with_index`).  So — exactly like
-    // `.fetch` above — they are handled HERE, ahead of the native-method
-    // allowlist, as EXPLICIT Ruby-semantic special cases.  Dispatch is a
-    // fixed `name ===` test on an `Array.isArray(recv)` receiver: never
-    // `recv[name]`, `eval`, or reflection on the source-derived name, so the
-    // RCE-hardened allowlist gate below is completely untouched (a name like
-    // `constructor` still falls through to it and is rejected).
-    if (Array.isArray(recv)) {
-      // `sum` — numeric sum; empty → 0 (or the seed).  A seed arg (`sum(s)`)
-      // is the starting accumulator, matching Ruby.  We fold through the
-      // runtime's polymorphic `plus`, so int/float promotion (and, per Ruby,
-      // string/array concat when a matching seed is given) is consistent with
-      // `+` everywhere else.
-      if (name === "sum") {
-        let acc = args.length >= 1 ? args[0] : 0;
-        for (const el of recv) { acc = plus(acc, el); }
-        return acc;
-      }
-      // `min` / `max` — element-wise extreme by the SIR `<` order (the same
-      // comparison the `"<"` builtin uses: native `<` on numbers/strings).
-      // An EMPTY array has no extreme → `nil` (null), matching Ruby.
-      if (name === "min" || name === "max") {
-        if (recv.length === 0) { return null; }
-        let best = recv[0];
-        for (let i = 1; i < recv.length; i++) {
-          const el = recv[i];
-          // `max` keeps the larger, `min` the smaller.  Strict `<` so an
-          // equal element does not displace the earlier one (stable).
-          if (name === "max" ? best < el : el < best) { best = el; }
-        }
-        return best;
-      }
-      // `uniq` — first-occurrence dedup by SIR VALUE equality (`sirEqual`),
-      // into a FRESH array (no mutation / aliasing of the receiver).  A later
-      // element equal to one already kept is dropped.
-      if (name === "uniq") {
-        const out = [];
-        for (const el of recv) {
-          if (!out.some((k) => sirEqual(k, el))) { out.push(el); }
-        }
-        return out;
-      }
-      // `flatten` — DEEP recursive flatten into a FRESH array, cycle-guarded
-      // (a self-referential array raises ArgumentError rather than looping).
-      if (name === "flatten") {
-        return flattenDeep(recv, [], new Set());
-      }
-      // `compact` — a NEW array with the nils (null / undefined) removed.
-      if (name === "compact") {
-        return recv.filter((el) => el !== null && el !== undefined);
-      }
-      // `each_with_index` — apply the trailing block Closure with
-      // `(element, index)` for each element, in order, and return the
-      // RECEIVER (Ruby returns self).  A block-less call returns the receiver
-      // too (Ruby returns an Enumerator; v0 floor).  The block arrives as the
-      // last RAW arg (an un-unwrapped `Closure`), invoked via `applyClosure`.
-      if (name === "each_with_index") {
-        const block = rawArgs[rawArgs.length - 1];
-        if (block instanceof Closure) {
-          for (let i = 0; i < recv.length; i++) {
-            applyClosure(block, [recv[i], i]);
-          }
-        }
-        return recv;
-      }
-      // `to_a` on an array is the identity (returns self), matching Ruby.
-      if (name === "to_a") { return recv; }
     }
     // Normalise a differently-spelled Ruby method name to its JS-native
     // equivalent (`upcase` → `toUpperCase`).  Unknown names pass through
@@ -1468,44 +1653,6 @@ mod tests {
         // SirInstance, the allowlist for a primitive) — not a probe of recv[name].
         assert!(RUNTIME.contains("resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"));
         assert!(RUNTIME.contains("METHOD_ALLOWLIST.has(native)"));
-    }
-
-    #[test]
-    fn runtime_defines_ruby_array_collection_methods() {
-        // Parity fill: the Ruby Array methods with NO 1:1 native JS equivalent
-        // (`sum`/`min`/`max`/`uniq`/`flatten`/`compact`/`each_with_index`/`to_a`)
-        // are special-cased in `callMethod`, ahead of the native allowlist, on
-        // an `Array.isArray(recv)` receiver.  Each name must be recognised.
-        assert!(RUNTIME.contains(r#"if (name === "sum")"#));
-        assert!(RUNTIME.contains(r#"if (name === "min" || name === "max")"#));
-        assert!(RUNTIME.contains(r#"if (name === "uniq")"#));
-        assert!(RUNTIME.contains(r#"if (name === "flatten")"#));
-        assert!(RUNTIME.contains(r#"if (name === "compact")"#));
-        assert!(RUNTIME.contains(r#"if (name === "each_with_index")"#));
-        assert!(RUNTIME.contains(r#"if (name === "to_a")"#));
-
-        // The helpers the special-cases reuse.
-        assert!(RUNTIME.contains("function sirEqual("));
-        assert!(RUNTIME.contains("function flattenDeep("));
-
-        // SECURITY: dispatch is a fixed `name ===` test on `Array.isArray`,
-        // NEVER a reflective `recv[name]` / eval on the source-derived name —
-        // the RCE-hardened allowlist gate is untouched.
-        assert!(!RUNTIME.contains("new Function("));
-        assert!(!RUNTIME.contains("eval("));
-
-        // `sum` folds through the polymorphic `plus` (int/float promotion).
-        assert!(RUNTIME.contains("acc = plus(acc, el);"));
-        // `min`/`max` floor an empty array to `nil` (null), matching Ruby.
-        assert!(RUNTIME.contains("if (recv.length === 0) { return null; }"));
-        // `uniq` dedups by SIR VALUE equality, not JS `===` on references.
-        assert!(RUNTIME.contains("!out.some((k) => sirEqual(k, el))"));
-        // `flatten` is cycle-guarded: a self-referential array raises a typed,
-        // rescuable ArgumentError rather than looping forever (CWE-674).
-        assert!(RUNTIME.contains(r#"raiseError("ArgumentError", "tried to flatten recursive array")"#));
-        // `each_with_index` invokes the trailing Closure block with (el, i) and
-        // returns the receiver.
-        assert!(RUNTIME.contains("applyClosure(block, [recv[i], i]);"));
     }
 
     #[test]

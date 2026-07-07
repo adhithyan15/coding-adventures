@@ -1,5 +1,60 @@
 # Changelog — `lang-aot`
 
+## 0.182.0 — 2026-07-07 — BA string INPUT: WASM column — `INPUT A$` on ALL SEVEN backends
+
+The final column. The `INPUT A$` matrix cell now runs on **all seven backends**
+`[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit]` (stdin `"OK"` → `OK`).
+
+- **WASM** (`iir-to-wasm` 0.31.0): `call_builtin "input_str"` bump-allocates a
+  `[i32 len][256 bytes]` block and calls `env.__input_str(block, max) -> ()`.
+- **Harness** (`run_wasm`): new `InputStrFunc` host resolves that import — it drains
+  one line from the shared stdin buffer and writes the `[i32 len][bytes]` block into
+  wasm linear memory (`store_i32` header + `store_i32_8` bytes), capped at `max`.
+  Registered next to `InputI64Func`/`PrintStrFunc`. Run-verified in-process locally.
+
+This completes the E4-dyn BASIC string `INPUT A$` arc across all four PRs (VM/JIT →
+JVM/CLR → native/LLVM → WASM).
+
+## 0.181.0 — 2026-07-07 — BA string INPUT: static columns (NativeAot + LLVM)
+
+The `INPUT A$` matrix cell (`10 INPUT A$ / 20 PRINT A$ / 30 END`, stdin `"OK"` →
+`OK`) gains its two **static** columns, so it now runs on `[NativeAot, Llvm, Jvm,
+Clr, Vm, Jit]` — 6 of 7 backends (WASM remains). On the static backends a `str`
+is an i64 handle to a `[i64 len][bytes]` heap block, so both columns gain a host
+primitive that BUILDS such a block from the input line:
+
+- **NativeAot** (`twig-aot` 0.29.0): `__twig_input_str()` in `twig_runtime.c`;
+  the aarch64 (0.21.0) / x86_64 (0.22.0) tables add it as a 0-arg/returns-i64
+  `V1_BUILTINS` entry (no codegen change). Run-verified locally on aarch64.
+- **LLVM** (`iir-to-llvm` 0.32.0): `call_builtin "input_str"` → `call i64
+  @__twig_input_str()`; also fixes a latent declare-guard bug that omitted the
+  input helpers. The harness `run_llvm` C shim (`PRINT_RUNTIME_C`) gains a
+  self-contained `__twig_input_str` (malloc-backed) and links it when the IR
+  references it. Run-verified locally via real `clang`.
+
+WASM (`env.__input_str` writing the block into linear memory) is the last column.
+
+## 0.180.0 — 2026-07-06 — BA string INPUT: managed columns (JVM + CLR)
+
+The `INPUT A$` matrix cell (`10 INPUT A$ / 20 PRINT A$ / 30 END`, stdin `"OK"` →
+`OK`) gains its two **managed** columns, so it now runs on `[Jvm, Clr, Vm, Jit]`.
+Neither needed a new value model — `str` is already a host string object on both —
+only a read-a-line host primitive returning that native string, mirroring numeric
+`input_i64`'s `readLong` / `ReadLine`+`Int32.Parse`.
+
+- **JVM** (`iir-to-jvm-class-file` 0.29.0): the validator now accepts a `str`
+  result on `call_builtin`/`mov`; `input_str` lowers to `invokestatic
+  env/BasicRuntime.readLine()Ljava/lang/String;` + `astore`. The harness
+  `BASIC_RUNTIME_JAVA` gains a `readLine()` method (reads to newline/EOF, returns
+  the line). Run-verified locally via real `javac`/`java`.
+- **CLR** (`iir-to-cil-bytecode` 0.38.0): `input_str` lowers to `call string
+  System.Console::ReadLine()` (no `Int32.Parse`), stored into the `System.String`
+  local. Verified on the CLR column via real `ilasm`/`dotnet` in CI.
+
+Wiring the static columns (native/LLVM `__twig_input_str` returning a `[i64
+len][bytes]` heap handle; WASM `env.__input_str` writing into linear memory) is
+the next slice of this arc.
+
 ## 0.179.0 — 2026-07-06 — BA string INPUT: `INPUT A$` reads a runtime string (VM/JIT)
 
 A new Dartmouth BASIC matrix cell — `10 INPUT A$ / 20 PRINT A$ / 30 END` — proves

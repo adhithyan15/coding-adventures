@@ -2359,17 +2359,38 @@ const PROGRAMS: &[Prog] = &[
     // then `mov`s the runtime handle into the `$`-variable's string slot; `PRINT A$`
     // consumes that slot through the shared E4 `print_str` op. This is the first
     // matrix proof that a runtime string can *originate at the input boundary*.
-    // It runs today on the already-dynamic VM/JIT columns (a tagged `Value::Str`
-    // read from the shared stdin buffer by the registered `input_str` closure);
-    // wiring the four subprocess/WASM columns' host read-a-line primitive
-    // (`__twig_input_str` / `env.__input_str` / `readLine` / `Console.ReadLine`)
-    // is the next slice of this arc. Stdin "OK\n" → A$ = "OK" → prints "OK".
+    // It runs on the dynamic VM/JIT columns (a tagged `Value::Str` read from the
+    // shared stdin buffer by the registered `input_str` closure) and the two
+    // **managed** columns whose `str` is already a host string object:
+    //   • JVM — `env.BasicRuntime.readLine()Ljava/lang/String;` returns a
+    //     `java.lang.String`, which is exactly how `str` is carried on the JVM
+    //     (`iir_type_to_jvm("str") = Ref`); the reference `astore`s into the slot.
+    //   • CLR — `System.Console.ReadLine()` returns a `System.String`, which is the
+    //     CLR representation of a `str` local; it stores straight in.
+    // The managed columns (JVM/CLR) needed no new value-model — only a read-a-line
+    // host primitive returning the backend's native string. The **static** columns
+    // (NativeAot, Llvm) carry a `str` as an i64 **handle** — the base address of a
+    // length-prefixed `[i64 len][bytes]` heap block (the same repr `str_eq` /
+    // `print_str` already read) — so they gain a host primitive that BUILDS such a
+    // block from the input line:
+    //   • NativeAot — `__twig_input_str()` in `twig_runtime.c` reads a line and
+    //     returns a handle to a fresh `alloc_bytes` block; the aarch64/x86_64
+    //     backends add it to their `V1_BUILTINS` table (0-arg / returns-i64, the
+    //     exact shape of `input_i64` — the returned pointer rides x0/RAX), so NO
+    //     new codegen. `print_str` reads the header length at run time.
+    //   • Llvm — the same `@__twig_input_str()` from the AOT archive; `iir-to-llvm`
+    //     lowers `call_builtin "input_str"` to `call i64 @__twig_input_str()` and
+    //     carries the handle as an i64 (str→i64 at boundaries, E4d-2b).
+    // WASM (E4d): `env.__input_str(block, max)` writes the whole `[i32 len][bytes]`
+    // block into linear memory; iir-to-wasm bump-allocates the block from
+    // `__array_bump` and passes its base. With this column BASIC string `INPUT A$`
+    // runs on **all seven backends**. Stdin "OK\n" → A$ = "OK" → prints "OK".
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -2537,12 +2558,17 @@ fn clang_ok() -> bool {
 /// when the emitted `.ll` actually references one of the symbols, so the bare
 /// expression-language programs still link a standalone `.ll`.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\n\
+    "#include <stdio.h>\n#include <stdint.h>\n#include <stdlib.h>\n#include <string.h>\n\
 void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
 void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n\
 int64_t __twig_input_i64(void){char buf[64];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<63){buf[i++]=(char)c;}buf[i]=0;\
-long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n";
+long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n\
+int64_t __twig_input_str(void){char buf[4096];int i=0;int c;\
+while((c=getchar())!=EOF&&c!='\\n'&&i<4095){buf[i++]=(char)c;}\
+int64_t* h=(int64_t*)malloc(8+(size_t)i);if(!h)return 0;\
+h[0]=(int64_t)i;if(i>0)memcpy((char*)h+8,buf,(size_t)i);\
+return (int64_t)(intptr_t)h;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
@@ -2574,7 +2600,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
     // Link the generic I/O runtime iff the program actually uses print or input.
-    if ll.contains("@__print_i64") || ll.contains("@__print_str") || ll.contains("@__twig_input_i64") {
+    if ll.contains("@__print_i64") || ll.contains("@__print_str")
+        || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
@@ -2807,6 +2834,71 @@ impl wasm_execution::HostFunction for InputI64Func {
     }
 }
 
+/// `env.__input_str(i32 block, i32 max) -> ()` — WASM host import for BASIC string
+/// `INPUT A$` (E4-dyn). Drains one line from the stdin buffer (bytes up to the next
+/// `\n`, newline consumed but not stored) and writes the WHOLE runtime-string block
+/// `[i32 len][bytes]` into linear memory at `block`: an `i32` length header
+/// (`store_i32`) then the bytes (`store_i32_8`). The length is capped at `max` (the
+/// codegen reserved a `[i32 len][max bytes]` region); a longer line is truncated —
+/// the V1 permissive contract. The handle the module keeps is `block`; `print_str`
+/// reads the length back with `i32.load` at it. The wasm sibling of the native
+/// `__twig_input_str` C helper.
+struct InputStrFunc {
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+}
+
+impl wasm_execution::HostFunction for InputStrFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32, wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let block = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__input_str: missing block ptr"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        let max = args.get(1)
+            .ok_or_else(|| wasm_execution::TrapError::new("__input_str: missing max"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        if block < 0 || max < 0 {
+            return Err(wasm_execution::TrapError::new("__input_str: negative block/max"));
+        }
+        let memory = memory
+            .ok_or_else(|| wasm_execution::TrapError::new("__input_str: no linear memory"))?;
+        let base = usize::try_from(block)
+            .map_err(|_| wasm_execution::TrapError::new("__input_str: block overflow"))?;
+        // Drain one line from the shared stdin buffer.
+        let mut line = Vec::new();
+        {
+            let mut buf = self.input.lock().expect("lang-matrix wasm stdin buffer poisoned");
+            loop {
+                match buf.pop_front() {
+                    None | Some(b'\n') => break,
+                    Some(b) => line.push(b),
+                }
+            }
+        }
+        // Cap at `max` (the codegen reserved [i32 len][max bytes]); truncate a longer line.
+        let len = line.len().min(max as usize);
+        // Length header (i32) then the bytes.
+        memory.store_i32(base, len as i32)?;
+        for (i, &b) in line.iter().take(len).enumerate() {
+            memory.store_i32_8(base + 4 + i, b as i32)?;
+        }
+        Ok(vec![])
+    }
+}
+
 // AL8 transcendentals — stateless `HostFunction` adapters for `env.__sin`,
 // `env.__cos`, `env.__ln`, `env.__exp`.  Each takes one f64 and returns one f64,
 // delegating to Rust's `f64::*` methods (which call the platform libm).
@@ -3015,6 +3107,11 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "__input_i64") => Some(Box::new(InputI64Func {
                 input: std::sync::Arc::clone(&self.input),
             })),
+            // E4-dyn: `env.__input_str` reads a line and writes a `[i32 len][bytes]`
+            // block into linear memory; used by BASIC string `INPUT A$`.
+            ("env", "__input_str") => Some(Box::new(InputStrFunc {
+                input: std::sync::Arc::clone(&self.input),
+            })),
             // AL8 transcendentals: env.__sin/cos/ln/exp are f64→f64 host imports.
             ("env", "__sin")  => Some(Box::new(SinFunc)),
             ("env", "__cos")  => Some(Box::new(CosFunc)),
@@ -3131,7 +3228,14 @@ while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
 String s = sb.toString().trim(); \
 if(s.isEmpty()) return 0L; \
 return Long.parseLong(s); \
-} catch(Exception e){ return 0L; } } }";
+} catch(Exception e){ return 0L; } } \
+public static String readLine(){ try { \
+java.io.InputStream in = System.in; \
+StringBuilder sb = new StringBuilder(); \
+int c; \
+while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
+return sb.toString(); \
+} catch(Exception e){ return \"\"; } } }";
 
 /// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
 /// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +

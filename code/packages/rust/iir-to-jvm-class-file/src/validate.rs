@@ -109,7 +109,9 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // McCarthy W4 (F3–F5): the lisp predicates — `pair?` (instanceof Object[]),
     // `not` (logical not), `equal?` (unbox + if_icmpeq).
     // `input_i64`: BASIC `INPUT X` — reads a long from stdin via `BasicRuntime.readLong()J`.
-    &["putchar", "getchar", "print_i64", "input_i64", "pair?", "not", "equal?"];
+    // `input_str`: BASIC string `INPUT A$` (E4-dyn) — reads a whole line as a
+    //   `java.lang.String` via `BasicRuntime.readLine()Ljava/lang/String;`.
+    &["putchar", "getchar", "print_i64", "input_i64", "input_str", "pair?", "not", "equal?"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///
@@ -294,12 +296,20 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
+                    // `call_builtin`: a `str`-returning host builtin — BASIC's string
+                    //   `INPUT A$` (`input_str` → `BasicRuntime.readLine()`), the string
+                    //   sibling of `input_i64`. The `str` result is a `java.lang.String`.
+                    // `mov`: copy a `str` value between reference slots — the string
+                    //   `INPUT` temp moves into the `$`-variable's slot; a plain
+                    //   reference `astore`/`aload` carries it (see `lower_mov`).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
+                        | "call_builtin" | "mov"
                 )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const, str_concat, str_slice literals and str call/ret are supported in this JVM backend",
+                     only str_const, str_concat, str_slice literals, str call/ret, \
+                     str call_builtin (input_str) and str mov are supported in this JVM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -903,6 +913,30 @@ mod tests {
         assert!(
             errs.iter().all(|e| !e.contains("UnsupportedOp")),
             "call_builtin \"getchar\" should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    /// E4-dyn: BASIC string `INPUT A$` lowers to a `str`-typed `call_builtin
+    /// "input_str"` (`BasicRuntime.readLine()`) followed by a `str`-typed `mov`
+    /// into the string slot. Both must clear the whitelist AND the `str`-type
+    /// gate — a `str` result on `call_builtin`/`mov` was previously rejected.
+    #[test]
+    fn call_builtin_input_str_and_str_mov_accepted() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("t".into()),
+                vec![Operand::Var("input_str".into())],
+                "str",
+            ),
+            IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t".into())], "str"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.iter()
+                .all(|e| !e.contains("UnsupportedOp") && !e.contains("UnsupportedType")),
+            "str call_builtin \"input_str\" + str mov should be accepted; got: {:?}",
             errs
         );
     }

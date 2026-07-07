@@ -922,6 +922,7 @@ fn emit_instr(
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
     input_i64_fn_idx: Option<u32>,
+    input_str_fn_idx: Option<u32>,
     sin_fn_idx: Option<u32>,
     cos_fn_idx: Option<u32>,
     ln_fn_idx: Option<u32>,
@@ -2868,6 +2869,50 @@ fn emit_instr(
                     code.extend(encode_call(fn_idx));
                     code.extend(encode_local_set(rd));
                 }
+                // E4-dyn: BASIC string `INPUT A$`. `input_str` reads a whole line as
+                // a runtime string. On WASM a `str` value is an i32 **handle** — the
+                // linear-memory offset of a `[i32 len][bytes]` block. We bump-allocate
+                // a `[i32 len][MAX bytes]` region from `__array_bump` (its base is the
+                // handle), then call `env.__input_str(block, MAX)` which fills the
+                // whole block (length header + bytes). `print_str` later reads the
+                // length via `i32.load` at the handle. Single `call` — the host owns
+                // the memory writes, so no `i32.store` here.
+                //   Shape: srcs[0]=Var("input_str"), dest=Some(varname)
+                "input_str" => {
+                    // Cap the line at 256 bytes: the module's linear memory is a
+                    // single fixed 64 KiB page (`min=max=1`), and each block is never
+                    // freed (bump-only), so a large MAX would exhaust the page after a
+                    // few reads. 256 covers a BASIC input line; a longer line is
+                    // truncated (V1 permissive contract).
+                    const INPUT_STR_MAX: i32 = 256;
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"input_str\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let fn_idx = input_str_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"input_str\": no env.__input_str import registered (internal error)".to_string(),
+                    })?;
+                    let bump = *global_map.get(ARRAY_BUMP_GLOBAL).ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"input_str\" (missing __array_bump global)".to_string(),
+                    })?;
+                    // handle (dest, i32) = wrap(current bump).
+                    code.extend(encode_global_get(bump));
+                    code.extend(encode_i32_wrap_i64());
+                    code.extend(encode_local_set(rd));
+                    // bump = bump + (4 + MAX).
+                    code.extend(encode_global_get(bump));
+                    code.extend(encode_i64_const((4 + INPUT_STR_MAX) as i64));
+                    code.push(I64_ADD);
+                    code.extend(encode_global_set(bump));
+                    // env.__input_str(block=handle, max=MAX) — host fills the block.
+                    code.extend(encode_local_get(rd));
+                    code.extend(encode_i32_const(INPUT_STR_MAX));
+                    code.extend(encode_call(fn_idx));
+                    // rd already holds the handle; nothing left on the stack.
+                }
                 // G2: `print_i64` reuses the same `env.__print_i64`
                 // host import the `io_out` opcode injects.  Lowering
                 // is identical to `io_out`: load the i64 argument from
@@ -3052,6 +3097,7 @@ fn lower_function(
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
     input_i64_fn_idx: Option<u32>,
+    input_str_fn_idx: Option<u32>,
     sin_fn_idx: Option<u32>,
     cos_fn_idx: Option<u32>,
     ln_fn_idx: Option<u32>,
@@ -3169,6 +3215,7 @@ fn lower_function(
                     putchar_fn_idx,
                     getchar_fn_idx,
                     input_i64_fn_idx,
+                    input_str_fn_idx,
                     sin_fn_idx,
                     cos_fn_idx,
                     ln_fn_idx,
@@ -3238,6 +3285,7 @@ fn lower_function(
                 putchar_fn_idx,
                 getchar_fn_idx,
                 input_i64_fn_idx,
+                input_str_fn_idx,
                 sin_fn_idx,
                 cos_fn_idx,
                 ln_fn_idx,
@@ -3340,6 +3388,10 @@ struct ModuleFeatures {
     uses_putchar: bool,
     uses_getchar: bool,
     uses_input_i64: bool,
+    /// True when the module calls `call_builtin "input_str"` (BASIC string
+    /// `INPUT A$`). Triggers injection of the `env.__input_str(i32,i32) -> i32`
+    /// host import (fills a linear-memory buffer with the line, returns its length).
+    uses_input_str: bool,
     /// True when the module calls `f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/`f64_tan`.
     /// Triggers injection of the corresponding host imports (`env.__sin` etc.,
     /// each `f64 -> f64`).  WASM has no built-in transcendental opcodes; these
@@ -3382,6 +3434,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_putchar = false;
     let mut uses_getchar = false;
     let mut uses_input_i64 = false;
+    let mut uses_input_str = false;
     let mut uses_f64_sin  = false;
     let mut uses_f64_cos  = false;
     let mut uses_f64_ln   = false;
@@ -3605,6 +3658,19 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                             // BA-INPUT: BASIC `INPUT X` — triggers injection of
                             // `env.__input_i64() -> i64` host import.
                             "input_i64" => uses_input_i64 = true,
+                            // E4-dyn: BASIC string `INPUT A$` — triggers the
+                            // `env.__input_str(i32,i32) -> i32` host import AND (like an
+                            // array op) linear memory + the `__array_bump` global, since
+                            // the lowering bump-allocates the `[i32 len][bytes]` block the
+                            // host fills. A pure INPUT-A$ program has no array op, so this
+                            // is where memory/bump get injected for it.
+                            "input_str" => {
+                                uses_input_str = true;
+                                uses_memory = true;
+                                if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                                    global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                                }
+                            }
                             // Other builtin names are rejected by the
                             // validator before we get here — be defensive
                             // and don't crash on unknown ones at compile time.
@@ -3630,6 +3696,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_putchar,
         uses_getchar,
         uses_input_i64,
+        uses_input_str,
         uses_f64_sin,
         uses_f64_cos,
         uses_f64_ln,
@@ -3712,6 +3779,7 @@ pub fn lower_iir_to_wasm(
     let uses_putchar = features.uses_putchar;
     let uses_getchar = features.uses_getchar;
     let uses_input_i64 = features.uses_input_i64;
+    let uses_input_str = features.uses_input_str;
     let uses_f64_sin  = features.uses_f64_sin;
     let uses_f64_cos  = features.uses_f64_cos;
     let uses_f64_ln   = features.uses_f64_ln;
@@ -3743,6 +3811,7 @@ pub fn lower_iir_to_wasm(
     //   2. env.putchar       (if uses_putchar)
     //   3. env.getchar       (if uses_getchar)
     //   4. env.__input_i64   (if uses_input_i64)
+    //   4b. env.__input_str  (if uses_input_str)  — inserted right after input_i64
     //   5. env.__sin         (if uses_f64_sin)
     //   6. env.__cos         (if uses_f64_cos)
     //   7. env.__ln          (if uses_f64_ln)
@@ -3764,6 +3833,9 @@ pub fn lower_iir_to_wasm(
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let input_i64_fn_idx: Option<u32> = if uses_input_i64 {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let input_str_fn_idx: Option<u32> = if uses_input_str {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let sin_fn_idx: Option<u32> = if uses_f64_sin {
@@ -3941,6 +4013,29 @@ pub fn lower_iir_to_wasm(
             type_info: ImportTypeInfo::Function(type_idx),
         });
     }
+    if uses_input_str {
+        // env.__input_str(i32 block, i32 max) -> () — BASIC string `INPUT A$`
+        // (E4-dyn). Reads one line from stdin and writes the WHOLE runtime-string
+        // block `[i32 len][bytes]` into linear memory at `block` (len capped at
+        // `max`) — the same repr `print_str` reads (`i32.load` the header). The
+        // lowering (see `emit_instr`'s `"input_str"` arm) bump-allocates a
+        // `[i32 len][max bytes]` region and passes its base; letting the host write
+        // both the length header and the bytes keeps the codegen a single `call`
+        // (no `i32.store`). The test host in `lang_matrix.rs` resolves this to
+        // `InputStrFunc`, draining the per-program stdin buffer one line at a time
+        // (V1 permissive contract; a longer line is truncated at `max`).
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![],
+        });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__input_str".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
     // ALGOL 60 transcendentals — WASM has no built-in opcodes for sin/cos/log/exp
     // so they are resolved via host imports (env.__sin, etc.).  Each is f64 → f64.
     // The test host in lang_matrix.rs resolves these to Rust's f64::sin() etc.
@@ -4076,7 +4171,7 @@ pub fn lower_iir_to_wasm(
             fn_, &fn_map, lispy_pair_type_idx, &global_map, fn_string_literals,
             fn_runtime_str_vars, fn_runtime_str_blocks,
             print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
-            input_i64_fn_idx,
+            input_i64_fn_idx, input_str_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
             pow_fn_idx,

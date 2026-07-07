@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.32.1] - 2026-07-07
+
+### Added — CLOC12.168 PR3: CodePrinter `import.meta` conformance port
+
+Ports upstream `CodePrinterTest`'s `import.meta` printing cases into
+`tests/upstream/code_printer_import_meta_test.rs` (the twenty-first CodePrinter
+port), isolating `emit_import_meta` + the `PREC_PRIMARY` classification that
+landed with `Expression::ImportMeta` (CLOC12.168 PR1). 6 hand-constructed-AST
+cases: the bare `import.meta`, member object (`import.meta.url`), call argument
+(`f(import.meta)`), member chain (`import.meta.a.b`), method call
+(`import.meta.m()`), and a binary parent (`import.meta+1`) — all print the leaf
+bare, confirming it composes paren-free at primary strength (the internal
+`.meta` is part of the spelling, not a member access). Registered via an
+explicit `[[test]]` entry per CLOC12.01 §3. Test-only; no library change.
+
+
+## [0.32.0] - 2026-07-07
+
+### Added — CLOC12.168: `emit_import_meta` (`import.meta`)
+
+Added `emit_import_meta` + the `Expression::ImportMeta` dispatch arm + the `PREC_PRIMARY` classification for the new `import.meta` module meta-property (the leaf sibling of `new.target`, CLOC12.168 PR1). `import.meta` prints as its literal eleven-character spelling and binds at primary strength — never wrapped in any parent, never forcing a paren around an operand (it has none); the internal `.meta` is part of the spelling, not a member access. 4 hand-constructed-AST unit tests (`import.meta`, `import.meta.url`, `f(import.meta)`, `import.meta+1`). Part of the atomic node PR1 that lands the node + emit + all nine downstream pass arms together. (CLOC12.168)
+
+
+## [0.31.1] - 2026-07-07
+
+### Added — CLOC12.167 PR3: CodePrinter `new.target` conformance port
+
+Ports upstream `CodePrinterTest`'s `new.target` printing cases into
+`tests/upstream/code_printer_new_target_test.rs` (the twentieth CodePrinter
+port), isolating `emit_new_target` + the `PREC_PRIMARY` classification that
+landed with `Expression::NewTarget` (CLOC12.167 PR1). 6 hand-constructed-AST
+tests pin that `new.target` prints as the bare ten-character spelling and, as a
+reserved-word primary, composes without parens in every parent: bare
+(`new.target;`), member object (`new.target.x;`), call argument
+(`f(new.target);`), member chain (`new.target.a.b;`), method call
+(`new.target.m();`), and under a binary parent (`new.target+1;`). Registered as
+`[[test]] upstream_code_printer_new_target`; ATTRIBUTION header mirrors the
+`super` port. Emitter is driven from hand-constructed AST, so the port does not
+depend on the bridge (gap-168 bridge work is CLOC12.167 PR2, exercised in
+`javascript-parser`).
+
 ## [0.31.0] - 2026-07-04
 
 ### Added — CLOC12.167: emit `NewTarget` (`new.target`)

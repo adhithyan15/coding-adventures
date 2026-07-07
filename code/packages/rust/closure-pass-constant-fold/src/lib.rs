@@ -505,6 +505,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         | Expression::ThisExpression(_)
         | Expression::Super(_)
         | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => expr.clone(),
 
         Expression::BinaryExpression(b) => fold_binary(b, st),

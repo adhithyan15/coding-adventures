@@ -142,6 +142,16 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   never touch it. It tags at `PREC_PRIMARY` and the emitter prints the literal
   spelling `new.target`. Node + `closure-emitter` + all pass traversals land in
   one atomic PR; the bridge-enable + conformance port follow.
+- `ImportMeta` (CLOC12.168) — the `import.meta` module meta-property (host
+  metadata about the current module, e.g. `import.meta.url`): the
+  `MetaProperty` sibling of `NewTarget`. `ImportMeta { cv }` — no operand, the
+  same leaf shape as `NewTarget`. Spelled with three tokens (`import` `.`
+  `meta`) in source, but the `.meta` is part of the fixed spelling (not a member
+  access — `import` is a reserved word with no accessible identifier), so it is
+  modelled as an atomic leaf rather than a `MemberExpression`; the renaming
+  passes never touch it. It tags at `PREC_PRIMARY` and the emitter prints the
+  literal spelling `import.meta`. Node + `closure-emitter` + all pass traversals
+  land in one atomic PR; the bridge-enable + conformance port follow.
 
 ## What's coming (follow-up PRs)
 

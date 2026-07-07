@@ -29,6 +29,10 @@ Linear memory is a flat byte array shared with JS; strings cross it as
   `[len: u32 LE][utf8 bytes]` buffer; JS reads the length, then the bytes, then
   frees the whole thing with `dealloc(ptr, 4 + len)`.
 
+The **file** exports (below) use the *same* `[len][bytes]` layout but with raw
+bytes, not UTF-8 — a `.xlsx`/`.xls` is binary, so `read_input_bytes`/`pack_bytes`
+never run the payload through lossy UTF-8 (which would corrupt it).
+
 Every allocation uses an explicit `Layout` with `align = 1`, and `dealloc`
 rebuilds the *same* layout from the `len` JS passes back — so allocation and
 free can never disagree on size (the classic source of unsoundness in
@@ -41,6 +45,16 @@ documented inline.
 — one per [`SpreadsheetSession`](../spreadsheet-core-wasm) method. A single
 global session lives in thread-local storage (WASM is single-threaded);
 `reset` starts a fresh sheet.
+
+**File open / save (bytes in, bytes out).** `load_xlsx` / `load_xls` /
+`load_csv` / `load_tsv` / `load_json` `(ptr, len) -> u32` read a file's raw bytes
+and replace the current document (`1` = opened, `0` = not a readable file of that
+format — the document is left untouched on failure). `save_xlsx` / `save_xls` /
+`save_csv` / `save_tsv` / `save_json` `() -> *mut u8` serialize the current
+document to that format's bytes, packed `[len][bytes]`. So a host can open the
+file a user picked and download the sheet as any format — every format routed
+through the one engine. `.xlsx` keeps live formulas; the others are
+lower-fidelity per [`spreadsheet-io`](../spreadsheet-io).
 
 ## Building & using
 
