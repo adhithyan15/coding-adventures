@@ -33,16 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic acknowledgement-record summary.
+1. Rust Berkeley Mosaic acknowledgement-record summary digest.
    - Status: current PR completion candidate.
    - Add a Rust-only Berkeley app-deck shell dashboard surface that wraps
      runtime activation receipt journal summary handoff receipt acknowledgement
-     record receipt acknowledgement records into compact summary/status-card
+     record receipt acknowledgement record summaries into compact digest/routing
      payloads for Mosaic and WebAssembly product shells.
-   - Expose native and JSON helpers with stable schema version, summary ID,
-     summarize/defer disposition, summary action, deterministic steps, compact
-     summarized/deferred counts, nested acknowledgement-record payload, and
-     capability metadata.
+   - Expose native and JSON helpers with stable schema version, digest ID,
+     route/hold disposition, digest action, badge label/tone, routing targets,
+     compact notification/count metadata, and capability metadata.
    - Preserve the public Berkeley parser contract and Python/TypeScript parser
      parity while extending the Rust app facade as an app-substrate acceleration
      layer.
@@ -2947,6 +2946,19 @@ the Rust, Python, and TypeScript surfaces together.
    - Cross-language tests lock the passing current dashboard and a negative
      missing-NMOS-`VT0` dashboard row without changing normalization, the
      67-row catalog, the seven-row summary, or the gate semantics.
+
+212. Rust Berkeley Mosaic acknowledgement-record summary.
+   - Status: completed in PR 7700.
+   - Rust `spice-netlist-parser` now exposes Berkeley app-deck shell dashboard
+     acknowledgement-record summary surfaces plus JSON helpers that wrap runtime
+     activation receipt journal summary handoff receipt acknowledgement record
+     receipt acknowledgement records into compact status-card payloads for
+     Mosaic and WebAssembly product shells.
+   - The summary preserves stable schema version, summary ID, summarize/defer
+     disposition, summary action, deterministic steps, compact summarized/
+     deferred counts, nested acknowledgement-record payload, and capability
+     metadata while leaving the public Berkeley parser contract and
+     Python/TypeScript parser parity unchanged.
 
 ## Backlog
 
