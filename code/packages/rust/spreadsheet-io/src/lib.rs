@@ -81,6 +81,9 @@ pub enum IoError {
     /// The delimited-text (CSV/TSV) bytes could not be read — not valid UTF-8,
     /// or malformed CSV structure. Carries the underlying message.
     Csv(String),
+    /// The JSON bytes could not be read — not valid UTF-8, malformed JSON, or a
+    /// top-level shape that isn't tabular. Carries the underlying message.
+    Json(String),
 }
 
 impl std::fmt::Display for IoError {
@@ -89,6 +92,7 @@ impl std::fmt::Display for IoError {
             IoError::Xlsx(msg) => write!(f, "failed to load .xlsx: {msg}"),
             IoError::Xls(msg) => write!(f, "failed to load .xls: {msg}"),
             IoError::Csv(msg) => write!(f, "failed to load CSV/TSV: {msg}"),
+            IoError::Json(msg) => write!(f, "failed to load JSON: {msg}"),
         }
     }
 }
@@ -492,6 +496,244 @@ pub fn save_csv(wb: &Workbook) -> Vec<u8> {
 /// Serialize the first sheet to `.tsv` (tab-delimited). See [`save_delimited`].
 pub fn save_tsv(wb: &Workbook) -> Vec<u8> {
     save_delimited(wb, '\t')
+}
+
+// ===========================================================================
+// JSON (array-of-objects "records") — load & save
+// ===========================================================================
+//
+// JSON has no single canonical spreadsheet shape, so we standardize on the one
+// almost every data API emits: a top-level ARRAY OF OBJECTS ("records"). Each
+// object is a row; each key is a column. That maps cleanly to a one-sheet grid:
+//
+//     [ {"region":"East","sales":200},        region | sales
+//       {"region":"West","sales":340} ]  -->   East   |  200
+//                                              West   |  340
+//
+// Row 1 is the header (the union of keys, in first-seen order); each later row
+// is one record, with a field placed under its key's column (a missing key is a
+// blank cell — records need not be uniform). We also accept the other natural
+// shapes so a hand-written file still round-trips somewhere sensible:
+//
+//   - array of ARRAYS   -> a positional grid (row r, col c), no header
+//   - array of SCALARS  -> a single column
+//   - a single OBJECT   -> header + exactly one record row
+//   - a top-level SCALAR -> a single cell
+//
+// A value that is itself an object or array (a nested structure inside a cell)
+// has no flat spreadsheet meaning, so it is stored as its compact JSON *text* —
+// lossy for editing but faithful for display and re-export.
+//
+// `load_json` uses the panic-free `try_parse_json`: JSON here is UNTRUSTED input
+// (a file, a paste, eventually a browser upload), so malformed bytes must be an
+// `IoError` to handle, never a crash.
+
+use coding_adventures_json_value::{from_ast, JsonNumber, JsonValue};
+use spreadsheet_core::SheetId;
+
+/// Place a value at a 1-based (row, col), skipping blanks and any coordinate
+/// past the u32 address space — a >4-billion-row/col document can't be placed
+/// and is dropped rather than wrapping to a wrong, colliding address.
+fn set_at(wb: &mut Workbook, sheet: SheetId, row: usize, col: usize, value: CellValue) {
+    if value == CellValue::Empty {
+        return;
+    }
+    if let (Ok(r), Ok(c)) = (u32::try_from(row), u32::try_from(col)) {
+        wb.set_value(sheet, CellAddress::new(r, c), value);
+    }
+}
+
+/// Map one JSON value to a cell. Scalars map directly; a nested object/array is
+/// serialized back to compact JSON text (there is no flat cell for a subtree).
+fn json_to_cell(v: &JsonValue) -> CellValue {
+    match v {
+        JsonValue::Null => CellValue::Empty,
+        JsonValue::Bool(b) => CellValue::Boolean(*b),
+        JsonValue::Number(JsonNumber::Integer(i)) => CellValue::Number(*i as f64),
+        JsonValue::Number(JsonNumber::Float(f)) => CellValue::Number(*f),
+        JsonValue::String(s) => CellValue::Text(s.clone()),
+        nested @ (JsonValue::Object(_) | JsonValue::Array(_)) => CellValue::Text(
+            coding_adventures_json_serializer::serialize(nested).unwrap_or_default(),
+        ),
+    }
+}
+
+/// Map one cell's computed value back to a JSON value. A whole-number `Number`
+/// becomes a JSON integer (so `200` re-exports as `200`, not `200.0`); a
+/// fractional or non-finite one stays a float. Errors export as their display
+/// text (there is no JSON error literal).
+fn cell_to_json(v: CellValue) -> JsonValue {
+    match v {
+        CellValue::Empty => JsonValue::Null,
+        CellValue::Boolean(b) => JsonValue::Bool(b),
+        CellValue::Number(n) => {
+            if n.fract() == 0.0 && n.is_finite() && n >= i64::MIN as f64 && n <= i64::MAX as f64 {
+                JsonValue::Number(JsonNumber::Integer(n as i64))
+            } else {
+                JsonValue::Number(JsonNumber::Float(n))
+            }
+        }
+        CellValue::Text(s) => JsonValue::String(s),
+        CellValue::Error(e) => JsonValue::String(e.display().to_string()),
+    }
+}
+
+/// Load JSON bytes into a one-sheet [`Workbook`] named `Sheet1`, interpreting a
+/// top-level array of objects as records (see the module-level shape table).
+///
+/// # Errors
+///
+/// [`IoError::Json`] if the bytes are not valid UTF-8, are malformed JSON, or
+/// the AST cannot be lowered to a value.
+pub fn load_json(bytes: &[u8]) -> Result<Workbook, IoError> {
+    let text = std::str::from_utf8(bytes).map_err(|e| IoError::Json(e.to_string()))?;
+    let ast = coding_adventures_json_parser::try_parse_json(text).map_err(IoError::Json)?;
+    let value = from_ast(&ast).map_err(|e| IoError::Json(e.message))?;
+
+    let mut wb = Workbook::new();
+    let sheet = wb.add_sheet("Sheet1");
+
+    match &value {
+        // Array of objects — the canonical "records" table.
+        JsonValue::Array(items)
+            if !items.is_empty() && items.iter().all(|it| matches!(it, JsonValue::Object(_))) =>
+        {
+            // Header = union of keys across all records, in first-seen order, so
+            // a later record introducing a new key still gets a column.
+            let mut headers: Vec<String> = Vec::new();
+            for it in items {
+                if let JsonValue::Object(pairs) = it {
+                    for (k, _) in pairs {
+                        if !headers.contains(k) {
+                            headers.push(k.clone());
+                        }
+                    }
+                }
+            }
+            for (c, h) in headers.iter().enumerate() {
+                set_at(&mut wb, sheet, 1, c + 1, CellValue::Text(h.clone()));
+            }
+            for (r, it) in items.iter().enumerate() {
+                if let JsonValue::Object(pairs) = it {
+                    for (k, v) in pairs {
+                        if let Some(c) = headers.iter().position(|h| h == k) {
+                            set_at(&mut wb, sheet, r + 2, c + 1, json_to_cell(v));
+                        }
+                    }
+                }
+            }
+        }
+        // Array of arrays — a positional grid, no header row.
+        JsonValue::Array(rows) if rows.iter().all(|it| matches!(it, JsonValue::Array(_))) => {
+            for (r, row) in rows.iter().enumerate() {
+                if let JsonValue::Array(cells) = row {
+                    for (c, v) in cells.iter().enumerate() {
+                        set_at(&mut wb, sheet, r + 1, c + 1, json_to_cell(v));
+                    }
+                }
+            }
+        }
+        // Array of scalars (or a mix) — a single column.
+        JsonValue::Array(items) => {
+            for (r, v) in items.iter().enumerate() {
+                set_at(&mut wb, sheet, r + 1, 1, json_to_cell(v));
+            }
+        }
+        // A single object — header plus exactly one record row.
+        JsonValue::Object(pairs) => {
+            for (c, (k, v)) in pairs.iter().enumerate() {
+                set_at(&mut wb, sheet, 1, c + 1, CellValue::Text(k.clone()));
+                set_at(&mut wb, sheet, 2, c + 1, json_to_cell(v));
+            }
+        }
+        // A top-level scalar — a single cell.
+        scalar => set_at(&mut wb, sheet, 1, 1, json_to_cell(scalar)),
+    }
+
+    wb.recalc_all();
+    Ok(wb)
+}
+
+/// Read the header key for a column from a header cell — text verbatim, other
+/// value kinds rendered so a numeric or boolean header still names its column.
+fn header_key(v: CellValue, col: u32) -> String {
+    match v {
+        CellValue::Text(s) => s,
+        CellValue::Empty => format!("col{col}"),
+        other => match cell_to_json(other) {
+            JsonValue::String(s) => s,
+            JsonValue::Number(JsonNumber::Integer(i)) => i.to_string(),
+            JsonValue::Number(JsonNumber::Float(f)) => format!("{f}"),
+            JsonValue::Bool(b) => b.to_string(),
+            _ => format!("col{col}"),
+        },
+    }
+}
+
+/// Serialize the workbook's **first sheet** to a JSON array of record objects:
+/// row 1 supplies the keys, each row below becomes one `{key: value}` object.
+///
+/// This is the inverse of [`load_json`]'s records shape, so a records file
+/// round-trips. Like the CSV writer, other sheets are dropped and formulas
+/// export as their computed value. An empty or sheetless workbook yields `[]`.
+///
+/// Unlike the dense CSV writer, this walks `populated_cells` **sparsely**, so a
+/// sheet with one far-flung cell does not blow up — cost is proportional to the
+/// number of non-empty cells, not the used-range area.
+pub fn save_json(wb: &Workbook) -> Vec<u8> {
+    let empty = || b"[]".to_vec();
+    let Some(first) = wb.sheet_names().first().and_then(|n| wb.sheet_id(n)) else {
+        return empty();
+    };
+    let Some(ur) = wb.used_range(first) else {
+        return empty();
+    };
+
+    let populated = wb.populated_cells(first);
+    let header_row = ur.min_row;
+
+    // Columns: each populated header-row cell → (col, key), left to right.
+    let mut cols: Vec<(u32, String)> = populated
+        .iter()
+        .filter(|a| a.row == header_row)
+        .map(|a| {
+            let key = header_key(
+                wb.get_value(first, *a).unwrap_or(CellValue::Empty),
+                a.col,
+            );
+            (a.col, key)
+        })
+        .collect();
+    cols.sort_by_key(|(c, _)| *c);
+
+    // Data rows: every populated row below the header, ascending, de-duplicated.
+    let mut rows: Vec<u32> = populated
+        .iter()
+        .map(|a| a.row)
+        .filter(|&r| r > header_row)
+        .collect();
+    rows.sort_unstable();
+    rows.dedup();
+
+    let records: Vec<JsonValue> = rows
+        .into_iter()
+        .map(|row| {
+            let pairs: Vec<(String, JsonValue)> = cols
+                .iter()
+                .map(|(col, key)| {
+                    let v = wb
+                        .get_value(first, CellAddress::new(row, *col))
+                        .unwrap_or(CellValue::Empty);
+                    (key.clone(), cell_to_json(v))
+                })
+                .collect();
+            JsonValue::Object(pairs)
+        })
+        .collect();
+
+    coding_adventures_json_serializer::serialize(&JsonValue::Array(records))
+        .unwrap_or_else(|_| "[]".to_string())
+        .into_bytes()
 }
 
 #[cfg(test)]
