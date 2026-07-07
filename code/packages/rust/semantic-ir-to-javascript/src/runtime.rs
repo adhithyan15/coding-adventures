@@ -523,6 +523,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // A number resolves the hand-implemented Ruby Numeric catalog (kept in
     // lockstep with `numericMethod`'s case labels), ahead of the native gate.
     if (typeof recv === "number" && NUMERIC_METHODS.has(name)) { return true; }
+    // A string resolves the hand-implemented Ruby String catalog (in lockstep
+    // with `stringMethod`'s case labels), ahead of the native gate.
+    if (typeof recv === "string" && STRING_METHODS.has(name)) { return true; }
     // A primitive resolves a name iff it (or its Ruby→native alias) is on the
     // method allowlist AND the native member is actually a function on `recv`.
     if (!(recv instanceof SirInstance)) {
@@ -649,6 +652,101 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return NUM_MISS;
   }
 
+  // ── Ruby String catalog ────────────────────────────────────────
+  // Hand-implemented Ruby String methods that either have no JS-native
+  // equivalent (`capitalize`, `chomp`, `chars`, `bytes`, `to_sym`, …) or whose
+  // Ruby semantics DIVERGE from the native (Ruby `sub`/`gsub` are LITERAL
+  // first/all replacement with no regex or back-reference expansion; Ruby
+  // `index` is a rune index; Ruby `reverse` is rune-aware and, unlike arrays,
+  // has no JS-native String method at all).  Dispatched by an EXPLICIT `switch`
+  // on the source-derived `name` — never `recv[name]` — ahead of the native
+  // allowlist, so the already-aliased natives (`upcase`→`toUpperCase`, …) still
+  // fall through on `STR_MISS`.  `STRING_METHODS` mirrors these labels for an
+  // honest `respond_to?`.
+  const STR_MISS = Symbol("str-miss");
+  const STRING_METHODS = new Set([
+    "capitalize", "chomp", "chars", "bytes", "sub", "gsub", "to_i", "to_f",
+    "to_sym", "to_s", "empty?", "index", "reverse", "size",
+  ]);
+  // Ruby `String#to_i` / `#to_f`: parse a LEADING numeric prefix (optional
+  // sign, digits, and — for to_f — a fractional/exponent part), yielding 0 when
+  // there is no numeric prefix.  Never raises (the lenient OO floor).
+  function strToI(s) {
+    const m = /^[+-]?\d+/.exec(s.trimStart());
+    return m ? Math.trunc(Number(m[0])) : 0;
+  }
+  function strToF(s) {
+    const m = /^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?/.exec(s.trimStart());
+    return m ? Number(m[0]) : 0;
+  }
+  function stringMethod(recv, name, args) {
+    switch (name) {
+      case "to_s": return recv;
+      case "empty?": return recv.length === 0;
+      case "size": return [...recv].length; // rune count, mirrors Ruby length
+      case "reverse": return [...recv].reverse().join("");
+      case "chars": return [...recv];
+      case "bytes": {
+        // Raw UTF-8 byte values as integers (Ruby `String#bytes`).
+        const enc = new TextEncoder().encode(recv);
+        return Array.from(enc, (b) => b);
+      }
+      case "to_i": return strToI(recv);
+      case "to_f": return strToF(recv);
+      case "to_sym": return new Sym(recv);
+      case "capitalize": {
+        // First character upcased, the rest downcased; rune-aware so a leading
+        // multibyte char is not split.
+        const cps = [...recv];
+        if (cps.length === 0) { return ""; }
+        return cps[0].toUpperCase() + cps.slice(1).join("").toLowerCase();
+      }
+      case "chomp": {
+        // With an explicit separator, drop exactly that trailing suffix once;
+        // otherwise drop one trailing "\r\n", "\n", or "\r".
+        if (args.length > 0) {
+          const sep = args[0];
+          if (typeof sep === "string") {
+            return sep !== "" && recv.endsWith(sep)
+              ? recv.slice(0, recv.length - sep.length) : recv;
+          }
+          return recv;
+        }
+        if (recv.endsWith("\r\n")) { return recv.slice(0, -2); }
+        if (recv.endsWith("\n") || recv.endsWith("\r")) { return recv.slice(0, -1); }
+        return recv;
+      }
+      case "index": {
+        // Rune index of the first occurrence of the substring, or nil.
+        if (args.length > 0 && typeof args[0] === "string") {
+          const bi = recv.indexOf(args[0]);
+          if (bi < 0) { return null; }
+          return [...recv.slice(0, bi)].length; // byte offset → rune count
+        }
+        return null;
+      }
+      case "sub": {
+        // LITERAL replacement of the FIRST occurrence (no regex / no `$&`/`\1`).
+        if (args.length >= 2 && typeof args[0] === "string" && typeof args[1] === "string") {
+          const bi = recv.indexOf(args[0]);
+          if (bi < 0) { return recv; }
+          return recv.slice(0, bi) + args[1] + recv.slice(bi + args[0].length);
+        }
+        return recv;
+      }
+      case "gsub": {
+        // LITERAL replacement of ALL occurrences.  `split(from).join(to)` is
+        // verbatim (no regex), matching Ruby's string-argument `gsub`.
+        if (args.length >= 2 && typeof args[0] === "string" && typeof args[1] === "string") {
+          if (args[0] === "") { return recv; }
+          return recv.split(args[0]).join(args[1]);
+        }
+        return recv;
+      }
+    }
+    return STR_MISS;
+  }
+
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
   // `name` is not an M6 method, so `callMethod` continues to its type-specific
   // paths.  `rawArgs` is the UN-unwrapped argument list — a trailing block is
@@ -726,6 +824,14 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (typeof recv === "number") {
       const nm = numericMethod(recv, name, args);
       if (nm !== NUM_MISS) { return nm; }
+    }
+    // Ruby String catalog on a `string` receiver — explicit-switch dispatch (no
+    // `recv[name]`) ahead of the native allowlist, so `capitalize`/`gsub`/… and
+    // the semantics-diverging cases resolve while `toUpperCase`/`split`/… still
+    // fall through below via the alias table.
+    if (typeof recv === "string") {
+      const sm = stringMethod(recv, name, args);
+      if (sm !== STR_MISS) { return sm; }
     }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
