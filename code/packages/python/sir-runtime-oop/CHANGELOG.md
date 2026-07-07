@@ -2,6 +2,22 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.13] - 2026-07-07
+
+### Added — more String methods: `ljust` / `rjust` / `center` / `swapcase`
+
+Extends `_string_method` (and the `_STRING_METHODS` `respond_to?` catalog) with
+four more common non-block Ruby String methods, mirroring the Go/JS runtimes:
+
+- `ljust(width, pad=" ")` / `rjust(...)` / `center(...)` — pad to `width`
+  characters using `pad` cyclically; `width <= len` returns the string
+  unchanged; `center` puts an odd extra pad char on the **right** (Ruby's rule,
+  the opposite of Python's built-in `str.center`, which also rejects a
+  multi-char fill). An empty pad degrades to a single space (never-raise floor).
+  New helper `_str_pad` builds the exact-length cyclic padding.
+- `swapcase` — flips each ASCII letter (non-letters / non-ASCII untouched),
+  matching the Go/JS runtimes byte-for-byte.
+
 ## [0.1.12] - 2026-07-07
 
 ### Added — Array block-method breadth (sort_by / group_by / partition / …)

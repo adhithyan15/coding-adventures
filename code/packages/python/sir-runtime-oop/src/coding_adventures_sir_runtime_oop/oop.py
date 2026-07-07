@@ -681,6 +681,10 @@ _STRING_METHODS = frozenset(
         "empty?",
         "*",
         "+",
+        "ljust",
+        "rjust",
+        "center",
+        "swapcase",
     }
 )
 
@@ -1258,7 +1262,51 @@ def _string_method(recv: str, name: str, args: list[Val]) -> Val:
         return _str_repeat(recv, args[0])
     if name == "+":
         return recv + args[0]
+    if name in ("ljust", "rjust", "center"):
+        # Ruby ``String#ljust``/``#rjust``/``#center(width, pad=" ")``: pad to
+        # ``width`` CHARACTERS using ``pad`` cyclically.  ``width <= len(recv)``
+        # returns the string unchanged; ``center`` puts any odd extra pad char on
+        # the RIGHT (Ruby's rule — the opposite of Python's ``str.center``, which
+        # also only accepts a single-char fill).  An empty pad degrades to a
+        # single space rather than raising, holding the never-raise floor.
+        width = int(args[0]) if args and isinstance(args[0], (int, float)) else 0
+        pad = args[1] if len(args) > 1 and isinstance(args[1], str) and args[1] else " "
+        # Clamp the padding to `_MAX_REPEAT_LEN` — the same DoS bound `_str_repeat`
+        # uses — so a hostile width (e.g. ``"".ljust(10**12)``) cannot OOM the host.
+        deficit = min(width - len(recv), _MAX_REPEAT_LEN)
+        if deficit <= 0:
+            return recv
+        if name == "ljust":
+            return recv + _str_pad(pad, deficit)
+        if name == "rjust":
+            return _str_pad(pad, deficit) + recv
+        left = deficit // 2
+        return _str_pad(pad, left) + recv + _str_pad(pad, deficit - left)
+    if name == "swapcase":
+        # Ruby ``String#swapcase``: flip the case of each ASCII letter (leaving
+        # non-letters and non-ASCII characters untouched), matching the Go/JS
+        # runtimes byte-for-byte.
+        out = []
+        for ch in recv:
+            code = ord(ch)
+            if 65 <= code <= 90:
+                out.append(chr(code + 32))
+            elif 97 <= code <= 122:
+                out.append(chr(code - 32))
+            else:
+                out.append(ch)
+        return "".join(out)
     return _MISS
+
+
+def _str_pad(pad: str, n: int) -> str:
+    """Build a padding string of exactly ``n`` characters by repeating ``pad``
+    cyclically (truncating the final repeat).  ``n <= 0`` or an empty ``pad``
+    yields ``""`` — callers guarantee a non-empty pad, so the guard is defensive."""
+    if n <= 0 or not pad:
+        return ""
+    repeats = (n // len(pad)) + 1
+    return (pad * repeats)[:n]
 
 
 def _string_block_method(recv: str, name: str, block: Closure) -> Val:
