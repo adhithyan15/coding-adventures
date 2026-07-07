@@ -1,5 +1,25 @@
 # Changelog — iir-to-wasm
 
+## [0.31.0] — 2026-07-07 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
+
+`input_str` (BASIC string `INPUT A$`) now lowers on WASM — the final backend, so
+`INPUT A$` runs on all seven.
+
+- **Validator** (`validate.rs`): `input_str` added to the `call_builtin` whitelist;
+  the `str`-type gate now also accepts `str` on `call_builtin` and `mov` (was
+  `str_const`/`str_concat`/`str_slice`/`call`/`ret` only).
+- **Lowering** (`lower.rs`): a `str` value is an i32 **handle** — a linear-memory
+  offset of a `[i32 len][bytes]` block. `call_builtin "input_str"` bump-allocates a
+  `[i32 len][MAX=256 bytes]` region from `__array_bump` (its base is the handle),
+  then calls the new `env.__input_str(i32 block, i32 max) -> ()` host import, which
+  writes the whole block (length header + bytes) into linear memory. Single `call`,
+  no `i32.store` in codegen — the host owns the writes. `print_str` reads the length
+  via `i32.load` at the handle. `input_str` also injects linear memory + the
+  `__array_bump` global (a pure INPUT-A$ program has no array op). New feature flag
+  `uses_input_str` + import index threaded through the lowering, mirroring
+  `input_i64`. MAX is 256 because the module's memory is a single fixed 64 KiB page.
+- Test `input_str_lowers_and_declares_env_import`.
+
 ## [0.30.0] — 2026-07-04 (LANG-FULL E4-dyn E4d-3b: runtime string as return value / call result)
 
 Extended the E4-dyn runtime-string support so a runtime string that arrives as a

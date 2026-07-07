@@ -138,6 +138,7 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// | `"getchar"`    | `env.getchar`        | `() -> i32`       |
 /// | `"print_i64"`  | `env.__print_i64`    | `(i64) -> ()`     |
 /// | `"input_i64"`  | `env.__input_i64`    | `() -> i64`       |
+/// | `"input_str"`  | `env.__input_str`    | `(i32,i32) -> ()`  |
 ///
 /// `print_i64` (G2) reuses the same `env.__print_i64` import the
 /// `io_out` opcode already injects.  This lets BASIC's `PRINT`
@@ -159,7 +160,7 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // `pair?` lowers to `ref.test $LispyPair` (is this lisp value a cons cell?),
     // the lisp `not` to `i32.eqz` (boolean negation), and `equal?` (McCarthy
     // `EQ` on atoms) to unbox-both-and-`i32.eq`. `ATOM x` = `not(pair? x)`.
-    &["putchar", "getchar", "print_i64", "input_i64", "pair?", "not", "equal?"];
+    &["putchar", "getchar", "print_i64", "input_i64", "input_str", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm
@@ -297,7 +298,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
+                    // `call_builtin`: BASIC string `INPUT A$` — `input_str` returns a
+                    //   `str` (the i32 handle of a `[i32 len][bytes]` linear-memory block).
+                    // `mov`: copy the input handle into the `$`-variable's slot (a plain
+                    //   i32 local copy).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
+                        | "call_builtin" | "mov"
                 )
             {
                 errors.push(format!(
