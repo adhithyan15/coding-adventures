@@ -2257,3 +2257,28 @@ fn numeric_upto_runs_block() {
         assert_eq!(stdout, "1\n2\n3");
     }
 }
+
+// ── Ruby String method catalog (hand-implemented, explicit dispatch) ──
+//
+// Exercises the `stringMethod` catalog end-to-end under Node: `capitalize`,
+// `reverse`, literal `sub`/`gsub`, `to_i`, `chomp`, rune `index`, and `chars`
+// must route through the explicit string switch (never `recv[name]`) and
+// produce Ruby-faithful values, while the already-aliased natives (`upcase`…)
+// are untouched.
+#[test]
+fn string_catalog_methods() {
+    let stmts = vec![
+        print(method(str_("hELLO"), "capitalize", vec![])),                 // Hello
+        print(method(str_("abc"), "reverse", vec![])),                      // cba
+        print(method(str_("hello"), "sub", vec![str_("l"), str_("L")])),    // heLlo
+        print(method(str_("hello"), "gsub", vec![str_("l"), str_("L")])),   // heLLo
+        print(method(str_("42abc"), "to_i", vec![])),                       // 42
+        print(method(str_("hi\n"), "chomp", vec![])),                       // hi
+        print(method(str_("hello world"), "index", vec![str_("world")])),   // 6
+        print(method(str_("abc"), "chars", vec![])),                        // [a, b, c]
+    ];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "strcatalog") {
+        assert_eq!(stdout, "Hello\ncba\nheLlo\nheLLo\n42\nhi\n6\n[a, b, c]");
+    }
+}

@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.14.0 — Ruby String method-catalog parity
+
+Adds a hand-implemented Ruby String catalog (`stringMethod`) to the emitted JS
+runtime, dispatched by an **explicit `switch` on the source-derived name**
+(never `recv[name]`) ahead of the native-method allowlist — so the methods with
+no JS-native spelling or with diverging semantics resolve, while the existing
+aliased natives (`upcase`→`toUpperCase`, `strip`→`trim`, …) still fall through.
+
+Methods: `capitalize`, `chomp`, `chars`, `bytes`, `to_i`, `to_f`, `to_sym`,
+`to_s`, `empty?`, `size`, `reverse` (rune-aware; JS strings have no native
+`reverse`), `index` (rune index), and literal `sub`/`gsub` (first/all
+occurrence, no regex or back-reference expansion — Ruby's string-argument
+semantics). Non-string arguments are guarded and degrade to the receiver/`nil`
+rather than throwing. `respond_to?` is kept honest via `STRING_METHODS`.
+
+Verified end-to-end under Node (`run_with_node`): the emitted JS executes and
+matches Ruby-faithful output for the catalog.
+
+(Stacked on the v0.13.0 Numeric-catalog change.)
+
 ## 0.13.0 — Ruby Numeric method-catalog parity
 
 Adds a hand-implemented Ruby Numeric catalog (`numericMethod`) to the emitted
