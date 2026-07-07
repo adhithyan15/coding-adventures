@@ -1257,76 +1257,43 @@ The split is exactly what SIR21 §E3 prescribes precisely to avoid one overloade
 
 Discovered: 2026-07-04, SIR21 division frontier (sir-conformance 0.10.0).
 
----
+## A stale-branch merge can silently REVERT already-merged work → red main from two green PRs
 
-## Generating Unicode/data tables for a zero-dep crate; reading a branch diff when main has advanced
+**Symptom:** `main` stopped compiling. `spreadsheet-core-wasm` 0.15 (SSIO PR4
+#7701) called `spreadsheet_io::load_json`, but `spreadsheet-io` on `main` was
+back at 0.3.0 with the whole JSON codec gone. `cargo build -p spreadsheet-wasm
+--target wasm32-unknown-unknown --release` failed with `cannot find function
+load_json in crate spreadsheet_io`.
 
-Context: Phase C1 of the Engram zero-dep program replaced `unicode-normalization`
-with a from-scratch zero-dep `code/packages/rust/unicode-normalize` (NFD/NFC +
-`is_combining_mark`, Unicode 17.0.0).
+**Root cause:** PR #7682 ("feat(sir): sir-hashmethods-go … **rebased onto
+main**") was rebased on a **stale, pre-#7693 main**. Its merge silently reverted
+the ENTIRE #7693 changeset (13 files across spreadsheet-io + json-parser +
+json-lexer) as collateral — #7682 was the only post-#7693 commit touching any of
+them, and it dragged them back to their old state. #7682's CI was green (its
+snapshot compiled); #7701's CI was green (its base still had `load_json`).
+Neither CI saw the other, so **two individually-green PRs merged into a red
+main**. This also re-opened a CRITICAL DoS (the json-parser recursion depth cap
+went with the revert).
 
-**Lessons:**
-- **Generate large data tables from the real crate, don't transcribe by hand.**
-  A throwaway `#[ignore]` test with the upstream crate as a `[dev-dependencies]`
-  enumerated every scalar value (`0..=0x10FFFF`) and emitted a compact
-  `src/tables.rs` (CCC / recursive decomposition / composition / Mark ranges).
-  Then a second throwaway test cross-checked this crate vs the live upstream one
-  across ALL code points + 200k random strings (zero mismatches) before deleting
-  the generator, the cross-check, and the dev-dep. Same interop-gate discipline
-  as protobuf/fsrs. Composition pairs were captured by probing upstream
-  `compose(a,b)` over candidate (starter, combiner) sets drawn from the decomp
-  table — no need to parse UCD files or hit the network.
-- **Two traits with the same method name (`nfd`/`nfc`) on the same receiver make
-  calls ambiguous** in the cross-check (both `unicode_normalize` and
-  `unicode_normalization` define them). Call via fully-qualified syntax
-  `Trait::method(x)` in the gate test.
-- **A blanket `impl<I: Iterator<Item=char>> Trait for I` collides with
-  `impl Trait for &str`** (coherence can't prove `&str: !Iterator`). Mirror the
-  upstream crate: impl for the concrete receivers actually used (`&str` and
-  `str::Chars`), not a blanket.
-- **`git diff --cached origin/main` on a feature branch shows the OTHER merged
-  PRs as spurious "deletions" once origin/main has advanced past your branch
-  point** — it compares your index to the newer main, so their newer additions
-  read as removed-on-your-side. This looked alarmingly like the stale-worktree
-  revert bug. Distinguish with `git status --short` and `git diff --name-only HEAD`
-  (working tree vs HEAD) — if those show ONLY your files, you're clean. Fix the
-  scary diff by `git rebase origin/main`; afterwards `git diff --name-only
-  origin/main` shows exactly your files. Always rebase before pushing so the PR
-  diff is only yours.
-- **Hangul is algorithmic** (UAX #15 §16) — decompose/compose by arithmetic on
-  code points, saving ~11,000 table entries. Only the 11172 syllables; the jamo
-  compose via the same arithmetic.
+**How to detect fast:** when a symbol "vanishes" that you know was merged,
+`git log --oneline <good-merge>..origin/main -- <file>` shows the culprit, and
+`git show origin/main:<file> | grep <symbol>` confirms it's gone. A reverted
+crate's **version number rolls backward** (0.4.0 → 0.3.0) — a dead giveaway.
 
-Discovered: 2026-07-03, Engram zero-dep Phase C1 (drop `unicode-normalization`).
+**Fix:** restore only the affected files to their last-good commit —
+`git checkout <good-sha> -- <the exact file list>` — never a broad revert (that
+would clobber the stale PR's *legitimate* work). Verify the previously-failing
+build command actually passes now. The restore is byte-identical to
+already-reviewed code, so no fresh security review is needed.
 
----
+**Prevention / takeaways:**
+- **"Rebased onto main" in a PR title is a smell** — verify its file list is only
+  what it claims. A SIR/Go PR touching `spreadsheet-io`/`json-*` is a red flag.
+- Green CI on *both* PRs does NOT mean their *combination* is green. A shared
+  crate that one PR removes and another PR starts calling is invisible to both
+  pre-merge checks. (See also: "Diff branch full file list vs origin/main before
+  push; stale worktrees revert files.")
+- When you inherit a broken main mid-loop, **fixing main is the priority** — a
+  focused hotfix PR unblocks the whole repo, not just your feature.
 
-## Don't hand-emulate a specific regex's backtracking — reach for the engine
-
-Context: Phase C2 of the Engram zero-dep program aimed to hand-write scanners
-replacing the two HTML-tag regexes in `engram-core` search-text rendering.
-
-**Lessons:**
-- **A hand scanner can replace a *simple* regex, but not a backtracking one.**
-  The tag-strip `(?is)<[^>]+>` has no alternation/backreference/overlap, so a
-  two-pointer scanner reproduces it byte-for-byte (verified vs live `regex` on
-  300k random strings). But the media pattern
-  `<(?:img|…)[^>]*(?:src|data)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^ >]+))[^>]*>`
-  hides layered backtracking that a fuzz cross-check exposed one corner at a
-  time: (1) a **quoted value `[^"]+` crosses `>`**, so the tag end isn't the
-  first `>`; (2) when the quoted alt yields no trailing `>`, the regex
-  **backtracks through the alternation** to the bare `[^ >]+`; (3) `\s*` and the
-  value class `[^ >]` **overlap** (tab ∈ both), so greedy `\s*` gives a tab back
-  to the value. Each fix surfaced the next corner — a sign you're reimplementing
-  a regex engine badly.
-- **When you catch yourself hand-emulating quantifier/alternation backtracking,
-  stop and build/adopt the general engine.** The right move was to descope: ship
-  only the trivially-exact tag-strip scanner now, and move the media pattern (plus
-  glob/whole-word/`re:`) to the planned zero-dep regex *engine*, where correct
-  semantics give byte-exactness for free instead of per-pattern emulation.
-- **The randomized cross-check earned its keep**: every divergence was a
-  malformed-HTML input a human would never think to unit-test. Fuzz vs the real
-  library before trusting a reimplementation — and read the *first* divergence
-  carefully; it usually reveals a structural misunderstanding, not an off-by-one.
-
-Discovered: 2026-07-03, Engram zero-dep Phase C2 (HTML tag scanners).
+Discovered: 2026-07-06, SSIO PR5 setup (found `main` non-compiling; hotfix #7709).

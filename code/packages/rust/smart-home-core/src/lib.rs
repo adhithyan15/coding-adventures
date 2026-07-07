@@ -1705,6 +1705,7 @@ pub enum SmartHomeTool {
     GetRecoveryBrief,
     GetRecoveryReadinessBrief,
     GetCommandLifecycleBrief,
+    GetCommandAuditDossier,
     GetMorningBrief,
     GetEscalationBrief,
     GetContinuityBrief,
@@ -2473,6 +2474,7 @@ impl SmartHomeTool {
                 read_tool("smart_home.get_recovery_readiness_brief")
             }
             Self::GetCommandLifecycleBrief => read_tool("smart_home.get_command_lifecycle_brief"),
+            Self::GetCommandAuditDossier => read_tool("smart_home.get_command_audit_dossier"),
             Self::GetMorningBrief => read_tool("smart_home.get_morning_brief"),
             Self::GetEscalationBrief => read_tool("smart_home.get_escalation_brief"),
             Self::GetContinuityBrief => read_tool("smart_home.get_continuity_brief"),
@@ -3410,6 +3412,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetRecoveryBrief,
         SmartHomeTool::GetRecoveryReadinessBrief,
         SmartHomeTool::GetCommandLifecycleBrief,
+        SmartHomeTool::GetCommandAuditDossier,
         SmartHomeTool::GetMorningBrief,
         SmartHomeTool::GetEscalationBrief,
         SmartHomeTool::GetContinuityBrief,
@@ -4267,7 +4270,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 320);
+        assert_eq!(catalog.len(), 321);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_command_risk_audit"
@@ -5545,6 +5548,11 @@ mod tests {
             == "smart_home.get_command_lifecycle_brief"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(
+            |tool| tool.tool_id == "smart_home.get_command_audit_dossier"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
     }
 
     #[test]
@@ -5552,15 +5560,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 320);
-        assert_eq!(summary.read_tools, 312);
+        assert_eq!(summary.total_tools, 321);
+        assert_eq!(summary.read_tools, 313);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 312);
+        assert_eq!(summary.read_only_tier_tools, 313);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 320);
+        assert_eq!(summary.total_required_capabilities, 321);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

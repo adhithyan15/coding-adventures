@@ -39,9 +39,6 @@ use spice_engine::{
     format_device_model_reference_deck_audit_summary_table,
     format_device_model_reference_deck_audit_table, format_measurement_table,
     format_model_card_supported_parameter_coverage_csv,
-    format_model_card_supported_parameter_coverage_dashboard_csv,
-    format_model_card_supported_parameter_coverage_dashboard_json,
-    format_model_card_supported_parameter_coverage_dashboard_table,
     format_model_card_supported_parameter_coverage_gate_issue_csv,
     format_model_card_supported_parameter_coverage_gate_issue_json,
     format_model_card_supported_parameter_coverage_gate_issue_table,
@@ -55,9 +52,7 @@ use spice_engine::{
     format_model_card_unsupported_parameter_issue_json,
     format_model_card_unsupported_parameter_issue_table, format_temperature_dc_table,
     jfet_from_model_card, measure_dc_sweep_deck, measure_dc_sweep_probe,
-    model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_dashboard,
-    model_card_supported_parameter_coverage_dashboard_records,
-    model_card_supported_parameter_coverage_gate,
+    model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_gate,
     model_card_supported_parameter_coverage_gate_issue_records,
     model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
@@ -263,92 +258,6 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     ));
     assert!(format_model_card_supported_parameter_coverage_gate_issue_json(&report).starts_with(
         "[{\"kind\":\"NMOS\",\"field\":\"canonical_parameter_count\",\"message\":\"expected NMOS to expose 18 canonical supported parameters, found 17\"}"
-    ));
-}
-
-#[test]
-fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
-    let coverage = model_card_supported_parameter_coverage();
-    let dashboard = model_card_supported_parameter_coverage_dashboard(&coverage);
-    assert_eq!(dashboard.len(), 7);
-    assert_eq!(dashboard[0].kind, ModelCardKind::Diode);
-    assert!(dashboard[0].passed);
-    assert_eq!(dashboard[0].canonical_parameter_count, 7);
-    assert_eq!(dashboard[0].expected_canonical_parameter_count, 7);
-    assert_eq!(dashboard[0].accepted_name_count, 11);
-    assert_eq!(dashboard[0].expected_accepted_name_count, 11);
-    assert_eq!(dashboard[0].aliased_parameter_count, 3);
-    assert_eq!(dashboard[0].expected_aliased_parameter_count, 3);
-    assert_eq!(dashboard[0].max_alias_count, 3);
-    assert_eq!(dashboard[0].expected_max_alias_count, 3);
-    assert_eq!(dashboard[0].issue_count, 0);
-    assert!(dashboard[0].issue_fields.is_empty());
-    assert_eq!(dashboard[5].kind, ModelCardKind::Nmos);
-    assert_eq!(dashboard[5].canonical_parameter_count, 18);
-    assert_eq!(dashboard[5].accepted_name_count, 25);
-    assert_eq!(dashboard[5].issue_count, 0);
-
-    let table = format_model_card_supported_parameter_coverage_dashboard_table(&coverage);
-    let lines = table.lines().collect::<Vec<_>>();
-    assert_eq!(
-        lines[0],
-        "kind\tpassed\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\texpected_accepted_name_count\taliased_parameter_count\texpected_aliased_parameter_count\tmax_alias_count\texpected_max_alias_count\tissue_count\tissue_fields"
-    );
-    assert_eq!(lines[1], "D\ttrue\t7\t7\t11\t11\t3\t3\t3\t3\t0\t");
-    assert_eq!(
-        lines.last().unwrap(),
-        &"PMOS\ttrue\t18\t18\t25\t25\t6\t6\t3\t3\t0\t"
-    );
-    let records = model_card_supported_parameter_coverage_dashboard_records(&coverage);
-    assert_eq!(records.len(), 7);
-    assert_eq!(records[0]["kind"], "D");
-    assert_eq!(records[0]["passed"], "true");
-    assert_eq!(records[0]["canonical_parameter_count"], "7");
-    assert_eq!(records[0]["expected_canonical_parameter_count"], "7");
-    assert_eq!(records[0]["issue_count"], "0");
-    assert_eq!(records[0]["issue_fields"], "");
-    assert!(format_model_card_supported_parameter_coverage_dashboard_csv(&coverage).starts_with(
-        "kind,passed,canonical_parameter_count,expected_canonical_parameter_count,accepted_name_count,expected_accepted_name_count,aliased_parameter_count,expected_aliased_parameter_count,max_alias_count,expected_max_alias_count,issue_count,issue_fields\nD,true,7,7,11,11,3,3,3,3,0,\n"
-    ));
-    assert!(format_model_card_supported_parameter_coverage_dashboard_json(&coverage).starts_with(
-        "[{\"kind\":\"D\",\"passed\":\"true\",\"canonical_parameter_count\":\"7\",\"expected_canonical_parameter_count\":\"7\""
-    ));
-}
-
-#[test]
-fn model_card_supported_parameter_coverage_dashboard_reports_missing_alias_family() {
-    let coverage = model_card_supported_parameter_coverage()
-        .into_iter()
-        .filter(|row| !(row.kind == ModelCardKind::Nmos && row.canonical_parameter == "VT0"))
-        .collect::<Vec<_>>();
-
-    let dashboard = model_card_supported_parameter_coverage_dashboard(&coverage);
-    let nmos = dashboard
-        .iter()
-        .find(|row| row.kind == ModelCardKind::Nmos)
-        .unwrap();
-
-    assert!(!nmos.passed);
-    assert_eq!(nmos.canonical_parameter_count, 17);
-    assert_eq!(nmos.expected_canonical_parameter_count, 18);
-    assert_eq!(nmos.accepted_name_count, 22);
-    assert_eq!(nmos.expected_accepted_name_count, 25);
-    assert_eq!(nmos.aliased_parameter_count, 5);
-    assert_eq!(nmos.expected_aliased_parameter_count, 6);
-    assert_eq!(nmos.max_alias_count, 2);
-    assert_eq!(nmos.expected_max_alias_count, 3);
-    assert_eq!(nmos.issue_count, 4);
-    assert_eq!(
-        nmos.issue_fields,
-        vec![
-            "canonical_parameter_count".to_string(),
-            "accepted_name_count".to_string(),
-            "aliased_parameter_count".to_string(),
-            "max_alias_count".to_string()
-        ]
-    );
-    assert!(format_model_card_supported_parameter_coverage_dashboard_table(&coverage).contains(
-        "NMOS\tfalse\t17\t18\t22\t25\t5\t6\t2\t3\t4\tcanonical_parameter_count|accepted_name_count|aliased_parameter_count|max_alias_count"
     ));
 }
 

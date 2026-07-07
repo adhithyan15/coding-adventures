@@ -1,44 +1,5 @@
 # Changelog
 
-## 0.16.0 — Ruby `Symbol` method catalog (to_s / upcase / capitalize / inspect / to_proc / …)
-
-Completes the Rust backend's **`Symbol` method catalog** for parity with the
-Python and TypeScript `sir-runtime-oop` reference. Runtime-only change (no core
-semantic-IR, no frontend, no emitter change): a `Value::Sym` receiver already
-routed to `symbol_method`; this release fills in the missing methods.
-
-- **Added to `symbol_method`** (previously only `to_s`, `to_sym`,
-  `length`/`size`, `upcase`, `downcase`):
-  - **`capitalize`** — returns a **new interned `Symbol`** whose name is the
-    first char upper-cased and the rest lower-cased (`:hELLo.capitalize` →
-    `:Hello`), matching Ruby (a helper `capitalize_str` implements the fold).
-  - **`inspect`** — the `":name"` display form (leading colon), e.g.
-    `:x.inspect == ":x"`.
-  - **`empty?`** — whether the symbol's name is the empty string.
-  - **`to_proc`** — builds the SAME dispatching `Closure` that a `&:sym`
-    block-pass lowers to, by re-using the free `sym_to_proc` helper. So
-    `:to_s.to_proc` and `&:to_s` are byte-for-byte the same proc.
-- Like the reference, `upcase`/`downcase`/`capitalize` return a **Symbol**
-  (not a String). Since a bare `Value::Sym` prints as its name with no `:`,
-  the exec-proof test chains `.inspect` to observe the returned type.
-- **`respond_to?`** on a `Symbol` now reports the new names
-  (`capitalize`/`inspect`/`empty?`/`to_proc`) so the honesty invariant holds:
-  a name it reports `true` for is exactly one a real call runs.
-- **SECURITY ([[dynamic-dispatch-rce]]):** `to_proc`'s closure re-enters the
-  runtime through the SAME explicit, closed `call_method` — an unknown method
-  raises `NoMethodError`; there is no reflection on the source-derived name.
-- **`&:sym` is runtime-reachable:** the frontend lowers `&:to_s` to
-  `block_pass(SymLit("to_s"))`, which the emitter turns into
-  `sym_to_proc(intern("to_s"))`, so `Symbol#to_proc` is load-bearing (it is
-  NOT a frontend block-expansion). Proved end-to-end by
-  `[1,2,3].map(&:to_s).join(",") == "1,2,3"`.
-- **Test:** new exec-proof `tests/compile_and_run_symbol_methods.rs`
-  (`symbol_methods_compile_and_run`) — emits Rust, compiles with `rustc`, runs
-  the binary, and diffs stdout against the reference:
-  `:hello.to_s → "hello"`, `:hi.length → 2`, `:abc.upcase.inspect → ":ABC"`,
-  `:x.inspect → ":x"`, `:hELLo.capitalize.inspect → ":Hello"`,
-  `[1,2,3].map(&:to_s).join(",") → "1,2,3"`.
-
 ## 0.15.0 — Array aggregate / reshape parity (min / max / sum / uniq / flatten / compact / to_a / each_with_index)
 
 Ports the remaining `Array`/`Enumerable` aggregate and reshape methods —

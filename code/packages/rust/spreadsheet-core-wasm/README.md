@@ -50,6 +50,22 @@ A cell has two faces — what you *typed* (`=SUM(B1:B5)`) and what it *shows*
 (`46`). The engine owns the computed value; this facade keeps a small per-cell
 `raw` map so the formula bar can be repopulated with the source.
 
+### File open / save
+
+The session also opens and saves real files, not just its own JSON snapshot —
+via [`spreadsheet-io`](../spreadsheet-io):
+
+| method | in | out |
+|---|---|---|
+| `load_xlsx_bytes` / `load_xls_bytes` / `load_csv_bytes` / `load_tsv_bytes` / `load_json_bytes` | file bytes | `bool` (opened?) |
+| `save_xlsx_bytes` / `save_xls_bytes` / `save_csv_bytes` / `save_tsv_bytes` / `save_json_bytes` | — | file bytes |
+
+An open reuses the snapshot path (load → serialize → `deserialize`), so it is
+**undoable** and rebuilds the formula bar; a failed open (bad bytes / malformed
+JSON) returns `false` and leaves the document untouched. `.xlsx` keeps live
+formulas; `.xls`/CSV/TSV/JSON are lower-fidelity (one sheet, formulas flatten to
+their value) per `spreadsheet-io`.
+
 ## Safety
 
 - Text values are JSON-escaped (via `serde_json`), so a label like `a"b<c>`

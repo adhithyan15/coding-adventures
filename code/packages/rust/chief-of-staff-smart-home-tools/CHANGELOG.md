@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_command_audit_dossier`, a read-only Chief adapter
+  that joins command lifecycle, platform access-review, event-ops, and evidence
+  ledger summaries into one command audit packet without dispatching commands,
+  draining event queues, or owning smart-home state.
 - Added `smart_home.get_command_lifecycle_brief`, a read-only Chief adapter
   that joins D23 command-result, command-risk, authorization-gap,
   service-execution safety, recovery readiness, and runtime maintenance

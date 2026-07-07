@@ -1,8 +1,10 @@
 # Changelog
 
+
+
 ## 0.16.0
 
-### Added — Ruby Symbol method catalog completion (`capitalize` / `inspect` / `to_proc`)
+### Added â€” Ruby Symbol method catalog completion (`capitalize` / `inspect` / `to_proc`)
 
 Parity-fill: the Python + TypeScript `sir-runtime-oop` Symbol catalogs already
 expose `inspect`; this ports it into the Go runtime's `_sir_symbol_method`
@@ -10,15 +12,15 @@ switch and adds the two task-mandated Ruby Symbol methods `capitalize` and
 `to_proc`, so a translated Ruby program's Symbol calls execute on the Go
 backend instead of hitting the `NoMethodError` floor.
 
-- **`inspect`** — returns the source form `":name"` (a String). Matches the
+- **`inspect`** â€” returns the source form `":name"` (a String). Matches the
   Python/TS reference semantics.
-- **`capitalize`** — returns a NEW interned `*Symbol` whose name has an
+- **`capitalize`** â€” returns a NEW interned `*Symbol` whose name has an
   uppercase first char and a lowercase remainder (rune-aware, mirroring the
   existing `upcase`/`downcase` arms).
-- **`to_proc`** — an explicit `sym.to_proc` call returns a `*Closure` built by
+- **`to_proc`** â€” an explicit `sym.to_proc` call returns a `*Closure` built by
   the SAME `_sir_sym_to_proc` helper the `&:sym` block-pass form uses. The
   resulting proc routes each application through the explicit
-  `_sir_call_method` switch — NEVER Go `reflect` ([[dynamic-dispatch-rce]]); an
+  `_sir_call_method` switch â€” NEVER Go `reflect` ([[dynamic-dispatch-rce]]); an
   out-of-catalog method surfaces the ordinary `NoMethodError`. Note: the
   `&:sym` block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
   (see `try_emit_block_pass` in `emit.rs`) and never reaches this catalog arm;
@@ -27,14 +29,46 @@ backend instead of hitting the `NoMethodError` floor.
   `inspect`, and `to_proc`.
 
 Exec-proof: `tests/compile_and_run_symbol_methods.rs` runs the emitted Go under
-a real `go run` toolchain and asserts `:hello.to_s`→"hello", `:hi.length`→"2",
-`:abc.upcase`→"ABC", `:ABC.downcase`→"abc", `:hELLO.capitalize`→"Hello",
-`:x.inspect`→":x", `[1,2,3].map(&:to_s).join`→"123" (block-pass form), and
-`[4,5,6].map(:to_s.to_proc).join`→"456" (explicit catalog `to_proc`).
+a real `go run` toolchain and asserts `:hello.to_s`â†’"hello", `:hi.length`â†’"2",
+`:abc.upcase`â†’"ABC", `:ABC.downcase`â†’"abc", `:hELLO.capitalize`â†’"Hello",
+`:x.inspect`â†’":x", `[1,2,3].map(&:to_s).join`â†’"123" (block-pass form), and
+`[4,5,6].map(:to_s.to_proc).join`â†’"456" (explicit catalog `to_proc`).
+
+## 0.16.0
+
+### Added â€” Ruby Symbol method catalog completion (`capitalize` / `inspect` / `to_proc`)
+
+Parity-fill: the Python + TypeScript `sir-runtime-oop` Symbol catalogs already
+expose `inspect`; this ports it into the Go runtime's `_sir_symbol_method`
+switch and adds the two task-mandated Ruby Symbol methods `capitalize` and
+`to_proc`, so a translated Ruby program's Symbol calls execute on the Go
+backend instead of hitting the `NoMethodError` floor.
+
+- **`inspect`** â€” returns the source form `":name"` (a String). Matches the
+  Python/TS reference semantics.
+- **`capitalize`** â€” returns a NEW interned `*Symbol` whose name has an
+  uppercase first char and a lowercase remainder (rune-aware, mirroring the
+  existing `upcase`/`downcase` arms).
+- **`to_proc`** â€” an explicit `sym.to_proc` call returns a `*Closure` built by
+  the SAME `_sir_sym_to_proc` helper the `&:sym` block-pass form uses. The
+  resulting proc routes each application through the explicit
+  `_sir_call_method` switch â€” NEVER Go `reflect` ([[dynamic-dispatch-rce]]); an
+  out-of-catalog method surfaces the ordinary `NoMethodError`. Note: the
+  `&:sym` block-pass form is FRONTEND-lowered straight to `_sir_sym_to_proc`
+  (see `try_emit_block_pass` in `emit.rs`) and never reaches this catalog arm;
+  `to_proc` is added for the explicit-call path and full correctness.
+- `_sir_symbol_responds` (`respond_to?`) updated to include `capitalize`,
+  `inspect`, and `to_proc`.
+
+Exec-proof: `tests/compile_and_run_symbol_methods.rs` runs the emitted Go under
+a real `go run` toolchain and asserts `:hello.to_s`â†’"hello", `:hi.length`â†’"2",
+`:abc.upcase`â†’"ABC", `:ABC.downcase`â†’"abc", `:hELLO.capitalize`â†’"Hello",
+`:x.inspect`â†’":x", `[1,2,3].map(&:to_s).join`â†’"123" (block-pass form), and
+`[4,5,6].map(:to_s.to_proc).join`â†’"456" (explicit catalog `to_proc`).
 
 ## 0.15.0
 
-### Added — Array collection-method parity (min / max / sum / uniq / flatten / compact / each_with_index)
+### Added â€” Array collection-method parity (min / max / sum / uniq / flatten / compact / each_with_index)
 
 Parity-fill: these Ruby `Array` methods already shipped in the Python + TypeScript
 `sir-runtime-oop` backends; this ports the SAME surface into the Go runtime's
@@ -42,31 +76,31 @@ array dispatch, so a translated Ruby program now executes them on the Go backend
 instead of hitting the `NoMethodError` floor. `to_a` was already present and is
 unchanged. Semantics match the Python/TS reference impls exactly.
 
-- **`min` / `max`** (non-block, v0) — element-wise extremum via `_sir_value_lt`
-  (Ruby's `<`/`>`); empty array ⇒ nil. Dispatched in `_sir_array_method`.
-- **`sum`** — folds with the polymorphic `_sir_plus` over an initial value
+- **`min` / `max`** (non-block, v0) â€” element-wise extremum via `_sir_value_lt`
+  (Ruby's `<`/`>`); empty array â‡’ nil. Dispatched in `_sir_array_method`.
+- **`sum`** â€” folds with the polymorphic `_sir_plus` over an initial value
   (default `0`, or the supplied `sum(init)` argument), preserving int/float;
-  empty array ⇒ the initial value. Dispatched in `_sir_array_method`.
-- **`uniq`** — order-preserving de-duplication via structural value-equality
+  empty array â‡’ the initial value. Dispatched in `_sir_array_method`.
+- **`uniq`** â€” order-preserving de-duplication via structural value-equality
   (`_sir_value_eq`); returns a fresh `*Seq`. Dispatched in `_sir_array_method`.
-- **`flatten`** — recursively flattens nested `*Seq` into a fresh flat `*Seq`.
+- **`flatten`** â€” recursively flattens nested `*Seq` into a fresh flat `*Seq`.
   **Cycle-guarded** (CWE-674, uncontrolled recursion): the new
   `_sir_flatten_into` helper threads a `visited` set of `*Seq` handle pointers
-  on the active recursion path — mirroring `_sir_puts_one` — so a self-referential
+  on the active recursion path â€” mirroring `_sir_puts_one` â€” so a self-referential
   array (`a = []; a << a`) terminates instead of overflowing the Go stack.
   Sibling (non-cyclic) occurrences still flatten in full.
-- **`compact`** — fresh `*Seq` with nil elements removed. Dispatched in
+- **`compact`** â€” fresh `*Seq` with nil elements removed. Dispatched in
   `_sir_array_method`.
-- **`each_with_index`** — block-taking; yields `(element, index)` pairs and
+- **`each_with_index`** â€” block-taking; yields `(element, index)` pairs and
   returns the receiver. Dispatched in `_sir_array_block_method`.
 - `_sir_array_responds` now advertises all of the above for `respond_to?` parity.
 
 Execution proof: `tests/compile_and_run_array_methods.rs`
 (`array_methods_compile_and_run`) hand-builds SIR exercising each method, emits
 Go, runs it under `go run`, and diffs stdout against the Python/TS reference
-values (`[3,1,2].max` → 3, `[1,2,2,3,1].uniq` → `[1,2,3]`, `[[1,[2]],3].flatten`
-→ `[1,2,3]`, `[1,nil,2,nil].compact` → `[1,2]`, `[1,2,3].sum` → 6,
-`[10,20].each_with_index` → `0:10`/`1:20` then the returned receiver).
+values (`[3,1,2].max` â†’ 3, `[1,2,2,3,1].uniq` â†’ `[1,2,3]`, `[[1,[2]],3].flatten`
+â†’ `[1,2,3]`, `[1,nil,2,nil].compact` â†’ `[1,2]`, `[1,2,3].sum` â†’ 6,
+`[10,20].each_with_index` â†’ `0:10`/`1:20` then the returned receiver).
 
 ## 0.14.0
 
@@ -76,10 +110,10 @@ values (`[3,1,2].max` → 3, `[1,2,2,3,1].uniq` → `[1,2,3]`, `[[1,[2]],3].flat
   ZERO args via the new `send` surface (`obj.send(:equal?)`, `true.send(:&)`),
   where indexing `args[0]` was a raw Go index-out-of-range panic (catchable only
   as `StandardError`, or a native crash if uncaught). They now raise a typed
-  `ArgumentError` ("wrong number of arguments (given 0, expected 1)") — matching
+  `ArgumentError` ("wrong number of arguments (given 0, expected 1)") â€” matching
   Ruby. Regression: `send_zero_arg_method_raises_argument_error_not_native_panic`.
 
-### Added — M6 universal Object metaprogramming (send / tap / then / respond_to? / boolean &|^)
+### Added â€” M6 universal Object metaprogramming (send / tap / then / respond_to? / boolean &|^)
 
 Parity-fill: M6 shipped in the Python + TypeScript `sir-runtime-oop` backends;
 this ports the SAME surface into the Go runtime's method-dispatch path
@@ -87,41 +121,41 @@ this ports the SAME surface into the Go runtime's method-dispatch path
 `respond_to?` and boolean `&`/`|`/`^` now execute on the Go backend instead of
 hitting the `NoMethodError` floor.
 
-- **`send`/`__send__`/`public_send`** — the first argument names a method; the
+- **`send`/`__send__`/`public_send`** â€” the first argument names a method; the
   dispatcher re-enters `_sir_call_method` with that name and the remaining args
   (a trailing block survives as a trailing arg). **Security ([[dynamic-dispatch-rce]]):**
   the dynamic name is coerced to a string and used ONLY as the key into the
-  SAME explicit catalog/switch a normal call walks — an unknown name surfaces
+  SAME explicit catalog/switch a normal call walks â€” an unknown name surfaces
   the ordinary `NoMethodError`. NEVER Go `reflect`/`MethodByName` on the
   source-derived name.
-- **`tap`** — yields the receiver to the block and returns the RECEIVER; a
+- **`tap`** â€” yields the receiver to the block and returns the RECEIVER; a
   block-less `tap` returns the receiver (v0 Enumerator-less floor).
-- **`then`/`yield_self`** — yields the receiver and returns the BLOCK RESULT;
+- **`then`/`yield_self`** â€” yields the receiver and returns the BLOCK RESULT;
   block-less returns the receiver.
-- **`respond_to?`** — true iff dispatch resolves the name, consulting the same
+- **`respond_to?`** â€” true iff dispatch resolves the name, consulting the same
   reflective / `define_method` / type-specific + universal catalog tiers a real
   call uses (`_sir_responds_to` + per-catalog `_sir_*_responds` predicates kept
-  in lockstep with the dispatch switches). Out-of-catalog → honest `false`.
-- **Boolean `&`/`|`/`^`** on `true`/`false` — Ruby's EAGER (non-short-circuit)
+  in lockstep with the dispatch switches). Out-of-catalog â†’ honest `false`.
+- **Boolean `&`/`|`/`^`** on `true`/`false` â€” Ruby's EAGER (non-short-circuit)
   logical operators, coercing the argument by SIR truthiness (`true & nil` is
   `false`, `false | 0` is `true`, `^` is XOR).
-- Also filled the universal `Object` table: `inspect`, `equal?` (identity —
+- Also filled the universal `Object` table: `inspect`, `equal?` (identity â€”
   value-equal for interned primitives, pointer-equal for `*Seq`/`*Map`/
   `*SirInstance`), `freeze`/`frozen?`, `dup`/`clone` (shallow copy of the
   mutable handles), and `nil.to_a == []` / `Array#to_a == self`.
 - Exec-proof via `go run` (`tests/compile_and_run_m6_meta.rs`):
-  `"hello".send(:upcase)` → `HELLO`, `[1,2,3].send(:map,&blk)` → `[2,4,6]`,
-  `5.tap{…}` → `5`, `5.then{|x|x*2}` → `10`, `respond_to?` true/false honesty,
+  `"hello".send(:upcase)` â†’ `HELLO`, `[1,2,3].send(:map,&blk)` â†’ `[2,4,6]`,
+  `5.tap{â€¦}` â†’ `5`, `5.then{|x|x*2}` â†’ `10`, `respond_to?` true/false honesty,
   the boolean operators, and an unknown `send(:bogus)` failing cleanly through
   the NoMethodError floor (no reflection).
 
 
 ## 0.13.2
 
-### Fixed — `or`/`and` builtins (Ruby `||`/`&&`) were unimplemented
+### Fixed â€” `or`/`and` builtins (Ruby `||`/`&&`) were unimplemented
 
 Ruby `&&`/`and` and `||`/`or` lower (in the frontend) to
-`BuiltinCall("and"/"or", [lhs, rhs])` — the fold covers BOTH the 2-operand
+`BuiltinCall("and"/"or", [lhs, rhs])` â€” the fold covers BOTH the 2-operand
 `a || b` form and a multi-value `when 1, 2, 3` chain. Only the Python backend's
 emitter handled them; this backend fell through to the eager runtime dispatcher,
 which has no `or`/`and` entry, so ANY `||`/`&&` (and every multi-value `when`)
@@ -131,7 +165,7 @@ compile-time gate catches a frontend-emitted builtin the backend never handled.
 - The emitter now special-cases `BuiltinCall("or"/"and", [a, b])`, emitting the
   SAME truthy-guarded short-circuit form as `Expr::LogicalOr`/`LogicalAnd`: rhs
   is not evaluated once lhs decides, SIR truthiness is used, and the deciding
-  OPERAND is returned (Ruby semantics — `nil || "b"` is `"b"`, `"a" || "b"` is
+  OPERAND is returned (Ruby semantics â€” `nil || "b"` is `"b"`, `"a" || "b"` is
   `"a"`), never a bare bool.
 - Emit-shape regression test; verified end-to-end via the sir-conformance
   `logical_ops` + `multi_when` programs (13 corpus x 4 backends, all agree).
@@ -139,83 +173,83 @@ compile-time gate catches a frontend-emitted builtin the backend never handled.
 
 ## 0.13.1
 
-### Fixed — `case_eq` builtin (Ruby case-equality `===`) was unimplemented
+### Fixed â€” `case_eq` builtin (Ruby case-equality `===`) was unimplemented
 
 Ruby's `case`/`when` (and `case`/`in`) lowers, in the frontend, to a chain of
 `if`s whose conditions are `BuiltinCall("case_eq", [pattern, scrutinee])`. This
 backend's runtime never implemented `case_eq`, so **every** `case` program hit
 `_sir_call_builtin_by_name`'s `unknown builtin` floor and **panicked at
-runtime** — `case` was unusable on the Go backend (no compile-time gate catches
+runtime** â€” `case` was unusable on the Go backend (no compile-time gate catches
 a missing builtin; only execution does).
 
 - Added `_sir_case_eq(args) Value` to the inlined runtime and wired it into both
   the emitter's helper table (direct-call path) and `_sir_call_builtin_by_name`
-  (reified-closure path). Ruby keys `===` to the *pattern*'s type (Range →
-  membership, Regexp → match, else `==`); the `when SomeClass` case is lowered to
+  (reified-closure path). Ruby keys `===` to the *pattern*'s type (Range â†’
+  membership, Regexp â†’ match, else `==`); the `when SomeClass` case is lowered to
   `value.is_a?(SomeClass)` at the frontend and never reaches here. This backend's
   Value model has no Range/Regexp variant yet, so `case_eq` is exactly structural
   equality (`_sir_value_eq`), matching the Python reference in `sir-runtime-oop`;
   extend with membership/match arms when those value types land.
-- New `compile_and_run_case_eq` exec proof: a `when`-style `if case_eq(…)` chain
+- New `compile_and_run_case_eq` exec proof: a `when`-style `if case_eq(â€¦)` chain
   emits Go, runs under `go run`, and matches the expected dispatch output.
 
 
 ## 0.13.0
 
-### Added — Ruby mixins: `module` + `include` / `extend` MRO (sir-mixins MX5)
+### Added â€” Ruby mixins: `module` + `include` / `extend` MRO (sir-mixins MX5)
 
 - The Go backend's emitted OOP runtime now EXECUTES Ruby mixins. A method
   defined in a `module` and mixed into a class via `include` is found through
   the class's Method Resolution Order; `extend` exposes a module's methods as
   class methods. Runtime-only change; no core-IR or frontend edit. Dispatch
-  stays explicit NAME-keyed map lookup — NEVER reflection (the
+  stays explicit NAME-keyed map lookup â€” NEVER reflection (the
   [[dynamic-dispatch-rce]] discipline).
-- **`Feature::Modules` is now ACCEPTED.** A `Stmt::ModuleDef` (`module M; …;
+- **`Feature::Modules` is now ACCEPTED.** A `Stmt::ModuleDef` (`module M; â€¦;
   end`) is hosted as a method *owner* alongside classes: its body's `def`s
-  register via the SAME `__def_method__("M", …)` builtin classes use (keyed by
+  register via the SAME `__def_method__("M", â€¦)` builtin classes use (keyed by
   the module name), and its body is emitted in order like a `ClassDef` body.
   Previously `ModuleDef` was rejected at the soundness gate; the gate now
   recurses into a module body for the residual `Const` checks instead.
-- **`__include__("Owner", "M")` → `_sir_include`** — appends `M` to a per-owner
+- **`__include__("Owner", "M")` â†’ `_sir_include`** â€” appends `M` to a per-owner
   included-module list (`_sir_included_modules map[string][]string`) in include
   order. Ruby searches the most-recently-included module first, so the
   resolution walk iterates this slice in REVERSE.
 - **MRO-extended method resolution** (`_sir_resolve_instance_method`): the walk
-  now follows class → its included modules (reverse, recursing so a module that
-  itself includes another is honoured) → superclass → its modules → … → Object.
+  now follows class â†’ its included modules (reverse, recursing so a module that
+  itself includes another is honoured) â†’ superclass â†’ its modules â†’ â€¦ â†’ Object.
   A class's own method SHADOWS an included module's; a module method shadows the
   superclass's. A module reached via two paths (a diamond) resolves ONCE, at its
   earliest position, because the `seen` set skips an already-visited owner. The
   walk is cycle-guarded (a self-including module or cyclic class hierarchy
   TERMINATES).
-- **`__extend__("Owner", "M")` → `_sir_extend`** — copies `M`'s instance
+- **`__extend__("Owner", "M")` â†’ `_sir_extend`** â€” copies `M`'s instance
   methods (including those `M` itself includes) into `Owner`'s class-method
   table, so they become callable as `Owner.method`. An entry `Owner` already
   defines is not overwritten (own/class method shadows the extended module's).
-- **`__class_method__("C", "m", args…)` → `_sir_call_class_method`** — a new
+- **`__class_method__("C", "m", argsâ€¦)` â†’ `_sir_call_class_method`** â€” a new
   emit arm + runtime helper wiring class-method *calls* (`Foo.bar`) through an
   ancestry-walking lookup in the class-method table (which `extend` populates).
   An unresolved name hits the controlled `NoMethodError` floor.
 - Emit arms added for `__include__`, `__extend__`, and `__class_method__`; all
   owner/module/method NAMES ride in as `StrLit`s emitted through
   `quote_go_string` (never interpolated), keeping the runtime side reflection-free.
-- Tests: five `go run` execution proofs (`compile_and_run_mixins.rs`) — an
+- Tests: five `go run` execution proofs (`compile_and_run_mixins.rs`) â€” an
   included-module method callable on an instance, a class method shadowing the
   module's, a module method shadowing the superclass's with a diamond include
   resolving once, `extend` making a module method a class method, and a mixed-in
-  method reading an including class's `@ivar` through the shared self-stack —
+  method reading an including class's `@ivar` through the shared self-stack â€”
   plus emit + runtime unit tests for the new arms and helpers.
 
 ## 0.12.0
 
-### Added — typed runtime errors: ZeroDivision / Index / Key / NoMethod (sir-typed-runtime-errors T4)
+### Added â€” typed runtime errors: ZeroDivision / Index / Key / NoMethod (sir-typed-runtime-errors T4)
 
 - A faulting emitted runtime operation now raises the CORRECT **typed**
-  `SirError` (via the existing `_sir_new_error` + `panic` entry point — the same
+  `SirError` (via the existing `_sir_new_error` + `panic` entry point â€” the same
   one an explicit `raise` uses), so a translated `rescue
   ZeroDivisionError`/`IndexError`/`KeyError`/`NoMethodError` catches it exactly
   as Ruby would, and uniformly with the other backends. Runtime-only change; no
-  core-IR or frontend edit. Dispatch stays explicit-string (no reflection — the
+  core-IR or frontend edit. Dispatch stays explicit-string (no reflection â€” the
   [[dynamic-dispatch-rce]] discipline).
 - **Division by zero** (`_sir_divide`): both the integer path and the
   float-promoted path now reject a zero divisor with
@@ -227,98 +261,98 @@ a missing builtin; only execution does).
 - **`Array#fetch`** (new entry in `_sir_array_method`): an out-of-bounds index
   raises `IndexError`; a supplied default (`fetch(i, d)`) is returned instead of
   raising; negative indices count from the end. The plain index operator
-  `arr[i]` is UNCHANGED — `.fetch` is the raising read, `[]` is not.
+  `arr[i]` is UNCHANGED â€” `.fetch` is the raising read, `[]` is not.
 - **`Hash#fetch`** (new entry in `_sir_hash_method`): a missing key raises
-  `KeyError` ("key not found: …"); a supplied default (`fetch(k, d)`) is
+  `KeyError` ("key not found: â€¦"); a supplied default (`fetch(k, d)`) is
   returned instead. Because `KeyError < IndexError` in the ancestry table, a
   `rescue IndexError` also catches it. The plain `hash[k]` (`MapGet`) still
-  returns `nil` — UNCHANGED (no over-raise).
+  returns `nil` â€” UNCHANGED (no over-raise).
 - **Unknown method** (`_sir_method_unknown`): now raises a typed `NoMethodError`
   with a Ruby-shaped message `undefined method 'x' for <class>`, replacing the
   previous raw `panic(string)` (which was caught only as generic
-  `StandardError`). The dispatch catalog remains the allowlist — an unknown
+  `StandardError`). The dispatch catalog remains the allowlist â€” an unknown
   name still surfaces a controlled, typed failure, never arbitrary behaviour.
 - `*SirError` now implements Go's `error` interface (`Error() string`), so an
   UNCAUGHT typed panic prints a readable `panic: <Class>: <message>` banner
-  instead of Go's default `(*main.SirError) 0x…` pointer dump. Cosmetic for the
+  instead of Go's default `(*main.SirError) 0xâ€¦` pointer dump. Cosmetic for the
   uncaught path only; `recover`/rescue matching still keys off the `Class` tag.
 - Execution proof `compile_and_run_typed_errors.rs` (8 tests) runs each case
   through `go run`: `1/0` caught as `ZeroDivisionError` (and as `StandardError`
-  via ancestry); `arr.fetch(oob)` → `IndexError`; `h.fetch(miss)` → `KeyError`
-  (and caught as `IndexError` via ancestry); `obj.undefined` → `NoMethodError`;
+  via ancestry); `arr.fetch(oob)` â†’ `IndexError`; `h.fetch(miss)` â†’ `KeyError`
+  (and caught as `IndexError` via ancestry); `obj.undefined` â†’ `NoMethodError`;
   regression that `h[miss]` (`MapGet`) still yields `nil`; and that
   `.fetch(k, default)` / an in-bounds `.fetch` do NOT over-raise.
 
 ## 0.11.0
 
-### Added — polymorphic `+` / `*` for strings and arrays (sir-polymorphic-operators PO4)
+### Added â€” polymorphic `+` / `*` for strings and arrays (sir-polymorphic-operators PO4)
 
 - Ruby overloads `+` and `*` by receiver type, and every case lowers to the
   same SIR builtins (`_sir_plus` / `_sir_times`). The Go runtime helpers were
-  previously **numeric-only** — they ran `_sir_as_int`/`_sir_as_float` on every
-  operand — so `"a" + "b"` and `[1] + [2]` produced garbage or panicked. Both
+  previously **numeric-only** â€” they ran `_sir_as_int`/`_sir_as_float` on every
+  operand â€” so `"a" + "b"` and `[1] + [2]` produced garbage or panicked. Both
   helpers now dispatch on the FIRST operand's runtime tag via a Go **type
-  switch** (never reflection — the [[dynamic-dispatch-rce]] discipline) and add
+  switch** (never reflection â€” the [[dynamic-dispatch-rce]] discipline) and add
   the string/array arms ahead of the unchanged numeric fold:
-  - `_sir_plus`: first operand a `string` → concatenate all operands as strings
-    (`"a"+"b"` → `"ab"`); first operand a `*Seq` → concatenate element slices
-    into a **fresh** backing array with no aliasing of any input (`[1]+[2]` →
+  - `_sir_plus`: first operand a `string` â†’ concatenate all operands as strings
+    (`"a"+"b"` â†’ `"ab"`); first operand a `*Seq` â†’ concatenate element slices
+    into a **fresh** backing array with no aliasing of any input (`[1]+[2]` â†’
     `[1, 2]`); otherwise the existing int/float-promoting numeric fold.
-  - `_sir_times`: `string × Integer` → repeat via `strings.Repeat` (`"ab"*3` →
+  - `_sir_times`: `string Ã— Integer` â†’ repeat via `strings.Repeat` (`"ab"*3` â†’
     `"ababab"`; a non-positive count yields `""`, clamped so `strings.Repeat`
-    never panics); `*Seq × Integer` → repeat the element list into a fresh slice
-    (`[0]*3` → `[0, 0, 0]`; non-positive → empty array); `*Seq × string` → join
+    never panics); `*Seq Ã— Integer` â†’ repeat the element list into a fresh slice
+    (`[0]*3` â†’ `[0, 0, 0]`; non-positive â†’ empty array); `*Seq Ã— string` â†’ join
     the elements with the separator using the same value-display helper `puts`
-    uses (`_sir_format`), so `[1,2]*", "` → `"1, 2"`; otherwise the numeric fold.
-- Numeric `+`/`*` semantics (int64 fast path, int→float promotion, variadic
-  fold) are **preserved exactly** — the new arms only run when the first operand
+    uses (`_sir_format`), so `[1,2]*", "` â†’ `"1, 2"`; otherwise the numeric fold.
+- Numeric `+`/`*` semantics (int64 fast path, intâ†’float promotion, variadic
+  fold) are **preserved exactly** â€” the new arms only run when the first operand
   is a string/`*Seq`. Ruby `+`/`*` are binary; the string/array arms fold
   left-associatively over the variadic operand list.
 - A controlled-panic helper `_sir_as_string` coerces string-`+` operands (a
-  non-string operand — e.g. `"a" + 1` — panics with a Ruby-shaped "no implicit
+  non-string operand â€” e.g. `"a" + 1` â€” panics with a Ruby-shaped "no implicit
   conversion of Integer into String" message rather than emitting garbage; the
   strict `TypeError` is deferred to the typed-runtime-errors cascade).
 - Execution proof `compile_and_run_polyops.rs` runs `"a"+"b"`, `"ab"*3`,
   `[1]+[2]`, `[0]*3`, `[1,2]*", "`, and the numeric regressions `1+2` / `2*3`
   under `go run` and asserts stdout is exactly `ab\nababab\n[1, 2]\n[0, 0, 0]\n1, 2\n3\n6\n`.
-- **Overflow guard (security):** the `*` repeat arms compute `len × count` in a
+- **Overflow guard (security):** the `*` repeat arms compute `len Ã— count` in a
   fixed-width host `int`, which on a large count could overflow (wrapping to a
-  negative/absurd `make` capacity → opaque panic) or drive a multi-gigabyte
-  allocation → OOM. Both arms now short-circuit an empty receiver (also avoiding
+  negative/absurd `make` capacity â†’ opaque panic) or drive a multi-gigabyte
+  allocation â†’ OOM. Both arms now short-circuit an empty receiver (also avoiding
   a huge append loop) and guard `count > maxInt/len` with a controlled
-  `panic("argument too big")` — matching Ruby's `ArgumentError: argument too
-  big` — before any `strings.Repeat`/`make`. The count is program-controlled, so
+  `panic("argument too big")` â€” matching Ruby's `ArgumentError: argument too
+  big` â€” before any `strings.Repeat`/`make`. The count is program-controlled, so
   this closes a reachable resource-exhaustion vector.
 
 ## 0.10.0
 
-### Added — `puts` builtin (Ruby semantics)
+### Added â€” `puts` builtin (Ruby semantics)
 
 - The Go backend now emits and executes Ruby's `puts`, the most common output
-  method. `puts` maps to a new variadic runtime helper `_sir_puts([]Value{…})`
+  method. `puts` maps to a new variadic runtime helper `_sir_puts([]Value{â€¦})`
   (routed both by the emit helper table and the `_sir_call_builtin_by_name`
   dispatch), reusing `_sir_format` for element rendering.
-- Ruby semantics implemented exactly: no-arg → one newline; `puts x` →
+- Ruby semantics implemented exactly: no-arg â†’ one newline; `puts x` â†’
   `x.to_s` + newline (no double newline when the text already ends in `"\n"`);
-  `puts a, b` → one line per arg; `puts []` → a single newline; a `*Seq` is
-  flattened recursively, one **element** per line; `puts nil` → a blank line.
+  `puts a, b` â†’ one line per arg; `puts []` â†’ a single newline; a `*Seq` is
+  flattened recursively, one **element** per line; `puts nil` â†’ a blank line.
 - Execution proof `compile_and_run_puts.rs` runs `puts "hello"; puts;
   puts [1,2,3]` under `go run` and asserts stdout is exactly
   `hello\n\n1\n2\n3\n` (the Ruby reference output).
 
-### Security — cycle-guard the `puts` array flatten (CWE-674)
+### Security â€” cycle-guard the `puts` array flatten (CWE-674)
 
 - `_sir_puts_one` flattened arrays by recursing per element with **no bound**.
   A `*Seq` is a shared, mutable handle, so a translated program can build a
   self-referential array (`a = []; a << a; puts a`) or a pathologically deep
   one; the unguarded recursion overflowed the Go stack and aborted the process
-  — a denial of service (uncontrolled recursion). The flatten now threads a
+  â€” a denial of service (uncontrolled recursion). The flatten now threads a
   `visited` set of the `*Seq` pointers on the active path (the same identity
   key `_sir_format` uses): a handle re-encountered within its own subtree is a
   cycle and renders as Ruby's `[...]` placeholder + newline instead of
   recursing, so `puts a` on a self-referential array now **terminates** exactly
   as real Ruby does. Non-cyclic output is byte-for-byte unchanged
-  (`puts [1,[2,3]]` → `1\n2\n3\n`); a new regression test
+  (`puts [1,[2,3]]` â†’ `1\n2\n3\n`); a new regression test
   (`puts_cyclic_array_terminates`) proves the self-referential case exits
   cleanly with `[...]\n`.
 
@@ -326,56 +360,56 @@ a missing builtin; only execution does).
 
 ### Added
 
-- **User-defined class OOP — method dispatch, `new`, `self`, `super` (O4).**
+- **User-defined class OOP â€” method dispatch, `new`, `self`, `super` (O4).**
   The Go backend now EXECUTES real user-defined classes (the Go analogue of the
   Python/TS `sir-runtime-oop` O1 path), not just exception subclasses.  The
-  method↔class association — which the Ruby frontend loses when it HOISTS every
-  `def` to a detached top-level function — is recovered at RUNTIME via explicit
+  methodâ†”class association â€” which the Ruby frontend loses when it HOISTS every
+  `def` to a detached top-level function â€” is recovered at RUNTIME via explicit
   `(class, method)` map tables.
   - **Inlined Go runtime** (`runtime.rs`, verbatim in every artifact):
     - `SirInstance { Class string; Ivars map[string]Value }` + `_sir_new_instance`.
     - Instance/class method tables `map[string]Value` keyed by a NUL-joined
       `class + "\x00" + method` string (a NUL cannot appear in an identifier, so
-      the flattened key is unambiguous) — `_sir_def_method` /
+      the flattened key is unambiguous) â€” `_sir_def_method` /
       `_sir_def_class_method`.
-    - `_sir_call_new(cls, args…)` — allocate → push self → resolve an inherited
-      `initialize` (walking the SHARED `_sir_ancestry` table, seen-guarded) →
-      apply → pop self via `defer` → return the instance.
+    - `_sir_call_new(cls, argsâ€¦)` â€” allocate â†’ push self â†’ resolve an inherited
+      `initialize` (walking the SHARED `_sir_ancestry` table, seen-guarded) â†’
+      apply â†’ pop self via `defer` â†’ return the instance.
     - `_sir_call_method` extended: a `*SirInstance` receiver resolves the user
       method table walking ancestry (push self, apply, pop via `defer`); a miss
       falls through to universal Object methods, else the NoMethodError floor.
       NON-instance receivers reach the existing collection/built-in catalog
       **UNCHANGED**.
-    - `_sir_call_super(method, cls, args…)` — walk from the superclass, apply
-      with the CURRENT self still bound (no push/pop — `super` re-dispatches on
+    - `_sir_call_super(method, cls, argsâ€¦)` â€” walk from the superclass, apply
+      with the CURRENT self still bound (no push/pop â€” `super` re-dispatches on
       the same receiver).
     - `_sir_current_self()` (`__self__`), `_sir_ivar_get`/`_sir_ivar_set` on the
       current self (self-stack top, with a default-self so top-level `@x` never
       panics), and `_sir_cvar_get`/`_sir_cvar_set` for class variables.
   - **Emit arms** (`emit::emit_builtin_call`, mirroring `__method__`):
-    `__new__`→`_sir_call_new`, `__super__`→`_sir_call_super`,
-    `__def_method__`/`__def_class_method__`→ the table registrations,
-    `__self__`→`_sir_current_self`.  Class/method names ride in as `StrLit`s and
-    are emitted through `quote_go_string` — never interpolated.
+    `__new__`â†’`_sir_call_new`, `__super__`â†’`_sir_call_super`,
+    `__def_method__`/`__def_class_method__`â†’ the table registrations,
+    `__self__`â†’`_sir_current_self`.  Class/method names ride in as `StrLit`s and
+    are emitted through `quote_go_string` â€” never interpolated.
   - **`@ivar` / `@@cvar`** (`emit::emit_var_ref` + `emit_stmt`):
-    `VarRef`/`Assign{scope:Instance}` → `_sir_ivar_get`/`set("@x", …)`;
-    `scope:ClassVar` → the `_sir_cvar_*` helpers.
+    `VarRef`/`Assign{scope:Instance}` â†’ `_sir_ivar_get`/`set("@x", â€¦)`;
+    `scope:ClassVar` â†’ the `_sir_cvar_*` helpers.
   - **Feature acceptance** (`lib.rs`): `ACCEPTED_FEATURES` now includes
     `InstanceVars` + `ClassVars` (alongside the existing `Classes`/`Constants`),
     so a REAL OO module is accepted and routed through the runtime.  The existing
-    soundness gate still cleanly REJECTS genuinely-unsupported constructs — a
+    soundness gate still cleanly REJECTS genuinely-unsupported constructs â€” a
     general `Const` used as a value, a `Const` assignment, a `ModuleDef`
-    (`Feature::Modules` stays unaccepted — no mixin/MRO runtime in v0).
+    (`Feature::Modules` stays unaccepted â€” no mixin/MRO runtime in v0).
   - **SECURITY (the C3 RCE lesson).**  Dispatch is ONLY an explicit map lookup on
-    the `(class, method)` key — NEVER Go `reflect`/`MethodByName` on a
+    the `(class, method)` key â€” NEVER Go `reflect`/`MethodByName` on a
     source-derived name.  A class/method named `constructor`/`__proto__` is just
-    a map key (a miss → the clean NoMethodError floor).  Every ancestry walk
+    a map key (a miss â†’ the clean NoMethodError floor).  Every ancestry walk
     carries a `seen` set so a cyclic hierarchy TERMINATES; self-stack pops go
     through `defer` so a panic still unwinds correctly.
   - **Tests.**  Emitted-shape unit tests for the five builtins + `@ivar`/`@@cvar`
     refs, plus `tests/compile_and_run_oop.rs` execution proofs through `go run`:
-    P1 (`Dog.new("Rex").speak` → `Rex`), P2 (inheritance + `super`, parent-set
-    ivar visible → `4`), a security case (class/method named `constructor`
+    P1 (`Dog.new("Rex").speak` â†’ `Rex`), P2 (inheritance + `super`, parent-set
+    ivar visible â†’ `4`), a security case (class/method named `constructor`
     dispatches the user method; unknown `__proto__` hits the NoMethodError
     floor), and a cyclic-ancestry-terminates case.
 
@@ -386,7 +420,7 @@ a missing builtin; only execution does).
 - **Exception handling via panic/recover + ancestry (E3).**  The Go backend now
   EXECUTES `begin/rescue/ensure` and `raise` end to end.  Go has NO native
   try/catch, so exceptions are modelled with `panic` + a deferred `recover`:
-  - **`Stmt::TryCatch` → an immediately-invoked func** (`emit::emit_try_catch`).
+  - **`Stmt::TryCatch` â†’ an immediately-invoked func** (`emit::emit_try_catch`).
     The func registers up to two deferred closures and then runs the try body:
     ```go
     func() {
@@ -406,36 +440,36 @@ a missing builtin; only execution does).
     An empty `exception_types` is a bare `rescue` (catch-all); `=> e` binds the
     caught value via `_sir_exc_value(r)`.
   - **ENSURE ORDERING (LIFO).**  Deferred funcs run last-in-first-out, and Ruby's
-    `ensure` must run whether or not a rescue matched — i.e. it must run LAST — so
-    its `defer` is registered **first** (deferred earliest ⇒ runs last).  The
+    `ensure` must run whether or not a rescue matched â€” i.e. it must run LAST â€” so
+    its `defer` is registered **first** (deferred earliest â‡’ runs last).  The
     recover/dispatch `defer` is registered second (runs first): it recovers,
-    dispatches, and re-`panic`s unmatched exceptions — a re-panic still unwinds
+    dispatches, and re-`panic`s unmatched exceptions â€” a re-panic still unwinds
     through the already-registered ensure defer, so `ensure` runs on the
     propagating path too.
-  - **`raise` → `panic`** (`emit::emit_builtin_call`).  `raise Foo, "m"` →
+  - **`raise` â†’ `panic`** (`emit::emit_builtin_call`).  `raise Foo, "m"` â†’
     `panic(_sir_new_error("Foo", <msg>))` (the `Const` class name is intercepted
-    and passed as a string — it never reaches `emit_var_ref`); `raise "boom"`
-    (non-const first arg) → an implicit `RuntimeError`; bare `raise` → a generic
+    and passed as a string â€” it never reaches `emit_var_ref`); `raise "boom"`
+    (non-const first arg) â†’ an implicit `RuntimeError`; bare `raise` â†’ a generic
     `RuntimeError` (SIR v0 does not thread the in-flight exception into a bare
-    re-raise — Go's `recover()` only works in a deferred func, matching the
+    re-raise â€” Go's `recover()` only works in a deferred func, matching the
     TS/Python backends' documented limitation).
   - **Runtime helpers** (`runtime.rs`, inlined verbatim): a `SirError` struct
     `{ Class string; Msg Value }`; `_sir_new_error(class, msg)`;
-    `_sir_exc_value(r)` (the `Value` a `rescue => e` binds — a `*SirError`
+    `_sir_exc_value(r)` (the `Value` a `rescue => e` binds â€” a `*SirError`
     verbatim, or a synthesised `StandardError` wrapping a native Go panic);
     `_sir_rescue_matches(r, classNames)` (the ordered, ancestry-aware type test);
     and `_sir_register_ancestry(edges)` for user-defined class edges.  A
     `_sir_format` arm makes a caught exception print as its message (Ruby's
     `exception.message`).
   - **Built-in Ruby ancestry table** (`_sir_ancestry`), **ported from the
-    TS/Python `sir-runtime-exceptions` reference for parity**: `StandardError →
+    TS/Python `sir-runtime-exceptions` reference for parity**: `StandardError â†’
     Exception`, `ArgumentError`/`TypeError`/`RuntimeError`/`RangeError`/
     `ZeroDivisionError`/`IOError`/`StopIteration`/`NotImplementedError`/
-    `NameError`/`IndexError → StandardError`, `NoMethodError → NameError`,
-    `KeyError → IndexError`.  User `class MyErr < StandardError` declarations
+    `NameError`/`IndexError â†’ StandardError`, `NoMethodError â†’ NameError`,
+    `KeyError â†’ IndexError`.  User `class MyErr < StandardError` declarations
     contribute one edge each, collected from every `ClassDef{superclass:Some}`
     and registered **once at program init** (`emit::emit_ancestry_init`).
-  - **SECURITY — no reflection, cycle-guarded.**  Rescue matching is an EXPLICIT
+  - **SECURITY â€” no reflection, cycle-guarded.**  Rescue matching is an EXPLICIT
     string-map lookup (`_sir_ancestry`), never reflection on a Go type name; user
     edges enter only via `_sir_register_ancestry` (built-in edges are never
     overwritten).  The ancestry walk carries a `seen` set so a malicious cyclic
@@ -444,11 +478,11 @@ a missing builtin; only execution does).
 ### Changed
 
 - **`Feature::Exceptions`, `Feature::Classes`, `Feature::Constants` are now
-  accepted** — but `Classes`/`Constants` ONLY for exception subclasses and the
+  accepted** â€” but `Classes`/`Constants` ONLY for exception subclasses and the
   `raise Foo`/`rescue Foo` class-name references they carry, NOT general OOP.  A
   new structural gate `check_exception_soundness` (beside `check_no_keyword_rest_mix`)
   keeps the backend's "never mis-emit" promise: a `Const` reference/assignment
-  OUTSIDE a `raise ClassName`, or a `module … end`, is rejected CLEANLY with an
+  OUTSIDE a `raise ClassName`, or a `module â€¦ end`, is rejected CLEANLY with an
   `UnsupportedFeature` error.  A class carrying instance/class variables observes
   `InstanceVars`/`ClassVars` (still unaccepted) and is rejected at the manifest
   gate; method-bearing classes hoist their `def`s to top-level Functions, so the
@@ -459,12 +493,12 @@ a missing builtin; only execution does).
 ### Added
 
 - **Collection-method dispatch + runtime catalog (C5).**  The Go backend now
-  EXECUTES `recv.meth(args…)` end to end.  A method call reaches the backend as
-  `BuiltinCall("__method__", [recv, StrLit("meth"), …args])`; previously it fell
+  EXECUTES `recv.meth(argsâ€¦)` end to end.  A method call reaches the backend as
+  `BuiltinCall("__method__", [recv, StrLit("meth"), â€¦args])`; previously it fell
   through to the generic `_sir_call_builtin_by_name` fallback, which has no
-  method-dispatch arm — so any collection method failed at runtime.  Now:
+  method-dispatch arm â€” so any collection method failed at runtime.  Now:
   - **Emit** (`emit.rs`): a `"__method__"` case in `emit_builtin_call` lowers the
-    dispatch to `_sir_call_method(recv, "name", []Value{…args})`.  A trailing
+    dispatch to `_sir_call_method(recv, "name", []Value{â€¦args})`.  A trailing
     block (`MakeClosure`) rides in as the last `[]Value` element; a `&:sym` /
     `&proc` block-pass that survives on the dispatch is converted via
     `try_emit_block_pass` (`_sir_sym_to_proc(intern("sym"))` for `&:sym`, the
@@ -495,18 +529,18 @@ a missing builtin; only execution does).
       that re-enters dispatch on its first argument, so `map(&:to_s)` behaves
       exactly like `map { |x| x.to_s }`.
   - **Security (the C3 RCE lesson)**: dispatch is ONLY through the explicit
-    catalog switches — there is **no reflection** on the raw method name, no
+    catalog switches â€” there is **no reflection** on the raw method name, no
     dynamic Go method/field lookup.  The catalog switch IS the allowlist.  An
     unknown method on a known receiver falls through to `_sir_method_unknown`,
     which panics with a controlled `undefined method '<name>' for <Class>`
-    message — a surfaced runtime error, never arbitrary behaviour.
+    message â€” a surfaced runtime error, never arbitrary behaviour.
   - **Capability gate** (`lib.rs`): a **pure** collection-method module (a
     `__method__` dispatch with NO class features) is now proven accepted.  This
     needs no gate change and no new `Feature` variant (the deferred C1
     `MethodDispatch` is not required): the validator observes no feature for
     `__method__`, so such a module carries only its receiver/argument features
     (`Sequences`/`Strings`/`Closures`/`Symbols`/`Maps`/`DynamicTyping`), all
-    already accepted — while class-bearing modules stay rejected
+    already accepted â€” while class-bearing modules stay rejected
     (`Feature::Classes` is not accepted).  The runtime catalog is the real gate.
   - Adds `sort` + `strings` to the emitted import block (the runtime catalog
     always references both).
@@ -525,12 +559,12 @@ a missing builtin; only execution does).
 ### Fixed
 
 - **Reject keyword params mixed with `*rest`/`**kwrest` (unsound static
-  resolution).**  KW6 resolves keyword arguments by *static* keyword→positional
+  resolution).**  KW6 resolves keyword arguments by *static* keywordâ†’positional
   slot mapping, which is only sound for **fixed-arity** callees.  The core
   validator, however, accepts a callee that mixes a `Keyword` param with a
   variadic (its ordering rule is `Required* Rest? Keyword* KwRest?`, so Ruby's
   `def f(a, *rest, x: 1)` is well-formed), and this backend accepts
-  `Feature::KeywordParams` — so such a module reached `emit_direct_call`, where
+  `Feature::KeywordParams` â€” so such a module reached `emit_direct_call`, where
   the `*rest` slot has no fixed position for a keyword to resolve against.  The
   result was a **panic** in debug builds (`debug_assert!` in the slot loop) or a
   **silent mis-emit** in release builds (a single `_sir_missing` sentinel landed
@@ -544,11 +578,11 @@ a missing builtin; only execution does).
   Added unit tests for both the `*rest` and `**kwrest` rejections and for the
   preserved happy path.
 
-## 0.6.0 — KW6 keyword parameters & arguments via static positional resolution
+## 0.6.0 â€” KW6 keyword parameters & arguments via static positional resolution
 
 Adds `Feature::KeywordParams` to the Go backend's accepted set (see
-`code/specs/sir-keyword-params.md`, §4 Go row).  Go has **no** native keyword
-arguments, so the backend lowers them **directly** — no runtime library — by
+`code/specs/sir-keyword-params.md`, Â§4 Go row).  Go has **no** native keyword
+arguments, so the backend lowers them **directly** â€” no runtime library â€” by
 resolving each keyword to a positional slot at *emit time* (a `DirectCall`'s
 callee signature is statically known).  This mirrors the Rust backend's
 strategy and reuses the SIR19 default-parameter machinery (the `_sir_missing`
@@ -557,23 +591,23 @@ sentinel + callee body prologue) unchanged.
 ### Added
 
 - **Keyword def params are positional-ized.**  A `ParamKind::Keyword` parameter
-  emits as an ordinary positional Go parameter in declared order — the
+  emits as an ordinary positional Go parameter in declared order â€” the
   by-name-ness is a source affordance the backend resolves at the call site.
   An *optional* keyword (`Keyword` + `default: Some`) reuses the existing
   default-param prologue: `if _sir_is_missing(name) { name = <default> }`.
-- **Static keyword→positional call resolution.**  A `DirectCall` whose `args`
+- **Static keywordâ†’positional call resolution.**  A `DirectCall` whose `args`
   contain `Expr::KeywordArg{ name, value }` elements is emitted as a plain
   positional Go call, built in the callee's declared param order:
   leading positionals fill leading slots; each `KeywordArg` fills the slot
   whose param **name** matches (source order irrelevant); every omitted
   *optional* slot is padded with `_sir_missing` (the callee prologue supplies
-  the default). Worked example — `greet(greeting:, name: "world")`:
-  `greet(greeting: "hi")` → `greet("hi", _sir_missing)`;
-  `greet(name: "ada", greeting: "hi")` → `greet("hi", "ada")`.
+  the default). Worked example â€” `greet(greeting:, name: "world")`:
+  `greet(greeting: "hi")` â†’ `greet("hi", _sir_missing)`;
+  `greet(name: "ada", greeting: "hi")` â†’ `greet("hi", "ada")`.
 - **`FN_PARAMS` signature table.**  A new per-module thread-local mapping each
   function name to its parameter shapes (name, is-keyword, has-default), in
   order, populated by `emit_module` alongside `FN_ARITY`.  The `DirectCall`
-  arm consults it to reorder keywords by name — `FN_ARITY` alone knows only
+  arm consults it to reorder keywords by name â€” `FN_ARITY` alone knows only
   *how many* params, not their names.
 
 ### Tests
@@ -588,14 +622,14 @@ sentinel + callee body prologue) unchanged.
   `greet(greeting: "hi", name: "ada")` prints `(hi ada)` (supplied). Skips
   gracefully if `go` is absent.
 
-### Deferred (spec §Out of scope)
+### Deferred (spec Â§Out of scope)
 
 - **Indirect/closure keyword calls.**  An `IndirectCall`/`MakeClosure` cannot
   resolve keywords by name (the callee signature is not statically known); the
   frontends do not emit such calls, so a `KeywordArg` reaching that path
   panics with a documented deferral message rather than mis-emitting.
 
-## 0.5.0 — SIR19 default parameters (P2f) via missing-sentinel runtime-mimic
+## 0.5.0 â€” SIR19 default parameters (P2f) via missing-sentinel runtime-mimic
 
 Adds `Feature::DefaultParams` to the Go backend's accepted set.  Go has no
 native optional/default parameters and emitted functions are *fixed-arity*
@@ -604,7 +638,7 @@ package-level MISSING sentinel flows through the ordinary `Value` channel.
 
 Semantics are **call-time, param-scope**: a default expression is evaluated
 each call, in the callee, where the *earlier* parameters are already bound
-(so a later default may reference an earlier param — `def f(a, b = a + 1)`).
+(so a later default may reference an earlier param â€” `def f(a, b = a + 1)`).
 
 ### Added
 
@@ -615,7 +649,7 @@ each call, in the callee, where the *earlier* parameters are already bound
   `func _sir_is_missing(v Value) bool` predicate exact and total.
 - **Caller-side padding.**  A `DirectCall` that omits trailing defaulted
   arguments pads the call up to the callee's full (fixed) param count with
-  `_sir_missing`, e.g. `f(5)` for `f(a, b = …)` emits
+  `_sir_missing`, e.g. `f(5)` for `f(a, b = â€¦)` emits
   `f(Value(int64(5)), _sir_missing)`.  The full param count comes from the
   module's function table (`FN_ARITY`, populated by `emit_module` before any
   body is walked).
@@ -629,7 +663,7 @@ each call, in the callee, where the *earlier* parameters are already bound
 
 ### Changed
 
-- **`_sir_format` / `_sir_value_eq`** defensively handle the sentinel — it
+- **`_sir_format` / `_sir_value_eq`** defensively handle the sentinel â€” it
   never reaches a print or `=` path in a well-formed program (a defaulted
   param is always replaced before use), but `_sir_format` renders a stray
   sentinel as `<missing>` and `_sir_value_eq` treats two sentinels as equal
@@ -656,7 +690,7 @@ each call, in the callee, where the *earlier* parameters are already bound
   trailing-newline, a needless lifetime on `pick_global_set`, and a
   `len() >= 1`) so the crate is clippy-clean under `--all-targets`.
 
-## 0.4.1 — harden emitted Go runtime against cyclic Seq/Map
+## 0.4.1 â€” harden emitted Go runtime against cyclic Seq/Map
 
 `*Seq`/`*Map` are shared, *mutable* handles, so an emitted Go program can
 build a cyclic structure (`xs = [0]; xs[0] = xs`).  Before this release the
@@ -667,7 +701,7 @@ comparing two *distinct* cyclic structures (a self-cycle was already short-
 circuited by the same-pointer fast path, but distinct cyclic operands were
 not).  This mirrors the Rust backend's `0.4.1` cyclic-guard.
 
-This is a robustness fix only — the public runtime API and the printed form
+This is a robustness fix only â€” the public runtime API and the printed form
 of every *non-cyclic* value are byte-identical (all existing tests pass
 unchanged).
 
@@ -675,7 +709,7 @@ unchanged).
 
 - **`_sir_format` / `_sir_format_seq` / `_sir_format_map`** now thread a
   visited-pointer set through a new `_sir_format_d(v, visited)` variant.
-  The set is a `map[Value]bool` keyed on the Seq/Map **pointer** — a
+  The set is a `map[Value]bool` keyed on the Seq/Map **pointer** â€” a
   `*Seq`/`*Map` boxed in the `Value` (`interface{}`) compares by pointer
   identity, the idiomatic Go way to key on handle identity.  A handle is
   inserted on entry and removed on exit, so it is only "seen" along the
@@ -684,7 +718,7 @@ unchanged).
   instead of recursing, while a value reached twice by sibling (non-cyclic)
   paths still prints in full.  `_sir_format_pair` threads the set too (a
   pair can hold a cyclic seq/map).  The public `_sir_format(Value) string`
-  signature is unchanged — it allocates a fresh visited set and delegates.
+  signature is unchanged â€” it allocates a fresh visited set and delegates.
 - **`_sir_value_eq`** keeps the same-pointer (`as == bs`) identity fast
   path and adds a co-inductive `pending` set of handle-pairs currently
   being compared (a `map[[2]Value]bool` keyed on the two boxed pointers)
@@ -695,8 +729,8 @@ unchanged).
 - **`_sir_map_get` / `_sir_map_set` / `_sir_map_put`** need no
   restructuring: Go has no `RefCell`-style aliasing-borrow check (the Rust
   backend's "already mutably borrowed" panic on a self-referential key has
-  no Go analogue), and the remaining hazard — a cyclic key making
-  `_sir_value_eq` recurse forever — is now handled by that function's
+  no Go analogue), and the remaining hazard â€” a cyclic key making
+  `_sir_value_eq` recurse forever â€” is now handled by that function's
   co-inductive guard.  A comment on `_sir_map_put` records this.
 
 ### Tests
@@ -712,11 +746,11 @@ unchanged).
   the emitted runtime string (`_sir_format_d` / `_sir_value_eq_d` and the
   placeholder literals).
 
-## 0.4.0 — SIR16 Sequences + Maps — completes Go v1 parity (A6)
+## 0.4.0 â€” SIR16 Sequences + Maps â€” completes Go v1 parity (A6)
 
 The final two SIR16 (v1) features land in the Go backend.  With them the
 Go backend accepts **all six** SIR16 features (Floats, ShortCircuit,
-MutableBindings, Loops, Sequences, Maps) — reaching **full SIR-v1
+MutableBindings, Loops, Sequences, Maps) â€” reaching **full SIR-v1
 parity**.  Go is the **fifth and last backend to reach v1**, completing
 the backend fleet (joining TypeScript, Rust, Python, and the others).
 Before this release a module using `SeqLit` / `SeqIndex` / `SeqLen` /
@@ -729,47 +763,47 @@ them up end-to-end.
 - `Feature::Sequences` and `Feature::Maps` join the backend's
   `ACCEPTED_FEATURES`, so a module declaring them is no longer rejected
   by the capability check.
-- **Sequences** — the inlined Go runtime gains a `*Seq` value (a struct
+- **Sequences** â€” the inlined Go runtime gains a `*Seq` value (a struct
   `Seq{ Items []Value }` held by pointer).  The pointer is the crux: a
   `SeqSet` (`xs[i] = v`) mutates the very sequence the caller holds, and
-  two bindings that alias the same literal observe each other's writes —
+  two bindings that alias the same literal observe each other's writes â€”
   the reference semantics of a Python list / JS array.  Copying a `Value`
   that holds a `*Seq` copies the handle, not the backing slice.
-  - `SeqLit` → `_sir_seq_lit([]Value{...})` builds a fresh shared seq.
-  - `SeqIndex` → `_sir_seq_index(seq, i)` (strict bounds; out-of-range
+  - `SeqLit` â†’ `_sir_seq_lit([]Value{...})` builds a fresh shared seq.
+  - `SeqIndex` â†’ `_sir_seq_index(seq, i)` (strict bounds; out-of-range
     panics, like `car`/`cdr`).
-  - `SeqLen` → `_sir_seq_len(seq)` returns the element count as `int64`.
-  - `SeqSet` → `_ = _sir_seq_set(seq, i, v)` mutates in place (no
+  - `SeqLen` â†’ `_sir_seq_len(seq)` returns the element count as `int64`.
+  - `SeqSet` â†’ `_ = _sir_seq_set(seq, i, v)` mutates in place (no
     auto-grow; out-of-range panics).
-- **Maps** — the runtime gains a `*Map` value (a struct
+- **Maps** â€” the runtime gains a `*Map` value (a struct
   `Map{ Entries []MapEntry }`, an *insertion-ordered* association list).
   Go's native `map` can't key on an arbitrary `Value` (floats, closures,
-  nested seqs/maps aren't usable keys), so — mirroring the Rust backend —
+  nested seqs/maps aren't usable keys), so â€” mirroring the Rust backend â€”
   keys are compared with the runtime's structural value-equality
   (`_sir_value_eq`, a linear scan).  A missing key reads as `nil`.
-  - `MapLit` → `_sir_map_lit([]Value{keys...}, []Value{vals...})` (keys
+  - `MapLit` â†’ `_sir_map_lit([]Value{keys...}, []Value{vals...})` (keys
     and values emitted as two parallel slices since Go has no tuple
     literal); last-write-wins on duplicate keys, first-seen order kept.
-  - `MapGet` → `_sir_map_get(map, key)` (missing key ⇒ `nil`).
-  - `MapSet` → `_ = _sir_map_set(map, key, v)` inserts (appends, order-
+  - `MapGet` â†’ `_sir_map_get(map, key)` (missing key â‡’ `nil`).
+  - `MapSet` â†’ `_ = _sir_map_set(map, key, v)` inserts (appends, order-
     preserving) or overwrites in place.
-- **Structural value-equality** — `_sir_eq` now routes through a new
+- **Structural value-equality** â€” `_sir_eq` now routes through a new
   `_sir_value_eq` that handles the whole value tower (numbers cross-type,
   symbols, pairs, and now seqs/maps element-wise / entry-wise, with
   identical-handle short-circuit).  This is the single source of truth
   shared by `=` and map-key lookup.
-- **ForEach reconciliation** — `_sir_seq_iter` (the A5 cons-list
+- **ForEach reconciliation** â€” `_sir_seq_iter` (the A5 cons-list
   flattener used by `ForEach`) now *also* snapshots a real `*Seq`, so
   `for x in [1, 2, 3]` (a `SeqLit`) iterates end to end while
   `ForEach`-over-cons-list keeps working.  A `*Seq` is copied element-wise
   into a fresh `[]Value` so the loop body sees a stable view even if it
   mutates the underlying sequence.
-- **Display** — `_sir_format` renders a seq as a bracketed list
+- **Display** â€” `_sir_format` renders a seq as a bracketed list
   (`[1, 2, 3]`) and a map as a brace-wrapped, insertion-ordered entry
   list (`{a: 1, b: 2}`).
-- New integration test `tests/compile_and_run_seq_maps.rs` — hand-builds
+- New integration test `tests/compile_and_run_seq_maps.rs` â€” hand-builds
   a module that exercises a sequence (lit/index/len/set + aliasing), a
-  map (lit/get/set + missing-key ⇒ nil), and a `for x in [10,20,30]`
+  map (lit/get/set + missing-key â‡’ nil), and a `for x in [10,20,30]`
   ForEach accumulation; emits Go, `go run`s it (gated on `go`
   availability), and asserts stdout (`99 / 3 / 99 / 2 / 3 / nil / 60`).
   This is the only check that catches Go's `:=`-vs-`=` and
@@ -783,7 +817,7 @@ them up end-to-end.
   (classes / module-defs / exceptions / `StrConcat`) whose features stay
   unaccepted, so they remain strictly unreachable.
 
-## 0.3.0 — SIR16 MutableBindings + Loops (A5)
+## 0.3.0 â€” SIR16 MutableBindings + Loops (A5)
 
 The next two SIR16 (v1) features land in the Go backend, mirroring the
 merged Rust backend equivalent.  Before this release the Go backend
@@ -797,34 +831,34 @@ wires up mutation and the three loop forms end-to-end onto Go's native
 - `Feature::MutableBindings` and `Feature::Loops` join the backend's
   `ACCEPTED_FEATURES`, so a module declaring them is no longer rejected
   by the capability check.
-- **MutableBindings** — `Stmt::Assign` to a Local/Param/Capture emits a
+- **MutableBindings** â€” `Stmt::Assign` to a Local/Param/Capture emits a
   plain `<name> = <value>`.  Go has no const/mut distinction, so unlike
   the Rust backend (which needs a `let mut` pre-pass) reassignment just
   works against the name already declared by the matching `LetBinding`
   (`:=`) or parameter.  A `Global` assignment writes through the runtime
   global store (`_sir_globals[<key>] = <value>`).
-- **Loops** — `Stmt::While` / `ForRange` / `ForEach` map onto Go's
+- **Loops** â€” `Stmt::While` / `ForRange` / `ForEach` map onto Go's
   native `for`:
-  - `While` → `for _sir_truthy(<cond>) { <body> }` (Go's `for` is its
+  - `While` â†’ `for _sir_truthy(<cond>) { <body> }` (Go's `for` is its
     `while`; the test routes through SIR truthiness, never Go `bool`).
-  - `ForRange` → a native three-clause `for` whose `stop`/`step` bounds
+  - `ForRange` â†’ a native three-clause `for` whose `stop`/`step` bounds
     are cached **once** into `int64` temporaries (re-evaluating Python's
     `range` bounds each turn would be wrong).  A direction-aware
     continue test (`_sir_range_cont`) lets a negative `step` count down.
-    The loop variable is re-bound each turn as a fresh `Value(int64(…))`
+    The loop variable is re-bound each turn as a fresh `Value(int64(â€¦))`
     and guarded with `_ = <var>` so an unused loop var still compiles.
-  - `ForEach` → `for _, <var> := range _sir_seq_iter(<iter>)`.  The new
+  - `ForEach` â†’ `for _, <var> := range _sir_seq_iter(<iter>)`.  The new
     runtime `_sir_seq_iter` flattens a cons-list (`Pair`-chain ending in
     `nil`) into a `[]Value` (Sequences land in a later PR, so a
     "sequence" is still the classic cons-list).
 - Loop bodies emit in statement context: a body's trailing non-`nil`
   value becomes `_ = <value>` (so side effects fire), and introduced
-  loop variables get a `_ = <var>` guard — satisfying Go's strict
+  loop variables get a `_ = <var>` guard â€” satisfying Go's strict
   unused-variable rule even when the body ignores them.
 - New runtime helpers `_sir_range_cont` and `_sir_seq_iter`.  (`ForRange`
   reuses the existing `_sir_as_int` from the Floats release for its
   bound extraction.)
-- New integration test `tests/compile_and_run_loops.rs` — hand-builds a
+- New integration test `tests/compile_and_run_loops.rs` â€” hand-builds a
   module using a mutable accumulator, a `for`-range, and a `while`
   countdown, emits Go, `go run`s it (gated on `go` availability), and
   asserts stdout (`sum 0..5 = 10`, countdown to `0`, reassign to `99`).
@@ -839,7 +873,7 @@ wires up mutation and the three loop forms end-to-end onto Go's native
   later PR.  `accepts_features` stays in lockstep with emit: every
   declared feature has a real (non-panicking) emit path.
 
-## 0.2.0 — SIR16 Floats + ShortCircuit (A4)
+## 0.2.0 â€” SIR16 Floats + ShortCircuit (A4)
 
 First two SIR16 (v1) features land in the Go backend, mirroring the
 just-merged Rust backend equivalent.  Before this release the Go backend
@@ -851,33 +885,33 @@ declared *none* of the six SIR16 features, so every SIR16 IR node hit a
 - `Feature::Floats` and `Feature::ShortCircuit` join the backend's
   `ACCEPTED_FEATURES`, so a module declaring them is no longer rejected
   by the capability check.
-- **Floats** — the inlined Go runtime's `Value` (`interface{}`) now
+- **Floats** â€” the inlined Go runtime's `Value` (`interface{}`) now
   accepts a `float64` arm:
   - New helpers `_sir_as_float`, `_sir_any_float`, `_sir_is_number_val`,
     and `_sir_format_float`.
   - Arithmetic (`+ - * /`) keeps the exact int64 fast-path while every
     operand is an integer, and promotes the whole fold to `float64` the
-    moment any operand is a float ("int op float ⇒ float").  Integer
+    moment any operand is a float ("int op float â‡’ float").  Integer
     division keeps its divide-by-zero panic; float division follows
-    IEEE-754 (`1.0/0.0 ⇒ +Inf`).
+    IEEE-754 (`1.0/0.0 â‡’ +Inf`).
   - `=` is cross-type for numbers (`1 == 1.0` is true) and uses IEEE
     equality for floats (`NaN != NaN`).  `<` / `>` compare numerically,
     staying on the int path when both operands are int64.
   - `number?` is true for both integers and floats.
   - `FloatLit` emits `Value(float64(<lit>))`; integral values spell out
     `3.0` (never `3`) so the runtime type-switch hits the float arm.
-    Non-finite values route through `math.NaN()` / `math.Inf(±1)` since
+    Non-finite values route through `math.NaN()` / `math.Inf(Â±1)` since
     Go has no float literal for them.
   - Display: `_sir_format_float` prints integral floats with a trailing
     `.0` (`3.0`, not Go's default `%v`-style `3`), fractional values via
     `strconv.FormatFloat(x, 'g', -1, 64)`, and non-finite values as
-    `NaN` / `inf` / `-inf` — matching the Rust backend's intent.
-- **ShortCircuit** — `LogicalAnd` / `LogicalOr` emit a truthy-guarded
+    `NaN` / `inf` / `-inf` â€” matching the Rust backend's intent.
+- **ShortCircuit** â€” `LogicalAnd` / `LogicalOr` emit a truthy-guarded
   immediately-invoked func literal:
   `func() Value { __l := <lhs>; if _sir_truthy(__l) { return <rhs> } else { return __l } }()`
   (and the mirror for `or`).  The operand value is returned (not a
   coerced bool), `lhs` is evaluated exactly once, and each IIFE scopes
-  its own `__l` so nesting never collides.  Pure emit — no runtime
+  its own `__l` so nesting never collides.  Pure emit â€” no runtime
   change.
 - The emitter now imports `"math"` (alongside `"fmt"` and `"strconv"`);
   the runtime always references it via the float `NaN`/`Inf` checks, so
@@ -885,18 +919,18 @@ declared *none* of the six SIR16 features, so every SIR16 IR node hit a
 - Integration test `tests/compile_and_run_floats.rs`: hand-builds a SIR
   module exercising floats, short-circuit, and cross-type equality;
   emits Go, runs it with `go run`, and asserts stdout
-  (`4.0 / 4.0 / 5 / 7 / #f / #t`).  Gated on `go version` — skips with a
+  (`4.0 / 4.0 / 5 / 7 / #f / #t`).  Gated on `go version` â€” skips with a
   log line if the Go toolchain is absent.
 
 ### Notes
 
 - The remaining four SIR16 features (MutableBindings, Loops, Sequences,
   Maps) are still **not** declared, so the corresponding emit arms
-  (`SeqLit`, `MapLit`, `Assign`, `While`, …) remain reachable only as
-  internal-bug `panic!`s — the capability check rejects such modules
+  (`SeqLit`, `MapLit`, `Assign`, `While`, â€¦) remain reachable only as
+  internal-bug `panic!`s â€” the capability check rejects such modules
   before emit.  They land in later Go PRs.
 
-## 0.1.2 — SIR18 exhaustiveness (no behaviour change)
+## 0.1.2 â€” SIR18 exhaustiveness (no behaviour change)
 
 semantic-ir 0.10.0 adds `Expr::StrConcat` (the SIR18 string-concat
 node).  This backend gains a `StrConcat` arm in its expression emitter
@@ -907,7 +941,7 @@ accepted-feature set, so a concat-using module is rejected at the
 capability check before emit, making the arm unreachable.  No output or
 accepted-feature changes.
 
-## 0.1.1 — SIR17 exhaustiveness (no behaviour change)
+## 0.1.1 â€” SIR17 exhaustiveness (no behaviour change)
 
 semantic-ir 0.2.0 adds `Stmt::ClassDef` (the SIR17 class node).  This
 backend gains a `ClassDef` match arm in its statement emitter so it
@@ -917,7 +951,7 @@ backend's accepted-feature set, so a class-using module is rejected
 at the capability check before emit, making the arm unreachable.  No
 output or accepted-feature changes.
 
-## 0.1.0 — initial release (SIR15 v0)
+## 0.1.0 â€” initial release (SIR15 v0)
 
 Fourth backend for the narrow-waist Semantic IR.  Emits
 self-contained Go source from a `semantic_ir::Module`.
@@ -947,18 +981,18 @@ self-contained Go source from a `semantic_ir::Module`.
 - Identifier sanitisation handles Go keywords (`for`, `func`,
   `chan`, etc.) and predeclared builtins (`int`, `string`,
   `print`, `len`, etc.) by appending `_`.  Other invalid chars
-  encode as `_<hex>`.  Empty → `_sir_empty`.  SIR's `main` is
+  encode as `_<hex>`.  Empty â†’ `_sir_empty`.  SIR's `main` is
   renamed to `_sir_user_main` so the emitter's own `main()`
   doesn't collide.
 - `sanitize_comment` strips line terminators from external
-  strings written into `//` comments — same defence as SIR12 /
+  strings written into `//` comments â€” same defence as SIR12 /
   SIR13 / SIR14.
 - Pre-lowering validation via `semantic_ir::validate`; capability
   check via `Backend::check_module`.
 
 ### Notes
 
-- The runtime always imports both `"fmt"` and `"strconv"` — both
+- The runtime always imports both `"fmt"` and `"strconv"` â€” both
   are referenced inside the runtime block, so Go's strict
   unused-import rule never fires regardless of what the user
   module uses.
