@@ -126,6 +126,7 @@ SELF_CONTAINED_RUNGS = (
     "rung86_joint_fluid",
     "rung87_complement_titer",
     "rung88_nerve_conduction",
+    "rung89_skin_test_wheal",
 )
 
 
