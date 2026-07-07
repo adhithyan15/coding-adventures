@@ -350,6 +350,40 @@ describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
     expect(callMethod([], "reduce", new Closure((a: Val, b: Val) => a + b))).toBeNull();
   });
 
+  it("array block-method breadth: sort_by/min_by/max_by/group_by/partition/…", () => {
+    const id = new Closure((x: Val) => x);
+    const even = new Closure((x: Val) => x % 2 === 0);
+    expect(callMethod([3, 1, 2], "sort_by", id)).toEqual([1, 2, 3]);
+    expect(callMethod(["aaa", "a", "aa"], "sort_by", new Closure((s: Val) => s.length))).toEqual([
+      "a",
+      "aa",
+      "aaa",
+    ]);
+    expect(callMethod([3, 1, 2], "min_by", id)).toBe(1);
+    expect(callMethod([3, 1, 2], "max_by", id)).toBe(3);
+    expect(callMethod([], "min_by", id)).toBeNull();
+    // group_by returns a Hash (Map).
+    expect(callMethod([1, 2, 3, 4], "group_by", even)).toEqual(
+      new Map<Val, Val>([
+        [false, [1, 3]],
+        [true, [2, 4]],
+      ]),
+    );
+    expect(callMethod([1, 2, 3, 4], "partition", even)).toEqual([
+      [2, 4],
+      [1, 3],
+    ]);
+    expect(callMethod([1, 2], "collect_concat", new Closure((x: Val) => [x, x]))).toEqual([
+      1, 1, 2, 2,
+    ]);
+    expect(callMethod([1, 2, 3, 4], "take_while", new Closure((x: Val) => x < 3))).toEqual([1, 2]);
+    expect(callMethod([1, 2, 3, 4], "drop_while", new Closure((x: Val) => x < 3))).toEqual([3, 4]);
+    expect(callMethod([1, 2, 3, 4], "count", even)).toBe(2);
+    expect(
+      callMethod([1, 2, 3], "each_with_object", [], new Closure((x: Val, o: Val) => o.push(x * 10))),
+    ).toEqual([10, 20, 30]);
+  });
+
   it("find/detect and flat_map", () => {
     expect(callMethod([1, 2, 3, 4], "find", new Closure((x: Val) => x > 2))).toBe(3);
     expect(callMethod([1, 2], "detect", new Closure((x: Val) => x > 9))).toBeNull();
