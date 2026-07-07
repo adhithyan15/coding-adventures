@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.32.0] - 2026-07-07
+
+### Added — CLOC12.168 PR2: bridge `import.meta` → `Expression::ImportMeta` (closes gap-169)
+
+The bridge now converts the grammar's `import_meta` leaf into
+`Expression::ImportMeta` (the module meta-property, sibling of `new.target`).
+Previously the `import_meta` rule — whose children are the three bare tokens
+`[Token("import"), Token("."), Token("meta")]` with no Node child — fell through
+the expression dispatch to the `other =>` internal-error arm, dragging any file
+containing `import.meta` to WHITESPACE_ONLY. A new `convert_import_meta` lowers
+it to the atomic `ImportMeta` leaf (the `.meta` is part of the fixed spelling,
+not a member access; the `import` token's `cv` becomes the node's provenance),
+mirroring `new.target`. The dead `import_meta_expression` decline arm (a rule
+name the grammar never emits for this construct) is removed. 3 new bridge unit
+tests (`import.meta;` → `ImportMeta`; `import.meta.url;` → member access whose
+object is `ImportMeta`; `f(import.meta);` bridges in argument position). The
+closurec end-to-end diff fixture exercises the full SIMPLE pipeline. (gap-169)
+
+
 ## [0.31.0] - 2026-07-07
 
 ### Added — CLOC12.167 PR2: bridge `new.target` → `Expression::NewTarget` (closes gap-168)
