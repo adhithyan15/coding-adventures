@@ -2177,16 +2177,30 @@ member kinds and recurse into the spread `argument`; visitor passes (`inline`,
 member is a spread, since a spread injects statically-unknown keys. All in ONE
 atomic commit so the workspace never has a broken `match`.
 
-### gap-SpreadProperty — bridge declines object spread `{...o}` — **OPEN (bridge slice pending, CLOC12.170 PR2)**
+### gap-SpreadProperty — bridge declines object spread `{...o}` — **RESOLVED (javascript-parser 0.34.0, CLOC12.170 PR2)**
 
-The `javascript-parser` bridge's `convert_property_definition` still returns
-`UnsupportedSyntax` for a `...` spread property (the `has_token(node, "...")`
-guard), so a file containing `{...o}` drops to WHITESPACE_ONLY. PR1 lands the
-`ObjectMember` node + emit + pass recursion so the typed AST and every pass can
-already represent and print an object spread. **PR2** wires
-`convert_property_definition`'s spread branch to `ObjectMember::Spread` and adds
-a closurec e2e diff fixture; **PR3** ports the upstream CodePrinter object-spread
-conformance cases.
+The `javascript-parser` bridge's `convert_property_definition` declined a `...`
+spread property with `UnsupportedSyntax { rule: "SpreadProperty" }`, so a file
+containing `{...o}` dropped to WHITESPACE_ONLY. PR1 landed the `ObjectMember`
+node + emit + pass recursion so the typed AST and every pass could already
+represent and print an object spread.
+
+**Fix (CLOC12.170 PR2):** dumping the parse tree showed the object-spread form
+nests one level deeper than the call/array spread (gap-163): a
+`property_definition` holds a single `object_spread_property` Node child whose
+own children are `[ Token("..."), Node(assignment_expression) ]` (the call/array
+spread's ELLIPSIS sits directly under `spread_element`, a different rule). So
+`convert_object_literal` now detects the spread by that inner rule name — it
+finds an `object_spread_property` child, extracts the `assignment_expression`
+(via `node_children`, which strips the ELLIPSIS token), converts it, and wraps
+it in `ObjectMember::Spread(SpreadElement { .. })` — reusing the same
+`SpreadElement` the call/array spread uses so it prints through
+`emit_object_spread`. Member order is preserved (observable: a later member
+overrides an earlier key). The dead `SpreadProperty` decline arm is removed from
+`convert_property_definition`. 3 bridge unit tests, plus the closurec e2e diff
+fixture `tests/diff/simple-objspread/` (`f({...o, x: 1 + 2});` → `f({...o,x:3});`)
+proving `{...o}` flows through SIMPLE. The **PR3** CodePrinter conformance port
+follows.
 
 ## CLOC12.169 — `ImportExpression` (dynamic `import(x)`): atomic node + emit + passes (PR1)
 

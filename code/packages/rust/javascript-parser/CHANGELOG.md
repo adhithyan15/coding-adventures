@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.34.0] - 2026-07-07
+
+### Added — CLOC12.170 PR2: bridge object spread `{...o}` → `ObjectMember::Spread` (closes gap-SpreadProperty)
+
+`convert_object_literal` now converts an object spread `{...o}` (ES2018) into an
+`ObjectMember::Spread`. Previously `convert_property_definition` declined the
+spread with `UnsupportedSyntax { rule: "SpreadProperty" }`, dragging any file
+containing `{...o}` to WHITESPACE_ONLY.
+
+Dumping the parse tree showed the spread form nests one level deeper than the
+call/array spread (CLOC12.162): a `property_definition` holds a single
+`object_spread_property` Node child whose own children are
+`[ Token("..."), Node(assignment_expression) ]` (the call/array spread's ELLIPSIS
+sits directly under `spread_element`, a different rule). So the spread is
+detected by that inner rule name — `convert_object_literal` finds an
+`object_spread_property` child, extracts its `assignment_expression` (via
+`node_children`, which strips the ELLIPSIS), converts it, and wraps it in
+`ObjectMember::Spread(SpreadElement { .. })` — reusing the same `SpreadElement`
+the call/array spread uses, so it prints through `emit_object_spread`. Member
+order is preserved (`{a: 1, ...o}` keeps the plain property then the spread),
+which is observable since a later member overrides an earlier key. The dead
+`SpreadProperty` decline arm is removed from `convert_property_definition`
+(spreads never reach it now). 3 bridge unit tests (`{...o}` → sole `Spread`
+member; `{a: 1, ...o}` → `[Property, Spread]` in order; `f({...o})` bridges in
+call-argument position).
+
 ## [0.33.0] - 2026-07-07
 
 ### Added — CLOC12.169 PR2: bridge `import(x)` → `Expression::ImportExpression` (closes gap-170)

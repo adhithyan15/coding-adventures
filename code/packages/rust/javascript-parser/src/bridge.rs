@@ -2654,12 +2654,34 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
     for n in nodes {
         match n.rule_name.as_str() {
             "property_definition" => {
-                // PR1 (node-only): normal key/value / shorthand / getter / setter
-                // properties convert to `ObjectMember::Property`. Object spread
-                // `{...o}` is still declined inside `convert_property_definition`
-                // (gap-SpreadProperty) — the `ObjectMember::Spread` bridge lands
-                // in CLOC12.170 PR2.
-                properties.push(ObjectMember::Property(convert_property_definition(n)?));
+                // A `property_definition` is either a normal member (`k: v`,
+                // shorthand `{x}`, getter/setter) or an **object spread** `...expr`
+                // (ES2018). Dumping the parse tree shows the spread form nests one
+                // level deeper than the call/array spread: the `property_definition`
+                // holds a single `object_spread_property` Node child whose own
+                // children are `[ Token("..."), Node(assignment_expression) ]`.
+                // (The call/array spread's ELLIPSIS sits directly under
+                // `spread_element` — a different rule.) So we detect the spread by
+                // that inner rule name, not `has_token` on `property_definition`.
+                // CLOC12.170 PR2, closes gap-SpreadProperty.
+                let spread = node_children(n)
+                    .into_iter()
+                    .find(|c| c.rule_name == "object_spread_property");
+                if let Some(spread_node) = spread {
+                    // `node_children` strips the ELLIPSIS token, leaving the single
+                    // `assignment_expression`. Reuse `SpreadElement` (the same node
+                    // the call/array spread uses) so it prints via `emit_object_spread`.
+                    let arg_n = node_children(spread_node).into_iter().next().ok_or_else(
+                        || internal(spread_node, "object spread: no argument expression"),
+                    )?;
+                    let argument = convert_expression(arg_n)?;
+                    properties.push(ObjectMember::Spread(SpreadElement {
+                        cv: None,
+                        argument: Box::new(argument),
+                    }));
+                } else {
+                    properties.push(ObjectMember::Property(convert_property_definition(n)?));
+                }
             }
             _ => {}
         }
@@ -2670,14 +2692,11 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, BridgeError> {
     // property_definition = property_name COLON assignment_expression
     //                     | NAME  (shorthand)
-    //                     | ELLIPSIS assignment_expression  (spread — unsupported)
     //                     | method_definition  (unsupported Phase 2)
-    if has_token(node, "...") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "SpreadProperty".to_string(),
-            location: loc(node),
-        });
-    }
+    //
+    // The ELLIPSIS spread form `...expr` is NOT handled here — `convert_object_literal`
+    // detects it (`has_token`) and builds `ObjectMember::Spread` directly, since a
+    // spread is a *member* but not a `Property`. This fn only sees plain members.
     let nodes = node_children(node);
     if nodes.len() == 2 {
         // property_name : value
@@ -4344,6 +4363,59 @@ mod tests {
                 }
             },
             other => panic!("expected ObjectExpression, got {other:?}"),
+        }
+    }
+
+    // ---- object spread `{...o}` (CLOC12.170 PR2, closes gap-SpreadProperty) --
+
+    /// `({...o})` bridges to an `ObjectExpression` whose sole member is an
+    /// `ObjectMember::Spread` wrapping the identifier `o` (no longer declined to
+    /// `SpreadProperty` / WHITESPACE_ONLY).
+    #[test]
+    fn object_spread_sole_member() {
+        match first_expr(&bridge_ok("({...o});")) {
+            Expression::ObjectExpression(obj) => {
+                assert_eq!(obj.properties.len(), 1, "one (spread) member");
+                match &obj.properties[0] {
+                    ObjectMember::Spread(s) => {
+                        assert!(matches!(&*s.argument, Expression::Identifier(i) if i.name == "o"));
+                    }
+                    other => panic!("expected Spread member, got {other:?}"),
+                }
+            }
+            other => panic!("expected ObjectExpression, got {other:?}"),
+        }
+    }
+
+    /// `({a: 1, ...o})` preserves member order — a plain `Property` then a
+    /// `Spread` (interleaving is observable: the spread may override `a`).
+    #[test]
+    fn object_spread_after_property_preserves_order() {
+        match first_expr(&bridge_ok("({a: 1, ...o});")) {
+            Expression::ObjectExpression(obj) => {
+                assert_eq!(obj.properties.len(), 2, "two members in order");
+                assert!(matches!(&obj.properties[0], ObjectMember::Property(p)
+                    if matches!(&p.key, PropertyKey::Identifier(i) if i.name == "a")));
+                assert!(matches!(&obj.properties[1], ObjectMember::Spread(s)
+                    if matches!(&*s.argument, Expression::Identifier(i) if i.name == "o")));
+            }
+            other => panic!("expected ObjectExpression, got {other:?}"),
+        }
+    }
+
+    /// `f({...o})` — an object spread nested inside a call argument bridges
+    /// cleanly (the whole file no longer drops to WHITESPACE_ONLY).
+    #[test]
+    fn object_spread_in_call_argument() {
+        match first_expr(&bridge_ok("f({...o});")) {
+            Expression::CallExpression(c) => match &c.arguments[0] {
+                Expression::ObjectExpression(obj) => {
+                    assert!(matches!(&obj.properties[0], ObjectMember::Spread(s)
+                        if matches!(&*s.argument, Expression::Identifier(i) if i.name == "o")));
+                }
+                other => panic!("expected ObjectExpression argument, got {other:?}"),
+            },
+            other => panic!("expected CallExpression, got {other:?}"),
         }
     }
 

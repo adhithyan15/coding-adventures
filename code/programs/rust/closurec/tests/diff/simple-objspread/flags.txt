@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-objspread/input/a.js
+--compilation_level
+SIMPLE
