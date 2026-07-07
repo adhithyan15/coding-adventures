@@ -686,6 +686,12 @@ summary capability metadata so WebAssembly-backed product shells can render
 compact activation receipt journal summary handoff receipt acknowledgement
 record receipt acknowledgement record status cards without re-walking record
 payloads.
+Embed runtime activation receipt journal summary handoff receipt
+acknowledgement record receipt acknowledgement record summary digests add stable
+digest IDs, route/hold dispositions, badge labels and tones, routing targets,
+compact notification/count metadata, and summary-digest capability metadata so
+WebAssembly-backed product shells can route acknowledgement status cards without
+parsing the larger summary payload.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
