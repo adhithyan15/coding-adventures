@@ -14,7 +14,8 @@
 //! side holds it as an opaque `long` handle and must call `nativeFree` when done.
 //! All calls are expected on a single (UI) thread — the handle is not synchronised.
 
-use jni_bridge::{jint, jlong, jstring, JNIEnv, jclass};
+use jni_bridge::{jboolean, jbyteArray, jclass, jint, jlong, jstring, JNIEnv};
+use jni_bridge::{jni_get_byte_array, jni_new_byte_array_from};
 use jni_bridge::{jni_get_string_utf, jni_new_string_utf};
 use spreadsheet_core_wasm::SpreadsheetSession;
 
@@ -142,4 +143,165 @@ pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeColumnLetters(
 ) -> jstring {
     let session = session!(ptr, env, jni_new_string_utf(env, ""));
     jni_new_string_utf(env, &session.column_letters(index as u32))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// File open / save — a Java `byte[]` in, a `byte[]` out.
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// The Android host reads a file the user picked into a `byte[]` and passes it to
+// `nativeLoad<Fmt>` (returns a `boolean`); `nativeSave<Fmt>` returns a `byte[]`
+// the host writes back out. A `byte[]` carries the raw file bytes intact — an
+// `.xlsx` is a ZIP, an `.xls` an OLE2 file — with no UTF-8 / NUL surprises. This
+// is the Android arm of the same open/save story as the WASM and C-ABI facades,
+// over the one engine. `.xlsx` keeps live formulas; the others are
+// lower-fidelity per `spreadsheet-io`.
+
+/// Open `.xlsx` file bytes as the current document. Returns `true` if opened,
+/// `false` if the bytes are not a readable `.xlsx` (or the handle is dead); a
+/// failed open leaves the current document untouched.
+///
+/// # Safety
+/// `ptr` must be a live session handle; `data` a valid `byte[]` or null.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeLoadXlsx(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+    data: jbyteArray,
+) -> jboolean {
+    let session = session!(ptr, env, 0);
+    session.load_xlsx_bytes(&jni_get_byte_array(env, data)) as jboolean
+}
+
+/// Save the current document to `.xlsx` bytes (a fresh `byte[]`).
+///
+/// # Safety
+/// `ptr` must be a live session handle.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeSaveXlsx(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+) -> jbyteArray {
+    let session = session!(ptr, env, jni_new_byte_array_from(env, &[]));
+    jni_new_byte_array_from(env, &session.save_xlsx_bytes())
+}
+
+/// Open legacy `.xls` (BIFF8) file bytes. Returns `true`/`false` like
+/// [`nativeLoadXlsx`](Java_com_example_visicalc_Engine_nativeLoadXlsx).
+///
+/// # Safety
+/// `ptr` must be a live session handle; `data` a valid `byte[]` or null.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeLoadXls(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+    data: jbyteArray,
+) -> jboolean {
+    let session = session!(ptr, env, 0);
+    session.load_xls_bytes(&jni_get_byte_array(env, data)) as jboolean
+}
+
+/// Save the current document to legacy `.xls` bytes.
+///
+/// # Safety
+/// `ptr` must be a live session handle.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeSaveXls(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+) -> jbyteArray {
+    let session = session!(ptr, env, jni_new_byte_array_from(env, &[]));
+    jni_new_byte_array_from(env, &session.save_xls_bytes())
+}
+
+/// Open `.csv` file bytes. Returns `true`/`false` (`false` on invalid UTF-8).
+///
+/// # Safety
+/// `ptr` must be a live session handle; `data` a valid `byte[]` or null.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeLoadCsv(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+    data: jbyteArray,
+) -> jboolean {
+    let session = session!(ptr, env, 0);
+    session.load_csv_bytes(&jni_get_byte_array(env, data)) as jboolean
+}
+
+/// Save the current document's first sheet to `.csv` bytes.
+///
+/// # Safety
+/// `ptr` must be a live session handle.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeSaveCsv(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+) -> jbyteArray {
+    let session = session!(ptr, env, jni_new_byte_array_from(env, &[]));
+    jni_new_byte_array_from(env, &session.save_csv_bytes())
+}
+
+/// Open `.tsv` file bytes. Returns `true`/`false` like `nativeLoadCsv`.
+///
+/// # Safety
+/// `ptr` must be a live session handle; `data` a valid `byte[]` or null.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeLoadTsv(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+    data: jbyteArray,
+) -> jboolean {
+    let session = session!(ptr, env, 0);
+    session.load_tsv_bytes(&jni_get_byte_array(env, data)) as jboolean
+}
+
+/// Save the current document's first sheet to `.tsv` bytes.
+///
+/// # Safety
+/// `ptr` must be a live session handle.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeSaveTsv(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+) -> jbyteArray {
+    let session = session!(ptr, env, jni_new_byte_array_from(env, &[]));
+    jni_new_byte_array_from(env, &session.save_tsv_bytes())
+}
+
+/// Open `.json` file bytes (a top-level array of record objects → a table).
+/// Returns `true`/`false` (`false` on malformed JSON — parsing is panic-free).
+///
+/// # Safety
+/// `ptr` must be a live session handle; `data` a valid `byte[]` or null.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeLoadJson(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+    data: jbyteArray,
+) -> jboolean {
+    let session = session!(ptr, env, 0);
+    session.load_json_bytes(&jni_get_byte_array(env, data)) as jboolean
+}
+
+/// Save the current document's first sheet to `.json` bytes (array of records).
+///
+/// # Safety
+/// `ptr` must be a live session handle.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_visicalc_Engine_nativeSaveJson(
+    env: *mut JNIEnv,
+    _class: jclass,
+    ptr: jlong,
+) -> jbyteArray {
+    let session = session!(ptr, env, jni_new_byte_array_from(env, &[]));
+    jni_new_byte_array_from(env, &session.save_json_bytes())
 }

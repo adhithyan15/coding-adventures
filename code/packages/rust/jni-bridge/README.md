@@ -67,3 +67,9 @@ pub unsafe extern "C" fn Java_com_example_Foo_greet(
 | `jni_set_object_field(env, obj, fid, val)` | 104 | Set object field |
 | `jni_new_double_array(env, len)` | 182 | Create `double[]` |
 | `jni_set_double_array_region(env, arr, s, l, buf)` | 214 | Fill `double[]` from buffer |
+| `jni_get_array_length(env, arr)` | 171 | Length of any array |
+| `jni_new_byte_array(env, len)` | 176 | Create `byte[]` |
+| `jni_get_byte_array_region(env, arr, s, l, buf)` | 200 | Copy `byte[]` → buffer |
+| `jni_set_byte_array_region(env, arr, s, l, buf)` | 208 | Fill `byte[]` from buffer |
+| `jni_get_byte_array(env, arr)` → `Vec<u8>` | — | `byte[]` → owned bytes (null-safe) |
+| `jni_new_byte_array_from(env, &[u8])` | — | owned bytes → `byte[]` |

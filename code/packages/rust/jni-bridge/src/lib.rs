@@ -120,6 +120,8 @@ pub type jthrowable = jobject;
 pub type jstring   = jobject;
 /// JNI array reference.
 pub type jarray    = jobject;
+/// JNI `byte[]` reference (a `jarray` whose elements are `jbyte`).
+pub type jbyteArray = jarray;
 /// JNI method ID — identifies a Java method; not a GC root.
 pub type jmethodID = *mut c_void;
 /// JNI field ID — identifies a Java field; not a GC root.
@@ -214,7 +216,11 @@ const SET_DOUBLE_FIELD_OFFSET:        usize = 112; // void SetDoubleField(env, o
 const NEW_STRING_UTF_OFFSET:          usize = 167; // jstring NewStringUTF(env, utf8)
 const GET_STRING_UTF_CHARS_OFFSET:    usize = 169; // const char* GetStringUTFChars(env, str, isCopy)
 const RELEASE_STRING_UTF_CHARS_OFFSET:usize = 170; // void ReleaseStringUTFChars(env, str, chars)
+const GET_ARRAY_LENGTH_OFFSET:        usize = 171; // jsize GetArrayLength(env, array)
+const NEW_BYTE_ARRAY_OFFSET:          usize = 176; // jbyteArray NewByteArray(env, len)
 const NEW_DOUBLE_ARRAY_OFFSET:        usize = 182; // jarray NewDoubleArray(env, len)
+const GET_BYTE_ARRAY_REGION_OFFSET:   usize = 200; // void GetByteArrayRegion(env, arr, start, len, buf)
+const SET_BYTE_ARRAY_REGION_OFFSET:   usize = 208; // void SetByteArrayRegion(env, arr, start, len, buf)
 const SET_DOUBLE_ARRAY_REGION_OFFSET: usize = 214; // void SetDoubleArrayRegion(env, arr, start, len, buf)
 const GET_JAVA_VM_OFFSET:             usize = 219; // jint GetJavaVM(env, JavaVM**)
 const EXCEPTION_CHECK_OFFSET:         usize = 228; // jboolean ExceptionCheck(env)
@@ -505,6 +511,103 @@ pub unsafe fn jni_set_double_array_region(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Byte arrays (JNI spec §Array Operations) — for passing file bytes to/from Java
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// A Java `byte[]` is the natural carrier for a spreadsheet file's raw bytes
+// (an `.xlsx` a user opened, or a document to download). The two convenience
+// wrappers below hide the raw JNI dance: `jni_get_byte_array` copies a `byte[]`
+// into an owned `Vec<u8>` (length query + one region copy — `jbyte` is `i8`, the
+// same bit pattern as `u8`), and `jni_new_byte_array_from` allocates a fresh
+// `byte[]` and fills it from a `&[u8]`. Both are safe against a null array.
+
+/// `GetArrayLength` — the element count of any Java array.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv; `arr` a valid array ref or null (→ 0).
+pub unsafe fn jni_get_array_length(env: *mut JNIEnv, arr: jarray) -> jsize {
+    if arr.is_null() {
+        return 0;
+    }
+    type F = unsafe extern "C" fn(*mut JNIEnv, jarray) -> jsize;
+    let f: F = table_fn(env, GET_ARRAY_LENGTH_OFFSET);
+    f(env, arr)
+}
+
+/// `NewByteArray` — allocate an empty Java `byte[]` of `len` bytes. Null on OOM.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.
+pub unsafe fn jni_new_byte_array(env: *mut JNIEnv, len: jsize) -> jbyteArray {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jsize) -> jbyteArray;
+    let f: F = table_fn(env, NEW_BYTE_ARRAY_OFFSET);
+    f(env, len)
+}
+
+/// `GetByteArrayRegion` — copy `len` bytes from `arr` (starting at `start`) into
+/// `buf`. `jbyte` is `i8`; the caller reinterprets the identical bits as `u8`.
+///
+/// # Safety
+/// `env` valid; `arr` a valid `byte[]`; `buf` writable for `len` `jbyte`s.
+pub unsafe fn jni_get_byte_array_region(
+    env: *mut JNIEnv,
+    arr: jbyteArray,
+    start: jsize,
+    len: jsize,
+    buf: *mut jbyte,
+) {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jbyteArray, jsize, jsize, *mut jbyte);
+    let f: F = table_fn(env, GET_BYTE_ARRAY_REGION_OFFSET);
+    f(env, arr, start, len, buf);
+}
+
+/// `SetByteArrayRegion` — copy `len` bytes from `buf` into `arr` at `start`.
+///
+/// # Safety
+/// `env` valid; `arr` a valid `byte[]`; `buf` readable for `len` `jbyte`s.
+pub unsafe fn jni_set_byte_array_region(
+    env: *mut JNIEnv,
+    arr: jbyteArray,
+    start: jsize,
+    len: jsize,
+    buf: *const jbyte,
+) {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jbyteArray, jsize, jsize, *const jbyte);
+    let f: F = table_fn(env, SET_BYTE_ARRAY_REGION_OFFSET);
+    f(env, arr, start, len, buf);
+}
+
+/// Copy a Java `byte[]` into an owned `Vec<u8>`. A null array yields an empty
+/// vec. `jbyte` (`i8`) and `u8` share a bit pattern, so the region copies
+/// straight into a `u8` buffer.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv; `arr` a valid `byte[]` ref or null.
+pub unsafe fn jni_get_byte_array(env: *mut JNIEnv, arr: jbyteArray) -> Vec<u8> {
+    let len = jni_get_array_length(env, arr);
+    if arr.is_null() || len <= 0 {
+        return Vec::new();
+    }
+    let mut buf = vec![0u8; len as usize];
+    jni_get_byte_array_region(env, arr, 0, len, buf.as_mut_ptr() as *mut jbyte);
+    buf
+}
+
+/// Allocate a fresh Java `byte[]` and fill it from a `&[u8]`. Returns null if
+/// the allocation fails (an `OutOfMemoryError` is then pending).
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.
+pub unsafe fn jni_new_byte_array_from(env: *mut JNIEnv, bytes: &[u8]) -> jbyteArray {
+    let len = bytes.len() as jsize;
+    let arr = jni_new_byte_array(env, len);
+    if !arr.is_null() && len > 0 {
+        jni_set_byte_array_region(env, arr, 0, len, bytes.as_ptr() as *const jbyte);
+    }
+    arr
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Local reference frames (JNI spec §5.1.2)
 // ─────────────────────────────────────────────────────────────────────────────
 //
@@ -792,4 +895,97 @@ pub unsafe fn jni_detach_current_thread(vm: *mut JavaVM) {
     type F = unsafe extern "C" fn(*mut JavaVM) -> jint;
     let f: F = vm_table_fn(vm, VM_DETACH_CURRENT_THREAD_OFFSET);
     f(vm);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tests
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// A real JNIEnv comes only from a running JVM, so we verify the byte-array
+// helpers against a MOCK function table: a `[*const c_void; N]` with the four
+// byte-array slots (at the same offset constants the helpers use) pointing at
+// Rust functions that emulate the JVM's behaviour. A `jbyteArray` is modelled as
+// a `*mut Vec<u8>`. This exercises the offset dispatch AND the get/new wrappers'
+// length-query + region-copy logic end to end.
+#[cfg(test)]
+mod byte_array_tests {
+    use super::*;
+    use std::os::raw::c_void;
+
+    unsafe extern "C" fn mock_new_byte_array(_env: *mut JNIEnv, len: jsize) -> jbyteArray {
+        Box::into_raw(Box::new(vec![0u8; len.max(0) as usize])) as jbyteArray
+    }
+    unsafe extern "C" fn mock_get_array_length(_env: *mut JNIEnv, arr: jarray) -> jsize {
+        (*(arr as *mut Vec<u8>)).len() as jsize
+    }
+    unsafe extern "C" fn mock_get_byte_array_region(
+        _env: *mut JNIEnv,
+        arr: jbyteArray,
+        start: jsize,
+        len: jsize,
+        buf: *mut jbyte,
+    ) {
+        let v = &*(arr as *mut Vec<u8>);
+        for i in 0..len as usize {
+            *buf.add(i) = v[start as usize + i] as jbyte;
+        }
+    }
+    unsafe extern "C" fn mock_set_byte_array_region(
+        _env: *mut JNIEnv,
+        arr: jbyteArray,
+        start: jsize,
+        len: jsize,
+        buf: *const jbyte,
+    ) {
+        let v = &mut *(arr as *mut Vec<u8>);
+        for i in 0..len as usize {
+            v[start as usize + i] = *buf.add(i) as u8;
+        }
+    }
+
+    /// Build a mock JNIEnv: a 232-slot table with the byte-array slots filled.
+    /// Returns the boxed table (which must outlive `env`) and the env pointer.
+    fn mock_env() -> (Box<[*const c_void; 232]>, Box<JNIEnv>) {
+        let mut table: Box<[*const c_void; 232]> = Box::new([std::ptr::null(); 232]);
+        table[GET_ARRAY_LENGTH_OFFSET] = mock_get_array_length as *const c_void;
+        table[NEW_BYTE_ARRAY_OFFSET] = mock_new_byte_array as *const c_void;
+        table[GET_BYTE_ARRAY_REGION_OFFSET] = mock_get_byte_array_region as *const c_void;
+        table[SET_BYTE_ARRAY_REGION_OFFSET] = mock_set_byte_array_region as *const c_void;
+        // JNIEnv is a pointer to the table base (`*const *const c_void`).
+        let env: Box<JNIEnv> = Box::new(table.as_ptr() as *const *const c_void);
+        (table, env)
+    }
+
+    #[test]
+    fn round_trips_bytes_through_a_java_byte_array() {
+        unsafe {
+            let (_table, mut env) = mock_env();
+            let envp: *mut JNIEnv = &mut *env;
+            // Rust bytes → new byte[] → read them back: identical, including a
+            // high bit (0xD0, the .xls magic) that i8/u8 reinterpretation covers.
+            let src = [0xD0u8, 0xCF, 0x00, 0x7F, 0xFFu8, 42];
+            let arr = jni_new_byte_array_from(envp, &src);
+            assert!(!arr.is_null());
+            assert_eq!(jni_get_array_length(envp, arr), src.len() as jsize);
+            assert_eq!(jni_get_byte_array(envp, arr), src);
+            drop(Box::from_raw(arr as *mut Vec<u8>)); // free the mock object
+        }
+    }
+
+    #[test]
+    fn empty_and_null_arrays_are_safe() {
+        unsafe {
+            let (_table, mut env) = mock_env();
+            let envp: *mut JNIEnv = &mut *env;
+            // Empty input → a real, zero-length array; reads back empty.
+            let arr = jni_new_byte_array_from(envp, &[]);
+            assert!(!arr.is_null());
+            assert_eq!(jni_get_array_length(envp, arr), 0);
+            assert!(jni_get_byte_array(envp, arr).is_empty());
+            drop(Box::from_raw(arr as *mut Vec<u8>));
+            // Null array → length 0 and an empty vec, never a deref crash.
+            assert_eq!(jni_get_array_length(envp, std::ptr::null_mut()), 0);
+            assert!(jni_get_byte_array(envp, std::ptr::null_mut()).is_empty());
+        }
+    }
 }
