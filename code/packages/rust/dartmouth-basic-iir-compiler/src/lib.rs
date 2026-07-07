@@ -25,7 +25,7 @@
 //! |---------------|----------|
 //! | `LET A = expr` | `<eval expr → t>; mov A = t` (`f64` scalar values; explicit `i64` boundaries) |
 //! | `PRINT a; "x", c` | numeric items call `__basic_print_int`/`__basic_print_real`, string literals lower to `str_const` + `print_str`, with `;`=tight / `,`=space separators and a trailing `putchar(10)` newline (BA2/BA4/BA7) |
-//! | `INPUT X`      | `call_builtin "input_i64" -> X` |
+//! | `INPUT X`      | numeric: `call_builtin "input_i64" -> X`; string `INPUT A$`: `call_builtin "input_str" -> t; mov __basic_str_A = t` (runtime string, E4-dyn) |
 //! | `IF cond THEN m` | `<eval cond → c>; jmp_if_true c, "line_m"` |
 //! | `GOTO m`       | `jmp "line_m"` |
 //! | `FOR I = a TO b STEP s` / `NEXT I` | classic counter loop with `for_<n>_test` / `for_<n>_end` labels |
@@ -45,8 +45,11 @@
 //! `PRINT "HELLO"` lowers to the shared LANG-FULL E4 string ops
 //! (`str_const` + `print_str`) and runs on every matrix column.  String
 //! variables (`A$`) can be assigned from literals and printed through the same
-//! E4 path.  `IF A$ = "Y" THEN n` lowers to `str_eq`; richer string expressions,
-//! string arrays, and string `INPUT` remain BA4/E4 follow-ups.
+//! E4 path.  `IF A$ = "Y" THEN n` lowers to `str_eq`.  `INPUT A$` reads a whole
+//! line from the host as a **runtime string** (`call_builtin "input_str"` — the
+//! `str` sibling of numeric `INPUT`'s `input_i64`), a value the compiler cannot
+//! fold; it runs today on the dynamic VM/JIT columns (E4-dyn).  Richer string
+//! expressions and string arrays remain BA4/E4 follow-ups.
 //!
 //! ## Variables
 //!
@@ -946,24 +949,55 @@ impl Compiler {
 
     fn emit_input(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
         // `INPUT` variable { COMMA variable }
-        // For each variable, emit `call_builtin "input_i64" -> X`.
-        // V1 only handles plain NAMEs (no array elements).
+        // Each variable reads one line from the host.  A numeric variable parses
+        // that line as a number (`input_i64`); a `$`-suffixed *string* variable
+        // keeps the whole line as a genuinely runtime string (`input_str`).
+        // V1 only handles plain NAMEs (no array elements) — `scalar_variable_name`
+        // rejects a subscripted `A(I)`.
         for v in child_nodes(stmt).into_iter()
             .filter(|n| n.rule_name == "variable")
         {
-            let name = numeric_scalar_variable_name(v)?;
-            let input = self.fresh_temp();
-            self.emit("call_builtin", Some(&input),
-                vec![Operand::Var("input_i64".into())],
-                "i64");
-            let input = ExprValue { slot: input, ty: BasicScalarType::Int };
-            let target_ty = self.scalar_types.get(&name).copied()
-                .unwrap_or(BasicScalarType::Real);
-            let input = self.coerce_value(input, target_ty);
-            self.emit("mov", Some(&name), vec![Operand::Var(input.slot)], input.ty.iir());
-            self.scalar_types.insert(name, input.ty);
+            let name = scalar_variable_name(v)?;
+            if is_basic_string_name(&name) {
+                self.emit_input_string(&name);
+            } else {
+                self.emit_input_numeric(name);
+            }
         }
         Ok(())
+    }
+
+    /// `INPUT X` (numeric): read a line, parse it as an integer via the
+    /// `input_i64` builtin, then coerce to `X`'s tracked scalar type and store.
+    fn emit_input_numeric(&mut self, name: String) {
+        let input = self.fresh_temp();
+        self.emit("call_builtin", Some(&input),
+            vec![Operand::Var("input_i64".into())],
+            "i64");
+        let input = ExprValue { slot: input, ty: BasicScalarType::Int };
+        let target_ty = self.scalar_types.get(&name).copied()
+            .unwrap_or(BasicScalarType::Real);
+        let input = self.coerce_value(input, target_ty);
+        self.emit("mov", Some(&name), vec![Operand::Var(input.slot)], input.ty.iir());
+        self.scalar_types.insert(name, input.ty);
+    }
+
+    /// `INPUT A$` (string, E4-dyn): the host reads a whole line and hands back a
+    /// **runtime string** — a value the compiler cannot fold, unlike every prior
+    /// BA4 string cell where the literal was known at compile time.  The
+    /// `input_str` builtin returns a `str`; a `mov` copies it into the
+    /// deterministic string slot `__basic_str_<stem>` (see [`basic_string_slot`])
+    /// so a later `PRINT A$` / `IF A$ = …` resolves the same slot through the
+    /// shared E4 `print_str` / `str_eq` ops.  This is the BASIC sibling of the
+    /// ALGOL string-procedure result and the E4-dyn foothold's branch-selected
+    /// string: the observable output depends on stdin, not on a folded constant.
+    fn emit_input_string(&mut self, name: &str) {
+        let input = self.fresh_temp();
+        self.emit("call_builtin", Some(&input),
+            vec![Operand::Var("input_str".into())],
+            "str");
+        let slot = basic_string_slot(name);
+        self.emit("mov", Some(&slot), vec![Operand::Var(input)], "str");
     }
 
     fn emit_if(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
@@ -2870,6 +2904,36 @@ mod tests {
             && i.type_hint == "f64"
             && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == widened)),
             "expected widened input temp to move into X");
+    }
+
+    /// E4-dyn: `INPUT A$` reads a whole line as a *runtime string* via the
+    /// `input_str` builtin (`str`-typed), then `mov`s it into the deterministic
+    /// string slot so a later `PRINT A$` resolves the same slot.  No literal
+    /// folding happens — the value is unknown until run time.
+    #[test]
+    fn compiles_input_string() {
+        let m = compile("10 INPUT A$\n20 PRINT A$\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        // The builtin call returns a `str` and names `input_str` (not `input_i64`).
+        let call = body.iter().find(|i| i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "input_str"))
+            .expect("expected call_builtin input_str");
+        assert_eq!(call.type_hint, "str", "string INPUT reads a str");
+        let temp = call.dest.as_deref().expect("input_str has a destination temp");
+        // The runtime string moves into the `$`-variable's string slot at `str`.
+        let slot = basic_string_slot("A$");
+        assert!(body.iter().any(|i| i.op == "mov"
+            && i.dest.as_deref() == Some(slot.as_str())
+            && i.type_hint == "str"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == temp)),
+            "expected input_str temp to move into the string slot");
+        // No `$` ever reaches a backend-facing register.
+        assert!(body.iter().all(|i| i.dest.as_deref() != Some("A$")),
+            "backend-facing registers must not contain `$`");
+        // `PRINT A$` reads that same slot through the shared E4 `print_str` op.
+        assert!(body.iter().any(|i| i.op == "print_str"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if *n == slot)),
+            "expected PRINT A$ to print the runtime string slot");
     }
 
     /// String literals in PRINT lower through shared E4 string ops.

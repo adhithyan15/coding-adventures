@@ -2349,6 +2349,38 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — **string** `INPUT A$` (LANG-FULL E4-dyn, BA string INPUT
+    // foothold). Unlike the numeric `INPUT X` (which parses the line to an i64) and
+    // the foothold above (which reads a *number* and merely *selects* between two
+    // compile-time string literals), this reads the whole stdin line **as the
+    // string value itself**: `A$` holds bytes that never appear anywhere in the
+    // program source, so the compiler cannot fold it. The frontend lowers `INPUT A$`
+    // to a new `call_builtin "input_str"` (a `str`-typed sibling of `input_i64`),
+    // then `mov`s the runtime handle into the `$`-variable's string slot; `PRINT A$`
+    // consumes that slot through the shared E4 `print_str` op. This is the first
+    // matrix proof that a runtime string can *originate at the input boundary*.
+    // It runs on the dynamic VM/JIT columns (a tagged `Value::Str` read from the
+    // shared stdin buffer by the registered `input_str` closure) and the two
+    // **managed** columns whose `str` is already a host string object:
+    //   • JVM — `env.BasicRuntime.readLine()Ljava/lang/String;` returns a
+    //     `java.lang.String`, which is exactly how `str` is carried on the JVM
+    //     (`iir_type_to_jvm("str") = Ref`); the reference `astore`s into the slot.
+    //   • CLR — `System.Console.ReadLine()` returns a `System.String`, which is the
+    //     CLR representation of a `str` local; it stores straight in.
+    // Neither needed a new value-model — only a read-a-line host primitive that
+    // returns the backend's native string (mirroring the numeric `input_i64`'s
+    // `readLong` / `ReadLine`+`Int32.Parse`), so this is the string sibling of the
+    // numeric `INPUT X` cell above. Wiring the static columns' heap-string host
+    // primitive (`__twig_input_str` returning a `[i64 len][bytes]` handle on
+    // native/LLVM, `env.__input_str` writing into linear memory on WASM) is the
+    // next slice of this arc. Stdin "OK\n" → A$ = "OK" → prints "OK".
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2404,6 +2436,27 @@ fn compile_native(src_path: &std::path::Path, exe: &std::path::Path, lang: Langu
     }
 }
 
+/// Drain one newline-terminated line from a shared in-process stdin buffer and
+/// return it as an owned `String` (the terminating `\n` is consumed, not kept).
+/// This is the string sibling of the inline `input_i64` line-drain: BASIC
+/// `INPUT A$` reads a *whole line as the string value*, so — unlike `input_i64` —
+/// there is no `parse`/`trim` step. An empty or drained buffer yields `""` (EOF).
+/// Shared by the VM and both JIT tiers' `input_str` closures so all three
+/// registration sites agree byte-for-byte.
+fn drain_stdin_line(
+    buf: &std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+) -> String {
+    let mut b = buf.lock().expect("lang-matrix stdin buffer poisoned");
+    let mut line = Vec::new();
+    loop {
+        match b.pop_front() {
+            None | Some(b'\n') => break,
+            Some(byte) => line.push(byte),
+        }
+    }
+    String::from_utf8_lossy(&line).into_owned()
+}
+
 /// The stdin bytes a Brainfuck `,` program reads. The matrix is otherwise stdin-free —
 /// every program above supplies none, so `getchar` sees EOF (the prior behaviour) — so
 /// only the explicit stdin programs name their input here, keyed on `(lang, src)`.
@@ -2422,6 +2475,8 @@ fn program_stdin(p: &Prog) -> &'static [u8] {
         (Language::DartmouthBasic, "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n") => b"10\n32\n",
         // E4-dyn foothold: `INPUT N` = 1 (>0) selects the `"HI"` branch for `A$`.
         (Language::DartmouthBasic, "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n") => b"1\n",
+        // BA string INPUT: `INPUT A$` reads the whole line "OK" as the string value.
+        (Language::DartmouthBasic, "10 INPUT A$\n20 PRINT A$\n30 END\n") => b"OK\n",
         _ => b"",
     }
 }
@@ -3086,7 +3141,14 @@ while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
 String s = sb.toString().trim(); \
 if(s.isEmpty()) return 0L; \
 return Long.parseLong(s); \
-} catch(Exception e){ return 0L; } } }";
+} catch(Exception e){ return 0L; } } \
+public static String readLine(){ try { \
+java.io.InputStream in = System.in; \
+StringBuilder sb = new StringBuilder(); \
+int c; \
+while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
+return sb.toString(); \
+} catch(Exception e){ return \"\"; } } }";
 
 /// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
 /// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +
@@ -3463,6 +3525,13 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
         let v: i64 = s.trim().parse().unwrap_or(0);
         Ok(Value::Int(v))
     });
+    // BA string INPUT (E4-dyn): `input_str` reads a whole line and returns it as a
+    // runtime `Value::Str` — the string sibling of `input_i64`. The value comes from
+    // stdin, so it is not foldable at compile time; `PRINT A$` prints it via `print_str`.
+    let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("input_str", move |_args: &[Value]| {
+        Ok(Value::Str(drain_stdin_line(&input)))
+    });
 
     let result = match vm.execute(&mut module, &entry, &[]) {
         Ok(result) => result,
@@ -3567,6 +3636,10 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         let v: i64 = s.trim().parse().unwrap_or(0);
         Ok(Value::Int(v))
     });
+    let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("input_str", move |_args: &[Value]| {
+        Ok(Value::Str(drain_stdin_line(&input)))
+    });
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
@@ -3600,6 +3673,10 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         let s = String::from_utf8_lossy(&line);
         let v: i64 = s.trim().parse().unwrap_or(0);
         Value::Int(v)
+    });
+    let input = Arc::clone(&stdin_buf);
+    backend.register_builtin("input_str", move |_args: &[Value]| {
+        Value::Str(drain_stdin_line(&input))
     });
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the

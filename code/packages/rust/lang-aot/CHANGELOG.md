@@ -1,5 +1,47 @@
 # Changelog — `lang-aot`
 
+## 0.180.0 — 2026-07-06 — BA string INPUT: managed columns (JVM + CLR)
+
+The `INPUT A$` matrix cell (`10 INPUT A$ / 20 PRINT A$ / 30 END`, stdin `"OK"` →
+`OK`) gains its two **managed** columns, so it now runs on `[Jvm, Clr, Vm, Jit]`.
+Neither needed a new value model — `str` is already a host string object on both —
+only a read-a-line host primitive returning that native string, mirroring numeric
+`input_i64`'s `readLong` / `ReadLine`+`Int32.Parse`.
+
+- **JVM** (`iir-to-jvm-class-file` 0.29.0): the validator now accepts a `str`
+  result on `call_builtin`/`mov`; `input_str` lowers to `invokestatic
+  env/BasicRuntime.readLine()Ljava/lang/String;` + `astore`. The harness
+  `BASIC_RUNTIME_JAVA` gains a `readLine()` method (reads to newline/EOF, returns
+  the line). Run-verified locally via real `javac`/`java`.
+- **CLR** (`iir-to-cil-bytecode` 0.38.0): `input_str` lowers to `call string
+  System.Console::ReadLine()` (no `Int32.Parse`), stored into the `System.String`
+  local. Verified on the CLR column via real `ilasm`/`dotnet` in CI.
+
+Wiring the static columns (native/LLVM `__twig_input_str` returning a `[i64
+len][bytes]` heap handle; WASM `env.__input_str` writing into linear memory) is
+the next slice of this arc.
+
+## 0.179.0 — 2026-07-06 — BA string INPUT: `INPUT A$` reads a runtime string (VM/JIT)
+
+A new Dartmouth BASIC matrix cell — `10 INPUT A$ / 20 PRINT A$ / 30 END` — proves
+that `INPUT A$` reads a whole stdin line **as the string value itself**, not as a
+number to parse (`INPUT X`) nor as a selector between compile-time literals (the
+E4-dyn foothold's `INPUT N`).  `A$` holds bytes that never appear in the program
+source, so the compiler cannot fold it: this is the first matrix proof of a
+runtime string that **originates at the input boundary**.
+
+- Frontend: `dartmouth-basic-iir-compiler` 0.36.0 lowers `INPUT A$` to
+  `call_builtin "input_str"` (a `str`-typed sibling of `input_i64`) + `mov` into
+  the string slot; `PRINT A$` consumes it via the shared E4 `print_str` op.
+- Harness (`tests/lang_matrix.rs`): a new `input_str` closure — registered on the
+  VM, the JIT's interpreter-fallback VM tier, and the `GenericCirJit` backend —
+  reads a line from the shared stdin buffer via a new `drain_stdin_line` helper
+  and returns a tagged `vm_core::Value::Str`.  The cell lists `[Vm, Jit]`; its
+  stdin `"OK\n"` is registered in `program_stdin`.  Stdin `"OK"` → `A$ = "OK"` →
+  prints `OK`.  Wiring the four subprocess/WASM columns' host read-a-line
+  primitive (`__twig_input_str` / `env.__input_str` / `readLine` /
+  `Console.ReadLine`) is the next slice of this arc.
+
 ## 0.178.0 — 2026-07-04 — E4d-JVM/CLR: ALGOL string procedure now runs on ALL SEVEN backends
 
 The ALGOL string-procedure matrix cell (`print(pick(1))` where `pick` returns a
