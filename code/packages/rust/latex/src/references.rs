@@ -1581,6 +1581,68 @@ fn kind_display_name(kind: LabelKind) -> &'static str {
     }
 }
 
+/// Render **one** resolved-reference [`RefEntry`] to its single plain-text line — the shared
+/// per-command rendering used by **both** [`CrossReferenceReport::to_plain_text`] (S6, flat pre-order)
+/// and [`CrossReferenceReport::to_plain_text_by_kind`] (S11, grouped-by-kind). Factoring the three
+/// precedence-ordered renderings into this one place is what guarantees the flat and grouped reports
+/// can **never** drift — they call the identical code, so a `\ref`/`\eqref`/`\pageref` line is
+/// byte-for-byte the same wherever it appears.
+///
+/// Three renderings, tried in this precedence order, keyed off the *surface command* + *target kind*
+/// (LTXDOC03 S9/S10):
+///
+///   1. An `\eqref` whose target is an **equation** renders amsmath-style — the `\eqref` spelling is
+///      kept and the number is **parenthesised**: `\eqref{eq:e} -> Equation (1)`. (`\eqref` on
+///      `article`'s equation counter typesets "(1)", so the report mirrors that surface form.) (S9.)
+///   2. Otherwise, a `\pageref` (to **any** kind) renders with the `\pageref` spelling and the literal
+///      placeholder `page ?`: `\pageref{sec:i} -> page ?`. A page reference asks *what page* the target
+///      is on; the crate has NO page model, so the target's kind and number are irrelevant — the
+///      honest fixed placeholder is `page ?` (the `?` mirrors LaTeX's own `??` for an unresolved page
+///      ref). (S10.)
+///   3. Every other resolved reference — all `\ref` and any `\eqref` to a **non-equation** kind —
+///      renders with the canonical `\ref` prefix and a **bare** number: `\ref{sec:intro} -> Section
+///      1.2`.
+///
+/// Pure and total: string building only (no indexing, no `unwrap`), allocating just the returned line.
+fn render_resolved_ref(r: &RefEntry) -> String {
+    if r.command == "eqref" && r.kind == LabelKind::Equation {
+        format!(r"\eqref{{{}}} -> {} ({})", r.key, kind_display_name(r.kind), r.number)
+    } else if r.command == "pageref" {
+        // No page model: a fixed, honest placeholder, independent of kind/number.
+        format!(r"\pageref{{{}}} -> page ?", r.key)
+    } else {
+        format!(r"\ref{{{}}} -> {} {}", r.key, kind_display_name(r.kind), r.number)
+    }
+}
+
+/// The **pluralised** capitalised subheading a kind gets in the S11 grouped report: `"Sections"`,
+/// `"Figures"`, `"Tables"`, `"Equations"`, `"Inline"`. Distinct from [`kind_display_name`]'s singular
+/// per-line form (`"Section"`) because the S11 subheading names a *group* of references. `Inline` has
+/// no natural plural here (it is not a numbered display kind), so it is left as-is. Pure, total, one
+/// fixed match.
+fn kind_group_heading(kind: LabelKind) -> &'static str {
+    match kind {
+        LabelKind::Section => "Sections",
+        LabelKind::Table => "Tables",
+        LabelKind::Figure => "Figures",
+        LabelKind::Equation => "Equations",
+        LabelKind::Inline => "Inline",
+    }
+}
+
+/// The **fixed kind order** the S11 grouped report emits its subheadings in — Sections, then Figures,
+/// then Tables, then Equations, then Inline — *regardless* of the source order references appear in.
+/// A group is only emitted if it has ≥1 resolved ref (see
+/// [`to_plain_text_by_kind`](CrossReferenceReport::to_plain_text_by_kind)); within a group the refs
+/// keep their pre-order.
+const S11_KIND_ORDER: [LabelKind; 5] = [
+    LabelKind::Section,
+    LabelKind::Figure,
+    LabelKind::Table,
+    LabelKind::Equation,
+    LabelKind::Inline,
+];
+
 // -------------------------------------------------------------------------------------------------
 // The report record types (plain, Clone-able, owned data — mirroring S4/S5's owned-String rows).
 // -------------------------------------------------------------------------------------------------
@@ -1696,46 +1758,11 @@ impl CrossReferenceReport {
     pub fn to_plain_text(&self) -> String {
         let mut lines: Vec<String> = Vec::new();
 
-        // Resolved references.
-        //
-        // Three renderings, tried in this precedence order, keyed off the *surface command* +
-        // *target kind* (LTXDOC03 S10):
-        //
-        //   1. An `\eqref` whose target is an **equation** renders amsmath-style — the `\eqref`
-        //      spelling is kept and the number is **parenthesised**:
-        //      `\eqref{eq:e} -> Equation (1)`.  (`\eqref` on `article`'s equation counter typesets
-        //      "(1)", so the report mirrors that surface form.)  (S9, unchanged.)
-        //   2. Otherwise, a `\pageref` (to **any** kind) renders with the `\pageref` spelling and the
-        //      literal placeholder `page ?`: `\pageref{sec:i} -> page ?`.  A page reference asks
-        //      *what page* the target is on; the crate has NO page model, so the target's kind and
-        //      number are irrelevant — the honest fixed placeholder is `page ?` (the `?` mirrors
-        //      LaTeX's own `??` for an unresolved page ref).  (S10, NEW.)
-        //   3. Every other resolved reference — all `\ref` and any `\eqref` to a **non-equation**
-        //      kind — renders exactly as it did through S8: the canonical `\ref` prefix and a **bare**
-        //      number, `\ref{sec:intro} -> Section 1.2`.
-        //
-        // Precedence matters: (1) before (2) is moot (an `\eqref` is never a `\pageref`), but (2)
-        // before (3) is what makes every `\pageref` diverge from the S8 `\ref` line.  `\ref` and
-        // `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines change.
+        // Resolved references — each rendered by the shared per-command helper
+        // [`render_resolved_ref`], so this S6 rendering and the S11 grouped rendering
+        // ([`to_plain_text_by_kind`](CrossReferenceReport::to_plain_text_by_kind)) can never drift.
         for r in &self.refs {
-            if r.command == "eqref" && r.kind == LabelKind::Equation {
-                lines.push(format!(
-                    r"\eqref{{{}}} -> {} ({})",
-                    r.key,
-                    kind_display_name(r.kind),
-                    r.number
-                ));
-            } else if r.command == "pageref" {
-                // No page model: a fixed, honest placeholder, independent of kind/number.
-                lines.push(format!(r"\pageref{{{}}} -> page ?", r.key));
-            } else {
-                lines.push(format!(
-                    r"\ref{{{}}} -> {} {}",
-                    r.key,
-                    kind_display_name(r.kind),
-                    r.number
-                ));
-            }
+            lines.push(render_resolved_ref(r));
         }
         // Resolved citations: `\cite{key} -> number`.
         for c in &self.cites {
@@ -1752,6 +1779,71 @@ impl CrossReferenceReport {
         if lines.is_empty() {
             // A stable, greppable marker so the rendering is never the empty string.
             "(no cross-references)".to_string()
+        } else {
+            lines.join("\n")
+        }
+    }
+
+    /// Render the report's **resolved references only**, grouped under fixed-order kind subheadings
+    /// (LTXDOC03 S11). A *sibling* of [`to_plain_text`](CrossReferenceReport::to_plain_text) — it
+    /// leaves that flat rendering untouched — that re-organises the **same** resolved-ref lines from
+    /// source order into per-kind groups, so a reader can see "which sections / figures / equations
+    /// does this document cross-reference?" at a glance.
+    ///
+    /// The exact format, pinned so tests and consumers can rely on it byte-for-byte:
+    ///
+    /// - Kinds are emitted in a **fixed order** — **Sections, Figures, Tables, Equations, Inline** —
+    ///   *regardless* of the order references appear in the source (see [`S11_KIND_ORDER`]).
+    /// - For each kind with **≥1** resolved ref, a subheading line — the pluralised capitalised kind
+    ///   name plus a colon (`Sections:`, `Figures:`, `Tables:`, `Equations:`, `Inline:`, from
+    ///   [`kind_group_heading`]) — followed by **one line per ref**, each **indented by two spaces**
+    ///   then rendered by the **shared** [`render_resolved_ref`] helper — the *identical* per-command
+    ///   rule [`to_plain_text`](CrossReferenceReport::to_plain_text) uses, so an `\eqref` to an
+    ///   equation still reads `\eqref{eq:e} -> Equation (1)` and a `\pageref` still reads
+    ///   `\pageref{key} -> page ?`. Within a kind group the refs keep their existing pre-order (this
+    ///   filters [`refs`](CrossReferenceReport::refs) for that kind, preserving order).
+    ///
+    ///   ```text
+    ///   Sections:
+    ///     \ref{sec:intro} -> Section 1
+    ///     \ref{sec:methods} -> Section 2
+    ///   Figures:
+    ///     \ref{fig:plot} -> Figure 1
+    ///   ```
+    /// - A kind with **zero** resolved refs is **omitted entirely** — no empty subheading.
+    /// - Only resolved **references** are grouped; citations and the dangling footers are **not**
+    ///   included (this method stays focused on the kind-grouped resolved refs — the flat
+    ///   [`to_plain_text`](CrossReferenceReport::to_plain_text) remains the place for the full report).
+    /// - If there are **zero** resolved refs at all, the fixed string `"(no resolved references)"` is
+    ///   returned (a stable, greppable marker — the S11 analogue of `to_plain_text`'s
+    ///   `"(no cross-references)"`), so the output is never the empty string.
+    ///
+    /// Lines are joined by a single `\n` with **no trailing newline** and no trailing whitespace on any
+    /// line. The kind order is fixed and the within-group order is source-derived, so the whole
+    /// rendering is a pure function of the report.
+    ///
+    /// Total & panic-free: string building only (no indexing, no `unwrap`), allocating just the output
+    /// `String`.
+    pub fn to_plain_text_by_kind(&self) -> String {
+        let mut lines: Vec<String> = Vec::new();
+
+        // Walk the fixed kind order; for each kind, gather its refs in pre-order and, if any, emit a
+        // subheading followed by the two-space-indented per-ref lines (shared render helper).
+        for &kind in &S11_KIND_ORDER {
+            let group: Vec<&RefEntry> = self.refs.iter().filter(|r| r.kind == kind).collect();
+            if group.is_empty() {
+                continue; // omit empty kinds entirely — no bare subheading.
+            }
+            lines.push(format!("{}:", kind_group_heading(kind)));
+            for r in group {
+                // Two-space indent, then the SAME per-command line the flat report emits.
+                lines.push(format!("  {}", render_resolved_ref(r)));
+            }
+        }
+
+        if lines.is_empty() {
+            // A stable, greppable marker so the rendering is never the empty string.
+            "(no resolved references)".to_string()
         } else {
             lines.join("\n")
         }
@@ -3235,6 +3327,102 @@ See Section~\ref{sec:intro} and \cite{smith2020}.
         assert!(
             doc.ref_target_node(&refs_before.resolved[0]).is_some(),
             "S3 lookup still resolves after building the report"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S11 — the grouped-by-kind cross-reference report (`to_plain_text_by_kind`).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s11_groups_refs_by_kind_in_fixed_order() {
+        // Sections + a figure + an equation, referenced by `\ref`/`\eqref`. The grouped rendering
+        // emits the FIXED kind order (Sections, Figures, Equations here — Tables/Inline absent, so
+        // omitted), each subheading followed by two-space-indented ref lines in pre-order, with the
+        // real S4 numbers (sec:intro→1, sec:methods→2, fig:plot→1, eq:e→(1)).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+\section{Methods}\label{sec:methods}
+
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:plot}\end{figure}
+
+\begin{equation} a = 1 \label{eq:e} \end{equation}
+
+See \ref{sec:intro}, \ref{sec:methods}, \ref{fig:plot}, \eqref{eq:e}.\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\n  \\ref{sec:methods} -> Section 2\n\
+             Figures:\n  \\ref{fig:plot} -> Figure 1\n\
+             Equations:\n  \\eqref{eq:e} -> Equation (1)",
+            "the pinned grouped-by-kind rendering (fixed kind order, two-space indent)"
+        );
+    }
+
+    #[test]
+    fn s11_eqref_and_pageref_render_rules_hold_in_groups() {
+        // The grouped lines reuse the SAME shared per-command helper as the flat report:
+        //   - an `\eqref` to an equation shows `\eqref{eq:e} -> Equation (1)` under `Equations:`;
+        //   - a `\pageref` shows `\pageref{...} -> page ?` under its TARGET kind's group — here the
+        //     `\pageref{sec:intro}` targets a Section, so it sits in the `Sections:` group.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+
+\begin{equation} a = 1 \label{eq:e} \end{equation}
+
+See \ref{sec:intro}, \pageref{sec:intro}, \eqref{eq:e}.\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\n  \\pageref{sec:intro} -> page ?\n\
+             Equations:\n  \\eqref{eq:e} -> Equation (1)",
+            "grouped lines obey the S9 eqref-parenthesises and S10 pageref-placeholder rules"
+        );
+    }
+
+    #[test]
+    fn s11_empty_returns_marker() {
+        // A doc with no resolved refs → the fixed S11 empty marker (distinct from the flat report's
+        // "(no cross-references)").
+        let rep = report(r"\begin{document}\end{document}");
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "(no resolved references)",
+            "no resolved refs renders the stable S11 marker"
+        );
+    }
+
+    #[test]
+    fn s11_dangling_and_cites_do_not_appear_in_grouped_report() {
+        // A doc with a dangling `\ref{nope}` and a `\cite` but NO resolved refs → still the empty
+        // marker: the grouped method is focused on resolved refs only (no citations, no dangling
+        // footers).
+        let src = r"\begin{document}See \ref{nope} and \cite{ghost}.\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text_by_kind(),
+            "(no resolved references)",
+            "citations and dangling keys are not part of the grouped resolved-ref report"
+        );
+    }
+
+    #[test]
+    fn s11_to_plain_text_unchanged() {
+        // GUARD (additivity/refactor): a representative doc's flat `to_plain_text()` still returns its
+        // exact prior S6 string, byte-for-byte, after the shared-helper refactor and the new S11
+        // method. If this line ever changes, the refactor broke additivity.
+        let src = r"\begin{document}\section{Intro}\label{s:i}
+
+See Section~\ref{s:i} and \cite{b}.
+
+\begin{thebibliography}{9}
+\bibitem{a} A. First. 2001.
+\bibitem{b} B. Second. 2002.
+\end{thebibliography}\end{document}";
+        let rep = report(src);
+        assert_eq!(
+            rep.to_plain_text(),
+            "\\ref{s:i} -> Section 1\n\\cite{b} -> [2]",
+            "flat to_plain_text() output is byte-for-byte unchanged by S11"
         );
     }
 }

@@ -927,3 +927,91 @@ unchanged and `\pageref` now diverges; a `\pageref` to a labelled equation still
 `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
 `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
 `cargo fmt`, no grammar regen, no new dependencies.
+
+## 17. S11 — grouped-by-kind cross-reference report
+
+### 17.1 The gap S11 closes
+
+Through S10 the only rendering of the cross-reference report was `CrossReferenceReport::to_plain_text`
+(§12.4, S6): resolved references, one line each, in **flat source (pre-order)** order — the order the
+`\ref`s appear in the body. That is the right default for an audit trail, but it answers "in what order
+are things referenced?" rather than "**which sections / figures / equations** does this document
+cross-reference?". A reader who wants the latter must eyeball the flat list and mentally bucket it by
+kind. S11 closes that gap with a **new, separate** rendering that does the bucketing.
+
+### 17.2 What S11 does — a new sibling method, `to_plain_text_by_kind`
+
+S11 adds a **new public method** `CrossReferenceReport::to_plain_text_by_kind(&self) -> String`. It
+renders the **same** resolved references `to_plain_text` does, but **grouped under fixed-order kind
+subheadings** instead of flat source order. It does **not** touch `to_plain_text`: S11 is purely
+additive, a second lens on the same `refs` data.
+
+The exact format, pinned:
+
+1. **Fixed kind order.** Groups are emitted in the fixed order **Sections, Figures, Tables, Equations,
+   Inline** (`S11_KIND_ORDER`) — *regardless* of the order the references appear in the source.
+2. **Non-empty groups only.** For each kind with **≥1** resolved ref, a subheading line — the
+   **pluralised capitalised** kind name plus a colon (`Sections:`, `Figures:`, `Tables:`,
+   `Equations:`, `Inline:`, from the new `kind_group_heading` helper) — followed by **one line per
+   ref**. A kind with **zero** resolved refs is **omitted entirely** (no bare subheading).
+3. **Two-space-indented ref lines, shared rendering.** Each ref line is indented by **two spaces** then
+   rendered by the **shared** `render_resolved_ref(&RefEntry) -> String` helper — the *identical*
+   per-command rule `to_plain_text` uses (§16.2 S8/S9/S10): an `\eqref` to an equation →
+   `\eqref{eq:e} -> Equation (1)`; a `\pageref` (any kind) → `\pageref{key} -> page ?`; else
+   `\ref{key} -> Kind N`. Within a kind group the refs keep the report's existing **pre-order** (a
+   filter of `refs` for that kind, preserving order). A `\pageref` groups under its **target kind**
+   (e.g. a `\pageref` to a section appears in the `Sections:` group).
+4. **Resolved refs only.** Citations (`cites`) and the dangling footers (`dangling_refs`,
+   `dangling_cites`) are **not** included — this method stays focused on the kind-grouped resolved
+   refs; the flat `to_plain_text` remains the place for the full report.
+5. **Distinct empty marker.** If there are **zero** resolved refs at all, the method returns the fixed
+   string `"(no resolved references)"` — the S11 analogue of `to_plain_text`'s `"(no cross-references)"`
+   — so the output is never the empty string.
+
+Lines are joined by a single `\n` with **no trailing newline** and no trailing whitespace on any line.
+Example:
+
+```text
+Sections:
+  \ref{sec:intro} -> Section 1
+  \ref{sec:methods} -> Section 2
+Figures:
+  \ref{fig:plot} -> Figure 1
+Equations:
+  \eqref{eq:e} -> Equation (1)
+```
+
+### 17.3 The shared `render_resolved_ref` helper (no-drift guarantee)
+
+To guarantee the flat (S6) and grouped (S11) reports can never diverge on how a single ref line looks,
+the three precedence-ordered per-command renderings are **factored** out of `to_plain_text`'s loop into
+a private `render_resolved_ref(&RefEntry) -> String`. **Both** `to_plain_text` and
+`to_plain_text_by_kind` call it, so a `\ref`/`\eqref`/`\pageref` line is byte-for-byte the same wherever
+it appears. `to_plain_text` was refactored to call the helper **only** because its output stays
+byte-for-byte identical — the existing S6–S10 tests (`report_to_plain_text_renders_the_exact_pinned_string`,
+the `s9_`/`s10_` tests) pass unchanged, proving additivity.
+
+### 17.4 Additive, and `to_latex()` unchanged
+
+S11 is a pure report-assembly method over data the report already holds (`refs` with their `kind`
+`LabelKind`). No AST/grammar/counter change, no new struct or field, no new dependency, no `unsafe`, no
+I/O. `to_latex()` remains a fixed point (S11 does not touch the AST). Every S1–S10 output byte is
+unchanged — `to_plain_text` included.
+
+### 17.5 Public API (added in S11)
+
+One new method: `CrossReferenceReport::to_plain_text_by_kind(&self) -> String`. No existing type or
+signature changes; `RefEntry`, `CrossReferenceReport`, `cross_reference_report`, and `to_plain_text`
+keep their shapes and outputs.
+
+### 17.6 Verification (S11)
+
+`cargo test -p latex` green (5 new S11 tests: sections + a figure + an equation grouped in the fixed
+Sections/Figures/Equations order with two-space-indented lines and the real S4 numbers; the grouped
+lines obey the S9 `\eqref`-parenthesises and S10 `\pageref` → `page ?` rules, with a `\pageref` grouped
+under its target kind's group; a doc with no resolved refs → the `(no resolved references)` marker; a
+doc with only a dangling `\ref` and a `\cite` → still the marker, proving citations/dangling are
+excluded; and a guard that `to_plain_text()` still returns its exact prior pinned string). All prior
+S1–S10 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream
+`cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No
+`cargo fmt`, no grammar regen, no new dependencies.

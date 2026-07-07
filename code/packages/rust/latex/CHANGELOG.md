@@ -2,6 +2,38 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.47.0] — 2026-07-07
+
+### Added — cross-reference report: grouped-by-kind rendering (LTXDOC03 S11)
+
+A **new, separate** public method `CrossReferenceReport::to_plain_text_by_kind(&self) -> String` that
+renders the **same** resolved references as `to_plain_text`, but **grouped under fixed-order kind
+subheadings** instead of flat source order — so a reader can see "which sections / figures / equations
+does this document cross-reference?" at a glance. `to_plain_text` is left **byte-for-byte unchanged**;
+S11 is purely additive.
+
+- **Fixed kind order, source-order within a group.** Groups are emitted **Sections, Figures, Tables,
+  Equations, Inline** regardless of source order (`S11_KIND_ORDER`). Within a group the refs keep the
+  report's existing pre-order (a filter of `refs` for that kind, preserving order).
+- **Subheading + two-space-indented lines.** Each kind with ≥1 resolved ref emits a pluralised
+  capitalised subheading (`Sections:`, `Figures:`, `Tables:`, `Equations:`, `Inline:`, from the new
+  `kind_group_heading` helper) followed by one two-space-indented line per ref. Kinds with zero
+  resolved refs are **omitted entirely** — no empty subheading.
+- **Same per-command rendering — factored into a shared helper.** The single-line rendering (S8/S9/S10
+  rules: `\eqref` to an equation → `\eqref{k} -> Equation (N)`; `\pageref` → `\pageref{k} -> page ?`;
+  else `\ref{k} -> Kind N`) is factored into a private `render_resolved_ref(&RefEntry) -> String` that
+  **both** `to_plain_text` and `to_plain_text_by_kind` call, so the flat and grouped renderings can
+  never drift. `to_plain_text` was refactored to call it with byte-for-byte identical output (the
+  existing S6–S10 tests pass unchanged). A `\pageref` groups under its **target kind** (e.g. a
+  `\pageref` to a section sits under `Sections:`).
+- **Resolved refs only; distinct empty marker.** Citations and dangling footers are **not** included
+  (the flat `to_plain_text` remains the full report). A report with **zero** resolved refs renders the
+  fixed string `"(no resolved references)"` — the S11 analogue of `to_plain_text`'s
+  `"(no cross-references)"`.
+- **Additive, no AST/struct/numbering change.** A pure report-assembly method over data the report
+  already holds (`refs` with their `kind`). No new field, no new dependency, no `unsafe`, no I/O;
+  `to_latex()` remains a fixed point. 5 new S11 tests; version bump 0.46.0 → 0.47.0.
+
 ## [0.46.0] — 2026-07-07
 
 ### Added — cross-reference resolution: distinct `\pageref` rendering (LTXDOC03 S10)

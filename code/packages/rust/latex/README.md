@@ -58,6 +58,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S8 — equation numbering** | `Counters` gains a flat `equation: u32` field and a `step_equation()` method (mirroring `step_figure`/`step_table` — pre-increment, saturating, one monotonic run **independent** of section/figure/table). In the `Block::DisplayMath { label: Some(key), .. }` arm of `number_labels`, S7's placeholder is replaced with `counters.step_equation().to_string()`, so a lifted equation label now carries a **real** sequential number in document order (`1`, `2`, …). The S6 report prints `\ref{eq:e} -> Equation 1` (was `Equation ?`). Equation numbering is independent of the section/figure/table counters. **Limitation:** because `Block::DisplayMath` carries no `numbered` flag (the D5 lowering sets `label: None` for both starred envs and `\[…\]`/`$$…$$` islands), only **labelled** equations step the counter — an unlabelled numbered equation between two labelled ones is not yet counted (needs an AST change, deferred). `\eqref` parenthesisation (`(1)` vs `1`) is also deferred to a later slice; S8 is counter-only. Pure, additive, tree-unchanged; total & panic-free. | ✅ |
 | **LTXDOC03 S9 — `\eqref` parenthesisation** | `CrossReferenceReport::to_plain_text` now mirrors amsmath's `\eqref` for the one case that matters: a resolved reference whose `command == "eqref"` **and** `kind == LabelKind::Equation` renders `\eqref{eq:e} -> Equation (1)` — the `\eqref` spelling is kept and the number is **parenthesised**. Every other reference — all `\ref`, all `\pageref`, and any `\eqref` to a **non-equation** kind — is byte-for-byte unchanged from S8: canonical `\ref` prefix, bare number (`\ref{sec:intro} -> Section 1.2`). `RefEntry.command` (the surface spelling) was already retained by S1, so S9 is a pure rendering split in one `format!` — no AST change, no new field, no re-numbering; `to_latex()` stays a fixed point. Pure, additive; total & panic-free. | ✅ |
 | **LTXDOC03 S10 — distinct `\pageref` rendering** | `CrossReferenceReport::to_plain_text` gains a **third** rendering branch so a resolved `\pageref` no longer renders identically to a `\ref`. A `\pageref{key}` asks "what **page** is the target on" — a different question from `\ref`'s "what **number** is the target" — but the crate has **no page model**, so it cannot compute a real page number. A resolved reference whose `command == "pageref"` (to **any** target kind) now renders `\pageref{sec:i} -> page ?` — the `\pageref` spelling is kept and the kind/number are replaced by the fixed literal placeholder `page ?` (the `?` mirrors LaTeX's own `??` for an unresolved page reference; it means "page number not modelled", not the kind, not the number). Branch precedence: (1) `\eqref` to Equation → parenthesised (S9); (2) `\pageref` any kind → `page ?` (S10); (3) else → `\ref{key} -> Kind N` (S8). So `\ref` and `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines change. Pure rendering branch — no AST change, no re-numbering, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S11 — grouped-by-kind cross-reference report** | `CrossReferenceReport::to_plain_text_by_kind() -> String` — a **new, separate** method that renders the **same** resolved references as `to_plain_text` but **grouped under fixed-order kind subheadings** (Sections, Figures, Tables, Equations, Inline — regardless of source order), each subheading followed by two-space-indented ref lines in the report's existing pre-order. Kinds with zero resolved refs are omitted entirely. The per-line rendering is the **identical** S8/S9/S10 rule — factored into a shared private `render_resolved_ref(&RefEntry)` that **both** `to_plain_text` and `to_plain_text_by_kind` call, so the flat and grouped reports can never drift (`to_plain_text` output is byte-for-byte unchanged). Only resolved refs are grouped (no citations, no dangling footers); zero resolved refs → the fixed marker `(no resolved references)`. A `\pageref` groups under its **target kind**. Pure report-assembly over data the report already holds — no AST/struct/numbering change, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -561,6 +562,47 @@ any kind → `page ?` (S10); (3) else → `\ref{key} -> Kind N` (S8). A `\pagere
 eqref/Equation special-case entirely — a `\pageref` to an equation still renders `page ?`, never
 `Equation (1)`. So `\ref` and `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines
 change. Pure rendering branch — no AST change, no re-numbering, `to_latex()` still a fixed point.
+
+### grouped-by-kind cross-reference report (LTXDOC03 S11)
+
+`to_plain_text` renders resolved references in flat source order. `to_plain_text_by_kind` is a
+**separate, sibling** method that renders the **same** resolved-ref lines **grouped under fixed-order
+kind subheadings** — Sections, Figures, Tables, Equations, Inline — so a reader can answer "which
+sections / figures / equations does this document cross-reference?" at a glance. The kind order is
+fixed regardless of source order; within a kind group the refs keep their source (pre-order) order; a
+kind with zero resolved refs is omitted entirely (no empty subheading). The per-line rendering is the
+**identical** S8/S9/S10 rule — a shared `render_resolved_ref` helper backs **both** methods, so the
+flat and grouped reports can never drift.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+\section{Methods}\label{sec:methods}
+\begin{figure}\caption{A plot}\label{fig:plot}\end{figure}
+\begin{equation} a = 1 \label{eq:e} \end{equation}
+See \ref{sec:intro}, \ref{sec:methods}, \ref{fig:plot}, \eqref{eq:e}.\end{document}";
+let doc = parse_document(src).unwrap();
+
+// Grouped under fixed-order kind subheadings, two-space-indented ref lines in pre-order.
+assert_eq!(
+    doc.cross_reference_report().to_plain_text_by_kind(),
+    "Sections:\n\
+     \x20 \\ref{sec:intro} -> Section 1\n\
+     \x20 \\ref{sec:methods} -> Section 2\n\
+     Figures:\n\
+     \x20 \\ref{fig:plot} -> Figure 1\n\
+     Equations:\n\
+     \x20 \\eqref{eq:e} -> Equation (1)",
+);
+```
+
+Only resolved references are grouped (citations and dangling footers are **not** included — the flat
+`to_plain_text` remains the full report); a `\pageref` groups under its **target kind** (a `\pageref`
+to a section sits under `Sections:`). A report with zero resolved refs renders the fixed marker
+`(no resolved references)` — the S11 analogue of `to_plain_text`'s `(no cross-references)`. Pure
+report-assembly over data the report already holds — no AST/struct/numbering change, `to_latex()`
+still a fixed point.
 
 ## Usage
 
