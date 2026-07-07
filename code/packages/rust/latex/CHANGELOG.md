@@ -2,6 +2,32 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.46.0] — 2026-07-07
+
+### Added — cross-reference resolution: distinct `\pageref` rendering (LTXDOC03 S10)
+
+Closes the surface-form gap S8/S9 left for the *page* reference family. A `\pageref{key}` asks "what
+**page** is the target on", a fundamentally different question from `\ref`'s "what **number** is the
+target". Through S9 the report conflated the two: a resolved `\pageref` rendered **identically** to a
+`\ref` — `\ref{key} -> Kind N`. The crate has no page model, so it cannot compute a real page number,
+but it can at least render the page family *honestly and distinctly*:
+
+- **`\pageref` renders `page ?`.** In `CrossReferenceReport::to_plain_text`, a resolved reference
+  whose `command == "pageref"` (to **any** target kind — Section/Table/Figure/Equation/Inline) now
+  renders `\pageref{sec:i} -> page ?` — the `\pageref` spelling is kept and the number/kind are
+  replaced by the fixed literal placeholder `page ?`. The `?` mirrors LaTeX's own `??` for an
+  unresolved page reference (and the S7 number-placeholder pattern): it means "page number not
+  modelled", NOT the kind and NOT the number.
+- **A `\pageref` ignores kind entirely.** Because a page reference is about location, not identity,
+  the `\pageref` branch takes precedence over the S8 else-branch and is orthogonal to the S9 amsmath
+  branch: a `\pageref` to an equation still renders `page ?`, never `Equation (1)` or `Equation 1`.
+- **`\ref` and `\eqref` are byte-for-byte unchanged.** Branch precedence is (1) `\eqref` to Equation →
+  parenthesised (S9); (2) `\pageref` any kind → `page ?` (S10, NEW); (3) else → `\ref{key} -> Kind N`
+  (S8). Only `\pageref` lines change.
+- **Additive, no AST/struct/numbering change.** `RefEntry.command` (the surface spelling) was already
+  retained by S1, so S10 is a pure rendering branch in one loop. No AST change, no new field, no
+  re-numbering; `to_latex()` remains a fixed point.
+
 ## [0.45.0] — 2026-07-06
 
 ### Added — cross-reference resolution: `\eqref` parenthesisation (LTXDOC03 S9)

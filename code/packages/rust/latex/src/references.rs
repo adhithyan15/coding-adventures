@@ -1658,18 +1658,26 @@ impl CrossReferenceReport {
     /// Render this report to a **stable, deterministic, human-readable** plain-text string (LTXDOC03
     /// S6). The exact format — pinned so tests and consumers can rely on it byte-for-byte:
     ///
-    /// - One line per resolved reference, in `refs` order. There are two renderings (LTXDOC03 S9):
+    /// - One line per resolved reference, in `refs` order. There are **three** renderings, tried in
+    ///   this precedence order (LTXDOC03 S10):
     ///   - An `\eqref` whose target is an **equation** renders amsmath-style, keeping the `\eqref`
     ///     spelling and **parenthesising** the number:
     ///     `` \eqref{<key>} -> <Kind> (<number>) `` — e.g. `` \eqref{eq:e} -> Equation (1) ``. This
-    ///     mirrors how amsmath's `\eqref` typesets the equation number as `(1)`.
-    ///   - Every **other** resolved reference — all `\ref`, all `\pageref`, and any `\eqref` to a
-    ///     **non-equation** kind — renders with the canonical `\ref` prefix and a **bare** number:
+    ///     mirrors how amsmath's `\eqref` typesets the equation number as `(1)`. (S9, unchanged.)
+    ///   - Otherwise, a `\pageref` (to **any** kind — Section/Table/Figure/Equation/Inline) renders
+    ///     with the `\pageref` spelling and the literal placeholder `page ?`:
+    ///     `` \pageref{<key>} -> page ? `` — e.g. `` \pageref{sec:i} -> page ? ``. A `\pageref` asks
+    ///     *what page* its target is on, but the crate has **no page model**, so neither the target's
+    ///     kind nor its number is relevant; the honest, fixed placeholder is `page ?` (the `?` mirrors
+    ///     LaTeX's own `??` for an unresolved page reference, and the S7 number-placeholder pattern).
+    ///     (S10, NEW — previously a `\pageref` rendered identically to a `\ref`.)
+    ///   - Every **other** resolved reference — all `\ref` and any `\eqref` to a **non-equation**
+    ///     kind — renders with the canonical `\ref` prefix and a **bare** number:
     ///     `` \ref{<key>} -> <Kind> <number> `` — e.g. `` \ref{sec:intro} -> Section 1.2 ``. The
-    ///     `\ref` prefix here names the *binding*, not the surface command (a `\pageref` still shows
-    ///     as `\ref`), unchanged from S8.
+    ///     `\ref` prefix here names the *binding*, not the surface command, unchanged from S8.
     ///
-    ///   In both renderings `<Kind>` is the capitalised kind name ([`kind_display_name`]).
+    ///   In the first and third renderings `<Kind>` is the capitalised kind name
+    ///   ([`kind_display_name`]); the `\pageref` rendering carries no kind or number at all.
     /// - One line per resolved citation, in `cites` order:
     ///   `` \cite{<key>} -> <number> `` — e.g. `` \cite{smith} -> [2] ``.
     /// - **Only if** `dangling_refs` is non-empty, a footer line:
@@ -1690,17 +1698,25 @@ impl CrossReferenceReport {
 
         // Resolved references.
         //
-        // Two renderings, keyed off the *surface command* + *target kind* (LTXDOC03 S9):
+        // Three renderings, tried in this precedence order, keyed off the *surface command* +
+        // *target kind* (LTXDOC03 S10):
         //
-        //   * An `\eqref` whose target is an **equation** renders amsmath-style — the `\eqref`
-        //     spelling is kept and the number is **parenthesised**:
-        //     `\eqref{eq:e} -> Equation (1)`.  (`\eqref` on `article`'s equation counter typesets
-        //     "(1)", so the report mirrors that surface form.)
-        //   * Every other resolved reference — all `\ref`, all `\pageref`, and any `\eqref` to a
-        //     **non-equation** kind — renders exactly as it did through S8: the canonical `\ref`
-        //     prefix and a **bare** number, `\ref{sec:intro} -> Section 1.2`.
+        //   1. An `\eqref` whose target is an **equation** renders amsmath-style — the `\eqref`
+        //      spelling is kept and the number is **parenthesised**:
+        //      `\eqref{eq:e} -> Equation (1)`.  (`\eqref` on `article`'s equation counter typesets
+        //      "(1)", so the report mirrors that surface form.)  (S9, unchanged.)
+        //   2. Otherwise, a `\pageref` (to **any** kind) renders with the `\pageref` spelling and the
+        //      literal placeholder `page ?`: `\pageref{sec:i} -> page ?`.  A page reference asks
+        //      *what page* the target is on; the crate has NO page model, so the target's kind and
+        //      number are irrelevant — the honest fixed placeholder is `page ?` (the `?` mirrors
+        //      LaTeX's own `??` for an unresolved page ref).  (S10, NEW.)
+        //   3. Every other resolved reference — all `\ref` and any `\eqref` to a **non-equation**
+        //      kind — renders exactly as it did through S8: the canonical `\ref` prefix and a **bare**
+        //      number, `\ref{sec:intro} -> Section 1.2`.
         //
-        // Only the one amsmath case diverges; the else-branch is byte-for-byte the S8 line.
+        // Precedence matters: (1) before (2) is moot (an `\eqref` is never a `\pageref`), but (2)
+        // before (3) is what makes every `\pageref` diverge from the S8 `\ref` line.  `\ref` and
+        // `\eqref` outputs are byte-for-byte unchanged; only `\pageref` lines change.
         for r in &self.refs {
             if r.command == "eqref" && r.kind == LabelKind::Equation {
                 lines.push(format!(
@@ -1709,6 +1725,9 @@ impl CrossReferenceReport {
                     kind_display_name(r.kind),
                     r.number
                 ));
+            } else if r.command == "pageref" {
+                // No page model: a fixed, honest placeholder, independent of kind/number.
+                lines.push(format!(r"\pageref{{{}}} -> page ?", r.key));
             } else {
                 lines.push(format!(
                     r"\ref{{{}}} -> {} {}",
@@ -1904,6 +1923,43 @@ mod tests {
         let report = doc.cross_reference_report();
         let text = report.to_plain_text();
         assert_eq!(text, "\\eqref{eq:a} -> Equation (1)\n\\eqref{eq:b} -> Equation (2)");
+    }
+
+    #[test]
+    fn s10_pageref_renders_page_placeholder() {
+        // LTXDOC03 S10: a resolved `\pageref` to a labelled section renders with the `\pageref`
+        // spelling and the fixed `page ?` placeholder — NOT the S8 `\ref{...} -> Section 1` line.
+        // (The crate has no page model, so a page reference cannot report a real page number.)
+        let src = r"\begin{document}\section{Intro}\label{sec:i} \pageref{sec:i}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\pageref{sec:i} -> page ?");
+    }
+
+    #[test]
+    fn s10_ref_still_bare_and_pageref_distinct() {
+        // A doc with BOTH a `\ref` and a `\pageref` to the same section: the `\ref` is UNCHANGED from
+        // S8 (`\ref{sec:i} -> Section 1`) while the `\pageref` now diverges (`\pageref{sec:i} -> page
+        // ?`). `\ref` first in source order, so it is the report's first line (S1 pre-order).
+        let src = r"\begin{document}\section{Intro}\label{sec:i} \ref{sec:i} \pageref{sec:i}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\ref{sec:i} -> Section 1\n\\pageref{sec:i} -> page ?");
+    }
+
+    #[test]
+    fn s10_pageref_to_equation_is_still_page() {
+        // A `\pageref` to a labelled EQUATION ignores the `\eqref`-to-equation special-case entirely:
+        // it is a page reference, so it still renders `\pageref{eq:e} -> page ?` (no parentheses, no
+        // Equation kind, no number). This proves the `\pageref` branch takes precedence over the S8
+        // else-branch and is orthogonal to the S9 amsmath branch.
+        let src = r"\begin{document}\begin{equation} E = mc^2 \label{eq:e} \end{equation} \pageref{eq:e}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let report = doc.cross_reference_report();
+        let text = report.to_plain_text();
+        assert_eq!(text, "\\pageref{eq:e} -> page ?");
     }
 
     #[test]
