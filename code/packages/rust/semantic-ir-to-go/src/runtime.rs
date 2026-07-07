@@ -2553,8 +2553,8 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 				limit := positional[0]
 				useFloat := _sir_is_float_val(recv) || _sir_is_float_val(limit) || _sir_is_float_val(stride)
 				if useFloat {
-					step := _sir_as_float(stride)
-					lim := _sir_as_float(limit)
+					step := _sir_as_float_lenient(stride)
+					lim := _sir_as_float_lenient(limit)
 					v := _sir_as_float(recv)
 					if step > 0 {
 						for v <= lim {
@@ -2574,17 +2574,23 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 						}
 					}
 				} else {
-					step := _sir_as_int(stride)
-					lim := _sir_as_int(limit)
+					step := _sir_as_int_trunc(stride)
+					lim := _sir_as_int_trunc(limit)
 					v := _sir_as_int(recv)
 					if step > 0 {
 						for v <= lim {
 							_sir_apply(block, []Value{v})
+							if v > math.MaxInt64-step {
+								break
+							}
 							v += step
 						}
 					} else if step < 0 {
 						for v >= lim {
 							_sir_apply(block, []Value{v})
+							if v < math.MinInt64-step {
+								break
+							}
 							v += step
 						}
 					}
@@ -2695,7 +2701,10 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 				return _sir_int_pow(_sir_as_int(recv), e), true
 			}
 		}
-		return math.Pow(_sir_as_float(recv), _sir_as_float(args[0])), true
+		// `recv` is numeric on this dispatch path; a non-numeric exponent
+		// degrades to 0.0 (→ result 1.0) via the lenient coercion rather than
+		// panicking on the dispatch surface.
+		return math.Pow(_sir_as_float(recv), _sir_as_float_lenient(args[0])), true
 	case "digits":
 		// Ruby `Integer#digits`: the base-10 digits, LEAST-significant first
 		// (`123.digits == [3, 2, 1]`).  A float receiver truncates first
@@ -2807,6 +2816,21 @@ func _sir_digits(n int64) *Seq {
 // `to_i`-style truncation that also accepts a float receiver (Ruby's
 // `3.7.to_i == 3`, `even?`/`odd?` truncate first).  A non-finite float
 // degrades to 0 rather than panicking (never-raise floor).
+// Lenient float coercion for the numeric OO surface: a non-numeric
+// receiver/argument degrades to 0.0 instead of panicking, upholding the
+// never-raise-on-the-dispatch-surface invariant (mirrors _sir_as_int_trunc).
+func _sir_as_float_lenient(v Value) float64 {
+	switch n := v.(type) {
+	case int64:
+		return float64(n)
+	case int:
+		return float64(n)
+	case float64:
+		return n
+	}
+	return 0
+}
+
 func _sir_as_int_trunc(v Value) int64 {
 	switch n := v.(type) {
 	case int64:
