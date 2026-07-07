@@ -75,7 +75,7 @@ use coding_adventures_javascript_ast::{
     FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
-    Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
+    ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
@@ -1749,19 +1749,38 @@ impl<'a> Emitter<'a> {
     fn emit_object(&mut self, o: &ObjectExpression) {
         self.maybe_map(&o.cv);
         self.write_str("{");
-        for (i, p) in o.properties.iter().enumerate() {
+        for (i, member) in o.properties.iter().enumerate() {
             if i > 0 {
                 self.write_str(",");
                 self.pretty_ws();
             } else {
                 self.pretty_ws();
             }
-            self.emit_property(p);
+            match member {
+                ObjectMember::Property(p) => self.emit_property(p),
+                ObjectMember::Spread(s) => self.emit_object_spread(s),
+            }
         }
         if !o.properties.is_empty() {
             self.pretty_ws();
         }
         self.write_str("}");
+    }
+
+    /// Emit an object-spread member `...expr` inside an object literal.
+    ///
+    /// Identical in shape to the call/array [`emit_spread`](Self::emit_spread):
+    /// the three literal `.` characters then the `argument` at
+    /// `PREC_ASSIGNMENT` with no interior space (`...o`, never `... o`). The
+    /// assignment precedence is the crux — an object-literal member position is
+    /// an `AssignmentExpression`, so everything at or above assignment strength
+    /// prints bare (`...o`, `...o.p`, `...f()`, `...a?b:c`), while the one looser
+    /// form, a **sequence**, must wrap (`...(a,b)`): a bare `...a,b` would spread
+    /// only `a` and leave `,b` as a second (empty-keyed, invalid) member slot.
+    fn emit_object_spread(&mut self, s: &SpreadElement) {
+        self.maybe_map(&s.cv);
+        self.write_str("...");
+        self.emit_expression_inner(&s.argument, PREC_ASSIGNMENT);
     }
 
     fn emit_property(&mut self, p: &Property) {
@@ -3419,7 +3438,7 @@ mod tests {
         let o = Expression::ObjectExpression(ObjectExpression {
             cv: None,
             properties: vec![
-                Property {
+                ObjectMember::Property(Property {
                     cv: None,
                     kind: PropertyKind::Init,
                     key: PropertyKey::Identifier(Identifier {
@@ -3430,8 +3449,8 @@ mod tests {
                     computed: false,
                     shorthand: false,
                     method: false,
-                },
-                Property {
+                }),
+                ObjectMember::Property(Property {
                     cv: None,
                     kind: PropertyKind::Init,
                     key: PropertyKey::Identifier(Identifier {
@@ -3442,12 +3461,90 @@ mod tests {
                     computed: false,
                     shorthand: false,
                     method: false,
-                },
+                }),
             ],
         });
         let prog = program().with_body(vec![stmt(o)]);
         let out = emit_default(prog);
         assert_eq!(out.code, "({a:1,b:2});");
+    }
+
+    // ---- object spread `{...o}` (CLOC12.170) ----
+    //
+    // A spread member prints `...` then its argument at `PREC_ASSIGNMENT` with
+    // no interior space, exactly like a call/array spread. The object body is
+    // wrapped in `(...)` here only because an object at statement-start needs it
+    // (tested above) — the `...` printing is what these assert.
+
+    /// Build a spread member `...arg`.
+    fn spread_member(arg: Expression) -> ObjectMember {
+        ObjectMember::Spread(SpreadElement { cv: None, argument: Box::new(arg) })
+    }
+
+    /// Build a plain `name: value` init member.
+    fn init_member(name: &str, value: Expression) -> ObjectMember {
+        ObjectMember::Property(Property {
+            cv: None,
+            kind: PropertyKind::Init,
+            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            value: Box::new(value),
+            computed: false,
+            shorthand: false,
+            method: false,
+        })
+    }
+
+    /// Emit an object literal (as a parenthesised statement) from its members.
+    fn emit_object_members(members: Vec<ObjectMember>) -> String {
+        let o = Expression::ObjectExpression(ObjectExpression { cv: None, properties: members });
+        emit_default(program().with_body(vec![stmt(o)])).code
+    }
+
+    #[test]
+    fn object_spread_sole_member_is_bare() {
+        // `{...a}` — the spread argument prints bare.
+        assert_eq!(emit_object_members(vec![spread_member(ident("a"))]), "({...a});");
+    }
+
+    #[test]
+    fn object_spread_before_property() {
+        // `{...a, b: 1}` — spread then a normal member, source order preserved.
+        assert_eq!(
+            emit_object_members(vec![spread_member(ident("a")), init_member("b", num(1.0))]),
+            "({...a,b:1});"
+        );
+    }
+
+    #[test]
+    fn object_spread_after_property() {
+        // `{a: 1, ...b}` — a normal member then a spread.
+        assert_eq!(
+            emit_object_members(vec![init_member("a", num(1.0)), spread_member(ident("b"))]),
+            "({a:1,...b});"
+        );
+    }
+
+    #[test]
+    fn object_spread_call_argument_is_bare() {
+        // `{...f()}` — a call binds tighter than assignment, so no wrap.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        assert_eq!(emit_object_members(vec![spread_member(call)]), "({...f()});");
+    }
+
+    #[test]
+    fn object_spread_sequence_argument_wraps() {
+        // `{...(a, b)}` — a sequence is looser than the member comma, so it must
+        // wrap; a bare `...a,b` would spread only `a` and leave `,b` as a second
+        // (invalid) member slot.
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("a"), ident("b")],
+        });
+        assert_eq!(emit_object_members(vec![spread_member(seq)]), "({...(a,b)});");
     }
 
     // ---- property-key quote stripping (emit_property_key) ----
@@ -3462,7 +3559,7 @@ mod tests {
     fn obj_one_string_key(value: &str) -> Expression {
         Expression::ObjectExpression(ObjectExpression {
             cv: None,
-            properties: vec![Property {
+            properties: vec![ObjectMember::Property(Property {
                 cv: None,
                 kind: PropertyKind::Init,
                 key: PropertyKey::StringLiteral(StringLiteral {
@@ -3476,7 +3573,7 @@ mod tests {
                 computed: false,
                 shorthand: false,
                 method: false,
-            }],
+            })],
         })
     }
 

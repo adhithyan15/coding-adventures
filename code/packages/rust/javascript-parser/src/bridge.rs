@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
-        ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, Property,
+        ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember, Property,
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -2654,7 +2654,12 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
     for n in nodes {
         match n.rule_name.as_str() {
             "property_definition" => {
-                properties.push(convert_property_definition(n)?);
+                // PR1 (node-only): normal key/value / shorthand / getter / setter
+                // properties convert to `ObjectMember::Property`. Object spread
+                // `{...o}` is still declined inside `convert_property_definition`
+                // (gap-SpreadProperty) — the `ObjectMember::Spread` bridge lands
+                // in CLOC12.170 PR2.
+                properties.push(ObjectMember::Property(convert_property_definition(n)?));
             }
             _ => {}
         }
@@ -4332,7 +4337,12 @@ mod tests {
     /// The first property's key of an object-literal expression statement.
     fn first_object_key(src: &str) -> PropertyKey {
         match first_expr(&bridge_ok(src)) {
-            Expression::ObjectExpression(o) => o.properties[0].key.clone(),
+            Expression::ObjectExpression(o) => match &o.properties[0] {
+                ObjectMember::Property(p) => p.key.clone(),
+                ObjectMember::Spread(_) => {
+                    unreachable!("first_object_key fixtures build no object spreads")
+                }
+            },
             other => panic!("expected ObjectExpression, got {other:?}"),
         }
     }

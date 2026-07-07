@@ -130,7 +130,7 @@ use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentExpression, AssignmentOperator, AssignmentTarget, BindingTarget,
     BlockStatement,
     CallExpression, Declaration, Expression, ExpressionStatement, ForInit, FunctionDeclaration,
-    FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, PropertyKey,
+    FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, ObjectMember, PropertyKey,
     Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
 
@@ -476,12 +476,17 @@ fn expr_node_count(expr: &Expression) -> usize {
         Expression::ObjectExpression(oe) => oe
             .properties
             .iter()
-            .map(|p| {
-                let key = match &p.key {
-                    PropertyKey::Expression(e) => expr_node_count(e),
-                    _ => 1,
-                };
-                key + expr_node_count(&p.value)
+            .map(|member| match member {
+                ObjectMember::Property(p) => {
+                    let key = match &p.key {
+                        PropertyKey::Expression(e) => expr_node_count(e),
+                        _ => 1,
+                    };
+                    key + expr_node_count(&p.value)
+                }
+                // A spread `...expr` has no key — count one node for the
+                // spread itself plus the node count of its argument.
+                ObjectMember::Spread(s) => 1 + expr_node_count(&s.argument),
             })
             .sum(),
         // A function *value* is heavy: count its params and one unit per
@@ -817,16 +822,26 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                // Only a *computed* key `[expr]` is a binding use; a
-                // plain identifier / string / number key is a property
-                // name.
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &prop.key {
-                        collect_binding_idents_expr(e, out);
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        // Only a *computed* key `[expr]` is a binding use; a
+                        // plain identifier / string / number key is a property
+                        // name.
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &prop.key {
+                                collect_binding_idents_expr(e, out);
+                            }
+                        }
+                        collect_binding_idents_expr(&prop.value, out);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        collect_binding_idents_expr(&s.argument, out);
                     }
                 }
-                collect_binding_idents_expr(&prop.value, out);
             }
         }
         // A function *value* binds its own name (if named) and its params
@@ -1127,13 +1142,23 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &prop.key {
-                        tally_expr(e, cand, t);
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &prop.key {
+                                tally_expr(e, cand, t);
+                            }
+                        }
+                        tally_expr(&prop.value, cand, t);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        tally_expr(&s.argument, cand, t);
                     }
                 }
-                tally_expr(&prop.value, cand, t);
             }
         }
         // Count uses of the candidate inside a function *value*'s body —
@@ -1444,16 +1469,26 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &mut oe.properties {
-                // A computed key `[expr]` is a sub-expression to walk; a
-                // plain identifier / string / number key is a property
-                // name.
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &mut prop.key {
-                        changed |= inline_in_expr(e, cand);
+            for member in &mut oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        // A computed key `[expr]` is a sub-expression to walk; a
+                        // plain identifier / string / number key is a property
+                        // name.
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &mut prop.key {
+                                changed |= inline_in_expr(e, cand);
+                            }
+                        }
+                        changed |= inline_in_expr(&mut prop.value, cand);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        changed |= inline_in_expr(&mut s.argument, cand);
                     }
                 }
-                changed |= inline_in_expr(&mut prop.value, cand);
             }
         }
         // Inline candidate calls that appear inside a function *value*'s
@@ -1597,13 +1632,23 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &mut oe.properties {
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &mut prop.key {
-                        substitute(e, map);
+            for member in &mut oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &mut prop.key {
+                                substitute(e, map);
+                            }
+                        }
+                        substitute(&mut prop.value, map);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        substitute(&mut s.argument, map);
                     }
                 }
-                substitute(&mut prop.value, map);
             }
         }
         // Substitute param→arg inside a function *value*'s body, but a
@@ -1998,13 +2043,23 @@ fn expr_collect_mutated_params(
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &prop.key {
-                        expr_collect_mutated_params(e, params, out);
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &prop.key {
+                                expr_collect_mutated_params(e, params, out);
+                            }
+                        }
+                        expr_collect_mutated_params(&prop.value, params, out);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        expr_collect_mutated_params(&s.argument, params, out);
                     }
                 }
-                expr_collect_mutated_params(&prop.value, params, out);
             }
         }
         // An assignment to an outer param INSIDE a function value's body
@@ -3475,13 +3530,23 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &mut oe.properties {
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &mut prop.key {
-                        rename_in_expr(e, map);
+            for member in &mut oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &mut prop.key {
+                                rename_in_expr(e, map);
+                            }
+                        }
+                        rename_in_expr(&mut prop.value, map);
+                    }
+                    // Object spread `...expr` — recurse into the spread
+                    // argument the same way the property arm recurses into
+                    // prop.value.
+                    ObjectMember::Spread(s) => {
+                        rename_in_expr(&mut s.argument, map);
                     }
                 }
-                rename_in_expr(&mut prop.value, map);
             }
         }
         // Alpha-rename uses inside a function *value*'s body, but its own

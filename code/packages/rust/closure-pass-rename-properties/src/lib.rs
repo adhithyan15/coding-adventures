@@ -83,7 +83,7 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, Declaration, Expression, ForInit, Program, ProgramItem,
+    ArrowBody, AssignmentTarget, Declaration, Expression, ForInit, ObjectMember, Program, ProgramItem,
     PropertyKey, Statement,
 };
 
@@ -1196,24 +1196,35 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &oe.properties {
-                if prop.computed {
-                    // `{ [expr]: v }` — Phase-1 rejects this at the bridge,
-                    // but be defensive: recurse the key, record nothing.
-                    if let PropertyKey::Expression(e) = &prop.key {
-                        classify_expr(e, cls);
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            // `{ [expr]: v }` — Phase-1 rejects this at the bridge,
+                            // but be defensive: recurse the key, record nothing.
+                            if let PropertyKey::Expression(e) = &prop.key {
+                                classify_expr(e, cls);
+                            }
+                        } else {
+                            match &prop.key {
+                                // `{ x: v }` — a renameable dotted key.
+                                PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
+                                // `{ "x": v }` — a quoted key disables `x`.
+                                PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
+                                // Numeric keys / others — not renameable identifiers.
+                                _ => {}
+                            }
+                        }
+                        classify_expr(&prop.value, cls);
                     }
-                } else {
-                    match &prop.key {
-                        // `{ x: v }` — a renameable dotted key.
-                        PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
-                        // `{ "x": v }` — a quoted key disables `x`.
-                        PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
-                        // Numeric keys / others — not renameable identifiers.
-                        _ => {}
+                    // `{ ...expr }` — a spread has no property NAME, so it
+                    // touches no property namespace. Only walk its argument
+                    // sub-expression so a quoted access inside it still
+                    // disables the affected name.
+                    ObjectMember::Spread(s) => {
+                        classify_expr(&s.argument, cls);
                     }
                 }
-                classify_expr(&prop.value, cls);
             }
         }
         // Classify property accesses inside a function *value*'s body — a
@@ -1487,19 +1498,28 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
         }
         Expression::ObjectExpression(oe) => {
-            for prop in &mut oe.properties {
-                if prop.computed {
-                    if let PropertyKey::Expression(e) = &mut prop.key {
-                        rewrite_expr(e, map);
+            for member in &mut oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &mut prop.key {
+                                rewrite_expr(e, map);
+                            }
+                        } else if let PropertyKey::Identifier(id) = &mut prop.key {
+                            // Rewrite a renameable unquoted key; a `StringLiteral`
+                            // (quoted) key is never in `map`, so it is left alone.
+                            if let Some(new) = map.get(&id.name) {
+                                id.name = new.clone();
+                            }
+                        }
+                        rewrite_expr(&mut prop.value, map);
                     }
-                } else if let PropertyKey::Identifier(id) = &mut prop.key {
-                    // Rewrite a renameable unquoted key; a `StringLiteral`
-                    // (quoted) key is never in `map`, so it is left alone.
-                    if let Some(new) = map.get(&id.name) {
-                        id.name = new.clone();
+                    // `{ ...expr }` — a spread has no property NAME to rewrite;
+                    // only walk its argument sub-expression.
+                    ObjectMember::Spread(s) => {
+                        rewrite_expr(&mut s.argument, map);
                     }
                 }
-                rewrite_expr(&mut prop.value, map);
             }
         }
         // Rewrite property accesses inside a function *value*'s body, the

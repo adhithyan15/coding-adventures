@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.34.0] - 2026-07-07
+
+### Added — CLOC12.170: emit object spread `{...o}` (`emit_object_spread`)
+
+`emit_object` now iterates `Vec<ObjectMember>` (the object-literal member type
+gained an object-spread arm in `javascript-ast` 0.29.0) and prints an
+`ObjectMember::Spread` via the new `emit_object_spread`: the three literal `.`
+characters then the `argument` at `PREC_ASSIGNMENT` with no interior space —
+identical in shape to the call/array `emit_spread`. The assignment precedence is
+the crux: an object-member position is an `AssignmentExpression`, so everything
+at or above assignment strength prints bare (`{...a}`, `{...a.b}`, `{...f()}`),
+while the one looser form — a **sequence** — must wrap (`{...(a,b)}`) because a
+bare `...a,b` would spread only `a` and leave `,b` as a second (invalid) member
+slot. 5 hand-constructed-AST unit tests (`{...a}`, `{...a,b:1}`, `{a:1,...b}`,
+`{...f()}`, and the sequence wrap `{...(a,b)}`). MINOR because the public
+`ObjectExpression` member type changed; no behaviour change for existing inputs.
+
 ## [0.33.1] - 2026-07-07
 
 ### Added — CLOC12.169 PR3: CodePrinter dynamic `import()` conformance port

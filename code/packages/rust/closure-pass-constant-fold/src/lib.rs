@@ -97,7 +97,7 @@ use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
-    ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
+    ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
     DoWhileStatement, VariableDeclarator, WhileStatement,
 };
@@ -601,22 +601,31 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             properties: o
                 .properties
                 .iter()
-                .map(|p| Property {
-                    cv: p.cv.clone(),
-                    kind: p.kind,
-                    key: match &p.key {
-                        // Identifier / literal keys: pass through.
-                        PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
-                        PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
-                        PropertyKey::NumericLiteral(n) => PropertyKey::NumericLiteral(n.clone()),
-                        PropertyKey::Expression(e) => {
-                            PropertyKey::Expression(Box::new(fold_expression(e, st)))
-                        }
-                    },
-                    value: Box::new(fold_expression(&p.value, st)),
-                    computed: p.computed,
-                    shorthand: p.shorthand,
-                    method: p.method,
+                .map(|member| match member {
+                    ObjectMember::Property(p) => ObjectMember::Property(Property {
+                        cv: p.cv.clone(),
+                        kind: p.kind,
+                        key: match &p.key {
+                            // Identifier / literal keys: pass through.
+                            PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
+                            PropertyKey::NumericLiteral(n) => PropertyKey::NumericLiteral(n.clone()),
+                            PropertyKey::Expression(e) => {
+                                PropertyKey::Expression(Box::new(fold_expression(e, st)))
+                            }
+                        },
+                        value: Box::new(fold_expression(&p.value, st)),
+                        computed: p.computed,
+                        shorthand: p.shorthand,
+                        method: p.method,
+                    }),
+                    // Object spread `...expr` — fold through the spread argument
+                    // (`{...(1+2 && o)}` is not foldable here, but a foldable
+                    // sub-expression inside still simplifies).
+                    ObjectMember::Spread(s) => ObjectMember::Spread(SpreadElement {
+                        cv: s.cv.clone(),
+                        argument: Box::new(fold_expression(&s.argument, st)),
+                    }),
                 })
                 .collect(),
         }),
@@ -4919,13 +4928,19 @@ fn js_math_min(values: &[f64]) -> f64 {
 /// instant any property fails the static-shape conditions documented at the call
 /// site. On success the pairs are in source order with duplicate keys collapsed
 /// (first position, last value).
-fn fold_object_entries_pairs(properties: &[Property]) -> Option<Vec<Expression>> {
+fn fold_object_entries_pairs(properties: &[ObjectMember]) -> Option<Vec<Expression>> {
     // Parallel vectors in first-occurrence order; `keys` finds a duplicate so its
     // value can be overwritten in place (the object the literal builds keeps only
     // the last value under a repeated key).
     let mut keys: Vec<String> = Vec::new();
     let mut pairs: Vec<Expression> = Vec::new();
-    for p in properties {
+    for member in properties {
+        // An object spread `...o` injects keys we cannot know statically, so any
+        // spread makes the whole `Object.entries` result indeterminate — decline.
+        let p = match member {
+            ObjectMember::Property(p) => p,
+            ObjectMember::Spread(_) => return None,
+        };
         // Only plain data properties `k: v`. Getters/setters execute code,
         // methods are functions, and a computed key `[expr]: v` is unknown.
         if p.kind != PropertyKind::Init || p.method || p.computed {
@@ -4991,13 +5006,18 @@ fn fold_object_entries_pairs(properties: &[Property]) -> Option<Vec<Expression>>
 /// for why dropping the value does NOT loosen them: the value expression is still
 /// evaluated when the source literal is built, so it must be a side-effect-free
 /// primitive literal even though `Object.keys` never emits it.
-fn fold_object_keys_names(properties: &[Property]) -> Option<Vec<Expression>> {
+fn fold_object_keys_names(properties: &[ObjectMember]) -> Option<Vec<Expression>> {
     // First-occurrence order; a duplicate key is found and ignored (the object the
     // literal builds keeps a single own property under a repeated key, and its
     // position is the first occurrence).
     let mut keys: Vec<String> = Vec::new();
     let mut names: Vec<Expression> = Vec::new();
-    for p in properties {
+    for member in properties {
+        // A spread `...o` injects statically-unknown keys — decline the fold.
+        let p = match member {
+            ObjectMember::Property(p) => p,
+            ObjectMember::Spread(_) => return None,
+        };
         // Only plain data properties `k: v`. Getters/setters execute code,
         // methods are functions, and a computed key `[expr]: v` is unknown.
         if p.kind != PropertyKind::Init || p.method || p.computed {
@@ -5114,11 +5134,11 @@ fn stamp_literal_cv(v: FoldedLiteral, cv: Option<String>) -> Expression {
 /// `None` (decline the fold) the instant any element fails the static-shape
 /// conditions documented at the call site. On success the returned properties
 /// honour the spec's duplicate-key rule: first-occurrence POSITION, last VALUE.
-fn fold_from_entries_pairs(elements: &[Option<Expression>]) -> Option<Vec<Property>> {
+fn fold_from_entries_pairs(elements: &[Option<Expression>]) -> Option<Vec<ObjectMember>> {
     // Parallel vectors in first-occurrence order; `keys` lets us find a
     // duplicate so its value can be overwritten in place (spec behaviour).
     let mut keys: Vec<String> = Vec::new();
-    let mut props: Vec<Property> = Vec::new();
+    let mut props: Vec<ObjectMember> = Vec::new();
     for element in elements {
         // No outer hole — `[ , ["a", 1]]` is declined.
         let pair = element.as_ref()?;
@@ -5159,7 +5179,7 @@ fn fold_from_entries_pairs(elements: &[Option<Expression>]) -> Option<Vec<Proper
             | Expression::NullLiteral(_) => value_expr.clone(),
             _ => return None,
         };
-        let property = Property {
+        let property = ObjectMember::Property(Property {
             cv: None,
             kind: PropertyKind::Init,
             key: property_key_for(&key_string),
@@ -5167,7 +5187,7 @@ fn fold_from_entries_pairs(elements: &[Option<Expression>]) -> Option<Vec<Proper
             computed: false,
             shorthand: false,
             method: false,
-        };
+        });
         // Duplicate key → keep first POSITION, take last VALUE.
         if let Some(pos) = keys.iter().position(|k| k == &key_string) {
             props[pos] = property;
@@ -8847,7 +8867,7 @@ mod tests {
         // dedicated tests cover that.)
         let obj = Expression::ObjectExpression(ObjectExpression {
             cv: None,
-            properties: vec![Property {
+            properties: vec![ObjectMember::Property(Property {
                 cv: None,
                 kind: coding_adventures_javascript_ast::PropertyKind::Init,
                 key: PropertyKey::Identifier(coding_adventures_javascript_ast::Identifier {
@@ -8858,7 +8878,7 @@ mod tests {
                 shorthand: false,
                 computed: false,
                 method: false,
-            }],
+            })],
         });
         let c = object_static_call("values", obj);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
@@ -8934,8 +8954,18 @@ mod tests {
     fn object_lit(props: Vec<Property>) -> Expression {
         Expression::ObjectExpression(ObjectExpression {
             cv: None,
-            properties: props,
+            properties: props.into_iter().map(ObjectMember::Property).collect(),
         })
+    }
+
+    /// Extract the `&Property` from an `&ObjectMember` in test assertions.
+    /// The fold outputs asserted on here never synthesize object spreads, so
+    /// a `Spread` arm here indicates a broken fold, not a missing case.
+    fn prop_of(member: &ObjectMember) -> &Property {
+        match member {
+            ObjectMember::Property(p) => p,
+            ObjectMember::Spread(_) => unreachable!("folded object has no spreads"),
+        }
     }
 
     /// Assert that `pair` is `["<key>", <expected-value-matcher>]`.
@@ -10049,13 +10079,13 @@ mod tests {
         match extract_expr(&out) {
             Expression::ObjectExpression(o) => {
                 assert_eq!(o.properties.len(), 2, "two properties");
-                let p0 = &o.properties[0];
+                let p0 = prop_of(&o.properties[0]);
                 match &p0.key {
                     PropertyKey::Identifier(id) => assert_eq!(id.name, "a"),
                     other => panic!("expected identifier key `a`; got {:?}", other),
                 }
                 assert!(matches!(&*p0.value, Expression::NumericLiteral(n) if n.value == 1.0));
-                let p1 = &o.properties[1];
+                let p1 = prop_of(&o.properties[1]);
                 match &p1.key {
                     PropertyKey::Identifier(id) => assert_eq!(id.name, "b"),
                     other => panic!("expected identifier key `b`; got {:?}", other),
@@ -10077,11 +10107,11 @@ mod tests {
         match extract_expr(&out) {
             Expression::ObjectExpression(o) => {
                 assert_eq!(o.properties.len(), 1, "one property");
-                match &o.properties[0].key {
+                match &prop_of(&o.properties[0]).key {
                     PropertyKey::StringLiteral(s) => assert_eq!(s.value, "1", "key ToString → \"1\""),
                     other => panic!("expected string key \"1\"; got {:?}", other),
                 }
-                assert!(matches!(&*o.properties[0].value, Expression::StringLiteral(s) if s.value == "x"));
+                assert!(matches!(&*prop_of(&o.properties[0]).value, Expression::StringLiteral(s) if s.value == "x"));
             }
             other => panic!("expected object literal; got {:?}", other),
         }
@@ -10102,15 +10132,15 @@ mod tests {
             Expression::ObjectExpression(o) => {
                 assert_eq!(o.properties.len(), 2, "deduped to two properties");
                 // position 0 is still `a`, but its value is the LAST one (3).
-                match &o.properties[0].key {
+                match &prop_of(&o.properties[0]).key {
                     PropertyKey::Identifier(id) => assert_eq!(id.name, "a", "a keeps first position"),
                     other => panic!("expected identifier key `a`; got {:?}", other),
                 }
                 assert!(
-                    matches!(&*o.properties[0].value, Expression::NumericLiteral(n) if n.value == 3.0),
+                    matches!(&*prop_of(&o.properties[0]).value, Expression::NumericLiteral(n) if n.value == 3.0),
                     "a takes the LAST value (3)"
                 );
-                match &o.properties[1].key {
+                match &prop_of(&o.properties[1]).key {
                     PropertyKey::Identifier(id) => assert_eq!(id.name, "b"),
                     other => panic!("expected identifier key `b`; got {:?}", other),
                 }
@@ -10145,10 +10175,10 @@ mod tests {
         match extract_expr(&out) {
             Expression::ObjectExpression(o) => {
                 assert_eq!(o.properties.len(), 4);
-                assert!(matches!(&*o.properties[0].value, Expression::StringLiteral(_)));
-                assert!(matches!(&*o.properties[1].value, Expression::NumericLiteral(_)));
-                assert!(matches!(&*o.properties[2].value, Expression::BooleanLiteral(_)));
-                assert!(matches!(&*o.properties[3].value, Expression::NullLiteral(_)));
+                assert!(matches!(&*prop_of(&o.properties[0]).value, Expression::StringLiteral(_)));
+                assert!(matches!(&*prop_of(&o.properties[1]).value, Expression::NumericLiteral(_)));
+                assert!(matches!(&*prop_of(&o.properties[2]).value, Expression::BooleanLiteral(_)));
+                assert!(matches!(&*prop_of(&o.properties[3]).value, Expression::NullLiteral(_)));
             }
             other => panic!("expected object literal; got {:?}", other),
         }

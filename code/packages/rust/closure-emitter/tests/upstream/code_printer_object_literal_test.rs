@@ -43,8 +43,8 @@
 use coding_adventures_closure_emitter::{emit, EmitOptions};
 use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
-    Expression, ExpressionStatement, Identifier, NumericLiteral, ObjectExpression, Program,
-    ProgramItem, Property, PropertyKey, PropertyKind, SourceType, Statement, StringLiteral,
+    Expression, ExpressionStatement, Identifier, NumericLiteral, ObjectExpression, ObjectMember,
+    Program, ProgramItem, Property, PropertyKey, PropertyKind, SourceType, Statement, StringLiteral,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use coding_adventures_type_sidecar::Sidecar;
@@ -109,7 +109,7 @@ fn numeric_key(v: f64) -> PropertyKey {
 fn object(properties: Vec<Property>) -> Expression {
     Expression::ObjectExpression(ObjectExpression {
         cv: None,
-        properties,
+        properties: properties.into_iter().map(ObjectMember::Property).collect(),
     })
 }
 
