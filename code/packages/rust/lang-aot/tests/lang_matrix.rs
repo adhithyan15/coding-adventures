@@ -2392,6 +2392,37 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // BA runtime string CONCAT — `str_concat` over two operands that are *both* read
+    // from `INPUT`, so neither carries any compile-time string metadata (no data-segment
+    // literal, no known length). Every earlier `str_concat` cell had at least one operand
+    // the compiler could fold to a literal; here the concatenation can only happen at run
+    // time. Stdin "OK\n!\n" → A$="OK", B$="!", and `PRINT A$ + B$` ⇒ "OK!".
+    //
+    // This foothold proves the four columns whose `str_concat` is *already* a runtime
+    // operation — no new lowering needed:
+    //   • Vm / Jit — a `str` is a tagged `Value::Str`; concat allocates a fresh tagged
+    //     string from the two operands' bytes, wholly at run time.
+    //   • Jvm — the two `str` locals are `java.lang.String` references (the `astore`d
+    //     results of `readLine()`); `str_concat` lowers to a `String` concat that builds
+    //     a new `String` from them — the operands need no compile-time identity.
+    //   • Clr — the same story with `System.String::Concat(string, string)`.
+    // The three columns whose `str_concat` is currently *literal-fold-only* are deferred
+    // to follow-up PRs, because each needs a genuine runtime-operand path:
+    //   • NativeAot — twig-aot only folds `str_concat` when BOTH operands are known
+    //     literals; the runtime helper `__twig_str_concat(a, b)` already exists in
+    //     twig_runtime.c, so the fix is to emit `call_builtin "str_concat"` (2-arg /
+    //     returns-i64 handle) when an operand isn't foldable and add it to `V1_BUILTINS`.
+    //   • Llvm — `str_concat` reads literal metadata today; the runtime path lowers to
+    //     `call i64 @__twig_str_concat(i64, i64)` against the same AOT archive symbol.
+    //   • Wasm — no libc; a runtime concat must bump-allocate `[i32 len][bytes]` and copy
+    //     both operands' bytes in linear memory (or call a host `env.__str_concat`).
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
+        expect: Expect::Stdout("OK!"),
+        backends: &[Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2488,6 +2519,8 @@ fn program_stdin(p: &Prog) -> &'static [u8] {
         (Language::DartmouthBasic, "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n") => b"1\n",
         // BA string INPUT: `INPUT A$` reads the whole line "OK" as the string value.
         (Language::DartmouthBasic, "10 INPUT A$\n20 PRINT A$\n30 END\n") => b"OK\n",
+        // BA runtime string concat: two INPUT lines feed `str_concat` → "OK!".
+        (Language::DartmouthBasic, "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n") => b"OK\n!\n",
         _ => b"",
     }
 }
