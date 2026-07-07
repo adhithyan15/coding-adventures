@@ -131,6 +131,7 @@ SELF_CONTAINED_RUNGS = (
     "rung91_protein_delivery",
     "rung92_gi_absorption",
     "rung93_insulin_dosing",
+    "rung94_toxin_clearance",
 )
 
 
