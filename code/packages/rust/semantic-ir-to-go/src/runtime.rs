@@ -1694,7 +1694,7 @@ func _sir_array_responds(name string) bool {
 	case "length", "size", "count", "first", "last", "empty?", "include?",
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
 		"min", "max", "sum", "uniq", "flatten", "compact", "zip", "rotate",
-		"to_h", "tally",
+		"to_h", "tally", "take", "drop", "values_at",
 		"join", "fetch", "to_a":
 		return true
 	// Block-taking Array/Enumerable methods.
@@ -1989,6 +1989,57 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 			_sir_map_set(acc, x, n+1)
 		}
 		return acc, true
+	case "take":
+		// `a.take(n)` -> a fresh Array of the first n elements. Ruby clamps: n<=0
+		// yields [], n>len yields a full copy. A negative n raises ArgumentError in
+		// Ruby; the never-raise floor treats it as 0.
+		n := int64(0)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		if n < 0 {
+			n = 0
+		}
+		if n > int64(len(recv.Items)) {
+			n = int64(len(recv.Items))
+		}
+		out := make([]Value, int(n))
+		copy(out, recv.Items[:int(n)])
+		return &Seq{Items: out}, true
+	case "drop":
+		// `a.drop(n)` -> a fresh Array with the first n elements removed (n<=0 -> a
+		// full copy, n>=len -> []). A negative n is treated as 0 (never-raise floor).
+		n := int64(0)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		if n < 0 {
+			n = 0
+		}
+		if n > int64(len(recv.Items)) {
+			n = int64(len(recv.Items))
+		}
+		out := make([]Value, len(recv.Items)-int(n))
+		copy(out, recv.Items[int(n):])
+		return &Seq{Items: out}, true
+	case "values_at":
+		// `a.values_at(i, j, ...)` -> a fresh Array of the element at each index,
+		// folding a negative index from the end; an out-of-range index yields nil
+		// (Ruby's behaviour), never panicking.
+		length := int64(len(recv.Items))
+		out := make([]Value, 0, len(args))
+		for _, a := range args {
+			idx := _sir_as_int_trunc(a)
+			if idx < 0 {
+				idx += length
+			}
+			if idx >= 0 && idx < length {
+				out = append(out, recv.Items[idx])
+			} else {
+				out = append(out, nil)
+			}
+		}
+		return &Seq{Items: out}, true
 	case "to_a":
 		return recv, true
 	}

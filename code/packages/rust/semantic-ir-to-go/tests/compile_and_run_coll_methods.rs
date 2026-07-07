@@ -509,3 +509,66 @@ fn array_more_methods_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+/// v0.23.0 slice-selection Array methods: `take`, `drop`, `values_at`.  All are
+/// index-clamped and never panic (`take`/`drop` clamp n to `[0, len]`;
+/// `values_at` folds negatives and yields nil out of range).
+fn take_drop_module() -> Module {
+    let stmts = vec![
+        // [1,2,3,4,5].take(2) -> [1, 2]
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]), "take", vec![ilit(2)])),
+        // [1,2,3].take(9) -> [1, 2, 3]  (n>len clamps to a full copy)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "take", vec![ilit(9)])),
+        // [1,2,3,4,5].drop(2) -> [3, 4, 5]
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]), "drop", vec![ilit(2)])),
+        // [1,2,3].drop(9) -> []  (n>=len yields empty)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "drop", vec![ilit(9)])),
+        // [10,20,30].values_at(0, 2, -1) -> [10, 30, 30]  (negative folds from end)
+        print_stmt(method(
+            seq(vec![ilit(10), ilit(20), ilit(30)]),
+            "values_at",
+            vec![ilit(0), ilit(2), ilit(-1)],
+        )),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+    program(vec![main])
+}
+
+#[test]
+fn take_drop_values_at_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&take_drop_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "takedrop");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[1, 2]",       // take(2)
+            "[1, 2, 3]",    // take(9) clamps
+            "[3, 4, 5]",    // drop(2)
+            "[]",           // drop(9) -> empty
+            "[10, 30, 30]", // values_at(0, 2, -1)
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}

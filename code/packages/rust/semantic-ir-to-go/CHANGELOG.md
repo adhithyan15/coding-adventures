@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.23.0 — slice-selection Array methods: `take` / `drop` / `values_at`
+
+Extends the emitted Go runtime's non-block `Array` catalog (and the
+`respond_to?` table):
+
+- `take(n)` — a fresh Array of the first `n` elements; `n` is clamped to
+  `[0, len]` (`n <= 0` → `[]`, `n > len` → a full copy). A negative `n` raises
+  `ArgumentError` in Ruby; the never-raise floor treats it as `0`.
+- `drop(n)` — a fresh Array with the first `n` elements removed (same clamp;
+  `n >= len` → `[]`).
+- `values_at(*idxs)` — a fresh Array of the element at each index, folding a
+  negative index from the end; an out-of-range index yields `nil` (never
+  panics).
+
+Verified end-to-end under `go run`.
+
 ## 0.22.0 — more String methods: `ljust` / `rjust` / `center` / `swapcase`
 
 Extends the emitted Go runtime's `_sir_string_method` catalog (and its
