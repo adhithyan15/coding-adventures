@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
-        MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
+        MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, Property,
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -2148,12 +2148,19 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
     let nodes = node_children(node);
 
     // Every member_expression has at least one Node child (the primary base) —
-    // EXCEPT the `super`-based forms (`super.x`, `super.m(…)`), whose base is a
-    // bare `super` *token*, not a Node. Those are handled below (CLOC12.166
-    // PR2 / gap-167), so only reject a genuinely empty node here.
+    // EXCEPT two reserved-word forms whose base is a bare *token*, not a Node:
+    //   * the `super`-based forms (`super.x`, `super.m(…)`)         (CLOC12.166)
+    //   * the `new.target` meta-property (`[new, ., target]` tokens) (CLOC12.167)
+    // Both are handled below, so only reject a genuinely empty node here.
     let super_base =
         matches!(node.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "super");
-    if nodes.is_empty() && !super_base {
+    // `new.target` is the meta-property: three bare tokens `new . target` and
+    // NO Node child. (`new X(args)` — the argumented constructor — always has a
+    // Node child, its callee, so it stays in the base-init path below; and a
+    // lone `new` without a callee never parses.) Distinguishing on
+    // `nodes.is_empty()` keeps the two `new` forms cleanly apart.
+    let new_target = nodes.is_empty() && has_token(node, "new") && has_token(node, "target");
+    if nodes.is_empty() && !super_base && !new_target {
         return Err(internal(node, "member_expression: no children"));
     }
 
@@ -2165,19 +2172,22 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
         });
     }
 
-    // `new.target` — a meta-property, Phase 3. (The argumented `new X(args)`
-    // form is converted below by the base-initialisation; only the
-    // `"new" DOT "target"` meta-property is still declined here.)
-    if has_token(node, "new")
-        && node
-            .children
-            .iter()
-            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "target"))
-    {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "NewTarget".to_string(),
-            location: loc(node),
-        });
+    // `new.target` — the meta-property (CLOC12.167 PR2, closes gap-168). The
+    // grammar emits it as three bare tokens `[Token("new"), Token("."),
+    // Token("target")]` with no Node child, so `new_target` (computed above) is
+    // true exactly here. It lowers to the atomic `NewTarget` leaf: the `.` is
+    // part of the fixed spelling, NOT a member access, so there is no object /
+    // property to fold — the whole thing is one primary. We take the `new`
+    // token's `cv` as the node's provenance (the meta-property is a single
+    // conceptual read). (The argumented `new X(args)` constructor form has a
+    // Node callee and is handled by the base-init below; the two never collide
+    // because that form is not `nodes.is_empty()`.)
+    if new_target {
+        let cv = match node.children.first() {
+            Some(ASTNodeOrToken::Token(t)) => t.cv.clone(),
+            _ => None,
+        };
+        return Ok(Expression::NewTarget(NewTarget { cv }));
     }
 
     // `super` (CLOC12.166 PR2, closes gap-167). Unlike every other primary,
@@ -3110,6 +3120,46 @@ mod tests {
                 other => panic!("expected MemberExpression callee; got {:?}", other),
             },
             other => panic!("expected CallExpression; got {:?}", other),
+        }
+    }
+
+    /// `new.target` — the meta-property (gap-168, CLOC12.167 PR2). The grammar
+    /// emits it as three bare tokens (`new`, `.`, `target`) in a
+    /// `member_expression` with no Node child, so the bridge must intercept it
+    /// as an atomic `NewTarget` leaf (the `.` is spelling, not a member
+    /// access). A bare `new.target;` parses standalone here.
+    #[test]
+    fn new_target_meta_property() {
+        let p = bridge_ok("new.target;");
+        assert!(
+            matches!(only_expr(&p), Expression::NewTarget(_)),
+            "expected NewTarget; got {:?}",
+            only_expr(&p)
+        );
+    }
+
+    /// `new.target` inside a function body (its canonical legal position) also
+    /// bridges cleanly — `bridge_ok` panics if the bridge declines, so a
+    /// successful parse+bridge here proves the meta-property is handled in a
+    /// nested (`return`) position too, not only at statement top level.
+    #[test]
+    fn new_target_in_function_return() {
+        let _ = bridge_ok("function f(){return new.target;}");
+    }
+
+    /// `new.target` used as a member object (`new.target.x`) still bridges: the
+    /// meta-property becomes the object of the outer member access. This pins
+    /// that the leaf slots into the suffix-fold like any other base primary.
+    #[test]
+    fn new_target_as_member_object() {
+        let p = bridge_ok("new.target.constructor;");
+        match only_expr(&p) {
+            Expression::MemberExpression(m) => assert!(
+                matches!(&*m.object, Expression::NewTarget(_)),
+                "expected NewTarget object; got {:?}",
+                m.object
+            ),
+            other => panic!("expected MemberExpression; got {:?}", other),
         }
     }
 
