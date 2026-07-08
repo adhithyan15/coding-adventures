@@ -2272,6 +2272,39 @@ found during implementation:**
    does, so no optimisation-inside-class work is deferred beyond the deferred
    *node features* (fields / static blocks).
 
+**PR2 (DONE) — `javascript-parser` 0.37.0 + `closurec` 0.234.12.** The bridge's
+`convert_expression` now converts `class_expression` → `Expression::ClassExpression`
+via new `convert_class_expression` / `convert_class_heritage` /
+`convert_class_element` / `convert_method_definition` converters, so a class
+expression flows through the full pipeline instead of declining to
+WHITESPACE_ONLY. `tests/diff/simple-class/` (SIMPLE) proves the class round-trips
+and the method body + sibling arg fold; `tests/diff/advanced-class-constructor/`
+(ADVANCED) is the end-to-end regression for the PR1 `constructor` no-rename guard.
+**Three divergences from the plan above, found by dumping the parse tree:**
+
+1. **Heritage operand comes in two shapes.** `class_heritage` holds a bare
+   `NAME` token for `extends B` (→ `Identifier`) but a
+   `left_hand_side_expression` *node* for `extends ns.B` (→ `convert_expression`).
+   `extends <call>` (`mix(B)`) flattens to several ambiguous NAME tokens with no
+   clean operand node, so it DECLINES rather than mis-read the super-class.
+2. **`async` is a distinct node, not a leading token.** A generator `*m(){}`
+   puts `*` inside `method_definition`, but an `async` method parses as a
+   separate `async_method` node under `class_element`. So `convert_class_element`
+   declines any member node that is not a plain `method_definition` (a
+   node-kind check, not just a token scan) — otherwise the `async` would be
+   silently dropped, a miscompile. Generator and computed-`[k]()` methods
+   likewise decline (later slices). All declines fall back to WHITESPACE_ONLY —
+   never a miscompile.
+3. **Grammar requires `;` between members.** `class { m(){} n(){} }` (no
+   separator) is a *parse* error → WHITESPACE_ONLY fallback; single-member
+   classes parse and bridge cleanly. This is a grammar limitation, not a bridge
+   decision, and is the reason both e2e fixtures use single-member classes.
+
+16 bridge unit tests (`class_*`) cover the accepted forms and the declines.
+
+**PR3 (CodePrinter conformance port)** — `closure-emitter` (PATCH), a
+`tests/upstream/code_printer_class_test.rs` — remains.
+
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 
 Regex literals were previously bridged via a **"treat as identifier" fallback**

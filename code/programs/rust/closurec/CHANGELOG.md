@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.12] - 2026-07-08
+
+### Added — CLOC12.173 PR2: class expressions flow through the SIMPLE/ADVANCED pipelines (gap-167)
+
+With the `javascript-parser` 0.37.0 bridge now building a real `ClassExpression`
+from a `class_expression` grammar node (instead of declining it, which dropped
+the whole file to WHITESPACE_ONLY), a **class expression** minifies through the
+full parser → bridge → passes → emitter pipeline.
+
+Two new fixtures:
+
+- `tests/diff/simple-class/`: `f(class { m() { return 1 + 2 } }, 3 + 4);` →
+  `f(class{m(){return 3}},7);` at SIMPLE. The class round-trips minified, the
+  method body folds (`1 + 2` → `3`, proving `fold_class` descended into the
+  method's function body), and the sibling `3 + 4` folds to `7` — none of which
+  a WHITESPACE_ONLY fallback would do.
+- `tests/diff/advanced-class-constructor/`:
+  `f(class { constructor() { return 1 + 2 } });` →
+  `f(class{constructor(){return 3}});` at ADVANCED. This is the end-to-end
+  regression for the **`constructor` no-rename guard** (PR1): rename-properties
+  must never rename a class's `constructor` key (doing so would turn the
+  constructor into an ordinary method and break `new C()`). The output keeps
+  `constructor` verbatim, and the body folds — proving both that the guard held
+  and that the ADVANCED pipeline actually ran over the class.
+
+**Known limitation (grammar):** the grammar requires an explicit `;` *between*
+class members, so an un-separated multi-member class (`class { m(){} n(){} }`)
+is a parse error and falls back to WHITESPACE_ONLY. Single-member classes
+minify cleanly. Computed-key / generator / `async` methods are declined at the
+bridge (a later slice) and likewise fall back — never a miscompile.
+
 ## [0.234.11] - 2026-07-08
 
 ### Added — CLOC12.172 PR2: regex literals `/pat/flags` flow through the SIMPLE pipeline (gap-RegExpAsIdentifier)

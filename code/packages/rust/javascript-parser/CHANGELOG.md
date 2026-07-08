@@ -2,6 +2,63 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.37.0] - 2026-07-08
+
+### Added — CLOC12.173 PR2: bridge class expressions `class { … }` → `ClassExpression` (closes gap-167)
+
+`convert_expression` now converts a `class_expression` grammar node into the
+typed `Expression::ClassExpression` (added to `javascript-ast` in PR1) instead
+of declining it as `UnsupportedSyntax`. A greenfield class expression therefore
+flows through the typed AST and every downstream pass.
+
+The parse-tree shape was established by dumping the grammar parser's output (a
+throwaway probe, removed with this commit):
+
+- `class_expression = [ "class", NAME?, class_heritage?, class_body ]`. The lone
+  direct-child token other than `class` is the class name (`None` for
+  `class {}` / `class extends B {}`).
+- `class_heritage = [ "extends", <operand> ]`. The operand is a bare `NAME`
+  token (`extends B` → `Identifier`) or a `left_hand_side_expression` node
+  (`extends ns.B` → `convert_expression`).
+- `class_body`'s `class_element` children each wrap one `method_definition`. A
+  leading bare `static` token marks a static member.
+- `method_definition = [ ("get"|"set")?, property_name, "(", params, ")",
+  "{", function_body?, "}" ]`. A single param parses as a direct
+  `formal_parameter`; two or more under a `formal_parameters` wrapper — both are
+  collected. A `constructor` key (non-static, non-accessor) becomes
+  `MethodKind::Constructor`.
+
+New converters: `convert_class_expression`, `convert_class_heritage`,
+`convert_class_element`, `convert_method_definition`.
+
+**Declined sub-forms (safe — a decline drops the whole file to WHITESPACE_ONLY,
+never a miscompile).** The typed slice does not yet model, so the bridge
+DECLINES via `UnsupportedSyntax`:
+
+- **Computed keys** `[k]() {}` — `convert_property_key` already declines a
+  computed property key.
+- **Generator methods** `*m() {}` — the `*` sits inside `method_definition`; a
+  generator carries semantics the slice does not model, and dropping the `*`
+  would be a miscompile, so it declines.
+- **`async` methods** `async m() {}` — the grammar attaches `async` as a
+  *distinct* `async_method` node under `class_element` (not a `method_definition`
+  token), so `convert_class_element` declines any member node that is not a plain
+  `method_definition`. This node-kind check (not just a token scan) is what stops
+  the `async` from being silently dropped.
+- **`extends <call>`** e.g. `extends mix(B)` — the grammar flattens the call
+  into several ambiguous `NAME` tokens with no clean operand node, so the
+  heritage converter declines rather than mis-read the super-class.
+
+**Grammar gap (not a bridge decision):** the grammar requires an explicit `;`
+*between* class members (`class { m(){}; n(){} }`); an un-separated multi-member
+class is a parse error and falls back to WHITESPACE_ONLY. Single-member classes
+parse and bridge cleanly.
+
+16 new bridge unit tests (`class_*`) cover empty / named / `extends`
+identifier+member / method / single-param / static / getter / setter / a method
+literally named `get` / constructor / static-`constructor`-is-plain-method, and
+the computed / generator / `async` declines.
+
 ## [0.36.0] - 2026-07-08
 
 ### Added — CLOC12.172 PR2: bridge regex literals `/pat/flags` → `RegExpLiteral` (closes gap-RegExpAsIdentifier)
