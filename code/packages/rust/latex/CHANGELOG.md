@@ -2,6 +2,44 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.51.0] — 2026-07-07
+
+### Added — resolved citations grouped by their source `\cite` (LTXDOC03 S15)
+
+A **new** public method `Document::citations_by_source(&self) -> String` that renders the resolved
+citations **grouped by the source `\cite` construct they came from** — the citation-family parallel
+of S11's `to_plain_text_by_kind` (which groups resolved *references*) and S13's `resolve_namerefs`
+(one rendered line per target). It reads only `resolve_citations().resolved` and re-assembles the
+per-key rows that S2 flattened out of each multi-key `\cite`. Every S1–S14 output is left
+**byte-for-byte unchanged**; S15 is purely additive and leaves the `to_latex()` round-trip fixed
+point intact.
+
+- **Groups by `cite_span`, in source order.** S2 emits one `ResolvedCite` per key, every key of a
+  `\cite{a,b}` sharing that one `\cite`'s `cite_span`. S15 groups the `resolved` rows back by
+  `cite_span`, preserving the **first-appearance order** of the cite_spans (source order of the
+  `\cite`s, since `resolved` is already in body pre-order) and keeping keys within a group in their
+  original left-to-right order.
+- **One line per source `\cite`, reconstructed from its resolved keys.** Each line is
+  `\cite{` + the group's resolved keys joined by `", "` + `}`. A **dangling** key (one no `\bibitem`
+  defines) never entered `resolved`, so it is **excluded** by construction: a `\cite{a,ghost}` where
+  only `a` resolves renders `\cite{a}`, not `\cite{a,ghost}`. We reconstruct rather than slice the
+  raw `&src[cite_span]` precisely because the source text would still contain the dangling `ghost`;
+  reconstruction shows exactly what *bound*. Lines are joined by `\n` with **no** trailing newline
+  (matching S11 `to_plain_text_by_kind`, S12 `list_of_floats`, S13 `resolve_namerefs`, S14
+  `list_summary`).
+- **Empty marker.** A document with **no** resolved citations — none present, or every cited key
+  dangling — returns the fixed marker `"(no resolved citations)"`, so the output is never the empty
+  string (the same stable-marker discipline S12/S13/S14 use).
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+  keys are already owned `String`s); a single pass over the already-bounded `resolved` list. Borrows
+  `self` immutably, returns owned `String`.
+
+Four `s15_*` tests pin the exact rendered strings: a doc grouping a multi-key `\cite{a,b}` and a
+separate `\cite{c}` (`\cite{a, b}\n\cite{c}`), a partial `\cite{a,ghost}` rendering only the
+resolved key (`\cite{a}`), an all-dangling doc returning the `(no resolved citations)` marker, and
+an additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`,
+`resolve_namerefs`, and `list_summary` all still produce their exact prior strings.
+
 ## [0.50.0] — 2026-07-07
 
 ### Added — per-kind census of the numbered-label table (LTXDOC03 S14)

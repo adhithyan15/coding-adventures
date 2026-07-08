@@ -62,6 +62,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S12 — List of Figures / List of Tables index** | `Document::list_of_floats() -> String` — a **new** method that renders the document's **List of Figures** and **List of Tables** (LaTeX's `\listoffigures` / `\listoftables`, as plain text) directly from the floats. A single document-order walk threads the **same** `Counters` float counters as `number_labels`, so each float's line number equals its S4 flat figure/table number (a labeled float's List-of number and its `\ref` number agree; figures numbered `1, 2, …`, tables independently from `1`). Each line is `<n>. <caption text>`, where the caption text is the plain rendering of the float's `\caption{…}` inlines (text/code verbatim, space as a single space, font-wrapper content recursively, trimmed — the same descent the caption-reaching test proves), via a private `caption_text(&Option<Caption>)` helper; a float with **no** `\caption` renders the fixed placeholder `(no caption)` so every float still gets a numbered line. The `List of Figures` heading is emitted only when there is ≥1 figure, `List of Tables` only when ≥1 table; a document with no floats → the fixed marker `(no floats)`. Lines joined by `\n`, no trailing newline. Real LaTeX gates these on `\listoffigures` / `\listoftables` commands (not parser-recognised here), so — like S11 — S12 is a method the caller invokes; every S1–S11 output is byte-for-byte unchanged. Pure assembly over existing blocks + the existing float walk — no AST/grammar/counter change, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S13 — `\nameref` resolution to a target's name** | `Document::resolve_namerefs() -> String` — a **new** method that resolves every `\nameref{key}` to the **name** (title/caption text) of its target — the name-valued sibling of `\ref` (number) and `\pageref` (page). `\nameref` is **not** a `REF_COMMAND`, so it appears in neither the resolved nor unresolved ref table (an AST probe confirms it lowers to `Inline::CrossRef { command: "nameref", .. }`); S13 reads the same S1 `\label` table but answers "*what is it called?*", so it is purely additive. One document-order walk collects each `nameref` cross-ref; the key is resolved against the winning label table and the name read from its defining node via the S3 `label_def_node` accessor — a `Section` → its title inlines flattened, a `Figure`/`Table` → its `\caption` via the shared `caption_text` helper (S12's flatten factored into a module-level `flatten_inlines_to_text`, reused by both so they can never drift). An `Equation`/`Inline` target (a number, not a title) → `(no name)`; an undefined key → `(undefined nameref: <key>)`; no `\nameref` at all → `(no namerefs)`. Each line is `\nameref{<key>} -> <name>`, joined by `\n`, no trailing newline. Every S1–S12 output is byte-for-byte unchanged. Total & panic-free. | ✅ |
 | **LTXDOC03 S14 — per-kind census of the numbered-label table** | `Document::list_summary() -> String` — a **new**, read-only method that renders a compact per-kind **count** of the document's numbered labels: how many sections, figures, tables, and equations carry a `\label`. It is a pure tally of the rows `number_labels()` returns, grouped by `LabelKind`, so it can never drift from the S4 numbering it summarises. Only the four numberable kinds reach that table — a bare inline `\label{…}` (`LabelKind::Inline`) is not numbered and is counted nowhere. One line per non-zero kind in the **fixed order** `Sections`, `Figures`, `Tables`, `Equations` (deterministic, not source order), formatted `<Kind>: <count>` with a **fixed plural** label regardless of count (a single section still prints `Sections: 1`); a kind with count 0 is **omitted** (mirroring S11). Lines joined by `\n`, no trailing newline. A document with **no** numbered label at all → the fixed marker `(no labels)`. E.g. two labeled sections + a figure + a table + an equation → `Sections: 2\nFigures: 1\nTables: 1\nEquations: 1`. Every S1–S13 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S15 — resolved citations grouped by their source `\cite`** | `Document::citations_by_source() -> String` — a **new**, read-only method that renders the resolved citations **grouped by the source `\cite` they came from** — the citation-family parallel of S11's `to_plain_text_by_kind` and S13's `resolve_namerefs`. It reads only `resolve_citations().resolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping them back by `cite_span` in **first-appearance order** (source order of the `\cite`s) with keys kept in their left-to-right order. One line per source `\cite`: `\cite{` + the group's **resolved** keys joined by `", "` + `}`. A **dangling** key never entered `resolved`, so it is excluded — `\cite{a,ghost}` where only `a` resolves renders `\cite{a}` (we reconstruct from resolved keys rather than slice `&src[cite_span]`, which would still show `ghost`). Lines joined by `\n`, no trailing newline. A document with **no** resolved citations (none present, or every key dangling) → the fixed marker `(no resolved citations)`. E.g. `\cite{a,b}` (both defined) then `\cite{c}` → `\cite{a, b}\n\cite{c}`. Every S1–S14 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -668,6 +669,36 @@ A bare inline `\label{…}` is not numbered, so it never appears in this census;
 label is such an inline label renders the `(no labels)` marker. Purely additive — reuses
 `number_labels`, mutates nothing, leaves every S1–S13 output and the `to_latex()` fixed point
 unchanged.
+
+### resolved citations grouped by their source `\cite` (LTXDOC03 S15)
+
+S2's `resolve_citations` flattens a multi-key `\cite{a,b}` into *several* `ResolvedCite` rows (one per
+key, all sharing that `\cite`'s `cite_span`). `citations_by_source` reads only that `resolved` list and
+re-assembles it: it groups the rows back by `cite_span` — in first-appearance order, i.e. source order
+of the `\cite`s — and emits one line per `\cite`, reconstructed as `\cite{` + the group's resolved keys
+joined by `", "` + `}`. A dangling key never entered `resolved`, so it is excluded by construction.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}
+See \cite{a,b} and \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\end{thebibliography}
+\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.citations_by_source(),
+    "\\cite{a, b}\n\\cite{c}",   // both of {a,b} resolve; only `c` of {c,ghost} does
+);
+```
+
+A document with no resolved citations — none present, or every cited key dangling — renders the fixed
+`(no resolved citations)` marker. Purely additive — reuses `resolve_citations`, mutates nothing, leaves
+every S1–S14 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 
