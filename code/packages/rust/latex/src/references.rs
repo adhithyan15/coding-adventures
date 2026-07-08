@@ -2515,6 +2515,114 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **per-kind CENSUS of the winning label definitions** (LTXDOC03 S25) — the *count*
+    /// companion of S23's [`label_definitions_by_kind`](Document::label_definitions_by_kind). Where
+    /// S23 renders one **line per definition** (a `[kind] \label{key}` list, grouped by kind), S25
+    /// renders one **line per kind** carrying just the integer **count** of winning definitions of
+    /// that kind — a `<kind>: <n>` tally, not a list. It is to S23 what S14's
+    /// [`list_summary`](Document::list_summary) (`"Sections: 1"`) is to a full enumeration: a numeric
+    /// summary over the *same* winning `definitions` list, so a reader sees "how many of each kind"
+    /// without scanning the individual keys.
+    ///
+    /// ## What it does
+    ///
+    /// S1's [`Document::resolve_references`] collects the **winning** first definition of each `\label`
+    /// key into [`ReferenceResolution::definitions`] — one row per distinct key, in
+    /// [`Document::walk`] pre-order, each tagged with the [`LabelKind`] of the node it defines (a
+    /// re-`\label`ed section, table, figure, equation, or bare inline label). S22's
+    /// [`label_definitions`](Document::label_definitions) renders that list flat; S23's
+    /// [`label_definitions_by_kind`](Document::label_definitions_by_kind) renders it grouped by kind,
+    /// still one line per definition. S25 collapses each kind's group to a **single count line**: it
+    /// walks the [`LabelKind`] variants in a fixed order and, for each kind that has **at least one**
+    /// winning definition, emits `<kind>: <n>` where `<n>` is how many winning definitions carry that
+    /// kind. Only the winning `definitions` are counted — a `\label{dup}` written twice contributes
+    /// **one** to its kind's count, because its later re-definition is a [`Duplicate`] (S20's domain),
+    /// never a second row in `definitions`. S23 and S25 are two *views* of one underlying list (S23 the
+    /// per-definition list, S25 the per-kind count); neither mutates anything.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Iterate the [`LabelKind`] variants in their **enum declaration order** —
+    /// [`Section`](LabelKind::Section), [`Table`](LabelKind::Table), [`Figure`](LabelKind::Figure),
+    /// [`Equation`](LabelKind::Equation), [`Inline`](LabelKind::Inline) — a fixed, deterministic order
+    /// that does **not** depend on the document (the SAME `const KIND_ORDER` slice S23/S24 use). For
+    /// each kind, count the [`ReferenceResolution::definitions`] whose `kind` is that kind, and — only
+    /// if the count is **at least one** — emit one line `<kind>: <n>`, where `<kind>` is the stable
+    /// lowercase tag from [`LabelKind::as_str`] (`"section"`, `"table"`, `"figure"`, `"equation"`,
+    /// `"inline"`) — the **same** kind string S23 renders — and `<n>` is the decimal count. This single
+    /// stable-ordered pass keeps the output deterministic **without** a hash map — the same `Vec`-scan
+    /// discipline S17/S18/S23/S24 use to avoid hash-order nondeterminism. A kind with a **zero** count
+    /// produces **no** line (there is never a bare `table: 0` for a doc with no table labels).
+    ///
+    /// A document with **no** winning label definitions at all returns the fixed marker
+    /// `(no label definitions)` — the **same** marker S22/S23 use (S25 counts the identical list, so
+    /// the empty case is identical), never the empty string (the stable-marker discipline S12–S24
+    /// share). Lines are joined by `\n` with **no** trailing newline (matching every S11–S24 renderer).
+    ///
+    /// Concretely, for a body defining a section label `sec:intro`, two equation labels `eq:a`/`eq:b`,
+    /// and a bare inline label `note`:
+    ///
+    /// ```text
+    /// section: 1
+    /// equation: 2
+    /// inline: 1
+    /// ```
+    ///
+    /// (the `section` count leads, then `equation`, then `inline`, in the fixed kind order; the `table`
+    /// and `figure` kinds have zero definitions and so contribute no lines).
+    ///
+    /// ## Additive by construction
+    ///
+    /// S25 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1–S24 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact. It is a *third view* of the same winning
+    /// `definitions` list S22 renders flat and S23 groups by kind — counting never adds, drops, or
+    /// reorders definitions relative to what `resolve_references` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only the `kind` field is read); a single stable-ordered pass (fixed kind order × pre-order
+    /// filter/count) over the already-bounded `definitions` list. Borrows `self` immutably and returns
+    /// owned `String` data, so the result outlives any borrow of the source.
+    pub fn label_kind_counts(&self) -> String {
+        // S1 already collected the winning definitions — the first `\label` of each distinct key, in
+        // body pre-order, each tagged with its `LabelKind`. We only read (and count) that list.
+        let resolution = self.resolve_references();
+
+        if resolution.definitions.is_empty() {
+            // No `\label` at all → the SAME fixed marker S22/S23 use (S25 counts the identical list).
+            return "(no label definitions)".to_string();
+        }
+
+        // The FIXED kind order = the enum declaration order (the SAME slice S23/S24 use). Iterating this
+        // explicit slice (rather than a hash map keyed by kind) makes the line order deterministic and
+        // document-independent, the same `Vec`-scan discipline S17/S18/S23/S24 use to avoid hash-order
+        // nondeterminism.
+        const KIND_ORDER: [LabelKind; 5] = [
+            LabelKind::Section,
+            LabelKind::Table,
+            LabelKind::Figure,
+            LabelKind::Equation,
+            LabelKind::Inline,
+        ];
+
+        // One stable-ordered pass: for each kind in the fixed order, count the definitions of that kind
+        // and — only when the count is >= 1 — emit `<kind>: <n>`. A kind with zero definitions is
+        // filtered out (`filter` on `count > 0`), so it contributes no line. The kind string is the
+        // SAME `LabelKind::as_str` tag S23 renders; there is no source slicing (only `kind` is read).
+        KIND_ORDER
+            .iter()
+            .filter_map(|kind| {
+                let count = resolution
+                    .definitions
+                    .iter()
+                    .filter(|def| def.kind == *kind)
+                    .count();
+                (count > 0).then(|| format!("{}: {}", kind.as_str(), count))
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -6103,6 +6211,169 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         assert_eq!(
             doc.resolved_references_by_kind(),
             "[section] \\ref{sec:intro}\n[equation] \\eqref{eq:e}"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S25 — per-kind CENSUS (counts) of the winning label definitions (`label_kind_counts`).
+    // The count companion of S23's `label_definitions_by_kind`: one `<kind>: <n>` line per kind (in
+    // the fixed enum order), a numeric summary over the SAME winning `definitions` list.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s25_counts_multiple_kinds_in_fixed_kind_order_zero_kinds_omitted() {
+        // A section label, two equation labels, and a bare inline label → one `<kind>: <n>` line per
+        // kind in the fixed enum order (Section, then Equation, then Inline). The Table and Figure
+        // kinds have zero definitions and so contribute NO lines (never `table: 0`).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+\begin{equation}\label{eq:a}x=1\end{equation}
+\begin{equation}\label{eq:b}y=2\end{equation}
+\label{note}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.label_kind_counts(),
+            "section: 1\nequation: 2\ninline: 1"
+        );
+    }
+
+    #[test]
+    fn s25_exactly_one_kind() {
+        // Two inline labels of the SAME (and only) kind → a single `inline: 2` line. No other kinds,
+        // no trailing newline.
+        let src = r"\begin{document}\label{a}
+
+\label{b}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.label_kind_counts(), "inline: 2");
+    }
+
+    #[test]
+    fn s25_no_labels_returns_marker() {
+        // A document with no `\label` at all → the same fixed `(no label definitions)` marker S22/S23
+        // use, never the empty string.
+        let src = r"\begin{document}Just some text with no labels.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.label_kind_counts(), "(no label definitions)");
+    }
+
+    #[test]
+    fn s25_duplicate_definitions_count_only_the_winner() {
+        // `dup` is `\label`ed TWICE (inline); only the WINNING first definition is in `definitions`,
+        // the loser is a duplicate (S20's domain). So the inline count is 1, NOT 2 — S25 counts winning
+        // definitions, never duplicates. A distinct `once` inline label makes the winning inline count 2.
+        let src = r"\begin{document}First \label{dup} here.
+
+Second \label{dup} there.
+
+\label{once}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        // Two DISTINCT winning inline keys (`dup` once as the winner, `once`) → inline: 2.
+        assert_eq!(doc.label_kind_counts(), "inline: 2");
+        // Confirm the losing re-`\label{dup}` was routed to duplicates (S20), not counted here.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+    }
+
+    #[test]
+    fn s25_newline_join_no_trailing_newline() {
+        // A section + figure + inline label → exact string equality pins the `\n`-join with NO trailing
+        // newline, and the fixed kind order (Section, then Figure, then Inline — Table and Equation
+        // absent), each line a `<kind>: 1` count.
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\begin{figure}\includegraphics{p.png}\caption{P}\label{fig:p}\end{figure}
+
+\label{note}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.label_kind_counts(),
+            "section: 1\nfigure: 1\ninline: 1"
+        );
+    }
+
+    #[test]
+    fn s25_is_additive_leaves_s1_s24_outputs_unchanged() {
+        // Same representative doc as the S24 additive test. S25 changes NONE of the S1-S24 outputs — it
+        // only reads `resolve_references`. S22's flat `label_definitions`, S23's grouped
+        // `label_definitions_by_kind`, and S25's per-kind counts are three views of the SAME winning
+        // `definitions` list; all are pinned here to show S25 neither adds, drops, nor reorders, and
+        // that its counts agree with S23's grouping.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\eqref{eq:e} -> Equation (1)\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\nEquations:\n  \\eqref{eq:e} -> Equation (1)"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+        // S18 grouped dangling refs — unchanged.
+        assert_eq!(doc.unresolved_references_by_source(), "\\eqref{eq:ghost}");
+        // S19 numbered winning bibliography — unchanged.
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+        // S20 losing duplicate labels — unchanged.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+        // S21 resolved references (flat, source order) — unchanged.
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
+        // S22 flat winning label definitions — unchanged.
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+        // S23 grouped winning label definitions — unchanged.
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[section] \\label{sec:intro}\n[figure] \\label{fig:p}\n[equation] \\label{eq:e}\n[inline] \\label{dup}"
+        );
+        // S24 grouped resolved references — unchanged.
+        assert_eq!(
+            doc.resolved_references_by_kind(),
+            "[section] \\ref{sec:intro}\n[equation] \\eqref{eq:e}"
+        );
+
+        // And S25 itself: the per-kind COUNTS of the SAME winning definitions, in the fixed enum order.
+        // One section (`sec:intro`), one figure (`fig:p`), one equation (`eq:e`), one winning inline
+        // (`dup` — its second `\label` is a duplicate, not a second definition). `\n`-joined, no
+        // trailing newline. Table has zero definitions and so is omitted.
+        assert_eq!(
+            doc.label_kind_counts(),
+            "section: 1\nfigure: 1\nequation: 1\ninline: 1"
         );
     }
 }
