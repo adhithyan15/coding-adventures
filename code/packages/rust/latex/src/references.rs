@@ -1841,6 +1841,103 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **unresolved (dangling) references grouped by their source `\ref`** (LTXDOC03 S18) — the
+    /// `\ref`-family parallel of S17's dangling-CITATION report, and the DANGLING mirror of the resolved
+    /// `\ref` family: one reconstructed `\<command>{key}` line per dangling reference, **command-aware**
+    /// so `\eqref` and `\pageref` render as themselves.
+    ///
+    /// ## What it does
+    ///
+    /// S3's [`Document::resolve_references`] walks every `\ref`/`\eqref`/`\pageref` in body pre-order and
+    /// splits them into the **resolved** references (those a `\label` defines) and the **unresolved**
+    /// references (LaTeX's *"Reference `key' undefined"*, the `??` in the output), each recorded in
+    /// [`ReferenceResolution::unresolved`] as an [`UnresolvedRef`] carrying its dangling `key`, the
+    /// `command` that was used (`"ref"` / `"eqref"` / `"pageref"`), and its own `ref_span`. S6 already
+    /// reports the dangling keys as one *flat* comma-joined footer (`"Dangling references: k1, k2"`); S18
+    /// is a **distinct** view — it reconstructs each dangling reference on **its own line**, preserving
+    /// the command it was written with, so a caller can point at the exact offending `\eqref{…}` rather
+    /// than a flattened `\ref`-shaped list.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read [`ReferenceResolution::unresolved`] and group its entries by their shared `ref_span`,
+    /// preserving the **first-appearance order** of the ref_spans (source order of the references) — a
+    /// `Vec` of `(ref_span, keys)`, **not** a hash map, so the order is deterministic and the code reads
+    /// identically to S17's grouping. Unlike a `\cite{a, b}` (multi-key), a `\ref`/`\eqref`/`\pageref`
+    /// takes exactly **one** key, so every group holds a single entry — the structural mirror is kept for
+    /// readability, but each group emits exactly one line.
+    ///
+    /// One line per dangling reference: `\` + that reference's own `command` + `{` + its `key` + `}`,
+    /// reconstructed from the owned `command`/`key` `String`s (no source slicing, matching S13's
+    /// `resolve_namerefs`, S15's `citations_by_source`, and S17's `unresolved_citations_by_source`).
+    /// Because the line is rebuilt from the ref's **own** `command`, a dangling `\eqref{eq:x}` renders
+    /// `\eqref{eq:x}` and a dangling `\pageref{p}` renders `\pageref{p}` — the command is **never**
+    /// hard-coded to `\ref`.
+    ///
+    /// A document with **no** unresolved references — every reference resolves, or there are none at all
+    /// — returns the fixed marker `(no unresolved references)`, never the empty string (the same
+    /// stable-marker discipline S12/S13/S14/S15/S16/S17 use). Lines are joined by `\n` with **no**
+    /// trailing newline (matching S15's `citations_by_source` and S17's
+    /// `unresolved_citations_by_source`).
+    ///
+    /// Concretely, for a body with `\eqref{eq:ghost}` and `\pageref{p:ghost}` (neither defined by a
+    /// `\label`):
+    ///
+    /// ```text
+    /// \eqref{eq:ghost}
+    /// \pageref{p:ghost}
+    /// ```
+    ///
+    /// Each line preserves the command it was written with, one dangling reference per line, in source
+    /// order.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S18 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1-S17 output (they are byte-for-byte unchanged) and leaves the
+    /// `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// `command` and `key` are already owned `String`s); a single pass over the already-bounded
+    /// `unresolved` list. Borrows `self` immutably and returns owned `String` data, so the result
+    /// outlives any borrow of the source.
+    pub fn unresolved_references_by_source(&self) -> String {
+        // S3 already split every `\ref`/`\eqref`/`\pageref` into resolved and dangling entries, routing
+        // the dangling ones into `unresolved` (in body pre-order), each carrying its own `command`,
+        // `key`, and `ref_span`. We only read that list.
+        let resolution = self.resolve_references();
+
+        // Group the dangling references by their shared `ref_span`, preserving the FIRST-APPEARANCE
+        // order of the ref_spans (source order of the references). A `Vec` of `(ref_span, refs)` — not a
+        // hash map — keeps that order deterministic and mirrors S17's grouping idiom exactly. Unlike a
+        // multi-key `\cite`, each reference takes exactly one key, so every group holds a single entry;
+        // the structural mirror is kept only so this code reads identically to S17.
+        let mut groups: Vec<(Span, Vec<&UnresolvedRef>)> = Vec::new();
+        for u in &resolution.unresolved {
+            match groups.iter_mut().find(|(span, _)| *span == u.ref_span) {
+                Some((_, refs)) => refs.push(u),
+                None => groups.push((u.ref_span, vec![u])),
+            }
+        }
+
+        if groups.is_empty() {
+            // Every reference resolved (or there were none) → the fixed marker, never the empty string.
+            return "(no unresolved references)".to_string();
+        }
+
+        // One line per dangling reference, reconstructed from its OWN command and key: `\<command>{key}`.
+        // We iterate each group's single entry so `\eqref` / `\pageref` render as themselves rather than
+        // all being flattened to `\ref`.
+        groups
+            .iter()
+            .flat_map(|(_, refs)| {
+                refs.iter()
+                    .map(|u| format!("\\{}{{{}}}", u.command, u.key))
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -4531,5 +4628,130 @@ See Section~\ref{sec:intro}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b
         // And S17 itself groups the dangling cites: `{a,b}` fully resolves (no line); `{c,ghost}` keeps
         // only the dangling `ghost`.
         assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S18 — unresolved (dangling) references grouped by source `\ref`
+    // (`unresolved_references_by_source`). The `\ref`-family mirror of S17, command-aware.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s18_reports_dangling_ref() {
+        // A `\ref{nope}` whose key no `\label` defines → one line, the reconstructed `\ref{nope}`.
+        let src = r"\begin{document}
+See \ref{nope}.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.unresolved_references_by_source(), "\\ref{nope}");
+    }
+
+    #[test]
+    fn s18_preserves_command_eqref_pageref() {
+        // A dangling `\eqref{eq:ghost}` and a dangling `\pageref{p:ghost}` → each line preserves the
+        // command it was written with (NOT flattened to `\ref`), one per line, in source order.
+        let src = r"\begin{document}
+See \eqref{eq:ghost} on \pageref{p:ghost}.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.unresolved_references_by_source(),
+            "\\eqref{eq:ghost}\n\\pageref{p:ghost}"
+        );
+    }
+
+    #[test]
+    fn s18_two_distinct_dangling_refs_source_order() {
+        // Two separate dangling `\ref`s → two lines, in the source order the references appear, joined by
+        // `\n`. The first-appearance grouping keeps `nope1` ahead of `nope2`.
+        let src = r"\begin{document}
+See \ref{nope1} and later \ref{nope2}.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.unresolved_references_by_source(),
+            "\\ref{nope1}\n\\ref{nope2}"
+        );
+    }
+
+    #[test]
+    fn s18_resolved_ref_excluded() {
+        // A `\ref{sec:intro}` that DOES resolve to a `\label{sec:intro}` never enters `unresolved`, so it
+        // is excluded by construction. With no dangling references, the fixed marker is returned.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+See Section~\ref{sec:intro}.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.unresolved_references_by_source(),
+            "(no unresolved references)"
+        );
+    }
+
+    #[test]
+    fn s18_empty_returns_marker() {
+        // A document with no references at all → the fixed `(no unresolved references)` marker, never the
+        // empty string.
+        let src = r"\begin{document}
+Just some text with no references.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.unresolved_references_by_source(),
+            "(no unresolved references)"
+        );
+    }
+
+    #[test]
+    fn s18_is_additive_leaves_s1_s17_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a resolved `\ref`, a
+        // `\nameref`, two `\cite`s (one multi-key, one dangling key), a duplicate `\bibitem`, AND a
+        // dangling `\eqref` (`eq:ghost`), S18 changes NONE of the S1-S17 outputs — it only reads
+        // `resolve_references`.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+See Section~\ref{sec:intro}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+
+        // And S18 itself surfaces the dangling `\eqref`, command preserved.
+        assert_eq!(
+            doc.unresolved_references_by_source(),
+            "\\eqref{eq:ghost}"
+        );
     }
 }

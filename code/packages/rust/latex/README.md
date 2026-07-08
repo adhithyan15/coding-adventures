@@ -65,6 +65,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S15 — resolved citations grouped by their source `\cite`** | `Document::citations_by_source() -> String` — a **new**, read-only method that renders the resolved citations **grouped by the source `\cite` they came from** — the citation-family parallel of S11's `to_plain_text_by_kind` and S13's `resolve_namerefs`. It reads only `resolve_citations().resolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping them back by `cite_span` in **first-appearance order** (source order of the `\cite`s) with keys kept in their left-to-right order. One line per source `\cite`: `\cite{` + the group's **resolved** keys joined by `", "` + `}`. A **dangling** key never entered `resolved`, so it is excluded — `\cite{a,ghost}` where only `a` resolves renders `\cite{a}` (we reconstruct from resolved keys rather than slice `&src[cite_span]`, which would still show `ghost`). Lines joined by `\n`, no trailing newline. A document with **no** resolved citations (none present, or every key dangling) → the fixed marker `(no resolved citations)`. E.g. `\cite{a,b}` (both defined) then `\cite{c}` → `\cite{a, b}\n\cite{c}`. Every S1–S14 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S16 — duplicate (multiply-defined) `\bibitem` entries** | `Document::duplicate_bibliography_entries() -> String` — a **new**, read-only method that surfaces the **multiply-defined** `\bibitem`s — LaTeX's *"Citation `key' multiply defined"* warnings — the citation-family parallel of S6's *"Dangling citations"* footer (for the *other* bibliography warning). These were already computed by S2 (`resolve_citations().duplicate_entries`) but rendered by **no** method until now. S2 collects every `\bibitem` in `walk` pre-order; the **first** of each key wins and every **later** `\bibitem` of an already-defined key is a losing duplicate. S16 emits one line per duplicate in that pre-order (**not** re-sorted, **not** de-duplicated — a key defined three times yields two lines), each reconstructed from its key as `\bibitem{<key>}` (no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** duplicates (no bibliography, or every key once) → the fixed marker `(no duplicate bibliography entries)`. E.g. `smith` defined twice + `jones` once → `\bibitem{smith}` (only the loser). Every S1–S15 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S17 — unresolved (dangling) citations grouped by source `\cite`** | `Document::unresolved_citations_by_source() -> String` — a **new**, read-only method that renders the **dangling** citations **grouped by the source `\cite` they came from** — the DANGLING-key mirror of S15's `citations_by_source`, and the per-`\cite` view of S6's flat *"Dangling citations"* footer. It reads only `resolve_citations().unresolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping the dangling keys back by `cite_span` in **first-appearance order** (source order) with keys kept left-to-right. One line per source `\cite` with ≥1 dangling key: `\cite{` + the group's **dangling** keys joined by `", "` + `}`. A **resolved** key never entered `unresolved`, so `\cite{a,ghost}` where only `a` resolves renders `\cite{ghost}` (reconstructed from keys, no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** unresolved citations → the fixed marker `(no unresolved citations)`. E.g. `\cite{known,ghost}` (only `known` defined) then `\cite{x,y}` (neither) → `\cite{ghost}\n\cite{x, y}`. Every S1–S16 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S18 — unresolved (dangling) references grouped by source `\ref`** | `Document::unresolved_references_by_source() -> String` — a **new**, read-only method that renders the **dangling** references, one reconstructed `\<command>{key}` line each — the `\ref`-family parallel of S17's dangling-CITATION report, and a **distinct** view from S6's flat *"Dangling references: k1, k2"* footer (S18 is **command-aware**, so `\eqref`/`\pageref` render as themselves, not flattened to `\ref`). It reads only `resolve_references().unresolved` (a `Vec<UnresolvedRef { key, command, ref_span }>`) and groups by `ref_span` in **first-appearance order** (source order); because each `\ref`/`\eqref`/`\pageref` takes exactly one key, every group is a single entry emitting one line: `\` + the ref's own `command` + `{` + its `key` + `}` (reconstructed from the owned strings, no source slicing). A **resolved** `\ref` never entered `unresolved`, so it is excluded. Lines joined by `\n`, no trailing newline. A document with **no** unresolved references → the fixed marker `(no unresolved references)`. E.g. `\eqref{eq:ghost}` then `\pageref{p:ghost}` (neither defined) → `\eqref{eq:ghost}\n\pageref{p:ghost}`. Every S1–S17 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -761,6 +762,35 @@ assert_eq!(
 A document with no unresolved citations — every cited key resolves, or none present — renders the fixed
 `(no unresolved citations)` marker. Purely additive — reuses `resolve_citations`, mutates nothing,
 leaves every S1–S16 output and the `to_latex()` fixed point unchanged.
+
+### unresolved (dangling) references grouped by source `\ref` (LTXDOC03 S18)
+
+The `\ref`-family parallel of S17's dangling-CITATION report, and a **distinct** view from S6's flat
+*"Dangling references: k1, k2"* footer: S18 reconstructs each dangling reference on **its own line**,
+**command-aware**. S3's `resolve_references` walks every `\ref`/`\eqref`/`\pageref` in body pre-order and
+routes the dangling ones into `unresolved` as `UnresolvedRef { key, command, ref_span }`.
+`unresolved_references_by_source` reads only that `unresolved` list and groups by `ref_span` in
+**first-appearance order** (source order). Because each reference takes exactly **one** key, every group
+is a single entry emitting one line: `\` + the reference's own `command` + `{` + its `key` + `}`. Rebuilt
+from the ref's own `command`, a dangling `\eqref{eq:x}` renders `\eqref{eq:x}` and a dangling
+`\pageref{p}` renders `\pageref{p}` — never a hard-coded `\ref`.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}
+See \eqref{eq:ghost} on \pageref{p:ghost}.
+\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.unresolved_references_by_source(),
+    "\\eqref{eq:ghost}\n\\pageref{p:ghost}",   // each command preserved, one per line, source order
+);
+```
+
+A document with no unresolved references — every reference resolves, or none present — renders the fixed
+`(no unresolved references)` marker. Purely additive — reuses `resolve_references`, mutates nothing,
+leaves every S1–S17 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

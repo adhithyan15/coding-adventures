@@ -2,6 +2,48 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.54.0] — 2026-07-07
+
+### Added — unresolved (dangling) references grouped by source `\ref` (LTXDOC03 S18)
+
+A **new** public method `Document::unresolved_references_by_source(&self) -> String` that surfaces the
+**unresolved (dangling) references grouped per source `\ref`** — the `\ref`-family parallel of S17's
+dangling-CITATION report, and a **distinct** view from S6's flat *"Dangling references: k1, k2"* footer:
+S18 reconstructs each dangling reference on **its own line**, **command-aware**, so `\eqref` and
+`\pageref` render as themselves rather than being flattened to `\ref`. These keys were already computed
+by S3 (`resolve_references().unresolved`) but grouped-by-source by **no** method until now. Every
+S1–S17 output is left **byte-for-byte unchanged**; S18 is purely additive and leaves the `to_latex()`
+round-trip fixed point intact.
+
+- **One line per dangling reference, command preserved.** S3 walks every `\ref`/`\eqref`/`\pageref` in
+  body pre-order and routes the dangling ones into `unresolved` as `UnresolvedRef { key, command,
+  ref_span }`. S18 groups them by their shared `ref_span`, preserving the **first-appearance order** of
+  the ref_spans (source order) via a `Vec<(Span, Vec<&UnresolvedRef>)>` — **not** a hash map — so the
+  order is deterministic. Unlike a multi-key `\cite`, each reference takes exactly **one** key, so every
+  group holds a single entry (the structural mirror of S17 is kept for readability). Each line is `\` +
+  the reference's own `command` + `{` + its `key` + `}`, reconstructed from the owned `command`/`key`
+  `String`s (no source slicing, matching S13 `resolve_namerefs`, S15 `citations_by_source`, and S17
+  `unresolved_citations_by_source`) — so a dangling `\eqref{eq:x}` renders `\eqref{eq:x}` and a dangling
+  `\pageref{p}` renders `\pageref{p}`, never a hard-coded `\ref`.
+- **Only dangling references shown.** A `\ref` that resolves to a `\label` never enters `unresolved`, so
+  it is excluded by construction. Lines are joined by `\n` with **no** trailing newline (matching S15
+  `citations_by_source` and S17 `unresolved_citations_by_source`).
+- **Empty marker.** A document with **no** unresolved references — every reference resolves, or there
+  are none at all — returns the fixed marker `"(no unresolved references)"`, so the output is never the
+  empty string (the same stable-marker discipline S12/S13/S14/S15/S16/S17 use).
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+  `command` and `key` are already owned `String`s); a single pass over the already-bounded `unresolved`
+  list. Borrows `self` immutably, returns owned `String`.
+
+Six `s18_*` tests pin the exact rendered strings: a single dangling `\ref{nope}` (`\ref{nope}`), a
+dangling `\eqref{eq:ghost}` and `\pageref{p:ghost}` preserving their commands
+(`\eqref{eq:ghost}\n\pageref{p:ghost}`), two distinct dangling `\ref`s in source order
+(`\ref{nope1}\n\ref{nope2}`), a resolved `\ref` excluded so a fully-resolved document returns the
+`(no unresolved references)` marker, a reference-free document returning the same marker, and an
+additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`,
+`list_summary`, `citations_by_source`, `duplicate_bibliography_entries`, and
+`unresolved_citations_by_source` are all byte-for-byte unchanged.
+
 ## [0.53.0] — 2026-07-07
 
 ### Added — unresolved (dangling) citations grouped by source `\cite` (LTXDOC03 S17)

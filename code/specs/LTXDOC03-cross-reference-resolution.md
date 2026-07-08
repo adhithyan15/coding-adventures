@@ -1454,3 +1454,83 @@ and `duplicate_bibliography_entries` all still produce their exact prior strings
 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test
 -p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`,
 no grammar regen, no new dependencies.
+
+## 24. S18 — unresolved (dangling) references grouped by source `\ref` (`unresolved_references_by_source`)
+
+### 24.1 Motivation
+
+S3's `resolve_references` returns `unresolved: Vec<UnresolvedRef>` — every `\ref`/`\eqref`/`\pageref`
+key that matched no `\label`, i.e. LaTeX's *"Reference `key' undefined"* warning (the `??` in the
+output). Each `UnresolvedRef` carries not just the dangling `key` and its `ref_span` but the `command`
+that was written (`"ref"` / `"eqref"` / `"pageref"`). S6's flat report already surfaces these dangling
+keys as a single "Dangling references: k1, k2" footer, and S17 gives the citation family its per-source
+dangling view. S18 is the `\ref`-family parallel of S17 — but it is a **distinct** view from S6's
+footer: it reconstructs each dangling reference on **its own line**, and it is **command-aware**, so a
+dangling `\eqref` renders `\eqref{…}` and a dangling `\pageref` renders `\pageref{…}` rather than being
+flattened into an undifferentiated `\ref`-shaped comma list.
+
+### 24.2 Why a new method — additive by construction
+
+S18 adds a **new public method** `Document::unresolved_references_by_source(&self) -> String`. It is a
+pure, read-only render of `resolve_references().unresolved`. It reuses that table verbatim (never
+re-walking the body or re-resolving references), so the report can never drift from the S3 resolution it
+summarises. It mutates nothing and changes no S1–S17 output — including `to_latex()`'s round-trip fixed
+point — byte-for-byte. Like S11–S17 it is a method the caller invokes directly.
+
+### 24.3 The grouping and ordering rule
+
+S3 walks every `\ref`/`\eqref`/`\pageref` in body pre-order and splits them into resolved references and
+unresolved (dangling) references, each dangling row recorded as `UnresolvedRef { key, command, ref_span
+}`. S18 groups the dangling references by their shared `ref_span`, preserving the **first-appearance
+order** of the ref_spans (source order of the references) via a `Vec<(Span, Vec<&UnresolvedRef>)>` —
+**not** a hash map — so the order is deterministic and the code reads identically to S17's grouping.
+Unlike a multi-key `\cite`, a `\ref`/`\eqref`/`\pageref` takes exactly **one** key, so every group holds
+a single entry; the structural mirror of S17 is kept only for readability, and each group emits exactly
+one line. Because `unresolved` holds **only** the dangling references, a `\ref` that resolves to a
+`\label` never appears — the exact analogue of how S17 shows only the *dangling* keys.
+
+### 24.4 The exact rendering contract — `Document::unresolved_references_by_source(&self) -> String`
+
+- One line per dangling reference, in the first-appearance order of the ref_spans (source order of the
+  references, **not** re-sorted).
+- Each line is `\` + that reference's own `command` + `{` + its `key` + `}`, reconstructed from the
+  owned `command`/`key` `String`s rather than sliced from `&src[span]` (matching S13 `resolve_namerefs`,
+  S15 `citations_by_source`, S17 `unresolved_citations_by_source`), so the render needs no source borrow
+  and can never index out of bounds. The command is taken from the reference's **own** `command` field —
+  it is **never** hard-coded to `\ref`, so a dangling `\eqref{eq:x}` renders `\eqref{eq:x}` and a
+  dangling `\pageref{p}` renders `\pageref{p}`.
+- A `\ref` that resolves to a `\label` never entered `unresolved`, so it is excluded by construction.
+- Lines are joined by `\n` with **no** trailing newline (matching S15 `citations_by_source`, S17
+  `unresolved_citations_by_source`).
+- If there are **no** unresolved references (every reference resolves, or none present), the fixed marker
+  `(no unresolved references)` is returned, so the output is never the empty string.
+
+Example (body with `\eqref{eq:ghost}` and `\pageref{p:ghost}`, neither defined by a `\label`):
+
+```text
+\eqref{eq:ghost}
+\pageref{p:ghost}
+```
+
+each line preserves the command it was written with, one dangling reference per line, in source order.
+This is distinct from S6's flat *"Dangling references: eq:ghost, p:ghost"* footer, which drops the
+per-reference command and comma-joins the keys.
+
+### 24.5 Public API (added in S18)
+
+One new method: `Document::unresolved_references_by_source(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_references` and every S1–S17 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 24.6 Verification (S18)
+
+`cargo test -p latex` green (6 new S18 tests: a single dangling `\ref{nope}` rendering `\ref{nope}`; a
+dangling `\eqref{eq:ghost}` and `\pageref{p:ghost}` rendering `\eqref{eq:ghost}\n\pageref{p:ghost}` with
+each command preserved; two distinct dangling `\ref`s rendering `\ref{nope1}\n\ref{nope2}` in source
+order; a resolved `\ref` excluded so a fully-resolved document returns the `(no unresolved references)`
+marker; a reference-free document returning the same marker; and an additivity check that
+`to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`,
+`citations_by_source`, `duplicate_bibliography_entries`, and `unresolved_citations_by_source` all still
+produce their exact prior strings). All prior S1–S17 tests pass unchanged. `cargo clippy -p latex
+--all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
+build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
