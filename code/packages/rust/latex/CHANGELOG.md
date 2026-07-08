@@ -2,6 +2,46 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.53.0] — 2026-07-07
+
+### Added — unresolved (dangling) citations grouped by source `\cite` (LTXDOC03 S17)
+
+A **new** public method `Document::unresolved_citations_by_source(&self) -> String` that surfaces the
+**unresolved (dangling) citations grouped per source `\cite`** — the DANGLING-key mirror of S15's
+`citations_by_source`, and the citation-family parallel of S6's flat *"Dangling citations"* footer but
+rendered **per source `\cite`** (a distinct new view). These keys were already computed by S2
+(`resolve_citations().unresolved`) but grouped-by-source by **no** method until now. Every S1–S16
+output is left **byte-for-byte unchanged**; S17 is purely additive and leaves the `to_latex()`
+round-trip fixed point intact.
+
+- **One line per source `\cite` with ≥1 dangling key.** S2 flattens every `\cite` into per-key rows,
+  splitting them into resolved keys and unresolved (dangling) keys, each tagged with the citing
+  `\cite`'s `cite_span`. S17 groups the *dangling* keys by their shared `cite_span`, preserving the
+  **first-appearance order** of the cite_spans (source order) via a `Vec<(Span, Vec<&str>)>` — **not**
+  a hash map — so the order is deterministic. Keys within a group stay in left-to-right order. Each
+  line is `\cite{` + that group's dangling keys joined by `", "` + `}`, reconstructed from the owned
+  `key` `String`s (no source slicing, matching S13 `resolve_namerefs`, S15 `citations_by_source`, and
+  S16 `duplicate_bibliography_entries`).
+- **Only dangling keys shown.** Because `unresolved` holds only the dangling keys, a `\cite{a, ghost}`
+  where `a` resolves and `ghost` dangles renders `\cite{ghost}` — the exact analogue of how S15 shows
+  only the *resolved* keys of a mixed `\cite`. Lines are joined by `\n` with **no** trailing newline
+  (matching S11 `to_plain_text_by_kind`, S12 `list_of_floats`, S13 `resolve_namerefs`, S14
+  `list_summary`, S15 `citations_by_source`, S16 `duplicate_bibliography_entries`).
+- **Empty marker.** A document with **no** unresolved citations — every cited key resolves, or there
+  are no citations at all — returns the fixed marker `"(no unresolved citations)"`, so the output is
+  never the empty string (the same stable-marker discipline S12/S13/S14/S15/S16 use).
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all — keys
+  are already owned `String`s); a single pass over the already-bounded `unresolved` list. Borrows
+  `self` immutably, returns owned `String`.
+
+Six `s17_*` tests pin the exact rendered strings: a single dangling `\cite{ghost}` (`\cite{ghost}`), a
+mixed `\cite{known, ghost}` showing only the dangling key (`\cite{ghost}`), a fully-dangling
+`\cite{x, y}` reuniting both keys on one line (`\cite{x, y}`), two distinct dangling `\cite`s in source
+order (`\cite{ghost1}\n\cite{ghost2}`), an all-resolved document returning the
+`(no unresolved citations)` marker, and an additivity check that `to_plain_text`,
+`to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`, `citations_by_source`,
+and `duplicate_bibliography_entries` are all byte-for-byte unchanged.
+
 ## [0.52.0] — 2026-07-07
 
 ### Added — duplicate (multiply-defined) bibliography entries (LTXDOC03 S16)
