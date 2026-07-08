@@ -63,6 +63,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S13 — `\nameref` resolution to a target's name** | `Document::resolve_namerefs() -> String` — a **new** method that resolves every `\nameref{key}` to the **name** (title/caption text) of its target — the name-valued sibling of `\ref` (number) and `\pageref` (page). `\nameref` is **not** a `REF_COMMAND`, so it appears in neither the resolved nor unresolved ref table (an AST probe confirms it lowers to `Inline::CrossRef { command: "nameref", .. }`); S13 reads the same S1 `\label` table but answers "*what is it called?*", so it is purely additive. One document-order walk collects each `nameref` cross-ref; the key is resolved against the winning label table and the name read from its defining node via the S3 `label_def_node` accessor — a `Section` → its title inlines flattened, a `Figure`/`Table` → its `\caption` via the shared `caption_text` helper (S12's flatten factored into a module-level `flatten_inlines_to_text`, reused by both so they can never drift). An `Equation`/`Inline` target (a number, not a title) → `(no name)`; an undefined key → `(undefined nameref: <key>)`; no `\nameref` at all → `(no namerefs)`. Each line is `\nameref{<key>} -> <name>`, joined by `\n`, no trailing newline. Every S1–S12 output is byte-for-byte unchanged. Total & panic-free. | ✅ |
 | **LTXDOC03 S14 — per-kind census of the numbered-label table** | `Document::list_summary() -> String` — a **new**, read-only method that renders a compact per-kind **count** of the document's numbered labels: how many sections, figures, tables, and equations carry a `\label`. It is a pure tally of the rows `number_labels()` returns, grouped by `LabelKind`, so it can never drift from the S4 numbering it summarises. Only the four numberable kinds reach that table — a bare inline `\label{…}` (`LabelKind::Inline`) is not numbered and is counted nowhere. One line per non-zero kind in the **fixed order** `Sections`, `Figures`, `Tables`, `Equations` (deterministic, not source order), formatted `<Kind>: <count>` with a **fixed plural** label regardless of count (a single section still prints `Sections: 1`); a kind with count 0 is **omitted** (mirroring S11). Lines joined by `\n`, no trailing newline. A document with **no** numbered label at all → the fixed marker `(no labels)`. E.g. two labeled sections + a figure + a table + an equation → `Sections: 2\nFigures: 1\nTables: 1\nEquations: 1`. Every S1–S13 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S15 — resolved citations grouped by their source `\cite`** | `Document::citations_by_source() -> String` — a **new**, read-only method that renders the resolved citations **grouped by the source `\cite` they came from** — the citation-family parallel of S11's `to_plain_text_by_kind` and S13's `resolve_namerefs`. It reads only `resolve_citations().resolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping them back by `cite_span` in **first-appearance order** (source order of the `\cite`s) with keys kept in their left-to-right order. One line per source `\cite`: `\cite{` + the group's **resolved** keys joined by `", "` + `}`. A **dangling** key never entered `resolved`, so it is excluded — `\cite{a,ghost}` where only `a` resolves renders `\cite{a}` (we reconstruct from resolved keys rather than slice `&src[cite_span]`, which would still show `ghost`). Lines joined by `\n`, no trailing newline. A document with **no** resolved citations (none present, or every key dangling) → the fixed marker `(no resolved citations)`. E.g. `\cite{a,b}` (both defined) then `\cite{c}` → `\cite{a, b}\n\cite{c}`. Every S1–S14 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S16 — duplicate (multiply-defined) `\bibitem` entries** | `Document::duplicate_bibliography_entries() -> String` — a **new**, read-only method that surfaces the **multiply-defined** `\bibitem`s — LaTeX's *"Citation `key' multiply defined"* warnings — the citation-family parallel of S6's *"Dangling citations"* footer (for the *other* bibliography warning). These were already computed by S2 (`resolve_citations().duplicate_entries`) but rendered by **no** method until now. S2 collects every `\bibitem` in `walk` pre-order; the **first** of each key wins and every **later** `\bibitem` of an already-defined key is a losing duplicate. S16 emits one line per duplicate in that pre-order (**not** re-sorted, **not** de-duplicated — a key defined three times yields two lines), each reconstructed from its key as `\bibitem{<key>}` (no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** duplicates (no bibliography, or every key once) → the fixed marker `(no duplicate bibliography entries)`. E.g. `smith` defined twice + `jones` once → `\bibitem{smith}` (only the loser). Every S1–S15 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -699,6 +700,35 @@ assert_eq!(
 A document with no resolved citations — none present, or every cited key dangling — renders the fixed
 `(no resolved citations)` marker. Purely additive — reuses `resolve_citations`, mutates nothing, leaves
 every S1–S14 output and the `to_latex()` fixed point unchanged.
+
+### duplicate (multiply-defined) bibliography entries (LTXDOC03 S16)
+
+S2's `resolve_citations` collects every `\bibitem` in pre-order: the **first** of each key wins (it is
+the entry citations resolve against), and every **later** `\bibitem` of an already-defined key becomes
+a losing duplicate in `duplicate_entries` — LaTeX's *"Citation `key' multiply defined"* warning.
+`duplicate_bibliography_entries` reads only that list and emits one line per losing duplicate, in the
+existing pre-order (not re-sorted, not de-duplicated), each reconstructed from its key as
+`\bibitem{<key>}`.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\cite{smith}.
+\begin{thebibliography}{9}
+\bibitem{smith} First Smith. 1990.
+\bibitem{jones} Jones. 1991.
+\bibitem{smith} Second Smith. 1992.
+\end{thebibliography}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.duplicate_bibliography_entries(),
+    "\\bibitem{smith}",   // only the SECOND `\bibitem{smith}` loses; `jones` (once) is not listed
+);
+```
+
+A document with no duplicates — no bibliography, or every key defined exactly once — renders the fixed
+`(no duplicate bibliography entries)` marker. Purely additive — reuses `resolve_citations`, mutates
+nothing, leaves every S1–S15 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

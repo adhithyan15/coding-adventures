@@ -1671,6 +1671,86 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **duplicate (multiply-defined) bibliography entries** (LTXDOC03 S16) — the citation-family
+    /// parallel of S6's *"Dangling citations"* footer, but for the *other* bibliography warning LaTeX
+    /// emits: *"Citation `key' multiply defined"*.
+    ///
+    /// ## What it does
+    ///
+    /// S2's [`Document::resolve_citations`] collects every `\bibitem{key}` inside a `thebibliography`
+    /// in [`Document::walk`] pre-order. The **first** `\bibitem` of each key wins (it becomes the row
+    /// citations resolve against); every **later** `\bibitem` of an already-defined key is a *losing*
+    /// duplicate, recorded in [`CitationResolution::duplicate_entries`]. No method has surfaced that
+    /// list until now — this method renders it, one warning per losing `\bibitem`.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// One line per losing duplicate, in the existing pre-order of `duplicate_entries` (the source
+    /// order of the offending `\bibitem`s — **not** re-sorted). Each line is the offending command
+    /// **reconstructed from its key**: `\bibitem{` + the duplicate's key + `}`. We reconstruct from the
+    /// owned key rather than slice `&src[span]` — matching how S13's `resolve_namerefs` and S15's
+    /// `citations_by_source` rebuild commands from keys — so the render needs no source borrow and can
+    /// never index out of bounds.
+    ///
+    /// **Every** losing `\bibitem` yields its own line; we do **not** de-duplicate. If a key is defined
+    /// *three* times, the second and third both lose, so two `\bibitem{key}` lines are emitted (one per
+    /// *"multiply defined"* warning LaTeX would raise) — surfacing every duplicate, not the fact that a
+    /// key is duplicated. The winning first `\bibitem` is never listed here (it is the entry in
+    /// [`CitationResolution::entries`], not a duplicate).
+    ///
+    /// A document with **no** duplicate entries — no bibliography, or every key defined exactly once —
+    /// returns the fixed marker `(no duplicate bibliography entries)`, never the empty string (the same
+    /// stable-marker discipline S12/S13/S14/S15 use). Lines are joined by `\n` with **no** trailing
+    /// newline (matching S11's `to_plain_text_by_kind`, S12's `list_of_floats`, S13's
+    /// `resolve_namerefs`, S14's `list_summary`, and S15's `citations_by_source`).
+    ///
+    /// Concretely, for a `thebibliography` that defines `smith` twice and `jones` once:
+    ///
+    /// ```text
+    /// \begin{thebibliography}{9}
+    /// \bibitem{smith} First Smith. 1990.
+    /// \bibitem{jones} Jones. 1991.
+    /// \bibitem{smith} Second Smith. 1992.
+    /// \end{thebibliography}
+    /// ```
+    ///
+    /// only the *second* `\bibitem{smith}` loses, so the report is the single line:
+    ///
+    /// ```text
+    /// \bibitem{smith}
+    /// ```
+    ///
+    /// ## Additive by construction
+    ///
+    /// S16 is a brand-new, read-only method that reuses [`resolve_citations`](Document::resolve_citations)
+    /// and mutates nothing; it changes no S1-S15 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// keys are already owned `String`s); a single pass over the already-bounded `duplicate_entries`
+    /// list. Borrows `self` immutably and returns owned `String` data, so the result outlives any borrow
+    /// of the source.
+    pub fn duplicate_bibliography_entries(&self) -> String {
+        // S2 already routed every later `\bibitem` of an already-defined key into `duplicate_entries`,
+        // in body pre-order (first-entry-wins). We only read that list.
+        let resolution = self.resolve_citations();
+
+        if resolution.duplicate_entries.is_empty() {
+            // No multiply-defined `\bibitem` → the fixed marker, never the empty string.
+            return "(no duplicate bibliography entries)".to_string();
+        }
+
+        // One line per losing duplicate, in the existing pre-order (NOT re-sorted; NOT de-duplicated —
+        // every "multiply defined" warning gets its own line). Reconstruct `\bibitem{key}` from the
+        // owned key, so there is no source slicing.
+        resolution
+            .duplicate_entries
+            .iter()
+            .map(|dup| format!("\\bibitem{{{}}}", dup.key))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -4138,5 +4218,100 @@ See Section~\ref{sec:intro}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b
 
         // And S15 itself groups the resolved cites: `{a,b}` fully resolves; `{c,ghost}` keeps only `c`.
         assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S16 — duplicate (multiply-defined) bibliography entries (`duplicate_bibliography_entries`).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s16_reports_duplicate_bibitem() {
+        // A `thebibliography` defining `smith` TWICE and `jones` once. The first `\bibitem{smith}` wins;
+        // the SECOND is the losing duplicate. `jones` (defined once) is not a duplicate. So exactly one
+        // line — the offending `\bibitem{smith}` — is surfaced.
+        let src = r"\begin{document}\cite{smith}.
+\begin{thebibliography}{9}
+\bibitem{smith} First Smith. 1990.
+\bibitem{jones} Jones. 1991.
+\bibitem{smith} Second Smith. 1992.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{smith}");
+    }
+
+    #[test]
+    fn s16_two_distinct_duplicates() {
+        // Two different keys, `a` and `b`, EACH defined twice. Each losing (second) `\bibitem` yields its
+        // own line, in pre-order: the duplicate of `a` appears before the duplicate of `b` (source order
+        // of the losing entries), so the report is `\bibitem{a}` then `\bibitem{b}`.
+        let src = r"\begin{document}
+\begin{thebibliography}{9}
+\bibitem{a} First A.
+\bibitem{b} First B.
+\bibitem{a} Second A.
+\bibitem{b} Second B.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}\n\\bibitem{b}");
+    }
+
+    #[test]
+    fn s16_empty_returns_marker() {
+        // A bibliography whose every key is defined exactly once has NO duplicates → the fixed marker,
+        // never the empty string.
+        let src = r"\begin{document}
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_entries(), "(no duplicate bibliography entries)");
+    }
+
+    #[test]
+    fn s16_is_additive_leaves_s1_s15_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a `\ref`, a `\nameref`,
+        // two `\cite`s (one multi-key, one dangling key), AND a duplicate `\bibitem` (`a` defined twice),
+        // S16 changes NONE of the S1-S15 outputs — it only reads `resolve_citations`.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+See Section~\ref{sec:intro}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — the resolved `\ref` and the three resolved `\cite`s with their `[n]`
+        // markers, plus the dangling `ghost` footer, all unchanged by S16.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — the single ref under its `Sections:` group, unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1"
+        );
+        // S12 list of floats — one figure line, unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — both namerefs render their names, unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — one section, one figure, one equation, unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped cites — `{a,b}` fully resolves; `{c,ghost}` keeps only `c`, unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+
+        // And S16 itself surfaces the one duplicate: the SECOND `\bibitem{a}`.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
     }
 }

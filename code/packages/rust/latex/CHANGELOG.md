@@ -2,6 +2,44 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.52.0] — 2026-07-07
+
+### Added — duplicate (multiply-defined) bibliography entries (LTXDOC03 S16)
+
+A **new** public method `Document::duplicate_bibliography_entries(&self) -> String` that surfaces the
+**duplicate (multiply-defined) `\bibitem` entries** — LaTeX's *"Citation `key' multiply defined"*
+warnings. These were already computed by S2 (`resolve_citations().duplicate_entries`) but rendered by
+**no** method until now. It is the citation-family parallel of S6's *"Dangling citations"* footer, for
+the *other* bibliography warning. Every S1–S15 output is left **byte-for-byte unchanged**; S16 is
+purely additive and leaves the `to_latex()` round-trip fixed point intact.
+
+- **One line per losing duplicate, in pre-order.** S2 collects every `\bibitem{key}` in `walk`
+  pre-order; the **first** of each key wins, and every **later** `\bibitem` of an already-defined key
+  is a losing duplicate in `duplicate_entries`. S16 emits one line per duplicate, in that existing
+  pre-order (**not** re-sorted). Each line is the offending command **reconstructed from its key**:
+  `\bibitem{` + the duplicate's key + `}`. We reconstruct from the owned key rather than slice
+  `&src[span]` (matching S13 `resolve_namerefs` and S15 `citations_by_source`), so the render needs no
+  source borrow and can never index out of bounds.
+- **Every duplicate, never de-duplicated.** If a key is defined *three* times, both the second and the
+  third lose, so two `\bibitem{key}` lines are emitted (one per *"multiply defined"* warning LaTeX
+  would raise) — the point is to surface every warning, not the fact that a key is duplicated. The
+  winning first `\bibitem` is never listed (it is an entry, not a duplicate). Lines are joined by `\n`
+  with **no** trailing newline (matching S11 `to_plain_text_by_kind`, S12 `list_of_floats`, S13
+  `resolve_namerefs`, S14 `list_summary`, S15 `citations_by_source`).
+- **Empty marker.** A document with **no** duplicate entries — no bibliography, or every key defined
+  exactly once — returns the fixed marker `"(no duplicate bibliography entries)"`, so the output is
+  never the empty string (the same stable-marker discipline S12/S13/S14/S15 use).
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all — keys
+  are already owned `String`s); a single pass over the already-bounded `duplicate_entries` list.
+  Borrows `self` immutably, returns owned `String`.
+
+Four `s16_*` tests pin the exact rendered strings: a bibliography defining `smith` twice and `jones`
+once (`\bibitem{smith}`, only the loser), two distinct keys each defined twice
+(`\bibitem{a}\n\bibitem{b}` in pre-order), a no-duplicate bibliography returning the
+`(no duplicate bibliography entries)` marker, and an additivity check that `to_plain_text`,
+`to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`, and
+`citations_by_source` all still produce their exact prior strings.
+
 ## [0.51.0] — 2026-07-07
 
 ### Added — resolved citations grouped by their source `\cite` (LTXDOC03 S15)
