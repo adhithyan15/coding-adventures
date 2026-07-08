@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 114 \u2014 fluent-syllable index from four stated quantities (a NEW panel: speech-language pathology / fluency assessment). From a first passage plus a second passage minus a disfluent count for the fluent load, all divided by a session span, compute the fluent-syllable index ((first_passage+second_passage-disfluent_count)/session_span), the fluent load (first_passage+second_passage-disfluent_count), or the session span. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a TWO-ADD-ONE-SUBTRACT THREE-TERM NUMERATOR, OVER A DIVISOR (a+b-c)/d (add the two passage counts, subtract the disfluent count, divide by the session span, so (a+b-c)/d = (((a+b)-c)/d); the sum-then-difference sibling of rung-108 (a+b+c)/d and distinct from rung-109 (a-b+c)/d which subtracts the MIDDLE term. The earlier three-term numerators (108 (a+b+c)/d, 109 (a-b+c)/d, 110 (a*b+c)/d, 111 (a*b-c)/d) never used two-add-one-subtract; the distributive pair (112 a*(b+c)/d, 113 a*(b-c)/d) wrapped a sum/difference inside a factor. Every earlier ratio used a TWO-term numerator: 37 (a+b)/(c+d), 99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), and the difference-denominator trio 105 (a+b)/(c-d), 106 a*b/(c-d), 107 (a-b)/(c-d)) \u2014 and the harness matches the scalar to the printed options. The fluent-syllable index is a rate (fluent load per session), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via +, - and / \u2014 no constant leaks, and neither the fluent load, the session span, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the disfluent count is divided (a+b-c/d, a wrong grouping) and regrouping so only the two passage counts form the numerator ((a+b)/(c+d), a wrong pairing). The core confusion tested is that (a+b-c)/d is (((a+b)-c)/d), not a+b-c/d and not (a+b)/(c+d). This rung SUBTRACTS the disfluent count in the numerator, so positivity is guaranteed by table construction: every table has first_passage + second_passage > disfluent_count (a+b>c) and session_span >= 2 (divisor never zero), keeping every family member strictly positive.",
+  "items": [
+    {
+      "id": "r114fluency-01",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 4 plus a second passage of 3 minus a disfluent count of 2, divided by a session span of 2. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(4)\nobserve second_passage(3)\nobserve disfluent_count(2)\nobserve session_span(2)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r114fluency-02",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 4 plus a second passage of 3 minus a disfluent count of 2, divided by a session span of 2. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(4)\nobserve second_passage(3)\nobserve disfluent_count(2)\nobserve session_span(2)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r114fluency-03",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 4 plus a second passage of 3 minus a disfluent count of 2, divided by a session span of 2. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(4)\nobserve second_passage(3)\nobserve disfluent_count(2)\nobserve session_span(2)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r114fluency-04",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 5 plus a second passage of 3 minus a disfluent count of 2, divided by a session span of 3. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(5)\nobserve second_passage(3)\nobserve disfluent_count(2)\nobserve session_span(3)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r114fluency-05",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 5 plus a second passage of 3 minus a disfluent count of 2, divided by a session span of 3. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(5)\nobserve second_passage(3)\nobserve disfluent_count(2)\nobserve session_span(3)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r114fluency-06",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 5 plus a second passage of 3 minus a disfluent count of 2, divided by a session span of 3. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(5)\nobserve second_passage(3)\nobserve disfluent_count(2)\nobserve session_span(3)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r114fluency-07",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 5 plus a second passage of 4 minus a disfluent count of 2, divided by a session span of 4. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(5)\nobserve second_passage(4)\nobserve disfluent_count(2)\nobserve session_span(4)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r114fluency-08",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 5 plus a second passage of 4 minus a disfluent count of 2, divided by a session span of 4. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(5)\nobserve second_passage(4)\nobserve disfluent_count(2)\nobserve session_span(4)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r114fluency-09",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 5 plus a second passage of 4 minus a disfluent count of 2, divided by a session span of 4. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(5)\nobserve second_passage(4)\nobserve disfluent_count(2)\nobserve session_span(4)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r114fluency-10",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 6 plus a second passage of 5 minus a disfluent count of 2, divided by a session span of 5. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(6)\nobserve second_passage(5)\nobserve disfluent_count(2)\nobserve session_span(5)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r114fluency-11",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 6 plus a second passage of 5 minus a disfluent count of 2, divided by a session span of 5. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(6)\nobserve second_passage(5)\nobserve disfluent_count(2)\nobserve session_span(5)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5714285714285714,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r114fluency-12",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 6 plus a second passage of 5 minus a disfluent count of 2, divided by a session span of 5. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(6)\nobserve second_passage(5)\nobserve disfluent_count(2)\nobserve session_span(5)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5714285714285714,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r114fluency-13",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 7 plus a second passage of 5 minus a disfluent count of 2, divided by a session span of 6. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(7)\nobserve second_passage(5)\nobserve disfluent_count(2)\nobserve session_span(6)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r114fluency-14",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 7 plus a second passage of 5 minus a disfluent count of 2, divided by a session span of 6. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(7)\nobserve second_passage(5)\nobserve disfluent_count(2)\nobserve session_span(6)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r114fluency-15",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 7 plus a second passage of 5 minus a disfluent count of 2, divided by a session span of 6. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(7)\nobserve second_passage(5)\nobserve disfluent_count(2)\nobserve session_span(6)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r114fluency-16",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 7 plus a second passage of 6 minus a disfluent count of 2, divided by a session span of 7. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(7)\nobserve second_passage(6)\nobserve disfluent_count(2)\nobserve session_span(7)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5714285714285714,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r114fluency-17",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 7 plus a second passage of 6 minus a disfluent count of 2, divided by a session span of 7. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(7)\nobserve second_passage(6)\nobserve disfluent_count(2)\nobserve session_span(7)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5714285714285714,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r114fluency-18",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 7 plus a second passage of 6 minus a disfluent count of 2, divided by a session span of 7. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(7)\nobserve second_passage(6)\nobserve disfluent_count(2)\nobserve session_span(7)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5714285714285714,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r114fluency-19",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 8 plus a second passage of 7 minus a disfluent count of 2, divided by a session span of 8. What is the fluent-syllable index (the fluent load divided by the session span)?",
+      "program": "observe first_passage(8)\nobserve second_passage(7)\nobserve disfluent_count(2)\nobserve session_span(8)\nlet answer = (first_passage + second_passage - disfluent_count) / session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r114fluency-20",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 8 plus a second passage of 7 minus a disfluent count of 2, divided by a session span of 8. What is the the fluent load (the two passage counts summed minus the disfluent count, the numerator divided by the session span)?",
+      "program": "observe first_passage(8)\nobserve second_passage(7)\nobserve disfluent_count(2)\nobserve session_span(8)\nlet answer = first_passage + second_passage - disfluent_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r114fluency-21",
+      "qtype": "fluent_index",
+      "stem": "A fluency assessment records a first passage of 8 plus a second passage of 7 minus a disfluent count of 2, divided by a session span of 8. What is the the session span (the divisor the fluent load is divided by)?",
+      "program": "observe first_passage(8)\nobserve second_passage(7)\nobserve disfluent_count(2)\nobserve session_span(8)\nlet answer = session_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.625,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
