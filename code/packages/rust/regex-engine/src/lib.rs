@@ -362,9 +362,14 @@ pub struct Captures<'t> {
 impl<'t> Captures<'t> {
     /// The `i`-th capture group's match (`0` = the overall match), or `None` if
     /// the group index is out of range or the group did not participate.
+    ///
+    /// `checked_mul` keeps a huge `i` (e.g. from a `$99999999999999999999` group
+    /// reference in a `replace_all` template) from overflowing the slot index — it
+    /// returns `None` rather than panicking under overflow-checked builds.
     pub fn get(&self, i: usize) -> Option<Match<'t>> {
-        let start = (*self.slots.get(2 * i)?)?;
-        let end = (*self.slots.get(2 * i + 1)?)?;
+        let lo = i.checked_mul(2)?;
+        let start = (*self.slots.get(lo)?)?;
+        let end = (*self.slots.get(lo + 1)?)?;
         Some(Match {
             text: self.text,
             start,
@@ -564,6 +569,8 @@ mod tests {
         assert_eq!(re.replace_all("a@b", "${1}_${2}"), "a_b");
         // `$$` is a literal dollar; `$0` is the whole match.
         assert_eq!(re.replace_all("a@b", "$$$0"), "$a@b");
+        // A group number that overflows `usize` must not panic — it expands empty.
+        assert_eq!(re.replace_all("a@b", "x$99999999999999999999y"), "xy");
     }
 
     #[test]
