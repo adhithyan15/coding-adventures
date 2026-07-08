@@ -141,6 +141,7 @@ SELF_CONTAINED_RUNGS = (
     "rung101_range_of_motion",
     "rung102_training_load",
     "rung103_gi_transit",
+    "rung104_coag_mixing",
 )
 
 
