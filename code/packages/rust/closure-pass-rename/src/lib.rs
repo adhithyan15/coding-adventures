@@ -91,9 +91,9 @@ use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, BindingTarget, BlockStatement, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionParam, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VarKind,
-    VariableDeclaration,
+    ArrowBody, AssignmentTarget, BindingTarget, BlockStatement, ClassMember, Declaration,
+    Expression, ForInit, FunctionDeclaration, FunctionParam, ObjectMember, Program, ProgramItem,
+    PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value. Empty in v1 — see crate-level docs
@@ -1021,6 +1021,41 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_stmt(s, out);
             }
         }
+        // A class *value* introduces its optional class name, the identifiers
+        // in its `extends` operand, and — for each method — the method value's
+        // own name (if any), its params, and its body identifiers. Record them
+        // all so a fresh short name for an OUTER local can never collide with,
+        // or capture, a name used inside the class, exactly as the
+        // `FunctionExpression` arm does. An identifier method KEY is a property
+        // name (not a variable); recorded here purely for collision-avoidance,
+        // matching how the `ObjectExpression` arm records identifier keys.
+        Expression::ClassExpression(ce) => {
+            if let Some(id) = &ce.id {
+                out.insert(id.name.clone());
+            }
+            if let Some(sup) = &ce.super_class {
+                collect_all_idents_expr(sup, out);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if let PropertyKey::Identifier(id) = &m.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let Some(id) = &m.value.id {
+                            out.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            out.insert(id.name.clone());
+                        }
+                        for s in &m.value.body.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                }
+            }
+        }
         // An arrow value introduces its params and whatever its body
         // references (it has no name of its own). Record them all so a
         // fresh short name for an OUTER local can never collide with a
@@ -1364,6 +1399,41 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
             for s in &mut fe.body.body {
                 rewrite_uses_stmt(s, &inner);
+            }
+        }
+        // A class expression closes over the enclosing locals. The `extends`
+        // operand is an ordinary expression at the class's OWN scope, so
+        // rewrite it with the outer `map`. Each method value is its own
+        // function scope: like the `FunctionExpression` arm, remove the
+        // LOCAL bindings that shadow an outer local — the class's own name,
+        // the method value's own name (if any), and the method params —
+        // before recursing into the body, so a genuine closure-over use is
+        // renamed while a shadowed use is left untouched. A method KEY is a
+        // property name, never a variable use, so it is never rewritten here.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                rewrite_uses_expr(sup, map);
+            }
+            let mut class_inner = map.clone();
+            if let Some(id) = &ce.id {
+                class_inner.remove(&id.name);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            inner.remove(&id.name);
+                        }
+                        for s in &mut m.value.body.body {
+                            rewrite_uses_stmt(s, &inner);
+                        }
+                    }
+                }
             }
         }
         // An arrow closes over the enclosing locals, so uses of a renamed

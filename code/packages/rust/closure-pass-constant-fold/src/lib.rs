@@ -95,6 +95,7 @@ use coding_adventures_javascript_ast::{
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
+    ClassExpression, ClassMember, MethodDefinition,
     FunctionDeclaration, FunctionExpression, Identifier,
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -487,6 +488,51 @@ fn fold_variable_declaration(v: &VariableDeclaration, st: &mut FoldState) -> Var
 // Expressions — the actual folding
 // =====================================================================
 
+/// Fold inside a class expression: the `extends` operand (an expression) and
+/// each method's body (statements). Kept `#[inline(never)]` so its locals do
+/// not inflate `fold_expression`'s frame — see the call site.
+#[inline(never)]
+fn fold_class(c: &ClassExpression, st: &mut FoldState) -> Expression {
+    Expression::ClassExpression(ClassExpression {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class: c
+            .super_class
+            .as_ref()
+            .map(|s| Box::new(fold_expression(s, st))),
+        body: c
+            .body
+            .iter()
+            .map(|m| match m {
+                ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
+                    cv: md.cv.clone(),
+                    key: md.key.clone(),
+                    kind: md.kind,
+                    value: FunctionExpression {
+                        cv: md.value.cv.clone(),
+                        id: md.value.id.clone(),
+                        params: md.value.params.clone(),
+                        body: BlockStatement {
+                            cv: md.value.body.cv.clone(),
+                            body: md
+                                .value
+                                .body
+                                .body
+                                .iter()
+                                .map(|s| fold_statement(s, st))
+                                .collect(),
+                        },
+                        generator: md.value.generator,
+                        is_async: md.value.is_async,
+                    },
+                    computed: md.computed,
+                    is_static: md.is_static,
+                }),
+            })
+            .collect(),
+    })
+}
+
 fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
     st.visit();
     match expr {
@@ -663,6 +709,14 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 is_async: f.is_async,
             })
         }
+        // A class expression: fold inside the `extends` operand and each
+        // method body, exactly as a function expression folds inside its body.
+        // The class itself is never a foldable constant. Delegated to an
+        // `#[inline(never)]` helper so this arm does not enlarge
+        // `fold_expression`'s debug-build stack frame — the whole `match` is on
+        // the hot recursive dispatch path, and a fat frame there is a
+        // deep-nesting stack-overflow (DoS) hazard (see lessons.md).
+        Expression::ClassExpression(c) => fold_class(c, st),
         // An arrow function value: fold inside its body just like a
         // function expression. A block body folds statement-by-statement;
         // a concise (expression) body folds the single expression — so

@@ -60,6 +60,7 @@ pub enum Expression {
     ObjectExpression(ObjectExpression),
     FunctionExpression(FunctionExpression),
     ArrowFunctionExpression(ArrowFunctionExpression),
+    ClassExpression(ClassExpression),
     TemplateLiteral(TemplateLiteral),
     UpdateExpression(UpdateExpression),
     NewExpression(NewExpression),
@@ -1051,6 +1052,105 @@ pub struct FunctionExpression {
     pub generator: bool,
     #[serde(rename = "async")]
     pub is_async: bool,
+}
+
+// ---------------------------------------------------------------------
+// ClassExpression — `class [id] [extends S] { members }` in value position
+// ---------------------------------------------------------------------
+
+/// A **class expression** — the `class` keyword used where an *expression*
+/// is expected (the right side of an assignment `var C = class {}`, an
+/// argument `f(class {})`, an IIFE callee `(class {})`, etc.). The sibling
+/// *declaration* form (`class C {}` as a statement) is a separate node that a
+/// later arc adds; the two share the member sub-AST introduced here
+/// (CLOC12.173).
+///
+/// ```text
+///   class {}                     anonymous, empty
+///   class C {}                   named
+///   class C extends B {}         with heritage
+///   class { m() {} }             with a method
+///   class { static m() {} }      a static method
+///   class { get x() {} }         an accessor
+///   class { [k]() {} }           a computed-key method
+/// ```
+///
+/// The shape mirrors [`FunctionExpression`] where it can: `id` is the optional
+/// class name, `super_class` is the optional `extends` operand (any expression,
+/// e.g. `extends mixin(Base)`), and `body` is the ordered list of members. Only
+/// **methods** are modelled today (`ClassMember::Method`); instance/static
+/// fields and `static { … }` blocks are additive follow-ups (see the spec).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ClassExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// `None` for anonymous `class {}`; `Some` for a named `class C {}`.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub id: Option<Identifier>,
+    /// The `extends <expr>` operand, if any. Any expression is legal here —
+    /// an identifier (`extends Base`), a member (`extends ns.Base`), or a call
+    /// (`extends mixin(Base)`) — so it is a boxed [`Expression`].
+    #[serde(skip_serializing_if = "Option::is_none", default, rename = "superClass")]
+    pub super_class: Option<Box<Expression>>,
+    /// The class body — the ordered member list between the braces. May be
+    /// empty (`class {}`).
+    pub body: Vec<ClassMember>,
+}
+
+/// One member of a class body. An enum (not a bare struct) because a later arc
+/// adds field (`PropertyDefinition`) and `static { … }` (static-block) variants
+/// alongside the method form; today only methods are representable.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type")]
+pub enum ClassMember {
+    /// A method / accessor / constructor: `m() {}`, `get x() {}`,
+    /// `static m() {}`, `[k]() {}`, `constructor() {}`.
+    Method(MethodDefinition),
+}
+
+/// A method-like class member. Unlike an object-literal [`Property`] it can be
+/// `static`, can be the `constructor`, and its value is *always* a
+/// [`FunctionExpression`] (the method's params + body). The key reuses
+/// [`PropertyKey`] — a method key has the same four shapes as a property key
+/// (identifier / string / numeric / computed `[expr]`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MethodDefinition {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The member name. For a computed key (`[expr]() {}`) this is
+    /// [`PropertyKey::Expression`] and `computed` is `true`.
+    pub key: PropertyKey,
+    /// Which kind of member: an ordinary method, the constructor, or a
+    /// getter/setter accessor.
+    pub kind: MethodKind,
+    /// The method body as a function value — its `params` and `body` are the
+    /// method's parameter list and block. `id` is normally `None` (a method has
+    /// no inner function name); `generator`/`is_async` carry `*`/`async`.
+    pub value: FunctionExpression,
+    /// `true` for a computed key `[expr]() {}`; `false` for a plain
+    /// identifier / string / numeric key.
+    pub computed: bool,
+    /// `true` for a `static` member.
+    #[serde(rename = "static")]
+    pub is_static: bool,
+}
+
+/// The four kinds of [`MethodDefinition`]. `Constructor` is distinct from
+/// `Method` because the emitter and later passes treat the constructor
+/// specially (e.g. it is never renamed and never a getter/setter). Mirrors
+/// Closure's Rhino `MEMBER_FUNCTION_DEF` (method/constructor) vs `GETTER_DEF` /
+/// `SETTER_DEF`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum MethodKind {
+    /// `constructor() {}`.
+    Constructor,
+    /// An ordinary method `m() {}`.
+    Method,
+    /// A getter `get x() {}`.
+    Get,
+    /// A setter `set x(v) {}`.
+    Set,
 }
 
 // ---------------------------------------------------------------------

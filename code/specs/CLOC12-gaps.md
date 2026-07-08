@@ -2233,6 +2233,45 @@ The bridge for a **class _declaration_** (a `ProgramItem`, not an
 `Expression`) is a **separate future arc** — this arc is scoped to the
 *expression* form. The two share the member sub-AST once PR1 lands.
 
+**PR1 (DONE).** `javascript-ast` 0.32.0 adds the node + member sub-AST exactly
+as modelled above; `closure-emitter` 0.37.0 adds `emit_class` /
+`emit_class_member` (with a shared `emit_param_list_and_body` helper factored
+out of `emit_function_expression`); `closure-pass-constant-fold` 0.85.13 folds
+inside the `extends` operand and method bodies via an `#[inline(never)]`
+`fold_class` helper. 8 emitter unit tests. **Two refinements to the plan above,
+found during implementation:**
+
+1. **Precedence is `PREC_UNARY`, not `PREC_PRIMARY`.** The plan said
+   `PREC_PRIMARY`, but `FunctionExpression` — the node a class expression
+   mirrors — is tagged `PREC_UNARY` in `expr_prec`, and *that* is what makes it
+   wrap as a member object (`(class{}).x`) or call callee (`(class{})()`);
+   `PREC_PRIMARY` would leave it bare and mis-emit. `ClassExpression` therefore
+   also tags `PREC_UNARY`, and is added to `emit_expression_statement`'s
+   leading-token wrap set (a statement-position `class` parses as a class
+   *declaration*, like `function`/`{`).
+2. **Most pass crates DO match `Expression` exhaustively and each needed a
+   `ClassExpression` arm.** (An earlier draft of this note wrongly said "only
+   two crates" — that conclusion came from a flawed local check: `grep -c
+   "test result: FAILED"` returns `0` for a crate that failed to *compile*, so a
+   non-exhaustive-match compile error read as a pass. The per-crate CI build-tool
+   caught it; see lessons.md.) In fact `closure-emitter`, `closure-pass-constant-fold`,
+   `closure-scope-analyzer`, `closure-pass-dce`, `closure-pass-fold-control-flow`,
+   `closure-pass-inline-variables`, `closure-pass-inline`, `closure-pass-rename`,
+   `closure-pass-rename-globals`, and `closure-pass-rename-properties` all match
+   `Expression` exhaustively (several at 2+ sites, some over `&mut Expression`),
+   and each got a `ClassExpression` arm **mirroring its `FunctionExpression`
+   handling** — recurse into the `extends` operand (a normal expression) and each
+   method’s `value` (a `FunctionExpression`, walked as its own function scope).
+   Variable-renaming passes leave method *keys* untouched (a method key is a
+   property name, not a variable); the property-renaming pass treats method keys
+   as renameable property names, mirroring object-literal keys. Rebuild/transform
+   arms delegate to an `#[inline(never)]` helper (frame-size DoS lesson). Only
+   `closure-pass-treeshake` / `-remove-unused-vars` / `-collapse-properties` route
+   through catch-alls (no arm needed). This is reachable only once the PR2 bridge
+   produces the node; the arms give correct (not just compiling) behaviour when it
+   does, so no optimisation-inside-class work is deferred beyond the deferred
+   *node features* (fields / static blocks).
+
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 
 Regex literals were previously bridged via a **"treat as identifier" fallback**

@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.10.13] - 2026-07-08
+
+### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)
+
+`javascript-ast` 0.32.0 added the `Expression::ClassExpression` variant, which made
+this crate’s exhaustive `Expression` match(es) non-exhaustive. Added a
+`ClassExpression` arm at each site, mirroring the crate’s existing
+`FunctionExpression` handling: recurse into the `extends` operand (a normal
+expression) and each method’s `value` (a `FunctionExpression`, walked as its own
+function scope). Variable-renaming passes leave method KEYS untouched (a method
+key is a property name, not a variable); the property-renaming pass treats method
+keys as renameable property names, mirroring object-literal keys. Rebuild/
+transform arms delegate to an `#[inline(never)]` helper (frame-size DoS lesson).
+Reachable once the CLOC12.173 PR2 bridge produces `ClassExpression` nodes.
+
 ## [0.10.12] - 2026-07-07
 
 ### Changed — CLOC12.169: `ImportExpression` exhaustive-match arm

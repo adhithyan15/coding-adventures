@@ -135,6 +135,7 @@ pub use expression::{
     ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
     AssignmentOperator, AssignmentTarget,
     BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
+    ClassExpression, ClassMember, MethodDefinition, MethodKind,
     ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
     ChainExpression, LogicalOperator, MemberExpression,
     NewExpression,

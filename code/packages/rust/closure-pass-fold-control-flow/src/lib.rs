@@ -59,6 +59,7 @@ use coding_adventures_javascript_ast::{
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
+    ClassExpression, ClassMember, MethodDefinition,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -292,6 +293,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
         FunctionExpression(e) => e.cv.clone(),
+        ClassExpression(e) => e.cv.clone(),
         ArrowFunctionExpression(e) => e.cv.clone(),
         TemplateLiteral(e) => e.cv.clone(),
     }
@@ -1358,6 +1360,48 @@ fn fold_variable_declaration(
 // a literal test IS folded for robustness when this pass runs solo.
 // =====================================================================
 
+/// Fold control flow inside a class expression: the `extends` operand is a
+/// plain value-position expression, and each method's function *value* body is
+/// folded and its `var`s hoisted exactly like the `FunctionExpression` arm
+/// (fold the body, then hoist to the function top). `#[inline(never)]` so it
+/// does not inflate `fold_expression`'s frame (stack-overflow DoS guard).
+#[inline(never)]
+fn fold_class(c: &ClassExpression, st: &mut FoldState) -> Expression {
+    Expression::ClassExpression(ClassExpression {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class: c
+            .super_class
+            .as_ref()
+            .map(|s| Box::new(fold_expression(s, st))),
+        body: c
+            .body
+            .iter()
+            .map(|m| match m {
+                ClassMember::Method(md) => {
+                    let folded_body = fold_block_statement(&md.value.body, st);
+                    let hoisted_body = hoist_function_body_vars(&folded_body, st);
+                    ClassMember::Method(MethodDefinition {
+                        cv: md.cv.clone(),
+                        key: md.key.clone(),
+                        kind: md.kind,
+                        value: FunctionExpression {
+                            cv: md.value.cv.clone(),
+                            id: md.value.id.clone(),
+                            params: md.value.params.clone(),
+                            body: hoisted_body,
+                            generator: md.value.generator,
+                            is_async: md.value.is_async,
+                        },
+                        computed: md.computed,
+                        is_static: md.is_static,
+                    })
+                }
+            })
+            .collect(),
+    })
+}
+
 fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
     st.visit();
     match expr {
@@ -1548,6 +1592,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 is_async: f.is_async,
             })
         }
+        Expression::ClassExpression(c) => fold_class(c, st),
         // Fold control flow inside an arrow-value's body. A block body is
         // folded and its `var`s hoisted exactly as a function body; a
         // concise (expression) body declares no `var`s, so it only needs

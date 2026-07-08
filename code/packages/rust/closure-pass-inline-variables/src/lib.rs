@@ -107,8 +107,9 @@ use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam,
-    Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind, VariableDeclaration,
+    ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
+    FunctionParam, Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
+    VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — constant-fold first, so a folded
@@ -832,6 +833,26 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                 count_uses_stmt(s, name, count);
             }
         }
+        // Count uses of `name` inside a class expression: the `extends`
+        // operand is an ordinary use-position expression, and each method's
+        // function *value* body is counted exactly like the
+        // `FunctionExpression` arm above (over-counting under a method-param
+        // shadow is conservative — it only prevents an inline). The method
+        // KEY is a property name, not a variable use, so it is not counted.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &ce.super_class {
+                count_uses_expr(sup, name, count);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            count_uses_stmt(s, name, count);
+                        }
+                    }
+                }
+            }
+        }
         // Count uses inside an arrow-value's body, same conservative
         // posture as the function arm (over-counting under a shadowing
         // param only prevents an inline, never produces a wrong one).
@@ -1165,6 +1186,26 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         Expression::FunctionExpression(fe) => {
             for s in &mut fe.body.body {
                 changed |= propagate_in_stmt(s, cand);
+            }
+        }
+        // Propagate the candidate into a class expression, mirroring the
+        // `FunctionExpression` arm and kept consistent with `count_uses_expr`
+        // so the count and the substitution walk cover the same positions:
+        // the `extends` operand is an ordinary use position, and each
+        // method's function *value* body is walked like a function body. The
+        // method KEY is a property name, never a substitutable use.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                changed |= propagate_in_expr(sup, cand);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            changed |= propagate_in_stmt(s, cand);
+                        }
+                    }
+                }
             }
         }
         // Propagate into an arrow-value's body, kept consistent with

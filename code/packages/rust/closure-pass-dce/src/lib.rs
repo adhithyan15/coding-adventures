@@ -76,6 +76,7 @@ use coding_adventures_javascript_ast::{
     ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
+    ClassExpression, ClassMember, MethodDefinition,
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
@@ -1154,6 +1155,38 @@ fn dce_variable_declaration(
 // Expressions — recurse only (DCE doesn't collapse expressions)
 // =====================================================================
 
+/// DCE inside a class expression: the `extends` operand and each method body.
+/// `#[inline(never)]` so it does not inflate `dce_expression`'s frame.
+#[inline(never)]
+fn dce_class(c: &ClassExpression, st: &mut DceState) -> Expression {
+    Expression::ClassExpression(ClassExpression {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class: c.super_class.as_ref().map(|s| Box::new(dce_expression(s, st))),
+        body: c
+            .body
+            .iter()
+            .map(|m| match m {
+                ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
+                    cv: md.cv.clone(),
+                    key: md.key.clone(),
+                    kind: md.kind,
+                    value: FunctionExpression {
+                        cv: md.value.cv.clone(),
+                        id: md.value.id.clone(),
+                        params: md.value.params.clone(),
+                        body: dce_block_statement(&md.value.body, st),
+                        generator: md.value.generator,
+                        is_async: md.value.is_async,
+                    },
+                    computed: md.computed,
+                    is_static: md.is_static,
+                }),
+            })
+            .collect(),
+    })
+}
+
 fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
     st.visit();
     match expr {
@@ -1355,6 +1388,11 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             generator: f.generator,
             is_async: f.is_async,
         }),
+        // A class expression: DCE the `extends` operand and each method body
+        // exactly as a function body. Delegated to an `#[inline(never)]` helper
+        // so this arm does not enlarge `dce_expression`'s frame on the hot
+        // recursive path (deep-nesting stack-overflow DoS lesson).
+        Expression::ClassExpression(c) => dce_class(c, st),
         // Recurse into an arrow-value's body. A block body eliminates
         // dead code after `return`/`throw` exactly as a function body
         // does; a concise (expression) body has no statements — a single
