@@ -151,8 +151,15 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   relies on — it never calls `find`). Reported extents can differ from `regex` only
   on lazy/overlapping-greedy-alternation corners, which the media pattern avoids.
   regex-engine v0.4.0.
-- **D3b — captures.** Add `Regex::captures` (per-group `Save` instructions,
-  copy-on-write capture slots, a group-count DoS cap), cross-verified vs `regex`.
+- **D3b — ✅ DONE (captures).** `Regex::captures` + `Captures` type. Capturing
+  groups compile to `Save` instructions bracketing the body (slots `2g`/`2g+1`;
+  `0`/`1` = overall); the `captures` run carries a **copy-on-write** (`Rc`) slot
+  vector per thread (branches share until a `Save` writes). `Save` is an epsilon
+  no-op for `is_match`/`find`, so those paths are unchanged. **MAX_GROUPS=1000**
+  DoS cap (rejects at build). Cross-verified vs live `regex`: 72k existence + 39k
+  full-group comparisons (group boundaries agree wherever the overall span does;
+  the lazy/overlapping-greedy overall-match corner from D3a is skipped, not group-
+  compared). regex-engine v0.5.0.
 - **D3c — `replace_all`/`find_iter`.** Built on find/captures; cross-verified.
 - **D4 — swap media + drop `regex`.** Point `DUPLICATE_HTML_MEDIA_TAGS` at the
   engine's `replace_all` (byte-verified vs the old regex on the corpus from C2),
