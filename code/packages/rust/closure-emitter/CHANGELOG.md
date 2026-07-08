@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.36.1] - 2026-07-08
+
+### Added — CLOC12.172 PR3: CodePrinter regex-literal conformance port
+
+New `tests/upstream/code_printer_regexp_test.rs` (a `[[test]]` target,
+`upstream_code_printer_regexp`) — the nineteenth CodePrinter port, isolating
+`emit_regexp` + the `PREC_PRIMARY` classification that landed with
+`Expression::RegExpLiteral` (CLOC12.172 PR1). Mirrors upstream Closure
+Compiler's `CodePrinterTest` printing of a `Token.REGEXP` node: the delimiters
+and the raw pattern/flags are written **verbatim** — a regex has exactly one
+spelling, so unlike a string there is no quote-choice or re-escaping pass. 13
+active `#[test]`s, **0 `#[ignore]`**: pattern+flags round-trip (`/ab+c/gi`),
+no-flags bare form (`/a.b/`), opaque pattern bodies (groups/alternation
+`/(?:a|b)/`, character class `/[a-z]/`, anchors+quantifiers `/^\d+$/`,
+backreference `/(a)\1/`, a `/` inside a class `/[/]/`, an escaped delimiter
+`/\//`), verbatim flags (full set `/x/dgimsuy`, non-canonical order `/x/ig`
+echoed unchanged), and the `PREC_PRIMARY` composition cases where a regex is a
+paren-free member base (`/re/.test(a)`, `/re/g.source`) or a bare call argument
+(`f(/ab+c/gi,1)`). Inputs are hand-constructed AST; the bridge conversion of a
+REGEX token (CLOC12.172 PR2, gap-RegExpAsIdentifier) is exercised separately in
+`javascript-parser`. Emitter-tests-only — no production code change.
+
 ## [0.36.0] - 2026-07-08
 
 ### Added — CLOC12.172 PR1: print `RegExpLiteral` (`/pattern/flags`)

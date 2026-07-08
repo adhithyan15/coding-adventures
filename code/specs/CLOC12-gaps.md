@@ -2176,6 +2176,19 @@ folds. **Discovered lexer gap (separate item):** the splitter handles `/[/]/`
 — it stops the literal at the inner `/`. End-to-end `/[/]/` support is a lexer
 change, not a bridge concern.
 
+**PR3 (DONE).** `closure-emitter` 0.36.1 adds
+`tests/upstream/code_printer_regexp_test.rs` (the nineteenth CodePrinter port),
+isolating `emit_regexp` + the `PREC_PRIMARY` classification. 13 active `#[test]`s
+/ 0 `#[ignore]`, mirroring upstream's verbatim `Token.REGEXP` printing: a regex
+has exactly one spelling, so the delimiters and raw pattern/flags are written
+verbatim with no quote-choice or re-escaping. Covers pattern+flags round-trip,
+no-flags bare form, opaque pattern bodies (groups/alternation, character class,
+anchors+quantifiers, backreference, `/` inside a class, escaped delimiter),
+verbatim flags (full `dgimsuy` set + non-canonical order echoed unchanged), and
+the `PREC_PRIMARY` composition cases (paren-free member base `/re/.test(a)` /
+`/re/g.source`, bare call argument `f(/ab+c/gi,1)`). Emitter-tests-only. This
+completes the CLOC12.172 RegExpLiteral arc.
+
 ## CLOC12.171 — optional chaining `a?.b` / `a?.[k]` / `a?.()`: nodes + emit + passes (PR1)
 
 Optional chaining (ES2020) lets a member/call short-circuit to `undefined`
