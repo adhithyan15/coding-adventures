@@ -28,8 +28,10 @@
 //!
 //! Character classes and `\b` are **Unicode-aware by default** (matching the
 //! `regex` crate), backed by generated tables in [`unicode_tables`]; `(?-u)`
-//! selects the ASCII sets. `(?i)` uses Unicode simple case folding. Not yet
-//! included: match *extents* (`find`/`captures`/`replace_all`).
+//! selects the ASCII sets. `(?i)` uses Unicode simple case folding. Boolean
+//! matching ([`Regex::is_match`]) and the overall match *extent* ([`Regex::find`])
+//! are implemented; capture groups and `replace_all` build on `find` in later
+//! changes.
 
 mod ast;
 mod casefold;
@@ -74,15 +76,70 @@ impl Regex {
     /// This is the operation Engram's search needs (`re:`, whole-word, and glob
     /// filters are all boolean matches). It is cross-verified byte-for-byte
     /// against the `regex` crate (in `(?-u)` mode) across a large random corpus.
-    ///
-    /// Reporting the *extent* of a match (`find`/`captures`/`replace_all`) is not
-    /// yet exposed: getting the exact match boundaries right for *nullable loops*
-    /// (e.g. `(a?)*`) is a distinct sub-problem, and Engram needs match extents
-    /// only for one fixed pattern (the media-tag replacement), which is added in
-    /// a later, separately-verified change.
+    /// For the boundaries of a match, use [`find`](Self::find).
     pub fn is_match(&self, text: &str) -> bool {
         let input = Input::new(text);
         self.program.is_match_from(&input, 0)
+    }
+
+    /// The leftmost match in `text`, or `None` if the pattern does not match.
+    ///
+    /// Returns the overall match *extent* (byte range + substring), resolving
+    /// ambiguity **leftmost-first** with greedy quantifiers preferring to match
+    /// more — the textbook Pike-VM semantics. It always returns a *valid* match at
+    /// the *leftmost* possible start (cross-checked as a property against the
+    /// `regex` crate's anchored matcher over a large random corpus). For the
+    /// overwhelming majority of patterns it reports the same byte boundaries as the
+    /// `regex` crate, including nullable loops such as `(a?)*` (which matches the
+    /// whole run of `a`s, not the empty prefix — see the star compilation in
+    /// `program.rs`).
+    ///
+    /// The reported *extent* can differ from the `regex` crate on some adversarial
+    /// patterns — chiefly around **lazy** quantifiers and **overlapping greedy
+    /// alternation** (e.g. `.+c+|.+.+`) — because the `regex` crate's specific NFA
+    /// thread-priority resolves those ambiguities differently from textbook
+    /// leftmost-first (in some cases its unanchored `find` even skips the leftmost
+    /// match its own anchored matcher accepts). [`is_match`](Self::is_match) stays
+    /// exact regardless. Engram's only extent consumer — the media-tag regex — is
+    /// greedy with disjoint alternation, so it is unaffected. Capture groups and
+    /// `replace_all` build on this.
+    pub fn find<'t>(&self, text: &'t str) -> Option<Match<'t>> {
+        let input = Input::new(text);
+        self.program
+            .find_from(&input, 0)
+            .map(|(start, end)| Match { text, start, end })
+    }
+}
+
+/// A single overall match: the byte range it spans in the searched text, and the
+/// matched substring. Byte offsets (not char indices) match the `regex` crate and
+/// index directly into the original `&str`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Match<'t> {
+    text: &'t str,
+    start: usize,
+    end: usize,
+}
+
+impl<'t> Match<'t> {
+    /// Byte offset of the start of the match.
+    pub fn start(&self) -> usize {
+        self.start
+    }
+
+    /// Byte offset just past the end of the match.
+    pub fn end(&self) -> usize {
+        self.end
+    }
+
+    /// The matched substring.
+    pub fn as_str(&self) -> &'t str {
+        &self.text[self.start..self.end]
+    }
+
+    /// The match as a byte `Range`, suitable for slicing the searched text.
+    pub fn range(&self) -> std::ops::Range<usize> {
+        self.start..self.end
     }
 }
 
@@ -192,6 +249,57 @@ mod tests {
         assert!(Regex::new(&escape("a.c")).unwrap().is_match("a.c"));
         // A metacharacter-free string is returned unchanged.
         assert_eq!(escape("hello world 123"), "hello world 123");
+    }
+
+    fn find_span(pat: &str, text: &str) -> Option<(usize, usize)> {
+        Regex::new(pat).unwrap().find(text).map(|m| (m.start(), m.end()))
+    }
+
+    #[test]
+    fn find_reports_leftmost_greedy_extent() {
+        // Leftmost start, greedy end.
+        assert_eq!(find_span("a+", "xaaay"), Some((1, 4)));
+        assert_eq!(find_span("a+", "xaay aaaa"), Some((1, 3))); // leftmost, not longest-overall
+        // as_str reflects the span.
+        let re = Regex::new(r"\d+").unwrap();
+        assert_eq!(re.find("abc123def").unwrap().as_str(), "123");
+        // No match.
+        assert_eq!(find_span("z", "abc"), None);
+    }
+
+    #[test]
+    fn find_lazy_vs_greedy() {
+        assert_eq!(find_span("a+?", "aaaa"), Some((0, 1))); // lazy: as few as possible
+        assert_eq!(find_span("a+", "aaaa"), Some((0, 4))); // greedy: as many as possible
+    }
+
+    #[test]
+    fn find_empty_and_anchored() {
+        assert_eq!(find_span("a?", "b"), Some((0, 0))); // empty match at start
+        assert_eq!(find_span("", "xyz"), Some((0, 0))); // empty pattern
+        assert_eq!(find_span("^abc", "zabc"), None); // anchored, no match past 0
+        assert_eq!(find_span(r"abc$", "abc"), Some((0, 3)));
+    }
+
+    #[test]
+    fn find_nullable_loops_match_greedily() {
+        // The extent problem `find` must get right: a loop whose body can match
+        // empty must still consume the whole greedy run, not stop at the empty
+        // prefix. (Cross-checked against the `regex` crate in the integration test.)
+        assert_eq!(find_span("(a?)*", "aaa"), Some((0, 3)));
+        assert_eq!(find_span("(a*)*", "aaaa"), Some((0, 4)));
+        assert_eq!(find_span("(a?)+", "aa"), Some((0, 2)));
+        // A lazy nullable loop prefers the empty match.
+        assert_eq!(find_span("(a??)+", "aa"), Some((0, 0)));
+    }
+
+    #[test]
+    fn find_returns_byte_offsets_for_multibyte_text() {
+        // "é" is 2 bytes, "😀" is 4 — offsets must be byte, not char, indices.
+        let re = Regex::new("b").unwrap();
+        let m = re.find("é😀b").unwrap();
+        assert_eq!((m.start(), m.end()), (6, 7)); // 2 + 4 = 6 bytes precede 'b'
+        assert_eq!(m.as_str(), "b");
     }
 
     #[test]

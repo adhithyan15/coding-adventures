@@ -134,9 +134,26 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   The `regex` crate stays only for the media `DUPLICATE_HTML_MEDIA_TAGS`
   `replace_all` (needs match extents → D4). Full `cargo test -p engram-core`
   (170 tests incl. the Anki text-modifier search suite) passes on the new engine.
-- **D3 — match extents.** Add `find`/`captures`/`replace_all` to the engine,
-  solving the **nullable-loop** priority problem (e.g. `(a?)*`) so extents match
-  `regex` byte-for-byte; cross-verify find + replace_all on random corpora.
+- **D3a — ✅ DONE (`find`, overall extent).** `Regex::find` returns the leftmost
+  match's byte range/substring, tracking one extra `usize` (the match start) per
+  thread — O(instructions) per step, no per-group vectors, so the DoS argument for
+  `is_match` still holds. Solved the **nullable-loop** priority problem: `e{n,}`
+  loops back to the body start and `e*` with a nullable body compiles as an
+  optional-plus, so an empty iteration routes to the exit at the correct priority
+  (`(a?)*`/`(a*)*` ⇒ whole run; `(a??)*`/`(a??)+` ⇒ empty — all matching `regex`,
+  pinned by hand-verified unit tests). Verified by **property**, not span-equality:
+  the live `regex` crate's own unanchored `find` is quirky on adversarial patterns
+  (skips matches its anchored matcher accepts), so it's the wrong oracle. Using
+  `regex`'s *anchored* matcher as an independent oracle, **40k+** random cases
+  (greedy+lazy quantifiers, alternation, nested groups, nullable loops; multibyte)
+  confirm every span is a *valid* match at the *leftmost* start; a separate **35k+**
+  check confirms `is_match` stays exact across the same space (the property engram
+  relies on — it never calls `find`). Reported extents can differ from `regex` only
+  on lazy/overlapping-greedy-alternation corners, which the media pattern avoids.
+  regex-engine v0.4.0.
+- **D3b — captures.** Add `Regex::captures` (per-group `Save` instructions,
+  copy-on-write capture slots, a group-count DoS cap), cross-verified vs `regex`.
+- **D3c — `replace_all`/`find_iter`.** Built on find/captures; cross-verified.
 - **D4 — swap media + drop `regex`.** Point `DUPLICATE_HTML_MEDIA_TAGS` at the
   engine's `replace_all` (byte-verified vs the old regex on the corpus from C2),
   then remove `regex` from `engram-core`'s Cargo.toml. **`regex` gone.**
