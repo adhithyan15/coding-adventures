@@ -306,9 +306,18 @@ def test_mul_bool_count_is_not_treated_as_a_repeat() -> None:
     assert sir.mul("ab", True) == "ab"
 
 
-def test_truncating_division() -> None:
+def test_integer_division_floors_and_float_true_divides() -> None:
+    # Ruby ``Integer#/`` floors toward −∞ (SIR21 §E3 DivOp::Floor) — every sign
+    # combination, matching the Rust oracle exactly.
     assert sir.div(7, 2) == 3
-    assert sir.div(-7, 2) == -3  # truncates toward zero, not floor
+    assert sir.div(-7, 2) == -4  # floors toward −∞, NOT truncate-to-zero (−3)
+    assert sir.div(7, -2) == -4
+    assert sir.div(-7, -2) == 3
+    assert sir.div(-6, 2) == -3  # exact division: floor == trunc
+    # ``Float#/`` true-divides — the old ``int(a / b)`` wrongly floored this to 3.
+    assert sir.div(7.0, 2) == 3.5
+    assert sir.div(7, 2.0) == 3.5
+    # Variadic fold + identity element are unchanged.
     assert sir.div() == 0
     assert sir.div(9, 3, 1) == 3
 

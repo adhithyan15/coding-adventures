@@ -2,6 +2,27 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.11.0] - Division frontier: Python arm closed (SIR21 §E3)
+
+### Added — `python_division_is_ruby_floor_faithful` (non-ignored)
+
+The Python backend's `Integer#/` now floors toward −∞ (fixed in
+`coding-adventures-sir-runtime-core` 0.1.9), so it reproduces Ruby's `/` on every
+sign combination. This new **non-ignored** test in `tests/division.rs` is the
+live regression guard: it emits `puts(lhs / rhs)`, runs it through `python3`, and
+asserts the output equals the oracle's `DivOp::Floor` — it would go red the day
+the Python `div` helper is reverted to truncation. Runs whenever `python3` and
+the `sir-runtime-*` packages are present; inert (not falsely green) otherwise.
+
+### Changed
+
+The all-backend `division_matches_ruby_floor_on_every_backend` stays `#[ignore]`d
+— Python passes now, but JavaScript still true-divides and Go/Rust crash on the
+negative path, so the *every-backend* promise isn't met yet. Its `#[ignore]`
+message and the module docs were updated to reflect that the Python arm is
+closed. The frontier flips to a passing assertion once the remaining three
+backends are made floor-faithful.
+
 ## [0.10.0] - Division frontier captured (oracle-judged), §E3
 
 ### Added — `tests/division.rs`

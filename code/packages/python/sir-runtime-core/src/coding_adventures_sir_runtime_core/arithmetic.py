@@ -6,9 +6,11 @@ runtime helper rather than a bare ``a + b``:
 1. **Variadic** — ``add`` / ``sub`` / ``mul`` fold over any number of
    arguments (``add()`` is ``0``, ``mul()`` is ``1``), matching the SIR
    builtin contract shared with the Lisp/Twig frontends.
-2. **Truncating integer division** — ``div`` truncates toward zero
-   (``div(7, 2) == 3``, ``div(-7, 2) == -3``) to match SIR semantics,
-   where Python's ``/`` would yield a float.
+2. **Ruby's integer-vs-float division split** — ``div`` *floors*
+   ``Integer / Integer`` toward −∞ (``div(7, 2) == 3``, ``div(-7, 2) == -4``)
+   and *true-divides* when either operand is a float (``div(7.0, 2) == 3.5``),
+   matching Ruby's polymorphic ``/`` (SIR21 §E3) rather than Python's uniform
+   float ``/``.
 
 Comparisons (``lt`` / ``gt``) are thin wrappers kept here so the dispatch
 table can expose them by SIR name.
@@ -124,8 +126,26 @@ def mul(*args: Any) -> Any:
 
 
 def div(*args: Any) -> Any:
-    """Variadic quotient with **truncating integer** division (toward
-    zero), matching SIR semantics rather than Python's float ``/``.
+    """Variadic quotient with Ruby's **integer-vs-float** division split
+    (SIR21 §E3), rather than one overloaded runtime divide.
+
+    Ruby's ``/`` is polymorphic on the operand *types*, and SIR keeps that
+    distinction honest instead of collapsing it:
+
+    * **``Integer / Integer`` floors toward −∞** — ``7 / 2 == 3`` but
+      ``-7 / 2 == -4`` (not ``-3``).  That is precisely Python's ``//`` on two
+      ``int`` operands, which also rounds toward −∞, so we dispatch to it
+      directly.  This is the reference op
+      :class:`~coding_adventures_sir_runtime_core` shares with the Rust oracle's
+      ``DivOp::Floor``.
+    * **``Float / _`` (or ``_ / Float``) true-divides** — ``7.0 / 2 == 3.5`` —
+      which is Python's ``/``.
+
+    The old one-liner ``int(a / b)`` got *both* wrong: it truncated integer
+    division toward zero (``-7 / 2`` gave ``-3``) *and* it silently floored
+    float division to an ``int`` (``7.0 / 2`` gave ``3``).  The explicit
+    ``isinstance`` dispatch below — never reflection, matching the ``add`` /
+    ``mul`` style — fixes both.
 
     **Division by zero is a *typed* error (T1).**  Ruby's ``1 / 0`` (and,
     per the SIR error spec, ``1.0 / 0`` too) raises ``ZeroDivisionError`` with
@@ -152,7 +172,19 @@ def div(*args: Any) -> Any:
     acc = args[0]
     for a in args[1:]:
         try:
-            acc = int(acc / a)
+            # Ruby ``Integer#/`` floors; ``Float#/`` true-divides.  ``bool`` is
+            # an ``int`` subclass but is never a numeric operand here, so it is
+            # excluded from the integer path (a stray bool falls to true
+            # division, exactly as a bare Python ``/`` would coerce it).
+            if (
+                isinstance(acc, int)
+                and not isinstance(acc, bool)
+                and isinstance(a, int)
+                and not isinstance(a, bool)
+            ):
+                acc = acc // a  # floor toward −∞ (Ruby Integer#/, DivOp::Floor)
+            else:
+                acc = acc / a  # true division (Ruby Float#/)
         except ZeroDivisionError:
             # Re-raise as the typed SIR error via the shared entry point.  The
             # native ``ZeroDivisionError`` remains chained as ``__context__``;
