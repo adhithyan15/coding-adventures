@@ -346,28 +346,32 @@ const PROGRAMS: &[Prog] = &[
     // the parameter as `str`, so `string-length s` lowers to `str_len` instead of
     // the dynamic builtin path.  NativeAot uses the LANG-STR-RT runtime: the
     // caller builds a length-prefixed `[i64 len][bytes...]` heap buffer and the
-    // callee emits `field_load s, 0 → len` to read it.  Llvm and Wasm are still
-    // excluded: they use a separate `str_lens` metadata map without a runtime-load
-    // fallback (unrelated gap, not addressed here).
+    // callee emits `field_load s, 0 → len` to read it.  Wasm now runs too: the
+    // caller promotes the `str_const` literal to a `[i32 len][bytes]` runtime block
+    // before passing it, so the callee's runtime `str_len` reads the header (see
+    // iir-to-wasm `collect_runtime_str_vars`).  Llvm is still excluded: its
+    // `lower_str_len` errors on a parameter not seeded into `str_values`/`str_lens`
+    // (a compile-time-only map) — the LLVM analogue of this promotion is a follow-up.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
     // call gives the compiler enough static evidence to stamp `s` as `str`
     // without creating refinement annotations.  NativeAot now uses the
     // LANG-STR-RT runtime (`field_load s, 0 → len`) — see cell above.
+    // Wasm now runs via the `str_const`→runtime-block call-argument promotion.
     // Llvm excluded: same `str_lens` map limitation — function parameters not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
@@ -405,26 +409,28 @@ const PROGRAMS: &[Prog] = &[
     // named actual stays in `main` as a typed `str` register.  NativeAot: the
     // global string `s` is built as a LANG-STR-RT buffer in `main`; the callee
     // reads the length via `field_load x, 0 → len`.
+    // Wasm now runs via the `str_const`→runtime-block call-argument promotion.
     // Llvm excluded: same `str_lens` map limitation — callee parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a lexical string local in `main`. The
     // `let` binding keeps `s` as a typed `str` register at the call site.
     // NativeAot: let-bound string is a LANG-STR-RT buffer; callee reads length
     // via `field_load x, 0 → len`.
+    // Wasm now runs via the `str_const`→runtime-block call-argument promotion.
     // Llvm excluded: same `str_lens` map limitation — callee parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a derived sequential `let*` string local

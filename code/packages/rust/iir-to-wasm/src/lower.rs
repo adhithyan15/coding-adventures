@@ -240,6 +240,17 @@ type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 /// exactly right there.
 fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    // `str_const` destinations, and str vars handed to a callee as a call argument.
+    // A single-block `str_const` literal normally takes the folded fast path: its
+    // handle is the RAW-byte data offset and its length is known only at compile
+    // time (via the `string_literals` table).  But when that literal is passed to a
+    // FUNCTION, the callee has no compile-time length for the parameter — its
+    // `str_len`/`str_concat`/`str_slice`/`str_eq` must read a length-prefixed
+    // `[i32 len][bytes]` block header at run time.  So a `str_const` literal used as
+    // a call argument must be promoted to a runtime-block handle exactly like a
+    // control-flow-selected string, even though it is assigned in only one block.
+    let mut str_const_dests: HashSet<&str> = HashSet::new();
+    let mut call_arg_vars: HashSet<&str> = HashSet::new();
     let mut block: usize = 0;
     for instr in &fn_.instructions {
         let op = instr.op.as_str();
@@ -251,15 +262,35 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
                 str_blocks.entry(dest.as_str()).or_default().insert(block);
             }
         }
+        if op == "str_const" {
+            if let Some(dest) = &instr.dest {
+                str_const_dests.insert(dest.as_str());
+            }
+        }
+        if op == "call" {
+            // srcs[0] is the callee name; srcs[1..] are the arguments.
+            for src in instr.srcs.iter().skip(1) {
+                if let Operand::Var(v) = src {
+                    call_arg_vars.insert(v.as_str());
+                }
+            }
+        }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
         }
     }
-    str_blocks
-        .into_iter()
+    let mut promoted: FunctionRuntimeStrVars = str_blocks
+        .iter()
         .filter(|(_, blocks)| blocks.len() >= 2)
         .map(|(name, _)| name.to_string())
-        .collect()
+        .collect();
+    // Promote a `str_const` literal passed across a function boundary (see above).
+    for v in &call_arg_vars {
+        if str_const_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    promoted
 }
 
 // ---------------------------------------------------------------------------

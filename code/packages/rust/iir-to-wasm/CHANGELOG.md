@@ -1,5 +1,22 @@
 # Changelog — iir-to-wasm
 
+## [0.33.0] — 2026-07-07 (LANG-FULL tail: promote a `str_const` literal passed across a call)
+
+Fixes a wrong-value bug where a string literal handed to a *callee* was read with a
+bogus length. On wasm a single-block `str_const` literal takes the folded fast path:
+its handle is the RAW-byte data offset and its length is compile-time metadata. But a
+callee has no compile-time length for its string parameter — its `str_len`/`str_concat`
+/`str_slice`/`str_eq` read a length-prefixed `[i32 len][bytes]` block header at run
+time. Passing the raw-byte handle made `str_len` read data bytes as a length (e.g.
+`(strlen "HELLO")` returned 72 = `'H'`).
+
+- `collect_runtime_str_vars` now also promotes a `str_const` destination that appears as
+  a **call argument** (not only strings assigned in >1 basic block). A promoted literal
+  gets a real `[i32 len][bytes]` runtime block whose handle points at the length prefix,
+  so the callee reads the correct length. Single-block literals *not* passed to a callee
+  keep the folded fast path unchanged.
+- Test: `str_literal_call_arg.rs` — `strlen("HELLO")` across a call returns 5.
+
 ## [0.32.0] — 2026-07-07 (LANG-FULL E4-dyn: runtime `str_concat` in linear memory)
 
 `str_concat` gains a runtime-operand path (it was literal-fold-only). When `dest`
