@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 107 \u2014 contact-lens fit index from four stated quantities (a NEW panel: optometry / contact-lens fitting). From a corneal reading minus a base curve for the sagittal gap, a lens diameter minus a pupil diameter for the coverage margin, and the sagittal gap divided by the coverage margin, compute the fit index ((corneal_reading-base_curve)/(lens_diameter-pupil_diameter)), the sagittal gap (corneal_reading-base_curve), or the coverage margin (lens_diameter-pupil_diameter). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A DIFFERENCE OVER A DIFFERENCE (a-b)/(c-d) (subtract b from a, subtract d from c, divide the numerator difference by the denominator difference, so (a-b)/(c-d) = ((a-b)/(c-d)); the FIRST time the ladder divides a bare DIFFERENCE by a bare DIFFERENCE \u2014 COMPLETING the difference-denominator family: rung-105 (a+b)/(c-d) sum/difference, rung-106 a*b/(c-d) product/difference, rung-107 difference/difference; rung-104 (a-b)/(c*d) divided a difference by a product, rung-37 (a+b)/(c+d) a sum by a sum) \u2014 and the harness matches the scalar to the printed options. The fit index is a dimensionless ratio, framed as an INDEX so the value stays honest. Contamination-safe: every figure is built only from the four observed quantities via - and / \u2014 no constant leaks, and neither the sagittal gap, the coverage margin, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the base curve is divided before subtracting (a-b/(c-d), a wrong grouping) and summing the denominator pair that should be a difference ((a-b)/(c+d), a wrong pairing). The core confusion tested is that (a-b)/(c-d) is ((a-b)/(c-d)), not a-b/(c-d) and not (a-b)/(c+d). Each table guarantees the corneal reading exceeds the base curve and the lens diameter exceeds the pupil diameter with a comfortable margin (both differences strictly positive, fit index finite), the two differences are unequal (numerator and denominator readouts distinct), and the swapped denominator is a sum of quantities >= 2 (never zero, no subtraction), so every figure stays strictly positive and well-defined.",
+  "items": [
+    {
+      "id": "r107clfit-01",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 8 minus a base curve of 2, divided by a lens diameter of 5 minus a pupil diameter of 3. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(8)\nobserve base_curve(2)\nobserve lens_diameter(5)\nobserve pupil_diameter(3)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r107clfit-02",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 8 minus a base curve of 2, divided by a lens diameter of 5 minus a pupil diameter of 3. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(8)\nobserve base_curve(2)\nobserve lens_diameter(5)\nobserve pupil_diameter(3)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r107clfit-03",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 8 minus a base curve of 2, divided by a lens diameter of 5 minus a pupil diameter of 3. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(8)\nobserve base_curve(2)\nobserve lens_diameter(5)\nobserve pupil_diameter(3)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r107clfit-04",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 10 minus a base curve of 3, divided by a lens diameter of 7 minus a pupil diameter of 4. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(10)\nobserve base_curve(3)\nobserve lens_diameter(7)\nobserve pupil_diameter(4)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6363636363636364,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r107clfit-05",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 10 minus a base curve of 3, divided by a lens diameter of 7 minus a pupil diameter of 4. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(10)\nobserve base_curve(3)\nobserve lens_diameter(7)\nobserve pupil_diameter(4)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6363636363636364,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r107clfit-06",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 10 minus a base curve of 3, divided by a lens diameter of 7 minus a pupil diameter of 4. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(10)\nobserve base_curve(3)\nobserve lens_diameter(7)\nobserve pupil_diameter(4)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6363636363636364,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r107clfit-07",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 12 minus a base curve of 4, divided by a lens diameter of 8 minus a pupil diameter of 3. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(12)\nobserve base_curve(4)\nobserve lens_diameter(8)\nobserve pupil_diameter(3)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7272727272727273,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r107clfit-08",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 12 minus a base curve of 4, divided by a lens diameter of 8 minus a pupil diameter of 3. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(12)\nobserve base_curve(4)\nobserve lens_diameter(8)\nobserve pupil_diameter(3)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7272727272727273,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r107clfit-09",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 12 minus a base curve of 4, divided by a lens diameter of 8 minus a pupil diameter of 3. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(12)\nobserve base_curve(4)\nobserve lens_diameter(8)\nobserve pupil_diameter(3)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7272727272727273,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r107clfit-10",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 13 minus a base curve of 4, divided by a lens diameter of 11 minus a pupil diameter of 5. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(13)\nobserve base_curve(4)\nobserve lens_diameter(11)\nobserve pupil_diameter(5)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r107clfit-11",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 13 minus a base curve of 4, divided by a lens diameter of 11 minus a pupil diameter of 5. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(13)\nobserve base_curve(4)\nobserve lens_diameter(11)\nobserve pupil_diameter(5)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r107clfit-12",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 13 minus a base curve of 4, divided by a lens diameter of 11 minus a pupil diameter of 5. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(13)\nobserve base_curve(4)\nobserve lens_diameter(11)\nobserve pupil_diameter(5)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r107clfit-13",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 14 minus a base curve of 4, divided by a lens diameter of 9 minus a pupil diameter of 2. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(14)\nobserve base_curve(4)\nobserve lens_diameter(9)\nobserve pupil_diameter(2)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r107clfit-14",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 14 minus a base curve of 4, divided by a lens diameter of 9 minus a pupil diameter of 2. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(14)\nobserve base_curve(4)\nobserve lens_diameter(9)\nobserve pupil_diameter(2)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.428571428571429,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r107clfit-15",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 14 minus a base curve of 4, divided by a lens diameter of 9 minus a pupil diameter of 2. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(14)\nobserve base_curve(4)\nobserve lens_diameter(9)\nobserve pupil_diameter(2)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.428571428571429,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r107clfit-16",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 16 minus a base curve of 5, divided by a lens diameter of 12 minus a pupil diameter of 4. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(16)\nobserve base_curve(5)\nobserve lens_diameter(12)\nobserve pupil_diameter(4)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r107clfit-17",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 16 minus a base curve of 5, divided by a lens diameter of 12 minus a pupil diameter of 4. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(16)\nobserve base_curve(5)\nobserve lens_diameter(12)\nobserve pupil_diameter(4)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r107clfit-18",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 16 minus a base curve of 5, divided by a lens diameter of 12 minus a pupil diameter of 4. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(16)\nobserve base_curve(5)\nobserve lens_diameter(12)\nobserve pupil_diameter(4)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r107clfit-19",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 15 minus a base curve of 3, divided by a lens diameter of 13 minus a pupil diameter of 4. What is the fit index (the sagittal gap divided by the coverage margin)?",
+      "program": "observe corneal_reading(15)\nobserve base_curve(3)\nobserve lens_diameter(13)\nobserve pupil_diameter(4)\nlet answer = (corneal_reading - base_curve) / (lens_diameter - pupil_diameter)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7058823529411765,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r107clfit-20",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 15 minus a base curve of 3, divided by a lens diameter of 13 minus a pupil diameter of 4. What is the the sagittal gap (the corneal reading minus the base curve, the numerator divided by the coverage margin)?",
+      "program": "observe corneal_reading(15)\nobserve base_curve(3)\nobserve lens_diameter(13)\nobserve pupil_diameter(4)\nlet answer = corneal_reading - base_curve\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14.666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.7058823529411765,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r107clfit-21",
+      "qtype": "clfit_fit_index",
+      "stem": "A contact-lens fitting records a corneal reading of 15 minus a base curve of 3, divided by a lens diameter of 13 minus a pupil diameter of 4. What is the the coverage margin (the lens diameter minus the pupil diameter, the denominator the sagittal gap is divided by)?",
+      "program": "observe corneal_reading(15)\nobserve base_curve(3)\nobserve lens_diameter(13)\nobserve pupil_diameter(4)\nlet answer = lens_diameter - pupil_diameter\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7058823529411765,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

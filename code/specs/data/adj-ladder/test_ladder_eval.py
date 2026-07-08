@@ -144,6 +144,7 @@ SELF_CONTAINED_RUNGS = (
     "rung104_coag_mixing",
     "rung105_sleep_study",
     "rung106_exercise_load",
+    "rung107_contact_lens",
 )
 
 
