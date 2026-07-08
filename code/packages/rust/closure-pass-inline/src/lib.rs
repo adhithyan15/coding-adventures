@@ -129,7 +129,8 @@ use coding_adventures_javascript_ast::statement::{ReturnStatement, TaggedStateme
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentExpression, AssignmentOperator, AssignmentTarget, BindingTarget,
     BlockStatement,
-    CallExpression, Declaration, Expression, ExpressionStatement, ForInit, FunctionDeclaration,
+    CallExpression, ClassMember, Declaration, Expression, ExpressionStatement, ForInit,
+    FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, ObjectMember, PropertyKey,
     Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
@@ -508,6 +509,23 @@ fn expr_node_count(expr: &Expression) -> usize {
         // a candidate whose value embeds a function from looking
         // deceptively cheap.
         Expression::FunctionExpression(fe) => fe.params.len() + fe.body.body.len(),
+        // A class *value* is heavy: weigh its `extends` operand plus, for each
+        // method, its params and one unit per body statement — the same size
+        // heuristic the `FunctionExpression` arm applies to a function value.
+        // This is only a budget heuristic (never a correctness input); counting
+        // the method bodies keeps a candidate embedding a class from looking
+        // deceptively cheap.
+        Expression::ClassExpression(ce) => {
+            ce.super_class.as_ref().map_or(0, |s| expr_node_count(s))
+                + ce.body
+                    .iter()
+                    .map(|m| match m {
+                        ClassMember::Method(md) => {
+                            md.value.params.len() + md.value.body.body.len()
+                        }
+                    })
+                    .sum::<usize>()
+        }
         // Same size heuristic for an arrow: params plus its body weight —
         // one unit per statement for a block, or the node count of the
         // concise expression.
@@ -887,6 +905,36 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
         }
+        // A class *value* binds its own name (if named) and each method
+        // value's name (if named) and params at their boundaries; record
+        // them so an inline never captures or collides with them — mirroring
+        // the `FunctionExpression` arm, which records boundary bindings but
+        // does NOT recurse into the (nested-scope) function bodies. The
+        // `extends` operand, however, is evaluated in the ENCLOSING scope
+        // (like a callee), so recurse into it as this walk does for other
+        // operand-position sub-expressions. A method KEY is a property name,
+        // not a binding.
+        Expression::ClassExpression(ce) => {
+            if let Some(id) = &ce.id {
+                out.insert(id.name.clone());
+            }
+            if let Some(sup) = &ce.super_class {
+                collect_binding_idents_expr(sup, out);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if let Some(id) = &m.value.id {
+                            out.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            out.insert(id.name.clone());
+                        }
+                    }
+                }
+            }
+        }
         // An arrow binds its params at its boundary (it has no name);
         // record them so an inline never captures or collides with them.
         Expression::ArrowFunctionExpression(ae) => {
@@ -1217,6 +1265,26 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         Expression::FunctionExpression(fe) => {
             for s in &fe.body.body {
                 tally_stmt(s, cand, t);
+            }
+        }
+        // A use of the candidate inside a class is still a use: the `extends`
+        // operand is an ordinary use position, and a closure over the
+        // candidate inside a method body counts too — mirror the
+        // `FunctionExpression` arm for each method value's body.
+        // Over-counting under method-param shadowing only makes the pass
+        // decline to inline, never wrong. A method KEY is a property name.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &ce.super_class {
+                tally_expr(sup, cand, t);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            tally_stmt(s, cand, t);
+                        }
+                    }
+                }
             }
         }
         // A closure over the candidate inside an arrow body is still a
@@ -1573,6 +1641,24 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_stmt(s, cand);
             }
         }
+        // Inline candidate calls inside a class too: the `extends` operand is
+        // an ordinary sub-expression, and each method body is walked like a
+        // `FunctionExpression` body. A method KEY is a property name, not a
+        // call site.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                changed |= inline_in_expr(sup, cand);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            changed |= inline_in_stmt(s, cand);
+                        }
+                    }
+                }
+            }
+        }
         // Inline candidate calls inside an arrow body too, mirroring the
         // function arm.
         Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
@@ -1760,6 +1846,40 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             }
             for s in &mut fe.body.body {
                 substitute_in_stmt(s, &inner);
+            }
+        }
+        // Substitute param→arg inside a class *value*. The `extends` operand
+        // is evaluated in the ENCLOSING scope, so substitute through it with
+        // the outer `map`. Each method body is a nested scope where the
+        // class's own name, the method value's own name, and the method
+        // params SHADOW a substituted parameter of the same spelling — remove
+        // those keys before recursing, exactly as the `FunctionExpression`
+        // arm does. A method KEY is a property name, never a substitutable
+        // identifier.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                substitute(sup, map);
+            }
+            let mut class_inner = map.clone();
+            if let Some(id) = &ce.id {
+                class_inner.remove(&id.name);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            inner.remove(&id.name);
+                        }
+                        for s in &mut m.value.body.body {
+                            substitute_in_stmt(s, &inner);
+                        }
+                    }
+                }
             }
         }
         // An arrow's params SHADOW the substituted parameter of the same
@@ -2182,6 +2302,26 @@ fn expr_collect_mutated_params(
         Expression::FunctionExpression(fe) => {
             for s in &fe.body.body {
                 stmt_collect_mutated_params(s, params, out);
+            }
+        }
+        // A closure inside a class can mutate an outer param too: the
+        // `extends` operand is an ordinary sub-expression, and each method
+        // body is walked like a `FunctionExpression` body. Over-detection
+        // only makes the pass decline to inline (a mutated param is not
+        // substituted). A method KEY is a property name, never an assignment
+        // target.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &ce.super_class {
+                expr_collect_mutated_params(sup, params, out);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            stmt_collect_mutated_params(s, params, out);
+                        }
+                    }
+                }
             }
         }
         // A closure inside an arrow body mutating an outer param counts
@@ -3699,6 +3839,39 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
             for s in &mut fe.body.body {
                 rename_in_stmt(s, &inner);
+            }
+        }
+        // Alpha-rename uses inside a class *value*. The `extends` operand is
+        // evaluated in the ENCLOSING scope, so rename it with the outer `map`.
+        // Each method body is a nested scope where the class's own name, the
+        // method value's own name, and the method params SHADOW an outer name
+        // being renamed — drop those keys before recursing so a shadowed use
+        // keeps its (inner) name, exactly as the `FunctionExpression` arm
+        // does. A method KEY is a property name, never a renamed use.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                rename_in_expr(sup, map);
+            }
+            let mut class_inner = map.clone();
+            if let Some(id) = &ce.id {
+                class_inner.remove(&id.name);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            inner.remove(&id.name);
+                        }
+                        for s in &mut m.value.body.body {
+                            rename_in_stmt(s, &inner);
+                        }
+                    }
+                }
             }
         }
         // An arrow's params SHADOW any outer name being alpha-renamed —

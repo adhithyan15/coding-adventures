@@ -72,8 +72,8 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam,
-    ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
+    ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
+    FunctionParam, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — empty. Global renaming is correct on its
@@ -744,6 +744,41 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_stmt(s, out);
             }
         }
+        // A class *value* contributes: its optional class name, the idents in
+        // the `extends` operand, and — for each method — the method value's
+        // own name (if any), its params, and its body identifiers. Recording
+        // them all keeps a renamed global from colliding with any of them,
+        // exactly as the `FunctionExpression` arm does for a function value.
+        // An identifier method KEY is a property name (like an object-literal
+        // key), recorded here for collision-avoidance the same way the
+        // `ObjectExpression` arm records `PropertyKey::Identifier`.
+        Expression::ClassExpression(ce) => {
+            if let Some(id) = &ce.id {
+                out.insert(id.name.clone());
+            }
+            if let Some(sup) = &ce.super_class {
+                collect_all_idents_expr(sup, out);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if let PropertyKey::Identifier(id) = &m.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let Some(id) = &m.value.id {
+                            out.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            out.insert(id.name.clone());
+                        }
+                        for s in &m.value.body.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                }
+            }
+        }
         // An arrow value contributes its params and body identifiers (it
         // has no name), so a renamed global never collides with them.
         Expression::ArrowFunctionExpression(ae) => {
@@ -1105,6 +1140,43 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
             for s in &mut fe.body.body {
                 rename_apply_stmt(s, &inner);
+            }
+        }
+        // A class expression. The `extends` operand is an ordinary
+        // value-position expression at the class's OWN scope, so rename it
+        // with the outer `map`. Each method's function *value* is its own
+        // scope: like the `FunctionExpression` arm, clone the map and remove
+        // the LOCAL bindings that shadow a same-spelled global — the class's
+        // own name (a named class binds its name inside its body), the
+        // method value's own name (if any), and the method params — before
+        // recursing into the method body, so genuine global uses are renamed
+        // while shadowed uses are left untouched. A method KEY is a property
+        // name, NOT a variable use, so it is never renamed.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                rename_apply_expr(sup, map);
+            }
+            // Names bound for the whole class body (the class's own name).
+            let mut class_inner = map.clone();
+            if let Some(id) = &ce.id {
+                class_inner.remove(&id.name);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            inner.remove(&id.name);
+                        }
+                        for s in &mut m.value.body.body {
+                            rename_apply_stmt(s, &inner);
+                        }
+                    }
+                }
             }
         }
         // An arrow's params are LOCAL bindings that shadow any global of

@@ -83,8 +83,8 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, Declaration, Expression, ForInit, ObjectMember, Program, ProgramItem,
-    PropertyKey, Statement,
+    ArrowBody, AssignmentTarget, ClassMember, Declaration, Expression, ForInit, ObjectMember,
+    Program, ProgramItem, PropertyKey, Statement,
 };
 
 /// `Pass::depends_on` value — empty. Property renaming is correct
@@ -1260,6 +1260,58 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
                 classify_stmt(s, cls, &mut nested);
             }
         }
+        // A class expression. Two namespaces meet here:
+        //
+        //   * Each method's KEY *defines* a property on the class/prototype,
+        //     so it classifies exactly like an object-literal key (the
+        //     `ObjectExpression` arm above): an unquoted `foo() {}` is a
+        //     renameable dotted property (`see_dotted`) that must move in
+        //     lock-step with any `c.foo` access, while a quoted `"foo"() {}`
+        //     DISABLES renaming of `foo` (`see_quoted`).
+        //   * Each method's VALUE body is a function scope, walked for nested
+        //     property accesses exactly like the `FunctionExpression` arm
+        //     (a quoted `o["bar"]` inside a method body must still disable
+        //     `bar`). The method params/self-name are variable bindings, not
+        //     property names.
+        //
+        // The `extends` operand is an ordinary expression — recurse into it.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &ce.super_class {
+                classify_expr(sup, cls);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if !m.computed {
+                            match &m.key {
+                                // `constructor` is a class-semantic keyword-as-key,
+                                // NOT an ordinary property: renaming it would turn
+                                // the constructor into a plain prototype method and
+                                // the class would silently get an implicit ctor —
+                                // `new C(x)` would stop initialising (miscompile).
+                                // Pin it via the same channel as a quoted key so it
+                                // is never eligible for renaming anywhere.
+                                PropertyKey::Identifier(id) if id.name == "constructor" => {
+                                    cls.see_quoted("constructor")
+                                }
+                                PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
+                                PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
+                                _ => {}
+                            }
+                        } else if let PropertyKey::Expression(e) = &m.key {
+                            // A computed key `[expr]` is a dynamic access — no
+                            // static name recorded, but recurse for nested
+                            // property accesses inside the key expression.
+                            classify_expr(e, cls);
+                        }
+                        let mut nested = 0u32;
+                        for s in &m.value.body.body {
+                            classify_stmt(s, cls, &mut nested);
+                        }
+                    }
+                }
+            }
+        }
         // Classify property accesses inside an arrow-value's body too —
         // a quoted `o["foo"]` written there must still disable renaming
         // of `foo`. Params are variable names, never property names, so
@@ -1564,6 +1616,42 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::FunctionExpression(fe) => {
             for s in &mut fe.body.body {
                 rewrite_stmt(s, map);
+            }
+        }
+        // Rewrite a class expression, the mirror of classifying it above: a
+        // renameable unquoted method KEY is rewritten through `map` exactly
+        // like an object-literal identifier key (a quoted key is never in
+        // `map`, so it is left alone); each method VALUE body is walked for
+        // nested property accesses like a `FunctionExpression` body; and the
+        // `extends` operand recurses as an ordinary expression.
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &mut ce.super_class {
+                rewrite_expr(sup, map);
+            }
+            for member in &mut ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if m.computed {
+                            if let PropertyKey::Expression(e) = &mut m.key {
+                                rewrite_expr(e, map);
+                            }
+                        } else if let PropertyKey::Identifier(id) = &mut m.key {
+                            // Never rewrite a `constructor` key (see classify:
+                            // it is `see_quoted`-pinned, so it is not in `map`
+                            // anyway — this guard is belt-and-braces against a
+                            // future map that might contain it, since renaming
+                            // it is a construction-semantics miscompile).
+                            if id.name != "constructor" {
+                                if let Some(new) = map.get(&id.name) {
+                                    id.name = new.clone();
+                                }
+                            }
+                        }
+                        for s in &mut m.value.body.body {
+                            rewrite_stmt(s, map);
+                        }
+                    }
+                }
             }
         }
         // Rewrite property accesses inside an arrow-value's body, the

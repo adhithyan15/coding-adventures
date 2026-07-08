@@ -2249,14 +2249,28 @@ found during implementation:**
    also tags `PREC_UNARY`, and is added to `emit_expression_statement`'s
    leading-token wrap set (a statement-position `class` parses as a class
    *declaration*, like `function`/`{`).
-2. **Only two crates have an exhaustive `Expression` match.** The plan said to
-   add an arm to "every pass"; in fact only `closure-emitter` (dispatch) and
-   `closure-pass-constant-fold` (`fold_expression`) match `Expression`
-   exhaustively. The other eight passes route unmatched expression kinds through
-   a catch-all, so a `ClassExpression` passes through them unchanged — safe and
-   conservative, and unreachable until the PR2 bridge produces the node anyway.
-   Optimisation *inside* class method bodies (scope/rename/inline) is deferred to
-   land with, or after, PR2 when it becomes reachable and testable end-to-end.
+2. **Most pass crates DO match `Expression` exhaustively and each needed a
+   `ClassExpression` arm.** (An earlier draft of this note wrongly said "only
+   two crates" — that conclusion came from a flawed local check: `grep -c
+   "test result: FAILED"` returns `0` for a crate that failed to *compile*, so a
+   non-exhaustive-match compile error read as a pass. The per-crate CI build-tool
+   caught it; see lessons.md.) In fact `closure-emitter`, `closure-pass-constant-fold`,
+   `closure-scope-analyzer`, `closure-pass-dce`, `closure-pass-fold-control-flow`,
+   `closure-pass-inline-variables`, `closure-pass-inline`, `closure-pass-rename`,
+   `closure-pass-rename-globals`, and `closure-pass-rename-properties` all match
+   `Expression` exhaustively (several at 2+ sites, some over `&mut Expression`),
+   and each got a `ClassExpression` arm **mirroring its `FunctionExpression`
+   handling** — recurse into the `extends` operand (a normal expression) and each
+   method’s `value` (a `FunctionExpression`, walked as its own function scope).
+   Variable-renaming passes leave method *keys* untouched (a method key is a
+   property name, not a variable); the property-renaming pass treats method keys
+   as renameable property names, mirroring object-literal keys. Rebuild/transform
+   arms delegate to an `#[inline(never)]` helper (frame-size DoS lesson). Only
+   `closure-pass-treeshake` / `-remove-unused-vars` / `-collapse-properties` route
+   through catch-alls (no arm needed). This is reachable only once the PR2 bridge
+   produces the node; the arms give correct (not just compiling) behaviour when it
+   does, so no optimisation-inside-class work is deferred beyond the deferred
+   *node features* (fields / static blocks).
 
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 

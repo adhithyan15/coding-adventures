@@ -68,7 +68,7 @@
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
-    AssignmentTarget, BindingTarget, BlockStatement, CvId, Declaration, Expression, ForInit,
+    AssignmentTarget, BindingTarget, BlockStatement, ClassMember, CvId, Declaration, Expression, ForInit,
     FunctionDeclaration, FunctionExpression, FunctionParam, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
 };
@@ -957,6 +957,23 @@ fn walk_expression(
         }
         Expression::FunctionExpression(fe) => {
             walk_function_expression(fe, ctx, analysis, pending);
+        }
+        // A class expression: resolve the `extends` operand in the current
+        // scope, then walk each method's function value as its own nested
+        // function scope (exactly like `FunctionExpression`). The optional
+        // class name binding is body-local; not tracking it is conservative
+        // (it is simply never chosen as a rename target).
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &ce.super_class {
+                walk_expression(sup, ctx, analysis, pending);
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        walk_function_expression(&m.value, ctx, analysis, pending)
+                    }
+                }
+            }
         }
         Expression::ArrowFunctionExpression(ae) => {
             walk_arrow_function_expression(ae, ctx, analysis, pending);
