@@ -31,6 +31,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs
 
 Item {
     id: sheet
@@ -46,6 +47,36 @@ Item {
     // this string to a file or QSettings; the demo keeps it in memory so the
     // round trip is self-contained.)
     property string savedSnapshot: ""
+
+    // Map a chosen file's URL to the engine's format key (its lowercase
+    // extension). Drives the File → Save…/Open… dialogs below; an unrecognised
+    // suffix falls back to "xlsx".
+    function formatOf(fileUrl) {
+        var s = fileUrl.toString();
+        var dot = s.lastIndexOf(".");
+        return dot >= 0 ? s.substring(dot + 1).toLowerCase() : "xlsx";
+    }
+
+    // File → Save / Open a REAL spreadsheet file on disk. A proper OS dialog (Qt
+    // Quick Dialogs) picks the path; the C++ model reads/writes the bytes over the
+    // engine's byte codecs (saveFile/openFile → sc_save_*/sc_load_*). The format
+    // is the chosen file's extension.
+    FileDialog {
+        id: saveDialog
+        title: "Save spreadsheet"
+        fileMode: FileDialog.SaveFile
+        defaultSuffix: "xlsx"
+        nameFilters: ["Excel (*.xlsx)", "Legacy Excel (*.xls)", "CSV (*.csv)",
+                      "TSV (*.tsv)", "JSON (*.json)"]
+        onAccepted: if (doc) doc.saveFile(selectedFile, sheet.formatOf(selectedFile))
+    }
+    FileDialog {
+        id: openDialog
+        title: "Open spreadsheet"
+        fileMode: FileDialog.OpenFile
+        nameFilters: ["Spreadsheets (*.xlsx *.xls *.csv *.tsv *.json)", "All files (*)"]
+        onAccepted: if (doc) doc.openFile(selectedFile, sheet.formatOf(selectedFile))
+    }
 
     // Cell geometry (pixels). The gutter and body share rowH so their two
     // ListViews scroll in lockstep. (Roomier to match the web reference.)
@@ -243,6 +274,23 @@ Item {
                     ToolTip.visible: hovered
                     ToolTip.text: "Restore the workbook from the last save"
                     onClicked: if (doc) doc.deserialize(sheet.savedSnapshot)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
+                // ── File → open / save a REAL spreadsheet file on disk (over the
+                //    engine's byte codecs, across the C ABI): a proper OS Save/Open
+                //    dialog. .xlsx keeps live formulas; .csv is values only. ──
+                ToolButton {
+                    text: "Save…"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Save the workbook to a real spreadsheet file (.xlsx keeps live formulas; .xls/.csv/.tsv/.json are values only)"
+                    onClicked: saveDialog.open()
+                }
+                ToolButton {
+                    text: "Open…"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Open a real spreadsheet file over the engine"
+                    onClicked: openDialog.open()
                 }
                 Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
 

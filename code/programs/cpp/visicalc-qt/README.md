@@ -137,6 +137,19 @@ the C ABI's `sc_serialize`) to a JSON document held in memory and restore it
 (`model.deserialize` / `sc_deserialize`): the document captures only the source
 (formula text + typed literals) and per-cell formats — not the computed values,
 which the engine recomputes on load, so a loaded formula stays live.
+The **Save… / Open…** buttons open and save a **real spreadsheet file** through a
+proper OS dialog (Qt Quick `FileDialog`): `model.saveFile(path, format)` /
+`openFile(path, format)` wrap `model.exportBytes(format)` / `importBytes(format,
+bytes)`, which bind the C ABI's `sc_save_<fmt>` / `sc_load_<fmt>`
+(`spreadsheet-capi`). File bytes ride in a **`QByteArray`** — an `.xlsx` (a ZIP,
+with live formulas preserved) or an `.xls`/`.csv`/`.tsv`/`.json` crosses the C ABI
+as raw bytes, never a `QString` that a `0x00` inside a ZIP would truncate; a save
+copies the engine's `(ptr, len)` buffer out and frees it with `sc_bytes_free` (the
+engine's own allocator). Unlike the plugin-free hosts, Qt's `FileDialog` gives a
+genuine path, so there's no fixed demo file. The headless `test/tst_model`
+round-trips the bytes: a saved `.xlsx` is asserted to begin with the ZIP magic
+`PK\x03\x04` (and its formula still recomputes after a reopen), an `.xls` with the
+OLE2 magic `0xD0CF`, and unknown/empty inputs are safe no-ops.
 The **Undo / Redo** buttons walk the engine's snapshot history (`model.undo`/
 `redo` over the C ABI's `sc_undo`/`sc_redo`); they enable off the `canUndo`/
 `canRedo` Q_PROPERTYs (which notify on `revisionChanged`, so they re-evaluate

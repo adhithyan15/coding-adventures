@@ -20,6 +20,7 @@
 #ifndef VISICALC_QT_SPREADSHEET_MODEL_H
 #define VISICALC_QT_SPREADSHEET_MODEL_H
 
+#include <QByteArray>
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -171,6 +172,18 @@ public:
     // regrows the extent, and bumps `revision` so the visible rows re-fetch.
     Q_INVOKABLE QString serialize() const;
     Q_INVOKABLE bool deserialize(const QString &data);
+    // ── File open / save — bytes in, bytes out ─────────────────────
+    // Open and save a REAL spreadsheet file over the engine's byte codecs. File
+    // bytes are binary (an .xlsx is a ZIP, an .xls an OLE2 file) and may contain a
+    // NUL, so they live in a QByteArray — never a QString, which the serialize()
+    // path above uses for the JSON document. exportBytes/importBytes are the codec
+    // core; saveFile/openFile wrap them with QFile so QML's FileDialog can hand a
+    // chosen path across. `.xlsx` keeps live formulas; `.xls`/`.csv`/`.tsv`/`.json`
+    // are lower-fidelity (values only). A failed open leaves the workbook intact.
+    Q_INVOKABLE QByteArray exportBytes(const QString &format) const;
+    Q_INVOKABLE bool importBytes(const QString &format, const QByteArray &bytes);
+    Q_INVOKABLE bool saveFile(const QString &path, const QString &format);
+    Q_INVOKABLE bool openFile(const QString &path, const QString &format);
     // Undo / redo: walk the engine's snapshot history. Each returns true if it
     // changed the document; on success the grid recomputes, the extent regrows,
     // the formula bar refreshes, and `revision` bumps (which re-evaluates the
