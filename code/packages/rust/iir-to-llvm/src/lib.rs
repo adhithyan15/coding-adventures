@@ -3145,7 +3145,7 @@ fn lower_call(
     // Resolve each operand and pair it with its declared param type.
     let mut arg_parts = Vec::with_capacity(arg_srcs.len());
     for (src, pty) in arg_srcs.iter().zip(sig.param_types.iter()) {
-        let op = match src {
+        let mut op = match src {
             Operand::Var(name) => state.env.get(name).cloned().ok_or_else(|| {
                 IIRLlvmError::UndefinedVariable {
                     function: state.fn_name.into(),
@@ -3154,6 +3154,21 @@ fn lower_call(
             })?,
             other => render_literal(Some(other), pty, state.fn_name)?,
         };
+        // E4-dyn: a `str` argument is passed as an i64 handle. A single-assignment
+        // string literal is tracked as its `{i64 len,[N×i8]}` GLOBAL POINTER
+        // (`@__twig_str_N`), so passing it directly would emit `call ...(i64
+        // @global)` — a type error (a `ptr` constant in an `i64` slot). The literal's
+        // address IS a valid handle, so `ptrtoint` it to i64 first — the exact mirror
+        // of the `ret` path. The callee reads the length header via `inttoptr`+`load`.
+        // (Branch-selected / call-result / param strings already carry an i64.)
+        // Guard on the param slot being `i64`: a `@__twig_str` global only ever fills
+        // an i64 (str-handle) slot today, but requiring it keeps the `ptrtoint … to
+        // i64` correct if some future param type ever lowers to `ptr` instead.
+        if *pty == "i64" && op.starts_with("@__twig_str") {
+            let h = state.fresh("argh");
+            out.push_str(&format!("  {h} = ptrtoint ptr {op} to i64\n"));
+            op = h;
+        }
         arg_parts.push(format!("{pty} {op}"));
     }
     let args_joined = arg_parts.join(", ");

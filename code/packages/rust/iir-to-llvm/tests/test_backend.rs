@@ -2326,3 +2326,47 @@ fn runtime_str_concat_lowers_to_twig_str_concat_call() {
     assert!(ll.contains("declare i64 @__twig_str_concat(i64, i64)"),
         "the @__twig_str_concat extern must be declared; got:\n{ll}");
 }
+
+/// LANG-FULL tail — a string LITERAL passed across a function boundary must be
+/// converted from its global-pointer form to an i64 handle with `ptrtoint` before
+/// the call. Otherwise `call i64 @strlen(i64 @__twig_str_0)` puts a `ptr` constant
+/// in an `i64` argument slot — invalid IR clang rejects. Regression for the
+/// Twig/lisp cell `(define (strlen (s : str)) (string-length s)) (strlen "HELLO")`.
+#[test]
+fn str_literal_call_arg_is_ptrtoint_to_i64() {
+    // fn strlen(s: str) -> i64 { str_len s }
+    let strlen = IIRFunction::new(
+        "strlen",
+        vec![("s".into(), "str".into())],
+        "i64",
+        vec![
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    // fn main() -> i64 { let s1 = "HELLO"; strlen(s1) }
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s1".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("call", Some("r".into()),
+                vec![Operand::Var("strlen".into()), Operand::Var("s1".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "t".into(),
+        functions: vec![strlen, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains("ptrtoint ptr @__twig_str"),
+        "a str literal passed as a call arg must be ptrtoint'd to i64; got:\n{ll}");
+    assert!(!ll.contains("@strlen(i64 @__twig_str"),
+        "the global pointer must NOT be passed directly in an i64 arg slot; got:\n{ll}");
+}
