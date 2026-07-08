@@ -1,5 +1,37 @@
 # Changelog — regex-engine
 
+## 0.2.0 — Unreleased
+
+Phase D1 of the Engram zero-dependency program: **Unicode-aware character
+classes**, so the engine matches the `regex` crate in its default (Unicode) mode.
+
+### Added
+
+- Unicode `\d \w \s` (and negations) — on by default, matching `regex`; `(?-u)`
+  selects the ASCII sets.
+- Unicode general-property classes `\p{Alphabetic}`, `\p{Mark}` (a.k.a. `\p{M}`),
+  `\p{Nd}`, and their `\P{…}` negations — usable standalone and inside `[...]`.
+- `\b` word boundaries use the Unicode word set in Unicode mode.
+- Inline `(?u)` / `(?-u)` flag toggling (including in combined groups like `(?i-u)`).
+- Generated `unicode_tables.rs` (WORD/DIGIT/SPACE/ALPHABETIC/MARK/ND ranges),
+  produced once from the `regex` crate then frozen; class membership is by binary
+  search over sorted, merged ranges.
+
+### Verified
+
+- Cross-checked against the live `regex` crate in **default Unicode mode** (no
+  `(?-u)`) across **80k+ random (pattern, input) pairs** using Unicode classes and
+  non-ASCII inputs (accented Latin, combining marks, CJK, Greek, Arabic-Indic /
+  Devanagari digits, non-breaking space) — zero `is_match` divergences. The
+  ASCII-mode cross-check from D0 still passes.
+
+### Not yet included
+
+- **Unicode case folding**: `case_insensitive` still folds ASCII only. Non-ASCII
+  case pairs (e.g. `é`/`É`) are added when the case-insensitive search uses are
+  wired (Phase D2). Match **extents** (`find`/`captures`/`replace_all`) remain
+  deferred to D3.
+
 ## 0.1.0 — Unreleased
 
 Initial release: the ASCII-mode `is_match` core of a zero-dependency,

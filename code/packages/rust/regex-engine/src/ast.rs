@@ -9,8 +9,9 @@
 //! (`\d \w \s` and their negations, plus escaped metacharacters), character
 //! classes `[...]`/`[^...]` with ranges, groups `(...)`/`(?:...)`, alternation
 //! `|`, the quantifiers `* + ?` and `{m}`/`{m,}`/`{m,n}` (greedy or lazy), the
-//! anchors `^ $`, and word boundaries `\b \B`. In ASCII mode the character
-//! classes are the ASCII sets; Unicode-aware classes are a later addition.
+//! anchors `^ $`, and word boundaries `\b \B`. Character classes (`\d\w\s`,
+//! `\p{Alphabetic|Mark|Nd}`) are Unicode-aware by default (backed by generated
+//! tables in `crate::unicode_tables`); `(?-u)` selects the ASCII sets.
 
 use std::fmt;
 
@@ -45,7 +46,7 @@ pub enum Assertion {
     StartText,
     /// `$` — end of the input.
     EndText,
-    /// `\b` — an ASCII word boundary.
+    /// `\b` — a word boundary (Unicode word set by default; ASCII under `(?-u)`).
     WordBoundary,
     /// `\B` — a non-word-boundary.
     NotWordBoundary,
@@ -88,10 +89,24 @@ pub enum Ast {
 
 /// Flags that can be toggled inline at the very start of a pattern (`(?is)`),
 /// mirroring the small subset of the `regex` crate's flags this engine needs.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy)]
 pub struct Flags {
     pub case_insensitive: bool,
     pub dot_matches_new_line: bool,
+    /// Unicode mode. **On by default**, matching the `regex` crate: `\d \w \s`
+    /// are the Unicode classes and `\b` uses Unicode word characters. `(?-u)`
+    /// switches them to the ASCII sets.
+    pub unicode: bool,
+}
+
+impl Default for Flags {
+    fn default() -> Self {
+        Flags {
+            case_insensitive: false,
+            dot_matches_new_line: false,
+            unicode: true,
+        }
+    }
 }
 
 /// Maximum group/alternation nesting depth. Past this the parser errors instead
@@ -158,14 +173,18 @@ impl Parser {
             return;
         }
         // Scan the flag letters up to the closing `)`; bail if it looks like a
-        // non-flag construct such as `(?:`.
+        // non-flag construct such as `(?:`. A `-` negates the flags that follow
+        // it (e.g. `(?i-u)` = case-insensitive, Unicode off).
         let mut j = self.pos + 2;
         let mut f = Flags::default();
+        let mut on = true;
         while let Some(&c) = self.chars.get(j) {
             match c {
-                'i' => f.case_insensitive = true,
-                's' => f.dot_matches_new_line = true,
-                'u' | 'U' | 'm' | 'x' => {} // accepted, no effect in this engine
+                '-' => on = false,
+                'i' => f.case_insensitive = on,
+                's' => f.dot_matches_new_line = on,
+                'u' => f.unicode = on,
+                'U' | 'm' | 'x' => {} // accepted, no effect in this engine
                 ')' => {
                     self.flags = f;
                     self.pos = j + 1;
@@ -360,13 +379,16 @@ impl Parser {
         let c = self
             .bump()
             .ok_or_else(|| ParseError("trailing backslash".to_string()))?;
+        let u = self.flags.unicode;
         Ok(match c {
-            'd' => Ast::Class(digit_class(false)),
-            'D' => Ast::Class(digit_class(true)),
-            'w' => Ast::Class(word_class(false)),
-            'W' => Ast::Class(word_class(true)),
-            's' => Ast::Class(space_class(false)),
-            'S' => Ast::Class(space_class(true)),
+            'd' => Ast::Class(digit_class(u, false)),
+            'D' => Ast::Class(digit_class(u, true)),
+            'w' => Ast::Class(word_class(u, false)),
+            'W' => Ast::Class(word_class(u, true)),
+            's' => Ast::Class(space_class(u, false)),
+            'S' => Ast::Class(space_class(u, true)),
+            'p' => Ast::Class(self.parse_unicode_property(false)?),
+            'P' => Ast::Class(self.parse_unicode_property(true)?),
             'b' => Ast::Assert(Assertion::WordBoundary),
             'B' => Ast::Assert(Assertion::NotWordBoundary),
             'n' => Ast::Literal('\n'),
@@ -379,6 +401,37 @@ impl Parser {
             // metacharacters `. * + ? ( ) [ ] { } | ^ $ \` and ordinary escapes).
             other => Ast::Literal(other),
         })
+    }
+
+    /// Parse the `{Name}` after a `\p`/`\P` into a (possibly negated) class. Only
+    /// the Unicode general properties Engram's search patterns use are supported:
+    /// `Alphabetic`, `Mark` (a.k.a. `M`), and `Nd`.
+    fn parse_unicode_property(&mut self, negated: bool) -> Result<Class, ParseError> {
+        if !self.eat('{') {
+            return Err(ParseError("expected `{` after `\\p`".to_string()));
+        }
+        let mut name = String::new();
+        while let Some(c) = self.peek() {
+            if c == '}' {
+                break;
+            }
+            name.push(c);
+            self.bump();
+        }
+        if !self.eat('}') {
+            return Err(ParseError("unclosed `\\p{`".to_string()));
+        }
+        let table: &[(u32, u32)] = match name.as_str() {
+            "Alphabetic" | "Alpha" => crate::unicode_tables::ALPHABETIC,
+            "Mark" | "M" => crate::unicode_tables::MARK,
+            "Nd" | "Decimal_Number" => crate::unicode_tables::ND,
+            other => {
+                return Err(ParseError(format!(
+                    "unsupported Unicode property `{other}`"
+                )))
+            }
+        };
+        Ok(make_class(negated, table_to_ranges(table)))
     }
 
     fn parse_class(&mut self) -> Result<Ast, ParseError> {
@@ -425,20 +478,22 @@ impl Parser {
                 }
             }
         }
-        Ok(Ast::Class(Class { negated, ranges }))
+        Ok(Ast::Class(make_class(negated, ranges)))
     }
 
     /// One element inside `[...]`: a literal char or an embedded class escape.
     fn class_char(&mut self) -> Result<ClassItem, ParseError> {
+        let u = self.flags.unicode;
         match self.bump() {
             Some('\\') => {
                 let c = self
                     .bump()
                     .ok_or_else(|| ParseError("trailing backslash in class".to_string()))?;
                 Ok(match c {
-                    'd' => ClassItem::from(digit_class(false)),
-                    'w' => ClassItem::from(word_class(false)),
-                    's' => ClassItem::from(space_class(false)),
+                    'd' => ClassItem::from(digit_class(u, false)),
+                    'w' => ClassItem::from(word_class(u, false)),
+                    's' => ClassItem::from(space_class(u, false)),
+                    'p' => ClassItem::from(self.parse_unicode_property(false)?),
                     'n' => ClassItem::Char('\n'),
                     'r' => ClassItem::Char('\r'),
                     't' => ClassItem::Char('\t'),
@@ -450,6 +505,44 @@ impl Parser {
             Some(c) => Ok(ClassItem::Char(c)),
             None => Err(ParseError("unexpected end of character class".to_string())),
         }
+    }
+}
+
+/// Convert a static Unicode range table into `ClassRange`s (skipping any range
+/// that would touch surrogate code points, which the tables never do).
+fn table_to_ranges(table: &[(u32, u32)]) -> Vec<ClassRange> {
+    table
+        .iter()
+        .filter_map(|&(lo, hi)| {
+            Some(ClassRange {
+                start: char::from_u32(lo)?,
+                end: char::from_u32(hi)?,
+            })
+        })
+        .collect()
+}
+
+/// Build a [`Class`] with its ranges sorted by start and overlapping/adjacent
+/// ranges merged, so membership can be tested by binary search — important
+/// because a Unicode class like `\w` has hundreds of ranges.
+fn make_class(negated: bool, mut ranges: Vec<ClassRange>) -> Class {
+    ranges.sort_by_key(|r| r.start);
+    let mut merged: Vec<ClassRange> = Vec::with_capacity(ranges.len());
+    for r in ranges {
+        if let Some(last) = merged.last_mut() {
+            // Merge if overlapping or directly adjacent (end+1 == next.start).
+            if r.start as u32 <= last.end as u32 + 1 {
+                if (r.end as u32) > (last.end as u32) {
+                    last.end = r.end;
+                }
+                continue;
+            }
+        }
+        merged.push(r);
+    }
+    Class {
+        negated,
+        ranges: merged,
     }
 }
 
@@ -467,60 +560,43 @@ impl ClassItem {
     }
 }
 
-// --- ASCII class definitions (Unicode-aware variants come in a later PR) ------
+// --- Class definitions for `\d \w \s` — Unicode (default) or ASCII (`(?-u)`) ---
 
-fn ascii_class(negated: bool, ranges: Vec<ClassRange>) -> Class {
-    Class { negated, ranges }
+fn ascii(start: char, end: char) -> ClassRange {
+    ClassRange { start, end }
 }
 
-fn digit_class(negated: bool) -> Class {
-    ascii_class(
-        negated,
-        vec![ClassRange {
-            start: '0',
-            end: '9',
-        }],
-    )
+/// `\d`: Unicode `\p{Nd}` in Unicode mode, else ASCII `[0-9]`.
+fn digit_class(unicode: bool, negated: bool) -> Class {
+    let ranges = if unicode {
+        table_to_ranges(crate::unicode_tables::DIGIT)
+    } else {
+        vec![ascii('0', '9')]
+    };
+    make_class(negated, ranges)
 }
 
-fn word_class(negated: bool) -> Class {
-    ascii_class(
-        negated,
+/// `\w`: Unicode word characters in Unicode mode, else ASCII `[0-9A-Za-z_]`.
+fn word_class(unicode: bool, negated: bool) -> Class {
+    let ranges = if unicode {
+        table_to_ranges(crate::unicode_tables::WORD)
+    } else {
         vec![
-            ClassRange {
-                start: '0',
-                end: '9',
-            },
-            ClassRange {
-                start: 'A',
-                end: 'Z',
-            },
-            ClassRange {
-                start: 'a',
-                end: 'z',
-            },
-            ClassRange {
-                start: '_',
-                end: '_',
-            },
-        ],
-    )
+            ascii('0', '9'),
+            ascii('A', 'Z'),
+            ascii('a', 'z'),
+            ascii('_', '_'),
+        ]
+    };
+    make_class(negated, ranges)
 }
 
-fn space_class(negated: bool) -> Class {
-    // Matches the ASCII whitespace set `[\t\n\x0B\x0C\r ]`, i.e. the `regex`
-    // crate's `(?-u:\s)`.
-    ascii_class(
-        negated,
-        vec![
-            ClassRange {
-                start: '\t',
-                end: '\r',
-            }, // 09..0D: \t \n \v \f \r
-            ClassRange {
-                start: ' ',
-                end: ' ',
-            }, // 20
-        ],
-    )
+/// `\s`: Unicode whitespace in Unicode mode, else ASCII `[\t\n\x0B\x0C\r ]`.
+fn space_class(unicode: bool, negated: bool) -> Class {
+    let ranges = if unicode {
+        table_to_ranges(crate::unicode_tables::SPACE)
+    } else {
+        vec![ascii('\t', '\r'), ascii(' ', ' ')]
+    };
+    make_class(negated, ranges)
 }

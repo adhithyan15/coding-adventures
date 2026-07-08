@@ -116,9 +116,12 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   **100k+ random (pattern,input) pairs** + CI sweep — zero `is_match`
   divergences. Iterative epsilon-closure (no stack overflow) + compile-size cap
   (no `{0,huge}` blowup). Not yet wired.
-- **D1 — Unicode classes.** Generate Unicode tables for `\w\d\s` (Unicode mode)
-  and `\p{Alphabetic}`/`\p{Mark}`/`\p{Nd}` (same generator approach as
-  `unicode-normalize`); cross-verify vs `regex` default (Unicode) mode.
+- **D1 — ✅ DONE (Unicode classes).** Generated Unicode tables (`unicode_tables.rs`:
+  WORD/DIGIT/SPACE/ALPHABETIC/MARK/ND) from the `regex` crate; `\w\d\s` are
+  Unicode by default (`(?-u)`=ASCII), `\p{Alphabetic|Mark|Nd}` + `\P` supported,
+  `\b` uses the Unicode word set, `(?u)`/`(?-u)` flags. Cross-verified vs live
+  `regex` in default Unicode mode across 80k+ pairs (non-ASCII inputs) — zero
+  divergences. Unicode CASE FOLDING deferred to D2 (needed when wiring the CI uses).
 - **D2 — swap the boolean uses.** Point `re:` (`build_search_regex`), whole-word
   (`build_whole_word_regex`), and glob (`search_pattern_regex_source`) at the new
   engine's `is_match`. Provide a `regex_engine::escape` for the glob builder.

@@ -41,6 +41,9 @@ enum Inst {
 pub struct Program {
     insts: Vec<Inst>,
     case_insensitive: bool,
+    /// Unicode mode — whether `\b` word boundaries use the Unicode word set.
+    /// (`\d\w\s` classes are already baked into instructions at parse time.)
+    unicode: bool,
     /// True when every match must begin at the start of the input (`^…`), so the
     /// unanchored scan can stop seeding start threads past position 0.
     anchored_start: bool,
@@ -74,6 +77,7 @@ pub fn compile(
     Ok(Program {
         insts: c.insts,
         case_insensitive: flags.case_insensitive,
+        unicode: flags.unicode,
         anchored_start,
     })
 }
@@ -362,7 +366,17 @@ impl Program {
     fn word_boundary(&self, chars: &[char], pos: usize) -> bool {
         let before = pos.checked_sub(1).and_then(|i| chars.get(i)).copied();
         let after = chars.get(pos).copied();
-        is_word(before) != is_word(after)
+        self.is_word(before) != self.is_word(after)
+    }
+
+    /// Whether `c` is a "word" character for `\b`: the Unicode word set in
+    /// Unicode mode, else ASCII `[0-9A-Za-z_]`.
+    fn is_word(&self, c: Option<char>) -> bool {
+        match c {
+            None => false,
+            Some(ch) if self.unicode => in_table(crate::unicode_tables::WORD, ch),
+            Some(ch) => ch.is_ascii_alphanumeric() || ch == '_',
+        }
     }
 
     fn char_eq(&self, input: char, pat: char) -> bool {
@@ -376,12 +390,37 @@ impl Program {
     }
 }
 
+/// Binary-search membership over a class's sorted, merged ranges (built by
+/// `ast::make_class`), so Unicode classes with hundreds of ranges stay fast.
 fn class_contains(class: &Class, c: char) -> bool {
-    class.ranges.iter().any(|r| (r.start..=r.end).contains(&c))
+    class
+        .ranges
+        .binary_search_by(|r| {
+            if c < r.start {
+                std::cmp::Ordering::Greater
+            } else if c > r.end {
+                std::cmp::Ordering::Less
+            } else {
+                std::cmp::Ordering::Equal
+            }
+        })
+        .is_ok()
 }
 
-fn is_word(c: Option<char>) -> bool {
-    matches!(c, Some(ch) if ch.is_ascii_alphanumeric() || ch == '_')
+/// Binary-search membership over a sorted `(u32, u32)` range table.
+fn in_table(table: &[(u32, u32)], c: char) -> bool {
+    let cp = c as u32;
+    table
+        .binary_search_by(|&(lo, hi)| {
+            if cp < lo {
+                std::cmp::Ordering::Greater
+            } else if cp > hi {
+                std::cmp::Ordering::Less
+            } else {
+                std::cmp::Ordering::Equal
+            }
+        })
+        .is_ok()
 }
 
 fn swap_ascii_case(c: char) -> char {

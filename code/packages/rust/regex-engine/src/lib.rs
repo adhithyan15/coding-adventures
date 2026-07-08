@@ -17,20 +17,23 @@
 //! resolved *leftmost-first* with greedy quantifiers preferring to match more —
 //! the same semantics the `regex` crate uses for these patterns.
 //!
-//! ## Supported syntax (this crate, ASCII mode)
+//! ## Supported syntax
 //!
-//! Literals; `.`; the escapes `\d \D \w \W \s \S` (ASCII sets) and escaped
-//! metacharacters; character classes `[...]`/`[^...]` with ranges; groups
-//! `(...)` and `(?:...)`; alternation `|`; the quantifiers `* + ?` and
-//! `{m}`/`{m,}`/`{m,n}`, greedy or lazy (`*?` …); the anchors `^ $`; word
-//! boundaries `\b \B`; and the leading inline flags `(?i)` / `(?s)`.
+//! Literals; `.`; the escapes `\d \D \w \W \s \S` and escaped metacharacters;
+//! the Unicode property classes `\p{Alphabetic}`, `\p{Mark}`, `\p{Nd}` (and
+//! `\P{…}`); character classes `[...]`/`[^...]` with ranges; groups `(...)` and
+//! `(?:...)`; alternation `|`; the quantifiers `* + ?` and `{m}`/`{m,}`/`{m,n}`,
+//! greedy or lazy (`*?` …); the anchors `^ $`; word boundaries `\b \B`; and the
+//! leading inline flags `(?i)` / `(?s)` / `(?u)`.
 //!
-//! Unicode-aware character classes (`\w`/`\d`/`\s` in Unicode mode and
-//! `\p{Alphabetic}` etc.) are a planned addition; today the classes are the
-//! ASCII sets, matching the `regex` crate's `(?-u:…)` behaviour.
+//! Character classes and `\b` are **Unicode-aware by default** (matching the
+//! `regex` crate), backed by generated tables in [`unicode_tables`]; `(?-u)`
+//! selects the ASCII sets. Not yet included: Unicode *case folding* (`(?i)` folds
+//! ASCII only) and match *extents* (`find`/`captures`/`replace_all`).
 
 mod ast;
 mod program;
+mod unicode_tables;
 
 use ast::Flags;
 use program::{Input, Program};
@@ -116,10 +119,12 @@ impl<'a> RegexBuilder<'a> {
     pub fn build(&self) -> Result<Regex, Error> {
         let (tree, group_count, mut flags) =
             ast::parse(self.pattern).map_err(|e| Error(e.to_string()))?;
-        // Builder flags OR the inline `(?…)` flags.
+        // Builder flags OR the inline `(?…)` flags. `unicode` is carried straight
+        // from the pattern's inline flags (default on; `(?-u)` turns it off).
         flags = Flags {
             case_insensitive: flags.case_insensitive || self.case_insensitive,
             dot_matches_new_line: flags.dot_matches_new_line || self.dot_matches_new_line,
+            unicode: flags.unicode,
         };
         let program = program::compile(&tree, group_count, flags, MAX_PROGRAM_INSTS)
             .map_err(|e| Error(e.to_string()))?;
@@ -200,6 +205,39 @@ mod tests {
         assert!(Regex::new(&deep).is_err());
         // Sanity: a reasonable bound still works.
         assert!(Regex::new("a{2,5}").unwrap().is_match("aaa"));
+    }
+
+    #[test]
+    fn unicode_classes_by_default() {
+        // `\w` is Unicode by default → matches accented letters and CJK.
+        assert!(Regex::new(r"^\w+$").unwrap().is_match("café"));
+        assert!(Regex::new(r"^\w+$").unwrap().is_match("日本語"));
+        // `(?-u)` reverts to ASCII → accented letters are NOT word chars.
+        assert!(!Regex::new(r"(?-u)^\w+$").unwrap().is_match("café"));
+        // Unicode digits.
+        assert!(Regex::new(r"^\d+$").unwrap().is_match("١٢٣")); // Arabic-Indic
+        assert!(!Regex::new(r"(?-u)^\d+$").unwrap().is_match("١٢٣"));
+    }
+
+    #[test]
+    fn unicode_properties() {
+        assert!(Regex::new(r"\p{Alphabetic}").unwrap().is_match("ω"));
+        assert!(Regex::new(r"\p{Nd}").unwrap().is_match("५")); // Devanagari 5
+        assert!(Regex::new(r"\p{Mark}").unwrap().is_match("a\u{0301}")); // combining acute
+        assert!(!Regex::new(r"\p{Mark}").unwrap().is_match("abc"));
+        // Negated property.
+        assert!(Regex::new(r"^\P{Alphabetic}+$").unwrap().is_match("123 !"));
+        // Unknown property is a compile error.
+        assert!(Regex::new(r"\p{Nonsense}").is_err());
+        // A class mixing a Unicode property and a literal.
+        assert!(Regex::new(r"^[\p{Nd}_]+$").unwrap().is_match("5_٣"));
+    }
+
+    #[test]
+    fn unicode_word_boundary() {
+        // `\b` uses Unicode word chars by default: "café" is one word.
+        assert!(Regex::new(r"\bcafé\b").unwrap().is_match("un café ici"));
+        assert!(!Regex::new(r"\bcaf\b").unwrap().is_match("café")); // no boundary inside
     }
 
     #[test]
