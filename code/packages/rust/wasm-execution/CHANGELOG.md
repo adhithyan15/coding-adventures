@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] — 2026-07-07
+
+### Added — `memory.copy` bulk-memory op (E4-dyn runtime string concat)
+
+The engine now runs the `memory.copy` bulk-memory instruction, which
+`iir-to-wasm` emits for runtime `str_concat` (splicing two operands' bytes into a
+freshly allocated `[i32 len][bytes]` block).
+
+- **Decoder**: a new `0xFC` two-byte-prefix branch (mirroring the `0xFB` GC prefix)
+  reads the sub-opcode and its memory-index immediates, carrying the sub-opcode in a
+  plain `Int` operand. `memory.copy` (`0x0A`, two index bytes) and `memory.fill`
+  (`0x0B`, one index byte) are decoded; only `memory.copy` is executed.
+- **Execution**: a `0xFC` handler pops `size`, `src`, `dest` and delegates to the new
+  `LinearMemory::copy`, which bounds-checks both ranges (either out of range traps —
+  never panics) and uses `copy_within` for overlap-safe (memmove) semantics. A
+  zero-length copy is a no-op even at the end of memory.
+- Tests: `memory_copy_decodes_as_one_0xfc_instruction`,
+  `linear_memory_copy_moves_bytes_overlap_safe`.
+
 ## [0.4.0] — 2026-06-08
 
 ### Added — `ref.test` execution (LANG77 / McCarthy L3b-3a-4)

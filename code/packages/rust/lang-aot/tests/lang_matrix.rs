@@ -2418,17 +2418,20 @@ const PROGRAMS: &[Prog] = &[
     //   • Llvm — `iir-to-llvm` keeps the literal fold, but lowers a runtime concat to
     //     `%r = call i64 @__twig_str_concat(i64 a, i64 b)` against the AOT archive symbol
     //     (str→i64 handle, E4d-2b), storing the result as a runtime string. Via clang.
-    // The last column whose `str_concat` is still literal-fold-only is deferred:
-    //   • Wasm — no libc; a runtime concat must bump-allocate `[i32 len][bytes]` and copy
-    //     both operands' bytes in linear memory (or call a host `env.__str_concat`).
-    // With NativeAot + Llvm, runtime `str_concat` runs on six of seven backends (WASM
-    // remains).
+    //   • Wasm — no libc and no host helper: the concat happens entirely *in* wasm.
+    //     `iir-to-wasm` bump-allocates a `[i32 len][bytes]` block from `__array_bump`,
+    //     writes the `i32` length header, and splices both operands' bytes with two
+    //     `memory.copy` (bulk-memory `0xFC 0x0A`) instructions — no scratch locals (each
+    //     operand length is re-read from its header with `i32.load`). The in-repo
+    //     `wasm-execution` interpreter gained a `0xFC` decoder + `LinearMemory::copy`
+    //     to execute it. With this column runtime `str_concat` runs on **all seven
+    //     backends**.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK!"),
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 

@@ -145,7 +145,8 @@ use wasm_types::{
 
 use crate::codegen::{
     encode_br, encode_br_table, encode_call, encode_f32_const, encode_f64_const,
-    encode_f64_load, encode_f64_store, encode_i32_load, encode_i64_load, encode_i64_store,
+    encode_f64_load, encode_f64_store, encode_i32_load, encode_i32_store, encode_i64_load,
+    encode_i64_store,
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
@@ -316,6 +317,21 @@ fn encode_i32_store8() -> Vec<u8> {
 /// effective address `base + idx` before an `i32.load8_u` / `i32.store8`.
 fn encode_i32_add() -> Vec<u8> {
     vec![0x6Au8]
+}
+
+/// Emit `memory.copy` (bulk-memory `0xFC 0x0A`) — copy a run of bytes within the
+/// single linear memory. Pops `size`, then `src`, then `dest` (so the stack, bottom
+/// → top, is `[dest, src, size]`), and copies `size` bytes from `src` to `dest`,
+/// overlap-safe. The two trailing `0x00` bytes are the destination and source
+/// memory indices — always memory 0 in our single-memory modules.
+///
+/// Used by E4-dyn runtime `str_concat` to splice each operand's bytes into a freshly
+/// bump-allocated `[i32 len][bytes]` block. The `wasm-execution` interpreter decodes
+/// the `0xFC` prefix and executes this via `LinearMemory::copy`.
+///
+/// Result encoding: `[0xFC, 0x0A, 0x00, 0x00]`.
+fn encode_memory_copy() -> Vec<u8> {
+    vec![0xFCu8, 0x0Au8, 0x00u8, 0x00u8]
 }
 
 fn encode_i64_global_init(value: i64) -> Vec<u8> {
@@ -1016,19 +1032,107 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
-        // ── str_concat → literal data-segment metadata ───────────────────────
+        // ── str_concat → literal data-segment metadata OR runtime block ──────
+        //
+        // Literal fast path: when BOTH operands folded to a compile-time literal, the
+        // module string table already holds the joined bytes at a fixed data-segment
+        // offset — the handle is that constant offset (mirrors str_slice / str_const).
+        //
+        // Runtime path (E4-dyn): at least one operand is a runtime handle (an `INPUT`
+        // result, a call result, a branch-selected string) with no literal entry. On
+        // WASM a `str` is an i32 handle to a `[i32 len][bytes]` block, so we build a
+        // fresh block in linear memory:
+        //   new  = bump                                  ;; base of the joined block
+        //   bump = bump + 4 + la + lb                    ;; reserve header + both runs
+        //   mem[new]      = la + lb                      ;; write the i32 length header
+        //   memory.copy(new+4,       a+4, la)            ;; splice operand a's bytes
+        //   memory.copy(new+4+la,    b+4, lb)            ;; then operand b's bytes
+        // `la`/`lb` are re-read from each operand's header with `i32.load` wherever
+        // needed, which keeps the whole sequence free of scratch locals (the only
+        // local written is the destination, `rd`). `print_str`/`str_len` on the result
+        // then read its header at run time, exactly like any other runtime string.
         "str_concat" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: "str_concat must have a dest".to_string(),
             })?;
             let rd = get_reg(dest)?;
-            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_concat missing module string table entry for {dest:?}"),
-            })?;
-            code.extend(encode_i32_const(lit.offset as i32));
-            code.extend(encode_local_set(rd));
+            if let Some(lit) = string_literals.get(dest) {
+                // Both operands are literals — fold to the data-segment offset.
+                code.extend(encode_i32_const(lit.offset as i32));
+                code.extend(encode_local_set(rd));
+            } else {
+                // Runtime path: at least one operand is a live handle.
+                let (a, b) = match instr.srcs.as_slice() {
+                    [Operand::Var(a), Operand::Var(b)] => (a, b),
+                    _ => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "runtime str_concat requires srcs [Var(a), Var(b)]".to_string(),
+                        });
+                    }
+                };
+                let ra = get_reg(a)?;
+                let rb = get_reg(b)?;
+                let bump = *global_map.get(ARRAY_BUMP_GLOBAL).ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_concat (missing __array_bump global)".to_string(),
+                    }
+                })?;
+
+                // rd = new = i32.wrap(bump)  — the fresh block's base handle.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_local_set(rd));
+
+                // bump = bump + i64(4 + la + lb)  — reserve header + both byte runs.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_global_set(bump));
+
+                // mem[new] = la + lb  — write the i32 length header.
+                code.extend(encode_local_get(rd));
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_i32_store(0));
+
+                // memory.copy(new+4, a+4, la)  — splice operand a's bytes.
+                code.extend(encode_local_get(rd));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_memory_copy());
+
+                // memory.copy(new+4+la, b+4, lb)  — then operand b's bytes.
+                code.extend(encode_local_get(rd));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_memory_copy());
+            }
         }
 
         // ── str_slice → literal data-segment metadata ────────────────────────
@@ -3637,6 +3741,18 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                 // injected into `global_names` here so it gets a global slot and a
                 // `global_map` index the lowering can look up.
                 s if interpreter_ir::opcodes::is_array_op(s) => {
+                    uses_memory = true;
+                    if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                        global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                    }
+                }
+                // E4-dyn: a `str_concat` whose operands are runtime handles (not
+                // foldable literals) bump-allocates a fresh `[i32 len][bytes]` block
+                // and `memory.copy`s both operands in — so, like an array op, it needs
+                // linear memory + the `__array_bump` global. (A both-literal concat
+                // folds to a data-segment offset and never touches the bump pointer,
+                // so the injected global is simply unused there.)
+                "str_concat" => {
                     uses_memory = true;
                     if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
                         global_names.push(ARRAY_BUMP_GLOBAL.to_string());
