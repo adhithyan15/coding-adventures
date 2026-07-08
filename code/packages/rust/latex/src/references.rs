@@ -2181,6 +2181,123 @@ impl Document {
             .join("\n")
     }
 
+    /// The **winning label definitions grouped by their [`LabelKind`]** (LTXDOC03 S23) — a per-kind
+    /// census of the `\label` definitions, the by-kind grouping companion of S22's
+    /// [`label_definitions`](Document::label_definitions) (the same discipline S18's
+    /// [`unresolved_references_by_source`](Document::unresolved_references_by_source) and S17's
+    /// [`unresolved_citations_by_source`](Document::unresolved_citations_by_source) bring to the
+    /// reference/citation families).
+    ///
+    /// ## What it does
+    ///
+    /// S1's [`Document::resolve_references`] collects the **winning** first definition of each `\label`
+    /// key into [`ReferenceResolution::definitions`] — one row per distinct key, in
+    /// [`Document::walk`] pre-order, each tagged with the [`LabelKind`] of the node it defines (a
+    /// re-`\label`ed section, table, figure, equation, or bare inline label). S22's
+    /// [`label_definitions`](Document::label_definitions) renders that list **flat**, one
+    /// `\label{key}` per line in pure pre-order. S23 renders the *same* winning `definitions` list
+    /// **grouped by kind**: it walks the [`LabelKind`] variants in a fixed order and, for each kind
+    /// that has at least one definition, emits every definition of that kind — so a reader can see, at
+    /// a glance, which keys are sections, which are equations, which are bare inline labels. S22 and
+    /// S23 are two *views* of one underlying list (S22 by source order, S23 by kind); neither mutates
+    /// anything.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Iterate the [`LabelKind`] variants in their **enum declaration order** —
+    /// [`Section`](LabelKind::Section), [`Table`](LabelKind::Table), [`Figure`](LabelKind::Figure),
+    /// [`Equation`](LabelKind::Equation), [`Inline`](LabelKind::Inline) — a fixed, deterministic
+    /// order that does **not** depend on the document. For each kind, filter
+    /// [`ReferenceResolution::definitions`] to the definitions of that kind, **preserving their
+    /// existing pre-order** within the kind, and emit one line each. This single stable-ordered pass
+    /// (fixed kind order on the outside, pre-order on the inside) keeps the output deterministic
+    /// **without** a hash map — mirroring the `Vec`-of-groups discipline S17/S18 use to avoid
+    /// hash-order nondeterminism.
+    ///
+    /// Each line has the shape `[<kind>] \label{<key>}`, where `<kind>` is the stable lowercase tag
+    /// from [`LabelKind::as_str`] (`"section"`, `"table"`, `"figure"`, `"equation"`, `"inline"`) and
+    /// `<key>` is reconstructed from the definition's **owned `key` `String`** — there is **no** source
+    /// slicing at all (matching S13's `resolve_namerefs`, S19's `bibliography_entries`, S20's
+    /// `duplicate_label_definitions`, and S22's `label_definitions`). Prefixing every line with its
+    /// `[kind]` makes the per-kind census visible on each line while staying one-line-per-definition
+    /// and never re-parseable back as raw LaTeX (the `[kind]` prefix is a report annotation, not source
+    /// — S23 is a *report*, not a round-trippable rendering). A kind with **no** definitions produces
+    /// **no** lines and **no** empty header (there is never a bare `[table]` group for a doc with no
+    /// tables).
+    ///
+    /// A document with **no** label definitions at all returns the fixed marker
+    /// `(no label definitions)` — the **same** marker S22 uses (S23 groups the identical list, so the
+    /// empty case is identical), never the empty string (the stable-marker discipline S12-S22 share).
+    /// Lines are joined by `\n` with **no** trailing newline (matching S11's `to_plain_text_by_kind`
+    /// and every S12-S22 renderer).
+    ///
+    /// Concretely, for a body defining a section label `sec:intro`, an equation label `eq:main`, and a
+    /// bare inline label `note`:
+    ///
+    /// ```text
+    /// \section{Intro}\label{sec:intro}
+    /// \begin{equation}\label{eq:main} x=1 \end{equation}
+    /// \label{note}
+    /// ```
+    ///
+    /// the winning definitions render grouped by kind (`section` sorts before `equation` and `inline`
+    /// in the fixed order, so `sec:intro` leads even though `note` is also a definition):
+    ///
+    /// ```text
+    /// [section] \label{sec:intro}
+    /// [equation] \label{eq:main}
+    /// [inline] \label{note}
+    /// ```
+    ///
+    /// ## Additive by construction
+    ///
+    /// S23 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1-S22 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact. It is a *second view* of the same winning
+    /// `definitions` list S22 renders flat — grouping never adds, drops, or reorders definitions
+    /// relative to what `resolve_references` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// keys are already owned `String`s); a single stable-ordered pass (fixed kind order × pre-order
+    /// filter) over the already-bounded `definitions` list. Borrows `self` immutably and returns owned
+    /// `String` data, so the result outlives any borrow of the source.
+    pub fn label_definitions_by_kind(&self) -> String {
+        // S1 already collected the winning definitions — the first `\label` of each distinct key, in
+        // body pre-order, each tagged with its `LabelKind`. We only read that list.
+        let resolution = self.resolve_references();
+
+        if resolution.definitions.is_empty() {
+            // No `\label` at all → the SAME fixed marker S22 uses (S23 groups the identical list).
+            return "(no label definitions)".to_string();
+        }
+
+        // The FIXED kind order = the enum declaration order. Iterating this explicit slice (rather than
+        // a hash map keyed by kind) makes the group order deterministic and document-independent, the
+        // same `Vec`-of-groups discipline S17/S18 use to avoid hash-order nondeterminism.
+        const KIND_ORDER: [LabelKind; 5] = [
+            LabelKind::Section,
+            LabelKind::Table,
+            LabelKind::Figure,
+            LabelKind::Equation,
+            LabelKind::Inline,
+        ];
+
+        // One stable-ordered pass: for each kind in the fixed order, take the definitions of that kind
+        // in their existing pre-order and emit `[<kind>] \label{<key>}`. A kind with no definitions
+        // contributes no lines (no empty header). Keys are owned, so there is no source slicing.
+        KIND_ORDER
+            .iter()
+            .flat_map(|kind| {
+                resolution
+                    .definitions
+                    .iter()
+                    .filter(move |def| def.kind == *kind)
+                    .map(|def| format!("[{}] \\label{{{}}}", def.kind.as_str(), def.key))
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
     /// The **resolved (successfully-matched) references grouped by their source `\ref`** (LTXDOC03
     /// S21) — the exact structural mirror of S18's
     /// [`unresolved_references_by_source`](Document::unresolved_references_by_source), but for the
@@ -5555,6 +5672,155 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         assert_eq!(
             doc.label_definitions(),
             "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S23 — winning label definitions grouped by kind (`label_definitions_by_kind`). The
+    // by-kind grouping companion of S22's flat `label_definitions`; two views of one list.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s23_groups_different_kinds_in_fixed_kind_order() {
+        // A section label, an equation label, and a bare inline label → grouped by kind in the fixed
+        // enum order (Section before Equation before Inline), each `[kind] \label{key}`. Note the
+        // source order is section, equation, inline — which already matches the fixed kind order here.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+\begin{equation}\label{eq:main}x=1\end{equation}
+\label{note}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[section] \\label{sec:intro}\n[equation] \\label{eq:main}\n[inline] \\label{note}"
+        );
+    }
+
+    #[test]
+    fn s23_reorders_source_to_fixed_kind_order() {
+        // Source order is inline THEN section, but the fixed kind order pulls the section ahead of the
+        // inline — proving S23 groups by kind rather than echoing source order.
+        let src = r"\begin{document}\label{note}
+\section{Intro}\label{sec:intro}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[section] \\label{sec:intro}\n[inline] \\label{note}"
+        );
+    }
+
+    #[test]
+    fn s23_same_kind_grouped_in_preorder() {
+        // Two inline labels of the SAME kind → listed together under `inline`, in their existing
+        // pre-order (`a` before `b`). Only the `inline` group appears; no empty groups for other kinds.
+        let src = r"\begin{document}\label{a}
+
+\label{b}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[inline] \\label{a}\n[inline] \\label{b}"
+        );
+    }
+
+    #[test]
+    fn s23_no_labels_returns_marker() {
+        // A document with no `\label` at all → the same fixed `(no label definitions)` marker S22 uses,
+        // never the empty string.
+        let src = r"\begin{document}Just some text with no labels.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.label_definitions_by_kind(), "(no label definitions)");
+    }
+
+    #[test]
+    fn s23_newline_join_no_trailing_newline() {
+        // A section + figure + inline label → exact string equality pins the `\n`-join with NO trailing
+        // newline, and the fixed kind order (Section, then Figure, then Inline).
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\begin{figure}\includegraphics{p.png}\caption{P}\label{fig:p}\end{figure}
+
+\label{note}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[section] \\label{sec:i}\n[figure] \\label{fig:p}\n[inline] \\label{note}"
+        );
+    }
+
+    #[test]
+    fn s23_is_additive_leaves_s1_s22_outputs_unchanged() {
+        // Same representative doc as the S22 additive test: a section, a figure, an equation, a
+        // resolved `\ref`, a resolved `\eqref`, `\nameref`s, two `\cite`s (one multi-key, one dangling),
+        // a duplicate `\bibitem`, a dangling `\eqref`, AND a duplicate `\label{dup}`. S23 changes NONE
+        // of the S1-S22 outputs — it only reads `resolve_references`. S22's flat `label_definitions`
+        // and S23's grouped `label_definitions_by_kind` are two views of the SAME winning `definitions`
+        // list; both are pinned here to show S23 neither adds, drops, nor reorders relative to S22.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\eqref{eq:e} -> Equation (1)\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\nEquations:\n  \\eqref{eq:e} -> Equation (1)"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+        // S18 grouped dangling refs — unchanged.
+        assert_eq!(doc.unresolved_references_by_source(), "\\eqref{eq:ghost}");
+        // S19 numbered winning bibliography — unchanged.
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+        // S20 losing duplicate labels — unchanged.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+        // S21 resolved references — unchanged.
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
+        // S22 flat winning label definitions — unchanged.
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+
+        // And S23 itself: the SAME winning definitions, grouped by kind in the fixed enum order
+        // (Section, Figure, Equation, Inline). `sec:intro` (section) leads, then `fig:p` (figure),
+        // then `eq:e` (equation), then `dup` (a bare inline `\label`). `\n`-joined, no trailing newline.
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[section] \\label{sec:intro}\n[figure] \\label{fig:p}\n[equation] \\label{eq:e}\n[inline] \\label{dup}"
         );
     }
 }
