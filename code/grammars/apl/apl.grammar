@@ -1,0 +1,130 @@
+# @version 1
+
+# =============================================================================
+# apl.grammar — Parser grammar for the APL historical core (MA-4b)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from the APL lexer (code/grammars/apl/apl.tokens). See
+# code/specs/MA05-apl-language.md, especially §3 (the grammar design this
+# file implements) and §4 (the exact primitive/operator scope).
+#
+# Token names (UPPERCASE) come from the APL lexer:
+#   NUMBER NAME                        literals and variables
+#   ARROW (←)                          assignment
+#   PLUS MINUS TIMES DIVIDE CEILING FLOOR RHO IOTA RAVEL   primitive functions
+#   EQ NE LT LE GE GT                  dyadic comparison primitives
+#   REDUCE (/)  SCAN (\)  OUTER (∘.)   operators
+#   LPAREN RPAREN                      grouping
+#   NEWLINE
+#
+# -----------------------------------------------------------------------------
+# Two nonterminals, not one (MA05 §3 bullet 1)
+# -----------------------------------------------------------------------------
+# Unlike every other frontend in this repo (Macsyma/MATLAB/Wolfram), APL needs
+# TWO expression nonterminals, because its operators (`/`, `\`, `∘.`) combine
+# with FUNCTIONS, not values:
+#
+#   value_expr     — arrays and scalars (what every other language just calls
+#                    "expr"). Built from `term`s combined by `function_expr`s.
+#   function_expr  — a primitive glyph, or a primitive glyph with a reduce/
+#                    scan/outer-product operator applied to it (a "derived
+#                    function"). A function_expr is never itself a value —
+#                    it only ever appears as the thing an application
+#                    production (below) combines with one or two value_exprs.
+#
+# -----------------------------------------------------------------------------
+# One precedence tier, right-to-left (MA05 §3 bullet 2)
+# -----------------------------------------------------------------------------
+# There is no precedence cascade to climb (contrast MATLAB's dozen-tier
+# cascade, MA01). `value_expr`'s dyadic continuation is a SINGLE right-
+# recursive rule: `a F b G c` parses as `a F (b G c)`, matching APL's
+# right-to-left evaluation exactly (`2×3+4` is `2×(3+4)`, not `(2×3)+4`).
+#
+# -----------------------------------------------------------------------------
+# Monadic vs. dyadic is a parser-production choice, not a lexer concern
+# (MA05 §3 bullet 3)
+# -----------------------------------------------------------------------------
+# `value_expr`'s two productions that start with a function_expr (monadic:
+# nothing precedes it) vs. that have a term before it (dyadic) are exactly
+# the "which application rule matched" the runtime later reads off — no
+# lexer-level context hook is needed, unlike MA01 §3's `'` problem.
+#
+# -----------------------------------------------------------------------------
+# Divergence from MA05 §3's inline illustrative example (documented, not a
+# silent change — see this PR's commit message)
+# -----------------------------------------------------------------------------
+# §3 bullet 1 illustrates the operator-production shape with
+# `outer = function_expr "∘." function_expr` — a function_expr on BOTH sides
+# of `∘.`. That does not match §1.1/§2's own semantic description of outer
+# product: `v ∘.F w` (MA05 §2) has exactly ONE function operand (F, appearing
+# immediately after the dot) and TWO VALUE operands (v, w) — there is no
+# "left function" in real APL's outer-product idiom (jot-dot always takes
+# its one function argument on the right; general function composition via
+# jot alone is deferred, see MA05 §4). This grammar therefore gives `outer`
+# a single function_atom operand (`OUTER function_atom`, i.e. `∘.F`), which
+# then plugs into the ordinary dyadic `value_expr` production like any other
+# function_expr — no special-casing needed. MA05 §3 has been corrected to
+# match this file, not the other way around.
+# =============================================================================
+
+program = { line } ;
+
+line = statement NEWLINE
+     | statement
+     | NEWLINE ;
+
+statement = assignment ;
+
+# Assignment (MA05 §4) is right-associative and, like everything else in
+# APL, evaluates right-to-left: the right-hand side is not a restricted
+# "simpler" rule, it recurses back through `assignment` itself, so
+# `A←2+3` assigns the value of `2+3` (not `2`) to `A`, and chained
+# assignment `A←B←3` assigns 3 to both `B` and `A`.
+assignment = NAME ARROW assignment
+           | value_expr ;
+
+# The core two-nonterminal, one-precedence-tier, right-to-left application
+# chain (MA05 §3). Ordered as ONE alternative per starting-token class (a
+# `term`-starting value vs. a `function_expr`-starting one) with the dyadic
+# continuation as an OPTIONAL trailing part of the first alternative — NOT
+# two competing "bare term" vs. "term then more" alternatives, which would
+# let a naive first-match-wins choice silently stop after a bare term even
+# when a dyadic continuation follows (mirrors the `X [ continuation ]` idiom
+# used throughout code/grammars/wolfram/wolfram.grammar for the same reason).
+value_expr = term [ function_expr value_expr ]
+           | function_expr value_expr ;
+
+# A value atom: a run of one or more juxtaposed NUMBER literals ("stranding"
+# — `1 2 3` is a 3-element vector; a single NUMBER is a rank-0 scalar, MA05
+# §4: "a scalar is a rank-0 array"), a NAME (a previously-assigned variable),
+# or a fully parenthesised value_expr. Stranding of non-numeric atoms (names,
+# parenthesised sub-expressions) is an honest textbook-subset restriction,
+# not a grammar limitation: `1 2 3` strands, `A B` does not (yet).
+term = NUMBER { NUMBER }
+     | NAME
+     | LPAREN value_expr RPAREN ;
+
+# The other nonterminal (MA05 §3 bullet 1): function-valued expressions.
+# Every function_atom is one of the MA05 §4 primitive glyphs — user-defined
+# functions/dfns (`∇`, `{...}`) are deferred, so function_atom is never
+# anything but a bare primitive. There is deliberately no parenthesised
+# function_expr and no "trains" (tacit function composition): both are out
+# of scope for this first cut, and omitting them avoids a real grammar
+# ambiguity a parenthesised-function form would otherwise introduce (`( … )`
+# would then be ambiguous between grouping a value_expr and grouping a
+# function_expr).
+function_atom = PLUS | MINUS | TIMES | DIVIDE | CEILING | FLOOR
+              | RHO | IOTA | RAVEL
+              | EQ | NE | LT | LE | GE | GT ;
+
+# An OPERATOR production takes a function_expr and produces a NEW
+# function_expr (MA05 §3 bullet 1). The three in scope (MA05 §4): reduce and
+# scan are POSTFIX on the function (`+/`, `+\`); outer product is PREFIX on
+# the function (`∘.×`) — see this file's header for why outer's shape
+# diverges from §3's own inline example. REDUCE/SCAN/OUTER's operand is
+# restricted to a bare `function_atom` (not the full recursive
+# `function_expr`) — stacking operators (e.g. applying reduce to an
+# already-reduced function) is not part of this first cut's scope.
+function_expr = function_atom [ REDUCE | SCAN ]
+              | OUTER function_atom ;

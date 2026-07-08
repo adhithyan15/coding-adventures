@@ -81,13 +81,22 @@ enough for both of APL's novel properties without a hand-written parser:
 - **Two nonterminals, not one.** `value_expr` (arrays/scalars) and
   `function_expr` (primitive glyphs, derived functions, user-defined dfns).
   An **operator** production takes a `function_expr` and produces a
-  `function_expr` (`reduce = function_expr "/"`, `outer = function_expr
-  "∘." function_expr`). An **application** production takes a
-  `function_expr` and one or two `value_expr`s (monadic: `function_expr
-  value_expr`; dyadic: `value_expr function_expr value_expr`) and produces a
-  `value_expr`. This is an ordinary two-nonterminal CFG — no parser
-  generator changes needed, just a grammar shaped differently from
-  MATLAB/Wolfram's single-nonterminal expression grammars.
+  `function_expr`. Reduce and scan are postfix on the function (`reduce =
+  function_expr "/"`, `scan = function_expr "\"`); outer product is
+  **prefix** on the function (`outer = "∘." function_expr`), not infix
+  between two function_exprs — `∘.` (jot-dot) always takes exactly ONE
+  function operand, immediately to its right (`∘.×` is "outer product with
+  ×"); the value operands (`v ∘.F w`, §2) are supplied entirely by the
+  surrounding application production below, never by `outer` itself. (This
+  corrects an earlier draft of this bullet, which showed `outer` with a
+  function_expr on both sides — that shape has no counterpart in §1.1/§2's
+  semantic description and was never implemented; see MA-4b's
+  `apl.grammar`.) An **application** production takes a `function_expr` and
+  one or two `value_expr`s (monadic: `function_expr value_expr`; dyadic:
+  `value_expr function_expr value_expr`) and produces a `value_expr`. This
+  is an ordinary two-nonterminal CFG — no parser generator changes needed,
+  just a grammar shaped differently from MATLAB/Wolfram's single-nonterminal
+  expression grammars.
 - **Right-to-left, one precedence tier.** A dyadic chain is right-recursive
   with **no** precedence levels between different glyphs: `value_expr =
   term | term function_expr value_expr`. This is simpler than MATLAB's
@@ -175,8 +184,11 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
   Landed as `ops::reduce`/`ops::scan`/`ops::outer`, CPU-reference only
   (rank ≤ 2, matching this crate's existing ceiling) — GPU-dispatch wiring
   through `accel`/`exec` is a follow-up, not required to unblock MA-4e.
-- **MA-4b — `apl.tokens`/`apl.grammar`**: the two-nonterminal grammar (§3),
-  validated with `grammar-tools validate`.
+- **MA-4b — `apl.tokens`/`apl.grammar`** (✅ done): the two-nonterminal
+  grammar (§3), validated with `grammar-tools validate` (24 tokens, 2 skip
+  patterns, 8 rules, zero cross-validation warnings — every declared token
+  is referenced). Files: `code/grammars/apl/apl.tokens`,
+  `code/grammars/apl/apl.grammar`.
 - **MA-4c — `apl-lexer`.** Single-codepoint glyph tokens, `⍝` line comments.
 - **MA-4d — `apl-parser`.** The `value_expr`/`function_expr` grammar,
   monadic/dyadic application, reduce/scan/outer-product operator

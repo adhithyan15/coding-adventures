@@ -1,0 +1,121 @@
+# APL Token Grammar
+# ============================================================================
+#
+# Tokenizes the historical-core subset of APL fixed by MA-4a
+# (code/specs/MA05-apl-language.md §4): dense numeric arrays, the primitive
+# functions `+ - × ÷ ⌈ ⌊ ⍴ ⍳ , = ≠ < ≤ ≥ >`, the three operators
+# `/` (reduce) `\` (scan) `∘.` (outer product), assignment `←`, parenthesised
+# grouping, and `⍝` line comments.
+#
+# Per MA05 §3 bullet 4 ("Glyph tokenization is easy"): every APL primitive is
+# a single dedicated Unicode code point, so each glyph below is its own
+# unambiguous single-token literal rule (mirroring the spec's own example,
+# `RHO = "⍴"`) — there is no character overloading of the kind MATLAB's `'`
+# or `.` need (see MA01 §3), so no lexer-level disambiguation hook is needed
+# anywhere in this file.
+#
+# Source is taken as native UTF-8 glyphs — no keyboard-mapping/transliteration
+# layer (that is a historical editor/input-method concern, out of scope for a
+# source-string-in frontend, per MA05 §3 bullet 4).
+#
+# There is no STRING token: MA05 §4 scopes this first cut to numeric arrays
+# only (mixed numeric+character arrays are explicitly deferred), so there is
+# no character/string literal syntax to tokenize yet.
+#
+# @version 1
+
+# ============================================================================
+# SECTION 1: Multi-character operators (declared before any single-character
+# token they could be confused with, per this repo's longest-match-first
+# lexer convention — see e.g. code/grammars/wolfram/wolfram.tokens)
+#
+# OUTER ("∘." — jot immediately followed by a dot) is the two-codepoint outer
+# -product operator (MA05 §4). Jot (∘) alone is not used for anything else in
+# this subset (general function composition/"trains" are deferred, MA05 §4),
+# so there is no ordering hazard the way `//.` vs `/.` vs `/` has in Wolfram —
+# it is listed here purely for the "multi-character tokens go first" grouping
+# convention, not because a real ambiguity exists.
+# ============================================================================
+
+OUTER = "∘."
+
+# ============================================================================
+# SECTION 2: Assignment and the primitive function glyphs (MA05 §4)
+#
+# Each dyadic/monadic pair shares ONE glyph — which meaning applies is a
+# PARSER-production concern (which application rule matched), not a lexer
+# concern (MA05 §3 bullet 3). The token name here is neutral between the two
+# readings, e.g. RHO is "shape" monadically and "reshape" dyadically.
+# ============================================================================
+
+ARROW   = "←"
+
+# conjugate / add, negate / subtract, sign / multiply, reciprocal / divide,
+# ceiling·floor / max·min, shape / reshape, index-generator / index-of,
+# ravel / catenate — one glyph per row, in MA05 §4's listed order.
+PLUS    = "+"
+MINUS   = "-"
+TIMES   = "×"
+DIVIDE  = "÷"
+CEILING = "⌈"
+FLOOR   = "⌊"
+RHO     = "⍴"
+IOTA    = "⍳"
+RAVEL   = ","
+
+EQ = "="
+NE = "≠"
+LT = "<"
+LE = "≤"
+GE = "≥"
+GT = ">"
+
+# ============================================================================
+# SECTION 3: Operators (MA05 §4) and grouping
+#
+# REDUCE and SCAN are postfix on the function they modify (`+/`, `+\`);
+# OUTER (Section 1) is prefix on the function it modifies (`∘.×`) — see
+# apl.grammar's `function_expr` for how the two shapes differ.
+# ============================================================================
+
+REDUCE = "/"
+SCAN   = "\"
+
+LPAREN = "("
+RPAREN = ")"
+
+# ============================================================================
+# SECTION 4: Literal value tokens
+#
+# NUMBER uses APL's historical "high minus" ¯ (U+00AF, macron) for a literal
+# negative sign, in the mantissa and/or the exponent (e.g. `¯3`, `1.5E¯3`) —
+# never the ASCII `-`, which is always the MINUS function token above. This
+# is not a stylistic choice: `-` must stay unambiguously a function so that
+# `A-B` (dyadic subtract) and a hypothetical negative literal never collide.
+#
+# NAME is a plain ASCII identifier (previously-assigned variables). APL's
+# `⎕`-prefixed system names/quad I/O are out of scope for this first cut
+# (MA05 §4 does not mention them).
+# ============================================================================
+
+NUMBER = /¯?[0-9]+(\.[0-9]+)?([Ee]¯?[0-9]+)?/
+NAME   = /[A-Za-z][A-Za-z0-9]*/
+
+# ============================================================================
+# SECTION 5: Significant newlines + skip patterns
+#
+# A newline separates statements, exactly like Wolfram (see wolfram.tokens
+# SECTION 4) — one difference is honestly simpler: this first cut does not
+# drop newlines inside `( … )`, so every parenthesised expression must stay
+# on one line for now (multi-line parenthesised grouping is a follow-on, not
+# a MA05 §4 in-scope item).
+#
+# `⍝` starts a line comment, consumed to (but not including) the end of the
+# line, so the following NEWLINE is still matched as its own token.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /⍝[^\r\n]*/
