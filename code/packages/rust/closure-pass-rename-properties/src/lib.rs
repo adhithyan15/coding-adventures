@@ -1190,6 +1190,22 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
             }
         }
         Expression::MemberExpression(m) => classify_member(&m.object, &m.property, m.computed, cls),
+        // `a?.b` / `a?.[k]` — the optional short-circuit does not change which
+        // property name is accessed, so it classifies exactly like a plain
+        // member access.
+        Expression::OptionalMemberExpression(m) => {
+            classify_member(&m.object, &m.property, m.computed, cls)
+        }
+        // `a?.()` — classify callee and each argument, as for an ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            classify_expr(&ce.callee, cls);
+            for a in &ce.arguments {
+                classify_expr(a, cls);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // descend into the inner expression.
+        Expression::ChainExpression(c) => classify_expr(&c.expression, cls),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
                 classify_expr(el, cls);
@@ -1492,6 +1508,21 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::MemberExpression(m) => {
             rewrite_member(&mut m.object, &mut m.property, m.computed, map)
         }
+        // `a?.b` / `a?.[k]` — rewrite the accessed property name exactly as a
+        // plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            rewrite_member(&mut m.object, &mut m.property, m.computed, map)
+        }
+        // `a?.()` — rewrite callee and each argument, as for an ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            rewrite_expr(&mut ce.callee, map);
+            for a in &mut ce.arguments {
+                rewrite_expr(a, map);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // descend into the inner expression.
+        Expression::ChainExpression(c) => rewrite_expr(&mut c.expression, map),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 rewrite_expr(el, map);

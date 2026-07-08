@@ -472,6 +472,16 @@ fn expr_node_count(expr: &Expression) -> usize {
         Expression::MemberExpression(m) => {
             expr_node_count(&m.object) + expr_node_count(&m.property)
         }
+        // `a?.b` / `a?.[k]` — same child shape as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            expr_node_count(&m.object) + expr_node_count(&m.property)
+        }
+        // `a?.()` — same child shape as an ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            expr_node_count(&ce.callee) + ce.arguments.iter().map(expr_node_count).sum::<usize>()
+        }
+        // A chain expression transparently wraps one inner expression.
+        Expression::ChainExpression(c) => expr_node_count(&c.expression),
         Expression::ArrayExpression(ae) => ae.elements.iter().flatten().map(expr_node_count).sum(),
         Expression::ObjectExpression(oe) => oe
             .properties
@@ -816,6 +826,19 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         Expression::MemberExpression(m) => {
             collect_binding_idents_member(&m.object, &m.property, m.computed, out)
         }
+        // `a?.b` / `a?.[k]` — same as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            collect_binding_idents_member(&m.object, &m.property, m.computed, out)
+        }
+        // `a?.()` — same as an ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            collect_binding_idents_expr(&ce.callee, out);
+            for a in &ce.arguments {
+                collect_binding_idents_expr(a, out);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => collect_binding_idents_expr(&c.expression, out),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
                 collect_binding_idents_expr(el, out);
@@ -1136,6 +1159,23 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         Expression::MemberExpression(m) => {
             tally_member(&m.object, &m.property, m.computed, cand, t)
         }
+        // `a?.b` / `a?.[k]` — same as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            tally_member(&m.object, &m.property, m.computed, cand, t)
+        }
+        // `a?.()` — an optional call is NOT a plain-call inline site (the
+        // inliner only substitutes `CallExpression`, and `is_name_arity_call`
+        // is typed to `&CallExpression`). Its callee and arguments are still
+        // ordinary uses of the candidate, so recurse without the call gate —
+        // mirroring the `NewExpression` tail above.
+        Expression::OptionalCallExpression(ce) => {
+            tally_expr(&ce.callee, cand, t);
+            for a in &ce.arguments {
+                tally_expr(a, cand, t);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => tally_expr(&c.expression, cand, t),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
                 tally_expr(el, cand, t);
@@ -1463,6 +1503,28 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
             }
         }
         Expression::MemberExpression(m) => changed |= inline_in_member(m, cand),
+        // `a?.b` / `a?.[k]` — recurse into object and (computed) property
+        // exactly as `inline_in_member` does for a plain member.
+        Expression::OptionalMemberExpression(m) => {
+            changed |= inline_in_expr(&mut m.object, cand);
+            // Only a computed property `o?.[expr]` is a sub-expression to walk;
+            // a non-computed `?.name` is a property name.
+            if m.computed {
+                changed |= inline_in_expr(&mut m.property, cand);
+            }
+        }
+        // `a?.()` is not a plain-call inline site (only `CallExpression` is
+        // substituted, handled before this match) — recurse into callee and
+        // arguments so a nested inlinable call is still reached, mirroring
+        // `NewExpression`.
+        Expression::OptionalCallExpression(ce) => {
+            changed |= inline_in_expr(&mut ce.callee, cand);
+            for a in &mut ce.arguments {
+                changed |= inline_in_expr(a, cand);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => changed |= inline_in_expr(&mut c.expression, cand),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 changed |= inline_in_expr(el, cand);
@@ -1626,6 +1688,23 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                 substitute(&mut m.property, map);
             }
         }
+        // `a?.b` / `a?.[k]` — substitute in object and (computed) property
+        // exactly as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            substitute(&mut m.object, map);
+            if m.computed {
+                substitute(&mut m.property, map);
+            }
+        }
+        // `a?.()` — substitute in callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            substitute(&mut ce.callee, map);
+            for a in &mut ce.arguments {
+                substitute(a, map);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => substitute(&mut c.expression, map),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 substitute(el, map);
@@ -2029,6 +2108,25 @@ fn expr_collect_mutated_params(
             if m.computed {
                 expr_collect_mutated_params(&m.property, params, out);
             }
+        }
+        // `a?.b` / `a?.[k]` — recurse into object and (computed) property
+        // exactly as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            expr_collect_mutated_params(&m.object, params, out);
+            if m.computed {
+                expr_collect_mutated_params(&m.property, params, out);
+            }
+        }
+        // `a?.()` — recurse into callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            expr_collect_mutated_params(&ce.callee, params, out);
+            for a in &ce.arguments {
+                expr_collect_mutated_params(a, params, out);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => {
+            expr_collect_mutated_params(&c.expression, params, out)
         }
         // Array/object literals: recurse every contained expression. The typed
         // AST has no spread element (`[...e]` / `{...e}` are Phase 2) and no
@@ -3524,6 +3622,23 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 rename_in_expr(&mut m.property, map);
             }
         }
+        // `a?.b` / `a?.[k]` — rename in object and (computed) property exactly
+        // as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            rename_in_expr(&mut m.object, map);
+            if m.computed {
+                rename_in_expr(&mut m.property, map);
+            }
+        }
+        // `a?.()` — rename in callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            rename_in_expr(&mut ce.callee, map);
+            for a in &mut ce.arguments {
+                rename_in_expr(a, map);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => rename_in_expr(&mut c.expression, map),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 rename_in_expr(el, map);

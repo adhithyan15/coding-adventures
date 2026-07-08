@@ -96,7 +96,7 @@ use coding_adventures_javascript_ast::{
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, Identifier,
-    IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
+    ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
     DoWhileStatement, VariableDeclarator, WhileStatement,
@@ -588,6 +588,16 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             source: Box::new(fold_expression(&e.source, st)),
         }),
         Expression::MemberExpression(m) => fold_member(m, st),
+        // Optional-chain nodes delegate to out-of-line helpers. This is not
+        // cosmetic: `fold_expression` recurses once per AST level, and a debug
+        // build gives every match arm its own stack slots, so building these
+        // structs *inline* would enlarge the per-level frame on the hot binary
+        // recursion path — enough to overflow the deep-chain DoS-guard test.
+        // Delegating (as the member/call arms already do) keeps their locals in
+        // the helper frame, entered only when an optional node is actually hit.
+        Expression::OptionalMemberExpression(m) => fold_optional_member(m, st),
+        Expression::OptionalCallExpression(c) => fold_optional_call(c, st),
+        Expression::ChainExpression(c) => fold_chain(c, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),
             elements: a
@@ -3584,6 +3594,50 @@ fn fold_string_replace(method: &str, haystack: &str, from: &str, to: &str) -> Op
 /// - Anything else (identifier objects like `s.length`, other properties like
 ///   `"x".charCodeAt`) falls through unchanged; we still recurse into the
 ///   object and property so nested constants inside them fold.
+/// Fold `a?.b` / `a?.[k]`. Recurse into object and property so nested
+/// constants fold, but keep the optional-member node itself — we deliberately
+/// do NOT apply the `.length` / string-method folds to the `?.` variant, so the
+/// short-circuit semantics are preserved verbatim and the transform stays
+/// obviously sound.
+///
+/// `#[inline(never)]` on purpose: this keeps the struct-building locals out of
+/// the recursive `fold_expression` frame, which recurses once per AST level. On
+/// the deep-binary-chain path this arm is never entered, so its frame cost must
+/// not be paid per level (see the deep-chain DoS-guard test).
+#[inline(never)]
+fn fold_optional_member(m: &OptionalMemberExpression, st: &mut FoldState) -> Expression {
+    Expression::OptionalMemberExpression(OptionalMemberExpression {
+        cv: m.cv.clone(),
+        object: Box::new(fold_expression(&m.object, st)),
+        property: Box::new(fold_expression(&m.property, st)),
+        computed: m.computed,
+    })
+}
+
+/// Fold `a?.(args)`. Recurse into callee and arguments to fold nested
+/// constants, keeping the optional-call node (the string-method folds are not
+/// applied, so the `?.` short-circuit variant is preserved). `#[inline(never)]`
+/// for the same frame-size reason as [`fold_optional_member`].
+#[inline(never)]
+fn fold_optional_call(c: &OptionalCallExpression, st: &mut FoldState) -> Expression {
+    Expression::OptionalCallExpression(OptionalCallExpression {
+        cv: c.cv.clone(),
+        callee: Box::new(fold_expression(&c.callee, st)),
+        arguments: c.arguments.iter().map(|a| fold_expression(a, st)).collect(),
+    })
+}
+
+/// Fold a `ChainExpression` — it transparently wraps an optional-chain spine,
+/// so recurse into its inner expression and rewrap. `#[inline(never)]` for the
+/// same frame-size reason as [`fold_optional_member`].
+#[inline(never)]
+fn fold_chain(c: &ChainExpression, st: &mut FoldState) -> Expression {
+    Expression::ChainExpression(ChainExpression {
+        cv: c.cv.clone(),
+        expression: Box::new(fold_expression(&c.expression, st)),
+    })
+}
+
 fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
     // Recurse first, so e.g. `("a" + "b").length` sees the folded `"ab"`.
     let object = fold_expression(&m.object, st);

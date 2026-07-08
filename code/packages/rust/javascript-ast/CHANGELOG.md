@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.30.0] - 2026-07-08
+
+### Added — CLOC12.171 PR1: optional chaining `a?.b` / `a?.[k]` / `a?.()` (ES2020)
+
+Three new `Expression` variants model **optional chaining**:
+
+- `OptionalMemberExpression { cv, object, property, computed }` — `a?.b` /
+  `a?.[k]`. Structurally identical to `MemberExpression`; the distinct type is
+  what records that the link was written with `?.`.
+- `OptionalCallExpression { cv, callee, arguments }` — `a?.()`. Structurally a
+  `CallExpression` written with `?.(`.
+- `ChainExpression { cv, expression }` — the transparent chain-boundary wrapper
+  (ESTree `ChainExpression`) that marks where the `undefined` short-circuit
+  resolves. It carries no syntax of its own.
+
+**Modelling note (diverges from the earlier flag-based plan).** The scouted
+plan was the ESTree-7 shape: an `optional: bool` flag on `MemberExpression` /
+`CallExpression` plus a `ChainExpression` wrapper. We instead give the optional
+links their **own node types**, for two reasons: (1) it matches the conformance
+target — Google's Closure Compiler represents optional access with dedicated
+Rhino node kinds (`OPTCHAIN_GETPROP` / `OPTCHAIN_GETELEM` / `OPTCHAIN_CALL`),
+not a flag on the ordinary access nodes; and (2) it is purely additive —
+`MemberExpression` / `CallExpression` have ~150 construction sites across the
+workspace, and a new required field would touch every one, whereas a new
+variant only adds `match` arms where a pass actually cares. `ChainExpression`
+is retained as the short-circuit boundary marker.
+
+Purely additive — no existing node changed. This is the atomic node PR of the
+CLOC12.171 arc; the grammar→typed-AST bridge that *builds* these nodes is PR2,
+and the CodePrinter conformance port is PR3.
+
 ## [0.29.0] - 2026-07-07
 
 ### Added — CLOC12.170: object spread `{...o}` via `ObjectMember` (gap-SpreadProperty)

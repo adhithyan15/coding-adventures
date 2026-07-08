@@ -62,7 +62,7 @@ use coding_adventures_javascript_ast::{
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
-    MemberExpression, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
+    ChainExpression, MemberExpression, ObjectExpression, ObjectMember, OptionalCallExpression, OptionalMemberExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, UnaryExpression, UnaryOperator, UpdateExpression, VarKind, VariableDeclaration,
     DoWhileStatement, VariableDeclarator, WhileStatement,
 };
@@ -285,6 +285,9 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         NewTarget(n) => n.cv.clone(),
         ImportMeta(n) => n.cv.clone(),
         MemberExpression(e) => e.cv.clone(),
+        OptionalMemberExpression(e) => e.cv.clone(),
+        OptionalCallExpression(e) => e.cv.clone(),
+        ChainExpression(e) => e.cv.clone(),
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
         FunctionExpression(e) => e.cv.clone(),
@@ -1461,6 +1464,30 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             object: Box::new(fold_expression(&m.object, st)),
             property: Box::new(fold_expression(&m.property, st)),
             computed: m.computed,
+        }),
+        // `a?.b` / `a?.[k]` — recurse into object and property exactly as a
+        // plain member access; the optional-member node is kept verbatim.
+        Expression::OptionalMemberExpression(m) => {
+            Expression::OptionalMemberExpression(OptionalMemberExpression {
+                cv: m.cv.clone(),
+                object: Box::new(fold_expression(&m.object, st)),
+                property: Box::new(fold_expression(&m.property, st)),
+                computed: m.computed,
+            })
+        }
+        // `a?.()` — recurse into callee and arguments as for an ordinary call.
+        Expression::OptionalCallExpression(c) => {
+            Expression::OptionalCallExpression(OptionalCallExpression {
+                cv: c.cv.clone(),
+                callee: Box::new(fold_expression(&c.callee, st)),
+                arguments: c.arguments.iter().map(|a| fold_expression(a, st)).collect(),
+            })
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // recurse into the inner expression and rewrap.
+        Expression::ChainExpression(c) => Expression::ChainExpression(ChainExpression {
+            cv: c.cv.clone(),
+            expression: Box::new(fold_expression(&c.expression, st)),
         }),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),

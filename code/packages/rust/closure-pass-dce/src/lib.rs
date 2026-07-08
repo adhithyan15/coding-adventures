@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
+    ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
     DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
@@ -1274,6 +1274,31 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             object: Box::new(dce_expression(&m.object, st)),
             property: Box::new(dce_expression(&m.property, st)),
             computed: m.computed,
+        }),
+        // `a?.b` / `a?.[k]` — structurally identical to a member access; rebuild
+        // it recursing into object and property exactly as `MemberExpression`.
+        Expression::OptionalMemberExpression(m) => {
+            Expression::OptionalMemberExpression(OptionalMemberExpression {
+                cv: m.cv.clone(),
+                object: Box::new(dce_expression(&m.object, st)),
+                property: Box::new(dce_expression(&m.property, st)),
+                computed: m.computed,
+            })
+        }
+        // `a?.()` — an optional call has the same side-effect profile as an
+        // ordinary call; recurse into callee and arguments and keep it.
+        Expression::OptionalCallExpression(c) => {
+            Expression::OptionalCallExpression(OptionalCallExpression {
+                cv: c.cv.clone(),
+                callee: Box::new(dce_expression(&c.callee, st)),
+                arguments: c.arguments.iter().map(|a| dce_expression(a, st)).collect(),
+            })
+        }
+        // A chain expression is a transparent optional-chain wrapper — recurse
+        // into its inner expression and rewrap.
+        Expression::ChainExpression(c) => Expression::ChainExpression(ChainExpression {
+            cv: c.cv.clone(),
+            expression: Box::new(dce_expression(&c.expression, st)),
         }),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),

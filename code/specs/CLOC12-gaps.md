@@ -2138,6 +2138,49 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.171 — optional chaining `a?.b` / `a?.[k]` / `a?.()`: nodes + emit + passes (PR1)
+
+Optional chaining (ES2020) lets a member/call short-circuit to `undefined`
+instead of throwing when the base is `null`/`undefined`: `a?.b`, `a?.[k]`,
+`a?.()`. Three new `Expression` variants model it (`javascript-ast` 0.30.0):
+
+```rust
+OptionalMemberExpression { cv, object, property, computed }  // a?.b / a?.[k]
+OptionalCallExpression    { cv, callee, arguments }          // a?.()
+ChainExpression           { cv, expression }                 // chain boundary
+```
+
+**Modelling — separate node types, not an `optional: bool` flag (a deliberate
+divergence from the ESTree-7 shape).** ESTree-7 marks optional links by setting
+`optional: true` on the ordinary `MemberExpression`/`CallExpression` and wraps
+the chain in `ChainExpression`. We instead give the optional links their **own
+node types** for two reasons: (1) it matches the conformance target — Google's
+Closure Compiler uses dedicated Rhino node kinds `OPTCHAIN_GETPROP` /
+`OPTCHAIN_GETELEM` / `OPTCHAIN_CALL`, not a flag on the ordinary access nodes;
+and (2) it is purely additive — `MemberExpression`/`CallExpression` have ~150
+construction sites across the workspace, so a new required field would touch
+every one, whereas a new variant only adds `match` arms where a pass cares.
+`ChainExpression` is kept as the short-circuit-boundary marker (it prints
+transparently). A non-optional suffix that follows an optional one stays an
+*ordinary* `MemberExpression`/`CallExpression` whose object/callee is the
+optional node, so `a?.b.c` needs no per-link flag — only the `b` link carries
+`?.`.
+
+`closure-emitter` (0.35.0) prints them: `emit_optional_member` spells `?.` /
+`?.[`…`]`, `emit_optional_call` spells `?.(`…`)`, and `emit_chain` descends
+transparently into its inner expression. All three are `PREC_PRIMARY` (they
+compose like member/call), so the object/callee binds at primary strength and a
+looser object keeps its parens (`(a||b)?.c`); a looser *sequence* call argument
+wraps (`a?.((b,c))`). 5 emitter unit tests.
+
+All downstream pass/analysis crates gain their three match arms — the optional
+member/call arms mirror the plain member/call handling (recurse into
+object/property, callee/arguments), and the `ChainExpression` arm recurses into
+its single inner expression. All in ONE atomic commit so the workspace never
+has a broken `match`. The grammar→typed-AST bridge that *builds* these nodes
+from `optional_chain_expression` is CLOC12.171 PR2 (closes gap-OptionalChain);
+the CodePrinter conformance port is PR3.
+
 ## CLOC12.170 — object spread `{...o}` via `ObjectMember`: structural node + emit + passes (PR1)
 
 Object literals now model **object spread** `{...o}` (ES2018) — the `...expr`

@@ -80,6 +80,7 @@ use coding_adventures_javascript_ast::{
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
     Super, NewTarget, ImportMeta, ImportExpression,
+    ChainExpression, OptionalCallExpression, OptionalMemberExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1131,6 +1132,9 @@ impl<'a> Emitter<'a> {
             Expression::NewExpression(n) => self.emit_new(n),
             Expression::SequenceExpression(s) => self.emit_sequence(s),
             Expression::MemberExpression(m) => self.emit_member(m),
+            Expression::OptionalMemberExpression(m) => self.emit_optional_member(m),
+            Expression::OptionalCallExpression(c) => self.emit_optional_call(c),
+            Expression::ChainExpression(c) => self.emit_chain(c),
             Expression::ArrayExpression(a) => self.emit_array(a),
             Expression::ObjectExpression(o) => self.emit_object(o),
             Expression::FunctionExpression(f) => self.emit_function_expression(f),
@@ -1716,6 +1720,51 @@ impl<'a> Emitter<'a> {
         }
     }
 
+    /// `obj?.prop` / `obj?.[prop]` — an optional member access. Identical to
+    /// [`Self::emit_member`] except the access operator is spelled `?.`
+    /// (`?.` before a dot name, `?.[` before a computed key). The object binds
+    /// at `PREC_PRIMARY` for the same reason as a plain member: a looser object
+    /// (`(a||b)?.c`) must keep its parens.
+    fn emit_optional_member(&mut self, m: &OptionalMemberExpression) {
+        self.maybe_map(&m.cv);
+        self.emit_expression_inner(&m.object, PREC_PRIMARY);
+        if m.computed {
+            self.write_str("?.[");
+            self.emit_expression(&m.property);
+            self.write_str("]");
+        } else {
+            self.write_str("?.");
+            self.emit_expression(&m.property);
+        }
+    }
+
+    /// `callee?.(args)` — an optional call. Identical to [`Self::emit_call`]
+    /// except the call operator is spelled `?.(`. The callee binds at
+    /// `PREC_PRIMARY`; each argument is emitted at `PREC_ASSIGNMENT` so a
+    /// looser *sequence* argument wraps (`f?.((a,b))`).
+    fn emit_optional_call(&mut self, c: &OptionalCallExpression) {
+        self.maybe_map(&c.cv);
+        self.emit_expression_inner(&c.callee, PREC_PRIMARY);
+        self.write_str("?.(");
+        for (i, a) in c.arguments.iter().enumerate() {
+            if i > 0 {
+                self.write_str(",");
+                self.pretty_ws();
+            }
+            self.emit_expression_inner(a, PREC_ASSIGNMENT);
+        }
+        self.write_str(")");
+    }
+
+    /// A [`ChainExpression`] is the transparent chain-boundary wrapper: it has
+    /// no syntax of its own, so the printer simply descends into its inner
+    /// expression. The inner spine is always a member/call/optional node at
+    /// `PREC_PRIMARY`, so no parenthesisation is required here.
+    fn emit_chain(&mut self, c: &ChainExpression) {
+        self.maybe_map(&c.cv);
+        self.emit_expression(&c.expression);
+    }
+
     fn emit_array(&mut self, a: &ArrayExpression) {
         self.maybe_map(&a.cv);
         self.write_str("[");
@@ -2086,6 +2135,14 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::ObjectExpression(_)
         | Expression::CallExpression(_)
         | Expression::MemberExpression(_)
+        // Optional-chain links (`a?.b`, `a?.[k]`, `a?.()`) bind exactly like
+        // their non-optional member/call siblings — left-associative primaries.
+        // The `ChainExpression` wrapper is transparent (it prints only its
+        // inner expression), so it inherits the primary strength of the
+        // member/call it wraps: `(a?.b).c` never needs extra parens.
+        | Expression::OptionalMemberExpression(_)
+        | Expression::OptionalCallExpression(_)
+        | Expression::ChainExpression(_)
         // `this` is a reserved-word primary — a bare keyword that binds at the
         // tightest level, like an identifier. It never needs wrapping in any
         // parent (`this.x`, `this()`, `f(this)` are all valid bare), and no
@@ -2602,6 +2659,98 @@ mod tests {
             prefix: true,
             argument: Box::new(arg),
         })
+    }
+
+    // ---- optional chaining (`a?.b` / `a?.[k]` / `a?.()`) ----------------
+    //
+    // These exercise `emit_optional_member`, `emit_optional_call`, and the
+    // transparent `emit_chain` wrapper (CLOC12.171 PR1). The printer is driven
+    // from hand-constructed AST — the bridge that *builds* these nodes from the
+    // grammar is PR2.
+
+    fn opt_member(object: Expression, prop: &str, computed: bool) -> Expression {
+        Expression::OptionalMemberExpression(OptionalMemberExpression {
+            cv: None,
+            object: Box::new(object),
+            property: Box::new(ident(prop)),
+            computed,
+        })
+    }
+    fn opt_call(callee: Expression, arguments: Vec<Expression>) -> Expression {
+        Expression::OptionalCallExpression(OptionalCallExpression {
+            cv: None,
+            callee: Box::new(callee),
+            arguments,
+        })
+    }
+    fn chain(inner: Expression) -> Expression {
+        Expression::ChainExpression(ChainExpression {
+            cv: None,
+            expression: Box::new(inner),
+        })
+    }
+
+    #[test]
+    fn optional_member_dot_and_computed() {
+        // `a?.b` — optional dot access spells the operator `?.`.
+        assert_eq!(emit_expr(chain(opt_member(ident("a"), "b", false))), "a?.b;");
+        // `a?.[b]` — optional computed access spells `?.[`…`]`.
+        assert_eq!(emit_expr(chain(opt_member(ident("a"), "b", true))), "a?.[b];");
+    }
+
+    #[test]
+    fn optional_call_prints_qmark_dot_parens() {
+        // `a?.()` — optional call, no arguments.
+        assert_eq!(emit_expr(chain(opt_call(ident("a"), vec![]))), "a?.();");
+        // `a?.(b)` — one argument.
+        assert_eq!(
+            emit_expr(chain(opt_call(ident("a"), vec![ident("b")]))),
+            "a?.(b);"
+        );
+    }
+
+    #[test]
+    fn optional_link_then_plain_link_only_marks_the_optional_one() {
+        // `a?.b.c` — only the FIRST link is optional; the `.c` that follows is
+        // an ordinary member whose object is the optional node. No `?.` leaks
+        // onto `.c`.
+        let inner = member(opt_member(ident("a"), "b", false), "c", false);
+        assert_eq!(emit_expr(chain(inner)), "a?.b.c;");
+        // `a?.b()` — a plain call on an optional member.
+        let called = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(opt_member(ident("a"), "b", false)),
+            arguments: vec![],
+        });
+        assert_eq!(emit_expr(chain(called)), "a?.b();");
+    }
+
+    #[test]
+    fn chain_wrapper_is_transparent_and_object_precedence_is_kept() {
+        // The `ChainExpression` wrapper adds no syntax: wrapping an optional
+        // member prints exactly the same as the bare optional member.
+        let bare = opt_member(ident("a"), "b", false);
+        assert_eq!(emit_expr(chain(bare.clone())), emit_expr(bare));
+        // The object still binds at PREC_PRIMARY: a looser object keeps parens.
+        let or = Expression::LogicalExpression(LogicalExpression {
+            cv: None,
+            operator: LogicalOperator::Or,
+            left: Box::new(ident("a")),
+            right: Box::new(ident("b")),
+        });
+        assert_eq!(emit_expr(chain(opt_member(or, "c", false))), "(a||b)?.c;");
+    }
+
+    #[test]
+    fn optional_call_sequence_argument_wraps() {
+        // `a?.((b,c))` — a looser *sequence* argument must wrap, exactly as a
+        // plain call argument does; a bare `a?.(b,c)` would be a two-argument
+        // call, a different program.
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("b"), ident("c")],
+        });
+        assert_eq!(emit_expr(chain(opt_call(ident("a"), vec![seq]))), "a?.((b,c));");
     }
 
     #[test]

@@ -52,6 +52,9 @@ pub enum Expression {
     ConditionalExpression(ConditionalExpression),
     CallExpression(CallExpression),
     MemberExpression(MemberExpression),
+    OptionalMemberExpression(OptionalMemberExpression),
+    OptionalCallExpression(OptionalCallExpression),
+    ChainExpression(ChainExpression),
     ArrayExpression(ArrayExpression),
     ObjectExpression(ObjectExpression),
     FunctionExpression(FunctionExpression),
@@ -780,6 +783,94 @@ pub struct MemberExpression {
 /// `Box<Expression>` directly. Will be removed in Phase 1.1.
 #[deprecated = "Use Box<Expression> directly on MemberExpression.property"]
 pub type MemberProperty = Box<Expression>;
+
+// ---------------------------------------------------------------------
+// Optional chaining — `a?.b`, `a?.[k]`, `a?.()`  (ES2020)
+// ---------------------------------------------------------------------
+//
+// # Why separate node types rather than an `optional: bool` flag?
+//
+// ESTree-7 marks optional links by setting `optional: true` on the regular
+// `MemberExpression`/`CallExpression` and wrapping the whole chain in a
+// `ChainExpression`. We instead give the **optional links their own node
+// types** (`OptionalMemberExpression`, `OptionalCallExpression`) and keep a
+// `ChainExpression` wrapper only as the chain-boundary marker. Two reasons:
+//
+//   1. **It matches our conformance target.** Google's Closure Compiler (the
+//      thing this crate clones) represents optional access with *dedicated*
+//      Rhino node kinds — `OPTCHAIN_GETPROP` (`a?.b`), `OPTCHAIN_GETELEM`
+//      (`a?.[k]`), and `OPTCHAIN_CALL` (`a?.()`) — not a flag on the ordinary
+//      `GETPROP`/`GETELEM`/`CALL`. Modelling the same shape keeps the printer
+//      and passes aligned with upstream behaviour.
+//   2. **It is purely additive.** `MemberExpression` and `CallExpression`
+//      have ~150 construction sites across the workspace; bolting a new
+//      required field onto them would touch every one. A new variant only
+//      adds `match` arms where a pass actually cares.
+//
+// # How a chain is shaped
+//
+// A run of `?.` / `.` / `[]` / `()` suffixes builds a left-leaning spine, and
+// the **whole spine** is wrapped once in a [`ChainExpression`] (the boundary
+// at which the `undefined` short-circuit resolves). A non-optional suffix
+// that follows an optional one is still an *ordinary* `MemberExpression` /
+// `CallExpression` whose object/callee is the optional node — so no `optional`
+// flag is needed to print `a?.b.c` (only the `b` link carries `?.`):
+//
+// ```text
+//   a?.b       ChainExpression( OptionalMember{ a, b } )
+//   a?.[k]     ChainExpression( OptionalMember{ a, k, computed } )
+//   a?.()      ChainExpression( OptionalCall{ a, [] } )
+//   a?.b.c     ChainExpression( Member{ OptionalMember{ a, b }, c } )
+//   a?.b()     ChainExpression( Call{ OptionalMember{ a, b }, [] } )
+// ```
+//
+// The printer is the unit under test in PR1; the bridge that *builds* these
+// nodes from the grammar's `optional_chain_expression` rule is CLOC12.171 PR2.
+
+/// `obj?.prop` (dot) or `obj?.[prop]` (computed) — an **optional** member
+/// access. If `obj` is `null`/`undefined` the whole surrounding
+/// [`ChainExpression`] short-circuits to `undefined` instead of throwing.
+/// Structurally identical to [`MemberExpression`]; the distinct type is what
+/// records that this link was written with `?.`. Mirrors Closure's
+/// `OPTCHAIN_GETPROP` / `OPTCHAIN_GETELEM`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OptionalMemberExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub object: Box<Expression>,
+    pub property: Box<Expression>,
+    pub computed: bool,
+}
+
+/// `callee?.(args)` — an **optional** call. If `callee` is `null`/`undefined`
+/// the surrounding [`ChainExpression`] short-circuits to `undefined` rather
+/// than throwing "not a function". Structurally a [`CallExpression`]; the
+/// distinct type records the `?.(` spelling. Mirrors Closure's
+/// `OPTCHAIN_CALL`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OptionalCallExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub callee: Box<Expression>,
+    pub arguments: Vec<Expression>,
+}
+
+/// The boundary wrapper around an optional chain (ESTree `ChainExpression`).
+/// It marks *where* the `undefined` short-circuit resolves: everything inside
+/// one `ChainExpression` shares a single short-circuit, so `a?.b.c` yields
+/// `undefined` (not a `TypeError`) when `a` is nullish. It carries no syntax
+/// of its own — the printer emits its `expression` transparently — so
+/// wrapping is invisible in the output while remaining observable to passes
+/// that must not hoist a `.c` out of the chain.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChainExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub expression: Box<Expression>,
+}
 
 // ---------------------------------------------------------------------
 // Composites

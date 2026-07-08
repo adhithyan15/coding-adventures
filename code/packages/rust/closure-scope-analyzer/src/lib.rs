@@ -913,6 +913,25 @@ fn walk_expression(
         Expression::MemberExpression(me) => {
             walk_member_expression_inner(&me.object, &me.property, me.computed, ctx, analysis, pending);
         }
+        // `a?.b` / `a?.[k]` — the optional short-circuit changes runtime
+        // behaviour but not name resolution, so it walks exactly like a plain
+        // member access: resolve references in the object and (computed) property.
+        Expression::OptionalMemberExpression(me) => {
+            walk_member_expression_inner(&me.object, &me.property, me.computed, ctx, analysis, pending);
+        }
+        // `a?.()` — an optional call resolves references in its callee and each
+        // argument, the same as an ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            walk_expression(&ce.callee, ctx, analysis, pending);
+            for arg in &ce.arguments {
+                walk_expression(arg, ctx, analysis, pending);
+            }
+        }
+        // A chain expression is a transparent wrapper around an optional-chain
+        // spine — it binds nothing, so walk straight into its inner expression.
+        Expression::ChainExpression(c) => {
+            walk_expression(&c.expression, ctx, analysis, pending);
+        }
         Expression::ArrayExpression(ae) => {
             for el in &ae.elements {
                 if let Some(e) = el {

@@ -964,6 +964,19 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         Expression::MemberExpression(m) => {
             collect_all_idents_member(&m.object, &m.property, m.computed, out)
         }
+        // `a?.b` / `a?.[k]` — same as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            collect_all_idents_member(&m.object, &m.property, m.computed, out)
+        }
+        // `a?.()` — same as an ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            collect_all_idents_expr(&ce.callee, out);
+            for a in &ce.arguments {
+                collect_all_idents_expr(a, out);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => collect_all_idents_expr(&c.expression, out),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
                 collect_all_idents_expr(el, out);
@@ -1289,6 +1302,20 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::MemberExpression(m) => {
             rewrite_uses_member(&mut m.object, &mut m.property, m.computed, map)
         }
+        // `a?.b` / `a?.[k]` — rewrite in object and (computed) property exactly
+        // as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            rewrite_uses_member(&mut m.object, &mut m.property, m.computed, map)
+        }
+        // `a?.()` — rewrite in callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            rewrite_uses_expr(&mut ce.callee, map);
+            for a in &mut ce.arguments {
+                rewrite_uses_expr(a, map);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine.
+        Expression::ChainExpression(c) => rewrite_uses_expr(&mut c.expression, map),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 rewrite_uses_expr(el, map);
