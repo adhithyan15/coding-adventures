@@ -150,6 +150,7 @@ SELF_CONTAINED_RUNGS = (
     "rung110_audiology",
     "rung111_dosimetry",
     "rung112_anesthesia",
+    "rung113_apheresis",
 )
 
 
