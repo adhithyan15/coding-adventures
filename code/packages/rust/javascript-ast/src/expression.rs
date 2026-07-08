@@ -45,6 +45,7 @@ pub enum Expression {
     NullLiteral(NullLiteral),
     BigIntLiteral(BigIntLiteral),
     UndefinedLiteral(UndefinedLiteral),
+    RegExpLiteral(RegExpLiteral),
     BinaryExpression(BinaryExpression),
     LogicalExpression(LogicalExpression),
     UnaryExpression(UnaryExpression),
@@ -113,6 +114,29 @@ pub struct StringLiteral {
     pub cv: Option<CvId>,
     pub value: String,
     pub raw: String,
+}
+
+/// A regular-expression literal — `/ab+c/gi`. Modelled as its own leaf so a
+/// regex is never confused with an ordinary reference: previously the bridge
+/// fell back to an [`Identifier`] whose name happened to be the regex source,
+/// which round-tripped only by accident (the text is not a valid identifier,
+/// so the rename passes skipped it) and left a latent hazard.
+///
+/// The two halves are stored split so passes can reason about the flags
+/// without re-parsing: `pattern` is the body between the slashes (`ab+c`) and
+/// `flags` is the trailing flag set (`gi`, possibly empty). The printer
+/// reconstructs the source as `/{pattern}/{flags}` — the slashes and the
+/// pattern's own escapes are part of `pattern`'s opaque text, so no escaping
+/// is applied. Mirrors ESTree's `RegExpLiteral` (its `regex: {pattern, flags}`
+/// companion object), minus the `value` field (a live `RegExp`, which a
+/// source-to-source minifier never needs).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RegExpLiteral {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub pattern: String,
+    pub flags: String,
 }
 
 /// A boolean literal — `true` / `false`.

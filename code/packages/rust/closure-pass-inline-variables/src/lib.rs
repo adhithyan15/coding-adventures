@@ -729,6 +729,7 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
         // `this` binds no variable name — nothing to count or propagate into.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
@@ -1061,6 +1062,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
         // `this` binds no variable name — nothing to count or propagate into.
         | Expression::ThisExpression(_)
         | Expression::Super(_)

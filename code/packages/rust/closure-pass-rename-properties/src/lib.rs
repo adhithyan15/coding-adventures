@@ -1145,6 +1145,9 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal (like `/ab+c/g`) is an inert leaf: no sub-expressions
+        // and no property names, so it is grouped with the other literals.
+        | Expression::RegExpLiteral(_)
         // `this` holds no property name to classify or rewrite.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
@@ -1461,6 +1464,9 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal (like `/ab+c/g`) is an inert leaf: no sub-expressions
+        // and no property names, so it is grouped with the other literals.
+        | Expression::RegExpLiteral(_)
         // `this` holds no property name to classify or rewrite.
         | Expression::ThisExpression(_)
         | Expression::Super(_)
