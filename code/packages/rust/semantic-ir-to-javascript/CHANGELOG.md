@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.20.0 — slice-selection Array methods: `take` / `drop` / `values_at`
+
+Extends the inlined JS runtime's `arrayMethod` switch (and the `ARRAY_METHODS`
+`respond_to?` set), mirroring the Go/Rust backends:
+
+- `take(n)` / `drop(n)` — the first / all-but-first `n` elements; `n` is clamped
+  to `[0, len]` (`n <= 0` → `[]`/full copy, `n > len` → full copy/`[]`), so
+  `recv.slice` never throws. A negative `n` raises `ArgumentError` in Ruby; the
+  never-raise floor treats it as `0`.
+- `values_at(*idxs)` — the element at each index, folding a negative index from
+  the end once; an out-of-range index yields `null` (never throws).
+
+Dispatch stays an explicit `switch (name)` — never `recv[name]`. Verified
+end-to-end under Node.
+
 ## 0.19.0 — more String methods: `ljust` / `rjust` / `center` / `swapcase`
 
 Extends the inlined JS runtime's `stringMethod` switch (and the `STRING_METHODS`
