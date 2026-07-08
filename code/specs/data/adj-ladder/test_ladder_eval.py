@@ -140,6 +140,7 @@ SELF_CONTAINED_RUNGS = (
     "rung100_refraction_focus",
     "rung101_range_of_motion",
     "rung102_training_load",
+    "rung103_gi_transit",
 )
 
 
