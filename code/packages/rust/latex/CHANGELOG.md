@@ -2,6 +2,47 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.55.0] — 2026-07-07
+
+### Added — numbered winning-bibliography-entry list (LTXDOC03 S19)
+
+A **new** public method `Document::bibliography_entries(&self) -> String` that renders the **winning
+bibliography entries as a numbered list** — the rendered bibliography a reader actually sees, and the
+table citations resolve against. It is a **distinct** view over `resolve_citations()`: S16
+(`duplicate_bibliography_entries`) renders the **losing** `duplicate_entries` as `\bibitem{key}` warning
+lines, and S15 (`citations_by_source`) renders the per-source *resolved cite keys* — S19 fills the
+remaining cell by rendering the **winning** `entries` themselves. Every S1–S18 output is left
+**byte-for-byte unchanged**; S19 is purely additive and leaves the `to_latex()` round-trip fixed point
+intact.
+
+- **One numbered line per winning entry, 1-based, in pre-order.** S2 already collects the first
+  `\bibitem{key}` of each distinct key into `resolve_citations().entries` (body pre-order; later
+  re-definitions go to `duplicate_entries`, never here). S19 numbers that list 1-based via
+  `enumerate()` + `n + 1`, emitting `format!("[{}] {}", n + 1, entry.key)` → `[1] smith2020`,
+  `[2] jones2019`, …. Each line is reconstructed from the entry's **owned `key` `String`** (no source
+  slicing at all, matching S13 `resolve_namerefs`, S15 `citations_by_source`, S16
+  `duplicate_bibliography_entries`, and S17/S18's dangling reports).
+- **`[n] key` chosen deliberately.** The numbered shape reads as a *rendered bibliography* and is
+  **visually distinct** from S16's `\bibitem{key}` losing-duplicate lines, so the two never look alike
+  even when they list overlapping keys.
+- **Duplicates appear once.** Because `entries` holds only the **first** `\bibitem` of each key, a
+  `\bibitem{dup}` written twice appears **once** here — the winner — exactly as a real bibliography
+  renders one line per key. The losing re-definitions remain the S16 view.
+- **Empty marker.** A document with **no** bibliography entries — no `thebibliography`, or an empty one
+  — returns the fixed marker `"(no bibliography entries)"`, so the output is never the empty string
+  (the same stable-marker discipline S12/S13/S14/S15/S16/S17/S18 use). Lines are joined by `\n` with
+  **no** trailing newline.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all — keys
+  are already owned `String`s); a single pass over the already-bounded `entries` list. Borrows `self`
+  immutably, returns owned `String`.
+
+Five `s19_*` tests pin the exact rendered strings: two distinct entries (`[1] a\n[2] b`), a duplicate
+key winning once with a peer (`[1] dup\n[2] other`), three entries numbered in pre-order
+(`[1] x\n[2] y\n[3] z`), a bibliography-free document returning the `(no bibliography entries)` marker,
+and an additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`,
+`resolve_namerefs`, `list_summary`, `citations_by_source`, `duplicate_bibliography_entries`,
+`unresolved_citations_by_source`, and `unresolved_references_by_source` are all byte-for-byte unchanged.
+
 ## [0.54.0] — 2026-07-07
 
 ### Added — unresolved (dangling) references grouped by source `\ref` (LTXDOC03 S18)

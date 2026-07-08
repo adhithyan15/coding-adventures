@@ -66,6 +66,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S16 — duplicate (multiply-defined) `\bibitem` entries** | `Document::duplicate_bibliography_entries() -> String` — a **new**, read-only method that surfaces the **multiply-defined** `\bibitem`s — LaTeX's *"Citation `key' multiply defined"* warnings — the citation-family parallel of S6's *"Dangling citations"* footer (for the *other* bibliography warning). These were already computed by S2 (`resolve_citations().duplicate_entries`) but rendered by **no** method until now. S2 collects every `\bibitem` in `walk` pre-order; the **first** of each key wins and every **later** `\bibitem` of an already-defined key is a losing duplicate. S16 emits one line per duplicate in that pre-order (**not** re-sorted, **not** de-duplicated — a key defined three times yields two lines), each reconstructed from its key as `\bibitem{<key>}` (no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** duplicates (no bibliography, or every key once) → the fixed marker `(no duplicate bibliography entries)`. E.g. `smith` defined twice + `jones` once → `\bibitem{smith}` (only the loser). Every S1–S15 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S17 — unresolved (dangling) citations grouped by source `\cite`** | `Document::unresolved_citations_by_source() -> String` — a **new**, read-only method that renders the **dangling** citations **grouped by the source `\cite` they came from** — the DANGLING-key mirror of S15's `citations_by_source`, and the per-`\cite` view of S6's flat *"Dangling citations"* footer. It reads only `resolve_citations().unresolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping the dangling keys back by `cite_span` in **first-appearance order** (source order) with keys kept left-to-right. One line per source `\cite` with ≥1 dangling key: `\cite{` + the group's **dangling** keys joined by `", "` + `}`. A **resolved** key never entered `unresolved`, so `\cite{a,ghost}` where only `a` resolves renders `\cite{ghost}` (reconstructed from keys, no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** unresolved citations → the fixed marker `(no unresolved citations)`. E.g. `\cite{known,ghost}` (only `known` defined) then `\cite{x,y}` (neither) → `\cite{ghost}\n\cite{x, y}`. Every S1–S16 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S18 — unresolved (dangling) references grouped by source `\ref`** | `Document::unresolved_references_by_source() -> String` — a **new**, read-only method that renders the **dangling** references, one reconstructed `\<command>{key}` line each — the `\ref`-family parallel of S17's dangling-CITATION report, and a **distinct** view from S6's flat *"Dangling references: k1, k2"* footer (S18 is **command-aware**, so `\eqref`/`\pageref` render as themselves, not flattened to `\ref`). It reads only `resolve_references().unresolved` (a `Vec<UnresolvedRef { key, command, ref_span }>`) and groups by `ref_span` in **first-appearance order** (source order); because each `\ref`/`\eqref`/`\pageref` takes exactly one key, every group is a single entry emitting one line: `\` + the ref's own `command` + `{` + its `key` + `}` (reconstructed from the owned strings, no source slicing). A **resolved** `\ref` never entered `unresolved`, so it is excluded. Lines joined by `\n`, no trailing newline. A document with **no** unresolved references → the fixed marker `(no unresolved references)`. E.g. `\eqref{eq:ghost}` then `\pageref{p:ghost}` (neither defined) → `\eqref{eq:ghost}\n\pageref{p:ghost}`. Every S1–S17 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S19 — numbered winning-bibliography-entry list** | `Document::bibliography_entries() -> String` — a **new**, read-only method that renders the **winning** bibliography entries as a **numbered list** — the rendered bibliography a reader sees, and the table citations resolve against. A **distinct** view over `resolve_citations()`: S16 (`duplicate_bibliography_entries`) renders the **losing** `duplicate_entries` as `\bibitem{key}` lines, S15 (`citations_by_source`) renders per-source *resolved cite keys*; S19 renders the **winning** `entries`. It reads only `resolve_citations().entries` (the first `\bibitem` of each distinct key, body pre-order; later re-definitions live in `duplicate_entries`) and numbers it **1-based**, one line per entry as `[n] key` (reconstructed from the owned key, no source slicing). The `[n] key` shape is deliberately distinct from S16's `\bibitem{key}` lines. A `\bibitem{dup}` written twice appears **once** — the winner. Lines joined by `\n`, no trailing newline. A document with **no** bibliography entries → the fixed marker `(no bibliography entries)`. E.g. `smith` (twice) + `jones` → `[1] smith\n[2] jones`. Every S1–S18 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -791,6 +792,40 @@ assert_eq!(
 A document with no unresolved references — every reference resolves, or none present — renders the fixed
 `(no unresolved references)` marker. Purely additive — reuses `resolve_references`, mutates nothing,
 leaves every S1–S17 output and the `to_latex()` fixed point unchanged.
+
+### numbered winning-bibliography-entry list (LTXDOC03 S19)
+
+The **winning** bibliography entries rendered as a **numbered list** — the rendered bibliography a reader
+actually sees, and the table citations resolve against. A **distinct** view over `resolve_citations()`:
+S16 (`duplicate_bibliography_entries`) renders the **losing** duplicates as `\bibitem{key}` warning
+lines, and S15 (`citations_by_source`) renders per-source *resolved cite keys* — S19 renders the
+**winning** `entries` themselves. S2 collects the first `\bibitem{key}` of each distinct key into
+`resolve_citations().entries` (body pre-order; later re-definitions go to `duplicate_entries`, never
+here). `bibliography_entries` numbers that list **1-based** and emits one line per winning entry as
+`[n] key` (reconstructed from the owned key — no source slicing). The `[n] key` shape is deliberately
+distinct from S16's `\bibitem{key}` lines, so the winning list never looks like the losing-duplicate
+report even when keys overlap. A `\bibitem{dup}` written twice appears **once** — the winner.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}
+\begin{thebibliography}{9}
+\bibitem{smith} First Smith.
+\bibitem{jones} Jones.
+\bibitem{smith} Second Smith.
+\end{thebibliography}
+\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.bibliography_entries(),
+    "[1] smith\n[2] jones",   // numbered, 1-based, pre-order; the duplicate `smith` wins once
+);
+```
+
+A document with no bibliography entries — no `thebibliography`, or an empty one — renders the fixed
+`(no bibliography entries)` marker. Purely additive — reuses `resolve_citations`, mutates nothing, leaves
+every S1–S18 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

@@ -1938,6 +1938,93 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **winning bibliography entries as a numbered list** (LTXDOC03 S19) — the rendered
+    /// bibliography a reader actually sees: one numbered line per *winning* `\bibitem`, the table
+    /// citations resolve against.
+    ///
+    /// ## What it does
+    ///
+    /// S2's [`Document::resolve_citations`] collects every `\bibitem{key}` inside a `thebibliography`
+    /// environment, keeping the **first** `\bibitem` of each distinct key as the *winning* entry (in
+    /// [`CitationResolution::entries`], body pre-order) and routing every later re-definition into the
+    /// *losing* [`CitationResolution::duplicate_entries`]. The other renderers view neighboring cells
+    /// of that resolution: S16's [`duplicate_bibliography_entries`](Document::duplicate_bibliography_entries)
+    /// renders the **losing** `duplicate_entries` (as `\bibitem{key}` warning lines); S15's
+    /// [`citations_by_source`](Document::citations_by_source) renders the per-source *resolved cite
+    /// keys*. S19 fills the remaining view: the **winning** `entries` themselves, rendered as a
+    /// bibliography looks — a distinct, brand-new view over the same resolution.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read [`CitationResolution::entries`] in its existing pre-order and number it **1-based**, one
+    /// line per winning entry: `format!("[{}] {}", n, entry.key)` → `[1] smith2020`, `[2] jones2019`,
+    /// … The `[n] key` shape is chosen **deliberately** so this reads as a *rendered bibliography* and
+    /// is visually distinct from S16's `\bibitem{key}` losing-duplicate lines — the two never look
+    /// alike even when they list overlapping keys. Each line is reconstructed from the entry's **owned
+    /// `key` `String`** (no source slicing at all, matching S13's `resolve_namerefs`, S15's
+    /// `citations_by_source`, S16's `duplicate_bibliography_entries`, and S17/S18's dangling reports).
+    ///
+    /// Because `entries` already holds only the **first** `\bibitem` of each key (later re-definitions
+    /// live in `duplicate_entries`, never here), a `\bibitem{dup}` written twice appears **once** in
+    /// this list — the winning entry — exactly as a real bibliography renders one line per key.
+    ///
+    /// A document with **no** bibliography entries — no `thebibliography`, or an empty one — returns
+    /// the fixed marker `(no bibliography entries)`, never the empty string (the same stable-marker
+    /// discipline S12/S13/S14/S15/S16/S17/S18 use). Lines are joined by `\n` with **no** trailing
+    /// newline (matching S11's `to_plain_text_by_kind` and every S12-S18 renderer).
+    ///
+    /// Concretely, for a `thebibliography` defining `smith` (twice) and `jones`:
+    ///
+    /// ```text
+    /// \begin{thebibliography}{9}
+    /// \bibitem{smith} First Smith. 1990.
+    /// \bibitem{jones} Jones. 1991.
+    /// \bibitem{smith} Second Smith. 1992.
+    /// \end{thebibliography}
+    /// ```
+    ///
+    /// the winning list is the two numbered lines (the second `\bibitem{smith}` is a duplicate, not a
+    /// second entry):
+    ///
+    /// ```text
+    /// [1] smith
+    /// [2] jones
+    /// ```
+    ///
+    /// ## Additive by construction
+    ///
+    /// S19 is a brand-new, read-only method that reuses [`resolve_citations`](Document::resolve_citations)
+    /// and mutates nothing; it changes no S1-S18 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// keys are already owned `String`s); a single pass over the already-bounded `entries` list.
+    /// Borrows `self` immutably and returns owned `String` data, so the result outlives any borrow of
+    /// the source.
+    pub fn bibliography_entries(&self) -> String {
+        // S2 already collected the winning entries — the first `\bibitem` of each distinct key, in
+        // body pre-order (later re-definitions went to `duplicate_entries`, not here). We only read
+        // that list.
+        let resolution = self.resolve_citations();
+
+        if resolution.entries.is_empty() {
+            // No `thebibliography` (or an empty one) → the fixed marker, never the empty string.
+            return "(no bibliography entries)".to_string();
+        }
+
+        // One numbered line per winning entry, 1-based, in the existing pre-order. `enumerate()` is
+        // 0-based, so `n + 1` gives the 1-based label. Reconstruct `[n] key` from the owned key, so
+        // there is no source slicing; the `[n] key` shape is deliberately distinct from S16's
+        // `\bibitem{key}` losing-duplicate lines.
+        resolution
+            .entries
+            .iter()
+            .enumerate()
+            .map(|(n, entry)| format!("[{}] {}", n + 1, entry.key))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -4753,5 +4840,115 @@ See Section~\ref{sec:intro}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig
             doc.unresolved_references_by_source(),
             "\\eqref{eq:ghost}"
         );
+    }
+
+    #[test]
+    fn s19_lists_winning_entries() {
+        // Two distinct `\bibitem`s → a numbered list, one line each, 1-based, in source order.
+        let src = r"\begin{document}
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b");
+    }
+
+    #[test]
+    fn s19_only_first_of_duplicate_key_wins() {
+        // A `\bibitem{dup}` written twice yields ONE winning entry (`dup`); the later re-definition
+        // lives in `duplicate_entries` (S16), not in the winning list. A peer `\bibitem{other}` shows
+        // the numbering/order stays 1-based in source order.
+        let src = r"\begin{document}
+\begin{thebibliography}{9}
+\bibitem{dup} First dup.
+\bibitem{other} Other.
+\bibitem{dup} Second dup.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.bibliography_entries(), "[1] dup\n[2] other");
+        // Cross-check: the losing duplicate is the S16 view, not the S19 winning list.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{dup}");
+    }
+
+    #[test]
+    fn s19_numbered_in_preorder() {
+        // Three distinct entries → three numbered lines in source (pre-order) order.
+        let src = r"\begin{document}
+\begin{thebibliography}{9}
+\bibitem{x} X.
+\bibitem{y} Y.
+\bibitem{z} Z.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.bibliography_entries(), "[1] x\n[2] y\n[3] z");
+    }
+
+    #[test]
+    fn s19_empty_returns_marker() {
+        // A document with no `thebibliography` at all → the fixed `(no bibliography entries)` marker,
+        // never the empty string.
+        let src = r"\begin{document}
+Just some text with no bibliography.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.bibliography_entries(), "(no bibliography entries)");
+    }
+
+    #[test]
+    fn s19_is_additive_leaves_s1_s18_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a resolved `\ref`, a
+        // `\nameref`, two `\cite`s (one multi-key, one dangling key), a duplicate `\bibitem`, AND a
+        // dangling `\eqref` (`eq:ghost`), S19 changes NONE of the S1-S18 outputs — it only reads
+        // `resolve_citations`.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+See Section~\ref{sec:intro}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+        // S18 grouped dangling refs — unchanged.
+        assert_eq!(doc.unresolved_references_by_source(), "\\eqref{eq:ghost}");
+
+        // And S19 itself surfaces the winning entries as a numbered list — the duplicate `a` appears
+        // once (the winner), `b` and `c` follow, in source pre-order.
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
     }
 }
