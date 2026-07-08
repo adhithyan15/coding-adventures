@@ -1748,3 +1748,82 @@ which also pins the `\n`-join with no trailing newline on a multi-ref case). All
 unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
 -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 28. S22 — winning label definitions (`label_definitions`)
+
+### 28.1 Motivation
+
+S1's `resolve_references` returns `definitions: Vec<LabelDef>` — the **winning** label definitions, one
+row per **distinct** key (the first `\label` of each key seen), in `walk` pre-order. This is precisely the
+label table `\ref`/`\eqref`/`\pageref` resolve against. S20 (`duplicate_label_definitions`) already
+renders the **losing** half of the `\label` split — the later re-definitions of an already-defined key,
+LaTeX's *"Label `key' multiply defined"* — one `\label{key}` line each. But the **winning** half — the
+definitions references actually bind to — had no renderer: S19 renders the winning `\bibitem` entries for
+the citation family, yet the exact `\label` analogue was missing. S22 fills that cell by rendering
+`definitions` as the winning-label report, the label-family analogue of S19 and the winning-side
+counterpart of S20.
+
+### 28.2 Why a new method — additive by construction
+
+S22 adds a **new public method** `Document::label_definitions(&self) -> String`. It is a pure, read-only
+render of `resolve_references().definitions`. It reuses that table verbatim (never re-walking the body or
+re-collecting definitions), so the report can never drift from the S1 resolution it summarises. It mutates
+nothing and changes no S1–S21 output — including `to_latex()`'s round-trip fixed point — byte-for-byte.
+Like S11–S21 it is a method the caller invokes directly.
+
+### 28.3 The ordering rule
+
+`definitions` is already in `walk` pre-order with **one row per distinct key**: S1's `collect_definitions`
+keeps the **first** `\label` of each key as the winner and routes every later re-definition of an
+already-defined key into `duplicates` (never into `definitions`). S22 renders `definitions` in that
+existing pre-order — **not** re-sorted and **not** de-duplicated, because no de-duplication is needed
+(the list already holds exactly one row per distinct key). A `\label{dup}` written twice therefore appears
+**once** here — the winner; its losing second definition lives in S20.
+
+### 28.4 The exact rendering contract — `Document::label_definitions(&self) -> String`
+
+- Read `resolve_references().definitions` in its existing pre-order and emit one line per winning
+  definition: `format!("\\label{{{}}}", def.key)` → `\label{` + the definition's `key` + `}`.
+  Reconstructed from the owned `key` `String` rather than sliced from `&src[span]` (matching S13
+  `resolve_namerefs`, S15 `citations_by_source`, S16 `duplicate_bibliography_entries`, S19
+  `bibliography_entries`, and S20 `duplicate_label_definitions`), so the render needs no source borrow and
+  can never index out of bounds. `\label{key}` is the correct reconstruction for any `LabelKind` (a
+  section, figure, equation, or bare inline label all render the same `\label{key}` form).
+- One line per winning definition, in the existing pre-order — **not** re-sorted, **not** de-duplicated
+  (none needed, since `definitions` already holds one row per distinct key).
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S21 renderer).
+- If there are **no** label definitions, the fixed marker `(no label definitions)` is returned, so the
+  output is never the empty string.
+
+Example (body defining `\label{sec:intro}` on a section, `\label{eq:main}` on an equation, then re-using
+`\label{sec:intro}` on a later subsection):
+
+```text
+\label{sec:intro}
+\label{eq:main}
+```
+
+only the *first* `\label{sec:intro}` wins, so the winning key `sec:intro` appears **once**; its later
+re-definition is a duplicate (surfaced by S20, not a second `definitions` row). This is the winning-label
+analogue of S19's numbered `\bibitem` list and the winning-side counterpart of S20's losing-duplicate
+view.
+
+### 28.5 Public API (added in S22)
+
+One new method: `Document::label_definitions(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_references` and every S1–S21 method are unchanged; no AST or grammar change;
+no new dependency, no `unsafe`, no I/O.
+
+### 28.6 Verification (S22)
+
+`cargo test -p latex` green (5 new S22 tests: two distinct labels rendering `\label{k1}\n\label{k2}` in
+source pre-order; a doc with no labels returning the `(no label definitions)` marker; a `\label{dup}`
+written twice rendering `\label{dup}` **once** (the winner) and cross-checked against S20's losing side;
+a three-label case pinning the `\n`-join with no trailing newline; and an additivity check that
+`to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`,
+`citations_by_source`, `duplicate_bibliography_entries`, `unresolved_citations_by_source`,
+`unresolved_references_by_source`, `bibliography_entries`, `duplicate_label_definitions`, and
+`resolved_references_by_source` all still produce their exact prior strings). All prior S1–S21 tests pass
+unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
+-p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.

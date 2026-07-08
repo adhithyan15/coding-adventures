@@ -69,6 +69,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S19 — numbered winning-bibliography-entry list** | `Document::bibliography_entries() -> String` — a **new**, read-only method that renders the **winning** bibliography entries as a **numbered list** — the rendered bibliography a reader sees, and the table citations resolve against. A **distinct** view over `resolve_citations()`: S16 (`duplicate_bibliography_entries`) renders the **losing** `duplicate_entries` as `\bibitem{key}` lines, S15 (`citations_by_source`) renders per-source *resolved cite keys*; S19 renders the **winning** `entries`. It reads only `resolve_citations().entries` (the first `\bibitem` of each distinct key, body pre-order; later re-definitions live in `duplicate_entries`) and numbers it **1-based**, one line per entry as `[n] key` (reconstructed from the owned key, no source slicing). The `[n] key` shape is deliberately distinct from S16's `\bibitem{key}` lines. A `\bibitem{dup}` written twice appears **once** — the winner. Lines joined by `\n`, no trailing newline. A document with **no** bibliography entries → the fixed marker `(no bibliography entries)`. E.g. `smith` (twice) + `jones` → `[1] smith\n[2] jones`. Every S1–S18 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S20 — losing duplicate `\label` definitions** | `Document::duplicate_label_definitions() -> String` — a **new**, read-only method that surfaces the **multiply-defined** `\label`s — LaTeX's *"Label `key' multiply defined"* warnings — the **label-family mirror of S16's** `duplicate_bibliography_entries` (which surfaces the losing `\bibitem` duplicates). It reads only `resolve_references().duplicates`: S1 collects every `\label` in pre-order; the **first** of each key wins (into `definitions`, what `\ref`/`\eqref`/`\pageref` resolve against) and every **later** `\label` of an already-defined key is a losing duplicate. S20 emits one line per duplicate in that pre-order (**not** re-sorted, **not** de-duplicated — a key defined three times yields two lines), each reconstructed from its key as `\label{<key>}` (no source slicing; the `\label{…}` form is right for any `LabelKind`). Lines joined by `\n`, no trailing newline. A document with **no** duplicate labels (every key once, or none) → the fixed marker `(no duplicate label definitions)`. E.g. `dup` defined twice + `once` once → `\label{dup}` (only the loser). Every S1–S19 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S21 — resolved references grouped by source `\ref`** | `Document::resolved_references_by_source() -> String` — a **new**, read-only method that renders the **resolved** (successfully-matched) references, one reconstructed `\<command>{key}` line each — the **RESOLVED mirror of S18's** `unresolved_references_by_source` (which renders the *dangling* half of the same split), **command-aware** so `\eqref`/`\pageref` render as themselves, not flattened to `\ref`. It reads only `resolve_references().resolved` (a `Vec<ResolvedRef { key, command, ref_span, target_span, target_kind }>`) and groups by `ref_span` in **first-appearance order** (source order); because each `\ref`/`\eqref`/`\pageref` takes exactly one key, every group is a single entry emitting one line: `\` + the ref's own `command` + `{` + its `key` + `}` (reconstructed from the owned strings, no source slicing). A **dangling** `\ref` never entered `resolved`, so it is excluded (it lives in S18). Lines joined by `\n`, no trailing newline. A document with **no** resolved references (every ref dangles, or none) → the fixed marker `(no resolved references)`. E.g. `\ref{sec:intro}`, `\eqref{eq:main}`, `\pageref{sec:intro}` (all defined) → `\ref{sec:intro}\n\eqref{eq:main}\n\pageref{sec:intro}`. Every S1–S20 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S22 — winning `\label` definitions** | `Document::label_definitions() -> String` — a **new**, read-only method that renders the **winning** label definitions — the `\label{key}` definitions references resolve against, one `\label{key}` line per distinct key — the **label-family analogue of S19's** `bibliography_entries` (which renders the winning `\bibitem` entries) and the **winning-side counterpart of S20's** `duplicate_label_definitions` (which renders the *losing* duplicate `\label`s). It reads only `resolve_references().definitions`: S1 collects every `\label` in pre-order; the **first** of each key wins (into `definitions`, one row per distinct key) and every **later** `\label` of an already-defined key goes to `duplicates` (S20's domain). S22 emits one line per winning definition in that pre-order (**not** re-sorted, **not** de-duplicated — none needed, since `definitions` already holds one row per distinct key), each reconstructed from its key as `\label{<key>}` (no source slicing; the `\label{…}` form is right for any `LabelKind`). A `\label{dup}` written twice appears **once** — the winner. Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the fixed marker `(no label definitions)`. E.g. `sec:intro` (section), `eq:main` (equation), then a re-used `sec:intro` → `\label{sec:intro}\n\label{eq:main}` (winner once). Every S1–S21 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -890,6 +891,37 @@ assert_eq!(
 A document with no resolved references — every reference dangles, or there are none at all — renders the
 fixed `(no resolved references)` marker. Purely additive — reuses `resolve_references`, mutates nothing,
 leaves every S1–S20 output and the `to_latex()` fixed point unchanged.
+
+### winning `\label` definitions (LTXDOC03 S22)
+
+The **winning** label definitions — the `\label{key}` definitions references resolve against — the
+**label-family analogue of S19's** `bibliography_entries` (which renders the winning `\bibitem` entries)
+and the **winning-side counterpart of S20's** `duplicate_label_definitions` (which renders the *losing*
+duplicate `\label`s). S1 splits every `\label` into the **winning** first definition of each key
+(`resolve_references().definitions`, one row per distinct key, in pre-order) and the **losing** later
+re-definitions (`duplicates`). `label_definitions` reads only that `definitions` list and emits one line
+per winning definition, in pre-order — reconstructed from its owned `key` as `\label{<key>}` (no source
+slicing; the `\label{…}` form is right for any `LabelKind`). No re-sorting and no de-duplication are
+needed, because `definitions` already holds exactly one row per distinct key; a `\label{dup}` written
+twice appears **once** here (its losing second definition lives in S20).
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+\begin{equation}\label{eq:main} x=1 \end{equation}
+\subsection{Dup}\label{sec:intro}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.label_definitions(),
+    // the winning key `sec:intro` appears once; the later re-`\label`ed `sec:intro` is a duplicate (S20)
+    "\\label{sec:intro}\n\\label{eq:main}",
+);
+```
+
+A document with no label definitions renders the fixed `(no label definitions)` marker. Purely
+additive — reuses `resolve_references`, mutates nothing, leaves every S1–S21 output and the `to_latex()`
+fixed point unchanged.
 
 ## Usage
 
