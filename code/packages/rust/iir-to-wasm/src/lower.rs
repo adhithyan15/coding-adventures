@@ -240,16 +240,20 @@ type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 /// exactly right there.
 fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
-    // `str_const` destinations, and str vars handed to a callee as a call argument.
-    // A single-block `str_const` literal normally takes the folded fast path: its
-    // handle is the RAW-byte data offset and its length is known only at compile
-    // time (via the `string_literals` table).  But when that literal is passed to a
-    // FUNCTION, the callee has no compile-time length for the parameter — its
-    // `str_len`/`str_concat`/`str_slice`/`str_eq` must read a length-prefixed
-    // `[i32 len][bytes]` block header at run time.  So a `str_const` literal used as
-    // a call argument must be promoted to a runtime-block handle exactly like a
-    // control-flow-selected string, even though it is assigned in only one block.
-    let mut str_const_dests: HashSet<&str> = HashSet::new();
+    // Folded-literal string destinations, and str vars handed to a callee as a call
+    // argument.  A `str_const`/`str_concat`/`str_slice` whose result folds to a
+    // compile-time literal normally takes the folded fast path: its handle is the
+    // RAW-byte data offset and its length is known only at compile time (via the
+    // `string_literals` table).  But when that literal is passed to a FUNCTION, the
+    // callee has no compile-time length for the parameter — its `str_len`/
+    // `str_concat`/`str_slice`/`str_eq` must read a length-prefixed `[i32 len][bytes]`
+    // block header at run time.  So a folded literal used as a call argument must be
+    // promoted to a runtime-block handle exactly like a control-flow-selected string,
+    // even though it is assigned in only one block.  (`str_const` alone was promoted
+    // originally; `str_concat`/`str_slice` results — e.g. `(strlen (substring …))` or
+    // a `let*`-derived `string-append` fed to a function — need the same treatment,
+    // else the callee reads the first data byte as the length: `"HELLO"` → `'H'`=72.)
+    let mut folding_str_dests: HashSet<&str> = HashSet::new();
     let mut call_arg_vars: HashSet<&str> = HashSet::new();
     let mut block: usize = 0;
     for instr in &fn_.instructions {
@@ -262,9 +266,14 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
                 str_blocks.entry(dest.as_str()).or_default().insert(block);
             }
         }
-        if op == "str_const" {
+        // Any string-producing op that folds to a compile-time literal. A `str` dest
+        // that is instead a live handle (a param, a call result, a branch-selected
+        // var) is NOT listed here: it already carries a runtime block, so passing it
+        // to a callee needs no promotion — and it has no `string_literals` entry to
+        // fold from.
+        if matches!(op, "str_const" | "str_concat" | "str_slice") {
             if let Some(dest) = &instr.dest {
-                str_const_dests.insert(dest.as_str());
+                folding_str_dests.insert(dest.as_str());
             }
         }
         if op == "call" {
@@ -284,9 +293,9 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
         .filter(|(_, blocks)| blocks.len() >= 2)
         .map(|(name, _)| name.to_string())
         .collect();
-    // Promote a `str_const` literal passed across a function boundary (see above).
+    // Promote a folded literal passed across a function boundary (see above).
     for v in &call_arg_vars {
-        if str_const_dests.contains(v) {
+        if folding_str_dests.contains(v) {
             promoted.insert(v.to_string());
         }
     }
@@ -1089,11 +1098,32 @@ fn emit_instr(
             })?;
             let rd = get_reg(dest)?;
             if let Some(lit) = string_literals.get(dest) {
-                // Both operands are literals — fold to the data-segment offset.
-                code.extend(encode_i32_const(lit.offset as i32));
+                // Both operands are literals — the joined bytes are a compile-time
+                // constant.  Normally the handle is that constant's raw data-segment
+                // offset.  But when this folded result crosses a call boundary
+                // (`runtime_str_vars`), the callee needs a length-prefixed header, so
+                // emit the runtime-block handle laid down in `collect_module_features`
+                // instead — keyed by the folded text exactly as at laydown.
+                if runtime_str_vars.contains(dest) {
+                    let key = String::from_utf8_lossy(&lit.bytes);
+                    let block_offset =
+                        runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+                            IIRWasmError::InvalidOperand {
+                                function: fn_name.to_string(),
+                                detail: format!(
+                                    "str_concat missing runtime block for folded {dest:?}"
+                                ),
+                            }
+                        })?;
+                    code.extend(encode_i32_const(block_offset as i32));
+                } else {
+                    code.extend(encode_i32_const(lit.offset as i32));
+                }
                 code.extend(encode_local_set(rd));
             } else {
-                // Runtime path: at least one operand is a live handle.
+                // Runtime path: at least one operand is a live handle.  This already
+                // bump-allocates a `[i32 len][bytes]` block, so its base IS a valid
+                // runtime handle — a promoted call-arg needs no extra treatment here.
                 let (a, b) = match instr.srcs.as_slice() {
                     [Operand::Var(a), Operand::Var(b)] => (a, b),
                     _ => {
@@ -1177,7 +1207,21 @@ fn emit_instr(
                 function: fn_name.to_string(),
                 detail: format!("str_slice missing module string table entry for {dest:?}"),
             })?;
-            code.extend(encode_i32_const(lit.offset as i32));
+            // Like `str_concat`: a folded slice handed to a callee needs its runtime
+            // block handle (with a real header), not the raw sliced-bytes offset.
+            if runtime_str_vars.contains(dest) {
+                let key = String::from_utf8_lossy(&lit.bytes);
+                let block_offset =
+                    runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+                        IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: format!("str_slice missing runtime block for folded {dest:?}"),
+                        }
+                    })?;
+                code.extend(encode_i32_const(block_offset as i32));
+            } else {
+                code.extend(encode_i32_const(lit.offset as i32));
+            }
             code.extend(encode_local_set(rd));
         }
 
@@ -3557,6 +3601,41 @@ struct ModuleFeatures {
 
 /// Walk the module once to collect everything the lowering needs to know
 /// for module-level decisions (imports, sections, fn-index offsets).
+/// Lay down (once, deduplicated by folded text) a length-prefixed runtime block
+/// `[i32 len (LE)][bytes]` for a promoted folded-literal string, append it to the
+/// module's `string_data`, and record the block's offset (its *handle*) plus mark
+/// `dest` as carrying a runtime handle.  This is the shared core of the promoted
+/// `str_const`/`str_concat`/`str_slice` paths: a folded literal handed to a callee
+/// must present a real header (the callee has no compile-time length), so it is
+/// materialised as a runtime block exactly like a control-flow-selected string.
+///
+/// Keyed by the folded text so identical literals (across ops or blocks) share one
+/// block.  All frontends that reach here emit UTF-8 string literals, so the lossy
+/// conversion is lossless and the key is a faithful, collision-free stand-in for
+/// the bytes; the lowering side recomputes the identical key from the same bytes.
+fn lay_runtime_str_block(
+    runtime_str_blocks: &mut ModuleRuntimeStrBlocks,
+    runtime_str_vars: &mut ModuleRuntimeStrVars,
+    string_data: &mut Vec<u8>,
+    fn_name: &str,
+    dest: &str,
+    bytes: &[u8],
+    len: u32,
+) {
+    let key = String::from_utf8_lossy(bytes).into_owned();
+    let fn_blocks = runtime_str_blocks.entry(fn_name.to_string()).or_default();
+    if !fn_blocks.contains_key(&key) {
+        let block_offset = string_data.len() as u32;
+        string_data.extend_from_slice(&len.to_le_bytes());
+        string_data.extend_from_slice(bytes);
+        fn_blocks.insert(key, block_offset);
+    }
+    runtime_str_vars
+        .entry(fn_name.to_string())
+        .or_default()
+        .insert(dest.to_string());
+}
+
 fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     // Use a HashSet for O(1) deduplication checks, preserving first-seen order
     // in the Vec.  Without the set, deduplication would be O(M × N) where M is
@@ -3627,26 +3706,23 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                             });
 
                         // E4-dyn (E4d-3): if this string variable is chosen by
-                        // control flow, also lay down a length-prefixed runtime
-                        // block `[i32 len (LE)][bytes]` and remember its offset
-                        // (the *handle*).  Deduplicated by text — two branches
-                        // that assign the same string share one block.  The
-                        // flat literal above is left in place too (harmless, and
-                        // still serves any literal-only reader of this dest).
+                        // control flow — OR handed to a callee as a folded literal
+                        // (`fn_runtime_vars`) — lay down a length-prefixed runtime
+                        // block `[i32 len (LE)][bytes]` and remember its offset (the
+                        // *handle*).  Deduplicated by text — two branches (or a
+                        // `str_const` and a `str_concat`) that yield the same string
+                        // share one block.  The flat literal above is left in place
+                        // too (harmless, and still serves any literal-only reader).
                         if fn_runtime_vars.contains(dest) {
-                            let fn_blocks = runtime_str_blocks
-                                .entry(fn_.name.clone())
-                                .or_default();
-                            if !fn_blocks.contains_key(s) {
-                                let block_offset = string_data.len() as u32;
-                                string_data.extend_from_slice(&len.to_le_bytes());
-                                string_data.extend_from_slice(s.as_bytes());
-                                fn_blocks.insert(s.clone(), block_offset);
-                            }
-                            runtime_str_vars
-                                .entry(fn_.name.clone())
-                                .or_default()
-                                .insert(dest.clone());
+                            lay_runtime_str_block(
+                                &mut runtime_str_blocks,
+                                &mut runtime_str_vars,
+                                &mut string_data,
+                                &fn_.name,
+                                dest,
+                                s.as_bytes(),
+                                len,
+                            );
                         }
                     }
                 }
@@ -3670,6 +3746,25 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         let offset = string_data.len() as u32;
                         let len = bytes.len() as u32;
                         string_data.extend_from_slice(&bytes);
+                        // If this folded result is passed across a call boundary, also
+                        // lay down a length-prefixed runtime block `[i32 len][bytes]`
+                        // and remember its offset (the handle) — exactly like the
+                        // promoted `str_const` path above, so the callee reads a real
+                        // header instead of the first data byte. Keyed by the folded
+                        // text for dedup (lisp string literals are UTF-8, so the lossy
+                        // conversion is lossless and collision-free here; the lowering
+                        // side derives the same key from the identical `lit.bytes`).
+                        if fn_runtime_vars.contains(dest) {
+                            lay_runtime_str_block(
+                                &mut runtime_str_blocks,
+                                &mut runtime_str_vars,
+                                &mut string_data,
+                                &fn_.name,
+                                dest,
+                                &bytes,
+                                len,
+                            );
+                        }
                         string_literals
                             .entry(fn_.name.clone())
                             .or_default()
@@ -3743,6 +3838,21 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         let offset = string_data.len() as u32;
                         let len = bytes.len() as u32;
                         string_data.extend_from_slice(&bytes);
+                        // Same promotion as `str_concat`: a folded slice passed
+                        // across a call boundary (e.g. `(strlen (substring …))`)
+                        // needs a real header, or the callee reads the first sliced
+                        // byte as the length.
+                        if fn_runtime_vars.contains(dest) {
+                            lay_runtime_str_block(
+                                &mut runtime_str_blocks,
+                                &mut runtime_str_vars,
+                                &mut string_data,
+                                &fn_.name,
+                                dest,
+                                &bytes,
+                                len,
+                            );
+                        }
                         string_literals
                             .entry(fn_.name.clone())
                             .or_default()

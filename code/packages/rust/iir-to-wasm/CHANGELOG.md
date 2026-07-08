@@ -1,5 +1,31 @@
 # Changelog — iir-to-wasm
 
+## [0.34.0] — 2026-07-08 (LANG-FULL tail: promote a folded `str_concat`/`str_slice` result passed across a call)
+
+Extends the 0.33.0 `str_const`-across-call promotion to folded `str_concat` and
+`str_slice` results. A `str_concat`/`str_slice` whose operands are all compile-time
+literals folds to a raw data-segment offset (its length lives only in the compile-time
+`string_literals` table). When that folded result is handed to a *callee* — e.g.
+`(strlen (substring …))` or a `let*`-derived `string-append` fed to a function — the
+callee has no compile-time length and reads a `[i32 len][bytes]` header at run time, so
+it must be promoted to a runtime block exactly like `str_const`. Before this fix those
+programs returned **72** (`'H'`, the first data byte read as a bogus length).
+
+- `collect_runtime_str_vars`: the "promote a folded literal used as a call arg" rule now
+  covers `str_concat`/`str_slice` dests, not just `str_const` (renamed the tracked set to
+  `folding_str_dests`). A `str` value that is instead a live handle (param/call result/
+  branch-selected) is deliberately excluded — it already carries a runtime block.
+- `collect_module_features`: a promoted `str_concat`/`str_slice` folded result now lays
+  down a static length-prefixed runtime block, via the new shared `lay_runtime_str_block`
+  helper (the `str_const` path was refactored onto it too, so identical literals across
+  ops share one block). No bump allocator is involved — the block is baked into the data
+  segment, like the `str_const` runtime blocks.
+- The `str_concat`/`str_slice` lowerings emit the runtime-block **handle** (not the raw
+  offset) when the dest is promoted. The non-folded runtime `str_concat` path is
+  unchanged — it already bump-allocates a header'd block, so its base is a valid handle.
+- Tests: `str_concat_result_passed_to_strlen_returns_length` and
+  `str_slice_result_passed_to_strlen_returns_length` (run-verified via `wasm-runtime`).
+
 ## [0.33.0] — 2026-07-07 (LANG-FULL tail: promote a `str_const` literal passed across a call)
 
 Fixes a wrong-value bug where a string literal handed to a *callee* was read with a

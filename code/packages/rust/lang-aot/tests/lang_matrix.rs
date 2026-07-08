@@ -382,12 +382,15 @@ const PROGRAMS: &[Prog] = &[
     // (LANG-STR-RT layout), callee reads length via `field_load x, 0 → len`.
     // Llvm now runs: the folded `substring` result is a `@__twig_str` global, which
     // `lower_call` `ptrtoint`s to an i64 handle before the call (same as `str_const`).
+    // Wasm now runs: the folded `str_slice` result is promoted to a length-prefixed
+    // runtime block `[i32 len][bytes]` (its dest is used as a call arg), so the callee
+    // reads a real header instead of the first sliced byte (`'H'`=72). All 7.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
@@ -442,12 +445,15 @@ const PROGRAMS: &[Prog] = &[
     // callee reads length via `field_load x, 0 → len`.
     // Llvm now runs: the folded `str_concat` result is a `@__twig_str` global, which
     // `lower_call` `ptrtoint`s to an i64 handle before the call (same as `str_const`).
+    // Wasm now runs: the folded `str_concat` result is promoted to a length-prefixed
+    // runtime block `[i32 len][bytes]` (its dest is used as a call arg), so the callee
+    // reads a real header instead of the first byte (`'H'`=72). All 7.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
