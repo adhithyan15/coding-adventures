@@ -1827,3 +1827,88 @@ a three-label case pinning the `\n`-join with no trailing newline; and an additi
 unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
 -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 29. S23 — winning label definitions grouped by kind (`label_definitions_by_kind`)
+
+### 29.1 Motivation
+
+S22 (`label_definitions`) renders the **winning** `\label` definitions **flat** — one `\label{key}` line
+per distinct key, in `walk` pre-order. But each winning definition also carries a `LabelKind`
+(`Section`, `Table`, `Figure`, `Equation`, or `Inline`), and a reader often wants the definitions
+organised **by that kind** — a per-kind census answering "which keys are sections? which are equations?
+which are bare inline labels?" at a glance. The citation/reference families already have their by-source
+groupings (S15/S17/S18 `citations_by_source`, `unresolved_citations_by_source`,
+`unresolved_references_by_source`); the label family had a flat winning-definitions list (S22) but no
+by-kind grouping. S23 fills that cell by rendering the *same* winning `definitions` list grouped by
+`LabelKind`, the by-kind companion of S22.
+
+### 29.2 Why a new method — additive by construction
+
+S23 adds a **new public method** `Document::label_definitions_by_kind(&self) -> String`. It is a pure,
+read-only render of `resolve_references().definitions` — a *second view* of the exact list S22 renders
+flat. It reuses that table verbatim (never re-walking the body or re-collecting definitions), so the
+report can never drift from the S1 resolution it summarises, and grouping never adds, drops, or reorders
+definitions relative to what `resolve_references` produced. It mutates nothing and changes no S1–S22
+output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S22 it is a method the
+caller invokes directly.
+
+### 29.3 The ordering rule
+
+The output is ordered by a **fixed, document-independent** kind order — the `LabelKind` enum declaration
+order: `Section`, `Table`, `Figure`, `Equation`, `Inline`. S23 iterates that order as an explicit slice
+(**not** a hash map keyed by kind), so the group order is deterministic and never depends on document
+content or hash iteration order — the same `Vec`-of-groups discipline S17/S18 use to avoid hash-order
+nondeterminism. **Within** each kind, the definitions keep their existing `definitions` pre-order;
+grouping never reorders within a kind. A kind with **no** definitions produces **no** lines (there is
+never an empty `[table]` group for a doc with no tables).
+
+### 29.4 The exact rendering contract — `Document::label_definitions_by_kind(&self) -> String`
+
+- Iterate the fixed kind order (`Section`, `Table`, `Figure`, `Equation`, `Inline`). For each kind, take
+  the definitions of that kind from `resolve_references().definitions` in their existing pre-order and
+  emit one line each: `format!("[{}] \\label{{{}}}", def.kind.as_str(), def.key)` → `[` + the kind tag +
+  `] \label{` + the definition's `key` + `}`. The kind tag comes from `LabelKind::as_str()`
+  (`"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`); the key is reconstructed from the owned
+  `key` `String` rather than sliced from `&src[span]` (matching S13 `resolve_namerefs`, S19
+  `bibliography_entries`, S20 `duplicate_label_definitions`, and S22 `label_definitions`), so the render
+  needs no source borrow and can never index out of bounds.
+- The `[kind]` prefix makes the per-kind census visible on every line while staying
+  one-line-per-definition; it is a **report annotation**, not round-trippable LaTeX (S23 is a *report*).
+- A kind with no definitions contributes no lines and no empty header.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S22 renderer).
+- If there are **no** label definitions at all, the fixed marker `(no label definitions)` is returned —
+  the **same** marker S22 uses (S23 groups the identical list), so the output is never the empty string.
+
+Example (body defining a section label `sec:intro`, an equation label `eq:main`, and a bare inline label
+`note`):
+
+```text
+[section] \label{sec:intro}
+[equation] \label{eq:main}
+[inline] \label{note}
+```
+
+`sec:intro` (kind `Section`) leads even though `note` is also a definition, because `Section` sorts
+before `Equation` and `Inline` in the fixed kind order. This is the by-kind grouping companion of S22's
+flat winning-definitions list — two views of the one `definitions` list.
+
+### 29.5 Public API (added in S23)
+
+One new method: `Document::label_definitions_by_kind(&self) -> String`. No existing type, field, counter,
+or signature changes; `resolve_references` and every S1–S22 method are unchanged; no AST or grammar
+change; no new dependency, no `unsafe`, no I/O.
+
+### 29.6 Verification (S23)
+
+`cargo test -p latex` green (6 new S23 tests: a section+equation+inline case rendering grouped in the
+fixed kind order; a source-order-reversed case proving the fixed kind order pulls the section ahead of an
+earlier inline; two same-kind inline labels grouped together in pre-order under `inline`; a doc with no
+labels returning the `(no label definitions)` marker; a section+figure+inline case pinning the `\n`-join
+with no trailing newline; and an additivity check that `to_plain_text`, `to_plain_text_by_kind`,
+`list_of_floats`, `resolve_namerefs`, `list_summary`, `citations_by_source`,
+`duplicate_bibliography_entries`, `unresolved_citations_by_source`, `unresolved_references_by_source`,
+`bibliography_entries`, `duplicate_label_definitions`, `resolved_references_by_source`, and S22's flat
+`label_definitions` all still produce their exact prior strings). All prior S1–S22 tests pass unchanged.
+`cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p
+adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.

@@ -2,6 +2,45 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.59.0] — 2026-07-08
+
+### Added — winning label definitions grouped by kind (LTXDOC03 S23)
+
+A **new** public method `Document::label_definitions_by_kind(&self) -> String` that renders the
+**winning label definitions grouped by their `LabelKind`** — a per-kind census of the `\label`
+definitions. It is the by-kind grouping companion of S22's `label_definitions` (which lists the same
+winning definitions **flat**, one `\label{key}` per line in pure pre-order): S22 and S23 are two
+*views* of the one winning `definitions` list `resolve_references()` produces. It is a read-only view
+over `resolve_references()`; every S1–S22 output is left **byte-for-byte unchanged**; S23 is purely
+additive and leaves the `to_latex()` round-trip fixed point intact.
+
+- **Grouped by kind in a fixed, document-independent order** — the `LabelKind` enum declaration order:
+  `Section`, `Table`, `Figure`, `Equation`, `Inline`. The method iterates that explicit fixed order
+  (not a hash map keyed by kind), so the group order is deterministic — the same `Vec`-of-groups
+  discipline S17/S18 use to avoid hash-order nondeterminism.
+- **Pre-order within each kind.** Definitions of a given kind keep their existing pre-order from
+  `definitions`; grouping never reorders within a kind.
+- **`[kind] \label{key}` line shape.** Each line is `[` + the stable lowercase tag from
+  `LabelKind::as_str()` (`"section"`, `"table"`, `"figure"`, `"equation"`, `"inline"`) + `] \label{` +
+  the definition's **owned `key` `String`** + `}` — so there is **no** source slicing at all (matching
+  S13 `resolve_namerefs`, S19 `bibliography_entries`, S20 `duplicate_label_definitions`, and S22
+  `label_definitions`). The `[kind]` prefix makes the census visible on every line while staying
+  one-line-per-definition; it is a report annotation, not round-trippable LaTeX.
+- **No empty groups.** A kind with no definitions contributes no lines and no bare `[table]` header.
+- **Stable empty marker.** No label definitions at all → the **same** fixed string
+  `(no label definitions)` S22 uses (S23 groups the identical list), never the empty string — the
+  stable-marker discipline S12–S22 share.
+- **`\n`-joined, no trailing newline** — matching S11's `to_plain_text_by_kind` and every S12–S22
+  renderer.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single
+  stable-ordered pass (fixed kind order × pre-order filter) over the already-bounded `definitions`
+  list. Borrows `self` immutably, returns owned `String`.
+- **Tests.** Added `s23_groups_different_kinds_in_fixed_kind_order`,
+  `s23_reorders_source_to_fixed_kind_order`, `s23_same_kind_grouped_in_preorder`,
+  `s23_no_labels_returns_marker`, `s23_newline_join_no_trailing_newline`, and
+  `s23_is_additive_leaves_s1_s22_outputs_unchanged` (which pins every S1–S22 output byte-for-byte,
+  including S22's flat `label_definitions`, alongside the new grouped output).
+
 ## [0.58.0] — 2026-07-08
 
 ### Added — winning label definitions report (LTXDOC03 S22)
