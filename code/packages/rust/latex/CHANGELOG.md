@@ -2,6 +2,40 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.56.0] — 2026-07-07
+
+### Added — losing duplicate-`\label` report (LTXDOC03 S20)
+
+A **new** public method `Document::duplicate_label_definitions(&self) -> String` that renders the
+**losing duplicate `\label` definitions** — the label-family mirror of S16's
+`duplicate_bibliography_entries` (which renders the losing `\bibitem` duplicates). It is a read-only
+view over `resolve_references()`: S1 splits every `\label` into the **winning** first definition of each
+key (`definitions`) and the **losing** later re-definitions of an already-defined key (`duplicates` —
+LaTeX's *"Label `key' multiply defined"* warning); S20 renders that `duplicates` list. Every S1–S19
+output is left **byte-for-byte unchanged**; S20 is purely additive and leaves the `to_latex()`
+round-trip fixed point intact.
+
+- **One line per losing duplicate, in pre-order.** The `duplicates` list is already in body pre-order
+  (first-definition-wins). S20 renders it verbatim — **not** re-sorted, **not** de-duplicated — so
+  every *"multiply defined"* warning gets its own line, exactly like S16.
+- **`\label{key}` reconstructed from the owned key.** Each line is `format!("\\label{{{}}}", dup.key)`
+  — no source slicing at all (matching S13 `resolve_namerefs`, S15 `citations_by_source`, S16
+  `duplicate_bibliography_entries`, and S17–S19's reports). Labels are always defined by `\label{…}`,
+  so `\label{key}` is the correct reconstruction regardless of the duplicate's `LabelKind` (a
+  re-`\label`ed section, figure, equation, or bare inline label all render the same `\label{key}`).
+- **Winner lives elsewhere.** The winning first definition of each key stays in `definitions` (what
+  `\ref`/`\eqref`/`\pageref` resolve against), never in this report.
+- **Stable empty marker.** No duplicate labels (every key defined once, or no labels at all) → the
+  fixed string `(no duplicate label definitions)`, never `""` (the same discipline S12–S19 use). Lines
+  are joined by `\n` with **no** trailing newline.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single pass
+  over the already-bounded `duplicates`. Borrows `self` immutably and returns owned `String`.
+
+Tests: `s20_reports_duplicate_label`, `s20_two_distinct_duplicates_preorder`,
+`s20_no_duplicates_returns_marker`, and an additivity test
+`s20_is_additive_leaves_s1_s19_outputs_unchanged` pinning S1–S19 outputs (including
+`bibliography_entries`) byte-for-byte alongside the new method.
+
 ## [0.55.0] — 2026-07-07
 
 ### Added — numbered winning-bibliography-entry list (LTXDOC03 S19)

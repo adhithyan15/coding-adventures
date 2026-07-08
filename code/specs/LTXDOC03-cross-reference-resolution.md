@@ -1606,3 +1606,73 @@ marker; and an additivity check that `to_plain_text`, `to_plain_text_by_kind`, `
 prior strings). All prior S1–S18 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D
 warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex
 --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 26. S20 — losing duplicate `\label` definitions (`duplicate_label_definitions`)
+
+### 26.1 Motivation
+
+S1's `resolve_references` returns `duplicates: Vec<Duplicate>` — the **losing** later re-definitions of
+an already-defined label key, one row per multiply-defined `\label`, in body pre-order. This is exactly
+LaTeX's *"Label `key' multiply defined"* warning list: the first `\label{key}` seen wins (into
+`definitions`, the table `\ref`/`\eqref`/`\pageref` resolve against) and every later `\label` of that key
+is a loser. Yet no method rendered it. S16 (`duplicate_bibliography_entries`) does the *citation-family*
+equivalent — it renders the losing `\bibitem` duplicates — but its `\label` mirror was missing. S20 fills
+that cell by rendering `duplicates` as the losing-`\label` report, the exact label-family parallel of S16.
+
+### 26.2 Why a new method — additive by construction
+
+S20 adds a **new public method** `Document::duplicate_label_definitions(&self) -> String`. It is a pure,
+read-only render of `resolve_references().duplicates`. It reuses that table verbatim (never re-walking the
+body or re-collecting labels), so the report can never drift from the S1 resolution it summarises. It
+mutates nothing and changes no S1–S19 output — including `to_latex()`'s round-trip fixed point —
+byte-for-byte. Like S11–S19 it is a method the caller invokes directly.
+
+### 26.3 The ordering rule
+
+S1 collects every `\label` (hoisted onto a section/table/figure/equation, or a bare inline `\label`) in
+body pre-order, keeping the **first** of each distinct key in `definitions` and routing every later
+re-definition of an already-defined key into `duplicates` (never into `definitions`). S20 renders
+`duplicates` verbatim in that existing pre-order — **not** re-sorted and **not** de-duplicated — so a key
+defined three times yields two lines, and every *"multiply defined"* warning gets its own line, exactly
+like S16. The winning first definition of each key stays in `definitions` and is never in this report.
+
+### 26.4 The exact rendering contract — `Document::duplicate_label_definitions(&self) -> String`
+
+- One line per losing duplicate, in the existing pre-order (**not** re-sorted, **not** de-duplicated),
+  each rendering `format!("\\label{{{}}}", dup.key)` → `\label{dup}`.
+- Each line is reconstructed from the duplicate's owned `key` `String` rather than sliced from
+  `&src[span]` (matching S13 `resolve_namerefs`, S15 `citations_by_source`, S16
+  `duplicate_bibliography_entries`, and S17–S19's reports), so the render needs no source borrow and can
+  never index out of bounds. Labels are always *defined* by `\label{…}`, so `\label{key}` is the correct
+  reconstruction regardless of the duplicate's `LabelKind` — a re-`\label`ed section, figure, equation,
+  or bare inline label all render the same `\label{key}` form.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S19 renderer).
+- If there are **no** duplicate labels (every key defined once, or no labels at all), the fixed marker
+  `(no duplicate label definitions)` is returned, so the output is never the empty string.
+
+Example (body writing `\label{dup}` twice and `\label{once}` once):
+
+```text
+\label{dup}
+```
+
+only the second `\label{dup}` loses; the first `dup` wins (into `definitions`) and `once` is defined once,
+so the report is the single losing line. This is the label-family mirror of S16's `\bibitem{key}` view.
+
+### 26.5 Public API (added in S20)
+
+One new method: `Document::duplicate_label_definitions(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_references` and every S1–S19 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 26.6 Verification (S20)
+
+`cargo test -p latex` green (4 new S20 tests: a `\label{dup}` written twice rendering `\label{dup}` (only
+the loser); two distinct keys each multiply-defined rendering `\label{alpha}\n\label{beta}` in pre-order;
+labels all defined once returning the `(no duplicate label definitions)` marker; and an additivity check
+that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`,
+`citations_by_source`, `duplicate_bibliography_entries`, `unresolved_citations_by_source`,
+`unresolved_references_by_source`, and `bibliography_entries` all still produce their exact prior
+strings). All prior S1–S19 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings`
+clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex
+--no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
