@@ -200,6 +200,28 @@ def test_array_fetch_out_of_bounds_raises_index_error() -> None:
     assert excinfo.value.args[0] == "index 100 outside of array bounds: -2...2"
 
 
+def test_array_take_and_drop_clamp_count() -> None:
+    # ``take(n)``/``drop(n)`` split the array at ``n``, which is clamped to
+    # ``[0, len]``: an over-long count saturates and a negative count folds to 0.
+    assert oop.call_method([1, 2, 3, 4], "take", 2) == [1, 2]
+    assert oop.call_method([1, 2, 3, 4], "drop", 2) == [3, 4]
+    assert oop.call_method([1, 2, 3], "take", 0) == []
+    assert oop.call_method([1, 2, 3], "drop", 0) == [1, 2, 3]
+    assert oop.call_method([1, 2, 3], "take", 99) == [1, 2, 3]
+    assert oop.call_method([1, 2, 3], "drop", 99) == []
+    assert oop.call_method([1, 2, 3], "take", -5) == []
+    assert oop.call_method([1, 2, 3], "drop", -5) == [1, 2, 3]
+
+
+def test_array_values_at_selects_and_folds_negatives() -> None:
+    # ``values_at(*idxs)`` returns one element per index; a negative index folds
+    # from the end once, and an out-of-range index yields ``None`` (never raises).
+    assert oop.call_method([10, 20, 30], "values_at", 0, 2) == [10, 30]
+    assert oop.call_method([10, 20, 30], "values_at", -1, -2) == [30, 20]
+    assert oop.call_method([10, 20, 30], "values_at", 5, -9) == [None, None]
+    assert oop.call_method([10, 20, 30], "values_at") == []
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]
