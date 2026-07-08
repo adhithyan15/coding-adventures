@@ -30,8 +30,8 @@ property classes `\p{Alphabetic}`, `\p{Mark}`, `\p{Nd}` (and `\P{…}`);
 `(?i)`/`(?s)`/`(?u)`.
 
 Character classes and `\b` are **Unicode-aware by default** (matching `regex`);
-`(?-u)` selects the ASCII sets. Unicode case folding and match extents are
-planned additions.
+`(?-u)` selects the ASCII sets. `(?i)` uses Unicode simple case folding. Match
+extents (`find`/`captures`/`replace_all`) are a planned addition.
 
 ## Usage
 
@@ -45,9 +45,9 @@ assert!(ci.is_match("HELLO"));
 
 ## Fidelity
 
-Cross-checked against the live `regex` crate across **100k+ random (pattern,
-input) pairs in ASCII mode** and **80k+ in default Unicode mode** (with
-non-ASCII inputs and `\p{…}` classes) — zero `is_match` divergences.
+Cross-checked against the live `regex` crate across **100k+ pairs in ASCII mode**,
+**80k+ in Unicode mode** (`\p{…}`, non-ASCII), and **60k+ case-insensitive**
+(Unicode fold orbits) — zero `is_match` divergences.
 
 ## Testing
 

@@ -1,5 +1,28 @@
 # Changelog — regex-engine
 
+## 0.3.0 — Unreleased
+
+Adds **Unicode simple case folding** to `(?i)` matching — the last engine
+capability needed before pointing engram-core's case-insensitive search
+(`re:` / whole-word / glob) at this engine (Phase D2).
+
+### Added
+
+- `case_insensitive` / `(?i)` now uses **Unicode simple case folding** in Unicode
+  mode (ASCII folding under `(?-u)`), matching the `regex` crate. Handles the
+  tricky orbits a naive upper/lower closure misses — Greek `σ`/`ς`/`Σ`, the
+  Kelvin (U+212A) and Ångström (U+212B) signs, long-s `ſ`, titlecase digraphs.
+- Generated `casefold.rs` (1454 case-fold orbits over 2938 cased characters),
+  produced once via the `regex` crate as oracle then frozen; orbit lookup is a
+  binary search, and class folding checks each of the (small) orbit's members.
+
+### Verified
+
+- New cross-check vs the live `regex` crate's `(?i)` (Unicode) across **60k+
+  random (pattern, input) pairs** built from cased characters incl. the tricky
+  orbits — zero `is_match` divergences. The D0 ASCII and D1 Unicode cross-checks
+  still pass. 13 unit tests; clippy + fmt clean.
+
 ## 0.2.0 — Unreleased
 
 Phase D1 of the Engram zero-dependency program: **Unicode-aware character

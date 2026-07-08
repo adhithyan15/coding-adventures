@@ -28,10 +28,11 @@
 //!
 //! Character classes and `\b` are **Unicode-aware by default** (matching the
 //! `regex` crate), backed by generated tables in [`unicode_tables`]; `(?-u)`
-//! selects the ASCII sets. Not yet included: Unicode *case folding* (`(?i)` folds
-//! ASCII only) and match *extents* (`find`/`captures`/`replace_all`).
+//! selects the ASCII sets. `(?i)` uses Unicode simple case folding. Not yet
+//! included: match *extents* (`find`/`captures`/`replace_all`).
 
 mod ast;
+mod casefold;
 mod program;
 mod unicode_tables;
 
@@ -103,7 +104,8 @@ impl<'a> RegexBuilder<'a> {
         }
     }
 
-    /// Enable case-insensitive matching (ASCII case folding).
+    /// Enable case-insensitive matching (Unicode simple case folding in Unicode
+    /// mode; ASCII folding under `(?-u)`).
     pub fn case_insensitive(&mut self, yes: bool) -> &mut Self {
         self.case_insensitive = yes;
         self
@@ -186,6 +188,29 @@ mod tests {
             .unwrap();
         assert!(re.is_match("HeLLo"));
         assert!(!Regex::new("hello").unwrap().is_match("HELLO"));
+    }
+
+    #[test]
+    fn unicode_case_folding() {
+        let ci = |p: &str| RegexBuilder::new(p).case_insensitive(true).build().unwrap();
+        // Accented Latin folds both directions.
+        assert!(ci("café").is_match("CAFÉ"));
+        assert!(ci("CAFÉ").is_match("café"));
+        // Greek final sigma: σ, ς and Σ are all in one fold orbit.
+        assert!(ci("σ").is_match("ς"));
+        assert!(ci("ς").is_match("Σ"));
+        // Special simple folds a std upper/lower closure would miss.
+        assert!(ci("k").is_match("\u{212A}")); // KELVIN SIGN
+        assert!(ci("å").is_match("\u{212B}")); // ANGSTROM SIGN
+        assert!(ci("s").is_match("ſ")); // LATIN SMALL LETTER LONG S
+                                        // Inside a class, too.
+        assert!(ci("[σ]").is_match("Σ"));
+        // `(?-u)` reverts to ASCII folding: é/É no longer fold.
+        assert!(!RegexBuilder::new("(?-u)é")
+            .case_insensitive(true)
+            .build()
+            .unwrap()
+            .is_match("É"));
     }
 
     #[test]
