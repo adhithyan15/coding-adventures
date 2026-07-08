@@ -497,6 +497,10 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
+        // A regex literal (`/ab+c/gi`) is a leaf like a string: nothing inside
+        // to fold, and it is never a foldable constant, so it passes through
+        // unchanged exactly like StringLiteral.
+        | Expression::RegExpLiteral(_)
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)

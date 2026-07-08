@@ -437,6 +437,9 @@ fn expr_node_count(expr: &Expression) -> usize {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — it counts like a StringLiteral: 0 sub-nodes.
+        | Expression::RegExpLiteral(_)
         // `this` is a single leaf keyword — it contributes one node like the
         // other leaves (which this arm counts as 0 sub-nodes).
         | Expression::ThisExpression(_)
@@ -770,6 +773,9 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — these traversals treat it exactly like a StringLiteral.
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — it binds/references no identifier and has
         // no sub-expression, so these traversals do nothing for it. (It is
         // deliberately NOT treated as a freely-substitutable primary: `this` is
@@ -1083,6 +1089,9 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — these traversals treat it exactly like a StringLiteral.
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — it binds/references no identifier and has
         // no sub-expression, so these traversals do nothing for it. (It is
         // deliberately NOT treated as a freely-substitutable primary: `this` is
@@ -1456,6 +1465,9 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — these traversals treat it exactly like a StringLiteral.
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — it binds/references no identifier and has
         // no sub-expression, so these traversals do nothing for it. (It is
         // deliberately NOT treated as a freely-substitutable primary: `this` is
@@ -1624,6 +1636,9 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — these traversals treat it exactly like a StringLiteral.
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — it binds/references no identifier and has
         // no sub-expression, so these traversals do nothing for it. (It is
         // deliberately NOT treated as a freely-substitutable primary: `this` is
@@ -2205,6 +2220,9 @@ fn expr_collect_mutated_params(
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — these traversals treat it exactly like a StringLiteral.
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — it binds/references no identifier and has
         // no sub-expression, so these traversals do nothing for it. (It is
         // deliberately NOT treated as a freely-substitutable primary: `this` is
@@ -3558,6 +3576,9 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        // A regex literal is an inert leaf (no sub-expression, references no
+        // identifier) — these traversals treat it exactly like a StringLiteral.
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — it binds/references no identifier and has
         // no sub-expression, so these traversals do nothing for it. (It is
         // deliberately NOT treated as a freely-substitutable primary: `this` is

@@ -265,6 +265,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         BooleanLiteral(e) => e.cv.clone(),
         NullLiteral(e) => e.cv.clone(),
         BigIntLiteral(e) => e.cv.clone(),
+        RegExpLiteral(e) => e.cv.clone(),
         UndefinedLiteral(e) => e.cv.clone(),
         BinaryExpression(e) => e.cv.clone(),
         LogicalExpression(e) => e.cv.clone(),
@@ -1366,6 +1367,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
         // `this` is a leaf keyword — nothing inside to fold, so it clones
         // through like the literals.
         | Expression::ThisExpression(_)

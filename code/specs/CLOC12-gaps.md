@@ -2138,6 +2138,27 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
+
+Regex literals were previously bridged via a **"treat as identifier" fallback**
+(`javascript-parser` `convert_primary`'s catch-all) — an `Identifier` whose name
+was the regex source. It round-tripped only by accident (the text is not a valid
+identifier, so the rename passes skipped it as a candidate) and left a latent
+hazard: any pass that treated it as a real reference could corrupt it.
+
+PR1 models it properly as `Expression::RegExpLiteral(RegExpLiteral { cv, pattern,
+flags })` (`javascript-ast` 0.31.0) — a leaf beside the other literal leaves.
+The two halves are stored split (`pattern` between the slashes, `flags` the
+trailing set) so passes reason about the flags without re-parsing.
+`closure-emitter` (0.36.0) `emit_regexp` reconstructs `/{pattern}/{flags}` with
+no escaping (a regex has one spelling) at `PREC_PRIMARY`; 3 unit tests. All
+downstream pass/analysis crates group `RegExpLiteral` into their existing inert
+leaf-literal arm (same treatment as `StringLiteral`/`NumericLiteral`: no
+recursion, no renaming, not a foldable constant) — several already covered it
+via a `_` catch-all. All in ONE atomic commit. The bridge that *builds* the node
+(replacing the identifier fallback, closes gap-RegExpAsIdentifier) is PR2; the
+CodePrinter conformance port is PR3.
+
 ## CLOC12.171 — optional chaining `a?.b` / `a?.[k]` / `a?.()`: nodes + emit + passes (PR1)
 
 Optional chaining (ES2020) lets a member/call short-circuit to `undefined`

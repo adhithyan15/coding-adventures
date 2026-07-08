@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.36.0] - 2026-07-08
+
+### Added — CLOC12.172 PR1: print `RegExpLiteral` (`/pattern/flags`)
+
+`emit_regexp` prints the regex-literal leaf added in `javascript-ast` 0.31.0:
+`/` + `pattern` + `/` + `flags`. The pattern is opaque text (its own `\/`
+escapes are already part of it) and no quote-choice/escaping applies — a regex
+has exactly one spelling. `RegExpLiteral` is `PREC_PRIMARY` (an atomic primary
+that never needs wrapping). 3 unit tests (flags, no-flags, pattern-internal
+escapes). Emitter-only; the bridge that builds the node is CLOC12.172 PR2 and
+the CodePrinter conformance port is PR3.
+
 ## [0.35.1] - 2026-07-08
 
 ### Added — CLOC12.171 PR3: CodePrinter optional-chaining `a?.b` / `a?.[k]` / `a?.()` conformance port

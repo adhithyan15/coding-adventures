@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.31.0] - 2026-07-08
+
+### Added — CLOC12.172 PR1: `RegExpLiteral` leaf node (`/pattern/flags`)
+
+New `Expression::RegExpLiteral(RegExpLiteral { cv, pattern, flags })` — a regex
+literal modelled as its own leaf, alongside the other literal leaves. Previously
+the bridge fell back to an `Identifier` whose name was the regex source, which
+round-tripped only by accident (the text is not a valid identifier, so the
+rename passes skipped it) and left a latent hazard. The two halves are stored
+split (`pattern` = the body between the slashes, `flags` = the trailing flag
+set) so passes can reason about the flags without re-parsing; the printer
+reconstructs `/{pattern}/{flags}`. Mirrors ESTree's `RegExpLiteral` minus the
+live-`RegExp` `value` a source-to-source minifier never needs.
+
+Purely additive — no existing node changed. This is the atomic node PR of the
+CLOC12.172 arc; the bridge that *builds* it (replacing the identifier fallback)
+is PR2, and the CodePrinter conformance port is PR3.
+
 ## [0.30.0] - 2026-07-08
 
 ### Added — CLOC12.171 PR1: optional chaining `a?.b` / `a?.[k]` / `a?.()` (ES2020)

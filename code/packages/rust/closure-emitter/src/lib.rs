@@ -77,6 +77,7 @@ use coding_adventures_javascript_ast::{
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
     ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
+    RegExpLiteral,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
     Super, NewTarget, ImportMeta, ImportExpression,
@@ -1122,6 +1123,7 @@ impl<'a> Emitter<'a> {
             Expression::NullLiteral(n) => self.emit_null(n),
             Expression::BigIntLiteral(b) => self.emit_bigint(b),
             Expression::UndefinedLiteral(u) => self.emit_undefined(u),
+            Expression::RegExpLiteral(r) => self.emit_regexp(r),
             Expression::BinaryExpression(b) => self.emit_binary(b),
             Expression::LogicalExpression(l) => self.emit_logical(l),
             Expression::UnaryExpression(u) => self.emit_unary(u),
@@ -1247,6 +1249,19 @@ impl<'a> Emitter<'a> {
     fn emit_undefined(&mut self, u: &UndefinedLiteral) {
         self.maybe_map(&u.cv);
         self.write_str("void 0");
+    }
+
+    /// `/pattern/flags` — a regex literal. The source is reconstructed
+    /// verbatim: `pattern` is the opaque body between the slashes (its own `\/`
+    /// escapes are already part of the text) and `flags` is the trailing flag
+    /// set. No escaping or quote-choice applies — a regex has exactly one
+    /// spelling.
+    fn emit_regexp(&mut self, r: &RegExpLiteral) {
+        self.maybe_map(&r.cv);
+        self.write_str("/");
+        self.write_str(&r.pattern);
+        self.write_str("/");
+        self.write_str(&r.flags);
     }
 
     fn emit_binary(&mut self, b: &BinaryExpression) {
@@ -2129,6 +2144,9 @@ fn expr_prec(e: &Expression) -> u8 {
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
+        // A regex literal `/…/g` is an atomic primary — it never needs
+        // wrapping and no operand context forces a paren around it.
+        | Expression::RegExpLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
         | Expression::ArrayExpression(_)
@@ -2583,6 +2601,23 @@ mod tests {
             cv: None,
             name: name.to_string(),
         })
+    }
+    fn regexp(pattern: &str, flags: &str) -> Expression {
+        Expression::RegExpLiteral(RegExpLiteral {
+            cv: None,
+            pattern: pattern.to_string(),
+            flags: flags.to_string(),
+        })
+    }
+
+    #[test]
+    fn regexp_literal_reconstructs_slashes_and_flags() {
+        // `/ab+c/gi` — pattern + flags round-trip verbatim.
+        assert_eq!(emit_expr(regexp("ab+c", "gi")), "/ab+c/gi;");
+        // No flags → a bare `/…/`.
+        assert_eq!(emit_expr(regexp("a.b", "")), "/a.b/;");
+        // Pattern-internal escapes/metachars are opaque text, emitted as-is.
+        assert_eq!(emit_expr(regexp("\\d+\\/x", "u")), "/\\d+\\/x/u;");
     }
     fn boolean(v: bool) -> Expression {
         Expression::BooleanLiteral(BooleanLiteral { cv: None, value: v })
