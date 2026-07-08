@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 104 \u2014 coagulation mixing-study correction index from four stated quantities (a NEW panel: hematology / coagulation mixing-study). From a patient time minus a control time for the prolongation, a mix ratio times an incubation factor for the dilution load, and the prolongation divided by the dilution load, compute the correction index ((patient_time-control_time)/(mix_ratio*incubation_factor)), the prolongation (patient_time-control_time), or the dilution load (mix_ratio*incubation_factor). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A DIFFERENCE OVER A PRODUCT (a-b)/(c*d) (subtract b from a, multiply c and d, divide the difference by the product, so (a-b)/(c*d) = ((a-b)/(c*d)); the FIRST time the ladder divides a bare DIFFERENCE by a bare PRODUCT \u2014 the MIRROR-SIBLING of rung-100 (a+b)/(c*d) which divided a SUM by the product; rung-99 (a*b)/(c+d) divided a product by a sum, rung-37 (a+b)/(c+d) a sum by a sum) \u2014 and the harness matches the scalar to the printed options. The correction index is a dimensionless ratio that naturally lands below one, framed as an INDEX (not a physical time) so the sub-one values stay honest. Contamination-safe: every figure is built only from the four observed quantities via -, *, and / \u2014 no constant leaks, and neither the prolongation, the dilution load, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the control time is divided before subtracting (a-b/(c*d), a wrong grouping) and multiplying the numerator pair while summing the denominator pair ((a*b)/(c+d), a wrong pairing). The core confusion tested is that (a-b)/(c*d) is ((a-b)/(c*d)), not a-b/(c*d) and not (a*b)/(c+d). Each table guarantees the patient time exceeds the control time and every denominator is a product or sum of quantities >= 2 (never zero, no subtraction), so every figure stays strictly positive and well-defined.",
+  "items": [
+    {
+      "id": "r104hemix-01",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 4 minus a control time of 2, divided by a mix ratio of 2 times an incubation factor of 3. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(4)\nobserve control_time(2)\nobserve mix_ratio(2)\nobserve incubation_factor(3)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r104hemix-02",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 4 minus a control time of 2, divided by a mix ratio of 2 times an incubation factor of 3. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(4)\nobserve control_time(2)\nobserve mix_ratio(2)\nobserve incubation_factor(3)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r104hemix-03",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 4 minus a control time of 2, divided by a mix ratio of 2 times an incubation factor of 3. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(4)\nobserve control_time(2)\nobserve mix_ratio(2)\nobserve incubation_factor(3)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r104hemix-04",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 6 minus a control time of 3, divided by a mix ratio of 3 times an incubation factor of 4. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(6)\nobserve control_time(3)\nobserve mix_ratio(3)\nobserve incubation_factor(4)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r104hemix-05",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 6 minus a control time of 3, divided by a mix ratio of 3 times an incubation factor of 4. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(6)\nobserve control_time(3)\nobserve mix_ratio(3)\nobserve incubation_factor(4)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r104hemix-06",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 6 minus a control time of 3, divided by a mix ratio of 3 times an incubation factor of 4. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(6)\nobserve control_time(3)\nobserve mix_ratio(3)\nobserve incubation_factor(4)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r104hemix-07",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 8 minus a control time of 4, divided by a mix ratio of 4 times an incubation factor of 2. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(8)\nobserve control_time(4)\nobserve mix_ratio(4)\nobserve incubation_factor(2)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r104hemix-08",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 8 minus a control time of 4, divided by a mix ratio of 4 times an incubation factor of 2. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(8)\nobserve control_time(4)\nobserve mix_ratio(4)\nobserve incubation_factor(2)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r104hemix-09",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 8 minus a control time of 4, divided by a mix ratio of 4 times an incubation factor of 2. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(8)\nobserve control_time(4)\nobserve mix_ratio(4)\nobserve incubation_factor(2)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r104hemix-10",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 10 minus a control time of 5, divided by a mix ratio of 5 times an incubation factor of 6. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(10)\nobserve control_time(5)\nobserve mix_ratio(5)\nobserve incubation_factor(6)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.833333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.545454545454546,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r104hemix-11",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 10 minus a control time of 5, divided by a mix ratio of 5 times an incubation factor of 6. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(10)\nobserve control_time(5)\nobserve mix_ratio(5)\nobserve incubation_factor(6)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.833333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.545454545454546,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r104hemix-12",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 10 minus a control time of 5, divided by a mix ratio of 5 times an incubation factor of 6. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(10)\nobserve control_time(5)\nobserve mix_ratio(5)\nobserve incubation_factor(6)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.833333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.545454545454546,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r104hemix-13",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 12 minus a control time of 6, divided by a mix ratio of 6 times an incubation factor of 7. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(12)\nobserve control_time(6)\nobserve mix_ratio(6)\nobserve incubation_factor(7)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.857142857142858,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.538461538461538,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r104hemix-14",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 12 minus a control time of 6, divided by a mix ratio of 6 times an incubation factor of 7. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(12)\nobserve control_time(6)\nobserve mix_ratio(6)\nobserve incubation_factor(7)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.857142857142858,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.538461538461538,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r104hemix-15",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 12 minus a control time of 6, divided by a mix ratio of 6 times an incubation factor of 7. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(12)\nobserve control_time(6)\nobserve mix_ratio(6)\nobserve incubation_factor(7)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11.857142857142858,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.538461538461538,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r104hemix-16",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 14 minus a control time of 7, divided by a mix ratio of 7 times an incubation factor of 5. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(14)\nobserve control_time(7)\nobserve mix_ratio(7)\nobserve incubation_factor(5)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.166666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r104hemix-17",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 14 minus a control time of 7, divided by a mix ratio of 7 times an incubation factor of 5. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(14)\nobserve control_time(7)\nobserve mix_ratio(7)\nobserve incubation_factor(5)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.166666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r104hemix-18",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 14 minus a control time of 7, divided by a mix ratio of 7 times an incubation factor of 5. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(14)\nobserve control_time(7)\nobserve mix_ratio(7)\nobserve incubation_factor(5)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.166666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r104hemix-19",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 16 minus a control time of 8, divided by a mix ratio of 8 times an incubation factor of 9. What is the correction index (the prolongation divided by the dilution load)?",
+      "program": "observe patient_time(16)\nobserve control_time(8)\nobserve mix_ratio(8)\nobserve incubation_factor(9)\nlet answer = (patient_time - control_time) / (mix_ratio * incubation_factor)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.88888888888889,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.529411764705882,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r104hemix-20",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 16 minus a control time of 8, divided by a mix ratio of 8 times an incubation factor of 9. What is the the prolongation (the patient time minus the control time, the numerator divided by the dilution load)?",
+      "program": "observe patient_time(16)\nobserve control_time(8)\nobserve mix_ratio(8)\nobserve incubation_factor(9)\nlet answer = patient_time - control_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.88888888888889,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.529411764705882,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r104hemix-21",
+      "qtype": "hemix_correction_index",
+      "stem": "A coagulation mixing study records a patient time of 16 minus a control time of 8, divided by a mix ratio of 8 times an incubation factor of 9. What is the the dilution load (the mix ratio times the incubation factor, the denominator the prolongation is divided by)?",
+      "program": "observe patient_time(16)\nobserve control_time(8)\nobserve mix_ratio(8)\nobserve incubation_factor(9)\nlet answer = mix_ratio * incubation_factor\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.88888888888889,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.529411764705882,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
