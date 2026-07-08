@@ -2138,6 +2138,101 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.173 — `ClassExpression` (`class [id] [extends S] { … }`): the class arc (design)
+
+`ClassExpression` is the next `Expression` node, and unlike every arc since
+CLOC12.150 it is **greenfield**: the typed AST models classes *nowhere* today
+(`declaration.rs` still says "Phase 3 adds `ClassDeclaration`"; no class struct
+exists). The grammar already parses `class_expression` / `class_declaration` /
+`class_body` / `class_element` / `method_definition`, but the bridge declines
+all of them (`bridge.rs` `convert_primary` maps `class_expression` →
+`unsupported`; `method_definition` is "unsupported Phase 2"). So a class literal
+currently drops its whole file to `WHITESPACE_ONLY`.
+
+Because a class carries a **member sub-AST**, this is larger than a single leaf
+node. This section fixes the model and the PR breakdown so the implementation
+lands in reviewable, atomic pieces rather than one monolith.
+
+### Model (ESTree-aligned, Rhino-informed)
+
+```rust
+// javascript-ast/src/expression.rs
+pub struct ClassExpression {
+    pub cv: Option<CvId>,
+    pub id: Option<Identifier>,               // `class C {}` vs anonymous `class {}`
+    pub super_class: Option<Box<Expression>>, // `extends <expr>` heritage
+    pub body: Vec<ClassMember>,               // the `{ … }` element list (may be empty)
+}
+
+pub enum ClassMember {
+    Method(MethodDefinition),
+    // Field(PropertyDefinition) and StaticBlock(...) arrive in later feature PRs.
+}
+
+pub struct MethodDefinition {
+    pub cv: Option<CvId>,
+    pub key: PropertyKey,          // reuse the object-literal key type
+    pub kind: MethodKind,          // constructor | method | get | set
+    pub value: FunctionExpression, // params + body live here (as for object methods)
+    pub computed: bool,            // `[expr]() {}` (mirrors `Property.computed`)
+    #[serde(rename = "static")]
+    pub is_static: bool,           // `static m() {}`
+}
+
+pub enum MethodKind { Constructor, Method, Get, Set }
+```
+
+**Why separate `MethodDefinition`, not reuse object-literal `Property`.** A
+`Property` has `shorthand`/`method`/`Init|Get|Set` and a `value: Expression`; a
+class method additionally needs `static`, a `constructor` kind (which a
+`Property` cannot express), and its `value` is *always* a `FunctionExpression`.
+This matches the conformance target — Closure's Rhino uses dedicated
+`MEMBER_FUNCTION_DEF` / `GETTER_DEF` / `SETTER_DEF` / `COMPUTED_PROP` node kinds,
+not object-property nodes. `PropertyKey` (identifier / string / numeric /
+`Expression` for computed) *is* reused — a method key and a property key have
+the same four shapes.
+
+**Deliberately deferred to later feature PRs (each an additive `ClassMember`
+variant or `MethodDefinition` field):** instance/static **fields**
+(`PropertyDefinition`), **static initialization blocks** (`static { … }`),
+private names (`#x`), and decorators. Excluding them keeps PR1 cohesive and
+each later slice small — the same "ship minimal, grow additively" path
+TemplateLiteral (no-substitution first) and optional chaining followed.
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all pass arms, ONE commit).** Add the
+  `ClassExpression` variant + the member sub-AST above to `javascript-ast`
+  (MINOR); add `emit_class` to `closure-emitter` (MINOR) printing
+  `class[ id][ extends S]{members}` with each member via an `emit_class_member`
+  helper (`static`/`get`/`set`/`*`-generator prefixes, computed `[key]`,
+  method params+body via the existing function-emit path), classified
+  `PREC_PRIMARY` (a class expression in a tighter parent — e.g. a call callee
+  `(class{})()` — wraps, exactly like a function expression); and add a
+  `ClassExpression` arm to **every** exhaustive `Expression` match in the pass
+  crates. The correct arm **mirrors `FunctionExpression`**: a class is a
+  scope-introducing, code-bearing node, so scope-analyzer / rename /
+  rename-globals / rename-properties / inline / inline-variables / dce /
+  fold-control-flow / constant-fold must recurse into `super_class` and each
+  method's `value` (a nested function scope) rather than treat the class as an
+  inert leaf. Check `treeshake` / `remove-unused-vars` / `collapse-properties`
+  for catch-all arms that already absorb it. Hand-constructed AST unit tests in
+  the emitter (empty class, named, `extends`, one method, `static`/`get`/`set`,
+  computed key).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  convert `class_expression` → `ClassExpression`, walking `class_body` /
+  `class_element` / `method_definition` into `ClassMember::Method`. Dump the
+  parse-tree shape first (the env-gated `eprintln` + throwaway probe technique).
+  Add a `closurec` e2e diff fixture (`tests/diff/simple-class/`). Closes the
+  `class_expression`-declines-to-WHITESPACE_ONLY gap.
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_class_test.rs` mirroring upstream
+  `CodePrinterTest`'s class printing cases.
+
+The bridge for a **class _declaration_** (a `ProgramItem`, not an
+`Expression`) is a **separate future arc** — this arc is scoped to the
+*expression* form. The two share the member sub-AST once PR1 lands.
+
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 
 Regex literals were previously bridged via a **"treat as identifier" fallback**
