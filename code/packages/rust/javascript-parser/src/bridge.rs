@@ -58,7 +58,8 @@ use coding_adventures_javascript_ast::{
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
-        ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember, Property,
+        ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
+        OptionalCallExpression, OptionalMemberExpression, Property,
         PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -1825,17 +1826,12 @@ fn convert_lhs_expression(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 ///   { OPTIONAL_CHAIN NAME | OPTIONAL_CHAIN ... | DOT NAME | LBRACKET expr RBRACKET | arguments | template_literal }
 /// ```
 ///
-/// Phase 1 handles: simple pass-through (no suffix), dot-access, bracket-access,
-/// and function-call suffixes. OPTIONAL_CHAIN (`?.`) suffixes are Phase 2.
+/// Handles: simple pass-through (no suffix), dot-access, bracket-access, and
+/// function-call suffixes, plus the OPTIONAL_CHAIN (`?.`) forms `a?.b` /
+/// `a?.[k]` / `a?.()` — each optional link becomes an `OptionalMemberExpression`
+/// / `OptionalCallExpression`, and a chain containing any optional link is
+/// wrapped once in a `ChainExpression` (CLOC12.171 PR2, closes gap-OptionalChain).
 fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
-    // If there's a ?. token anywhere → Phase 2.
-    if has_token(node, "?.") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "OptionalChainExpression".to_string(),
-            location: loc(node),
-        });
-    }
-
     let nodes = node_children(node);
     if nodes.is_empty() {
         return Err(internal(node, "optional_chain_expression: no children"));
@@ -1843,6 +1839,11 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
 
     // Base: the first node child is always the member_expression.
     let mut base = convert_expression(nodes[0])?;
+
+    // Whether any `?.` link appeared in this chain. If so, the whole spine is
+    // wrapped once in a `ChainExpression` (the boundary at which the `undefined`
+    // short-circuit resolves) before we return.
+    let mut saw_optional = false;
 
     // Walk any additional suffix operations in the children after the base.
     // Children layout after the base member_expression:
@@ -1866,6 +1867,78 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
     // Now process remaining children as suffix groups.
     while i < children.len() {
         match &children[i] {
+            ASTNodeOrToken::Token(t) if t.value == "?." => {
+                // OPTIONAL_CHAIN — the *following* suffix is optional. The parse
+                // tree spells `?.` as its own token followed directly by the
+                // suffix (confirmed by parse-tree dump):
+                //   `a?.b`    → ?.  NAME            → OptionalMember (dot)
+                //   `a?.[k]`  → ?.  [ expr ]        → OptionalMember (computed)
+                //   `a?.()`   → ?.  Node(arguments) → OptionalCall
+                // A non-optional suffix that follows (e.g. the `.c` in `a?.b.c`)
+                // is handled by the ordinary arms below, so only the `?.`-marked
+                // link becomes an `Optional*` node.
+                saw_optional = true;
+                i += 1;
+                match children.get(i) {
+                    // `?.[` expr `]` — optional computed access.
+                    Some(ASTNodeOrToken::Token(t)) if t.value == "[" => {
+                        i += 1;
+                        while i < children.len() {
+                            if let ASTNodeOrToken::Node(key_n) = &children[i] {
+                                let key = convert_expression(key_n)?;
+                                base = Expression::OptionalMemberExpression(
+                                    OptionalMemberExpression {
+                                        cv: None,
+                                        object: Box::new(base),
+                                        property: Box::new(key),
+                                        computed: true,
+                                    },
+                                );
+                                i += 1;
+                                break;
+                            }
+                            i += 1;
+                        }
+                        // Skip the RBRACKET.
+                        if let Some(ASTNodeOrToken::Token(t)) = children.get(i) {
+                            if t.value == "]" {
+                                i += 1;
+                            }
+                        }
+                    }
+                    // `?.(` args `)` — optional call.
+                    Some(ASTNodeOrToken::Node(arg_n)) if arg_n.rule_name == "arguments" => {
+                        let args = convert_arguments(arg_n)?;
+                        base = Expression::OptionalCallExpression(OptionalCallExpression {
+                            cv: None,
+                            callee: Box::new(base),
+                            arguments: args,
+                        });
+                        i += 1;
+                    }
+                    // `?.` NAME — optional dot access (the bare name token sits
+                    // directly after `?.`, with no interposed `.`).
+                    Some(ASTNodeOrToken::Token(name_t)) => {
+                        let prop_name = name_t.value.clone();
+                        i += 1;
+                        base = Expression::OptionalMemberExpression(OptionalMemberExpression {
+                            cv: None,
+                            object: Box::new(base),
+                            property: Box::new(Expression::Identifier(Identifier {
+                                cv: None,
+                                name: prop_name,
+                            })),
+                            computed: false,
+                        });
+                    }
+                    _ => {
+                        return Err(internal(
+                            node,
+                            "optional_chain_expression: unexpected child after `?.`",
+                        ))
+                    }
+                }
+            }
             ASTNodeOrToken::Token(t) if t.value == "." => {
                 // DOT NAME — dot property access.
                 i += 1;
@@ -1927,6 +2000,17 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                 i += 1; // Skip unknown tokens (e.g. closing brackets already consumed).
             }
         }
+    }
+
+    // If any `?.` link appeared, wrap the whole spine once in a
+    // `ChainExpression` — the ESTree boundary marker at which the `undefined`
+    // short-circuit resolves. A chain with no optional link (a plain
+    // `a.b.c` / `f()`) is returned bare, exactly as before.
+    if saw_optional {
+        base = Expression::ChainExpression(ChainExpression {
+            cv: None,
+            expression: Box::new(base),
+        });
     }
 
     Ok(base)
@@ -2924,6 +3008,7 @@ mod tests {
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
     }
+
 
 
     // -----------------------------------------------------------------------
@@ -4285,6 +4370,97 @@ mod tests {
             )) => &es.expression,
             _ => panic!("expected an expression statement"),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Optional chaining — `a?.b` / `a?.[k]` / `a?.()`  (CLOC12.171 PR2)
+    // -----------------------------------------------------------------------
+
+    /// `a?.b` bridges to `ChainExpression( OptionalMemberExpression{ a, b } )`.
+    #[test]
+    fn optional_member_dot_bridges() {
+        let chain = match first_expr(&bridge_ok("a?.b;")) {
+            Expression::ChainExpression(c) => c.clone(),
+            other => panic!("expected ChainExpression, got {other:?}"),
+        };
+        match &*chain.expression {
+            Expression::OptionalMemberExpression(m) => {
+                assert!(!m.computed);
+                assert!(matches!(&*m.object, Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(&*m.property, Expression::Identifier(i) if i.name == "b"));
+            }
+            other => panic!("expected OptionalMemberExpression, got {other:?}"),
+        }
+    }
+
+    /// `a?.[k]` bridges to a computed `OptionalMemberExpression`.
+    #[test]
+    fn optional_member_computed_bridges() {
+        let chain = match first_expr(&bridge_ok("a?.[k];")) {
+            Expression::ChainExpression(c) => c.clone(),
+            other => panic!("expected ChainExpression, got {other:?}"),
+        };
+        match &*chain.expression {
+            Expression::OptionalMemberExpression(m) => {
+                assert!(m.computed, "?.[k] is a computed access");
+                assert!(matches!(&*m.object, Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(&*m.property, Expression::Identifier(i) if i.name == "k"));
+            }
+            other => panic!("expected OptionalMemberExpression, got {other:?}"),
+        }
+    }
+
+    /// `a?.()` bridges to `ChainExpression( OptionalCallExpression{ a, [] } )`.
+    #[test]
+    fn optional_call_bridges() {
+        let chain = match first_expr(&bridge_ok("a?.();")) {
+            Expression::ChainExpression(c) => c.clone(),
+            other => panic!("expected ChainExpression, got {other:?}"),
+        };
+        match &*chain.expression {
+            Expression::OptionalCallExpression(c) => {
+                assert!(c.arguments.is_empty());
+                assert!(matches!(&*c.callee, Expression::Identifier(i) if i.name == "a"));
+            }
+            other => panic!("expected OptionalCallExpression, got {other:?}"),
+        }
+    }
+
+    /// `a?.b.c` — only the FIRST link is optional. The `.c` that follows is an
+    /// ordinary `MemberExpression` whose object is the optional node, and the
+    /// whole spine is wrapped once in a single `ChainExpression`.
+    #[test]
+    fn optional_then_plain_link_wraps_once() {
+        let chain = match first_expr(&bridge_ok("a?.b.c;")) {
+            Expression::ChainExpression(c) => c.clone(),
+            other => panic!("expected ChainExpression, got {other:?}"),
+        };
+        match &*chain.expression {
+            Expression::MemberExpression(outer) => {
+                // `.c` is a PLAIN member.
+                assert!(!outer.computed);
+                assert!(matches!(&*outer.property, Expression::Identifier(i) if i.name == "c"));
+                // Its object is the OPTIONAL `a?.b`.
+                match &*outer.object {
+                    Expression::OptionalMemberExpression(inner) => {
+                        assert!(matches!(&*inner.object, Expression::Identifier(i) if i.name == "a"));
+                        assert!(matches!(&*inner.property, Expression::Identifier(i) if i.name == "b"));
+                    }
+                    other => panic!("expected inner OptionalMemberExpression, got {other:?}"),
+                }
+            }
+            other => panic!("expected an outer plain MemberExpression, got {other:?}"),
+        }
+    }
+
+    /// A chain with NO optional link is NOT wrapped in a `ChainExpression` —
+    /// `a.b` stays a bare `MemberExpression`, exactly as before.
+    #[test]
+    fn plain_chain_is_not_wrapped() {
+        assert!(
+            matches!(first_expr(&bridge_ok("a.b;")), Expression::MemberExpression(_)),
+            "a plain member access must not be wrapped in a ChainExpression",
+        );
     }
 
     #[test]

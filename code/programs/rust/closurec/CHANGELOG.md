@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.10] - 2026-07-08
+
+### Added — CLOC12.171 PR2: optional chaining `a?.b` flows through the SIMPLE pipeline
+
+With the `javascript-parser` 0.35.0 bridge now building the optional-chain nodes
+(closing gap-OptionalChain), **optional chaining** `a?.b` / `a?.[k]` / `a?.()`
+(ES2020) minifies through the full parser → bridge → passes → emitter pipeline
+instead of dragging the file to WHITESPACE_ONLY.
+
+New `tests/diff/simple-optchain/` fixture: `f(a?.b, 1 + 2);` → `f(a?.b,3);`. The
+`?.` link round-trips (the bridge produced a real `ChainExpression` /
+`OptionalMemberExpression`) **and** the sibling argument `1 + 2` folds to `3` —
+together proving the SIMPLE passes walked through the call rather than re-emitting
+the file verbatim.
+
 ## [0.234.9] - 2026-07-07
 
 ### Added — CLOC12.170 PR2: object spread `{...o}` flows through the SIMPLE pipeline (gap-SpreadProperty)
