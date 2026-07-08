@@ -165,6 +165,85 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "28.00")
     }
 
+    /// File open / save over the engine's byte codecs (sc_load_*/sc_save_*): raw
+    /// file bytes cross the C ABI intact — a ZIP for .xlsx, an OLE2 file for .xls
+    /// — including bytes a NUL-terminated string would truncate. Values-only
+    /// codecs (CSV/TSV/JSON) round-trip a header + data row.
+    func testFileOpenSaveRoundTrips() {
+        // A tiny workbook with a live formula, so we can tell a values-only codec
+        // from a formula-preserving one (.xlsx) after a round trip.
+        func seeded() -> SpreadsheetSession {
+            let s = SpreadsheetSession()
+            _ = s.setCell("A1", "15"); _ = s.setCell("B1", "3"); _ = s.setCell("C1", "=A1+B1") // 18
+            return s
+        }
+
+        // .xlsx is a real ZIP (magic "PK\x03\x04") and keeps its live formula.
+        let xlsx = seeded().saveXlsx()
+        XCTAssertGreaterThan(xlsx.count, 4)
+        XCTAssertEqual(Array(xlsx.prefix(4)), [0x50, 0x4B, 0x03, 0x04])
+        let dstX = SpreadsheetSession()
+        XCTAssertTrue(dstX.loadXlsx(xlsx))
+        XCTAssertEqual(dstX.getRaw("C1"), "=A1+B1") // formula survives .xlsx
+        XCTAssertEqual(dstX.display("C1"), "18")
+
+        // .xls is a real OLE2 file (magic D0 CF 11 E0) — the 0xD0 high bit is what
+        // a lossy string round-trip would have mangled.
+        let xls = seeded().saveXls()
+        XCTAssertGreaterThan(xls.count, 8)
+        XCTAssertEqual(Array(xls.prefix(4)), [0xD0, 0xCF, 0x11, 0xE0])
+        let dstL = SpreadsheetSession()
+        XCTAssertTrue(dstL.loadXls(xls))
+        XCTAssertEqual(dstL.display("C1"), "18") // values-only, value is right
+
+        // CSV / TSV / JSON: values-only. JSON's canonical shape is an array of
+        // objects, so row 1 is the HEADER (the keys) and row 2 the first data
+        // record; CSV/TSV are positional grids. A header + data row round-trips
+        // consistently through all three.
+        for format in ["csv", "tsv", "json"] {
+            let t = SpreadsheetSession()
+            _ = t.setCell("A1", "qty"); _ = t.setCell("B1", "unit"); _ = t.setCell("C1", "total")
+            _ = t.setCell("A2", "15"); _ = t.setCell("B2", "3"); _ = t.setCell("C2", "=A2*B2") // 45
+            let bytes: Data
+            switch format {
+            case "csv": bytes = t.saveCsv()
+            case "tsv": bytes = t.saveTsv()
+            default: bytes = t.saveJson()
+            }
+            XCTAssertFalse(bytes.isEmpty, "\(format) save produced bytes")
+            let d = SpreadsheetSession()
+            let ok: Bool
+            switch format {
+            case "csv": ok = d.loadCsv(bytes)
+            case "tsv": ok = d.loadTsv(bytes)
+            default: ok = d.loadJson(bytes)
+            }
+            XCTAssertTrue(ok, "\(format) reopened")
+            XCTAssertEqual(d.display("A1"), "qty", "\(format) header round-tripped")
+            XCTAssertEqual(d.display("C2"), "45", "\(format) value round-tripped")
+        }
+
+        // A bad or empty payload is rejected, workbook left untouched.
+        let s = seeded()
+        XCTAssertFalse(s.loadXlsx(Data("not a spreadsheet".utf8)))
+        XCTAssertEqual(s.display("C1"), "18")
+        XCTAssertFalse(s.loadCsv(Data()))
+        XCTAssertEqual(s.display("C1"), "18")
+    }
+
+    /// The WindowedSheetModel exposes format-parameterised export / import.
+    func testModelExportImport() {
+        let m = WindowedSheetModel()
+        for format in WindowedSheetModel.fileFormats {
+            let bytes = m.exportBytes(format)
+            XCTAssertFalse(bytes.isEmpty, "\(format) export")
+            XCTAssertTrue(m.importBytes(format, bytes), "\(format) import")
+        }
+        // An unknown format is a safe no-op both ways.
+        XCTAssertTrue(m.exportBytes("numbers").isEmpty)
+        XCTAssertFalse(m.importBytes("numbers", Data([1, 2, 3])))
+    }
+
     /// Undo / redo: make two edits, walk history back and forward, and confirm a
     /// restored formula recomputes live. (The model seeds its budget via setCell,
     /// so history is non-empty from construction — undoing into the seed is

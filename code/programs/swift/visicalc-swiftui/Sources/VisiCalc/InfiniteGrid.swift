@@ -12,6 +12,7 @@
 // every row, and tapping a cell selects it for editing in the formula bar.
 
 import SwiftUI
+import Foundation
 
 /// Engine-backed model for the virtualized sheet: seeds a deliberately far-flung,
 /// sparse dataset, exposes windowed reads + the data extent, and tracks the
@@ -316,6 +317,50 @@ final class WindowedSheetModel: ObservableObject {
         return ok
     }
 
+    /// The spreadsheet file formats the demo can open / save, in menu order. The
+    /// canonical extension doubles as the format key for `exportBytes(_:)` /
+    /// `importBytes(_:_:)`.
+    static let fileFormats = ["xlsx", "xls", "csv", "tsv", "json"]
+
+    /// Export the whole workbook to a real spreadsheet file's bytes in `format`
+    /// (one of `fileFormats`) — the same bytes the web download and the other
+    /// native hosts write. `.xlsx` keeps live formulas; the rest are values-only.
+    /// An unknown format or empty document yields an empty `Data`.
+    func exportBytes(_ format: String) -> Data {
+        switch format {
+        case "xlsx": return session.saveXlsx()
+        case "xls": return session.saveXls()
+        case "csv": return session.saveCsv()
+        case "tsv": return session.saveTsv()
+        case "json": return session.saveJson()
+        default: return Data()
+        }
+    }
+
+    /// Import a real spreadsheet file's `bytes` of `format` (one of
+    /// `fileFormats`), replacing the workbook. Returns `false` (workbook
+    /// untouched) if the bytes aren't a readable file of that format or the
+    /// format is unknown. On success it resizes the extent, refreshes the formula
+    /// bar, and bumps `revision` so the view re-reads.
+    @discardableResult
+    func importBytes(_ format: String, _ bytes: Data) -> Bool {
+        let ok: Bool
+        switch format {
+        case "xlsx": ok = session.loadXlsx(bytes)
+        case "xls": ok = session.loadXls(bytes)
+        case "csv": ok = session.loadCsv(bytes)
+        case "tsv": ok = session.loadTsv(bytes)
+        case "json": ok = session.loadJson(bytes)
+        default: ok = false
+        }
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+
     /// Undo / redo: walk the engine's snapshot history. On success the extent
     /// resizes, the formula bar refreshes, and `revision` bumps (which re-renders
     /// the SwiftUI view, re-evaluating the canUndo/canRedo button gates); a
@@ -409,6 +454,11 @@ struct InfiniteGridView: View {
     // serialized workbook here, Load restores from it. (A real app would write it
     // to a file; the demo keeps the round trip self-contained.)
     @State private var savedSnapshot = ""
+    // The most recent File → Save / Open result, echoed in the status bar, plus a
+    // PRIVATE per-session scratch dir (created lazily, mode 0700) so the on-disk
+    // round trip doesn't write a predictable name into the shared temp root.
+    @State private var fileStatus = ""
+    @State private var scratchDir: URL?
     // Drives the formula field's accent focus ring.
     @FocusState private var formulaFocused: Bool
     // Multi-sheet: the index being renamed (non-nil shows the rename alert) and
@@ -548,7 +598,8 @@ struct InfiniteGridView: View {
             Rectangle().fill(line).frame(height: 1)
             HStack {
                 Text("Virtual grid: \(model.totalRows) rows × \(model.totalCols) cols  ·  revision \(model.revision)"
-                    + (model.findStatus.isEmpty ? "" : "  ·  \(model.findStatus)"))
+                    + (model.findStatus.isEmpty ? "" : "  ·  \(model.findStatus)")
+                    + (fileStatus.isEmpty ? "" : "  ·  \(fileStatus)"))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(muted)
                 Spacer()
@@ -556,6 +607,47 @@ struct InfiniteGridView: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
         }
+    }
+
+    // ── File → Save / Open a REAL spreadsheet file on disk ────────────
+    // Unlike the in-memory Save / Load above, these write and read an actual file
+    // over the engine's byte codecs (WindowedSheetModel.exportBytes/importBytes →
+    // sc_save_*/sc_load_*). The demo uses a fixed name in a private per-session
+    // temp dir (mode 0700, freshly created — not a predictable name in the shared
+    // temp root); a production host would swap in `.fileExporter` / `.fileImporter`
+    // and hand the same bytes across.
+    private func scratchDirectory() -> URL {
+        if let dir = scratchDir { return dir }
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("visicalc-\(UUID().uuidString)", isDirectory: true)
+        try? FileManager.default.createDirectory(
+            at: dir, withIntermediateDirectories: true,
+            attributes: [.posixPermissions: 0o700])
+        scratchDir = dir
+        return dir
+    }
+
+    private func demoURL(_ ext: String) -> URL {
+        scratchDirectory().appendingPathComponent("visicalc-demo.\(ext)")
+    }
+
+    private func exportFile(_ format: String) {
+        let bytes = model.exportBytes(format)
+        let url = demoURL(format)
+        try? bytes.write(to: url)
+        let kb = String(format: "%.1f", Double(bytes.count) / 1024.0)
+        fileStatus = "saved \(kb) KB → \(url.lastPathComponent)"
+    }
+
+    private func openFile(_ format: String) {
+        let url = demoURL(format)
+        guard let bytes = try? Data(contentsOf: url) else {
+            fileStatus = "no \(url.lastPathComponent) yet — Save first"
+            return
+        }
+        fileStatus = model.importBytes(format, bytes)
+            ? "opened \(url.lastPathComponent)"
+            : "not a valid \(format) file"
     }
 
     // The editable formula bar for the selected cell: a panel holding the address
@@ -608,6 +700,18 @@ struct InfiniteGridView: View {
             Button("Load") { if !savedSnapshot.isEmpty { model.loadBook(savedSnapshot) } }
                 .disabled(savedSnapshot.isEmpty)
                 .help("Restore the workbook from the last save")
+            toolSep
+            // ── File → open / save a REAL file on disk (over the engine's byte
+            //    codecs, across the C ABI): an .xlsx (ZIP, live formulas) and a
+            //    .csv (text, values only). ──
+            Button("Save .xlsx") { exportFile("xlsx") }
+                .help("Write the workbook to visicalc-demo.xlsx (a real ZIP; keeps live formulas)")
+            Button("Open .xlsx") { openFile("xlsx") }
+                .help("Reopen visicalc-demo.xlsx over the engine (reloads live formulas)")
+            Button("Save .csv") { exportFile("csv") }
+                .help("Write the workbook to visicalc-demo.csv (values only)")
+            Button("Open .csv") { openFile("csv") }
+                .help("Reopen visicalc-demo.csv over the engine (values only)")
             toolSep
             // ── Structure (insert / delete the selected row or column) ──
             Button("+ Row") { model.insertRow() }

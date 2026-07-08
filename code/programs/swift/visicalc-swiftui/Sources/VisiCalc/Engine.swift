@@ -107,6 +107,56 @@ final class SpreadsheetSession {
         sc_deserialize(handle, data) != 0
     }
 
+    // ── File open / save — bytes in, bytes out ──────────────────────
+    // Unlike every call above, these carry RAW FILE BYTES (a ZIP for .xlsx, an
+    // OLE2 file for .xls, text for CSV/TSV/JSON), which may contain a 0x00 — so
+    // they must NOT go through the char*/`take` path (which stops at the first
+    // NUL). A load hands the engine a (pointer, count) pair borrowed from a
+    // Data's own storage; a save copies the engine's (ptr, out_len) buffer into
+    // a Swift Data BEFORE releasing it with sc_bytes_free (the engine's
+    // allocator — never Swift's). Reach `sc_load_<fmt>` / `sc_save_<fmt>`.
+
+    /// Hand `data`'s bytes to a C `sc_load_*` (via `call`), replacing the
+    /// workbook. Returns `true` if opened, `false` if the bytes aren't a readable
+    /// file of that format (the workbook is left untouched) or the input is empty
+    /// (a safe no-op — an empty Data has no base address to borrow).
+    private func loadBytes(_ data: Data, _ call: (UnsafePointer<UInt8>?, Int) -> Int32) -> Bool {
+        if data.isEmpty { return false }
+        return data.withUnsafeBytes { raw in
+            call(raw.bindMemory(to: UInt8.self).baseAddress, data.count) != 0
+        }
+    }
+
+    /// Copy an engine-returned byte buffer into a Swift `Data` and free it with
+    /// the engine's allocator (sc_bytes_free — NOT Swift's). A NULL pointer or a
+    /// non-positive length yields an empty `Data`; a non-NULL buffer is always
+    /// freed (the `defer` runs after the copy, and even a zero-length buffer is
+    /// released).
+    private func takeBytes(_ ptr: UnsafeMutablePointer<UInt8>?, _ len: Int) -> Data {
+        guard let ptr = ptr else { return Data() }
+        defer { sc_bytes_free(ptr, len) }
+        return len > 0 ? Data(bytes: ptr, count: len) : Data()
+    }
+
+    /// Open a real spreadsheet file the user picked, over the one engine. `.xlsx`
+    /// reloads live formulas; `.xls`/CSV/TSV/JSON are values-only. Each returns
+    /// `true` on success, `false` if the bytes aren't a readable file of that
+    /// format (the workbook is left untouched) or the input is empty.
+    func loadXlsx(_ data: Data) -> Bool { loadBytes(data) { sc_load_xlsx(handle, $0, $1) } }
+    func loadXls(_ data: Data) -> Bool { loadBytes(data) { sc_load_xls(handle, $0, $1) } }
+    func loadCsv(_ data: Data) -> Bool { loadBytes(data) { sc_load_csv(handle, $0, $1) } }
+    func loadTsv(_ data: Data) -> Bool { loadBytes(data) { sc_load_tsv(handle, $0, $1) } }
+    func loadJson(_ data: Data) -> Bool { loadBytes(data) { sc_load_json(handle, $0, $1) } }
+
+    /// Serialize the current document to a file's bytes in each format — what a
+    /// host writes to disk / hands to a share sheet. An empty document yields an
+    /// empty `Data`.
+    func saveXlsx() -> Data { var len = 0; return takeBytes(sc_save_xlsx(handle, &len), len) }
+    func saveXls() -> Data { var len = 0; return takeBytes(sc_save_xls(handle, &len), len) }
+    func saveCsv() -> Data { var len = 0; return takeBytes(sc_save_csv(handle, &len), len) }
+    func saveTsv() -> Data { var len = 0; return takeBytes(sc_save_tsv(handle, &len), len) }
+    func saveJson() -> Data { var len = 0; return takeBytes(sc_save_json(handle, &len), len) }
+
     /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
     /// changed the document (the host then re-reads the viewport), `false` if
     /// there was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
