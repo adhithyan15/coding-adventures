@@ -780,6 +780,22 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
         Expression::MemberExpression(m) => {
             count_uses_member(&m.object, &m.property, m.computed, name, count)
         }
+        // `a?.b` / `a?.[k]` — count uses in object and property exactly as a
+        // plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            count_uses_member(&m.object, &m.property, m.computed, name, count)
+        }
+        // `a?.()` — count uses in callee and each argument, as for an
+        // ordinary call.
+        Expression::OptionalCallExpression(ce) => {
+            count_uses_expr(&ce.callee, name, count);
+            for a in &ce.arguments {
+                count_uses_expr(a, name, count);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // descend into the inner expression.
+        Expression::ChainExpression(c) => count_uses_expr(&c.expression, name, count),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
                 count_uses_expr(el, name, count);
@@ -1093,6 +1109,26 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
             }
         }
         Expression::MemberExpression(m) => changed |= propagate_in_member(m, cand),
+        // `a?.b` / `a?.[k]` — propagate into the object and (computed only)
+        // property exactly as `propagate_in_member` does for a plain member.
+        Expression::OptionalMemberExpression(m) => {
+            changed |= propagate_in_expr(&mut m.object, cand);
+            // Only a computed property `o?.[expr]` is a use position; a
+            // non-computed `?.name` is a property name.
+            if m.computed {
+                changed |= propagate_in_expr(&mut m.property, cand);
+            }
+        }
+        // `a?.()` — propagate into callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            changed |= propagate_in_expr(&mut ce.callee, cand);
+            for a in &mut ce.arguments {
+                changed |= propagate_in_expr(a, cand);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // descend into the inner expression.
+        Expression::ChainExpression(c) => changed |= propagate_in_expr(&mut c.expression, cand),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 changed |= propagate_in_expr(el, cand);

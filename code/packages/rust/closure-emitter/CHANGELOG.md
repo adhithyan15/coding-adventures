@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.35.0] - 2026-07-08
+
+### Added — CLOC12.171 PR1: print optional chaining `a?.b` / `a?.[k]` / `a?.()`
+
+Teaches the printer the three optional-chain `Expression` variants added in
+`javascript-ast` 0.30.0:
+
+- `emit_optional_member` — `a?.b` (dot) / `a?.[k]` (computed). Identical to
+  `emit_member` but spells the operator `?.` (`?.` before a name, `?.[` before
+  a computed key). The object binds at `PREC_PRIMARY`, so a looser object keeps
+  its parens (`(a||b)?.c`).
+- `emit_optional_call` — `a?.(args)`. Identical to `emit_call` but spells the
+  call operator `?.(`; a looser *sequence* argument still wraps (`a?.((b,c))`).
+- `emit_chain` — the `ChainExpression` wrapper is transparent: it emits its
+  inner expression with no added syntax, so `a?.b.c` prints with `?.` on only
+  the optional link.
+
+All three variants are `PREC_PRIMARY` (they compose like member/call). 5 unit
+tests cover dot/computed/call spelling, the optional-then-plain link case
+(`a?.b.c`, `a?.b()`), the transparent wrapper, object-precedence parens, and
+the sequence-argument wrap. Emitter-only; the bridge that builds these nodes is
+CLOC12.171 PR2 and the CodePrinter conformance port is PR3.
+
 ## [0.34.1] - 2026-07-07
 
 ### Added — CLOC12.170 PR3: CodePrinter object-spread `{...o}` conformance port

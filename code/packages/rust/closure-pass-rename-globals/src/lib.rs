@@ -686,6 +686,21 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         Expression::MemberExpression(m) => {
             collect_all_idents_member(&m.object, &m.property, m.computed, out)
         }
+        // `a?.b` / `a?.[k]` — collect idents in object and (computed) property
+        // exactly as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            collect_all_idents_member(&m.object, &m.property, m.computed, out)
+        }
+        // `a?.()` — collect idents in callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            collect_all_idents_expr(&ce.callee, out);
+            for a in &ce.arguments {
+                collect_all_idents_expr(a, out);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // descend into the inner expression.
+        Expression::ChainExpression(c) => collect_all_idents_expr(&c.expression, out),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
                 collect_all_idents_expr(el, out);
@@ -1027,6 +1042,21 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::MemberExpression(m) => {
             rename_apply_member(&mut m.object, &mut m.property, m.computed, map)
         }
+        // `a?.b` / `a?.[k]` — rename in object and (computed) property exactly
+        // as a plain member access.
+        Expression::OptionalMemberExpression(m) => {
+            rename_apply_member(&mut m.object, &mut m.property, m.computed, map)
+        }
+        // `a?.()` — rename in callee and each argument, as for a call.
+        Expression::OptionalCallExpression(ce) => {
+            rename_apply_expr(&mut ce.callee, map);
+            for a in &mut ce.arguments {
+                rename_apply_expr(a, map);
+            }
+        }
+        // A chain expression transparently wraps its optional-chain spine —
+        // descend into the inner expression.
+        Expression::ChainExpression(c) => rename_apply_expr(&mut c.expression, map),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
                 rename_apply_expr(el, map);
