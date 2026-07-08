@@ -21,12 +21,17 @@ Those are the target of this crate. (The one place Engram needs a match *extent*
 the media-tag `replace_all`, keeps using the `regex` crate until a later,
 separately-verified change adds extents here.)
 
-## Supported syntax (ASCII mode)
+## Supported syntax
 
-Literals; `.`; `\d \D \w \W \s \S` (ASCII) and escaped metacharacters;
+Literals; `.`; `\d \D \w \W \s \S` and escaped metacharacters; the Unicode
+property classes `\p{Alphabetic}`, `\p{Mark}`, `\p{Nd}` (and `\P{…}`);
 `[...]`/`[^...]` with ranges; `(...)`/`(?:...)`; `|`; `* + ?` and
-`{m}`/`{m,}`/`{m,n}` (greedy or lazy); `^ $`; `\b \B`; leading `(?i)`/`(?s)`.
-Unicode-aware classes are a planned addition.
+`{m}`/`{m,}`/`{m,n}` (greedy or lazy); `^ $`; `\b \B`; leading
+`(?i)`/`(?s)`/`(?u)`.
+
+Character classes and `\b` are **Unicode-aware by default** (matching `regex`);
+`(?-u)` selects the ASCII sets. Unicode case folding and match extents are
+planned additions.
 
 ## Usage
 
@@ -40,8 +45,9 @@ assert!(ci.is_match("HELLO"));
 
 ## Fidelity
 
-Cross-checked against the live `regex` crate (in `(?-u)` ASCII mode) across
-**100k+ random (pattern, input) pairs** — zero `is_match` divergences.
+Cross-checked against the live `regex` crate across **100k+ random (pattern,
+input) pairs in ASCII mode** and **80k+ in default Unicode mode** (with
+non-ASCII inputs and `\p{…}` classes) — zero `is_match` divergences.
 
 ## Testing
 
