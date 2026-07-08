@@ -60,7 +60,7 @@ use coding_adventures_javascript_ast::{
         LogicalOperator,
         ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
         OptionalCallExpression, OptionalMemberExpression, Property,
-        PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
+        PropertyKey, PropertyKind, RegExpLiteral, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
         Super, ThisExpression, UndefinedLiteral, UpdateExpression, UpdateOperator, YieldExpression,
@@ -2574,10 +2574,76 @@ fn convert_primary_expression(node: &GrammarASTNode) -> Result<Expression, Bridg
     Err(internal(node, "primary_expression: unrecognised shape"))
 }
 
+/// Split a raw regex literal token `/pattern/flags` into `(pattern, flags)`.
+///
+/// The lexer hands us the ENTIRE literal as one string, delimiters included:
+/// `/a\/b/gi` → pattern `a\/b`, flags `gi`. Finding the *closing* delimiter is
+/// not a simple "second `/`": a `/` may appear literally inside the pattern
+/// when it is backslash-escaped (`\/`) or inside a character class (`[/]`),
+/// and neither ends the pattern. We therefore scan character by character:
+///
+/// ```text
+///   state          '/' means…              example
+///   ───────────    ─────────────────────   ───────────
+///   normal         CLOSE the pattern       /ab/  → close after `ab`
+///   after '\'      literal, keep scanning  /a\/b/ → the `\/` is literal
+///   inside '[...]' literal, keep scanning  /[/]/  → the `/` is a class member
+/// ```
+///
+/// Per ECMA-262 a `RegularExpressionClass` (`[...]`) is opened by an unescaped
+/// `[` and closed by an unescaped `]`; a `/` inside it does NOT terminate the
+/// literal (`/[/]/` is a valid regex matching a single slash). A `\` escapes
+/// the very next character in either state. We honour both so the delimiter we
+/// pick is the true closing `/`.
+///
+/// Returns `None` if the token is malformed (does not start with `/`, or has no
+/// closing `/`) — the caller turns that into a bridge `InternalError` rather
+/// than silently mis-splitting.
+fn split_regex_literal(raw: &str) -> Option<(String, String)> {
+    let bytes = raw.as_bytes();
+    // Must open with a delimiter; anything else is not a regex literal token.
+    if bytes.first() != Some(&b'/') {
+        return None;
+    }
+
+    let mut i = 1; // skip the opening '/'
+    let mut in_class = false; // inside a `[...]` character class?
+    let mut close: Option<usize> = None;
+    while i < bytes.len() {
+        match bytes[i] {
+            // A backslash escapes the next byte in BOTH states. Skip both so an
+            // escaped delimiter (`\/`) or escaped bracket (`\[`, `\]`) is inert.
+            b'\\' => {
+                i += 2;
+                continue;
+            }
+            b'[' if !in_class => in_class = true,
+            b']' if in_class => in_class = false,
+            // The closing delimiter: an unescaped `/` OUTSIDE a character class.
+            b'/' if !in_class => {
+                close = Some(i);
+                break;
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+
+    let close = close?;
+    // `pattern` is between the delimiters; `flags` is everything after the
+    // closing `/`. Slicing on ASCII `/`/`\`/`[`/`]` byte boundaries is safe:
+    // every index we key on is a single-byte ASCII position, and any multi-byte
+    // UTF-8 sequence in the pattern is copied through untouched.
+    let pattern = raw[1..close].to_string();
+    let flags = raw[close + 1..].to_string();
+    Some((pattern, flags))
+}
+
 /// Convert a single-token primary expression.
 ///
 /// NUMBER/STRING/NAME are encoded in `t.type_` (not `t.type_name`).
 /// BIGINT has `type_ = TokenType::Name` and `type_name = Some("BIGINT")`.
+/// REGEX has `type_ = TokenType::Name` and `type_name = Some("REGEX")`.
 fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // Value-based checks first (keywords: this, true, false, null, undefined).
     match t.value.as_str() {
@@ -2594,6 +2660,42 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
         let raw = t.value.clone();
         let value = raw.trim_end_matches('n').to_string();
         return Ok(Expression::BigIntLiteral(BigIntLiteral { cv: t.cv.clone(), value, raw }));
+    }
+
+    // REGEX: type_ == TokenType::Name but type_name == Some("REGEX"). The lexer
+    // emits the ENTIRE literal as one token whose `value` is `/pat/flags`
+    // (escapes and char-class contents preserved verbatim, e.g. `/a\/b/gi`).
+    // We split it into `pattern` and `flags` around the CLOSING `/` so the
+    // emitter can round-trip it as a `RegExpLiteral`. Without this arm the
+    // catch-all below would mis-encode the whole literal as an `Identifier`
+    // named `/pat/flags` (gap-RegExpAsIdentifier), which the emitter then
+    // prints as raw text — a latent miscompile if the identifier were ever
+    // renamed or folded.
+    if t.type_name.as_deref() == Some("REGEX") {
+        let (pattern, flags) = split_regex_literal(&t.value).ok_or_else(|| {
+            BridgeError::InternalError {
+                msg: format!("malformed regex literal token '{}'", t.value),
+                rule: ctx.rule_name.clone(),
+            }
+        })?;
+        // Defence-in-depth (debug builds): the split must leave the `pattern`
+        // free of raw line terminators (ECMA-262 forbids them in a regex
+        // literal) and the `flags` restricted to the valid ES set `dgimsuy`.
+        // The lexer already enforces both; these asserts catch any future
+        // lexer/grammar drift before a malformed literal reaches the emitter.
+        debug_assert!(
+            !pattern.contains('\n') && !pattern.contains('\r'),
+            "regex pattern must not contain a raw line terminator: {pattern:?}"
+        );
+        debug_assert!(
+            flags.chars().all(|c| "dgimsuy".contains(c)),
+            "regex flags must be a subset of [dgimsuy]: {flags:?}"
+        );
+        return Ok(Expression::RegExpLiteral(RegExpLiteral {
+            cv: t.cv.clone(),
+            pattern,
+            flags,
+        }));
     }
 
     // Standard terminal types via the type_ discriminant.
@@ -3007,6 +3109,79 @@ mod tests {
 
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
+    }
+
+    /// Pull the `RegExpLiteral` out of `x = <regex>;` so the regex tests can
+    /// assert on `(pattern, flags)` directly.
+    fn regex_of(src: &str) -> RegExpLiteral {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => match &*a.right {
+                Expression::RegExpLiteral(r) => r.clone(),
+                other => panic!("expected RegExpLiteral RHS, got {other:?}"),
+            },
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn regex_simple_with_flags() {
+        // `/ab+c/gi` — a plain pattern with two flags.
+        let r = regex_of("x = /ab+c/gi;");
+        assert_eq!(r.pattern, "ab+c");
+        assert_eq!(r.flags, "gi");
+    }
+
+    #[test]
+    fn regex_escaped_slash_is_not_the_delimiter() {
+        // `/a\/b/` — the `\/` is an escaped slash INSIDE the pattern; the
+        // closing delimiter is the final `/`, so pattern = `a\/b`, no flags.
+        let r = regex_of("x = /a\\/b/;");
+        assert_eq!(r.pattern, "a\\/b");
+        assert_eq!(r.flags, "");
+    }
+
+    #[test]
+    fn regex_single_char_no_flags() {
+        // `/a/` — the minimal case.
+        let r = regex_of("x = /a/;");
+        assert_eq!(r.pattern, "a");
+        assert_eq!(r.flags, "");
+    }
+
+    #[test]
+    fn regex_char_class_bridges() {
+        // `/[abc]/` — a character class round-trips through the bridge. (The
+        // trickier `/[/]/`, where a `/` lives inside the class, is not yet
+        // tokenised by the lexer — it stops the literal at the inner `/`. Our
+        // splitter already handles that shape correctly; see
+        // `split_regex_literal_cases`. Enabling it end-to-end is a lexer gap
+        // tracked separately, not a bridge concern.)
+        let r = regex_of("x = /[abc]/;");
+        assert_eq!(r.pattern, "[abc]");
+        assert_eq!(r.flags, "");
+    }
+
+    // Unit tests for the low-level splitter, independent of the grammar/lexer.
+    #[test]
+    fn split_regex_literal_cases() {
+        assert_eq!(
+            split_regex_literal("/ab+c/gi"),
+            Some(("ab+c".to_string(), "gi".to_string()))
+        );
+        assert_eq!(
+            split_regex_literal("/a\\/b/"),
+            Some(("a\\/b".to_string(), "".to_string()))
+        );
+        assert_eq!(split_regex_literal("/a/"), Some(("a".to_string(), "".to_string())));
+        // Char class: the inner `/` is literal, closing `/` is the last one.
+        assert_eq!(split_regex_literal("/[/]/"), Some(("[/]".to_string(), "".to_string())));
+        // Escaped opening bracket means we are NOT in a class, so the next `/`
+        // closes: `/\[/` → pattern `\[`, flags empty.
+        assert_eq!(split_regex_literal("/\\[/"), Some(("\\[".to_string(), "".to_string())));
+        // Malformed: no opening slash, and no closing slash.
+        assert_eq!(split_regex_literal("abc"), None);
+        assert_eq!(split_regex_literal("/abc"), None);
     }
 
 

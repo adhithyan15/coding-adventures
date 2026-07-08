@@ -2159,6 +2159,23 @@ via a `_` catch-all. All in ONE atomic commit. The bridge that *builds* the node
 (replacing the identifier fallback, closes gap-RegExpAsIdentifier) is PR2; the
 CodePrinter conformance port is PR3.
 
+**PR2 (DONE, closes gap-RegExpAsIdentifier).** `javascript-parser` 0.36.0's
+`convert_primary_token` now recognises the lexer's REGEX token — discriminated
+exactly like BIGINT (`type_ = Name`, `type_name = Some("REGEX")`, `value =
+"/pat/flags"`, verified by a throwaway parse-tree dump) — and builds a real
+`Expression::RegExpLiteral` instead of the identifier catch-all. A new
+`split_regex_literal` helper splits the token value around the **closing**
+delimiter, scanning from index 1 while honouring `\`-escapes (`\/` is literal)
+and character classes (`[...]`, inside which `/` is literal), so pattern/flags
+are extracted correctly for `/a\/b/`, `/[abc]/`, `/ab+c/gi`. Debug-build asserts
+guard no-raw-newline-in-pattern and flags ⊆ `[dgimsuy]`. closurec 0.234.11's
+`tests/diff/simple-regex/` (`f(/ab+c/gi, 1 + 2);` → `f(/ab+c/gi,3);`) proves the
+literal round-trips through the full SIMPLE pipeline and the sibling `1 + 2`
+folds. **Discovered lexer gap (separate item):** the splitter handles `/[/]/`
+(a `/` inside a class) correctly, but the lexer does not yet tokenise that shape
+— it stops the literal at the inner `/`. End-to-end `/[/]/` support is a lexer
+change, not a bridge concern.
+
 ## CLOC12.171 — optional chaining `a?.b` / `a?.[k]` / `a?.()`: nodes + emit + passes (PR1)
 
 Optional chaining (ES2020) lets a member/call short-circuit to `undefined`

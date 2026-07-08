@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.11] - 2026-07-08
+
+### Added — CLOC12.172 PR2: regex literals `/pat/flags` flow through the SIMPLE pipeline (gap-RegExpAsIdentifier)
+
+With the `javascript-parser` 0.36.0 bridge now building a real `RegExpLiteral`
+for the lexer's REGEX token (instead of mis-encoding it as an `Identifier`
+named `/pat/flags`), a **regular-expression literal** minifies through the full
+parser → bridge → passes → emitter pipeline rather than risking a mangled
+identifier or a WHITESPACE_ONLY fallback.
+
+New `tests/diff/simple-regex/` fixture: `f(/ab+c/gi, 1 + 2);` → `f(/ab+c/gi,3);`.
+The regex `/ab+c/gi` round-trips verbatim (delimiters + both flags), proving the
+bridge produced a real `RegExpLiteral` the emitter can print, **and** the sibling
+argument `1 + 2` folds to `3` — together proving the SIMPLE passes walked through
+the call rather than re-emitting the file verbatim.
+
 ## [0.234.10] - 2026-07-08
 
 ### Added — CLOC12.171 PR2: optional chaining `a?.b` flows through the SIMPLE pipeline

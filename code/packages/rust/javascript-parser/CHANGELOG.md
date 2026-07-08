@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.36.0] - 2026-07-08
+
+### Added — CLOC12.172 PR2: bridge regex literals `/pat/flags` → `RegExpLiteral` (closes gap-RegExpAsIdentifier)
+
+`convert_primary_token` now recognises the lexer's **REGEX** token and builds a
+real `RegExpLiteral` (added to `javascript-ast` 0.31.0) instead of letting the
+catch-all mis-encode the literal as an `Identifier` whose `name` is the raw
+`/pat/flags` text. A parse-tree dump confirmed the whole literal arrives as one
+token, discriminated exactly like BIGINT — `type_ = Name`, `type_name =
+Some("REGEX")`, `value = "/pat/flags"`:
+
+```text
+  /ab+c/gi  → Token{ type_name: REGEX, value: "/ab+c/gi" }  → pattern "ab+c", flags "gi"
+  /a\/b/    → Token{ type_name: REGEX, value: "/a\/b/"   }  → pattern "a\/b", flags ""
+```
+
+A new `split_regex_literal` helper splits `value` into `(pattern, flags)` around
+the **closing** delimiter, scanning from index 1 while honouring `\`-escapes
+(`\/` is literal) and character classes (`[...]`, inside which `/` is literal) —
+so the delimiter it picks is the true terminating `/`. Debug-build asserts guard
+that the pattern carries no raw line terminator and the flags are a subset of
+`[dgimsuy]` (defence-in-depth against future lexer drift). 4 bridge unit tests +
+a splitter unit test covering escaped-slash and char-class edges.
+
+**Scope note (discovered lexer gap):** the splitter correctly handles a `/`
+*inside* a character class (`/[/]/` → pattern `[/]`), but the current lexer does
+not yet tokenise that shape — it stops the literal at the inner `/`. Enabling
+`/[/]/` end-to-end is a lexer change tracked separately; this bridge PR is
+already correct for when the lexer produces the right token.
+
 ## [0.35.0] - 2026-07-08
 
 ### Added — CLOC12.171 PR2: bridge optional chaining `a?.b` / `a?.[k]` / `a?.()` (closes gap-OptionalChain)
