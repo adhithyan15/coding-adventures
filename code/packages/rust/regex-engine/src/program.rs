@@ -380,12 +380,34 @@ impl Program {
     }
 
     fn char_eq(&self, input: char, pat: char) -> bool {
-        input == pat || (self.case_insensitive && input.eq_ignore_ascii_case(&pat))
+        if input == pat {
+            return true;
+        }
+        if !self.case_insensitive {
+            return false;
+        }
+        // Case-insensitive: Unicode simple case folding in Unicode mode, else
+        // ASCII case folding (matching the `regex` crate's `(?i)` vs `(?i-u)`).
+        if self.unicode {
+            crate::casefold::fold_eq(input, pat)
+        } else {
+            input.eq_ignore_ascii_case(&pat)
+        }
     }
 
     fn class_matches(&self, class: &Class, input: char) -> bool {
-        let hit = class_contains(class, input)
-            || (self.case_insensitive && class_contains(class, swap_ascii_case(input)));
+        let mut hit = class_contains(class, input);
+        if !hit && self.case_insensitive {
+            if self.unicode {
+                // The class matches if any case-fold mate of `input` is in it
+                // (the `regex` crate folds the class under `(?i)`).
+                if let Some(orbit) = crate::casefold::orbit(input) {
+                    hit = orbit.iter().any(|&m| class_contains(class, m));
+                }
+            } else {
+                hit = class_contains(class, swap_ascii_case(input));
+            }
+        }
         hit != class.negated
     }
 }

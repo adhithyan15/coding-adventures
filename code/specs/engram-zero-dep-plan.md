@@ -122,7 +122,10 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   `\b` uses the Unicode word set, `(?u)`/`(?-u)` flags. Cross-verified vs live
   `regex` in default Unicode mode across 80k+ pairs (non-ASCII inputs) — zero
   divergences. Unicode CASE FOLDING deferred to D2 (needed when wiring the CI uses).
-- **D2 — swap the boolean uses.** Point `re:` (`build_search_regex`), whole-word
+- **D2 — IN PROGRESS.** Prereq **Unicode simple case folding** added to
+  regex-engine (v0.3.0): `(?i)` uses Unicode fold orbits, cross-verified vs live
+  `regex` (60k+ pairs incl. tricky orbits). NEXT: point the boolean uses at it.
+- **D2 (wiring) — swap the boolean uses.** Point `re:` (`build_search_regex`), whole-word
   (`build_whole_word_regex`), and glob (`search_pattern_regex_source`) at the new
   engine's `is_match`. Provide a `regex_engine::escape` for the glob builder.
   `regex` stays only for the media `replace_all`.
