@@ -161,6 +161,22 @@ document held in memory and restore it (`LoadBook` / `sc_deserialize`): the
 document captures only the source (formula text + typed literals) and per-cell
 formats — not the computed values, which the engine recomputes on load, so a
 loaded formula stays live.
+The **Save .xlsx / Open .xlsx / Save .csv / Open .csv** buttons open and save a
+**real spreadsheet file** over the engine's byte codecs:
+`InfiniteSheetModel.ExportBytes(format)` / `ImportBytes(format, bytes)` P/Invoke
+the C ABI's `sc_save_<fmt>` / `sc_load_<fmt>` (`spreadsheet-capi`), so an `.xlsx`
+(a ZIP, with live formulas preserved) or a `.csv` (text, values only) crosses
+P/Invoke as **raw bytes** — a `byte[]` going in, a copied-out heap buffer coming
+back (freed with `sc_bytes_free`) — never a NUL-terminated string that a `0x00`
+inside a ZIP would truncate. The demo writes to / reads from a fixed name in a
+**private per-session temp directory** (`Directory.CreateTempSubdirectory`, mode
+0700 on Unix) and echoes the result in the footer; a production host would swap
+that for a WinUI `FileSavePicker` / `FileOpenPicker` and hand the identical bytes
+across. All five formats the engine speaks — `.xlsx`, `.xls`, `.csv`, `.tsv`,
+`.json` — are bound on `SpreadsheetSession` (`LoadXlsx`/`SaveXlsx`/…), and the
+cross-platform smoke (`test/Program.cs`, run by `scripts/verify.sh`) round-trips
+each: a saved `.xlsx` is asserted to begin with the ZIP magic `PK\x03\x04`, an
+`.xls` with the OLE2 magic `0xD0CF`, and every codec's values survive a reopen.
 The **Undo / Redo** buttons walk the engine's snapshot history
 (`InfiniteSheetModel.UndoEdit`/`RedoEdit` over the C ABI's `sc_undo`/`sc_redo`);
 they enable/disable off `CanUndo`/`CanRedo` (refreshed after every edit). Every
