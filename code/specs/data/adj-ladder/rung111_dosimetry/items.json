@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 111 \u2014 net-dose index from four stated quantities (a NEW panel: radiation oncology / dosimetry). From a beam count times a dose per beam for the total delivered dose, minus a scatter dose, all divided by a fraction count, compute the net-dose index ((beam_count*dose_per_beam-scatter_dose)/fraction_count), the net dose (beam_count*dose_per_beam-scatter_dose), or the fraction count. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A PRODUCT-MINUS-A-TERM OVER A DIVISOR (a*b-c)/d (multiply the beam count by the dose per beam, subtract the scatter dose, divide by the fraction count, so (a*b-c)/d = ((a*b-c)/d); the FIRST time the ladder puts a three-term numerator whose leading two terms are MULTIPLIED and the third is SUBTRACTED, over a divisor \u2014 the minus-sibling of rung-110 (a*b+c)/d; rung-108 opened the frontier with the pure sum (a+b+c)/d, 109 the mixed (a-b+c)/d, 110 the product-plus-term (a*b+c)/d, and every earlier ratio used a TWO-term numerator: 37 (a+b)/(c+d), 99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), and the difference-denominator trio 105 (a+b)/(c-d), 106 a*b/(c-d), 107 (a-b)/(c-d)) \u2014 and the harness matches the scalar to the printed options. The net-dose index is a rate (net dose per fraction), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via *, - and / \u2014 no constant leaks, and neither the net dose, the fraction count, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the scatter dose is divided before subtracting (a*b-c/d, a wrong grouping) and regrouping so only the product forms the numerator ((a*b)/(c+d), a wrong pairing). The core confusion tested is that (a*b-c)/d is ((a*b-c)/d), not a*b-c/d and not (a*b)/(c+d). This rung SUBTRACTS the scatter dose, so positivity is guaranteed by table construction: every table has beam_count*dose_per_beam > scatter_dose (a*b>c) and fraction_count >= 2 (divisor never zero), keeping every family member strictly positive.",
+  "items": [
+    {
+      "id": "r111dose-01",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 3 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 2. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(3)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(2)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r111dose-02",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 3 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 2. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(3)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(2)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r111dose-03",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 3 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 2. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(3)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(2)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r111dose-04",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 5 minus a scatter dose of 4, divided by a fraction count of 3. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(5)\nobserve scatter_dose(4)\nobserve fraction_count(3)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r111dose-05",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 5 minus a scatter dose of 4, divided by a fraction count of 3. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(5)\nobserve scatter_dose(4)\nobserve fraction_count(3)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 21,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r111dose-06",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 5 minus a scatter dose of 4, divided by a fraction count of 3. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(5)\nobserve scatter_dose(4)\nobserve fraction_count(3)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r111dose-07",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 4. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(4)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r111dose-08",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 4. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(4)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r111dose-09",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 4. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(4)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 19.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r111dose-10",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 6 times a dose per beam of 4 minus a scatter dose of 4, divided by a fraction count of 5. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(6)\nobserve dose_per_beam(4)\nobserve scatter_dose(4)\nobserve fraction_count(5)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r111dose-11",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 6 times a dose per beam of 4 minus a scatter dose of 4, divided by a fraction count of 5. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(6)\nobserve dose_per_beam(4)\nobserve scatter_dose(4)\nobserve fraction_count(5)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r111dose-12",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 6 times a dose per beam of 4 minus a scatter dose of 4, divided by a fraction count of 5. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(6)\nobserve dose_per_beam(4)\nobserve scatter_dose(4)\nobserve fraction_count(5)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r111dose-13",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 6 minus a scatter dose of 2, divided by a fraction count of 6. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(6)\nobserve scatter_dose(2)\nobserve fraction_count(6)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 29.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r111dose-14",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 6 minus a scatter dose of 2, divided by a fraction count of 6. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(6)\nobserve scatter_dose(2)\nobserve fraction_count(6)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 29.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r111dose-15",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 5 times a dose per beam of 6 minus a scatter dose of 2, divided by a fraction count of 6. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(5)\nobserve dose_per_beam(6)\nobserve scatter_dose(2)\nobserve fraction_count(6)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 29.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r111dose-16",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 7 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 7. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(7)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(7)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.7142857142857144,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r111dose-17",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 7 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 7. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(7)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(7)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.7142857142857144,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r111dose-18",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 7 times a dose per beam of 4 minus a scatter dose of 2, divided by a fraction count of 7. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(7)\nobserve dose_per_beam(4)\nobserve scatter_dose(2)\nobserve fraction_count(7)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.7142857142857144,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r111dose-19",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 9 times a dose per beam of 4 minus a scatter dose of 6, divided by a fraction count of 8. What is the net-dose index (the net dose divided by the fraction count)?",
+      "program": "observe beam_count(9)\nobserve dose_per_beam(4)\nobserve scatter_dose(6)\nobserve fraction_count(8)\nlet answer = (beam_count * dose_per_beam - scatter_dose) / fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r111dose-20",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 9 times a dose per beam of 4 minus a scatter dose of 6, divided by a fraction count of 8. What is the the net dose (the beam count times the dose per beam minus the scatter dose, the numerator divided by the fraction count)?",
+      "program": "observe beam_count(9)\nobserve dose_per_beam(4)\nobserve scatter_dose(6)\nobserve fraction_count(8)\nlet answer = beam_count * dose_per_beam - scatter_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r111dose-21",
+      "qtype": "net_dose_index",
+      "stem": "A radiotherapy plan records a beam count of 9 times a dose per beam of 4 minus a scatter dose of 6, divided by a fraction count of 8. What is the the fraction count (the divisor the net dose is divided by)?",
+      "program": "observe beam_count(9)\nobserve dose_per_beam(4)\nobserve scatter_dose(6)\nobserve fraction_count(8)\nlet answer = fraction_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

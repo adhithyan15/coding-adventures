@@ -148,6 +148,7 @@ SELF_CONTAINED_RUNGS = (
     "rung108_periodontal",
     "rung109_wound_care",
     "rung110_audiology",
+    "rung111_dosimetry",
 )
 
 
