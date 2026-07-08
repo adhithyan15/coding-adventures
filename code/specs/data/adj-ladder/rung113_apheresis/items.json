@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 113 \u2014 cleared-load index from four stated quantities (a NEW panel: transfusion medicine / therapeutic apheresis). From a cycle factor times the difference of a pre-count and a post-count for the cleared load, all divided by a session count, compute the cleared-load index (cycle_factor*(pre_count-post_count)/session_count), the cleared load (cycle_factor*(pre_count-post_count)), or the session count. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A FACTOR DISTRIBUTED OVER A DIFFERENCE, OVER A DIVISOR a*(b-c)/d (subtract the post count from the pre count, multiply the difference by the cycle factor, divide by the session count, so a*(b-c)/d = ((a*(b-c))/d); the SECOND distributive shape and the FIRST where the factor multiplies a parenthesised DIFFERENCE \u2014 the minus-sibling of rung-112 a*(b+c)/d. The flat three-term numerators (108 (a+b+c)/d, 109 (a-b+c)/d, 110 (a*b+c)/d, 111 (a*b-c)/d) wrapped the WHOLE numerator; the distributive family wraps the SUM/DIFFERENCE (the multiplicand). Every earlier ratio used a TWO-term numerator: 37 (a+b)/(c+d), 99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), and the difference-denominator trio 105 (a+b)/(c-d), 106 a*b/(c-d), 107 (a-b)/(c-d)) \u2014 and the harness matches the scalar to the printed options. The cleared-load index is a rate (cleared load per session), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via *, - and / \u2014 no constant leaks, and neither the cleared load, the session count, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the difference parentheses so the factor multiplies only the pre count (a*b-c/d, a wrong distribution) and regrouping so only that product forms the numerator ((a*b)/(c+d), a wrong pairing). The core confusion tested is that a*(b-c)/d is ((a*(b-c))/d), not a*b-c/d and not (a*b)/(c+d). This rung SUBTRACTS inside the parentheses, so positivity is guaranteed by table construction: every table has pre_count > post_count (b>c) and session_count >= 2 (divisor never zero), keeping every family member strictly positive.",
+  "items": [
+    {
+      "id": "r113apher-01",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 2 times a pre count of 5 minus a post count of 2, divided by a session count of 2. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(2)\nobserve pre_count(5)\nobserve post_count(2)\nobserve session_count(2)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r113apher-02",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 2 times a pre count of 5 minus a post count of 2, divided by a session count of 2. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(2)\nobserve pre_count(5)\nobserve post_count(2)\nobserve session_count(2)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r113apher-03",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 2 times a pre count of 5 minus a post count of 2, divided by a session count of 2. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(2)\nobserve pre_count(5)\nobserve post_count(2)\nobserve session_count(2)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r113apher-04",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 3 times a pre count of 6 minus a post count of 2, divided by a session count of 3. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(3)\nobserve pre_count(6)\nobserve post_count(2)\nobserve session_count(3)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.333333333333332,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r113apher-05",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 3 times a pre count of 6 minus a post count of 2, divided by a session count of 3. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(3)\nobserve pre_count(6)\nobserve post_count(2)\nobserve session_count(3)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.333333333333332,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r113apher-06",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 3 times a pre count of 6 minus a post count of 2, divided by a session count of 3. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(3)\nobserve pre_count(6)\nobserve post_count(2)\nobserve session_count(3)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r113apher-07",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 5 times a pre count of 5 minus a post count of 2, divided by a session count of 4. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(5)\nobserve pre_count(5)\nobserve post_count(2)\nobserve session_count(4)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r113apher-08",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 5 times a pre count of 5 minus a post count of 2, divided by a session count of 4. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(5)\nobserve pre_count(5)\nobserve post_count(2)\nobserve session_count(4)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r113apher-09",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 5 times a pre count of 5 minus a post count of 2, divided by a session count of 4. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(5)\nobserve pre_count(5)\nobserve post_count(2)\nobserve session_count(4)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r113apher-10",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 4 times a pre count of 6 minus a post count of 2, divided by a session count of 5. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(4)\nobserve pre_count(6)\nobserve post_count(2)\nobserve session_count(5)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 23.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r113apher-11",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 4 times a pre count of 6 minus a post count of 2, divided by a session count of 5. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(4)\nobserve pre_count(6)\nobserve post_count(2)\nobserve session_count(5)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r113apher-12",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 4 times a pre count of 6 minus a post count of 2, divided by a session count of 5. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(4)\nobserve pre_count(6)\nobserve post_count(2)\nobserve session_count(5)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r113apher-13",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 2 times a pre count of 9 minus a post count of 2, divided by a session count of 6. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(2)\nobserve pre_count(9)\nobserve post_count(2)\nobserve session_count(6)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r113apher-14",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 2 times a pre count of 9 minus a post count of 2, divided by a session count of 6. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(2)\nobserve pre_count(9)\nobserve post_count(2)\nobserve session_count(6)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r113apher-15",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 2 times a pre count of 9 minus a post count of 2, divided by a session count of 6. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(2)\nobserve pre_count(9)\nobserve post_count(2)\nobserve session_count(6)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r113apher-16",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 3 times a pre count of 8 minus a post count of 2, divided by a session count of 7. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(3)\nobserve pre_count(8)\nobserve post_count(2)\nobserve session_count(7)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r113apher-17",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 3 times a pre count of 8 minus a post count of 2, divided by a session count of 7. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(3)\nobserve pre_count(8)\nobserve post_count(2)\nobserve session_count(7)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r113apher-18",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 3 times a pre count of 8 minus a post count of 2, divided by a session count of 7. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(3)\nobserve pre_count(8)\nobserve post_count(2)\nobserve session_count(7)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r113apher-19",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 4 times a pre count of 7 minus a post count of 2, divided by a session count of 8. What is the cleared-load index (the cleared load divided by the session count)?",
+      "program": "observe cycle_factor(4)\nobserve pre_count(7)\nobserve post_count(2)\nobserve session_count(8)\nlet answer = cycle_factor * (pre_count - post_count) / session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 27.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r113apher-20",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 4 times a pre count of 7 minus a post count of 2, divided by a session count of 8. What is the the cleared load (the cycle factor times the difference of the pre and post counts, the numerator divided by the session count)?",
+      "program": "observe cycle_factor(4)\nobserve pre_count(7)\nobserve post_count(2)\nobserve session_count(8)\nlet answer = cycle_factor * (pre_count - post_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 27.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r113apher-21",
+      "qtype": "cleared_load_index",
+      "stem": "An apheresis log records a cycle factor of 4 times a pre count of 7 minus a post count of 2, divided by a session count of 8. What is the the session count (the divisor the cleared load is divided by)?",
+      "program": "observe cycle_factor(4)\nobserve pre_count(7)\nobserve post_count(2)\nobserve session_count(8)\nlet answer = session_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
