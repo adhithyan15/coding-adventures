@@ -1,5 +1,33 @@
 # Changelog — iir-to-wasm
 
+## [0.35.0] — 2026-07-08 (LANG-FULL tail: runtime `str_eq` via a self-contained in-module `$__str_eq` helper)
+
+Adds a runtime path for `str_eq`. Previously `str_eq` only supported the case where
+BOTH operands are folded literals (constant-folded at compile time) and errored the
+moment either operand was a runtime string handle — a parameter, a call result. That
+error (`str_eq left source "a" is not a direct str_const local`) blocked the Twig cell
+`(define (same a b) (if (string=? a b) 42 0)) (same "OK" (string-append "O" "K"))` on
+WASM. This is the final lang-full string-tail item.
+
+- **In-module helper** (`build_str_eq_helper`): emits a self-contained
+  `$__str_eq(i32, i32) -> i32` WASM function — a header-length check followed by a
+  byte-compare loop over the two `[i32 len][bytes]` blocks (its own `len`/`i` scratch
+  locals; structured `loop`/`if`/`br`). It is **not** a host import: unlike I/O, string
+  equality is pure computation, so keeping it inside the module makes the WASM
+  self-contained (mirrors the native/LLVM `__twig_str_eq` archive helper). Emitted once
+  per module, gated by the new `uses_str_eq_runtime` feature, appended after all IIR
+  functions (index `fn_idx_base + module.functions.len()`), its FuncType registered with
+  the same `+ struct_type_offset` convention as host-import types.
+- **`str_eq` lowering**: keeps the both-literal compile-time fold; otherwise loads both
+  operand handles and `call`s `$__str_eq` (widening the i32 result to i64 when the dest
+  slot is i64).
+- **Operand promotion**: when a runtime `str_eq` has a folded-literal operand, that
+  operand is promoted to a runtime block in `collect_module_features` (via
+  `lay_runtime_str_block`) so it presents a real header to the helper — covering the
+  mixed `string=? x "OK"` case, not just two-param comparisons.
+- Tests: `tests/str_eq_runtime.rs` (equal / same-length-different-bytes / different-length
+  / empty-string cases, run-verified via `wasm-runtime`).
+
 ## [0.34.0] — 2026-07-08 (LANG-FULL tail: promote a folded `str_concat`/`str_slice` result passed across a call)
 
 Extends the 0.33.0 `str_const`-across-call promotion to folded `str_concat` and
