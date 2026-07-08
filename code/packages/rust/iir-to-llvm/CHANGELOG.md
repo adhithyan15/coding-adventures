@@ -1,5 +1,18 @@
 # Changelog — iir-to-llvm
 
+## [0.34.0] — 2026-07-07 (LANG-FULL tail: `ptrtoint` a string literal passed as a call arg)
+
+Fixes invalid IR when a string LITERAL is passed to a function. A single-assignment
+`str_const` literal is tracked as its `{i64 len,[N×i8]}` GLOBAL POINTER
+(`@__twig_str_N`), and a `str` argument is passed as an i64 handle — so passing the
+literal directly emitted `call i64 @strlen(i64 @__twig_str_0)`, a `ptr` constant in an
+`i64` argument slot, which clang rejects.
+
+- `lower_call` now `ptrtoint`s any argument that resolves to a `@__twig_str` global
+  pointer to an i64 handle before the call (the exact mirror of the `ret` path). The
+  callee reads the length header via `inttoptr`+`load` in its runtime `str_len`.
+- Test: `str_literal_call_arg_is_ptrtoint_to_i64`. Run-verified end-to-end via clang.
+
 ## [0.33.0] — 2026-07-07 (LANG-FULL E4-dyn: runtime `str_concat` → `@__twig_str_concat`)
 
 `lower_str_concat` gains a runtime-operand path. It keeps the compile-time literal
