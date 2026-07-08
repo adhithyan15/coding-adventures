@@ -335,6 +335,73 @@ fun main() {
     check("msm Summary B3", msm.rowCells(3)[1], "300") // B3 = A1+A2 = 100+200
     msm.close()
 
+    // ── File open / save (the File → Save/Open buttons drive exportBytes/
+    // importBytes over sc_save_*/sc_load_*): open and save a REAL spreadsheet
+    // file over the engine's byte codecs. File bytes are binary (a .xlsx is a
+    // ZIP, an .xls an OLE2 file) and cross Java FFM as a native (segment, len)
+    // pair going in and a copied-out buffer coming back — never a NUL-terminated
+    // string a 0x00 inside the file would truncate.
+    val fsrc = SpreadsheetSession()
+    fsrc.setCell("A1", "15"); fsrc.setCell("B1", "3"); fsrc.setCell("C1", "=A1+B1") // 18
+
+    // .xlsx is a real ZIP (magic "PK\x03\x04") and keeps its live formula.
+    val xlsx = fsrc.saveXlsx()
+    check("xlsx ZIP magic",
+        (xlsx.size > 4 && xlsx[0] == 0x50.toByte() && xlsx[1] == 0x4B.toByte() &&
+            xlsx[2] == 0x03.toByte() && xlsx[3] == 0x04.toByte()).toString(), "true")
+    val fdstX = SpreadsheetSession()
+    check("xlsx reopens", fdstX.loadXlsx(xlsx).toString(), "true")
+    check("xlsx keeps formula", fdstX.getRaw("C1"), "=A1+B1")
+    check("xlsx computes", fdstX.display("C1"), "18")
+    fdstX.close()
+
+    // .xls is a real OLE2 file (magic D0 CF 11 E0) — the 0xD0 high bit is what a
+    // lossy string round trip would have mangled. Values only.
+    val xls = fsrc.saveXls()
+    check("xls OLE2 magic",
+        (xls.size > 8 && xls[0] == 0xD0.toByte() && xls[1] == 0xCF.toByte() &&
+            xls[2] == 0x11.toByte() && xls[3] == 0xE0.toByte()).toString(), "true")
+    val fdstL = SpreadsheetSession()
+    check("xls reopens", fdstL.loadXls(xls).toString(), "true")
+    check("xls value", fdstL.display("C1"), "18")
+    fdstL.close()
+
+    // A bad or empty payload is rejected, workbook left untouched.
+    check("xlsx rejects garbage", fsrc.loadXlsx("not a spreadsheet".toByteArray()).toString(), "false")
+    check("xlsx rejects empty", fsrc.loadXlsx(ByteArray(0)).toString(), "false")
+    check("workbook intact after reject", fsrc.display("C1"), "18")
+    fsrc.close()
+
+    // CSV / TSV / JSON: values-only. JSON's canonical shape is an array of
+    // objects, so row 1 is the HEADER (the keys) and row 2 the first data
+    // record; CSV/TSV are positional grids. A header + data row round-trips
+    // consistently through all three.
+    for (format in listOf("csv", "tsv", "json")) {
+        val t = SpreadsheetSession()
+        t.setCell("A1", "qty"); t.setCell("B1", "unit"); t.setCell("C1", "total")
+        t.setCell("A2", "15"); t.setCell("B2", "3"); t.setCell("C2", "=A2*B2") // 45
+        val bytes = when (format) { "csv" -> t.saveCsv(); "tsv" -> t.saveTsv(); else -> t.saveJson() }
+        t.close()
+        check("$format save non-empty", bytes.isNotEmpty().toString(), "true")
+        val d = SpreadsheetSession()
+        val ok = when (format) { "csv" -> d.loadCsv(bytes); "tsv" -> d.loadTsv(bytes); else -> d.loadJson(bytes) }
+        check("$format reopens", ok.toString(), "true")
+        check("$format header round-trip", d.display("A1"), "qty")
+        check("$format value round-trip", d.display("C2"), "45")
+        d.close()
+    }
+
+    // The InfiniteSheetModel exposes format-parameterised export / import.
+    val fm = InfiniteSheetModel()
+    for (format in InfiniteSheetModel.fileFormats) {
+        val bytes = fm.exportBytes(format)
+        check("model $format export", bytes.isNotEmpty().toString(), "true")
+        check("model $format import", fm.importBytes(format, bytes).toString(), "true")
+    }
+    check("model unknown export empty", fm.exportBytes("numbers").isEmpty().toString(), "true")
+    check("model unknown import false", fm.importBytes("numbers", byteArrayOf(1, 2, 3)).toString(), "false")
+    fm.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }

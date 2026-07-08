@@ -121,6 +121,24 @@ document held in memory and restore it (`loadBook` / `sc_deserialize`): the
 document captures only the source (formula text + typed literals) and per-cell
 formats — not the computed values, which the engine recomputes on load, so a
 loaded formula stays live.
+The **Save .xlsx / Open .xlsx / Save .csv / Open .csv** buttons open and save a
+**real spreadsheet file** over the engine's byte codecs:
+`InfiniteSheetModel.exportBytes(format)` / `importBytes(format, bytes)` bind the
+C ABI's `sc_save_<fmt>` / `sc_load_<fmt>` (`spreadsheet-capi`) through the Java
+**FFM API**, so an `.xlsx` (a ZIP, with live formulas preserved) or a `.csv`
+(text, values only) crosses as **raw bytes** — a native `(segment, len)` pair
+going in, a copied-out buffer coming back (freed with `sc_bytes_free`, the
+engine's own allocator) — never a NUL-terminated string that a `0x00` inside a
+ZIP would truncate (`size_t` binds as `JAVA_LONG`). The demo writes to / reads
+from a fixed name in a **private per-session temp directory**
+(`Files.createTempDirectory`, mode 0700 on POSIX) and echoes the result in the
+footer; a production host would swap that for an AWT `FileDialog` and hand the
+identical bytes across. All five formats the engine speaks — `.xlsx`, `.xls`,
+`.csv`, `.tsv`, `.json` — are bound on `SpreadsheetSession`
+(`loadXlsx`/`saveXlsx`/…), and the cross-platform FFM smoke (`test/EngineSmoke.kt`,
+run by `scripts/verify.sh`) round-trips each: a saved `.xlsx` is asserted to begin
+with the ZIP magic `PK\x03\x04`, an `.xls` with the OLE2 magic `0xD0CF`, and every
+codec's values survive a reopen.
 The **Undo / Redo** buttons walk the engine's snapshot history
 (`InfiniteSheetModel.undoEdit`/`redoEdit` over the C ABI's `sc_undo`/`sc_redo`);
 they disable at the history ends via `canUndo`/`canRedo`. Every edit is
