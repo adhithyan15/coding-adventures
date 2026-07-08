@@ -82,6 +82,21 @@ pub fn compile(
     })
 }
 
+/// Whether `ast` can match the empty string. Used to pick the correct star
+/// compilation: a star whose body is nullable needs the "optional-plus" shape so
+/// an empty iteration routes to the exit (matching the `regex` crate's extent),
+/// whereas a star with a non-nullable body uses the simpler single-split loop.
+fn is_nullable(ast: &Ast) -> bool {
+    match ast {
+        Ast::Empty | Ast::Assert(_) => true,
+        Ast::Literal(_) | Ast::AnyChar | Ast::Class(_) => false,
+        Ast::Concat(items) => items.iter().all(is_nullable),
+        Ast::Alternate(branches) => branches.iter().any(is_nullable),
+        Ast::Group { inner, .. } => is_nullable(inner),
+        Ast::Repeat { inner, min, .. } => *min == 0 || is_nullable(inner),
+    }
+}
+
 fn starts_with_start_anchor(ast: &Ast) -> bool {
     match ast {
         Ast::Assert(Assertion::StartText) => true,
@@ -162,32 +177,94 @@ impl Compiler {
     }
 
     fn emit_repeat(&mut self, inner: &Ast, min: u32, max: Option<u32>, greedy: bool) {
-        // Emit `min` mandatory copies. The cap check bails early so a large `min`
-        // (bounded at parse time, but still up to REPEAT_LIMIT) cannot spin or
-        // allocate past the program-size cap.
-        for _ in 0..min {
-            if self.insts.len() > self.cap {
-                return;
-            }
-            self.emit(inner);
-        }
         match max {
-            None => {
-                // `{min,}` — a greedy/lazy star on the tail.
-                let l1 = self.insts.len();
-                let split_at = self.insts.len();
-                self.insts.push(Inst::Split(0, 0));
+            None if min == 0 && is_nullable(inner) => {
+                // `e*` with a **nullable body** — compile as the optional plus
+                // `(e+)?`: an *entry* split and an *after-body* split, both choosing
+                // between the body start and the exit. The after-body split loops
+                // back to the body start (the `+` loop-back), so an empty iteration
+                // re-enters the already-`seen` body start and dead-ends into the exit
+                // at the correct priority — `(a??)*` on "aa" ⇒ the empty `0..0`, not
+                // `0..2`. The textbook single-split loop would instead rank the body's
+                // own consume alternative above the exit and over-match here. (Both
+                // forms accept the same language, so `is_match` is unaffected; only
+                // the reported extent differs.)
+                let entry = self.insts.len();
+                self.insts.push(Inst::Split(0, 0)); // patched below
                 let body = self.insts.len();
                 self.emit(inner);
-                self.insts.push(Inst::Jmp(l1));
-                let end = self.insts.len();
-                self.insts[split_at] = if greedy {
-                    Inst::Split(body, end)
+                if self.insts.len() > self.cap {
+                    return;
+                }
+                let after = self.insts.len();
+                self.insts.push(Inst::Split(0, 0)); // patched below
+                let exit = self.insts.len();
+                let arms = if greedy { (body, exit) } else { (exit, body) };
+                self.insts[entry] = Inst::Split(arms.0, arms.1);
+                self.insts[after] = Inst::Split(arms.0, arms.1);
+            }
+            None if min == 0 => {
+                // `e*` with a **non-nullable body** — the simple single-split loop
+                // `U: split(body, exit); body; jmp U` (also the `regex` crate's
+                // shape). The body always consumes at least one character per
+                // iteration, so there is no empty-iteration priority subtlety, and an
+                // inner lazy star (e.g. `(..)*?`) keeps its minimal-consumption
+                // preference rather than being forced wider by the optional-plus form.
+                let u = self.insts.len();
+                self.insts.push(Inst::Split(0, 0)); // patched below
+                let body = self.insts.len();
+                self.emit(inner);
+                if self.insts.len() > self.cap {
+                    return;
+                }
+                self.insts.push(Inst::Jmp(u));
+                let exit = self.insts.len();
+                self.insts[u] = if greedy {
+                    Inst::Split(body, exit)
                 } else {
-                    Inst::Split(end, body)
+                    Inst::Split(exit, body)
+                };
+            }
+            None => {
+                // `e{min,}` with min ≥ 1 — emit `min - 1` mandatory copies, then a
+                // final body whose loop-back split targets *that body's start* (not a
+                // separate entry split): `…copies…; body; U: split(body, exit)`. This
+                // is the `regex` crate's `+`/`{n,}` shape; looping to the body start
+                // is what makes the extent match for a nullable body — `(a??)+` on
+                // "aa" ⇒ `0..0`. (Looping to a separate entry split instead would
+                // rank the body's consume alternative above the exit and over-match.)
+                for _ in 0..(min - 1) {
+                    if self.insts.len() > self.cap {
+                        return;
+                    }
+                    self.emit(inner);
+                }
+                if self.insts.len() > self.cap {
+                    return;
+                }
+                let body = self.insts.len();
+                self.emit(inner);
+                if self.insts.len() > self.cap {
+                    return;
+                }
+                let u = self.insts.len();
+                self.insts.push(Inst::Split(0, 0)); // patched below
+                let exit = self.insts.len();
+                self.insts[u] = if greedy {
+                    Inst::Split(body, exit)
+                } else {
+                    Inst::Split(exit, body)
                 };
             }
             Some(max) => {
+                // Emit `min` mandatory copies, then the optional ones. The cap check
+                // bails early so a large `min` cannot spin past the program-size cap.
+                for _ in 0..min {
+                    if self.insts.len() > self.cap {
+                        return;
+                    }
+                    self.emit(inner);
+                }
                 // `{min,max}` — (max - min) optional copies. The cap check must be
                 // *inside* the loop and before the `Split` push, otherwise a large
                 // `max` (e.g. `a{0,4000000000}`) would push billions of `Split`
@@ -238,6 +315,47 @@ struct PcList {
 impl PcList {
     fn new(n: usize) -> Self {
         PcList {
+            dense: Vec::with_capacity(n),
+            seen: vec![0; n],
+            generation: 0,
+        }
+    }
+    fn clear(&mut self) {
+        self.dense.clear();
+        self.generation += 1;
+    }
+    fn contains(&self, pc: usize) -> bool {
+        self.seen[pc] == self.generation
+    }
+    fn mark(&mut self, pc: usize) {
+        self.seen[pc] = self.generation;
+    }
+}
+
+/// A priority-ordered thread list for `find`, where each thread additionally
+/// remembers the input position at which its match *started*. Reporting the
+/// overall match extent needs the start (the end is simply the position at which
+/// a thread reaches `Match`), so a thread carries exactly one extra `usize` — no
+/// per-group capture vector, so this stays O(instructions) per step and cannot
+/// blow up on a pattern with many groups (that is the [`PcList`] DoS argument,
+/// preserved here). Dedup is still by program counter: the first thread to reach
+/// a `pc` at a given step has the highest priority, so a later thread reaching
+/// the same `pc` (necessarily lower priority, hence a less-preferred start) is
+/// correctly dropped.
+struct StartThread {
+    pc: usize,
+    start: usize,
+}
+
+struct StartList {
+    dense: Vec<StartThread>,
+    seen: Vec<u32>,
+    generation: u32,
+}
+
+impl StartList {
+    fn new(n: usize) -> Self {
+        StartList {
             dense: Vec::with_capacity(n),
             seen: vec![0; n],
             generation: 0,
@@ -318,6 +436,118 @@ impl Program {
             pos += 1;
         }
         matched
+    }
+
+    /// Find the leftmost match at or after char index `from`, returning its
+    /// `(start, end)` in **char indices** (map to byte offsets via `Input.offsets`).
+    ///
+    /// Same lockstep Pike-VM scan as [`matches`](Self::matches), but each thread
+    /// carries the position at which it started, and instead of a boolean we keep
+    /// the best match's `(start, end)`. The leftmost-first priority the existing
+    /// scan already implements — process threads in priority order, and on `Match`
+    /// stop scanning *lower*-priority threads at this step while letting the
+    /// already-advanced *higher*-priority threads run on — is exactly what yields
+    /// the correct greedy extent: a greedy quantifier keeps a higher-priority
+    /// "match more" thread alive, so when it reaches `Match` at a later position it
+    /// overwrites the shorter match. This holds for nullable loops too (e.g.
+    /// `(a?)*` on `"aaa"` ⇒ `0..3`): the per-position `seen` dedup stops an
+    /// empty-body iteration from re-entering the loop, so the scan terminates while
+    /// the longest greedy path still wins.
+    fn find(&self, chars: &[char], from: usize) -> Option<(usize, usize)> {
+        let n = self.insts.len();
+        let mut clist = StartList::new(n);
+        let mut nlist = StartList::new(n);
+        let mut best: Option<(usize, usize)> = None;
+
+        clist.clear();
+        let mut pos = from;
+        loop {
+            // Seed a start thread at this position, unless we already have a match
+            // (a later start is lower priority — leftmost wins) or the pattern is
+            // start-anchored and we are past position 0.
+            if best.is_none() && !(self.anchored_start && pos > 0) {
+                self.add_start_thread(&mut clist, 0, pos, chars, pos);
+            }
+            if clist.dense.is_empty() && best.is_some() {
+                break;
+            }
+
+            let cur_char = chars.get(pos).copied();
+            nlist.clear();
+            let mut i = 0;
+            while i < clist.dense.len() {
+                let StartThread { pc, start } = clist.dense[i];
+                match &self.insts[pc] {
+                    Inst::Char(c) => {
+                        if cur_char.is_some_and(|ch| self.char_eq(ch, *c)) {
+                            self.add_start_thread(&mut nlist, pc + 1, start, chars, pos + 1);
+                        }
+                    }
+                    Inst::Any { dot_all } => {
+                        if cur_char.is_some_and(|ch| *dot_all || ch != '\n') {
+                            self.add_start_thread(&mut nlist, pc + 1, start, chars, pos + 1);
+                        }
+                    }
+                    Inst::Class(class) => {
+                        if cur_char.is_some_and(|ch| self.class_matches(class, ch)) {
+                            self.add_start_thread(&mut nlist, pc + 1, start, chars, pos + 1);
+                        }
+                    }
+                    Inst::Match => {
+                        // This thread is higher-priority than everything after it in
+                        // `clist`, so its match is preferred over theirs: record it
+                        // and cut the rest of this step. Higher-priority threads have
+                        // already advanced into `nlist` and may still overwrite this.
+                        best = Some((start, pos));
+                        break;
+                    }
+                    Inst::Assert(_) | Inst::Split(_, _) | Inst::Jmp(_) => {}
+                }
+                i += 1;
+            }
+
+            std::mem::swap(&mut clist, &mut nlist);
+            if pos >= chars.len() {
+                break;
+            }
+            pos += 1;
+        }
+        best
+    }
+
+    /// Epsilon-closure for [`find`](Self::find): identical walk to
+    /// [`add_thread`](Self::add_thread) but propagating each thread's `start`
+    /// position and parking `StartThread`s.
+    fn add_start_thread(
+        &self,
+        list: &mut StartList,
+        pc_start: usize,
+        start: usize,
+        chars: &[char],
+        pos: usize,
+    ) {
+        let mut stack = vec![pc_start];
+        while let Some(pc) = stack.pop() {
+            if list.contains(pc) {
+                continue;
+            }
+            list.mark(pc);
+            match &self.insts[pc] {
+                Inst::Jmp(t) => stack.push(*t),
+                Inst::Split(a, b) => {
+                    stack.push(*b); // push `b` first so `a` is popped/processed first
+                    stack.push(*a);
+                }
+                Inst::Assert(a) => {
+                    if self.assertion_holds(*a, chars, pos) {
+                        stack.push(pc + 1);
+                    }
+                }
+                Inst::Char(_) | Inst::Any { .. } | Inst::Class(_) | Inst::Match => {
+                    list.dense.push(StartThread { pc, start });
+                }
+            }
+        }
     }
 
     /// Follow epsilon transitions (Save/Split/Jmp/Assert) from `pc`, adding the
@@ -457,17 +687,26 @@ fn swap_ascii_case(c: char) -> char {
 
 // --- Public surface used by `lib.rs` ----------------------------------------
 
-/// A prepared input: the characters of the text. (Byte offsets, needed only for
-/// reporting match extents, are added with that feature.)
+/// A prepared input: the characters of the text plus, for each character, the
+/// byte offset at which it starts. `offsets[i]` is the byte offset of `chars[i]`,
+/// and `offsets[chars.len()]` is the total byte length — so a match spanning
+/// character indices `s..e` maps to byte range `offsets[s]..offsets[e]`, which is
+/// what callers (and the `regex` crate) report.
 pub(crate) struct Input {
     pub chars: Vec<char>,
+    pub offsets: Vec<usize>,
 }
 
 impl Input {
     pub fn new(text: &str) -> Self {
-        Input {
-            chars: text.chars().collect(),
+        let mut chars = Vec::new();
+        let mut offsets = Vec::new();
+        for (byte, ch) in text.char_indices() {
+            chars.push(ch);
+            offsets.push(byte);
         }
+        offsets.push(text.len()); // sentinel: byte length, = end of the last char
+        Input { chars, offsets }
     }
 }
 
@@ -475,5 +714,12 @@ impl Program {
     /// Whether the pattern matches `input` at or after char index `from`.
     pub(crate) fn is_match_from(&self, input: &Input, from: usize) -> bool {
         self.matches(&input.chars, from)
+    }
+
+    /// The leftmost match at or after char index `from`, as a **byte** range
+    /// `start..end` into the original text (via `input.offsets`), or `None`.
+    pub(crate) fn find_from(&self, input: &Input, from: usize) -> Option<(usize, usize)> {
+        self.find(&input.chars, from)
+            .map(|(s, e)| (input.offsets[s], input.offsets[e]))
     }
 }

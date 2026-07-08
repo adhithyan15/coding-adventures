@@ -1,5 +1,41 @@
 # Changelog — regex-engine
 
+## 0.4.0 — Unreleased
+
+Adds the overall **match extent** — `Regex::find` — the first half of Phase D3
+(match extents), on the way to `captures`/`replace_all` and dropping the `regex`
+crate from engram-core entirely (D4).
+
+### Added
+
+- `Regex::find(text) -> Option<Match>` — the leftmost match's byte range and
+  substring (`Match::start`/`end`/`as_str`/`range`). Leftmost-first with greedy
+  quantifiers preferring more (the `regex` crate's default); reports **byte**
+  offsets that index directly into the searched `&str`.
+
+### Changed
+
+- Star/plus compilation now yields the `regex` crate's extent for **nullable
+  loops**. `e{n,}` (n ≥ 1) loops back to the body start; `e*` with a nullable body
+  compiles as an optional-plus so an empty iteration routes to the loop exit at the
+  correct priority (`(a?)*`/`(a*)*` on a run ⇒ the whole run; `(a??)*`/`(a??)+` ⇒
+  the empty match — all matching `regex`). Purely a thread-priority change; the
+  accepted language, and thus `is_match`, is unchanged.
+
+### Verified
+
+- `find` is checked against the live `regex` crate by its *defining properties*
+  rather than a byte-identical span — on adversarial patterns the `regex` crate's
+  own unanchored `find` returns non-leftmost results that its anchored matcher
+  contradicts, so its `find` is the wrong oracle. Using its **anchored** matcher as
+  an independent oracle, **40k+** random cases (greedy *and* lazy quantifiers,
+  alternation, nested groups, nullable loops; multibyte inputs) confirm every
+  reported span is a **valid** match at the **leftmost** start, and every `None`
+  means no match anywhere. A separate **35k+** boolean cross-check confirms
+  `is_match` agrees with `regex` across the same full construct space. Exact greedy
+  extents — including the nullable-loop fixes (`(a?)*`⇒whole run, `(a??)*`⇒empty) —
+  are pinned by 16 hand-verified unit tests.
+
 ## 0.3.1 — Unreleased
 
 Adds the small `escape` helper engram-core's glob/search-pattern builder needs,
