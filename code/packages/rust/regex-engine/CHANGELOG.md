@@ -1,5 +1,31 @@
 # Changelog — regex-engine
 
+## 0.6.0 — Unreleased
+
+Adds **`replace_all`** and the match **iterators** — the last engine capability
+before engram-core can point its media-tag `replace_all` at this engine and drop
+the third-party `regex` crate entirely (Phase D4).
+
+### Added
+
+- `Regex::replace_all(text, rep) -> Cow<str>` (borrows unchanged when there is no
+  match). `rep` is a [`Replacer`]: a closure `FnMut(&Captures) -> String` (the form
+  engram's media replacement uses), or a replacement **string** with `$N`/`${N}`
+  numbered-group references and `$$` for a literal `$`.
+- `Regex::find_iter` / `Regex::captures_iter` — iterators over the leftmost,
+  **non-overlapping** matches. Iteration matches the `regex` crate: resume at the
+  previous match's end, and skip an empty match sitting exactly at that end (so an
+  empty-capable pattern inserts between characters without doubling at the seams).
+
+### Verified
+
+- Cross-checked vs the live `regex` crate: **84k** iteration checks (the sequence
+  of match byte ranges agrees, incl. the empty-match non-overlap rule) and **84k**
+  `replace_all` output comparisons — wherever the two engines iterate identically,
+  the replaced output (with a `$0`/`$1`/`$$` replacement string) is byte-identical.
+  5 new unit tests cover the closure and string replacers, empty-match semantics,
+  and both iterators. Full `cargo test -p regex-engine` green; clippy + fmt clean.
+
 ## 0.5.0 — Unreleased
 
 Adds **capture groups** — `Regex::captures` — the second half of Phase D3, on the

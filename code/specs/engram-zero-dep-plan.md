@@ -160,7 +160,13 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   full-group comparisons (group boundaries agree wherever the overall span does;
   the lazy/overlapping-greedy overall-match corner from D3a is skipped, not group-
   compared). regex-engine v0.5.0.
-- **D3c — `replace_all`/`find_iter`.** Built on find/captures; cross-verified.
+- **D3c — ✅ DONE (`replace_all` + iterators).** `Regex::replace_all` (Cow return;
+  `Replacer` = closure `FnMut(&Captures)->String` *or* `$N`/`${N}`/`$$` string),
+  `find_iter`, `captures_iter`. Non-overlapping iteration matches `regex` (resume
+  at prev end; skip empty match at that end). Cross-verified vs live `regex`: 84k
+  iteration checks + 84k replace-output comparisons (byte-identical where the two
+  iterate identically). regex-engine v0.6.0. **D4 next: point engram-core's media
+  `DUPLICATE_HTML_MEDIA_TAGS` at this + remove `regex`.**
 - **D4 — swap media + drop `regex`.** Point `DUPLICATE_HTML_MEDIA_TAGS` at the
   engine's `replace_all` (byte-verified vs the old regex on the corpus from C2),
   then remove `regex` from `engram-core`'s Cargo.toml. **`regex` gone.**

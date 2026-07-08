@@ -926,4 +926,36 @@ impl Program {
                 .collect()
         })
     }
+
+    /// The leftmost match at or after **char** index `from`, as both its char
+    /// extent (for driving non-overlapping iteration) and its **byte** capture
+    /// slots (for reporting). Returns `None` past the end or when no match remains.
+    /// The overall-match slots `0`/`1` are always populated on a match, so the char
+    /// start/end are taken from the (unmapped) run before byte conversion.
+    pub(crate) fn captures_at(&self, input: &Input, from: usize) -> Option<RawCaptures> {
+        if from > input.chars.len() {
+            return None;
+        }
+        let char_slots = self.captures(&input.chars, from)?;
+        // Slot 0/1 are set by the bracketing `Save(0)`/`Save(1)` on every match.
+        let start_char = char_slots[0].expect("overall-match start slot set on a match");
+        let end_char = char_slots[1].expect("overall-match end slot set on a match");
+        let byte_slots = char_slots
+            .into_iter()
+            .map(|slot| slot.map(|char_index| input.offsets[char_index]))
+            .collect();
+        Some(RawCaptures {
+            start_char,
+            end_char,
+            byte_slots,
+        })
+    }
+}
+
+/// One match from [`Program::captures_at`]: its char extent (used to advance the
+/// non-overlapping search) and its byte-offset capture slots (used to report).
+pub(crate) struct RawCaptures {
+    pub start_char: usize,
+    pub end_char: usize,
+    pub byte_slots: Vec<Option<usize>>,
 }
