@@ -402,12 +402,16 @@ const PROGRAMS: &[Prog] = &[
     // Llvm now runs: `lower_str_eq` gained a runtime path — when an operand isn't a
     // compile-time literal (here both are params), it calls `@__twig_str_eq(i64, i64)`
     // over the two handles (the caller `ptrtoint`s the literal-args' globals first).
+    // Wasm now runs: `str_eq` over runtime handles calls the self-contained in-module
+    // `$__str_eq(i32,i32)->i32` helper (header-length check + byte-compare loop); the
+    // literal args are promoted to `[i32 len][bytes]` blocks so both present a header.
+    // This is the last lang-full string-tail cell — all 3 now run on all 7 backends.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
