@@ -71,6 +71,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S21 — resolved references grouped by source `\ref`** | `Document::resolved_references_by_source() -> String` — a **new**, read-only method that renders the **resolved** (successfully-matched) references, one reconstructed `\<command>{key}` line each — the **RESOLVED mirror of S18's** `unresolved_references_by_source` (which renders the *dangling* half of the same split), **command-aware** so `\eqref`/`\pageref` render as themselves, not flattened to `\ref`. It reads only `resolve_references().resolved` (a `Vec<ResolvedRef { key, command, ref_span, target_span, target_kind }>`) and groups by `ref_span` in **first-appearance order** (source order); because each `\ref`/`\eqref`/`\pageref` takes exactly one key, every group is a single entry emitting one line: `\` + the ref's own `command` + `{` + its `key` + `}` (reconstructed from the owned strings, no source slicing). A **dangling** `\ref` never entered `resolved`, so it is excluded (it lives in S18). Lines joined by `\n`, no trailing newline. A document with **no** resolved references (every ref dangles, or none) → the fixed marker `(no resolved references)`. E.g. `\ref{sec:intro}`, `\eqref{eq:main}`, `\pageref{sec:intro}` (all defined) → `\ref{sec:intro}\n\eqref{eq:main}\n\pageref{sec:intro}`. Every S1–S20 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S22 — winning `\label` definitions** | `Document::label_definitions() -> String` — a **new**, read-only method that renders the **winning** label definitions — the `\label{key}` definitions references resolve against, one `\label{key}` line per distinct key — the **label-family analogue of S19's** `bibliography_entries` (which renders the winning `\bibitem` entries) and the **winning-side counterpart of S20's** `duplicate_label_definitions` (which renders the *losing* duplicate `\label`s). It reads only `resolve_references().definitions`: S1 collects every `\label` in pre-order; the **first** of each key wins (into `definitions`, one row per distinct key) and every **later** `\label` of an already-defined key goes to `duplicates` (S20's domain). S22 emits one line per winning definition in that pre-order (**not** re-sorted, **not** de-duplicated — none needed, since `definitions` already holds one row per distinct key), each reconstructed from its key as `\label{<key>}` (no source slicing; the `\label{…}` form is right for any `LabelKind`). A `\label{dup}` written twice appears **once** — the winner. Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the fixed marker `(no label definitions)`. E.g. `sec:intro` (section), `eq:main` (equation), then a re-used `sec:intro` → `\label{sec:intro}\n\label{eq:main}` (winner once). Every S1–S21 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S23 — winning `\label` definitions grouped by kind** | `Document::label_definitions_by_kind() -> String` — a **new**, read-only method that renders the **winning** `\label` definitions **grouped by their `LabelKind`** — a per-kind census — the **by-kind grouping companion of S22's** `label_definitions` (which lists the same winning definitions *flat*); S22 and S23 are two views of the one winning `definitions` list. It reads only `resolve_references().definitions` and groups by kind in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — iterated as an explicit slice, not a hash map, so the order is deterministic like S17/S18's `Vec`-of-groups). Within each kind, definitions keep their existing pre-order. Each line is `[<kind>] \label{<key>}` — `<kind>` from `LabelKind::as_str()` (`"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`), `<key>` from the owned key (no source slicing). A kind with no definitions contributes no lines (no empty `[table]` header). Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the **same** fixed marker `(no label definitions)` S22 uses. E.g. `sec:intro` (section), `eq:main` (equation), `note` (inline) → `[section] \label{sec:intro}\n[equation] \label{eq:main}\n[inline] \label{note}`. Every S1–S22 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S24 — resolved references grouped by target kind** | `Document::resolved_references_by_kind() -> String` — a **new**, read-only method that renders the **resolved** `\ref`/`\eqref`/`\pageref` references **grouped by the `LabelKind` they resolved TO** — a per-kind census — the **by-kind grouping companion of S21's** `resolved_references_by_source` (which lists the same resolved refs *flat*, in source order); S21 and S24 are two views of the one `resolved` list. It mirrors S23's `label_definitions_by_kind` idiom but over the **resolved-references** list, and stays **command-aware** like S21. It reads only `resolve_references().resolved` (a `Vec<ResolvedRef { key, command, ref_span, target_span, target_kind }>`) and groups by `target_kind` in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — the SAME slice S23 uses, iterated explicitly, not a hash map, so the order is deterministic). Within each kind, refs keep their existing pre-order. Each line is `[<kind>] \<command>{<key>}` — `<kind>` from the ref's `target_kind.as_str()`, `<command>` the ref's own (so `\eqref`/`\pageref` render as themselves), `<key>` from the owned key (no source slicing). A **dangling** `\ref` never entered `resolved`, so it is excluded (it lives in S18). A kind with no resolved refs contributes no lines (no empty `[table]` header). Lines joined by `\n`, no trailing newline. A document with **no** resolved references → the **same** fixed marker `(no resolved references)` S21 uses. E.g. `\ref{sec:intro}` (section), `\eqref{eq:main}` (equation), `\pageref{sec:intro}` (section) → `[section] \ref{sec:intro}\n[section] \pageref{sec:intro}\n[equation] \eqref{eq:main}`. Every S1–S23 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -954,6 +955,41 @@ assert_eq!(
 A document with no label definitions renders the **same** fixed `(no label definitions)` marker S22
 uses (S23 groups the identical list). Purely additive — reuses `resolve_references`, mutates nothing,
 leaves every S1–S22 output and the `to_latex()` fixed point unchanged.
+
+### resolved references grouped by target kind (LTXDOC03 S24)
+
+The **resolved** `\ref`/`\eqref`/`\pageref` references **grouped by the `LabelKind` they resolved TO**
+— a per-kind census — the **by-kind grouping companion of S21's** `resolved_references_by_source`
+(which lists the same resolved refs *flat*, one `\<command>{key}` per line in source pre-order). S21
+and S24 are two *views* of the one `resolved` list `resolve_references()` produces. It is the exact
+`resolved`-refs analogue of S23's `label_definitions_by_kind` (same `const KIND_ORDER`, same
+`flat_map`/`filter` pass), and stays **command-aware** like S21. `resolved_references_by_kind` reads
+only that `resolved` list and groups it by `target_kind` in a **fixed, document-independent order** —
+the `LabelKind` enum declaration order (`Section`, `Table`, `Figure`, `Equation`, `Inline`, the SAME
+slice S23 uses), iterated as an explicit slice rather than a hash map, so the group order is
+deterministic. Within each kind, refs keep their existing pre-order. Each line is
+`[<kind>] \<command>{<key>}` — the `<kind>` tag from the ref's `target_kind.as_str()`, the `<command>`
+the ref's own (so `\eqref`/`\pageref` render as themselves), the `<key>` from the owned key (no source
+slicing). A **dangling** `\ref` never entered `resolved`, so it is excluded (it lives in S18). A kind
+with no resolved refs contributes no lines (no empty `[table]` header).
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+\begin{equation}\label{eq:main} x=1 \end{equation}
+\ref{sec:intro} \eqref{eq:main} \pageref{sec:intro}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.resolved_references_by_kind(),
+    // grouped in the fixed kind order: both section refs (in pre-order), then the equation ref
+    "[section] \\ref{sec:intro}\n[section] \\pageref{sec:intro}\n[equation] \\eqref{eq:main}",
+);
+```
+
+A document with no resolved references (every ref dangles, or there are none) renders the **same** fixed
+`(no resolved references)` marker S21 uses. Purely additive — reuses `resolve_references`, mutates
+nothing, leaves every S1–S23 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

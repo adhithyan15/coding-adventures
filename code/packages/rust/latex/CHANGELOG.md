@@ -2,6 +2,52 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.60.0] — 2026-07-08
+
+### Added — resolved references grouped by target kind (LTXDOC03 S24)
+
+A **new** public method `Document::resolved_references_by_kind(&self) -> String` that renders the
+**resolved `\ref`/`\eqref`/`\pageref` references grouped by the `LabelKind` they resolved TO** — a
+per-kind census of the successfully-matched references. It is the by-kind grouping companion of S21's
+`resolved_references_by_source` (which lists the same resolved references **flat**, one
+`\<command>{key}` per line in source pre-order): S21 and S24 are two *views* of the one `resolved` list
+`resolve_references()` produces. It mirrors S23's `label_definitions_by_kind` idiom (same
+`const KIND_ORDER`, same flat_map/filter pass) but over the **resolved-references** list instead of the
+**definitions** list, and stays **command-aware** like S21. It is a read-only view over
+`resolve_references()`; every S1–S23 output is left **byte-for-byte unchanged**; S24 is purely additive
+and leaves the `to_latex()` round-trip fixed point intact.
+
+- **Grouped by target kind in a fixed, document-independent order** — the `LabelKind` enum declaration
+  order: `Section`, `Table`, `Figure`, `Equation`, `Inline` (the SAME `const KIND_ORDER` slice S23
+  uses). The method iterates that explicit fixed order (not a hash map keyed by kind), so the group
+  order is deterministic — the same `Vec`-scan discipline S17/S18/S23 use to avoid hash-order
+  nondeterminism.
+- **Pre-order within each kind.** Refs that resolved to a given kind keep their existing pre-order from
+  `resolved`; grouping never reorders within a kind.
+- **`[kind] \<command>{key}` line shape, command-aware.** Each line is `[` + the stable lowercase tag
+  from `LabelKind::as_str()` (of the ref's `target_kind`) + `] \` + the ref's **own** `command` + `{` +
+  its **owned `key` `String`** + `}` — so a resolved `\eqref` renders `[equation] \eqref{eq:m}` and a
+  resolved `\pageref` renders `[section] \pageref{sec:i}`; the command is **never** hard-coded to
+  `\ref`. There is **no** source slicing at all (matching S21 `resolved_references_by_source` and S23
+  `label_definitions_by_kind`). The `[kind]` prefix makes the census visible on every line while
+  staying one-line-per-ref; it is a report annotation, not round-trippable LaTeX.
+- **Dangling refs excluded by construction.** A `\ref{nope}` with no `\label` never entered `resolved`,
+  so it appears in S18's `unresolved_references_by_source`, not here.
+- **No empty groups.** A kind with no resolved refs contributes no lines and no bare `[table]` header.
+- **Stable empty marker.** No resolved references at all (every ref dangles, or there are none) → the
+  **same** fixed string `(no resolved references)` S21 uses, never the empty string — the stable-marker
+  discipline S12–S23 share.
+- **`\n`-joined, no trailing newline** — matching S21's `resolved_references_by_source` and every
+  S11–S23 renderer.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing (`ref_span`/
+  `target_span` unused); a single stable-ordered pass (fixed kind order × pre-order filter) over the
+  already-bounded `resolved` list. Borrows `self` immutably, returns owned `String`.
+- **Tests.** Added `s24_groups_different_kinds_in_fixed_kind_order`,
+  `s24_reorders_source_to_fixed_kind_order`, `s24_same_kind_grouped_in_preorder_command_aware`,
+  `s24_only_dangling_or_none_returns_marker`, `s24_newline_join_no_trailing_newline_excludes_dangling`,
+  and `s24_is_additive_leaves_s1_s23_outputs_unchanged` (which pins every S1–S23 output byte-for-byte,
+  including S21's flat `resolved_references_by_source`, alongside the new grouped output).
+
 ## [0.59.0] — 2026-07-08
 
 ### Added — winning label definitions grouped by kind (LTXDOC03 S23)

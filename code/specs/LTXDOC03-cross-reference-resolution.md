@@ -1912,3 +1912,98 @@ with no trailing newline; and an additivity check that `to_plain_text`, `to_plai
 `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p
 adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 30. S24 — resolved references grouped by target kind (`resolved_references_by_kind`)
+
+### 30.1 Motivation
+
+S21 (`resolved_references_by_source`) renders the **resolved** `\ref`/`\eqref`/`\pageref` references
+**flat** — one reconstructed `\<command>{key}` line per resolved reference, in `walk` pre-order. But each
+resolved reference also carries a `target_kind` (`Section`, `Table`, `Figure`, `Equation`, or `Inline`) —
+the `LabelKind` of the definition it bound to — and a reader often wants the resolved references
+organised **by that kind**: a per-kind census answering "which of my references land on sections? which
+on equations? which on bare inline labels?" at a glance. The label family already got its by-kind
+grouping in S23 (`label_definitions_by_kind`, the by-kind companion of S22's flat `label_definitions`);
+S24 brings the *same* discipline to the **resolved-references** family — it is to S21 exactly what S23 is
+to S22.
+
+### 30.2 Why a new method — additive by construction
+
+S24 adds a **new public method** `Document::resolved_references_by_kind(&self) -> String`. It is a pure,
+read-only render of `resolve_references().resolved` — a *second view* of the exact list S21 renders flat.
+It reuses that list verbatim (never re-walking the body or re-resolving references), so the report can
+never drift from the S1 resolution it summarises, and grouping never adds, drops, or reorders references
+relative to what `resolve_references` produced. It mutates nothing and changes no S1–S23 output —
+including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S23 it is a method the caller
+invokes directly.
+
+### 30.3 The ordering rule
+
+The output is ordered by a **fixed, document-independent** kind order — the `LabelKind` enum declaration
+order: `Section`, `Table`, `Figure`, `Equation`, `Inline` (the **same** `const KIND_ORDER` slice S23
+uses). S24 iterates that order as an explicit slice (**not** a hash map keyed by kind), so the group
+order is deterministic and never depends on document content or hash iteration order — the same
+`Vec`-scan discipline S17/S18/S23 use to avoid hash-order nondeterminism. **Within** each kind, the
+resolved references keep their existing `resolved` pre-order; grouping never reorders within a kind. A
+kind with **no** resolved references produces **no** lines (there is never an empty `[table]` group for a
+doc that references no tables).
+
+### 30.4 The exact rendering contract — `Document::resolved_references_by_kind(&self) -> String`
+
+- Iterate the fixed kind order (`Section`, `Table`, `Figure`, `Equation`, `Inline`). For each kind, take
+  the resolved references whose `target_kind` is that kind from `resolve_references().resolved` in their
+  existing pre-order and emit one line each:
+  `format!("[{}] \\{}{{{}}}", r.target_kind.as_str(), r.command, r.key)` → `[` + the kind tag + `] \` +
+  the ref's own `command` + `{` + its `key` + `}`. The kind tag comes from `LabelKind::as_str()`
+  (`"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`); the `command` is the reference's **own**
+  (so a resolved `\eqref` renders `\eqref` and a resolved `\pageref` renders `\pageref`, never
+  hard-coded to `\ref` — matching S21's command-awareness); the key is reconstructed from the owned `key`
+  `String` rather than sliced from `&src[span]` (matching S21 `resolved_references_by_source` and S23
+  `label_definitions_by_kind`), so the render needs no source borrow and can never index out of bounds
+  (`ref_span`/`target_span` are unused).
+- The `[kind]` prefix makes the per-kind census visible on every line while staying one-line-per-ref; it
+  is a **report annotation**, not round-trippable LaTeX (S24 is a *report*).
+- Dangling references never entered `resolved`, so they are excluded by construction (a `\ref{nope}` with
+  no `\label` appears in S18's `unresolved_references_by_source`, not here).
+- A kind with no resolved references contributes no lines and no empty header.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S23 renderer).
+- If there are **no** resolved references at all (every reference dangles, or there are none), the fixed
+  marker `(no resolved references)` is returned — the **same** marker S21 uses (S24 groups the identical
+  list), so the output is never the empty string.
+
+Example (body defining a section label `sec:intro` and an equation label `eq:main`, then writing
+`\ref{sec:intro}`, `\eqref{eq:main}`, and `\pageref{sec:intro}` — all of which resolve):
+
+```text
+[section] \ref{sec:intro}
+[section] \pageref{sec:intro}
+[equation] \eqref{eq:main}
+```
+
+Both references to `sec:intro` (kind `Section`) lead — in their pre-order, `\ref` before `\pageref` —
+even though the `\eqref` appears between them in source, because `Section` sorts before `Equation` in the
+fixed kind order. This is the by-kind grouping companion of S21's flat resolved-references list — two
+views of the one `resolved` list.
+
+### 30.5 Public API (added in S24)
+
+One new method: `Document::resolved_references_by_kind(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_references` and every S1–S23 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 30.6 Verification (S24)
+
+`cargo test -p latex` green (6 new S24 tests: a `\ref`-to-section + `\eqref`-to-equation case rendering
+grouped in the fixed kind order; a source-order-reversed case proving the fixed kind order pulls the
+section ahead of an earlier equation; two same-section refs (`\ref` then `\pageref`) grouped together in
+pre-order under `section`, command-aware; a dangling-only and a no-references case both returning the
+`(no resolved references)` marker; a section+equation case with a trailing dangling `\ref{nope}` pinning
+the `\n`-join with no trailing newline and confirming the dangling ref is excluded; and an additivity
+check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`,
+`list_summary`, `citations_by_source`, `duplicate_bibliography_entries`,
+`unresolved_citations_by_source`, `unresolved_references_by_source`, `bibliography_entries`,
+`duplicate_label_definitions`, `resolved_references_by_source`, `label_definitions`, and S23's grouped
+`label_definitions_by_kind` all still produce their exact prior strings). All prior S1–S23 tests pass
+unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
+-p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.
