@@ -2091,3 +2091,88 @@ that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namere
 unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
 -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 32. S26 — per-kind census (counts) of the resolved references (`resolved_reference_kind_counts`)
+
+### 32.1 Motivation
+
+S24 (`resolved_references_by_kind`) groups the **resolved** `\ref`/`\eqref`/`\pageref` references by the
+`LabelKind` they resolved TO and renders one **line per resolved reference** (`[kind] \<command>{key}`).
+But a reader often wants not the enumeration but the **tally** — "how many of my references land on
+sections? how many on equations? how many on bare inline labels?" — a per-kind *count* answered at a
+glance, without scanning the individual keys. S25 (`label_kind_counts`) already brought exactly this
+numeric-summary discipline to the **label-definitions** family (a `<kind>: <n>` tally over the winning
+`definitions` list); S26 brings the same shape to the **resolved-references** family. It is to S24 what
+S25 is to S23: the *same* `resolved` list, collapsed to one line per kind.
+
+### 32.2 Why a new method — additive by construction
+
+S26 adds a **new public method** `Document::resolved_reference_kind_counts(&self) -> String`. It is a
+pure, read-only render of `resolve_references().resolved` — a *third view* of the exact list S21 renders
+flat and S24 groups by kind. It reuses that list verbatim (never re-walking the body or re-resolving), so
+the report can never drift from the S1 resolution it summarises, and counting never adds, drops, or
+reorders references relative to what `resolve_references` produced. It mutates nothing and changes no
+S1–S25 output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S25 it is a
+method the caller invokes directly.
+
+### 32.3 The ordering rule
+
+The output is ordered by a **fixed, document-independent** kind order — the `LabelKind` enum declaration
+order: `Section`, `Table`, `Figure`, `Equation`, `Inline` (the **same** `const KIND_ORDER` slice
+S23/S24/S25 use). S26 iterates that order as an explicit slice (**not** a hash map keyed by kind), so the
+line order is deterministic and never depends on document content or hash iteration order — the same
+`Vec`-scan discipline S17/S18/S23/S24/S25 use to avoid hash-order nondeterminism. A kind with a **zero**
+count produces **no** line (there is never a bare `table: 0` for a doc that references no tables).
+
+### 32.4 The exact rendering contract — `Document::resolved_reference_kind_counts(&self) -> String`
+
+- Iterate the fixed kind order (`Section`, `Table`, `Figure`, `Equation`, `Inline`). For each kind, count
+  the `resolve_references().resolved` refs whose `target_kind` is that kind and — only if the count is
+  **at least one** — emit one line `format!("{}: {}", kind.as_str(), count)` → the kind tag + `": "` + the
+  decimal count. The kind tag comes from `LabelKind::as_str()` (`"section"`/`"table"`/`"figure"`/
+  `"equation"`/`"inline"`) — the **same** kind string S24 renders — and there is **no** source slicing at
+  all (only the `target_kind` field is read; keys/commands/spans are unused for the count), so the render
+  needs no source borrow and can never index out of bounds.
+- Only the **resolved** references are counted. A dangling `\ref{nope}` lives in
+  `resolve_references().unresolved` (S18's domain), never in `resolved`, so it is excluded by construction
+  and never contributes a spurious `<kind>: 0` line.
+- A kind with a zero count contributes no line and no empty header.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S25 renderer).
+- If there are **no** resolved references at all (every reference dangles, or there are none), the fixed
+  marker `(no resolved references)` is returned — the **same** marker S21/S24 use (S26 counts the
+  identical list), so the output is never the empty string.
+
+Example (body defining two section labels `sec:a`/`sec:b` and one equation label `eq:e`, then writing
+`\ref{sec:a}`, `\ref{sec:b}`, and `\eqref{eq:e}`, all of which resolve):
+
+```text
+section: 2
+equation: 1
+```
+
+The `section` count leads, then `equation`, in the fixed kind order; the `table`, `figure`, and `inline`
+kinds have zero resolved refs and so contribute no lines. This is the count companion of S24's per-ref
+grouping — a third view of the one `resolved` list.
+
+### 32.5 Public API (added in S26)
+
+One new method: `Document::resolved_reference_kind_counts(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_references` and every S1–S25 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 32.6 Verification (S26)
+
+`cargo test -p latex` green (6 new S26 tests: a section + two-equation + inline case rendering the
+per-kind counts in the fixed kind order with the zero-count kinds omitted; a single-kind case
+(`section: 2`, two refs to one section); a two-section-labels case proving multiple resolved refs to the
+same kind aggregate (`section: 2`); an all-dangling / no-references case returning the
+`(no resolved references)` marker (cross-checked against S18's `unresolved_references_by_source`); a
+section + equation + dangling-ref case pinning the `\n`-join with no trailing newline and the dangling
+ref's exclusion; and an additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`,
+`resolve_namerefs`, `list_summary`, `citations_by_source`, `duplicate_bibliography_entries`,
+`unresolved_citations_by_source`, `unresolved_references_by_source`, `bibliography_entries`,
+`duplicate_label_definitions`, `resolved_references_by_source`, `label_definitions`, S23's
+`label_definitions_by_kind`, S24's `resolved_references_by_kind`, and S25's `label_kind_counts` all still
+produce their exact prior strings). All prior S1–S25 tests pass unchanged. `cargo clippy -p latex
+--all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
+build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.

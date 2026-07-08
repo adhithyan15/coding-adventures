@@ -2,6 +2,51 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.62.0] — 2026-07-08
+
+### Added — per-kind census (counts) of the resolved references (LTXDOC03 S26)
+
+A **new** public method `Document::resolved_reference_kind_counts(&self) -> String` that renders a
+**per-kind CENSUS** of the RESOLVED `\ref`/`\eqref`/`\pageref` references — one `<kind>: <n>` line per
+`LabelKind` that has at least one resolved ref, carrying the integer **count** rather than a list. It is
+the *count* companion of S24's `resolved_references_by_kind` (which renders one `[kind] \<command>{key}`
+**line per resolved reference**, grouped by the kind each ref bound to): S24, S21's flat
+`resolved_references_by_source`, and S26 are three *views* of the one `resolved` list
+`resolve_references()` produces — S26 collapses each kind's group to a single tally line. It is to S24
+what S25's `label_kind_counts` is to S23: a numeric summary. It is a read-only view over
+`resolve_references()`; every S1–S25 output is left **byte-for-byte unchanged**; S26 is purely additive
+and leaves the `to_latex()` round-trip fixed point intact.
+
+- **Counts the RESOLVED refs only.** S26 reads `resolve_references().resolved` — each a `ResolvedRef`
+  carrying the `target_kind` (the `LabelKind` of the label it bound to). A dangling `\ref{nope}` lives
+  in `resolve_references().unresolved` (S18's domain), never in `resolved`, so it is excluded by
+  construction — never contributing a spurious `<kind>: 0` line.
+- **Per-kind counts in a fixed, document-independent order** — the `LabelKind` enum declaration order:
+  `Section`, `Table`, `Figure`, `Equation`, `Inline` (the SAME `const KIND_ORDER` slice S23/S24/S25
+  use). The method iterates that explicit fixed order (not a hash map keyed by kind), so the line order
+  is deterministic — the same `Vec`-scan discipline S17/S18/S23/S24/S25 use to avoid hash-order
+  nondeterminism.
+- **`<kind>: <n>` line shape.** Each line is the stable lowercase tag from `LabelKind::as_str()` (the
+  SAME kind string S24 renders — `"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`) + `": "` +
+  the decimal count of resolved refs whose `target_kind` is that kind. There is **no** source slicing
+  at all (only the `target_kind` field is read).
+- **Zero-count kinds omitted.** A kind with no resolved refs contributes no line (there is never a bare
+  `table: 0` for a doc that references no tables).
+- **Stable empty marker.** No resolved references at all → the **same** fixed string
+  `(no resolved references)` S21/S24 use, never the empty string — the stable-marker discipline S12–S25
+  share.
+- **`\n`-joined, no trailing newline** — matching S24's `resolved_references_by_kind` and every S11–S25
+  renderer.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single
+  stable-ordered pass (fixed kind order × pre-order filter/count) over the already-bounded `resolved`
+  list. Borrows `self` immutably, returns owned `String`.
+- **Tests.** Added `s26_counts_multiple_kinds_in_fixed_kind_order_zero_kinds_omitted`,
+  `s26_exactly_one_kind`, `s26_two_refs_to_two_section_labels_count_two`,
+  `s26_all_dangling_or_none_returns_marker`, `s26_newline_join_no_trailing_newline_excludes_dangling`,
+  and `s26_is_additive_leaves_s1_s25_outputs_unchanged` (which pins every S1–S25 output byte-for-byte,
+  including S24's grouped `resolved_references_by_kind` and S25's `label_kind_counts`, alongside the new
+  per-kind counts).
+
 ## [0.61.0] — 2026-07-08
 
 ### Added — per-kind census (counts) of the winning label definitions (LTXDOC03 S25)
