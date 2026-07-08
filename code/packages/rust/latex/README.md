@@ -72,6 +72,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S22 — winning `\label` definitions** | `Document::label_definitions() -> String` — a **new**, read-only method that renders the **winning** label definitions — the `\label{key}` definitions references resolve against, one `\label{key}` line per distinct key — the **label-family analogue of S19's** `bibliography_entries` (which renders the winning `\bibitem` entries) and the **winning-side counterpart of S20's** `duplicate_label_definitions` (which renders the *losing* duplicate `\label`s). It reads only `resolve_references().definitions`: S1 collects every `\label` in pre-order; the **first** of each key wins (into `definitions`, one row per distinct key) and every **later** `\label` of an already-defined key goes to `duplicates` (S20's domain). S22 emits one line per winning definition in that pre-order (**not** re-sorted, **not** de-duplicated — none needed, since `definitions` already holds one row per distinct key), each reconstructed from its key as `\label{<key>}` (no source slicing; the `\label{…}` form is right for any `LabelKind`). A `\label{dup}` written twice appears **once** — the winner. Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the fixed marker `(no label definitions)`. E.g. `sec:intro` (section), `eq:main` (equation), then a re-used `sec:intro` → `\label{sec:intro}\n\label{eq:main}` (winner once). Every S1–S21 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S23 — winning `\label` definitions grouped by kind** | `Document::label_definitions_by_kind() -> String` — a **new**, read-only method that renders the **winning** `\label` definitions **grouped by their `LabelKind`** — a per-kind census — the **by-kind grouping companion of S22's** `label_definitions` (which lists the same winning definitions *flat*); S22 and S23 are two views of the one winning `definitions` list. It reads only `resolve_references().definitions` and groups by kind in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — iterated as an explicit slice, not a hash map, so the order is deterministic like S17/S18's `Vec`-of-groups). Within each kind, definitions keep their existing pre-order. Each line is `[<kind>] \label{<key>}` — `<kind>` from `LabelKind::as_str()` (`"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`), `<key>` from the owned key (no source slicing). A kind with no definitions contributes no lines (no empty `[table]` header). Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the **same** fixed marker `(no label definitions)` S22 uses. E.g. `sec:intro` (section), `eq:main` (equation), `note` (inline) → `[section] \label{sec:intro}\n[equation] \label{eq:main}\n[inline] \label{note}`. Every S1–S22 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S24 — resolved references grouped by target kind** | `Document::resolved_references_by_kind() -> String` — a **new**, read-only method that renders the **resolved** `\ref`/`\eqref`/`\pageref` references **grouped by the `LabelKind` they resolved TO** — a per-kind census — the **by-kind grouping companion of S21's** `resolved_references_by_source` (which lists the same resolved refs *flat*, in source order); S21 and S24 are two views of the one `resolved` list. It mirrors S23's `label_definitions_by_kind` idiom but over the **resolved-references** list, and stays **command-aware** like S21. It reads only `resolve_references().resolved` (a `Vec<ResolvedRef { key, command, ref_span, target_span, target_kind }>`) and groups by `target_kind` in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — the SAME slice S23 uses, iterated explicitly, not a hash map, so the order is deterministic). Within each kind, refs keep their existing pre-order. Each line is `[<kind>] \<command>{<key>}` — `<kind>` from the ref's `target_kind.as_str()`, `<command>` the ref's own (so `\eqref`/`\pageref` render as themselves), `<key>` from the owned key (no source slicing). A **dangling** `\ref` never entered `resolved`, so it is excluded (it lives in S18). A kind with no resolved refs contributes no lines (no empty `[table]` header). Lines joined by `\n`, no trailing newline. A document with **no** resolved references → the **same** fixed marker `(no resolved references)` S21 uses. E.g. `\ref{sec:intro}` (section), `\eqref{eq:main}` (equation), `\pageref{sec:intro}` (section) → `[section] \ref{sec:intro}\n[section] \pageref{sec:intro}\n[equation] \eqref{eq:main}`. Every S1–S23 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S25 — per-kind census (counts) of the winning `\label` definitions** | `Document::label_kind_counts() -> String` — a **new**, read-only method that renders a **per-kind CENSUS** of the winning `\label` definitions: one `<kind>: <n>` line per `LabelKind` that has at least one winning definition, carrying the integer **count** (not a list) — the **count companion of S23's** `label_definitions_by_kind` (which renders one `[kind] \label{key}` *line per definition*). S22's flat `label_definitions`, S23's grouped list, and S25's counts are three views of the one winning `definitions` list; S25 collapses each kind's group to a single tally line (it is to S23 what S14's `list_summary` is to a full enumeration). It reads only `resolve_references().definitions` (one row per distinct key — the WINNER; a `\label{dup}` written twice counts **once**, its later copy being a `Duplicate` in S20's domain) and counts by kind in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — the SAME slice S23/S24 use, iterated explicitly, not a hash map, so the order is deterministic). Each line is `<kind>: <n>` — `<kind>` from `LabelKind::as_str()` (the SAME tag S23 renders: `"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`), `<n>` the decimal count (no source slicing). A kind with a zero count contributes no line (no bare `table: 0`). Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the **same** fixed marker `(no label definitions)` S22/S23 use. E.g. `sec:intro` (section), `eq:a`/`eq:b` (equations), `note` (inline) → `section: 1\nequation: 2\ninline: 1`. Every S1–S24 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -990,6 +991,42 @@ assert_eq!(
 A document with no resolved references (every ref dangles, or there are none) renders the **same** fixed
 `(no resolved references)` marker S21 uses. Purely additive — reuses `resolve_references`, mutates
 nothing, leaves every S1–S23 output and the `to_latex()` fixed point unchanged.
+
+### per-kind census (counts) of the winning `\label` definitions (LTXDOC03 S25)
+
+A **per-kind CENSUS** of the winning `\label` definitions — one `<kind>: <n>` line per `LabelKind`
+that has at least one winning definition, carrying the integer **count** rather than a list — the
+**count companion of S23's** `label_definitions_by_kind` (which renders one `[kind] \label{key}` line
+*per definition*, grouped by kind). S22's flat `label_definitions`, S23's grouped list, and S25's
+counts are three *views* of the one winning `definitions` list `resolve_references()` produces; S25
+collapses each kind's group to a single tally line. It is to S23 what S14's `list_summary`
+(`"Sections: 1"`) is to a full enumeration: a numeric summary. `label_kind_counts` reads only that
+`definitions` list — one row per distinct key, the WINNER (a `\label{dup}` written twice counts
+**once**, its later copy being a `Duplicate` in S20's domain) — and counts by kind in a **fixed,
+document-independent order** (the `LabelKind` enum declaration order: `Section`, `Table`, `Figure`,
+`Equation`, `Inline`, the SAME slice S23/S24 use), iterated as an explicit slice rather than a hash
+map, so the line order is deterministic. Each line is `<kind>: <n>` — the `<kind>` tag from
+`LabelKind::as_str()` (the SAME tag S23 renders), the `<n>` the decimal count (no source slicing). A
+kind with a zero count contributes no line (no bare `table: 0`).
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:intro}
+\begin{equation}\label{eq:a} x=1 \end{equation}
+\begin{equation}\label{eq:b} y=2 \end{equation}
+\label{note}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.label_kind_counts(),
+    // one count line per non-empty kind, in the fixed kind order (Table/Figure omitted — zero)
+    "section: 1\nequation: 2\ninline: 1",
+);
+```
+
+A document with no label definitions renders the **same** fixed `(no label definitions)` marker
+S22/S23 use (S25 counts the identical list). Purely additive — reuses `resolve_references`, mutates
+nothing, leaves every S1–S24 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

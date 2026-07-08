@@ -2,6 +2,50 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.61.0] — 2026-07-08
+
+### Added — per-kind census (counts) of the winning label definitions (LTXDOC03 S25)
+
+A **new** public method `Document::label_kind_counts(&self) -> String` that renders a **per-kind
+CENSUS** of the winning `\label` definitions — one `<kind>: <n>` line per `LabelKind` that has at
+least one winning definition, carrying the integer **count** rather than a list. It is the *count*
+companion of S23's `label_definitions_by_kind` (which renders one `[kind] \label{key}` **line per
+definition**, grouped by kind): S23, S22's flat `label_definitions`, and S25 are three *views* of the
+one winning `definitions` list `resolve_references()` produces — S25 collapses each kind's group to a
+single tally line. It is to S23 what S14's `list_summary` (`"Sections: 1"`) is to a full enumeration:
+a numeric summary. It is a read-only view over `resolve_references()`; every S1–S24 output is left
+**byte-for-byte unchanged**; S25 is purely additive and leaves the `to_latex()` round-trip fixed point
+intact.
+
+- **Counts the WINNING definitions only.** S25 reads `resolve_references().definitions` — one row per
+  distinct key (the first `\label` of each key). A `\label{dup}` written twice contributes **one** to
+  its kind's count, because its later re-definition is a `Duplicate` (S20's domain), never a second row
+  in `definitions`.
+- **Per-kind counts in a fixed, document-independent order** — the `LabelKind` enum declaration order:
+  `Section`, `Table`, `Figure`, `Equation`, `Inline` (the SAME `const KIND_ORDER` slice S23/S24 use).
+  The method iterates that explicit fixed order (not a hash map keyed by kind), so the line order is
+  deterministic — the same `Vec`-scan discipline S17/S18/S23/S24 use to avoid hash-order nondeterminism.
+- **`<kind>: <n>` line shape.** Each line is the stable lowercase tag from `LabelKind::as_str()` (the
+  SAME kind string S23 renders — `"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`) + `": "` +
+  the decimal count of winning definitions of that kind. There is **no** source slicing at all (only
+  the `kind` field is read).
+- **Zero-count kinds omitted.** A kind with no winning definitions contributes no line (there is never
+  a bare `table: 0` for a doc with no table labels).
+- **Stable empty marker.** No winning label definitions at all → the **same** fixed string
+  `(no label definitions)` S22/S23 use, never the empty string — the stable-marker discipline S12–S24
+  share.
+- **`\n`-joined, no trailing newline** — matching S23's `label_definitions_by_kind` and every S11–S24
+  renderer.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single
+  stable-ordered pass (fixed kind order × pre-order filter/count) over the already-bounded
+  `definitions` list. Borrows `self` immutably, returns owned `String`.
+- **Tests.** Added `s25_counts_multiple_kinds_in_fixed_kind_order_zero_kinds_omitted`,
+  `s25_exactly_one_kind`, `s25_no_labels_returns_marker`,
+  `s25_duplicate_definitions_count_only_the_winner`, `s25_newline_join_no_trailing_newline`, and
+  `s25_is_additive_leaves_s1_s24_outputs_unchanged` (which pins every S1–S24 output byte-for-byte,
+  including S22's flat `label_definitions` and S23's grouped `label_definitions_by_kind`, alongside the
+  new per-kind counts).
+
 ## [0.60.0] — 2026-07-08
 
 ### Added — resolved references grouped by target kind (LTXDOC03 S24)

@@ -2007,3 +2007,87 @@ check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_
 unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
 -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 31. S25 — per-kind census (counts) of the winning label definitions (`label_kind_counts`)
+
+### 31.1 Motivation
+
+S23 (`label_definitions_by_kind`) groups the **winning** `\label` definitions by their `LabelKind` and
+renders one **line per definition** (`[kind] \label{key}`). But a reader often wants not the enumeration
+but the **tally** — "how many sections do I define? how many equations? how many bare inline labels?" —
+a per-kind *count* answered at a glance, without scanning the individual keys. S14 (`list_summary`)
+already provides exactly this shape (`"Sections: 1"`) over S4's numbered-node census; S25 brings the same
+numeric-summary discipline to the **label-definitions** family. It is to S23 what a count is to a full
+list: the *same* winning `definitions` list, collapsed to one line per kind.
+
+### 31.2 Why a new method — additive by construction
+
+S25 adds a **new public method** `Document::label_kind_counts(&self) -> String`. It is a pure, read-only
+render of `resolve_references().definitions` — a *third view* of the exact list S22 renders flat and S23
+groups by kind. It reuses that list verbatim (never re-walking the body or re-resolving), so the report
+can never drift from the S1 resolution it summarises, and counting never adds, drops, or reorders
+definitions relative to what `resolve_references` produced. It mutates nothing and changes no S1–S24
+output — including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S24 it is a method the
+caller invokes directly.
+
+### 31.3 The ordering rule
+
+The output is ordered by a **fixed, document-independent** kind order — the `LabelKind` enum declaration
+order: `Section`, `Table`, `Figure`, `Equation`, `Inline` (the **same** `const KIND_ORDER` slice S23/S24
+use). S25 iterates that order as an explicit slice (**not** a hash map keyed by kind), so the line order
+is deterministic and never depends on document content or hash iteration order — the same `Vec`-scan
+discipline S17/S18/S23/S24 use to avoid hash-order nondeterminism. A kind with a **zero** count produces
+**no** line (there is never a bare `table: 0` for a doc with no table labels).
+
+### 31.4 The exact rendering contract — `Document::label_kind_counts(&self) -> String`
+
+- Iterate the fixed kind order (`Section`, `Table`, `Figure`, `Equation`, `Inline`). For each kind, count
+  the `resolve_references().definitions` whose `kind` is that kind and — only if the count is **at least
+  one** — emit one line `format!("{}: {}", kind.as_str(), count)` → the kind tag + `": "` + the decimal
+  count. The kind tag comes from `LabelKind::as_str()` (`"section"`/`"table"`/`"figure"`/`"equation"`/
+  `"inline"`) — the **same** kind string S23 renders — and there is **no** source slicing at all (only the
+  `kind` field is read; keys/spans are unused), so the render needs no source borrow and can never index
+  out of bounds.
+- Only the **winning** definitions are counted. `definitions` holds one row per distinct key (the first
+  `\label` of each key); a `\label{dup}` written twice contributes **one** to its kind's count, because
+  its later re-definition is a `Duplicate` (S20's domain), never a second row in `definitions`.
+- A kind with a zero count contributes no line and no empty header.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S24 renderer).
+- If there are **no** winning label definitions at all, the fixed marker `(no label definitions)` is
+  returned — the **same** marker S22/S23 use (S25 counts the identical list), so the output is never the
+  empty string.
+
+Example (body defining a section label `sec:intro`, two equation labels `eq:a`/`eq:b`, and a bare inline
+label `note`):
+
+```text
+section: 1
+equation: 2
+inline: 1
+```
+
+The `section` count leads, then `equation`, then `inline`, in the fixed kind order; the `table` and
+`figure` kinds have zero definitions and so contribute no lines. This is the count companion of S23's
+per-definition grouping — a third view of the one winning `definitions` list.
+
+### 31.5 Public API (added in S25)
+
+One new method: `Document::label_kind_counts(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_references` and every S1–S24 method are unchanged; no AST or grammar change;
+no new dependency, no `unsafe`, no I/O.
+
+### 31.6 Verification (S25)
+
+`cargo test -p latex` green (6 new S25 tests: a section + two-equation + inline case rendering the
+per-kind counts in the fixed kind order with the zero-count kinds omitted; a single-kind case
+(`inline: 2`); a no-labels case returning the `(no label definitions)` marker; a duplicate-`\label` case
+proving only the WINNING definition is counted (the loser routed to S20's `duplicate_label_definitions`);
+a section + figure + inline case pinning the `\n`-join with no trailing newline; and an additivity check
+that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`,
+`citations_by_source`, `duplicate_bibliography_entries`, `unresolved_citations_by_source`,
+`unresolved_references_by_source`, `bibliography_entries`, `duplicate_label_definitions`,
+`resolved_references_by_source`, `label_definitions`, S23's `label_definitions_by_kind`, and S24's
+`resolved_references_by_kind` all still produce their exact prior strings). All prior S1–S24 tests pass
+unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
+-p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.
