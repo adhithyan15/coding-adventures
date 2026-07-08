@@ -15,6 +15,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QByteArray>
+#include <QFile>
+#include <QUrl>
 
 #include <cmath>
 
@@ -497,6 +499,83 @@ bool SpreadsheetModel::deserialize(const QString &data) {
         emit revisionChanged();
     }
     return ok;
+}
+
+// ── File open / save — bytes in, bytes out ─────────────────────────────
+// A QByteArray carries raw file bytes intact (an .xlsx is a ZIP, an .xls an OLE2
+// file) — unlike takeString's char* path, a 0x00 in the middle doesn't truncate
+// it. exportBytes copies the engine's (ptr, len) buffer into a QByteArray and
+// frees it with sc_bytes_free (the engine's own allocator — NOT free()); a save
+// that returns a null pointer / empty doc yields an empty QByteArray. importBytes
+// hands the engine a borrowed (constData, size) pair and, on success, refreshes
+// the grid exactly as deserialize() does.
+
+QByteArray SpreadsheetModel::exportBytes(const QString &format) const {
+    size_t len = 0;
+    uint8_t *ptr = nullptr;
+    if (format == QLatin1String("xlsx")) ptr = sc_save_xlsx(session_, &len);
+    else if (format == QLatin1String("xls")) ptr = sc_save_xls(session_, &len);
+    else if (format == QLatin1String("csv")) ptr = sc_save_csv(session_, &len);
+    else if (format == QLatin1String("tsv")) ptr = sc_save_tsv(session_, &len);
+    else if (format == QLatin1String("json")) ptr = sc_save_json(session_, &len);
+    else return QByteArray();
+    if (ptr == nullptr) return QByteArray();
+    // Copy the bytes out BEFORE releasing the engine's buffer with its allocator.
+    // Use qsizetype (64-bit in Qt 6) for the length so a large file can't wrap a
+    // narrower int.
+    QByteArray bytes(reinterpret_cast<const char *>(ptr), static_cast<qsizetype>(len));
+    sc_bytes_free(ptr, len);
+    return bytes;
+}
+
+bool SpreadsheetModel::importBytes(const QString &format, const QByteArray &bytes) {
+    if (bytes.isEmpty()) return false; // empty input is a safe no-op
+    const auto *p = reinterpret_cast<const uint8_t *>(bytes.constData());
+    const auto n = static_cast<size_t>(bytes.size());
+    int ok = 0;
+    if (format == QLatin1String("xlsx")) ok = sc_load_xlsx(session_, p, n);
+    else if (format == QLatin1String("xls")) ok = sc_load_xls(session_, p, n);
+    else if (format == QLatin1String("csv")) ok = sc_load_csv(session_, p, n);
+    else if (format == QLatin1String("tsv")) ok = sc_load_tsv(session_, p, n);
+    else if (format == QLatin1String("json")) ok = sc_load_json(session_, p, n);
+    else return false;
+    if (ok) {
+        recompute();
+        computeExtent();
+        infFormula_ = rawAt(infAddress());
+        revision_++;
+        emit changed();
+        emit infSelectionChanged();
+        emit revisionChanged();
+    }
+    return ok != 0;
+}
+
+// saveFile/openFile wrap the codec core with QFile so QML's FileDialog can hand a
+// real path (a proper OS Save/Open dialog — no fixed demo path needed here, unlike
+// the plugin-free hosts). QML's FileDialog reports a `file://` URL, so accept both
+// a local path and a URL (normalising through QUrl). A failed file open, or a codec
+// that rejects the bytes, returns false and leaves the workbook untouched.
+static QString localPathOf(const QString &pathOrUrl) {
+    const QUrl url(pathOrUrl);
+    return url.isLocalFile() ? url.toLocalFile() : pathOrUrl;
+}
+
+bool SpreadsheetModel::saveFile(const QString &path, const QString &format) {
+    const QByteArray bytes = exportBytes(format);
+    QFile file(localPathOf(path));
+    if (!file.open(QIODevice::WriteOnly)) return false;
+    const bool ok = file.write(bytes) == bytes.size();
+    file.close();
+    return ok;
+}
+
+bool SpreadsheetModel::openFile(const QString &path, const QString &format) {
+    QFile file(localPathOf(path));
+    if (!file.open(QIODevice::ReadOnly)) return false;
+    const QByteArray bytes = file.readAll();
+    file.close();
+    return importBytes(format, bytes);
 }
 
 // Undo / redo availability — thin reads of the engine's history stacks; the

@@ -25,6 +25,11 @@ private slots:
     // A formula entry computes, and a division-by-zero error propagates through
     // a binary operator (matching Excel; the engine's documented behaviour).
     void formulaAndErrorPropagation();
+    // File open / save over the engine's byte codecs: raw file bytes cross the C
+    // ABI in a QByteArray intact — a ZIP for .xlsx (with the live formula still
+    // recomputing after a reopen), an OLE2 file for .xls — and unknown/empty
+    // inputs are safe no-ops.
+    void fileOpenSaveRoundTrips();
 };
 
 void TstModel::seededTotalsAreEngineComputed() {
@@ -74,4 +79,53 @@ void TstModel::formulaAndErrorPropagation() {
 }
 
 QTEST_MAIN(TstModel)
+void TstModel::fileOpenSaveRoundTrips() {
+    SpreadsheetModel src;
+    src.setCell("C1", "=A1+B1"); // override the seeded literal: 15+3 = 18
+
+    // .xlsx is a real ZIP (magic "PK\x03\x04"): the raw binary crossed the C ABI
+    // in a QByteArray without a NUL truncating it.
+    const QByteArray xlsx = src.exportBytes("xlsx");
+    QVERIFY(xlsx.size() > 4);
+    QVERIFY(xlsx.at(0) == char(0x50) && xlsx.at(1) == char(0x4B)
+            && xlsx.at(2) == char(0x03) && xlsx.at(3) == char(0x04));
+    SpreadsheetModel dstX;
+    QVERIFY(dstX.importBytes("xlsx", xlsx));
+    QCOMPARE(dstX.display("C1"), QStringLiteral("18"));
+    // .xlsx keeps the formula LIVE, not a frozen value: edit a precedent and C1
+    // recomputes (15+3 → 115+3).
+    dstX.setCell("A1", "115");
+    QCOMPARE(dstX.display("C1"), QStringLiteral("118"));
+
+    // .xls is a real OLE2 file (magic D0 CF 11 E0) — the 0xD0 high bit is exactly
+    // what a lossy string round trip would have mangled. Values only.
+    const QByteArray xls = src.exportBytes("xls");
+    QVERIFY(xls.size() > 8);
+    QVERIFY(xls.at(0) == char(0xD0) && xls.at(1) == char(0xCF)
+            && xls.at(2) == char(0x11) && xls.at(3) == char(0xE0));
+    SpreadsheetModel dstL;
+    QVERIFY(dstL.importBytes("xls", xls));
+    QCOMPARE(dstL.display("C1"), QStringLiteral("18"));
+
+    // CSV / TSV / JSON: values-only tabular codecs. The QByteArray marshalling is
+    // proven by a non-empty export that reopens cleanly (the per-codec value
+    // semantics are asserted against the same engine in the Dart/.NET/Swift
+    // suites; here the seeded budget makes exact cell reshaping format-specific).
+    for (const QString &format : {QStringLiteral("csv"), QStringLiteral("tsv"),
+                                  QStringLiteral("json")}) {
+        const QByteArray bytes = src.exportBytes(format);
+        QVERIFY2(!bytes.isEmpty(), qPrintable(format + " export produced bytes"));
+        SpreadsheetModel dst;
+        QVERIFY2(dst.importBytes(format, bytes), qPrintable(format + " reopened"));
+    }
+
+    // Unknown format and empty input are safe no-ops.
+    QVERIFY(src.exportBytes("numbers").isEmpty());
+    QVERIFY(!src.importBytes("numbers", QByteArray("x")));
+    QVERIFY(!src.importBytes("xlsx", QByteArray()));
+    // A non-spreadsheet payload is rejected and leaves the workbook untouched.
+    QVERIFY(!src.importBytes("xlsx", QByteArray("not a spreadsheet")));
+    QCOMPARE(src.display("C1"), QStringLiteral("18"));
+}
+
 #include "tst_model.moc"
