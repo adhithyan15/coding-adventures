@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 105 \u2014 polysomnography apnea-hypopnea index from four stated quantities (a NEW panel: sleep medicine / polysomnography). From an apnea count plus a hypopnea count for the respiratory events, a recording time minus a wake time for the sleep hours, and the respiratory events divided by the sleep hours, compute the apnea-hypopnea index ((apnea_count+hypopnea_count)/(recording_hours-wake_hours)), the respiratory events (apnea_count+hypopnea_count), or the sleep hours (recording_hours-wake_hours). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A SUM OVER A DIFFERENCE (a+b)/(c-d) (add b to a, subtract d from c, divide the sum by the difference, so (a+b)/(c-d) = ((a+b)/(c-d)); the FIRST time the ladder divides a bare SUM by a bare DIFFERENCE \u2014 completing the ratio-with-difference family: rung-104 (a-b)/(c*d) divided a difference by a product, rung-100 (a+b)/(c*d) a sum by a product, rung-99 (a*b)/(c+d) a product by a sum, rung-37 (a+b)/(c+d) a sum by a sum, but no prior rung put a DIFFERENCE in the denominator) \u2014 and the harness matches the scalar to the printed options. The apnea-hypopnea index is a rate (events per sleep hour), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via +, -, and / \u2014 no constant leaks, and neither the respiratory events, the sleep hours, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the hypopnea count is divided before adding (a+b/(c-d), a wrong grouping) and subtracting the numerator pair while summing the denominator pair ((a-b)/(c+d), a wrong pairing). The core confusion tested is that (a+b)/(c-d) is ((a+b)/(c-d)), not a+b/(c-d) and not (a-b)/(c+d). Each table guarantees the apnea count exceeds the hypopnea count and the recording time exceeds the wake time with a comfortable margin (sleep hours strictly positive, index finite), and the swapped denominator is a sum of quantities >= 2 (never zero, no subtraction), so every figure stays strictly positive and well-defined.",
+  "items": [
+    {
+      "id": "r105sleep-01",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 6 plus a hypopnea count of 2, divided by a recording time of 8 hours minus a wake time of 4 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(6)\nobserve hypopnea_count(2)\nobserve recording_hours(8)\nobserve wake_hours(4)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r105sleep-02",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 6 plus a hypopnea count of 2, divided by a recording time of 8 hours minus a wake time of 4 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(6)\nobserve hypopnea_count(2)\nobserve recording_hours(8)\nobserve wake_hours(4)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r105sleep-03",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 6 plus a hypopnea count of 2, divided by a recording time of 8 hours minus a wake time of 4 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(6)\nobserve hypopnea_count(2)\nobserve recording_hours(8)\nobserve wake_hours(4)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r105sleep-04",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 8 plus a hypopnea count of 3, divided by a recording time of 9 hours minus a wake time of 4 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(8)\nobserve hypopnea_count(3)\nobserve recording_hours(9)\nobserve wake_hours(4)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r105sleep-05",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 8 plus a hypopnea count of 3, divided by a recording time of 9 hours minus a wake time of 4 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(8)\nobserve hypopnea_count(3)\nobserve recording_hours(9)\nobserve wake_hours(4)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r105sleep-06",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 8 plus a hypopnea count of 3, divided by a recording time of 9 hours minus a wake time of 4 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(8)\nobserve hypopnea_count(3)\nobserve recording_hours(9)\nobserve wake_hours(4)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r105sleep-07",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 9 plus a hypopnea count of 4, divided by a recording time of 10 hours minus a wake time of 3 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(9)\nobserve hypopnea_count(4)\nobserve recording_hours(10)\nobserve wake_hours(3)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.8571428571428572,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r105sleep-08",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 9 plus a hypopnea count of 4, divided by a recording time of 10 hours minus a wake time of 3 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(9)\nobserve hypopnea_count(4)\nobserve recording_hours(10)\nobserve wake_hours(3)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.8571428571428572,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r105sleep-09",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 9 plus a hypopnea count of 4, divided by a recording time of 10 hours minus a wake time of 3 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(9)\nobserve hypopnea_count(4)\nobserve recording_hours(10)\nobserve wake_hours(3)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.8571428571428572,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r105sleep-10",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 12 plus a hypopnea count of 5, divided by a recording time of 11 hours minus a wake time of 2 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(12)\nobserve hypopnea_count(5)\nobserve recording_hours(11)\nobserve wake_hours(2)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.555555555555555,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5384615384615384,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8888888888888888,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r105sleep-11",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 12 plus a hypopnea count of 5, divided by a recording time of 11 hours minus a wake time of 2 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(12)\nobserve hypopnea_count(5)\nobserve recording_hours(11)\nobserve wake_hours(2)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.8888888888888888,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.555555555555555,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5384615384615384,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r105sleep-12",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 12 plus a hypopnea count of 5, divided by a recording time of 11 hours minus a wake time of 2 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(12)\nobserve hypopnea_count(5)\nobserve recording_hours(11)\nobserve wake_hours(2)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.8888888888888888,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.555555555555555,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5384615384615384,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r105sleep-13",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 7 plus a hypopnea count of 3, divided by a recording time of 9 hours minus a wake time of 3 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(7)\nobserve hypopnea_count(3)\nobserve recording_hours(9)\nobserve wake_hours(3)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r105sleep-14",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 7 plus a hypopnea count of 3, divided by a recording time of 9 hours minus a wake time of 3 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(7)\nobserve hypopnea_count(3)\nobserve recording_hours(9)\nobserve wake_hours(3)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r105sleep-15",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 7 plus a hypopnea count of 3, divided by a recording time of 9 hours minus a wake time of 3 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(7)\nobserve hypopnea_count(3)\nobserve recording_hours(9)\nobserve wake_hours(3)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r105sleep-16",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 14 plus a hypopnea count of 6, divided by a recording time of 13 hours minus a wake time of 5 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(14)\nobserve hypopnea_count(6)\nobserve recording_hours(13)\nobserve wake_hours(5)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r105sleep-17",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 14 plus a hypopnea count of 6, divided by a recording time of 13 hours minus a wake time of 5 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(14)\nobserve hypopnea_count(6)\nobserve recording_hours(13)\nobserve wake_hours(5)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r105sleep-18",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 14 plus a hypopnea count of 6, divided by a recording time of 13 hours minus a wake time of 5 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(14)\nobserve hypopnea_count(6)\nobserve recording_hours(13)\nobserve wake_hours(5)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r105sleep-19",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 11 plus a hypopnea count of 4, divided by a recording time of 8 hours minus a wake time of 5 hours. What is the apnea-hypopnea index (the respiratory events divided by the sleep hours)?",
+      "program": "observe apnea_count(11)\nobserve hypopnea_count(4)\nobserve recording_hours(8)\nobserve wake_hours(5)\nlet answer = (apnea_count + hypopnea_count) / (recording_hours - wake_hours)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5384615384615384,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r105sleep-20",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 11 plus a hypopnea count of 4, divided by a recording time of 8 hours minus a wake time of 5 hours. What is the the respiratory events (the apnea count plus the hypopnea count, the numerator divided by the sleep hours)?",
+      "program": "observe apnea_count(11)\nobserve hypopnea_count(4)\nobserve recording_hours(8)\nobserve wake_hours(5)\nlet answer = apnea_count + hypopnea_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5384615384615384,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r105sleep-21",
+      "qtype": "sleep_apnea_hypopnea_index",
+      "stem": "A polysomnography study records an apnea count of 11 plus a hypopnea count of 4, divided by a recording time of 8 hours minus a wake time of 5 hours. What is the the sleep hours (the recording hours minus the wake hours, the denominator the respiratory events are divided by)?",
+      "program": "observe apnea_count(11)\nobserve hypopnea_count(4)\nobserve recording_hours(8)\nobserve wake_hours(5)\nlet answer = recording_hours - wake_hours\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5384615384615384,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
