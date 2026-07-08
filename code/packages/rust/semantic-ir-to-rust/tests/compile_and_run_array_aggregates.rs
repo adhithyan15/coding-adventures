@@ -408,3 +408,98 @@ fn array_more_methods_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+/// The v0.23.0 **slice-selection Array methods**: `take`, `drop`, `values_at`.
+/// All index-clamped / bounds-guarded and never panic.  Assertions stay
+/// integer-valued and never print a `nil` element, so the proof is independent
+/// of the display convention (this module's `source_language` is `"test"`).
+fn take_drop_demo() -> Module {
+    let main_stmts = vec![
+        // take(2) of a 5-element array
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]), "take", vec![ilit(2)])),
+        // take(9) clamps to a full copy (n > len)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "take", vec![ilit(9)])),
+        // drop(2)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]), "drop", vec![ilit(2)])),
+        // drop(9) -> [] (n >= len)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "drop", vec![ilit(9)])),
+        // values_at(0, 2, -1) -> [10, 30, 30] (negative folds from the end)
+        print_stmt(method(
+            seq(vec![ilit(10), ilit(20), ilit(30)]),
+            "values_at",
+            vec![ilit(0), ilit(2), ilit(-1)],
+        )),
+    ];
+    demo_module(main_stmts, vec![])
+}
+
+#[test]
+fn take_drop_values_at_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&take_drop_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_take_drop_{nonce}.rs"));
+    let bin_path = dir.join(format!(
+        "sir_take_drop_{nonce}{}",
+        if cfg!(windows) { ".exe" } else { "" }
+    ));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd
+        .arg(&src_path)
+        .arg("-o")
+        .arg(&bin_path)
+        .output()
+        .expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[1, 2]",       // take(2)
+            "[1, 2, 3]",    // take(9) clamps
+            "[3, 4, 5]",    // drop(2)
+            "[]",           // drop(9) -> empty
+            "[10, 30, 30]", // values_at(0, 2, -1)
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}

@@ -1467,8 +1467,9 @@ pub const RUNTIME: &str = r##"mod __sir {
                     // aggregate / reshape non-block methods (all dispatch in
                     // `array_method` above; previously under-reported here)
                     | "min" | "max" | "sum" | "uniq" | "flatten" | "compact" | "to_a"
-                    // this PR: more non-block Array methods
+                    // more non-block Array methods
                     | "zip" | "rotate" | "to_h" | "tally"
+                    | "take" | "drop" | "values_at"
             ),
             Value::Map(_) => matches!(
                 name,
@@ -2095,6 +2096,51 @@ pub const RUNTIME: &str = r##"mod __sir {
                     map_set(&acc, item, Value::Int(n + 1));
                 }
                 acc
+            }
+            // `take(n)` / `drop(n)` — a fresh Array of the first / all-but-first
+            // `n` elements.  `n` is clamped to `[0, len]` (`n <= 0` and `n > len`
+            // both saturate), so the slice bounds are always valid.  Ruby raises
+            // `ArgumentError` on a negative `n`; the never-raise floor treats it
+            // as `0`.  The snapshot is taken up front so no `RefCell` borrow is
+            // held across the allocation.
+            "take" | "drop" => {
+                let snapshot = items_rc.borrow().clone();
+                let len = snapshot.len() as i64;
+                let mut n = pos.first().map(as_i64).unwrap_or(0);
+                if n < 0 {
+                    n = 0;
+                }
+                if n > len {
+                    n = len;
+                }
+                let n = n as usize;
+                if name == "take" {
+                    seq_lit(snapshot[..n].to_vec())
+                } else {
+                    seq_lit(snapshot[n..].to_vec())
+                }
+            }
+            // `values_at(*idxs)` — a fresh Array of the element at each index,
+            // folding a negative index from the end once; an out-of-range index
+            // (including a doubly-negative one) yields `nil` rather than panicking.
+            "values_at" => {
+                let snapshot = items_rc.borrow().clone();
+                let len = snapshot.len() as i64;
+                let out: Vec<Value> = pos
+                    .iter()
+                    .map(|a| {
+                        let mut idx = as_i64(a);
+                        if idx < 0 {
+                            idx += len;
+                        }
+                        if idx >= 0 && idx < len {
+                            snapshot[idx as usize].clone()
+                        } else {
+                            Value::Nil
+                        }
+                    })
+                    .collect();
+                seq_lit(out)
             }
             _ => no_method_error(&recv, name),
         }
