@@ -17,6 +17,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io' show Directory, File, Platform;
 import 'dart:math' show max;
+import 'dart:typed_data' show Uint8List;
 
 // ---------------------------------------------------------------------------
 // C ABI function signatures (see spreadsheet-capi/include/spreadsheet.h).
@@ -120,6 +121,28 @@ typedef _PasteD = int Function(Pointer<Void>, Pointer<Uint8>);
 typedef _FlagC = Int32 Function(Pointer<Void>);
 typedef _FlagD = int Function(Pointer<Void>);
 
+// ── File open / save — bytes in, bytes out (see spreadsheet.h) ────────
+// These are the first calls that carry RAW FILE BYTES, not NUL-terminated C
+// strings: an .xlsx is a ZIP, an .xls an OLE2 file, and either may contain a NUL
+// byte, so the bytes cross as an explicit (ptr, len) pair — never a `char*` that
+// a NUL would truncate. `size_t` is a native-word integer, so the FFI type is
+// `Size` (Dart `int` on the Dart side).
+//
+//   sc_load_<fmt>(session, bytes, len)  → int (1 opened / 0 not a readable file
+//                                         of that format; the doc is untouched
+//                                         on failure).
+//   sc_save_<fmt>(session, &out_len)    → uint8_t* heap buffer of *out_len bytes
+//                                         (NULL / 0 for an empty doc); free it
+//                                         with sc_bytes_free(ptr, out_len).
+typedef _LoadBytesC = Int32 Function(Pointer<Void>, Pointer<Uint8>, Size);
+typedef _LoadBytesD = int Function(Pointer<Void>, Pointer<Uint8>, int);
+typedef _SaveBytesC = Pointer<Uint8> Function(Pointer<Void>, Pointer<Size>);
+typedef _SaveBytesD = Pointer<Uint8> Function(Pointer<Void>, Pointer<Size>);
+// sc_bytes_free(ptr, len) → void. Frees a buffer an sc_save_* returned; the
+// (ptr, len) must match what that call wrote (the engine's allocator, NOT free).
+typedef _BytesFreeC = Void Function(Pointer<Uint8>, Size);
+typedef _BytesFreeD = void Function(Pointer<Uint8>, int);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -158,6 +181,21 @@ class SpreadsheetSession {
   late final _FlagD _redoFn;
   late final _FlagD _canUndoFn;
   late final _FlagD _canRedoFn;
+  // File open / save — one (load, save) pair per format. The load takes file
+  // bytes and replaces the workbook; the save returns the workbook as that
+  // format's file bytes. .xlsx keeps live formulas; .xls/.csv/.tsv/.json are
+  // lower-fidelity (values only) per spreadsheet-io.
+  late final _LoadBytesD _loadXlsxFn;
+  late final _SaveBytesD _saveXlsxFn;
+  late final _LoadBytesD _loadXlsFn;
+  late final _SaveBytesD _saveXlsFn;
+  late final _LoadBytesD _loadCsvFn;
+  late final _SaveBytesD _saveCsvFn;
+  late final _LoadBytesD _loadTsvFn;
+  late final _SaveBytesD _saveTsvFn;
+  late final _LoadBytesD _loadJsonFn;
+  late final _SaveBytesD _saveJsonFn;
+  late final _BytesFreeD _bytesFreeFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -200,6 +238,17 @@ class SpreadsheetSession {
     _redoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_redo');
     _canUndoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_can_undo');
     _canRedoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_can_redo');
+    _loadXlsxFn = _lib.lookupFunction<_LoadBytesC, _LoadBytesD>('sc_load_xlsx');
+    _saveXlsxFn = _lib.lookupFunction<_SaveBytesC, _SaveBytesD>('sc_save_xlsx');
+    _loadXlsFn = _lib.lookupFunction<_LoadBytesC, _LoadBytesD>('sc_load_xls');
+    _saveXlsFn = _lib.lookupFunction<_SaveBytesC, _SaveBytesD>('sc_save_xls');
+    _loadCsvFn = _lib.lookupFunction<_LoadBytesC, _LoadBytesD>('sc_load_csv');
+    _saveCsvFn = _lib.lookupFunction<_SaveBytesC, _SaveBytesD>('sc_save_csv');
+    _loadTsvFn = _lib.lookupFunction<_LoadBytesC, _LoadBytesD>('sc_load_tsv');
+    _saveTsvFn = _lib.lookupFunction<_SaveBytesC, _SaveBytesD>('sc_save_tsv');
+    _loadJsonFn = _lib.lookupFunction<_LoadBytesC, _LoadBytesD>('sc_load_json');
+    _saveJsonFn = _lib.lookupFunction<_SaveBytesC, _SaveBytesD>('sc_save_json');
+    _bytesFreeFn = _lib.lookupFunction<_BytesFreeC, _BytesFreeD>('sc_bytes_free');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -558,6 +607,74 @@ class SpreadsheetSession {
     }
   }
 
+  // ── File open / save — bytes in, bytes out ───────────────────────────
+  // Unlike every other call above, these carry RAW FILE BYTES: an .xlsx is a
+  // ZIP, an .xls an OLE2 file, and either may hold a NUL byte, so we must NOT
+  // route them through _toCString/_takeString (which stop at the first NUL).
+  // We hand the load a (buffer, length) pair, and copy the save's (ptr, length)
+  // out before freeing the engine's buffer with its own allocator.
+
+  /// Load [bytes] as a file of the given format, replacing the workbook via the
+  /// C ABI `fn` (one of sc_load_xlsx/xls/csv/tsv/json). Returns `true` if opened,
+  /// `false` if the bytes aren't a readable file of that format (the workbook is
+  /// left untouched — the engine validates before it mutates). Empty input is a
+  /// no-op `false`. The buffer goes through libc malloc/free like every other
+  /// string we pass INTO the engine, but is filled by raw byte copy (no NUL
+  /// terminator — the length is explicit).
+  bool _loadBytes(_LoadBytesD fn, Uint8List bytes) {
+    if (bytes.isEmpty) return false;
+    final buf = _malloc(bytes.length);
+    buf.asTypedList(bytes.length).setRange(0, bytes.length, bytes);
+    try {
+      return fn(_handle, buf, bytes.length) != 0;
+    } finally {
+      _freeCString(buf);
+    }
+  }
+
+  /// Serialize the workbook to the given format's file bytes via the C ABI `fn`
+  /// (one of sc_save_xlsx/xls/csv/tsv/json). Returns an empty list for an empty
+  /// document. The engine hands back a heap buffer as a (ptr, out_len) pair; we
+  /// COPY those bytes into a Dart-owned Uint8List before releasing the engine's
+  /// buffer with sc_bytes_free (its allocator — never libc free), so no engine
+  /// memory outlives this call. The out-length cell is a single native-word slot
+  /// we borrow from libc malloc.
+  Uint8List _saveBytes(_SaveBytesD fn) {
+    final lenPtr = _malloc(sizeOf<Size>()).cast<Size>();
+    try {
+      final ptr = fn(_handle, lenPtr);
+      final len = lenPtr.value;
+      if (ptr == nullptr || len == 0) {
+        if (ptr != nullptr) _bytesFreeFn(ptr, len);
+        return Uint8List(0);
+      }
+      final out = Uint8List.fromList(ptr.asTypedList(len)); // copy before free
+      _bytesFreeFn(ptr, len);
+      return out;
+    } finally {
+      _free(lenPtr.cast());
+    }
+  }
+
+  /// Open a real spreadsheet file the user picked, over the one engine. `.xlsx`
+  /// reloads live formulas; `.xls`/CSV/TSV/JSON are values-only. Each returns
+  /// `true` on success, `false` if the bytes aren't a readable file of that
+  /// format (the workbook is left untouched).
+  bool loadXlsx(Uint8List bytes) => _loadBytes(_loadXlsxFn, bytes);
+  bool loadXls(Uint8List bytes) => _loadBytes(_loadXlsFn, bytes);
+  bool loadCsv(Uint8List bytes) => _loadBytes(_loadCsvFn, bytes);
+  bool loadTsv(Uint8List bytes) => _loadBytes(_loadTsvFn, bytes);
+  bool loadJson(Uint8List bytes) => _loadBytes(_loadJsonFn, bytes);
+
+  /// Serialize the current document to a file's bytes in each format — what a
+  /// host writes to disk / hands to a download. An empty document yields an
+  /// empty list.
+  Uint8List saveXlsx() => _saveBytes(_saveXlsxFn);
+  Uint8List saveXls() => _saveBytes(_saveXlsFn);
+  Uint8List saveCsv() => _saveBytes(_saveCsvFn);
+  Uint8List saveTsv() => _saveBytes(_saveTsvFn);
+  Uint8List saveJson() => _saveBytes(_saveJsonFn);
+
   /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
   /// changed the document (the host then re-reads the viewport), `false` if there
   /// was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
@@ -901,6 +1018,59 @@ class InfiniteSheetModel {
   String saveBook() => _session.serialize();
   bool loadBook(String data) {
     final ok = _session.deserialize(data);
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
+    return ok;
+  }
+
+  /// The spreadsheet file formats the demo can open / save, in menu order. The
+  /// canonical extension doubles as the format key passed to [exportBytes] /
+  /// [importBytes].
+  static const List<String> fileFormats = ['xlsx', 'xls', 'csv', 'tsv', 'json'];
+
+  /// Export the whole workbook to a real spreadsheet file's bytes in [format]
+  /// (one of [fileFormats]) — the same bytes the web download and the native
+  /// hosts write. `.xlsx` keeps live formulas; the rest are values-only. An
+  /// unknown format or empty document yields an empty list.
+  Uint8List exportBytes(String format) {
+    switch (format) {
+      case 'xlsx':
+        return _session.saveXlsx();
+      case 'xls':
+        return _session.saveXls();
+      case 'csv':
+        return _session.saveCsv();
+      case 'tsv':
+        return _session.saveTsv();
+      case 'json':
+        return _session.saveJson();
+      default:
+        return Uint8List(0);
+    }
+  }
+
+  /// Import a real spreadsheet file's [bytes] of [format] (one of [fileFormats]),
+  /// replacing the workbook. Returns `false` (workbook untouched) if the bytes
+  /// aren't a readable file of that format or the format is unknown. On success
+  /// it regrows the extent and refreshes the formula bar so the view re-reads.
+  bool importBytes(String format, Uint8List bytes) {
+    final bool ok;
+    switch (format) {
+      case 'xlsx':
+        ok = _session.loadXlsx(bytes);
+      case 'xls':
+        ok = _session.loadXls(bytes);
+      case 'csv':
+        ok = _session.loadCsv(bytes);
+      case 'tsv':
+        ok = _session.loadTsv(bytes);
+      case 'json':
+        ok = _session.loadJson(bytes);
+      default:
+        ok = false;
+    }
     if (ok) {
       computeExtent();
       formula = _session.getRaw(infAddress);

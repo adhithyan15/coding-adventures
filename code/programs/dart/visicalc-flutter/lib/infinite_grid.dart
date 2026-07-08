@@ -27,6 +27,8 @@
 //   • body vertical scroll  → gutter.jumpTo(offset)   (gutter follows ↕)
 //   • body horizontal scroll → header.jumpTo(offset)  (header follows ↔)
 
+import 'dart:io' show Directory, File;
+
 import 'package:flutter/material.dart';
 import 'engine.dart';
 
@@ -88,6 +90,21 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   // this string to a file; the demo keeps the round trip self-contained.)
   String _savedSnapshot = '';
 
+  // The most recent File → Save / Open result, echoed in the status bar (e.g.
+  // "saved 4.2 KB → visicalc-demo.xlsx" / "opened visicalc-demo.csv"). Empty
+  // until the first file action.
+  String _fileMsg = '';
+
+  // A PRIVATE per-session scratch directory for the File → Save / Open demo,
+  // created lazily on first use with `createTemp` (mode 0700 on POSIX). Writing
+  // into our own freshly-made directory — rather than a fixed name in the shared,
+  // world-writable system temp root (/tmp, mode 1777) — avoids a local
+  // symlink-clobber on save and keeps the file from being world-readable, while
+  // still letting Open read back what Save wrote (it's a stable per-session dir).
+  Directory? _fileDir;
+  Directory get _scratchDir =>
+      _fileDir ??= Directory.systemTemp.createTempSync('visicalc-');
+
   @override
   void initState() {
     super.initState();
@@ -118,6 +135,10 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     _formulaFocus.dispose();
     _findCtrl.dispose();
     _replaceCtrl.dispose();
+    // Best-effort cleanup of the private scratch dir (the OS also reclaims temp).
+    try {
+      _fileDir?.deleteSync(recursive: true);
+    } catch (_) {/* already gone / racing OS cleanup — ignore */}
     _model.dispose();
     super.dispose();
   }
@@ -160,6 +181,43 @@ class _InfiniteGridState extends State<InfiniteGrid> {
       _formulaCtrl.text = _model.formula;
     });
   }
+
+  // ── File → Save / Open a REAL spreadsheet file on disk ────────────────
+  // Unlike the in-memory Save / Load above, these write and read an actual file
+  // — an .xlsx (a ZIP, keeping live formulas) or a .csv (text, values only) —
+  // proving the engine's file codecs cross dart:ffi as raw bytes. The demo uses
+  // a fixed path in the system temp dir (no plugin file picker); a production
+  // host would swap in an OS Save/Open dialog and hand the same bytes across.
+  String _demoPath(String ext) => '${_scratchDir.path}/visicalc-demo.$ext';
+
+  // Serialize the workbook to `format` bytes and write them to the demo path.
+  void _exportFile(String format, String ext) {
+    final bytes = _model.exportBytes(format);
+    final path = _demoPath(ext);
+    File(path).writeAsBytesSync(bytes);
+    final kb = (bytes.length / 1024).toStringAsFixed(1);
+    setState(() => _fileMsg = 'saved $kb KB → ${_baseName(path)}');
+  }
+
+  // Read the demo path's bytes back and open them as `format`, replacing the
+  // workbook. Reports "no <file> yet" if it was never saved, or "not a valid
+  // <ext>" if the engine rejects the bytes (the workbook is left untouched).
+  void _openFile(String format, String ext) {
+    final file = File(_demoPath(ext));
+    if (!file.existsSync()) {
+      setState(() => _fileMsg = 'no ${_baseName(file.path)} yet — Save first');
+      return;
+    }
+    final ok = _model.importBytes(format, file.readAsBytesSync());
+    setState(() {
+      _formulaCtrl.text = _model.formula;
+      _fileMsg = ok
+          ? 'opened ${_baseName(file.path)}'
+          : 'not a valid $ext file';
+    });
+  }
+
+  static String _baseName(String path) => path.split('/').last;
 
   // Undo / redo: walk the engine's snapshot history. On success the whole grid
   // re-reads and the formula bar re-syncs; the buttons disable at the history
@@ -438,11 +496,30 @@ class _InfiniteGridState extends State<InfiniteGrid> {
               'Paste the clipboard at the selected cell, shifting relative references',
               _paste),
           _toolSep(),
-          // ── File (save / load) ──
+          // ── File (save / load to memory) ──
           _toolButton('Save', 'Serialize the whole workbook to memory', _save),
           const SizedBox(width: 6),
           _toolButton('Load', 'Restore the workbook from the last save', _load,
               enabled: _savedSnapshot.isNotEmpty),
+          _toolSep(),
+          // ── File → open / save a REAL file on disk (over the engine's byte
+          //    codecs, across dart:ffi): an .xlsx (ZIP, live formulas) and a
+          //    .csv (text, values only). ──
+          _toolButton('Save .xlsx',
+              'Write the workbook to visicalc-demo.xlsx (a real ZIP; keeps live formulas)',
+              () => _exportFile('xlsx', 'xlsx')),
+          const SizedBox(width: 6),
+          _toolButton('Open .xlsx',
+              'Reopen visicalc-demo.xlsx over the engine (reloads live formulas)',
+              () => _openFile('xlsx', 'xlsx')),
+          const SizedBox(width: 6),
+          _toolButton('Save .csv',
+              'Write the workbook to visicalc-demo.csv (values only)',
+              () => _exportFile('csv', 'csv')),
+          const SizedBox(width: 6),
+          _toolButton('Open .csv',
+              'Reopen visicalc-demo.csv over the engine (values only)',
+              () => _openFile('csv', 'csv')),
           _toolSep(),
           // ── Structure (insert / delete the selected row or column) ──
           _toolButton('+ Row',
@@ -583,7 +660,8 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           padding: const EdgeInsets.fromLTRB(10, 6, 10, 10),
           child: Text(
             'Virtual grid: ${_model.totalRows} rows × ${_model.totalCols} cols'
-            '  ·  revision ${_model.revision}',
+            '  ·  revision ${_model.revision}'
+            '${_fileMsg.isEmpty ? '' : '  ·  $_fileMsg'}',
             style: const TextStyle(color: _cMuted, fontSize: 12, fontFamily: _mono),
           ),
         ),
