@@ -2181,6 +2181,26 @@ has a broken `match`. The grammar→typed-AST bridge that *builds* these nodes
 from `optional_chain_expression` is CLOC12.171 PR2 (closes gap-OptionalChain);
 the CodePrinter conformance port is PR3.
 
+### gap-OptionalChain — bridge declines optional chaining `a?.b` / `a?.[k]` / `a?.()` — **RESOLVED (javascript-parser 0.35.0, CLOC12.171 PR2)**
+
+Before PR2, `convert_optional_chain_expression` (and the sibling call/member
+chain converters) bailed with `UnsupportedSyntax` the moment any `?.` token
+appeared, so every optional chain dragged the whole file to WHITESPACE_ONLY.
+
+**Fix (CLOC12.171 PR2):** an env-gated parse-tree dump confirmed the grammar
+spells `?.` as its own token followed directly by the suffix — `?.` NAME (dot),
+`?.` `[` expr `]` (computed), `?.` `arguments` (call). The suffix walker gained
+a `?.` arm that builds `OptionalMemberExpression` / `OptionalCallExpression` for
+the marked link (a following non-optional suffix like the `.c` in `a?.b.c` stays
+an ordinary member/call whose object is the optional node), and the whole spine
+is wrapped once in a `ChainExpression` when any optional link appeared. A
+non-optional chain is returned bare. 5 bridge unit tests + the closurec
+`simple-optchain` e2e fixture (`f(a?.b, 1 + 2);` → `f(a?.b,3);`).
+
+**Remaining (safe) follow-up:** `f()?.x` — an optional link whose *base* is a
+call — routes through `convert_call_expression`, whose `?.` decline arm still
+falls back to WHITESPACE_ONLY (never a miscompile).
+
 ## CLOC12.170 — object spread `{...o}` via `ObjectMember`: structural node + emit + passes (PR1)
 
 Object literals now model **object spread** `{...o}` (ES2018) — the `...expr`

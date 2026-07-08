@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.35.0] - 2026-07-08
+
+### Added — CLOC12.171 PR2: bridge optional chaining `a?.b` / `a?.[k]` / `a?.()` (closes gap-OptionalChain)
+
+`convert_optional_chain_expression` now **builds** the optional-chain nodes that
+`javascript-ast` 0.30.0 added, instead of declining every `?.` to
+`UnsupportedSyntax` (which dragged the whole file to WHITESPACE_ONLY). A
+parse-tree dump confirmed the grammar spells `?.` as its own token directly
+followed by the suffix:
+
+```text
+  a?.b    → member_expr  Token("?.")  Token("b")            → OptionalMember (dot)
+  a?.[k]  → member_expr  Token("?.")  Token("[") expr "]"   → OptionalMember (computed)
+  a?.()   → member_expr  Token("?.")  Node(arguments)       → OptionalCall
+  a?.b.c  → member_expr  Token("?.")  Token("b") "." "c"    → only `b` optional
+```
+
+The suffix walker gained a `?.` arm that emits an `OptionalMemberExpression`
+(dot or computed) / `OptionalCallExpression` for the marked link; a non-optional
+suffix that follows (the `.c` in `a?.b.c`) stays an ordinary member/call whose
+object is the optional node. When any optional link appeared, the whole spine is
+wrapped once in a `ChainExpression` before returning; a chain with no optional
+link (`a.b.c`) is returned bare, exactly as before. 5 bridge unit tests.
+
+**Scope:** the primary optional-chain path — every `?.` whose base is a
+`member_expression` — routes through this function and is now supported. The two
+remaining `?.` decline arms (in `convert_call_expression` /
+`convert_member_expression`, reached only when the base is itself a *call*, e.g.
+`f()?.x`) still decline gracefully to WHITESPACE_ONLY — a safe follow-up, never
+a miscompile.
+
 ## [0.34.0] - 2026-07-07
 
 ### Added — CLOC12.170 PR2: bridge object spread `{...o}` → `ObjectMember::Spread` (closes gap-SpreadProperty)
