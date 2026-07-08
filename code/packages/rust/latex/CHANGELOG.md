@@ -2,6 +2,40 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.57.0] — 2026-07-08
+
+### Added — resolved-references-by-source report (LTXDOC03 S21)
+
+A **new** public method `Document::resolved_references_by_source(&self) -> String` that renders the
+**resolved (successfully-matched) `\ref`/`\eqref`/`\pageref` references grouped by their source `\ref`**
+— the exact structural mirror of S18's `unresolved_references_by_source` (which renders the *dangling*
+half of the same split), but for the references that **did** resolve to a real `\label`. It is a
+read-only view over `resolve_references()`: S3 splits every reference into the **resolved** ones
+(`resolved`, a `Vec<ResolvedRef>`) and the **unresolved** (dangling) ones (`unresolved`); S21 renders
+the `resolved` list. Every S1–S20 output is left **byte-for-byte unchanged**; S21 is purely additive and
+leaves the `to_latex()` round-trip fixed point intact.
+
+- **Command-aware, one line per resolved reference.** Each line is reconstructed from the ref's **own**
+  `command` and `key` as `format!("\\{}{{{}}}", r.command, r.key)`, so a resolved `\eqref{eq:main}`
+  renders `\eqref{eq:main}` and a resolved `\pageref{sec:intro}` renders `\pageref{sec:intro}` — the
+  command is **never** hard-coded to `\ref`. No source slicing at all (matching S13
+  `resolve_namerefs`, S15 `citations_by_source`, S17/S18's reports).
+- **First-appearance grouping, source order.** Entries are grouped by their shared `ref_span` into a
+  `Vec<(Span, Vec<&ResolvedRef>)>` (not a hash map) preserving first-appearance order — the same
+  grouping idiom as S18. Each reference takes exactly one key, so every group emits one line.
+- **Dangling refs excluded by construction.** A `\ref{nope}` with no `\label` lives in `unresolved`
+  (S18), never in `resolved`, so it never appears here.
+- **Stable empty marker.** No resolved references (every ref dangles, or none at all) → the fixed string
+  `(no resolved references)`, never `""` (the same discipline S12–S20 use). Lines are joined by `\n`
+  with **no** trailing newline.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single pass
+  over the already-bounded `resolved`. Borrows `self` immutably and returns owned `String`.
+
+Tests: `s21_preserves_command_ref_eqref_pageref`, `s21_no_references_returns_marker`,
+`s21_only_dangling_returns_marker`, `s21_mixed_lists_only_resolved`, and an additivity test
+`s21_is_additive_leaves_s1_s20_outputs_unchanged` pinning S1–S20 outputs (including
+`duplicate_label_definitions`) byte-for-byte alongside the new method.
+
 ## [0.56.0] — 2026-07-07
 
 ### Added — losing duplicate-`\label` report (LTXDOC03 S20)

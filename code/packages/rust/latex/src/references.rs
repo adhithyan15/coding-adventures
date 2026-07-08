@@ -2097,6 +2097,105 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **resolved (successfully-matched) references grouped by their source `\ref`** (LTXDOC03
+    /// S21) — the exact structural mirror of S18's
+    /// [`unresolved_references_by_source`](Document::unresolved_references_by_source), but for the
+    /// references that **did** resolve: one reconstructed `\<command>{key}` line per resolved
+    /// reference, **command-aware** so `\eqref` and `\pageref` render as themselves.
+    ///
+    /// ## What it does
+    ///
+    /// S3's [`Document::resolve_references`] walks every `\ref`/`\eqref`/`\pageref` in body pre-order
+    /// and splits them into the **resolved** references (those a `\label` defines — recorded in
+    /// [`ReferenceResolution::resolved`] as a [`ResolvedRef`]) and the **unresolved** references
+    /// (LaTeX's *"Reference `key' undefined"*, the `??` in the output). S18 reports the *dangling*
+    /// half of that split; S21 reports the **winning** half — the references that bound to a real
+    /// `\label`. Each [`ResolvedRef`] carries the `key`, the `command` that was used (`"ref"` /
+    /// `"eqref"` / `"pageref"`), and its own `ref_span` (plus the `target_span`/`target_kind` of the
+    /// definition it bound to, which S21 does not need to render). S21 reconstructs each resolved
+    /// reference on **its own line**, preserving the command it was written with, so a caller can
+    /// point at the exact matched `\eqref{…}` rather than a flattened `\ref`-shaped list.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read [`ReferenceResolution::resolved`] and group its entries by their shared `ref_span`,
+    /// preserving the **first-appearance order** of the ref_spans (source order of the references) —
+    /// a `Vec` of `(ref_span, refs)`, **not** a hash map, so the order is deterministic and the code
+    /// reads identically to S18's grouping. As in S18, a `\ref`/`\eqref`/`\pageref` takes exactly
+    /// **one** key, so every group holds a single entry — the structural mirror is kept for
+    /// readability, but each group emits exactly one line.
+    ///
+    /// One line per resolved reference: `\` + that reference's own `command` + `{` + its `key` + `}`,
+    /// reconstructed from the owned `command`/`key` `String`s (no source slicing, matching S13's
+    /// `resolve_namerefs`, S15's `citations_by_source`, S17's `unresolved_citations_by_source`, and
+    /// S18's `unresolved_references_by_source`). Because the line is rebuilt from the ref's **own**
+    /// `command`, a resolved `\eqref{eq:main}` renders `\eqref{eq:main}` and a resolved
+    /// `\pageref{sec:intro}` renders `\pageref{sec:intro}` — the command is **never** hard-coded to
+    /// `\ref`. Dangling references never entered `resolved`, so they are excluded by construction (a
+    /// `\ref{nope}` with no `\label` appears in S18, not here).
+    ///
+    /// A document with **no** resolved references — every reference dangles, or there are none at all
+    /// — returns the fixed marker `(no resolved references)`, never the empty string (the same
+    /// stable-marker discipline S12/S13/S14/S15/S16/S17/S18/S19/S20 use). Lines are joined by `\n`
+    /// with **no** trailing newline (matching S15's `citations_by_source` and S18's
+    /// `unresolved_references_by_source`).
+    ///
+    /// Concretely, for a body defining `\label{sec:intro}` and `\label{eq:main}` and then writing
+    /// `\ref{sec:intro}`, `\eqref{eq:main}`, and `\pageref{sec:intro}` (all of which resolve):
+    ///
+    /// ```text
+    /// \ref{sec:intro}
+    /// \eqref{eq:main}
+    /// \pageref{sec:intro}
+    /// ```
+    ///
+    /// Each line preserves the command it was written with, one resolved reference per line, in
+    /// source order.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S21 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1-S20 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// `command` and `key` are already owned `String`s); a single pass over the already-bounded
+    /// `resolved` list. Borrows `self` immutably and returns owned `String` data, so the result
+    /// outlives any borrow of the source.
+    pub fn resolved_references_by_source(&self) -> String {
+        // S3 already split every `\ref`/`\eqref`/`\pageref` into resolved and dangling entries, routing
+        // the resolved ones into `resolved` (in body pre-order), each carrying its own `command`,
+        // `key`, and `ref_span`. We only read that list.
+        let resolution = self.resolve_references();
+
+        // Group the resolved references by their shared `ref_span`, preserving the FIRST-APPEARANCE
+        // order of the ref_spans (source order of the references). A `Vec` of `(ref_span, refs)` — not a
+        // hash map — keeps that order deterministic and mirrors S18's grouping idiom exactly. Unlike a
+        // multi-key `\cite`, each reference takes exactly one key, so every group holds a single entry;
+        // the structural mirror is kept only so this code reads identically to S18.
+        let mut groups: Vec<(Span, Vec<&ResolvedRef>)> = Vec::new();
+        for r in &resolution.resolved {
+            match groups.iter_mut().find(|(span, _)| *span == r.ref_span) {
+                Some((_, refs)) => refs.push(r),
+                None => groups.push((r.ref_span, vec![r])),
+            }
+        }
+
+        if groups.is_empty() {
+            // Every reference dangled (or there were none) → the fixed marker, never the empty string.
+            return "(no resolved references)".to_string();
+        }
+
+        // One line per resolved reference, reconstructed from its OWN command and key: `\<command>{key}`.
+        // We iterate each group's single entry so `\eqref` / `\pageref` render as themselves rather than
+        // all being flattened to `\ref`.
+        groups
+            .iter()
+            .flat_map(|(_, refs)| refs.iter().map(|r| format!("\\{}{{{}}}", r.command, r.key)))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -5121,5 +5220,135 @@ See Section~\ref{sec:intro}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig
 
         // And S20 itself surfaces only the losing later `\label{dup}` (the first `dup` wins).
         assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S21 — resolved (successfully-matched) references grouped by source `\ref`
+    // (`resolved_references_by_source`). The RESOLVED mirror of S18, command-aware.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s21_preserves_command_ref_eqref_pageref() {
+        // A resolved `\ref`, `\eqref`, and `\pageref` (each bound to a real `\label`) → each line
+        // preserves the command it was written with (NOT flattened to `\ref`), one per line, in source
+        // order. This is the command-aware core of S21.
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+See \ref{sec:intro} and \eqref{eq:main} and \pageref{sec:intro}.
+\begin{equation}\label{eq:main}x=1\end{equation}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:main}\n\\pageref{sec:intro}"
+        );
+    }
+
+    #[test]
+    fn s21_no_references_returns_marker() {
+        // A document with no references at all → the fixed `(no resolved references)` marker, never the
+        // empty string.
+        let src = r"\begin{document}
+Just some text with no references.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "(no resolved references)"
+        );
+    }
+
+    #[test]
+    fn s21_only_dangling_returns_marker() {
+        // A document whose ONLY reference dangles (`\ref{nope}` with no `\label`) has zero resolved
+        // references → the fixed marker, never the empty string. The dangling ref lives in S18, not here.
+        let src = r"\begin{document}
+See \ref{nope}.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "(no resolved references)"
+        );
+    }
+
+    #[test]
+    fn s21_mixed_lists_only_resolved() {
+        // A doc mixing a resolved `\ref{sec:intro}` with a dangling `\ref{nope}` → S21 lists ONLY the
+        // resolved one; the dangling `\ref{nope}` must NOT appear (it is excluded by construction).
+        let src = r"\begin{document}\section{Intro}\label{sec:intro}
+See \ref{sec:intro} and also \ref{nope}.
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_references_by_source(), "\\ref{sec:intro}");
+    }
+
+    #[test]
+    fn s21_is_additive_leaves_s1_s20_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a resolved `\ref`, a
+        // `\nameref`, two `\cite`s (one multi-key, one dangling key), a duplicate `\bibitem`, a
+        // dangling `\eqref` (`eq:ghost`), a duplicate `\label{dup}`, AND a resolved `\eqref{eq:e}`,
+        // S21 changes NONE of the S1-S20 outputs — it only reads `resolve_references`. This also pins
+        // the `\n`-join with no trailing newline on the multi-ref S21 case.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — the resolved `\eqref{eq:e}` (Equation (1)) now appears alongside the
+        // resolved `\ref`; the dangling `eq:ghost` stays in the footer. S6's content is a function of
+        // the same resolution S21 reads, so this string is what S6 already produces for this doc —
+        // running S21 does not perturb it.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\eqref{eq:e} -> Equation (1)\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — the resolved `\eqref{eq:e}` shows under Equations.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\nEquations:\n  \\eqref{eq:e} -> Equation (1)"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+        // S18 grouped dangling refs — unchanged (only the dangling `\eqref{eq:ghost}`).
+        assert_eq!(doc.unresolved_references_by_source(), "\\eqref{eq:ghost}");
+        // S19 numbered winning bibliography — unchanged.
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+        // S20 losing duplicate labels — unchanged.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+
+        // And S21 itself surfaces only the RESOLVED references: the `\ref{sec:intro}` and the
+        // `\eqref{eq:e}` (command preserved), in source order, `\n`-joined with no trailing newline.
+        // The dangling `\eqref{eq:ghost}` is excluded (it lives in S18).
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
     }
 }
