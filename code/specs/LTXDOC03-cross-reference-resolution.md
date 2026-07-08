@@ -1676,3 +1676,75 @@ that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`, `resolve_namere
 strings). All prior S1–S19 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings`
 clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex
 --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 27. S21 — resolved references grouped by source `\ref` (`resolved_references_by_source`)
+
+### 27.1 Motivation
+
+S3's `resolve_references` returns `resolved: Vec<ResolvedRef>` — every `\ref`/`\eqref`/`\pageref` that
+bound to a real `\label`, one row per resolved reference, in body pre-order. S18
+(`unresolved_references_by_source`) already renders the **dangling** half of that split — the references
+that matched no `\label`, LaTeX's *"Reference `key' undefined"* — as one command-aware `\<command>{key}`
+line each. But the **resolved** half — the references that *did* match — had no by-source renderer: S6
+reports the flat *"Dangling references"* footer, S18 the dangling per-line view, but nothing renders the
+successfully-matched references on their own lines with their commands preserved. S21 fills that cell by
+rendering `resolved` as the resolved-reference report, the exact RESOLVED mirror of S18's dangling view.
+
+### 27.2 Why a new method — additive by construction
+
+S21 adds a **new public method** `Document::resolved_references_by_source(&self) -> String`. It is a pure,
+read-only render of `resolve_references().resolved`. It reuses that table verbatim (never re-walking the
+body or re-resolving references), so the report can never drift from the S3 resolution it summarises. It
+mutates nothing and changes no S1–S20 output — including `to_latex()`'s round-trip fixed point —
+byte-for-byte. Like S11–S20 it is a method the caller invokes directly.
+
+### 27.3 The exact rendering contract — `Document::resolved_references_by_source(&self) -> String`
+
+- Read `resolve_references().resolved` and group its entries by their shared `ref_span`, preserving the
+  **first-appearance order** of the ref_spans (source order of the references) — a `Vec` of
+  `(ref_span, refs)`, **not** a hash map, so the order is deterministic and the code reads identically to
+  S18's grouping. A `\ref`/`\eqref`/`\pageref` takes exactly **one** key, so every group holds a single
+  entry and emits exactly one line.
+- One line per resolved reference: `format!("\\{}{{{}}}", r.command, r.key)` → `\` + the reference's own
+  `command` + `{` + its `key` + `}`. Reconstructed from the owned `command`/`key` `String`s rather than
+  sliced from `&src[span]` (matching S13 `resolve_namerefs`, S15 `citations_by_source`, and S17/S18's
+  reports), so the render needs no source borrow and can never index out of bounds. Because the line is
+  rebuilt from the ref's **own** `command`, a resolved `\eqref{eq:main}` renders `\eqref{eq:main}` and a
+  resolved `\pageref{sec:intro}` renders `\pageref{sec:intro}` — the command is **never** hard-coded to
+  `\ref`. Dangling references never entered `resolved`, so they are excluded by construction (a
+  `\ref{nope}` with no `\label` appears in S18, not here).
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S20 renderer).
+- If there are **no** resolved references (every reference dangles, or none at all), the fixed marker
+  `(no resolved references)` is returned, so the output is never the empty string.
+
+Example (body defining `\label{sec:intro}` and `\label{eq:main}`, then writing `\ref{sec:intro}`,
+`\eqref{eq:main}`, `\pageref{sec:intro}`, and a dangling `\ref{nope}`):
+
+```text
+\ref{sec:intro}
+\eqref{eq:main}
+\pageref{sec:intro}
+```
+
+each resolved reference on its own line, command preserved, in source order; the dangling `\ref{nope}` is
+excluded (it lives in S18). This is the RESOLVED mirror of S18's dangling `\<command>{key}` view.
+
+### 27.4 Public API (added in S21)
+
+One new method: `Document::resolved_references_by_source(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_references` and every S1–S20 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 27.5 Verification (S21)
+
+`cargo test -p latex` green (5 new S21 tests: a resolved `\ref`+`\eqref`+`\pageref` rendering each as its
+own command-aware line in source order; a doc with no references returning the `(no resolved references)`
+marker; a doc whose only reference dangles returning the same marker; a mixed doc listing only the
+resolved reference and excluding the dangling `\ref{nope}`; and an additivity check that `to_plain_text`,
+`to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`, `citations_by_source`,
+`duplicate_bibliography_entries`, `unresolved_citations_by_source`, `unresolved_references_by_source`,
+`bibliography_entries`, and `duplicate_label_definitions` all still produce their exact prior strings,
+which also pins the `\n`-join with no trailing newline on a multi-ref case). All prior S1–S20 tests pass
+unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang
+-p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`, no grammar
+regen, no new dependencies.
