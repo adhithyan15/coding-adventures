@@ -1,5 +1,20 @@
 # Changelog — regex-engine
 
+## 0.3.1 — Unreleased
+
+Adds the small `escape` helper engram-core's glob/search-pattern builder needs,
+completing the API surface for Phase D2 (pointing engram-core's boolean search
+at this engine).
+
+### Added
+
+- `regex_engine::escape(text) -> String` — escapes every regular-expression
+  metacharacter so `text` matches literally. Mirrors `regex::escape` (same
+  metacharacter set as `regex-syntax`), so an interleaved glob source built from
+  escaped literals plus `*`/`_` wildcard fragments is byte-identical whether the
+  old (`regex`) or new (`regex_engine`) path builds it. Unit-tested for
+  metacharacter neutralization and literal round-trip.
+
 ## 0.3.0 — Unreleased
 
 Adds **Unicode simple case folding** to `(?i)` matching — the last engine

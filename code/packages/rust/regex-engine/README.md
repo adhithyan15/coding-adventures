@@ -36,11 +36,17 @@ extents (`find`/`captures`/`replace_all`) are a planned addition.
 ## Usage
 
 ```rust
-use regex_engine::{Regex, RegexBuilder};
+use regex_engine::{escape, Regex, RegexBuilder};
 
 assert!(Regex::new(r"\bcat\b").unwrap().is_match("the cat sat"));
 let ci = RegexBuilder::new("hello").case_insensitive(true).build().unwrap();
 assert!(ci.is_match("HELLO"));
+
+// `escape` neutralizes metacharacters so a string matches literally — used when
+// building a pattern that interleaves user text with wildcard fragments.
+assert_eq!(escape("a.c"), r"a\.c");
+assert!(Regex::new(&escape("a.c")).unwrap().is_match("a.c"));
+assert!(!Regex::new(&escape("a.c")).unwrap().is_match("axc"));
 ```
 
 ## Fidelity

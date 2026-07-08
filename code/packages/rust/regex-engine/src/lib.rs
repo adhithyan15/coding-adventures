@@ -86,6 +86,47 @@ impl Regex {
     }
 }
 
+/// Escape every regular-expression metacharacter in `text`, returning a pattern
+/// that matches `text` literally. Mirrors `regex::escape` (same metacharacter
+/// set as `regex-syntax`), so a glob/search-pattern builder that interleaves
+/// escaped literals with wildcard fragments produces the same source string.
+pub fn escape(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        if is_meta_character(c) {
+            out.push('\\');
+        }
+        out.push(c);
+    }
+    out
+}
+
+/// The regex metacharacters `escape` guards, matching `regex-syntax`'s
+/// `is_meta_character`. Escaping any of these makes it a literal; the parser
+/// treats `\<char>` as a literal for all of them.
+fn is_meta_character(c: char) -> bool {
+    matches!(
+        c,
+        '\\' | '.'
+            | '+'
+            | '*'
+            | '?'
+            | '('
+            | ')'
+            | '|'
+            | '['
+            | ']'
+            | '{'
+            | '}'
+            | '^'
+            | '$'
+            | '#'
+            | '&'
+            | '-'
+            | '~'
+    )
+}
+
 /// A builder for a [`Regex`] with configurable flags, mirroring the small part
 /// of `regex::RegexBuilder` that Engram uses.
 pub struct RegexBuilder<'a> {
@@ -137,6 +178,21 @@ impl<'a> RegexBuilder<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn escape_neutralizes_metacharacters_and_round_trips() {
+        // Every escaped metacharacter becomes a literal, so the escaped string
+        // matches itself exactly and matches nothing broader.
+        let raw = r"a.b*c+d?(e)|[f]{g}^h$#&-~i\j";
+        let escaped = escape(raw);
+        let re = Regex::new(&escaped).unwrap();
+        assert!(re.is_match(raw), "escaped pattern must match its own literal");
+        // `.` is escaped, so it must NOT act as a wildcard.
+        assert!(!Regex::new(&escape("a.c")).unwrap().is_match("axc"));
+        assert!(Regex::new(&escape("a.c")).unwrap().is_match("a.c"));
+        // A metacharacter-free string is returned unchanged.
+        assert_eq!(escape("hello world 123"), "hello world 123");
+    }
 
     #[test]
     fn literals_and_dot() {
