@@ -29,9 +29,9 @@
 //! Character classes and `\b` are **Unicode-aware by default** (matching the
 //! `regex` crate), backed by generated tables in [`unicode_tables`]; `(?-u)`
 //! selects the ASCII sets. `(?i)` uses Unicode simple case folding. Boolean
-//! matching ([`Regex::is_match`]) and the overall match *extent* ([`Regex::find`])
-//! are implemented; capture groups and `replace_all` build on `find` in later
-//! changes.
+//! matching ([`Regex::is_match`]), the overall match *extent* ([`Regex::find`]),
+//! and capture groups ([`Regex::captures`]) are implemented; `replace_all` builds
+//! on them in a later change.
 
 mod ast;
 mod casefold;
@@ -108,6 +108,59 @@ impl Regex {
         self.program
             .find_from(&input, 0)
             .map(|(start, end)| Match { text, start, end })
+    }
+
+    /// The leftmost match in `text` with its capture groups, or `None`.
+    ///
+    /// [`Captures::get(0)`](Captures::get) is the overall match (same extent as
+    /// [`find`](Self::find)); `get(i)` for `i ≥ 1` is the `i`-th capturing group
+    /// `(…)`, or `None` if that group did not participate in the match. Capture
+    /// boundaries use the `regex` crate's leftmost-first Pike-VM semantics, so on
+    /// the patterns Engram builds (`re:`, whole-word, and the media-tag regex — no
+    /// nested lazy-nullable groups) they agree with `regex` byte-for-byte.
+    ///
+    /// A pattern with more than 1000 capturing groups is rejected at
+    /// [`RegexBuilder::build`] time (a DoS guard on per-thread slot state).
+    pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
+        let input = Input::new(text);
+        self.program
+            .captures_from(&input, 0)
+            .map(|slots| Captures { text, slots })
+    }
+}
+
+/// The capture groups of a single match. Slot pairs index into the searched text
+/// by **byte** offset: group `i` spans `slots[2i]..slots[2i+1]` (each `Option`
+/// because a group may not participate). Group `0` is the overall match.
+#[derive(Debug, Clone)]
+pub struct Captures<'t> {
+    text: &'t str,
+    slots: Vec<Option<usize>>,
+}
+
+impl<'t> Captures<'t> {
+    /// The `i`-th capture group's match (`0` = the overall match), or `None` if
+    /// the group index is out of range or the group did not participate.
+    pub fn get(&self, i: usize) -> Option<Match<'t>> {
+        let start = (*self.slots.get(2 * i)?)?;
+        let end = (*self.slots.get(2 * i + 1)?)?;
+        Some(Match {
+            text: self.text,
+            start,
+            end,
+        })
+    }
+
+    /// The number of capture groups, **including** the overall match at index 0
+    /// (so this is always ≥ 1). Mirrors `regex::Captures::len`.
+    pub fn len(&self) -> usize {
+        self.slots.len() / 2
+    }
+
+    /// Always `false` — a `Captures` always has at least the overall match (group
+    /// 0). Present so `len` has its conventional companion.
+    pub fn is_empty(&self) -> bool {
+        self.slots.is_empty()
     }
 }
 
@@ -243,7 +296,10 @@ mod tests {
         let raw = r"a.b*c+d?(e)|[f]{g}^h$#&-~i\j";
         let escaped = escape(raw);
         let re = Regex::new(&escaped).unwrap();
-        assert!(re.is_match(raw), "escaped pattern must match its own literal");
+        assert!(
+            re.is_match(raw),
+            "escaped pattern must match its own literal"
+        );
         // `.` is escaped, so it must NOT act as a wildcard.
         assert!(!Regex::new(&escape("a.c")).unwrap().is_match("axc"));
         assert!(Regex::new(&escape("a.c")).unwrap().is_match("a.c"));
@@ -252,7 +308,70 @@ mod tests {
     }
 
     fn find_span(pat: &str, text: &str) -> Option<(usize, usize)> {
-        Regex::new(pat).unwrap().find(text).map(|m| (m.start(), m.end()))
+        Regex::new(pat)
+            .unwrap()
+            .find(text)
+            .map(|m| (m.start(), m.end()))
+    }
+
+    fn group_spans(pat: &str, text: &str) -> Vec<Option<(usize, usize)>> {
+        let re = Regex::new(pat).unwrap();
+        let caps = re.captures(text).unwrap();
+        (0..caps.len())
+            .map(|i| caps.get(i).map(|m| (m.start(), m.end())))
+            .collect()
+    }
+
+    #[test]
+    fn captures_reports_group_boundaries() {
+        // Overall match + one group.
+        assert_eq!(
+            group_spans(r"(\d+)-(\d+)", "x12-345y"),
+            vec![Some((1, 7)), Some((1, 3)), Some((4, 7))]
+        );
+        // A non-participating alternation branch is `None`.
+        let caps = Regex::new(r"(a)|(b)").unwrap().captures("b").unwrap();
+        assert_eq!(caps.get(0).map(|m| m.as_str()), Some("b"));
+        assert_eq!(caps.get(1), None); // (a) did not participate
+        assert_eq!(caps.get(2).map(|m| m.as_str()), Some("b"));
+        // No match ⇒ None.
+        assert!(Regex::new(r"(z)").unwrap().captures("abc").is_none());
+    }
+
+    #[test]
+    fn captures_noncapturing_group_has_no_slot() {
+        let caps = Regex::new(r"(?:ab)+(c)")
+            .unwrap()
+            .captures("ababc")
+            .unwrap();
+        assert_eq!(caps.len(), 2); // group 0 + the one capturing group
+        assert_eq!(caps.get(1).map(|m| m.as_str()), Some("c"));
+    }
+
+    #[test]
+    fn captures_last_iteration_wins_in_repeat() {
+        // A quantified group captures its last iteration (matching `regex`).
+        let caps = Regex::new(r"(\d)+").unwrap().captures("789").unwrap();
+        assert_eq!(caps.get(0).map(|m| m.as_str()), Some("789"));
+        assert_eq!(caps.get(1).map(|m| m.as_str()), Some("9"));
+    }
+
+    #[test]
+    fn captures_media_pattern_shape() {
+        // The shape of Engram's media-tag regex: disjoint quoted alternatives.
+        let re = Regex::new(r#"<img src=(?:"([^"]+)"|'([^']+)')>"#).unwrap();
+        let caps = re.captures(r#"<img src="a.png">"#).unwrap();
+        assert_eq!(caps.get(1).map(|m| m.as_str()), Some("a.png"));
+        assert_eq!(caps.get(2), None);
+        let caps = re.captures(r#"<img src='b.gif'>"#).unwrap();
+        assert_eq!(caps.get(1), None);
+        assert_eq!(caps.get(2).map(|m| m.as_str()), Some("b.gif"));
+    }
+
+    #[test]
+    fn too_many_groups_is_rejected() {
+        let pat = "()".repeat(1001);
+        assert!(Regex::new(&pat).is_err());
     }
 
     #[test]
@@ -260,7 +379,7 @@ mod tests {
         // Leftmost start, greedy end.
         assert_eq!(find_span("a+", "xaaay"), Some((1, 4)));
         assert_eq!(find_span("a+", "xaay aaaa"), Some((1, 3))); // leftmost, not longest-overall
-        // as_str reflects the span.
+                                                                // as_str reflects the span.
         let re = Regex::new(r"\d+").unwrap();
         assert_eq!(re.find("abc123def").unwrap().as_str(), "123");
         // No match.
