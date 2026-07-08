@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.35.1] - 2026-07-08
+
+### Added — CLOC12.171 PR3: CodePrinter optional-chaining `a?.b` / `a?.[k]` / `a?.()` conformance port
+
+Ports upstream `CodePrinterTest`'s optional-chaining printing cases into
+`tests/upstream/code_printer_optional_chain_test.rs` (the twenty-fourth
+CodePrinter port), isolating `emit_optional_member` / `emit_optional_call` /
+`emit_chain` (which landed with CLOC12.171 PR1). 7 hand-constructed-AST cases
+cover the two forces that drive the printing: (1) each link keeps its own
+optionality — only the `?.`-marked link prints `?.`, so `a?.b.c` prints a PLAIN
+`.c` (and the transparent `ChainExpression` wrapper adds no syntax); and (2) the
+object/callee binds at `PREC_PRIMARY` — a looser object keeps its parens
+(`(a||b)?.c`) and a looser sequence call argument wraps (`a?.((b,c))`). Emitter
+code unchanged — test-only conformance port. (CLOC12.171)
+
 ## [0.35.0] - 2026-07-08
 
 ### Added — CLOC12.171 PR1: print optional chaining `a?.b` / `a?.[k]` / `a?.()`
