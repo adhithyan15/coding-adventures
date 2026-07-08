@@ -736,6 +736,10 @@ pub fn lower_iir_to_llvm(
     // the declare is simply unused (a declare with no call site is legal LLVM and
     // creates no undefined-symbol reference at link time).
     let mut used_str_concat = false;
+    // E4-dyn runtime string equality over non-literal operands lowers to a call to
+    // `@__twig_str_eq`. Set whenever any `str_eq` op appears; an unused declare is
+    // legal LLVM (same rationale as `used_str_concat`).
+    let mut used_str_eq = false;
     // LANG-FULL E8: the `real_to_int_*` conversions need `@llvm.trap` (the
     // out-of-range trap) plus the `@llvm.floor.f64`/`@llvm.trunc.f64` rounding
     // intrinsics. `is_conversion` covers int_to_real / real_to_int_{trunc,floor}.
@@ -771,6 +775,9 @@ pub fn lower_iir_to_llvm(
             }
             if i.op == "str_concat" {
                 used_str_concat = true;
+            }
+            if i.op == "str_eq" {
+                used_str_eq = true;
             }
             if interpreter_ir::opcodes::is_conversion(&i.op) {
                 used_conversions = true;
@@ -841,7 +848,7 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat {
+        || used_input_i64 || used_input_str || used_str_concat || used_str_eq {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
@@ -883,6 +890,12 @@ pub fn lower_iir_to_llvm(
             // operands' `[i64 len][bytes]` headers and returns an i64 handle to a fresh
             // joined block. Used when `str_concat` has a non-literal (runtime) operand.
             out.push_str("declare i64 @__twig_str_concat(i64, i64)\n");
+        }
+        if used_str_eq {
+            // `@__twig_str_eq` (E4-dyn) is provided by `twig_runtime.c`: compares both
+            // operands' `[i64 len][bytes]` headers then `memcmp`s the bytes, returning
+            // 1/0. Used when `str_eq` has a non-literal (runtime) operand.
+            out.push_str("declare i64 @__twig_str_eq(i64, i64)\n");
         }
     }
     if !used_lispy.is_empty() {
@@ -1717,7 +1730,7 @@ fn lower_instr(
         "str_slice" => lower_str_slice(instr, state, out),
         "str_index" => lower_str_index(instr, state, out),
         "str_len" => lower_str_len(instr, state, out),
-        "str_eq" => lower_str_eq(instr, state),
+        "str_eq" => lower_str_eq(instr, state, out),
         "str_cmp" => lower_str_cmp(instr, state),
         "print_str" => lower_print_str(instr, state, out),
 
@@ -2072,10 +2085,11 @@ fn lower_str_index(
 fn lower_str_eq(
     instr: &IIRInstr,
     state: &mut FnState,
+    out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_eq", state.fn_name)?.to_string();
     let left = match instr.srcs.first() {
-        Some(Operand::Var(s)) => s,
+        Some(Operand::Var(s)) => s.clone(),
         _ => {
             return Err(IIRLlvmError::InvalidOperand {
                 function: state.fn_name.into(),
@@ -2084,7 +2098,7 @@ fn lower_str_eq(
         }
     };
     let right = match instr.srcs.get(1) {
-        Some(Operand::Var(s)) => s,
+        Some(Operand::Var(s)) => s.clone(),
         _ => {
             return Err(IIRLlvmError::InvalidOperand {
                 function: state.fn_name.into(),
@@ -2092,19 +2106,47 @@ fn lower_str_eq(
             });
         }
     };
-    let left_value = state.str_values.get(left).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
-            function: state.fn_name.into(),
-            detail: format!("str_eq left source {left:?} is not a string literal value"),
-        }
+
+    // Literal fast path: BOTH operands are compile-time string VALUES, so the
+    // comparison folds to a constant 1/0 with no runtime call.
+    if let (Some(lv), Some(rv)) =
+        (state.str_values.get(&left).cloned(), state.str_values.get(&right).cloned())
+    {
+        state.env.insert(dest, if lv == rv { "1" } else { "0" }.into());
+        return Ok(());
+    }
+
+    // E4-dyn runtime path: at least one operand is a runtime string handle (a param,
+    // call result, branch-selected string, or `str_concat`/`str_slice` result). Both
+    // must be i64 handles for `@__twig_str_eq(a, b)`, which reads the `[i64 len][bytes]`
+    // headers and `memcmp`s. Each operand resolves to `env[op]`, which is either a
+    // literal's GLOBAL POINTER (`@__twig_str_N` — convert with `ptrtoint`) or an i64
+    // handle already (param / call-result / concat-result). Returns i64 1/0.
+    let lop = state.env.get(&left).cloned().ok_or_else(|| IIRLlvmError::UndefinedVariable {
+        function: state.fn_name.into(),
+        name: left.clone(),
     })?;
-    let right_value = state.str_values.get(right).ok_or_else(|| {
-        IIRLlvmError::InvalidOperand {
-            function: state.fn_name.into(),
-            detail: format!("str_eq right source {right:?} is not a string literal value"),
-        }
+    let lh = if lop.starts_with('@') {
+        let h = state.fresh("seqh");
+        out.push_str(&format!("  {h} = ptrtoint ptr {lop} to i64\n"));
+        h
+    } else {
+        lop
+    };
+    let rop = state.env.get(&right).cloned().ok_or_else(|| IIRLlvmError::UndefinedVariable {
+        function: state.fn_name.into(),
+        name: right.clone(),
     })?;
-    state.env.insert(dest, if left_value == right_value { "1" } else { "0" }.into());
+    let rh = if rop.starts_with('@') {
+        let h = state.fresh("seqh");
+        out.push_str(&format!("  {h} = ptrtoint ptr {rop} to i64\n"));
+        h
+    } else {
+        rop
+    };
+    let res = state.fresh("seq");
+    out.push_str(&format!("  {res} = call i64 @__twig_str_eq(i64 {lh}, i64 {rh})\n"));
+    state.env.insert(dest, res);
     Ok(())
 }
 

@@ -2370,3 +2370,26 @@ fn str_literal_call_arg_is_ptrtoint_to_i64() {
     assert!(!ll.contains("@strlen(i64 @__twig_str"),
         "the global pointer must NOT be passed directly in an i64 arg slot; got:\n{ll}");
 }
+
+/// LANG-FULL tail — `str_eq` over runtime string PARAMETERS lowers to a call to the
+/// archive helper `@__twig_str_eq(i64, i64)` (not a compile-time fold). Regression for
+/// the Twig cell `(define (same a b) (if (string=? a b) 42 0)) (same "OK" (...))`,
+/// where `lower_str_eq` previously errored on the params `a`/`b` (not literals).
+#[test]
+fn str_eq_over_params_calls_twig_str_eq() {
+    let same = IIRFunction::new(
+        "same",
+        vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+        "i64",
+        vec![
+            IIRInstr::new("str_eq", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(same));
+    assert!(ll.contains("call i64 @__twig_str_eq(i64 %a, i64 %b)"),
+        "str_eq over params must call the runtime helper; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__twig_str_eq(i64, i64)"),
+        "the @__twig_str_eq extern must be declared; got:\n{ll}");
+}
