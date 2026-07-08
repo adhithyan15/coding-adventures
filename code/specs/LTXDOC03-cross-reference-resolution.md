@@ -1300,3 +1300,82 @@ all-dangling doc returning the `(no resolved citations)` marker; and an additivi
 still produce their exact prior strings). All prior S1–S14 tests pass unchanged. `cargo clippy -p latex
 --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
 build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 22. S16 — duplicate (multiply-defined) bibliography entries (`duplicate_bibliography_entries`)
+
+### 22.1 Motivation
+
+S2's `resolve_citations` returns `duplicate_entries: Vec<DuplicateBib>` — every `\bibitem` that
+redefines an already-defined key, i.e. LaTeX's *"Citation `key' multiply defined"* warning. S6's flat
+report surfaces the *dangling* bibliography warning (undefined citations, a "Dangling citations:"
+footer), but the *other* bibliography warning — the multiply-defined `\bibitem`s — was computed by S2
+yet rendered by **no** method. S16 fills that gap: it is the citation-family analogue of the dangling
+footer, for duplicate definitions.
+
+### 22.2 Why a new method — additive by construction
+
+S16 adds a **new public method** `Document::duplicate_bibliography_entries(&self) -> String`. It is a
+pure, read-only render of `resolve_citations().duplicate_entries`. It reuses that table verbatim (never
+re-walking the body or re-collecting `\bibitem`s), so the report can never drift from the S2 resolution
+it summarises. It mutates nothing and changes no S1–S15 output — including `to_latex()`'s round-trip
+fixed point — byte-for-byte. Like S11–S15 it is a method the caller invokes directly.
+
+### 22.3 The ordering and multiplicity rule
+
+S2 collects every `\bibitem{key}` inside a `thebibliography` in `Document::walk` **pre-order**. The
+**first** `\bibitem` of each key wins (it is the entry citations resolve against, in `entries`); every
+**later** `\bibitem` of an already-defined key is a losing duplicate, appended to `duplicate_entries`
+in that same pre-order. S16 renders `duplicate_entries` **in that order, unchanged** — it does **not**
+re-sort. It also does **not** de-duplicate: if a key is defined three times, the second and third both
+lose, so `duplicate_entries` holds two rows and S16 emits two lines — one per *"multiply defined"*
+warning LaTeX would raise. The winning first `\bibitem` is never listed (it is an entry, not a
+duplicate).
+
+### 22.4 The exact rendering contract — `Document::duplicate_bibliography_entries(&self) -> String`
+
+- One line per losing duplicate `\bibitem`, in the existing pre-order of `duplicate_entries` (source
+  order of the offending `\bibitem`s, **not** re-sorted).
+- Each line is the offending command **reconstructed from its key**: `\bibitem{` + the duplicate's key
+  + `}`. We reconstruct from the owned key rather than slice the raw `&src[span]` (matching S13
+  `resolve_namerefs` and S15 `citations_by_source`), so the render needs no source borrow and can never
+  index out of bounds.
+- Every losing `\bibitem` yields its own line — **no** de-duplication (a key defined three times yields
+  two lines).
+- Lines are joined by `\n` with **no** trailing newline (matching S11 `to_plain_text_by_kind`, S12
+  `list_of_floats`, S13 `resolve_namerefs`, S14 `list_summary`, S15 `citations_by_source`).
+- If there are **no** duplicate entries (no bibliography, or every key defined exactly once), the fixed
+  marker `(no duplicate bibliography entries)` is returned, so the output is never the empty string.
+
+Example (`thebibliography` defining `smith` twice and `jones` once):
+
+```text
+\begin{thebibliography}{9}
+\bibitem{smith} First Smith. 1990.
+\bibitem{jones} Jones. 1991.
+\bibitem{smith} Second Smith. 1992.
+\end{thebibliography}
+```
+
+only the *second* `\bibitem{smith}` loses, so the report is the single line:
+
+```text
+\bibitem{smith}
+```
+
+### 22.5 Public API (added in S16)
+
+One new method: `Document::duplicate_bibliography_entries(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_citations` and every S1–S15 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 22.6 Verification (S16)
+
+`cargo test -p latex` green (4 new S16 tests: a bibliography defining `smith` twice and `jones` once
+rendering `\bibitem{smith}` (only the loser); two distinct keys each defined twice rendering
+`\bibitem{a}\n\bibitem{b}` in pre-order; a no-duplicate bibliography returning the
+`(no duplicate bibliography entries)` marker; and an additivity check that `to_plain_text`,
+`to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`, and
+`citations_by_source` all still produce their exact prior strings). All prior S1–S15 tests pass
+unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p
+adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`,
+no grammar regen, no new dependencies.
