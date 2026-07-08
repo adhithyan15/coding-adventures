@@ -138,6 +138,7 @@ SELF_CONTAINED_RUNGS = (
     "rung98_segmental_pressure",
     "rung99_clearance_fraction",
     "rung100_refraction_focus",
+    "rung101_range_of_motion",
 )
 
 
