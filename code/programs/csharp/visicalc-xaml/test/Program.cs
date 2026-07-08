@@ -347,5 +347,82 @@ using (var msm = new InfiniteSheetModel())
     Check("msm Summary B3", msm.RowCells(3)[1], "300"); // B3 = A1+A2 = 100+200
 }
 
+// ── File open / save (the File → Save/Open buttons drive ExportBytes/
+// ImportBytes over sc_save_*/sc_load_*): open and save a REAL spreadsheet file
+// over the engine's byte codecs. File bytes are binary (a .xlsx is a ZIP, an
+// .xls an OLE2 file) and cross P/Invoke as a (byte[], len) pair going in and a
+// copied-out heap buffer coming back — never a NUL-terminated string a 0x00
+// inside the file would truncate.
+using (var src = new SpreadsheetSession())
+{
+    src.SetCell("A1", "15"); src.SetCell("B1", "3"); src.SetCell("C1", "=A1+B1"); // 18
+
+    // .xlsx is a real ZIP (magic "PK\x03\x04") and keeps its live formula.
+    byte[] xlsx = src.SaveXlsx();
+    Check("xlsx ZIP magic",
+        (xlsx.Length > 4 && xlsx[0] == 0x50 && xlsx[1] == 0x4B && xlsx[2] == 0x03 && xlsx[3] == 0x04).ToString(),
+        "True");
+    using (var dst = new SpreadsheetSession())
+    {
+        Check("xlsx reopens", dst.LoadXlsx(xlsx).ToString(), "True");
+        Check("xlsx keeps formula", dst.GetRaw("C1"), "=A1+B1");
+        Check("xlsx computes", dst.Display("C1"), "18");
+    }
+
+    // .xls is a real OLE2 file (magic D0 CF 11 E0) — the 0xD0 high bit is exactly
+    // what a lossy string round-trip would have mangled.
+    byte[] xls = src.SaveXls();
+    Check("xls OLE2 magic",
+        (xls.Length > 8 && xls[0] == 0xD0 && xls[1] == 0xCF && xls[2] == 0x11 && xls[3] == 0xE0).ToString(),
+        "True");
+    using (var dst = new SpreadsheetSession())
+    {
+        Check("xls reopens", dst.LoadXls(xls).ToString(), "True");
+        Check("xls value", dst.Display("C1"), "18");
+    }
+
+    // A bad or empty payload is rejected (no exception), workbook left untouched.
+    Check("xlsx rejects garbage",
+        src.LoadXlsx(System.Text.Encoding.UTF8.GetBytes("not a spreadsheet")).ToString(), "False");
+    Check("xlsx rejects empty", src.LoadXlsx(Array.Empty<byte>()).ToString(), "False");
+    Check("workbook intact after reject", src.Display("C1"), "18");
+}
+
+// CSV / TSV / JSON are values-only tabular codecs. JSON's canonical shape is an
+// array of objects, so row 1 is the HEADER (the keys) and row 2 the first data
+// record; CSV/TSV are positional grids. A header row + one data row round-trips
+// consistently through all three.
+foreach (var format in new[] { "csv", "tsv", "json" })
+{
+    byte[] bytes;
+    using (var t = new SpreadsheetSession())
+    {
+        t.SetCell("A1", "qty"); t.SetCell("B1", "unit"); t.SetCell("C1", "total");
+        t.SetCell("A2", "15"); t.SetCell("B2", "3"); t.SetCell("C2", "=A2*B2"); // 45
+        bytes = format switch { "csv" => t.SaveCsv(), "tsv" => t.SaveTsv(), _ => t.SaveJson() };
+    }
+    Check($"{format} save non-empty", (bytes.Length > 0).ToString(), "True");
+    using (var t2 = new SpreadsheetSession())
+    {
+        bool ok = format switch { "csv" => t2.LoadCsv(bytes), "tsv" => t2.LoadTsv(bytes), _ => t2.LoadJson(bytes) };
+        Check($"{format} reopens", ok.ToString(), "True");
+        Check($"{format} header round-trip", t2.Display("A1"), "qty");
+        Check($"{format} value round-trip", t2.Display("C2"), "45");
+    }
+}
+
+// The InfiniteSheetModel exposes format-parameterised ExportBytes/ImportBytes.
+using (var fm = new InfiniteSheetModel())
+{
+    foreach (var format in InfiniteSheetModel.FileFormats)
+    {
+        byte[] bytes = fm.ExportBytes(format);
+        Check($"model {format} export", (bytes.Length > 0).ToString(), "True");
+        Check($"model {format} import", fm.ImportBytes(format, bytes).ToString(), "True");
+    }
+    Check("model unknown export empty", (fm.ExportBytes("numbers").Length == 0).ToString(), "True");
+    Check("model unknown import false", fm.ImportBytes("numbers", new byte[] { 1, 2, 3 }).ToString(), "False");
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

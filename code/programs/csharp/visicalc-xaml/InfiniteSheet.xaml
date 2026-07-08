@@ -144,6 +144,26 @@
                             ToolTipService.ToolTip="Restore the workbook from the last save"
                             Click="LoadButton_Click"/>
                     <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
+                    <!-- File -> open / save a REAL file on disk (over the engine's
+                         byte codecs, across P/Invoke): an .xlsx (ZIP, live
+                         formulas) and a .csv (text, values only). -->
+                    <Button x:Name="SaveXlsxButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="Save .xlsx"
+                            ToolTipService.ToolTip="Write the workbook to visicalc-demo.xlsx (a real ZIP; keeps live formulas)"
+                            Click="SaveXlsxButton_Click"/>
+                    <Button x:Name="OpenXlsxButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="Open .xlsx"
+                            ToolTipService.ToolTip="Reopen visicalc-demo.xlsx over the engine (reloads live formulas)"
+                            Click="OpenXlsxButton_Click"/>
+                    <Button x:Name="SaveCsvButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="Save .csv"
+                            ToolTipService.ToolTip="Write the workbook to visicalc-demo.csv (values only)"
+                            Click="SaveCsvButton_Click"/>
+                    <Button x:Name="OpenCsvButton" Style="{StaticResource ToolChip}"
+                            Content="Open .csv"
+                            ToolTipService.ToolTip="Reopen visicalc-demo.csv over the engine (values only)"
+                            Click="OpenCsvButton_Click"/>
+                    <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
                     <!-- Structure (insert / delete the selected row or column) -->
                     <Button x:Name="InsRowButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
                             Content="+ Row"

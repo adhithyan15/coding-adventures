@@ -136,6 +136,29 @@ internal static class ScNative
         [MarshalAs(UnmanagedType.LPUTF8Str)] string newName);
     [DllImport("spreadsheet_capi")] internal static extern int sc_delete_sheet(IntPtr s, uint index);
 
+    // ── File open / save — bytes in, bytes out (see spreadsheet.h) ──
+    // The first calls that carry RAW FILE BYTES, not a NUL-terminated char*: an
+    // .xlsx is a ZIP, an .xls an OLE2 file, and either may contain a 0x00 byte,
+    // so the bytes cross as an explicit (bytes, len) pair. `size_t` maps to
+    // `nuint` (a native-word unsigned int). A `byte[]` in-parameter is marshalled
+    // as a pinned pointer to its first element; the sc_save_* results come back
+    // as a raw IntPtr + an out length, copied out and freed with sc_bytes_free.
+    //   sc_load_<fmt>(s, bytes, len) -> 1 opened / 0 not a readable file (or NULL s).
+    //   sc_save_<fmt>(s, &out_len)   -> heap uint8_t* of *out_len bytes (NULL/0 empty).
+    [DllImport("spreadsheet_capi")] internal static extern int sc_load_xlsx(IntPtr s, byte[] bytes, nuint len);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_save_xlsx(IntPtr s, out nuint outLen);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_load_xls(IntPtr s, byte[] bytes, nuint len);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_save_xls(IntPtr s, out nuint outLen);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_load_csv(IntPtr s, byte[] bytes, nuint len);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_save_csv(IntPtr s, out nuint outLen);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_load_tsv(IntPtr s, byte[] bytes, nuint len);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_save_tsv(IntPtr s, out nuint outLen);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_load_json(IntPtr s, byte[] bytes, nuint len);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_save_json(IntPtr s, out nuint outLen);
+    // Free a buffer an sc_save_* returned — (ptr, len) must match what it wrote
+    // (the engine's allocator, NOT the CLR / C free). Safe with (NULL, 0).
+    [DllImport("spreadsheet_capi")] internal static extern void sc_bytes_free(IntPtr ptr, nuint len);
+
     [DllImport("spreadsheet_capi")] internal static extern void sc_string_free(IntPtr p);
 
     /// Resolve the vendored engine library: an explicit CAPI_LIB env var, or
@@ -248,6 +271,66 @@ public sealed class SpreadsheetSession : IDisposable
     /// workbook is left untouched — the engine validates before it mutates).
     /// Formulas reload live.
     public bool Deserialize(string data) => ScNative.sc_deserialize(_handle, data) != 0;
+
+    // ── File open / save — bytes in, bytes out ────────────────────────
+    // Unlike every other call, these carry RAW FILE BYTES (a ZIP for .xlsx, an
+    // OLE2 file for .xls, text for CSV/TSV/JSON), which may contain a 0x00 — so
+    // they must NOT go through the char*/PtrToStringUTF8 path (which stops at the
+    // first NUL). A load hands the engine a (byte[], len) pair; a save copies the
+    // engine's (ptr, out_len) buffer into a managed byte[] BEFORE releasing it
+    // with sc_bytes_free (the engine's allocator — never the CLR / C free).
+    private delegate int LoadFn(IntPtr s, byte[] bytes, nuint len);
+    private delegate IntPtr SaveFn(IntPtr s, out nuint outLen);
+
+    private bool LoadBytes(LoadFn fn, byte[] bytes)
+    {
+        // Empty input is a safe no-op: nothing to open, and a zero-length array
+        // could otherwise marshal to a pointer the engine would read a slice from.
+        if (bytes is null || bytes.Length == 0) return false;
+        return fn(_handle, bytes, (nuint)bytes.Length) != 0;
+    }
+
+    private byte[] SaveBytes(SaveFn fn)
+    {
+        IntPtr ptr = fn(_handle, out nuint outLen);
+        if (ptr == IntPtr.Zero || outLen == 0)
+        {
+            if (ptr != IntPtr.Zero) ScNative.sc_bytes_free(ptr, outLen); // free a 0-len buffer
+            return Array.Empty<byte>();
+        }
+        // Marshal.Copy takes an int length. A spreadsheet file never approaches
+        // 2 GiB here, but if one somehow did, free the engine buffer BEFORE we
+        // bail — a checked cast that throws first would leak it.
+        if (outLen > int.MaxValue)
+        {
+            ScNative.sc_bytes_free(ptr, outLen);
+            throw new InvalidOperationException($"saved file too large to marshal: {outLen} bytes");
+        }
+        int len = (int)outLen;
+        var managed = new byte[len];
+        Marshal.Copy(ptr, managed, 0, len); // COPY out before we free the engine buffer
+        ScNative.sc_bytes_free(ptr, outLen);
+        return managed;
+    }
+
+    /// Open a real spreadsheet file the user picked, over the one engine. `.xlsx`
+    /// reloads live formulas; `.xls`/CSV/TSV/JSON are values-only. Each returns
+    /// `true` on success, `false` if the bytes aren't a readable file of that
+    /// format (the workbook is left untouched) or the input is empty.
+    public bool LoadXlsx(byte[] bytes) => LoadBytes(ScNative.sc_load_xlsx, bytes);
+    public bool LoadXls(byte[] bytes) => LoadBytes(ScNative.sc_load_xls, bytes);
+    public bool LoadCsv(byte[] bytes) => LoadBytes(ScNative.sc_load_csv, bytes);
+    public bool LoadTsv(byte[] bytes) => LoadBytes(ScNative.sc_load_tsv, bytes);
+    public bool LoadJson(byte[] bytes) => LoadBytes(ScNative.sc_load_json, bytes);
+
+    /// Serialize the current document to a file's bytes in each format — what a
+    /// host writes to disk / hands to a Save dialog. An empty document yields an
+    /// empty array.
+    public byte[] SaveXlsx() => SaveBytes(ScNative.sc_save_xlsx);
+    public byte[] SaveXls() => SaveBytes(ScNative.sc_save_xls);
+    public byte[] SaveCsv() => SaveBytes(ScNative.sc_save_csv);
+    public byte[] SaveTsv() => SaveBytes(ScNative.sc_save_tsv);
+    public byte[] SaveJson() => SaveBytes(ScNative.sc_save_json);
 
     /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
     /// changed the document (the host then re-reads the viewport), `false` if
@@ -767,6 +850,49 @@ public sealed class InfiniteSheetModel : IDisposable
     public bool LoadBook(string data)
     {
         bool ok = _session.Deserialize(data);
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
+        return ok;
+    }
+
+    /// The spreadsheet file formats the demo can open / save, in menu order. The
+    /// canonical extension doubles as the format key for <see cref="ExportBytes"/>
+    /// / <see cref="ImportBytes"/>.
+    public static readonly string[] FileFormats = { "xlsx", "xls", "csv", "tsv", "json" };
+
+    /// Export the whole workbook to a real spreadsheet file's bytes in `format`
+    /// (one of <see cref="FileFormats"/>) — the same bytes the web download and
+    /// the other native hosts write. `.xlsx` keeps live formulas; the rest are
+    /// values-only. An unknown format or empty document yields an empty array.
+    public byte[] ExportBytes(string format) => format switch
+    {
+        "xlsx" => _session.SaveXlsx(),
+        "xls" => _session.SaveXls(),
+        "csv" => _session.SaveCsv(),
+        "tsv" => _session.SaveTsv(),
+        "json" => _session.SaveJson(),
+        _ => Array.Empty<byte>(),
+    };
+
+    /// Import a real spreadsheet file's `bytes` of `format` (one of
+    /// <see cref="FileFormats"/>), replacing the workbook. Returns `false`
+    /// (workbook untouched) if the bytes aren't a readable file of that format or
+    /// the format is unknown. On success it regrows the extent and refreshes the
+    /// formula bar so the view re-reads.
+    public bool ImportBytes(string format, byte[] bytes)
+    {
+        bool ok = format switch
+        {
+            "xlsx" => _session.LoadXlsx(bytes),
+            "xls" => _session.LoadXls(bytes),
+            "csv" => _session.LoadCsv(bytes),
+            "tsv" => _session.LoadTsv(bytes),
+            "json" => _session.LoadJson(bytes),
+            _ => false,
+        };
         if (ok)
         {
             ComputeExtent();

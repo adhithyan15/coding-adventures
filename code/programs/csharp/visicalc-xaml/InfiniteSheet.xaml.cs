@@ -65,6 +65,22 @@ public sealed partial class InfiniteSheet : UserControl
 
     /// Short find/replace status (match/replace count) echoed in the footer.
     private string _findStatus = string.Empty;
+
+    /// The most recent File → Save / Open result, echoed in the footer.
+    private string _fileStatus = string.Empty;
+
+    /// A PRIVATE per-session scratch directory for the File → Save / Open demo,
+    /// created lazily with CreateTempSubdirectory (mode 0700 on Unix). Writing
+    /// into our own freshly-made directory — rather than a fixed name in the
+    /// shared, world-writable system temp root — avoids a local symlink-clobber
+    /// on save and keeps the file from being world-readable, while still letting
+    /// Open read back what Save wrote (a stable per-session dir).
+    private string? _fileDir;
+    private string ScratchDir => _fileDir ??=
+        System.IO.Directory.CreateTempSubdirectory("visicalc-").FullName;
+    private string DemoPath(string ext) =>
+        System.IO.Path.Combine(ScratchDir, $"visicalc-demo.{ext}");
+
     private ScrollViewer? _bodyInnerSv, _gutterInnerSv;
 
     public InfiniteSheet()
@@ -422,6 +438,47 @@ public sealed partial class InfiniteSheet : UserControl
         }
     }
 
+    // ── File → Save / Open a REAL spreadsheet file on disk ────────────
+    // Unlike the in-memory Save / Load above, these write and read an actual file
+    // — an .xlsx (a ZIP, keeping live formulas) or a .csv (text, values only) —
+    // over the engine's byte codecs (InfiniteSheetModel.ExportBytes/ImportBytes
+    // → sc_save_*/sc_load_*), proving file bytes cross P/Invoke intact. The demo
+    // uses a fixed name in a private per-session temp dir (no OS picker); a
+    // production host would swap in a FileSavePicker / FileOpenPicker and hand the
+    // same bytes across.
+    private void SaveXlsxButton_Click(object sender, RoutedEventArgs e) => ExportFile("xlsx");
+    private void OpenXlsxButton_Click(object sender, RoutedEventArgs e) => OpenFile("xlsx");
+    private void SaveCsvButton_Click(object sender, RoutedEventArgs e) => ExportFile("csv");
+    private void OpenCsvButton_Click(object sender, RoutedEventArgs e) => OpenFile("csv");
+
+    private void ExportFile(string format)
+    {
+        byte[] bytes = _model.ExportBytes(format);
+        string path = DemoPath(format);
+        System.IO.File.WriteAllBytes(path, bytes);
+        _fileStatus = $"saved {bytes.Length / 1024.0:0.0} KB → {System.IO.Path.GetFileName(path)}";
+        UpdateStatus();
+    }
+
+    private void OpenFile(string format)
+    {
+        string path = DemoPath(format);
+        if (!System.IO.File.Exists(path))
+        {
+            _fileStatus = $"no {System.IO.Path.GetFileName(path)} yet — Save first";
+            UpdateStatus();
+            return;
+        }
+        bool ok = _model.ImportBytes(format, System.IO.File.ReadAllBytes(path));
+        _fileStatus = ok ? $"opened {System.IO.Path.GetFileName(path)}" : $"not a valid {format} file";
+        if (ok)
+        {
+            RefreshFormulaBar();
+            RepaintRealizedRows();
+        }
+        UpdateStatus();
+    }
+
     /// Undo / redo: walk the engine's snapshot history. On success the formula
     /// bar re-reads and the realized rows repaint (any cell could have changed);
     /// the buttons enable/disable off CanUndo/CanRedo via RefreshHistoryButtons.
@@ -513,7 +570,8 @@ public sealed partial class InfiniteSheet : UserControl
     private void UpdateStatus() =>
         StatusText.Text =
             $"Virtual grid: {_model.TotalRows} rows × {_model.TotalCols} cols  ·  revision {_model.Revision}"
-            + (_findStatus.Length > 0 ? $"  ·  {_findStatus}" : string.Empty);
+            + (_findStatus.Length > 0 ? $"  ·  {_findStatus}" : string.Empty)
+            + (_fileStatus.Length > 0 ? $"  ·  {_fileStatus}" : string.Empty);
 
     /// Rebuild only the currently-realized rows (body + gutter) and the header so
     /// the selection highlight, accent-tinted row/column headers, and recomputed
