@@ -380,13 +380,14 @@ const PROGRAMS: &[Prog] = &[
     // inferred `str` parameter without creating refinement annotations.
     // NativeAot: caller folds str_concat+str_slice to a literal-backed buffer
     // (LANG-STR-RT layout), callee reads length via `field_load x, 0 → len`.
-    // Llvm excluded: same `str_lens` map limitation — parameter not seeded.
+    // Llvm now runs: the folded `substring` result is a `@__twig_str` global, which
+    // `lower_call` `ptrtoint`s to an i64 handle before the call (same as `str_const`).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
@@ -395,15 +396,15 @@ const PROGRAMS: &[Prog] = &[
     // NativeAot: runtime `str_eq` parameters lower to `call_builtin "str_eq"` →
     // `__twig_str_eq(a, b)` which compares the LANG-STR-RT length headers then
     // memcmp's the byte data.
-    // Llvm is excluded: `iir-to-llvm`'s `str_values` map has compile-time-only
-    // scope; `lower_str_eq` returns `InvalidOperand` for any parameter not
-    // seeded by `str_const` (separate gap, not addressed here).
+    // Llvm now runs: `lower_str_eq` gained a runtime path — when an operand isn't a
+    // compile-time literal (here both are params), it calls `@__twig_str_eq(i64, i64)`
+    // over the two handles (the caller `ptrtoint`s the literal-args' globals first).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
@@ -439,13 +440,14 @@ const PROGRAMS: &[Prog] = &[
     // materialises `b` through `str_concat`, and keeps `(strlen b)` typed.
     // NativeAot: `main`'s lowering folds `str_concat` to a LANG-STR-RT buffer;
     // callee reads length via `field_load x, 0 → len`.
-    // Llvm excluded: same `str_lens` map limitation — `str_concat` result not seeded.
+    // Llvm now runs: the folded `str_concat` result is a `@__twig_str` global, which
+    // `lower_call` `ptrtoint`s to an i64 handle before the call (same as `str_const`).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Jvm, Clr, Vm, Jit],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
@@ -2626,7 +2628,11 @@ int64_t* h=(int64_t*)malloc(8+(size_t)(la+lb));if(!h)return 0;\
 h[0]=la+lb;\
 if(la>0)memcpy((char*)h+8,(const char*)(intptr_t)a+8,(size_t)la);\
 if(lb>0)memcpy((char*)h+8+la,(const char*)(intptr_t)b+8,(size_t)lb);\
-return (int64_t)(intptr_t)h;}\n";
+return (int64_t)(intptr_t)h;}\n\
+int64_t __twig_str_eq(int64_t a,int64_t b){\
+int64_t la=a?*(int64_t*)(intptr_t)a:0;int64_t lb=b?*(int64_t*)(intptr_t)b:0;\
+if(la!=lb)return 0;if(la<=0)return 1;\
+return memcmp((const char*)(intptr_t)a+8,(const char*)(intptr_t)b+8,(size_t)la)==0?1:0;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
@@ -2660,7 +2666,7 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // Link the generic I/O runtime iff the program actually uses print or input.
     if ll.contains("@__print_i64") || ll.contains("@__print_str")
         || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
-        || ll.contains("@__twig_str_concat") {
+        || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);

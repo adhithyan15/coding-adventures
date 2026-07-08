@@ -1,5 +1,21 @@
 # Changelog — iir-to-llvm
 
+## [0.35.0] — 2026-07-08 (LANG-FULL tail: runtime `str_eq` over non-literal operands)
+
+`lower_str_eq` gains a runtime path. It keeps the both-operands-literal compile-time
+fold (constant 1/0), but when either operand is a runtime string handle — a param, a
+call result, a `str_concat`/`str_slice` result — it calls the archive helper
+`@__twig_str_eq(i64, i64)` over the two i64 handles (each operand resolved from `env`,
+`ptrtoint`ing a literal's `@__twig_str` global pointer to a handle). Previously
+`lower_str_eq` errored (`"a" is not a string literal value`) on a `str` parameter,
+which is why `(define (same a b) (if (string=? a b) …)) (same …)` failed on LLVM.
+
+- Declared under a `used_str_eq` flag (set whenever a `str_eq` op appears). Also fixes
+  a latent declare-guard bug: the extern block's outer condition now includes
+  `used_str_eq`, so a str_eq-only module (no `str_concat`/input/array ops) still emits
+  the `declare` — mirroring the earlier `input_i64`/`input_str` declare-guard fix.
+- Test: `str_eq_over_params_calls_twig_str_eq`. Run-verified end-to-end via clang.
+
 ## [0.34.0] — 2026-07-07 (LANG-FULL tail: `ptrtoint` a string literal passed as a call arg)
 
 Fixes invalid IR when a string LITERAL is passed to a function. A single-assignment
