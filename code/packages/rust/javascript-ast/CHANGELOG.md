@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.32.0] - 2026-07-08
+
+### Added — CLOC12.173 PR1: `ClassExpression` node + class member sub-AST
+
+The first class modelling in the typed AST (previously classes existed nowhere;
+a class literal dropped its whole file to WHITESPACE_ONLY). New `Expression`
+variant `ClassExpression(ClassExpression)` plus its member sub-AST:
+
+- `ClassExpression { cv, id: Option<Identifier>, super_class: Option<Box<Expression>>, body: Vec<ClassMember> }`
+  — `class [id] [extends S] { members }` in value position.
+- `ClassMember::Method(MethodDefinition)` — the only member kind today; fields
+  (`PropertyDefinition`) and `static { … }` blocks are additive follow-ups.
+- `MethodDefinition { cv, key: PropertyKey, kind: MethodKind, value: FunctionExpression, computed, is_static }`
+  — reuses `PropertyKey` (a method key has the same four shapes as a property
+  key). A dedicated type rather than reusing object-literal `Property`, which
+  cannot express `static` or a `constructor` kind and whose value is not always
+  a function; matches Closure's Rhino `MEMBER_FUNCTION_DEF`/`GETTER_DEF`/
+  `SETTER_DEF`/`COMPUTED_PROP` kinds.
+- `MethodKind { Constructor, Method, Get, Set }`.
+
+Re-exported from the crate root. Scoped to the class *expression* form; the
+class *declaration* (`ProgramItem`) form is a separate future arc sharing this
+sub-AST. Emitter + constant-fold support land in the same PR1 commit; the bridge
+is PR2, the CodePrinter conformance port PR3 (see `code/specs/CLOC12-gaps.md`
+§CLOC12.173).
+
 ## [0.31.0] - 2026-07-08
 
 ### Added — CLOC12.172 PR1: `RegExpLiteral` leaf node (`/pattern/flags`)

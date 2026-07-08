@@ -68,8 +68,9 @@ use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
     TemplateElement, TemplateLiteral,
     BooleanLiteral,
-    BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
+    BreakStatement, CallExpression, CatchClause, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
+    MethodDefinition, MethodKind,
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     FunctionDeclaration, FunctionExpression,
@@ -395,13 +396,17 @@ impl<'a> Emitter<'a> {
         // child that requires it.
         // A leading `{` parses as a block and a leading `function`
         // parses as a function *declaration* — both mis-parse a bare
-        // expression statement, so wrap them. (The general "leftmost
-        // token" problem — e.g. a call whose callee is a function
-        // expression — is handled by each child's own precedence wrap;
-        // this covers the direct cases.)
+        // expression statement, so wrap them. A leading `class` is the
+        // same hazard: it parses as a class *declaration*, so a class
+        // *expression* in statement position must be wrapped too. (The
+        // general "leftmost token" problem — e.g. a call whose callee is a
+        // function expression — is handled by each child's own precedence
+        // wrap; this covers the direct cases.)
         let needs_paren = matches!(
             es.expression,
-            Expression::ObjectExpression(_) | Expression::FunctionExpression(_)
+            Expression::ObjectExpression(_)
+                | Expression::FunctionExpression(_)
+                | Expression::ClassExpression(_)
         );
         self.maybe_map(&es.cv);
         if needs_paren {
@@ -894,8 +899,17 @@ impl<'a> Emitter<'a> {
             self.required_ws();
             self.emit_identifier(id);
         }
+        self.emit_param_list_and_body(&f.params, &f.body);
+    }
+
+    /// Emit `(p1,p2){body}` — the shared parameter-list + block-body tail of a
+    /// function value. Used by [`Self::emit_function_expression`] (after the
+    /// `function[*][ id]` head) and by [`Self::emit_class_member`] (after the
+    /// `[static ][get|set ][*]key` head), since a class method's value is a
+    /// [`FunctionExpression`] whose params/body print identically.
+    fn emit_param_list_and_body(&mut self, params: &[FunctionParam], body: &BlockStatement) {
         self.write_str("(");
-        for (i, p) in f.params.iter().enumerate() {
+        for (i, p) in params.iter().enumerate() {
             if i > 0 {
                 self.write_str(",");
                 self.pretty_ws();
@@ -906,7 +920,93 @@ impl<'a> Emitter<'a> {
         }
         self.write_str(")");
         self.pretty_ws();
-        self.emit_block_statement(&f.body);
+        self.emit_block_statement(body);
+    }
+
+    /// Emit a [`ClassExpression`] — `class[ id][ extends S]{members}`.
+    ///
+    /// ```text
+    ///   class {}                     → class{}
+    ///   class C {}                   → class C{}
+    ///   class C extends B {}         → class C extends B{}
+    ///   class { m() {} }             → class{m(){}}
+    ///   class { static get x() {} }  → class{static get x(){}}
+    /// ```
+    ///
+    /// The `extends` operand is emitted at `PREC_PRIMARY`: a `LeftHandSide`
+    /// superclass (identifier `extends B`, member `extends ns.B`, call
+    /// `extends mixin(B)`) stays bare, while anything looser (a conditional
+    /// `extends (a?b:c)`) is wrapped — which is exactly the grammar's
+    /// requirement. Members print back-to-back with no separators (each carries
+    /// its own `{…}`); the whole node's own wrapping in a tighter parent is
+    /// handled by [`expr_prec`] (`PREC_UNARY`).
+    fn emit_class(&mut self, c: &ClassExpression) {
+        self.maybe_map(&c.cv);
+        self.write_str("class");
+        if let Some(id) = &c.id {
+            self.required_ws();
+            self.emit_identifier(id);
+        }
+        if let Some(sup) = &c.super_class {
+            self.required_ws();
+            self.write_str("extends");
+            self.required_ws();
+            self.emit_expression_inner(sup, PREC_PRIMARY);
+        }
+        // No space before the brace even in pretty mode — Closure prints
+        // `class C{...}` (the members carry their own layout).
+        self.write_str("{");
+        for member in &c.body {
+            match member {
+                ClassMember::Method(m) => self.emit_class_member(m),
+            }
+        }
+        self.write_str("}");
+    }
+
+    /// Emit one [`MethodDefinition`]: `[static ][get|set ][*]key(params){body}`.
+    ///
+    /// Order of prefixes matches the grammar (and Closure): `static` first, then
+    /// the accessor keyword (`get`/`set`) if any, then the generator `*`, then
+    /// the key. A computed key (`[expr]`) is bracketed by `emit_property_key`
+    /// (via `PropertyKey::Expression`), exactly as an object-literal computed
+    /// key. `constructor` and an ordinary method share the same shape (no
+    /// keyword prefix) — the `kind` only distinguishes them for the passes.
+    fn emit_class_member(&mut self, m: &MethodDefinition) {
+        self.maybe_map(&m.cv);
+        if m.is_static {
+            self.write_str("static");
+            self.required_ws();
+        }
+        match m.kind {
+            // `get`/`set` accessors: the keyword, then the key. Accessors are
+            // never `async` or generators (the grammar forbids it), so the
+            // `value`'s `is_async`/`generator` flags are not consulted here.
+            MethodKind::Get => {
+                self.write_str("get");
+                self.required_ws();
+            }
+            MethodKind::Set => {
+                self.write_str("set");
+                self.required_ws();
+            }
+            // An ordinary method or the constructor. The method head allows
+            // `async` and/or `*` before the key: grammar order is
+            // `async [*] key`, so `async` prints first (with a space before the
+            // key), then the generator `*`. For a plain `m(){}` both flags are
+            // false and neither prints.
+            MethodKind::Constructor | MethodKind::Method => {
+                if m.value.is_async {
+                    self.write_str("async");
+                    self.required_ws();
+                }
+                if m.value.generator {
+                    self.write_str("*");
+                }
+            }
+        }
+        self.emit_property_key(&m.key);
+        self.emit_param_list_and_body(&m.value.params, &m.value.body);
     }
 
     /// Emit an [`ArrowFunctionExpression`] — the `=>` form.
@@ -1141,6 +1241,7 @@ impl<'a> Emitter<'a> {
             Expression::ObjectExpression(o) => self.emit_object(o),
             Expression::FunctionExpression(f) => self.emit_function_expression(f),
             Expression::ArrowFunctionExpression(a) => self.emit_arrow_function_expression(a),
+            Expression::ClassExpression(c) => self.emit_class(c),
             Expression::TemplateLiteral(t) => self.emit_template_literal(t),
             Expression::TaggedTemplateExpression(t) => self.emit_tagged_template(t),
             Expression::SpreadElement(s) => self.emit_spread(s),
@@ -2219,6 +2320,15 @@ fn expr_prec(e: &Expression) -> u8 {
         // of an expression statement — is wrapped by
         // `emit_expression_statement`, not here.
         Expression::FunctionExpression(_) => PREC_UNARY,
+        // A class expression behaves exactly like a function expression for
+        // parenthesisation: it must wrap as a member object (`(class{}).x`) or
+        // a call callee (`(class{})()`) — both mis-parse bare — and at the
+        // start of an expression statement (a leading `class` parses as a class
+        // *declaration*, wrapped by `emit_expression_statement`). Tagging it at
+        // `PREC_UNARY` (below the `PREC_PRIMARY` at which member/call emit their
+        // base) gives that wrapping, while looser assignment/binary parents
+        // leave it bare (`x=class{}`, `class{}+1` are valid).
+        Expression::ClassExpression(_) => PREC_UNARY,
         // An arrow function is an `AssignmentExpression` in the grammar —
         // the loosest-binding expression there is. Tagging it at
         // `PREC_ASSIGNMENT` makes a call/member parent wrap it into
@@ -2618,6 +2728,159 @@ mod tests {
         assert_eq!(emit_expr(regexp("a.b", "")), "/a.b/;");
         // Pattern-internal escapes/metachars are opaque text, emitted as-is.
         assert_eq!(emit_expr(regexp("\\d+\\/x", "u")), "/\\d+\\/x/u;");
+    }
+
+    // --- ClassExpression (CLOC12.173 PR1) ------------------------------
+
+    /// An empty function body `{}` — the value of a no-op method.
+    fn empty_block() -> BlockStatement {
+        BlockStatement { cv: None, body: vec![] }
+    }
+    /// A method value `(){}` (no params, empty body).
+    fn method_fn() -> FunctionExpression {
+        FunctionExpression {
+            cv: None,
+            id: None,
+            params: vec![],
+            body: empty_block(),
+            generator: false,
+            is_async: false,
+        }
+    }
+    /// A `MethodDefinition` with a plain identifier key `name` and empty body.
+    fn method(name: &str, kind: MethodKind, is_static: bool) -> ClassMember {
+        ClassMember::Method(MethodDefinition {
+            cv: None,
+            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            kind,
+            value: method_fn(),
+            computed: false,
+            is_static,
+        })
+    }
+    /// Build a `ClassExpression` from optional name, optional superclass, and
+    /// a member list.
+    fn class_expr(
+        id: Option<&str>,
+        super_class: Option<Expression>,
+        body: Vec<ClassMember>,
+    ) -> Expression {
+        Expression::ClassExpression(ClassExpression {
+            cv: None,
+            id: id.map(|n| Identifier { cv: None, name: n.to_string() }),
+            super_class: super_class.map(Box::new),
+            body,
+        })
+    }
+
+    #[test]
+    fn class_empty_wraps_at_statement_start() {
+        // A leading `class` parses as a *declaration*, so a class *expression*
+        // in statement position is wrapped — like `function`/`{`.
+        assert_eq!(emit_expr(class_expr(None, None, vec![])), "(class{});");
+    }
+
+    #[test]
+    fn class_named_and_heritage() {
+        // `class C{}` and `class C extends B{}` (both statement-wrapped).
+        assert_eq!(emit_expr(class_expr(Some("C"), None, vec![])), "(class C{});");
+        assert_eq!(
+            emit_expr(class_expr(Some("C"), Some(ident("B")), vec![])),
+            "(class C extends B{});"
+        );
+    }
+
+    #[test]
+    fn class_extends_call_stays_bare_but_conditional_wraps() {
+        // The `extends` operand is a LeftHandSideExpression: a call
+        // `extends mixin(B)` stays bare, a conditional `extends (a?b:c)` wraps.
+        let mixin = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("mixin")),
+            arguments: vec![ident("B")],
+        });
+        assert_eq!(
+            emit_expr(class_expr(None, Some(mixin), vec![])),
+            "(class extends mixin(B){});"
+        );
+        let cond = Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(ident("a")),
+            consequent: Box::new(ident("b")),
+            alternate: Box::new(ident("c")),
+        });
+        // The keyword→operand separator after `extends` is always emitted (it
+        // is mandatory before an identifier operand like `mixin`); before a
+        // parenthesised operand the space is redundant but harmless/valid. A
+        // context-sensitive drop is a later minification refinement.
+        assert_eq!(
+            emit_expr(class_expr(None, Some(cond), vec![])),
+            "(class extends (a?b:c){});"
+        );
+    }
+
+    #[test]
+    fn class_with_method() {
+        assert_eq!(
+            emit_expr(class_expr(None, None, vec![method("m", MethodKind::Method, false)])),
+            "(class{m(){}});"
+        );
+    }
+
+    #[test]
+    fn class_static_and_accessors() {
+        assert_eq!(
+            emit_expr(class_expr(None, None, vec![method("m", MethodKind::Method, true)])),
+            "(class{static m(){}});"
+        );
+        assert_eq!(
+            emit_expr(class_expr(None, None, vec![method("x", MethodKind::Get, false)])),
+            "(class{get x(){}});"
+        );
+        assert_eq!(
+            emit_expr(class_expr(None, None, vec![method("x", MethodKind::Set, false)])),
+            "(class{set x(){}});"
+        );
+    }
+
+    #[test]
+    fn class_computed_key_method() {
+        // `[k](){}` — a computed key is bracketed via `PropertyKey::Expression`.
+        let m = ClassMember::Method(MethodDefinition {
+            cv: None,
+            key: PropertyKey::Expression(Box::new(ident("k"))),
+            kind: MethodKind::Method,
+            value: method_fn(),
+            computed: true,
+            is_static: false,
+        });
+        assert_eq!(emit_expr(class_expr(None, None, vec![m])), "(class{[k](){}});");
+    }
+
+    #[test]
+    fn class_as_call_argument_is_bare() {
+        // As a call argument (emitted at PREC_ASSIGNMENT) a class expression
+        // needs no wrap — only statement-start and member/callee contexts wrap.
+        let c = class_expr(None, None, vec![]);
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![c],
+        });
+        assert_eq!(emit_expr(call), "f(class{});");
+    }
+
+    #[test]
+    fn class_as_member_object_wraps() {
+        // `(class{}).x` — a member parent (PREC_PRIMARY) wraps the class.
+        let c = class_expr(None, None, vec![]);
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(c),
+            property: Box::new(ident("x")),
+            computed: false,
+        });
+        assert_eq!(emit_expr(m), "(class{}).x;");
     }
     fn boolean(v: bool) -> Expression {
         Expression::BooleanLiteral(BooleanLiteral { cv: None, value: v })

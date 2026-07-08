@@ -2233,6 +2233,31 @@ The bridge for a **class _declaration_** (a `ProgramItem`, not an
 `Expression`) is a **separate future arc** — this arc is scoped to the
 *expression* form. The two share the member sub-AST once PR1 lands.
 
+**PR1 (DONE).** `javascript-ast` 0.32.0 adds the node + member sub-AST exactly
+as modelled above; `closure-emitter` 0.37.0 adds `emit_class` /
+`emit_class_member` (with a shared `emit_param_list_and_body` helper factored
+out of `emit_function_expression`); `closure-pass-constant-fold` 0.85.13 folds
+inside the `extends` operand and method bodies via an `#[inline(never)]`
+`fold_class` helper. 8 emitter unit tests. **Two refinements to the plan above,
+found during implementation:**
+
+1. **Precedence is `PREC_UNARY`, not `PREC_PRIMARY`.** The plan said
+   `PREC_PRIMARY`, but `FunctionExpression` — the node a class expression
+   mirrors — is tagged `PREC_UNARY` in `expr_prec`, and *that* is what makes it
+   wrap as a member object (`(class{}).x`) or call callee (`(class{})()`);
+   `PREC_PRIMARY` would leave it bare and mis-emit. `ClassExpression` therefore
+   also tags `PREC_UNARY`, and is added to `emit_expression_statement`'s
+   leading-token wrap set (a statement-position `class` parses as a class
+   *declaration*, like `function`/`{`).
+2. **Only two crates have an exhaustive `Expression` match.** The plan said to
+   add an arm to "every pass"; in fact only `closure-emitter` (dispatch) and
+   `closure-pass-constant-fold` (`fold_expression`) match `Expression`
+   exhaustively. The other eight passes route unmatched expression kinds through
+   a catch-all, so a `ClassExpression` passes through them unchanged — safe and
+   conservative, and unreachable until the PR2 bridge produces the node anyway.
+   Optimisation *inside* class method bodies (scope/rename/inline) is deferred to
+   land with, or after, PR2 when it becomes reachable and testable end-to-end.
+
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 
 Regex literals were previously bridged via a **"treat as identifier" fallback**

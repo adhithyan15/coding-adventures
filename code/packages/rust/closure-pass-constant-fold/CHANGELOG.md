@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.13] - 2026-07-08
+
+### Added — CLOC12.173 PR1: fold inside a `ClassExpression`
+
+`fold_expression` gains a `ClassExpression` arm (required now that
+`javascript-ast` 0.32.0 adds the variant to the exhaustive `Expression` match).
+It folds the `extends` operand (an expression) and each method body (statements)
+exactly as the `FunctionExpression` arm folds inside a function body — a class
+is never itself a foldable constant. Delegated to an `#[inline(never)]`
+`fold_class` helper so the new arm does not enlarge `fold_expression`'s
+debug-build stack frame; the whole `match` sits on the hot recursive-dispatch
+path, where a fat frame is a deep-nesting stack-overflow (DoS) hazard (per
+lessons.md). Reachable once the CLOC12.173 PR2 bridge produces `ClassExpression`
+nodes.
+
 ## [0.85.12] - 2026-07-07
 
 ### Changed — CLOC12.169: `ImportExpression` exhaustive-match arm

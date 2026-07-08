@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.37.0] - 2026-07-08
+
+### Added — CLOC12.173 PR1: print `ClassExpression`
+
+`emit_class` prints the `ClassExpression` leaf added in `javascript-ast` 0.32.0:
+`class[ id][ extends S]{members}`. Each member goes through `emit_class_member`
+(`[static ][get|set ][async ][*]key(params){body}`, computed key `[expr]` via
+the shared `emit_property_key`). The method's params + block body reuse a new
+`emit_param_list_and_body` helper factored out of `emit_function_expression` (a
+class method's `value` is a `FunctionExpression`). The `extends` operand is
+emitted at `PREC_PRIMARY` so a LeftHandSide superclass (`extends B`,
+`extends ns.B`, `extends mixin(B)`) stays bare while a looser operand wraps
+(`extends (a?b:c)`).
+
+**Precedence.** `ClassExpression` tags at `PREC_UNARY` — exactly like
+`FunctionExpression` — so it wraps as a member object (`(class{}).x`) or call
+callee (`(class{})()`), and a leading `class` in expression-statement position
+is wrapped (`(class{});`) since it would otherwise parse as a class
+*declaration*. Looser assignment/argument parents leave it bare (`x=class{}`,
+`f(class{})`). 8 hand-constructed unit tests (empty, named, heritage,
+call/conditional extends operand, method, static, get/set, computed key, plus
+the statement-wrap and member-wrap precedence cases).
+
+Emitter-only production change in this crate (the AST node ships from
+`javascript-ast`); the bridge is CLOC12.173 PR2 and the CodePrinter conformance
+port is PR3.
+
 ## [0.36.1] - 2026-07-08
 
 ### Added — CLOC12.172 PR3: CodePrinter regex-literal conformance port
