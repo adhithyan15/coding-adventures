@@ -20,6 +20,7 @@ import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.SymbolLookup
 import java.lang.foreign.ValueLayout
+import java.lang.invoke.MethodHandle
 import java.io.File
 
 /// A single spreadsheet session, owning the opaque C handle.
@@ -95,6 +96,26 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scAddSheet = handle("sc_add_sheet", FunctionDescriptor.of(i32, ptr, ptr))
     private val scRenameSheet = handle("sc_rename_sheet", FunctionDescriptor.of(i32, ptr, i32, ptr))
     private val scDeleteSheet = handle("sc_delete_sheet", FunctionDescriptor.of(i32, ptr, i32))
+
+    // ── File open / save — bytes in, bytes out ─────────────────────────
+    // The first calls that carry RAW FILE BYTES, not a NUL-terminated char*: an
+    // .xlsx is a ZIP, an .xls an OLE2 file, and either may contain a 0x00, so the
+    // bytes cross as an explicit (address, len) pair. `size_t` is a native-word
+    // integer → JAVA_LONG (i64). A load takes (session, bytes*, len) → int; a save
+    // takes (session, &out_len) → uint8_t*.
+    private val scLoadXlsx = handle("sc_load_xlsx", FunctionDescriptor.of(i32, ptr, ptr, i64))
+    private val scSaveXlsx = handle("sc_save_xlsx", FunctionDescriptor.of(ptr, ptr, ptr))
+    private val scLoadXls = handle("sc_load_xls", FunctionDescriptor.of(i32, ptr, ptr, i64))
+    private val scSaveXls = handle("sc_save_xls", FunctionDescriptor.of(ptr, ptr, ptr))
+    private val scLoadCsv = handle("sc_load_csv", FunctionDescriptor.of(i32, ptr, ptr, i64))
+    private val scSaveCsv = handle("sc_save_csv", FunctionDescriptor.of(ptr, ptr, ptr))
+    private val scLoadTsv = handle("sc_load_tsv", FunctionDescriptor.of(i32, ptr, ptr, i64))
+    private val scSaveTsv = handle("sc_save_tsv", FunctionDescriptor.of(ptr, ptr, ptr))
+    private val scLoadJson = handle("sc_load_json", FunctionDescriptor.of(i32, ptr, ptr, i64))
+    private val scSaveJson = handle("sc_save_json", FunctionDescriptor.of(ptr, ptr, ptr))
+    // Free a buffer an sc_save_* returned — (ptr, len) must match what it wrote
+    // (the engine's allocator, NOT libc free). Safe with (NULL, 0).
+    private val scBytesFree = handle("sc_bytes_free", FunctionDescriptor.ofVoid(ptr, i64))
 
     private val session = scNew.invoke() as MemorySegment
 
@@ -236,6 +257,66 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     fun deserialize(data: String): Boolean = Arena.ofConfined().use { a ->
         (scDeserialize.invoke(session, a.allocateUtf8String(data)) as Int) != 0
     }
+
+    // ── File open / save — bytes in, bytes out ─────────────────────────
+    // Unlike every call above, these carry RAW FILE BYTES (a ZIP for .xlsx, an
+    // OLE2 file for .xls, text for CSV/TSV/JSON), which may contain a 0x00 — so
+    // they must NOT go through the char*/[take] path (which stops at the first
+    // NUL). A load copies the ByteArray into a native segment and hands the engine
+    // a (segment, len) pair; a save copies the engine's (ptr, out_len) buffer into
+    // a Kotlin ByteArray BEFORE releasing it with sc_bytes_free (the engine's
+    // allocator — never libc free).
+
+    /// Load `bytes` as a file of a format via the C ABI handle `fn` (one of
+    /// sc_load_xlsx/xls/csv/tsv/json), replacing the workbook. Returns `true` if
+    /// opened, `false` if the bytes aren't a readable file of that format (the
+    /// workbook is left untouched) or the input is empty (a safe no-op — no native
+    /// buffer for the engine to read a slice from).
+    private fun loadBytes(fn: MethodHandle, bytes: ByteArray): Boolean {
+        if (bytes.isEmpty()) return false
+        return Arena.ofConfined().use { a ->
+            val seg = a.allocateArray(ValueLayout.JAVA_BYTE, *bytes)
+            (fn.invoke(session, seg, bytes.size.toLong()) as Int) != 0
+        }
+    }
+
+    /// Serialize the workbook to a format's file bytes via the C ABI handle `fn`
+    /// (one of sc_save_xlsx/xls/csv/tsv/json). Returns an empty array for an empty
+    /// document. The engine hands back a heap buffer as a (ptr, out_len) pair; we
+    /// COPY those bytes into a Kotlin ByteArray (toArray) before releasing the
+    /// engine's buffer with sc_bytes_free, so no engine memory outlives this call.
+    private fun saveBytes(fn: MethodHandle): ByteArray = Arena.ofConfined().use { a ->
+        val lenSeg = a.allocate(i64)
+        val p = fn.invoke(session, lenSeg) as MemorySegment
+        val len = lenSeg.get(ValueLayout.JAVA_LONG, 0)
+        if (p.address() == 0L || len <= 0L) {
+            if (p.address() != 0L) scBytesFree.invoke(p, len) // free a 0-len buffer
+            ByteArray(0)
+        } else {
+            val out = p.reinterpret(len).toArray(ValueLayout.JAVA_BYTE) // copy before free
+            scBytesFree.invoke(p, len)
+            out
+        }
+    }
+
+    /// Open a real spreadsheet file the user picked, over the one engine. `.xlsx`
+    /// reloads live formulas; `.xls`/CSV/TSV/JSON are values-only. Each returns
+    /// `true` on success, `false` if the bytes aren't a readable file of that
+    /// format (the workbook is left untouched) or the input is empty.
+    fun loadXlsx(bytes: ByteArray): Boolean = loadBytes(scLoadXlsx, bytes)
+    fun loadXls(bytes: ByteArray): Boolean = loadBytes(scLoadXls, bytes)
+    fun loadCsv(bytes: ByteArray): Boolean = loadBytes(scLoadCsv, bytes)
+    fun loadTsv(bytes: ByteArray): Boolean = loadBytes(scLoadTsv, bytes)
+    fun loadJson(bytes: ByteArray): Boolean = loadBytes(scLoadJson, bytes)
+
+    /// Serialize the current document to a file's bytes in each format — what a
+    /// host writes to disk / hands to a Save dialog. An empty document yields an
+    /// empty array.
+    fun saveXlsx(): ByteArray = saveBytes(scSaveXlsx)
+    fun saveXls(): ByteArray = saveBytes(scSaveXls)
+    fun saveCsv(): ByteArray = saveBytes(scSaveCsv)
+    fun saveTsv(): ByteArray = saveBytes(scSaveTsv)
+    fun saveJson(): ByteArray = saveBytes(scSaveJson)
 
     /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
     /// changed the document (the host then re-reads the viewport), `false` if
@@ -685,6 +766,46 @@ class InfiniteSheetModel(
             formula = session.getRaw(infAddress())
         }
         return ok
+    }
+
+    /// Export the whole workbook to a real spreadsheet file's bytes in [format]
+    /// (one of [fileFormats]) — the same bytes the web download and the other
+    /// native hosts write. `.xlsx` keeps live formulas; the rest are values-only.
+    /// An unknown format or empty document yields an empty array.
+    fun exportBytes(format: String): ByteArray = when (format) {
+        "xlsx" -> session.saveXlsx()
+        "xls" -> session.saveXls()
+        "csv" -> session.saveCsv()
+        "tsv" -> session.saveTsv()
+        "json" -> session.saveJson()
+        else -> ByteArray(0)
+    }
+
+    /// Import a real spreadsheet file's [bytes] of [format] (one of [fileFormats]),
+    /// replacing the workbook. Returns `false` (workbook untouched) if the bytes
+    /// aren't a readable file of that format or the format is unknown. On success
+    /// it regrows the extent and refreshes the formula bar so the view re-reads.
+    fun importBytes(format: String, bytes: ByteArray): Boolean {
+        val ok = when (format) {
+            "xlsx" -> session.loadXlsx(bytes)
+            "xls" -> session.loadXls(bytes)
+            "csv" -> session.loadCsv(bytes)
+            "tsv" -> session.loadTsv(bytes)
+            "json" -> session.loadJson(bytes)
+            else -> false
+        }
+        if (ok) {
+            computeExtent()
+            formula = session.getRaw(infAddress())
+        }
+        return ok
+    }
+
+    companion object {
+        /// The spreadsheet file formats the demo can open / save, in menu order.
+        /// The canonical extension doubles as the format key for [exportBytes] /
+        /// [importBytes].
+        val fileFormats = listOf("xlsx", "xls", "csv", "tsv", "json")
     }
 
     /// Undo / redo: walk the engine's snapshot history. On success the extent

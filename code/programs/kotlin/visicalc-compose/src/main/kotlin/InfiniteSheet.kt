@@ -121,6 +121,12 @@ fun InfiniteSheet() {
     // serialized workbook here, Load restores from it. (A real app would write
     // it to a file; the demo keeps the round trip self-contained.)
     var savedSnapshot by remember { mutableStateOf("") }
+    // The most recent File → Save / Open result, echoed in the footer, plus a
+    // PRIVATE per-session scratch dir (createTempDirectory → mode 0700 on POSIX)
+    // so the on-disk round trip doesn't write a predictable name into the shared,
+    // world-writable temp root.
+    var fileStatus by remember { mutableStateOf("") }
+    val scratchDir = remember { java.nio.file.Files.createTempDirectory("visicalc-").toFile() }
 
     // Find / replace fields + a short status echoed in the footer (match/replace
     // count). The query searches every cell's SOURCE (case-insensitive).
@@ -173,6 +179,25 @@ fun InfiniteSheet() {
         model.loadBook(savedSnapshot)
         formula = model.formula
         rev++
+    }
+
+    // File → Save / Open a REAL spreadsheet file on disk over the engine's byte
+    // codecs (model.exportBytes/importBytes → sc_save_*/sc_load_*). The demo uses
+    // a fixed name in the private scratch dir; a production host would swap in an
+    // AWT FileDialog and hand the same bytes across.
+    fun exportFile(format: String, ext: String) {
+        val bytes = model.exportBytes(format)
+        val f = java.io.File(scratchDir, "visicalc-demo.$ext")
+        f.writeBytes(bytes)
+        fileStatus = "saved %.1f KB → %s".format(bytes.size / 1024.0, f.name)
+    }
+    fun openFile(format: String, ext: String) {
+        val f = java.io.File(scratchDir, "visicalc-demo.$ext")
+        if (!f.exists()) { fileStatus = "no ${f.name} yet — Save first"; return }
+        val ok = model.importBytes(format, f.readBytes())
+        formula = model.formula
+        rev++
+        fileStatus = if (ok) "opened ${f.name}" else "not a valid $ext file"
     }
 
     // Undo / redo: walk the engine's snapshot history. On success the grid
@@ -347,10 +372,21 @@ fun InfiniteSheet() {
             Spacer(Modifier.width(6.dp))
             toolButton("Paste") { pasteCell() }
             toolSep()
-            // ── File (save / load) ──
+            // ── File (save / load to memory) ──
             toolButton("Save") { saveBook() }
             Spacer(Modifier.width(6.dp))
             toolButton("Load", enabled = savedSnapshot.isNotEmpty()) { loadBook() }
+            toolSep()
+            // ── File → open / save a REAL file on disk (over the engine's byte
+            //    codecs, across Java FFM): an .xlsx (ZIP, live formulas) and a
+            //    .csv (text, values only). ──
+            toolButton("Save .xlsx") { exportFile("xlsx", "xlsx") }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Open .xlsx") { openFile("xlsx", "xlsx") }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Save .csv") { exportFile("csv", "csv") }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Open .csv") { openFile("csv", "csv") }
             toolSep()
             // ── Structure (insert / delete the selected row or column) ──
             toolButton("+ Row") { insertRow() }
@@ -549,7 +585,8 @@ fun InfiniteSheet() {
         androidx.compose.material.Text(
             "Virtual grid: ${model.totalRows} rows × ${model.totalCols} cols" +
                 "  ·  revision ${rev.let { model.revision() }}" +
-                (if (findStatus.isNotEmpty()) "  ·  $findStatus" else ""),
+                (if (findStatus.isNotEmpty()) "  ·  $findStatus" else "") +
+                (if (fileStatus.isNotEmpty()) "  ·  $fileStatus" else ""),
             color = MUTED,
             fontSize = 12.sp,
             fontFamily = MONO,
