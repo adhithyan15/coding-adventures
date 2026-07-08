@@ -550,6 +550,9 @@ const ARRAY_METHODS = new Set<string>([
   "to_a",
   "join",
   "fetch",
+  "take",
+  "drop",
+  "values_at",
 ]);
 
 // Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
@@ -946,6 +949,31 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
         `index ${raw} outside of array bounds: ${-recv.length}...${recv.length}`,
       );
       return MISS; // unreachable: raiseError returns `never`
+    }
+    case "take":
+    case "drop": {
+      // Ruby `Array#take(n)` / `#drop(n)`: the first `n` elements, or all
+      // elements *after* the first `n`.  `n` is clamped to `[0, len]` — Ruby
+      // raises `ArgumentError` on a negative `n`, but the never-raise floor
+      // (mirroring the Go/Rust/Python runtimes) folds a negative count to 0,
+      // and `slice` already saturates `n > len`.  A non-numeric argument
+      // degrades to 0 rather than raising.
+      let n = typeof args[0] === "number" ? Math.trunc(args[0] as number) : 0;
+      if (n < 0) n = 0;
+      if (n > recv.length) n = recv.length;
+      return name === "take" ? recv.slice(0, n) : recv.slice(n);
+    }
+    case "values_at": {
+      // Ruby `Array#values_at(*idxs)`: one element per index, with a negative
+      // index folded from the end **once**.  An out-of-range index yields `nil`
+      // (`null`) rather than raising — matching the sibling backends.
+      const out: Val[] = [];
+      for (const arg of args) {
+        let idx = typeof arg === "number" ? Math.trunc(arg) : 0;
+        if (idx < 0) idx += recv.length;
+        out.push(idx >= 0 && idx < recv.length ? recv[idx] : null);
+      }
+      return out;
     }
     default:
       return MISS;

@@ -255,6 +255,25 @@ describe("built-in method catalog: non-block Array (M1a)", () => {
     expect(callMethod([1, 2, 3], "fetch", 100, "def")).toBe("def");
     expect(callMethod([1, 2, 3], "fetch", -4, 0)).toBe(0);
   });
+
+  it("take / drop split the array at a count clamped to [0, len]", () => {
+    // Over-long counts saturate; a negative count folds to 0 (never-raise floor).
+    expect(callMethod([1, 2, 3, 4], "take", 2)).toEqual([1, 2]);
+    expect(callMethod([1, 2, 3, 4], "drop", 2)).toEqual([3, 4]);
+    expect(callMethod([1, 2, 3], "take", 0)).toEqual([]);
+    expect(callMethod([1, 2, 3], "drop", 0)).toEqual([1, 2, 3]);
+    expect(callMethod([1, 2, 3], "take", 99)).toEqual([1, 2, 3]);
+    expect(callMethod([1, 2, 3], "drop", 99)).toEqual([]);
+    expect(callMethod([1, 2, 3], "take", -5)).toEqual([]);
+    expect(callMethod([1, 2, 3], "drop", -5)).toEqual([1, 2, 3]);
+  });
+
+  it("values_at selects one element per index, folding negatives, nil OOB", () => {
+    expect(callMethod([10, 20, 30], "values_at", 0, 2)).toEqual([10, 30]);
+    expect(callMethod([10, 20, 30], "values_at", -1, -2)).toEqual([30, 20]);
+    expect(callMethod([10, 20, 30], "values_at", 5, -9)).toEqual([null, null]);
+    expect(callMethod([10, 20, 30], "values_at")).toEqual([]);
+  });
 });
 
 describe("built-in method catalog: universal Object (M1a)", () => {
