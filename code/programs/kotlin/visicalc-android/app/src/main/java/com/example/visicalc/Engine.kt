@@ -58,6 +58,42 @@ class Engine : AutoCloseable {
         }
     }
 
+    // ── File open / save — bytes in, bytes out ──────────────────────────────
+    // Open and save a REAL spreadsheet file over the one engine. A Java `byte[]`
+    // carries the raw file bytes intact — an .xlsx is a ZIP, an .xls an OLE2 file,
+    // either may hold a 0x00 — so nothing goes through the String/char* path a NUL
+    // would truncate. The JNI side (spreadsheet-android-jni) marshals the byte[]
+    // via jni-bridge's jni_get_byte_array / jni_new_byte_array_from. `.xlsx` keeps
+    // live formulas; `.xls`/CSV/TSV/JSON are values-only per spreadsheet-io.
+
+    /** Open a file's [bytes] as [format] (one of [fileFormats]), replacing the
+     *  workbook. Returns `true` if opened, `false` if the bytes aren't a readable
+     *  file of that format (the document is untouched) or the input is empty. The
+     *  caller re-reads [viewportRows] / [rawAt] afterwards. */
+    fun importBytes(format: String, bytes: ByteArray): Boolean {
+        if (bytes.isEmpty()) return false
+        return when (format) {
+            "xlsx" -> nativeLoadXlsx(ptr, bytes)
+            "xls" -> nativeLoadXls(ptr, bytes)
+            "csv" -> nativeLoadCsv(ptr, bytes)
+            "tsv" -> nativeLoadTsv(ptr, bytes)
+            "json" -> nativeLoadJson(ptr, bytes)
+            else -> false
+        }
+    }
+
+    /** Serialize the current document to [format]'s file bytes (one of
+     *  [fileFormats]) — the bytes a host writes to the file the user picked. An
+     *  unknown format yields an empty array. */
+    fun exportBytes(format: String): ByteArray = when (format) {
+        "xlsx" -> nativeSaveXlsx(ptr)
+        "xls" -> nativeSaveXls(ptr)
+        "csv" -> nativeSaveCsv(ptr)
+        "tsv" -> nativeSaveTsv(ptr)
+        "json" -> nativeSaveJson(ptr)
+        else -> ByteArray(0)
+    }
+
     override fun close() {
         nativeFree(ptr)
     }
@@ -73,8 +109,23 @@ class Engine : AutoCloseable {
     private external fun nativeGetRaw(ptr: Long, a1: String): String
     private external fun nativeGetDisplayWindow(ptr: Long, row0: Int, col0: Int, row1: Int, col1: Int): String
     private external fun nativeColumnLetters(ptr: Long, index: Int): String
+    // File open / save (bytes in, bytes out) — added in spreadsheet-android-jni
+    // 0.2.0; the byte[] crosses via jni-bridge's byte-array helpers.
+    private external fun nativeLoadXlsx(ptr: Long, data: ByteArray): Boolean
+    private external fun nativeSaveXlsx(ptr: Long): ByteArray
+    private external fun nativeLoadXls(ptr: Long, data: ByteArray): Boolean
+    private external fun nativeSaveXls(ptr: Long): ByteArray
+    private external fun nativeLoadCsv(ptr: Long, data: ByteArray): Boolean
+    private external fun nativeSaveCsv(ptr: Long): ByteArray
+    private external fun nativeLoadTsv(ptr: Long, data: ByteArray): Boolean
+    private external fun nativeSaveTsv(ptr: Long): ByteArray
+    private external fun nativeLoadJson(ptr: Long, data: ByteArray): Boolean
+    private external fun nativeSaveJson(ptr: Long): ByteArray
 
     companion object {
+        /** The spreadsheet file formats the demo can open / save, in menu order. */
+        val fileFormats = listOf("xlsx", "xls", "csv", "tsv", "json")
+
         init {
             System.loadLibrary("spreadsheet_android_jni")
         }

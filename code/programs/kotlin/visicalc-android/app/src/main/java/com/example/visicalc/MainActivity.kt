@@ -20,11 +20,18 @@ package com.example.visicalc
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Button
@@ -95,6 +102,41 @@ private fun VisiCalcApp() {
     // runtime toggle — the Android sibling of the Qt/Compose/Flutter toggles.
     var touch by remember { mutableStateOf(true) }
 
+    // File open / save via the Storage Access Framework: a document picker for
+    // Open, a "create document" flow for Save. The bytes cross the Rust engine's
+    // byte codecs (engine.exportBytes / importBytes → the nativeLoad* / nativeSave*
+    // JNI methods). One `pendingFormat` selects which codec a launched dialog uses;
+    // `fileStatus` echoes the result under the toolbar.
+    val context = LocalContext.current
+    var pendingFormat by remember { mutableStateOf("xlsx") }
+    var fileStatus by remember { mutableStateOf("") }
+    val openLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                ?: ByteArray(0)
+            val ok = engine.importBytes(pendingFormat, bytes)
+            if (ok) {
+                // The load replaced the whole workbook — re-read the grid + bar.
+                viewportRows = engine.viewportRows()
+                formulaText =
+                    if (selectedCol.toInt() >= 1) engine.rawAt(cellAddress(selectedRow, selectedCol))
+                    else ""
+            }
+            fileStatus = if (ok) "opened .$pendingFormat" else "not a valid .$pendingFormat file"
+        }
+    }
+    val saveLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/octet-stream"),
+    ) { uri ->
+        if (uri != null) {
+            context.contentResolver.openOutputStream(uri)
+                ?.use { it.write(engine.exportBytes(pendingFormat)) }
+            fileStatus = "saved .$pendingFormat"
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
             text = "VISICALC · MOSAIC ANDROID DEMO",
@@ -107,6 +149,28 @@ private fun VisiCalcApp() {
         // Column at runtime — both drive the same engine identically.
         Button(onClick = { touch = !touch }) {
             Text(if (touch) "Desktop bar" else "Touch bar")
+        }
+
+        // File: open / save a REAL spreadsheet file via the Storage Access
+        // Framework, over the engine's byte codecs (.xlsx keeps live formulas;
+        // .csv is values only). Horizontally scrollable so the row fits a phone.
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Button(onClick = { pendingFormat = "xlsx"; saveLauncher.launch("visicalc-demo.xlsx") }) { Text("Save .xlsx") }
+            Button(onClick = { pendingFormat = "xlsx"; openLauncher.launch(arrayOf("*/*")) }) { Text("Open .xlsx") }
+            Button(onClick = { pendingFormat = "csv"; saveLauncher.launch("visicalc-demo.csv") }) { Text("Save .csv") }
+            Button(onClick = { pendingFormat = "csv"; openLauncher.launch(arrayOf("*/*")) }) { Text("Open .csv") }
+        }
+        if (fileStatus.isNotEmpty()) {
+            Text(
+                text = fileStatus,
+                color = Color(0xFF9D9D9D),
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.padding(top = 4.dp),
+            )
         }
 
         Box(modifier = Modifier.padding(top = 8.dp)) {

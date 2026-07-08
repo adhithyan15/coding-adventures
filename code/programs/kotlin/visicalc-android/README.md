@@ -43,6 +43,26 @@ identical dispatch — editing behaves the same in both; only the shape
 changes. This is the Android sibling of the Qt / Compose / Flutter toggles
 and the web demo's switcher (the UI30 "one component, many layouts" invariant).
 
+### File open / save (over the engine's byte codecs)
+
+**Save .xlsx / Open .xlsx / Save .csv / Open .csv** buttons open and save a
+**real spreadsheet file** over the one engine, via Android's **Storage Access
+Framework** (`ActivityResultContracts.OpenDocument` / `CreateDocument`). The
+picked document's bytes cross to the engine through
+`Engine.exportBytes(format)` / `importBytes(format, bytes)`, which call the
+`nativeSave<Fmt>` / `nativeLoad<Fmt>` JNI methods in
+[`spreadsheet-android-jni`](../../../packages/rust/spreadsheet-android-jni) (0.2.0,
+over the zero-dependency [`jni-bridge`](../../../packages/rust/jni-bridge) byte-array
+helpers). A Java `byte[]` carries the raw file bytes intact — an `.xlsx` is a ZIP,
+an `.xls` an OLE2 file, either may hold a `0x00` — so nothing goes through a
+`String`/`char*` path that a NUL would truncate. `.xlsx` keeps live formulas;
+`.xls` / CSV / TSV / JSON are lower-fidelity (values only) per
+[`spreadsheet-io`](../../../packages/rust/spreadsheet-io). All five formats the
+engine speaks are bound on `Engine`; a Save/Open re-reads the grid from the
+reloaded workbook. This is the Android arm of the same open/save story the web
+(WASM), native (C ABI), Flutter (dart:ffi), .NET (P/Invoke), SwiftUI, Qt and
+Compose Desktop hosts have.
+
 ## What this demo does NOT yet do
 
 - No `mosaic-compile --backend compose` exists yet (tracked as
