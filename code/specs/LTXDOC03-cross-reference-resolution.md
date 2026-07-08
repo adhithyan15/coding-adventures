@@ -1534,3 +1534,75 @@ marker; a reference-free document returning the same marker; and an additivity c
 produce their exact prior strings). All prior S1–S17 tests pass unchanged. `cargo clippy -p latex
 --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
 build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 25. S19 — numbered winning-bibliography-entry list (`bibliography_entries`)
+
+### 25.1 Motivation
+
+S2's `resolve_citations` returns `entries: Vec<BibEntry>` — the **winning** bibliography entries, one row
+per distinct citation key (the first `\bibitem{key}` seen), in body pre-order. This is the table
+citations resolve against, and it is exactly what a reader sees rendered as the document's bibliography.
+Yet no method rendered it: S16 (`duplicate_bibliography_entries`) renders the **losing**
+`duplicate_entries` as `\bibitem{key}` warning lines, and S15 (`citations_by_source`) renders the
+per-source *resolved cite keys* — neither shows the winning entries themselves. S19 fills the remaining
+cell of that view-matrix by rendering `entries` as a **numbered list**, the way a bibliography actually
+looks.
+
+### 25.2 Why a new method — additive by construction
+
+S19 adds a **new public method** `Document::bibliography_entries(&self) -> String`. It is a pure,
+read-only render of `resolve_citations().entries`. It reuses that table verbatim (never re-walking the
+body or re-collecting entries), so the report can never drift from the S2 resolution it summarises. It
+mutates nothing and changes no S1–S18 output — including `to_latex()`'s round-trip fixed point —
+byte-for-byte. Like S11–S18 it is a method the caller invokes directly.
+
+### 25.3 The numbering and ordering rule
+
+S2 collects every `\bibitem{key}` inside a `thebibliography` environment in body pre-order, keeping the
+**first** `\bibitem` of each distinct key in `entries` and routing every later re-definition into
+`duplicate_entries` (never into `entries`). S19 numbers `entries` **1-based** in that existing pre-order,
+emitting one line per winning entry. Because `entries` already holds only the first `\bibitem` of each
+key, a `\bibitem{dup}` written twice appears **once** — the winner — exactly as a real bibliography
+renders one line per key; its losing re-definitions remain the S16 view.
+
+### 25.4 The exact rendering contract — `Document::bibliography_entries(&self) -> String`
+
+- One numbered line per winning entry, **1-based**, in the existing pre-order (**not** re-sorted): the
+  n-th entry renders `format!("[{}] {}", n, entry.key)` → `[1] smith2020`, `[2] jones2019`, ….
+- Each line is reconstructed from the entry's owned `key` `String` rather than sliced from `&src[span]`
+  (matching S13 `resolve_namerefs`, S15 `citations_by_source`, S16 `duplicate_bibliography_entries`, and
+  S17/S18's dangling reports), so the render needs no source borrow and can never index out of bounds.
+- The `[n] key` shape is chosen **deliberately** so the winning list reads as a *rendered bibliography*
+  and is visually distinct from S16's `\bibitem{key}` losing-duplicate lines — the two never look alike
+  even when they list overlapping keys.
+- Lines are joined by `\n` with **no** trailing newline (matching every S11–S18 renderer).
+- If there are **no** bibliography entries (no `thebibliography`, or an empty one), the fixed marker
+  `(no bibliography entries)` is returned, so the output is never the empty string.
+
+Example (`thebibliography` defining `smith` twice and `jones` once):
+
+```text
+[1] smith
+[2] jones
+```
+
+the second `\bibitem{smith}` is a duplicate (the S16 view), not a second entry, so the winning list is
+two lines. This is distinct from S16's `\bibitem{smith}` losing-duplicate line, which renders the loser.
+
+### 25.5 Public API (added in S19)
+
+One new method: `Document::bibliography_entries(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_citations` and every S1–S18 method are unchanged; no AST or grammar change;
+no new dependency, no `unsafe`, no I/O.
+
+### 25.6 Verification (S19)
+
+`cargo test -p latex` green (5 new S19 tests: two distinct entries rendering `[1] a\n[2] b`; a duplicate
+key winning once with a peer rendering `[1] dup\n[2] other`; three entries numbered in pre-order
+rendering `[1] x\n[2] y\n[3] z`; a bibliography-free document returning the `(no bibliography entries)`
+marker; and an additivity check that `to_plain_text`, `to_plain_text_by_kind`, `list_of_floats`,
+`resolve_namerefs`, `list_summary`, `citations_by_source`, `duplicate_bibliography_entries`,
+`unresolved_citations_by_source`, and `unresolved_references_by_source` all still produce their exact
+prior strings). All prior S1–S18 tests pass unchanged. `cargo clippy -p latex --all-targets -- -D
+warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo build -p latex
+--no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
