@@ -22,6 +22,7 @@
 #define SPREADSHEET_CAPI_H
 
 #include <stdint.h> /* uint32_t / uint64_t for the viewport calls */
+#include <stddef.h> /* size_t for the file byte lengths */
 
 #ifdef __cplusplus
 extern "C" {
@@ -149,6 +150,46 @@ char *sc_column_letters(ScSession *s, uint32_t index); /* 1-based index -> "A"/"
 uint64_t sc_current_revision(ScSession *s);     /* per-edit revision clock (0 if s==NULL) */
 char *sc_changed_since(ScSession *s, uint64_t since);  /* -> {"revision":N,"changed":[..]} |
                                                             {"revision":N,"stale":true}    */
+
+/* Column widths & row heights on the active sheet (presentation chrome the engine
+   stores but never computes with). A 1-based column / row index; a `double` size
+   in host units. A returned `0.0` means "no custom size — use the host default"
+   (a valid size is always > 0). The setters return 1 if the size changed, 0 if
+   rejected (non-finite / <= 0 size, or index 0); they persist through save/load
+   and shift with their column/row on an insert/delete. The *_widths/_heights
+   readers return a heap JSON array (free with sc_string_free). */
+double sc_column_width(ScSession *s, uint32_t col);     /* -> width  | 0.0 if unset/NULL */
+double sc_row_height(ScSession *s, uint32_t row);       /* -> height | 0.0 if unset/NULL */
+int   sc_set_column_width(ScSession *s, uint32_t col, double width);  /* 1 changed / 0 rejected */
+int   sc_set_row_height(ScSession *s, uint32_t row, double height);   /* 1 changed / 0 rejected */
+int   sc_clear_column_width(ScSession *s, uint32_t col); /* 1 if a width was removed, else 0 */
+int   sc_clear_row_height(ScSession *s, uint32_t row);   /* 1 if a height was removed, else 0 */
+char *sc_column_widths(ScSession *s, uint32_t col0, uint32_t col1); /* -> [{"col":N,"w":F},..] */
+char *sc_row_heights(ScSession *s, uint32_t row0, uint32_t row1);   /* -> [{"row":N,"h":F},..] */
+
+/* File open / save — bytes in, bytes out. Open a real spreadsheet file the user
+   picked and save the current document as one, over the one engine. File bytes
+   are binary (a .xlsx is a ZIP, a .xls an OLE2 file) and may contain NUL, so they
+   cross as an explicit (ptr, len) pair, never a C string.
+     - sc_load_<fmt>(s, bytes, len) -> 1 opened / 0 not a readable file of that
+       format (or s NULL). A failed open leaves the current document untouched.
+     - sc_save_<fmt>(s, &out_len)   -> heap uint8_t* of length *out_len; free it
+       with sc_bytes_free(ptr, out_len). NULL / *out_len = 0 for an empty doc.
+   .xlsx keeps live formulas; .xls/.csv/.tsv/.json are lower-fidelity (values). */
+int      sc_load_xlsx(ScSession *s, const uint8_t *bytes, size_t len);
+uint8_t *sc_save_xlsx(ScSession *s, size_t *out_len);
+int      sc_load_xls(ScSession *s, const uint8_t *bytes, size_t len);
+uint8_t *sc_save_xls(ScSession *s, size_t *out_len);
+int      sc_load_csv(ScSession *s, const uint8_t *bytes, size_t len);
+uint8_t *sc_save_csv(ScSession *s, size_t *out_len);
+int      sc_load_tsv(ScSession *s, const uint8_t *bytes, size_t len);
+uint8_t *sc_save_tsv(ScSession *s, size_t *out_len);
+int      sc_load_json(ScSession *s, const uint8_t *bytes, size_t len);
+uint8_t *sc_save_json(ScSession *s, size_t *out_len);
+
+/* Free a byte buffer returned by an sc_save_* function. (ptr, len) must match
+   what that call returned/wrote. Safe with (NULL, 0). */
+void  sc_bytes_free(uint8_t *ptr, size_t len);
 
 /* Free a string returned by any sc_* function. */
 void  sc_string_free(char *p);

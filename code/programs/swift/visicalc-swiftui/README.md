@@ -98,6 +98,22 @@ document held in memory and restore it (`loadBook` / `sc_deserialize`): the
 document captures only the source (formula text + typed literals) and per-cell
 formats — not the computed values, which the engine recomputes on load, so a
 loaded formula stays live.
+The **Save .xlsx / Open .xlsx / Save .csv / Open .csv** buttons open and save a
+**real spreadsheet file** over the engine's byte codecs:
+`WindowedSheetModel.exportBytes(_:)` / `importBytes(_:_:)` bind the C ABI's
+`sc_save_<fmt>` / `sc_load_<fmt>` (`spreadsheet-capi`), so an `.xlsx` (a ZIP,
+with live formulas preserved) or a `.csv` (text, values only) crosses the C ABI
+as **raw bytes** — a `Data`'s storage handed in as a `(pointer, count)` pair, a
+copied-out heap buffer coming back (freed with `sc_bytes_free`) — never a
+NUL-terminated string that a `0x00` inside a ZIP would truncate. The demo writes
+to / reads from a fixed name in a **private per-session temp directory** (mode
+0700, freshly created) and echoes the result in the status bar; a production host
+would swap that for a SwiftUI `.fileExporter` / `.fileImporter` and hand the
+identical bytes across. All five formats the engine speaks — `.xlsx`, `.xls`,
+`.csv`, `.tsv`, `.json` — are bound on `SpreadsheetSession`
+(`loadXlsx`/`saveXlsx`/…), and `Tests/VisiCalcTests` round-trips each: a saved
+`.xlsx` is asserted to begin with the ZIP magic `PK\x03\x04`, an `.xls` with the
+OLE2 magic `0xD0CF`, and every codec's values survive a reopen.
 The **Undo / Redo** buttons walk the engine's snapshot history
 (`WindowedSheetModel.undoEdit`/`redoEdit` over the C ABI's `sc_undo`/`sc_redo`);
 they disable at the history ends via `canUndo`/`canRedo` (re-evaluated whenever
