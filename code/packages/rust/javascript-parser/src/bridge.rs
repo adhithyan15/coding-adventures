@@ -56,6 +56,7 @@ use coding_adventures_javascript_ast::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
         AssignmentOperator, AssignmentTarget,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
+        ClassExpression, ClassMember, MethodDefinition, MethodKind,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
@@ -1024,6 +1025,270 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
 }
 
 // ---------------------------------------------------------------------
+// ClassExpression (CLOC12.173 PR2 — bridge enable, gap-167)
+// ---------------------------------------------------------------------
+
+/// Convert a `class_expression` grammar node into a [`ClassExpression`].
+///
+/// The parse-tree shape (confirmed by dumping the grammar parser's output —
+/// see the throwaway probe removed with this PR) is a *flat* child list:
+///
+/// ```text
+///   class_expression = [ Token("class"),
+///                        Token(NAME)?,        // the class name, if any
+///                        Node(class_heritage)?,
+///                        Node(class_body) ]
+/// ```
+///
+/// - **Name.** The single direct-child `Token` other than the `class` keyword
+///   is the class name. It is `None` for an anonymous `class {}` /
+///   `class extends B {}` and `Some` for a named `class C {}`. (Every other
+///   token lives *inside* the `class_heritage` / `class_body` child nodes, so a
+///   scan of the class node's own token children never confuses them.)
+/// - **Heritage.** `class_heritage = [ Token("extends"), <operand> ]`. The
+///   operand is either a bare `Token(NAME)` (for `extends B`) or a
+///   `Node(left_hand_side_expression)` (for `extends ns.B`). We convert a
+///   child node with [`convert_expression`]; a lone NAME token becomes an
+///   [`Identifier`]. Anything else (e.g. the grammar flattens `extends mix(B)`
+///   into two ambiguous NAME tokens) DECLINES via `UnsupportedSyntax` rather
+///   than risk mis-reading the super-class — the file then falls back to
+///   WHITESPACE_ONLY, never a miscompile.
+/// - **Body.** `class_body`'s `class_element` children each become one
+///   [`ClassMember`] via [`convert_class_element`].
+fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, BridgeError> {
+    // Name: the only direct-child token that is not the `class` keyword.
+    let id = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.value != "class" => Some(t.value.clone()),
+            _ => None,
+        })
+        .map(|name| Identifier { cv: None, name });
+
+    // Heritage (`extends <operand>`), if present.
+    let mut super_class: Option<Box<Expression>> = None;
+    if let Some(heritage) = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "class_heritage" => Some(n),
+            _ => None,
+        })
+    {
+        super_class = Some(Box::new(convert_class_heritage(heritage)?));
+    }
+
+    // Body: iterate `class_element` children of the `class_body` node.
+    let body_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "class_body" => Some(n),
+            _ => None,
+        })
+        .ok_or_else(|| internal(node, "class_expression: missing class_body"))?;
+
+    let mut body = Vec::new();
+    for el in node_children(body_node) {
+        if el.rule_name == "class_element" {
+            body.push(convert_class_element(el)?);
+        }
+    }
+
+    Ok(ClassExpression { cv: None, id, super_class, body })
+}
+
+/// Convert a `class_heritage` (`extends <operand>`) node into the super-class
+/// [`Expression`]. See the shape note on [`convert_class_expression`].
+fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+    // Prefer a child *node* operand (`extends ns.B` → left_hand_side_expression).
+    if let Some(operand) = node_children(node).into_iter().next() {
+        return convert_expression(operand);
+    }
+    // Otherwise a lone NAME token (`extends B`). Exactly one non-`extends`
+    // token is a clean identifier; anything else (the grammar's flattened
+    // `extends mix(B)` yields several tokens) is ambiguous — DECLINE.
+    let names: Vec<&String> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.value != "extends" => Some(&t.value),
+            _ => None,
+        })
+        .collect();
+    match names.as_slice() {
+        [name] => Ok(Expression::Identifier(Identifier { cv: None, name: (*name).clone() })),
+        _ => Err(unsupported(node)),
+    }
+}
+
+/// Convert one `class_element` into a [`ClassMember`].
+///
+/// ```text
+///   class_element = [ Token("static")? , Node(method_definition) ]
+/// ```
+///
+/// A leading bare `Token("static")` marks a static member; the sole
+/// `method_definition` child carries the rest. (Field and `static { … }`
+/// static-block members are a later slice; they are not produced by this
+/// grammar today, so a `class_element` always wraps exactly one method.)
+///
+/// **`async` lives here, not on `method_definition`.** The grammar attaches an
+/// `async` method's `async` keyword to the *`class_element`* (`async m(){}` →
+/// `[Token("async"), method_definition]`), unlike the generator `*`, which sits
+/// inside `method_definition`. An `async` member carries semantics this slice
+/// does not model, so any `class_element` token other than `static` DECLINES —
+/// otherwise the `async` would be silently dropped, a semantics-changing
+/// miscompile. (Declining the member drops the whole file to WHITESPACE_ONLY.)
+fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeError> {
+    // A `class_element` carries at most one *word* modifier — `static` (which
+    // we model) or `async` (which we do not). It may also carry a benign
+    // separator `;` (a stray semicolon between members). Inspect only the
+    // identifier/keyword tokens: `static` sets the flag; any *other* word
+    // modifier declines (so `async` is never silently dropped). Punctuation
+    // such as `;` is ignored.
+    let mut is_static = false;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if matches!(t.type_, TokenType::Name | TokenType::Keyword) {
+                if t.value == "static" {
+                    is_static = true;
+                } else {
+                    return Err(unsupported(node));
+                }
+            }
+        }
+    }
+    // The member itself is a *single* child node. Only a plain
+    // `method_definition` is modelled today; the grammar's `async_method` node
+    // (an `async` method) — and any future field / static-block node — is a
+    // form this slice does not represent, so it DECLINES (safe WHITESPACE_ONLY
+    // fallback) rather than surfacing an internal error. (Because `async` is a
+    // *distinct node*, not just a leading token, the node kind must be checked.)
+    let member = node_children(node)
+        .into_iter()
+        .next()
+        .ok_or_else(|| internal(node, "class_element: empty"))?;
+    if member.rule_name != "method_definition" {
+        return Err(unsupported(member));
+    }
+    Ok(ClassMember::Method(convert_method_definition(member, is_static)?))
+}
+
+/// Convert a `method_definition` node into a [`MethodDefinition`].
+///
+/// ```text
+///   method_definition = [ (Token("get") | Token("set"))?,    // accessor kind
+///                         Node(property_name),                // the key
+///                         Token("("),
+///                         Node(formal_parameters | formal_parameter)*,
+///                         Token(")"),
+///                         Token("{"), Node(function_body)?, Token("}") ]
+/// ```
+///
+/// **Modifier tokens precede the `property_name` node.** `get` / `set` mark an
+/// accessor; a `*` (generator) marks a form this slice does not model yet — it
+/// DECLINES via `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback) rather than
+/// emit a plain method and silently drop the `*` (a semantics-changing
+/// miscompile). A key literally named `get` (`get(){}`) parses with the
+/// `property_name` node *first* — no leading accessor token — so it is correctly
+/// an ordinary [`MethodKind::Method`]. (An `async` method is a *separate*
+/// grammar node, `async_method`, declined one level up in
+/// [`convert_class_element`], so `async` never reaches here.)
+///
+/// **`constructor`.** A non-static, non-accessor method whose key is the plain
+/// identifier `constructor` is [`MethodKind::Constructor`] — the emitter and the
+/// rename-properties pass treat it specially (never renamed).
+///
+/// **Params.** A single parameter parses as a direct `formal_parameter` child;
+/// two or more parse under a `formal_parameters` wrapper (mirroring the two
+/// grammar shapes). Both are collected. Rest/default/destructured params are
+/// declined by the shared [`convert_formal_parameter`] (Phase-1 simple names).
+fn convert_method_definition(
+    node: &GrammarASTNode,
+    is_static: bool,
+) -> Result<MethodDefinition, BridgeError> {
+    // Collect the modifier tokens that appear *before* the property_name node.
+    let mut saw_get = false;
+    let mut saw_set = false;
+    let mut saw_star = false;
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "property_name" => break,
+            ASTNodeOrToken::Token(t) => match t.value.as_str() {
+                "get" => saw_get = true,
+                "set" => saw_set = true,
+                "*" => saw_star = true,
+                _ => {}
+            },
+            _ => {}
+        }
+    }
+
+    // Generator methods carry evaluation semantics this slice does not model —
+    // DECLINE so the whole file falls back rather than mis-emit.
+    if saw_star {
+        return Err(unsupported(node));
+    }
+
+    let key_node = node_children(node)
+        .into_iter()
+        .find(|n| n.rule_name == "property_name")
+        .ok_or_else(|| internal(node, "method_definition: missing property_name"))?;
+    // `convert_property_key` declines a computed `[expr]` key via
+    // `UnsupportedSyntax` (a later slice), which drops the file — sound.
+    let key = convert_property_key(key_node)?;
+
+    let kind = if saw_get {
+        MethodKind::Get
+    } else if saw_set {
+        MethodKind::Set
+    } else if !is_static
+        && matches!(&key, PropertyKey::Identifier(id) if id.name == "constructor")
+    {
+        MethodKind::Constructor
+    } else {
+        MethodKind::Method
+    };
+
+    // Params: a lone `formal_parameter` (single param) OR a `formal_parameters`
+    // wrapper (two or more). Collect whichever the grammar produced.
+    let mut params = Vec::new();
+    for n in node_children(node) {
+        match n.rule_name.as_str() {
+            "formal_parameters" => params.extend(convert_formal_parameters(n)?),
+            "formal_parameter" => params.push(convert_formal_parameter(n)?),
+            _ => {}
+        }
+    }
+
+    // Body: the `function_body` node, or an empty block for `m(){}`.
+    let body = match node_children(node).into_iter().find(|n| n.rule_name == "function_body") {
+        Some(b) => convert_function_body(b)?,
+        None => BlockStatement { cv: None, body: vec![] },
+    };
+
+    Ok(MethodDefinition {
+        cv: None,
+        key,
+        kind,
+        value: FunctionExpression {
+            cv: None,
+            id: None,
+            params,
+            body,
+            generator: false,
+            is_async: false,
+        },
+        // Computed keys are declined above, so a bridged method is never
+        // computed today.
+        computed: false,
+        is_static,
+    })
+}
+
+// ---------------------------------------------------------------------
 // YieldExpression (CLOC12.163 PR2 — bridge enable, gap-164)
 // ---------------------------------------------------------------------
 
@@ -1422,11 +1687,21 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // template literals are separate future AST slices. (Plain
         // no-substitution templates are handled above by
         // `convert_template_literal`.)
+        // Class expression (CLOC12.173 PR2, gap-167). The typed AST gained
+        // `Expression::ClassExpression` in PR1; convert the greenfield class
+        // instead of declining. `convert_class_expression` itself declines the
+        // sub-forms the grammar admits but the typed slice does not yet model
+        // (computed `[k]()` keys, `async`/generator methods) via
+        // `UnsupportedSyntax`, so an unrepresentable member still drops the
+        // whole file to WHITESPACE_ONLY rather than mis-emitting.
+        "class_expression" => {
+            convert_class_expression(node).map(Expression::ClassExpression)
+        }
+
         "async_arrow_function"
         | "await_expression"
         | "async_function_expression"
         | "async_generator_expression"
-        | "class_expression"
         | "tagged_template_expression"
         | "new_target_expression" => Err(unsupported(node)),
 
@@ -3122,6 +3397,160 @@ mod tests {
             },
             other => panic!("expected AssignmentExpression, got {other:?}"),
         }
+    }
+
+    // -----------------------------------------------------------------
+    // ClassExpression bridging (CLOC12.173 PR2, gap-167)
+    // -----------------------------------------------------------------
+
+    /// Pull the `ClassExpression` out of `x = <class …>;`.
+    fn class_of(src: &str) -> ClassExpression {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => match &*a.right {
+                Expression::ClassExpression(c) => c.clone(),
+                other => panic!("expected ClassExpression RHS, got {other:?}"),
+            },
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_empty_anonymous() {
+        let c = class_of("x = class {};");
+        assert!(c.id.is_none());
+        assert!(c.super_class.is_none());
+        assert!(c.body.is_empty());
+    }
+
+    #[test]
+    fn class_named() {
+        let c = class_of("x = class C {};");
+        assert_eq!(c.id.as_ref().map(|i| i.name.as_str()), Some("C"));
+        assert!(c.super_class.is_none());
+    }
+
+    #[test]
+    fn class_extends_identifier() {
+        // `extends B` — the heritage operand is a bare NAME token.
+        let c = class_of("x = class C extends B {};");
+        match c.super_class.as_deref() {
+            Some(Expression::Identifier(id)) => assert_eq!(id.name, "B"),
+            other => panic!("expected Identifier super_class, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_extends_member() {
+        // `extends ns.B` — the heritage operand is a member-expression NODE.
+        let c = class_of("x = class extends ns.B {};");
+        match c.super_class.as_deref() {
+            Some(Expression::MemberExpression(m)) => {
+                assert!(matches!(&*m.object, Expression::Identifier(i) if i.name == "ns"));
+            }
+            other => panic!("expected MemberExpression super_class, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_method() {
+        let c = class_of("x = class { m(a,b){return a} };");
+        assert_eq!(c.body.len(), 1);
+        let ClassMember::Method(m) = &c.body[0];
+        assert_eq!(m.kind, MethodKind::Method);
+        assert!(!m.is_static);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m"));
+        assert_eq!(m.value.params.len(), 2);
+    }
+
+    #[test]
+    fn class_single_param_method() {
+        // A single param parses as a direct `formal_parameter` (no wrapper);
+        // it must still be collected.
+        let c = class_of("x = class { m(v){return v} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert_eq!(m.value.params.len(), 1);
+    }
+
+    #[test]
+    fn class_static_method() {
+        let c = class_of("x = class { static m(){} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert!(m.is_static);
+        assert_eq!(m.kind, MethodKind::Method);
+    }
+
+    #[test]
+    fn class_getter() {
+        let c = class_of("x = class { get g(){return 1} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert_eq!(m.kind, MethodKind::Get);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "g"));
+    }
+
+    #[test]
+    fn class_setter() {
+        let c = class_of("x = class { set s(v){} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert_eq!(m.kind, MethodKind::Set);
+        assert_eq!(m.value.params.len(), 1);
+    }
+
+    #[test]
+    fn class_method_named_get_is_plain_method() {
+        // `get(){}` — a method whose NAME is `get`, NOT a getter. The grammar
+        // puts the `property_name` node first (no leading accessor token), so
+        // the bridge must classify it as an ordinary method.
+        let c = class_of("x = class { get(){} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert_eq!(m.kind, MethodKind::Method);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "get"));
+    }
+
+    #[test]
+    fn class_constructor() {
+        let c = class_of("x = class { constructor(a){} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert_eq!(m.kind, MethodKind::Constructor);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "constructor"));
+    }
+
+    #[test]
+    fn class_static_constructor_is_plain_method() {
+        // A `static constructor(){}` is NOT the special constructor — only a
+        // non-static `constructor` member is. (Legal JS: a static method may be
+        // named `constructor`.)
+        let c = class_of("x = class { static constructor(){} };");
+        let ClassMember::Method(m) = &c.body[0];
+        assert!(m.is_static);
+        assert_eq!(m.kind, MethodKind::Method);
+    }
+
+    #[test]
+    fn class_computed_key_declines() {
+        // Computed `[k]()` keys are a later slice; the bridge DECLINES (the file
+        // then falls back to WHITESPACE_ONLY — never a miscompile).
+        assert!(matches!(
+            bridge("x = class { [k](){} };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    #[test]
+    fn class_generator_method_declines() {
+        // `*gen(){}` carries generator semantics not modelled here — DECLINE.
+        assert!(matches!(
+            bridge("x = class { *gen(){} };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    #[test]
+    fn class_async_method_declines() {
+        assert!(matches!(
+            bridge("x = class { async am(){} };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
     }
 
     #[test]
