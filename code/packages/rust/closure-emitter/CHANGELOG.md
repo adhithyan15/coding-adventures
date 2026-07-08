@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.37.1] - 2026-07-08
+
+### Added — CLOC12.173 PR3: CodePrinter class-expression conformance port
+
+New upstream test port `tests/upstream/code_printer_class_test.rs` (registered
+as `[[test]] upstream_code_printer_class`) — the twentieth CodePrinter port,
+isolating `emit_class` + `emit_class_member` + the `PREC_UNARY` classification
+that landed with `Expression::ClassExpression` (CLOC12.173 PR1). **22 active
+`#[test]`s, 0 `#[ignore]`** — the emitter conforms to every covered class shape:
+
+- **statement-start wrap** — a bare `class{}` / `class C{}` in expression-
+  statement position is parenthesised (`(class{});`) so a leading `class` does
+  not parse as a class *declaration*;
+- **surface + heritage** — anonymous/named classes as a call argument print bare
+  (`f(class{})`, `f(class C{})`); the `extends` operand prints bare for an
+  identifier / member / call heritage (`extends B`, `extends ns.B`,
+  `extends mixin(B)`) and wraps for a looser conditional
+  (`extends (a?b:c)`);
+- **members** — empty method, method with params + body, `static` method,
+  `get`/`set` accessors, `constructor`, stacked `static get`, generator `*m`,
+  `async m`, computed-key `[k]`, and two members back-to-back with no separator;
+- **whole-node precedence** — the class wraps as a member object
+  (`(class{}).x`) and a call callee (`(class{})()`) but stays bare under a
+  binary parent (`class{}+1`).
+
+Inputs are hand-constructed typed AST (the emitter is the unit under test), so
+the port also exercises generator / async / computed-key methods and multi-
+member classes the grammar cannot yet parse (bridge conversion is CLOC12.173
+PR2, exercised separately in `javascript-parser`). Test-only change — no
+production-code edit in this crate; version bumped PATCH.
+
 ## [0.37.0] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: print `ClassExpression`
