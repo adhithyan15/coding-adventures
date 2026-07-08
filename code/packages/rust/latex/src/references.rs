@@ -1751,6 +1751,96 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **unresolved (dangling) citations grouped by their source `\cite`** (LTXDOC03 S17) — the
+    /// citation-family parallel of S6's flat *"Dangling citations"* footer, but rendered **per source
+    /// `\cite`**: a distinct new view, and the DANGLING-key mirror of S15's
+    /// [`citations_by_source`](Document::citations_by_source).
+    ///
+    /// ## What it does
+    ///
+    /// S2's [`Document::resolve_citations`] flattens every `\cite` into per-key rows, splitting them
+    /// into the **resolved** keys (those a `\bibitem` defines) and the **unresolved** keys (LaTeX's
+    /// *"Citation `key' undefined"*, the `[?]` in the output), each row tagged with the citing `\cite`'s
+    /// own `cite_span`. S6 already reports the dangling keys as one *flat* footer line; S15 groups the
+    /// *resolved* keys per source `\cite`. S17 fills the remaining cell of that 2×2: it groups the
+    /// *dangling* keys per source `\cite`, emitting one reconstructed `\cite{…}` line per source `\cite`
+    /// that has **at least one** dangling key.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read [`CitationResolution::unresolved`] and group its keys by their shared `cite_span`,
+    /// preserving the **first-appearance order** of the cite_spans (source order of the `\cite`s) — a
+    /// `Vec` of `(cite_span, keys)`, **not** a hash map, so the order is deterministic. Keys within a
+    /// group stay in their existing left-to-right order.
+    ///
+    /// One line per source `\cite` with ≥1 dangling key: `\cite{` + that group's dangling keys joined
+    /// by `", "` + `}`, reconstructed from the owned `key` `String`s (no source slicing, matching S13's
+    /// `resolve_namerefs`, S15's `citations_by_source`, and S16's `duplicate_bibliography_entries`).
+    /// Because `unresolved` holds **only** the dangling keys, a `\cite{a, ghost}` where `a` resolves and
+    /// `ghost` dangles renders `\cite{ghost}` (only the dangling key) — the exact analogue of how S15
+    /// shows only the *resolved* keys of a mixed `\cite`.
+    ///
+    /// A document with **no** unresolved citations — every cited key resolves, or there are no
+    /// citations at all — returns the fixed marker `(no unresolved citations)`, never the empty string
+    /// (the same stable-marker discipline S12/S13/S14/S15/S16 use). Lines are joined by `\n` with **no**
+    /// trailing newline (matching S11's `to_plain_text_by_kind`, S12's `list_of_floats`, S13's
+    /// `resolve_namerefs`, S14's `list_summary`, S15's `citations_by_source`, and S16's
+    /// `duplicate_bibliography_entries`).
+    ///
+    /// Concretely, for a body citing `\cite{a, ghost}` (where `a` resolves) and `\cite{x, y}` (neither
+    /// defined):
+    ///
+    /// ```text
+    /// \cite{ghost}
+    /// \cite{x, y}
+    /// ```
+    ///
+    /// The first line drops the resolved `a` and keeps only the dangling `ghost`; the second reunites
+    /// both dangling keys of the fully-dangling `\cite` on one comma-space-joined line, in source order.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S17 is a brand-new, read-only method that reuses [`resolve_citations`](Document::resolve_citations)
+    /// and mutates nothing; it changes no S1-S16 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// keys are already owned `String`s); a single pass over the already-bounded `unresolved` list.
+    /// Borrows `self` immutably and returns owned `String` data, so the result outlives any borrow of
+    /// the source.
+    pub fn unresolved_citations_by_source(&self) -> String {
+        // S2 already flattened every `\cite` into per-key rows and routed the dangling keys into
+        // `unresolved` (in body pre-order, and within a multi-key `\cite` in left-to-right order), each
+        // tagged with its source `\cite`'s span. We only read that list.
+        let resolution = self.resolve_citations();
+
+        // Group the dangling keys by their shared `cite_span`, preserving the FIRST-APPEARANCE order of
+        // the cite_spans (source order of the `\cite`s). A `Vec` of `(cite_span, keys)` — not a hash
+        // map — keeps that order deterministic and the code allocation-light (the number of distinct
+        // `\cite`s is small). Keys within a group stay in their existing left-to-right order.
+        let mut groups: Vec<(Span, Vec<&str>)> = Vec::new();
+        for cite in &resolution.unresolved {
+            match groups.iter_mut().find(|(span, _)| *span == cite.cite_span) {
+                Some((_, keys)) => keys.push(&cite.key),
+                None => groups.push((cite.cite_span, vec![&cite.key])),
+            }
+        }
+
+        if groups.is_empty() {
+            // Every cited key resolved (or there were no citations) → the fixed marker, never the empty
+            // string.
+            return "(no unresolved citations)".to_string();
+        }
+
+        // One line per source `\cite` with ≥1 dangling key: `\cite{` + its dangling keys joined by
+        // `", "` + `}`. Resolved keys never entered `unresolved`, so they are excluded by construction.
+        groups
+            .iter()
+            .map(|(_, keys)| format!("\\cite{{{}}}", keys.join(", ")))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -4313,5 +4403,133 @@ See Section~\ref{sec:intro}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b
 
         // And S16 itself surfaces the one duplicate: the SECOND `\bibitem{a}`.
         assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S17 — unresolved (dangling) citations grouped by source `\cite`
+    // (`unresolved_citations_by_source`).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s17_reports_dangling_cite() {
+        // A `\cite{ghost}` whose key no `\bibitem` defines (the bibliography defines a DIFFERENT key).
+        // `ghost` dangles → one line, the reconstructed `\cite{ghost}`.
+        let src = r"\begin{document}
+See \cite{ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+    }
+
+    #[test]
+    fn s17_groups_multi_key_only_dangling_shown() {
+        // A `\cite{known, ghost}` where `known` resolves and `ghost` dangles → the line shows ONLY the
+        // dangling key (`\cite{ghost}`). `unresolved` holds only the dangling keys, so the resolved
+        // `known` is excluded by construction — the DANGLING mirror of S15's resolved-only rendering.
+        let src = r"\begin{document}
+See \cite{known, ghost}.
+\begin{thebibliography}{9}
+\bibitem{known} Author K.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+    }
+
+    #[test]
+    fn s17_fully_dangling_multi_key() {
+        // A `\cite{x, y}` where NEITHER key is defined → both dangling keys reunite on ONE line, in
+        // left-to-right source order, comma-space joined: `\cite{x, y}`.
+        let src = r"\begin{document}
+See \cite{x, y}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{x, y}");
+    }
+
+    #[test]
+    fn s17_two_distinct_cites_source_order() {
+        // Two separate dangling `\cite`s → two lines, in the source order the `\cite`s appear, joined
+        // by `\n`. The first-appearance grouping keeps `ghost1` ahead of `ghost2`.
+        let src = r"\begin{document}
+See \cite{ghost1} and later \cite{ghost2}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.unresolved_citations_by_source(),
+            "\\cite{ghost1}\n\\cite{ghost2}"
+        );
+    }
+
+    #[test]
+    fn s17_empty_returns_marker() {
+        // A document whose every cited key resolves has NO unresolved citations → the fixed
+        // `(no unresolved citations)` marker, never the empty string.
+        let src = r"\begin{document}
+See \cite{a}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.unresolved_citations_by_source(), "(no unresolved citations)");
+    }
+
+    #[test]
+    fn s17_is_additive_leaves_s1_s16_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a `\ref`, a `\nameref`,
+        // two `\cite`s (one multi-key, one dangling key), AND a duplicate `\bibitem` (`a` defined
+        // twice), S17 changes NONE of the S1-S16 outputs — it only reads `resolve_citations`.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+See Section~\ref{sec:intro}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+
+        // And S17 itself groups the dangling cites: `{a,b}` fully resolves (no line); `{c,ghost}` keeps
+        // only the dangling `ghost`.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
     }
 }

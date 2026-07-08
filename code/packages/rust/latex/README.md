@@ -64,6 +64,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S14 — per-kind census of the numbered-label table** | `Document::list_summary() -> String` — a **new**, read-only method that renders a compact per-kind **count** of the document's numbered labels: how many sections, figures, tables, and equations carry a `\label`. It is a pure tally of the rows `number_labels()` returns, grouped by `LabelKind`, so it can never drift from the S4 numbering it summarises. Only the four numberable kinds reach that table — a bare inline `\label{…}` (`LabelKind::Inline`) is not numbered and is counted nowhere. One line per non-zero kind in the **fixed order** `Sections`, `Figures`, `Tables`, `Equations` (deterministic, not source order), formatted `<Kind>: <count>` with a **fixed plural** label regardless of count (a single section still prints `Sections: 1`); a kind with count 0 is **omitted** (mirroring S11). Lines joined by `\n`, no trailing newline. A document with **no** numbered label at all → the fixed marker `(no labels)`. E.g. two labeled sections + a figure + a table + an equation → `Sections: 2\nFigures: 1\nTables: 1\nEquations: 1`. Every S1–S13 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S15 — resolved citations grouped by their source `\cite`** | `Document::citations_by_source() -> String` — a **new**, read-only method that renders the resolved citations **grouped by the source `\cite` they came from** — the citation-family parallel of S11's `to_plain_text_by_kind` and S13's `resolve_namerefs`. It reads only `resolve_citations().resolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping them back by `cite_span` in **first-appearance order** (source order of the `\cite`s) with keys kept in their left-to-right order. One line per source `\cite`: `\cite{` + the group's **resolved** keys joined by `", "` + `}`. A **dangling** key never entered `resolved`, so it is excluded — `\cite{a,ghost}` where only `a` resolves renders `\cite{a}` (we reconstruct from resolved keys rather than slice `&src[cite_span]`, which would still show `ghost`). Lines joined by `\n`, no trailing newline. A document with **no** resolved citations (none present, or every key dangling) → the fixed marker `(no resolved citations)`. E.g. `\cite{a,b}` (both defined) then `\cite{c}` → `\cite{a, b}\n\cite{c}`. Every S1–S14 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S16 — duplicate (multiply-defined) `\bibitem` entries** | `Document::duplicate_bibliography_entries() -> String` — a **new**, read-only method that surfaces the **multiply-defined** `\bibitem`s — LaTeX's *"Citation `key' multiply defined"* warnings — the citation-family parallel of S6's *"Dangling citations"* footer (for the *other* bibliography warning). These were already computed by S2 (`resolve_citations().duplicate_entries`) but rendered by **no** method until now. S2 collects every `\bibitem` in `walk` pre-order; the **first** of each key wins and every **later** `\bibitem` of an already-defined key is a losing duplicate. S16 emits one line per duplicate in that pre-order (**not** re-sorted, **not** de-duplicated — a key defined three times yields two lines), each reconstructed from its key as `\bibitem{<key>}` (no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** duplicates (no bibliography, or every key once) → the fixed marker `(no duplicate bibliography entries)`. E.g. `smith` defined twice + `jones` once → `\bibitem{smith}` (only the loser). Every S1–S15 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S17 — unresolved (dangling) citations grouped by source `\cite`** | `Document::unresolved_citations_by_source() -> String` — a **new**, read-only method that renders the **dangling** citations **grouped by the source `\cite` they came from** — the DANGLING-key mirror of S15's `citations_by_source`, and the per-`\cite` view of S6's flat *"Dangling citations"* footer. It reads only `resolve_citations().unresolved` and re-assembles the per-key rows S2 flattened out of each multi-key `\cite`, grouping the dangling keys back by `cite_span` in **first-appearance order** (source order) with keys kept left-to-right. One line per source `\cite` with ≥1 dangling key: `\cite{` + the group's **dangling** keys joined by `", "` + `}`. A **resolved** key never entered `unresolved`, so `\cite{a,ghost}` where only `a` resolves renders `\cite{ghost}` (reconstructed from keys, no source slicing). Lines joined by `\n`, no trailing newline. A document with **no** unresolved citations → the fixed marker `(no unresolved citations)`. E.g. `\cite{known,ghost}` (only `known` defined) then `\cite{x,y}` (neither) → `\cite{ghost}\n\cite{x, y}`. Every S1–S16 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -729,6 +730,37 @@ assert_eq!(
 A document with no duplicates — no bibliography, or every key defined exactly once — renders the fixed
 `(no duplicate bibliography entries)` marker. Purely additive — reuses `resolve_citations`, mutates
 nothing, leaves every S1–S15 output and the `to_latex()` fixed point unchanged.
+
+### unresolved (dangling) citations grouped by source `\cite` (LTXDOC03 S17)
+
+The DANGLING-key mirror of S15's `citations_by_source`, and the per-`\cite` view of S6's flat
+*"Dangling citations"* footer. S2's `resolve_citations` flattens every `\cite` into per-key rows,
+splitting them into the **resolved** keys and the **unresolved** (dangling) keys, each tagged with the
+citing `\cite`'s `cite_span`. `unresolved_citations_by_source` reads only that `unresolved` list and
+groups the dangling keys back by `cite_span` in **first-appearance order** (source order of the
+`\cite`s), emitting one line per source `\cite` that has ≥1 dangling key: `\cite{` + its dangling keys
+joined by `", "` + `}`. Because only dangling keys are in `unresolved`, a `\cite{a, ghost}` where `a`
+resolves renders `\cite{ghost}`.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}
+See \cite{known, ghost} and \cite{x, y}.
+\begin{thebibliography}{9}
+\bibitem{known} Author K.
+\end{thebibliography}
+\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.unresolved_citations_by_source(),
+    "\\cite{ghost}\n\\cite{x, y}",   // first drops resolved `known`; second is fully dangling
+);
+```
+
+A document with no unresolved citations — every cited key resolves, or none present — renders the fixed
+`(no unresolved citations)` marker. Purely additive — reuses `resolve_citations`, mutates nothing,
+leaves every S1–S16 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

@@ -1379,3 +1379,78 @@ rendering `\bibitem{smith}` (only the loser); two distinct keys each defined twi
 unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test -p
 adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`,
 no grammar regen, no new dependencies.
+
+## 23. S17 — unresolved (dangling) citations grouped by source `\cite` (`unresolved_citations_by_source`)
+
+### 23.1 Motivation
+
+S2's `resolve_citations` returns `unresolved: Vec<UnresolvedCite>` — every `\cite` key that matched no
+`\bibitem`, i.e. LaTeX's *"Citation `key' undefined"* warning (the `[?]` in the output). S6's flat
+report already surfaces these dangling keys as a single "Dangling citations:" footer, and S15's
+`citations_by_source` groups the *resolved* keys per source `\cite`. S17 fills the remaining cell of
+that 2×2: it groups the *dangling* keys per source `\cite` — the DANGLING-key mirror of S15, and a
+distinct new per-`\cite` view of the same information S6 renders flat.
+
+### 23.2 Why a new method — additive by construction
+
+S17 adds a **new public method** `Document::unresolved_citations_by_source(&self) -> String`. It is a
+pure, read-only render of `resolve_citations().unresolved`. It reuses that table verbatim (never
+re-walking the body or re-resolving citations), so the report can never drift from the S2 resolution it
+summarises. It mutates nothing and changes no S1–S16 output — including `to_latex()`'s round-trip fixed
+point — byte-for-byte. Like S11–S16 it is a method the caller invokes directly.
+
+### 23.3 The grouping and ordering rule
+
+S2 flattens every `\cite` into per-key rows, splitting them into resolved keys and unresolved
+(dangling) keys, each row tagged with the citing `\cite`'s own `cite_span` (shared by every key of a
+multi-key `\cite`). S17 groups the dangling keys by their shared `cite_span`, preserving the
+**first-appearance order** of the cite_spans (source order of the `\cite`s) via a `Vec<(Span,
+Vec<&str>)>` — **not** a hash map — so the order is deterministic. Keys within a group stay in their
+existing left-to-right order. Because `unresolved` holds **only** the dangling keys, a resolved key of
+a mixed `\cite` never appears — the exact analogue of how S15 shows only the *resolved* keys.
+
+### 23.4 The exact rendering contract — `Document::unresolved_citations_by_source(&self) -> String`
+
+- One line per source `\cite` that has **at least one** dangling key, in the first-appearance order of
+  the cite_spans (source order of the `\cite`s, **not** re-sorted).
+- Each line is `\cite{` + that group's **dangling** keys joined by `", "` + `}`, reconstructed from the
+  owned keys rather than sliced from `&src[span]` (matching S13 `resolve_namerefs`, S15
+  `citations_by_source`, S16 `duplicate_bibliography_entries`), so the render needs no source borrow and
+  can never index out of bounds.
+- A `\cite{a, ghost}` where `a` resolves and `ghost` dangles renders `\cite{ghost}` (only the dangling
+  key), because `unresolved` contains only the dangling keys.
+- Lines are joined by `\n` with **no** trailing newline (matching S11 `to_plain_text_by_kind`, S12
+  `list_of_floats`, S13 `resolve_namerefs`, S14 `list_summary`, S15 `citations_by_source`, S16
+  `duplicate_bibliography_entries`).
+- If there are **no** unresolved citations (every cited key resolves, or none present), the fixed marker
+  `(no unresolved citations)` is returned, so the output is never the empty string.
+
+Example (body citing `\cite{a, ghost}` where `a` resolves, then `\cite{x, y}` where neither is
+defined):
+
+```text
+\cite{ghost}
+\cite{x, y}
+```
+
+the first line drops the resolved `a` and keeps only the dangling `ghost`; the second reunites both
+dangling keys of the fully-dangling `\cite` on one comma-space-joined line, in source order.
+
+### 23.5 Public API (added in S17)
+
+One new method: `Document::unresolved_citations_by_source(&self) -> String`. No existing type, field,
+counter, or signature changes; `resolve_citations` and every S1–S16 method are unchanged; no AST or
+grammar change; no new dependency, no `unsafe`, no I/O.
+
+### 23.6 Verification (S17)
+
+`cargo test -p latex` green (6 new S17 tests: a single dangling `\cite{ghost}` rendering `\cite{ghost}`;
+a mixed `\cite{known, ghost}` (only `known` defined) rendering `\cite{ghost}`; a fully-dangling
+`\cite{x, y}` rendering `\cite{x, y}` (both keys, one line); two distinct dangling `\cite`s rendering
+`\cite{ghost1}\n\cite{ghost2}` in source order; an all-resolved document returning the
+`(no unresolved citations)` marker; and an additivity check that `to_plain_text`,
+`to_plain_text_by_kind`, `list_of_floats`, `resolve_namerefs`, `list_summary`, `citations_by_source`,
+and `duplicate_bibliography_entries` all still produce their exact prior strings). All prior S1–S16
+tests pass unchanged. `cargo clippy -p latex --all-targets -- -D warnings` clean; downstream `cargo test
+-p adj-lang -p adj-lang-cli` green; `cargo build -p latex --no-default-features` builds. No `cargo fmt`,
+no grammar regen, no new dependencies.
