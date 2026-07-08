@@ -2,6 +2,39 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.58.0] — 2026-07-08
+
+### Added — winning label definitions report (LTXDOC03 S22)
+
+A **new** public method `Document::label_definitions(&self) -> String` that renders the **winning label
+definitions** — the `\label{key}` definitions that references resolve against, one `\label{key}` line
+per distinct key. It is the label-family analogue of S19's `bibliography_entries` (which renders the
+winning `\bibitem` entries) and the *winning-side* counterpart of S20's `duplicate_label_definitions`
+(which renders the *losing* duplicate `\label` definitions). It is a read-only view over
+`resolve_references()`: S1 splits every `\label` into the **winning** first definition of each key
+(`definitions`, a `Vec<LabelDef>` with one row per distinct key, in pre-order) and the **losing** later
+re-definitions (`duplicates`); S22 renders the `definitions` list. Every S1–S21 output is left
+**byte-for-byte unchanged**; S22 is purely additive and leaves the `to_latex()` round-trip fixed point
+intact.
+
+- **One reconstructed `\label{key}` line per winning definition**, in the existing pre-order — **not**
+  re-sorted and **not** de-duplicated (no de-duplication is needed: `definitions` already holds exactly
+  one row per distinct key, later re-definitions having gone to `duplicates`). Each line is
+  reconstructed from the definition's **owned `key` `String`** via `format!("\\label{{{}}}", def.key)`,
+  so there is **no** source slicing at all (matching S13 `resolve_namerefs`, S15 `citations_by_source`,
+  S16 `duplicate_bibliography_entries`, S19 `bibliography_entries`, and S20
+  `duplicate_label_definitions`). `\label{key}` is the correct form for any `LabelKind` (section,
+  figure, equation, or bare inline label).
+- **Winning key appears once.** A `\label{dup}` written twice appears **once** here — the winning first
+  definition; its losing second definition lives in S20 (`duplicate_label_definitions`), never here.
+- **Stable empty marker.** No label definitions at all → the fixed string `(no label definitions)`,
+  never `""` (the same discipline S12–S21 use). Lines are joined by `\n` with **no** trailing newline.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single pass
+  over the already-bounded `definitions` list. Borrows `self` immutably and returns owned `String`.
+- Tests: winning definitions in pre-order, empty-marker, duplicate-key-wins-once (cross-checked against
+  S20's losing side), `\n`-join with no trailing newline, and an additivity test pinning every S1–S21
+  output byte-for-byte on a representative document.
+
 ## [0.57.0] — 2026-07-08
 
 ### Added — resolved-references-by-source report (LTXDOC03 S21)

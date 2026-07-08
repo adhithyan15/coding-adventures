@@ -2098,6 +2098,89 @@ impl Document {
             .join("\n")
     }
 
+    /// The **winning label definitions** (LTXDOC03 S22) — the `\label{key}` definitions that
+    /// references resolve against, the label-family analogue of S19's
+    /// [`bibliography_entries`](Document::bibliography_entries) and the *winning-side* counterpart of
+    /// S20's [`duplicate_label_definitions`](Document::duplicate_label_definitions).
+    ///
+    /// ## What it does
+    ///
+    /// S1's [`Document::resolve_references`] splits every `\label` into the **winning** first
+    /// definition of each key ([`ReferenceResolution::definitions`] — one row per distinct key, in
+    /// [`Document::walk`] pre-order, and precisely what `\ref`/`\eqref`/`\pageref` resolve against) and
+    /// the **losing** later re-definitions ([`ReferenceResolution::duplicates`] — LaTeX's *"Label
+    /// `key' multiply defined"* warning). The neighboring label renderers view the other cells of that
+    /// resolution: S20's [`duplicate_label_definitions`](Document::duplicate_label_definitions) renders
+    /// the **losing** `duplicates` (as `\label{key}` warning lines). S22 fills the remaining view: the
+    /// **winning** `definitions` themselves — one reconstructed `\label{key}` line per distinct key, in
+    /// the order the definitions were first seen. It is the exact `\label` parallel of S19, which
+    /// renders the winning `\bibitem` entries.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read [`ReferenceResolution::definitions`] in its existing pre-order and render one line per
+    /// winning definition: `\label{` + `def.key` + `}`. The list is **NOT** re-sorted and **NOT**
+    /// de-duplicated — but no de-duplication is needed, because `definitions` already holds exactly one
+    /// row per distinct key (every later re-definition of an already-defined key went to `duplicates`,
+    /// S20's domain, never here). Each line is reconstructed from the definition's **owned `key`
+    /// `String`** — there is **no** source slicing at all (matching S13's `resolve_namerefs`, S15's
+    /// `citations_by_source`, S16's `duplicate_bibliography_entries`, S19's `bibliography_entries`, and
+    /// S20's `duplicate_label_definitions`). Labels are always *defined* by `\label{…}`, so `\label{key}`
+    /// is the correct reconstruction regardless of the definition's [`LabelKind`] (a section, figure,
+    /// equation, or bare inline label all render the same `\label{key}` form).
+    ///
+    /// A document with **no** label definitions returns the fixed marker `(no label definitions)`,
+    /// never the empty string (the same stable-marker discipline S12-S21 use). Lines are joined by `\n`
+    /// with **no** trailing newline (matching S11's `to_plain_text_by_kind` and every S12-S21 renderer).
+    ///
+    /// Concretely, for a body that defines `\label{sec:intro}` (a section), `\label{eq:main}` (an
+    /// equation), and then re-uses `\label{sec:intro}` on a later subsection:
+    ///
+    /// ```text
+    /// \section{Intro}\label{sec:intro}
+    /// \begin{equation}\label{eq:main} x=1 \end{equation}
+    /// \subsection{Dup}\label{sec:intro}
+    /// ```
+    ///
+    /// only the *first* `\label{sec:intro}` wins, so the winning key `sec:intro` appears **once**
+    /// (its later re-definition is a duplicate, surfaced by S20, not a second `definitions` row):
+    ///
+    /// ```text
+    /// \label{sec:intro}
+    /// \label{eq:main}
+    /// ```
+    ///
+    /// ## Additive by construction
+    ///
+    /// S22 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1-S21 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// keys are already owned `String`s); a single pass over the already-bounded `definitions` list.
+    /// Borrows `self` immutably and returns owned `String` data, so the result outlives any borrow of
+    /// the source.
+    pub fn label_definitions(&self) -> String {
+        // S1 already collected the winning definitions — the first `\label` of each distinct key, in
+        // body pre-order (later re-definitions went to `duplicates`, not here). We only read that list.
+        let resolution = self.resolve_references();
+
+        if resolution.definitions.is_empty() {
+            // No `\label` at all → the fixed marker, never the empty string.
+            return "(no label definitions)".to_string();
+        }
+
+        // One line per winning definition, in the existing pre-order (NOT re-sorted; NOT de-duplicated —
+        // `definitions` already holds exactly one row per distinct key). Reconstruct `\label{key}` from
+        // the owned key, so there is no source slicing; `\label{…}` is the right form for any LabelKind.
+        resolution
+            .definitions
+            .iter()
+            .map(|def| format!("\\label{{{}}}", def.key))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
     /// The **resolved (successfully-matched) references grouped by their source `\ref`** (LTXDOC03
     /// S21) — the exact structural mirror of S18's
     /// [`unresolved_references_by_source`](Document::unresolved_references_by_source), but for the
@@ -5349,6 +5432,129 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         assert_eq!(
             doc.resolved_references_by_source(),
             "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S22 — winning label definitions (`label_definitions`). The label-family mirror of
+    // S19's `bibliography_entries`, and the winning-side counterpart of S20.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s22_lists_winning_definitions_in_preorder() {
+        // Two distinct labels defined in source order → each renders `\label{key}`, one per line, in
+        // body pre-order (`k1` before `k2`).
+        let src = r"\begin{document}First \label{k1} here.
+
+Second \label{k2} there.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.label_definitions(), "\\label{k1}\n\\label{k2}");
+    }
+
+    #[test]
+    fn s22_no_labels_returns_marker() {
+        // A document with no `\label` at all → the fixed `(no label definitions)` marker, never the
+        // empty string.
+        let src = r"\begin{document}Just some text with no labels.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.label_definitions(), "(no label definitions)");
+    }
+
+    #[test]
+    fn s22_duplicate_key_wins_once() {
+        // `\label{dup}` written twice: the FIRST wins (→ `definitions`), the SECOND loses (→
+        // `duplicates`). S22 renders the winning key EXACTLY ONCE; the losing later one is S20's domain.
+        let src = r"\begin{document}First \label{dup} here.
+
+Second \label{dup} there.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        // Winning side: the key appears once.
+        assert_eq!(doc.label_definitions(), "\\label{dup}");
+        // Cross-check the losing side: S20 surfaces the second (losing) `\label{dup}`.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+    }
+
+    #[test]
+    fn s22_newline_join_no_trailing_newline() {
+        // Three distinct labels → exact string equality pins the `\n`-join with NO trailing newline.
+        let src = r"\begin{document}\label{a}
+
+\label{b}
+
+\label{c}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.label_definitions(), "\\label{a}\n\\label{b}\n\\label{c}");
+    }
+
+    #[test]
+    fn s22_is_additive_leaves_s1_s21_outputs_unchanged() {
+        // On a representative doc carrying a section, a figure, an equation, a resolved `\ref`, a
+        // resolved `\eqref`, a `\nameref`, two `\cite`s (one multi-key, one dangling key), a duplicate
+        // `\bibitem`, a dangling `\eqref` (`eq:ghost`), AND a duplicate `\label{dup}`, S22 changes NONE
+        // of the S1-S21 outputs — it only reads `resolve_references`. This also pins the `\n`-join with
+        // no trailing newline on the multi-label S22 case, and that the winning `dup` appears ONCE.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\eqref{eq:e} -> Equation (1)\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\nEquations:\n  \\eqref{eq:e} -> Equation (1)"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+        // S18 grouped dangling refs — unchanged.
+        assert_eq!(doc.unresolved_references_by_source(), "\\eqref{eq:ghost}");
+        // S19 numbered winning bibliography — unchanged.
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+        // S20 losing duplicate labels — unchanged.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+        // S21 resolved references — unchanged.
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
+
+        // And S22 itself surfaces only the WINNING label definitions — one row per distinct key, in
+        // pre-order, `\n`-joined with no trailing newline. The duplicate `dup` appears ONCE (its losing
+        // second definition lives in S20, not here).
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
         );
     }
 }
