@@ -147,6 +147,7 @@ SELF_CONTAINED_RUNGS = (
     "rung107_contact_lens",
     "rung108_periodontal",
     "rung109_wound_care",
+    "rung110_audiology",
 )
 
 

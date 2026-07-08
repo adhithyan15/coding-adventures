@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 110 \u2014 prescribed-gain index from four stated quantities (a NEW panel: audiology / hearing-aid fitting). From a channel count times a gain step for the programmed gain, plus a baseline gain, all divided by an ear count, compute the prescribed-gain index ((channel_count*gain_step+baseline_gain)/ear_count), the programmed gain (channel_count*gain_step+baseline_gain), or the ear count. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A PRODUCT-PLUS-A-TERM OVER A DIVISOR (a*b+c)/d (multiply the channel count by the gain step, add the baseline gain, divide by the ear count, so (a*b+c)/d = ((a*b+c)/d); the FIRST time the ladder puts a three-term numerator whose leading two terms are MULTIPLIED before the third is added, over a divisor \u2014 rung-108 opened the frontier with the pure sum (a+b+c)/d and rung-109 the mixed (a-b+c)/d, and every earlier ratio used a TWO-term numerator: 37 (a+b)/(c+d), 99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), and the difference-denominator trio 105 (a+b)/(c-d), 106 a*b/(c-d), 107 (a-b)/(c-d)) \u2014 and the harness matches the scalar to the printed options. The prescribed-gain index is a rate (programmed gain per ear), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via *, + and / \u2014 no constant leaks, and neither the programmed gain, the ear count, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the numerator parentheses so only the baseline gain is divided before adding (a*b+c/d, a wrong grouping) and regrouping so only the product forms the numerator ((a*b)/(c+d), a wrong pairing). The core confusion tested is that (a*b+c)/d is ((a*b+c)/d), not a*b+c/d and not (a*b)/(c+d). This rung has NO subtraction, so every family member is a product, sum, or quotient of positives and is strictly positive by construction; the ear count is >= 2 (divisor never zero).",
+  "items": [
+    {
+      "id": "r110audio-01",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 3 times a gain step of 2 plus a baseline gain of 4, divided by an ear count of 2. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(3)\nobserve gain_step(2)\nobserve baseline_gain(4)\nobserve ear_count(2)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r110audio-02",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 3 times a gain step of 2 plus a baseline gain of 4, divided by an ear count of 2. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(3)\nobserve gain_step(2)\nobserve baseline_gain(4)\nobserve ear_count(2)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r110audio-03",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 3 times a gain step of 2 plus a baseline gain of 4, divided by an ear count of 2. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(3)\nobserve gain_step(2)\nobserve baseline_gain(4)\nobserve ear_count(2)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r110audio-04",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 4 times a gain step of 2 plus a baseline gain of 3, divided by an ear count of 3. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(4)\nobserve gain_step(2)\nobserve baseline_gain(3)\nobserve ear_count(3)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r110audio-05",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 4 times a gain step of 2 plus a baseline gain of 3, divided by an ear count of 3. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(4)\nobserve gain_step(2)\nobserve baseline_gain(3)\nobserve ear_count(3)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r110audio-06",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 4 times a gain step of 2 plus a baseline gain of 3, divided by an ear count of 3. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(4)\nobserve gain_step(2)\nobserve baseline_gain(3)\nobserve ear_count(3)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r110audio-07",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 3 times a gain step of 4 plus a baseline gain of 6, divided by an ear count of 4. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(3)\nobserve gain_step(4)\nobserve baseline_gain(6)\nobserve ear_count(4)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r110audio-08",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 3 times a gain step of 4 plus a baseline gain of 6, divided by an ear count of 4. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(3)\nobserve gain_step(4)\nobserve baseline_gain(6)\nobserve ear_count(4)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r110audio-09",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 3 times a gain step of 4 plus a baseline gain of 6, divided by an ear count of 4. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(3)\nobserve gain_step(4)\nobserve baseline_gain(6)\nobserve ear_count(4)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r110audio-10",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 5 times a gain step of 3 plus a baseline gain of 5, divided by an ear count of 5. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(5)\nobserve gain_step(3)\nobserve baseline_gain(5)\nobserve ear_count(5)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r110audio-11",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 5 times a gain step of 3 plus a baseline gain of 5, divided by an ear count of 5. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(5)\nobserve gain_step(3)\nobserve baseline_gain(5)\nobserve ear_count(5)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r110audio-12",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 5 times a gain step of 3 plus a baseline gain of 5, divided by an ear count of 5. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(5)\nobserve gain_step(3)\nobserve baseline_gain(5)\nobserve ear_count(5)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r110audio-13",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 4 times a gain step of 5 plus a baseline gain of 6, divided by an ear count of 6. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(4)\nobserve gain_step(5)\nobserve baseline_gain(6)\nobserve ear_count(6)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r110audio-14",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 4 times a gain step of 5 plus a baseline gain of 6, divided by an ear count of 6. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(4)\nobserve gain_step(5)\nobserve baseline_gain(6)\nobserve ear_count(6)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r110audio-15",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 4 times a gain step of 5 plus a baseline gain of 6, divided by an ear count of 6. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(4)\nobserve gain_step(5)\nobserve baseline_gain(6)\nobserve ear_count(6)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r110audio-16",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 6 times a gain step of 3 plus a baseline gain of 3, divided by an ear count of 7. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(6)\nobserve gain_step(3)\nobserve baseline_gain(3)\nobserve ear_count(7)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.428571428571427,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r110audio-17",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 6 times a gain step of 3 plus a baseline gain of 3, divided by an ear count of 7. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(6)\nobserve gain_step(3)\nobserve baseline_gain(3)\nobserve ear_count(7)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.428571428571427,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r110audio-18",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 6 times a gain step of 3 plus a baseline gain of 3, divided by an ear count of 7. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(6)\nobserve gain_step(3)\nobserve baseline_gain(3)\nobserve ear_count(7)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.428571428571427,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r110audio-19",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 6 times a gain step of 4 plus a baseline gain of 4, divided by an ear count of 8. What is the prescribed-gain index (the programmed gain divided by the ear count)?",
+      "program": "observe channel_count(6)\nobserve gain_step(4)\nobserve baseline_gain(4)\nobserve ear_count(8)\nlet answer = (channel_count * gain_step + baseline_gain) / ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r110audio-20",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 6 times a gain step of 4 plus a baseline gain of 4, divided by an ear count of 8. What is the the programmed gain (the channel count times the gain step plus the baseline gain, the numerator divided by the ear count)?",
+      "program": "observe channel_count(6)\nobserve gain_step(4)\nobserve baseline_gain(4)\nobserve ear_count(8)\nlet answer = channel_count * gain_step + baseline_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 28,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r110audio-21",
+      "qtype": "prescribed_gain_index",
+      "stem": "A hearing-aid fitting records a channel count of 6 times a gain step of 4 plus a baseline gain of 4, divided by an ear count of 8. What is the the ear count (the divisor the programmed gain is divided by)?",
+      "program": "observe channel_count(6)\nobserve gain_step(4)\nobserve baseline_gain(4)\nobserve ear_count(8)\nlet answer = ear_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
