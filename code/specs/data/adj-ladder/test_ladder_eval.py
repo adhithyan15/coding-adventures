@@ -143,6 +143,7 @@ SELF_CONTAINED_RUNGS = (
     "rung103_gi_transit",
     "rung104_coag_mixing",
     "rung105_sleep_study",
+    "rung106_exercise_load",
 )
 
 
