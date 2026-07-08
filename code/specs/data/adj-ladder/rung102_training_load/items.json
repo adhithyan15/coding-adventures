@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 102 \u2014 total reps performed from four stated quantities (a NEW panel: sports-medicine / resistance-training rep accounting). From a planned-reps count minus a missed-reps count for the scheduled-completed reps, a set count times an added-per-set count for the bonus reps, and the bonus reps added to the scheduled-completed reps, compute the total reps ((planned_reps-missed_reps)+(set_count*added_per_set)), the scheduled-completed reps (planned_reps-missed_reps), or the bonus reps (set_count*added_per_set). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, A DIFFERENCE PLUS A PRODUCT a-b+c*d (subtract b from a, multiply c and d, add the product to the difference, so a-b+c*d = ((a-b)+(c*d)); the FIRST time the ladder adds a bare PRODUCT to a bare DIFFERENCE \u2014 the PLUS-SIBLING of rung-101 a+b-c*d which subtracted the product from a sum; rung-91 a+b+c*d added a product to a sum, rung-34 a*b+c*d summed two products, rung-35 a*b-c*d subtracted two products) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the four observed quantities via +, -, and * \u2014 no constant leaks, and neither the scheduled-completed reps, the bonus reps, nor any total figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: folding the addition inside the parentheses so the set count is added before multiplying ((a-b+c)*d, a wrong grouping) and multiplying the first pair while differencing the second pair ((a*b)+(c-d), a wrong pairing). The core confusion tested is that a-b+c*d is ((a-b)+(c*d)), not (a-b+c)*d and not (a*b)+(c-d). Each table guarantees the planned reps exceed the missed reps and the planned-times-missed product plus the set count exceeds the added-per-set count, so every figure stays strictly positive.",
+  "items": [
+    {
+      "id": "r102smed-01",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 4 minus missed reps of 2, plus a set count of 2 times an added-per-set count of 3. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(4)\nobserve missed_reps(2)\nobserve set_count(2)\nobserve added_per_set(3)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r102smed-02",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 4 minus missed reps of 2, plus a set count of 2 times an added-per-set count of 3. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(4)\nobserve missed_reps(2)\nobserve set_count(2)\nobserve added_per_set(3)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r102smed-03",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 4 minus missed reps of 2, plus a set count of 2 times an added-per-set count of 3. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(4)\nobserve missed_reps(2)\nobserve set_count(2)\nobserve added_per_set(3)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r102smed-04",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 6 minus missed reps of 3, plus a set count of 3 times an added-per-set count of 4. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(6)\nobserve missed_reps(3)\nobserve set_count(3)\nobserve added_per_set(4)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r102smed-05",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 6 minus missed reps of 3, plus a set count of 3 times an added-per-set count of 4. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(6)\nobserve missed_reps(3)\nobserve set_count(3)\nobserve added_per_set(4)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r102smed-06",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 6 minus missed reps of 3, plus a set count of 3 times an added-per-set count of 4. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(6)\nobserve missed_reps(3)\nobserve set_count(3)\nobserve added_per_set(4)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 17,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r102smed-07",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 8 minus missed reps of 4, plus a set count of 4 times an added-per-set count of 2. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(8)\nobserve missed_reps(4)\nobserve set_count(4)\nobserve added_per_set(2)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 34,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r102smed-08",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 8 minus missed reps of 4, plus a set count of 4 times an added-per-set count of 2. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(8)\nobserve missed_reps(4)\nobserve set_count(4)\nobserve added_per_set(2)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 34,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r102smed-09",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 8 minus missed reps of 4, plus a set count of 4 times an added-per-set count of 2. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(8)\nobserve missed_reps(4)\nobserve set_count(4)\nobserve added_per_set(2)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 34,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r102smed-10",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 10 minus missed reps of 5, plus a set count of 5 times an added-per-set count of 6. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(10)\nobserve missed_reps(5)\nobserve set_count(5)\nobserve added_per_set(6)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 49,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 35,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r102smed-11",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 10 minus missed reps of 5, plus a set count of 5 times an added-per-set count of 6. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(10)\nobserve missed_reps(5)\nobserve set_count(5)\nobserve added_per_set(6)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r102smed-12",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 10 minus missed reps of 5, plus a set count of 5 times an added-per-set count of 6. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(10)\nobserve missed_reps(5)\nobserve set_count(5)\nobserve added_per_set(6)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r102smed-13",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 12 minus missed reps of 6, plus a set count of 6 times an added-per-set count of 7. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(12)\nobserve missed_reps(6)\nobserve set_count(6)\nobserve added_per_set(7)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 71,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r102smed-14",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 12 minus missed reps of 6, plus a set count of 6 times an added-per-set count of 7. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(12)\nobserve missed_reps(6)\nobserve set_count(6)\nobserve added_per_set(7)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 71,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r102smed-15",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 12 minus missed reps of 6, plus a set count of 6 times an added-per-set count of 7. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(12)\nobserve missed_reps(6)\nobserve set_count(6)\nobserve added_per_set(7)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 84,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 71,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r102smed-16",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 14 minus missed reps of 7, plus a set count of 7 times an added-per-set count of 5. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(14)\nobserve missed_reps(7)\nobserve set_count(7)\nobserve added_per_set(5)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r102smed-17",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 14 minus missed reps of 7, plus a set count of 7 times an added-per-set count of 5. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(14)\nobserve missed_reps(7)\nobserve set_count(7)\nobserve added_per_set(5)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r102smed-18",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 14 minus missed reps of 7, plus a set count of 7 times an added-per-set count of 5. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(14)\nobserve missed_reps(7)\nobserve set_count(7)\nobserve added_per_set(5)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 42,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r102smed-19",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 13 minus missed reps of 5, plus a set count of 8 times an added-per-set count of 8. What is the total reps performed (the scheduled-completed reps plus the bonus reps)?",
+      "program": "observe planned_reps(13)\nobserve missed_reps(5)\nobserve set_count(8)\nobserve added_per_set(8)\nlet answer = (planned_reps - missed_reps) + (set_count * added_per_set)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 65,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r102smed-20",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 13 minus missed reps of 5, plus a set count of 8 times an added-per-set count of 8. What is the the scheduled-completed reps (the planned reps minus the missed reps, the difference the bonus reps are added to)?",
+      "program": "observe planned_reps(13)\nobserve missed_reps(5)\nobserve set_count(8)\nobserve added_per_set(8)\nlet answer = planned_reps - missed_reps\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 65,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r102smed-21",
+      "qtype": "smed_total_reps",
+      "stem": "A resistance-training log records planned reps of 13 minus missed reps of 5, plus a set count of 8 times an added-per-set count of 8. What is the the bonus reps (the set count times the added-per-set count, the product added to the scheduled-completed reps)?",
+      "program": "observe planned_reps(13)\nobserve missed_reps(5)\nobserve set_count(8)\nobserve added_per_set(8)\nlet answer = set_count * added_per_set\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 65,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
