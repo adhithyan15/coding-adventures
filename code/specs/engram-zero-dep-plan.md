@@ -122,13 +122,18 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   `\b` uses the Unicode word set, `(?u)`/`(?-u)` flags. Cross-verified vs live
   `regex` in default Unicode mode across 80k+ pairs (non-ASCII inputs) — zero
   divergences. Unicode CASE FOLDING deferred to D2 (needed when wiring the CI uses).
-- **D2 — IN PROGRESS.** Prereq **Unicode simple case folding** added to
-  regex-engine (v0.3.0): `(?i)` uses Unicode fold orbits, cross-verified vs live
-  `regex` (60k+ pairs incl. tricky orbits). NEXT: point the boolean uses at it.
-- **D2 (wiring) — swap the boolean uses.** Point `re:` (`build_search_regex`), whole-word
-  (`build_whole_word_regex`), and glob (`search_pattern_regex_source`) at the new
-  engine's `is_match`. Provide a `regex_engine::escape` for the glob builder.
-  `regex` stays only for the media `replace_all`.
+- **D2a — ✅ DONE (Unicode case folding).** Prereq added to regex-engine (v0.3.0):
+  `(?i)` uses Unicode fold orbits, cross-verified vs live `regex` (60k+ pairs incl.
+  tricky orbits — σ/ς/Σ, Kelvin/Ångström, long-s, titlecase digraphs).
+- **D2 (wiring) — ✅ DONE.** engram-core's `search.rs` now imports
+  `regex_engine::{Regex, RegexBuilder}` for all three boolean uses — `re:`
+  (`build_search_regex`), whole-word (`build_whole_word_regex` + the runtime
+  `whole_word_pattern_matches`), and glob (`search_pattern_regex_source` compiled
+  in `contains_search_pattern` / `search_pattern_matches`). Added
+  `regex_engine::escape` (v0.3.1) for the glob builder (replaces `regex::escape`).
+  The `regex` crate stays only for the media `DUPLICATE_HTML_MEDIA_TAGS`
+  `replace_all` (needs match extents → D4). Full `cargo test -p engram-core`
+  (170 tests incl. the Anki text-modifier search suite) passes on the new engine.
 - **D3 — match extents.** Add `find`/`captures`/`replace_all` to the engine,
   solving the **nullable-loop** priority problem (e.g. `(a?)*`) so extents match
   `regex` byte-for-byte; cross-verify find + replace_all on random corpora.

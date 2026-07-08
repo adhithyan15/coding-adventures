@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+### Search matching now runs on the zero-dep `regex-engine` (Phase D2)
+
+The three **boolean** regex uses in `search.rs` — user `re:` patterns
+(`build_search_regex`), whole-word matching (`build_whole_word_regex` and the
+runtime `whole_word_pattern_matches`), and `*`/`_` glob matching
+(`search_pattern_regex_source` compiled in `contains_search_pattern` /
+`search_pattern_matches`) — now use `regex_engine::{Regex, RegexBuilder}`
+(linear-time Pike VM, zero third-party deps) instead of the `regex` crate. The
+glob-source builder's `regex::escape` calls become `regex_engine::escape`. All
+170 `engram-core` tests, including the Anki text-modifier search suite (words,
+combining marks, clozes, and `re:`), pass unchanged on the new engine.
+
+The `regex` crate is **still a dependency** — the media-tag
+`DUPLICATE_HTML_MEDIA_TAGS` pattern uses `replace_all` (a match *extent*, not a
+boolean), which the engine gains in a later, separately-verified step (Phase D4,
+after `regex-engine` adds `find`/`captures`/`replace_all`). Part of the Engram
+zero-dependency program (`code/specs/engram-zero-dep-plan.md`, Phase D2).
+
 ### HTML tag-strip no longer uses `regex` (zero-dep step)
 
 `rendered_search_text` (search) stripped HTML tags with the `regex` pattern

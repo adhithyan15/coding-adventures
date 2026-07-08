@@ -10,14 +10,19 @@ use crate::model::{
 };
 use crate::queue::{is_new_progress_overlay, is_reviewable};
 use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
-use regex::{Regex, RegexBuilder};
+// Engram's boolean search matching — user `re:` patterns, whole-word, and
+// `*`/`_` globs — runs on the zero-dependency `regex_engine` (Pike VM,
+// linear-time). The one place a match *extent* is still needed, the media-tag
+// `replace_all` below, keeps the third-party `regex` crate (fully qualified)
+// until a later, separately-verified change adds extents to `regex_engine`.
+use regex_engine::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use unicode_normalize::{char::is_combining_mark, UnicodeNormalize};
 
-static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
+static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<regex::Regex> = LazyLock::new(|| {
+    regex::Regex::new(
         r#"(?is)<(?:img|audio|video|object|source)[^>]*(?:src|data)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^ >]+))[^>]*>"#,
     )
     .expect("duplicate media tag regex should compile")
@@ -980,9 +985,9 @@ fn search_pattern_regex_source(pattern: &str, scope: WildcardScope) -> String {
             match chars.peek().copied() {
                 Some('*' | '_') => {
                     let escaped = chars.next().expect("peeked wildcard exists");
-                    source.push_str(&regex::escape(&escaped.to_string()));
+                    source.push_str(&regex_engine::escape(&escaped.to_string()));
                 }
-                _ => source.push_str(&regex::escape(&ch.to_string())),
+                _ => source.push_str(&regex_engine::escape(&ch.to_string())),
             }
             continue;
         }
@@ -996,7 +1001,7 @@ fn search_pattern_regex_source(pattern: &str, scope: WildcardScope) -> String {
                 WildcardScope::Text => source.push('.'),
                 WildcardScope::Word => source.push_str("[\\p{Alphabetic}\\p{Mark}\\p{Nd}_]"),
             },
-            _ => source.push_str(&regex::escape(&ch.to_string())),
+            _ => source.push_str(&regex_engine::escape(&ch.to_string())),
         }
     }
     source
