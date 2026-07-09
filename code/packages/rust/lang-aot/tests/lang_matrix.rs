@@ -1282,8 +1282,13 @@ const PROGRAMS: &[Prog] = &[
     // instead of the operand width) — `clang` rejected that IR, so this cell was VM/
     // JIT/JVM/CLR only. Fixed in `algol-iir-compiler` (the guard now compares at
     // `i64`, like every other relation), and the `for`-loop sum-of-squares now
-    // compiles + runs via `clang` → exit 55. (NativeAot/WASM lower arrays but the
-    // for-loop path is the LLVM-specific cmp lowering this exercises.)
+    // compiles + runs via `clang` → exit 55. **NativeAot and WASM run it too**: the
+    // for-loop lowers to the same generic `alloc_array`/`array_get`/`array_set` +
+    // integer relation/branch ops the straight-line E5 cell (below) already proved on
+    // both — no backend-specific for-loop path exists, so once the LLVM guard-width
+    // bug was fixed there was nothing left blocking native/wasm. This cell now runs on
+    // all 7 backends (the loop is a pure control-flow composition over ops all backends
+    // already lower).
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1292,7 +1297,7 @@ const PROGRAMS: &[Prog] = &[
                result := 0; \
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
-        backends: &[Vm, Jit, Jvm, Clr, Llvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *straight-line* 1-D integer array (LANG-FULL E5, the **LLVM**
     // static-array proof — PR-4a). `A[1] := 40; A[3] := 2; result := A[1] + A[3]`
