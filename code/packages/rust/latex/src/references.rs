@@ -2798,6 +2798,74 @@ impl Document {
         // no `target_kind` — a per-kind census is not viable here, and a single total is the clean move.
         self.resolve_references().unresolved.len().to_string()
     }
+
+    /// The **single-integer TOTAL of the resolved references** (LTXDOC03 S28) — the *count-total*
+    /// companion of S21's [`resolved_references_by_source`](Document::resolved_references_by_source)
+    /// and S24's [`resolved_references_by_kind`](Document::resolved_references_by_kind). Where S21/S24
+    /// render one **line per resolved reference** (a `\<command>{key}` list, flat in body pre-order or
+    /// grouped by target kind), S28 renders one **line** carrying just the decimal **count** of those
+    /// resolved refs — the number of `\ref`/`\eqref`/`\pageref` that some `\label` defines. It is the
+    /// exact resolved-side twin of S27's
+    /// [`unresolved_reference_count`](Document::unresolved_reference_count): together the two totals
+    /// split every reference into the pair (resolved, dangling), so S28 + S27 = the total reference
+    /// count. It is to S21/S24 what S25's [`label_kind_counts`](Document::label_kind_counts) and S26's
+    /// [`resolved_reference_kind_counts`](Document::resolved_reference_kind_counts) are to their list
+    /// views: a numeric summary over the *same* list — here the **resolved** references — so a reader
+    /// sees "how many refs resolve" without scanning the individual keys.
+    ///
+    /// ## What it does
+    ///
+    /// S1's [`Document::resolve_references`] walks every `\ref`/`\eqref`/`\pageref` in body pre-order
+    /// and splits them into the **resolved** references (those a `\label` defines — S21/S24/S26's
+    /// domain, recorded in [`ReferenceResolution::resolved`] as [`ResolvedRef`]s) and the
+    /// **unresolved** (dangling) ones (S18/S27's domain). S21/S24 render that `resolved` list as one
+    /// line per resolved ref; S28 collapses the whole list to a **single count line** — the decimal
+    /// `.len()` of `resolved`. Unlike S26 (which *can* census the resolved refs by the `target_kind`
+    /// each bound to), S28 takes no per-kind view at all: it reads only the length, never a
+    /// `target_kind`, so section, table, and equation references all fold into one total. Only the
+    /// **resolved** refs are counted; a dangling `\ref{nope}` lives in
+    /// [`ReferenceResolution::unresolved`] (S18/S27), never in `resolved`, so it is excluded by
+    /// construction.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read the length of [`ReferenceResolution::resolved`] and render it as its decimal `String`,
+    /// **always** on a single line with **no** trailing newline. This is a **count** renderer, so its
+    /// honest value when there are no resolved references is the number `0` — the string `"0"`, **not**
+    /// a `(no resolved references)` marker (a total count of zero *is* a number; the `(no …)` marker
+    /// discipline belongs to the *list* renderers S21/S24, whose empty case has no lines to show). This
+    /// mirrors S27 exactly, which emits `"0"` for an empty `unresolved` list. There is no source
+    /// slicing and no `target_kind` read at all — only `.len()` is taken.
+    ///
+    /// Concretely, for a body defining `\label{sec:i}` and then writing `\ref{sec:i}` (resolves),
+    /// `\ref{nope}` (dangles), and `\ref{sec:i}` again (resolves):
+    ///
+    /// ```text
+    /// 2
+    /// ```
+    ///
+    /// (two references resolve; the one dangling `\ref{nope}` is excluded). A document with no resolved
+    /// references — every ref dangles, or there are none at all — returns `"0"`.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S28 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1–S27 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact. It is a *second view* of the same `resolved` list
+    /// S21/S24 render per-source and per-kind — counting never adds, drops, or reorders the resolved
+    /// references relative to what `resolve_references` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only `.len()` is read, never a `target_kind`); a single read of the already-bounded `resolved`
+    /// list's length. Borrows `self` immutably and returns owned `String` data, so the result outlives
+    /// any borrow of the source.
+    pub fn resolved_reference_count(&self) -> String {
+        // S1 already split every `\ref`/`\eqref`/`\pageref` into resolved and dangling entries, routing
+        // the resolved ones into `resolved` (in body pre-order). We only read that list's length; the
+        // dangling refs live in `unresolved` (S18/S27). No `target_kind` is read — section, table, and
+        // equation references all fold into a single total, the resolved-side twin of S27's count.
+        self.resolve_references().resolved.len().to_string()
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -6858,6 +6926,144 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         assert_eq!(
             doc.unresolved_reference_count(),
             doc.unresolved_references_by_source().lines().count().to_string()
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S28 — single-integer TOTAL of the resolved references (`resolved_reference_count`).
+    // The count-total companion of S21's `resolved_references_by_source` / S24's
+    // `resolved_references_by_kind`: one decimal line = `.len()` of the SAME `resolved` list. It is
+    // the exact resolved-side twin of S27's `unresolved_reference_count` — together S28 + S27 split
+    // every reference into (resolved, dangling). No `target_kind` is read, so all kinds fold into one
+    // total. Being a COUNT renderer, its empty value is the honest number "0", NOT a `(no …)` marker.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s28_two_resolved_plus_one_dangling_counts_two() {
+        // Two `\ref`s that resolve (`sec:i` twice) plus one that dangles (`nope`) → the count of
+        // resolved refs is exactly "2"; the dangling `\ref{nope}` is excluded (it lands in `unresolved`).
+        // Cross-check: on the SAME doc S27 returns "1" — the two totals split the references.
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\ref{sec:i} \pageref{sec:i} \ref{nope}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_reference_count(), "2");
+        // The dangling side: exactly one, so S28 + S27 = 3 = the total reference count.
+        assert_eq!(doc.unresolved_reference_count(), "1");
+        // Cross-check: the two resolved refs are exactly what S21 enumerates.
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:i}\n\\pageref{sec:i}"
+        );
+    }
+
+    #[test]
+    fn s28_no_resolvable_refs_counts_zero() {
+        // Every reference dangles (no `\label` defines them) → zero resolved refs. A COUNT renderer's
+        // honest value for an empty list is the number "0" (never a `(no …)` marker).
+        let src = r"\begin{document}\ref{nope} \eqref{eq:ghost} \pageref{gone}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_reference_count(), "0");
+        // And S21 (the list view) shows its fixed marker for the same doc — the divergence is intended.
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "(no resolved references)"
+        );
+    }
+
+    #[test]
+    fn s28_no_references_at_all_counts_zero() {
+        // A document with NO references whatsoever → still "0" (the count of an empty `resolved` list).
+        let src = r"\begin{document}Just some text with no references.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_reference_count(), "0");
+    }
+
+    #[test]
+    fn s28_mixed_target_kinds_count_the_integer() {
+        // Several resolved refs across DIFFERENT target kinds — a section, a table, and an equation. No
+        // kind is tracked by S28 (only `.len()` is read), so the answer is simply the integer count of
+        // resolved refs: "3".
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\begin{table}\caption{T}\label{tab:t}\end{table}
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+\ref{sec:i} \ref{tab:t} \eqref{eq:e}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_reference_count(), "3");
+    }
+
+    #[test]
+    fn s28_count_equals_number_of_s21_lines() {
+        // Cross-check the total against S21's per-source list: the count S28 returns MUST equal the
+        // number of lines S21 enumerates (they are two views of the SAME `resolved` list).
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+\ref{sec:i} \eqref{eq:e} \pageref{sec:i} \ref{nope}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        let s21 = doc.resolved_references_by_source();
+        let s21_line_count = s21.lines().count();
+        assert_eq!(s21_line_count, 3);
+        assert_eq!(doc.resolved_reference_count(), s21_line_count.to_string());
+        assert_eq!(doc.resolved_reference_count(), "3");
+    }
+
+    #[test]
+    fn s28_is_additive_leaves_s1_s27_outputs_unchanged() {
+        // Same representative doc as the S24/S25/S26/S27 additive tests. S28 changes NONE of the S1-S27
+        // outputs — it only reads `resolve_references`. Its count is a second view of the SAME
+        // `resolved` list S21/S24 render per-source and per-kind; pinned here to show S28 neither adds,
+        // drops, nor reorders, and that its total agrees with the number of lines S21 enumerates.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // A handful of prior renderers — byte-for-byte unchanged.
+        // S14 per-kind census.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S22 flat winning label definitions.
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+        // S21 flat resolved refs — `\ref{sec:intro}` and `\eqref{eq:e}` resolve (`\eqref{eq:ghost}`
+        // dangles; `\nameref`/`\cite` are outside the `\ref` family).
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
+        // S25 per-kind label-definition counts.
+        assert_eq!(
+            doc.label_kind_counts(),
+            "section: 1\nfigure: 1\nequation: 1\ninline: 1"
+        );
+        // S26 per-kind resolved-reference counts.
+        assert_eq!(
+            doc.resolved_reference_kind_counts(),
+            "section: 1\nequation: 1"
+        );
+        // S27 dangling-reference count — exactly one (`\eqref{eq:ghost}`).
+        assert_eq!(doc.unresolved_reference_count(), "1");
+
+        // And S28 itself: exactly TWO references resolve, so the count is "2" — agreeing with the two
+        // lines S21 enumerates for the same doc.
+        assert_eq!(doc.resolved_reference_count(), "2");
+        assert_eq!(
+            doc.resolved_reference_count(),
+            doc.resolved_references_by_source().lines().count().to_string()
         );
     }
 }

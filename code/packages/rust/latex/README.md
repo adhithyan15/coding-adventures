@@ -75,6 +75,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S25 — per-kind census (counts) of the winning `\label` definitions** | `Document::label_kind_counts() -> String` — a **new**, read-only method that renders a **per-kind CENSUS** of the winning `\label` definitions: one `<kind>: <n>` line per `LabelKind` that has at least one winning definition, carrying the integer **count** (not a list) — the **count companion of S23's** `label_definitions_by_kind` (which renders one `[kind] \label{key}` *line per definition*). S22's flat `label_definitions`, S23's grouped list, and S25's counts are three views of the one winning `definitions` list; S25 collapses each kind's group to a single tally line (it is to S23 what S14's `list_summary` is to a full enumeration). It reads only `resolve_references().definitions` (one row per distinct key — the WINNER; a `\label{dup}` written twice counts **once**, its later copy being a `Duplicate` in S20's domain) and counts by kind in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — the SAME slice S23/S24 use, iterated explicitly, not a hash map, so the order is deterministic). Each line is `<kind>: <n>` — `<kind>` from `LabelKind::as_str()` (the SAME tag S23 renders: `"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`), `<n>` the decimal count (no source slicing). A kind with a zero count contributes no line (no bare `table: 0`). Lines joined by `\n`, no trailing newline. A document with **no** label definitions → the **same** fixed marker `(no label definitions)` S22/S23 use. E.g. `sec:intro` (section), `eq:a`/`eq:b` (equations), `note` (inline) → `section: 1\nequation: 2\ninline: 1`. Every S1–S24 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S26 — per-kind census (counts) of the resolved references** | `Document::resolved_reference_kind_counts() -> String` — a **new**, read-only method that renders a **per-kind CENSUS** of the RESOLVED `\ref`/`\eqref`/`\pageref` references: one `<kind>: <n>` line per `LabelKind` that has at least one resolved ref, carrying the integer **count** (not a list) — the **count companion of S24's** `resolved_references_by_kind` (which renders one `[kind] \<command>{key}` *line per resolved ref*). S21's flat `resolved_references_by_source`, S24's grouped list, and S26's counts are three views of the one `resolved` list; S26 collapses each kind's group to a single tally line (it is to S24 what S25's `label_kind_counts` is to S23). It reads only `resolve_references().resolved` (each a `ResolvedRef` carrying the `target_kind` — the kind of the label it bound to; a dangling `\ref` lives in `unresolved`, S18's domain, and is excluded by construction — never a spurious `<kind>: 0`) and counts by `target_kind` in a **fixed, document-independent order** (the enum declaration order: `Section`, `Table`, `Figure`, `Equation`, `Inline` — the SAME slice S23/S24/S25 use, iterated explicitly, not a hash map, so the order is deterministic). Each line is `<kind>: <n>` — `<kind>` from `LabelKind::as_str()` (the SAME tag S24 renders: `"section"`/`"table"`/`"figure"`/`"equation"`/`"inline"`), `<n>` the decimal count (no source slicing). A kind with a zero count contributes no line (no bare `table: 0`). Lines joined by `\n`, no trailing newline. A document with **no** resolved references → the **same** fixed marker `(no resolved references)` S21/S24 use. E.g. `\ref{sec:a}`, `\ref{sec:b}` (two sections), `\eqref{eq:e}` (equation) → `section: 2\nequation: 1`. Every S1–S25 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S27 — single-integer total of the unresolved (dangling) references** | `Document::unresolved_reference_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the UNRESOLVED (dangling) `\ref`/`\eqref`/`\pageref` references — the ones no `\label` defines (LaTeX's *"Reference `key' undefined"*, the `??`) — as one integer line. It is the **count-total companion of S18's** `unresolved_references_by_source` (which renders one `\<command>{key}` *line per dangling ref*): S18 and S27 are two views of the one `unresolved` list; S27 collapses the whole list to a single `.len()` tally. It is the count-total sibling of the census family (S25 `label_kind_counts`, S26 `resolved_reference_kind_counts`), but for the UNRESOLVED refs — which carry **no** `target_kind` (a dangling ref bound to nothing), so a per-kind census is not viable and a single total is the clean move. It reads only `resolve_references().unresolved.len()` (a resolved `\ref{sec:i}` lives in `resolved`, S21's domain, and is excluded by construction) — never a `target_kind`, no source slicing at all. Being a COUNT renderer, its empty case (every ref resolves, or none at all) is the honest number `"0"` — **not** a `(no …)` marker (that discipline belongs to the *list* renderers). One line, no trailing newline. E.g. `\ref{sec:i}` (resolves) + `\ref{nope}` + `\ref{gone}` (both dangle) → `2`. Every S1–S26 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S28 — single-integer total of the resolved references** | `Document::resolved_reference_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the RESOLVED `\ref`/`\eqref`/`\pageref` references — the ones some `\label` defines — as one integer line. It is the **count-total companion of S21's** `resolved_references_by_source` **and S24's** `resolved_references_by_kind` (which render one `\<command>{key}` *line per resolved ref*, flat in source order or grouped by target kind): S21/S24 and S28 are two views of the one `resolved` list; S28 collapses the whole list to a single `.len()` tally. It is the exact resolved-side **twin of S27's** `unresolved_reference_count` — together S28 + S27 split every reference into the pair (resolved, dangling), so their totals sum to the total reference count. It reads only `resolve_references().resolved.len()` (a dangling `\ref{nope}` lives in `unresolved`, S18/S27's domain, and is excluded by construction) — never a `target_kind`, no source slicing at all, so section/table/equation references all fold into one total. Being a COUNT renderer, its empty case (every ref dangles, or none at all) is the honest number `"0"` — **not** a `(no resolved references)` marker (that discipline belongs to the *list* renderers; this mirrors S27). One line, no trailing newline. E.g. `\ref{sec:i}` (resolves) + `\pageref{sec:i}` (resolves) + `\ref{nope}` (dangles) → `2`. Every S1–S27 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -1099,6 +1100,38 @@ Being a COUNT renderer, a document with no dangling references (every ref resolv
 renders the honest number `"0"` — **not** a `(no …)` marker (that discipline belongs to the *list*
 renderers S18/S21/S24, whose empty case has no lines to show). Purely additive — reuses
 `resolve_references`, mutates nothing, leaves every S1–S26 output and the `to_latex()` fixed point
+unchanged.
+
+### single-integer total of the resolved references (LTXDOC03 S28)
+
+The decimal **COUNT** of the RESOLVED `\ref`/`\eqref`/`\pageref` references — the ones some `\label`
+defines — as one integer line. It is the **count-total companion of S21's** `resolved_references_by_source`
+**and S24's** `resolved_references_by_kind` (which render one `\<command>{key}` line *per resolved ref*,
+flat in source order or grouped by target kind): S21/S24 and S28 are two *views* of the one `resolved`
+list `resolve_references()` produces; S28 collapses the whole list to a single `.len()` tally. It is the
+exact resolved-side **twin of S27's** `unresolved_reference_count` — together S28 + S27 split every
+reference into the pair (resolved, dangling), so their totals sum to the total reference count.
+`resolved_reference_count` reads only `resolve_references().resolved.len()` — a dangling `\ref{nope}`
+lives in `unresolved` (S18/S27's domain) and is excluded by construction — never a `target_kind`, with no
+source slicing at all, so section/table/equation references all fold into one total.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\section{Intro}\label{sec:i}
+\ref{sec:i} \pageref{sec:i} \ref{nope}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.resolved_reference_count(),
+    // two refs resolve (`\ref{sec:i}`, `\pageref{sec:i}`); the dangling `\ref{nope}` is excluded
+    "2",
+);
+```
+
+Being a COUNT renderer, a document with no resolved references (every ref dangles, or none at all)
+renders the honest number `"0"` — **not** a `(no resolved references)` marker (that discipline belongs to
+the *list* renderers S21/S24, whose empty case has no lines to show; this mirrors S27). Purely additive —
+reuses `resolve_references`, mutates nothing, leaves every S1–S27 output and the `to_latex()` fixed point
 unchanged.
 
 ## Usage
