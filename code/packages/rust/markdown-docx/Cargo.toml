@@ -1,0 +1,15 @@
+[package]
+name = "markdown-docx"
+version = "0.1.0"
+edition = "2021"
+description = "Native Markdown/GFM to .docx, through the shared Document AST (MD02)"
+license = "MIT"
+
+[dependencies]
+commonmark-parser = { path = "../commonmark-parser" }
+gfm-parser = { path = "../gfm-parser" }
+document-ast-to-docx = { path = "../document-ast-to-docx" }
+
+[dev-dependencies]
+# Round-trip proof: reopen the .docx bytes with the read-side WordprocessingML reader.
+coding-adventures-wordprocessingml = { path = "../wordprocessingml" }

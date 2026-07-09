@@ -873,4 +873,5 @@ members = [
     "xls",
     "spreadsheet-io",
   "document-ast-to-docx",
+  "markdown-docx",
 ]
