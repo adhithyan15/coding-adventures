@@ -10,19 +10,20 @@ use crate::model::{
 };
 use crate::queue::{is_new_progress_overlay, is_reviewable};
 use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
-// Engram's boolean search matching — user `re:` patterns, whole-word, and
-// `*`/`_` globs — runs on the zero-dependency `regex_engine` (Pike VM,
-// linear-time). The one place a match *extent* is still needed, the media-tag
-// `replace_all` below, keeps the third-party `regex` crate (fully qualified)
-// until a later, separately-verified change adds extents to `regex_engine`.
+// Engram's search matching runs entirely on the zero-dependency `regex_engine`
+// (Pike VM, linear-time): the boolean uses — user `re:` patterns, whole-word,
+// and `*`/`_` globs — plus the one place a match *extent* is needed, the
+// media-tag `replace_all` below. No third-party regex crate remains in the
+// runtime dependency graph (`regex` is now a dev-dependency, used only by the
+// `html_scan` cross-check test).
 use regex_engine::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use unicode_normalize::{char::is_combining_mark, UnicodeNormalize};
 
-static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<regex::Regex> = LazyLock::new(|| {
-    regex::Regex::new(
+static DUPLICATE_HTML_MEDIA_TAGS: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
         r#"(?is)<(?:img|audio|video|object|source)[^>]*(?:src|data)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^ >]+))[^>]*>"#,
     )
     .expect("duplicate media tag regex should compile")
@@ -2276,14 +2277,15 @@ fn rendered_search_text(value: &str) -> Cow<'_, str> {
         return Cow::Borrowed(value);
     }
 
-    let with_media = DUPLICATE_HTML_MEDIA_TAGS.replace_all(value, |captures: &regex::Captures| {
-        let filename = captures
-            .get(1)
-            .or_else(|| captures.get(2))
-            .or_else(|| captures.get(3))
-            .map_or("", |capture| capture.as_str());
-        format!(" {filename} ")
-    });
+    let with_media =
+        DUPLICATE_HTML_MEDIA_TAGS.replace_all(value, |captures: &regex_engine::Captures| {
+            let filename = captures
+                .get(1)
+                .or_else(|| captures.get(2))
+                .or_else(|| captures.get(3))
+                .map_or("", |capture| capture.as_str());
+            format!(" {filename} ")
+        });
     let without_tags = crate::html_scan::strip_tags(&with_media);
     Cow::Owned(decode_search_html_entities(&without_tags))
 }
