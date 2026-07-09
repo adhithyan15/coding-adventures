@@ -84,8 +84,18 @@ const OFFICE_DOCUMENT_REL_TYPE: &str =
 
 /// Content type of every `.rels` part, registered as a `<Default>` for the
 /// `rels` extension.
-const RELS_CONTENT_TYPE: &str =
-    "application/vnd.openxmlformats-package.relationships+xml";
+const RELS_CONTENT_TYPE: &str = "application/vnd.openxmlformats-package.relationships+xml";
+
+/// The content type registered as an `<Override>` for `/word/styles.xml` — the
+/// part holding the style definitions the body's `<w:pStyle>` references resolve
+/// against. Only emitted when a non-`Normal` paragraph style is used.
+const STYLES_CONTENT_TYPE: &str =
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml";
+
+/// The relationship type linking `word/document.xml` to its `word/styles.xml`.
+/// Word follows this from the body's own `.rels` to find the style definitions.
+const STYLES_REL_TYPE: &str =
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles";
 
 /// Content type registered as the `<Default>` for the `xml` extension.
 const XML_CONTENT_TYPE: &str = "application/xml";
@@ -102,11 +112,98 @@ const XML_DECL: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"ye
 // a table (rows of cell strings). We keep only *text*; formatting is out of
 // scope at this milestone, exactly as the reader keeps only run text.
 
+/// A **run** — a maximal span of uniform character formatting within a
+/// paragraph, the unit WordprocessingML formats at. `"a **bold** word"` is three
+/// runs: `"a "`, `"bold"` (bold), `" word"`.
+///
+/// The three flags map to *direct* (style-free) formatting: `bold` → `<w:b/>`,
+/// `italic` → `<w:i/>`, `mono` → a monospace `<w:rFonts>` (inline `code`). The
+/// reader ignores them (it keeps only text); Word renders them. A run with no
+/// flags emits no `<w:rPr>`, so unformatted output is byte-for-byte unchanged.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Run {
+    /// The run's logical text (escaped only at serialization time).
+    pub text: String,
+    /// Bold — `<w:b/>`.
+    pub bold: bool,
+    /// Italic — `<w:i/>`.
+    pub italic: bool,
+    /// Monospace — a Consolas `<w:rFonts>` override (inline code).
+    pub mono: bool,
+}
+
+impl Run {
+    /// An unformatted run carrying `text`.
+    pub fn plain(text: &str) -> Self {
+        Self {
+            text: text.to_string(),
+            bold: false,
+            italic: false,
+            mono: false,
+        }
+    }
+    /// This run, made bold (chainable: `Run::plain("x").bold().italic()`).
+    #[must_use]
+    pub fn bold(mut self) -> Self {
+        self.bold = true;
+        self
+    }
+    /// This run, made italic.
+    #[must_use]
+    pub fn italic(mut self) -> Self {
+        self.italic = true;
+        self
+    }
+    /// This run, made monospace (inline code).
+    #[must_use]
+    pub fn mono(mut self) -> Self {
+        self.mono = true;
+        self
+    }
+}
+
+/// A paragraph's **style** — the semantic role Word renders it as. Anything but
+/// [`Normal`](ParagraphStyle::Normal) emits a `<w:pStyle>` reference and pulls in
+/// the package's `styles.xml` (see [`write_docx`]); `Normal` emits nothing, so a
+/// document that uses no styles has no `styles.xml` at all.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ParagraphStyle {
+    /// Body text — no `<w:pStyle>`.
+    Normal,
+    /// A heading; the `u8` is the level, clamped to `1..=6` (`Heading1`…`Heading6`).
+    Heading(u8),
+    /// A monospace code-block line (`Code`).
+    Code,
+    /// A block quotation (`Quote`).
+    Quote,
+    /// A list item's paragraph (`ListParagraph`) — indented; the bullet/number is
+    /// carried in the run text by the caller.
+    List,
+}
+
+impl ParagraphStyle {
+    /// The `w:styleId` this style references, or `None` for [`Normal`]
+    /// (which needs no `<w:pStyle>`). Heading levels are clamped to `1..=6`.
+    fn style_id(self) -> Option<String> {
+        match self {
+            ParagraphStyle::Normal => None,
+            ParagraphStyle::Heading(level) => Some(format!("Heading{}", level.clamp(1, 6))),
+            ParagraphStyle::Code => Some("Code".to_string()),
+            ParagraphStyle::Quote => Some("Quote".to_string()),
+            ParagraphStyle::List => Some("ListParagraph".to_string()),
+        }
+    }
+}
+
 /// One block-level item in the body.
 enum Block {
-    /// A paragraph: an ordered list of run texts. A single-run paragraph has one
-    /// element; a multi-run paragraph has several, which the reader rejoins.
-    Paragraph(Vec<String>),
+    /// A paragraph: a style + an ordered list of formatted runs. A single-run
+    /// paragraph has one element; a multi-run paragraph has several, which the
+    /// reader rejoins.
+    Paragraph {
+        style: ParagraphStyle,
+        runs: Vec<Run>,
+    },
     /// A table: rows of cells, each cell a single string of text.
     Table(Vec<Vec<String>>),
 }
@@ -135,7 +232,10 @@ impl Document {
     /// model holds the *logical* string, not XML). `"a & b"` round-trips to
     /// `"a & b"`, not `"a &amp; b"`.
     pub fn add_paragraph(&mut self, text: &str) {
-        self.blocks.push(Block::Paragraph(vec![text.to_string()]));
+        self.blocks.push(Block::Paragraph {
+            style: ParagraphStyle::Normal,
+            runs: vec![Run::plain(text)],
+        });
     }
 
     /// Append a **multi-run** paragraph: one `<w:r>` per element of `runs`, in
@@ -146,8 +246,22 @@ impl Document {
     /// An empty slice yields an empty paragraph (a `<w:p/>` with no runs), which
     /// is valid and reads back as empty text.
     pub fn add_paragraph_runs(&mut self, runs: &[&str]) {
-        self.blocks
-            .push(Block::Paragraph(runs.iter().map(|r| r.to_string()).collect()));
+        self.blocks.push(Block::Paragraph {
+            style: ParagraphStyle::Normal,
+            runs: runs.iter().map(|r| Run::plain(r)).collect(),
+        });
+    }
+
+    /// Append a paragraph carrying a [`ParagraphStyle`] and a list of formatted
+    /// [`Run`]s — the general form the plain helpers above sugar over. A heading,
+    /// a code line, a quote, or a list item with bold/italic/mono spans all go
+    /// through here.
+    ///
+    /// Using any non-[`Normal`](ParagraphStyle::Normal) style causes
+    /// [`write_docx`] to emit a `styles.xml` part defining it (Word needs the
+    /// definition to render the style); an all-`Normal` document has none.
+    pub fn add_styled_paragraph(&mut self, style: ParagraphStyle, runs: Vec<Run>) {
+        self.blocks.push(Block::Paragraph { style, runs });
     }
 
     /// Append a table: `rows` of cells, each cell a string of text. Each cell
@@ -177,7 +291,7 @@ fn document_xml(doc: &Document) -> Vec<u8> {
 
     for block in &doc.blocks {
         match block {
-            Block::Paragraph(runs) => push_paragraph(&mut xml, runs),
+            Block::Paragraph { style, runs } => push_paragraph(&mut xml, *style, runs),
             Block::Table(rows) => push_table(&mut xml, rows),
         }
     }
@@ -186,29 +300,55 @@ fn document_xml(doc: &Document) -> Vec<u8> {
     xml.into_bytes()
 }
 
-/// Append one `<w:p>` built from an ordered list of run texts.
+/// Append one `<w:p>` with an optional `<w:pStyle>` (for non-`Normal` styles) and
+/// an ordered list of formatted runs.
 ///
-/// Each run is `<w:r><w:t xml:space="preserve">…escaped…</w:t></w:r>`. The
-/// `xml:space="preserve"` attribute stops an XML processor from collapsing
-/// leading/trailing whitespace, so a run like `"Second "` keeps its trailing
-/// space when the reader rejoins runs.
-fn push_paragraph(xml: &mut String, runs: &[String]) {
+/// The paragraph properties, when present, come first:
+/// `<w:pPr><w:pStyle w:val="Heading1"/></w:pPr>`. A `Normal` paragraph emits no
+/// `<w:pPr>`, so its bytes are unchanged from the text-only era.
+fn push_paragraph(xml: &mut String, style: ParagraphStyle, runs: &[Run]) {
     xml.push_str("<w:p>");
+    if let Some(id) = style.style_id() {
+        xml.push_str("<w:pPr><w:pStyle w:val=\"");
+        xml.push_str(&id); // style ids are our own fixed ASCII identifiers
+        xml.push_str("\"/></w:pPr>");
+    }
     for run in runs {
         push_run(xml, run);
     }
     xml.push_str("</w:p>");
 }
 
-/// Append one `<w:r><w:t xml:space="preserve">…</w:t></w:r>` for `text`.
-fn push_run(xml: &mut String, text: &str) {
-    xml.push_str("<w:r><w:t xml:space=\"preserve\">");
-    xml.push_str(&xml_escape(text));
+/// Append one `<w:r>` for `run`: an optional `<w:rPr>` of direct formatting, then
+/// `<w:t xml:space="preserve">…escaped…</w:t>`.
+///
+/// The `xml:space="preserve"` attribute stops an XML processor from collapsing
+/// leading/trailing whitespace, so a run like `"Second "` keeps its trailing
+/// space when the reader rejoins runs. An unformatted run emits no `<w:rPr>`.
+fn push_run(xml: &mut String, run: &Run) {
+    xml.push_str("<w:r>");
+    if run.bold || run.italic || run.mono {
+        xml.push_str("<w:rPr>");
+        if run.bold {
+            xml.push_str("<w:b/>");
+        }
+        if run.italic {
+            xml.push_str("<w:i/>");
+        }
+        if run.mono {
+            // A direct monospace font override — inline `code` without needing a
+            // character style defined in styles.xml.
+            xml.push_str("<w:rFonts w:ascii=\"Consolas\" w:hAnsi=\"Consolas\" w:cs=\"Consolas\"/>");
+        }
+        xml.push_str("</w:rPr>");
+    }
+    xml.push_str("<w:t xml:space=\"preserve\">");
+    xml.push_str(&xml_escape(&run.text));
     xml.push_str("</w:t></w:r>");
 }
 
 /// Append one `<w:tbl>` built from rows of cell strings. Each cell is a `<w:tc>`
-/// wrapping a single-run paragraph — the minimal valid cell content.
+/// wrapping a single-run `Normal` paragraph — the minimal valid cell content.
 fn push_table(xml: &mut String, rows: &[Vec<String>]) {
     xml.push_str("<w:tbl>");
     for row in rows {
@@ -217,7 +357,7 @@ fn push_table(xml: &mut String, rows: &[Vec<String>]) {
             xml.push_str("<w:tc>");
             // A cell must contain at least one paragraph to be valid; we give it
             // exactly one single-run paragraph carrying the cell's text.
-            push_paragraph(xml, std::slice::from_ref(cell));
+            push_paragraph(xml, ParagraphStyle::Normal, &[Run::plain(cell)]);
             xml.push_str("</w:tc>");
         }
         xml.push_str("</w:tr>");
@@ -259,7 +399,86 @@ pub fn write_docx(doc: &Document) -> Vec<u8> {
     let body = document_xml(doc);
     pkg.add_part("/word/document.xml", DOCUMENT_CONTENT_TYPE, &body);
 
+    // (4) Styles — ONLY when a paragraph uses a non-Normal style. A `<w:pStyle>`
+    // reference renders as its style only if the package defines it, so we add a
+    // `word/styles.xml` part plus the `word/_rels/document.xml.rels` relationship
+    // that points the body at it. An all-Normal document skips this entirely, so
+    // its bytes are byte-for-byte what the text-only writer produced.
+    if uses_styles(doc) {
+        let mut doc_rels = RelationshipsBuilder::new();
+        doc_rels.add("rId1", STYLES_REL_TYPE, "styles.xml");
+        pkg.add_part_defaulted("/word/_rels/document.xml.rels", &doc_rels.build());
+        pkg.add_part(
+            "/word/styles.xml",
+            STYLES_CONTENT_TYPE,
+            styles_xml().as_bytes(),
+        );
+    }
+
     pkg.finish()
+}
+
+/// Whether any block uses a non-`Normal` paragraph style — the condition for
+/// emitting `styles.xml`.
+fn uses_styles(doc: &Document) -> bool {
+    doc.blocks
+        .iter()
+        .any(|b| matches!(b, Block::Paragraph { style, .. } if style.style_id().is_some()))
+}
+
+/// The fixed `word/styles.xml` defining every style MD02 uses: `Heading1`…
+/// `Heading6` (bold, decreasing size, with an `<w:outlineLvl>` so Word's outline
+/// / navigation pane works), `Code` (monospace), `Quote` (indented italic), and
+/// `ListParagraph` (indented). Word resolves a `<w:pStyle w:val="Heading1"/>` in
+/// the body against these definitions.
+fn styles_xml() -> String {
+    let mut s = String::new();
+    s.push_str(XML_DECL);
+    s.push_str("<w:styles xmlns:w=\"");
+    s.push_str(W_NS);
+    s.push_str("\">");
+    // Heading1..6: half-point sizes 32,28,26,24,22,20 (16pt..10pt), bold, with an
+    // outline level (0-based) so they populate the document outline.
+    let heading_sizes = [32u32, 28, 26, 24, 22, 20];
+    for (i, size) in heading_sizes.iter().enumerate() {
+        let level = i + 1;
+        s.push_str(&format!(
+            "<w:style w:type=\"paragraph\" w:styleId=\"Heading{level}\">\
+               <w:name w:val=\"heading {level}\"/>\
+               <w:basedOn w:val=\"Normal\"/>\
+               <w:pPr><w:outlineLvl w:val=\"{outline}\"/></w:pPr>\
+               <w:rPr><w:b/><w:sz w:val=\"{size}\"/></w:rPr>\
+             </w:style>",
+            outline = i,
+        ));
+    }
+    // Code: a monospace block style.
+    s.push_str(
+        "<w:style w:type=\"paragraph\" w:styleId=\"Code\">\
+           <w:name w:val=\"Code\"/>\
+           <w:basedOn w:val=\"Normal\"/>\
+           <w:rPr><w:rFonts w:ascii=\"Consolas\" w:hAnsi=\"Consolas\" w:cs=\"Consolas\"/></w:rPr>\
+         </w:style>",
+    );
+    // Quote: indented italic.
+    s.push_str(
+        "<w:style w:type=\"paragraph\" w:styleId=\"Quote\">\
+           <w:name w:val=\"Quote\"/>\
+           <w:basedOn w:val=\"Normal\"/>\
+           <w:pPr><w:ind w:left=\"720\"/></w:pPr>\
+           <w:rPr><w:i/></w:rPr>\
+         </w:style>",
+    );
+    // ListParagraph: indented body text (the bullet/number lives in the text).
+    s.push_str(
+        "<w:style w:type=\"paragraph\" w:styleId=\"ListParagraph\">\
+           <w:name w:val=\"List Paragraph\"/>\
+           <w:basedOn w:val=\"Normal\"/>\
+           <w:pPr><w:ind w:left=\"720\"/></w:pPr>\
+         </w:style>",
+    );
+    s.push_str("</w:styles>");
+    s
 }
 
 #[cfg(test)]
