@@ -1,0 +1,16 @@
+[package]
+name = "document-ast-to-docx"
+version = "0.1.0"
+edition = "2021"
+description = "Render a document-ast DocumentNode to a .docx via docx-writer — the Markdown→DOCX bridge from the shared Document AST (MD02)"
+license = "MIT"
+
+[dependencies]
+document-ast = { path = "../document-ast" }
+coding-adventures-docx-writer = { path = "../docx-writer" }
+
+[dev-dependencies]
+# Round-trip proof: reopen our .docx bytes with the read-side WordprocessingML reader.
+coding-adventures-wordprocessingml = { path = "../wordprocessingml" }
+# Inspect the emitted document.xml (assert paragraph styles + run formatting).
+coding-adventures-opc = { path = "../opc" }

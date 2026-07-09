@@ -871,4 +871,5 @@ members = [
     "xlsx-eval",
     "xls",
     "spreadsheet-io",
+  "document-ast-to-docx",
 ]
