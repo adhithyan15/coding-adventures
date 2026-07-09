@@ -156,6 +156,7 @@ SELF_CONTAINED_RUNGS = (
     "rung116_otolaryngology",
     "rung117_podiatry",
     "rung118_occupational_therapy",
+    "rung119_allergy_skin_testing",
 )
 
 

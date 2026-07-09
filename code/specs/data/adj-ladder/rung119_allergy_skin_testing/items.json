@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 119 \u2014 skin-test reactivity index from four stated quantities (a NEW panel: allergy skin testing / reactivity). From an allergen load divided by the net reactive demand (a wheal rate times a panel count, minus a baseline reactivity), compute the reactivity index (allergen_load/(wheal_rate*panel_count-baseline_reactivity)), the net reactive demand (wheal_rate*panel_count-baseline_reactivity), or the allergen load. Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a SINGLE TERM OVER A PRODUCT-MINUS-TERM DENOMINATOR a/(b*c-d) (multiply the wheal rate and panel count, subtract the baseline reactivity, divide the allergen load by that whole net reactive demand, so a/(b*c-d) = (a/((b*c)-d)); the ladder's FIRST denominator that is a product minus a term \u2014 the subtraction twin of rung-118's product-plus-term a/(b*c+d). Every product-minus-term the ladder built was a NUMERATOR over a single divisor (111 (a*b-c)/d); every two-term ratio with a product had the product on ONE side only (99 (a*b)/(c+d), 100 (a+b)/(c*d), 104 (a-b)/(c*d), 106 a*b/(c-d)) \u2014 rung-119 is the first to put a b*c-d UNDER the bar. The harness matches the scalar to the printed options. The reactivity index is a rate (allergen load per unit of net reactive demand), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via *, - and / \u2014 no constant leaks, and neither the net reactive demand, the allergen load, nor any index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the wheal rate divides (a/b*c-d, a wrong grouping) and subtracting the baseline reactivity outside the division instead of inside the denominator (a/(b*c)-d, a wrong pairing). The core confusion tested is that a/(b*c-d) is (a/((b*c)-d)), not a/b*c-d and not a/(b*c)-d. Subtraction is used inside the denominator and both distractors, so positivity is guarded explicitly: with every observed quantity >= 2 the tables keep wheal_rate*panel_count > baseline_reactivity and the net reactive demand b*c-d >= 2 (the division is never by zero and stays positive), and every family member is asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r119as-01",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 60 divided by a wheal rate of 2 times a panel count of 3 minus a baseline reactivity of 2. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(60)\nobserve wheal_rate(2)\nobserve panel_count(3)\nobserve baseline_reactivity(2)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 88.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r119as-02",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 60 divided by a wheal rate of 2 times a panel count of 3 minus a baseline reactivity of 2. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(60)\nobserve wheal_rate(2)\nobserve panel_count(3)\nobserve baseline_reactivity(2)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 88.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r119as-03",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 60 divided by a wheal rate of 2 times a panel count of 3 minus a baseline reactivity of 2. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(60)\nobserve wheal_rate(2)\nobserve panel_count(3)\nobserve baseline_reactivity(2)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 88.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r119as-04",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 80 divided by a wheal rate of 2 times a panel count of 4 minus a baseline reactivity of 3. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(80)\nobserve wheal_rate(2)\nobserve panel_count(4)\nobserve baseline_reactivity(3)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 157.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r119as-05",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 80 divided by a wheal rate of 2 times a panel count of 4 minus a baseline reactivity of 3. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(80)\nobserve wheal_rate(2)\nobserve panel_count(4)\nobserve baseline_reactivity(3)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 157.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r119as-06",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 80 divided by a wheal rate of 2 times a panel count of 4 minus a baseline reactivity of 3. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(80)\nobserve wheal_rate(2)\nobserve panel_count(4)\nobserve baseline_reactivity(3)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 157.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r119as-07",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 72 divided by a wheal rate of 2 times a panel count of 4 minus a baseline reactivity of 2. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(72)\nobserve wheal_rate(2)\nobserve panel_count(4)\nobserve baseline_reactivity(2)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 142.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r119as-08",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 72 divided by a wheal rate of 2 times a panel count of 4 minus a baseline reactivity of 2. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(72)\nobserve wheal_rate(2)\nobserve panel_count(4)\nobserve baseline_reactivity(2)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 142.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r119as-09",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 72 divided by a wheal rate of 2 times a panel count of 4 minus a baseline reactivity of 2. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(72)\nobserve wheal_rate(2)\nobserve panel_count(4)\nobserve baseline_reactivity(2)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 142.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r119as-10",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 91 divided by a wheal rate of 2 times a panel count of 5 minus a baseline reactivity of 3. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(91)\nobserve wheal_rate(2)\nobserve panel_count(5)\nobserve baseline_reactivity(3)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 91,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 224.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r119as-11",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 91 divided by a wheal rate of 2 times a panel count of 5 minus a baseline reactivity of 3. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(91)\nobserve wheal_rate(2)\nobserve panel_count(5)\nobserve baseline_reactivity(3)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 91,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 224.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r119as-12",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 91 divided by a wheal rate of 2 times a panel count of 5 minus a baseline reactivity of 3. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(91)\nobserve wheal_rate(2)\nobserve panel_count(5)\nobserve baseline_reactivity(3)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 91,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 224.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.1,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r119as-13",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 90 divided by a wheal rate of 3 times a panel count of 4 minus a baseline reactivity of 2. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(90)\nobserve wheal_rate(3)\nobserve panel_count(4)\nobserve baseline_reactivity(2)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 118.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r119as-14",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 90 divided by a wheal rate of 3 times a panel count of 4 minus a baseline reactivity of 2. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(90)\nobserve wheal_rate(3)\nobserve panel_count(4)\nobserve baseline_reactivity(2)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 118.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r119as-15",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 90 divided by a wheal rate of 3 times a panel count of 4 minus a baseline reactivity of 2. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(90)\nobserve wheal_rate(3)\nobserve panel_count(4)\nobserve baseline_reactivity(2)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 118.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 90,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r119as-16",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 88 divided by a wheal rate of 2 times a panel count of 5 minus a baseline reactivity of 2. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(88)\nobserve wheal_rate(2)\nobserve panel_count(5)\nobserve baseline_reactivity(2)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 88,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 218.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.800000000000001,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r119as-17",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 88 divided by a wheal rate of 2 times a panel count of 5 minus a baseline reactivity of 2. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(88)\nobserve wheal_rate(2)\nobserve panel_count(5)\nobserve baseline_reactivity(2)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 88,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 218.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.800000000000001,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r119as-18",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 88 divided by a wheal rate of 2 times a panel count of 5 minus a baseline reactivity of 2. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(88)\nobserve wheal_rate(2)\nobserve panel_count(5)\nobserve baseline_reactivity(2)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 88,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 218.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.800000000000001,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r119as-19",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 100 divided by a wheal rate of 2 times a panel count of 6 minus a baseline reactivity of 3. What is the skin-test reactivity index (the allergen load divided by the net reactive demand)?",
+      "program": "observe allergen_load(100)\nobserve wheal_rate(2)\nobserve panel_count(6)\nobserve baseline_reactivity(3)\nlet answer = allergen_load / (wheal_rate * panel_count - baseline_reactivity)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 297.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11.11111111111111,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r119as-20",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 100 divided by a wheal rate of 2 times a panel count of 6 minus a baseline reactivity of 3. What is the the net reactive demand (the wheal rate times the panel count minus the baseline reactivity, the divisor the allergen load is divided by)?",
+      "program": "observe allergen_load(100)\nobserve wheal_rate(2)\nobserve panel_count(6)\nobserve baseline_reactivity(3)\nlet answer = wheal_rate * panel_count - baseline_reactivity\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11.11111111111111,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 297.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r119as-21",
+      "qtype": "reactivity_index",
+      "stem": "An allergy skin-test report records an allergen load of 100 divided by a wheal rate of 2 times a panel count of 6 minus a baseline reactivity of 3. What is the the allergen load (the numerator divided by the net reactive demand)?",
+      "program": "observe allergen_load(100)\nobserve wheal_rate(2)\nobserve panel_count(6)\nobserve baseline_reactivity(3)\nlet answer = allergen_load\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11.11111111111111,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 297.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
