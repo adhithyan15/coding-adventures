@@ -2176,3 +2176,78 @@ ref's exclusion; and an additivity check that `to_plain_text`, `to_plain_text_by
 produce their exact prior strings). All prior S1–S25 tests pass unchanged. `cargo clippy -p latex
 --all-targets -- -D warnings` clean; downstream `cargo test -p adj-lang -p adj-lang-cli` green; `cargo
 build -p latex --no-default-features` builds. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 33. S27 — single-integer total of the unresolved (dangling) references (`unresolved_reference_count`)
+
+### 33.1 Motivation
+
+S18 (`unresolved_references_by_source`) enumerates the **unresolved** (dangling) `\ref`/`\eqref`/`\pageref`
+references — the ones no `\label` defines (LaTeX's *"Reference `key' undefined"*, the `??`) — one **line
+per dangling reference** (`\<command>{key}`, in body pre-order). But a reader often wants not the
+enumeration but the **total** — "how many of my references dangle?" — a single number answered at a
+glance, without scanning the individual keys. S25 (`label_kind_counts`) and S26
+(`resolved_reference_kind_counts`) already brought a numeric-summary discipline to the label-definitions
+and resolved-references families, respectively, as *per-kind* censuses. But the unresolved refs carry
+**no** `target_kind` — a dangling ref bound to no definition, so there is nothing to group by; a per-kind
+census is not viable. The clean move is a **single total**: S27 collapses the whole `unresolved` list to
+its decimal `.len()`. It is the count-total sibling of the census family, but for the UNRESOLVED refs.
+
+### 33.2 Why a new method — additive by construction
+
+S27 adds a **new public method** `Document::unresolved_reference_count(&self) -> String`. It is a pure,
+read-only render of `resolve_references().unresolved.len()` — a *second view* of the exact list S18
+renders per-source. It reuses that list verbatim (never re-walking the body or re-resolving), so the
+report can never drift from the S1 resolution it summarises, and counting never adds, drops, or reorders
+references relative to what `resolve_references` produced. It mutates nothing and changes no S1–S26 output
+— including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S26 it is a method the caller
+invokes directly.
+
+### 33.3 The rendering rule
+
+The output is the decimal `.len()` of the `unresolved` list, rendered as its `String`, **always** on a
+single line with **no** trailing newline. There is no ordering question (a single integer has no order)
+and no per-kind grouping (a dangling ref carries no `target_kind` to group by) — only `.len()` is read,
+with **no** source slicing at all. Being a **count** renderer, its empty case is the honest number `"0"`
+— **not** a `(no …)` marker. The `(no …)` marker discipline belongs to the *list* renderers
+S18/S21/S24, whose empty case has no lines to show; a total count of zero *is* a number, so `"0"` is its
+truthful value.
+
+### 33.4 The exact rendering contract — `Document::unresolved_reference_count(&self) -> String`
+
+- Read `resolve_references().unresolved.len()` and render it with `.to_string()` → the decimal count, one
+  line, no trailing newline. There is **no** source slicing and **no** `target_kind` read at all (a
+  dangling ref never carries one), so the render needs no source borrow and can never index out of bounds.
+- Only the **unresolved** references are counted. A resolved `\ref{sec:i}` lives in
+  `resolve_references().resolved` (S21's domain), never in `unresolved`, so it is excluded by construction.
+- The empty case (every ref resolves, or there are none at all) returns the honest number `"0"` — **not**
+  a `(no …)` marker, because S27 is a count renderer.
+
+Example (body defining `\label{sec:i}`, then writing `\ref{sec:i}` (resolves), `\ref{nope}` (dangles), and
+`\ref{gone}` (dangles)):
+
+```text
+2
+```
+
+Two references dangle; the one resolved `\ref{sec:i}` is excluded. This is the count-total companion of
+S18's per-source list — a second view of the one `unresolved` list; the count equals the number of lines
+S18 would enumerate.
+
+### 33.5 Public API (added in S27)
+
+One new method: `Document::unresolved_reference_count(&self) -> String`. No existing type, field, counter,
+or signature changes; `resolve_references` and every S1–S26 method are unchanged; no AST or grammar
+change; no new dependency, no `unsafe`, no I/O.
+
+### 33.6 Verification (S27)
+
+`cargo test -p latex` green (6 new S27 tests: two-danglers-plus-one-resolved returning `"2"`
+(cross-checked against S18's `unresolved_references_by_source`); an all-refs-resolve case returning `"0"`
+(cross-checked against S18's `(no unresolved references)` marker); a no-references-at-all case returning
+`"0"`; a mixed-kinds-of-danglers case (`\ref`/`\eqref`/`\pageref`, none defined) returning the integer
+`"3"`; a cross-check that the count equals the number of lines S18 enumerates (`"4"`); and an additivity
+check that a handful of prior renderers — `list_summary`, `bibliography_entries`, `label_definitions`,
+`unresolved_references_by_source`, S25's `label_kind_counts`, and S26's `resolved_reference_kind_counts` —
+all still produce their exact prior strings, with S27 returning `"1"` (agreeing with the single line S18
+enumerates)). All prior S1–S26 tests pass unchanged. No `cargo fmt`, no grammar regen, no new
+dependencies.
