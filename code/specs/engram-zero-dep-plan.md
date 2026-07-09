@@ -21,7 +21,7 @@ so each landed PR is independently green.
 | `zstd_crate` | engram-anki-package | prod | repo `zstd` — **currently INCOMPLETE** (see below) | **L** | must bidirectionally interop with real zstd (Anki `.anki21b`) |
 | `prost` (protobuf) | engram-anki-package | prod | new tiny `protobuf` codec (4 messages) | **S/M** | must byte-interop with Anki `meta`/`media` protobufs |
 | `fsrs 6.6.1` | engram-core | prod | reimplement forward FSRS-5/6 (~200 LOC) | **M** | **numeric** — must match crate output |
-| `regex` | engram-core (search.rs) | prod | hand-scanners + glob matcher; mini regex engine only for `re:` | **S…L** | `re:` user-search is the only true-regex need |
+| `regex` | engram-core (**✅ DONE — now test-only dev-dep**; was prod in search.rs) | dev | zero-dep `regex-engine` (Pike VM) — all boolean uses + media `replace_all` moved over (Phase D); `regex` kept only as the `html_scan` cross-check oracle | **S…L** | `re:` user-search + media extent both run on `regex-engine` now |
 | `unicode-normalization` | engram-core (search.rs, template.rs) | prod | NFD/combining-class tables (+ NFC for dedup) | **M** | Unicode tables shared with regex whole-word |
 | `serde` + `serde_json` | engram-core, -core-wasm, -capi, -anki-package | prod | repo `json-value`/`json-parser`/`json-serializer` + **new `json-derive` macro** | **L** | **wire-critical** — JS/Swift/Anki parse the exact bytes |
 | `tempfile` | engram-capi (**test-only, already dev-dep**), engram-anki-package (test) | test | drop with rusqlite | trivial | — |
@@ -165,11 +165,17 @@ DoS-immune on user `re:` patterns, unlike a backtracker. Decomposed:
   `find_iter`, `captures_iter`. Non-overlapping iteration matches `regex` (resume
   at prev end; skip empty match at that end). Cross-verified vs live `regex`: 84k
   iteration checks + 84k replace-output comparisons (byte-identical where the two
-  iterate identically). regex-engine v0.6.0. **D4 next: point engram-core's media
-  `DUPLICATE_HTML_MEDIA_TAGS` at this + remove `regex`.**
-- **D4 — swap media + drop `regex`.** Point `DUPLICATE_HTML_MEDIA_TAGS` at the
-  engine's `replace_all` (byte-verified vs the old regex on the corpus from C2),
-  then remove `regex` from `engram-core`'s Cargo.toml. **`regex` gone.**
+  iterate identically). regex-engine v0.6.0.
+- **D4 — ✅ DONE (swap media + drop `regex`).** `DUPLICATE_HTML_MEDIA_TAGS` now
+  compiles on `regex_engine::Regex` and its `replace_all` closure takes
+  `&regex_engine::Captures` (same `get()`/`Match::as_str()` API — the media
+  pattern is greedy with disjoint quote-alternation, so the new engine's leftmost
+  extents match the old crate exactly; the full `engram-core` suite, incl. the
+  media-dedup tests, is byte-identical). `regex` is **removed from
+  `[dependencies]`** and kept only as a **`[dev-dependency]`** — its sole
+  remaining use is the `html_scan` cross-check test's independent oracle. No
+  non-test `regex::` reference remains in `engram-core/src`. **`regex` gone from
+  the runtime graph — Phase D complete; the whole regex removal is done.**
 - Rationale for the split: `is_match` (D0) is the bulk of engram's use and is
   cross-verifiable independently; extents (D3) are a genuinely separate, harder
   sub-problem, so they get their own PR rather than blocking the core.
