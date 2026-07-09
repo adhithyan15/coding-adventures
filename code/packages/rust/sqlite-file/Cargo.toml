@@ -1,0 +1,17 @@
+[package]
+name = "sqlite-file"
+version = "0.1.0"
+edition = "2021"
+description = "A small, zero-dependency reader for the SQLite on-disk file format — the read subset the Engram Anki-package importer needs — reimplemented from scratch to keep the Engram stack free of the bundled-C `rusqlite` crate."
+license = "MIT"
+
+[dependencies]
+
+# `rusqlite` (bundled C SQLite) is a DEV-dependency only: it is the independent
+# oracle the cross-check tests measure this zero-dep reader against. It builds
+# real `.sqlite` files (and reads rows back via SQL) so the interop gate can
+# confirm our reader decodes the exact same bytes. No runtime code path depends
+# on it — that is the whole point of this crate (Engram zero-dependency program,
+# `code/specs/engram-zero-dep-plan.md`, Phase E).
+[dev-dependencies]
+rusqlite = { version = "0.32", features = ["bundled"] }

@@ -292,6 +292,7 @@ members = [
     "s-runtime",
     "sql-lexer",
     "sql-parser",
+    "sqlite-file",
     "smt-lib-format",
     "starlark-ast-to-bytecode-compiler",
     "starlark-compiler",
