@@ -2,6 +2,42 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.63.0] — 2026-07-08
+
+### Added — single-integer TOTAL of the unresolved (dangling) references (LTXDOC03 S27)
+
+A **new** public method `Document::unresolved_reference_count(&self) -> String` that renders the decimal
+**COUNT** of the UNRESOLVED (dangling) `\ref`/`\eqref`/`\pageref` references — the ones no `\label`
+defines (LaTeX's *"Reference `key' undefined"*, the `??`) — as one integer line. It is the *count-total*
+companion of S18's `unresolved_references_by_source` (which renders one `\<command>{key}` **line per
+dangling reference**): S18 and S27 are two *views* of the one `unresolved` list `resolve_references()`
+produces — S27 collapses the whole list to a single `.len()` tally. It is the count-total sibling of the
+census family (S25 `label_kind_counts`, S26 `resolved_reference_kind_counts`), but for the UNRESOLVED
+refs — which carry **no** `target_kind` (a dangling ref bound to nothing), so a per-kind census is not
+viable; a single total is the clean move. It is a read-only view over `resolve_references()`; every
+S1–S26 output is left **byte-for-byte unchanged**; S27 is purely additive and leaves the `to_latex()`
+round-trip fixed point intact.
+
+- **Counts the UNRESOLVED refs only.** S27 reads `resolve_references().unresolved.len()` — each entry an
+  `UnresolvedRef` for a dangling `\ref`/`\eqref`/`\pageref`. A resolved `\ref{sec:i}` lives in
+  `resolve_references().resolved` (S21's domain), never in `unresolved`, so it is excluded by
+  construction.
+- **A single decimal line, always.** The output is the decimal `.len()` of the `unresolved` list — one
+  line, no trailing newline. There is **no** source slicing and **no** `target_kind` read at all (a
+  dangling ref never carries one); only `.len()` is taken.
+- **Zero is the honest value `"0"`.** Being a COUNT renderer, its empty case (every ref resolves, or
+  there are none at all) is the number `"0"` — **not** a `(no …)` marker. The `(no …)` marker discipline
+  belongs to the *list* renderers S18/S21/S24, whose empty case has no lines to show; a total count of
+  zero *is* a number.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single read
+  of the already-bounded `unresolved` list's length. Borrows `self` immutably, returns owned `String`.
+- **Tests.** Added `s27_two_dangling_plus_one_resolved_counts_two`, `s27_all_refs_resolve_counts_zero`,
+  `s27_no_references_at_all_counts_zero`, `s27_mixed_kinds_of_danglers_count_the_integer`,
+  `s27_count_equals_number_of_s18_lines` (cross-checking the total against the number of lines S18
+  enumerates), and `s27_is_additive_leaves_s1_s26_outputs_unchanged` (which pins a handful of prior
+  S1–S26 outputs byte-for-byte — including S18's `unresolved_references_by_source` and S26's
+  `resolved_reference_kind_counts` — alongside the new count).
+
 ## [0.62.0] — 2026-07-08
 
 ### Added — per-kind census (counts) of the resolved references (LTXDOC03 S26)
