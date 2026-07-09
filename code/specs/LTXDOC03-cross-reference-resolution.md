@@ -2405,3 +2405,78 @@ additivity check that a handful of prior renderers — S22's `label_definitions`
 S27's `unresolved_reference_count`, and S28's `resolved_reference_count` — all still produce their exact
 prior strings, with S29 returning `"4"` (agreeing with the four lines S22 enumerates)). All prior S1–S28
 tests pass unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 36. S30 — single-integer total of the bibliography entries (`bibliography_entry_count`)
+
+### 36.1 Motivation
+
+S19 (`bibliography_entries`) enumerates the **winning** bibliography entries — the distinct `\bibitem` keys
+the document defines inside a `thebibliography` environment, the table `\cite` resolves against — one
+**line per winning entry** (`[n] key`, 1-based in body pre-order). But a reader often wants not the
+enumeration but the **total** — "how many bibliography entries does this document define?" — a single
+number answered at a glance, without scanning the individual keys. S27 (`unresolved_reference_count`) and
+S28 (`resolved_reference_count`) gave that single-total discipline to the two *reference* tables, and S29
+(`label_definition_count`) gave it to the label-definition table; S30 is the **citation-side analogue** of
+S29, completing the *totals family*: it collapses the whole winning `entries` list to its decimal `.len()`.
+Where S29 counts the label definitions, S30 counts the bibliography entries — the last of the four total
+renderers (S27/S28 references, S29 labels, S30 bibliography).
+
+### 36.2 Why a new method — additive by construction
+
+S30 adds a **new public method** `Document::bibliography_entry_count(&self) -> String`. It is a pure,
+read-only render of `resolve_citations().entries.len()` — a *second view* of the exact list S19 renders
+flat. It reuses that list verbatim (never re-walking the body or re-resolving), so the report can never
+drift from the S2 resolution it summarises, and counting never adds, drops, or reorders entries relative to
+what `resolve_citations` produced. It mutates nothing and changes no S1–S29 output — including
+`to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S29 it is a method the caller invokes
+directly.
+
+### 36.3 The rendering rule
+
+The output is the decimal `.len()` of the winning `entries` list, rendered as its `String`, **always** on a
+single line with **no** trailing newline. There is no ordering question (a single integer has no order) —
+only `.len()` is read, with **no** source slicing at all. Being a **count** renderer, its empty case is the
+honest number `"0"` — **not** a `(no bibliography entries)` marker, mirroring S27/S28/S29 exactly. The
+`(no …)` marker discipline belongs to the *list* renderer S19, whose empty case has no lines to show; a
+total count of zero *is* a number, so `"0"` is its truthful value.
+
+### 36.4 The exact rendering contract — `Document::bibliography_entry_count(&self) -> String`
+
+- Read `resolve_citations().entries.len()` and render it with `.to_string()` → the decimal count, one line,
+  no trailing newline. There is **no** source slicing at all, so the render needs no source borrow and can
+  never index out of bounds.
+- Only the **winning** entries are counted. A later re-definition `\bibitem{dup}` of an already-defined key
+  lives in `resolve_citations().duplicate_entries` (S16's domain), never in `entries`, so it is excluded by
+  construction — the count is exactly the number of lines S19 lists.
+- The empty case (no `\bibitem` at all) returns the honest number `"0"` — **not** a
+  `(no bibliography entries)` marker, because S30 is a count renderer (mirroring S27/S28/S29).
+
+Example (a `thebibliography` with `\bibitem{a}`, `\bibitem{b}`, `\bibitem{c}`, and then a re-used
+`\bibitem{a}` (a duplicate)):
+
+```text
+3
+```
+
+Three distinct keys are defined; the later duplicate `\bibitem{a}` is excluded. This is the count-total
+companion of S19's flat list — a second view of the one winning `entries` list; the count equals the number
+of lines S19 would enumerate.
+
+### 36.5 Public API (added in S30)
+
+One new method: `Document::bibliography_entry_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `resolve_citations` and every S1–S29 method are unchanged; no AST or grammar change; no
+new dependency, no `unsafe`, no I/O.
+
+### 36.6 Verification (S30)
+
+`cargo test -p latex` green (5 new S30 tests: a multiple-entries case returning `"3"` (cross-checked against
+S19's `bibliography_entries`); a single-entry case returning `"1"`; a duplicate-bibitem case where the later
+`\bibitem{dup}` is a duplicate (S16's domain), not a second entry, so the count is the number of distinct
+keys `"2"` (cross-checked against S16's `duplicate_bibliography_entries` and against the number of lines S19
+lists); a no-entries case returning `"0"` (cross-checked against S19's `(no bibliography entries)` marker);
+and an additivity check that a handful of prior renderers — S19's `bibliography_entries`, S22's
+`label_definitions`, S27's `unresolved_reference_count`, S28's `resolved_reference_count`, and S29's
+`label_definition_count` — all still produce their exact prior strings, with S30 returning `"3"` (agreeing
+with the three lines S19 enumerates)). All prior S1–S29 tests pass unchanged. No `cargo fmt`, no grammar
+regen, no new dependencies.
