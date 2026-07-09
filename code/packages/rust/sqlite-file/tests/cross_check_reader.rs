@@ -22,18 +22,23 @@ use std::sync::atomic::{AtomicU64, Ordering};
 /// SQLite (`rusqlite`) and return its on-disk bytes. This is the reusable
 /// oracle fixture-builder the whole cross-check suite is built on.
 ///
-/// A unique temp path keeps parallel test threads from colliding without
-/// pulling in a `tempfile` dependency (this is a zero-dep crate; even the test
-/// oracle stays lean).
+/// The fixture is written inside a freshly-`create_dir`'d per-run subdirectory
+/// rather than a predictably-named file placed straight in the shared temp dir:
+/// `create_dir` fails if the path already exists (including a planted symlink),
+/// which sidesteps the classic `/tmp` symlink-swap hazard without pulling in a
+/// `tempfile` dependency (this is a zero-dep crate; even the test oracle stays
+/// lean). A per-run counter keeps parallel test threads from colliding.
 fn build_sqlite_db(statements: &[&str]) -> Vec<u8> {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
     let unique = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let mut path = std::env::temp_dir();
-    path.push(format!(
-        "sqlite_file_xcheck_{}_{}.db",
+    let mut dir = std::env::temp_dir();
+    dir.push(format!(
+        "sqlite_file_xcheck_{}_{}",
         std::process::id(),
         unique
     ));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("oracle.db");
 
     {
         let conn = rusqlite::Connection::open(&path).expect("open sqlite db");
@@ -43,7 +48,7 @@ fn build_sqlite_db(statements: &[&str]) -> Vec<u8> {
     } // connection dropped → file flushed and closed
 
     let bytes = std::fs::read(&path).expect("read db file");
-    let _ = std::fs::remove_file(&path);
+    let _ = std::fs::remove_dir_all(&dir);
     bytes
 }
 
