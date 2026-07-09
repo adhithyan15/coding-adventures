@@ -2,6 +2,45 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.65.0] — 2026-07-08
+
+### Added — single-integer TOTAL of the label definitions (LTXDOC03 S29)
+
+A **new** public method `Document::label_definition_count(&self) -> String` that renders the decimal
+**COUNT** of the winning label definitions — the distinct `\label` keys the document defines — as one
+integer line. It is the *count-total* companion of S22's `label_definitions` and S23's
+`label_definitions_by_kind` (which render one `\label{key}` **line per winning definition**, flat in
+source order or grouped by kind): S22/S23 and S29 are two *views* of the one winning `definitions` list
+`resolve_references()` produces — S29 collapses the whole list to a single `.len()` tally. It is the exact
+label-definition-side **analogue** of the reference-side totals S27's `unresolved_reference_count` and
+S28's `resolved_reference_count`, and the count-total sibling of the census family (S25 `label_kind_counts`)
+but for the *whole* definition list rather than per-kind. It is a read-only view over
+`resolve_references()`; every S1–S28 output is left **byte-for-byte unchanged**; S29 is purely additive and
+leaves the `to_latex()` round-trip fixed point intact.
+
+- **Counts the WINNING definitions only.** S29 reads `resolve_references().definitions.len()` — each entry
+  a `LabelDef` for the first `\label` of a distinct key. A later re-definition `\label{dup}` lives in
+  `resolve_references().duplicates` (S20's domain), never in `definitions`, so it is excluded by
+  construction — the count is exactly the number of lines S22 lists.
+- **A single decimal line, always.** The output is the decimal `.len()` of the `definitions` list — one
+  line, no trailing newline. There is **no** source slicing and **no** `kind` read at all (unlike S25's
+  per-kind census); section, figure, equation, and inline labels all fold into one total — only `.len()`
+  is taken.
+- **Zero is the honest value `"0"`.** Being a COUNT renderer, its empty case (no `\label` at all) is the
+  number `"0"` — **not** a `(no label definitions)` marker. This mirrors S27/S28 exactly. The `(no …)`
+  marker discipline belongs to the *list* renderers S22/S23, whose empty case has no lines to show; a
+  total count of zero *is* a number.
+- **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing, no source slicing; a single read of
+  the already-bounded `definitions` list's length. Borrows `self` immutably, returns owned `String`.
+- **Tests.** Added `s29_multiple_definitions_count_the_integer`,
+  `s29_duplicate_label_counted_once_matching_s22` (cross-checking that a later `\label{dup}` is a
+  duplicate — S20's domain — not a second definition), `s29_no_labels_counts_zero`,
+  `s29_mixed_document_counts_only_label_definitions` (the count is unaffected by refs/citations),
+  `s29_count_equals_number_of_s22_lines` (cross-checking the total against the number of lines S22
+  enumerates), and `s29_is_additive_leaves_s1_s28_outputs_unchanged` (which pins a handful of prior
+  S1–S28 outputs byte-for-byte — including S22's `label_definitions`, S25's `label_kind_counts`, S27's
+  `unresolved_reference_count`, and S28's `resolved_reference_count` — alongside the new count).
+
 ## [0.64.0] — 2026-07-08
 
 ### Added — single-integer TOTAL of the resolved references (LTXDOC03 S28)
