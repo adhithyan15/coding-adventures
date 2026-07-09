@@ -27,8 +27,9 @@
 //! 1. **`varint`** — the 1–9 byte integer encoding used everywhere. *(done)*
 //! 2. **`record`** — decode a row's bytes into typed [`SqlValue`]s. *(done)*
 //! 3. **`header` + `pager`** — parse the 100-byte DB header; borrow pages from
-//!    `&[u8]` (read-only, zero-copy, no journal/cache). *(here)*
-//! 4. b-tree walk — leaf + interior pages + overflow chains → `(rowid, row)`.
+//!    `&[u8]` (read-only, zero-copy, no journal/cache). *(done)*
+//! 4. **`btree`** — walk a table b-tree (leaf + interior pages) → `(rowid, record
+//!    bytes)`. *(here; overflow-chain reassembly is the next step)*
 //! 5. `sqlite_schema` + `read_table(bytes, name)` — the public read API.
 //!
 //! Each layer is cross-checked against the real `rusqlite`/C-SQLite as an
@@ -50,6 +51,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod btree;
 pub mod error;
 pub mod header;
 pub mod pager;

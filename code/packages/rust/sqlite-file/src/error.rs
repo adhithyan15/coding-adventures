@@ -27,6 +27,10 @@ pub enum SqliteError {
     /// implement (named by the `&'static str`) — e.g. a text encoding other
     /// than UTF-8.
     Unsupported(&'static str),
+    /// The bytes are internally inconsistent in a way a well-formed database
+    /// never is — a b-tree page of an unexpected type, a cell pointer past the
+    /// page, or a page-link cycle. The `&'static str` names what was wrong.
+    Corrupt(&'static str),
 }
 
 impl fmt::Display for SqliteError {
@@ -37,6 +41,7 @@ impl fmt::Display for SqliteError {
             SqliteError::BadPageSize(n) => write!(f, "invalid page size {n}"),
             SqliteError::BadPageNumber(n) => write!(f, "invalid page number {n}"),
             SqliteError::Unsupported(what) => write!(f, "unsupported SQLite feature: {what}"),
+            SqliteError::Corrupt(what) => write!(f, "corrupt SQLite database: {what}"),
         }
     }
 }
