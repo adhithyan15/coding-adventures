@@ -1,0 +1,26 @@
+[package]
+name = "md2docx"
+version = "0.1.0"
+edition = "2021"
+description = "CLI: convert a Markdown (or GFM) file to a real Word .docx, natively — the runnable end-goal of the Markdown → Document AST → OOXML pipeline (MD02)."
+license = "MIT"
+
+# Programs in code/programs/rust/ each declare their own [workspace] so they stay
+# independent from the packages workspace at code/packages/rust/Cargo.toml.
+[workspace]
+
+[[bin]]
+name = "md2docx"
+path = "src/main.rs"
+
+[lib]
+name = "md2docx"
+path = "src/lib.rs"
+
+[dependencies]
+# The whole pipeline: Markdown/GFM → Document AST → .docx bytes.
+markdown-docx = { path = "../../../packages/rust/markdown-docx" }
+
+[dev-dependencies]
+# Reopen the emitted .docx to assert the GFM/CommonMark difference.
+coding-adventures-wordprocessingml = { path = "../../../packages/rust/wordprocessingml" }
