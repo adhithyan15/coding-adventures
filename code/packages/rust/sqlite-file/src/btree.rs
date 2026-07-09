@@ -91,6 +91,18 @@ pub fn walk_table<'a>(
     // (Phase E3b) — for now we detect it and refuse rather than truncate.
     let max_local = header.usable_size().saturating_sub(35) as usize;
 
+    // Anti-amplification budget. The cell-pointer array is attacker-controlled
+    // and pointers need not be distinct: a hostile page could point all of its
+    // (up to 65535) cells at one full-size cell, making us copy that record
+    // thousands of times — gigabytes out of a single small page, an OOM DoS.
+    // Every record byte a *well-formed* database emits is physically stored in
+    // some page, and pages do not overlap, so the total record bytes can never
+    // exceed the file's byte length. Cap the running total there: a valid file
+    // is always under it, and the aliasing attack trips it after copying at most
+    // one page's worth of bytes.
+    let file_bytes = pager.page_count().saturating_mul(pager.page_size());
+    let mut emitted_bytes: usize = 0;
+
     let mut rows: Vec<(i64, Vec<u8>)> = Vec::new();
 
     // Explicit stack instead of recursion: a deep or maliciously-nested tree
@@ -120,6 +132,10 @@ pub fn walk_table<'a>(
                 for i in 0..cell_count {
                     let cell_off = cell_pointer(page, ptr_array, i)?;
                     let (rowid, record) = read_leaf_cell(page, cell_off, max_local)?;
+                    emitted_bytes = emitted_bytes
+                        .checked_add(record.len())
+                        .filter(|total| *total <= file_bytes)
+                        .ok_or(SqliteError::Corrupt("row data exceeds file size"))?;
                     rows.push((rowid, record));
                 }
             }
@@ -350,6 +366,43 @@ mod tests {
         assert_eq!(
             walk_table(&pager, &header, 1),
             Err(SqliteError::Corrupt("b-tree page cycle"))
+        );
+    }
+
+    #[test]
+    fn rejects_aliased_cell_pointer_amplification() {
+        // Anti-DoS: a hostile page pointing many cells at ONE full-size cell
+        // must not copy that record thousands of times. Build a 512-byte page
+        // (file = 512 bytes) claiming 20 cells that all alias one ~400-byte
+        // record — replaying it would emit ~8 KB, well over the 512-byte file.
+        let ps = 512usize;
+        let mut page = vec![0u8; ps];
+        page[0..16].copy_from_slice(MAGIC);
+        page[16..18].copy_from_slice(&(ps as u16).to_be_bytes());
+        page[56..60].copy_from_slice(&1u32.to_be_bytes());
+        page[28..32].copy_from_slice(&1u32.to_be_bytes());
+        let h = 100;
+        page[h] = LEAF_TABLE;
+        page[h + 3..h + 5].copy_from_slice(&20u16.to_be_bytes()); // 20 cells claimed
+
+        // One real cell near the end: a ~400-byte record.
+        let record = vec![0x5A; 400];
+        let mut cell = Vec::new();
+        varint::write(record.len() as i64, &mut cell);
+        varint::write(1, &mut cell); // rowid
+        cell.extend_from_slice(&record);
+        let cell_off = ps - cell.len();
+        page[cell_off..cell_off + cell.len()].copy_from_slice(&cell);
+        // Point ALL 20 cell pointers at that same cell.
+        for i in 0..20 {
+            page[h + 8 + i * 2..h + 8 + i * 2 + 2]
+                .copy_from_slice(&(cell_off as u16).to_be_bytes());
+        }
+
+        let (header, pager) = Pager::open(&page).unwrap();
+        assert_eq!(
+            walk_table(&pager, &header, 1),
+            Err(SqliteError::Corrupt("row data exceeds file size"))
         );
     }
 }
