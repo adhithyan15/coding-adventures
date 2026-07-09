@@ -99,6 +99,49 @@ fn oracle_produces_wellformed_sqlite_header() {
     assert_eq!(text_encoding, 1, "reader assumes UTF-8 (encoding = 1)");
 }
 
+/// Parse a real SQLite file's header with **our** `header` module and confirm
+/// every field matches an independent inline read of the same bytes. This makes
+/// the reader's header parser — not just the reader's assumptions — the thing
+/// under test against genuine `rusqlite` output.
+#[test]
+fn our_header_matches_a_real_sqlite_file() {
+    let db = build_sqlite_db(&[
+        "CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)",
+        "INSERT INTO t VALUES (1, 'Ada'), (2, 'Grace')",
+    ]);
+
+    let header = sqlite_file::Header::parse(&db).expect("our header parses a real db");
+
+    // Page size (offset 16, u16-be; 1 ⇒ 65536).
+    let raw = u16::from_be_bytes([db[16], db[17]]);
+    let expected_page_size: u32 = if raw == 1 { 65536 } else { u32::from(raw) };
+    assert_eq!(header.page_size, expected_page_size);
+
+    // Reserved space (offset 20), page count (offset 28), schema format
+    // (offset 44), text encoding (offset 56).
+    assert_eq!(header.reserved_space, db[20]);
+    assert_eq!(
+        header.page_count,
+        u32::from_be_bytes([db[28], db[29], db[30], db[31]])
+    );
+    assert_eq!(
+        header.schema_format,
+        u32::from_be_bytes([db[44], db[45], db[46], db[47]])
+    );
+    assert_eq!(header.text_encoding, sqlite_file::TextEncoding::Utf8);
+
+    // The header's page count must describe the actual file, and the pager must
+    // agree and be able to hand back page 1 (which carries the header).
+    let (h2, pager) = sqlite_file::Pager::open(&db).unwrap();
+    assert_eq!(h2, header);
+    assert_eq!(
+        u64::from(header.page_count) * u64::from(header.page_size),
+        db.len() as u64
+    );
+    assert_eq!(pager.page_count(), header.page_count as usize);
+    assert_eq!(&pager.page(1).unwrap()[0..16], sqlite_file::header::MAGIC);
+}
+
 /// The full round-trip gate: decode every row straight out of the file bytes
 /// and confirm it equals what SQLite reports over SQL. It needs the table
 /// b-tree walk to locate record bytes, which lands in Phase E3 — this staged

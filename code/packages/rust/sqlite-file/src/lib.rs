@@ -24,14 +24,14 @@
 //!
 //! ## Build order (this crate grows leaf-to-root)
 //!
-//! 1. **`varint`** — the 1–9 byte integer encoding used everywhere. *(here)*
-//! 2. **`record`** — decode a row's bytes into typed [`SqlValue`]s. *(here)*
-//! 3. `header` + pager — parse the 100-byte DB header, borrow pages from `&[u8]`.
+//! 1. **`varint`** — the 1–9 byte integer encoding used everywhere. *(done)*
+//! 2. **`record`** — decode a row's bytes into typed [`SqlValue`]s. *(done)*
+//! 3. **`header` + `pager`** — parse the 100-byte DB header; borrow pages from
+//!    `&[u8]` (read-only, zero-copy, no journal/cache). *(here)*
 //! 4. b-tree walk — leaf + interior pages + overflow chains → `(rowid, row)`.
 //! 5. `sqlite_schema` + `read_table(bytes, name)` — the public read API.
 //!
-//! Steps 1–2 land in this first change; the rest follow as their own reviewable
-//! pieces. Each is cross-checked against the real `rusqlite`/C-SQLite as an
+//! Each layer is cross-checked against the real `rusqlite`/C-SQLite as an
 //! independent oracle (a dev-dependency, never a runtime one) before the Anki
 //! importer is cut over to this crate.
 //!
@@ -50,7 +50,13 @@
 
 #![forbid(unsafe_code)]
 
+pub mod error;
+pub mod header;
+pub mod pager;
 pub mod record;
 pub mod varint;
 
+pub use error::SqliteError;
+pub use header::{Header, TextEncoding};
+pub use pager::Pager;
 pub use record::SqlValue;
