@@ -1337,19 +1337,20 @@ const PROGRAMS: &[Prog] = &[
     // `literal_string_slots`, so `print(s)` lowers to `print_str s` on all
     // backends — the same path ALGOL literal-string `print` uses (AL4).
     // The return value (implicitly 0, the integer default) is discarded.
-    // NativeAot, Llvm, and Wasm are excluded: all three backends resolve
-    // `print_str s` through a compile-time-known literal map (`strings`,
-    // `str_lens`, or the WASM string-local table); a function parameter `s`
-    // receives its value at runtime and is absent from those maps, so the
-    // backend cannot lower the `print_str` CIR op (no runtime string-pointer
-    // ABI — the calling convention would need to pass buf + len separately).
+    // NativeAot, Llvm, and Wasm run it too now: the E4-dyn runtime-string work
+    // (E4d-2b LLVM / E4d-3b WASM / E4d-4 native) gave `print_str` a RUNTIME path
+    // that reads the length from the `[len][bytes]` block header at run time for
+    // any string lacking a compile-time-length entry — which is exactly a string
+    // parameter `s` (it receives its i64/i32 handle at the call site and is absent
+    // from the `strings`/`str_lens`/string-local maps). The literal actual
+    // `'HELLO'` is passed as that handle across the shared `call`. All 7 backends.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin integer procedure echo(s); value s; string s; print(s); \
                echo('HELLO') end",
         expect: Expect::Stdout("HELLO"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a named string variable passed to a string parameter (AL4-str-params).
     // The outer block declares `string msg`, initialises it with a literal, then
@@ -1357,9 +1358,11 @@ const PROGRAMS: &[Prog] = &[
     // slot (not just an inline literal) as a `str`-typed actual argument, and
     // the callee's `print(s)` still lowers to `print_str` on all managed
     // backends.
-    // NativeAot, Llvm, and Wasm excluded: same root cause as `echo` above —
-    // the callee's `s` parameter is not in any backend's compile-time string
-    // map, so none of those three backends can lower `print_str s`.
+    // NativeAot, Llvm, and Wasm run it too now (same E4-dyn runtime `print_str`
+    // path as `echo` above): the callee's `s` param carries a runtime string
+    // handle and `print_str` reads its header at run time. The extra wrinkle here
+    // — the actual is a *named* outer-block string slot `msg` (not an inline
+    // literal) — makes no difference: the call still passes `msg`'s handle. All 7.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1367,7 +1370,7 @@ const PROGRAMS: &[Prog] = &[
                integer procedure say(s); value s; string s; print(s); \
                msg := 'HI'; say(msg) end",
         expect: Expect::Stdout("HI"),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
