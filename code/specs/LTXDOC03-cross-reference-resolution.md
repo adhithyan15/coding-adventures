@@ -2480,3 +2480,73 @@ and an additivity check that a handful of prior renderers — S19's `bibliograph
 `label_definition_count` — all still produce their exact prior strings, with S30 returning `"3"` (agreeing
 with the three lines S19 enumerates)). All prior S1–S29 tests pass unchanged. No `cargo fmt`, no grammar
 regen, no new dependencies.
+
+## 37. S31 — single-integer total of the resolved citations (`citation_count`)
+
+### 37.1 Motivation
+
+S15 (`citations_by_source`) enumerates the **resolved** citations — the `\cite` keys some `\bibitem` defines
+— grouped by their source `\cite`. But a reader often wants not the enumeration but the **total** — "how many
+citations resolve in this document?" — a single number answered at a glance, without scanning the individual
+keys. S27 (`unresolved_reference_count`) and S28 (`resolved_reference_count`) gave that single-total
+discipline to the two *reference* tables, S29 (`label_definition_count`) to the label-definition table, and
+S30 (`bibliography_entry_count`) to the bibliography table; S31 is the exact resolved-**citation-side twin**
+of S28, extending the *totals family* onto the resolved-citation table: it collapses the whole `resolved`
+list to its decimal `.len()`. Where S28 counts the resolved references, S31 counts the resolved citations —
+the citation-side analogue that pairs with S30 (bibliography entries) to summarise the two citation tables.
+
+### 37.2 Why a new method — additive by construction
+
+S31 adds a **new public method** `Document::citation_count(&self) -> String`. It is a pure, read-only render
+of `resolve_citations().resolved.len()` — a *second view* of the exact list S15 renders per-source. It
+reuses that list verbatim (never re-walking the body or re-resolving), so the report can never drift from the
+S2 resolution it summarises, and counting never adds, drops, or reorders citations relative to what
+`resolve_citations` produced. It mutates nothing and changes no S1–S30 output — including `to_latex()`'s
+round-trip fixed point — byte-for-byte. Like S11–S30 it is a method the caller invokes directly.
+
+### 37.3 The rendering rule
+
+The output is the decimal `.len()` of the `resolved` list, rendered as its `String`, **always** on a single
+line with **no** trailing newline. There is no ordering question (a single integer has no order) — only
+`.len()` is read, with **no** source slicing at all. Being a **count** renderer, its empty case is the honest
+number `"0"` — **not** a `(no resolved citations)` marker, mirroring S27/S28/S29/S30 exactly. The `(no …)`
+marker discipline belongs to the *list* renderer S15, whose empty case has no lines to show; a total count of
+zero *is* a number, so `"0"` is its truthful value.
+
+### 37.4 The exact rendering contract — `Document::citation_count(&self) -> String`
+
+- Read `resolve_citations().resolved.len()` and render it with `.to_string()` → the decimal count, one line,
+  no trailing newline. There is **no** source slicing at all, so the render needs no source borrow and can
+  never index out of bounds.
+- Only the **resolved** keys are counted. A dangling `\cite{ghost}` (no matching `\bibitem`) lives in
+  `resolve_citations().unresolved` (S17's domain), never in `resolved`, so it is excluded by construction. A
+  multi-key `\cite{a,b}` contributes one record per resolved key; `cite_span`/`entry_span` are never read.
+- The empty case (every cited key dangling, or no `\cite` at all) returns the honest number `"0"` — **not** a
+  `(no resolved citations)` marker, because S31 is a count renderer (mirroring S27/S28/S29/S30).
+
+Example (a body `\cite{a,b}` (both defined) then `\cite{c,ghost}` (only `c` defined), against a bibliography
+defining `a`, `b`, `c`):
+
+```text
+3
+```
+
+Three keys resolve (`a`, `b`, `c`); the one dangling `ghost` is excluded. This is the count-total companion
+of S15's per-source list — a second view of the one `resolved` list.
+
+### 37.5 Public API (added in S31)
+
+One new method: `Document::citation_count(&self) -> String`. No existing type, field, counter, or signature
+changes; `resolve_citations` and every S1–S30 method are unchanged; no AST or grammar change; no new
+dependency, no `unsafe`, no I/O.
+
+### 37.6 Verification (S31)
+
+`cargo test -p latex` green (6 new S31 tests: a multiple-resolved case returning `"3"`; a single-resolved
+case returning `"1"`; a dangling-key case where `\cite{a, ghost}` counts only the one resolved key `"1"` (the
+`ghost` excluded, S17's domain); a no-citations case returning `"0"` (cross-checked against S15's
+`(no resolved citations)` marker); an every-key-dangling case returning `"0"`; and an additivity check that
+the prior totals-family renderers — S27's `unresolved_reference_count`, S28's `resolved_reference_count`,
+S29's `label_definition_count`, and S30's `bibliography_entry_count` — all still produce their exact prior
+strings, with S31 returning `"3"` for `\cite{a,b}` plus `\cite{c,ghost}`). All prior S1–S30 tests pass
+unchanged. No `cargo fmt`, no grammar regen, no new dependencies.

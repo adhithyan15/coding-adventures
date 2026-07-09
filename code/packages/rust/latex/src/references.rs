@@ -2998,6 +2998,71 @@ impl Document {
         // and completes the totals family (S27/S28 references, S29 labels, S30 bibliography).
         self.resolve_citations().entries.len().to_string()
     }
+
+    /// The **single-integer TOTAL of the resolved citations** (LTXDOC03 S31) — the exact
+    /// **citation-side** twin of S28's [`resolved_reference_count`](Document::resolved_reference_count).
+    ///
+    /// This extends the *totals family* onto the resolved-citation table: S27's
+    /// [`unresolved_reference_count`](Document::unresolved_reference_count) and S28's
+    /// [`resolved_reference_count`](Document::resolved_reference_count) count the two reference tables,
+    /// S29's [`label_definition_count`](Document::label_definition_count) counts the winning label
+    /// definitions, S30's [`bibliography_entry_count`](Document::bibliography_entry_count) counts the
+    /// winning bibliography entries, and S31 counts the **resolved** citations. It is to S15's
+    /// [`citations_by_source`](Document::citations_by_source) exactly what S28 is to S21/S24's resolved-
+    /// reference lists: a numeric summary over the *same* list — here the **resolved** `\cite` keys — so
+    /// a reader sees "how many citations resolve" without scanning the individual keys.
+    ///
+    /// ## What it does
+    ///
+    /// S2's [`Document::resolve_citations`] walks every `\cite` in body pre-order and splits its keys
+    /// (a multi-key `\cite{a,b}` yields one record per key) into the **resolved** citations — those a
+    /// `\bibitem` defines ([`CitationResolution::resolved`] as [`ResolvedCite`]s, S15's domain) — and the
+    /// **unresolved** (dangling) ones ([`CitationResolution::unresolved`], S17's domain). S15 renders
+    /// that `resolved` list grouped by source `\cite`; S31 collapses the whole list to a **single count
+    /// line** — the decimal `.len()` of `resolved`. It reads only the length, never a `cite_span` or
+    /// `entry_span`, so every resolved key — regardless of which `\cite` it came from — folds into one
+    /// total. Only the **resolved** keys are counted; a dangling `\cite{ghost}` lives in
+    /// [`CitationResolution::unresolved`] (S17), never in `resolved`, so it is excluded by construction.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read the length of [`CitationResolution::resolved`] and render it as its decimal `String`,
+    /// **always** on a single line with **no** trailing newline. This is a **count** renderer, so its
+    /// honest value when there are no resolved citations is the number `0` — the string `"0"`, **not**
+    /// a `(no resolved citations)` marker (a total count of zero *is* a number; the `(no …)` marker
+    /// discipline belongs to the *list* renderer S15, whose empty case has no lines to show). This
+    /// mirrors S27/S28/S29/S30 exactly, which emit `"0"` for their empty lists. There is no source
+    /// slicing — only `.len()` is taken.
+    ///
+    /// Concretely, for a body `\cite{a,b}` (both defined) then `\cite{c,ghost}` (only `c` defined),
+    /// against a bibliography defining `a`, `b`, `c`:
+    ///
+    /// ```text
+    /// 3
+    /// ```
+    ///
+    /// (three keys resolve — `a`, `b`, `c`; the one dangling `ghost` is excluded). A document with no
+    /// resolved citations — every cited key dangling, or none at all — returns `"0"`.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S31 is a brand-new, read-only method that reuses [`resolve_citations`](Document::resolve_citations)
+    /// and mutates nothing; it changes no S1–S30 output (they are byte-for-byte unchanged) and leaves the
+    /// `to_latex` round-trip fixed point intact. It is a *second view* of the same `resolved` list S15
+    /// renders per-source — counting never adds, drops, or reorders the resolved citations relative to
+    /// what `resolve_citations` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only `.len()` is read); a single read of the already-bounded `resolved` list's length. Borrows
+    /// `self` immutably and returns owned `String` data, so the result outlives any borrow of the
+    /// source.
+    pub fn citation_count(&self) -> String {
+        // S2 already flattened every `\cite` into per-key records, routing the ones a `\bibitem`
+        // defines into `resolved` (in body pre-order; the dangling keys went to `unresolved`, S17). We
+        // only read that list's length. No `cite_span`/`entry_span` is read — every resolved key folds
+        // into a single total, the resolved-citation-side twin of S28's resolved-reference count.
+        self.resolve_citations().resolved.len().to_string()
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -7459,5 +7524,105 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
             doc.bibliography_entry_count(),
             doc.bibliography_entries().lines().count().to_string()
         );
+    }
+
+    // LTXDOC03 S31 — single-integer TOTAL of the resolved citations (`citation_count`). The exact
+    // resolved-CITATION-side twin of S28's `resolved_reference_count`: one decimal line = `.len()` of
+    // the SAME resolved `\cite`-key list S15's `citations_by_source` renders grouped by source. It
+    // extends the totals family onto the resolved-citation table — S27/S28 count the two reference
+    // tables, S29 the label definitions, S30 the bibliography entries, S31 the resolved citations.
+    // Being a COUNT renderer, its empty value is the honest number "0", NOT a `(no …)` marker. A
+    // dangling `\cite{ghost}` is in `unresolved` (S17), never `resolved`, so it is excluded.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s31_multiple_resolved_citations_count_the_integer() {
+        // `\cite{a,b}` then `\cite{c}` against a bibliography defining a, b, c → three keys resolve,
+        // so the count is exactly "3".
+        let src = r"\begin{document}See \cite{a,b} and \cite{c}.
+\begin{thebibliography}{9}\bibitem{a} A.\bibitem{b} B.\bibitem{c} C.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citation_count(), "3");
+    }
+
+    #[test]
+    fn s31_one_resolved_citation_counts_one() {
+        // A single resolved `\cite{only}` → "1".
+        let src = r"\begin{document}See \cite{only}.
+\begin{thebibliography}{9}\bibitem{only} Solo.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citation_count(), "1");
+    }
+
+    #[test]
+    fn s31_dangling_citation_excluded_from_count() {
+        // `\cite{a, ghost}`: `a` is defined (resolves), `ghost` is not (dangles, S17's domain). Only
+        // the ONE resolved key is counted; the dangling `ghost` is excluded by construction.
+        let src = r"\begin{document}See \cite{a, ghost}.
+\begin{thebibliography}{9}\bibitem{a} A.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citation_count(), "1");
+    }
+
+    #[test]
+    fn s31_no_resolved_citations_counts_zero() {
+        // A document with NO `\cite` at all → "0" (the count of an empty `resolved` list). A COUNT
+        // renderer's honest value for an empty list is the number "0", never a `(no …)` marker.
+        let src = r"\begin{document}Just some text with no citations.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citation_count(), "0");
+        // And S15 (the list view) shows its fixed marker for the same doc — the divergence is intended.
+        assert_eq!(doc.citations_by_source(), "(no resolved citations)");
+    }
+
+    #[test]
+    fn s31_every_citation_dangling_counts_zero() {
+        // Every cited key dangles (no matching `\bibitem`) → all go to `unresolved` (S17), so the
+        // resolved-citation count is "0", the same honest-zero as the "no `\cite` at all" case.
+        let src = r"\begin{document}See \cite{ghost, phantom}.
+\begin{thebibliography}{9}\bibitem{real} R.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.citation_count(), "0");
+    }
+
+    #[test]
+    fn s31_is_additive_leaves_s1_s30_outputs_unchanged() {
+        // Same representative doc as the S30 additive test. S31 changes NONE of the S1-S30 outputs — it
+        // only reads `resolve_citations`. Its count is a second view of the SAME `resolved` list S15
+        // renders per-source; pinned here alongside S27/S28/S29/S30 to show S31 neither adds, drops, nor
+        // reorders. The body cites `\cite{a,b}` and `\cite{c,ghost}` against a bibliography defining a,
+        // b, c — so `a`, `b`, `c` resolve (three) and `ghost` dangles.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // Prior totals-family renderers — byte-for-byte unchanged.
+        // S27 dangling-reference count — exactly one (`\eqref{eq:ghost}`).
+        assert_eq!(doc.unresolved_reference_count(), "1");
+        // S28 resolved-reference count — exactly two (`\ref{sec:intro}`, `\eqref{eq:e}`).
+        assert_eq!(doc.resolved_reference_count(), "2");
+        // S29 label-definition count — exactly four distinct label keys.
+        assert_eq!(doc.label_definition_count(), "4");
+        // S30 bibliography-entry count — exactly three distinct `\bibitem` keys (`a`, `b`, `c`).
+        assert_eq!(doc.bibliography_entry_count(), "3");
+
+        // And S31 itself: exactly THREE citation keys resolve (`a`, `b`, `c`); the one dangling `ghost`
+        // is in `unresolved` (S17), not counted here.
+        assert_eq!(doc.citation_count(), "3");
     }
 }
