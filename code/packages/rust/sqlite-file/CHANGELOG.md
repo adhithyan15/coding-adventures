@@ -1,5 +1,38 @@
 # Changelog — sqlite-file
 
+## 0.2.0 — Unreleased
+
+Phase E2: the **database header** parser and a read-only **pager**, on the way
+to the b-tree walk (E3) and the `read_table` API (E4).
+
+### Added
+
+- **`header`** — parse the 100-byte database header at the start of page 1:
+  magic string, page size (with the `1 ⇒ 65536` convention and the power-of-two
+  ≥ 512 validation), reserved-space-per-page, in-header page count, change
+  counter, freelist trunk/count, schema cookie, schema format, and text
+  encoding (`Utf8`/`Utf16Le`/`Utf16Be`). Exposes `usable_size()` = page size −
+  reserved tail, the figure the b-tree/overflow math (E3) works against.
+- **`pager`** — a zero-copy, read-only view over the database bytes: `Pager::open`
+  parses the header and returns it alongside a `page(n)` accessor that borrows
+  1-based page *n* as a sub-slice (page 1 includes the header bytes; the b-tree
+  layer skips them). No journal, no cache — the database is already in memory.
+  Bogus page numbers (0, past-EOF, or large enough to overflow the offset math)
+  return `BadPageNumber` rather than panicking or reading out of bounds.
+- **`error`** — a `SqliteError` enum (`BadMagic`, `Truncated`, `BadPageSize`,
+  `BadPageNumber`, `Unsupported`) so every parse path is fallible on corrupt or
+  hostile input. `#![forbid(unsafe_code)]` throughout.
+
+### Verified
+
+- 12 new unit tests (typical 4 KiB/UTF-8 header, the 65536 page-size quirk,
+  reserved-space usable-size, bad magic / non-power-of-two size / short buffer /
+  unknown encoding rejections, page-1-includes-header, page slicing, and
+  out-of-range/overflow page numbers). The cross-check harness now parses a real
+  `rusqlite`-built file's header with **our** `header` module and asserts every
+  field matches an independent inline read of the same bytes, and that the pager
+  agrees on page count and can return page 1. Full suite green; clippy + fmt clean.
+
 ## 0.1.0 — Unreleased
 
 Initial scaffold of a zero-dependency reader for the SQLite on-disk file format,
