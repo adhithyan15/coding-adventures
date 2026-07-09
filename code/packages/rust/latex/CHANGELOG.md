@@ -2,6 +2,28 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.66.0] — 2026-07-09
+
+### Added — single-integer TOTAL of the bibliography entries (LTXDOC03 S30)
+
+A **new** public method `Document::bibliography_entry_count(&self) -> String` that renders the decimal
+**COUNT** of the winning bibliography entries — the distinct `\bibitem` keys the document defines inside a
+`thebibliography` environment — as one integer line. It is the *count-total* companion of S19's
+`bibliography_entries` (which renders one `[n] key` **line per winning entry**, 1-based in source order):
+S19 and S30 are two *views* of the one winning `entries` list `resolve_citations()` produces — S30
+collapses the whole list to a single `.len()` tally. It is the exact **citation-side analogue** of S29's
+`label_definition_count`, completing the *totals family*: S27 `unresolved_reference_count` and S28
+`resolved_reference_count` count the two reference tables, S29 `label_definition_count` counts the label
+definitions, and S30 counts the bibliography entries. It reads only `resolve_citations().entries.len()` — a
+later duplicate `\bibitem{dup}` lives in `duplicate_entries` (S16's domain) and is excluded by construction,
+so the count is exactly the number of lines S19 lists. Being a COUNT renderer, its empty case (no `\bibitem`
+at all) is the honest number `"0"` — **not** a `(no bibliography entries)` marker (that discipline belongs
+to the *list* renderer S19; this mirrors S27/S28/S29). One line, no trailing newline. It is a read-only view
+over `resolve_citations()`; every S1–S29 output is left **byte-for-byte unchanged**; S30 is purely additive
+and leaves the `to_latex()` round-trip fixed point intact. Total & panic-free.
+
+---
+
 ## [0.65.0] — 2026-07-08
 
 ### Added — single-integer TOTAL of the label definitions (LTXDOC03 S29)

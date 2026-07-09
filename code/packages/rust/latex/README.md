@@ -77,6 +77,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S27 — single-integer total of the unresolved (dangling) references** | `Document::unresolved_reference_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the UNRESOLVED (dangling) `\ref`/`\eqref`/`\pageref` references — the ones no `\label` defines (LaTeX's *"Reference `key' undefined"*, the `??`) — as one integer line. It is the **count-total companion of S18's** `unresolved_references_by_source` (which renders one `\<command>{key}` *line per dangling ref*): S18 and S27 are two views of the one `unresolved` list; S27 collapses the whole list to a single `.len()` tally. It is the count-total sibling of the census family (S25 `label_kind_counts`, S26 `resolved_reference_kind_counts`), but for the UNRESOLVED refs — which carry **no** `target_kind` (a dangling ref bound to nothing), so a per-kind census is not viable and a single total is the clean move. It reads only `resolve_references().unresolved.len()` (a resolved `\ref{sec:i}` lives in `resolved`, S21's domain, and is excluded by construction) — never a `target_kind`, no source slicing at all. Being a COUNT renderer, its empty case (every ref resolves, or none at all) is the honest number `"0"` — **not** a `(no …)` marker (that discipline belongs to the *list* renderers). One line, no trailing newline. E.g. `\ref{sec:i}` (resolves) + `\ref{nope}` + `\ref{gone}` (both dangle) → `2`. Every S1–S26 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S28 — single-integer total of the resolved references** | `Document::resolved_reference_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the RESOLVED `\ref`/`\eqref`/`\pageref` references — the ones some `\label` defines — as one integer line. It is the **count-total companion of S21's** `resolved_references_by_source` **and S24's** `resolved_references_by_kind` (which render one `\<command>{key}` *line per resolved ref*, flat in source order or grouped by target kind): S21/S24 and S28 are two views of the one `resolved` list; S28 collapses the whole list to a single `.len()` tally. It is the exact resolved-side **twin of S27's** `unresolved_reference_count` — together S28 + S27 split every reference into the pair (resolved, dangling), so their totals sum to the total reference count. It reads only `resolve_references().resolved.len()` (a dangling `\ref{nope}` lives in `unresolved`, S18/S27's domain, and is excluded by construction) — never a `target_kind`, no source slicing at all, so section/table/equation references all fold into one total. Being a COUNT renderer, its empty case (every ref dangles, or none at all) is the honest number `"0"` — **not** a `(no resolved references)` marker (that discipline belongs to the *list* renderers; this mirrors S27). One line, no trailing newline. E.g. `\ref{sec:i}` (resolves) + `\pageref{sec:i}` (resolves) + `\ref{nope}` (dangles) → `2`. Every S1–S27 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S29 — single-integer total of the label definitions** | `Document::label_definition_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the winning label definitions — the distinct `\label` keys the document defines — as one integer line. It is the **count-total companion of S22's** `label_definitions` **and S23's** `label_definitions_by_kind` (which render one `\label{key}` *line per winning definition*, flat in source order or grouped by kind): S22/S23 and S29 are two views of the one winning `definitions` list; S29 collapses the whole list to a single `.len()` tally. It is the exact label-definition-side **analogue** of the reference-side totals S27's `unresolved_reference_count` and S28's `resolved_reference_count`, and the count-total sibling of the census family (S25 `label_kind_counts`) but over the *whole* definition list rather than per-kind. It reads only `resolve_references().definitions.len()` (a later duplicate `\label{dup}` lives in `duplicates`, S20's domain, and is excluded by construction — the count is exactly the number of lines S22 lists) — never a `kind`, no source slicing at all, so section/figure/equation/inline labels all fold into one total. Being a COUNT renderer, its empty case (no `\label` at all) is the honest number `"0"` — **not** a `(no label definitions)` marker (that discipline belongs to the *list* renderers; this mirrors S27/S28). One line, no trailing newline. E.g. `sec:intro` (section) + `eq:main` (equation) + a re-used `sec:intro` (duplicate) → `2`. Every S1–S28 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S30 — single-integer total of the bibliography entries** | `Document::bibliography_entry_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the winning bibliography entries — the distinct `\bibitem` keys the document defines inside a `thebibliography` environment — as one integer line. It is the **count-total companion of S19's** `bibliography_entries` (which renders one `[n] key` *line per winning entry*, 1-based in source order): S19 and S30 are two views of the one winning `entries` list; S30 collapses the whole list to a single `.len()` tally. It is the exact **citation-side analogue of S29's** `label_definition_count`, completing the *totals family* — S27's `unresolved_reference_count` and S28's `resolved_reference_count` count the two reference tables, S29 counts the label definitions, and S30 counts the bibliography entries. It reads only `resolve_citations().entries.len()` (a later duplicate `\bibitem{dup}` lives in `duplicate_entries`, S16's domain, and is excluded by construction — the count is exactly the number of lines S19 lists) — no source slicing at all. Being a COUNT renderer, its empty case (no `\bibitem` at all) is the honest number `"0"` — **not** a `(no bibliography entries)` marker (that discipline belongs to the *list* renderer S19; this mirrors S27/S28/S29). One line, no trailing newline. E.g. `a` + `b` + `c` + a re-used `a` (duplicate) → `3`. Every S1–S29 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -1167,6 +1168,37 @@ Being a COUNT renderer, a document with no label definitions at all renders the 
 **not** a `(no label definitions)` marker (that discipline belongs to the *list* renderers S22/S23, whose
 empty case has no lines to show; this mirrors S27/S28). Purely additive — reuses `resolve_references`,
 mutates nothing, leaves every S1–S28 output and the `to_latex()` fixed point unchanged.
+
+### single-integer total of the bibliography entries (LTXDOC03 S30)
+
+The decimal **COUNT** of the winning bibliography entries — the distinct `\bibitem` keys the document defines
+inside a `thebibliography` environment — as one integer line. It is the **count-total companion of S19's**
+`bibliography_entries` (which renders one `[n] key` line *per winning entry*, 1-based in source order): S19
+and S30 are two *views* of the one winning `entries` list `resolve_citations()` produces; S30 collapses the
+whole list to a single `.len()` tally. It is the exact **citation-side analogue of S29's**
+`label_definition_count`, completing the *totals family* — S27's `unresolved_reference_count` and S28's
+`resolved_reference_count` count the two reference tables, S29 counts the label definitions, and S30 counts
+the bibliography entries. `bibliography_entry_count` reads only `resolve_citations().entries.len()` — a later
+duplicate `\bibitem{dup}` lives in `duplicate_entries` (S16's domain) and is excluded by construction, so the
+count is exactly the number of lines S19 lists, with no source slicing at all.
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\begin{thebibliography}{9}
+\bibitem{a} Author A.\bibitem{b} Author B.\bibitem{a} Author A again.\end{thebibliography}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.bibliography_entry_count(),
+    // two distinct keys defined (`a`, `b`); the later `\bibitem{a}` is a duplicate
+    "2",
+);
+```
+
+Being a COUNT renderer, a document with no bibliography entries at all renders the honest number `"0"` —
+**not** a `(no bibliography entries)` marker (that discipline belongs to the *list* renderer S19, whose empty
+case has no lines to show; this mirrors S27/S28/S29). Purely additive — reuses `resolve_citations`, mutates
+nothing, leaves every S1–S29 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 
