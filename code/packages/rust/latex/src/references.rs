@@ -2623,6 +2623,117 @@ impl Document {
             .collect::<Vec<_>>()
             .join("\n")
     }
+
+    /// The **per-kind CENSUS of the resolved references** (LTXDOC03 S26) — the *count* companion of
+    /// S24's [`resolved_references_by_kind`](Document::resolved_references_by_kind). Where S24 renders
+    /// one **line per resolved reference** (an `[kind] \<command>{key}` list, grouped by the kind of
+    /// node each ref bound to), S26 renders one **line per kind** carrying just the integer **count**
+    /// of resolved references that landed on that kind — a `<kind>: <n>` tally, not a list. It is to
+    /// S24 what S25's [`label_kind_counts`](Document::label_kind_counts) is to S23: a numeric summary
+    /// over the *same* list (here the **resolved** references), so a reader sees "how many refs land on
+    /// each kind" without scanning the individual keys.
+    ///
+    /// ## What it does
+    ///
+    /// S1's [`Document::resolve_references`] walks every `\ref`/`\eqref`/`\pageref` in body pre-order
+    /// and splits them into the **resolved** references (those a `\label` defines — recorded in
+    /// [`ReferenceResolution::resolved`] as a [`ResolvedRef`]) and the **unresolved** (dangling) ones
+    /// (LaTeX's *"Reference `key' undefined"*, the `??` in the output — S18's domain). Each
+    /// [`ResolvedRef`] carries the [`LabelKind`] (`target_kind`) of the definition it bound to. S21
+    /// renders that `resolved` list **flat**, S24 renders it **grouped by `target_kind`** (one line per
+    /// ref). S26 collapses each kind's group to a **single count line**: it walks the [`LabelKind`]
+    /// variants in a fixed order and, for each kind that has **at least one** resolved ref, emits
+    /// `<kind>: <n>` where `<n>` is how many resolved refs carry that `target_kind`. Only the
+    /// **resolved** refs are counted — a dangling `\ref{nope}` lives in
+    /// [`ReferenceResolution::unresolved`] (S18), never in `resolved`, so it is excluded by
+    /// construction. S24 and S26 are two *views* of one underlying list (S24 the per-ref list, S26 the
+    /// per-kind count); neither mutates anything.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Iterate the [`LabelKind`] variants in their **enum declaration order** —
+    /// [`Section`](LabelKind::Section), [`Table`](LabelKind::Table), [`Figure`](LabelKind::Figure),
+    /// [`Equation`](LabelKind::Equation), [`Inline`](LabelKind::Inline) — a fixed, deterministic order
+    /// that does **not** depend on the document (the SAME `const KIND_ORDER` slice S23/S24/S25 use).
+    /// For each kind, count the [`ReferenceResolution::resolved`] refs whose `target_kind` is that kind,
+    /// and — only if the count is **at least one** — emit one line `<kind>: <n>`, where `<kind>` is the
+    /// stable lowercase tag from [`LabelKind::as_str`] (`"section"`, `"table"`, `"figure"`,
+    /// `"equation"`, `"inline"`) — the **same** kind string S24 renders — and `<n>` is the decimal
+    /// count. This single stable-ordered pass keeps the output deterministic **without** a hash map —
+    /// the same `Vec`-scan discipline S17/S18/S23/S24/S25 use to avoid hash-order nondeterminism. A kind
+    /// with a **zero** count produces **no** line (there is never a bare `table: 0` for a doc with no
+    /// refs to tables).
+    ///
+    /// A document with **no** resolved references — every reference dangles, or there are none at all —
+    /// returns the fixed marker `(no resolved references)`, the **same** marker S21/S24 use (S26 counts
+    /// the identical list, so the empty case is identical), never the empty string (the stable-marker
+    /// discipline S12–S25 share). Lines are joined by `\n` with **no** trailing newline (matching every
+    /// S11–S25 renderer).
+    ///
+    /// Concretely, for a body defining two section labels `sec:a`/`sec:b` and one equation label
+    /// `eq:e`, then writing `\ref{sec:a}`, `\ref{sec:b}`, and `\eqref{eq:e}` (all of which resolve):
+    ///
+    /// ```text
+    /// section: 2
+    /// equation: 1
+    /// ```
+    ///
+    /// (the `section` count leads, then `equation`, in the fixed kind order; the `table`, `figure`, and
+    /// `inline` kinds have zero resolved refs and so contribute no lines).
+    ///
+    /// ## Additive by construction
+    ///
+    /// S26 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1–S25 output (they are byte-for-byte unchanged) and leaves
+    /// the `to_latex` round-trip fixed point intact. It is a *third view* of the same `resolved` list
+    /// S21 renders flat and S24 groups by kind — counting never adds, drops, or reorders resolved
+    /// references relative to what `resolve_references` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only the `target_kind` field is read); a single stable-ordered pass (fixed kind order × pre-order
+    /// filter/count) over the already-bounded `resolved` list. Borrows `self` immutably and returns
+    /// owned `String` data, so the result outlives any borrow of the source.
+    pub fn resolved_reference_kind_counts(&self) -> String {
+        // S1 already split every `\ref`/`\eqref`/`\pageref` into resolved and dangling entries, routing
+        // the resolved ones into `resolved` (in body pre-order), each carrying the `target_kind` of the
+        // label it bound to. We only read (and count) that list; dangling refs live in `unresolved`.
+        let resolution = self.resolve_references();
+
+        if resolution.resolved.is_empty() {
+            // Every reference dangled (or there were none) → the SAME fixed marker S21/S24 use.
+            return "(no resolved references)".to_string();
+        }
+
+        // The FIXED kind order = the enum declaration order (the SAME slice S23/S24/S25 use). Iterating
+        // this explicit slice (rather than a hash map keyed by kind) makes the line order deterministic
+        // and document-independent, the same `Vec`-scan discipline S17/S18/S23/S24/S25 use to avoid
+        // hash-order nondeterminism.
+        const KIND_ORDER: [LabelKind; 5] = [
+            LabelKind::Section,
+            LabelKind::Table,
+            LabelKind::Figure,
+            LabelKind::Equation,
+            LabelKind::Inline,
+        ];
+
+        // One stable-ordered pass: for each kind in the fixed order, count the resolved refs whose
+        // `target_kind` is that kind and — only when the count is >= 1 — emit `<kind>: <n>`. A kind with
+        // zero resolved refs is filtered out (`filter` on `count > 0`), so it contributes no line. The
+        // kind string is the SAME `LabelKind::as_str` tag S24 renders; there is no source slicing (only
+        // `target_kind` is read).
+        KIND_ORDER
+            .iter()
+            .filter_map(|kind| {
+                let count = resolution
+                    .resolved
+                    .iter()
+                    .filter(|r| r.target_kind == *kind)
+                    .count();
+                (count > 0).then(|| format!("{}: {}", kind.as_str(), count))
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -6374,6 +6485,186 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         assert_eq!(
             doc.label_kind_counts(),
             "section: 1\nfigure: 1\nequation: 1\ninline: 1"
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S26 — per-kind CENSUS (counts) of the RESOLVED references
+    // (`resolved_reference_kind_counts`). The count companion of S24's
+    // `resolved_references_by_kind`: one `<kind>: <n>` line per kind (in the fixed enum order), a
+    // numeric summary over the SAME `resolved` list. Dangling refs live in `unresolved` (S18).
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s26_counts_multiple_kinds_in_fixed_kind_order_zero_kinds_omitted() {
+        // A `\ref` to a section, two `\eqref`s to two equations, and a `\ref` to a bare inline label →
+        // one `<kind>: <n>` line per kind in the fixed enum order (Section, then Equation, then Inline).
+        // The Table and Figure kinds have zero resolved refs and so contribute NO lines (never
+        // `table: 0`).
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\begin{equation}\label{eq:a}x=1\end{equation}
+\begin{equation}\label{eq:b}y=2\end{equation}
+\label{note}
+\ref{sec:i} \eqref{eq:a} \eqref{eq:b} \ref{note}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolved_reference_kind_counts(),
+            "section: 1\nequation: 2\ninline: 1"
+        );
+    }
+
+    #[test]
+    fn s26_exactly_one_kind() {
+        // Two refs to the SAME (and only) section → a single `section: 2` line. No other kinds, no
+        // trailing newline.
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\ref{sec:i} \pageref{sec:i}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_reference_kind_counts(), "section: 2");
+    }
+
+    #[test]
+    fn s26_two_refs_to_two_section_labels_count_two() {
+        // Two `\ref`s to two DIFFERENT section labels → `section: 2` (multiple resolved refs to the
+        // same kind aggregate into the kind's count).
+        let src = r"\begin{document}\section{One}\label{sec:a}
+\section{Two}\label{sec:b}
+\ref{sec:a} \ref{sec:b}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.resolved_reference_kind_counts(), "section: 2");
+    }
+
+    #[test]
+    fn s26_all_dangling_or_none_returns_marker() {
+        // A document whose only reference dangles (`\ref{nope}` with no `\label`) → the fixed
+        // `(no resolved references)` marker S21/S24 use, never a `<kind>: 0` line — the dangling ref
+        // lands in `unresolved` (S18), not `resolved`.
+        let dangling = r"\begin{document}\ref{nope}\end{document}";
+        let doc = parse_document(dangling).expect("parse");
+        assert_eq!(
+            doc.resolved_reference_kind_counts(),
+            "(no resolved references)"
+        );
+        // Cross-check: the dangling ref is in `unresolved`, so it never contributed a zero count.
+        assert_eq!(doc.unresolved_references_by_source(), "\\ref{nope}");
+
+        // And a document with no references at all → the SAME marker.
+        let none = r"\begin{document}Just some text with no references.\end{document}";
+        let doc = parse_document(none).expect("parse");
+        assert_eq!(
+            doc.resolved_reference_kind_counts(),
+            "(no resolved references)"
+        );
+    }
+
+    #[test]
+    fn s26_newline_join_no_trailing_newline_excludes_dangling() {
+        // A `\ref` to a section, an `\eqref` to an equation, plus a DANGLING `\ref{nope}` → exact
+        // string equality pins the `\n`-join with NO trailing newline, the fixed kind order (Section
+        // then Equation), AND that the dangling `\ref{nope}` is excluded from the counts (it never
+        // entered `resolved`).
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+\begin{equation}\label{eq:m}x=1\end{equation}
+\ref{sec:i} \eqref{eq:m} \ref{nope}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(
+            doc.resolved_reference_kind_counts(),
+            "section: 1\nequation: 1"
+        );
+        // The dangling ref shows up in S18, confirming it was routed to `unresolved`, not counted here.
+        assert_eq!(doc.unresolved_references_by_source(), "\\ref{nope}");
+    }
+
+    #[test]
+    fn s26_is_additive_leaves_s1_s25_outputs_unchanged() {
+        // Same representative doc as the S24/S25 additive tests. S26 changes NONE of the S1-S25 outputs
+        // — it only reads `resolve_references`. S21's flat `resolved_references_by_source`, S24's
+        // grouped `resolved_references_by_kind`, and S26's per-kind counts are three views of the SAME
+        // `resolved` list; all are pinned here to show S26 neither adds, drops, nor reorders, and that
+        // its counts agree with S24's grouping.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S1/S6 flat report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text(),
+            "\\ref{sec:intro} -> Section 1\n\\eqref{eq:e} -> Equation (1)\n\\cite{a} -> [1]\n\\cite{b} -> [2]\n\\cite{c} -> [3]\nDangling references: eq:ghost\nDangling citations: ghost"
+        );
+        // S11 grouped-by-kind report — unchanged.
+        assert_eq!(
+            doc.cross_reference_report().to_plain_text_by_kind(),
+            "Sections:\n  \\ref{sec:intro} -> Section 1\nEquations:\n  \\eqref{eq:e} -> Equation (1)"
+        );
+        // S12 list of floats — unchanged.
+        assert_eq!(doc.list_of_floats(), "List of Figures\n1. A plot");
+        // S13 nameref resolution — unchanged.
+        assert_eq!(
+            doc.resolve_namerefs(),
+            "\\nameref{sec:intro} -> Introduction\n\\nameref{fig:p} -> A plot"
+        );
+        // S14 per-kind census — unchanged.
+        assert_eq!(doc.list_summary(), "Sections: 1\nFigures: 1\nEquations: 1");
+        // S15 grouped resolved cites — unchanged.
+        assert_eq!(doc.citations_by_source(), "\\cite{a, b}\n\\cite{c}");
+        // S16 duplicate bibliography entries — unchanged.
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S17 grouped dangling cites — unchanged.
+        assert_eq!(doc.unresolved_citations_by_source(), "\\cite{ghost}");
+        // S18 grouped dangling refs — unchanged.
+        assert_eq!(doc.unresolved_references_by_source(), "\\eqref{eq:ghost}");
+        // S19 numbered winning bibliography — unchanged.
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+        // S20 losing duplicate labels — unchanged.
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+        // S21 resolved references (flat, source order) — unchanged.
+        assert_eq!(
+            doc.resolved_references_by_source(),
+            "\\ref{sec:intro}\n\\eqref{eq:e}"
+        );
+        // S22 flat winning label definitions — unchanged.
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+        // S23 grouped winning label definitions — unchanged.
+        assert_eq!(
+            doc.label_definitions_by_kind(),
+            "[section] \\label{sec:intro}\n[figure] \\label{fig:p}\n[equation] \\label{eq:e}\n[inline] \\label{dup}"
+        );
+        // S24 grouped resolved references — unchanged.
+        assert_eq!(
+            doc.resolved_references_by_kind(),
+            "[section] \\ref{sec:intro}\n[equation] \\eqref{eq:e}"
+        );
+        // S25 per-kind label-definition counts — unchanged.
+        assert_eq!(
+            doc.label_kind_counts(),
+            "section: 1\nfigure: 1\nequation: 1\ninline: 1"
+        );
+
+        // And S26 itself: the per-kind COUNTS of the SAME resolved references, in the fixed enum order.
+        // One resolved ref lands on a section (`\ref{sec:intro}`) and one on an equation (`\eqref{eq:e}`);
+        // the `\eqref{eq:ghost}` dangles (excluded). `\n`-joined, no trailing newline. Table, figure,
+        // and inline have zero resolved refs and so are omitted.
+        assert_eq!(
+            doc.resolved_reference_kind_counts(),
+            "section: 1\nequation: 1"
         );
     }
 }
