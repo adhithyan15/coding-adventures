@@ -193,6 +193,27 @@ under the Apache License, Version 2.0:
       are not asserted to be valid JS (`super` is syntactically restricted to
       member/call position inside a method or derived constructor).
 
+- `code_printer_class_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the class-expression `class[ id][ extends S]{members}` printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_class` + `emit_class_member` + the `PREC_UNARY`
+      classification that landed with `Expression::ClassExpression`
+      (CLOC12.173). 22 active `#[test]`s and **0 `#[ignore]`** — the emitter
+      conforms to every covered shape: the statement-start wrap (`(class{});`),
+      anonymous/named surface, the four `extends`-operand precedence cases
+      (identifier / member / call heritage print bare, a conditional heritage
+      wraps: `extends (a?b:c)`), the member forms (empty / params+body /
+      `static` / `get` / `set` / `constructor` / stacked `static get` /
+      generator `*m` / `async m` / computed `[k]` / two members back-to-back),
+      and the whole-node precedence cases where the class wraps as a member
+      object (`(class{}).x`) and a call callee (`(class{})()`) but stays bare
+      under a binary parent (`class{}+1`). Inputs are hand-constructed AST; the
+      bridge conversion of `class_expression` (CLOC12.173 PR2, gap-167) is
+      exercised separately in `javascript-parser`, and building the AST directly
+      lets the port cover generator / async / computed-key methods and
+      multi-member classes the grammar cannot yet parse.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

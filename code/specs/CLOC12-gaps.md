@@ -2302,8 +2302,20 @@ and the method body + sibling arg fold; `tests/diff/advanced-class-constructor/`
 
 16 bridge unit tests (`class_*`) cover the accepted forms and the declines.
 
-**PR3 (CodePrinter conformance port)** — `closure-emitter` (PATCH), a
-`tests/upstream/code_printer_class_test.rs` — remains.
+**PR3 (DONE) — `closure-emitter` 0.37.1.** New upstream port
+`tests/upstream/code_printer_class_test.rs` (registered as `[[test]]
+upstream_code_printer_class`), isolating `emit_class` + `emit_class_member` +
+the `PREC_UNARY` classification from PR1. **22 active `#[test]`s, 0
+`#[ignore]`** — the statement-start wrap (`(class{});`), anonymous/named
+surface, the four `extends`-operand precedence cases (identifier / member / call
+heritage bare, conditional heritage wrapped `extends (a?b:c)`), the member forms
+(empty / params+body / `static` / `get` / `set` / `constructor` / stacked
+`static get` / generator `*m` / `async m` / computed `[k]` / two members
+back-to-back), and the whole-node precedence cases (`(class{}).x`,
+`(class{})()`, `class{}+1`). Inputs are hand-constructed AST, so the port also
+covers the generator / async / computed-key / multi-member shapes the grammar
+cannot yet parse. Test-only change (no production edit); ATTRIBUTION.md updated.
+This closes the CLOC12.173 class-expression arc.
 
 ## CLOC12.172 — `RegExpLiteral` leaf node (`/pattern/flags`): node + emit + passes (PR1)
 
