@@ -8,7 +8,6 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 use std::io::Cursor;
-use std::ptr::NonNull;
 
 use coding_adventures_sha1::sum1;
 pub use engram_core::EngramMediaReferenceAnalysis;
@@ -21,10 +20,10 @@ use engram_core::{
     LeechAction, MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session,
     SessionStatus, TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
-use rusqlite::{ffi as sqlite_ffi, serialize::OwnedData};
 use rusqlite::{Connection, DatabaseName};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use sqlite_file::SqlValue;
 use zip::{ZipReader, ZipWriter};
 
 const LEGACY_COLLECTION: &str = "collection.anki2";
@@ -632,9 +631,7 @@ pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> 
 }
 
 pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
-    let connection = open_serialized_v11_collection(bytes)?;
-
-    let raw_col = read_v11_col_row(&connection)?;
+    let raw_col = read_v11_col_row(bytes)?;
     let metadata = AnkiV11CollectionMetadata {
         id: raw_col.id,
         created_at_days: raw_col.created_at_days,
@@ -652,38 +649,12 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
     Ok(AnkiV11Collection {
         decks: parse_v11_decks(&raw_col.decks_json)?,
         note_types: parse_v11_note_types(&raw_col.models_json)?,
-        notes: read_v11_notes(&connection)?,
-        cards: read_v11_cards(&connection)?,
-        reviews: read_v11_reviews(&connection)?,
-        graves: read_v11_graves(&connection)?,
+        notes: read_v11_notes(bytes)?,
+        cards: read_v11_cards(bytes)?,
+        reviews: read_v11_reviews(bytes)?,
+        graves: read_v11_graves(bytes)?,
         metadata,
     })
-}
-
-fn open_serialized_v11_collection(bytes: &[u8]) -> Result<Connection, ApkgError> {
-    let mut connection = Connection::open_in_memory()
-        .map_err(|err| apkg_error(format!("failed to open in-memory SQLite collection: {err}")))?;
-    if bytes.is_empty() {
-        return Err(apkg_error("Anki V11 SQLite collection is empty"));
-    }
-    let ptr = unsafe { sqlite_ffi::sqlite3_malloc64(bytes.len() as sqlite_ffi::sqlite3_uint64) };
-    let ptr = NonNull::new(ptr.cast::<u8>()).ok_or_else(|| {
-        apkg_error(format!(
-            "failed to allocate {} bytes for Anki V11 SQLite collection",
-            bytes.len()
-        ))
-    })?;
-    unsafe {
-        std::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr.as_ptr(), bytes.len());
-        connection
-            .deserialize(
-                DatabaseName::Main,
-                OwnedData::from_raw_nonnull(ptr, bytes.len()),
-                true,
-            )
-            .map_err(|err| apkg_error(format!("failed to deserialize Anki V11 collection: {err}")))
-    }?;
-    Ok(connection)
 }
 
 pub fn read_v11_collection_as_engram_state(data: &[u8]) -> Result<AppState, ApkgError> {
@@ -3685,30 +3656,28 @@ struct RawV11ColRow {
     tags_json: String,
 }
 
-fn read_v11_col_row(connection: &Connection) -> Result<RawV11ColRow, ApkgError> {
-    connection
-        .query_row(
-            "SELECT id, crt, mod, scm, ver, dty, usn, ls, conf, models, decks, dconf, tags FROM col LIMIT 1",
-            [],
-            |row| {
-                Ok(RawV11ColRow {
-                    id: row.get(0)?,
-                    created_at_days: row.get(1)?,
-                    modified_at: row.get(2)?,
-                    schema_modified_at: row.get(3)?,
-                    version: row.get(4)?,
-                    dirty: row.get(5)?,
-                    update_sequence_number: row.get(6)?,
-                    last_sync: row.get(7)?,
-                    config_json: row.get(8)?,
-                    models_json: row.get(9)?,
-                    decks_json: row.get(10)?,
-                    deck_config_json: row.get(11)?,
-                    tags_json: row.get(12)?,
-                })
-            },
-        )
-        .map_err(|err| apkg_error(format!("failed to read Anki V11 col table: {err}")))
+fn read_v11_col_row(bytes: &[u8]) -> Result<RawV11ColRow, ApkgError> {
+    let mut rows = read_v11_table(bytes, "col", "Anki V11 col table")?;
+    let (rowid, columns) = rows
+        .drain(..)
+        .next()
+        .ok_or_else(|| apkg_error("Anki V11 col table is empty"))?;
+    require_sqlite_column_count("Anki V11 col row", &columns, 13)?;
+    Ok(RawV11ColRow {
+        id: rowid,
+        created_at_days: sqlite_i64(&columns[1], "col.crt")?,
+        modified_at: sqlite_i64(&columns[2], "col.mod")?,
+        schema_modified_at: sqlite_i64(&columns[3], "col.scm")?,
+        version: sqlite_i64(&columns[4], "col.ver")?,
+        dirty: sqlite_i64(&columns[5], "col.dty")?,
+        update_sequence_number: sqlite_i64(&columns[6], "col.usn")?,
+        last_sync: sqlite_i64(&columns[7], "col.ls")?,
+        config_json: sqlite_text(&columns[8], "col.conf")?,
+        models_json: sqlite_text(&columns[9], "col.models")?,
+        decks_json: sqlite_text(&columns[10], "col.decks")?,
+        deck_config_json: sqlite_text(&columns[11], "col.dconf")?,
+        tags_json: sqlite_text(&columns[12], "col.tags")?,
+    })
 }
 
 fn parse_v11_decks(json: &str) -> Result<Vec<AnkiV11Deck>, ApkgError> {
@@ -3789,116 +3758,135 @@ fn parse_v11_templates(raw_model: &Value) -> Vec<AnkiV11Template> {
     templates
 }
 
-fn read_v11_notes(connection: &Connection) -> Result<Vec<AnkiV11Note>, ApkgError> {
-    let mut statement = connection
-        .prepare(
-            "SELECT id, guid, mid, mod, usn, tags, flds, sfld, csum, flags, data FROM notes ORDER BY id",
-        )
-        .map_err(|err| apkg_error(format!("failed to prepare Anki V11 notes query: {err}")))?;
-    let rows = statement
-        .query_map([], |row| {
-            let tags: String = row.get(5)?;
-            let fields: String = row.get(6)?;
+fn read_v11_notes(bytes: &[u8]) -> Result<Vec<AnkiV11Note>, ApkgError> {
+    read_v11_table(bytes, "notes", "Anki V11 notes")?
+        .into_iter()
+        .map(|(rowid, columns)| {
+            require_sqlite_column_count("Anki V11 notes row", &columns, 11)?;
+            let tags = sqlite_text(&columns[5], "notes.tags")?;
+            let fields = sqlite_text(&columns[6], "notes.flds")?;
             Ok(AnkiV11Note {
-                id: row.get(0)?,
-                guid: row.get(1)?,
-                note_type_id: row.get(2)?,
-                modified_at: row.get(3)?,
-                update_sequence_number: row.get(4)?,
+                id: rowid,
+                guid: sqlite_text(&columns[1], "notes.guid")?,
+                note_type_id: sqlite_i64(&columns[2], "notes.mid")?,
+                modified_at: sqlite_i64(&columns[3], "notes.mod")?,
+                update_sequence_number: sqlite_i64(&columns[4], "notes.usn")?,
                 tags: split_anki_tags(&tags),
                 field_values: split_anki_fields(&fields),
-                sort_field: sqlite_value_to_string(row, 7)?,
-                checksum: row.get(8)?,
-                flags: row.get(9)?,
-                data: row.get(10)?,
+                sort_field: sqlite_value_to_string(&columns[7]),
+                checksum: sqlite_i64(&columns[8], "notes.csum")?,
+                flags: sqlite_i64(&columns[9], "notes.flags")?,
+                data: sqlite_text(&columns[10], "notes.data")?,
             })
         })
-        .map_err(|err| apkg_error(format!("failed to read Anki V11 notes: {err}")))?;
-    collect_sqlite_rows("Anki V11 notes", rows)
+        .collect()
 }
 
-fn read_v11_cards(connection: &Connection) -> Result<Vec<AnkiV11Card>, ApkgError> {
-    let mut statement = connection
-        .prepare(
-            "SELECT id, nid, did, ord, mod, usn, type, queue, due, ivl, factor, reps, lapses, left, odue, odid, flags, data FROM cards ORDER BY id",
-        )
-        .map_err(|err| apkg_error(format!("failed to prepare Anki V11 cards query: {err}")))?;
-    let rows = statement
-        .query_map([], |row| {
+fn read_v11_cards(bytes: &[u8]) -> Result<Vec<AnkiV11Card>, ApkgError> {
+    read_v11_table(bytes, "cards", "Anki V11 cards")?
+        .into_iter()
+        .map(|(rowid, columns)| {
+            require_sqlite_column_count("Anki V11 cards row", &columns, 18)?;
             Ok(AnkiV11Card {
-                id: row.get(0)?,
-                note_id: row.get(1)?,
-                deck_id: row.get(2)?,
-                ordinal: row.get(3)?,
-                modified_at: row.get(4)?,
-                update_sequence_number: row.get(5)?,
-                kind: row.get(6)?,
-                queue: row.get(7)?,
-                due: row.get(8)?,
-                interval: row.get(9)?,
-                factor: row.get(10)?,
-                repetitions: row.get(11)?,
-                lapses: row.get(12)?,
-                left: row.get(13)?,
-                original_due: row.get(14)?,
-                original_deck_id: row.get(15)?,
-                flags: row.get(16)?,
-                data: row.get(17)?,
+                id: rowid,
+                note_id: sqlite_i64(&columns[1], "cards.nid")?,
+                deck_id: sqlite_i64(&columns[2], "cards.did")?,
+                ordinal: sqlite_i64(&columns[3], "cards.ord")?,
+                modified_at: sqlite_i64(&columns[4], "cards.mod")?,
+                update_sequence_number: sqlite_i64(&columns[5], "cards.usn")?,
+                kind: sqlite_i64(&columns[6], "cards.type")?,
+                queue: sqlite_i64(&columns[7], "cards.queue")?,
+                due: sqlite_i64(&columns[8], "cards.due")?,
+                interval: sqlite_i64(&columns[9], "cards.ivl")?,
+                factor: sqlite_i64(&columns[10], "cards.factor")?,
+                repetitions: sqlite_i64(&columns[11], "cards.reps")?,
+                lapses: sqlite_i64(&columns[12], "cards.lapses")?,
+                left: sqlite_i64(&columns[13], "cards.left")?,
+                original_due: sqlite_i64(&columns[14], "cards.odue")?,
+                original_deck_id: sqlite_i64(&columns[15], "cards.odid")?,
+                flags: sqlite_i64(&columns[16], "cards.flags")?,
+                data: sqlite_text(&columns[17], "cards.data")?,
             })
         })
-        .map_err(|err| apkg_error(format!("failed to read Anki V11 cards: {err}")))?;
-    collect_sqlite_rows("Anki V11 cards", rows)
+        .collect()
 }
 
-fn read_v11_reviews(connection: &Connection) -> Result<Vec<AnkiV11Review>, ApkgError> {
-    let mut statement = connection
-        .prepare(
-            "SELECT id, cid, usn, ease, ivl, lastIvl, factor, time, type FROM revlog ORDER BY id",
-        )
-        .map_err(|err| apkg_error(format!("failed to prepare Anki V11 revlog query: {err}")))?;
-    let rows = statement
-        .query_map([], |row| {
+fn read_v11_reviews(bytes: &[u8]) -> Result<Vec<AnkiV11Review>, ApkgError> {
+    read_v11_table(bytes, "revlog", "Anki V11 revlog")?
+        .into_iter()
+        .map(|(rowid, columns)| {
+            require_sqlite_column_count("Anki V11 revlog row", &columns, 9)?;
             Ok(AnkiV11Review {
-                id: row.get(0)?,
-                card_id: row.get(1)?,
-                update_sequence_number: row.get(2)?,
-                ease: row.get(3)?,
-                interval: row.get(4)?,
-                last_interval: row.get(5)?,
-                factor: row.get(6)?,
-                time: row.get(7)?,
-                kind: row.get(8)?,
+                id: rowid,
+                card_id: sqlite_i64(&columns[1], "revlog.cid")?,
+                update_sequence_number: sqlite_i64(&columns[2], "revlog.usn")?,
+                ease: sqlite_i64(&columns[3], "revlog.ease")?,
+                interval: sqlite_i64(&columns[4], "revlog.ivl")?,
+                last_interval: sqlite_i64(&columns[5], "revlog.lastIvl")?,
+                factor: sqlite_i64(&columns[6], "revlog.factor")?,
+                time: sqlite_i64(&columns[7], "revlog.time")?,
+                kind: sqlite_i64(&columns[8], "revlog.type")?,
             })
         })
-        .map_err(|err| apkg_error(format!("failed to read Anki V11 revlog: {err}")))?;
-    collect_sqlite_rows("Anki V11 revlog", rows)
+        .collect()
 }
 
-fn read_v11_graves(connection: &Connection) -> Result<Vec<AnkiV11Grave>, ApkgError> {
-    let mut statement = connection
-        .prepare("SELECT usn, oid, type FROM graves ORDER BY oid")
-        .map_err(|err| apkg_error(format!("failed to prepare Anki V11 graves query: {err}")))?;
-    let rows = statement
-        .query_map([], |row| {
+fn read_v11_graves(bytes: &[u8]) -> Result<Vec<AnkiV11Grave>, ApkgError> {
+    let mut graves = read_v11_table(bytes, "graves", "Anki V11 graves")?
+        .into_iter()
+        .map(|(_rowid, columns)| {
+            require_sqlite_column_count("Anki V11 graves row", &columns, 3)?;
             Ok(AnkiV11Grave {
-                update_sequence_number: row.get(0)?,
-                object_id: row.get(1)?,
-                kind: row.get(2)?,
+                update_sequence_number: sqlite_i64(&columns[0], "graves.usn")?,
+                object_id: sqlite_i64(&columns[1], "graves.oid")?,
+                kind: sqlite_i64(&columns[2], "graves.type")?,
             })
         })
-        .map_err(|err| apkg_error(format!("failed to read Anki V11 graves: {err}")))?;
-    collect_sqlite_rows("Anki V11 graves", rows)
+        .collect::<Result<Vec<_>, ApkgError>>()?;
+    graves.sort_by_key(|grave| grave.object_id);
+    Ok(graves)
 }
 
-fn collect_sqlite_rows<T>(
+fn read_v11_table(
+    bytes: &[u8],
+    table: &str,
     context: &str,
-    rows: rusqlite::MappedRows<'_, impl FnMut(&rusqlite::Row<'_>) -> rusqlite::Result<T>>,
-) -> Result<Vec<T>, ApkgError> {
-    let mut values = Vec::new();
-    for row in rows {
-        values.push(row.map_err(|err| apkg_error(format!("failed to map {context}: {err}")))?);
+) -> Result<Vec<(i64, Vec<SqlValue>)>, ApkgError> {
+    sqlite_file::read_table(bytes, table)
+        .map_err(|err| apkg_error(format!("failed to read {context}: {err}")))
+}
+
+fn require_sqlite_column_count(
+    context: &str,
+    columns: &[SqlValue],
+    expected: usize,
+) -> Result<(), ApkgError> {
+    if columns.len() == expected {
+        Ok(())
+    } else {
+        Err(apkg_error(format!(
+            "{context} has {} columns; expected {expected}",
+            columns.len()
+        )))
     }
-    Ok(values)
+}
+
+fn sqlite_i64(value: &SqlValue, field: &str) -> Result<i64, ApkgError> {
+    match value {
+        SqlValue::Int(value) => Ok(*value),
+        other => Err(apkg_error(format!(
+            "expected integer for Anki V11 {field}, got {other:?}"
+        ))),
+    }
+}
+
+fn sqlite_text(value: &SqlValue, field: &str) -> Result<String, ApkgError> {
+    match value {
+        SqlValue::Text(value) => Ok(value.clone()),
+        other => Err(apkg_error(format!(
+            "expected text for Anki V11 {field}, got {other:?}"
+        ))),
+    }
 }
 
 fn parse_json_value(field_name: &str, json: &str) -> Result<Value, ApkgError> {
@@ -4013,15 +4001,13 @@ fn split_anki_tags(tags: &str) -> Vec<String> {
     tags.split_whitespace().map(str::to_string).collect()
 }
 
-fn sqlite_value_to_string(row: &rusqlite::Row<'_>, index: usize) -> rusqlite::Result<String> {
-    use rusqlite::types::ValueRef;
-
-    match row.get_ref(index)? {
-        ValueRef::Null => Ok(String::new()),
-        ValueRef::Integer(value) => Ok(value.to_string()),
-        ValueRef::Real(value) => Ok(value.to_string()),
-        ValueRef::Text(value) => Ok(String::from_utf8_lossy(value).into_owned()),
-        ValueRef::Blob(value) => Ok(String::from_utf8_lossy(value).into_owned()),
+fn sqlite_value_to_string(value: &SqlValue) -> String {
+    match value {
+        SqlValue::Null => String::new(),
+        SqlValue::Int(value) => value.to_string(),
+        SqlValue::Real(value) => value.to_string(),
+        SqlValue::Text(value) => value.clone(),
+        SqlValue::Blob(value) => String::from_utf8_lossy(value).into_owned(),
     }
 }
 

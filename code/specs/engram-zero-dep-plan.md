@@ -189,8 +189,11 @@ Per `code/specs/storage-sqlite.md` + the Python `storage-sqlite` port:
 - E5: cut anki-pkg **reader** over (`open_serialized_v11_collection` +
   `read_v11_*`), delete the `ffi`/`OwnedData` unsafe block. M — import runs rusqlite-free.
 
-Status update: E1-E4 are now landed in `sqlite-file`; E5 is the next reader
-milestone and can consume `sqlite_file::read_table(bytes, name)` directly.
+Status update: E1-E4 are now landed in `sqlite-file`; E5 has started by cutting
+`engram-anki-package`'s V11 import tables over to
+`sqlite_file::read_table(bytes, name)`. The reader path no longer needs the
+unsafe serialized-rusqlite open helper; remaining `rusqlite` usage is writer and
+test-fixture work for Phase F.
 
 ### Phase F — sqlite-file writer (**removes rusqlite**) — L (PRs A6–A8)
 - F1: record/header/b-tree **write** — smallest-serial-type rule, leaf-insert,
