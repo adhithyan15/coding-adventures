@@ -2,6 +2,22 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.15] - 2026-07-07
+
+### Added — Array reorder/combine methods: `rotate` / `zip`
+
+Closes the parity gap with the Go/Rust runtimes (which already carry these) by
+adding two more non-block Ruby Array methods to `arrayMethod` and the
+`ARRAY_METHODS` `respond_to?` catalog:
+
+- `rotate(n=1)` — rotate left by `n` (a negative `n` rotates right); the shift is
+  re-folded into `[0, len)` (JS `%` keeps the dividend's sign) so any magnitude
+  terminates, and an empty array stays `[]`. No argument defaults to `1`; a
+  non-numeric argument degrades to `0` (never raises).
+- `zip(*others)` — an Array of tuples `[self[i], others..[i]]` of length
+  `recv.length`; a shorter operand pads with `nil` (`null`), a longer one is
+  truncated, and a non-array operand is treated as empty (pad-only).
+
 ## [0.1.14] - 2026-07-07
 
 ### Added — Array slice-selection methods: `take` / `drop` / `values_at`

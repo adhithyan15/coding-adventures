@@ -65,7 +65,7 @@ The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md
 the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
 `min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a`,
-`take`/`drop`/`values_at` — and the
+`take`/`drop`/`values_at`, `rotate`/`zip` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
 `freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`, plus the **Kernel
 flow-control** group `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`
