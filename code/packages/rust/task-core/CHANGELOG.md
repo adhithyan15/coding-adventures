@@ -43,11 +43,30 @@ All notable changes to `task-core` are documented here.
   - `working_between` — count working minutes in a half-open interval (for slack).
   - Built on `datetime-core` weekday math; an absent calendar safely degrades to 24/7;
     walks are bounded so a no-working-time calendar can never hang.
+  - `sub_working` — the inverse of `add_working` (walk working time *backward*),
+    powering the backward pass, finish-anchored constraints, and FF/SF links.
+
+- **The CPM scheduler** (`scheduler` module) — turns the stored inputs into a
+  schedule via the Critical Path Method:
+  - `schedule(project, project_start) -> ScheduleResult` — per-task `ScheduledDates`
+    (early/late start & finish, total & free slack, `critical`), plus `conflicts` and
+    the project finish; returns a `Cycle` error for a non-acyclic network.
+  - Dependency ordering + cycle detection reuse `directed-graph`
+    (`topological_sort`/`has_cycle`); no graph algorithm is reimplemented.
+  - **Forward pass** (early dates) and **backward pass** (late dates, slack, critical
+    path) honouring all four link types (FS/SS/FF/SF) with lag, in working time.
+  - Date constraints: `AsSoonAsPossible`, `StartNoEarlierThan`, `MustStartOn`,
+    `FinishNoEarlierThan` are applied; `StartNoLaterThan`/`FinishNoLaterThan`/
+    `MustFinishOn`/`deadline` raise conflict flags. Summary tasks roll up to span
+    their descendants.
+  - First-cut limitations (refined in a follow-up): `AsLateAsPossible` is treated as
+    `AsSoonAsPossible`; negative lag (lead) is applied in elapsed time; resource
+    leveling is not yet applied.
 
 ### Notes
 
 - Design principle: everything a scheduler derives is computed, never stored — this
-  release is the *input* model plus the working-time engine; the CPM scheduler
-  (forward/backward pass) and the reducer land next.
-- Reuses `directed-graph` (declared; consumed by the forthcoming scheduler) and
-  `datetime-core` (date arithmetic) rather than reimplementing them.
+  release is the *input* model, the working-time engine, and the CPM scheduler; the
+  `TaskCommand` reducer and formula fields land next.
+- Reuses `directed-graph` (dependency graph) and `datetime-core` (date arithmetic)
+  rather than reimplementing them.

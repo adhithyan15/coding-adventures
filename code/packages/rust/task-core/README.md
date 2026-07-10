@@ -46,14 +46,28 @@ rollups, formula values — is **computed, never stored as source of truth**.
 
 ## What's implemented
 
-- **The data model** (this release): `Task` (with an optional scheduling block, typed
-  custom fields, and decision-tree support), dependency and generic links, resources,
-  assignments, working-time calendars, workflows, baselines, views, and the root
-  `ProjectState`. Typed string-backed ids; serde-optional; JSON round-trip tested.
+- **The data model**: `Task` (with an optional scheduling block, typed custom fields,
+  and decision-tree support), dependency and generic links, resources, assignments,
+  working-time calendars, workflows, baselines, views, and the root `ProjectState`.
+  Typed string-backed ids; serde-optional; JSON round-trip tested.
+- **The working-time engine** (`calendar`): calendar-aware working-day tests and the
+  `next_working` / `add_working` / `sub_working` / `working_between` walks the
+  scheduler measures in — weekend/holiday/off-hours aware, bounded, safe on hostile
+  input.
+- **The CPM scheduler** (`scheduler`): `schedule(project, project_start)` computes
+  per-task early/late dates, total/free slack, and the critical path via forward and
+  backward passes over `directed-graph`, honouring FS/SS/FF/SF links with lag,
+  working-time calendars, the common date constraints, and summary rollups. Rejects
+  cyclic networks; surfaces constraint conflicts.
 
-Landing next (per the specs): the CPM scheduler (forward/backward pass over
-`directed-graph`), working-time calendar math, formula/rollup fields (via
-`symbolic-vm`), and the `TaskCommand` reducer.
+Landing next (per the specs): the `TaskCommand` reducer (with input range validation),
+formula/rollup fields (via `symbolic-vm`), and resource leveling.
+
+```rust
+use task_core::{scheduler, Date};
+// let result = scheduler::schedule(&project, Date::from_ymd(2026, 7, 13).unwrap())?;
+// result.dates[&task_id].critical, .total_slack, .early_start, …
+```
 
 ## Usage
 

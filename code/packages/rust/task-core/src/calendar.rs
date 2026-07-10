@@ -200,6 +200,54 @@ pub fn working_between(project: &ProjectState, cal: &CalendarId, a: Instant, b: 
     total
 }
 
+/// The inverse of [`add_working`]: the instant `start` such that consuming `dur`
+/// working minutes forward from it lands exactly on `end`. Equivalently, walk
+/// *backward* from `end`, consuming working time. Used by the backward pass
+/// (`late_start = sub_working(late_finish, duration)`), by finish-anchored
+/// constraints (`MustFinishOn`), and by finish-to-finish / start-to-finish links.
+pub fn sub_working(
+    project: &ProjectState,
+    cal: &CalendarId,
+    end: Instant,
+    dur: Duration,
+) -> Instant {
+    if dur.elapsed {
+        return end.saturating_sub(dur.working_minutes);
+    }
+    if dur.working_minutes <= 0 {
+        return end;
+    }
+    let Some(c) = resolve_calendar(project, cal) else {
+        return end.saturating_sub(dur.working_minutes); // 24/7
+    };
+
+    let mut remaining = dur.working_minutes;
+    let mut date = date_of(end);
+    // Upper bound (exclusive) within the current day; the whole day on earlier days.
+    let mut to_min = minute_of_day(end);
+    for _ in 0..MAX_DAYS_WALK {
+        let sched = day_schedule(c, date);
+        if sched.working {
+            // Consume intervals from latest to earliest.
+            for iv in sched.intervals.iter().rev() {
+                let lo = iv.start_min as i64;
+                let hi = (iv.end_min as i64).min(to_min);
+                if hi > lo {
+                    let avail = hi - lo;
+                    if remaining <= avail {
+                        return instant_of(date, hi - remaining);
+                    }
+                    remaining -= avail;
+                }
+            }
+        }
+        date = date.add_days(-1);
+        to_min = MINUTES_PER_DAY;
+    }
+    // Degenerate calendar: best effort.
+    instant_of(date, MINUTES_PER_DAY)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -314,6 +362,25 @@ mod tests {
             elapsed: true,
         };
         assert_eq!(add_working(&p, &cal, start, huge), i64::MAX);
+    }
+
+    #[test]
+    fn sub_working_inverts_add_working_across_the_weekend() {
+        let (p, cal) = project_with_standard_calendar();
+        let fri_9 = instant_of(Date::from_ymd(2026, 7, 10).unwrap(), 9 * 60);
+        // 12 working hours forward from Friday 09:00 → Monday 13:00.
+        let mon_13 = add_working(&p, &cal, fri_9, Duration::minutes(12 * 60));
+        // …and back again lands exactly on Friday 09:00.
+        assert_eq!(
+            sub_working(&p, &cal, mon_13, Duration::minutes(12 * 60)),
+            fri_9
+        );
+        // A single 8h day: Friday 17:00 back 8h → Friday 09:00.
+        let fri_17 = instant_of(Date::from_ymd(2026, 7, 10).unwrap(), 17 * 60);
+        assert_eq!(
+            sub_working(&p, &cal, fri_17, Duration::minutes(8 * 60)),
+            fri_9
+        );
     }
 
     #[test]
