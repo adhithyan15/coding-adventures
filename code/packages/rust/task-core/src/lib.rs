@@ -27,11 +27,15 @@
 //!   measures in, with civil-date arithmetic delegated to `datetime-core`.
 //! - [`model`] — the entities: `Task`, links, resources, calendars, fields,
 //!   workflow, baselines, views, and the root `ProjectState`.
+//! - [`calendar`] — the working-time engine: resolve calendars, snap into working
+//!   time, add working durations, and count working minutes. The unit the scheduler
+//!   measures in.
 //!
-//! The CPM scheduler (a forward/backward pass over `directed-graph`) and the
-//! command/reducer surface land in follow-up modules; this module defines the
-//! *shape* of the world they operate on.
+//! The CPM scheduler (a forward/backward pass over `directed-graph`, built on
+//! [`calendar`]) and the command/reducer surface land in follow-up modules; the
+//! types here define the *shape* of the world they operate on.
 
+pub mod calendar;
 mod ids;
 mod model;
 mod primitives;
