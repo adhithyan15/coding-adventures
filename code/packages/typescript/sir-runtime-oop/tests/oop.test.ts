@@ -572,6 +572,26 @@ describe("built-in method catalog: String (M1c)", () => {
     expect(callMethod("a1B!c", "swapcase")).toBe("A1b!C");
   });
 
+  it("char-set methods (tr / count / delete / squeeze)", () => {
+    // tr: positional translate; shorter `to` repeats its last char; empty `to`
+    // deletes; last mapping wins on repeated `from` chars.
+    expect(callMethod("hello", "tr", "el", "ip")).toBe("hippo");
+    expect(callMethod("hello", "tr", "l", "r")).toBe("herro");
+    expect(callMethod("hello", "tr", "aeiou", "*")).toBe("h*ll*");
+    expect(callMethod("hello", "tr", "l", "")).toBe("heo");
+    // A non-string arg (or missing `to`) is a no-op, holding the never-raise floor.
+    expect(callMethod("hello", "tr", "l")).toBe("hello");
+    // count / delete over a literal char set.
+    expect(callMethod("hello", "count", "l")).toBe(2);
+    expect(callMethod("hello", "count", "lo")).toBe(3);
+    expect(callMethod("hello", "delete", "l")).toBe("heo");
+    // Multiple set args INTERSECT (only chars in every set count/delete).
+    expect(callMethod("hello", "count", "lo", "o")).toBe(1);
+    // squeeze: bare form collapses every run; with a set only those runs.
+    expect(callMethod("mississippi", "squeeze")).toBe("misisipi");
+    expect(callMethod("aaabbbccc", "squeeze", "a")).toBe("abbbccc");
+  });
+
   it("strip family and chomp", () => {
     expect(callMethod("  hi  ", "strip")).toBe("hi");
     expect(callMethod("  hi  ", "lstrip")).toBe("hi  ");

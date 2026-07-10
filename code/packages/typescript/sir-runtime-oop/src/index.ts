@@ -660,6 +660,10 @@ const STRING_METHODS = new Set<string>([
   "rjust",
   "center",
   "swapcase",
+  "tr",
+  "count",
+  "delete",
+  "squeeze",
 ]);
 
 // Block-taking `String` methods (M1c); `each_char` yields one character.
@@ -1386,6 +1390,92 @@ function stringMethod(recv: string, name: string, args: Val[]): Val | typeof MIS
         if (c >= 65 && c <= 90) out += String.fromCodePoint(c + 32);
         else if (c >= 97 && c <= 122) out += String.fromCodePoint(c - 32);
         else out += ch;
+      }
+      return out;
+    }
+    case "tr": {
+      // Ruby `String#tr(from, to)`: translate each char that appears in `from`
+      // to the char at the same position in `to`.  A shorter `to` repeats its
+      // LAST char; an empty `to` deletes matching chars; when `from` repeats a
+      // char the last mapping wins.
+      //
+      //   "hello".tr("el", "ip") == "hippo"   (e→i, l→p)
+      //   "hello".tr("l", "r")   == "herro"   (single mapping)
+      //   "hello".tr("aeiou", "*") == "h*ll*" (shorter `to` repeats "*")
+      //   "hello".tr("l", "")    == "heo"     (empty `to` deletes)
+      //
+      // NOTE: the char-RANGE (`"a-z"`) and NEGATION (`"^abc"`) forms are a
+      // follow-up, matching the literal-only `sub`/`gsub` precedent here.  We
+      // iterate whole code points (`[...s]` / `for…of`) so astral runes are
+      // never split mid-surrogate.
+      const from = typeof args[0] === "string" ? (args[0] as string) : null;
+      const to = typeof args[1] === "string" ? (args[1] as string) : null;
+      if (from === null || to === null) return recv;
+      const toC = [...to];
+      const fromC = [...from];
+      // Map each `from` code point to its replacement (or `null` = delete).
+      const table = new Map<string, string | null>();
+      for (let i = 0; i < fromC.length; i++) {
+        if (toC.length === 0) table.set(fromC[i], null);
+        else table.set(fromC[i], i < toC.length ? toC[i] : toC[toC.length - 1]);
+      }
+      let out = "";
+      for (const ch of recv) {
+        if (table.has(ch)) {
+          const r = table.get(ch) as string | null;
+          if (r !== null) out += r;
+        } else {
+          out += ch;
+        }
+      }
+      return out;
+    }
+    case "count":
+    case "delete":
+    case "squeeze": {
+      // Char-set methods.  Each `string` argument is treated LITERALLY — the set
+      // of characters it contains (ranges/negation are a follow-up).  `count`
+      // returns how many chars of `recv` lie in the set; `delete` removes them;
+      // `squeeze` collapses consecutive runs (of set chars, or of ALL chars when
+      // no set is given).  Multiple set args INTERSECT (Ruby's rule).
+      //
+      //   "hello".count("l")        == 2
+      //   "hello".delete("l")       == "heo"
+      //   "mississippi".squeeze     == "misisipi"   (no set: all runs)
+      //   "aaabbbccc".squeeze("a")  == "abbbccc"    (only "a" runs collapse)
+      const sets: Array<Set<string>> = [];
+      for (const a of args) if (typeof a === "string") sets.push(new Set([...a]));
+      // A char is "in the set" only when it is present in EVERY set argument.
+      const inAll = (ch: string): boolean => sets.length > 0 && sets.every((set) => set.has(ch));
+      if (name === "squeeze" && sets.length === 0) {
+        // Bare `squeeze` collapses every run of identical characters.
+        let out = "";
+        let last: string | null = null;
+        for (const ch of recv) {
+          if (ch !== last) {
+            out += ch;
+            last = ch;
+          }
+        }
+        return out;
+      }
+      if (name === "count") {
+        let n = 0;
+        for (const ch of recv) if (inAll(ch)) n++;
+        return n;
+      }
+      if (name === "delete") {
+        let out = "";
+        for (const ch of recv) if (!inAll(ch)) out += ch;
+        return out;
+      }
+      // squeeze(set): collapse only runs of characters that lie in the set.
+      let out = "";
+      let last: string | null = null;
+      for (const ch of recv) {
+        if (ch === last && inAll(ch)) continue;
+        out += ch;
+        last = ch;
       }
       return out;
     }
