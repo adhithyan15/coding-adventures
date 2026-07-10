@@ -684,6 +684,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "capitalize", "chomp", "chars", "bytes", "sub", "gsub", "to_i", "to_f",
     "to_sym", "to_s", "empty?", "index", "reverse", "size",
     "ljust", "rjust", "center", "swapcase",
+    "tr", "count", "delete", "squeeze",
   ]);
   // Ruby `String#to_i` / `#to_f`: parse a LEADING numeric prefix (optional
   // sign, digits, and — for to_f — a fractional/exponent part), yielding 0 when
@@ -795,6 +796,69 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           if (c >= 65 && c <= 90) { out += String.fromCodePoint(c + 32); }
           else if (c >= 97 && c <= 122) { out += String.fromCodePoint(c - 32); }
           else { out += ch; }
+        }
+        return out;
+      }
+      case "tr": {
+        // Ruby `String#tr(from, to)`: position-wise code-point translation.  A
+        // shorter `to` repeats its last code point; an empty `to` deletes
+        // matching code points; a repeated code point in `from` keeps the last
+        // mapping.  Iterates by code point (`[...str]`/`for..of`) so a multibyte
+        // receiver is never split.  Literal only — the range (`"a-z"`) and
+        // negation (`"^abc"`) forms are a follow-up, matching the literal-only
+        // sub/gsub precedent here.
+        const from = typeof args[0] === "string" ? args[0] : null;
+        const to = typeof args[1] === "string" ? args[1] : null;
+        if (from === null || to === null) { return recv; }
+        const toC = [...to];
+        const table = new Map();
+        const fromC = [...from];
+        for (let i = 0; i < fromC.length; i++) {
+          if (toC.length === 0) { table.set(fromC[i], null); }
+          else { table.set(fromC[i], i < toC.length ? toC[i] : toC[toC.length - 1]); }
+        }
+        let out = "";
+        for (const ch of recv) {
+          if (table.has(ch)) {
+            const r = table.get(ch);
+            if (r !== null) { out += r; }
+          } else { out += ch; }
+        }
+        return out;
+      }
+      case "count": case "delete": case "squeeze": {
+        // Char-set methods.  Each `set` argument is treated LITERALLY — the code
+        // points it contains (ranges/negation are a follow-up).  `count` tallies
+        // code points of the receiver in the set; `delete` removes them;
+        // `squeeze` collapses consecutive runs (of set code points, or of ALL
+        // when no set is given).  Multiple set args intersect (Ruby's rule).
+        const sets = [];
+        for (const a of args) {
+          if (typeof a === "string") { sets.push(new Set([...a])); }
+        }
+        const inAll = (ch) => sets.length > 0 && sets.every((set) => set.has(ch));
+        if (name === "squeeze" && sets.length === 0) {
+          let out = "";
+          let last = null;
+          for (const ch of recv) { if (ch !== last) { out += ch; last = ch; } }
+          return out;
+        }
+        if (name === "count") {
+          let n = 0;
+          for (const ch of recv) { if (inAll(ch)) { n++; } }
+          return n;
+        }
+        if (name === "delete") {
+          let out = "";
+          for (const ch of recv) { if (!inAll(ch)) { out += ch; } }
+          return out;
+        }
+        let out = "";
+        let last = null;
+        for (const ch of recv) {
+          if (ch === last && inAll(ch)) { continue; }
+          out += ch;
+          last = ch;
         }
         return out;
       }

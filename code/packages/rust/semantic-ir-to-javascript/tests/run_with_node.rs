@@ -2308,6 +2308,27 @@ fn string_justify_swapcase_methods() {
     }
 }
 
+// v0.23.0 char-set String methods: `tr`, `count`, `delete`, `squeeze`.  Each
+// `set`/`from`/`to` arg is a LITERAL code-point set (ranges/negation deferred);
+// all route through the explicit `stringMethod` switch (never `recv[name]`),
+// matching the Python/Go/Rust reference.
+#[test]
+fn string_charset_methods() {
+    let stmts = vec![
+        print(method(str_("hello"), "tr", vec![str_("el"), str_("ip")])),   // hippo
+        print(method(str_("hello"), "tr", vec![str_("aeiou"), str_("*")])), // h*ll*
+        print(method(str_("hello"), "tr", vec![str_("l"), str_("")])),      // heo (empty `to` deletes)
+        print(method(str_("hello"), "count", vec![str_("lo")])),            // 3
+        print(method(str_("hello"), "delete", vec![str_("aeiou")])),        // hll
+        print(method(str_("mississippi"), "squeeze", vec![])),              // misisipi
+        print(method(str_("aaabbbccc"), "squeeze", vec![str_("a")])),       // abbbccc
+    ];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "strcharset") {
+        assert_eq!(stdout, "hippo\nh*ll*\nheo\n3\nhll\nmisisipi\nabbbccc");
+    }
+}
+
 // v0.20.0 slice-selection Array methods: `take`, `drop`, `values_at`.  All are
 // index-clamped / bounds-guarded and route through the explicit `arrayMethod`
 // switch (never `recv[name]`).
