@@ -1,0 +1,118 @@
+# Token definitions for the C integer-core subset (SIR27)
+# @version 1
+#
+# The lexical layer of the `c-to-semantic-ir` frontend
+# (code/specs/SIR27-c-to-semantic-ir.md).  The v1 subset is integer-only and
+# deliberately side-steps C's two context-sensitivities:
+#
+#   * The preprocessor is not run.  Any line beginning with `#` (e.g.
+#     `#include <stdint.h>`) is skipped whole — see the `skip:` section — so no
+#     pre-tokenize hook is needed.  #define/macros are out of scope.
+#   * The <stdint.h> fixed-width type names and `size_t` are lexed as KEYWORDS,
+#     not typedef names, so a type is always a keyword sequence and never an
+#     identifier — the typedef/identifier ambiguity (which makes C not
+#     context-free) never arises.  User `typedef` is out of scope.
+#
+# First-match / longest-match ordering matters: every multi-character operator
+# is listed before the single-character operators it could otherwise shadow
+# (`==` before `=`, `<<` before `<`, `&&` before `&`, …).
+
+case_sensitive: true
+
+# ---------------------------------------------------------------------------
+# Multi-character operators (must precede the single-character ones)
+# ---------------------------------------------------------------------------
+EQ_EQ   = "=="
+NE      = "!="
+LE      = "<="
+GE      = ">="
+SHL     = "<<"
+SHR     = ">>"
+AND_AND = "&&"
+OR_OR   = "||"
+
+# ---------------------------------------------------------------------------
+# Value literals
+# ---------------------------------------------------------------------------
+
+# Integer literal: hexadecimal or decimal, with an optional C integer suffix
+# (any mix of u/U and l/L, e.g. 42, 0xFF, 100u, 10LL, 5UL).  Hex must precede
+# decimal so `0x…` is not read as `0` then a name.
+INT_LIT = /(0[xX][0-9a-fA-F]+|[0-9]+)([uUlL]*)/
+
+# Character constant: a single character or simple escape (e.g. 'A', '\n').
+# Its value is the character's code point (an int) — resolved in lowering.
+CHAR_LIT = /'([^'\\]|\\.)'/
+
+# String literal: used only for printf format strings in v1.
+STR_LIT = /"([^"\\]|\\.)*"/
+
+# ---------------------------------------------------------------------------
+# Keywords (types + control flow).  The <stdint.h> names and size_t are here so
+# a type specifier is always a keyword sequence, never an identifier.
+# ---------------------------------------------------------------------------
+keywords:
+  void
+  char
+  short
+  int
+  long
+  signed
+  unsigned
+  int8_t
+  int16_t
+  int32_t
+  int64_t
+  uint8_t
+  uint16_t
+  uint32_t
+  uint64_t
+  size_t
+  if
+  else
+  while
+  for
+  return
+
+# ---------------------------------------------------------------------------
+# Identifiers (function/variable names; printf/putchar are ordinary names
+# recognised by the lowerer)
+# ---------------------------------------------------------------------------
+NAME = /[A-Za-z_][A-Za-z0-9_]*/
+
+# ---------------------------------------------------------------------------
+# Single-character operators and punctuation
+# ---------------------------------------------------------------------------
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+SLASH     = "/"
+PERCENT   = "%"
+AMP       = "&"
+PIPE      = "|"
+CARET     = "^"
+TILDE     = "~"
+BANG      = "!"
+LT        = "<"
+GT        = ">"
+EQ        = "="
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+
+# ---------------------------------------------------------------------------
+# Skipped: whitespace, comments, and (whole) preprocessor lines
+# ---------------------------------------------------------------------------
+skip:
+  WHITESPACE    = /[ \t\r\n]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*+[^*\/])*\*+\//
+  PREPROC       = /#[^\n]*/
+
+errors:
+  UNKNOWN = /./

@@ -218,6 +218,7 @@ members = [
     "macsyma-wasm",
     "matlab-lexer",
     "matlab-parser",
+    "c-lexer",
     "matlab-runtime",
     "matlab-repl",
     "octave-runtime",
