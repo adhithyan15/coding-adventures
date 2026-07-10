@@ -118,16 +118,12 @@ the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
 
-1. Make the parity reporter use Git-visible files rather than filesystem
-   directories.
-2. Emit Markdown summary, JSON detail, and a full CSV package/language matrix.
-3. Classify implementation, emerging, target, domain-language, and build lanes.
-4. Report within-language canonical identity collisions.
-5. Add unit tests and run them in the CI detect job.
-6. Resolve the current Ruby collisions:
-   - `ruby/b-tree` versus `ruby/b_tree`
-   - `ruby/b-plus-tree` versus `ruby/b_plus_tree`
-7. Once collisions are fixed, enable `--fail-on-collisions` in CI.
+Completed. The reporter now inventories Git-visible files, emits Markdown,
+JSON, and CSV, classifies package lanes, detects canonical collisions, and is
+covered by CI unit tests. The conflicting `ruby/b_tree` and
+`ruby/b_plus_tree` shadow packages were removed in favor of the authoritative
+DT11/DT12 `ruby/b-tree` and `ruby/b-plus-tree` implementations. CI now rejects
+new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
@@ -266,7 +262,7 @@ the first port PR.
 3. Extend the parity reporter with explicit applicability data rather than
    hard-coding exceptions in reporting logic.
 4. Fail CI on unclassified new package buckets.
-5. After identity cleanup, fail CI on canonical collisions.
+5. Keep the canonical-collision CI gate enabled.
 6. Add a policy check: a new portable singleton must include either another
    language implementation or a declared parity work item/classification.
 7. Track package maturity separately from structural presence: manifest,
