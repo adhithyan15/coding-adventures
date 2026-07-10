@@ -1,5 +1,27 @@
 # Changelog — iir-to-wasm
 
+## [0.36.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `array<str>` elements)
+
+BASIC string arrays (`DIM A$(n)`) store an E4-dyn runtime string **handle** per
+element. A `str` handle on WASM is a 4-byte `i32` linear-memory offset (unlike the
+8-byte `i64`/`f64` elements E5 arrays used so far), so `array<str>` is a flat block
+of i32 handles.
+
+- **`wasm_array_elem`** gains a `"str" => (I32, 4)` branch; `alloc_array` sizes the
+  block by the 4-byte element, and `array_get`/`array_set` select `i32.load`/
+  `i32.store` for a `str` element.
+- **`collect_runtime_str_vars`** now promotes a folded str literal used as the
+  *value* of an `array_set` to a runtime-block handle — the same treatment call
+  arguments already get. Without it, `array_set` would store the val local's
+  uninitialised `0` (a folded literal's handle lives only in the compile-time
+  `string_literals` table, never in its runtime local), and a later `array_get` +
+  `print_str`/`str_concat` would read the module header as a bogus length and trap
+  (`out of bounds memory.copy`).
+- **Validator** (`validate.rs`) accepts a `str` type_hint on `array_get`/`array_set`.
+
+**Tests:** `str_array_uses_i32_element_store` (an `array<str>` element `array_set`
+emits `i32.store`), `str_array_elem_is_i32_4_bytes`.
+
 ## [0.35.0] — 2026-07-08 (LANG-FULL tail: runtime `str_eq` via a self-contained in-module `$__str_eq` helper)
 
 Adds a runtime path for `str_eq`. Previously `str_eq` only supported the case where

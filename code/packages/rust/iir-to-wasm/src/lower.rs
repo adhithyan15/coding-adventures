@@ -255,6 +255,15 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     // else the callee reads the first data byte as the length: `"HELLO"` → `'H'`=72.)
     let mut folding_str_dests: HashSet<&str> = HashSet::new();
     let mut call_arg_vars: HashSet<&str> = HashSet::new();
+    // E4d-BA-arr: str vars stored as the *value* of an `array_set` into an
+    // `array<str>` element.  Same rationale as `call_arg_vars` below — a folded
+    // literal handed to `array_set` must become a runtime-block handle, because
+    // `array_set` emits `local.get val` and stores that i32 into the element, but
+    // a folded literal's local is never assigned the block offset (its handle
+    // lives only in the compile-time `string_literals` table).  Left un-promoted,
+    // the element would store 0 and a later `array_get` + `print_str`/`str_concat`
+    // would read the module header as a bogus length and trap.
+    let mut array_set_val_vars: HashSet<&str> = HashSet::new();
     let mut block: usize = 0;
     for instr in &fn_.instructions {
         let op = instr.op.as_str();
@@ -284,6 +293,13 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
                 }
             }
         }
+        // E4d-BA-arr: `array_set handle, idx, val` — the value (src[2]) is the
+        // string being stored into an element.
+        if op == "array_set" {
+            if let Some(Operand::Var(v)) = instr.srcs.get(2) {
+                array_set_val_vars.insert(v.as_str());
+            }
+        }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
         }
@@ -295,6 +311,13 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
         .collect();
     // Promote a folded literal passed across a function boundary (see above).
     for v in &call_arg_vars {
+        if folding_str_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    // E4d-BA-arr: likewise promote a folded literal stored into an `array<str>`
+    // element — `array_set` needs the runtime block handle in the val local.
+    for v in &array_set_val_vars {
         if folding_str_dests.contains(v) {
             promoted.insert(v.to_string());
         }
@@ -598,17 +621,24 @@ pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
     }
 }
 
-/// The WASM value type + byte size for an E5 array element type hint. Only the
-/// 64-bit elements (`i64` / `f64`) are supported on this backend so far — the
-/// ALGOL frontend's `integer` and `real` arrays — so a narrower element produces
-/// a clear error rather than a silently wrong store width.
+/// The WASM value type + byte size for an E5 array element type hint. The
+/// 64-bit elements (`i64` / `f64`) back the ALGOL frontend's `integer` and
+/// `real` arrays; the 4-byte `str` element (E4d-BA-arr) backs BASIC string
+/// arrays.  Any other element produces a clear error rather than a silently
+/// wrong store width.
 fn wasm_array_elem(elem: &str, fn_name: &str) -> Result<(ValueType, u32), IIRWasmError> {
-    match hint_to_value_type(elem) {
-        Some(ValueType::I64) => Ok((ValueType::I64, 8)),
-        Some(ValueType::F64) => Ok((ValueType::F64, 8)),
+    match elem {
+        "i64" | "u64" => Ok((ValueType::I64, 8)),
+        "f64" => Ok((ValueType::F64, 8)),
+        // E4d-BA-arr: a `str` element is an E4-dyn runtime string handle — a
+        // 4-byte `i32` linear-memory offset (the same representation a `str`
+        // local uses via `hint_to_value_type`), so a string array is a flat
+        // block of i32 handles.  `array_get`/`array_set` select `i32.load`/
+        // `i32.store` for it (below).
+        "str" => Ok((ValueType::I32, 4)),
         _ => Err(IIRWasmError::UnsupportedType {
             function: fn_name.to_string(),
-            type_hint: format!("array element {elem:?} (only i64/f64 elements on WASM so far)"),
+            type_hint: format!("array element {elem:?} (only i64/f64/str elements on WASM so far)"),
         }),
     }
 }
@@ -2927,6 +2957,8 @@ fn emit_instr(
             code.push(I32_ADD);
             match vt {
                 ValueType::F64 => code.extend(encode_f64_load(8)),
+                // E4d-BA-arr: a `str` element is a 4-byte i32 handle.
+                ValueType::I32 => code.extend(encode_i32_load(8)),
                 _ => code.extend(encode_i64_load(8)),
             }
             code.extend(encode_local_set(rd));
@@ -2969,6 +3001,8 @@ fn emit_instr(
             code.extend(encode_local_get(val_slot));
             match vt {
                 ValueType::F64 => code.extend(encode_f64_store(8)),
+                // E4d-BA-arr: a `str` element is a 4-byte i32 handle.
+                ValueType::I32 => code.extend(encode_i32_store(8)),
                 _ => code.extend(encode_i64_store(8)),
             }
         }
@@ -4886,5 +4920,37 @@ mod tests {
         let code = &wm.code[0].code;
         assert!(code.contains(&0x39), "f64.store for array<f64> element");
         assert!(code.contains(&0x2B), "f64.load for array<f64> element");
+    }
+
+    #[test]
+    fn str_array_uses_i32_element_store() {
+        // E4d-BA-arr: an `array<str>` element is a 4-byte i32 handle, so the
+        // element `array_set` emits `i32.store` (0x36) — not the i64.store an
+        // `array<i64>` element uses.  Lowering an `array<str>` at all is the
+        // regression guard: before E4d-BA-arr, `wasm_array_elem`/the validator
+        // rejected a `str` element outright.
+        let m = single_fn("main", vec![], "void", vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()),
+                vec![Operand::Var("n".into())], "array<str>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("str_const", Some("s".into()),
+                vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()),
+                     Operand::Var("s".into())], "str"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        let code = &wm.code[0].code;
+        assert!(code.contains(&0x36), "i32.store for the array<str> element handle");
+    }
+
+    #[test]
+    fn str_array_elem_is_i32_4_bytes() {
+        assert_eq!(wasm_array_elem("str", "main").unwrap(), (ValueType::I32, 4));
     }
 }

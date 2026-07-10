@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.36.0"
+version = "0.37.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.36.0 (E4-dyn string INPUT): `INPUT A$` reads a whole line as a runtime string via `call_builtin \"input_str\"` (the `str` sibling of numeric `INPUT`'s `input_i64`); proven on the dynamic VM/JIT columns. v0.35.0 (BA-DIM-2D): multi-dimensional DIM arrays — `DIM A(m,n)` allocates one flat array and `A(i,j)` folds through row-major strides to a flat 0-based index; no backend change. v0.34.0 (BA-pow): general `^` exponentiation."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.37.0 (E4-dyn E4d-BA-arr — string arrays): `DIM A$(n)` allocates an `array<str>` (the E5 aggregate substrate carrying an E4-dyn runtime string handle per element); `A$(i)=s` lowers to a `str`-typed `array_set` and `A$(i)` reads to a `str`-typed `array_get` that feeds PRINT / `+` concat; the handle register is `$`-free so a string array `A$` coexists with a numeric array `A`; a numeric use of a string array (or a numeric RHS to a string element) is a clean type error. v0.36.0 (E4-dyn string INPUT): `INPUT A$` reads a whole line as a runtime string via `call_builtin \"input_str\"` (the `str` sibling of numeric `INPUT`'s `input_i64`); proven on the dynamic VM/JIT columns. v0.35.0 (BA-DIM-2D): multi-dimensional DIM arrays — `DIM A(m,n)` allocates one flat array and `A(i,j)` folds through row-major strides to a flat 0-based index; no backend change. v0.34.0 (BA-pow): general `^` exponentiation."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }

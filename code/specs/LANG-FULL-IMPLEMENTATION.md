@@ -588,7 +588,14 @@ backend immediately) come before the enabler-dependent items.
   matrix proofs).
   `IF A$ < "B" THEN n` / `IF "B" > A$ THEN n` lower through `str_cmp` plus typed
   zero comparisons and also run on every backend.
-  String arrays, string `INPUT`, and broader dynamic string expressions remain.
+  **String `INPUT` ✅** (E4d-BA-input, all 7 backends): `INPUT A$` reads a whole
+  stdin line as a runtime string via `call_builtin "input_str"`; two matrix cells
+  (`INPUT A$` → `OK`, runtime concat `INPUT A$ / INPUT B$ / PRINT A$ + B$` → `OK!`).
+  **String arrays ◑** (E4d-BA-arr, part 1 on [Llvm, Wasm, Vm, Jit]): `DIM A$(n)`
+  lowers to an `array<str>` (the E5 aggregate carrying E4-dyn string handles);
+  `A$(i)=s`/`A$(i)` are `str`-typed `array_set`/`array_get`. Part 2 adds
+  NativeAot/JVM/CLR (native element-size allowance + managed reference-array
+  lowering). Broader dynamic string expressions and string `READ`/`DATA` remain.
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
   shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every
