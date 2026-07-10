@@ -2468,20 +2468,24 @@ const PROGRAMS: &[Prog] = &[
     // reads them back through two `str`-typed `array_get`s and concatenates —
     // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
     // distinct and the handles survive a store→load round-trip through the
-    // aggregate.  Per backend: **VM/JIT** hold a tagged `Value::Str` element;
-    // **WASM** stores a 4-byte i32 handle per element (`i32.store`/`i32.load`,
-    // the E4d-BA-arr `wasm_array_elem` branch); **LLVM** stores an 8-byte i64
-    // handle per element (`str`→`i64`, no backend change).  NativeAot/JVM/CLR
-    // (native element-size allowance + managed reference arrays) land in the
-    // E4d-BA-arr follow-up; they are deliberately not listed here so the
-    // guardrail does not treat them as silently skipped.
+    // aggregate.  Runs on **all seven backends**, each with its native
+    // representation of a `str` element:
+    //   • **VM/JIT** — a tagged `Value::Str` array element.
+    //   • **WASM** — a 4-byte i32 handle per element (`i32.store`/`i32.load`, the
+    //     E4d-BA-arr `wasm_array_elem` branch + folded-literal→array_set promotion).
+    //   • **LLVM** — an 8-byte i64 handle per element (`str`→`i64`); `array_set`
+    //     `ptrtoint`s a folded literal's global to the i64 handle.
+    //   • **NativeAot** — an 8-byte handle (address of the `[i64 len][bytes]` block);
+    //     `native_array_elem_size` accepts `str` as an 8-byte element on x86_64/aarch64.
+    //   • **JVM** — a `java.lang.String[]` (`anewarray` + `aaload`/`aastore`).
+    //   • **CLR** — a `System.String[]` (`newarr` + `ldelem.ref`/`stelem.ref`).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
                40 PRINT A$(0) + A$(1)\n50 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[Llvm, Wasm, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 

@@ -236,22 +236,22 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
      `env.__input_str` linear-memory writer, LLVM `@__twig_input_str`, JVM
      `BasicRuntime.readLine()`, CLR `Console.ReadLine()`, VM/JIT `input_str`
      closures returning a tagged `Value::Str`.
-   - **E4d-BA-arr — BASIC string arrays.** ◑ **Part 1 landed on [Llvm, Wasm, Vm,
-     Jit]** (`dartmouth-basic-iir-compiler` 0.37.0 / `iir-to-wasm` 0.36.0 /
-     `lang-aot` 0.193.0). `DIM A$(n)` allocates an `array<str>` (the E5 aggregate
-     substrate carrying an E4-dyn string handle per element); `A$(i) = s` → a
-     `str`-typed `array_set`, `A$(i)` read → a `str`-typed `array_get` feeding
-     PRINT / `+` concat. Matrix cell `DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT
-     A$(0)+A$(1)` → `OK`. VM/JIT hold a tagged `Value::Str` element; WASM stores a
-     4-byte i32 handle per element (new `wasm_array_elem` `str` branch + a
-     folded-literal-into-`array_set` promotion so the element stores a real block
-     handle); LLVM carries a `str` element as an i64 handle with no backend change.
-     **Part 2** (follow-up) adds **NativeAot** (a one-line `native_array_elem_size`
-     allowance — a `str` handle is already 8 bytes), **JVM**, and **CLR** — the two
-     managed backends need reference-array lowering (`anewarray java/lang/String` +
-     `aaload`/`aastore` + `String[]` locals; `newarr …System.String` +
-     `ldelem.ref`/`stelem.ref` + `string[]` locals), since numeric E5 arrays only
-     exercised primitive `long[]`/`int32[]` element arrays.
+   - **E4d-BA-arr — BASIC string arrays.** ✅ **COMPLETE — all 7 backends**
+     (`dartmouth-basic-iir-compiler` 0.37.0 / `iir-to-wasm` 0.36.0 /
+     `iir-to-llvm` 0.36.0 / `iir-to-jvm-class-file` 0.30.0 /
+     `iir-to-cil-bytecode` 0.39.0 / `x86_64-backend` 0.24.0 /
+     `aarch64-backend` 0.23.0 / `lang-aot` 0.194.0). `DIM A$(n)` allocates an
+     `array<str>` (the E5 aggregate substrate carrying an E4-dyn string handle per
+     element); `A$(i) = s` → a `str`-typed `array_set`, `A$(i)` read → a `str`-typed
+     `array_get` feeding PRINT / `+` concat. Matrix cell
+     `DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT A$(0)+A$(1)` → `OK` on all 7 backends.
+     Per backend: **VM/JIT** tagged `Value::Str` element; **WASM** a 4-byte i32
+     handle per element (`wasm_array_elem` `str` branch + a folded-literal-into-
+     `array_set` promotion); **LLVM** an i64 handle (`str`→`i64`) with an `array_set`
+     `ptrtoint` guard for folded literals; **NativeAot** an 8-byte handle
+     (`native_array_elem_size` accepts `str`); **JVM** a `java.lang.String[]`
+     reference array (`anewarray` + `aaload`/`aastore`); **CLR** a
+     `System.String[]` (`newarr …System.String` + `ldelem.ref`/`stelem.ref`).
 
 Managed backends (JVM/CLR) already run runtime strings, so each frontend cell can
 tag `Jvm`/`Clr` from the start and add the static backends as E4d-2…4 land.
