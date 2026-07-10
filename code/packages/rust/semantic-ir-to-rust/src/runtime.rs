@@ -1482,7 +1482,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 "length" | "size" | "upcase" | "downcase" | "capitalize" | "reverse" | "strip"
                     | "lstrip" | "rstrip" | "chomp" | "chars" | "bytes" | "split" | "include?"
                     | "start_with?" | "end_with?" | "index" | "replace" | "sub" | "gsub" | "to_i"
-                    | "to_f" | "to_sym" | "empty?"
+                    | "to_f" | "to_sym" | "empty?" | "tr" | "count" | "delete" | "squeeze"
             ),
             Value::Sym(_) => matches!(
                 name,
@@ -2399,6 +2399,93 @@ pub const RUNTIME: &str = r##"mod __sir {
             "to_f" => Value::Float(str_to_f(&s)),
             "to_sym" => intern(&s),
             "empty?" => Value::Bool(s.is_empty()),
+            "tr" => {
+                // Ruby `String#tr(from, to)`: position-wise char translation.  A
+                // shorter `to` repeats its last char; an empty `to` deletes
+                // matching chars; a repeated char in `from` keeps the last
+                // mapping.  Char-based so a multibyte receiver is never sliced
+                // mid-codepoint.  Literal only — the range (`"a-z"`) and negation
+                // (`"^abc"`) forms are a follow-up, matching the literal-only
+                // sub/gsub precedent here.
+                let from = match args.first() {
+                    Some(Value::Str(f)) => f.clone(),
+                    _ => return Value::Str(s.clone()),
+                };
+                let to = match args.get(1) {
+                    Some(Value::Str(t)) => t.clone(),
+                    _ => return Value::Str(s.clone()),
+                };
+                let to_chars: Vec<char> = to.chars().collect();
+                let mut table: HashMap<char, Option<char>> = HashMap::new();
+                for (i, c) in from.chars().enumerate() {
+                    if to_chars.is_empty() {
+                        table.insert(c, None);
+                    } else if i < to_chars.len() {
+                        table.insert(c, Some(to_chars[i]));
+                    } else {
+                        table.insert(c, Some(*to_chars.last().unwrap()));
+                    }
+                }
+                let out: String = s
+                    .chars()
+                    .filter_map(|c| match table.get(&c) {
+                        Some(Some(r)) => Some(*r),
+                        Some(None) => None,
+                        None => Some(c),
+                    })
+                    .collect();
+                Value::Str(Rc::from(out.as_str()))
+            }
+            "count" | "delete" | "squeeze" => {
+                // Char-set methods.  Each `set` argument is treated LITERALLY —
+                // the chars it contains (ranges/negation are a follow-up).
+                // `count` tallies chars of the receiver in the set; `delete`
+                // removes them; `squeeze` collapses consecutive runs (of set
+                // chars, or of ALL chars when no set is given).  Multiple set
+                // args intersect (Ruby's rule).  Char-based throughout.
+                let sets: Vec<std::collections::HashSet<char>> = args
+                    .iter()
+                    .filter_map(|a| {
+                        if let Value::Str(t) = a {
+                            Some(t.chars().collect())
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
+                let in_all =
+                    |c: char| !sets.is_empty() && sets.iter().all(|set| set.contains(&c));
+                if name == "squeeze" && sets.is_empty() {
+                    let mut out = String::new();
+                    let mut last: Option<char> = None;
+                    for c in s.chars() {
+                        if last != Some(c) {
+                            out.push(c);
+                            last = Some(c);
+                        }
+                    }
+                    return Value::Str(Rc::from(out.as_str()));
+                }
+                match name {
+                    "count" => Value::Int(s.chars().filter(|c| in_all(*c)).count() as i64),
+                    "delete" => {
+                        let out: String = s.chars().filter(|c| !in_all(*c)).collect();
+                        Value::Str(Rc::from(out.as_str()))
+                    }
+                    _ => {
+                        let mut out = String::new();
+                        let mut last: Option<char> = None;
+                        for c in s.chars() {
+                            if last == Some(c) && in_all(c) {
+                                continue;
+                            }
+                            out.push(c);
+                            last = Some(c);
+                        }
+                        Value::Str(Rc::from(out.as_str()))
+                    }
+                }
+            }
             _ => no_method_error(&recv, name),
         }
     }
