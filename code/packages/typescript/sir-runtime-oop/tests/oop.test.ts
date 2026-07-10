@@ -274,6 +274,24 @@ describe("built-in method catalog: non-block Array (M1a)", () => {
     expect(callMethod([10, 20, 30], "values_at", 5, -9)).toEqual([null, null]);
     expect(callMethod([10, 20, 30], "values_at")).toEqual([]);
   });
+
+  it("rotate wraps left (default 1) and right (negative n), any magnitude", () => {
+    expect(callMethod([1, 2, 3, 4], "rotate")).toEqual([2, 3, 4, 1]);
+    expect(callMethod([1, 2, 3, 4], "rotate", 2)).toEqual([3, 4, 1, 2]);
+    expect(callMethod([1, 2, 3, 4], "rotate", -1)).toEqual([4, 1, 2, 3]);
+    expect(callMethod([1, 2, 3, 4], "rotate", 6)).toEqual([3, 4, 1, 2]);
+    expect(callMethod([1, 2, 3], "rotate", 0)).toEqual([1, 2, 3]);
+    expect(callMethod([], "rotate", 3)).toEqual([]);
+  });
+
+  it("zip pads a shorter operand with nil and truncates to receiver length", () => {
+    expect(callMethod([1, 2, 3], "zip", [4, 5, 6])).toEqual([[1, 4], [2, 5], [3, 6]]);
+    expect(callMethod([1, 2, 3], "zip", [4, 5])).toEqual([[1, 4], [2, 5], [3, null]]);
+    expect(callMethod([1, 2], "zip", [3, 4, 5])).toEqual([[1, 3], [2, 4]]);
+    expect(callMethod([1, 2], "zip", [3, 4], [5, 6])).toEqual([[1, 3, 5], [2, 4, 6]]);
+    expect(callMethod([1, 2], "zip", 99)).toEqual([[1, null], [2, null]]);
+    expect(callMethod([1, 2], "zip")).toEqual([[1], [2]]);
+  });
 });
 
 describe("built-in method catalog: universal Object (M1a)", () => {

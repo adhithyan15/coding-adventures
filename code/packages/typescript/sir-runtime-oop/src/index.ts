@@ -553,6 +553,8 @@ const ARRAY_METHODS = new Set<string>([
   "take",
   "drop",
   "values_at",
+  "rotate",
+  "zip",
 ]);
 
 // Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
@@ -974,6 +976,36 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
         out.push(idx >= 0 && idx < recv.length ? recv[idx] : null);
       }
       return out;
+    }
+    case "rotate": {
+      // Ruby `Array#rotate(n=1)`: rotate left by `n` (a negative `n` rotates
+      // right).  The modulo wraps so any magnitude terminates; an empty array is
+      // `[]`.  No arg defaults to 1; a non-numeric arg degrades to 0 — matching
+      // the Go/Rust runtimes.
+      const length = recv.length;
+      if (length === 0) return [];
+      let n = args.length === 0
+        ? 1
+        : typeof args[0] === "number" ? Math.trunc(args[0] as number) : 0;
+      // JS `%` keeps the sign of the dividend, so re-add `length` to fold right
+      // rotations (negative `n`) back into `[0, length)`.
+      const shift = ((n % length) + length) % length;
+      return recv.slice(shift).concat(recv.slice(0, shift));
+    }
+    case "zip": {
+      // Ruby `Array#zip(*others)`: an Array of tuples `[self[i], others..[i]]` of
+      // length `recv.length`.  A shorter operand pads with `nil` (`null`); a
+      // non-array operand is treated as empty (pad-only), never raising.
+      const others: Val[][] = args.map((o) => (Array.isArray(o) ? o : []));
+      const zipped: Val[] = [];
+      for (let i = 0; i < recv.length; i++) {
+        const row: Val[] = [recv[i]];
+        for (const o of others) {
+          row.push(i < o.length ? o[i] : null);
+        }
+        zipped.push(row);
+      }
+      return zipped;
     }
     default:
       return MISS;
