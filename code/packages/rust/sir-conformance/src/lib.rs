@@ -44,7 +44,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use ruby_to_semantic_ir::compile_source;
-use semantic_ir::Module;
+use semantic_ir::{BackendErrorKind, Module};
 
 pub mod oracle;
 
@@ -69,12 +69,19 @@ pub enum Target {
     JavaScript,
     Go,
     Rust,
+    C,
 }
 
 impl Target {
     /// Every target the harness knows how to run.
     pub fn all() -> &'static [Target] {
-        &[Target::Python, Target::JavaScript, Target::Go, Target::Rust]
+        &[
+            Target::Python,
+            Target::JavaScript,
+            Target::Go,
+            Target::Rust,
+            Target::C,
+        ]
     }
 
     /// Human-readable tag for assertion messages.
@@ -84,16 +91,20 @@ impl Target {
             Target::JavaScript => "javascript",
             Target::Go => "go",
             Target::Rust => "rust",
+            Target::C => "c",
         }
     }
 
-    /// The executable that must be on `PATH` for this target to run.
+    /// The executable that must be on `PATH` for this target to run.  (C is
+    /// special — it discovers its compiler via [`c_compiler`], honouring the
+    /// `SIR_CC` override — so this default is only its PATH fallback.)
     fn toolchain(self) -> &'static str {
         match self {
             Target::Python => "python3",
             Target::JavaScript => "node",
             Target::Go => "go",
             Target::Rust => "rustc",
+            Target::C => "cc",
         }
     }
 
@@ -110,12 +121,39 @@ impl Target {
     /// Is this target's toolchain available on the host? A missing toolchain
     /// means the caller should *skip* (not fail) that target.
     pub fn available(self) -> bool {
+        if self == Target::C {
+            return c_compiler().is_some();
+        }
         Command::new(self.toolchain())
             .arg(self.version_arg())
             .output()
             .map(|o| o.status.success())
             .unwrap_or(false)
     }
+}
+
+/// Discover a gcc/clang-style C compiler for the C backend: the `SIR_CC`
+/// environment variable first (an absolute path works — handy on Windows),
+/// then `cc` / `clang` / `gcc` on `PATH`. Returns `None` when none is present,
+/// so the C cell *skips* rather than fails. MSVC `cl` uses a different CLI and
+/// is verified by the repo's separate C harness, not here.
+fn c_compiler() -> Option<String> {
+    if let Ok(cc) = std::env::var("SIR_CC") {
+        if !cc.trim().is_empty() {
+            return Some(cc);
+        }
+    }
+    for cand in ["cc", "clang", "gcc"] {
+        let ok = Command::new(cand)
+            .arg("--version")
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false);
+        if ok {
+            return Some(cand.to_string());
+        }
+    }
+    None
 }
 
 /// The outcome of running one program through one backend.
@@ -161,6 +199,7 @@ pub fn run_source(name: &str, source: &str, target: Target) -> RunOutcome {
         Target::JavaScript => run_javascript(name, &module),
         Target::Go => run_go(name, &module),
         Target::Rust => run_rust(name, &module),
+        Target::C => run_c(name, &module),
     }
 }
 
@@ -319,6 +358,64 @@ fn run_rust(name: &str, module: &Module) -> RunOutcome {
         Err(e) => {
             let _ = fs::remove_file(&src);
             RunOutcome::Skipped(format!("rustc unavailable: {e}"))
+        }
+    }
+}
+
+// ── C ─────────────────────────────────────────────────────────────────────
+//
+// The C backend emits a self-contained `.c`; we compile it with a discovered
+// gcc/clang-style compiler (see `c_compiler`) and run the binary. Two skips
+// (not failures) keep the matrix honest: no C compiler on the host, and a
+// program whose feature set the *v0* C backend does not yet accept — the
+// backend rejects it cleanly (a declared gap, not a faithfulness bug), so that
+// `(program, C)` cell is skipped until the feature's batch lands.
+
+fn run_c(name: &str, module: &Module) -> RunOutcome {
+    let artifact = match semantic_ir_to_c::compile(module) {
+        Ok(a) => a,
+        Err(e)
+            if matches!(
+                e.kind,
+                BackendErrorKind::UnsupportedFeature | BackendErrorKind::UnsupportedIntrinsic
+            ) =>
+        {
+            return RunOutcome::Skipped(format!("c backend (v0) does not yet accept: {}", e.message))
+        }
+        Err(e) => return RunOutcome::Failed(format!("c emit failed: {e:?}")),
+    };
+    let Some(cc) = c_compiler() else {
+        return RunOutcome::Skipped("no C compiler (set SIR_CC or install cc/clang/gcc)".into());
+    };
+    let src = temp_path(name, Target::C, ".c");
+    let bin = temp_path(name, Target::C, if cfg!(windows) { ".exe" } else { "" });
+    if fs::write(&src, &artifact.source).is_err() {
+        return RunOutcome::Failed("could not write temp .c".into());
+    }
+    let compiled = Command::new(&cc)
+        .arg("-std=c99")
+        .arg("-o")
+        .arg(&bin)
+        .arg(&src)
+        .output();
+    match compiled {
+        Ok(o) if o.status.success() => {
+            let run_out = Command::new(&bin).output();
+            let _ = fs::remove_file(&src);
+            let _ = fs::remove_file(&bin);
+            finish(run_out, &artifact.source, "c")
+        }
+        Ok(o) => {
+            let stderr = String::from_utf8_lossy(&o.stderr);
+            let _ = fs::remove_file(&src);
+            RunOutcome::Failed(format!(
+                "C compiler failed:\n{stderr}\n--- source ---\n{}",
+                artifact.source
+            ))
+        }
+        Err(e) => {
+            let _ = fs::remove_file(&src);
+            RunOutcome::Skipped(format!("C compiler unavailable: {e}"))
         }
     }
 }

@@ -11,3 +11,4 @@ semantic-ir-to-python = { path = "../semantic-ir-to-python" }
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
 semantic-ir-to-go = { path = "../semantic-ir-to-go" }
 semantic-ir-to-rust = { path = "../semantic-ir-to-rust" }
+semantic-ir-to-c = { path = "../semantic-ir-to-c" }
