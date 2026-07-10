@@ -2,286 +2,307 @@
 
 ## Goal
 
-Close package gaps intelligently across language buckets without pretending
-that directory equality is the same as useful parity.
+Close package gaps across implementation languages without confusing directory
+equality with useful parity. Every deterministic, language-agnostic package
+should have a pure implementation in each established language when practical.
+Platform, ABI, browser, firmware, and accelerator packages should instead have
+honest native implementations or thin tested wrappers.
 
-The repo should aim for portable API parity where a package is naturally
-language-agnostic, and for honest native or web specialization where the
-package is tied to a runtime, operating system, browser API, or FFI boundary.
+This roadmap is the durable work queue for the autonomous package-parity PR
+loop. It is ordered by leverage: repair the inventory, finish nearly complete
+families, then classify and port sparse families in dependency-shaped waves.
 
-## Current Baseline
+## Canonical Inventory
 
-The most useful baseline today is not "everything everywhere." It is:
-
-- **Portable core:** packages present in both Rust and Python.
-- **Native source of truth:** Rust packages that expose platform, FFI, graphics,
-  runtime, or C ABI behavior.
-- **Python prototyping/runtime lane:** Python packages that carry language
-  runtime experiments, compiler tracks, and native-wrapper facades.
-- **Web lane:** TypeScript and WASM packages that depend on browser, DOM,
-  Canvas, IndexedDB, Vite, or Web Audio behavior.
-
-After normalizing folder naming conventions, the current inventory is:
-
-| Baseline | Count |
-|---|---:|
-| All normalized package names, excluding Starlark | 540 |
-| Rust/Python union | 493 |
-| Rust/Python shared core | 261 |
-| Rust packages | 377 |
-| Python packages | 377 |
-| Rust-only packages | 116 |
-| Python-only packages | 116 |
-| Packages outside Rust/Python | 47 |
-
-Core parity coverage against the Rust/Python shared core:
-
-| Language | Missing Core | Coverage |
-|---|---:|---:|
-| TypeScript | 19 | 92.7% |
-| Go | 23 | 91.2% |
-| Ruby | 23 | 91.2% |
-| Elixir | 32 | 87.7% |
-| Perl | 56 | 78.5% |
-| Lua | 57 | 78.2% |
-| Swift | 136 | 47.9% |
-| Haskell | 138 | 47.1% |
-| Java | 192 | 26.4% |
-| Kotlin | 193 | 26.1% |
-| WASM | 200 | 23.4% |
-| F# | 209 | 19.9% |
-| C# | 210 | 19.5% |
-| Dart | 228 | 12.6% |
-
-Regenerate the numbers with:
+Run:
 
 ```sh
 python scripts/package_parity_report.py --format markdown
+python scripts/package_parity_report.py --format json
+python scripts/package_parity_report.py --format csv
 ```
 
-## Parity Rules
+The reporter reads Git-visible files: tracked files plus untracked files that
+are not ignored. It therefore sees newly scaffolded packages without treating
+`target`, `node_modules`, `.pytest_cache`, or other ignored build output as
+packages.
 
-### Portable Packages Should Converge
+Package identity is case- and punctuation-insensitive. `directed-graph`,
+`directed_graph`, and `Directed.Graph` are one identity. The reporter retains
+the original directories and reports collisions when one language contains
+multiple directories for the same identity.
 
-Packages should converge across all serious implementation languages when they
-are pure algorithms, data structures, grammar frontends, codecs, IR models,
-validators, encoders, simulators, or deterministic transforms.
+### Established implementation lanes
 
-Examples:
-
-- `hash-functions`
-- `trie`
-- `bloom-filter`
-- `lexer`
-- `parser`
-- `wasm-module-encoder`
-- `json-value`
-- `zip`
-
-### Native Packages Should Not Be Reimplemented Blindly
-
-Rust should remain the implementation source of truth for packages that are
-really platform or ABI surfaces. Other languages should usually receive thin,
-tested wrappers instead of independent reimplementations.
-
-Examples:
-
-- `python-bridge`, `ruby-bridge`, `node-bridge`, `lua-bridge`
-- `epoll`, `kqueue`, `iocp`
-- `audio-device-coreaudio`
-- `paint-vm-direct2d`, `paint-vm-gdi`, `paint-metal`
-- `cuda-compute`, `metal-compute`
-- `*-c`, `*-native`, and runtime extension packages
-
-### Web Packages Stay Web-First
-
-Browser and app-shell packages should not become parity blockers for backend
-languages.
-
-Examples:
-
-- `indexeddb`
-- `ui-components`
-- `vite-plugin-lattice`
-- `paint-vm-canvas`
-- `window-canvas`
-- `web-audio-sink`
-- `browser-extension-toolkit`
-
-### Runtime-Specific Compiler Backends Need Dependency Readiness
-
-Compiler and VM packages should be ported in dependency waves, not one package
-at a time. A backend package is only ready when its local lexer, parser, IR,
-validator, encoder, and runtime dependencies are already present or included in
-the same wave.
-
-## Optimal Implementation Order
-
-### Phase 0: Keep the Map Fresh
-
-Status: started by this roadmap and `scripts/package_parity_report.py`.
-
-- Keep `scripts/package_parity_report.py` as the canonical quick inventory.
-- Use the Rust/Python shared core as the portable parity target.
-- Classify every apparent gap before implementing it.
-- Do not count Starlark as an implementation language; it is a build/config
-  rule lane.
-
-### Phase 1: Close Near-Parity Languages First
-
-Target languages:
-
-- TypeScript
-- Go
-- Ruby
+- C#
+- Dart
 - Elixir
+- F#
+- Go
+- Haskell
+- Java
+- Kotlin
+- Lua
+- Perl
+- Python
+- Ruby
+- Rust
+- Swift
+- TypeScript
 
-These buckets are already above 87% core coverage. Closing them first gives the
-repo fast wins and creates templates for Lua, Perl, Swift, and Haskell.
+### Separately classified lanes
 
-Recommended first wave:
+- C++ is an emerging implementation lane. It needs package/scaffold maturity
+  before it can join the all-language completion denominator.
+- WASM is an execution-target lane, not a requirement for every source package.
+- Mosaic and Twig are domain/source-language lanes.
+- Starlark is a build/configuration lane.
 
-| Package | Languages | Why first |
+## July 10, 2026 Baseline
+
+The tracked tree at `8efcb2d5b` contains:
+
+| Metric | Count |
+|---|---:|
+| Established implementation languages | 15 |
+| Tracked package directories in those languages | 4,096 |
+| Distinct normalized package identities | 1,102 |
+| Package/language slots after identity normalization | 4,094 |
+| Missing slots for literal all-language parity | 12,436 |
+| Rust identities | 873 |
+| Python identities | 494 |
+| TypeScript identities | 436 |
+| Rust singletons | 465 |
+| Python singletons | 88 |
+| TypeScript singletons | 81 |
+| Packages present in all 15 languages | 34 |
+
+Rust drift is recent as well as cumulative. From June 10 to July 10, Rust added
+127 package directories out of 185 total net additions across the 15 lanes.
+Rust-only identities grew from 373 to 465.
+
+The previous April baseline had 377 Rust and 377 Python packages. It is no
+longer a useful current planning baseline.
+
+## Parity Classes
+
+Every sparse package must receive one of these classifications before a porting
+wave treats it as a gap:
+
+| Class | Meaning | Expected action |
 |---|---|---|
-| `hash-functions` | TypeScript, Go, Ruby, Elixir | Leaf-like utility used by later structures |
-| `trie` | TypeScript, Go, Ruby, Elixir | Pure data structure with clear tests |
-| `bloom-filter` | TypeScript, Go, Ruby, Elixir | Depends naturally on hash behavior |
+| `portable` | Pure algorithm, data structure, IR, codec, validator, deterministic transform, simulator, or grammar frontend | Pure implementation in every established language |
+| `native-source` | The package directly owns OS, ABI, GPU, firmware, or hardware behavior | Keep the appropriate native implementation |
+| `wrapper` | Thin language-facing binding to a native source of truth | Test the wrapper; do not count it as a missing pure port |
+| `web-only` | Browser, DOM, Canvas, IndexedDB, Vite, or Web Audio behavior | Keep in web-capable lanes |
+| `target-specific` | Compiler backend or artifact writer meaningful only for a particular target | Port only where the target is supported |
+| `not-applicable` | The package has no coherent role in the language lane | Document the exception |
 
-The `hash-functions` row is implemented in this branch. The next best cut is
-`trie`, followed by `bloom-filter`.
+Directory presence is not completion. A completed pure port needs matching API
+semantics, shared fixtures or reference vectors, package-native tests, README,
+CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 
-Recommended second wave:
+## Work Inventory
 
-| Package | Languages | Why second |
-|---|---|---|
-| `css-lexer` | TypeScript, Go | Grammar-generated and browser-relevant |
-| `css-parser` | TypeScript, Go, Elixir | Completes the CSS frontend pair |
-| `haskell-lexer` | Go, Perl | Follow existing grammar-generated package pattern |
-| `haskell-parser` | Go, Perl | Follows lexer support |
+The missing matrix is heavily concentrated in singleton packages:
 
-Hold for classification:
+| Current breadth | Packages | Missing slots to all 15 |
+|---|---:|---:|
+| Present in 10-15 languages | 171 | 411 |
+| Present in 5-9 languages | 122 | 917 |
+| Present in 2-4 languages | 153 | 1,924 |
+| Present in one language | 656 | 9,184 |
 
-- `audio-device-sink`: likely portable facade plus native backends.
-- `tcp-server`: portable contract, but runtime behavior must be shaped per
-  language.
-- `ml-framework-*`: probably educational facades; confirm desired depth before
-  porting.
-- `jit-compiler`, `lisp-*`, `starlark-compiler`: port as compiler waves after
-  dependency checks.
+The loop must not start by attempting 9,184 singleton ports. It should finish
+the broadly established portable core, then classify the sparse majority.
 
-### Phase 2: Bring Lua and Perl to Near-Parity
+## Priority 0: Inventory And Identity Integrity
 
-Lua and Perl are around 78% core coverage and share many missing packages. Use
-the Phase 1 implementations as templates after they pass in TypeScript, Go,
-Ruby, and Elixir.
+1. Make the parity reporter use Git-visible files rather than filesystem
+   directories.
+2. Emit Markdown summary, JSON detail, and a full CSV package/language matrix.
+3. Classify implementation, emerging, target, domain-language, and build lanes.
+4. Report within-language canonical identity collisions.
+5. Add unit tests and run them in the CI detect job.
+6. Resolve the current Ruby collisions:
+   - `ruby/b-tree` versus `ruby/b_tree`
+   - `ruby/b-plus-tree` versus `ruby/b_plus_tree`
+7. Once collisions are fixed, enable `--fail-on-collisions` in CI.
 
-Prioritize:
+## Priority 1: Complete The 14-Of-15 Set
 
-- `hash-functions`
-- `bloom-filter`
-- `fenwick-tree`
-- `hash-map`
-- `hyperloglog`
-- `radix-tree`
-- `skip-list`
-- `tree-set`
-- `trie`
-- `resp-protocol`
-- `tcp-server`
+Twenty-one package/language slots turn 21 nearly complete packages into fully
+covered packages.
 
-Then continue with compiler/runtime packages from the existing convergence
-specs.
+### Dart: 13 ports
 
-### Phase 3: Treat Haskell and Swift as Medium Catch-Up Tracks
+- `algol-lexer`
+- `algol-parser`
+- `bitset`
+- `b-plus-tree`
+- `b-tree`
+- `heap`
+- `image-geometric-transforms`
+- `image-point-ops`
+- `logic-gates`
+- `mosaic-lexer`
+- `mosaic-parser`
+- `pixel-container`
+- `toml-lexer`
 
-Haskell and Swift sit near 47% core coverage, so their next work should be
-dependency-shaped rather than gap-count-shaped.
+### Haskell: 5 ports
 
-Haskell:
+- `huffman-compression`
+- `huffman-tree`
+- `lz77`
+- `lzss`
+- `lzw`
 
-- Refresh `haskell-catch-up-survey.md` with the new merged baseline.
-- Prioritize tooling/core packages that make future Haskell package creation
-  cheaper.
-- Continue the Brainfuck/Nib/WASM convergence wave in
-  `04n-haskell-wasm-convergence.md`.
-- Be strict about `cabal.project` transitive local dependencies.
+### Swift: 3 ports
 
-Swift:
+- `cli-builder`
+- `sql-execution-engine`
+- `wasm-simulator`
 
-- Add a Swift catch-up survey similar to the Haskell one.
-- Prioritize portable algorithm/data-structure packages before native app
-  surfaces.
-- Port grammar frontends only after package scaffolding and build support are
-  predictable.
+Port dependency families together when doing so avoids temporary broken package
+graphs. Grammar-generated lexer/parser pairs should be generated from the shared
+grammar sources rather than independently handwritten.
 
-### Phase 4: Work in Paired Ecosystems
+## Priority 2: Complete The High-Consensus Core
 
-Java and Kotlin should move together. C# and F# should move together.
+The 171 packages present in at least ten implementation languages need 411
+ports to reach all 15. After Priority 1, select work in this order:
 
-The best initial paired waves are:
+| Language lane | Current high-consensus gaps | Pairing rule |
+|---|---:|---|
+| Python | 3 | Pair `in-memory-data-store` packages; classify self-hosted `python-parser` carefully |
+| Elixir | 1 | Complete alongside the Python parser/frontend decision |
+| Lua | 16 | Pair with Perl data-structure/storage wave |
+| Perl | 16 | Pair with Lua data-structure/storage wave |
+| C# | 17 | Move with F# |
+| F# | 17 | Move with C# |
+| Haskell | 41 | Dependency-shaped compression, graphics, ML, and protocol waves |
+| Swift | 56 | Data structures and generated frontends before native app surfaces |
+| Java | 60 | Move with Kotlin |
+| Kotlin | 60 | Move with Java |
+| Dart | 124 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
 
-- generated lexer/parser packages
-- data structures
-- crypto and compression primitives
-- WASM encoder/runtime slices
-- existing Brainfuck/Nib convergence specs
+Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
+consensus set. They remain reference/template lanes for these waves.
 
-Avoid one-off ports that make Java diverge from Kotlin or C# diverge from F#.
+Recommended family order:
 
-### Phase 5: Keep Dart and WASM Selective
+1. Leaf algorithms and data structures.
+2. Hashing, crypto, compression, and deterministic codecs.
+3. Shared JSON/document/IR models and serializers.
+4. Grammar-generated lexer/parser pairs.
+5. SQL/storage packages in dependency order.
+6. Compiler and VM families with their local IR, validator, encoder, and runtime
+   dependencies in the same wave.
 
-Dart has low coverage but should not blindly mirror systems packages. Favor
-portable packages that fit the Dart ecosystem:
+## Priority 3: Expand The Portable Core
 
-- data structures
-- codecs
-- QR/barcode work
-- grammar frontends
-- document and paint transforms
+After the high-consensus set is complete:
 
-WASM packages should stay focused on wrappers, runtime targets, and browser or
-portable execution units. They do not need to mirror every source-language
-package.
+1. Complete packages already present in 8-9 languages.
+2. Complete packages present in 5-7 languages.
+3. Recompute the matrix after every merged wave.
+4. Prefer families with existing cross-language fixtures and low dependency
+   fan-out.
+5. Add missing shared conformance fixtures before porting when current tests are
+   language-specific and cannot prove equivalent behavior.
 
-## First Implementation Tranche
+This phase covers 122 package identities and 917 current missing slots.
 
-Start with 12 packages:
+## Priority 4: Classify Sparse And Singleton Families
 
-- `code/packages/typescript/hash-functions` - done in this branch
-- `code/packages/go/hash-functions` - done in this branch
-- `code/packages/ruby/hash_functions` - done in this branch
-- `code/packages/elixir/hash_functions` - done in this branch
-- `code/packages/typescript/trie`
-- `code/packages/go/trie`
-- `code/packages/ruby/trie`
-- `code/packages/elixir/trie`
-- `code/packages/typescript/bloom-filter`
-- `code/packages/go/bloom-filter`
-- `code/packages/ruby/bloom_filter`
-- `code/packages/elixir/bloom_filter`
+The singleton inventory is led by 465 Rust, 88 Python, and 81 TypeScript
+packages. Classify families before opening implementation PRs.
 
-Build order:
+### Likely portable Rust-led families
 
-1. `hash-functions`
-2. `trie`
-3. `bloom-filter`
+- `closure-*` compiler passes
+- `dsp-*` algorithms
+- `iir-*` IR passes and deterministic target emitters
+- portable `image-codec-*` packages
+- `state-machine-*` tokenization, serialization, and compilation
+- language runtimes and frontends such as `r-*` and `twig-*`, when their
+  dependency stacks are ready
+- deterministic portions of `vault-*`, `adjudication-*`, and `smart-home-*`
 
-Validation rules:
+### Likely native, wrapper, or target-specific Rust-led families
 
-- Each package needs `BUILD`, README, CHANGELOG, package metadata, and tests.
-- BUILD files must install transitive local dependencies in leaf-to-root order.
-- Ruby requires dependency `require` ordering before local modules.
-- Elixir implementations must avoid reserved words as variables.
-- Go packages must run `go mod tidy` after adding local module dependencies.
-- TypeScript packages must avoid committing generated `.js`, `.d.ts`, or source
-  map outputs.
+- `*-bridge`, `*-capi`, `*-jni`, `*-napi`, and `*-native`
+- `silicon-rust-*` bindings
+- board firmware and physical transport packages
+- OS paint/window backends
+- CUDA, Metal, Vulkan, Direct2D, GDI, OpenCL, and similar accelerator/platform
+  implementations
+
+### Python-led families requiring classification
+
+- CPU/ISA simulators and gate-level models
+- JVM/CLR/BEAM artifact and runtime packages
+- Prolog and logic-runtime stacks
+- Tetrad, Twig, and Oct compiler backends
+- native data-structure wrappers
+
+### TypeScript-led families requiring classification
+
+- the 57-package `forme-*` web/static-site family
+- browser, IndexedDB, Vite, Canvas, Web Audio, and UI packages
+- layout and document-to-paint packages
+- Mosaic web emitters
+
+For each family, add or identify a portable contract spec, dependency order,
+reference implementation, shared fixtures, and explicit exception list before
+the first port PR.
+
+## Priority 5: Conformance And Regression Prevention
+
+1. Give each portable family a language-neutral fixture corpus or oracle.
+2. Add package-level conformance runners where directory presence currently
+   masks API or semantic drift.
+3. Extend the parity reporter with explicit applicability data rather than
+   hard-coding exceptions in reporting logic.
+4. Fail CI on unclassified new package buckets.
+5. After identity cleanup, fail CI on canonical collisions.
+6. Add a policy check: a new portable singleton must include either another
+   language implementation or a declared parity work item/classification.
+7. Track package maturity separately from structural presence: manifest,
+   source, tests, BUILD, README, CHANGELOG, conformance status, and last verified
+   revision.
+
+## Autonomous Loop Protocol
+
+Only one parity PR should be active at a time.
+
+1. Fetch `origin/main` and verify the prior PR state.
+2. If CI fails, inspect the actual GitHub Actions logs, make a focused fix, run
+   local verification, and push to the same PR.
+3. If the branch conflicts with `main`, update it carefully and verify the full
+   PR diff contains only intended work.
+4. If checks are pending, keep monitoring.
+5. If the PR is merged, regenerate the report from the new `origin/main`, update
+   priorities with any newly discovered work, and select the highest-impact
+   unblocked item.
+6. Create a fresh `codex/` branch, implement one coherent dependency-shaped
+   work item, validate it, push it, and open the next PR.
+7. Continue until the report has no unclassified or eligible portable gaps.
+
+Every PR must state what changed, why the selected slice is next, tests run,
+remaining gaps, and any packages deliberately classified as non-portable.
 
 ## Completion Definition
 
-This roadmap is working when:
+The parity program is complete when:
 
-- the parity report can be regenerated after every major merge;
-- near-parity language gaps shrink in coherent waves;
-- native and web-only packages are classified instead of treated as failures;
-- new implementations follow existing package conventions;
-- specs, READMEs, CHANGELOGs, and tests move together.
+- every package identity is classified;
+- every `portable` package has a tested pure implementation in every established
+  implementation language, or an explicit reviewed `not-applicable` exception;
+- native, wrapper, web-only, and target-specific packages have honest tested
+  coverage in their applicable lanes;
+- canonical identity collisions are zero;
+- the reporter and conformance checks run in CI;
+- adding a new package cannot silently create an unplanned singleton;
+- the generated matrix contains no eligible unowned gap.

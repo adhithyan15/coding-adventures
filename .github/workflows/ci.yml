@@ -77,6 +77,11 @@ jobs:
         with:
           go-version: '1.23'
 
+      - name: Test package parity reporter
+        run: |
+          python3 -m unittest discover -s scripts/tests -p 'test_package_parity_report.py'
+          python3 scripts/package_parity_report.py --format json > /tmp/package-parity-report.json
+
       - name: Determine diff base
         id: diff-base
         shell: bash
