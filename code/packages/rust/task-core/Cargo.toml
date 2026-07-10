@@ -1,0 +1,24 @@
+[package]
+name = "task-core"
+version = "0.1.0"
+edition = "2021"
+description = "Headless task and project scheduling core (MS-Project-class CPM) for task-app and Mosaic frontends."
+
+# `serde` is optional (engram-core house style): the pure model has zero
+# external deps by default; JSON (de)serialisation is opt-in for the facade.
+[features]
+default = []
+serde = ["dep:serde"]
+
+[dependencies]
+# Reused, not rebuilt. directed-graph powers the CPM dependency network
+# (topological order, cycle detection, affected-set recompute); datetime-core
+# provides civil-date arithmetic (weekday/add-days) for the working-time model.
+directed-graph = { path = "../directed-graph" }
+datetime-core = { path = "../datetime-core" }
+serde = { version = "1", features = ["derive"], optional = true }
+
+# `serde_json` is a dev-only oracle: the JSON round-trip tests (gated on the
+# `serde` feature) use it to prove the wire contract (camelCase, transparent ids).
+[dev-dependencies]
+serde_json = "1"

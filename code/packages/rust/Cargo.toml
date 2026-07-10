@@ -875,4 +875,5 @@ members = [
     "spreadsheet-io",
   "document-ast-to-docx",
   "markdown-docx",
+  "task-core",
 ]
