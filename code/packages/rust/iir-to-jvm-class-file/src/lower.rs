@@ -712,10 +712,25 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
             let elem = array_elem_type(h)?;
             match iir_type_to_jvm(&elem)? {
                 JvmType::Int | JvmType::Long | JvmType::Float | JvmType::Double => Some(JvmType::Ref),
+                // E4d-BA-arr: a supported *reference* element (`array<str>` →
+                // `String[]`) is also a Ref-slot handle; its elements load/store
+                // with `aaload`/`aastore` and it allocates with `anewarray`.
+                JvmType::Ref if jvm_ref_array_element_class(&elem).is_some() => Some(JvmType::Ref),
                 JvmType::Void | JvmType::Ref => None,
             }
         }
         // Catch-all: return None, let caller decide
+        _ => None,
+    }
+}
+
+/// For a **reference**-element array (E4d-BA-arr), the JVM class used by
+/// `anewarray` and loaded/stored with `aaload`/`aastore`.  `array<str>` →
+/// `String[]`; every other element is a primitive handled by
+/// [`array_element_opcodes`] instead, so this returns `None` for them.
+fn jvm_ref_array_element_class(elem_hint: &str) -> Option<&'static str> {
+    match elem_hint {
+        "str" => Some("java/lang/String"),
         _ => None,
     }
 }
@@ -3237,19 +3252,27 @@ fn lower_function(
                         detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
                     }
                 })?;
-                let elem_ty = iir_type_to_jvm(&elem_hint).and_then(array_element_opcodes);
-                let (atype, _, _) = elem_ty.ok_or_else(|| IIRJvmError::InvalidOperand {
-                    function: fname.clone(),
-                    detail: format!("alloc_array element type {elem_hint:?} is not a supported JVM array element"),
-                })?;
                 let (count_slot, count_ty) = lookup_var(&count_name)?;
                 let (dest_slot, _dest_ty) = lookup_var(dest_name)?;
                 emit_typed_load(&mut code, count_slot, count_ty);
                 if count_ty == JvmType::Long {
-                    code.push(L2I); // newarray count is an int
+                    code.push(L2I); // newarray/anewarray count is an int
                 }
-                code.push(NEWARRAY);
-                code.push(atype);
+                if let Some(class) = jvm_ref_array_element_class(&elem_hint) {
+                    // E4d-BA-arr: reference-element array (`array<str>` → `String[]`)
+                    // allocates with `anewarray <class cp index>` (not `newarray`).
+                    let cidx = cp.add_class(class);
+                    code.push(ANEWARRAY);
+                    code.extend_from_slice(&cidx.to_be_bytes());
+                } else {
+                    let (atype, _, _) = iir_type_to_jvm(&elem_hint).and_then(array_element_opcodes)
+                        .ok_or_else(|| IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("alloc_array element type {elem_hint:?} is not a supported JVM array element"),
+                        })?;
+                    code.push(NEWARRAY);
+                    code.push(atype);
+                }
                 emit_astore(&mut code, dest_slot);
             }
 
@@ -3271,12 +3294,19 @@ fn lower_function(
                 })?;
                 let handle_name = array_var_operand(instr, 0, "array_get", "handle", &fname)?;
                 let idx_name = array_var_operand(instr, 1, "array_get", "idx", &fname)?;
-                let (_, aload_op, _) = iir_type_to_jvm(&instr.type_hint)
-                    .and_then(array_element_opcodes)
-                    .ok_or_else(|| IIRJvmError::InvalidOperand {
-                        function: fname.clone(),
-                        detail: format!("array_get element type {:?} is not a supported JVM array element", instr.type_hint),
-                    })?;
+                // E4d-BA-arr: a `str` element loads with `aaload` (reference element);
+                // primitive elements use the typed `*aload` from `array_element_opcodes`.
+                let aload_op = if jvm_ref_array_element_class(&instr.type_hint).is_some() {
+                    AALOAD
+                } else {
+                    iir_type_to_jvm(&instr.type_hint)
+                        .and_then(array_element_opcodes)
+                        .map(|(_, aload_op, _)| aload_op)
+                        .ok_or_else(|| IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("array_get element type {:?} is not a supported JVM array element", instr.type_hint),
+                        })?
+                };
                 let (h_slot, _) = lookup_var(&handle_name)?;
                 let (i_slot, i_ty) = lookup_var(&idx_name)?;
                 let (dest_slot, dest_ty) = lookup_var(dest_name)?;
@@ -3306,12 +3336,19 @@ fn lower_function(
                 let handle_name = array_var_operand(instr, 0, "array_set", "handle", &fname)?;
                 let idx_name = array_var_operand(instr, 1, "array_set", "idx", &fname)?;
                 let val_name = array_var_operand(instr, 2, "array_set", "val", &fname)?;
-                let (_, _, astore_op) = iir_type_to_jvm(&instr.type_hint)
-                    .and_then(array_element_opcodes)
-                    .ok_or_else(|| IIRJvmError::InvalidOperand {
-                        function: fname.clone(),
-                        detail: format!("array_set element type {:?} is not a supported JVM array element", instr.type_hint),
-                    })?;
+                // E4d-BA-arr: a `str` element stores with `aastore` (reference element);
+                // primitive elements use the typed `*astore` from `array_element_opcodes`.
+                let astore_op = if jvm_ref_array_element_class(&instr.type_hint).is_some() {
+                    AASTORE
+                } else {
+                    iir_type_to_jvm(&instr.type_hint)
+                        .and_then(array_element_opcodes)
+                        .map(|(_, _, astore_op)| astore_op)
+                        .ok_or_else(|| IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("array_set element type {:?} is not a supported JVM array element", instr.type_hint),
+                        })?
+                };
                 let (h_slot, _) = lookup_var(&handle_name)?;
                 let (i_slot, i_ty) = lookup_var(&idx_name)?;
                 let (v_slot, v_ty) = lookup_var(&val_name)?;
@@ -5294,8 +5331,10 @@ mod tests {
         assert_eq!(iir_type_to_jvm("array<i32>"), Some(JvmType::Ref));
         assert_eq!(iir_type_to_jvm("array<i64>"), Some(JvmType::Ref));
         assert_eq!(iir_type_to_jvm("array<f64>"), Some(JvmType::Ref));
-        // A non-mappable element type is rejected (no nested/ref-element arrays).
-        assert_eq!(iir_type_to_jvm("array<str>"), None);
+        // E4d-BA-arr: a supported reference element (`array<str>` → `String[]`) now
+        // maps to a Ref handle; an unsupported ref element still returns None.
+        assert_eq!(iir_type_to_jvm("array<str>"), Some(JvmType::Ref));
+        assert_eq!(iir_type_to_jvm("array<ref<LispyPair>>"), None);
     }
 
     #[test]
@@ -5333,6 +5372,34 @@ mod tests {
         assert!(code.contains(&IASTORE), "iastore (array_set) expected");
         assert!(code.contains(&IALOAD), "iaload (array_get) expected");
         assert!(code.contains(&ARRAYLENGTH), "arraylength (array_len) expected");
+    }
+
+    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String`
+    /// + `aastore`/`aaload` — reference-element ops, since a str value is a native
+    /// `java.lang.String` (not a primitive). The JVM bounds-checks each access.
+    #[test]
+    fn string_array_emits_reference_array_opcodes() {
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("c2".into()), vec![Operand::Int(2)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c2".into())], "array<str>"),
+                IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("s".into())], "str"),
+                IIRInstr::new("array_get", Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into())], "str"),
+                IIRInstr::new("array_len", Some("n".into()), vec![Operand::Var("a".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i32"),
+            ],
+        );
+        let code = code_bytes(&make_module(f));
+        assert!(code.contains(&ANEWARRAY), "anewarray String[] expected");
+        assert!(code.contains(&AASTORE), "aastore (array_set) expected");
+        assert!(code.contains(&AALOAD), "aaload (array_get) expected");
     }
 
     /// `double[]` uses `newarray T_DOUBLE` + `dastore`/`daload`.

@@ -37,6 +37,9 @@
 //! | `DIM A(n)`     | `alloc_array A = <n+1>` (`array<f64>`, 0-based, inclusive) — BA3 / BA7 |
 //! | `LET A(i)=e`   | `<eval i → x>; <eval e → v>; array_set A, x, v` (BA3) |
 //! | `A(i)` (rvalue) | `<eval i → x>; array_get A, x -> t` (BA3) |
+//! | `DIM A$(n)`    | `alloc_array A$ = <n+1>` (`array<str>`, E4-dyn string handles) — E4d-BA-arr |
+//! | `LET A$(i)=s`  | `<eval i → x>; <eval string s → h>; array_set A$, x, h` (`str`) — E4d-BA-arr |
+//! | `A$(i)` (rvalue) | `<eval i → x>; array_get A$, x -> t` (`str`) — E4d-BA-arr |
 //! | `STOP`         | same as `END` for V1 |
 //! | `DEF FNx(P)=e` | sibling `IIRFunction` + `call` (BA5); `FNx(arg)` → `call` |
 //!
@@ -48,8 +51,11 @@
 //! E4 path.  `IF A$ = "Y" THEN n` lowers to `str_eq`.  `INPUT A$` reads a whole
 //! line from the host as a **runtime string** (`call_builtin "input_str"` — the
 //! `str` sibling of numeric `INPUT`'s `input_i64`), a value the compiler cannot
-//! fold; it runs today on the dynamic VM/JIT columns (E4-dyn).  Richer string
-//! expressions and string arrays remain BA4/E4 follow-ups.
+//! fold.  **String arrays** (`DIM A$(n)`; `A$(i) = …`; `PRINT A$(i)`) reuse the
+//! E5 aggregate substrate with a `str` element type (`array<str>`), so each
+//! element holds an E4-dyn runtime string handle — enabler **E4-dyn**, work item
+//! **E4d-BA-arr**.  String `READ`/`DATA` (numeric `DATA` only today) remains a
+//! follow-up.
 //!
 //! ## Variables
 //!
@@ -250,6 +256,17 @@ struct Compiler {
     /// `A(i,j)` is `i*(N+1) + j`.  A 1-D `DIM A(N)` stores `[1]`, so `A(i)` is
     /// the flat index `i` directly — unchanged from BA3.
     arrays: std::collections::HashMap<String, Vec<i64>>,
+    /// The subset of [`arrays`](Self::arrays) whose element type is `str`
+    /// (declared with a `$`-suffixed name, `DIM A$(n)`) — enabler **E4-dyn**,
+    /// work item **E4d-BA-arr**.  A string array is *also* recorded in `arrays`
+    /// (its row-major strides drive the same flat-index folding numeric arrays
+    /// use), so membership here is the single bit that decides whether a
+    /// subscripted `A$(i)` lowers to a `str`-typed `array_get`/`array_set`
+    /// (reusing the E5 aggregate substrate to hold E4-dyn runtime string
+    /// handles) rather than the numeric `f64` path.  A numeric read of a name
+    /// in this set is a clean type error, mirroring the scalar `$`/non-`$`
+    /// split.
+    string_arrays: std::collections::HashSet<String>,
     /// Scalar value types learned while lowering `main`.  BA7 makes BASIC
     /// scalar values real (`f64`); the few integer slots left are true
     /// structural boundaries such as indexes, read pointers, and return PCs.
@@ -297,6 +314,7 @@ impl Default for Compiler {
             defined_fns: std::collections::HashSet::new(),
             current_fn_param: None,
             arrays: std::collections::HashMap::new(),
+            string_arrays: std::collections::HashSet::new(),
             scalar_types: std::collections::HashMap::new(),
             data_pool: Vec::new(),
             needs_print_helpers: false,
@@ -544,10 +562,6 @@ impl Compiler {
         let subs = array_subscript_indices(var_node);
         if !subs.is_empty() {
             let name = array_target_name(var_node)?;
-            if is_basic_string_name(&name) {
-                return Err(CompileError::Unsupported(format!(
-                    "string array `{name}(...)` — BA4 currently supports scalar string variables")));
-            }
             if !self.arrays.contains_key(&name) {
                 return Err(CompileError::Unsupported(format!(
                     "assignment to `{name}(...)` but `{name}` was never DIMmed \
@@ -558,6 +572,23 @@ impl Compiler {
             // strides recorded at `DIM` (BA-DIM-2D).  1-D arrays fold to the bare
             // subscript, so BA3 semantics are unchanged.
             let flat = self.emit_flat_index(&name, &subs)?;
+            if self.string_arrays.contains(&name) {
+                // `A$(i) = <string expr>` — E4d-BA-arr.  The RHS lowers through
+                // the shared E4 string-expression path (literal / `$`-variable /
+                // `+` concat / another `A$(j)` element read) to a runtime `str`
+                // handle, which `array_set` stores into the `array<str>` slot.
+                // A numeric RHS is a clean type error (no silent coercion).
+                let Some(val) = self.emit_basic_string_expr(expr_node)? else {
+                    return Err(CompileError::Unsupported(format!(
+                        "string array element `{name}(...)` assignment needs a \
+                         string RHS (literal, string variable, or `+` concat)")));
+                };
+                self.emit("array_set", None,
+                    vec![Operand::Var(basic_array_handle(&name)),
+                         Operand::Var(flat), Operand::Var(val)],
+                    "str");
+                return Ok(());
+            }
             let val = self.emit_expr(expr_node)?;
             let val = self.coerce_value(val, BasicScalarType::Real);
             self.emit("array_set", None,
@@ -662,10 +693,6 @@ impl Compiler {
             let name = first_name_token_value(decl).ok_or_else(|| {
                 CompileError::Malformed("DIM decl missing array name".into())
             })?;
-            if is_basic_string_name(&name) {
-                return Err(CompileError::Unsupported(format!(
-                    "DIM {name}(...) — string arrays are a BA4 follow-up")));
-            }
             let bounds = dim_decl_bounds(decl)?;
             // Per-dimension size = max subscript + 1 (0-based inclusive).  Each
             // bound was already range-checked (`0..=MAX_DIM_BOUND`) so the `+ 1`
@@ -704,8 +731,22 @@ impl Compiler {
             let len = self.fresh_temp();
             self.emit("const", Some(&len),
                 vec![Operand::Int(count)], "i64");
-            self.emit("alloc_array", Some(&name),
-                vec![Operand::Var(len)], "array<f64>");
+            // A `$`-named array holds E4-dyn runtime string handles
+            // (`array<str>`, work item E4d-BA-arr); every other array holds
+            // BA7 reals (`array<f64>`).  Both ride the *same* E5 length-
+            // prefixed aggregate — only the element type differs — so all of
+            // the count/stride math above is shared.  On the static backends a
+            // `str` element is an 8-byte handle to the `[i64 len][bytes]` heap
+            // block E4-dyn already lays down; on the managed backends it is a
+            // native `String[]` slot; on the VM/JIT a tagged `Value::Str`.
+            let elem_ty = if is_basic_string_name(&name) {
+                self.string_arrays.insert(name.clone());
+                "array<str>"
+            } else {
+                "array<f64>"
+            };
+            self.emit("alloc_array", Some(&basic_array_handle(&name)),
+                vec![Operand::Var(len)], elem_ty);
             self.arrays.insert(name, strides);
         }
         Ok(())
@@ -1389,6 +1430,31 @@ impl Compiler {
             self.emit_str_const_to(&dest, text);
             return Ok(Some(dest));
         }
+        // `A$(i)` / `A$(i,j)` — an E4-dyn string-array element read (E4d-BA-arr).
+        // The scalar `expr_string_variable_name` path deliberately skips
+        // subscripted variables; a subscripted `$`-name that was DIMmed as a
+        // string array lowers to a `str`-typed `array_get` at the flat row-major
+        // index, producing a runtime string handle the surrounding `+` / PRINT /
+        // `=` path then consumes exactly like any other runtime string.  The
+        // `array_get` writes straight into `target` when one is supplied (it is
+        // a fresh-value-producing load, not an aliasing `mov`), mirroring how the
+        // `+`-concat path writes its final `str_concat` into `target`.
+        if let Some(var) = expr_plain_variable(node) {
+            let subs = array_subscript_indices(var);
+            if !subs.is_empty() {
+                let name = array_target_name(var)?;
+                if self.string_arrays.contains(&name) {
+                    let flat = self.emit_flat_index(&name, &subs)?;
+                    let dest = target
+                        .map(str::to_string)
+                        .unwrap_or_else(|| self.fresh_temp());
+                    self.emit("array_get", Some(&dest),
+                        vec![Operand::Var(basic_array_handle(&name)),
+                             Operand::Var(flat)], "str");
+                    return Ok(Some(dest));
+                }
+            }
+        }
         if let Some(name) = expr_string_variable_name(node)? {
             if let Some(target) = target {
                 let src = basic_string_slot(&name);
@@ -1637,6 +1703,15 @@ impl Compiler {
                             return Err(CompileError::Unsupported(format!(
                                 "`{name}(...)` is read but `{name}` was never \
                                  DIMmed — declare it with `DIM {name}(n)` first")));
+                        }
+                        // A `$`-named (string) array read reaching the numeric
+                        // path is a type error — string arrays live only in
+                        // string context (PRINT, `+` concat, string `=`), where
+                        // `emit_basic_string_expr_to` handles the `str` array_get.
+                        if self.string_arrays.contains(&name) {
+                            return Err(CompileError::Unsupported(format!(
+                                "string array element `{name}(...)` used in a \
+                                 numeric expression")));
                         }
                         let flat = self.emit_flat_index(&name, &subs)?;
                         let dest = self.fresh_temp();
@@ -2116,6 +2191,24 @@ fn is_basic_string_name(name: &str) -> bool {
 fn basic_string_slot(name: &str) -> String {
     let stem = name.strip_suffix('$').unwrap_or(name);
     format!("__basic_str_{stem}")
+}
+
+/// The IIR register that holds an array's aggregate handle.
+///
+/// A numeric array uses its bare BASIC name (`A` → register `A`).  A **string**
+/// array (`A$`) cannot: `$` is not a portable IIR register-name character (the
+/// scalar string path sanitises the same way via [`basic_string_slot`]), and
+/// BASIC lets a numeric array `A` and a string array `A$` coexist as distinct
+/// variables — so the string array gets its own prefixed, `$`-free handle
+/// register that can never collide with the numeric `A`.  Keyed lookups
+/// (`arrays`, `string_arrays`, `emit_flat_index`) still use the original BASIC
+/// name; only the *emitted register operand* is sanitised.
+fn basic_array_handle(name: &str) -> String {
+    if let Some(stem) = name.strip_suffix('$') {
+        format!("__basic_strarr_{stem}")
+    } else {
+        name.to_string()
+    }
 }
 
 fn single_child_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
@@ -3842,6 +3935,123 @@ mod tests {
         assert_eq!(get.type_hint, "f64");
         assert_eq!(var_name(get.srcs.first()), Some("A"));
         assert!(get.dest.is_some(), "array_get writes a destination register");
+    }
+
+    // -- E4d-BA-arr: BASIC string arrays (`DIM A$(n)`) -----------------------
+    // A `$`-named array holds E4-dyn runtime string handles: it reuses the E5
+    // aggregate substrate with a `str` element type (`array<str>`) rather than
+    // the numeric `array<f64>`.  The handle register is sanitised ($-free) so it
+    // is a portable IIR name and coexists with a numeric array of the same stem.
+
+    /// `DIM A$(2)` allocates an `array<str>` of 3 handles (0-based inclusive),
+    /// under the `$`-free handle register `__basic_strarr_A`.
+    #[test]
+    fn compiles_string_dim_to_alloc_array_str() {
+        let m = compile("10 DIM A$(2)\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let alloc = body.iter().find(|i| i.op == "alloc_array")
+            .expect("DIM A$(n) produces one alloc_array");
+        assert_eq!(alloc.type_hint, "array<str>",
+            "a $-named array holds E4-dyn string handles");
+        assert_eq!(alloc.dest.as_deref(), Some("__basic_strarr_A"),
+            "the string-array handle register is $-free");
+        let len_reg = var_name(alloc.srcs.first()).expect("alloc_array len reg");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.dest.as_deref() == Some(len_reg)
+                && matches!(i.srcs.first(), Some(Operand::Int(3)))),
+            "DIM A$(2) allocates 3 elements (A$(0)..A$(2))");
+    }
+
+    /// `LET A$(0) = "HI"` stores a runtime `str` handle into the element via a
+    /// `str`-typed `array_set` (handle, flat index, value).
+    #[test]
+    fn compiles_string_array_assignment_to_array_set_str() {
+        let m = compile("10 DIM A$(2)\n20 LET A$(0) = \"HI\"\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let set = body.iter().find(|i| i.op == "array_set")
+            .expect("LET A$(i)=s produces an array_set");
+        assert_eq!(set.type_hint, "str");
+        assert_eq!(var_name(set.srcs.first()), Some("__basic_strarr_A"));
+        assert_eq!(set.srcs.len(), 3, "array_set takes handle, index, value");
+        let val_reg = var_name(set.srcs.get(2)).expect("value reg");
+        assert!(body.iter().any(|i|
+            i.op == "str_const" && i.dest.as_deref() == Some(val_reg)),
+            "the stored value is a runtime str handle from str_const");
+    }
+
+    /// `PRINT A$(1)` reads the element with a `str`-typed `array_get` and prints
+    /// it through the shared E4 `print_str` op.
+    #[test]
+    fn compiles_string_array_read_to_array_get_str() {
+        let m = compile("10 DIM A$(2)\n20 LET A$(1) = \"HI\"\n30 PRINT A$(1)\n40 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        let get = body.iter().find(|i| i.op == "array_get"
+            && var_name(i.srcs.first()) == Some("__basic_strarr_A"))
+            .expect("reading A$(i) produces an array_get on the string handle");
+        assert_eq!(get.type_hint, "str");
+        let dest = get.dest.as_deref().expect("array_get writes a dest");
+        assert!(body.iter().any(|i|
+            i.op == "print_str" && var_name(i.srcs.first()) == Some(dest)),
+            "PRINT A$(i) feeds the array_get result into print_str");
+    }
+
+    /// A string-array element can feed `+` concatenation — proving the read is a
+    /// genuine runtime string handle (two `str` array_gets → one `str_concat`),
+    /// not a folded literal.
+    #[test]
+    fn string_array_element_feeds_concat() {
+        let m = compile(
+            "10 DIM A$(2)\n20 LET A$(0)=\"O\"\n30 LET A$(1)=\"K\"\n\
+             40 LET B$ = A$(0) + A$(1)\n50 PRINT B$\n60 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let gets = body.iter()
+            .filter(|i| i.op == "array_get" && i.type_hint == "str").count();
+        assert!(gets >= 2, "A$(0)+A$(1) reads two string elements, got {gets}");
+        assert!(body.iter().any(|i| i.op == "str_concat"),
+            "the two element reads feed a str_concat");
+    }
+
+    /// Reading a string array in a numeric expression is a clean type error, not
+    /// a miscompile into an `f64` array_get.
+    #[test]
+    fn string_array_in_numeric_context_is_unsupported() {
+        let err = compile("10 DIM A$(2)\n20 LET X = A$(0)\n30 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) =>
+                assert!(msg.contains("numeric expression"),
+                    "expected a numeric-context error, got {msg:?}"),
+            other => panic!("expected Unsupported(numeric…), got {other:?}"),
+        }
+    }
+
+    /// A numeric RHS assigned to a string-array element is a clean type error
+    /// (no silent coercion).
+    #[test]
+    fn numeric_rhs_to_string_array_is_unsupported() {
+        let err = compile("10 DIM A$(2)\n20 LET A$(0) = 5\n30 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) =>
+                assert!(msg.contains("string RHS"),
+                    "expected a string-RHS error, got {msg:?}"),
+            other => panic!("expected Unsupported(string RHS…), got {other:?}"),
+        }
+    }
+
+    /// A numeric array `A` and a string array `A$` coexist as distinct
+    /// variables with distinct, non-colliding handle registers.
+    #[test]
+    fn numeric_and_string_arrays_coexist() {
+        let m = compile(
+            "10 DIM A(2)\n20 DIM A$(2)\n30 LET A(0)=7\n40 LET A$(0)=\"HI\"\n50 END\n")
+            .expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "alloc_array"
+            && i.dest.as_deref() == Some("A") && i.type_hint == "array<f64>"),
+            "numeric array A keeps its bare f64 handle");
+        assert!(body.iter().any(|i| i.op == "alloc_array"
+            && i.dest.as_deref() == Some("__basic_strarr_A") && i.type_hint == "array<str>"),
+            "string array A$ gets a distinct str handle");
     }
 
     /// Storing into an array that was never `DIM`med is a clean error, not a

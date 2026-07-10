@@ -1906,6 +1906,37 @@ fn f64_array_uses_double_element() {
     assert!(ll.contains("load double"), "array_get loads a double");
 }
 
+/// E4d-BA-arr: a folded `str` literal stored into an `array<str>` element must be
+/// converted from its global-pointer form to an i64 handle with `ptrtoint` before
+/// the `store i64` — otherwise the emitted IR is `store i64 @__twig_str_N` (a `ptr`
+/// constant in an i64 slot, which clang rejects). The str element is an i64 handle.
+#[test]
+fn str_array_set_ptrtoints_the_literal_handle() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<str>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("s".into())], "str"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "str"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("m".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("getelementptr i64, ptr"), "str element GEP is i64; got:\n{ll}");
+    assert!(ll.contains("ptrtoint ptr @__twig_str"),
+        "array_set must ptrtoint the str literal to an i64 handle; got:\n{ll}");
+    assert!(!ll.contains("store i64 @__twig_str"),
+        "must not store a ptr constant into an i64 slot; got:\n{ll}");
+}
+
 /// `array<T>` validates (its element type is checked, not the wrapper).
 #[test]
 fn array_type_hint_validates() {

@@ -2460,6 +2460,33 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK!"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — **string arrays** (LANG-FULL E4-dyn, work item
+    // E4d-BA-arr).  `DIM A$(2)` allocates an `array<str>`: the E5 length-
+    // prefixed aggregate substrate carrying an E4-dyn runtime string *handle*
+    // per element instead of an `f64`.  `A$(0)`/`A$(1)` are assigned string
+    // literals through a `str`-typed `array_set`, and `PRINT A$(0) + A$(1)`
+    // reads them back through two `str`-typed `array_get`s and concatenates —
+    // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
+    // distinct and the handles survive a store→load round-trip through the
+    // aggregate.  Runs on **all seven backends**, each with its native
+    // representation of a `str` element:
+    //   • **VM/JIT** — a tagged `Value::Str` array element.
+    //   • **WASM** — a 4-byte i32 handle per element (`i32.store`/`i32.load`, the
+    //     E4d-BA-arr `wasm_array_elem` branch + folded-literal→array_set promotion).
+    //   • **LLVM** — an 8-byte i64 handle per element (`str`→`i64`); `array_set`
+    //     `ptrtoint`s a folded literal's global to the i64 handle.
+    //   • **NativeAot** — an 8-byte handle (address of the `[i64 len][bytes]` block);
+    //     `native_array_elem_size` accepts `str` as an 8-byte element on x86_64/aarch64.
+    //   • **JVM** — a `java.lang.String[]` (`anewarray` + `aaload`/`aastore`).
+    //   • **CLR** — a `System.String[]` (`newarr` + `ldelem.ref`/`stelem.ref`).
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
+               40 PRINT A$(0) + A$(1)\n50 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

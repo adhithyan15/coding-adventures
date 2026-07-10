@@ -1,5 +1,21 @@
 # Changelog — iir-to-llvm
 
+## [0.36.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `array<str>` elements)
+
+BASIC string arrays (`DIM A$(n)`) store a `str` element as an i64 handle
+(`array_elem_llvm("str")` → `llvm_type_for("str")` = `i64`, 8-byte stride). No
+new validator or element-type code was needed — `str` already maps to `i64` — but
+`lower_array_set` had a latent bug: a folded `str` literal's value is tracked as
+its `{i64 len,[N×i8]}` **global pointer** (`@__twig_str_N`), so storing it directly
+emitted `store i64 @__twig_str_N` — a `ptr` constant in an i64 slot, which clang
+rejects. Fix: `array_set` now `ptrtoint`s the literal's global to an i64 handle
+before the store (the exact mirror of the existing call-arg and `ret` guards). A
+runtime str element (branch-selected / read from another `array_get`) already
+carries an i64, so the guard is scoped to the `@__twig_str` global.
+
+Test: `str_array_set_ptrtoints_the_literal_handle` (asserts the `ptrtoint` and the
+absence of a bare `store i64 @__twig_str`).
+
 ## [0.35.0] — 2026-07-08 (LANG-FULL tail: runtime `str_eq` over non-literal operands)
 
 `lower_str_eq` gains a runtime path. It keeps the both-operands-literal compile-time

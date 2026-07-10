@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## 0.24.0 — 2026-07-10 — E4d-BA-arr: `str` array element (BASIC string arrays)
+
+`native_array_elem_size` now accepts a `str` element as an 8-byte element (BASIC
+`DIM A$(n)` → `array<str>`). A `str` value on the native backend is already an
+8-byte runtime string handle (the address of a `[i64 len][bytes]` block), stored
+and loaded as a plain word exactly like an i64, so no separate str load/store path
+is needed — twig-aot already materialises the handle into the var's slot. One-line
+element-size allowance mirroring the aarch64 backend.
+
 ## 0.23.0 — 2026-07-07 — E4-dyn: `str_concat` in V1_BUILTINS (runtime string concat)
 
 `V1_BUILTINS` gains `str_concat { n_args: 2, returns: true }` — the runtime string

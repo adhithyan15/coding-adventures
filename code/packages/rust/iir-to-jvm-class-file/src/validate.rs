@@ -302,8 +302,10 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                     // `mov`: copy a `str` value between reference slots — the string
                     //   `INPUT` temp moves into the `$`-variable's slot; a plain
                     //   reference `astore`/`aload` carries it (see `lower_mov`).
+                    // `array_get`/`array_set`: E4d-BA-arr BASIC string arrays — a `str`
+                    //   element is a `java.lang.String` in a `String[]` (aaload/aastore).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
-                        | "call_builtin" | "mov"
+                        | "call_builtin" | "mov" | "array_get" | "array_set"
                 )
             {
                 errors.push(format!(
