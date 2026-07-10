@@ -957,10 +957,51 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "each_with_object", "sum", "uniq", "first", "last", "empty?", "to_a",
     "take", "drop", "values_at",
     "flatten", "compact", "rotate", "zip",
+    "include?", "index",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
   function arrCmp(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+  // Ruby value equality (`==`) for `Array#include?` / `Array#index`.  Ruby
+  // compares by VALUE, not identity: `[[1,2]].include?([1, 2])` is `true` and
+  // `[1,2,3].index(9)` is `nil`.  Native JS `Array#includes` / `indexOf` use
+  // SameValueZero (identity for objects), so a nested Array or Symbol would
+  // wrongly miss — this mirrors the Go/Python reference (`_sir_value_eq`):
+  // scalars by `===`, Symbols by name, Arrays element-wise, Maps entry-wise.
+  // (`NaN !== NaN`, matching Ruby's `Float::NAN == Float::NAN == false`.)
+  // `seen` is a path-set of the `a`-side containers currently being compared; a
+  // cyclic array (`a = []; a << a`, which this runtime explicitly supports) would
+  // otherwise recurse forever.  Re-encountering `a` on the path means the two
+  // structures have matched identically all the way down to the back-edge, so we
+  // return `true` — exactly Ruby's recursive-`==` rule — mirroring the `seen` set
+  // the display path (`formatSeen`) carries for the same cyclic values.
+  function valEq(a, b, seen) {
+    if (a === b) { return true; }
+    if (a instanceof Sym && b instanceof Sym) { return a.name === b.name; }
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) { return false; }
+      if (seen === undefined) { seen = new Set(); }
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      for (let i = 0; i < a.length; i++) {
+        if (!valEq(a[i], b[i], seen)) { seen.delete(a); return false; }
+      }
+      seen.delete(a);
+      return true;
+    }
+    if (a instanceof Map && b instanceof Map) {
+      if (a.size !== b.size) { return false; }
+      if (seen === undefined) { seen = new Set(); }
+      if (seen.has(a)) { return true; }
+      seen.add(a);
+      for (const [k, v] of a) {
+        if (!b.has(k) || !valEq(b.get(k), v, seen)) { seen.delete(a); return false; }
+      }
+      seen.delete(a);
+      return true;
+    }
+    return false;
+  }
   function arrayMethod(recv, name, args) {
     // A trailing function positional is the block (`arr.map { … }`).
     const blk = args.length > 0 && typeof args[args.length - 1] === "function"
@@ -1150,6 +1191,23 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           zipped.push(row);
         }
         return zipped;
+      }
+      case "include?": {
+        // Ruby `Array#include?(x)` — VALUE equality (see `valEq`), so a nested
+        // Array/Symbol matches structurally.  Overrides the native `includes`
+        // alias (SameValueZero), matching the Go/Python reference.
+        for (const x of recv) { if (valEq(x, args[0])) { return true; } }
+        return false;
+      }
+      case "index": {
+        // Ruby `Array#index(x)` — the first index whose element `== x` (value
+        // equality), or `nil` when absent.  Native JS `indexOf` returns `-1`
+        // and uses identity; this returns `null` and matches Ruby / the Go
+        // reference.  (The block form `index { … }` is out of v0 scope.)
+        for (let i = 0; i < recv.length; i++) {
+          if (valEq(recv[i], args[0])) { return i; }
+        }
+        return null;
       }
       case "to_a": return recv;
     }
