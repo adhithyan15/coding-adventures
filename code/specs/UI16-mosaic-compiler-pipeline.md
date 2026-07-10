@@ -484,6 +484,15 @@ specific style overrides are v2, driven by the Lattice token layer.
 
 ## §9 First End-to-End Demo: Grid
 
+> **Superseded.** The `code/components/Grid/` demo described below was the
+> original v1 pipeline walkthrough but had no consumers, no package manifest,
+> and no tests — it was removed as dead code. The Grid component now lives
+> at `code/packages/mosaic/mosaic-pkg-grid/`, which supersedes this demo:
+> it composes from the UI31 `HostTable` primitive family across all seven
+> backends (React, HTML, WebComponent, Flutter, Qt, SwiftUI, XAML) instead
+> of the React-only built-in `Grid` primitive shown here. The section below
+> is kept as a historical illustration of the v1 pipeline shape.
+
 The `Grid` component in `code/components/Grid/` demonstrates the full pipeline:
 
 **Grid.mil** declares:
