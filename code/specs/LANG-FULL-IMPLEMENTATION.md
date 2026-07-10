@@ -286,17 +286,25 @@ multiple languages; close an enabler before the features that depend on it.
   checks on JVM/CLR/WasmGC). Bounds-checked from the start (OOB → trap). Full design + PR
   breakdown in **[`lang-full-e5-arrays.md`](lang-full-e5-arrays.md)**. Unlocks ALGOL arrays (AL2),
   BASIC `DIM` (BA3), Twig lists (TW3).
-- **E6 — General `call_builtin` / closures / dynamic dispatch on code-gen backends.** ⚠
-  Today the IIR-to-{wasm,jvm,clr,llvm} validators reject `call_builtin`/`type_hint="any"`,
-  which is why most of Twig only runs on the VM. Closing this is the biggest single unlock
-  for Twig (and McCarthy cons/symbols). **Architectural fork — design pass first.**
+- **E6 — General `call_builtin` / closures / dynamic dispatch on code-gen backends.**
+  The `call_builtin` allowlists + `type_hint="any"` rejection are why most of Twig
+  runs only on the VM. **Design surveyed & written — the substrate already exists:**
+  McCarthy Lisp's full cons/symbol/lambda/recursion suite runs on all 5 code-gen
+  backends via the uniform boxed `ref<any>` value + two language-agnostic
+  `iir-builtin-lowering` passes, and **Twig rides them too** — so this is a
+  *catalog-extension*, not a from-scratch fork. Full design + PR breakdown in
+  **[`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md)** (E6 layer 2).
   - **E6 layer 1 (typed module globals) — spec [`lang-full-e6-globals.md`](lang-full-e6-globals.md).**
-    The tractable, run-verifiable first slice: a typed `i64` module global a *function*
-    can read/write, on all 7 backends. `global_load`/`global_store` already work on
-    BEAM/WASM/native; the work is LLVM/JVM/CLR (the `LANG32b` rejections) + an ALGOL
-    enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
-    globals); foundation for closures. The general `any`-dispatch / closure layers
-    stack on top.
+    ✅ DONE. A typed `i64` module global a *function* can read/write, on all 7
+    backends (`global_load`/`global_store`; LLVM/JVM/CLR closed the `LANG32b`
+    rejections; ALGOL enclosing-scope frontend + matrix proof). Unblocks AL6
+    (`own`), O3 (Oct globals).
+  - **E6 layer 2 (general dynamic dispatch) — spec [`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md).**
+    ◑ STARTED. **E6d-1 ✅** — Twig `cons`/`car`/`cdr` (TW3-core) proven on the
+    code-gen backends (matrix: `(car (cons 42 0))` → 42, run-verified on WASM +
+    real dotnet CLR). Remaining: dynamic arithmetic (E6d-2), list ops (E6d-3),
+    symbols (E6d-4), records/unions (E6d-5/6, TW6), closures-on-WASM (E6d-7, TW5),
+    dynamic globals (E6d-8).
 - **E7 — Subroutine / return-stack.** ✅ COMPLETE. `GOSUB`/`RETURN` and procedure
   call/return ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
   Structured procedure call/return was already done (`call`/`ret` — ALGOL AL3,
@@ -777,7 +785,13 @@ backend immediately) come before the enabler-dependent items.
   (`lang_matrix.rs`). Added a reusable escape analysis (`free_vars::lambda_captured_globals`).
   **Limits:** a value captured by a closure, or a top-level forward reference, stays on
   the host global table (unchanged) — full mutable globals on code-gen backends need **E6**.
-- ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
+- ◑ **TW3** — list / cons ops on code-gen backends. **Cons core ✅** (E6d-1):
+  `(car (cons 42 0))` and nested `(car (cdr (cons 1 (cons 42 0))))` run on the
+  code-gen backends (WASM + real dotnet CLR verified; native/LLVM/JVM via CI) —
+  the Twig frontend's `call_builtin "cons"/"car"/"cdr"` lowers through the shared
+  `iir-builtin-lowering` heap passes to the same `ref<any>` substrate McCarthy
+  uses. List builtins (`list`/`length`/`append`/…) remain (E6d-3, needs the
+  allowlist/lowering extension). See [`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md).
 - ✅ **TW4** — typed E4 strings on code-gen backends. Direct literals,
   immutable top-level string value defines, and lexical `let`/`let*` string
   locals lower to shared `str_const`/`str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`

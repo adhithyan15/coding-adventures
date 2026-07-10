@@ -153,6 +153,36 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — **E6d-1: TW3-core dynamic `cons`/`car`/`cdr` on the code-gen backends.**
+    // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
+    // The Twig frontend emits `call_builtin "cons"/"car" [any]`; the shared
+    // `iir-builtin-lowering` passes — `lower_heap_builtins` (cons→`alloc`+`field_store`;
+    // car→`field_load[0]`) then `lower_lisp_repr_structural` (use-site boxing to the
+    // uniform `ref<any>` value) — run for EVERY language, so Twig's first genuinely
+    // dynamic value lowers to the exact heap-object family McCarthy Lisp already runs
+    // on all five code-gen backends (WASM `anyref`+`$LispyPair`, JVM `Object[]`, CLR
+    // `object[]`, LLVM tagged-i64 + `__twig_lispy_*` runtime, native).  The entry
+    // result (a boxed `42`) is unboxed to the process exit code.  The generic Vm/Jit
+    // columns run `vm-core` typed IIR, which has no `ref<any>`/`alloc`, so dynamic
+    // Twig is proven on the code-gen columns (which cross-check each other + the
+    // known result); `twig-vm` is the interpreter reference off-matrix.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cons 42 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-1: nested cons proves multi-cell pointer chasing.
+    // `(car (cdr (cons 1 (cons 42 0))))` = car(cdr(`(1 . (42 . 0))`)) =
+    // car(`(42 . 0)`) = 42 — two `cons` allocations, a `cdr` then a `car`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (cons 1 (cons 42 0))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.
