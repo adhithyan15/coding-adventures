@@ -32,9 +32,22 @@ All notable changes to `task-core` are documented here.
   the `serde` feature emits camelCase JSON. A JSON round-trip test proves the wire
   contract (camelCase field names, transparent string ids).
 
+- **The working-time engine** (`calendar` module) — the unit the CPM scheduler
+  measures in. Represents time as **instants** (integer minutes since the epoch) for
+  clean half-open interval arithmetic, and provides:
+  - `is_working_day` — calendar-aware working-day test (weekly pattern + holiday/
+    overtime exceptions).
+  - `next_working` — snap an instant forward to the next working minute.
+  - `add_working` — advance an instant by a `Duration` in working time (skipping
+    weekends/holidays/off-hours), with elapsed-duration and zero-duration handling.
+  - `working_between` — count working minutes in a half-open interval (for slack).
+  - Built on `datetime-core` weekday math; an absent calendar safely degrades to 24/7;
+    walks are bounded so a no-working-time calendar can never hang.
+
 ### Notes
 
 - Design principle: everything a scheduler derives is computed, never stored — this
-  release is the *input* model; the CPM scheduler and reducer land next.
+  release is the *input* model plus the working-time engine; the CPM scheduler
+  (forward/backward pass) and the reducer land next.
 - Reuses `directed-graph` (declared; consumed by the forthcoming scheduler) and
   `datetime-core` (date arithmetic) rather than reimplementing them.
