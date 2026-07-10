@@ -1659,7 +1659,8 @@ func _sir_string_responds(name string) bool {
 		"strip", "lstrip", "rstrip", "chomp", "empty?", "include?",
 		"start_with?", "end_with?", "split", "chars", "bytes", "index",
 		"replace", "sub", "gsub", "to_i", "to_f", "to_sym",
-		"ljust", "rjust", "center", "swapcase":
+		"ljust", "rjust", "center", "swapcase",
+		"tr", "count", "delete", "squeeze":
 		return true
 	}
 	return false
@@ -2747,6 +2748,109 @@ func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
 			}
 		}
 		return string(r), true
+	case "tr":
+		// Ruby String#tr(from, to): position-wise rune translation.  A shorter
+		// `to` repeats its last rune; an empty `to` deletes matching runes; a
+		// repeated rune in `from` keeps the last mapping.  Literal only — the
+		// range (`"a-z"`) and negation (`"^abc"`) forms are a follow-up, matching
+		// the literal-only sub/gsub precedent here.
+		if len(args) < 2 {
+			return recv, true
+		}
+		from, fok := args[0].(string)
+		to, tok := args[1].(string)
+		if !fok || !tok {
+			return recv, true
+		}
+		toR := []rune(to)
+		table := make(map[rune]rune)
+		del := make(map[rune]bool)
+		for i, c := range []rune(from) {
+			if len(toR) == 0 {
+				del[c] = true
+				delete(table, c)
+			} else if i < len(toR) {
+				table[c] = toR[i]
+				delete(del, c)
+			} else {
+				table[c] = toR[len(toR)-1]
+				delete(del, c)
+			}
+		}
+		out := make([]rune, 0, len(recv))
+		for _, c := range recv {
+			if del[c] {
+				continue
+			}
+			if r, ok := table[c]; ok {
+				out = append(out, r)
+			} else {
+				out = append(out, c)
+			}
+		}
+		return string(out), true
+	case "count", "delete", "squeeze":
+		// Char-set methods.  Each `set` argument is treated LITERALLY — the runes
+		// it contains (ranges/negation are a follow-up).  `count` tallies runes of
+		// `recv` in the set; `delete` removes them; `squeeze` collapses consecutive
+		// runs (of set runes, or of ALL runes when no set is given).  Multiple set
+		// args intersect (Ruby's rule).
+		sets := make([]map[rune]bool, 0, len(args))
+		for _, a := range args {
+			if s, ok := a.(string); ok {
+				m := make(map[rune]bool)
+				for _, c := range s {
+					m[c] = true
+				}
+				sets = append(sets, m)
+			}
+		}
+		inAll := func(c rune) bool {
+			if len(sets) == 0 {
+				return false
+			}
+			for _, m := range sets {
+				if !m[c] {
+					return false
+				}
+			}
+			return true
+		}
+		if name == "squeeze" && len(sets) == 0 {
+			out := make([]rune, 0, len(recv))
+			for _, c := range recv {
+				if len(out) == 0 || out[len(out)-1] != c {
+					out = append(out, c)
+				}
+			}
+			return string(out), true
+		}
+		if name == "count" {
+			n := int64(0)
+			for _, c := range recv {
+				if inAll(c) {
+					n++
+				}
+			}
+			return n, true
+		}
+		if name == "delete" {
+			out := make([]rune, 0, len(recv))
+			for _, c := range recv {
+				if !inAll(c) {
+					out = append(out, c)
+				}
+			}
+			return string(out), true
+		}
+		out := make([]rune, 0, len(recv))
+		for _, c := range recv {
+			if len(out) > 0 && out[len(out)-1] == c && inAll(c) {
+				continue
+			}
+			out = append(out, c)
+		}
+		return string(out), true
 	}
 	return nil, false
 }
