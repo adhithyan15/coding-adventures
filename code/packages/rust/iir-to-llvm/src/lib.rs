@@ -2626,6 +2626,20 @@ fn lower_array_set(
     let handle = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
     let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
     let val = resolve_operand(instr.srcs.get(2), &state.env, elem_ty, state.fn_name)?;
+    // E4d-BA-arr: a folded `str` literal stored into an `array<str>` element is
+    // tracked as its `{i64 len,[N×i8]}` GLOBAL POINTER (`@__twig_str_N`), so
+    // storing it directly would emit `store i64 @global` — a `ptr` constant in an
+    // i64 slot (invalid IR). The literal's address IS a valid handle, so `ptrtoint`
+    // it to i64 first — the exact mirror of the call-arg (line ~3209) and `ret`
+    // guards. A runtime str element (branch-selected / read from another array_get)
+    // already carries an i64, so the guard is scoped to the `@__twig_str` global.
+    let val = if elem_ty == "i64" && val.starts_with("@__twig_str") {
+        let h = state.fresh("aeh");
+        out.push_str(&format!("  {h} = ptrtoint ptr {val} to i64\n"));
+        h
+    } else {
+        val
+    };
     emit_bounds_check(&handle, &idx, state, out);
     let ep = state.fresh("aep");
     out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
