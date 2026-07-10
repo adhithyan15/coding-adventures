@@ -2331,6 +2331,47 @@ fn array_take_drop_values_at_methods() {
     }
 }
 
+// v0.21.0 non-block Array catch-up: `flatten`, `compact`, `rotate`, `zip` — the
+// last of the reference (Go/Rust/Python/TS) non-block surface the JS backend was
+// missing.  All route through the explicit `arrayMethod` switch (never `recv[name]`
+// and never the depth-1 native `flat`).  Proven end-to-end under Node.
+#[test]
+fn array_flatten_compact_rotate_zip_methods() {
+    let nil = || Expr::NilLit { span: sp() };
+    let stmts = vec![
+        // flatten fully flattens nested Arrays (not the depth-1 native `flat`)
+        print(method(
+            seq(vec![int(1), seq(vec![int(2), seq(vec![int(3)])])]),
+            "flatten",
+            vec![],
+        )), // [1, 2, 3]
+        // compact drops every nil
+        print(method(
+            seq(vec![int(1), nil(), int(2), nil()]),
+            "compact",
+            vec![],
+        )), // [1, 2]
+        // rotate: default 1, explicit 2, negative rotates right
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "rotate", vec![])), // [2, 3, 4, 1]
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "rotate", vec![int(2)])), // [3, 4, 1, 2]
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "rotate", vec![int(-1)])), // [4, 1, 2, 3]
+        // zip pads a shorter operand with nil, keeps receiver length
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "zip",
+            vec![seq(vec![int(4), int(5)])],
+        )), // [[1, 4], [2, 5], [3, nil]]
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "arrflattenrotate") {
+        assert_eq!(
+            stdout,
+            "[1, 2, 3]\n[1, 2]\n[2, 3, 4, 1]\n[3, 4, 1, 2]\n[4, 1, 2, 3]\n[[1, 4], [2, 5], [3, nil]]"
+        );
+    }
+}
+
 // ── Ruby Hash method catalog (hand-implemented, explicit dispatch) ──
 //
 // Exercises the `hashMethod` catalog end-to-end under Node: `keys`/`values`/
