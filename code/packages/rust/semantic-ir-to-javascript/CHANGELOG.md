@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.23.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Adds four non-block Ruby String methods to the inlined runtime's `stringMethod`
+switch and the `STRING_METHODS` `respond_to?` set, iterating by code point
+(`for..of` / `[...str]`) so a multibyte receiver is never split, mirroring the
+Python/Go/Rust reference:
+
+- `tr(from, to)` — position-wise code-point translation; a shorter `to` repeats
+  its last code point, an empty `to` deletes matching code points, and a
+  repeated code point in `from` keeps the last mapping.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies receiver code points in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set code points, or of *all* when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the range (`"a-z"`)
+and negation (`"^abc"`) forms are a follow-up, matching the literal-only
+`sub`/`gsub` precedent. Exec-proven end-to-end under Node. Fourth backend of the
+String char-set sweep (Python, Go, Rust already landed).
+
 ## 0.22.0 — Ruby value-equality for `Array#include?` / `Array#index`
 
 Fixes two native-alias semantic divergences on Array receivers, routed through
