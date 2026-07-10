@@ -2372,6 +2372,31 @@ fn array_flatten_compact_rotate_zip_methods() {
     }
 }
 
+// v0.22.0 native-alias divergence fixes: `include?` and `index` now use Ruby
+// VALUE equality (`valEq`) via the explicit `arrayMethod` switch, not native
+// `Array#includes`/`indexOf` (which use identity and return `-1`).  So a nested
+// Array matches structurally, and a missing element yields `nil` (not `-1`).
+// `index` was previously ABSENT for arrays (NoMethodError).  Booleans render
+// `#t`/`#f` here because the module's source language is non-Ruby ("handbuilt").
+#[test]
+fn array_include_and_index_value_equality() {
+    let pair = |a, b| seq(vec![int(a), int(b)]);
+    let stmts = vec![
+        print(method(seq(vec![int(10), int(20), int(30)]), "include?", vec![int(20)])), // #t
+        print(method(seq(vec![int(10), int(20), int(30)]), "include?", vec![int(99)])), // #f
+        // structural: a nested Array matches by value, not identity
+        print(method(seq(vec![pair(1, 2), pair(3, 4)]), "include?", vec![pair(1, 2)])), // #t
+        print(method(seq(vec![int(10), int(20), int(30)]), "index", vec![int(20)])), // 1
+        print(method(seq(vec![int(10), int(20), int(30)]), "index", vec![int(99)])), // nil
+        print(method(seq(vec![pair(1, 2), pair(3, 4)]), "index", vec![pair(3, 4)])), // 1
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "arrincludeindex") {
+        assert_eq!(stdout, "#t\n#f\n#t\n1\nnil\n1");
+    }
+}
+
 // ── Ruby Hash method catalog (hand-implemented, explicit dispatch) ──
 //
 // Exercises the `hashMethod` catalog end-to-end under Node: `keys`/`values`/

@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.22.0 — Ruby value-equality for `Array#include?` / `Array#index`
+
+Fixes two native-alias semantic divergences on Array receivers, routed through
+the explicit `arrayMethod` switch (never `recv[name]`) with a new `valEq` helper
+that mirrors the Go/Python reference `_sir_value_eq` (scalars by `===`, Symbols
+by name, Arrays element-wise, Maps entry-wise):
+
+- **`index`** was previously **absent** for arrays (`index` ≠ native `indexOf`,
+  not aliased, not on the allowlist) → `[1, 2, 3].index(2)` raised NoMethodError.
+  It now returns the first index whose element `== x` by **value**, or **`nil`**
+  when absent (native `indexOf` returns `-1` and uses identity).
+- **`include?`** previously used native `Array#includes` (SameValueZero /
+  identity), so a nested Array or Symbol wrongly missed. It now compares by
+  **value**, so `[[1, 2]].include?([1, 2])` is `true`, matching Ruby and the
+  sibling backends. (String `include?` is unaffected — strings resolve via
+  `stringMethod`/the native alias before the Array path.)
+
+Exec-proven end-to-end under Node.
+
+> Deferred (display-frontier entanglement): `Array#join`'s default separator
+> (Ruby `""` vs native JS `","`) and element `to_s` rendering intersect the
+> in-progress source-language display-convention work, so they are left to that
+> effort rather than fixed here.
+
 ## 0.21.0 — non-block Array catch-up: `flatten` / `compact` / `rotate` / `zip`
 
 Closes the JS backend's remaining gap on the reference (Go/Rust/Python/TS)
