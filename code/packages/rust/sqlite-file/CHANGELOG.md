@@ -1,5 +1,36 @@
 # Changelog — sqlite-file
 
+## 0.5.0 - Unreleased
+
+Phase E4: **`sqlite_schema` lookup** and the public **`read_table(bytes, name)`**
+API. Callers no longer need to hand-walk page 1 to find a table root page before
+reading rows.
+
+### Added
+
+- New `schema` module:
+  - `read_schema(bytes)` decodes the five-column `sqlite_schema` rows into
+    `SchemaEntry` values (`type`, `name`, `tbl_name`, `rootpage`, `sql`).
+  - `table_root_page(bytes, name)` resolves a real table name to its root b-tree
+    page and reports `SqliteError::NoSuchTable` for missing tables or views.
+  - `read_table(bytes, name)` opens the pager, resolves the root page, walks the
+    table b-tree, and returns rows as `(rowid, Vec<SqlValue>)` in rowid order.
+- Root-level re-exports for the E4 API, so downstream Engram code can call
+  `sqlite_file::read_table(...)` directly.
+
+### Verified
+
+- New `rusqlite` cross-checks confirm schema roots match SQLite's own
+  `sqlite_schema` view and that `read_table` decodes named-table rows including
+  INTEGER PRIMARY KEY aliases, REAL, BLOB, NULL, and an overflow-chain TEXT row.
+- Full `cargo test --manifest-path code/packages/rust/sqlite-file/Cargo.toml`
+  passes: unit tests, cross-check tests, and doc tests.
+
+### Next
+
+- Phase E5: cut `engram-anki-package`'s V11 collection reader over from
+  `rusqlite` to `sqlite-file::read_table`.
+
 ## 0.4.0 — Unreleased
 
 Phase E3b: **overflow-chain reassembly** and the **full row round-trip gate**.

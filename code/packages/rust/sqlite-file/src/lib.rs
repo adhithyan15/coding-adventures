@@ -31,7 +31,8 @@
 //! 4. **`btree`** — walk a table b-tree (leaf + interior pages) → `(rowid, record
 //!    bytes)`, reassembling overflow chains for records too big for one page.
 //!    *(done)*
-//! 5. `sqlite_schema` + `read_table(bytes, name)` — the public read API. *(next)*
+//! 5. **`sqlite_schema` + `read_table(bytes, name)`** - the public read API.
+//!    *(done)*
 //!
 //! Each layer is cross-checked against the real `rusqlite`/C-SQLite as an
 //! independent oracle (a dev-dependency, never a runtime one) before the Anki
@@ -57,9 +58,11 @@ pub mod error;
 pub mod header;
 pub mod pager;
 pub mod record;
+pub mod schema;
 pub mod varint;
 
 pub use error::SqliteError;
 pub use header::{Header, TextEncoding};
 pub use pager::Pager;
 pub use record::SqlValue;
+pub use schema::{read_schema, read_table, table_root_page, SchemaEntry};
