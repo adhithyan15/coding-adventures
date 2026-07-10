@@ -103,7 +103,13 @@ pub fn schedule(
             .is_some_and(|t| t.kind != TaskKind::Summary && t.schedule.is_some())
     };
     for dep in &project.dependencies {
-        if is_schedulable(&dep.predecessor) && is_schedulable(&dep.successor) {
+        // A self-dependency (predecessor == successor) is meaningless and is skipped;
+        // `directed_graph` rejects self-loops anyway, and admitting it into the
+        // adjacency maps below would make a task depend on its own unscheduled dates.
+        if dep.predecessor != dep.successor
+            && is_schedulable(&dep.predecessor)
+            && is_schedulable(&dep.successor)
+        {
             let _ = graph.add_edge(dep.predecessor.as_str(), dep.successor.as_str());
         }
     }
@@ -121,7 +127,10 @@ pub fn schedule(
     let mut preds: BTreeMap<TaskId, Vec<(TaskId, DependencyKind, Duration)>> = BTreeMap::new();
     let mut succs: BTreeMap<TaskId, Vec<(TaskId, DependencyKind, Duration)>> = BTreeMap::new();
     for dep in &project.dependencies {
-        if is_schedulable(&dep.predecessor) && is_schedulable(&dep.successor) {
+        if dep.predecessor != dep.successor
+            && is_schedulable(&dep.predecessor)
+            && is_schedulable(&dep.successor)
+        {
             record_edge(&mut preds, &dep.successor, dep, dep.predecessor.clone());
             record_edge(&mut succs, &dep.predecessor, dep, dep.successor.clone());
         }
@@ -146,8 +155,11 @@ pub fn schedule(
 
         // Predecessor constraints per link type.
         for (pred, kind, lag) in preds.get(&id).into_iter().flatten() {
-            let ps = es[pred];
-            let pf = ef[pred];
+            // Defensive: predecessors precede successors in topological order, so this
+            // is always populated — but never index-panic on an unexpected input.
+            let (Some(&ps), Some(&pf)) = (es.get(pred), ef.get(pred)) else {
+                continue;
+            };
             let cand = match kind {
                 DependencyKind::FinishToStart => lag_forward(project, cal, pf, *lag),
                 DependencyKind::StartToStart => lag_forward(project, cal, ps, *lag),
@@ -254,8 +266,10 @@ pub fn schedule(
 
         let mut late_finish = project_finish_inst.unwrap_or_else(|| ef[&id]);
         for (succ, kind, lag) in succs.get(&id).into_iter().flatten() {
-            let sls = ls[succ];
-            let slf = lf[succ];
+            // Defensive: successors are scheduled first in the reverse walk.
+            let (Some(&sls), Some(&slf)) = (ls.get(succ), lf.get(succ)) else {
+                continue;
+            };
             let cand = match kind {
                 DependencyKind::FinishToStart => lag_backward(project, cal, sls, *lag),
                 DependencyKind::StartToStart => {
@@ -314,7 +328,7 @@ pub fn schedule(
         dates,
         conflicts,
         project_start,
-        project_finish: project_finish_inst.map(|f| finish_date(f - 1, f)),
+        project_finish: project_finish_inst.map(|f| finish_date(f.saturating_sub(1), f)),
     })
 }
 
@@ -569,6 +583,21 @@ mod tests {
             schedule(&p, day(2026, 7, 13)),
             Err(SchedulingError::Cycle(_))
         ));
+    }
+
+    #[test]
+    fn self_dependency_does_not_panic() {
+        // A task that depends on itself (from hostile/broken input) must not crash the
+        // scheduler; the meaningless self-link is ignored and the task schedules.
+        let p = project_with(
+            vec![scheduled_task("a", "A", 1)],
+            vec![link("l1", "a", "a", DependencyKind::FinishToStart)],
+        );
+        let r = schedule(&p, day(2026, 7, 13)).unwrap();
+        assert_eq!(
+            r.dates[&TaskId::from_raw("a")].early_start,
+            day(2026, 7, 13)
+        );
     }
 
     #[test]
