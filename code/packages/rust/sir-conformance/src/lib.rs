@@ -70,6 +70,7 @@ pub enum Target {
     Go,
     Rust,
     C,
+    Ruby,
 }
 
 impl Target {
@@ -81,6 +82,7 @@ impl Target {
             Target::Go,
             Target::Rust,
             Target::C,
+            Target::Ruby,
         ]
     }
 
@@ -92,6 +94,7 @@ impl Target {
             Target::Go => "go",
             Target::Rust => "rust",
             Target::C => "c",
+            Target::Ruby => "ruby",
         }
     }
 
@@ -105,6 +108,7 @@ impl Target {
             Target::Go => "go",
             Target::Rust => "rustc",
             Target::C => "cc",
+            Target::Ruby => "ruby",
         }
     }
 
@@ -200,6 +204,7 @@ pub fn run_source(name: &str, source: &str, target: Target) -> RunOutcome {
         Target::Go => run_go(name, &module),
         Target::Rust => run_rust(name, &module),
         Target::C => run_c(name, &module),
+        Target::Ruby => run_ruby(name, &module),
     }
 }
 
@@ -418,6 +423,38 @@ fn run_c(name: &str, module: &Module) -> RunOutcome {
             RunOutcome::Skipped(format!("C compiler unavailable: {e}"))
         }
     }
+}
+
+// ── Ruby ────────────────────────────────────────────────────────────────────
+//
+// The Ruby backend emits a self-contained `.rb`; we run it with `ruby`. As with
+// the C backend, a program whose feature set the *v0* Ruby backend does not yet
+// accept is a *skip* (a declared gap), not a failure — that `(program, Ruby)`
+// cell is skipped until the feature's batch lands.
+
+fn run_ruby(name: &str, module: &Module) -> RunOutcome {
+    let artifact = match semantic_ir_to_ruby::compile(module) {
+        Ok(a) => a,
+        Err(e)
+            if matches!(
+                e.kind,
+                BackendErrorKind::UnsupportedFeature | BackendErrorKind::UnsupportedIntrinsic
+            ) =>
+        {
+            return RunOutcome::Skipped(format!(
+                "ruby backend (v0) does not yet accept: {}",
+                e.message
+            ))
+        }
+        Err(e) => return RunOutcome::Failed(format!("ruby emit failed: {e:?}")),
+    };
+    let path = temp_path(name, Target::Ruby, ".rb");
+    if fs::write(&path, &artifact.source).is_err() {
+        return RunOutcome::Failed("could not write temp .rb".into());
+    }
+    let out = Command::new("ruby").arg(&path).output();
+    let _ = fs::remove_file(&path);
+    finish(out, &artifact.source, "ruby")
 }
 
 /// Turn a process result into a [`RunOutcome`]: non-zero exit is a failure

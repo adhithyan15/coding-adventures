@@ -843,6 +843,7 @@ members = [
     "semantic-ir-to-python",
     "semantic-ir-to-go",
     "semantic-ir-to-c",
+    "semantic-ir-to-ruby",
     "hdl-ir",
     "gate-netlist-format",
     "synthesis",

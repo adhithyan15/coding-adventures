@@ -1,0 +1,59 @@
+# semantic-ir-to-ruby
+
+Seventh backend for the narrow-waist Semantic IR.  Lowers
+[semantic-ir](../semantic-ir/) modules into **self-contained** Ruby source
+code — every emitted `.rb` file carries a small inlined runtime, so
+`ruby <file>.rb` runs it with no gems.
+
+Implements [SIR25](../../../specs/SIR25-semantic-ir-to-ruby.md).
+
+Ruby was previously only a *frontend* ([ruby-to-semantic-ir](../ruby-to-semantic-ir/));
+this crate adds the matching **backend**, so SIR can now *emit* Ruby — enabling
+Ruby↔SIR round-trips, Twig/Python/JavaScript→Ruby, and the motivating
+**C→SIR→Ruby** path (where C's sized-integer / wrapping semantics render
+faithfully via the later [`Convert`](../../../specs/SIR26-integer-conversions.md)
+node).
+
+## Public API
+
+```rust
+use semantic_ir_to_ruby::{compile, RubyBackend};
+use semantic_ir::Backend;
+
+let artifact = compile(&sir_module)?;            // convenience
+let artifact = RubyBackend::new().compile(&sir_module)?;  // via the trait
+```
+
+## Why Ruby is the simplest target in the family
+
+Ruby's semantics already match the SIR's:
+
+- **Truthiness matches exactly** — only `nil` and `false` are falsy, precisely
+  the SIR/Lisp convention, so a condition is a native `if` with no coercion.
+- **Everything is an expression** — `if`/`begin…end` yield values and a method
+  returns its last expression, so a SIR `Block`/`If` renders **directly** with
+  no IIFE or statement-hoisting (unlike the Go/C backends).
+- **Native values** — arbitrary-precision `Integer`, `Float`,
+  `true`/`false`/`nil`, `String`, `Symbol`, and `Proc`/lambda closures are all
+  built in.  Only a cons-`Pair` needs a shim (`SirPair = Struct.new(:car, :cdr)`).
+
+So the emitter is thin and the inlined runtime is tiny (a `Pair`, a global
+store, a display path, equality, and a builtin-as-value dispatcher).
+
+## Capability declaration (v0)
+
+Accepts the SIR-v0 feature set: `Closures`, `Pairs`, `Symbols`, `Strings`,
+`DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
+Rejects `TailCalls`, `Intrinsics`, and every later feature (SIR16 sequences /
+maps / loops, params, the `Convert` node, collection methods, exceptions, OOP)
+until its cascade batch lands — each a clean, source-positioned
+`UnsupportedFeature`.
+
+## Verification
+
+- `cargo test -p semantic-ir-to-ruby` — per-node emit shape, identifier
+  sanitisation, string-escaping safety, determinism, and end-to-end runs
+  (skipped when no `ruby` is on `PATH`).
+- The cross-backend proof is [`sir-conformance`](../sir-conformance/): a
+  `Target::Ruby` arm runs the emitted Ruby and asserts byte-identical stdout
+  versus the reference oracle for every corpus program the backend accepts.
