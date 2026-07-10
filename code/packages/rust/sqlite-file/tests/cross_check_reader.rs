@@ -10,11 +10,12 @@
 //!     real SQLite file matches the format constants the reader is built to
 //!     assume (page size, text encoding, schema format). This is what pins the
 //!     fixtures every later phase parses.
-//!   * **with the b-tree walk (Phase E3):** locate each row's record bytes in
-//!     the file and assert `record::decode` yields the same values `rusqlite`
-//!     returns over SQL — the full round-trip gate. Staged below as an
-//!     `#[ignore]`d placeholder so the intent is visible and testable the moment
-//!     the walk lands.
+//!   * **with the b-tree walk (Phase E3a):** walk the real `sqlite_schema`
+//!     b-tree and match every object's `(name, rootpage)` against SQLite.
+//!   * **with overflow chains (Phase E3b):** walk a real user table — including a
+//!     row whose TEXT is far larger than one page — and assert every decoded
+//!     column equals what `rusqlite` returns over SQL. This is the full
+//!     round-trip gate, and it exercises overflow-chain reassembly end to end.
 
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -215,18 +216,89 @@ fn sqlite_schema_walk_matches_the_oracle() {
     assert!(!ours.is_empty(), "expected some schema objects");
 }
 
-/// The full round-trip gate: decode every row straight out of the file bytes
-/// and confirm it equals what SQLite reports over SQL. It needs the table
-/// b-tree walk to locate record bytes, which lands in Phase E3 — this staged
-/// placeholder documents the gate and turns green the moment `read_table`
-/// exists.
+/// The full round-trip gate (Phase E3b): decode every row of a real table
+/// straight out of the file bytes and confirm it equals what SQLite reports over
+/// SQL — *including a row whose TEXT is far too large for one page*, which forces
+/// the reader through the overflow-chain reassembly path.
+///
+/// To read table `t` we must first find its root page: walk `sqlite_schema`
+/// (page 1), find the `('table', 't')` row, take its `rootpage` (column 3), then
+/// `walk_table` that page and decode each record. Because `id` is declared
+/// `INTEGER PRIMARY KEY`, it is an alias for the rowid and stored as `NULL` in the
+/// record itself — so the id we compare is the walk's `rowid`, and column 1 is the
+/// `body` TEXT.
 #[test]
-#[ignore = "activates in Phase E3 once the b-tree walk can locate row records"]
 fn rows_round_trip_through_our_reader() {
-    let _db = build_sqlite_db(&[
-        "CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)",
-        "INSERT INTO t VALUES (1, 'Ada'), (2, 'Grace')",
-    ]);
-    // TODO(E3): let rows = sqlite_file::read_table(&_db, "t").unwrap();
-    //           assert_eq!(rows, [(1, [Int(1), Text("Ada")]), (2, [Int(2), Text("Grace")])]);
+    // ~6.5 KB of text — larger than the default 4 KiB page, so this row cannot
+    // fit inline and must spill into an overflow chain.
+    let big = "Ada Lovelace ".repeat(500);
+    assert!(big.len() > 5000, "the large row must exceed one page");
+    let create = "CREATE TABLE t (id INTEGER PRIMARY KEY, body TEXT)";
+    let ins1 = "INSERT INTO t VALUES (1, 'short one')";
+    let ins2 = format!("INSERT INTO t VALUES (2, '{big}')");
+    let ins3 = "INSERT INTO t VALUES (3, 'short three')";
+    let db = build_sqlite_db(&[create, ins1, &ins2, ins3]);
+
+    // --- Our reader: sqlite_schema → rootpage of `t` → walk + decode.
+    let (header, pager) = sqlite_file::Pager::open(&db).unwrap();
+    let schema = sqlite_file::btree::walk_table(&pager, &header, 1).unwrap();
+    let mut root: Option<u32> = None;
+    for (_rowid, record) in &schema {
+        let cols = sqlite_file::record::decode(record).expect("schema row decodes");
+        let is_table = matches!(&cols[0], sqlite_file::SqlValue::Text(s) if s == "table");
+        let is_t = matches!(&cols[1], sqlite_file::SqlValue::Text(s) if s == "t");
+        if is_table && is_t {
+            root = match &cols[3] {
+                sqlite_file::SqlValue::Int(n) => Some(*n as u32),
+                other => panic!("rootpage should be INTEGER, got {other:?}"),
+            };
+        }
+    }
+    let root = root.expect("table t must appear in sqlite_schema");
+
+    let rows = sqlite_file::btree::walk_table(&pager, &header, root).unwrap();
+    let mut ours: Vec<(i64, String)> = rows
+        .iter()
+        .map(|(rowid, record)| {
+            let cols = sqlite_file::record::decode(record).expect("row decodes");
+            // col 0 is NULL (the INTEGER PRIMARY KEY alias); col 1 is the body.
+            let body = match &cols[1] {
+                sqlite_file::SqlValue::Text(s) => s.clone(),
+                other => panic!("body should be TEXT, got {other:?}"),
+            };
+            (*rowid, body)
+        })
+        .collect();
+    ours.sort();
+
+    // --- Oracle: the same rows straight out of bundled-C SQLite over SQL.
+    static COUNTER3: AtomicU64 = AtomicU64::new(2_000_000);
+    let unique = COUNTER3.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!(
+        "sqlite_file_rows_{}_{}",
+        std::process::id(),
+        unique
+    ));
+    std::fs::create_dir(&dir).unwrap();
+    let path = dir.join("oracle.db");
+    std::fs::write(&path, &db).unwrap();
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let mut theirs: Vec<(i64, String)> = conn
+        .prepare("SELECT id, body FROM t")
+        .unwrap()
+        .query_map([], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, String>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    theirs.sort();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    // The overflow row and the two inline rows must all match byte-for-byte.
+    assert_eq!(ours, theirs, "every row must round-trip through our reader");
+    assert!(
+        ours.iter().any(|(_, body)| body.len() > 5000),
+        "the overflow row must have been reassembled in full"
+    );
 }
