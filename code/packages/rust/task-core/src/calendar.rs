@@ -127,20 +127,20 @@ pub fn add_working(
     dur: Duration,
 ) -> Instant {
     if dur.elapsed {
-        return start + dur.working_minutes;
+        return start.saturating_add(dur.working_minutes);
     }
     if dur.working_minutes <= 0 {
         return start;
     }
     let Some(c) = resolve_calendar(project, cal) else {
-        return start + dur.working_minutes; // 24/7
+        return start.saturating_add(dur.working_minutes); // 24/7
     };
 
     let mut remaining = dur.working_minutes;
     // Snap into working time before consuming.
     let snapped = match next_working(project, cal, start) {
         Some(i) => i,
-        None => return start + dur.working_minutes, // degenerate calendar
+        None => return start.saturating_add(dur.working_minutes), // degenerate calendar
     };
     let mut date = date_of(snapped);
     let mut from_min = minute_of_day(snapped);
@@ -301,6 +301,19 @@ mod tests {
         );
         // Exactly 24h later, weekend or not.
         assert_eq!(finish, fri_9 + MINUTES_PER_DAY);
+    }
+
+    #[test]
+    fn add_working_saturates_instead_of_overflowing() {
+        // A hostile project (e.g. from untrusted JSON) with an enormous duration must
+        // not panic (debug) or wrap to a negative finish (release) — it saturates.
+        let (p, cal) = project_with_standard_calendar();
+        let start = instant_of(Date::from_ymd(2026, 7, 10).unwrap(), 9 * 60);
+        let huge = Duration {
+            working_minutes: i64::MAX,
+            elapsed: true,
+        };
+        assert_eq!(add_working(&p, &cal, start, huge), i64::MAX);
     }
 
     #[test]
