@@ -302,8 +302,11 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                     //   `str` (the i32 handle of a `[i32 len][bytes]` linear-memory block).
                     // `mov`: copy the input handle into the `$`-variable's slot (a plain
                     //   i32 local copy).
+                    // `array_get` / `array_set`: E4d-BA-arr BASIC string arrays — a `str`
+                    //   element is a 4-byte i32 handle stored in / loaded from an
+                    //   `array<str>` block (see `wasm_array_elem` in lower.rs).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
-                        | "call_builtin" | "mov"
+                        | "call_builtin" | "mov" | "array_get" | "array_set"
                 )
             {
                 errors.push(format!(

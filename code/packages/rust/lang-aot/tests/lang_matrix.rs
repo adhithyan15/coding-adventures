@@ -2460,6 +2460,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK!"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — **string arrays** (LANG-FULL E4-dyn, work item
+    // E4d-BA-arr).  `DIM A$(2)` allocates an `array<str>`: the E5 length-
+    // prefixed aggregate substrate carrying an E4-dyn runtime string *handle*
+    // per element instead of an `f64`.  `A$(0)`/`A$(1)` are assigned string
+    // literals through a `str`-typed `array_set`, and `PRINT A$(0) + A$(1)`
+    // reads them back through two `str`-typed `array_get`s and concatenates —
+    // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
+    // distinct and the handles survive a store→load round-trip through the
+    // aggregate.  Per backend: **VM/JIT** hold a tagged `Value::Str` element;
+    // **WASM** stores a 4-byte i32 handle per element (`i32.store`/`i32.load`,
+    // the E4d-BA-arr `wasm_array_elem` branch); **LLVM** stores an 8-byte i64
+    // handle per element (`str`→`i64`, no backend change).  NativeAot/JVM/CLR
+    // (native element-size allowance + managed reference arrays) land in the
+    // E4d-BA-arr follow-up; they are deliberately not listed here so the
+    // guardrail does not treat them as silently skipped.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
+               40 PRINT A$(0) + A$(1)\n50 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[Llvm, Wasm, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

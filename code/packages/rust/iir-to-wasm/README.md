@@ -63,7 +63,11 @@ through a deprecated intermediate.
   there is no managed runtime to bounds-check for it) then an `i64.load`/`i64.store`
   (or `f64`) at `wrap(handle)+idx*elemsize` offset 8; `array_len` reads the header.
   The wasm sibling of the LLVM `@calloc` + `icmp uge` + `llvm.trap` lowering. `i64`
-  and `f64` elements (the ALGOL `integer`/`real` arrays).
+  and `f64` elements (the ALGOL `integer`/`real` arrays), plus **`str` elements**
+  (v0.36.0 — E4d-BA-arr, BASIC `DIM A$(n)`): a 4-byte `i32` handle per element
+  (`i32.load`/`i32.store`, 4-byte stride), each an E4-dyn runtime string block
+  offset. A folded str literal stored via `array_set` is promoted to a runtime
+  block handle so the element holds a real offset rather than an uninitialised `0`.
 - **String literal foothold (v0.23.0 — LANG-FULL E4 / BA4)**: `str_const` writes
   printable ASCII literal bytes into a linear-memory data segment and stores the
   byte pointer in an `i32` local; `print_str` calls the host import
