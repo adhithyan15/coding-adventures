@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.24.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Adds four non-block Ruby String methods to the emitted runtime's `string_method`
+`match` and the `responds_to` catalog, mirroring the Python/Go reference
+semantics (char-based, so a multibyte receiver is never sliced mid-codepoint):
+
+- `tr(from, to)` — position-wise char translation; a shorter `to` repeats its
+  last char, an empty `to` deletes matching chars, and a repeated char in `from`
+  keeps the last mapping.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies chars of the receiver in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set chars, or of *all* chars when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the range (`"a-z"`)
+and negation (`"^abc"`) forms are a follow-up, matching the literal-only
+`sub`/`gsub` precedent. Exec-proven end-to-end via `rustc`. Third backend of the
+String char-set sweep (Python `sir-runtime-oop` v0.1.16, Go v0.24.0).
+
 ## 0.23.0 — slice-selection Array methods: `take` / `drop` / `values_at`
 
 Extends the emitted Rust runtime's `array_method` catalog (and the `Value::Seq`

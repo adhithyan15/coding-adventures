@@ -132,6 +132,19 @@ fn full_demo() -> Module {
         print_stmt(method(slit("foo"), "replace", vec![slit("bar")])),
         // "".empty?  → #t
         print_stmt(method(slit(""), "empty?", vec![])),
+        // ── char-set methods (v0.24.0): tr / count / delete / squeeze ──
+        // "hello".tr("el", "ip")  → "hippo"
+        print_stmt(method(slit("hello"), "tr", vec![slit("el"), slit("ip")])),
+        // "hello".tr("l", "")  → "heo"  (empty `to` deletes)
+        print_stmt(method(slit("hello"), "tr", vec![slit("l"), slit("")])),
+        // "hello".count("lo")  → 3
+        print_stmt(method(slit("hello"), "count", vec![slit("lo")])),
+        // "hello".delete("aeiou")  → "hll"
+        print_stmt(method(slit("hello"), "delete", vec![slit("aeiou")])),
+        // "mississippi".squeeze  → "misisipi"
+        print_stmt(method(slit("mississippi"), "squeeze", vec![])),
+        // "aaabbbccc".squeeze("a")  → "abbbccc"
+        print_stmt(method(slit("aaabbbccc"), "squeeze", vec![slit("a")])),
     ];
 
     demo_module(main_stmts)
@@ -218,6 +231,12 @@ fn string_methods_compile_and_run() {
             "x  ",           // lstrip
             "bar",           // replace
             "#t",            // "".empty?
+            "hippo",         // tr("el", "ip")
+            "heo",           // tr("l", "") — empty `to` deletes
+            "3",             // count("lo")
+            "hll",           // delete("aeiou")
+            "misisipi",      // squeeze (no arg)
+            "abbbccc",       // squeeze("a")
         ],
         "unexpected program output; full stdout:\n{stdout}"
     );
