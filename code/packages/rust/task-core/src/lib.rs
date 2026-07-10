@@ -39,6 +39,7 @@ pub mod calendar;
 mod ids;
 mod model;
 mod primitives;
+pub mod scheduler;
 
 pub use ids::*;
 pub use model::*;
