@@ -36,9 +36,15 @@ editing, and save/delete/cancel controls.
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
   `pkg::mosaic-pkg-review-actions::ReviewActions`.
-- `EngramApp.dark.msl` owns app-shell styling only.
+- `EngramApp.touch.mll` is the touch/mobile layout variant of the same
+  product shell, keeping the `EngramApp.mil` interface and component mounts
+  unchanged while stacking the header and navigation for narrow viewports.
+- `EngramApp.dark.msl` and `EngramApp.light.msl` own app-shell styling only;
+  component-package styling still comes from the package dependency chain.
 - Package artifact builds inline component-package styles through the full
-  dependency chain.
+  dependency chain. Layout variants are emitted as suffixed artifacts such as
+  `EngramApp.touch.*`; style themes are selected with the package build theme
+  option, for example `--theme light`.
 - The app shell includes host-status slots so import/export completion,
   cancellation, and host-side file errors can appear in every generated Mosaic
   UI instead of only in host adapter return objects.
