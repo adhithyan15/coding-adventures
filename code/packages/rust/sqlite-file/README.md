@@ -38,7 +38,7 @@ Built leaf-to-root; this is the foundation:
 | varint (1–9 byte integers) | `varint` | ✅ read + write, golden-vector + sweep tests |
 | record / serial types → `SqlValue` | `record` | ✅ decode, golden-row tests |
 | DB header + in-memory pager | `header`, `pager` | ✅ header fields + zero-copy 1-based pages |
-| table b-tree walk + overflow | `btree` | ⏳ Phase E3 |
+| table b-tree walk (leaf + interior) | `btree` | ✅ `walk_table(root)` → `(rowid, record)`; overflow chains next |
 | `sqlite_schema` + `read_table(bytes, name)` | `schema` | ⏳ Phase E4 |
 
 ## Usage

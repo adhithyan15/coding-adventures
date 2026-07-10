@@ -142,6 +142,79 @@ fn our_header_matches_a_real_sqlite_file() {
     assert_eq!(&pager.page(1).unwrap()[0..16], sqlite_file::header::MAGIC);
 }
 
+/// Walk the **real `sqlite_schema` b-tree** (rooted on page 1) with our reader
+/// and confirm the object name + rootpage of every table/index matches what
+/// SQLite reports via `SELECT name, rootpage FROM sqlite_schema`. This exercises
+/// the whole leaf/interior walk + record-decode pipeline against genuine SQLite
+/// output — the first end-to-end row read.
+#[test]
+fn sqlite_schema_walk_matches_the_oracle() {
+    let db = build_sqlite_db(&[
+        "CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)",
+        "CREATE TABLE u (x INTEGER, y INTEGER)",
+        "CREATE INDEX idx_u_x ON u (x)",
+        "INSERT INTO t VALUES (1, 'Ada'), (2, 'Grace')",
+        "INSERT INTO u VALUES (10, 20), (30, 40)",
+    ]);
+
+    // Our reader: walk page 1 (the sqlite_schema root) and decode each 5-column
+    // row (type, name, tbl_name, rootpage, sql).
+    let (header, pager) = sqlite_file::Pager::open(&db).unwrap();
+    let rows = sqlite_file::btree::walk_table(&pager, &header, 1).unwrap();
+    let mut ours: Vec<(String, i64)> = Vec::new();
+    for (_rowid, record) in &rows {
+        let cols = sqlite_file::record::decode(record).expect("schema row decodes");
+        assert_eq!(cols.len(), 5, "sqlite_schema has five columns");
+        let name = match &cols[1] {
+            sqlite_file::SqlValue::Text(s) => s.clone(),
+            other => panic!("name column should be TEXT, got {other:?}"),
+        };
+        // rootpage is 0 for views/triggers; tables and indexes have a real page.
+        let rootpage = match &cols[3] {
+            sqlite_file::SqlValue::Int(n) => *n,
+            sqlite_file::SqlValue::Null => 0,
+            other => panic!("rootpage should be INTEGER, got {other:?}"),
+        };
+        ours.push((name, rootpage));
+    }
+    ours.sort();
+
+    // The oracle: the same view straight out of bundled-C SQLite.
+    let conn = {
+        // Reopen the bytes we already built by writing them to a fresh temp file
+        // and querying — simplest independent path to the same rows.
+        static COUNTER2: AtomicU64 = AtomicU64::new(1_000_000);
+        let unique = COUNTER2.fetch_add(1, Ordering::Relaxed);
+        let mut dir = std::env::temp_dir();
+        dir.push(format!(
+            "sqlite_file_schema_{}_{}",
+            std::process::id(),
+            unique
+        ));
+        std::fs::create_dir(&dir).unwrap();
+        let path = dir.join("oracle.db");
+        std::fs::write(&path, &db).unwrap();
+        let conn = rusqlite::Connection::open(&path).unwrap();
+        // Leak the tempdir cleanup to the OS reboot is fine, but tidy up anyway
+        // after reading.
+        (conn, dir)
+    };
+    let mut theirs: Vec<(String, i64)> = conn
+        .0
+        .prepare("SELECT name, rootpage FROM sqlite_schema")
+        .unwrap()
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    theirs.sort();
+    drop(conn.0);
+    let _ = std::fs::remove_dir_all(&conn.1);
+
+    assert_eq!(ours, theirs, "our sqlite_schema walk must match SQLite's");
+    assert!(!ours.is_empty(), "expected some schema objects");
+}
+
 /// The full round-trip gate: decode every row straight out of the file bytes
 /// and confirm it equals what SQLite reports over SQL. It needs the table
 /// b-tree walk to locate record bytes, which lands in Phase E3 — this staged

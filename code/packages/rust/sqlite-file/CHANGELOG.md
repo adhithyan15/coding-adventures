@@ -1,5 +1,40 @@
 # Changelog — sqlite-file
 
+## 0.3.0 — Unreleased
+
+Phase E3a: the **table b-tree walk** — reads every row of a table given its
+root page. Overflow-chain reassembly (for records too big for one page) and the
+public `read_table(bytes, name)` API follow in E3b/E4.
+
+### Added
+
+- **`btree::walk_table(pager, header, root_page)`** — walks a table b-tree and
+  returns `Vec<(rowid, record bytes)>` in rowid order. Handles **leaf** table
+  pages (`0x0D`) and **interior** table pages (`0x05`, descending every child
+  cell plus the right-most child in the page header), the page-1 offset-100
+  quirk, and the cell-pointer array. Fully bounds- and cycle-checked: a corrupt
+  tree (unexpected page type, cell pointer past the page, or a child-pointer
+  cycle) returns a `SqliteError`, never a panic, out-of-bounds read, or infinite
+  loop — the walk uses an explicit stack (no recursion) and a visited-page set.
+- **`SqliteError::Corrupt(&str)`** — for structurally-inconsistent bytes a
+  well-formed database never produces.
+
+### Not yet included
+
+- **Overflow chains**: a record larger than the inline maximum (`usable_size −
+  35`) currently returns `Unsupported("overflow chain")` rather than truncating.
+  Reassembly is Phase E3b, which also flips on the full row round-trip gate.
+
+### Verified
+
+- 5 new unit tests (single-leaf walk in rowid order, empty leaf, an interior
+  page over two leaves, unknown-page-type reject, child-pointer-cycle detect).
+  New cross-check: our reader walks the **real `sqlite_schema` b-tree** of a
+  genuine `rusqlite`-built file and its `(name, rootpage)` set matches
+  `SELECT name, rootpage FROM sqlite_schema` exactly — the first end-to-end row
+  read against real SQLite. Full suite green (`#![forbid(unsafe_code)]`); clippy
+  + fmt clean.
+
 ## 0.2.0 — Unreleased
 
 Phase E2: the **database header** parser and a read-only **pager**, on the way
