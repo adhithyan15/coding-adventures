@@ -42,12 +42,29 @@
 //! page) begins right after the header: offset 8 on a leaf, 12 on an interior
 //! page.
 //!
-//! ## Overflow — deferred
+//! ## Overflow chains
 //!
-//! A row whose record is too big for one page spills into an *overflow chain*.
-//! That is Phase E3b; here, a cell that would overflow returns
-//! `Unsupported("overflow chain")` rather than silently truncating the record.
-//! The tables Engram reads whose rows all fit inline work today.
+//! A row whose record is too big for one page keeps only its **first K bytes**
+//! inline; the rest spills into a linked list of *overflow pages*. The leaf cell
+//! then looks like `[payload-len varint] [rowid varint] [first K bytes] [u32-be
+//! first-overflow-page]`, and each overflow page is `[u32-be next-page] [content
+//! bytes]`, chained until the full payload is collected (a next-page of 0 ends
+//! the chain).
+//!
+//! The inline split follows SQLite's table-leaf rule exactly. With usable size
+//! `U` and payload length `P`:
+//!
+//! ```text
+//!   X = U - 35                        (max bytes that stay inline)
+//!   M = ((U - 12) * 32 / 255) - 23    (min bytes that stay inline)
+//!   K = M + ((P - M) mod (U - 4))     (candidate inline length)
+//!   inline = if K <= X { K } else { M }
+//! ```
+//!
+//! and each overflow page carries `U - 4` content bytes (the first 4 are the
+//! next-page pointer). [`read_leaf_cell`] reassembles inline + overflow into one
+//! contiguous record, guarding the chain against cycles (a visited-page set) and
+//! against amplification (the same file-size byte cap the leaf loop uses).
 
 use crate::error::SqliteError;
 use crate::header::Header;
@@ -86,10 +103,13 @@ pub fn walk_table<'a>(
     header: &Header,
     root_page: u32,
 ) -> Result<Vec<(i64, Vec<u8>)>, SqliteError> {
-    // The largest record that fits inline on a leaf page, per the format's
-    // table-leaf formula: usable_size - 35. A larger payload spills to overflow
-    // (Phase E3b) — for now we detect it and refuse rather than truncate.
-    let max_local = header.usable_size().saturating_sub(35) as usize;
+    // Usable bytes per page (page size minus the reserved tail), and the largest
+    // record that fits inline on a leaf page, per the format's table-leaf
+    // formula: usable_size - 35. A larger payload keeps only its first K bytes
+    // inline and spills the rest into an overflow chain, which `read_leaf_cell`
+    // reassembles.
+    let usable = header.usable_size() as usize;
+    let max_local = usable.saturating_sub(35);
 
     // Anti-amplification budget. The cell-pointer array is attacker-controlled
     // and pointers need not be distinct: a hostile page could point all of its
@@ -131,7 +151,8 @@ pub fn walk_table<'a>(
                 let ptr_array = header_off + 8;
                 for i in 0..cell_count {
                     let cell_off = cell_pointer(page, ptr_array, i)?;
-                    let (rowid, record) = read_leaf_cell(page, cell_off, max_local)?;
+                    let (rowid, record) =
+                        read_leaf_cell(pager, page, cell_off, usable, max_local, file_bytes)?;
                     emitted_bytes = emitted_bytes
                         .checked_add(record.len())
                         .filter(|total| *total <= file_bytes)
@@ -177,11 +198,21 @@ fn cell_pointer(page: &[u8], ptr_array: usize, i: usize) -> Result<usize, Sqlite
 }
 
 /// Decode one leaf-table cell at `cell_off`: `[payload-len varint] [rowid
-/// varint] [record bytes]`. Returns `(rowid, record bytes)`.
+/// varint] [payload]`. Returns `(rowid, record bytes)`.
+///
+/// When the payload fits inline (`payload_len <= max_local`) the record is a
+/// direct slice of the page. When it does not, only the first K bytes are inline
+/// — followed by a 4-byte overflow-page pointer — and the remainder is collected
+/// from the overflow chain by [`follow_overflow`]. `usable` is the page's usable
+/// size; `file_bytes` is the running amplification cap (a record can never
+/// exceed the file's own byte length).
 fn read_leaf_cell(
+    pager: &Pager<'_>,
     page: &[u8],
     cell_off: usize,
+    usable: usize,
     max_local: usize,
+    file_bytes: usize,
 ) -> Result<(i64, Vec<u8>), SqliteError> {
     let cell = page
         .get(cell_off..)
@@ -195,20 +226,105 @@ fn read_leaf_cell(
         .get(n1..)
         .ok_or(SqliteError::Corrupt("truncated cell"))?;
     let (rowid, n2) = varint::read(after_len).ok_or(SqliteError::Corrupt("bad rowid"))?;
+    let payload = after_len
+        .get(n2..)
+        .ok_or(SqliteError::Corrupt("truncated cell"))?;
 
-    // A payload larger than the inline maximum spills into an overflow chain,
-    // which this layer does not yet reassemble (Phase E3b).
-    if payload_len > max_local {
-        return Err(SqliteError::Unsupported("overflow chain"));
+    // Common case: the whole payload sits on this page.
+    if payload_len <= max_local {
+        let record = payload
+            .get(..payload_len)
+            .ok_or(SqliteError::Corrupt("record past page"))?;
+        return Ok((rowid, record.to_vec()));
     }
 
-    let record_start = n1 + n2;
-    let record = after_len
-        .get(n2..)
-        .and_then(|s| s.get(..payload_len))
-        .ok_or(SqliteError::Corrupt("record past page"))?;
-    let _ = record_start; // documented offset; the slice above is what we return
-    Ok((rowid, record.to_vec()))
+    // Overflow. Reject a payload that could not physically fit in the file up
+    // front — this bounds the reassembly target and rejects a hostile cell that
+    // claims a gigantic length. (A valid record's bytes all live in the file, so
+    // its length is at most the file's length.)
+    if payload_len > file_bytes {
+        return Err(SqliteError::Corrupt("payload exceeds file size"));
+    }
+
+    // How many bytes stay on this page, per the SQLite table-leaf rule.
+    //   X = usable - 35 = max_local          (the inline ceiling)
+    //   M = ((usable - 12) * 32 / 255) - 23   (the inline floor)
+    //   K = M + ((P - M) mod (usable - 4))
+    //   inline = if K <= X { K } else { M }
+    let m = usable.saturating_sub(12).saturating_mul(32) / 255;
+    let min_local = m.saturating_sub(23);
+    let span = usable
+        .checked_sub(4)
+        .filter(|s| *s > 0)
+        .ok_or(SqliteError::Corrupt("usable size too small"))?;
+    let k = min_local + (payload_len - min_local) % span;
+    let inline = if k <= max_local { k } else { min_local };
+
+    // The inline bytes, then the 4-byte pointer to the first overflow page.
+    let inline_bytes = payload
+        .get(..inline)
+        .ok_or(SqliteError::Corrupt("inline payload past page"))?;
+    let first_overflow =
+        be_u32(payload, inline).ok_or(SqliteError::Corrupt("missing overflow ptr"))?;
+
+    let mut record = Vec::with_capacity(payload_len);
+    record.extend_from_slice(inline_bytes);
+    follow_overflow(
+        pager,
+        first_overflow,
+        payload_len,
+        usable,
+        file_bytes,
+        &mut record,
+    )?;
+    Ok((rowid, record))
+}
+
+/// Collect the tail of an overflow payload by walking the overflow-page chain,
+/// appending onto `record` until it holds `payload_len` bytes.
+///
+/// Each overflow page is `[u32-be next-page] [content bytes]`; the content area
+/// runs from offset 4 to `usable`, giving `usable - 4` bytes per page. A next-page
+/// of 0 ends the chain. Guarded three ways so hostile input cannot hang or
+/// exhaust memory: a `visited` set turns any cycle into `Corrupt`, every page
+/// fetch is bounds-checked by the pager, and the total never exceeds `file_bytes`.
+fn follow_overflow(
+    pager: &Pager<'_>,
+    first_page: u32,
+    payload_len: usize,
+    usable: usize,
+    file_bytes: usize,
+    record: &mut Vec<u8>,
+) -> Result<(), SqliteError> {
+    let mut next = first_page;
+    let mut visited: std::collections::HashSet<u32> = std::collections::HashSet::new();
+
+    while record.len() < payload_len {
+        if next == 0 {
+            return Err(SqliteError::Corrupt("overflow chain ended early"));
+        }
+        if !visited.insert(next) {
+            return Err(SqliteError::Corrupt("overflow chain cycle"));
+        }
+        let page = pager.page(next)?;
+        let next_ptr = be_u32(page, 0).ok_or(SqliteError::Corrupt("truncated overflow page"))?;
+        let content = page
+            .get(4..usable)
+            .ok_or(SqliteError::Corrupt("overflow content past page"))?;
+
+        // Take only as many bytes as the payload still needs from this page.
+        let still_needed = payload_len - record.len();
+        let take = still_needed.min(content.len());
+        record.extend_from_slice(&content[..take]);
+
+        // Belt-and-braces amplification guard (the visited set already bounds the
+        // chain to the file's real pages, but this makes the cap explicit).
+        if record.len() > file_bytes {
+            return Err(SqliteError::Corrupt("overflow payload exceeds file size"));
+        }
+        next = next_ptr;
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -366,6 +482,155 @@ mod tests {
         assert_eq!(
             walk_table(&pager, &header, 1),
             Err(SqliteError::Corrupt("b-tree page cycle"))
+        );
+    }
+
+    /// The table-leaf inline split, mirrored from `read_leaf_cell` so tests can
+    /// lay out an overflow row exactly the way the reader expects to find it.
+    fn inline_len(usable: usize, payload_len: usize) -> usize {
+        let max_local = usable - 35;
+        let min_local = (usable - 12) * 32 / 255 - 23;
+        let span = usable - 4;
+        let k = min_local + (payload_len - min_local) % span;
+        if k <= max_local {
+            k
+        } else {
+            min_local
+        }
+    }
+
+    /// Build a database whose **page 2** is a leaf table b-tree holding a single
+    /// row `(rowid, payload)` too big to fit inline: the first `inline` bytes stay
+    /// on page 2, the rest spills across overflow pages 3, 4, … each `[u32-be
+    /// next-page][content]`. Rooting the leaf on page 2 (not page 1) avoids the
+    /// 100-byte header quirk, so the whole leaf content area is available — which
+    /// is what real SQLite does for any table other than `sqlite_schema`. Page 1
+    /// carries only the database header. Returns the bytes; the leaf root is
+    /// page 2. Reserved space is zero, so usable size == page size.
+    fn one_overflow_row_db(ps: usize, rowid: i64, payload: &[u8]) -> Vec<u8> {
+        let usable = ps;
+        assert!(payload.len() > usable - 35, "payload must overflow");
+        let inline = inline_len(usable, payload.len());
+        let (head, tail) = payload.split_at(inline);
+
+        // Chunk the overflow tail into (usable - 4)-byte content pieces.
+        let content = usable - 4;
+        let n_overflow = tail.len().div_ceil(content);
+        let total_pages = 2 + n_overflow; // page 1 header, page 2 leaf, then overflow
+        let first_overflow = 3u32;
+
+        let mut data = vec![0u8; ps * total_pages];
+
+        // --- Page 1: database header only.
+        data[0..16].copy_from_slice(MAGIC);
+        data[16..18].copy_from_slice(&(ps as u16).to_be_bytes());
+        data[56..60].copy_from_slice(&1u32.to_be_bytes()); // UTF-8
+        data[28..32].copy_from_slice(&(total_pages as u32).to_be_bytes());
+
+        // --- Page 2: one-cell leaf b-tree (header at offset 0).
+        let base = ps;
+        data[base] = LEAF_TABLE;
+        data[base + 3..base + 5].copy_from_slice(&1u16.to_be_bytes());
+
+        // Cell: [payload-len varint][rowid varint][inline head][u32-be first
+        // overflow page].
+        let mut cell = Vec::new();
+        varint::write(payload.len() as i64, &mut cell);
+        varint::write(rowid, &mut cell);
+        cell.extend_from_slice(head);
+        cell.extend_from_slice(&first_overflow.to_be_bytes());
+        let cell_rel = ps - cell.len(); // offset within page 2
+        data[base + cell_rel..base + cell_rel + cell.len()].copy_from_slice(&cell);
+        data[base + 8..base + 10].copy_from_slice(&(cell_rel as u16).to_be_bytes());
+        data[base + 5..base + 7].copy_from_slice(&(cell_rel as u16).to_be_bytes());
+
+        // --- Overflow pages 3..=total_pages.
+        for (i, chunk) in tail.chunks(content).enumerate() {
+            let page_no = first_overflow as usize + i;
+            let ob = (page_no - 1) * ps;
+            let next = if i + 1 < n_overflow {
+                (page_no + 1) as u32
+            } else {
+                0 // last page ends the chain
+            };
+            data[ob..ob + 4].copy_from_slice(&next.to_be_bytes());
+            data[ob + 4..ob + 4 + chunk.len()].copy_from_slice(chunk);
+        }
+        data
+    }
+
+    #[test]
+    fn reassembles_a_row_that_spills_into_overflow() {
+        // A 1500-byte payload on a 512-byte page cannot fit inline; walking must
+        // stitch the inline head and the overflow tail back into the exact bytes.
+        let payload: Vec<u8> = (0..1500).map(|i| (i % 251) as u8).collect();
+        let db = one_overflow_row_db(512, 7, &payload);
+        let (header, pager) = Pager::open(&db).unwrap();
+        let rows = walk_table(&pager, &header, 2).unwrap();
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].0, 7);
+        assert_eq!(rows[0].1, payload);
+    }
+
+    #[test]
+    fn overflow_reassembly_spans_several_pages() {
+        // A payload several page-widths long exercises a multi-hop chain.
+        let payload: Vec<u8> = (0..5000).map(|i| (i * 7 % 256) as u8).collect();
+        let db = one_overflow_row_db(512, 1, &payload);
+        let (header, pager) = Pager::open(&db).unwrap();
+        let rows = walk_table(&pager, &header, 2).unwrap();
+        assert_eq!(rows[0].1, payload);
+    }
+
+    #[test]
+    fn detects_an_overflow_chain_cycle() {
+        // Point the first overflow page's next-pointer back at itself: the walk
+        // must report a cycle, never spin forever.
+        let payload: Vec<u8> = (0..1500).map(|i| i as u8).collect();
+        let mut db = one_overflow_row_db(512, 1, &payload);
+        // First overflow page is 3 (offset 2*512 = 1024); make it point at itself.
+        db[1024..1028].copy_from_slice(&3u32.to_be_bytes());
+        let (header, pager) = Pager::open(&db).unwrap();
+        assert_eq!(
+            walk_table(&pager, &header, 2),
+            Err(SqliteError::Corrupt("overflow chain cycle"))
+        );
+    }
+
+    #[test]
+    fn detects_an_overflow_chain_that_ends_too_soon() {
+        // Truncate the chain (next = 0 on the first overflow page) before the
+        // full payload has been collected.
+        let payload: Vec<u8> = (0..1500).map(|i| i as u8).collect();
+        let mut db = one_overflow_row_db(512, 1, &payload);
+        db[1024..1028].copy_from_slice(&0u32.to_be_bytes()); // page 3 -> chain end
+        let (header, pager) = Pager::open(&db).unwrap();
+        assert_eq!(
+            walk_table(&pager, &header, 2),
+            Err(SqliteError::Corrupt("overflow chain ended early"))
+        );
+    }
+
+    #[test]
+    fn rejects_overflow_payload_larger_than_the_file() {
+        // A hostile cell claiming a gigantic payload_len must be refused before
+        // any reassembly, not drive a huge allocation.
+        let payload: Vec<u8> = (0..1500).map(|i| i as u8).collect();
+        let mut db = one_overflow_row_db(512, 1, &payload);
+        // The leaf cell is on page 2; its page-relative offset is in the cell
+        // pointer array at page-2 offset 8 (absolute 512 + 8 = 520).
+        let cell_rel = be_u16(&db, 520).unwrap() as usize;
+        let cell_off = 512 + cell_rel;
+        // Overwrite the payload-length varint with a 5-byte varint for a big
+        // number (its length differs, shifting the rowid — the point is only that
+        // the huge length trips the file-size guard before any reassembly).
+        let mut huge = Vec::new();
+        varint::write(1_000_000_000, &mut huge);
+        db[cell_off..cell_off + huge.len()].copy_from_slice(&huge);
+        let (header, pager) = Pager::open(&db).unwrap();
+        assert_eq!(
+            walk_table(&pager, &header, 2),
+            Err(SqliteError::Corrupt("payload exceeds file size"))
         );
     }
 

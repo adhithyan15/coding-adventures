@@ -1,5 +1,45 @@
 # Changelog — sqlite-file
 
+## 0.4.0 — Unreleased
+
+Phase E3b: **overflow-chain reassembly** and the **full row round-trip gate**.
+Rows too large for one page now read back in full, and the reader is measured
+end-to-end against real SQLite for the first time.
+
+### Added
+
+- **Overflow-chain reassembly in `btree::read_leaf_cell`.** A record larger than
+  the inline maximum keeps only its first *K* bytes on the leaf page, followed by
+  a 4-byte overflow-page pointer; the rest lives in a linked list of overflow
+  pages (`[u32-be next-page][content]`). The reader now stitches inline + overflow
+  back into one contiguous record. The inline split follows SQLite's table-leaf
+  rule exactly: `K = min_local + ((P − min_local) mod (usable − 4))`, clamped to
+  `min_local` when it would exceed `usable − 35`. Replaces the previous
+  `Unsupported("overflow chain")` bail-out.
+- Overflow reassembly is bounded on every axis, so hostile input cannot hang or
+  exhaust memory: a **visited-page set** turns any chain cycle into `Corrupt`, a
+  chain that ends before the payload is complete is `Corrupt`, a payload claiming
+  to be larger than the whole file is rejected up front, and the running total is
+  capped at the file's byte length (the same anti-amplification discipline the
+  leaf loop uses). `#![forbid(unsafe_code)]` throughout.
+
+### Verified
+
+- 6 new unit tests (single-page-spill reassembly, a multi-hop chain, chain-cycle
+  detection, an early-terminated chain, an oversized-payload rejection, plus the
+  retained aliasing-amplification guard).
+- **The staged round-trip gate is now active.** `rows_round_trip_through_our_reader`
+  builds a real `rusqlite` database whose table holds a row with 6.5 KB of TEXT
+  (forcing overflow), walks `sqlite_schema` to find the table's root page, walks
+  that table with our reader, decodes each record, and asserts every column equals
+  what SQLite returns over `SELECT` — the overflow row included. Full suite green;
+  clippy + fmt clean.
+
+### Not yet included
+
+- The **`read_table(bytes, name)`** convenience API (sqlite_schema lookup + walk
+  in one call) is Phase E4; the Anki importer cutover is Phase E5.
+
 ## 0.3.0 — Unreleased
 
 Phase E3a: the **table b-tree walk** — reads every row of a table given its

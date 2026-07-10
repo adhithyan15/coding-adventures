@@ -29,8 +29,9 @@
 //! 3. **`header` + `pager`** — parse the 100-byte DB header; borrow pages from
 //!    `&[u8]` (read-only, zero-copy, no journal/cache). *(done)*
 //! 4. **`btree`** — walk a table b-tree (leaf + interior pages) → `(rowid, record
-//!    bytes)`. *(here; overflow-chain reassembly is the next step)*
-//! 5. `sqlite_schema` + `read_table(bytes, name)` — the public read API.
+//!    bytes)`, reassembling overflow chains for records too big for one page.
+//!    *(done)*
+//! 5. `sqlite_schema` + `read_table(bytes, name)` — the public read API. *(next)*
 //!
 //! Each layer is cross-checked against the real `rusqlite`/C-SQLite as an
 //! independent oracle (a dev-dependency, never a runtime one) before the Anki
