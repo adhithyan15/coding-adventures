@@ -2,6 +2,26 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.16] - 2026-07-07
+
+### Added — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Extends `_string_method` (and the `_STRING_METHODS` `respond_to?` catalog) with
+four more non-block Ruby String methods:
+
+- `tr(from, to)` — position-wise character translation; a shorter `to` repeats
+  its last char, an empty `to` deletes matching chars, and the last mapping wins
+  when `from` repeats a char.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies chars of the receiver in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set chars, or of *all* chars when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the character-range
+(`"a-z"`) and negation (`"^abc"`) forms are a follow-up, matching the existing
+literal-only `sub`/`gsub` precedent. First backend of the String char-set sweep
+(reference; the Go/Rust/JS/TS backends follow).
+
 ## [0.1.15] - 2026-07-07
 
 ### Added — Array reorder/combine methods: `rotate` / `zip`
