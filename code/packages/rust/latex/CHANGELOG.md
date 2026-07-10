@@ -2,6 +2,30 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.68.0] — 2026-07-09
+
+### Added — single-integer TOTAL of the unresolved (dangling) citations (LTXDOC03 S32)
+
+A **new** public method `Document::unresolved_citation_count(&self) -> String` that renders the decimal
+**COUNT** of the unresolved (dangling) citations — the `\cite` keys **no** `\bibitem` defines — as one
+integer line. It is the *count-total* companion of S17's `unresolved_citations_by_source` (which renders
+the dangling keys grouped by their source `\cite`): S17 and S32 are two *views* of the one `unresolved`
+list `resolve_citations()` produces — S32 collapses the whole list to a single `.len()` tally. It is the
+exact unresolved-**citation-side twin** of S27's `unresolved_reference_count`, and the **dangling sibling**
+of S31's resolved `citation_count`. Together S31 and S32 **partition** every per-key `\cite` record:
+`citation_count + unresolved_citation_count` equals the total number of cited keys, because
+`resolve_citations()` routes each key into exactly one of `resolved`/`unresolved`. It reads only
+`resolve_citations().unresolved.len()` — a resolved `\cite{a}` lives in `resolved` (S15/S31's domain) and is
+excluded by construction — never a `cite_span`/dangling `key`, no source slicing at all, so every dangling
+key folds into one total. Being a COUNT renderer, its empty case (every cited key resolving, or none at
+all) is the honest number `"0"` — **not** a `(no unresolved citations)` marker (that discipline belongs to
+the *list* renderer S17; this mirrors S27/S28/S29/S30/S31). One line, no trailing newline. E.g. `\cite{a,b}`
+(both defined) + `\cite{c,ghost}` (only `c` defined) → `1`. It is a read-only view over
+`resolve_citations()`; every S1–S31 output is left **byte-for-byte unchanged**; S32 is purely additive and
+leaves the `to_latex()` round-trip fixed point intact. Total & panic-free.
+
+---
+
 ## [0.67.0] — 2026-07-09
 
 ### Added — single-integer TOTAL of the resolved citations (LTXDOC03 S31)
