@@ -80,7 +80,10 @@ pub fn emit_module(m: &Module) -> String {
     // source-controlled field — so this substitution can never inject into the
     // emitted Go.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "true" } else { "false" }));
+    out.push_str(&RUNTIME.replace(
+        "__SIR_DISPLAY_RUBY__",
+        if display_ruby { "true" } else { "false" },
+    ));
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -847,9 +850,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MatMul { .. }
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {
+        | Expr::IndexGet { .. }
+        // SIR26 `Convert` — this backend does not accept `Conversions`, so a
+        // validated module never reaches here (capability check rejects it).
+        | Expr::Convert { .. } => {
             panic!(
-                "go backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                "go backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );

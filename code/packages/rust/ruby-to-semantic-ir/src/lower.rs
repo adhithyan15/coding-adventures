@@ -223,6 +223,8 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
 fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
     match expr {
         Expr::VarRef { name, .. } => names.contains(name),
+        // SIR26 conversion (not currently emitted by this frontend) — recurse.
+        Expr::Convert { value, .. } => expr_references_any_name(value, names),
 
         // Leaves: no children, no references possible.
         Expr::IntLit { .. }
@@ -3958,6 +3960,8 @@ impl Lowerer {
     /// `yield` inside a block literal belongs to the enclosing method).
     fn rewrite_yields_in_expr(expr: &mut Expr, block_scope: Scope) -> bool {
         match expr {
+            // SIR26 conversion (not currently emitted here) — recurse.
+            Expr::Convert { value, .. } => Self::rewrite_yields_in_expr(value, block_scope),
             Expr::BuiltinCall {
                 name,
                 args,
@@ -4658,6 +4662,8 @@ impl Lowerer {
 
     fn normalize_calls_in_expr(expr: &mut Expr, ctx: &BlockNormCtx) {
         match expr {
+            // SIR26 conversion (not currently emitted here) — recurse.
+            Expr::Convert { value, .. } => Self::normalize_calls_in_expr(value, ctx),
             // Phase Q10c — a bare, parenless reference to a known
             // block-taking method (`foo` with no `()`/args) reaches the
             // lowerer as `VarRef { scope: Local }` (the method-call parser
@@ -4948,6 +4954,8 @@ impl Lowerer {
 
     fn collect_bound_names_expr(expr: &Expr, out: &mut HashSet<String>) {
         match expr {
+            // SIR26 conversion (not currently emitted here) — recurse.
+            Expr::Convert { value, .. } => Self::collect_bound_names_expr(value, out),
             Expr::If {
                 cond,
                 then_branch,

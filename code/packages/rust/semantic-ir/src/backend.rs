@@ -443,6 +443,10 @@ where
             walk_intrinsics_in_expr(target, f, depth + 1);
             walk_intrinsics_in_index_args(indices, f, depth + 1);
         }
+        // ── SIR26 ──────────────────────────────────────────────────
+        Expr::Convert { value, .. } => {
+            walk_intrinsics_in_expr(value, f, depth + 1);
+        }
     }
 }
 

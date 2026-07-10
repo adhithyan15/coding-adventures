@@ -3463,6 +3463,8 @@ enum Lowered {
 /// a closure is treated as potentially effectful.
 fn expr_may_have_effects(expr: &Expr) -> bool {
     match expr {
+        // SIR26 conversion (not currently emitted here): pure iff its value is.
+        Expr::Convert { value, .. } => expr_may_have_effects(value),
         // Provably pure leaves.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }

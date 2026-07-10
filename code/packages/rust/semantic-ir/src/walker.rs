@@ -351,6 +351,11 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
             v.visit_expr(target);
             walk_index_args(v, indices);
         }
+
+        // ── SIR26 ──────────────────────────────────────────────────
+        Expr::Convert { value, .. } => {
+            v.visit_expr(value);
+        }
     }
 }
 

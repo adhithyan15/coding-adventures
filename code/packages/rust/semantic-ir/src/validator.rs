@@ -1024,6 +1024,24 @@ impl<'m> ValidatorState<'m> {
                 self.check_expr(target, env, depth + 1);
                 self.check_index_args(indices, env, depth + 1);
             }
+
+            // ── SIR26: integer conversion ──────────────────────────────
+            Expr::Convert { value, to, .. } => {
+                // Observe the conversion feature plus the SIR21 type-implied
+                // features of the target type, so the manifest and capability
+                // check see exactly what a backend must support.
+                self.observed.add(Feature::Conversions);
+                if !to.is_arbitrary() {
+                    self.observed.add(Feature::SizedIntegers);
+                }
+                if !to.signed {
+                    self.observed.add(Feature::Unsigned);
+                }
+                if to.overflow != crate::types::Overflow::Arbitrary {
+                    self.observed.add(Feature::WrappingArithmetic);
+                }
+                self.check_expr(value, env, depth + 1);
+            }
         }
     }
 
