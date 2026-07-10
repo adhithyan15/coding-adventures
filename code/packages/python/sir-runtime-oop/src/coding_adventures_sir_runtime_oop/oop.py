@@ -690,6 +690,10 @@ _STRING_METHODS = frozenset(
         "rjust",
         "center",
         "swapcase",
+        "tr",
+        "count",
+        "delete",
+        "squeeze",
     }
 )
 
@@ -1351,6 +1355,47 @@ def _string_method(recv: str, name: str, args: list[Val]) -> Val:
                 out.append(chr(code - 32))
             else:
                 out.append(ch)
+        return "".join(out)
+    if name == "tr":
+        # Ruby ``String#tr(from, to)``: translate each char that appears in
+        # ``from`` to the char at the same position in ``to``.  A shorter ``to``
+        # repeats its LAST char; an empty ``to`` deletes matching chars; when
+        # ``from`` repeats a char the last mapping wins.
+        # NOTE: the char-RANGE (``"a-z"``) and NEGATION (``"^abc"``) forms are a
+        # follow-up, matching the literal-only ``sub``/``gsub`` precedent here.
+        if len(args) < 2 or not isinstance(args[0], str) or not isinstance(args[1], str):
+            return recv
+        frm, to = args[0], args[1]
+        table: dict[str, str] = {}
+        for i, ch in enumerate(frm):
+            table[ch] = (to[i] if i < len(to) else to[-1]) if to else ""
+        return "".join(table.get(ch, ch) for ch in recv)
+    if name in ("count", "delete", "squeeze"):
+        # Char-set methods.  Each ``set`` argument is treated LITERALLY — the set
+        # of characters it contains (ranges/negation are a follow-up).  ``count``
+        # returns how many chars of ``recv`` lie in the set; ``delete`` removes
+        # them; ``squeeze`` collapses consecutive runs (of set chars, or of ALL
+        # chars when no set is given).  Multiple set args intersect (Ruby's rule).
+        str_sets = [set(a) for a in args if isinstance(a, str)]
+        if name == "squeeze" and not str_sets:
+            squeezed: list[str] = []
+            for ch in recv:
+                if not squeezed or squeezed[-1] != ch:
+                    squeezed.append(ch)
+            return "".join(squeezed)
+
+        def in_all(ch: str) -> bool:
+            return bool(str_sets) and all(ch in s for s in str_sets)
+
+        if name == "count":
+            return sum(1 for ch in recv if in_all(ch))
+        if name == "delete":
+            return "".join(ch for ch in recv if not in_all(ch))
+        out = []
+        for ch in recv:
+            if out and out[-1] == ch and in_all(ch):
+                continue
+            out.append(ch)
         return "".join(out)
     return _MISS
 

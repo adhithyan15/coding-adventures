@@ -599,6 +599,26 @@ def test_string_repeat_and_concat() -> None:
     assert len(oop.call_method("ab", "*", 10**9)) <= 100_000_000
 
 
+def test_string_tr_translates_and_deletes() -> None:
+    # `tr(from, to)`: position-wise char map; a shorter `to` repeats its last
+    # char; an empty `to` deletes matching chars; last mapping wins on a repeat.
+    assert oop.call_method("hello", "tr", "el", "ip") == "hippo"
+    assert oop.call_method("hello", "tr", "aeiou", "*") == "h*ll*"
+    assert oop.call_method("hello", "tr", "l", "") == "heo"
+    assert oop.call_method("hello", "tr", "xyz", "abc") == "hello"
+
+
+def test_string_count_delete_squeeze_char_sets() -> None:
+    assert oop.call_method("hello", "count", "l") == 2
+    assert oop.call_method("hello", "count", "lo") == 3
+    assert oop.call_method("hello", "count", "xyz") == 0
+    assert oop.call_method("hello", "delete", "l") == "heo"
+    assert oop.call_method("hello", "delete", "aeiou") == "hll"
+    # squeeze: no arg collapses every run; with a set, only those chars
+    assert oop.call_method("mississippi", "squeeze") == "misisipi"
+    assert oop.call_method("aaabbbccc", "squeeze", "a") == "abbbccc"
+
+
 def test_string_each_char_block() -> None:
     seen: list[Val] = []
     result = oop.call_method("abc", "each_char", Closure(seen.append))
