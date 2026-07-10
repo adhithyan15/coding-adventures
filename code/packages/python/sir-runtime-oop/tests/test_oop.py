@@ -222,6 +222,28 @@ def test_array_values_at_selects_and_folds_negatives() -> None:
     assert oop.call_method([10, 20, 30], "values_at") == []
 
 
+def test_array_rotate_wraps_left_and_right() -> None:
+    # ``rotate(n=1)`` rotates left by ``n``; a negative ``n`` rotates right and the
+    # modulo wraps any magnitude.  Empty array stays empty.
+    assert oop.call_method([1, 2, 3, 4], "rotate") == [2, 3, 4, 1]
+    assert oop.call_method([1, 2, 3, 4], "rotate", 2) == [3, 4, 1, 2]
+    assert oop.call_method([1, 2, 3, 4], "rotate", -1) == [4, 1, 2, 3]
+    assert oop.call_method([1, 2, 3, 4], "rotate", 6) == [3, 4, 1, 2]
+    assert oop.call_method([1, 2, 3], "rotate", 0) == [1, 2, 3]
+    assert oop.call_method([], "rotate", 3) == []
+
+
+def test_array_zip_pads_and_truncates_to_receiver_length() -> None:
+    # ``zip(*others)`` yields one tuple per receiver element; a shorter operand pads
+    # with ``None`` and a longer one is truncated to the receiver length.
+    assert oop.call_method([1, 2, 3], "zip", [4, 5, 6]) == [[1, 4], [2, 5], [3, 6]]
+    assert oop.call_method([1, 2, 3], "zip", [4, 5]) == [[1, 4], [2, 5], [3, None]]
+    assert oop.call_method([1, 2], "zip", [3, 4, 5]) == [[1, 3], [2, 4]]
+    assert oop.call_method([1, 2], "zip", [3, 4], [5, 6]) == [[1, 3, 5], [2, 4, 6]]
+    assert oop.call_method([1, 2], "zip", 99) == [[1, None], [2, None]]
+    assert oop.call_method([1, 2], "zip") == [[1], [2]]
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]

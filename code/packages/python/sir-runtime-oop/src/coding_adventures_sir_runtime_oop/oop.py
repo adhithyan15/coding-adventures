@@ -574,6 +574,8 @@ _ARRAY_METHODS = frozenset(
         "take",
         "drop",
         "values_at",
+        "rotate",
+        "zip",
     }
 )
 
@@ -986,6 +988,34 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
                 idx += length
             out.append(recv[idx] if 0 <= idx < length else None)
         return out
+    if name == "rotate":
+        # Ruby ``Array#rotate(n=1)``: rotate left by ``n`` (a negative ``n`` rotates
+        # right).  The modulo wraps so any ``n`` terminates; an empty array is ``[]``.
+        # No arg defaults to 1; a non-numeric arg degrades to 0 (never raises),
+        # matching the Go/Rust runtimes.
+        length = len(recv)
+        if length == 0:
+            return []
+        if not args:
+            n = 1
+        elif isinstance(args[0], (int, float)):
+            n = int(args[0])
+        else:
+            n = 0
+        shift = n % length  # Python ``%`` folds negatives into ``[0, length)``
+        return recv[shift:] + recv[:shift]
+    if name == "zip":
+        # Ruby ``Array#zip(*others)``: an Array of tuples ``[self[i], others..[i]]``
+        # of length ``len(self)``.  A shorter operand pads with ``nil`` (``None``);
+        # a non-array operand is treated as empty (pad-only), never raising.
+        others = [o if isinstance(o, list) else [] for o in args]
+        zipped: list[Val] = []
+        for i, x in enumerate(recv):
+            row: list[Val] = [x]
+            for o in others:
+                row.append(o[i] if i < len(o) else None)
+            zipped.append(row)
+        return zipped
     return _MISS
 
 
