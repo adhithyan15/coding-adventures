@@ -9,7 +9,7 @@
 
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, Scope, Stmt};
+use semantic_ir::{Block, Expr, Function, Global, IntWidth, Module, Scope, Stmt};
 
 use crate::runtime::RUNTIME;
 
@@ -149,6 +149,7 @@ fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
             args.iter().find_map(scan_expr)
         }
         Expr::MakeClosure { captures, .. } => captures.iter().find_map(|c| scan_expr(&c.value)),
+        Expr::Convert { value, .. } => scan_expr(value),
         _ => None,
     }
 }
@@ -269,7 +270,18 @@ fn emit_expr(e: &Expr) -> String {
                 fixed.join(", ")
             )
         }
-        other => unreachable!("v0 Ruby backend reached unsupported expr: {other:?}"),
+        // SIR26: integer conversion → a mask helper chosen by target width +
+        // signedness.  A target width of `Arbitrary` is the identity (a widen
+        // into Ruby's already-unbounded Integer), so no helper wraps it.
+        Expr::Convert { value, to, .. } => match to.width {
+            IntWidth::Arbitrary => emit_expr(value),
+            w => {
+                let bits = w.bits().expect("non-arbitrary width has bits");
+                let sign = if to.signed { 'i' } else { 'u' };
+                format!("sir_{sign}{bits}({})", emit_expr(value))
+            }
+        },
+        other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),
     }
 }
 

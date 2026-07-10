@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.0 — render SIR26 integer conversions
+
+Accepts `Feature::Conversions` (plus the SIR21 type-implied `SizedIntegers`,
+`Unsigned`, `WrappingArithmetic`) and renders `Expr::Convert` — the C→SIR→Ruby
+payoff.
+
+- A conversion emits an inlined mask helper chosen by target width + signedness:
+  `sir_u8`/`sir_u16`/`sir_u32`/`sir_u64`/`sir_u128` (mask) and
+  `sir_i8`/`sir_i16`/`sir_i32`/`sir_i64`/`sir_i128` (mask then two's-complement
+  sign-fold).  A target width of `Arbitrary` is the identity (a widen into
+  Ruby's already-unbounded `Integer`) and emits no wrapper.
+- The masking is exact for every width because Ruby's `Integer` is arbitrary
+  precision and its bitwise ops use a two's-complement model — so `sir_u8(-1)
+  == 255`, `sir_i32(4_000_000_000) == -294_967_296`.
+- Verified end-to-end through a real `ruby`: `sir_u8(300)==44`,
+  `sir_i32(4e9)==-294_967_296`, `(uint32_t)-1==4_294_967_295`,
+  `(int8_t)200==-56`, arbitrary-width identity.
+
 ## 0.1.0 — v0 core (SIR25)
 
 First release of the Ruby backend — the seventh SIR backend and the first Ruby

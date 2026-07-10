@@ -57,6 +57,15 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // ── SIR26 integer conversions ────────────────────────────────────
+    // `Expr::Convert` renders as the portable `_sir_convert(v, bits, signed)`
+    // runtime helper (two's-complement reduction over int64/uint64).  A
+    // Convert's target type also makes the validator observe these SIR21
+    // type-implied features, so the C backend must accept them.
+    Feature::Conversions,
+    Feature::SizedIntegers,
+    Feature::Unsigned,
+    Feature::WrappingArithmetic,
 ];
 
 impl Backend for CBackend {

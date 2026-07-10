@@ -166,3 +166,150 @@ fn e2e_tail_if_both_branches() {
         None => eprintln!("skip: no ruby on PATH"),
     }
 }
+
+// ── SIR26 integer conversions (Expr::Convert) ───────────────────────────────
+
+use semantic_ir::{
+    Block, EffectSet, Expr, Feature, FeatureManifest, Function, IntSpec, IntWidth, Metadata,
+    Module, Overflow, Span, CURRENT_SIR_VERSION,
+};
+
+/// Build a module whose `main` prints `convert(to, IntLit(v))`, emit Ruby, run
+/// it, and return stdout (or `None` when `ruby` is absent).
+fn run_convert(v: i64, to: IntSpec) -> Option<String> {
+    let inner = Expr::IntLit {
+        value: v,
+        span: Span::synthetic(),
+    };
+    let conv = Expr::Convert {
+        value: Box::new(inner),
+        to,
+        span: Span::synthetic(),
+    };
+    let puts = Expr::BuiltinCall {
+        name: "puts".into(),
+        args: vec![conv],
+        effects: EffectSet::PURE,
+        span: Span::synthetic(),
+    };
+    let module = Module {
+        name: "prog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Conversions,
+            Feature::SizedIntegers,
+            Feature::Unsigned,
+            Feature::WrappingArithmetic,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: puts,
+                span: Span::synthetic(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: Span::synthetic(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: Span::synthetic(),
+    };
+    let rb = compile(&module).expect("ruby emit").source;
+    run_ruby(&rb)
+}
+
+fn sized(w: IntWidth, signed: bool) -> IntSpec {
+    IntSpec::sized(w, signed, Overflow::Wrap)
+}
+
+#[test]
+fn convert_emit_shape_picks_the_right_helper() {
+    let inner = Expr::IntLit {
+        value: 300,
+        span: Span::synthetic(),
+    };
+    let m = Module {
+        name: "prog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Conversions,
+            Feature::SizedIntegers,
+            Feature::Unsigned,
+            Feature::WrappingArithmetic,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::Convert {
+                    value: Box::new(inner),
+                    to: sized(IntWidth::W8, false),
+                    span: Span::synthetic(),
+                },
+                span: Span::synthetic(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: Span::synthetic(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: Span::synthetic(),
+    };
+    assert!(compile(&m).unwrap().source.contains("sir_u8(300)"));
+}
+
+#[test]
+fn e2e_convert_u8_wraps() {
+    // 300 mod 256 == 44 (the canonical uint8 overflow).
+    match run_convert(300, sized(IntWidth::W8, false)) {
+        Some(out) => assert_eq!(out, "44"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_convert_i32_overflow() {
+    // (int32_t)4_000_000_000 == -294_967_296 under two's complement.
+    match run_convert(4_000_000_000, sized(IntWidth::W32, true)) {
+        Some(out) => assert_eq!(out, "-294967296"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_convert_u32_of_negative_one() {
+    // (uint32_t)(-1) == 4_294_967_295.
+    match run_convert(-1, sized(IntWidth::W32, false)) {
+        Some(out) => assert_eq!(out, "4294967295"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_convert_i8_of_200() {
+    // (int8_t)200 == -56.
+    match run_convert(200, sized(IntWidth::W8, true)) {
+        Some(out) => assert_eq!(out, "-56"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_convert_arbitrary_is_identity() {
+    // A widen into the unbounded integer keeps the value exactly.
+    match run_convert(4_000_000_000, IntSpec::arbitrary()) {
+        Some(out) => assert_eq!(out, "4000000000"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
