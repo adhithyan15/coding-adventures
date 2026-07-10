@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.25.0 — String justify methods: `ljust` / `rjust` / `center` / `swapcase`
+
+Closes the last String parity gap with the Python/Go/JS/TS runtimes (which
+already carry these) by adding four more non-block Ruby String methods to the
+emitted runtime's `string_method` `match` and the `responds_to` catalog. All are
+**char-based** (`chars().count()` / a rune-cyclic `str_pad`), so a multibyte
+receiver and a multibyte pad are never split mid-codepoint:
+
+- `ljust(width, pad = " ")` / `rjust(width, pad = " ")` / `center(width, pad = " ")`
+  — pad to `width` **characters** using `pad` cyclically. `width <= the current
+  char length` returns the string unchanged; `center` puts any odd extra pad
+  char on the **RIGHT** (Ruby's rule). An empty `pad` degrades to a single space
+  rather than raising, and the fill count is clamped to a DoS bound
+  (`100_000_000`) so a hostile `width` cannot drive an unbounded allocation —
+  holding the never-raise floor.
+- `swapcase` — flip the case of each ASCII letter, leaving non-letters and
+  non-ASCII characters untouched (byte-for-byte identical to the other four
+  runtimes).
+
+Dispatch stays an **explicit** `match` on the interned method name (never
+reflection over a host method table). Exec-proven end-to-end via `rustc`
+(emitted Rust compiled and run; stdout diffed against the Ruby/Python/Go
+reference, including the odd-extra-pad-on-the-right `center` case). Completes the
+String justify group across all five backends.
+
 ## 0.24.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
 
 Adds four non-block Ruby String methods to the emitted runtime's `string_method`
