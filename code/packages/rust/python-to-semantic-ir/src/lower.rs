@@ -3628,6 +3628,8 @@ fn collect_callees_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
 
 fn collect_callees_expr(expr: &Expr, out: &mut HashSet<String>) {
     match expr {
+        // SIR26 conversion (not currently emitted by this frontend) — recurse.
+        Expr::Convert { value, .. } => collect_callees_expr(value, out),
         Expr::DirectCall { fn_name, args, .. } => {
             out.insert(fn_name.clone());
             for a in args {

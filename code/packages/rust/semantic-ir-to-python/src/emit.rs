@@ -415,6 +415,7 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
             expr_uses_builtin(target, name)
                 || indices.iter().any(|ix| index_arg_uses_builtin(ix, name))
         }
+        Expr::Convert { value, .. } => expr_uses_builtin(value, name),
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -1238,9 +1239,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MatMul { .. }
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {
+        | Expr::IndexGet { .. }
+        // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
+        // validated module.
+        | Expr::Convert { .. } => {
             panic!(
-                "python backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                "python backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );

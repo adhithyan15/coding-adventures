@@ -644,6 +644,14 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             print_index_args(out, indices, depth);
             out.push(')');
         }
+        // ── SIR26: integer conversion ──────────────────────────────────
+        Expr::Convert { value, to, .. } => {
+            // `(convert <to> <value>)`, where <to> is the IntSpec text form
+            // (SIR21), e.g. `(convert (int u8 wrap) (var-ref t local))`.
+            let _ = write!(out, "(convert {} ", to);
+            print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
     }
 }
 

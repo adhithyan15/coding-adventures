@@ -421,6 +421,7 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
             expr_uses_builtin(target, name)
                 || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
         }
+        Expr::Convert { value, .. } => expr_uses_builtin(value, name),
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -921,6 +922,7 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
                 collect_index_arg_assigned(idx, out);
             }
         }
+        Expr::Convert { value, .. } => collect_expr_assigned(value, out),
         // Leaves with no nested blocks/exprs that could hold an Assign.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
@@ -1461,9 +1463,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::MatMul { .. }
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
-        | Expr::IndexGet { .. } => {
+        | Expr::IndexGet { .. }
+        // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
+        // validated module.
+        | Expr::Convert { .. } => {
             panic!(
-                "typescript backend reached a deferred SIR22 array/matrix expression ({}) at {} — not accepted yet",
+                "typescript backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );

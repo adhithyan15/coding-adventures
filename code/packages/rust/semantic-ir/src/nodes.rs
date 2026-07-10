@@ -28,7 +28,7 @@ use crate::effects::EffectSet;
 use crate::manifest::FeatureManifest;
 use crate::metadata::Metadata;
 use crate::span::Span;
-use crate::types::SirType;
+use crate::types::{IntSpec, SirType};
 
 // ---------------------------------------------------------------------------
 // Module-level structure
@@ -894,6 +894,27 @@ pub enum Expr {
         indices: Vec<IndexArg>,
         span: Span,
     },
+
+    // ── SIR26 (integer conversions) ──────────────────────────────────
+    /// Convert an integer `value` to the target integer type `to` by
+    /// two's-complement reinterpretation: reduce modulo `2^width` (mask to
+    /// the low `width` bits), then sign-extend when `to.signed` and the top
+    /// bit is set.  A target width of `Arbitrary` is the identity (a widen
+    /// into the unbounded integer — no bits lost).
+    ///
+    /// This is exactly a C integer cast / implicit conversion under
+    /// two's-complement (`-fwrapv`): `(uint8_t)300 == 44`,
+    /// `(int32_t)4_000_000_000 == −294_967_296`.  A frontend inserts a
+    /// `Convert` after each width-bounded operation and at each cast /
+    /// assignment; arithmetic stays exact, so the width enforcement here
+    /// reproduces the source's overflow behaviour at every step.  See
+    /// [SIR26](../../../specs/SIR26-integer-conversions.md).  Gated by
+    /// [`Feature::Conversions`](crate::Feature::Conversions).
+    Convert {
+        value: Box<Expr>,
+        to: IntSpec,
+        span: Span,
+    },
 }
 
 /// The five elementwise (broadcast) binary arithmetic operators
@@ -1010,6 +1031,7 @@ impl Expr {
             Expr::ElementwiseOp { span, .. } => span,
             Expr::Transpose { span, .. } => span,
             Expr::IndexGet { span, .. } => span,
+            Expr::Convert { span, .. } => span,
         }
     }
 
@@ -1046,6 +1068,7 @@ impl Expr {
             Expr::ElementwiseOp { .. } => "elementwise-op",
             Expr::Transpose { .. } => "transpose",
             Expr::IndexGet { .. } => "index-get",
+            Expr::Convert { .. } => "convert",
         }
     }
 }

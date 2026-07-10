@@ -194,6 +194,14 @@ pub enum Feature {
     /// buffer layout and must match the same `(r, c) → c * nrows + r`
     /// indexing formula.
     ArrayColumnMajor,
+    // ── SIR26 (integer conversions) ──────────────────────────────────
+    /// The module contains an `Expr::Convert` node — an integer
+    /// narrowing / reinterpretation to a target width+signedness (a C cast
+    /// or implicit conversion).  A backend accepting this renders the
+    /// two's-complement reduction (mask + sign-fold); a `Convert`'s target
+    /// type also implies `SizedIntegers`/`Unsigned` per SIR21.  See
+    /// [SIR26](../../../../specs/SIR26-integer-conversions.md).
+    Conversions,
 }
 
 impl Feature {
@@ -236,6 +244,7 @@ impl Feature {
         Feature::Rationals,
         Feature::Complex,
         Feature::ArrayColumnMajor,
+        Feature::Conversions,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -278,6 +287,7 @@ impl Feature {
             Feature::Rationals => "rationals",
             Feature::Complex => "complex",
             Feature::ArrayColumnMajor => "array-column-major",
+            Feature::Conversions => "conversions",
         }
     }
 
