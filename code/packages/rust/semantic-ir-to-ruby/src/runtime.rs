@@ -56,6 +56,39 @@ def sir_eq(a, b) = a == b
 # Call a closure value (a Ruby lambda) with the given arguments.
 def sir_apply(target, *args) = target.call(*args)
 
+# ── SIR26 integer conversions ──
+# Reduce an Integer to a fixed width by two's-complement reinterpretation — the
+# rendering of an Expr::Convert.  Ruby's Integer is arbitrary precision and its
+# bitwise ops use an (infinite) two's-complement model, so `v & mask` is exact
+# even when v is negative (e.g. sir_u8(-1) == 255).  Unsigned masks; signed
+# masks then folds the sign bit.  (A target width of Arbitrary is the identity
+# and is emitted with no helper.)
+def sir_u8(v)   = v & 0xFF
+def sir_u16(v)  = v & 0xFFFF
+def sir_u32(v)  = v & 0xFFFFFFFF
+def sir_u64(v)  = v & 0xFFFFFFFFFFFFFFFF
+def sir_u128(v) = v & ((1 << 128) - 1)
+def sir_i8(v)
+  m = v & 0xFF
+  m >= 0x80 ? m - 0x100 : m
+end
+def sir_i16(v)
+  m = v & 0xFFFF
+  m >= 0x8000 ? m - 0x10000 : m
+end
+def sir_i32(v)
+  m = v & 0xFFFFFFFF
+  m >= 0x80000000 ? m - 0x100000000 : m
+end
+def sir_i64(v)
+  m = v & 0xFFFFFFFFFFFFFFFF
+  m >= 0x8000000000000000 ? m - 0x10000000000000000 : m
+end
+def sir_i128(v)
+  m = v & ((1 << 128) - 1)
+  m >= (1 << 127) ? m - (1 << 128) : m
+end
+
 # The key is normalised with to_s so a name that arrives as a Symbol (how the
 # _init function's global_set passes it) and the same name as a String (how a
 # VarRef Global reads it) hit the same entry.

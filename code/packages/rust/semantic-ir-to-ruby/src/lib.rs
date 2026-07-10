@@ -53,6 +53,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // ── SIR26 integer conversions ────────────────────────────────────
+    // `Expr::Convert` renders as an inlined mask helper (`sir_u8`/`sir_i32`/…);
+    // a Convert's target type also makes the validator observe these SIR21
+    // type-implied features, so the Ruby backend must accept them to compile a
+    // conversion-bearing module.  Ruby's arbitrary-precision Integer makes the
+    // masking exact for every width (its bitwise ops use two's complement).
+    Feature::Conversions,
+    Feature::SizedIntegers,
+    Feature::Unsigned,
+    Feature::WrappingArithmetic,
 ];
 
 impl Backend for RubyBackend {

@@ -142,6 +142,32 @@ const char *_sir_str_of(SirValue v) {
     return (v.tag == SIR_STR || v.tag == SIR_SYM) ? v.as.s : "";
 }
 
+/* ---- SIR26 integer conversions ------------------------------ */
+
+/* Reduce an int64 to `bits` (8/16/32/64/128) by two's-complement
+ * reinterpretation: mask to the low `bits`, then sign-fold when `is_signed`.
+ * Pure int64/uint64 arithmetic (no reliance on native fixed-width casts), so it
+ * behaves identically on every compiler.  For bits >= 64 the value is the int64
+ * identity — the u64/i64 storage floor, where u64 values above 2^63 are the
+ * documented bignum frontier shared with the Go/Rust backends. */
+int64_t _sir_mask_to(int64_t v, int bits, int is_signed) {
+    uint64_t mask, m;
+    if (bits >= 64) return v;
+    mask = ((uint64_t)1 << bits) - 1u;
+    m = (uint64_t)v & mask;
+    if (is_signed && (m & ((uint64_t)1 << (bits - 1)))) {
+        return (int64_t)(m - ((uint64_t)1 << bits)); /* sign-extend */
+    }
+    return (int64_t)m;
+}
+
+/* The rendering of Expr::Convert: reduce an integer SirValue to the target
+ * width/signedness (a non-integer passes through, defensively). */
+SirValue _sir_convert(SirValue v, int bits, int is_signed) {
+    if (v.tag != SIR_INT) return v;
+    return _sir_int(_sir_mask_to(v.as.i, bits, is_signed));
+}
+
 /* Collect varargs into a heap array (freed by the caller).  Returns NULL
  * for n == 0. */
 SirValue *_sir_va_collect(int n, va_list ap) {

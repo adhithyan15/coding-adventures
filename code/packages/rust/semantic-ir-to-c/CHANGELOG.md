@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 — render SIR26 integer conversions
+
+Accepts `Feature::Conversions` (plus the SIR21 type-implied `SizedIntegers`,
+`Unsigned`, `WrappingArithmetic`) and renders `Expr::Convert`, so C→SIR→C
+round-trips a source language's integer width/wrapping/truncating semantics.
+
+- A conversion emits the portable runtime helper `_sir_convert(v, bits, signed)`
+  (with `_sir_mask_to` doing a two's-complement reduction over `int64`/`uint64`
+  — mask then sign-fold — no reliance on native fixed-width casts, so it behaves
+  identically on MSVC/GCC/Clang).  A target width of `Arbitrary` is the identity
+  and emits no wrapper.  `bits >= 64` is the `int64` storage floor (u64 above
+  2^63 is the documented bignum frontier, shared with the Go/Rust backends).
+- Verified on **clang, gcc, and MSVC**: `(uint8_t)300==44`, `(int8_t)200==-56`,
+  `(uint16_t)70000==4464`, `(uint32_t)-1==4294967295`,
+  `(int32_t)4e9==-294967296`, arbitrary-width identity.
+
 ## 0.1.0 — v0 core (SIR24)
 
 First release of the sixth SIR backend: lowers a `semantic_ir::Module` to a

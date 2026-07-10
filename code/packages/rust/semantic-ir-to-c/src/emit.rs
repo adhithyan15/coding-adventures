@@ -13,7 +13,7 @@
 use std::cell::Cell;
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, Scope, Span, Stmt};
+use semantic_ir::{Block, Expr, Function, Global, IntSpec, IntWidth, Module, Scope, Span, Stmt};
 
 use crate::runtime::RUNTIME;
 
@@ -403,6 +403,18 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             emit_assign(out, dst, &args[1], indent + 1);
             let _ = writeln!(out, "{pad}}}");
         }
+        // SIR26 conversion with a compound value: compute the value into `dst`,
+        // then reduce it to the target width in place.
+        Expr::Convert { value, to, .. } => {
+            emit_assign(out, dst, value, indent);
+            if let IntWidth::Arbitrary = to.width {
+                // identity widen — nothing to mask
+            } else {
+                let bits = to.width.bits().expect("non-arbitrary width has bits");
+                let signed = if to.signed { 1 } else { 0 };
+                let _ = writeln!(out, "{pad}{dst} = _sir_convert({dst}, {bits}, {signed});");
+            }
+        }
         // A call whose arguments contain control flow: hoist every argument
         // into a temp (left-to-right), then make the call.
         _ => emit_compound_call(out, dst, e, indent),
@@ -530,6 +542,8 @@ fn is_simple(e: &Expr) -> bool {
         | Expr::IndirectCall { args, .. }
         | Expr::BuiltinCall { args, .. } => args.iter().all(is_simple),
         Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_simple(&c.value)),
+        // SIR26: a conversion is as simple as its value.
+        Expr::Convert { value, .. } => is_simple(value),
         // SIR16+ nodes / Intrinsic are not accepted in v0 → unreachable after
         // the capability check.  Treat as non-simple defensively.
         _ => false,
@@ -587,7 +601,24 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             // Simple only when stmts empty (guaranteed by is_simple).
             emit_expr(out, &b.value, indent);
         }
+        Expr::Convert { value, to, .. } => emit_convert(out, value, to, indent),
         other => unreachable!("emit_expr on compound/unsupported node: {other:?}"),
+    }
+}
+
+/// SIR26 integer conversion → the portable `_sir_convert(v, bits, signed)`
+/// runtime helper (two's-complement reduction), or the identity when the
+/// target width is `Arbitrary` (a widen into the unbounded integer).
+fn emit_convert(out: &mut String, value: &Expr, to: &IntSpec, indent: usize) {
+    match to.width {
+        IntWidth::Arbitrary => emit_expr(out, value, indent),
+        w => {
+            let bits = w.bits().expect("non-arbitrary width has bits");
+            let signed = if to.signed { 1 } else { 0 };
+            out.push_str("_sir_convert(");
+            emit_expr(out, value, indent);
+            let _ = write!(out, ", {bits}, {signed})");
+        }
     }
 }
 
@@ -753,6 +784,7 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         Expr::MakeClosure { captures, .. } => captures
             .iter()
             .find_map(|c| scan_expr_for_builtin(&c.value)),
+        Expr::Convert { value, .. } => scan_expr_for_builtin(value),
         _ => None,
     }
 }
