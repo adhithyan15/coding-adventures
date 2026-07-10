@@ -1,0 +1,12 @@
+[package]
+name = "semantic-ir-to-ruby"
+version = "0.1.0"
+edition = "2021"
+description = "Semantic IR → self-contained Ruby source code (SIR25). Seventh backend for the SIR10 narrow-waist IR — the first Ruby target (Ruby was previously only a frontend)."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+
+[dev-dependencies]
+twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }
+ruby-to-semantic-ir = { path = "../ruby-to-semantic-ir" }
