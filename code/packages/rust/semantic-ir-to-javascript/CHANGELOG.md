@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.21.0 — non-block Array catch-up: `flatten` / `compact` / `rotate` / `zip`
+
+Closes the JS backend's remaining gap on the reference (Go/Rust/Python/TS)
+non-block Array surface. Adds four methods to the inlined runtime's `arrayMethod`
+switch and the `ARRAY_METHODS` `respond_to?` set — all Ruby-correct and routed
+through the explicit switch (never `recv[name]`):
+
+- `flatten` — fully flattens nested Arrays (`flatten(n)` to depth `n`, a negative
+  `n` meaning no limit). Handled explicitly rather than via the native `flat`
+  alias, so the no-arg form is full-depth (not JS `flat`'s default depth 1). Only
+  Array elements flatten; strings and other values stay intact, matching Ruby.
+- `compact` — a copy with every `nil` (`null`) removed.
+- `rotate(n=1)` — rotate left by `n` (a negative `n` rotates right); the modulo
+  wraps so any magnitude terminates, and an empty array stays `[]`. A non-numeric
+  arg degrades to `0`.
+- `zip(*others)` — an Array of tuples `[self[i], others..[i]]` of length
+  `recv.length`; a shorter operand pads with `nil` (`null`), a longer one is
+  truncated, and a non-array operand is treated as empty (pad-only).
+
+Exec-proven end-to-end under Node.
+
 ## 0.20.0 — slice-selection Array methods: `take` / `drop` / `values_at`
 
 Extends the inlined JS runtime's `arrayMethod` switch (and the `ARRAY_METHODS`

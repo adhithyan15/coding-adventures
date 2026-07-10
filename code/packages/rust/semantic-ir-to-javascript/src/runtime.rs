@@ -956,6 +956,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "partition", "flat_map", "collect_concat", "take_while", "drop_while",
     "each_with_object", "sum", "uniq", "first", "last", "empty?", "to_a",
     "take", "drop", "values_at",
+    "flatten", "compact", "rotate", "zip",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -1110,6 +1111,45 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           out.push(idx >= 0 && idx < recv.length ? recv[idx] : null);
         }
         return out;
+      }
+      case "flatten": {
+        // Ruby `flatten` fully flattens nested Arrays; `flatten(n)` flattens to
+        // depth `n` (a negative `n` means no limit).  Only Array elements are
+        // flattened — strings and other values stay intact — matching Ruby and
+        // the sibling backends.  (`Array#flat` is deliberately handled here, not
+        // via the native alias, so the no-arg case is full-depth, not depth 1.)
+        let depth = typeof args[0] === "number" ? Math.trunc(args[0]) : Infinity;
+        if (depth < 0) { depth = Infinity; }
+        return recv.flat(depth);
+      }
+      case "compact": {
+        // Ruby `compact` returns a copy with every `nil` (`null`) removed.
+        return recv.filter((x) => x !== null && x !== undefined);
+      }
+      case "rotate": {
+        // `a.rotate(n=1)` — elements rotated left by `n` (a negative `n` rotates
+        // right).  The modulo wraps so any magnitude terminates; an empty array
+        // is `[]`.  No arg defaults to 1; a non-numeric arg degrades to 0.
+        const length = recv.length;
+        if (length === 0) { return []; }
+        const n = args.length === 0
+          ? 1
+          : (typeof args[0] === "number" ? Math.trunc(args[0]) : 0);
+        const shift = ((n % length) + length) % length;
+        return recv.slice(shift).concat(recv.slice(0, shift));
+      }
+      case "zip": {
+        // `a.zip(b, c, ...)` — an Array of tuples `[a[i], b[i], ...]` of length
+        // `a.length`.  A shorter operand pads with `null`; a non-array operand
+        // is treated as empty (pad-only), never raising.
+        const others = args.map((o) => (Array.isArray(o) ? o : []));
+        const zipped = [];
+        for (let i = 0; i < recv.length; i++) {
+          const row = [recv[i]];
+          for (const o of others) { row.push(i < o.length ? o[i] : null); }
+          zipped.push(row);
+        }
+        return zipped;
       }
       case "to_a": return recv;
     }
