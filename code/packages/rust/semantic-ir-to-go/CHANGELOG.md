@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.24.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
+
+Adds four non-block Ruby String methods to the emitted runtime's
+`_sir_string_method` switch and the `_sir_string_responds` catalog, mirroring
+the Python `sir-runtime-oop` reference semantics (rune-based, so multibyte
+strings are never split mid-codepoint):
+
+- `tr(from, to)` — position-wise rune translation; a shorter `to` repeats its
+  last rune, an empty `to` deletes matching runes, and a repeated rune in `from`
+  keeps the last mapping.
+- `count(*sets)` / `delete(*sets)` / `squeeze(*sets)` — char-set methods:
+  `count` tallies runes of the receiver in the set, `delete` removes them, and
+  `squeeze` collapses consecutive runs (of set runes, or of *all* runes when no
+  set is given). Multiple set arguments intersect (Ruby's rule).
+
+Each `set`/`from`/`to` argument is treated **literally** — the range (`"a-z"`)
+and negation (`"^abc"`) forms are a follow-up, matching the literal-only
+`sub`/`gsub` precedent. Exec-proven end-to-end via `go run`. Second backend of
+the String char-set sweep (Python landed in `sir-runtime-oop` v0.1.16).
+
 ## 0.23.0 — slice-selection Array methods: `take` / `drop` / `values_at`
 
 Extends the emitted Go runtime's non-block `Array` catalog (and the
