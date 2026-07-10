@@ -194,6 +194,13 @@ fn cil_array_elem(elem: &str) -> Option<(&'static str, &'static str, &'static st
         "int32" => Some(("int32[]", "ldelem.i4", "stelem.i4", "[System.Runtime]System.Int32")),
         "float64" => Some(("float64[]", "ldelem.r8", "stelem.r8", "[System.Runtime]System.Double")),
         "float32" => Some(("float32[]", "ldelem.r4", "stelem.r4", "[System.Runtime]System.Single")),
+        // E4d-BA-arr: a `str` element (BASIC `DIM A$(n)`) is a **reference**
+        // element — a native `System.String[]`.  Unlike the primitive element
+        // arrays, it uses the reference element ops `ldelem.ref`/`stelem.ref`
+        // (the same pair the McCarthy `object[]` cons cells use), and its str
+        // values are real `System.String` references (no handle materialisation
+        // needed, unlike the static backends).
+        "string" => Some(("string[]", "ldelem.ref", "stelem.ref", "[System.Runtime]System.String")),
         _ => None,
     }
 }
@@ -1577,6 +1584,8 @@ mod tests {
         assert_eq!(cil_array_elem("i32").map(|t| (t.1, t.2)), Some(("ldelem.i4", "stelem.i4")));
         assert_eq!(cil_array_elem("i64").map(|t| (t.1, t.2)), Some(("ldelem.i4", "stelem.i4")));
         assert_eq!(cil_array_elem("f64").map(|t| (t.1, t.2)), Some(("ldelem.r8", "stelem.r8")));
+        // E4d-BA-arr: a `str` element is a reference element (String[]).
+        assert_eq!(cil_array_elem("str").map(|t| (t.1, t.2)), Some(("ldelem.ref", "stelem.ref")));
         assert_eq!(cil_array_elem("ref<LispyPair>"), None);
     }
 
@@ -1629,6 +1638,33 @@ mod tests {
         assert!(il.contains("stelem.r8"), "array_set → stelem.r8");
         assert!(il.contains("ldelem.r8"), "array_get → ldelem.r8");
         assert!(il.contains("float64[]"), "handle local declared float64[]");
+    }
+
+    /// E4d-BA-arr: `string[]` (BASIC `DIM A$(n)`) uses `newarr System.String` +
+    /// `stelem.ref`/`ldelem.ref` — the reference element ops, since a str value
+    /// is a native `System.String` (not a primitive boxed into the array).
+    #[test]
+    fn string_array_emits_ref_ops() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("c2".into()), vec![Operand::Int(2)], "i32"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c2".into())], "array<str>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("s".into())], "str"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "str"),
+            IIRInstr::new("array_len", Some("n".into()), vec![Operand::Var("a".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "dartmouth_basic");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("newarr [System.Runtime]System.String"), "alloc_array → newarr string; got:\n{il}");
+        assert!(il.contains("stelem.ref"), "array_set → stelem.ref");
+        assert!(il.contains("ldelem.ref"), "array_get → ldelem.ref");
+        assert!(il.contains("string[]"), "handle local declared string[]");
     }
 
     /// A void IIR function (`return_type == "void"`, body ends in `ret_void`)

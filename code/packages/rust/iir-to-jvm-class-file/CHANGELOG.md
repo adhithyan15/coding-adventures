@@ -1,5 +1,24 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.30.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `java.lang.String[]` reference arrays)
+
+BASIC string arrays (`DIM A$(n)`) lower to a JVM `java.lang.String[]` — the first
+**reference-element** array on this backend (E5 numeric arrays were all primitive
+`int[]`/`long[]`/`double[]`).
+
+- `iir_type_to_jvm("array<str>")` now maps to `Some(JvmType::Ref)` (a supported
+  reference element); a new `jvm_ref_array_element_class` returns
+  `java/lang/String` for a `str` element.
+- `alloc_array` emits `anewarray java/lang/String` (a `cp.add_class` reference
+  array) instead of `newarray <atype>`; `array_get`/`array_set` use `aaload`/
+  `aastore` (the reference element ops) instead of the typed `*aload`/`*astore`.
+- A str value is a real `java.lang.String` reference, so no handle materialisation
+  is needed; the validator accepts `str` on `array_get`/`array_set`.
+
+Tests: `string_array_emits_reference_array_opcodes`; the pinned
+`array_handle_maps_to_ref` now asserts `array<str>` → `Ref` (and an unsupported
+ref element still → `None`).
+
 ## [0.29.0] — 2026-07-06 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
 
 BASIC's string `INPUT A$` (E4-dyn) now lowers to real JVM bytecode: a whole line

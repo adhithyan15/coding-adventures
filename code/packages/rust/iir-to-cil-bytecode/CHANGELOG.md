@@ -1,5 +1,20 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.39.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `System.String[]` reference arrays)
+
+BASIC string arrays (`DIM A$(n)`) lower to a CIL `System.String[]` in the textual
+`il_text` emitter (the real-CoreCLR / `ilasm` matrix path).
+
+- **`cil_array_elem`** gains a `"string"` arm: `("string[]", "ldelem.ref",
+  "stelem.ref", "[System.Runtime]System.String")` — the reference element ops, the
+  same `ldelem.ref`/`stelem.ref` pair the McCarthy `object[]` cons cells already use.
+- `alloc_array`/`array_get`/`array_set` consume that tuple generically, so
+  `newarr System.String` + `stelem.ref`/`ldelem.ref` fall out with no other change.
+- A str value is a real `System.String` reference (a `str` local is `string`), so —
+  unlike the static backends — no handle materialisation is needed.
+
+Tests: `string_array_emits_ref_ops`, plus a `str` case in `array_element_opcode_table`.
+
 ## [0.38.0] — 2026-07-06 (LANG-FULL E4-dyn: BASIC string `INPUT A$`)
 
 BASIC's string `INPUT A$` (E4-dyn) now lowers on the CLR: the whole stdin line is

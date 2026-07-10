@@ -1659,7 +1659,11 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
 /// stride.
 fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
     match elem {
-        "i64" | "u64" | "f64" => Ok(8),
+        // E4d-BA-arr: a `str` element (BASIC `DIM A$(n)`) is an 8-byte runtime
+        // string handle — the address of a `[i64 len][bytes]` block — stored and
+        // loaded as a plain word exactly like an i64, so no separate str load/store
+        // path is needed (twig-aot already materialises the handle into the slot).
+        "i64" | "u64" | "f64" | "str" => Ok(8),
         other => Err(BackendError::MalformedInstr(format!(
             "array element {other:?} not supported on the native backend (8-byte elements only so far)"
         ))),
