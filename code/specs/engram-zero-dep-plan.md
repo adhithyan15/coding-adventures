@@ -189,6 +189,9 @@ Per `code/specs/storage-sqlite.md` + the Python `storage-sqlite` port:
 - E5: cut anki-pkg **reader** over (`open_serialized_v11_collection` +
   `read_v11_*`), delete the `ffi`/`OwnedData` unsafe block. M — import runs rusqlite-free.
 
+Status update: E1-E4 are now landed in `sqlite-file`; E5 is the next reader
+milestone and can consume `sqlite_file::read_table(bytes, name)` directly.
+
 ### Phase F — sqlite-file writer (**removes rusqlite**) — L (PRs A6–A8)
 - F1: record/header/b-tree **write** — smallest-serial-type rule, leaf-insert,
   page splits → interior pages, overflow-write for large `col` JSON. L

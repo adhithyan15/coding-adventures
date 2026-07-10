@@ -302,3 +302,112 @@ fn rows_round_trip_through_our_reader() {
         "the overflow row must have been reassembled in full"
     );
 }
+
+/// Phase E4: the public schema API should expose the same table root pages the
+/// low-level E3 tests hand-extracted from `sqlite_schema`.
+#[test]
+fn public_schema_api_finds_table_root_pages() {
+    let db = build_sqlite_db(&[
+        "CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)",
+        "CREATE TABLE u (x INTEGER, y INTEGER)",
+        "CREATE VIEW v AS SELECT name FROM t",
+        "INSERT INTO t VALUES (1, 'Ada'), (2, 'Grace')",
+        "INSERT INTO u VALUES (10, 20), (30, 40)",
+    ]);
+
+    let schema = sqlite_file::read_schema(&db).expect("schema should decode");
+    assert!(
+        schema.iter().any(|entry| entry.object_type == "table"
+            && entry.name == "t"
+            && entry.table_name == "t"
+            && entry.root_page.is_some()
+            && entry
+                .sql
+                .as_deref()
+                .unwrap_or("")
+                .contains("CREATE TABLE t")),
+        "table t should appear in decoded sqlite_schema"
+    );
+    assert!(
+        schema.iter().any(|entry| entry.object_type == "view"
+            && entry.name == "v"
+            && entry.root_page.is_none()),
+        "view v should appear without a root page"
+    );
+
+    let t_root = sqlite_file::table_root_page(&db, "t").expect("table t root");
+    let u_root = sqlite_file::table_root_page(&db, "u").expect("table u root");
+    assert_ne!(t_root, 0);
+    assert_ne!(u_root, 0);
+
+    static COUNTER4: AtomicU64 = AtomicU64::new(3_000_000);
+    let unique = COUNTER4.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!(
+        "sqlite_file_schema_api_{}_{}",
+        std::process::id(),
+        unique
+    ));
+    std::fs::create_dir(&dir).unwrap();
+    let path = dir.join("oracle.db");
+    std::fs::write(&path, &db).unwrap();
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let theirs: Vec<(String, i64)> = conn
+        .prepare("SELECT name, rootpage FROM sqlite_schema WHERE type = 'table' ORDER BY name")
+        .unwrap()
+        .query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    assert!(theirs.contains(&("t".to_string(), i64::from(t_root))));
+    assert!(theirs.contains(&("u".to_string(), i64::from(u_root))));
+}
+
+/// Phase E4: callers should be able to read a table by name without knowing how
+/// to walk `sqlite_schema` manually. This also keeps the overflow row gate on
+/// the public API path.
+#[test]
+fn read_table_api_decodes_named_table_rows() {
+    let big = "public api overflow ".repeat(400);
+    assert!(big.len() > 5000, "the large row must exceed one page");
+    let ins2 = format!("INSERT INTO t VALUES (2, '{big}', 2.5, x'cafe', 'kept')");
+    let db = build_sqlite_db(&[
+        "CREATE TABLE t (id INTEGER PRIMARY KEY, body TEXT, score REAL, payload BLOB, note TEXT)",
+        "INSERT INTO t VALUES (1, 'short one', 1.25, x'dead', NULL)",
+        &ins2,
+        "INSERT INTO t VALUES (3, 'short three', NULL, NULL, 'tail')",
+    ]);
+
+    let rows = sqlite_file::read_table(&db, "t").expect("read table t");
+    assert_eq!(rows.len(), 3);
+    assert_eq!(rows[0].0, 1);
+    assert_eq!(rows[0].1[0], sqlite_file::SqlValue::Null);
+    assert_eq!(
+        rows[0].1[1],
+        sqlite_file::SqlValue::Text("short one".to_string())
+    );
+    assert_eq!(rows[0].1[2], sqlite_file::SqlValue::Real(1.25));
+    assert_eq!(rows[0].1[3], sqlite_file::SqlValue::Blob(vec![0xde, 0xad]));
+    assert_eq!(rows[0].1[4], sqlite_file::SqlValue::Null);
+
+    assert_eq!(rows[1].0, 2);
+    assert_eq!(rows[1].1[1], sqlite_file::SqlValue::Text(big.clone()));
+    assert_eq!(rows[1].1[2], sqlite_file::SqlValue::Real(2.5));
+    assert_eq!(rows[1].1[3], sqlite_file::SqlValue::Blob(vec![0xca, 0xfe]));
+    assert!(
+        matches!(&rows[2].1[2], sqlite_file::SqlValue::Null),
+        "NULL REAL values should decode as SqlValue::Null"
+    );
+}
+
+#[test]
+fn read_table_reports_missing_tables() {
+    let db = build_sqlite_db(&["CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)"]);
+    assert_eq!(
+        sqlite_file::read_table(&db, "missing"),
+        Err(sqlite_file::SqliteError::NoSuchTable("missing".to_string()))
+    );
+}
