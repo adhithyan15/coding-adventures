@@ -248,6 +248,43 @@ mod tests {
     }
 
     #[test]
+    fn hostile_picture_size_errors_rather_than_exhausting_memory() {
+        // A ~30-byte program that would allocate gigabytes without the bound.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC X(4000000000).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::UnsupportedPicture(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn invalid_level_number_is_rejected() {
+        // Level 88 (condition-names) is a deferred feature; level 50 is invalid.
+        for lvl in ["88", "50"] {
+            let err = run_cobol(&program(&[
+                "IDENTIFICATION DIVISION.",
+                "PROGRAM-ID. P.",
+                "DATA DIVISION.",
+                "WORKING-STORAGE SECTION.",
+                "01  REC  PIC X(3).",
+                &format!("{lvl}  SUB  PIC X(2)."),
+                "PROCEDURE DIVISION.",
+                "MAIN.",
+                "    STOP RUN.",
+            ]))
+            .unwrap_err();
+            assert!(matches!(err, RuntimeError::Unsupported(_)), "level {lvl}: got {err:?}");
+        }
+    }
+
+    #[test]
     fn signed_picture_is_unsupported_not_wrong() {
         let err = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",

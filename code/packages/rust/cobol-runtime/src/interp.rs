@@ -43,6 +43,17 @@ impl Machine {
         let mut stack: Vec<usize> = Vec::new();
 
         for def in &program.data {
+            // Only the hierarchy levels 01–49 and the standalone 77 are modelled
+            // in v0.1. Rejecting anything else is faithful COBOL (66/88 are
+            // deferred features; 50+ are invalid) and bounds the item-tree depth
+            // to ≤ 49, so `group_image` recursion can never overflow the stack.
+            if !(1..=49).contains(&def.level) && def.level != 77 {
+                return Err(RuntimeError::Unsupported(format!(
+                    "level number {:02} (v0.1 supports 01–49 and 77)",
+                    def.level
+                )));
+            }
+
             let picture = match &def.picture {
                 Some(p) => Some(Picture::parse(p)?),
                 None => None,
