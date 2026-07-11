@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.18] - 2026-07-11
+
+### Added — CLOC12.179: private accessors end-to-end
+
+Picks up javascript-parser 0.43.0, whose bridge now lowers a private getter /
+setter (`get #x(){}`, `set #x(v){}`) to a `ClassMember::Method` with
+`MethodKind::Get` / `MethodKind::Set` and a `PropertyKey::PrivateName` key. A
+private accessor now survives the full closurec pipeline. New e2e diff fixture
+`tests/diff/simple-private-getter/`:
+`class C { get #x(){ return 1 + 2 } }` → `class C{get #x(){return 3}}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the getter's body: `1 + 2`
+folds to `3`. Before this bridge extension the private getter declined, dropping
+the file to WHITESPACE_ONLY (`class C{get #x(){return 1+2}};`). Version-synced
+cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.17] - 2026-07-11
 
 ### Added — CLOC12.178: private methods end-to-end

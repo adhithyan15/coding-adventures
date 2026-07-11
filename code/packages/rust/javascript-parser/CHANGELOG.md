@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.43.0] - 2026-07-11
+
+### Added — CLOC12.179: bridge private accessors (`get #x()` / `set #x()`)
+
+`convert_private_method_definition` (CLOC12.178) declined the private *accessor*
+forms; it now lowers them. A private getter (`get #x(){}`) becomes a
+`ClassMember::Method` with `MethodKind::Get` and a `PropertyKey::PrivateName`
+key; a private setter (`set #x(v){}`) becomes `MethodKind::Set` with its single
+parameter. The `get` / `set` keyword precedes the `PRIVATE_NAME` token as a
+direct token child (read alongside `static`), so `static get #x(){}` also works.
+
+Still declined: the private **generator** (`*#m(){}`) and **async** forms — like
+a public generator method, they DECLINE (safe WHITESPACE_ONLY), never a mis-emit.
+
+4 new bridge tests (private getter, private setter, static private getter; the
+former `class_private_getter_still_declines` replaced by a
+`class_private_generator_still_declines` guard). MINOR.
+
 ## [0.42.0] - 2026-07-11
 
 ### Added — CLOC12.178 PR1: bridge private methods → `ClassMember::Method` with a private key
