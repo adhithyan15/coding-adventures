@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 125 \u2014 EMG recruitment index from four stated quantities (a NEW panel: electromyography / motor-unit recruitment). From a lone motor response divided by a net amplitude (a baseline amplitude with a decrement drop subtracted and a facilitation gain added back), compute the recruitment index (motor_response/(baseline_amplitude-decrement_drop+facilitation_gain)), the net amplitude (baseline_amplitude-decrement_drop+facilitation_gain), or the residual (baseline_amplitude-decrement_drop). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a LONE TERM OVER A SUBTRACT-THEN-ADD THREE-TERM DENOMINATOR a/(b-c+d) (subtract the decrement drop from the baseline amplitude, add the facilitation gain, then divide the motor response by that whole net amplitude, so a/(b-c+d) = (a/((b-c)+d)); the subtract-then-add sibling of rung-124's all-minus a/(b-c-d). a/(b-c+d) has never been a headline on the ladder \u2014 only rung-124's swapped distractor \u2014 so this promotes that grouping to a queried gold. Distinct from rung-117 a/(b+c-d), which adds the first two and subtracts the third; rung-125 subtracts the first later term and adds the second. The last-term sign-flip a/(b-c-d) (rung-124's real shape) rides alongside as the swapped distractor. The harness matches the scalar to the printed options. The recruitment index is a rate (motor response per unit of net amplitude), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via -, + and / \u2014 no constant leaks, and neither the net amplitude, the residual, nor the recruitment index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the baseline amplitude divides (a/b-c+d, evaluating (a/b)-c+d, a wrong grouping) and flipping the sign of the last term (a/(b-c-d), rung-124's grouping, a wrong grouping). The core confusion tested is that a/(b-c+d) is (a/((b-c)+d)), not a/b-c+d and not a/(b-c-d). This rung SUBTRACTS a term inside the denominator so positivity is NOT automatic; each table guards baseline_amplitude > decrement_drop + facilitation_gain (b-c-d >= 2, keeping the swapped denom, the residual, and the net amplitude all positive) and motor_response/baseline_amplitude - decrement_drop + facilitation_gain > 0 (crossed positive), keeping the five family values pairwise distinct and all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r125emg-01",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 18 divided by a baseline amplitude of 7 minus a decrement drop of 3 plus a facilitation gain of 2. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(18)\nobserve baseline_amplitude(7)\nobserve decrement_drop(3)\nobserve facilitation_gain(2)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r125emg-02",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 18 divided by a baseline amplitude of 7 minus a decrement drop of 3 plus a facilitation gain of 2. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(18)\nobserve baseline_amplitude(7)\nobserve decrement_drop(3)\nobserve facilitation_gain(2)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r125emg-03",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 18 divided by a baseline amplitude of 7 minus a decrement drop of 3 plus a facilitation gain of 2. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(18)\nobserve baseline_amplitude(7)\nobserve decrement_drop(3)\nobserve facilitation_gain(2)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r125emg-04",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 32 divided by a baseline amplitude of 7 minus a decrement drop of 2 plus a facilitation gain of 3. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(32)\nobserve baseline_amplitude(7)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r125emg-05",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 32 divided by a baseline amplitude of 7 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(32)\nobserve baseline_amplitude(7)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r125emg-06",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 32 divided by a baseline amplitude of 7 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(32)\nobserve baseline_amplitude(7)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r125emg-07",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 45 divided by a baseline amplitude of 8 minus a decrement drop of 2 plus a facilitation gain of 3. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(45)\nobserve baseline_amplitude(8)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r125emg-08",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 45 divided by a baseline amplitude of 8 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(45)\nobserve baseline_amplitude(8)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r125emg-09",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 45 divided by a baseline amplitude of 8 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(45)\nobserve baseline_amplitude(8)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r125emg-10",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 60 divided by a baseline amplitude of 9 minus a decrement drop of 2 plus a facilitation gain of 3. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(60)\nobserve baseline_amplitude(9)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r125emg-11",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 60 divided by a baseline amplitude of 9 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(60)\nobserve baseline_amplitude(9)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r125emg-12",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 60 divided by a baseline amplitude of 9 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(60)\nobserve baseline_amplitude(9)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r125emg-13",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 77 divided by a baseline amplitude of 10 minus a decrement drop of 2 plus a facilitation gain of 3. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(77)\nobserve baseline_amplitude(10)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r125emg-14",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 77 divided by a baseline amplitude of 10 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(77)\nobserve baseline_amplitude(10)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r125emg-15",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 77 divided by a baseline amplitude of 10 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(77)\nobserve baseline_amplitude(10)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r125emg-16",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 96 divided by a baseline amplitude of 11 minus a decrement drop of 2 plus a facilitation gain of 3. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(96)\nobserve baseline_amplitude(11)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.727272727272727,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r125emg-17",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 96 divided by a baseline amplitude of 11 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(96)\nobserve baseline_amplitude(11)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.727272727272727,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r125emg-18",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 96 divided by a baseline amplitude of 11 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(96)\nobserve baseline_amplitude(11)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.727272727272727,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r125emg-19",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 117 divided by a baseline amplitude of 12 minus a decrement drop of 2 plus a facilitation gain of 3. What is the recruitment index (the motor response divided by the net amplitude)?",
+      "program": "observe motor_response(117)\nobserve baseline_amplitude(12)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = motor_response / (baseline_amplitude - decrement_drop + facilitation_gain)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.714285714285715,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r125emg-20",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 117 divided by a baseline amplitude of 12 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the net amplitude (the baseline amplitude minus the decrement drop plus the facilitation gain, the divisor the motor response is divided by)?",
+      "program": "observe motor_response(117)\nobserve baseline_amplitude(12)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop + facilitation_gain\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.714285714285715,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r125emg-21",
+      "qtype": "recruitment_index",
+      "stem": "An electromyography chart records a motor response of 117 divided by a baseline amplitude of 12 minus a decrement drop of 2 plus a facilitation gain of 3. What is the the residual (the baseline amplitude minus the decrement drop, before the facilitation gain is added back)?",
+      "program": "observe motor_response(117)\nobserve baseline_amplitude(12)\nobserve decrement_drop(2)\nobserve facilitation_gain(3)\nlet answer = baseline_amplitude - decrement_drop\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.714285714285715,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
