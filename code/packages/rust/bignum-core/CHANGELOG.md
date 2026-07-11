@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sign, matching Rust's `/` and `%`; panics on a zero divisor), `Neg`, and `abs`.
 - `pow(exp)` via exponentiation by squaring; `gcd(&other)` via the Euclidean algorithm
   (always non-negative).
+- `try_pow(exp, max_bits)` — the DoS-safe form of `pow`: because a result's bit length
+  is `≤ bit_len(base) · exp`, it refuses an oversized result up front (in O(1), before
+  any allocation) with a typed `PowTooLargeError`, so an untrusted exponent cannot
+  trigger an out-of-memory abort. `pow` documents that it must not be called with an
+  untrusted exponent.
 - Comparison and hashing: `Ord`/`PartialOrd`/`Eq`/`PartialEq`/`Hash` (by sign then
   magnitude), plus `is_zero`, `is_negative`, `is_positive`, `signum`, `num_limbs`,
   `bit_len`.

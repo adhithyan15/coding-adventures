@@ -141,6 +141,36 @@ impl fmt::Display for ParseBigIntError {
 
 impl std::error::Error for ParseBigIntError {}
 
+/// The error returned by [`BigInteger::try_pow`] when the projected result would
+/// exceed the caller's size ceiling.
+///
+/// Exponentiation grows the result LINEARLY in the exponent: `bit_len(baseᵉ) ≈
+/// bit_len(base) · e`. A `u32` exponent sourced from untrusted input (a document, a
+/// model) can therefore ask for a multi-gigabit number from a tiny expression
+/// (`2 ^ 4000000000`), exhausting memory before a single wrong digit is produced.
+/// `try_pow` refuses up front — in O(1), before any allocation — when the projected
+/// bit length crosses `max_bits`, turning a resource-exhaustion DoS into this clean,
+/// typed error. Carries both the projected size and the ceiling that rejected it.
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct PowTooLargeError {
+    /// The (upper-bound) bit length the result would have had: `bit_len(base) · exp`.
+    pub projected_bits: u64,
+    /// The ceiling the caller supplied, which `projected_bits` exceeded.
+    pub max_bits: u64,
+}
+
+impl fmt::Display for PowTooLargeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "pow result would be ~{} bits, exceeding the {}-bit ceiling",
+            self.projected_bits, self.max_bits
+        )
+    }
+}
+
+impl std::error::Error for PowTooLargeError {}
+
 // ===========================================================================
 //  Magnitude primitives — pure functions on normalized little-endian limb slices
 // ===========================================================================
@@ -763,6 +793,15 @@ impl BigInteger {
     /// assert_eq!(BigInteger::from_u64(3).pow(4), BigInteger::from_u64(81));
     /// assert_eq!(BigInteger::from_u64(10).pow(0), BigInteger::one());
     /// ```
+    ///
+    /// ## Unbounded result — do not call with an untrusted exponent
+    ///
+    /// The result grows LINEARLY in `exp`: `bit_len(baseᵉ) ≈ bit_len(base) · exp`. A
+    /// large `exp` (still only a small `u32`) therefore asks for an arbitrarily large
+    /// number — `2.pow(4_000_000_000)` targets ~4 gigabits and exhausts memory. When
+    /// `exp` may come from untrusted input (a document, a model), use
+    /// [`try_pow`](Self::try_pow), which refuses an oversized result up front instead
+    /// of OOMing.
     pub fn pow(&self, exp: u32) -> BigInteger {
         let mut result = BigInteger::one();
         let mut base = self.clone();
@@ -777,6 +816,42 @@ impl BigInteger {
             }
         }
         result
+    }
+
+    /// [`pow`](Self::pow) with a size guard — the safe form for an exponent that may
+    /// come from untrusted input.
+    ///
+    /// Because `bit_len(baseᵉ) ≤ bit_len(base) · exp`, the result's size is known in
+    /// O(1) *before* any work is done. If that upper bound exceeds `max_bits`, this
+    /// returns [`PowTooLargeError`] immediately — no allocation, no squaring — so a
+    /// hostile `2 ^ 4_000_000_000` is a clean typed error, not an out-of-memory abort.
+    /// Otherwise it computes `self.pow(exp)`. Exponentiation-by-squaring's largest
+    /// intermediate is the result itself, so bounding the final size bounds every
+    /// step. A zero/one/-one base or `exp == 0` never grows and always succeeds.
+    ///
+    /// ```
+    /// # use bignum_core::BigInteger;
+    /// // Fits: 3^40 is ~64 bits, well under the ceiling.
+    /// assert!(BigInteger::from_u64(3).try_pow(40, 4096).is_ok());
+    /// // Refused up front: 2^1_000_000 would be ~1e6 bits, over the 4096-bit cap.
+    /// assert!(BigInteger::from_u64(2).try_pow(1_000_000, 4096).is_err());
+    /// ```
+    pub fn try_pow(&self, exp: u32, max_bits: u64) -> Result<BigInteger, PowTooLargeError> {
+        // Bases that never grow: 0, ±1, or exp 0 → the result is 0 or ±1 (≤ 1 bit).
+        let projected = if exp == 0 || self.is_zero() || self.bit_len() <= 1 {
+            1
+        } else {
+            // Upper bound on the result's bit length. `saturating_mul` keeps a huge
+            // exponent from wrapping the projection (which would defeat the guard).
+            self.bit_len().saturating_mul(exp as u64)
+        };
+        if projected > max_bits {
+            return Err(PowTooLargeError {
+                projected_bits: projected,
+                max_bits,
+            });
+        }
+        Ok(self.pow(exp))
     }
 
     /// The greatest common divisor of `self` and `other`, always **non-negative**,
@@ -1675,5 +1750,31 @@ mod tests {
             BigInteger::from_u64(2).pow(200).to_str_radix(36),
             "bnklg118comha6gqury14067gur54n8won6guf4"
         );
+    }
+
+    /// The `try_pow` size guard: a hostile exponent is refused up front (no OOM), a
+    /// legitimate one computes the same value as `pow`, and non-growing bases always
+    /// pass regardless of the exponent.
+    #[test]
+    fn try_pow_guards_oversized_results() {
+        let two = BigInteger::from_u64(2);
+        // Refused BEFORE any allocation: 2^4e9 would be ~4 gigabits.
+        let err = two.try_pow(4_000_000_000, 1 << 20).unwrap_err();
+        assert_eq!(err.max_bits, 1 << 20);
+        assert!(err.projected_bits > err.max_bits);
+        // A modest exponent within the ceiling succeeds and equals plain `pow`.
+        assert_eq!(two.try_pow(200, 4096).unwrap(), two.pow(200));
+        // Exactly at the boundary: 2^100 is 101 bits (bit_len(2)=2 → projected 200).
+        assert!(BigInteger::from_u64(2).try_pow(100, 200).is_ok());
+        assert!(BigInteger::from_u64(2).try_pow(100, 199).is_err());
+        // Non-growing bases pass at any exponent — 1, -1, 0 never blow up.
+        assert_eq!(BigInteger::one().try_pow(u32::MAX, 1).unwrap(), BigInteger::one());
+        assert_eq!(
+            (-&BigInteger::one()).try_pow(u32::MAX, 1).unwrap(),
+            -&BigInteger::one()
+        );
+        assert_eq!(BigInteger::zero().try_pow(u32::MAX, 1).unwrap(), BigInteger::zero());
+        // exp == 0 is 1 for any base, always within any non-zero ceiling.
+        assert_eq!(BigInteger::from_u64(999).try_pow(0, 1).unwrap(), BigInteger::one());
     }
 }
