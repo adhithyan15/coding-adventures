@@ -1717,7 +1717,9 @@ func _sir_hash_responds(name string) bool {
 		return true
 	// Block-taking Hash methods.
 	case "each", "each_pair", "each_key", "each_value", "map",
-		"select", "filter", "reject", "transform_values", "transform_keys":
+		"select", "filter", "reject", "transform_values", "transform_keys",
+		"find", "detect", "any?", "all?", "none?", "count",
+		"sort_by", "min_by", "max_by":
 		return true
 	}
 	return false
@@ -2566,6 +2568,92 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			_sir_map_put(m, _sir_apply(block, []Value{e.Key}), e.Val)
 		}
 		return m, true
+	// ── Enumerable aggregates (Hash includes Enumerable) ───────────
+	//
+	// Ruby's Hash mixes in Enumerable, so these iterate the hash as a
+	// sequence of [key, value] pairs: the block is yielded (key, value)
+	// (two arguments, matching `each`), and the "element" an aggregate
+	// returns is the two-element [key, value] Array (`&Seq{key, value}`).
+	case "find", "detect":
+		// First [k, v] pair whose block result is truthy; nil if none.
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return &Seq{Items: []Value{e.Key, e.Val}}, true
+			}
+		}
+		return nil, true
+	case "any?":
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return true, true
+			}
+		}
+		return false, true
+	case "all?":
+		for _, e := range recv.Entries {
+			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return false, true
+			}
+		}
+		return true, true
+	case "none?":
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				return false, true
+			}
+		}
+		return true, true
+	case "count":
+		// count { |k, v| pred } — number of pairs with a truthy block result.
+		n := int64(0)
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				n++
+			}
+		}
+		return n, true
+	case "sort_by":
+		// A NEW Array of [k, v] pairs sorted by the block key, stable on ties.
+		// Keys are computed once (Schwartzian); `_sir_value_lt` never panics.
+		type sbKV struct {
+			key  Value
+			pair Value
+		}
+		keyed := make([]sbKV, len(recv.Entries))
+		for i, e := range recv.Entries {
+			keyed[i] = sbKV{_sir_apply(block, []Value{e.Key, e.Val}), &Seq{Items: []Value{e.Key, e.Val}}}
+		}
+		sort.SliceStable(keyed, func(i, j int) bool {
+			return _sir_value_lt(keyed[i].key, keyed[j].key)
+		})
+		out := make([]Value, len(keyed))
+		for i := range keyed {
+			out[i] = keyed[i].pair
+		}
+		return &Seq{Items: out}, true
+	case "min_by", "max_by":
+		// The [k, v] pair with the extremal block key (first-on-tie; nil on
+		// an empty hash).
+		if len(recv.Entries) == 0 {
+			return nil, true
+		}
+		wantMin := name == "min_by"
+		best := recv.Entries[0]
+		bestKey := _sir_apply(block, []Value{best.Key, best.Val})
+		for _, e := range recv.Entries[1:] {
+			k := _sir_apply(block, []Value{e.Key, e.Val})
+			take := false
+			if wantMin {
+				take = _sir_value_lt(k, bestKey)
+			} else {
+				take = _sir_value_lt(bestKey, k)
+			}
+			if take {
+				best = e
+				bestKey = k
+			}
+		}
+		return &Seq{Items: []Value{best.Key, best.Val}}, true
 	}
 	return nil, false
 }
