@@ -387,6 +387,12 @@ jobs:
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true'
         uses: dtolnay/rust-toolchain@stable
+        with:
+          # `clippy` is required by the build tool's -clippy gate, which lints
+          # every affected Rust package with `-D warnings` before its BUILD runs.
+          # dtolnay/rust-toolchain installs the minimal profile, so clippy must be
+          # requested explicitly.
+          components: clippy
 
       - name: Install native Paint VM dependencies
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
@@ -726,6 +732,7 @@ jobs:
             -root . \
             $PLAN_FLAG \
             -validate-build-files \
+            -clippy \
             -language all
 
       # ── Force full build on main ──────────────────────────────
@@ -734,4 +741,4 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -language all
+          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
