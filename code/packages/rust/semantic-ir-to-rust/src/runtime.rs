@@ -2317,17 +2317,23 @@ pub const RUNTIME: &str = r##"mod __sir {
                             .find(|(ek, _)| value_eq(ek, k))
                             .map(|(_, v)| v.clone())
                             .unwrap_or(Value::Nil),
-                        Value::Seq(items) => {
-                            let items = items.borrow();
-                            let len = items.len() as i64;
-                            let raw = as_i64(k);
-                            let idx = if raw < 0 { raw + len } else { raw };
-                            if idx >= 0 && idx < len {
-                                items[idx as usize].clone()
-                            } else {
-                                Value::Nil
+                        // `Array#dig` indexes by an Integer; a non-integer key
+                        // is a MISS (nil), never a panic — honouring the
+                        // never-panic floor and matching the JS backend (which
+                        // digs an Array only when the key is a number).
+                        Value::Seq(items) => match k {
+                            Value::Int(raw) => {
+                                let items = items.borrow();
+                                let len = items.len() as i64;
+                                let idx = if *raw < 0 { raw + len } else { *raw };
+                                if idx >= 0 && idx < len {
+                                    items[idx as usize].clone()
+                                } else {
+                                    Value::Nil
+                                }
                             }
-                        }
+                            _ => Value::Nil,
+                        },
                         _ => Value::Nil,
                     };
                     if matches!(cur, Value::Nil) {
@@ -2381,11 +2387,17 @@ pub const RUNTIME: &str = r##"mod __sir {
             }
             // `Hash#reject { |k, v| … }` — a NEW hash of the pairs for which the
             // block is FALSY (the complement of `select`).  Non-mutating.
+            // Each block arm SNAPSHOTS the entries into an owned `Vec` in a
+            // `let` binding *before* iterating, so the `RefCell` borrow is
+            // released prior to any `apply_closure` call.  A block that
+            // reentrantly mutates the SAME hash (`h.each_key { h.store(...) }`)
+            // therefore cannot trip a `BorrowMutError` panic — the never-panic
+            // floor holds even now that mutating Hash arms (`store`/`delete`/
+            // `clear`) exist.
             "reject" => match &block {
                 Some(b) => {
-                    let kept: Vec<(Value, Value)> = entries_rc
-                        .borrow()
-                        .clone()
+                    let snapshot = entries_rc.borrow().clone();
+                    let kept: Vec<(Value, Value)> = snapshot
                         .into_iter()
                         .filter(|(k, v)| !truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
                         .collect();
@@ -2397,7 +2409,8 @@ pub const RUNTIME: &str = r##"mod __sir {
             // and returns the receiver.
             "each_key" => {
                 if let Some(b) = &block {
-                    for (k, _) in entries_rc.borrow().clone() {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (k, _) in snapshot {
                         apply_closure(b, vec![k]);
                     }
                 }
@@ -2407,7 +2420,8 @@ pub const RUNTIME: &str = r##"mod __sir {
             // entry and returns the receiver.
             "each_value" => {
                 if let Some(b) = &block {
-                    for (_, v) in entries_rc.borrow().clone() {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (_, v) in snapshot {
                         apply_closure(b, vec![v]);
                     }
                 }

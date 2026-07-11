@@ -189,6 +189,19 @@ fn catalog_demo() -> Module {
         print_stmt(method(nested(), "dig", vec![symlit("a"), symlit("b")])),
         // {a:{b:1}}.dig(:a,:z) → nil  (nested miss)
         print_stmt(method(nested(), "dig", vec![symlit("a"), symlit("z")])),
+        // {a:[10,20]}.dig(:a, :b) → nil  (non-integer index into an Array is a
+        // MISS, never a panic — never-panic floor)
+        print_stmt(method(
+            map_lit(vec![(symlit("a"), Expr::SeqLit { items: vec![ilit(10), ilit(20)], span: s() })]),
+            "dig",
+            vec![symlit("a"), symlit("b")],
+        )),
+        // {a:[10,20]}.dig(:a, 1) → 20  (integer index into the nested Array)
+        print_stmt(method(
+            map_lit(vec![(symlit("a"), Expr::SeqLit { items: vec![ilit(10), ilit(20)], span: s() })]),
+            "dig",
+            vec![symlit("a"), ilit(1)],
+        )),
         // {a:1,b:2}.invert → {1: a, 2: b}
         print_stmt(method(ab_map(), "invert", vec![])),
         // {a:1,b:2}.store(:c, 3) → 3  (returns stored value)
@@ -273,6 +286,8 @@ fn hash_catalog_compile_and_run() {
             "{a: 1, b: 9}",     // merge (collision → other wins)
             "1",                // dig nested hit
             "nil",              // dig nested miss
+            "nil",              // dig non-integer Array index → nil (no panic)
+            "20",               // dig integer Array index
             "{1: a, 2: b}",     // invert
             "3",                // store → stored value
             "1",                // delete → removed value
