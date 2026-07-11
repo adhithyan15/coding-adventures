@@ -232,7 +232,7 @@ const BASTORE: u8 = 0x54;
 ///   * `public static byte[] __tape` — the BF tape (typically 30,000 bytes)
 ///   * `public static void putchar(int)` — write one byte to stdout
 ///   * `public static int  getchar()`    — read one byte from stdin, or `-1` / `0`
-///                                          on EOF (BF's interpreter convention is `0`)
+///     on EOF (BF's interpreter convention is `0`)
 ///
 /// Picking a fixed host class keeps the BF-compiled class self-contained:
 /// no `<clinit>` required on the BF side, and no per-program tape size baked
@@ -4532,6 +4532,9 @@ fn one_src(
 }
 
 /// Extract (slot, type) for both sources of a binary instruction (must both be Vars).
+// The nested `(slot, type)` pairs are the natural shape here; a named struct
+// would only obscure the two-operand extraction at the single call cluster.
+#[allow(clippy::type_complexity)]
 fn two_srcs(
     func: &IIRFunction,
     instr: &interpreter_ir::IIRInstr,
@@ -5390,8 +5393,8 @@ mod tests {
         assert!(code.contains(&ARRAYLENGTH), "arraylength (array_len) expected");
     }
 
-    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String`
-    /// + `aastore`/`aaload` — reference-element ops, since a str value is a native
+    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String` +
+    /// `aastore`/`aaload` — reference-element ops, since a str value is a native
     /// `java.lang.String` (not a primitive). The JVM bounds-checks each access.
     #[test]
     fn string_array_emits_reference_array_opcodes() {

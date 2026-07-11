@@ -376,8 +376,8 @@ fn apply_alph_chunk(pixels: &mut PixelContainer, alph: &[u8]) -> Result<(), Stri
 
     // Write the decoded alpha values into every pixel's A channel.
     let total = pixels.width as usize * pixels.height as usize;
-    for i in 0..total.min(alpha_values.len()) {
-        pixels.data[i * 4 + 3] = alpha_values[i];
+    for (i, &alpha) in alpha_values.iter().enumerate().take(total) {
+        pixels.data[i * 4 + 3] = alpha;
     }
     Ok(())
 }

@@ -1,3 +1,6 @@
+// The doc blocks use intentional ASCII alignment; allow the overindented-list
+// lint rather than disturb that layout.
+#![allow(clippy::doc_overindented_list_items)]
 //! Two-pass type-checking walker for Twig programs (TW05-B).
 //!
 //! ## Overview of the two passes

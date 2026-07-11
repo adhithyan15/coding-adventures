@@ -147,6 +147,9 @@ pub struct LanguageSpec {
     /// Receives the full document source; returns the reformatted source.
     ///
     /// If `None`, the bridge advertises no formatting capability.
+    // A plain formatter function pointer; the Option<fn(..) -> Result<..>>
+    // shape is the natural capability slot (clippy::type_complexity).
+    #[allow(clippy::type_complexity)]
     pub format_fn: Option<fn(source: &str) -> Result<String, String>>,
 
     // ── Phase 2 extension points (reserved; always None for Phase 1) ─────────

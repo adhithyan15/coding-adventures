@@ -1,3 +1,6 @@
+// Builds config by mutating a `Default::default()` base for readability across
+// several optional fields; identical to a struct literal.
+#![allow(clippy::field_reassign_with_default)]
 //! StreamingMultiprocessor -- NVIDIA SM simulator.
 //!
 //! # What is a Streaming Multiprocessor?

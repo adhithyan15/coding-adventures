@@ -74,8 +74,8 @@ pub struct DecomposeLevelRequest {
     /// the response are zero-based offsets within this string; the
     /// orchestrator translates to document-absolute on splice.
     pub parent_text: String,
-    /// Optional correction context for retries (prior attempt JSON
-    /// + a description of the gap). When `None`, this is an initial
+    /// Optional correction context for retries (prior attempt JSON +
+    /// a description of the gap). When `None`, this is an initial
     /// dispatch.
     pub correction_context: Option<String>,
     /// Optional ancestor-chain context for disambiguation. Rendered

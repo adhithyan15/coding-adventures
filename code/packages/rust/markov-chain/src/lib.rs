@@ -1,3 +1,6 @@
+// The doc block uses intentional ASCII alignment; allow the overindented-list
+// lint rather than disturb that layout.
+#![allow(clippy::doc_overindented_list_items)]
 //! # Markov Chain — DT28
 //!
 //! A Markov Chain models a system that moves between a finite set of **states**

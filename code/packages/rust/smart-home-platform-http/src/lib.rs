@@ -5564,6 +5564,10 @@ fn smoke_scene_target(state: &SmartHomePlatformHttpState) -> Option<String> {
     state.scenes.first().map(home_assistant_scene_id)
 }
 
+// Each argument is a distinct field of a runtime smoke-check descriptor (id, label,
+// HTTP method/path, category, mutation/authorization flags, expected status); grouping
+// them into a struct would not improve clarity for this internal helper.
+#[allow(clippy::too_many_arguments)]
 fn runtime_smoke_check(
     check_id: &'static str,
     label: &'static str,

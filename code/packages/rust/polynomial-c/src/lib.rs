@@ -118,14 +118,12 @@ pub unsafe extern "C" fn poly_c_normalize(
     out_cap: usize,
 ) -> usize {
     // Catch any Rust panics to avoid unwinding through C frames (UB).
-    match panic::catch_unwind(|| {
+    panic::catch_unwind(|| {
         let poly = unsafe { slice(coeffs, len) };
         let result = polynomial::normalize(poly);
         unsafe { write_out(result, out, out_cap) }
-    }) {
-        Ok(n) => n,
-        Err(_) => 0,
-    }
+    })
+    .unwrap_or_default()
 }
 
 /// Return the degree of a polynomial.
@@ -192,15 +190,13 @@ pub unsafe extern "C" fn poly_c_add(
     out_cap: usize,
 ) -> usize {
     // Catch any Rust panics to avoid unwinding through C frames (UB).
-    match panic::catch_unwind(|| {
+    panic::catch_unwind(|| {
         let sa = unsafe { slice(a, a_len) };
         let sb = unsafe { slice(b, b_len) };
         let result = polynomial::add(sa, sb);
         unsafe { write_out(result, out, out_cap) }
-    }) {
-        Ok(n) => n,
-        Err(_) => 0,
-    }
+    })
+    .unwrap_or_default()
 }
 
 /// Subtract polynomial `b` from polynomial `a` term-by-term.
@@ -222,15 +218,13 @@ pub unsafe extern "C" fn poly_c_subtract(
     out_cap: usize,
 ) -> usize {
     // Catch any Rust panics to avoid unwinding through C frames (UB).
-    match panic::catch_unwind(|| {
+    panic::catch_unwind(|| {
         let sa = unsafe { slice(a, a_len) };
         let sb = unsafe { slice(b, b_len) };
         let result = polynomial::subtract(sa, sb);
         unsafe { write_out(result, out, out_cap) }
-    }) {
-        Ok(n) => n,
-        Err(_) => 0,
-    }
+    })
+    .unwrap_or_default()
 }
 
 // =============================================================================
@@ -256,15 +250,13 @@ pub unsafe extern "C" fn poly_c_multiply(
     out_cap: usize,
 ) -> usize {
     // Catch any Rust panics to avoid unwinding through C frames (UB).
-    match panic::catch_unwind(|| {
+    panic::catch_unwind(|| {
         let sa = unsafe { slice(a, a_len) };
         let sb = unsafe { slice(b, b_len) };
         let result = polynomial::multiply(sa, sb);
         unsafe { write_out(result, out, out_cap) }
-    }) {
-        Ok(n) => n,
-        Err(_) => 0,
-    }
+    })
+    .unwrap_or_default()
 }
 
 // =============================================================================
@@ -416,13 +408,11 @@ pub unsafe extern "C" fn poly_c_gcd(
     out_cap: usize,
 ) -> usize {
     // Catch any Rust panics to avoid unwinding through C frames (UB).
-    match panic::catch_unwind(|| {
+    panic::catch_unwind(|| {
         let sa = unsafe { slice(a, a_len) };
         let sb = unsafe { slice(b, b_len) };
         let result = polynomial::gcd(sa, sb);
         unsafe { write_out(result, out, out_cap) }
-    }) {
-        Ok(n) => n,
-        Err(_) => 0,
-    }
+    })
+    .unwrap_or_default()
 }

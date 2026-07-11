@@ -1,3 +1,6 @@
+// The float literal is intentional inference test/fixture data, not an
+// approximation of a std constant to be replaced.
+#![allow(clippy::approx_constant)]
 //! Type-inference pass — populates `type_hint` on `IIRInstr` objects
 //! that currently carry `"any"`.
 //!

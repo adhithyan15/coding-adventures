@@ -549,6 +549,10 @@ fn block_as_plain_text(b: &BlockNode) -> String {
 mod tests {
     use super::*;
     use document_ast::{EmphasisNode, HardBreakNode, LinkNode, SoftBreakNode, StrongNode, TextNode};
+    // `Content` is only referenced in these tests (destructuring laid-out leaf
+    // content); import it here rather than at crate scope to avoid an unused
+    // import in non-test builds.
+    use layout_ir::Content;
 
     fn txt(s: &str) -> InlineNode {
         InlineNode::Text(TextNode { value: s.into() })

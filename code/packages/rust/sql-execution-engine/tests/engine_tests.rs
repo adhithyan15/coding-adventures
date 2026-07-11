@@ -32,6 +32,9 @@ fn i(v: i64) -> SqlValue { Some(SqlPrimitive::Int(v)) }
 fn s(v: &str) -> SqlValue { Some(SqlPrimitive::Text(v.to_string())) }
 fn b(v: bool) -> SqlValue { Some(SqlPrimitive::Bool(v)) }
 fn null() -> SqlValue { None }
+// Float SqlValue constructor kept beside the other `SqlValue` helpers for
+// symmetry; not every test references it.
+#[allow(dead_code)]
 fn f(v: f64) -> SqlValue { Some(SqlPrimitive::Float(v)) }
 
 impl DataSource for InMemorySource {

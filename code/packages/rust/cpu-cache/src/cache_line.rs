@@ -1,46 +1,46 @@
-/// Cache line -- the smallest unit of data in a cache.
-///
-/// In a real CPU, data is not moved one byte at a time between memory and the
-/// cache. Instead, it moves in fixed-size chunks called **cache lines** (also
-/// called cache blocks). A typical cache line is 64 bytes.
-///
-/// Analogy: Think of a warehouse that ships goods in standard containers.
-/// You can't order a single screw -- you get the whole container (cache line)
-/// that includes the screw you need plus 63 other bytes of nearby data.
-/// This works well because of **spatial locality**: if you accessed byte N,
-/// you'll likely access bytes N+1, N+2, ... soon.
-///
-/// Each cache line stores:
-///
-/// ```text
-///     +-------+-------+-----+------+---------------------------+
-///     | valid | dirty | tag | LRU  |     data (64 bytes)       |
-///     +-------+-------+-----+------+---------------------------+
-/// ```
-///
-/// - **valid**: Is this line holding real data? After a reset, all lines are
-///   invalid (empty boxes). A line becomes valid when data is loaded into it.
-///
-/// - **dirty**: Has the data been modified since it was loaded from memory?
-///   In a write-back cache, writes go only to the cache (not memory). The
-///   dirty bit tracks whether the line needs to be written back to memory
-///   when evicted. (Like editing a document locally -- you need to save it
-///   back to the server before closing.)
-///
-/// - **tag**: The high bits of the memory address. Since many addresses map
-///   to the same cache set (like many apartments on the same floor), the tag
-///   distinguishes WHICH address is actually stored here.
-///
-/// - **data**: The actual bytes -- a `Vec<u8>` because the line size is
-///   configured at runtime (could be 32, 64, or 128 bytes). We use `Vec<u8>`
-///   instead of `&[u8]` because each cache line **owns** its data. A borrow
-///   (`&[u8]`) would require a lifetime parameter tying the line to whatever
-///   originally provided the data -- but in a cache, data gets overwritten
-///   on eviction, so we need ownership semantics.
-///
-/// - **last_access**: A timestamp (cycle count) recording when this line was
-///   last read or written. Used by the LRU replacement policy to decide
-///   which line to evict when the set is full.
+//! Cache line -- the smallest unit of data in a cache.
+//!
+//! In a real CPU, data is not moved one byte at a time between memory and the
+//! cache. Instead, it moves in fixed-size chunks called **cache lines** (also
+//! called cache blocks). A typical cache line is 64 bytes.
+//!
+//! Analogy: Think of a warehouse that ships goods in standard containers.
+//! You can't order a single screw -- you get the whole container (cache line)
+//! that includes the screw you need plus 63 other bytes of nearby data.
+//! This works well because of **spatial locality**: if you accessed byte N,
+//! you'll likely access bytes N+1, N+2, ... soon.
+//!
+//! Each cache line stores:
+//!
+//! ```text
+//!     +-------+-------+-----+------+---------------------------+
+//!     | valid | dirty | tag | LRU  |     data (64 bytes)       |
+//!     +-------+-------+-----+------+---------------------------+
+//! ```
+//!
+//! - **valid**: Is this line holding real data? After a reset, all lines are
+//!   invalid (empty boxes). A line becomes valid when data is loaded into it.
+//!
+//! - **dirty**: Has the data been modified since it was loaded from memory?
+//!   In a write-back cache, writes go only to the cache (not memory). The
+//!   dirty bit tracks whether the line needs to be written back to memory
+//!   when evicted. (Like editing a document locally -- you need to save it
+//!   back to the server before closing.)
+//!
+//! - **tag**: The high bits of the memory address. Since many addresses map
+//!   to the same cache set (like many apartments on the same floor), the tag
+//!   distinguishes WHICH address is actually stored here.
+//!
+//! - **data**: The actual bytes -- a `Vec<u8>` because the line size is
+//!   configured at runtime (could be 32, 64, or 128 bytes). We use `Vec<u8>`
+//!   instead of `&[u8]` because each cache line **owns** its data. A borrow
+//!   (`&[u8]`) would require a lifetime parameter tying the line to whatever
+//!   originally provided the data -- but in a cache, data gets overwritten
+//!   on eviction, so we need ownership semantics.
+//!
+//! - **last_access**: A timestamp (cycle count) recording when this line was
+//!   last read or written. Used by the LRU replacement policy to decide
+//!   which line to evict when the set is full.
 
 /// A single cache line -- one slot in the cache.
 ///

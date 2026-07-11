@@ -1,3 +1,6 @@
+// The complex tuple type is an internal JIT backend signature; a type alias
+// would not make it clearer.
+#![allow(clippy::type_complexity)]
 //! `BrainfuckCirJit` — a real [`jit_core::backend::Backend`] for Brainfuck.
 //!
 //! # What this is

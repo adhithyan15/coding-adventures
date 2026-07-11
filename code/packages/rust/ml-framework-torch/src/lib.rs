@@ -593,6 +593,9 @@ pub mod data {
 #[cfg(test)]
 mod tests {
     use super::*;
+    // `Parameter` lives in `ml_framework_core` and is re-imported inside `mod nn`,
+    // so it is not brought into scope by `use super::*`; import it directly for tests.
+    use ml_framework_core::Parameter;
 
     #[test]
     fn test_tensor_creation() {

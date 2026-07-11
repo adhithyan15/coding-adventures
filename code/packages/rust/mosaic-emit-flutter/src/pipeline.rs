@@ -4807,8 +4807,10 @@ mod tests {
         let m = component("Hello", vec![], vec![]);
         let l = layout("Hello", node("Box"));
         let s = empty_style("Hello");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         assert!(
             r.project.is_some(),
@@ -4821,8 +4823,10 @@ mod tests {
         let m = component("Hello", vec![], vec![]);
         let l = layout("Hello", node("Box"));
         let s = empty_style("Hello");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -4855,8 +4859,10 @@ mod tests {
         let m = component("Deterministic", vec![], vec![]);
         let l = layout("Deterministic", node("Box"));
         let s = empty_style("Deterministic");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
 
         let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
@@ -4872,9 +4878,11 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
-        opts.package_name = Some("Mosaic-Grid".to_string()); // uppercase + hyphen
+        let opts = EmitOptions {
+            emit_project: true,
+            package_name: Some("Mosaic-Grid".to_string()), // uppercase + hyphen
+            ..EmitOptions::default()
+        };
 
         let err =
             from_pipeline_with_options(&m, &l, &s, &opts).expect_err("invalid pub name must error");
@@ -4892,8 +4900,10 @@ mod tests {
         let m = component("ProfileCard", vec![], vec![]);
         let l = layout("ProfileCard", node("Box"));
         let s = empty_style("ProfileCard");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -4912,8 +4922,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -4936,8 +4948,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -4959,8 +4973,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -4982,8 +4998,10 @@ mod tests {
         let m = component("MyWidget", vec![], vec![]);
         let l = layout("MyWidget", node("Box"));
         let s = empty_style("MyWidget");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -5058,8 +5076,10 @@ mod tests {
         );
         let l = layout("ProfileCard", node("Box"));
         let s = empty_style("ProfileCard");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project

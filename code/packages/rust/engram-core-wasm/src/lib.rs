@@ -1932,6 +1932,10 @@ fn app_state_from_anki_note_tsv_import(imported: AnkiNoteTsvImport) -> AppState 
     }
 }
 
+// Aggregates the whole app view-state into the props object handed to the
+// renderer; the parameters mirror the discrete pieces of UI state (deck,
+// selection, clock, screen, …) rather than being worth bundling into a struct.
+#[allow(clippy::too_many_arguments)]
 fn engram_app_props_for_state(
     state: &AppState,
     deck_id: &str,
@@ -3041,6 +3045,10 @@ fn insert_note_type_editor_props(
     );
 }
 
+// As with engram_app_props_for_state, this flattens the browser view-state
+// (queries, filter, …) into a props object; the parameter list mirrors that
+// state directly.
+#[allow(clippy::too_many_arguments)]
 fn engram_browser_props_for_state(
     state: &AppState,
     display_query: &str,

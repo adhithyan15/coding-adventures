@@ -248,6 +248,9 @@ pub fn numel(dims: &[u32]) -> usize {
 }
 
 /// Decompose a flat index into multidim coordinates per `dims`.
+// Public index-decomposition helper in this internal module; kept as part of the
+// eval API surface even though current call sites use `unravel_with_strides`.
+#[allow(dead_code)]
 pub fn unravel(mut flat: usize, dims: &[u32]) -> Vec<usize> {
     let r = dims.len();
     let mut coords = vec![0usize; r];
@@ -266,6 +269,9 @@ pub fn ravel(coords: &[usize], strides: &[usize]) -> usize {
 
 /// Reduce f32 along the given axes using `fold` (initialized at `init`).
 /// Returns the reduced bytes and the output shape.
+// `flat` is the flat input index consumed by `unravel_with_strides`; the range
+// loop reflects the stride arithmetic, so iterating by value would obscure it.
+#[allow(clippy::needless_range_loop)]
 pub fn reduce_f32(
     input: &[u8],
     in_dims: &[u32],
@@ -337,6 +343,9 @@ pub fn reduce_f32(
 
 /// Reduce f64 along the given axes using `fold` (initialized at `init`).
 /// Returns the reduced bytes and the output shape. Mirrors [`reduce_f32`].
+// `flat` is the flat input index consumed by `unravel_with_strides`; the range
+// loop reflects the stride arithmetic, so iterating by value would obscure it.
+#[allow(clippy::needless_range_loop)]
 pub fn reduce_f64(
     input: &[u8],
     in_dims: &[u32],
@@ -404,6 +413,9 @@ pub fn reduce_f64(
     (out, out_dims)
 }
 
+// `flat` is the flat input index consumed by `unravel_with_strides`; the range
+// loop reflects the stride arithmetic, so iterating by value would obscure it.
+#[allow(clippy::needless_range_loop)]
 pub fn reduce_i32(
     input: &[u8],
     in_dims: &[u32],
@@ -467,6 +479,9 @@ pub fn reduce_i32(
     (out, out_dims)
 }
 
+// `flat` is the flat input index consumed by `unravel_with_strides`; the range
+// loop reflects the stride arithmetic, so iterating by value would obscure it.
+#[allow(clippy::needless_range_loop)]
 pub fn reduce_u8(
     input: &[u8],
     in_dims: &[u32],

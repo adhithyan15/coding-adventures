@@ -2602,6 +2602,8 @@ mod tests {
 
     /// Test 58: value_to_starlark_value covers all types.
     #[test]
+    // 3.14 below is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn test_value_conversion() {
         assert_eq!(
             value_to_starlark_value(&Value::Int(42)),
@@ -2648,6 +2650,8 @@ mod tests {
 
     /// Test 60: values_equal covers all cases.
     #[test]
+    // 3.14 below is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn test_values_equal() {
         assert!(values_equal(&Value::Int(42), &Value::Int(42)));
         assert!(!values_equal(&Value::Int(42), &Value::Int(43)));

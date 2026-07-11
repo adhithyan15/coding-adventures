@@ -525,6 +525,8 @@ mod tests {
 
     // ----- StarlarkValue tests -----
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_truthiness() {
         assert!(!StarlarkValue::None.is_truthy());
@@ -542,6 +544,8 @@ mod tests {
         assert!(!StarlarkValue::Tuple(vec![]).is_truthy());
     }
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_type_name() {
         assert_eq!(StarlarkValue::Int(42).type_name(), "int");
@@ -592,6 +596,8 @@ mod tests {
         assert_eq!(call_builtin("int", vec![StarlarkValue::Bool(true)]).unwrap(), StarlarkValue::Int(1));
     }
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_builtin_float() {
         assert_eq!(call_builtin("float", vec![StarlarkValue::Int(42)]).unwrap(), StarlarkValue::Float(42.0));
@@ -679,6 +685,8 @@ mod tests {
         assert_eq!(call_builtin("max", vec![StarlarkValue::Int(3), StarlarkValue::Int(1), StarlarkValue::Int(2)]).unwrap(), StarlarkValue::Int(3));
     }
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_builtin_abs() {
         assert_eq!(call_builtin("abs", vec![StarlarkValue::Int(-5)]).unwrap(), StarlarkValue::Int(5));

@@ -258,9 +258,7 @@ pub fn smul32(a: u32, b: u32) -> (u32, u32) {
         if bb[i] == 1 {
             let shifted: Vec<u8> = {
                 let mut s = vec![0u8; 64];
-                for j in i..64 {
-                    s[j] = ab[j - i];
-                }
+                s[i..64].copy_from_slice(&ab[..64 - i]);
                 s
             };
             let r = ripple_carry_adder_with_carry(&acc, &shifted, 0);

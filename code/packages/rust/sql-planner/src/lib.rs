@@ -861,10 +861,8 @@ fn extract_join_condition(join_clause: &GrammarASTNode) -> Result<Option<SqlExpr
     let children = &join_clause.children;
     for (i, child) in children.iter().enumerate() {
         if is_keyword_token(child, "ON") {
-            if let Some(next) = children.get(i + 1) {
-                if let ASTNodeOrToken::Node(expr_node) = next {
-                    return Ok(Some(plan_expression(expr_node)?));
-                }
+            if let Some(ASTNodeOrToken::Node(expr_node)) = children.get(i + 1) {
+                return Ok(Some(plan_expression(expr_node)?));
             }
         }
     }
@@ -1466,11 +1464,9 @@ fn apply_col_constraint(col: &mut ColumnDef, constraint: &GrammarASTNode) {
     // DEFAULT handling: if there's a "DEFAULT" keyword, look for the value.
     if has_token(constraint, "DEFAULT") {
         if let Some(primary) = find_node(constraint, "primary") {
-            if let Ok(val) = plan_primary(primary) {
-                if let SqlExpr::Literal(sql_val) = val {
-                    col.default_value = sql_val;
-                    col.has_default = true;
-                }
+            if let Ok(SqlExpr::Literal(sql_val)) = plan_primary(primary) {
+                col.default_value = sql_val;
+                col.has_default = true;
             }
         }
     }

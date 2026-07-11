@@ -1262,7 +1262,7 @@ fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchErr
         })?
         .max(1);
     let rating = match parts.next() {
-        Some(raw_rating) if raw_rating.is_empty() => {
+        Some("") => {
             return Err(SearchError {
                 message: "rated search rating is missing".to_string(),
                 token: token.to_string(),
@@ -1402,6 +1402,10 @@ fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> 
     }
 }
 
+// Search matching threads the full evaluation context (card, progress, deck,
+// note, metadata, reviews, clock) through each recursive call; a params struct
+// would add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn expression_matches(
     expression: &SearchExpr,
     card: &Card,
@@ -1433,6 +1437,9 @@ fn expression_matches(
     }
 }
 
+// Mirrors `expression_matches`: the full evaluation context is threaded through;
+// a params struct would add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn clause_matches(
     clause: &SearchClause,
     card: &Card,

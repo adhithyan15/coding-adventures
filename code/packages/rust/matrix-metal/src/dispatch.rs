@@ -1,3 +1,6 @@
+// The index loop indexes a permutation array and uses the index value itself;
+// the range form mirrors the dispatch dimension math.
+#![allow(clippy::needless_range_loop)]
 //! Dispatch a `ComputeGraph` on Metal.
 //!
 //! Mirrors matrix-cpu's `dispatch::run`: walks `graph.ops` in order,

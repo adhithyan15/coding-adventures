@@ -237,8 +237,8 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
     // This ensures that when we reconstruct state = base + read(nb bits),
     // we land in the range [sz, 2*sz), which is the valid encoder state range.
     let mut sn = sym_next.clone();
-    for i in 0..sz {
-        let s = tbl[i].sym as usize;
+    for entry in tbl.iter_mut().take(sz) {
+        let s = entry.sym as usize;
         let ns = sn[s] as u32;
         sn[s] += 1;
         debug_assert!(ns > 0, "FSE: sym_next must be positive");
@@ -246,8 +246,8 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
         let nb = acc_log - (31 - ns.leading_zeros()) as u8;
         // base = ns * (1 << nb) - sz
         let base = ((ns << nb) as usize).wrapping_sub(sz) as u16;
-        tbl[i].nb = nb;
-        tbl[i].base = base;
+        entry.nb = nb;
+        entry.base = base;
     }
 
     tbl
@@ -350,8 +350,8 @@ fn build_encode_sym(norm: &[i16], acc_log: u8) -> (Vec<FseEe>, Vec<u16>) {
     let mut sym_occ = vec![0u32; norm.len()];
     let mut st = vec![0u16; sz as usize];
 
-    for i in 0..sz as usize {
-        let s = spread[i] as usize;
+    for (i, &sp) in spread.iter().enumerate().take(sz as usize) {
+        let s = sp as usize;
         let j = sym_occ[s] as usize;
         sym_occ[s] += 1;
         // Slot for this (sym, occurrence) pair

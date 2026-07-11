@@ -7702,11 +7702,11 @@ b = "y"
             .stmts
             .iter()
             .filter_map(|s| match s {
-                Stmt::LetBinding { name, value, .. }
-                    if matches!(value, Expr::SeqIndex { .. }) =>
-                {
-                    Some(name.as_str())
-                }
+                Stmt::LetBinding {
+                    name,
+                    value: Expr::SeqIndex { .. },
+                    ..
+                } => Some(name.as_str()),
                 _ => None,
             })
             .collect();

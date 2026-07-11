@@ -378,9 +378,7 @@ pub fn encode(message: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
     // Assemble: message bytes then check bytes.
     let mut codeword = message.to_vec();
     let pad = n_check - remainder.len();
-    for _ in 0..pad {
-        codeword.push(0);
-    }
+    codeword.resize(codeword.len() + pad, 0);
     codeword.extend_from_slice(&remainder);
 
     Ok(codeword)

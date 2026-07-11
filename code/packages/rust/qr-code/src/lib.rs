@@ -586,7 +586,7 @@ fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
     for &cw in codewords {
         for b in (0u8..8).rev() { bits.push((cw >> b) & 1 == 1); }
     }
-    for _ in 0..num_remainder_bits(version) { bits.push(false); }
+    bits.resize(bits.len() + num_remainder_bits(version), false);
 
     let mut bit_idx = 0usize;
     let mut up = true;
@@ -668,6 +668,11 @@ fn apply_mask(
     result
 }
 
+// The loops below use their index symmetrically to walk both rows and columns of
+// the module grid (e.g. `modules[a][i]` and `modules[i][a]` in the same body), so
+// a plain `.iter().enumerate()` rewrite would not preserve the transposed access;
+// keep the explicit range loops.
+#[allow(clippy::needless_range_loop)]
 fn compute_penalty(modules: &[Vec<bool>], sz: usize) -> u32 {
     let mut penalty = 0u32;
 

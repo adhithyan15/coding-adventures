@@ -2330,12 +2330,12 @@ pub fn emit_raw_node(node: &GrammarASTNode) -> String {
 /// Create a synthetic IDENT token with the given value.
 pub fn make_synthetic_token(value: &str, template: &Token) -> Token {
     // Determine the best token type for the value
+    // NOTE: the "alphabetic, non-quoted" case currently yields the same
+    // (Name, None) as the fallback, so the two are folded into one `else`.
     let (type_, type_name) = if value.starts_with('#') {
         (TokenType::Name, Some("HASH".to_string()))
     } else if value.ends_with('%') {
         (TokenType::Name, Some("PERCENTAGE".to_string()))
-    } else if value.chars().any(|c| c.is_alphabetic()) && !value.starts_with('"') {
-        (TokenType::Name, None)
     } else {
         (TokenType::Name, None)
     };
@@ -2455,8 +2455,8 @@ fn parse_css_text_to_value(text: &str) -> LatticeValue {
     if trimmed == "true" { return LatticeValue::Bool(true); }
     if trimmed == "false" { return LatticeValue::Bool(false); }
     if trimmed == "null" { return LatticeValue::Null; }
-    if trimmed.ends_with('%') {
-        if let Ok(n) = trimmed[..trimmed.len()-1].parse::<f64>() {
+    if let Some(rest) = trimmed.strip_suffix('%') {
+        if let Ok(n) = rest.parse::<f64>() {
             return LatticeValue::Percentage(n);
         }
     }

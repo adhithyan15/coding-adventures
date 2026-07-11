@@ -6,11 +6,11 @@
 //! It has a small but capable register file:
 //!
 //! - **A** — Accumulator: 8-bit implicit result register for all ALU ops.
-//!           Every arithmetic and logical instruction uses A and places the
-//!           result in A.  A is scratch — not preserved across operations.
+//!   Every arithmetic and logical instruction uses A and places the
+//!   result in A.  A is scratch — not preserved across operations.
 //! - **B, C, D, E** — Four 8-bit general-purpose data registers.
 //! - **H, L** — High and Low bytes of the 14-bit memory address register.
-//!              `H:L = (H << 8) | L`.  Used for all memory ops via M.
+//!   `H:L = (H << 8) | L`.  Used for all memory ops via M.
 //! - **M** — Pseudo-register: the memory byte at address H:L.
 //!
 //! ## Physical register assignment

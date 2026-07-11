@@ -135,7 +135,9 @@ fn test_run_unexpected_panic() {
 #[test]
 fn test_run_negative_test_passes_when_it_panics() {
     let tc = TestCase::new("must_fail", |_dut: &mut DutHandle| {
-        assert!(false, "intentional");
+        // Intentional panic: this negative test verifies expect_fail() passes
+        // when the body panics. panic! preserves the original assert! behavior.
+        panic!("intentional");
     }).expect_fail();
     let rep = run(buffer_hir(), Some(vec![tc]));
     assert!(rep.all_passed());

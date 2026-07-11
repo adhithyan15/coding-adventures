@@ -525,6 +525,7 @@ pub struct GrammarLexer<'a> {
 
     /// Post-tokenize hooks: transform token list after lexing.
     /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    #[allow(clippy::type_complexity)] // boxed hook-list type reads clearly with the doc above
     post_tokenize_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 
     /// Whether keyword matching is case-insensitive.

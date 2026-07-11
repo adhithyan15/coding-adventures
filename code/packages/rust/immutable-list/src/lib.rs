@@ -868,7 +868,7 @@ impl ImmutableList {
         let val = self.tail[0].clone();
 
         // Find the rightmost leaf in the trie and extract it.
-        let new_tail = self.rightmost_leaf(&self.root, self.shift);
+        let new_tail = self.rightmost_leaf(&self.root);
 
         // Remove the rightmost leaf from the trie (via path copying).
         let (new_root, new_shift) = self.pop_tail(self.len - 1, self.shift, &self.root);
@@ -888,7 +888,7 @@ impl ImmutableList {
     ///
     /// This walks the rightmost path of the trie to find the last leaf node,
     /// then collects its non-None elements into a Vec.
-    fn rightmost_leaf(&self, node: &Arc<Node>, level: u32) -> Vec<String> {
+    fn rightmost_leaf(&self, node: &Arc<Node>) -> Vec<String> {
         match &**node {
             Node::Internal { children } => {
                 // Find the rightmost non-None child.
@@ -897,7 +897,7 @@ impl ImmutableList {
                     idx -= 1;
                 }
                 match &children[idx] {
-                    Some(child) => self.rightmost_leaf(child, level - BITS),
+                    Some(child) => self.rightmost_leaf(child),
                     None => Vec::new(),
                 }
             }

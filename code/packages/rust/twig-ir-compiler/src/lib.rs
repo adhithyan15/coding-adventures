@@ -531,6 +531,9 @@ mod tests {
             .instructions
     }
 
+    // Test helper kept alongside `main_instrs`/`fn_instrs`/`op_names`; not every
+    // helper is referenced by the current test set.
+    #[allow(dead_code)]
     fn function_names(src: &str) -> Vec<String> {
         module(src)
             .functions

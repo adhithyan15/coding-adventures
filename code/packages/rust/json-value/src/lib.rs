@@ -1,3 +1,6 @@
+// The `3.14` literals are intentional JSON parse/round-trip test data, not
+// approximations of a std constant to be replaced.
+#![allow(clippy::approx_constant)]
 //! # JSON Value — typed representation of JSON data.
 //!
 //! This crate bridges the gap between the generic AST produced by `json-parser`

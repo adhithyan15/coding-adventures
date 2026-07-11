@@ -1,3 +1,7 @@
+// The literal -1.5707963267948966 is hand-written test data (a specific phase in
+// degrees), not an approximation to FRAC_PI_2 that clippy should replace.
+#![allow(clippy::approx_constant)]
+
 use std::collections::BTreeMap;
 
 use spice_engine::{

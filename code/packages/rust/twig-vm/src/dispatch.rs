@@ -1,3 +1,6 @@
+// The dispatch handlers take wide argument lists that mirror the VM instruction
+// operands 1:1; collapsing them into a struct would obscure that mapping.
+#![allow(clippy::too_many_arguments)]
 //! # `dispatch` — the real interpreter dispatch loop for `twig-vm`.
 //!
 //! Originally LANG20 PR 4 (tree-walking dispatcher); extended in

@@ -1251,6 +1251,8 @@ mod tests {
         );
     }
 
+    // `3.14` is an arbitrary float literal exercised by the printer, not PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn print_float_lit_emits_decimal_form() {
         // Integer-valued floats render with explicit `.0` so the

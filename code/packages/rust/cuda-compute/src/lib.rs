@@ -792,6 +792,11 @@ impl CudaBuffer {
         self.len
     }
 
+    /// Returns `true` when the buffer holds zero elements.
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+
     /// The raw CUDA device pointer value.
     ///
     /// Pass this (via a `*mut CUdeviceptr` pointer) to `cuLaunchKernel`

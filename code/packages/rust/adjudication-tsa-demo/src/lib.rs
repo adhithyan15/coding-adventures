@@ -273,6 +273,9 @@ pub struct RawArmReport {
 /// trail records every call.
 ///
 /// Returns `AcquireRulebookError` on elicit / decompose failure.
+// The `Err` variant is a large upstream error enum; boxing it would change the
+// public signature across the demo. Accepting the large variant here is fine.
+#[allow(clippy::result_large_err)]
 pub fn acquire_demo_rulebook(
     cfg: &DemoConfig,
     gateway: &GatewayConfig,
@@ -294,6 +297,8 @@ pub fn acquire_demo_rulebook(
 /// When `cfg.rulebook_text` is `Some(text)`, the system prompt names
 /// the rules explicitly and tells the model to cite a rule number
 /// per finding — the model can no longer invent constraints.
+// `LlmError` is a large upstream enum; propagated by-value throughout the demo.
+#[allow(clippy::result_large_err)]
 pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     match cfg.arm_a_mode {
         ArmAMode::SingleTurn => run_raw_arm_single_turn(cfg),
@@ -301,6 +306,8 @@ pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     }
 }
 
+// See `run_raw_arm`: large upstream `LlmError` propagated by value.
+#[allow(clippy::result_large_err)]
 fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let client = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
@@ -346,6 +353,8 @@ fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
 /// If the rulebook is `None`, the priming turn is skipped and the
 /// behaviour falls back to single-turn (priming with no rulebook
 /// to digest would be a wasted round-trip).
+// See `run_raw_arm`: large upstream `LlmError` propagated by value.
+#[allow(clippy::result_large_err)]
 fn run_raw_arm_priming(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let rulebook = match cfg.rulebook_text.as_deref() {
         Some(t) if !t.is_empty() => t,
@@ -858,9 +867,9 @@ pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
                         Err(e) => {
                             // Corrected IR was unparseable; give up and
                             // keep the previous pipeline output.
-                            clarification_turns
-                                .last_mut()
-                                .map(|t| t.outcome = adjudication_audit_trail::DialogueOutcome::Abandoned);
+                            if let Some(t) = clarification_turns.last_mut() {
+                                t.outcome = adjudication_audit_trail::DialogueOutcome::Abandoned;
+                            }
                             let _ = e;
                             break;
                         }
@@ -2579,8 +2588,10 @@ mod tests {
         // End-to-end at the build-prompt level (no LLM call). Verify
         // that wiring `rulebook_text: Some(fixture)` into DemoConfig
         // produces a system prompt that contains the fixture rules.
-        let mut cfg = DemoConfig::default();
-        cfg.rulebook_text = Some(fixture_tsa_rulebook());
+        let cfg = DemoConfig {
+            rulebook_text: Some(fixture_tsa_rulebook()),
+            ..DemoConfig::default()
+        };
         let s = build_raw_system_prompt(cfg.rulebook_text.as_deref());
         assert!(s.contains("Strike-anywhere matches"));
         assert!(s.contains("3.4 oz"));
@@ -2655,9 +2666,11 @@ mod tests {
 
     #[test]
     fn config_with_priming_mode_is_addressable_via_struct_field() {
-        let mut cfg = DemoConfig::default();
-        cfg.arm_a_mode = ArmAMode::Priming;
-        cfg.rulebook_text = Some(fixture_tsa_rulebook());
+        let cfg = DemoConfig {
+            arm_a_mode: ArmAMode::Priming,
+            rulebook_text: Some(fixture_tsa_rulebook()),
+            ..DemoConfig::default()
+        };
         assert_eq!(cfg.arm_a_mode, ArmAMode::Priming);
         // The library doesn't actually call the LLM here (that would
         // require Ollama running); this test just verifies the

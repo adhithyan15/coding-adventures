@@ -392,6 +392,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 below is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn operand_from_iir_operand() {
         use interpreter_ir::instr::Operand;
         let ir_ops = [Operand::Var("x".into()),

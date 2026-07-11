@@ -346,6 +346,7 @@ fn add_rect_vertices(rect: &PaintRect, positions: &mut Vec<f32>, colors: &mut Ve
 }
 
 /// Emit a filled axis-aligned rectangle as two triangles (helper).
+#[allow(clippy::too_many_arguments)] // geometry + color + buffers; signature kept as-is
 fn emit_filled_rect(
     x: f32, y: f32, w: f32, h: f32,
     r: f32, g: f32, b: f32, a: f32,

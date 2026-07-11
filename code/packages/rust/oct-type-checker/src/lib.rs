@@ -180,6 +180,11 @@ impl TypeChecker {
             return;
         };
         match resolve_type(type_node) {
+            // NOTE: `map_entry` would suggest the `entry` API, but the "already
+            // declared" branch must call `self.err_at(..)` which needs `&mut self`,
+            // conflicting with a live `self.statics` entry borrow. The contains_key +
+            // insert form keeps the borrows disjoint, so the lint is allowed here.
+            #[allow(clippy::map_entry)]
             Some(t) => {
                 if self.statics.contains_key(&name) {
                     self.err_at(format!("static '{name}' is already declared"), node);
@@ -298,12 +303,13 @@ impl TypeChecker {
         let expr_node = child_nodes(node).into_iter()
             .find(|n| n.rule_name != "type");
         if let Some(expr_node) = expr_node {
-            let actual = self.check_expr(expr_node, local);
-            if actual.is_some() && !assignable(actual.as_deref(), Some(&declared)) {
-                self.err_at(format!(
-                    "cannot assign '{}' to '{}' variable '{}'",
-                    actual.unwrap(), declared, name,
-                ), expr_node);
+            if let Some(actual) = self.check_expr(expr_node, local) {
+                if !assignable(Some(&actual), Some(&declared)) {
+                    self.err_at(format!(
+                        "cannot assign '{}' to '{}' variable '{}'",
+                        actual, declared, name,
+                    ), expr_node);
+                }
             }
         }
         local.insert(name, declared);
@@ -319,12 +325,13 @@ impl TypeChecker {
             return;
         };
         if let Some(expr_node) = child_nodes(node).into_iter().next() {
-            let actual = self.check_expr(expr_node, local);
-            if actual.is_some() && !assignable(actual.as_deref(), Some(&declared)) {
-                self.err_at(format!(
-                    "cannot assign '{}' to '{}' variable '{}'",
-                    actual.unwrap(), declared, name,
-                ), expr_node);
+            if let Some(actual) = self.check_expr(expr_node, local) {
+                if !assignable(Some(&actual), Some(&declared)) {
+                    self.err_at(format!(
+                        "cannot assign '{}' to '{}' variable '{}'",
+                        actual, declared, name,
+                    ), expr_node);
+                }
             }
         }
     }
@@ -344,12 +351,13 @@ impl TypeChecker {
                 self.err_at("void function must not return a value", e);
             }
             (Some(e), Some(rt)) => {
-                let actual = self.check_expr(e, local);
-                if actual.is_some() && !assignable(actual.as_deref(), Some(rt)) {
-                    self.err_at(format!(
-                        "'return' type mismatch: expected '{}', got '{}'",
-                        rt, actual.unwrap(),
-                    ), e);
+                if let Some(actual) = self.check_expr(e, local) {
+                    if !assignable(Some(&actual), Some(rt)) {
+                        self.err_at(format!(
+                            "'return' type mismatch: expected '{}', got '{}'",
+                            rt, actual,
+                        ), e);
+                    }
                 }
             }
             (None, None) => {}
@@ -369,13 +377,14 @@ impl TypeChecker {
             else if cond_node.is_none() { cond_node = Some(c); }
         }
         if let Some(cond) = cond_node {
-            let ty = self.check_expr(cond, local);
-            if ty.is_some() && ty.as_deref() != Some("bool") {
-                self.err_at(format!(
-                    "'if' condition must be 'bool', got '{}' — use an explicit \
-                     comparison (e.g. x != 0)",
-                    ty.unwrap(),
-                ), cond);
+            if let Some(ty) = self.check_expr(cond, local) {
+                if ty != "bool" {
+                    self.err_at(format!(
+                        "'if' condition must be 'bool', got '{}' — use an explicit \
+                         comparison (e.g. x != 0)",
+                        ty,
+                    ), cond);
+                }
             }
         }
         for blk in blocks {
@@ -397,13 +406,14 @@ impl TypeChecker {
             else if cond_node.is_none() { cond_node = Some(c); }
         }
         if let Some(cond) = cond_node {
-            let ty = self.check_expr(cond, local);
-            if ty.is_some() && ty.as_deref() != Some("bool") {
-                self.err_at(format!(
-                    "'while' condition must be 'bool', got '{}' — use an \
-                     explicit comparison (e.g. n != 255)",
-                    ty.unwrap(),
-                ), cond);
+            if let Some(ty) = self.check_expr(cond, local) {
+                if ty != "bool" {
+                    self.err_at(format!(
+                        "'while' condition must be 'bool', got '{}' — use an \
+                         explicit comparison (e.g. n != 255)",
+                        ty,
+                    ), cond);
+                }
             }
         }
         if let Some(blk) = block_node {
@@ -563,12 +573,14 @@ impl TypeChecker {
                 let operand = node.children.get(1)?;
                 let ty = self.check_child(operand, local);
                 if op == "BANG" {
-                    if ty.as_deref() != Some("bool") && ty.is_some() {
-                        self.err_at(format!(
-                            "'!' (logical NOT) requires 'bool' operand, got '{}' — \
-                             use an explicit comparison (e.g. x != 0)",
-                            ty.unwrap()
-                        ), node);
+                    if let Some(ty_str) = ty.as_deref() {
+                        if ty_str != "bool" {
+                            self.err_at(format!(
+                                "'!' (logical NOT) requires 'bool' operand, got '{}' — \
+                                 use an explicit comparison (e.g. x != 0)",
+                                ty_str
+                            ), node);
+                        }
                     }
                     return Some("bool".to_string());
                 } else {
@@ -661,7 +673,7 @@ impl TypeChecker {
         node: &GrammarASTNode,
         local: &HashMap<String, OctType>,
     ) -> Option<OctType> {
-        let Some(fn_name) = first_name_token(node) else { return None; };
+        let fn_name = first_name_token(node)?;
         let info = match self.functions.get(&fn_name).cloned() {
             Some(i) => i,
             None => {
@@ -686,11 +698,13 @@ impl TypeChecker {
             let arg_type = self.check_expr(arg, local);
             if i < info.params.len() {
                 let (_, ptype) = &info.params[i];
-                if arg_type.is_some() && !assignable(arg_type.as_deref(), Some(ptype)) {
-                    self.err_at(format!(
-                        "argument {} to '{}': expected '{}', got '{}'",
-                        i + 1, fn_name, ptype, arg_type.unwrap(),
-                    ), arg);
+                if let Some(arg_ty) = arg_type {
+                    if !assignable(Some(&arg_ty), Some(ptype)) {
+                        self.err_at(format!(
+                            "argument {} to '{}': expected '{}', got '{}'",
+                            i + 1, fn_name, ptype, arg_ty,
+                        ), arg);
+                    }
                 }
             }
         }

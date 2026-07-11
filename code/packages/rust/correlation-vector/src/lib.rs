@@ -789,7 +789,7 @@ impl CVLog {
     /// assert_eq!(chain[1].id, b);
     /// ```
     pub fn lineage(&self, cv_id: &str) -> Vec<CVEntry> {
-        if self.entries.get(cv_id).is_none() {
+        if !self.entries.contains_key(cv_id) {
             return vec![];
         }
 

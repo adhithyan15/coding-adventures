@@ -1,3 +1,7 @@
+// `add`/`sub`/`mul`/`div` here are fallible checked-arithmetic methods returning
+// `Option<Self>`, not the infallible `std::ops` traits (which must return `Self`);
+// implementing those traits would be the wrong contract.
+#![allow(clippy::should_implement_trait)]
 //! # Computation with provenance-through-math (ADJ language expansion, step 3a).
 //!
 //! Adjudication is full of arithmetic: *sum these line items; compute the

@@ -383,6 +383,10 @@ fn test_empty_statements_dropped_from_function_body() {
 /// keep an audit-trail anchor in the DCE upstream-ports file
 /// pointing readers at the right crate when they search upstream
 /// `testIf`. The actual behavioural assertions live in fold-control-flow.
+// `marker` is a compile-time-constant string, so clippy knows `is_empty()` is
+// always false; the assertion is an intentional documentation marker, not a
+// runtime check, so the const-evaluation lint is allowed here.
+#[allow(clippy::const_is_empty)]
 #[test]
 fn test_if_with_constant_test_collapse() {
     // Sanity: this test_is intentionally a marker, not a behaviour

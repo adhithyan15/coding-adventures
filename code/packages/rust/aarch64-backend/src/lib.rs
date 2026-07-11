@@ -345,6 +345,10 @@ pub fn compile_with_relocs(
 /// relocation entries, and a list of [`GlobalWordReloc`] entries — one per
 /// `global_load` / `global_store` instruction — that the Mach-O packager uses
 /// to emit `ARM64_RELOC_PAGE21` / `ARM64_RELOC_PAGEOFF12` records.
+// The tuple return carries the three parallel outputs of one pass (code bytes,
+// external relocs, global-word relocs); splitting it into a named struct would
+// only rename the same shape, so the complexity is intrinsic to the API.
+#[allow(clippy::type_complexity)]
 pub fn compile_with_globals(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
@@ -354,6 +358,8 @@ pub fn compile_with_globals(
         .map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
+// Same intrinsic tuple shape as `compile_with_globals`; not a refactor target.
+#[allow(clippy::type_complexity)]
 fn compile_inner(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
@@ -480,6 +486,10 @@ fn compile_inner(
 // Per-instruction lowering
 // ===========================================================================
 
+// Lowering one instruction needs the full lowering context (assembler, reg
+// allocator, label table, frame size, fn name, global slot map + reloc sink);
+// bundling these into a struct would not reduce the coupling, only hide it.
+#[allow(clippy::too_many_arguments)]
 fn emit_instr(
     asm: &mut Assembler,
     instr: &CIRInstr,

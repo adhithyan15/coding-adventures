@@ -301,6 +301,9 @@ fn run_clr_real(src: &str) -> Option<i64> {
 /// The capstone: every backend that can run a program computes the same integer.
 #[test]
 fn mccarthy_is_uniform_across_every_backend() {
+    // A labelled table of backend runners; the `fn` pointer type is intentional
+    // and reads clearly inline, so keep it rather than hoisting a type alias.
+    #[allow(clippy::type_complexity)]
     let backends: &[(&str, fn(&str) -> Option<i64>)] = &[
         ("VM", run_vm),
         ("JIT", run_jit),

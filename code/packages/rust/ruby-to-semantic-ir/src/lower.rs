@@ -736,6 +736,7 @@ fn flatten_block_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) 
 ///   - NOT immediately preceded by `.` (else it's a method name:
 ///     `obj.it`), and
 ///   - NOT immediately followed by `(` (else it's a call: `it(x)`).
+///
 /// `it.foo`, `it + 1`, `puts(it)` all qualify (the `.`/`(` there are
 /// not adjacent in the disqualifying position).  This is a heuristic;
 /// an `it` used as a local (`it = …`) or parenless callee is a rare
@@ -8920,7 +8921,7 @@ impl Lowerer {
             _ => false,
         };
         if is_bare_name {
-            let scope = if self.current_params.contains(&trimmed.to_string()) {
+            let scope = if self.current_params.contains(trimmed) {
                 Scope::Param
             } else {
                 Scope::Local

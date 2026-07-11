@@ -817,6 +817,10 @@ fn extract_define(node: &GrammarASTNode, depth: usize) -> Result<Define, TwigPar
 /// `twig.tokens` prevents the `{ typed_param }` repetition from consuming
 /// the arrow as a bare-NAME parameter, which previously caused a
 /// "Expected COLON, got '0'" parse error when the type annotation followed.
+// The 4-tuple return bundles the parsed pieces of a function signature (name,
+// params, per-param annotations, return annotation). Introducing a named struct
+// would ripple through the single caller for no real clarity gain here.
+#[allow(clippy::type_complexity)]
 fn extract_fn_signature(
     sig_node: &GrammarASTNode,
 ) -> Result<(String, Vec<String>, Vec<Option<TypeAnnotation>>, Option<TypeAnnotation>), TwigParseError> {

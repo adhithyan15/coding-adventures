@@ -189,9 +189,7 @@ fn delete_rec<T: Ord + Clone>(
     root: Option<Box<RBNode<T>>>,
     value: &T,
 ) -> Option<Box<RBNode<T>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     if value < &node.value {
         if !is_red(&node.left) && !is_red_left(&node.left) {

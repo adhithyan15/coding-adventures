@@ -1,3 +1,16 @@
+// `needless_range_loop`: the placement/matrix loops index the 2-D grid by
+// (row, col) and use the indices in the ECC200 placement arithmetic.
+// `type_complexity`: internal tuple signatures for the encoder tables.
+// `ptr_arg`: the placement helpers take `&mut Vec<Vec<bool>>` to match the
+// grid's owned type across the module (the outer Vec is never resized).
+// `doc_overindented_list_items`: the doc blocks use intentional ASCII alignment
+// mirroring the ISO/IEC 16022 tables.
+#![allow(
+    clippy::needless_range_loop,
+    clippy::type_complexity,
+    clippy::ptr_arg,
+    clippy::doc_overindented_list_items
+)]
 //! # data-matrix
 //!
 //! Data Matrix ECC200 encoder — ISO/IEC 16022:2006 compliant.
@@ -167,6 +180,9 @@ struct SymbolSizeEntry {
     data_region_height: usize,
     data_region_width: usize,
     data_cw: usize,
+    // Retained from the ISO/IEC 16022 size table for documentation/layout even
+    // though the encoder derives ECC length from block counts instead.
+    #[allow(dead_code)]
     ecc_cw: usize,
     num_blocks: usize,
     ecc_per_block: usize,

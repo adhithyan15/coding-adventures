@@ -55,6 +55,8 @@ fn integer_literal_unchanged() {
 }
 
 #[test]
+// 3.14 is arbitrary float test data, not an approximation of PI.
+#[allow(clippy::approx_constant)]
 fn float_literal_unchanged() {
     assert_eq!(symbolic().eval(flt(3.14)), flt(3.14));
 }

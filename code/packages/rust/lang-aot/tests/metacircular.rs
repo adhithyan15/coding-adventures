@@ -373,6 +373,9 @@ fn metacircular_smoke_vm_evaluates_canonical_programs() {
 
 #[test]
 fn metacircular_eval_uniform_across_modern_backends() {
+    // Labelled table of backend runners; the inline `fn` pointer type is clearer
+    // here than a hoisted type alias.
+    #[allow(clippy::type_complexity)]
     let backends: &[(&str, fn(&str) -> Option<i64>)] = &[
         ("VM", run_vm),
         ("JIT", run_jit),

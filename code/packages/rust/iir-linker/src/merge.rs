@@ -279,6 +279,9 @@ mod tests {
         )
     }
 
+    // Test fixture builder retained alongside the other `make_fn_*` helpers for
+    // symmetry; not every test references it.
+    #[allow(dead_code)]
     fn make_fn_calling(name: &str, callee: &str) -> IIRFunction {
         IIRFunction::new(
             name,

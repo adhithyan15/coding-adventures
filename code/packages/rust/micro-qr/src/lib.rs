@@ -39,6 +39,12 @@
 //!   → ModuleGrid
 //! ```
 
+// Micro QR encoding is fundamentally 2D grid placement: functions here iterate
+// `row`/`col` (or format-table) indices to write modules at exact `(r, c)`
+// positions defined by ISO/IEC 18004 Annex E. Index loops mirror the spec's
+// coordinate tables and keep placement auditable, so we allow the lint crate-wide.
+#![allow(clippy::needless_range_loop)]
+
 pub const VERSION: &str = "0.1.0";
 
 use barcode_2d::{layout, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};

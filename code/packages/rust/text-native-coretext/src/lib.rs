@@ -782,8 +782,10 @@ mod tests {
     fn shape_rejects_rtl_for_v1() {
         let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
         let s = CoreTextShaper::new();
-        let mut opts = ShapeOptions::default();
-        opts.direction = Direction::Rtl;
+        let opts = ShapeOptions {
+            direction: Direction::Rtl,
+            ..Default::default()
+        };
         let err = s.shape("hello", &h, 16.0, &opts).unwrap_err();
         assert_eq!(err, ShapingError::UnsupportedDirection(Direction::Rtl));
     }

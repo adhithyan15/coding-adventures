@@ -527,6 +527,9 @@ mod tests {
         tokenise(src).tokens.into_iter().map(|t| t.kind).collect()
     }
 
+    // Symmetric test helper kept alongside `kinds` for completeness; not
+    // currently referenced by any test.
+    #[allow(dead_code)]
     fn values(src: &str) -> Vec<String> {
         tokenise(src).tokens.into_iter().map(|t| t.value).collect()
     }

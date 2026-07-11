@@ -1,3 +1,6 @@
+// The complex tuple types are internal VM callback/handler signatures; a type
+// alias would not make them clearer.
+#![allow(clippy::type_complexity)]
 //! [`BrainfuckVM`] — a thin [`vm_core`] wrapper configured for Brainfuck.
 //!
 //! ## What this wrapper actually does

@@ -791,8 +791,10 @@ mod tests {
         )
         .unwrap();
 
-        let mut options = PaintBarcode1DOptions::default();
-        options.label = Some("Demo barcode".to_string());
+        let options = PaintBarcode1DOptions {
+            label: Some("Demo barcode".to_string()),
+            ..PaintBarcode1DOptions::default()
+        };
         let scene = layout_barcode_1d(&runs, &options).unwrap();
 
         assert_eq!(scene.background, "#ffffff");

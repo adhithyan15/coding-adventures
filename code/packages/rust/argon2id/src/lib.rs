@@ -225,6 +225,10 @@ impl AddressStream {
 /// first two slices of the first pass, data-dependent everywhere else.
 fn data_independent(r: usize, sl: usize) -> bool { r == 0 && sl < 2 }
 
+// The segment-fill routine threads the full RFC 9106 addressing context
+// (pass, lane, slice, dimensions, cost parameters); grouping them into a
+// struct would only hide the spec-mandated inputs.
+#[allow(clippy::too_many_arguments)]
 fn fill_segment(
     memory: &mut [Vec<Vec<u64>>],
     r: usize, lane: usize, sl: usize, q: usize, sl_len: usize,
@@ -268,6 +272,9 @@ fn fill_segment(
     }
 }
 
+// Validation mirrors RFC 9106's parameter list one-to-one, so the argument
+// count is intrinsic to the spec rather than a design smell.
+#[allow(clippy::too_many_arguments)]
 fn validate(
     password: &[u8], salt: &[u8],
     time_cost: u32, memory_cost: u32, parallelism: u32, tag_length: u32,
@@ -327,6 +334,10 @@ pub fn argon2id(
         .map(|_| (0..q).map(|_| vec![0u64; BLOCK_WORDS]).collect())
         .collect();
 
+    // `i` is the lane index: it is both hashed into the block seed via
+    // `le32(i as u32)` and used to place two blocks per lane, so an
+    // enumerate-based rewrite would not simplify the body.
+    #[allow(clippy::needless_range_loop)]
     for i in 0..p {
         let mut in0 = Vec::with_capacity(h0.len() + 8);
         in0.extend_from_slice(&h0);
@@ -353,6 +364,9 @@ pub fn argon2id(
     }
 
     let mut final_block = memory[0][q - 1].clone();
+    // `lane` starts at 1 (lane 0 seeds `final_block`) and the inner loop XORs
+    // word-by-word across two distinct arrays, so keep the explicit indices.
+    #[allow(clippy::needless_range_loop)]
     for lane in 1..p {
         for k in 0..BLOCK_WORDS {
             final_block[k] ^= memory[lane][q - 1][k];

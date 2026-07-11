@@ -257,12 +257,12 @@ mod tests {
         let recovered =
             istft(&spec, n_fft, hop, WindowType::Hann, 1024).unwrap();
         let pad = (n_fft / 2) as usize;
-        for n in pad..(1024 - pad) {
+        for (n, &val) in recovered.iter().enumerate().take(1024 - pad).skip(pad) {
             assert!(
-                approx_eq(recovered[n], 1.5, 1e-3),
+                approx_eq(val, 1.5, 1e-3),
                 "n={}: got {}, expected 1.5",
                 n,
-                recovered[n]
+                val
             );
         }
     }

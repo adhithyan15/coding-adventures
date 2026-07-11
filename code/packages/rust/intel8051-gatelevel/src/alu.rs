@@ -327,9 +327,7 @@ pub fn rl8(a: u8) -> AluResult8051 {
     // New value: shift left, insert out_bit into bit 0
     let mut out = [0u8; 8];
     out[0] = out_bit;
-    for i in 1..8 {
-        out[i] = bits[i - 1];
-    }
+    out[1..8].copy_from_slice(&bits[..7]);
     let result = crate::bits::bits_to_u8(&out);
     AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
 }
@@ -350,9 +348,7 @@ pub fn rr8(a: u8) -> AluResult8051 {
     let bits = int_to_bits8(a);
     let out_bit = bits[0]; // LSB exits
     let mut out = [0u8; 8];
-    for i in 0..7 {
-        out[i] = bits[i + 1];
-    }
+    out[..7].copy_from_slice(&bits[1..8]);
     out[7] = out_bit; // enters at MSB
     let result = crate::bits::bits_to_u8(&out);
     AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
@@ -378,9 +374,7 @@ pub fn rlc8(a: u8, cy_in: u8) -> AluResult8051 {
     let out_bit = bits[7]; // bit7 exits to CY
     let mut out = [0u8; 8];
     out[0] = cy_in; // CY enters at bit0
-    for i in 1..8 {
-        out[i] = bits[i - 1];
-    }
+    out[1..8].copy_from_slice(&bits[..7]);
     let result = crate::bits::bits_to_u8(&out);
     AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
 }
@@ -404,9 +398,7 @@ pub fn rrc8(a: u8, cy_in: u8) -> AluResult8051 {
     let bits = int_to_bits8(a);
     let out_bit = bits[0]; // bit0 exits to CY
     let mut out = [0u8; 8];
-    for i in 0..7 {
-        out[i] = bits[i + 1];
-    }
+    out[..7].copy_from_slice(&bits[1..8]);
     out[7] = cy_in; // CY enters at bit7
     let result = crate::bits::bits_to_u8(&out);
     AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
@@ -425,12 +417,11 @@ pub fn rrc8(a: u8, cy_in: u8) -> AluResult8051 {
 /// ```
 pub fn swap8(a: u8) -> AluResult8051 {
     let bits = int_to_bits8(a);
-    // Wire swap: bits[0..4] ↔ bits[4..8]
+    // Wire swap: bits[0..4] ↔ bits[4..8]. `out` and `bits` are distinct
+    // arrays, so the two half-copies are independent of ordering.
     let mut out = [0u8; 8];
-    for i in 0..4 {
-        out[i] = bits[i + 4]; // low ← old high
-        out[i + 4] = bits[i]; // high ← old low
-    }
+    out[..4].copy_from_slice(&bits[4..8]); // low ← old high
+    out[4..8].copy_from_slice(&bits[..4]); // high ← old low
     let result = crate::bits::bits_to_u8(&out);
     // SWAP does NOT update parity
     AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: 0 }
@@ -463,7 +454,9 @@ pub fn mul8(a: u8, b: u8) -> (u8, u8, u8) {
     let mut product_hi = 0u16;
     let partial = a as u16;
 
-    // Shift-and-add over 8 iterations
+    // Shift-and-add over 8 iterations. `i` both selects `b_bits[i]` and drives
+    // the `partial << i` shift, so the explicit index is needed.
+    #[allow(clippy::needless_range_loop)]
     for i in 0..8 {
         if b_bits[i] != 0 {
             // Add partial product (shifted) into accumulator

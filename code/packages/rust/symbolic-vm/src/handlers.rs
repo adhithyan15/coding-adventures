@@ -4159,8 +4159,8 @@ fn is_linear_in(expr: &IRNode, x: &str) -> bool {
 ///
 /// - **Case A**: R = c·D′  →  c·log(D)
 /// - **Case B**: R is linear, D = a₂x²+a₁x+a₀, and √(4a₂a₀-a₁²)
-///              is rational. Split off the D′ log term, then close the
-///              remaining constant-over-quadratic term with atan.
+///   is rational. Split off the D′ log term, then close the
+///   remaining constant-over-quadratic term with atan.
 ///
 /// Returns `None` if neither case applies (signals that Phase 28 falls through).
 fn close_remainder_over_d(
@@ -5005,6 +5005,9 @@ fn sqrt_t_minus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
     decompose_by_monomial(q_tilde, monomial)
 }
 
+// The `monomial` parameter is a recursion callback carrying the memo table; its
+// fn-pointer signature is intentionally explicit here rather than aliased.
+#[allow(clippy::type_complexity)]
 fn decompose_by_monomial(
     q_tilde: &[RatC],
     monomial: fn(usize, &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)>,
@@ -6231,8 +6234,8 @@ fn multiply_nodes(nodes: Vec<IRNode>) -> IRNode {
 fn poly_add(a: &[i64], b: &[i64]) -> Vec<i64> {
     let len = a.len().max(b.len());
     let mut out = vec![0; len];
-    for i in 0..len {
-        out[i] = a.get(i).copied().unwrap_or(0) + b.get(i).copied().unwrap_or(0);
+    for (i, out_i) in out.iter_mut().enumerate() {
+        *out_i = a.get(i).copied().unwrap_or(0) + b.get(i).copied().unwrap_or(0);
     }
     trim_poly(out)
 }
@@ -6240,8 +6243,8 @@ fn poly_add(a: &[i64], b: &[i64]) -> Vec<i64> {
 fn poly_sub(a: &[i64], b: &[i64]) -> Vec<i64> {
     let len = a.len().max(b.len());
     let mut out = vec![0; len];
-    for i in 0..len {
-        out[i] = a.get(i).copied().unwrap_or(0) - b.get(i).copied().unwrap_or(0);
+    for (i, out_i) in out.iter_mut().enumerate() {
+        *out_i = a.get(i).copied().unwrap_or(0) - b.get(i).copied().unwrap_or(0);
     }
     trim_poly(out)
 }

@@ -1,3 +1,7 @@
+// These index loops walk transform basis functions by index, several of them
+// indexing parallel arrays (`out`/`coeffs`/`x`) or using the index in the cosine
+// arithmetic; the explicit range mirrors the DCT/IDCT math, so keep it.
+#![allow(clippy::needless_range_loop)]
 //! # `dsp-dct` — Discrete Cosine Transform
 //!
 //! **DSP02 Phase 1 + 2 (this release).**  Pure-Rust scalar

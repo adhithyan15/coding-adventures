@@ -203,8 +203,8 @@ mod tests {
         let xor_size = 2 * 2 * 4; // 2×2 pixels × 4 bytes BGRA
         let and_start = 22 + 40 + xor_size;
         // AND mask for width=2: stride=4, 2 rows = 8 bytes, all zero.
-        for i in and_start..and_start + 8 {
-            assert_eq!(bytes[i], 0, "AND mask byte {} should be 0", i);
+        for (offset, &byte) in bytes[and_start..and_start + 8].iter().enumerate() {
+            assert_eq!(byte, 0, "AND mask byte {} should be 0", and_start + offset);
         }
     }
 }

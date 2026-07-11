@@ -209,7 +209,12 @@ impl fmt::Debug for FPRegisterFile {
 
 #[cfg(test)]
 mod tests {
+    // 3.14 / -2.5 etc. are arbitrary float test values, not approximations of PI.
+    #![allow(clippy::approx_constant)]
     use super::*;
+    // `FP32` is a `fp_arithmetic` constant used by the tests but not imported at
+    // module scope, so `use super::*` does not provide it; import it directly.
+    use fp_arithmetic::FP32;
 
     #[test]
     fn test_new_register_file() {

@@ -164,8 +164,8 @@ pub fn parse_ir(text: &str) -> Result<IrProgram, String> {
         }
 
         // Standalone comment line — starts with ";"
-        if trimmed.starts_with(';') {
-            let comment_text = trimmed[1..].trim();
+        if let Some(after_semicolon) = trimmed.strip_prefix(';') {
+            let comment_text = after_semicolon.trim();
             // Skip ID-only comments like "; #3" (those are attached to instructions)
             if !comment_text.starts_with('#') {
                 program.add_instruction(IrInstruction::new(

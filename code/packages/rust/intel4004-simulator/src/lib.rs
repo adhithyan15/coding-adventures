@@ -521,8 +521,10 @@ impl Intel4004Simulator {
                     result = result || self.carry;
                 }
                 if test_pin {
-                    // Test pin is always 0 in this simulator (no external hardware).
-                    result = result || false;
+                    // Test pin is always 0 in this simulator (no external hardware),
+                    // so it contributes a low (false) level to the OR of conditions.
+                    let test_pin_level = false;
+                    result = result || test_pin_level;
                 }
 
                 // Apply inversion.

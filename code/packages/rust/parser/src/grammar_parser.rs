@@ -184,6 +184,8 @@ pub struct GrammarParser {
 
     /// Pre-parse hooks: transform token list before parsing.
     /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    // Boxed-closure hook list; the type documents the hook signature inline.
+    #[allow(clippy::type_complexity)]
     pre_parse_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 
     /// Post-parse hooks: transform AST after parsing.

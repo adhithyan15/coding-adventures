@@ -176,10 +176,13 @@ impl paint_instructions::ImageCodec for TiffCodec {
     }
 }
 
-// Helper trait for tests.
+// Helper trait for tests. Gated to `#[cfg(test)]` because it is only exercised by
+// the test module below; without the gate it registers as dead code in the lib build.
+#[cfg(test)]
 trait SliceExt {
     fn empty_check(&self) -> bool;
 }
+#[cfg(test)]
 impl<T> SliceExt for Vec<T> {
     fn empty_check(&self) -> bool {
         self.is_empty()

@@ -859,7 +859,7 @@ mod tests {
     #[test]
     fn roundtrip_one_login() {
         let r = login("GitHub", "alice", "hunter2");
-        let bytes = export_to_bundle(&[r.clone()]).unwrap();
+        let bytes = export_to_bundle(std::slice::from_ref(&r)).unwrap();
         let bundle = import_from_bundle(&bytes).unwrap();
         assert_eq!(bundle.version, BUNDLE_VERSION);
         assert_eq!(bundle.records.len(), 1);
@@ -928,7 +928,7 @@ mod tests {
         // Same input → identical output bytes (BTreeMap iteration
         // and the writer's fixed key order make this true).
         let r = login("github", "alice", "hunter2");
-        let bytes_a = export_to_bundle(&[r.clone()]).unwrap();
+        let bytes_a = export_to_bundle(std::slice::from_ref(&r)).unwrap();
         let bytes_b = export_to_bundle(&[r]).unwrap();
         assert_eq!(bytes_a, bytes_b);
     }
@@ -936,7 +936,7 @@ mod tests {
     #[test]
     fn passthrough_importer_works() {
         let r = login("github", "alice", "hunter2");
-        let bytes = export_to_bundle(&[r.clone()]).unwrap();
+        let bytes = export_to_bundle(std::slice::from_ref(&r)).unwrap();
         let imp = PassthroughImporter;
         assert_eq!(imp.name(), "vault-portable");
         let recs = imp.import(&bytes).unwrap();
@@ -1073,7 +1073,7 @@ mod tests {
             tags: vec![],
             custom_fields: BTreeMap::new(),
         };
-        let bytes = export_to_bundle(&[r.clone()]).unwrap();
+        let bytes = export_to_bundle(std::slice::from_ref(&r)).unwrap();
         let bundle = import_from_bundle(&bytes).unwrap();
         assert_eq!(bundle.records[0], r);
     }
@@ -1091,7 +1091,7 @@ mod tests {
             tags: vec![],
             custom_fields: BTreeMap::new(),
         };
-        let bytes = export_to_bundle(&[r.clone()]).unwrap();
+        let bytes = export_to_bundle(std::slice::from_ref(&r)).unwrap();
         // U+2028 / U+2029 escaped on the wire (so JS embedding
         // is safe) but read back to original chars.
         let s = std::str::from_utf8(&bytes).unwrap();
@@ -1151,7 +1151,7 @@ mod tests {
             tags: vec!["密码".into(), "café".into()],
             custom_fields: BTreeMap::new(),
         };
-        let bytes = export_to_bundle(&[r.clone()]).unwrap();
+        let bytes = export_to_bundle(std::slice::from_ref(&r)).unwrap();
         let bundle = import_from_bundle(&bytes).unwrap();
         assert_eq!(bundle.records[0], r);
     }

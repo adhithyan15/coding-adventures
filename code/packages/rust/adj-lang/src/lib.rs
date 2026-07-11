@@ -1,3 +1,6 @@
+// The large `Err` variant is the crate's public `CompileError` enum; boxing it
+// would churn the public API and all call sites for no behavior change.
+#![allow(clippy::result_large_err)]
 //! # adj-lang — surface syntax for the adjudication framework
 //!
 //! A small probabilistic-logic DSL whose programs lower directly to
@@ -116,8 +119,8 @@ pub fn compile_with_imports(
 
 /// Run a **differential** over a lowered program's `? h` query lines:
 /// treat the program's queries as the competing hypotheses, rank them by
-/// posterior, and return the comparative [`Differential`] decision (argmax
-/// + between-hypothesis margin, with a kickback when an open uncertainty
+/// posterior, and return the comparative [`Differential`] decision (argmax +
+/// between-hypothesis margin, with a kickback when an open uncertainty
 /// could flip the ranking).
 ///
 /// This is the natural reading of a multi-`?` adj-lang program: the queries

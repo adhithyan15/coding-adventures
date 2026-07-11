@@ -287,8 +287,8 @@ fn parse_type7_attrs(s: &str) -> &str {
 
         // Optional: `\s*=\s*VALUE`
         let after_eq = after_name.trim_start();
-        if after_eq.starts_with('=') {
-            let after_eq = &after_eq[1..].trim_start();
+        if let Some(after_eq) = after_eq.strip_prefix('=') {
+            let after_eq = &after_eq.trim_start();
             if let Some(rest) = after_eq.strip_prefix('"') {
                 // Double-quoted: "[^"\n]*"
                 if let Some(end) = rest.find(['"', '\n']) {
@@ -467,6 +467,9 @@ pub struct ListMarker {
     pub marker: char,
     pub marker_len: usize, // bytes consumed by marker + spaces
     pub space_after: usize,
+    // Parsed for completeness of the list-marker record; not yet consumed by
+    // callers, kept so the struct mirrors the full marker syntax.
+    #[allow(dead_code)]
     pub indent: usize,
 }
 
@@ -730,6 +733,9 @@ impl BlockParser {
         self.arena.alloc(kind, Some(parent))
     }
 
+    // Helper retained alongside `alloc_node` for symmetry; not currently
+    // called but kept as part of the block-builder API surface.
+    #[allow(dead_code)]
     fn push_leaf(&mut self, container: NodeId, kind: NodeKind) -> NodeId {
         let id = self.alloc_node(kind, container);
         self.add_child_to_container(container, id);
@@ -786,19 +792,14 @@ impl BlockParser {
 
     fn finalize_paragraph_lines(&mut self, node_id: NodeId, lines: Vec<String>) {
         let mut text = lines.join("\n");
-        loop {
-            match parse_link_definition(&text) {
-                Some(def) => {
-                    if !self.link_refs.contains_key(&def.label) {
-                        self.link_refs.insert(def.label.clone(), LinkReference {
-                            destination: def.destination,
-                            title: def.title,
-                        });
-                    }
-                    text = text[def.chars_consumed..].to_string();
-                }
-                None => break,
+        while let Some(def) = parse_link_definition(&text) {
+            if !self.link_refs.contains_key(&def.label) {
+                self.link_refs.insert(def.label.clone(), LinkReference {
+                    destination: def.destination,
+                    title: def.title,
+                });
             }
+            text = text[def.chars_consumed..].to_string();
         }
 
         if text.trim().is_empty() {
@@ -817,6 +818,10 @@ impl BlockParser {
         }
     }
 
+    // A few running cursors (`container_idx`, `inner`) get a final write on a
+    // break path or are immediately re-assigned; the writes are harmless but
+    // clippy/rustc flag them as never-read. Kept as-is for control-flow clarity.
+    #[allow(unused_assignments)]
     pub fn process_line(&mut self, raw_line: &str) {
         let orig_blank = is_blank(raw_line);
         let mut line_content = raw_line.to_string();
@@ -1157,13 +1162,10 @@ impl BlockParser {
                             } else { vec![] };
                             // Check if paragraph content is entirely link definitions
                             let mut text = lines.join("\n");
-                            let mut all_defs = true;
-                            loop {
-                                match parse_link_definition(&text) {
-                                    Some(def) => { text = text[def.chars_consumed..].to_string(); }
-                                    None => { all_defs = text.trim().is_empty(); break; }
-                                }
+                            while let Some(def) = parse_link_definition(&text) {
+                                text = text[def.chars_consumed..].to_string();
                             }
+                            let all_defs = text.trim().is_empty();
                             if !all_defs {
                                 // Has real content — treat as setext heading
                                 let lines = if let NodeKind::Paragraph { lines } = &self.arena.get(leaf_id).kind {
@@ -1386,19 +1388,14 @@ impl BlockParser {
     fn finalize_paragraph_as_setext(&mut self, _leaf_id: NodeId, lines: Vec<String>, level: u8, inner: NodeId) {
         let mut text = lines.join("\n");
         // Extract link defs
-        loop {
-            match parse_link_definition(&text) {
-                Some(def) => {
-                    if !self.link_refs.contains_key(&def.label) {
-                        self.link_refs.insert(def.label.clone(), LinkReference {
-                            destination: def.destination,
-                            title: def.title,
-                        });
-                    }
-                    text = text[def.chars_consumed..].to_string();
-                }
-                None => break,
+        while let Some(def) = parse_link_definition(&text) {
+            if !self.link_refs.contains_key(&def.label) {
+                self.link_refs.insert(def.label.clone(), LinkReference {
+                    destination: def.destination,
+                    title: def.title,
+                });
             }
+            text = text[def.chars_consumed..].to_string();
         }
 
         // Remove the paragraph

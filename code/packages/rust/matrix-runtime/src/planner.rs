@@ -6,7 +6,7 @@
 //! 1. **Capability filter** — for each op, set of executors that can run it.
 //! 2. **Greedy cost minimisation** — for each op in topological order,
 //!    pick the executor that minimises (compute + transfer-in) cost.
-//! 2b. **Single-executor preference** (V1.1, spec MX04 §"Single-executor
+//!    2b. **Single-executor preference** (V1.1, spec MX04 §"Single-executor
 //!    preference") — for each healthy executor that is a candidate for
 //!    *every* op, compute the total cost of running the entire graph
 //!    on it (compute_ns per op, plus a *one-time* host→device transfer
@@ -224,8 +224,10 @@ pub fn plan(graph: &Graph, registry: &Registry) -> Result<ComputeGraph, PlanErro
         // would treat it as mixed and undo our work.  Reassigning the
         // constants to `uniform_exec` keeps the placed graph honestly
         // single-executor.
-        for i in 0..graph.ops.len() {
-            placement[i] = uniform_exec;
+        // `placement` has exactly one entry per op (built in the greedy pass),
+        // so overwriting every slot reassigns every op to the uniform executor.
+        for slot in placement.iter_mut() {
+            *slot = uniform_exec;
         }
         for c in &graph.constants {
             let b = next_buf(uniform_exec, &mut next_buffer_id_per_executor);

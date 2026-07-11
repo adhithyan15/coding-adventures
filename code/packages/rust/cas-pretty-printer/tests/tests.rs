@@ -1,3 +1,6 @@
+// The float literal is intentional printer test input, not an approximation of a
+// std constant to be replaced.
+#![allow(clippy::approx_constant)]
 // Integration tests for cas-pretty-printer.
 //
 // Mirrors the Python reference tests in

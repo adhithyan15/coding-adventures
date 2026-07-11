@@ -73,7 +73,7 @@
 mod classes;
 mod exec;
 
-use std::ffi::{c_char, c_int};
+use std::ffi::c_int;
 use std::ptr;
 
 use coding_adventures_json_value::JsonValue;
@@ -382,26 +382,26 @@ unsafe extern "C" fn py_graph_round_trip_json(
 
 static mut MODULE_METHODS: [PyMethodDef; 3] = [
     PyMethodDef {
-        ml_name: b"graph_round_trip_json\0".as_ptr() as *const c_char,
+        ml_name: c"graph_round_trip_json".as_ptr(),
         ml_meth: Some(py_graph_round_trip_json),
         ml_flags: METH_VARARGS,
-        ml_doc: b"graph_round_trip_json(json_string: str) -> str\n\n\
+        ml_doc: c"graph_round_trip_json(json_string: str) -> str\n\n\
                   Decode a matrix-ir-json Graph and re-encode it.  \
-                  Raises ValueError on malformed or schema-invalid JSON.\n\0"
-            .as_ptr() as *const c_char,
+                  Raises ValueError on malformed or schema-invalid JSON.\n"
+            .as_ptr(),
     },
     PyMethodDef {
-        ml_name: b"run_graph_on_cpu\0".as_ptr() as *const c_char,
+        ml_name: c"run_graph_on_cpu".as_ptr(),
         ml_meth: Some(py_run_graph_on_cpu),
         ml_flags: METH_VARARGS,
-        ml_doc: b"run_graph_on_cpu(envelope_json: str) -> str\n\n\
+        ml_doc: c"run_graph_on_cpu(envelope_json: str) -> str\n\n\
                   Plan and execute a matrix-ir-json Graph on the CPU executor.  \
                   Envelope is `{\"graph\": <matrix-ir-json>, \"inputs\": [<hex>, ...]}`; \
                   result is `{\"outputs\": [<hex>, ...]}`.  \
                   Raises ValueError on malformed JSON, missing fields, invalid hex, \
                   planner errors, executor errors, or graphs exceeding the 4 GiB \
-                  total-buffer cap.\n\0"
-            .as_ptr() as *const c_char,
+                  total-buffer cap.\n"
+            .as_ptr(),
     },
     // Sentinel — terminates the methods array.
     PyMethodDef {
@@ -431,9 +431,9 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
         m_index: 0,
         m_copy: ptr::null_mut(),
     },
-    m_name: b"matrix_rust_python\0".as_ptr() as *const c_char,
-    m_doc: b"Rust-backed matrix execution layer - zero-dependency Python C extension.\0"
-        .as_ptr() as *const c_char,
+    m_name: c"matrix_rust_python".as_ptr(),
+    m_doc: c"Rust-backed matrix execution layer - zero-dependency Python C extension."
+        .as_ptr(),
     m_size: -1,
     m_methods: &raw mut MODULE_METHODS as *mut PyMethodDef,
     m_slots: ptr::null_mut(),
@@ -452,6 +452,14 @@ static mut MODULE_DEF: PyModuleDef = PyModuleDef {
 // (POSIX) or `GetProcAddress` (Windows).
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// # Safety
+///
+/// This is the CPython extension entry point. It must only be called by the
+/// CPython import machinery (via `dlsym`/`GetProcAddress`) on the interpreter's
+/// main thread while the GIL is held, exactly once per process. It reads and
+/// mutates the module's `static mut` definition tables, so it must not be
+/// invoked concurrently. Returns a new reference to the module object (or null
+/// on failure), as required by the CPython C-API contract.
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_matrix_rust_python() -> PyObjectPtr {
     let module = PyModule_Create2(&raw mut MODULE_DEF, PYTHON_API_VERSION as c_int);

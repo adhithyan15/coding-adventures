@@ -1820,9 +1820,7 @@ fn is_regular_singular(
 
     // P_eff(x) = P(x) / x^m  (analytic, P_eff(0) ≠ 0).
     let mut p_eff = vec![Frac::ZERO; n];
-    for i in m..n {
-        p_eff[i - m] = p_poly[i];
-    }
+    p_eff[..n - m].copy_from_slice(&p_poly[m..n]);
     if p_eff[0].is_zero() {
         return None;
     }
@@ -1846,12 +1844,15 @@ fn is_regular_singular(
     // tildeP = x^{1-m} · Q · inv  (left-shift by m-1).
     let q_inv = frac_poly_mul(q_poly, &inv, n - 1);
     let shift_p = m - 1;
-    for i in 0..shift_p {
-        if !q_inv[i].is_zero() {
+    for val in &q_inv[..shift_p] {
+        if !val.is_zero() {
             return None;
         }
     }
     let mut tilde_p = vec![Frac::ZERO; n];
+    // `k` indexes `tilde_p` while `k + shift_p` indexes `q_inv` (a shifted copy
+    // guarded by `idx < n`), so keep the explicit index arithmetic.
+    #[allow(clippy::needless_range_loop)]
     for k in 0..n {
         let idx = k + shift_p;
         if idx < n {
@@ -1864,11 +1865,14 @@ fn is_regular_singular(
     let mut tilde_q = vec![Frac::ZERO; n];
     if m >= 2 {
         let shift_q = m - 2;
-        for i in 0..shift_q {
-            if !r_inv[i].is_zero() {
+        for val in &r_inv[..shift_q] {
+            if !val.is_zero() {
                 return None;
             }
         }
+        // `k` indexes `tilde_q` while `k + shift_q` indexes `r_inv` (a shifted
+        // copy guarded by `idx < n`), so keep the explicit index arithmetic.
+        #[allow(clippy::needless_range_loop)]
         for k in 0..n {
             let idx = k + shift_q;
             if idx < n {
@@ -1877,9 +1881,7 @@ fn is_regular_singular(
         }
     } else {
         // m == 1: shift_q = -1, so right-shift R_inv by 1.
-        for k in 1..n {
-            tilde_q[k] = r_inv[k - 1];
-        }
+        tilde_q[1..n].copy_from_slice(&r_inv[..n - 1]);
     }
 
     Some((tilde_p, tilde_q))

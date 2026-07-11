@@ -1,3 +1,6 @@
+// Builds config/option structs by mutating a `Default::default()` base for
+// readability across many optional fields; identical to a struct literal.
+#![allow(clippy::field_reassign_with_default)]
 //! # Three-file pipeline entry point for the HTML backend.
 //!
 //! This module is the static-HTML consumer of the three-language pipeline

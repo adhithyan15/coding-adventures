@@ -283,19 +283,21 @@ impl CommandQueue {
         let shader = pipeline.shader();
 
         let kernel = if shader.is_gpu_style() {
-            let mut k = KernelDescriptor::default();
-            k.name = format!("dispatch_{}x{}x{}", group_x, group_y, group_z);
-            k.program = Some(shader.code().unwrap().to_vec());
-            k.grid_dim = (group_x, group_y, group_z);
-            k.block_dim = shader.local_size();
-            k
+            KernelDescriptor {
+                name: format!("dispatch_{}x{}x{}", group_x, group_y, group_z),
+                program: Some(shader.code().unwrap().to_vec()),
+                grid_dim: (group_x, group_y, group_z),
+                block_dim: shader.local_size(),
+                ..Default::default()
+            }
         } else {
-            let mut k = KernelDescriptor::default();
-            k.name = format!("op_{}", shader.operation());
-            k.operation = shader.operation().to_string();
-            k.input_data = Some(vec![vec![1.0]]);
-            k.weight_data = Some(vec![vec![1.0]]);
-            k
+            KernelDescriptor {
+                name: format!("op_{}", shader.operation()),
+                operation: shader.operation().to_string(),
+                input_data: Some(vec![vec![1.0]]),
+                weight_data: Some(vec![vec![1.0]]),
+                ..Default::default()
+            }
         };
 
         let device = memory_manager.device_mut();

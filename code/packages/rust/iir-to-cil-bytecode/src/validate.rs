@@ -50,6 +50,11 @@
 //! Previously unsupported but now accepted: `alloc` (LispyPair only),
 //! `field_load`, `field_store`, `is_null`.
 
+// The float literals in this module (e.g. 3.14...) are hand-written test/demo
+// values, not attempts to approximate `std::f64::consts::PI`. This is a `mod`
+// file, so the inner attribute applies to this module only.
+#![allow(clippy::approx_constant)]
+
 use std::collections::HashMap;
 
 use interpreter_ir::{IIRModule, Operand};

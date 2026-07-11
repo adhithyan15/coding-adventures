@@ -5,6 +5,14 @@
 //! framing, and CRC checks stay in Rust, where the board firmware and host CLI
 //! already share the same implementation.
 
+// The `#[no_mangle] pub unsafe extern "C"` functions below form a single C-ABI
+// boundary that all shares one safety contract: every raw pointer passed in must
+// be a valid, properly-aligned pointer to the named type (or null, which each
+// function handles by returning an error status). That contract is enforced
+// uniformly via `mut_ref`/`ref_from_ptr` helpers rather than restated per-fn,
+// so a crate-level allow is used instead of ~50 near-identical `# Safety` blocks.
+#![allow(clippy::missing_safety_doc)]
+
 use std::cell::{Cell, RefCell};
 use std::collections::BTreeMap;
 use std::env;

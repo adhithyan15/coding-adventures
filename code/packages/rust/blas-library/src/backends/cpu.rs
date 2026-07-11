@@ -314,12 +314,12 @@ impl BlasBackend for CpuBlas {
         }
 
         let mut result = vec![0.0_f32; m];
-        for i in 0..m {
+        for (i, result_i) in result.iter_mut().enumerate() {
             let mut s = 0.0_f32;
             for k in 0..n {
                 s += get_element(a, i, k, trans) * x.data()[k];
             }
-            result[i] = alpha * s + beta * y.data()[i];
+            *result_i = alpha * s + beta * y.data()[i];
         }
 
         Ok(Vector::new(result))
@@ -922,8 +922,8 @@ impl MlBlasBackend for CpuBlas {
 
         // Step 3: apply mask
         if let Some(m) = mask {
-            for i in 0..scaled_data.len() {
-                scaled_data[i] += m.data()[i];
+            for (i, sd) in scaled_data.iter_mut().enumerate() {
+                *sd += m.data()[i];
             }
         }
 

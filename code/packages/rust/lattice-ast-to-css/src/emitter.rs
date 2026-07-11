@@ -682,6 +682,9 @@ mod tests {
         })
     }
 
+    // Token-construction helper kept for symmetry with the other `make_*`
+    // builders; not currently called from this module.
+    #[allow(dead_code)]
     fn make_named_token(type_name: &str, value: &str) -> ASTNodeOrToken {
         ASTNodeOrToken::Token(Token {
             type_: lexer::token::TokenType::Name,

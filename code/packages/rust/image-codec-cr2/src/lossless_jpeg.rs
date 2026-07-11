@@ -630,8 +630,8 @@ pub fn decode_sof3(data: &[u8]) -> Result<(Vec<u16>, u32, u32), String> {
             }
 
             // Reset predictors for the new interval.
-            for c in 0..nc {
-                prev[c] = initial_predictor;
+            for slot in prev.iter_mut().take(nc) {
+                *slot = initial_predictor;
             }
             mcu_in_interval = 0;
         }
@@ -694,9 +694,7 @@ mod tests {
     fn hufftable_all_lengths() {
         // A table with one code per length from 1 to 8.
         let mut bits16 = [0u8; 16];
-        for i in 0..8 {
-            bits16[i] = 1;
-        }
+        bits16[..8].fill(1);
         let huffval: Vec<u8> = (0u8..8).collect();
         let table = HuffTable::build(&bits16, huffval).unwrap();
         // Length 1: code = 0b0

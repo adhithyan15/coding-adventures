@@ -539,8 +539,8 @@ fn is_lucky(p: &BiPoly, image: &[Rat]) -> bool {
         return false;
     }
     let mut deriv: Vec<Rat> = Vec::new();
-    for i in 1..image.len() {
-        deriv.push(Rat::from_int(i as i128).mul(&image[i]));
+    for (i, coeff) in image.iter().enumerate().skip(1) {
+        deriv.push(Rat::from_int(i as i128).mul(coeff));
     }
     let dn = u_normalize(&deriv);
     if dn.is_empty() {
@@ -866,6 +866,10 @@ fn n_shift_var(p: &NPoly, var_idx: usize, value: Rat) -> NPoly {
 // Recursive coefficient-ring diophantine.
 // ---------------------------------------------------------------------------
 
+// `main_var` is threaded through the recursive descent to keep the full variable
+// context available at every level; clippy sees it as "only used in recursion",
+// but removing it would break the signature the recursion relies on.
+#[allow(clippy::only_used_in_recursion)]
 fn n_diophantine(
     g0: &NPoly,
     h0: &NPoly,
@@ -1050,8 +1054,8 @@ fn is_lucky_uni(p_n: &NPoly, image: &[Rat], main_var: usize) -> bool {
         return false;
     }
     let mut deriv: Vec<Rat> = Vec::new();
-    for i in 1..image.len() {
-        deriv.push(Rat::from_int(i as i128).mul(&image[i]));
+    for (i, coeff) in image.iter().enumerate().skip(1) {
+        deriv.push(Rat::from_int(i as i128).mul(coeff));
     }
     let dn = u_normalize(&deriv);
     if dn.is_empty() {
@@ -1135,8 +1139,8 @@ pub fn try_n_variate_hensel(f_in: &NPoly, num_vars: usize) -> Option<Vec<NPoly>>
             let lift_var = aux_vars[lift_idx];
 
             let mut f_stage = f_shift.clone();
-            for later_idx in (lift_idx + 1)..aux_vars.len() {
-                f_stage = n_substitute_var_keep(&f_stage, aux_vars[later_idx], Rat::ZERO);
+            for &later_var in &aux_vars[lift_idx + 1..] {
+                f_stage = n_substitute_var_keep(&f_stage, later_var, Rat::ZERO);
             }
             f_stage = n_normalize(&f_stage);
 

@@ -206,6 +206,9 @@ pub fn brute_force(ciphertext: &str) -> Vec<BruteForceResult> {
 /// assert_eq!(shift, 3);
 /// assert_eq!(plaintext, "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG");
 /// ```
+// Doc uses intentional hand-aligned nested pseudo-code under the numbered
+// steps; the extra indentation is deliberate literate formatting.
+#[allow(clippy::doc_overindented_list_items)]
 pub fn frequency_analysis(ciphertext: &str) -> (i32, String) {
     // Start with shift 1 as the default so that even when all candidates
     // tie (e.g. no alphabetic characters), we return a valid shift and

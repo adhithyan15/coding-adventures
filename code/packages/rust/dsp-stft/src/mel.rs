@@ -99,6 +99,9 @@ fn mel_to_hz(m: f32) -> f32 {
 /// (no input bins).  Both degenerate cases are surfaced as
 /// errors at the [`mel_spectrogram`] / [`mfcc`] layer where
 /// they actually matter.
+// The `!(x > 0.0)` form is a deliberate NaN-safe guard (see the inline comment):
+// rewriting it as `x <= 0.0` would let NaN slip through. Behavior-preserving allow.
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
 pub fn mel_filterbank(
     n_mels: u32,
     n_fft: u32,
@@ -203,6 +206,9 @@ pub fn mel_filterbank(
 /// The "what you see in a Spotify-style audio visualiser"
 /// representation.  Also the standard input for modern audio /
 /// speech neural networks (after taking `log10` of it).
+// The `!(x > 0.0)` form is a deliberate NaN-safe guard (see the inline comment):
+// rewriting it as `x <= 0.0` would let NaN slip through. Behavior-preserving allow.
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
 pub fn mel_spectrogram(
     signal: &[f32],
     n_fft: u32,

@@ -543,7 +543,12 @@ pub mod keras {
             }
         }
 
-        pub fn default() -> Self {
+    }
+
+    impl Default for Adam {
+        /// Adam with the canonical TensorFlow defaults
+        /// (lr=0.001, β1=0.9, β2=0.999, ε=1e-7).
+        fn default() -> Self {
             Self::new(0.001, 0.9, 0.999, 1e-7)
         }
     }
@@ -596,6 +601,9 @@ pub mod keras {
             if y_pred.ndim() == 2 {
                 let num_classes = y_pred.shape()[y_pred.ndim() - 1];
                 let batch_size = y_pred.shape()[0];
+                // `i` drives slice-offset arithmetic (`i * num_classes`) as well
+                // as indexing `true_data`; a plain range reads clearest here.
+                #[allow(clippy::needless_range_loop)]
                 for i in 0..batch_size {
                     let start = i * num_classes;
                     let row = &pred_data[start..start + num_classes];

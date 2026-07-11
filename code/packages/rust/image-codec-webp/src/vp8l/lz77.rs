@@ -178,7 +178,7 @@ pub fn decode_dist(symbol: u32, extra: u32) -> u32 {
 /// This is the inverse of `decode_dist`: find the Dist symbol and extra bits
 /// that, when decoded, reproduce `dist_code`.  Clamps to `MAX_DIST_CODE`.
 pub fn encode_dist_code(dist_code: u32) -> (u32, u32, u32) {
-    let dist_code = dist_code.max(1).min(MAX_DIST_CODE);
+    let dist_code = dist_code.clamp(1, MAX_DIST_CODE);
     let symbol = DIST_BASE.partition_point(|&base| base <= dist_code).saturating_sub(1);
     let n_extra = DIST_BITS[symbol];
     let extra_val = dist_code - DIST_BASE[symbol];

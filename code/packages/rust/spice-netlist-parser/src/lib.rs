@@ -391,6 +391,9 @@ pub struct AnalysisPlanStep {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+// Boxing the large `Op(DcResult)` variant would ripple through every consumer's
+// pattern matches; the size difference is not worth that churn here.
+#[allow(clippy::large_enum_variant)]
 pub enum AnalysisResult {
     Op(DcResult),
     Tran(Vec<TransientPoint>),

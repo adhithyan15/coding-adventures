@@ -1,3 +1,12 @@
+// Many circuit-analysis routines take a large, fixed set of physical parameters
+// (node indices, model coefficients, temperature, etc.). Splitting these into
+// parameter structs would obscure the direct correspondence with the SPICE
+// device equations, so we accept wide signatures here.
+#![allow(clippy::too_many_arguments)]
+// FRAC_PI_2 and similar values appear as hand-written physical/test constants,
+// not as approximations we intend clippy to replace with std constants.
+#![allow(clippy::approx_constant)]
+
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
 use std::thread;
@@ -17500,13 +17509,12 @@ pub fn dc_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 scope.spawn(move || -> Result<CornerPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: dc_op_with_options(&corner_circuit, options)?,
                     })
                 })
@@ -18050,14 +18058,13 @@ pub fn dc_sweep_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let source_name = source_name.to_string();
                 scope.spawn(move || -> Result<CornerDcSweepPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerDcSweepPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         points: dc_sweep(&corner_circuit, &source_name, start, stop, step)?,
                     })
                 })
@@ -18179,14 +18186,13 @@ pub fn mc_dc_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 scope.spawn(move || -> Result<CornerMcPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerMcPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: mc_dc(&corner_circuit, &output_node, n_trials, options)?,
                     })
                 })
@@ -18322,15 +18328,14 @@ pub fn tf_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 let input_source = input_source.to_string();
                 scope.spawn(move || -> Result<CornerTfPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerTfPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: tf(&corner_circuit, &output_node, &input_source)?,
                     })
                 })
@@ -18436,14 +18441,13 @@ pub fn sens_dc_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 scope.spawn(move || -> Result<CornerSensPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerSensPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: sens_dc(&corner_circuit, &output_node)?,
                     })
                 })
@@ -18548,13 +18552,12 @@ pub fn ac_sweep_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 scope.spawn(move || -> Result<CornerAcSweepPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerAcSweepPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
                     })
                 })
@@ -18680,16 +18683,15 @@ pub fn s_parameters_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let port1_source = port1_source.to_string();
                 let port2_source = port2_source.to_string();
                 let frequencies_hz = frequencies_hz.to_vec();
                 scope.spawn(move || -> Result<CornerSParameterPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerSParameterPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: s_parameters(
                             &corner_circuit,
                             &port1_source,
@@ -18989,16 +18991,15 @@ pub fn noise_ac_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 let input_source = input_source.to_string();
                 let frequencies_hz = frequencies_hz.to_vec();
                 scope.spawn(move || -> Result<CornerNoisePoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerNoisePoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: noise_ac(
                             &corner_circuit,
                             &output_node,
@@ -25183,6 +25184,9 @@ fn solve_dense_linear_system(
                 continue;
             }
             matrix[row][pivot_col] = 0.0;
+            // `col` indexes two distinct rows of `matrix` (row and pivot_col); an
+            // iterator rewrite would require split_at_mut and obscure the algebra.
+            #[allow(clippy::needless_range_loop)]
             for col in (pivot_col + 1)..n {
                 matrix[row][col] -= factor * matrix[pivot_col][col];
             }
@@ -25330,6 +25334,9 @@ fn solve_dense_complex_linear_system(
                 continue;
             }
             matrix[row][pivot_col] = Complex::zero();
+            // `col` indexes two distinct rows of `matrix` (row and pivot_col); an
+            // iterator rewrite would require split_at_mut and obscure the algebra.
+            #[allow(clippy::needless_range_loop)]
             for col in (pivot_col + 1)..n {
                 matrix[row][col] = matrix[row][col] - factor * matrix[pivot_col][col];
             }

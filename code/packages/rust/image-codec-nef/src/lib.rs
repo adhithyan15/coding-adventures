@@ -172,6 +172,7 @@ mod tests {
     }
 
     // Build a TIFF byte stream with an additional Make tag.
+    #[allow(clippy::too_many_arguments)] // test helper spelling out TIFF fields explicitly
     fn build_raw_tiff_with_make(
         width: u32,
         height: u32,

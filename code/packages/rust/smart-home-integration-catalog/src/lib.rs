@@ -35227,7 +35227,6 @@ impl IntegrationActivationBriefingSummary {
         let mut ready_items = 0;
         let mut review_status_items = 0;
         let mut blocked_status_items = 0;
-        let mut empty_items = 0;
         let mut summary = Self {
             total_items: 0,
             unique_integrations: 0,
@@ -35277,7 +35276,9 @@ impl IntegrationActivationBriefingSummary {
                 IntegrationActivationHealthStatus::Ready => ready_items += 1,
                 IntegrationActivationHealthStatus::NeedsReview => review_status_items += 1,
                 IntegrationActivationHealthStatus::Blocked => blocked_status_items += 1,
-                IntegrationActivationHealthStatus::Empty => empty_items += 1,
+                // `Empty` items need no separate tally: the overall status falls
+                // through to `Empty` whenever no other category is present.
+                IntegrationActivationHealthStatus::Empty => {}
             }
 
             match item.kind {
@@ -35348,9 +35349,9 @@ impl IntegrationActivationBriefingSummary {
             IntegrationActivationHealthStatus::NeedsReview
         } else if ready_items > 0 {
             IntegrationActivationHealthStatus::Ready
-        } else if empty_items > 0 {
-            IntegrationActivationHealthStatus::Empty
         } else {
+            // Both the `empty_items > 0` case and the fall-through default map to
+            // `Empty`, so they are collapsed into a single arm (behavior-identical).
             IntegrationActivationHealthStatus::Empty
         };
         summary
@@ -38712,6 +38713,9 @@ impl IntegrationActivationWatchtowerSummary {
 }
 
 impl IntegrationActivationSentinelAlert {
+    // Constructor gathers many independent rollup fields into the alert record;
+    // bundling them into a params struct would add churn without clarity.
+    #[allow(clippy::too_many_arguments)]
     fn from_rollups(
         sequence: usize,
         alert_kind: IntegrationActivationSentinelAlertKind,
@@ -38966,6 +38970,9 @@ impl IntegrationActivationSentinelSummary {
 }
 
 impl IntegrationActivationAuditRecord {
+    // Record constructor takes each audit field explicitly; a params struct would
+    // add churn without improving clarity.
+    #[allow(clippy::too_many_arguments)]
     fn new(
         record_kind: IntegrationActivationAuditRecordKind,
         record_id: String,
@@ -39329,6 +39336,9 @@ impl IntegrationActivationAuditSummary {
 }
 
 impl IntegrationActivationEscalationCase {
+    // Case constructor takes each escalation field explicitly; a params struct
+    // would add churn without improving clarity.
+    #[allow(clippy::too_many_arguments)]
     fn new(
         case_kind: IntegrationActivationEscalationCaseKind,
         source_id: String,
@@ -55935,6 +55945,9 @@ fn guardrail_verdict_rank(verdict: IntegrationActivationGuardrailVerdict) -> u8 
     }
 }
 
+// Helper forwards each alert field straight into `from_rollups`; a params struct
+// here would just duplicate that constructor's signature.
+#[allow(clippy::too_many_arguments)]
 fn push_activation_sentinel_alert(
     alerts: &mut Vec<IntegrationActivationSentinelAlert>,
     alert_kind: IntegrationActivationSentinelAlertKind,

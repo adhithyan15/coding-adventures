@@ -454,6 +454,10 @@ impl<'a> DwarfEmitter<'a> {
         buf
     }
 
+    // Each push in `build_line` documents a distinct DWARF line-program header
+    // field, so the step-by-step construction is intentional (clearer than a bare
+    // `vec![…]`); allow the vec-init-then-push lint for this function.
+    #[allow(clippy::vec_init_then_push)]
     fn build_line(&self) -> Vec<u8> {
         let source_files = self.reader.source_files();
         let std_opcode_lengths: &[u8] = &[0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1];

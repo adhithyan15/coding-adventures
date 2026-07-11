@@ -1319,9 +1319,8 @@ mod tests {
         match check_typed_quantity_coverage(&doc, &ir) {
             TypedQuantityResult::Fail { violations } => {
                 assert_eq!(violations.len(), 1);
-                if let TypedQuantityViolation::MissingQuantity { literal, .. } = &violations[0] {
-                    assert_eq!(literal, "4");
-                }
+                let TypedQuantityViolation::MissingQuantity { literal, .. } = &violations[0];
+                assert_eq!(literal, "4");
             }
             other => panic!("expected Fail, got {other:?}"),
         }
@@ -1418,9 +1417,9 @@ mod tests {
                 assert_eq!(violations.len(), 2);
                 let literals: Vec<&str> = violations
                     .iter()
-                    .filter_map(|v| {
+                    .map(|v| {
                         let TypedQuantityViolation::MissingQuantity { literal, .. } = v;
-                        Some(literal.as_str())
+                        literal.as_str()
                     })
                     .collect();
                 assert!(literals.contains(&"1"));

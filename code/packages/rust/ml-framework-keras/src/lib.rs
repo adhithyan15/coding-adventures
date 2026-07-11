@@ -673,6 +673,12 @@ pub mod models {
 #[cfg(test)]
 mod tests {
     use super::*;
+    // Tensor/Parameter are only imported inside the individual submodules above,
+    // so `use super::*` does not bring them into the test module's scope; import
+    // them directly from the core crate so the test target compiles. HashMap is
+    // likewise needed by the callback tests below.
+    use ml_framework_core::{Parameter, Tensor};
+    use std::collections::HashMap;
 
     #[test]
     fn test_backend() {
@@ -782,7 +788,7 @@ mod tests {
         dense1.build(3);
         model.add(Box::new(dense1));
         model.add(Box::new(layers::ReLU));
-        assert!(model.trainable_weights().len() > 0);
+        assert!(!model.trainable_weights().is_empty());
     }
 
     #[test]

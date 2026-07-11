@@ -1,3 +1,7 @@
+// These tests build config structs by mutating a `Default::default()` base for
+// readability across many optional fields; behavior is identical to a struct
+// literal, so allow the field-reassign pattern here.
+#![allow(clippy::field_reassign_with_default)]
 //! Integration tests for the compute-unit crate.
 //!
 //! These tests verify that all five compute unit simulators work correctly:

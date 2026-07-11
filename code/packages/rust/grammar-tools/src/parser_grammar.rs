@@ -856,8 +856,8 @@ pub fn parse_parser_grammar(source: &str) -> Result<ParserGrammar, ParserGrammar
     let mut version: u32 = 0;
     for raw_line in source.split('\n') {
         let stripped = raw_line.trim();
-        if stripped.starts_with('#') {
-            let after_hash = stripped[1..].trim_start();
+        if let Some(after_hash) = stripped.strip_prefix('#') {
+            let after_hash = after_hash.trim_start();
             if let Some(rest) = after_hash.strip_prefix('@') {
                 // skip '@'
                 let key_end = rest.find(|c: char| c.is_whitespace()).unwrap_or(rest.len());

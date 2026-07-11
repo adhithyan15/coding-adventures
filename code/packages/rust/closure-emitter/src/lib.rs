@@ -1563,6 +1563,7 @@ impl<'a> Emitter<'a> {
     ///   * A *postfix* update ends in `+`/`-`, so a following binary `+`/`-`
     ///     (`x++ + y`) would fuse; the binary emitter's left-seam check already
     ///     inspects the emitted output tail and inserts the space.
+    ///
     /// The prefix operator's own seam with its operand never fuses: `++`/`--`
     /// are already maximal-munch tokens, so `++ +x` and `+++x` tokenise
     /// identically (and an update of a non-reference operand is invalid input
@@ -2486,6 +2487,7 @@ fn update_op_lead_char(op: UpdateOperator) -> char {
 ///   * a nested unary with the same sign — `-(-a)` → inner prints `-a`;
 ///   * a negative numeric literal — `format_js_number` prints the
 ///     leading `-` (e.g. a constant-folded `-5`).
+///
 /// A `+` literal never prints a leading `+`, and a `BigIntLiteral`'s value
 /// is always non-negative (the `-` of `-5n` is a `UnaryExpression`), so
 /// only the nested-unary case matters for `+` and bigints cannot fuse.
@@ -2737,8 +2739,13 @@ fn escape_ascii_only(s: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    // Number-emission tests deliberately use literals like `3.14` as test data
+    // and `0.0 * -1.0` to construct an IEEE-754 negative zero at runtime; neither
+    // is a std-constant approximation or a stray `* -1` to be rewritten.
+    #![allow(clippy::approx_constant)]
+    #![allow(clippy::neg_multiply)]
     use super::*;
-    use coding_adventures_javascript_ast::{Program, SourceType};
+    use coding_adventures_javascript_ast::{CatchClause, Program, SourceType};
     use coding_adventures_javascript_tokens::EsVersion;
 
     fn program() -> Program {

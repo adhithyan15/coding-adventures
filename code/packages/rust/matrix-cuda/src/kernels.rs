@@ -298,6 +298,9 @@ impl Kernels {
 
     /// Dispatch the rank-2 row-major MatMul: `c = a * b` where
     /// `a` is `[m, k]`, `b` is `[k, n]`, and `c` is `[m, n]`.
+    // The three matrix buffers plus their m/k/n dimensions are all independent
+    // kernel-launch inputs; a struct would only relocate the same arguments.
+    #[allow(clippy::too_many_arguments)]
     pub fn launch_matmul(
         &self,
         device: &CudaDevice,
@@ -320,6 +323,8 @@ impl Kernels {
     }
 
     /// `launch_matmul` core that accepts device pointers directly.
+    // Three device pointers plus m/k/n dimensions are independent kernel inputs.
+    #[allow(clippy::too_many_arguments)]
     pub fn launch_matmul_by_ptr(
         &self,
         device: &CudaDevice,

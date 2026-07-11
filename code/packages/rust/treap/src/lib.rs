@@ -145,6 +145,10 @@ pub fn treap_delete<K: Ord + Clone>(
     delete_rec(root, key)
 }
 
+// The pair-of-optional-boxed-subtrees return type is the natural signature for a
+// treap split (both halves of the tree); factoring it into a type alias would not
+// improve clarity, so the complexity lint is allowed here.
+#[allow(clippy::type_complexity)]
 pub fn treap_split<K: Ord + Clone>(
     root: Option<Box<TreapNode<K>>>,
     key: &K,
@@ -305,9 +309,7 @@ fn delete_rec<K: Ord + Clone>(
     root: Option<Box<TreapNode<K>>>,
     key: &K,
 ) -> Option<Box<TreapNode<K>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     match key.cmp(&node.key) {
         Ordering::Less => {

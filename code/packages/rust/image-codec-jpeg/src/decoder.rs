@@ -43,6 +43,9 @@ const M_SOF0: u8 = 0xC0;
 const M_DHT:  u8 = 0xC4;
 const M_SOS:  u8 = 0xDA;
 // APP0–APPF and other skip-able markers
+// Kept for the marker-table completeness even though the parser skips APPn
+// segments by length rather than by matching this constant.
+#[allow(dead_code)]
 const M_APP0: u8 = 0xE0;
 
 // ---------------------------------------------------------------------------

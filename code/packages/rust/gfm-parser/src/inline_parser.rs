@@ -451,7 +451,7 @@ fn resolve_emphasis(mut tokens: Vec<Token>) -> Vec<InlineNode> {
             _ => { i += 1; continue; }
         };
 
-        let use_len = if closer.ch == '~' { 2 } else if opener_count >= 2 && closer_count >= 2 { 2 } else { 1 };
+        let use_len = if closer.ch == '~' || (opener_count >= 2 && closer_count >= 2) { 2 } else { 1 };
         let is_strong = closer.ch != '~' && use_len == 2;
 
         // Collect inner tokens and resolve recursively
@@ -821,9 +821,7 @@ fn try_inline_link(scanner: &mut Scanner, _outer_saved: usize) -> Option<LinkRes
     scanner.skip(1); // consume `(`
     skip_optional_spaces_and_newline(scanner);
 
-    let mut destination = String::new();
-
-    if scanner.peek_char(0) == '<' {
+    let destination = if scanner.peek_char(0) == '<' {
         scanner.skip(1);
         let mut dest_buf = String::new();
         loop {
@@ -842,7 +840,7 @@ fn try_inline_link(scanner: &mut Scanner, _outer_saved: usize) -> Option<LinkRes
                 dest_buf.push(c); scanner.skip(c.len_utf8());
             }
         }
-        destination = normalize_url(&decode_entities(&dest_buf));
+        normalize_url(&decode_entities(&dest_buf))
     } else {
         let mut depth = 0i32;
         let dest_start = scanner.pos;
@@ -858,8 +856,8 @@ fn try_inline_link(scanner: &mut Scanner, _outer_saved: usize) -> Option<LinkRes
             }
         }
         let dest_raw = scanner.source[dest_start..scanner.pos].to_string();
-        destination = normalize_url(&decode_entities(&apply_backslash_escapes_inline(&dest_raw)));
-    }
+        normalize_url(&decode_entities(&apply_backslash_escapes_inline(&dest_raw)))
+    };
 
     skip_optional_spaces_and_newline(scanner);
 

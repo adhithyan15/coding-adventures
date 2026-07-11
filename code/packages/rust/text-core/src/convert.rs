@@ -305,6 +305,8 @@ mod tests {
         assert!(matches!(e, TextError::FormatError { function: "TEXT", .. }));
     }
 
+    // `3.14` is parse test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn value_basic() {
         assert_eq!(value("123").unwrap(), 123.0);

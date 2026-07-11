@@ -184,6 +184,9 @@ extern "C" {
 
     // rb_data_object_get extracts the pointer we stored.
     // (This is the RDATA(obj)->data macro in a function form.)
+    // Part of the Ruby C-API binding surface; declared for completeness even
+    // though no caller wires it yet.
+    #[allow(dead_code)]
     fn rb_check_typeddata(obj: VALUE, data_type: *const c_void) -> *mut c_void;
 
     // -- Exception handling ------------------------------------------------
@@ -193,6 +196,9 @@ extern "C" {
     pub fn rb_raise(exc_class: VALUE, fmt: *const c_char, ...) -> !;
 
     // -- String length (for str_from_rb) -----------------------------------
+    // Part of the Ruby C-API binding surface; declared for completeness even
+    // though no caller wires it yet.
+    #[allow(dead_code)]
     fn rb_str_strlen(str: VALUE) -> c_long;
 
     // -- Runtime literals ---------------------------------------------------
@@ -322,7 +328,7 @@ pub fn bytes_from_rb(val: VALUE) -> Option<Vec<u8>> {
             return None;
         }
 
-        let mid = rb_intern(b"bytesize\0".as_ptr() as *const c_char);
+        let mid = rb_intern(c"bytesize".as_ptr());
         let len_val = rb_funcallv(v, mid, 0, std::ptr::null());
         let len = rb_num2long(len_val);
         if len < 0 {
@@ -361,7 +367,7 @@ pub fn array_push(array: VALUE, item: VALUE) {
 pub fn array_len(array: VALUE) -> usize {
     unsafe {
         // rb_intern caches the ID after the first call — no performance concern.
-        let mid = rb_intern(b"length\0".as_ptr() as *const c_char);
+        let mid = rb_intern(c"length".as_ptr());
         // rb_funcallv with argc=0 and null argv calls array.length with no args.
         let len_val = rb_funcallv(array, mid, 0, std::ptr::null());
         rb_num2long(len_val) as usize
@@ -454,13 +460,13 @@ pub fn bool_to_rb(b: bool) -> VALUE {
 /// while still avoiding any external bridge dependency.
 pub fn nil_value() -> VALUE {
     static RUBY_NIL: OnceLock<VALUE> = OnceLock::new();
-    *RUBY_NIL.get_or_init(|| unsafe { rb_eval_string(b"nil\0".as_ptr() as *const c_char) })
+    *RUBY_NIL.get_or_init(|| unsafe { rb_eval_string(c"nil".as_ptr()) })
 }
 
 /// Return the actual Ruby `true` VALUE for the currently loaded interpreter.
 pub fn true_value() -> VALUE {
     static RUBY_TRUE: OnceLock<VALUE> = OnceLock::new();
-    *RUBY_TRUE.get_or_init(|| unsafe { rb_eval_string(b"true\0".as_ptr() as *const c_char) })
+    *RUBY_TRUE.get_or_init(|| unsafe { rb_eval_string(c"true".as_ptr()) })
 }
 
 pub fn usize_to_rb(n: usize) -> VALUE {
@@ -576,7 +582,7 @@ pub fn raise_error(exc_class: VALUE, msg: &str) -> ! {
     let c_msg = CString::new(msg).unwrap_or_else(|_| CString::new("(error)").unwrap());
     // SAFETY: "%s\0" is a valid, literal printf format string. c_msg is a
     // nul-terminated CString that lives until rb_raise longjmps.
-    unsafe { rb_raise(exc_class, b"%s\0".as_ptr() as *const c_char, c_msg.as_ptr()) }
+    unsafe { rb_raise(exc_class, c"%s".as_ptr(), c_msg.as_ptr()) }
 }
 
 /// Raise a RuntimeError.

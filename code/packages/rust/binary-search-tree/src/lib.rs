@@ -154,9 +154,7 @@ pub fn bst_delete<T: Ord + Clone>(
     root: Option<Box<BSTNode<T>>>,
     value: &T,
 ) -> Option<Box<BSTNode<T>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     match value.cmp(&node.value) {
         Ordering::Less => {

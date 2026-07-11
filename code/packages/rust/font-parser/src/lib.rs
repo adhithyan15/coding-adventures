@@ -1,3 +1,6 @@
+// The doc blocks use intentional ASCII alignment (glyph/value tables); allow the
+// overindented-list-item lint rather than disturb that layout.
+#![allow(clippy::doc_overindented_list_items)]
 //! # font-parser
 //!
 //! A metrics-only OpenType/TrueType font parser.

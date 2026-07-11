@@ -535,10 +535,10 @@ impl<'m> ValidatorState<'m> {
                     }
                     // Check every RHS in the *outer* env (no new
                     // names added yet).
-                    for k in i..j {
+                    for stmt in &stmts[i..j] {
                         if let Stmt::LetBinding {
                             value, sir_type, ..
-                        } = &stmts[k]
+                        } = stmt
                         {
                             self.check_expr(value, env, depth + 1);
                             if sir_type.is_some() {
@@ -547,8 +547,8 @@ impl<'m> ValidatorState<'m> {
                         }
                     }
                     // Add every bound name to the env, all at once.
-                    for k in i..j {
-                        if let Stmt::LetBinding { name, .. } = &stmts[k] {
+                    for stmt in &stmts[i..j] {
+                        if let Stmt::LetBinding { name, .. } = stmt {
                             env.add_local(name.clone());
                         }
                     }
@@ -2395,6 +2395,8 @@ mod tests {
         e
     }
 
+    // `3.14` is an arbitrary float literal test value, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_lit_observes_floats_feature() {
         // Module uses a float literal but doesn't declare Floats →

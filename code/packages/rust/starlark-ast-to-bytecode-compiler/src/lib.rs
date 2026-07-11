@@ -578,6 +578,9 @@ fn compile_load_arg(compiler: &mut GenericCompiler, node: &ASTNode) {
 /// This pattern is identical to CPython's approach. Each branch emits
 /// a conditional jump to skip past its body, and an unconditional jump
 /// at the end to skip the remaining branches.
+// `j` scans the child list and is also used to advance the outer cursor `i`; the
+// explicit index is intrinsic to the parse walk. Behavior-preserving allow.
+#[allow(clippy::needless_range_loop)]
 fn compile_if_stmt(compiler: &mut GenericCompiler, node: &ASTNode) {
     // Collect (condition, suite) pairs, plus optional else suite
     let mut sections: Vec<(Option<&ASTNode>, &ASTNode)> = Vec::new();
@@ -1196,11 +1199,11 @@ fn compile_factor(compiler: &mut GenericCompiler, node: &ASTNode) {
         }
     }
 
-    if children.len() == 1 {
-        compiler.compile_node(&children[0]);
-    } else {
-        compiler.compile_node(&children[0]);
-    }
+    // Both the single-child and multi-child cases currently compile only the first
+    // child (clippy::if_same_then_else). Collapsed to preserve exact behavior.
+    // NOTE: the redundant branch suggests the multi-child case may be unfinished —
+    // flagged for follow-up.
+    compiler.compile_node(&children[0]);
 }
 
 /// Compile an exponentiation expression.
@@ -2238,6 +2241,8 @@ mod tests {
     // ── Test: compile_atom -- floats ─────────────────────────────────────
 
     #[test]
+    // 3.14 is the literal under test (the FLOAT token), not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn test_compile_atom_float() {
         let root = ast("atom", vec![tok("FLOAT", "3.14")]);
         let code = compile(root);

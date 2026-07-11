@@ -182,7 +182,12 @@ pub fn fp_mul(a: &FloatBits, b: &FloatBits) -> FloatBits {
 
         result_mant = product >> rp;
 
-        // Apply rounding
+        // Apply rounding (round to nearest even). The two `+= 1` arms are
+        // intentionally kept separate for clarity: the first rounds up because
+        // the remainder exceeds half; the second rounds up because it is exactly
+        // half and the mantissa is odd. They take the same action, so allow the
+        // identical-blocks lint.
+        #[allow(clippy::if_same_then_else)]
         if guard == 1 {
             if round_bit == 1 || sticky == 1 {
                 result_mant += 1;

@@ -547,6 +547,9 @@ fn update_chroma_context(top_row: &mut [i32], left_col: &mut [i32], mb_col: u32,
 }
 
 /// Fill a 16×16 macroblock with the reconstructed YCbCr values, converted to RGBA.
+// Each argument is a distinct pixel-geometry / color input; grouping them into a
+// struct would not clarify this low-level fill routine, so the arg-count lint is allowed.
+#[allow(clippy::too_many_arguments)]
 fn fill_macroblock(
     rgba: &mut [u8], width: u32, height: u32,
     mb_row: u32, mb_col: u32, y: u8, cb: u8, cr: u8,

@@ -89,6 +89,8 @@ pub struct Shaders {
     /// CUDA C kernel source (NVIDIA).
     pub cuda: Option<&'static str>,
     /// Pure-Rust CPU fallback.  Signature: `fn(src: &[u8], dst: &mut [u8], uniforms: &[u8])`.
+    // The fn-pointer type is self-documenting; a type alias would hide the callback shape.
+    #[allow(clippy::type_complexity)]
     pub cpu: Option<fn(src: &[u8], dst: &mut [u8], uniforms: &[u8])>,
 }
 
@@ -335,6 +337,9 @@ impl Runtime {
     // ------------------------------------------------------------------
 
     #[cfg(all(target_vendor = "apple", feature = "metal"))]
+    // Each argument is a distinct GPU dispatch parameter (buffers, dims, uniforms);
+    // grouping them adds no clarity. Behavior-preserving allow.
+    #[allow(clippy::too_many_arguments)]
     fn run_metal(
         &self,
         device:   &metal_compute::MetalDevice,
@@ -370,6 +375,9 @@ impl Runtime {
     }
 
     #[cfg(all(target_vendor = "apple", feature = "metal"))]
+    // Each argument is a distinct GPU dispatch parameter (buffers, dims, uniforms);
+    // grouping them adds no clarity. Behavior-preserving allow.
+    #[allow(clippy::too_many_arguments)]
     fn run_metal_pixels(
         &self,
         device:      &metal_compute::MetalDevice,
@@ -465,6 +473,9 @@ impl Runtime {
         device.download(&dst_buf).map_err(GpuError::from)
     }
 
+    // Each argument is a distinct GPU dispatch parameter (buffers, dims, uniforms);
+    // grouping them adds no clarity. Behavior-preserving allow.
+    #[allow(clippy::too_many_arguments)]
     fn run_cuda_pixels(
         &self,
         device:      &cuda_compute::CudaDevice,

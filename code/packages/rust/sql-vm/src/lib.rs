@@ -1771,7 +1771,7 @@ fn build_insert_row(
 /// For each key, we look up the column's position in `output_columns` by name
 /// and extract the value from the row's parallel `(name, value)` list.
 fn apply_sort(
-    rows: &mut Vec<Vec<(String, SqlValue)>>,
+    rows: &mut [Vec<(String, SqlValue)>],
     keys: &[CompiledSortKey],
     output_columns: &[String],
 ) {

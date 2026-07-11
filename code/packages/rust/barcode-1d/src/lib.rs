@@ -447,8 +447,7 @@ mod tests {
             (Symbology::UpcA, "012345678905"),
         ];
         for (symbology, data) in cases {
-            let mut options = Options::default();
-            options.symbology = symbology;
+            let options = Options { symbology, ..Options::default() };
             let png = render_with_backend(data, Some(&options), "skia")
                 .map(|pixels| paint_codec_png::encode_png(&pixels))
                 .unwrap_or_else(|e| panic!("Skia render failed for {symbology:?}: {e}"));
@@ -484,8 +483,7 @@ mod tests {
             (Symbology::UpcA, "012345678905"),
         ];
         for (symbology, data) in cases {
-            let mut options = Options::default();
-            options.symbology = symbology;
+            let options = Options { symbology, ..Options::default() };
             let png = render_with_backend(data, Some(&options), "cairo")
                 .map(|pixels| paint_codec_png::encode_png(&pixels))
                 .unwrap_or_else(|e| panic!("Cairo render failed for {symbology:?}: {e}"));

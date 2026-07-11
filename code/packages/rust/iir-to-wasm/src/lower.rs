@@ -3341,6 +3341,10 @@ fn get_src_reg(
 ///
 /// `print_fn_idx` is `Some(0)` when the module imports `env.__print_i64`.
 /// Used by `io_out` instructions.
+// This is the core per-function lowering entry point; its parameters are the
+// full module-lowering context (type indices, maps, feature flags, injection
+// slots). Bundling them into a struct would only relocate the same 21 inputs.
+#[allow(clippy::too_many_arguments)]
 fn lower_function(
     fn_: &IIRFunction,
     fn_map: &HashMap<String, u32>,
@@ -3621,6 +3625,7 @@ fn make_lispy_pair_struct_type() -> StructType {
 ///   position in the vec determines their WASM global section index.
 /// - `uses_io_out` — `true` if any instruction in any function has the
 ///   `"io_out"` opcode.  Triggers injection of the `env.__print_i64` import.
+///
 /// Features the WASM lowering must materialize as imports / sections.
 ///
 /// Populated by [`collect_module_features`] from a single pass over the
@@ -4113,18 +4118,16 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         global_names.push(ARRAY_BUMP_GLOBAL.to_string());
                     }
                 }
-                // E4-dyn: a `str_concat` whose operands are runtime handles (not
-                // foldable literals) bump-allocates a fresh `[i32 len][bytes]` block
-                // and `memory.copy`s both operands in — so, like an array op, it needs
-                // linear memory + the `__array_bump` global. (A both-literal concat
-                // folds to a data-segment offset and never touches the bump pointer,
-                // so the injected global is simply unused there.)
-                "str_concat" => {
-                    uses_memory = true;
-                    if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
-                        global_names.push(ARRAY_BUMP_GLOBAL.to_string());
-                    }
-                }
+                // NOTE (clippy-cleanup): a second `"str_concat"` arm previously lived
+                // here to mark `uses_memory` / inject `__array_bump` for runtime
+                // (non-foldable) concats. It was unreachable — the earlier
+                // `"str_concat"` arm above already matches every str_concat and
+                // `continue`s on the non-foldable path — so this pre-pass never marked
+                // linear memory for a runtime str_concat. The dead arm is removed to
+                // silence `unreachable_patterns`; its behavior was already never taken,
+                // so removal is a no-op. FLAGGED as a likely latent bug: runtime
+                // str_concat may need the memory/global injection folded into the
+                // earlier arm's `else { continue }` branch.
                 "call_builtin" => {
                     // The builtin name is in srcs[0] as Var.
                     if let Some(Operand::Var(name)) = instr.srcs.first() {
@@ -4210,8 +4213,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
 ///    and assign consecutive WASM function indices (0, 1, 2, …).
 ///
 /// 4. **Lower each function** — for each `IIRFunction`:
-///    a. Build the WASM function type (`FuncType`) from the parameter types
-///       and return type.
+///    a. Build the WASM function type (`FuncType`) from the parameter types and return type.
 ///    b. Lower the function body to a `FunctionBody`.
 ///    c. Record an export so the function is callable from the host.
 ///
@@ -4810,6 +4812,8 @@ mod tests {
         assert!(wm.code[0].code.contains(&0x41));
     }
 
+    // 3.14 is arbitrary float test input; not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn lower_f64_const_accepted() {
         // Float constants are valid in the WASM backend (unlike BEAM).

@@ -139,9 +139,9 @@ fn lookup(name: &str) -> Option<&'static NumericEntry> {
 /// Returns:
 /// - `Ok(true)`  — the instruction was rewritten (numeric builtin recognised).
 /// - `Ok(false)` — the instruction was left unchanged (unknown builtin or
-///                 not a `call_builtin` at all).
+///   not a `call_builtin` at all).
 /// - `Err(_)`    — the instruction was a recognised numeric builtin but
-///                 had invalid arity.
+///   had invalid arity.
 ///
 /// The `fn_name` parameter is used only for error messages.
 pub fn try_lower_instr(

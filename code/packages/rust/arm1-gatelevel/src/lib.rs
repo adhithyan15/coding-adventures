@@ -53,8 +53,8 @@ use arm1_simulator::{
 /// and the gate-level world (slices of 0s and 1s flowing through gates).
 pub fn int_to_bits(value: u32, width: usize) -> Vec<u8> {
     let mut bits = vec![0u8; width];
-    for i in 0..width {
-        bits[i] = ((value >> i) & 1) as u8;
+    for (i, bit) in bits.iter_mut().enumerate() {
+        *bit = ((value >> i) & 1) as u8;
     }
     bits
 }
@@ -330,9 +330,7 @@ fn gate_ror(value: &[u8], amount: u32, carry_in: u8, by_register: bool) -> (Vec<
     if amount == 0 && !by_register {
         // RRX: 33-bit rotate through carry
         let mut result = vec![0u8; 32];
-        for i in 0..31 {
-            result[i] = value[i + 1];
-        }
+        result[..31].copy_from_slice(&value[1..32]);
         result[31] = carry_in; // Old carry becomes MSB
         let carry = value[0];  // Old LSB becomes new carry
         return (result, carry);
@@ -614,8 +612,8 @@ impl ARM1GateLevel {
     pub fn step(&mut self) -> Trace {
         let pc = self.pc();
         let mut regs_before = [0u32; 16];
-        for i in 0..16 {
-            regs_before[i] = self.read_reg(i);
+        for (i, reg) in regs_before.iter_mut().enumerate() {
+            *reg = self.read_reg(i);
         }
         let flags_before = self.flags();
 

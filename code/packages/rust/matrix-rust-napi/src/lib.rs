@@ -451,11 +451,11 @@ mod tests {
         assert!(err.contains("decode failed"), "got: {}", err);
     }
 
-    /// The output of the round-trip must itself be valid JSON that
-    /// re-round-trips identically.  Idempotence: `f(f(x)) == f(x)`.
-    /// (Useful to catch any drift introduced by the encoder — e.g.
-    /// if it ever started canonicalising fields differently between
-    /// runs.)
+    // The output of the round-trip must itself be valid JSON that
+    // re-round-trips identically.  Idempotence: `f(f(x)) == f(x)`.
+    // (Useful to catch any drift introduced by the encoder — e.g.
+    // if it ever started canonicalising fields differently between
+    // runs.)
     // ── JSON envelope (Phase 2) ──────────────────────────────────
 
     /// Build an Add graph, package it + inputs into the envelope JSON,

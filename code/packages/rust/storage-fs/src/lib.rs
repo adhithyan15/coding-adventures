@@ -1,3 +1,6 @@
+// Builds a config by mutating a `Default::default()` base for readability;
+// identical to a struct literal.
+#![allow(clippy::field_reassign_with_default)]
 //! # coding_adventures_storage_fs — STR-FILE
 //!
 //! ## What this crate does

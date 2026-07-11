@@ -1,3 +1,6 @@
+// Builds config/state by mutating a `Default::default()` base for readability
+// across several optional fields; identical to a struct literal.
+#![allow(clippy::field_reassign_with_default)]
 //! # `coding_adventures_vault_engine_kv2` — VLT08 KV-v2 engine
 //!
 //! ## What this crate is

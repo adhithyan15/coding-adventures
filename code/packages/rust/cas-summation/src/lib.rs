@@ -1,3 +1,6 @@
+// A doc comment continues a bullet-list paragraph into a following prose
+// paragraph without re-indenting; the wording is intentional, so allow it.
+#![allow(clippy::doc_lazy_continuation)]
 use std::cmp::Ordering;
 
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, LOG, MUL, NEG, POW, SUB};
@@ -708,9 +711,9 @@ fn canonicalise_add_operand_order(node: &IRNode) -> IRNode {
     node.clone()
 }
 
-fn try_telescoping<E: ?Sized>(f: &IRNode, k: &IRNode, eval_fn: &mut E) -> Option<(IRNode, i32)>
+fn try_telescoping<E>(f: &IRNode, k: &IRNode, eval_fn: &mut E) -> Option<(IRNode, i32)>
 where
-    E: FnMut(IRNode) -> IRNode,
+    E: ?Sized + FnMut(IRNode) -> IRNode,
 {
     // Phase 46: if f is an Add-with-negation shape, normalise to Sub
     // first so the existing structural match below fires.  No-op when

@@ -1218,10 +1218,10 @@ fn decode_symbol(
 
 fn fixed_ll_lengths() -> Vec<u8> {
     let mut v = vec![0u8; 288];
-    for i in 0..=143   { v[i] = 8; }
-    for i in 144..=255 { v[i] = 9; }
-    for i in 256..=279 { v[i] = 7; }
-    for i in 280..=287 { v[i] = 8; }
+    v[0..=143].fill(8);
+    v[144..=255].fill(9);
+    v[256..=279].fill(7);
+    v[280..=287].fill(8);
     v
 }
 
@@ -1754,9 +1754,7 @@ mod tests {
         // to keep genuinely-skewed *literal* frequencies we interleave.
         let mut data = Vec::new();
         for i in 0..40u8 {
-            for _ in 0..1500 {
-                data.push(b'A');
-            }
+            data.extend(std::iter::repeat_n(b'A', 1500));
             data.push(b'0' + (i % 10)); // a rare-ish literal, non-matchable in place
         }
         roundtrip(&data);

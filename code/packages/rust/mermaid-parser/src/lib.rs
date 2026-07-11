@@ -1,5 +1,11 @@
 //! Grammar-driven parser for a focused Mermaid flowchart subset.
 
+// This file hand-parses many `starts_with(...)` / slice-index prefix strips
+// where the prefix and the stripped remainder need slightly different handling;
+// rewriting every one as `strip_prefix` hurts readability here, so we opt out
+// of the lint file-wide.
+#![allow(clippy::manual_strip)]
+
 pub const VERSION: &str = "0.2.0";
 
 use std::collections::HashMap;
@@ -475,6 +481,8 @@ fn strip_visibility(s: &str) -> String {
     }
 }
 
+#[allow(dead_code)] // retained as API surface / scaffolding
+#[allow(clippy::ptr_arg)] // dead code; signature kept as-is
 fn strip_visibility_owned(s: &String) -> String {
     strip_visibility(s.as_str())
 }

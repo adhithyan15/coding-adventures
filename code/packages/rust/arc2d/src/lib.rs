@@ -442,6 +442,9 @@ mod tests {
         (a - b).abs() < EPS
     }
 
+    // Retained as a companion to `approx_eq` for point comparisons in tests;
+    // not every test module uses it.
+    #[allow(dead_code)]
     fn point_approx_eq(a: Point, b: Point) -> bool {
         approx_eq(a.x, b.x) && approx_eq(a.y, b.y)
     }

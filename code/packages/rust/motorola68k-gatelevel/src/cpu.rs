@@ -69,6 +69,12 @@ pub struct Cpu68K {
     pub halted: bool,
 }
 
+impl Default for Cpu68K {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Cpu68K {
     /// Create a new 68000 in power-on state (memory zeroed, registers default).
     pub fn new() -> Self {

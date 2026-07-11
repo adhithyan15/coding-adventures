@@ -218,9 +218,10 @@ pub fn gpu_colour_matrix(
     // product of M's row with input RGB.  In matmul form with row-vector
     // pixels, that's `pixels @ M^T`.
     let mut m_t: Vec<f32> = Vec::with_capacity(9);
+    // Transpose flatten: column-major walk of `matrix` (col outer, rows inner).
     for col in 0..3 {
-        for row in 0..3 {
-            m_t.push(matrix[row][col]);
+        for m_row in matrix.iter() {
+            m_t.push(m_row[col]);
         }
     }
 

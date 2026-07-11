@@ -224,14 +224,13 @@ impl Pass for CollapsePropertiesPass {
                 continue; // not aliased anywhere — let remove-unused-vars handle it
             }
             // `#[non_exhaustive]` on BindingKind: future variants
-            // conservatively passthrough via wildcard.
-            match binding.kind {
-                BindingKind::Const => alias_candidates.push(id),
-                // Var/Let can be reassigned mid-program — collapsing
-                // would create an alias that diverges from the
-                // source. Function/Param/Class need additional
-                // shape analysis the analyzer doesn't expose.
-                _ => {}
+            // conservatively passthrough (the `else` of this `if let`).
+            // Only `Const` is collapsible. Var/Let can be reassigned
+            // mid-program — collapsing would create an alias that diverges
+            // from the source. Function/Param/Class need additional shape
+            // analysis the analyzer doesn't expose.
+            if let BindingKind::Const = binding.kind {
+                alias_candidates.push(id);
             }
         }
 

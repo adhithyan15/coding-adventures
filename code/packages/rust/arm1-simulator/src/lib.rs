@@ -1161,8 +1161,8 @@ impl ARM1 {
     pub fn step(&mut self) -> Trace {
         let pc = self.pc();
         let mut regs_before = [0u32; 16];
-        for i in 0..16 {
-            regs_before[i] = self.read_register(i);
+        for (i, reg) in regs_before.iter_mut().enumerate() {
+            *reg = self.read_register(i);
         }
         let flags_before = self.flags();
 

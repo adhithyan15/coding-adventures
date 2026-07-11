@@ -564,6 +564,9 @@ where
     let shard_bits = shard_bits_for(worker_count);
 
     let init: Arc<dyn Fn(TcpConnectionInfo) -> S + Send + Sync> = Arc::new(init);
+    // The handler is an owned callback trait object; its signature is the runtime's
+    // public per-connection contract, not a type worth aliasing away.
+    #[allow(clippy::type_complexity)]
     let handler: Arc<dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync> =
         Arc::new(handler);
     let on_close: Arc<dyn Fn(TcpConnectionInfo, S) + Send + Sync> = Arc::new(on_close);

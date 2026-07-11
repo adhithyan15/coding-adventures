@@ -346,24 +346,20 @@ mod tests {
         let mut result = Vec::new();
         let mut rest = bytes;
 
-        loop {
-            // Find the header/payload separator.
-            if let Some(sep_pos) = find_header_end(rest) {
-                let header = &rest[..sep_pos];
+        // Find the header/payload separator.
+        while let Some(sep_pos) = find_header_end(rest) {
+            let header = &rest[..sep_pos];
 
-                // Extract Content-Length.
-                let header_str = std::str::from_utf8(header).unwrap();
-                let cl_line = header_str.lines().find(|l| l.starts_with("Content-Length:")).unwrap();
-                let n: usize = cl_line.trim_start_matches("Content-Length:").trim().parse().unwrap();
+            // Extract Content-Length.
+            let header_str = std::str::from_utf8(header).unwrap();
+            let cl_line = header_str.lines().find(|l| l.starts_with("Content-Length:")).unwrap();
+            let n: usize = cl_line.trim_start_matches("Content-Length:").trim().parse().unwrap();
 
-                let payload = &rest[sep_pos + 4..sep_pos + 4 + n];
-                result.push(parse_message(payload).unwrap());
-                rest = &rest[sep_pos + 4 + n..];
+            let payload = &rest[sep_pos + 4..sep_pos + 4 + n];
+            result.push(parse_message(payload).unwrap());
+            rest = &rest[sep_pos + 4 + n..];
 
-                if rest.is_empty() {
-                    break;
-                }
-            } else {
+            if rest.is_empty() {
                 break;
             }
         }

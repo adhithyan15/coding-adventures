@@ -472,10 +472,10 @@ extern "C" {
     ///
     /// - `async_resource`      — pass `napi_get_undefined(env)` (unused here)
     /// - `async_resource_name` — a JS string for profiling/tracing; usually
-    ///                           the handler name
+    ///   the handler name
     /// - `max_queue_size`      — 0 means unlimited queue
     /// - `initial_thread_count`— number of threads that will call this TSFN
-    ///                           (including the creating thread); typically 1
+    ///   (including the creating thread); typically 1
     /// - `thread_finalize_data`— opaque pointer passed to `thread_finalize_cb`
     /// - `thread_finalize_cb`  — called when all threads have released the TSFN
     /// - `context`             — arbitrary data passed to every `call_js_cb`
@@ -779,6 +779,12 @@ pub fn wrap_data<T>(env: napi_env, this: napi_value, data: T) {
     );
 }
 
+/// # Safety
+///
+/// `env` must be a valid N-API environment and `this` a JS object previously
+/// wrapped (via `napi_wrap`) with a boxed `T`. The returned pointer aliases
+/// that boxed data and is only valid while the wrapped object lives; the caller
+/// must not outlive it or use a mismatched `T`.
 pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> *const T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
@@ -786,6 +792,12 @@ pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> *const T {
     ptr as *const T
 }
 
+/// # Safety
+///
+/// `env` must be a valid N-API environment and `this` a JS object previously
+/// wrapped (via `napi_wrap`) with a boxed `T`. The returned pointer aliases
+/// that boxed data mutably; the caller must ensure no other references exist,
+/// must not outlive the wrapped object, and must use the correct `T`.
 pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> *mut T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");

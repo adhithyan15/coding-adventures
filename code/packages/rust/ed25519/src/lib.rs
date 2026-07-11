@@ -121,6 +121,10 @@ impl Fe {
     }
 
     /// Encode as 32 little-endian bytes (fully reduced).
+    // Takes `&self` by reference deliberately to match the surrounding field-element
+    // API (all other Fe methods borrow); changing the convention here would churn
+    // every caller for no behavioral gain.
+    #[allow(clippy::wrong_self_convention)]
     fn to_bytes(&self) -> [u8; 32] {
         let t = self.reduce();
         let mut out = [0u8; 32];
@@ -1214,7 +1218,7 @@ mod tests {
     #[test]
     fn test_deterministic() {
         let mut seed = [0u8; 32];
-        for i in 0..32 { seed[i] = i as u8; }
+        for (i, byte) in seed.iter_mut().enumerate() { *byte = i as u8; }
         let (pub1, sec1) = generate_keypair(&seed);
         let (pub2, sec2) = generate_keypair(&seed);
         assert_eq!(pub1, pub2);
@@ -1224,7 +1228,7 @@ mod tests {
     #[test]
     fn test_sign_deterministic() {
         let mut seed = [0u8; 32];
-        for i in 0..32 { seed[i] = i as u8; }
+        for (i, byte) in seed.iter_mut().enumerate() { *byte = i as u8; }
         let (_, sec) = generate_keypair(&seed);
         let sig1 = sign(b"hello", &sec);
         let sig2 = sign(b"hello", &sec);
@@ -1234,7 +1238,7 @@ mod tests {
     #[test]
     fn test_secret_key_format() {
         let mut seed = [0u8; 32];
-        for i in 0..32 { seed[i] = i as u8; }
+        for (i, byte) in seed.iter_mut().enumerate() { *byte = i as u8; }
         let (pub_key, sec_key) = generate_keypair(&seed);
         assert_eq!(&sec_key[..32], &seed);
         assert_eq!(&sec_key[32..], &pub_key);

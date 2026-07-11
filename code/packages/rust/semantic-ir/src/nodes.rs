@@ -355,6 +355,11 @@ pub struct RescueClause {
 /// SIR16 (Python/JS interop) extends this with mutation (`Assign`),
 /// loops (`While`, `ForRange`, `ForEach`), and indexed assignment on
 /// sequences and maps (`SeqSet`, `MapSet`).
+// Variants differ in size because some statement kinds carry several boxed
+// `Expr`s while others carry one. This is a core AST node matched exhaustively
+// throughout the crate; boxing a variant to equalize sizes would churn every
+// construction and pattern for no meaningful gain.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum Stmt {
     /// Parallel-let semantics.  Multiple consecutive `LetBinding`
@@ -1342,6 +1347,8 @@ mod tests {
         }
     }
 
+    // `3.14` is an arbitrary float literal test value, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn sir16_expr_kind_names() {
         let span = s();
@@ -1444,6 +1451,8 @@ mod tests {
         }
     }
 
+    // `3.14` is an arbitrary float literal test value, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_lit_partial_eq_handles_nan() {
         // f64::NAN is never equal to itself — Expr only impls

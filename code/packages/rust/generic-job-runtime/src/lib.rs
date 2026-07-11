@@ -1197,9 +1197,7 @@ fn complete_thread_pool_job<Request, Response>(
             .expect("thread pool queue mutex poisoned");
         queue.pending.remove(&id)
     };
-    let Some(pending) = pending else {
-        return None;
-    };
+    let pending = pending?;
     decrement_in_flight(&inner.in_flight);
 
     match pending.state {

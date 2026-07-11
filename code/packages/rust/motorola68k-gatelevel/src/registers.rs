@@ -71,6 +71,12 @@ const Z_BIT: u16 = 1 << 2;
 const V_BIT: u16 = 1 << 1;
 const C_BIT: u16 = 1 << 0;
 
+impl Default for RegisterFile68K {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RegisterFile68K {
     /// Power-on state: all registers zero except A7 = 0x00F000, SR = 0x2700.
     ///

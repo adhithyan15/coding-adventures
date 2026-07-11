@@ -608,6 +608,9 @@ pub struct Table {
     /// Elements: `Some(func_index)` or `None` (uninitialized).
     elements: Vec<Option<u32>>,
     /// Maximum table size.
+    // Captured from the module's table limits for spec completeness; table growth
+    // is not yet enforced against it, so the field is currently write-only.
+    #[allow(dead_code)]
     max_size: Option<u32>,
 }
 
@@ -3037,6 +3040,11 @@ pub struct WasmEngineState {
 pub struct WasmExecutionEngine {
     vm: GenericVM,
     memory: Option<Box<LinearMemory>>,
+    // Boxing is intentional, NOT redundant: `call_indirect` stores `*mut Table`
+    // raw pointers into the execution context (see `table_ptrs` below). Boxing
+    // gives each `Table` a stable heap address so those pointers stay valid even
+    // if this Vec reallocates; a plain `Vec<Table>` would invalidate them.
+    #[allow(clippy::vec_box)]
     tables: Vec<Box<Table>>,
     globals: Vec<WasmValue>,
     global_types: Vec<GlobalType>,
@@ -3220,6 +3228,9 @@ impl WasmExecutionEngine {
 
 #[cfg(test)]
 mod tests {
+    // Tests use 3.14 / 2.718 as arbitrary float sample values (checking f32/f64
+    // store/load/const/convert behaviour), not as approximations of PI or E.
+    #![allow(clippy::approx_constant)]
     use super::*;
     use wasm_types::{FuncType, FunctionBody, ValueType};
 

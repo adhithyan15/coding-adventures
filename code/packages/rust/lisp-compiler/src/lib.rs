@@ -222,12 +222,10 @@ impl Value {
     /// Falsy values: Nil, Integer(0), Bool(false).
     /// Everything else is truthy.
     pub fn is_falsy(&self) -> bool {
-        match self {
-            Value::Nil => true,
-            Value::Bool(false) => true,
-            Value::Integer(0) => true,
-            _ => false,
-        }
+        matches!(
+            self,
+            Value::Nil | Value::Bool(false) | Value::Integer(0)
+        )
     }
 }
 
@@ -1048,16 +1046,6 @@ mod tests {
             .iter()
             .map(|i| i.opcode)
             .collect()
-    }
-
-    /// Helper: compile and return constants.
-    fn constants(source: &str) -> Vec<Value> {
-        compile(source).unwrap().constants
-    }
-
-    /// Helper: compile and return names.
-    fn names(source: &str) -> Vec<std::string::String> {
-        compile(source).unwrap().names
     }
 
     // =====================================================================

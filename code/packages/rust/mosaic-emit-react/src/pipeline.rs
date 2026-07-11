@@ -1399,6 +1399,10 @@ fn emit_for_jsx(
 /// Both branches render their children through
 /// `emit_children_jsx_with_control_flow`, which means a nested If/Else
 /// pair, a nested For, or any normal container all work uniformly.
+// Internal JSX-emit helper threading the full codegen context (writer, indent,
+// node, slot/emit tables, options); grouping into a struct would only hide the
+// data flow at its few call sites.
+#[allow(clippy::too_many_arguments)]
 fn emit_if_jsx(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
@@ -2999,6 +3003,9 @@ fn emit_host_table_jsx(
 /// through `emit_jsx_tree` so a future `For` emitter (a sibling PR) lands
 /// naturally — its output becomes a `{rows.map(...)}` expression inside the
 /// section.
+// Internal JSX-emit helper threading the full codegen context; the flat
+// argument list mirrors the emitter's data flow at its call sites.
+#[allow(clippy::too_many_arguments)]
 fn emit_host_table_section_jsx(
     section_node: &LayoutNode,
     html_tag: &str,
@@ -3100,6 +3107,9 @@ fn emit_host_table_section_jsx(
 /// cell element; the inner JSX comes from the general tree walker
 /// so a Text leaf, a HostButton, or any other primitive composes
 /// cleanly.
+// Internal JSX-emit helper threading the full codegen context; the flat
+// argument list mirrors the emitter's data flow at its call sites.
+#[allow(clippy::too_many_arguments)]
 fn emit_table_row_jsx(
     row_node: &LayoutNode,
     cell_tag: &str,
@@ -3177,6 +3187,9 @@ fn emit_table_row_jsx(
 ///     row-level seam (`For { Row { … } }` → multiple `<tr>`s, not
 ///     multiple cells inside one `<tr>`).
 ///   - `each:`, `as:`, `index:` same rules as `emit_for_jsx`.
+// Internal JSX-emit helper threading the full codegen context; the flat
+// argument list mirrors the emitter's data flow at its call sites.
+#[allow(clippy::too_many_arguments)]
 fn try_emit_table_for_cell_jsx(
     for_node: &LayoutNode,
     cell_tag: &str,
@@ -3342,6 +3355,9 @@ fn try_emit_table_for_cell_jsx(
 /// (row) => <div>…</div>)}` — structurally invalid (a `<div>`
 /// inside `<tbody>` is parse-error territory in HTML and breaks
 /// the table semantics on every other backend too).
+// Internal JSX-emit helper threading the full codegen context; the flat
+// argument list mirrors the emitter's data flow at its call sites.
+#[allow(clippy::too_many_arguments)]
 fn try_emit_table_for_row_jsx(
     for_node: &LayoutNode,
     cell_tag: &str,
@@ -3990,25 +4006,25 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 ///
 /// Recognised forms:
 ///   - `content: slot: name`     → `{name}`  (the JSX interpolation
-///                                  the rest of the emitter assumes;
-///                                  the receiver chooses how to render).
+///     the rest of the emitter assumes;
+///     the receiver chooses how to render).
 ///   - `content: <NAME>`         → `{name}`  (a bare keyword name, which
-///                                  the For-emitter binds as the
-///                                  iteration variable. We can't tell
-///                                  here whether the binding actually
-///                                  exists in scope — that's a runtime
-///                                  ReferenceError if the author got it
-///                                  wrong — but for the cell-body case
-///                                  `Text (content: row)` inside a
-///                                  `For (as: row) { … }` the JS engine
-///                                  resolves it just like any other
-///                                  closure variable).
+///     the For-emitter binds as the
+///     iteration variable. We can't tell
+///     here whether the binding actually
+///     exists in scope — that's a runtime
+///     ReferenceError if the author got it
+///     wrong — but for the cell-body case
+///     `Text (content: row)` inside a
+///     `For (as: row) { … }` the JS engine
+///     resolves it just like any other
+///     closure variable).
 ///   - `content: "string"`       → None (a literal string is rendered
-///                                  by the standard Text walker as its
-///                                  own `<span>literal</span>`; this
-///                                  helper only surfaces the JSX-
-///                                  expression form so the cell flatten
-///                                  path can inline it).
+///     by the standard Text walker as its
+///     own `<span>literal</span>`; this
+///     helper only surfaces the JSX-
+///     expression form so the cell flatten
+///     path can inline it).
 ///
 /// The Keyword arm is the L10 wiring that lets HostTable composers
 /// write `For (as: row) { Text (content: row) }` and have the row
@@ -4062,6 +4078,7 @@ fn jsx_text_content(node: &LayoutNode) -> Option<String> {
 ///   - A slot of type `node`
 ///   - A slot of type `<ComponentName>` (custom component types are
 ///     emitted as `React.ReactNode` with a doc comment)
+///
 /// Both can also appear inside `list<...>` containers, which we
 /// inspect recursively.
 fn interface_uses_react_namespace(interface: &MosmodelComponent) -> bool {
@@ -4223,6 +4240,10 @@ fn is_safe_js_identifier(s: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    // Several layout/prop builder helpers below are scaffolding shared across
+    // families of codegen tests; some variants (grid v3, stripes, sticky, …) are
+    // kept ready for their tests without being wired up right now.
+    #![allow(dead_code)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, ListInnerType};
@@ -8721,8 +8742,10 @@ mod tests {
         let m = component("Hello", vec![], vec![]);
         let l = single_box_layout("Hello");
         let s = empty_style("Hello");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         assert!(
             r.project.is_some(),
@@ -8735,8 +8758,10 @@ mod tests {
         let m = component("Hello", vec![], vec![]);
         let l = single_box_layout("Hello");
         let s = empty_style("Hello");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -8775,8 +8800,10 @@ mod tests {
         let m = component("Deterministic", vec![], vec![]);
         let l = single_box_layout("Deterministic");
         let s = empty_style("Deterministic");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
 
         let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
@@ -8789,9 +8816,11 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = single_box_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
-        opts.package_name = Some("Mosaic-Grid".to_string()); // uppercase = invalid
+        let opts = EmitOptions {
+            emit_project: true,
+            package_name: Some("Mosaic-Grid".to_string()), // uppercase = invalid
+            ..Default::default()
+        };
 
         let err =
             from_pipeline_with_options(&m, &l, &s, &opts).expect_err("invalid npm name must error");
@@ -8807,8 +8836,10 @@ mod tests {
         let m = component("HostTable", vec![], vec![]);
         let l = single_box_layout("HostTable");
         let s = empty_style("HostTable");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -8826,8 +8857,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = single_box_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -8904,8 +8937,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = single_box_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -8931,8 +8966,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = single_box_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -8972,8 +9009,10 @@ mod tests {
         );
         let l = single_box_layout("ProfileCard");
         let s = empty_style("ProfileCard");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project

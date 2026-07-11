@@ -76,7 +76,7 @@ pub enum EventType {
 /// - `event_type` -- what happened (Started, Finished, Skipped)
 /// - `name` -- human-readable identifier (e.g., "python/logic-gates")
 /// - `status` -- outcome label, only meaningful for Finished events
-///               (e.g., "built", "failed", "cached")
+///   (e.g., "built", "failed", "cached")
 #[derive(Debug, Clone)]
 pub struct Event {
     pub event_type: EventType,

@@ -5,6 +5,12 @@
 //! pretending HTML is context-free. Future batches can add the full WHATWG
 //! insertion-mode machinery on top of this DOM target.
 
+// The WHATWG tree-construction algorithm threads a lot of parser state through
+// its helpers; several fns legitimately take many parameters mirroring the spec.
+// Refactoring their signatures would obscure the correspondence to the standard,
+// so allow the too_many_arguments lint crate-wide.
+#![allow(clippy::too_many_arguments)]
+
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer_with_context, Attribute as LexerAttribute,
     Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState,
@@ -5954,8 +5960,8 @@ impl HtmlParser {
         incoming_name: &str,
         attributes: &[Attribute],
     ) -> bool {
-        if !self.current_element_is_table_structure()
-            && !(matches!(incoming_name, "i" | "nobr")
+        if !(self.current_element_is_table_structure()
+            || matches!(incoming_name, "i" | "nobr")
                 && self.has_open_table_context()
                 && self.current_parent_is_fostered_before_open_table())
         {
@@ -7653,11 +7659,10 @@ impl HtmlParser {
             .open_elements
             .iter()
             .skip(formatting_index + 1)
-            .filter(|path| {
+            .rfind(|path| {
                 path.starts_with(&first_div_path)
                     && element_at_path(&self.document, path).is_some_and(|name| name == "div")
             })
-            .next_back()
             .cloned()
             .unwrap_or_else(|| first_div_path.clone());
 
@@ -9841,10 +9846,7 @@ fn coalesce_adjacent_text_nodes(nodes: &mut Vec<Node>) {
 
     let mut index = 1;
     while index < nodes.len() {
-        let merge = match (&nodes[index - 1], &nodes[index]) {
-            (Node::Text(_), Node::Text(_)) => true,
-            _ => false,
-        };
+        let merge = matches!((&nodes[index - 1], &nodes[index]), (Node::Text(_), Node::Text(_)));
         if !merge {
             index += 1;
             continue;

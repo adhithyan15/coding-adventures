@@ -1514,6 +1514,9 @@ fn card_bury_kind(state: &AppState, card_id: &str, now: u64) -> Option<BuryCardK
     }
 }
 
+// Reducer takes the full set of review inputs explicitly; a params struct would
+// add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn reduce_rate_card(
     state: &AppState,
     review_id: String,

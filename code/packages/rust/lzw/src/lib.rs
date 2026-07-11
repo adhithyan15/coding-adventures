@@ -320,6 +320,11 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
 /// let data: Vec<u8> = b"AAAAAAA".to_vec();
 /// assert_eq!(decompress(&compress(&data)).unwrap(), data);
 /// ```
+// The decode loop reads a code and then dispatches on LZW control codes
+// (CLEAR_CODE / END_OF_INFORMATION) with `break`/`continue`; the explicit
+// `loop { match reader.read(..) { .. None => break } }` form keeps that
+// control flow readable, so we opt out of clippy::while_let_loop here.
+#[allow(clippy::while_let_loop)]
 pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     if data.len() < 4 {
         return Err("input too short: missing 4-byte header".into());

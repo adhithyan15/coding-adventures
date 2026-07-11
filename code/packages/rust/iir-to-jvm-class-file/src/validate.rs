@@ -775,6 +775,8 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
     }
 
+    // `3.14` is an arbitrary float operand payload, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_const_allowed() {
         // Unlike BEAM backend, float constants ARE supported on JVM.

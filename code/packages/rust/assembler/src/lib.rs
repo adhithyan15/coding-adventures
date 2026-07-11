@@ -71,8 +71,8 @@ fn parse_register(s: &str) -> Option<u32> {
         "LR" => Some(14),
         "PC" => Some(15),
         _ => {
-            if s.starts_with('R') {
-                s[1..].parse::<u32>().ok().filter(|&n| n <= 15)
+            if let Some(index) = s.strip_prefix('R') {
+                index.parse::<u32>().ok().filter(|&n| n <= 15)
             } else {
                 None
             }
@@ -316,7 +316,9 @@ impl Assembler {
             "NOP" => Ok(ArmInstruction::Nop),
 
             "MOV" | "MOVS" => {
-                let _set_flags = mnemonic.ends_with('S') && mnemonic != "MOVS" || mnemonic == "MOVS";
+                // `(ends_with('S') && != "MOVS") || == "MOVS"` is just `ends_with('S')`
+                // since "MOVS" itself ends with 'S'; the "S" suffix sets flags.
+                let _set_flags = mnemonic.ends_with('S');
                 let operands = self.split_operands(operands_str);
                 if operands.len() != 2 {
                     return Err(AssemblerError::InvalidOperandCount {

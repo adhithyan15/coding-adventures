@@ -19,9 +19,9 @@
 //!
 //! - `params`   — parameter names of the current function.
 //! - `captures` — capture names of the current function (empty for
-//!                top-level non-closure functions).
+//!   top-level non-closure functions).
 //! - `locals`   — a *stack* of let-bound names; pushed when entering
-//!                `let` / `let*` groups, popped on exit.
+//!   `let` / `let*` groups, popped on exit.
 //!
 //! Name resolution at any point walks these in order:
 //! locals (innermost-first) → params → captures → module globals →

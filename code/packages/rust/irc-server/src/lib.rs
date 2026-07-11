@@ -584,7 +584,7 @@ impl IRCServer {
     /// values without the wire-format colon).
     fn make_msg(&self, command: &str, params: &[&str]) -> Message {
         let cleaned: Vec<String> = params.iter().map(|p| {
-            if p.starts_with(':') { p[1..].to_string() } else { p.to_string() }
+            if let Some(stripped) = p.strip_prefix(':') { stripped.to_string() } else { p.to_string() }
         }).collect();
         Message {
             prefix: Some(self.server_name.clone()),
@@ -1544,12 +1544,12 @@ impl IRCServer {
                 // Set: acknowledge by broadcasting MODE to channel members.
                 let mode_str = msg.params[1].clone();
                 // Apply simple single-char modes (no parameters in v1).
-                if mode_str.starts_with('+') {
-                    for ch in mode_str[1..].chars() {
+                if let Some(mode_chars) = mode_str.strip_prefix('+') {
+                    for ch in mode_chars.chars() {
                         self.channels.get_mut(&chan_name).unwrap().modes.insert(ch);
                     }
-                } else if mode_str.starts_with('-') {
-                    for ch in mode_str[1..].chars() {
+                } else if let Some(mode_chars) = mode_str.strip_prefix('-') {
+                    for ch in mode_chars.chars() {
                         self.channels.get_mut(&chan_name).unwrap().modes.remove(&ch);
                     }
                 }

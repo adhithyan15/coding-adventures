@@ -525,6 +525,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 here is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn test_coerce_float() {
         assert_eq!(coerce_value("3.14", "float", &[]).unwrap(), json!(3.14));
     }

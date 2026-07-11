@@ -182,8 +182,6 @@ mod tests {
     #[test]
     fn first_pixel_predicts_zero() {
         // With no neighbours the predictor should return 0.
-        let mut dummy = [0i32; 4];
-        dummy[0] = 99; // pixel at (0,0) — not yet decoded by predictor
         // For (0,0) we pass an empty-so-far buffer:
         let pred = gradient_predict(0, 0, 2, &[0, 0, 0, 0]);
         assert_eq!(pred, 0);

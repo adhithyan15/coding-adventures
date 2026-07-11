@@ -3192,6 +3192,9 @@ fn _slot_type_keepalive(_t: &SlotType, _l: &ListInnerType) {}
 
 #[cfg(test)]
 mod tests {
+    // Tests build a `*::default()` then set one field; the sequential form
+    // reads clearly and is behavior-identical to an initializer.
+    #![allow(clippy::field_reassign_with_default)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, SlotDecl};

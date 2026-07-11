@@ -105,6 +105,7 @@ mod _grammar;
 /// code; a follow-up PR will sweep it. This PR removes the
 /// registration so any future use of `Grid` resolves as a userland
 /// component reference (matching the userland v0.2.0 package).
+#[allow(dead_code)] // retained as API surface / scaffolding
 const PRIMITIVES: &[&str] = &[
     "Box", "Row", "Column", "Text", "Image", "Spacer",
     // Extended set from earlier specs (kept for completeness):
@@ -154,6 +155,7 @@ const PRIMITIVES: &[&str] = &[
     "Col",
 ];
 
+#[allow(dead_code)] // retained as API surface / scaffolding
 fn is_primitive(tag: &str) -> bool {
     PRIMITIVES.contains(&tag)
 }
@@ -519,6 +521,7 @@ pub fn validate(
     }
 }
 
+#[allow(clippy::too_many_arguments)] // threaded validation context; signature kept as-is
 fn validate_node(
     node: &LayoutNode,
     known_slots: &HashSet<String>,
@@ -1170,7 +1173,8 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
                     idx += 1;
                 }
                 ASTNodeOrToken::Token(t) if t.value == "}" => {
-                    idx += 1; // skip RBRACE
+                    // RBRACE closes the child block; `idx` is not read after
+                    // the loop, so no need to advance it here.
                     break;
                 }
                 _ => {

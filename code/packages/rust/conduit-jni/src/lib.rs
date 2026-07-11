@@ -55,6 +55,13 @@
 // building JNI chatter and no object-array machinery.
 
 #![allow(non_snake_case)]
+// Every exported fn is a `Java_*` JNI entry point invoked only by the JVM,
+// which guarantees the pointer/handle contract; the safety obligations are
+// uniform and documented in the module header above.
+#![allow(clippy::missing_safety_doc)]
+// The `guard_ptr!(ptr, ())` macro takes an explicit "value to return on a null
+// pointer"; `()` is a required macro argument here, not a redundant unit.
+#![allow(clippy::unused_unit)]
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;

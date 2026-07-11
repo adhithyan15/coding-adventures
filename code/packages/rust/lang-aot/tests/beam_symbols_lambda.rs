@@ -6,6 +6,7 @@
 //!   Erlang integer; `EQ` on symbols becomes `is_eq_exact`.
 //! - **Lambda (F7):** needs NO BEAM-specific work — a `(LAMBDA …)` application is
 //!   a method `call`, which `iir-to-beam` already lowers natively (a BEAM fun).
+//!
 //! **Verified by RUNNING** the emitted `.beam` on a real `erl` (skipped if absent).
 
 use lang_aot::{compile_source_to_beam, Language};

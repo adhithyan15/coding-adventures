@@ -158,6 +158,10 @@ fn schedule(block: &[u8]) -> [u32; 80] {
 // back to input state to prevent invertibility.
 //
 // `wrapping_add` makes the intent explicit: we want mod 2^32 arithmetic.
+// The round loop is indexed by `t` (0..80) because `t` both selects the round
+// function/constant and indexes the message schedule `W[t]`, exactly as FIPS
+// 180-4 §6.1.2 specifies; an indexed loop keeps the code auditable against it.
+#[allow(clippy::needless_range_loop)]
 fn compress(state: [u32; 5], block: &[u8]) -> [u32; 5] {
     let w = schedule(block);
     let [h0, h1, h2, h3, h4] = state;

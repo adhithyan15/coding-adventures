@@ -153,8 +153,8 @@ fn init_gf_tables() {
         let log = GF_LOG.get_or_init(|| {
             let mut log = [0u16; 929];
             let mut val: u64 = 1;
-            for i in 0..ORDER as usize {
-                exp[i] = val as u16;
+            for (i, exp_i) in exp.iter_mut().enumerate().take(ORDER as usize) {
+                *exp_i = val as u16;
                 log[val as usize] = i as u16;
                 val = (val * ALPHA) % PRIME;
             }
@@ -319,15 +319,13 @@ fn auto_ecc_level(data_count: usize) -> u8 {
 /// Heuristic: `c = ceil(sqrt(total / 3))`, clamped to 1–30.
 /// Then `r = ceil(total / c)`, clamped to 3–90.
 fn choose_dimensions(total: usize) -> (u32, u32) {
-    let mut c = (((total as f64) / 3.0).sqrt().ceil() as u32)
-        .max(MIN_COLS)
-        .min(MAX_COLS);
+    let mut c = (((total as f64) / 3.0).sqrt().ceil() as u32).clamp(MIN_COLS, MAX_COLS);
 
     let mut r = (total as u32).div_ceil(c).max(MIN_ROWS);
 
     if r < MIN_ROWS {
         r = MIN_ROWS;
-        c = (total as u32).div_ceil(r).max(MIN_COLS).min(MAX_COLS);
+        c = (total as u32).div_ceil(r).clamp(MIN_COLS, MAX_COLS);
         r = (total as u32).div_ceil(c).max(MIN_ROWS);
     }
 

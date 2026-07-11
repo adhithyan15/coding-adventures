@@ -232,6 +232,12 @@ pub struct GenericCompiler {
     scope_stack: Vec<CompilerScope>,
 }
 
+impl Default for GenericCompiler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GenericCompiler {
     /// Create a new compiler with no registered handlers.
     pub fn new() -> Self {

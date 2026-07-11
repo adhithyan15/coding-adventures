@@ -33,7 +33,7 @@ use crate::types::TypeSite;
 /// when the raw impact scores happen to be equal.
 ///
 /// Returns a mutable reference to the same slice for call-chaining.
-pub fn rank_sites(sites: &mut Vec<TypeSite>) {
+pub fn rank_sites(sites: &mut [TypeSite]) {
     sites.sort_by(|a, b| {
         // Primary: descending impact
         b.impact().cmp(&a.impact())

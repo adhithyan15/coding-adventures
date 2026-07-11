@@ -595,9 +595,9 @@ fn power_series_coeffs(num: &[Frac], den: &[Frac], terms: usize) -> Vec<Frac> {
     for k in 0..terms {
         let nk = num.get(k).copied().unwrap_or(Frac::zero());
         let mut subtract = Frac::zero();
-        for j in 0..k {
+        for (j, &gj) in g.iter().enumerate() {
             let dkj = den.get(k - j).copied().unwrap_or(Frac::zero());
-            subtract = f_add(subtract, f_mul(dkj, g[j]));
+            subtract = f_add(subtract, f_mul(dkj, gj));
         }
         g.push(f_div(f_sub(nk, subtract), q0));
     }

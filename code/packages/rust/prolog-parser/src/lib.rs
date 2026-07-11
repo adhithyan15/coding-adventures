@@ -87,6 +87,10 @@ pub fn parse_iso_prolog(source: &str) -> GrammarASTNode {
 
 /// Tokenize, parse, and return the AST as a `Result`. Use this when
 /// you need to handle parse errors rather than panic.
+// `GrammarParseError` is a large error type owned by the shared grammar crate;
+// boxing the `Err` here would diverge from the rest of the parser API surface,
+// so we accept the large-Err variant.
+#[allow(clippy::result_large_err)]
 pub fn try_parse_iso_prolog(source: &str) -> Result<GrammarASTNode, GrammarParseError> {
     let mut p = create_iso_prolog_parser(source);
     p.parse()

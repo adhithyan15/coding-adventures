@@ -349,6 +349,11 @@ mod apple {
             self.len
         }
 
+        /// Returns `true` when the buffer holds no bytes.
+        pub fn is_empty(&self) -> bool {
+            self.len == 0
+        }
+
         /// Mutable byte view into the CPU-side of the buffer.
         ///
         /// On Apple Silicon, the GPU also sees these bytes via `[[buffer(N)]]`.

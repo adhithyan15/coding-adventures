@@ -172,8 +172,8 @@ fn decode_grayscale(
                     raw.len(), num_pixels
                 ));
             }
-            for i in 0..num_pixels {
-                let mut v = raw[i];
+            for &pixel in raw.iter().take(num_pixels) {
+                let mut v = pixel;
                 if photometric == 0 {
                     v = 255 - v; // WhiteIsZero: invert
                 }

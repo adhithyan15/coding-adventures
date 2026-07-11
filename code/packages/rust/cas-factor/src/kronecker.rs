@@ -117,6 +117,10 @@ fn signed_divisors(value: i64) -> Vec<i64> {
         .collect()
 }
 
+// Lagrange interpolation: the basis-building loop iterates node index `j`,
+// skipping `j == i`, and indexes the node vector `xs[j]`; the indexed form
+// mirrors the interpolation formula and keeps the skip-self condition explicit.
+#[allow(clippy::needless_range_loop)]
 fn lagrange_interpolate(xs: &[i64], ys: &[i64]) -> Option<Vec<Rational>> {
     let n = xs.len();
     let mut result = vec![Rational::zero(); n];

@@ -6,6 +6,11 @@
 //! explicit and testable.
 
 #![forbid(unsafe_code)]
+// Many tool-builder/handler functions in this crate take a wide, deliberately
+// flat set of parameters (each maps to a distinct field of a JSON tool payload).
+// Bundling them into structs purely to satisfy the arg-count heuristic would add
+// boilerplate without improving clarity, so the lint is allowed crate-wide.
+#![allow(clippy::too_many_arguments)]
 
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier as ToolPrivilegeTier, SchemaProperty,
@@ -250,9 +255,7 @@ use std::rc::Rc;
 
 macro_rules! heap_object {
     ($(($name:expr, $value:expr $(,)?)),* $(,)?) => {{
-        let mut fields = Vec::new();
-        $(fields.push(($name, $value));)*
-        object_from_fields(fields)
+        object_from_fields(vec![$(($name, $value)),*])
     }};
 }
 
@@ -11818,18 +11821,13 @@ fn command_risk_audit_query(arguments: &JsonValue) -> Result<CommandRiskAuditQue
     })
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 enum AuthorizationGapAuditSort {
+    #[default]
     RiskDesc,
     DecidedAtDesc,
     DecidedAtAsc,
     PrincipalId,
-}
-
-impl Default for AuthorizationGapAuditSort {
-    fn default() -> Self {
-        Self::RiskDesc
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -56729,7 +56727,7 @@ fn morning_brief_output_json(
     incident: &JsonValue,
     recovery: &JsonValue,
 ) -> JsonValue {
-    let sections = vec![
+    let sections = [
         morning_brief_section_from_output(
             "platform",
             "Platform controller readiness",
@@ -57955,7 +57953,7 @@ fn operator_readiness_lane_from_continuity_lane(item: &JsonValue) -> OperatorRea
     let priority = morning_brief_integer_at(item, &["priority"])
         .unwrap_or_else(|| operator_readiness_priority(&severity));
     let handoff_required = morning_brief_bool_at(item, &["handoff_required"])
-        .unwrap_or_else(|| matches!(severity.as_str(), "blocker" | "review"));
+        .unwrap_or(matches!(severity.as_str(), "blocker" | "review"));
 
     OperatorReadinessLane {
         lane_id: format!("operator:{}:{}", severity, section_id),
@@ -62367,6 +62365,10 @@ fn operations_brief_controller_handoff_ready_counts(
     (readiness.category_count(), readiness.ready_category_count())
 }
 
+// NOTE: the `is_idle` and final `else` arms both yield "ready" by design (an idle
+// system is treated as ready). The duplication is intentional so the distinct states
+// stay explicit; flag for review if an "idle"-specific status is ever introduced.
+#[allow(clippy::if_same_then_else)]
 fn operations_brief_status(
     controller_ready: bool,
     is_idle: bool,
@@ -63813,7 +63815,7 @@ fn device_command_json(command: &DeviceCommand) -> JsonValue {
             command
                 .idempotency_key
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -64338,7 +64340,7 @@ fn describe_primitive_output_json(
             JsonValue::Array(
                 ecosystem_sources
                     .iter()
-                    .map(|source| ecosystem_source_json(*source))
+                    .map(|source| ecosystem_source_json(source))
                     .collect(),
             ),
         ),
@@ -69147,7 +69149,7 @@ fn activation_handoff_package_json(package: &IntegrationActivationHandoffPackage
                 package
                     .risk_ids
                     .iter()
-                    .map(|risk_id| string(risk_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -69467,7 +69469,7 @@ fn activation_execution_packet_json(packet: &IntegrationActivationExecutionPacke
                 packet
                     .risk_ids
                     .iter()
-                    .map(|risk_id| string(risk_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -69829,7 +69831,7 @@ fn activation_verification_checkpoint_json(
                 checkpoint
                     .risk_ids
                     .iter()
-                    .map(|risk_id| string(risk_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -76373,7 +76375,7 @@ fn integration_activation_waiver_remediation_summary_json(
             summary
                 .next_remediation_kind
                 .as_ref()
-                .map(|kind| string(kind))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -76628,7 +76630,7 @@ fn integration_activation_waiver_closure_summary_json(
             summary
                 .next_closure_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -76876,7 +76878,7 @@ fn integration_activation_waiver_archive_summary_json(
             summary
                 .next_archive_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77132,7 +77134,7 @@ fn integration_activation_waiver_retention_summary_json(
             summary
                 .next_retention_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77398,7 +77400,7 @@ fn integration_activation_waiver_expiration_summary_json(
             summary
                 .next_expiration_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77662,7 +77664,7 @@ fn integration_activation_waiver_disposal_summary_json(
             summary
                 .next_disposal_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -77940,7 +77942,7 @@ fn integration_activation_waiver_tombstone_summary_json(
             summary
                 .next_tombstone_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -78237,7 +78239,7 @@ fn integration_activation_waiver_purge_summary_json(
             summary
                 .next_purge_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -78537,7 +78539,7 @@ fn integration_activation_waiver_erasure_summary_json(
             summary
                 .next_erasure_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -78795,7 +78797,7 @@ fn integration_activation_waiver_erasure_receipt_summary_json(
             summary
                 .next_receipt_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79061,7 +79063,7 @@ fn integration_activation_waiver_release_closure_summary_json(
             summary
                 .next_release_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79352,7 +79354,7 @@ fn integration_activation_waiver_release_signoff_summary_json(
             summary
                 .next_signoff_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79669,7 +79671,7 @@ fn integration_activation_waiver_release_certification_summary_json(
             summary
                 .next_certification_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -79991,7 +79993,7 @@ fn integration_activation_waiver_release_certification_remediation_summary_json(
             summary
                 .next_remediation_kind
                 .as_ref()
-                .map(|kind| string(kind))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -80013,7 +80015,7 @@ fn integration_activation_waiver_release_certification_remediation_summary_json(
             summary
                 .next_remediation_action
                 .as_ref()
-                .map(|action| string(action))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -84602,7 +84604,7 @@ fn bridge_json(bridge: &Bridge) -> JsonValue {
             bridge
                 .address
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
@@ -84737,7 +84739,7 @@ fn device_json(device: &Device) -> JsonValue {
             device
                 .room_id
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
     ])
@@ -85054,7 +85056,7 @@ fn command_result_json(result: &CommandResult) -> JsonValue {
             result
                 .message
                 .as_ref()
-                .map(|message| string(message))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
     ])
@@ -85920,14 +85922,14 @@ fn state_transition_audit_row_json(row: &StateTransitionAuditRow) -> JsonValue {
             "worker_kind",
             row.worker_kind
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
             "status",
             row.status
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         ("reason", string(row.reason)),
@@ -86079,14 +86081,14 @@ fn supervision_remediation_row_json(row: &SupervisionRemediationRow) -> JsonValu
             "worker_kind",
             row.worker_kind
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         (
             "status",
             row.status
                 .as_ref()
-                .map(|value| string(value))
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
         ("reason", string(row.reason)),
@@ -86216,7 +86218,7 @@ fn runtime_maintenance_window_json(row: &RuntimeMaintenanceWindowRow) -> JsonVal
             JsonValue::Array(
                 row.remediation_ids
                     .iter()
-                    .map(|remediation_id| string(remediation_id))
+                    .map(string)
                     .collect(),
             ),
         ),
@@ -92538,6 +92540,9 @@ fn value_kind_label(kind: smart_home_core::ValueKind) -> &'static str {
 }
 
 trait BridgeTransportLabel {
+    // Implemented only for small `Copy` enums, so taking `self` by value is the
+    // natural, zero-cost convention here despite the `as_*` naming heuristic.
+    #[allow(clippy::wrong_self_convention)]
     fn as_str(self) -> &'static str;
 }
 

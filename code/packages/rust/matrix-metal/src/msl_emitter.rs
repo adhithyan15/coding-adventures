@@ -1,3 +1,6 @@
+// The float literals here are intentional MSL codegen constants emitted into the
+// generated shader source, not approximations of std constants to be replaced.
+#![allow(clippy::approx_constant)]
 //! `msl_emitter` — the **MSL string generator** for specialised kernels.
 //!
 //! # MX05 Phase 4.2 — what this module is

@@ -154,9 +154,9 @@ fn select_best(entries: &[DirEntry], data: &[u8]) -> usize {
     let mut best = 0;
     for (i, e) in entries.iter().enumerate() {
         let b = &entries[best];
-        if e.area() > b.area() {
-            best = i;
-        } else if e.area() == b.area() && quality_rank(e, data) > quality_rank(b, data) {
+        if e.area() > b.area()
+            || (e.area() == b.area() && quality_rank(e, data) > quality_rank(b, data))
+        {
             best = i;
         }
     }

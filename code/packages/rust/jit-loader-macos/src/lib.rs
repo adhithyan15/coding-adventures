@@ -335,7 +335,7 @@ mod tests {
     ///   ret               → 0xD65F03C0
     fn return_42_bytes() -> [u8; 8] {
         let mut out = [0u8; 8];
-        out[0..4].copy_from_slice(&0xD28005_40u32.to_le_bytes());
+        out[0..4].copy_from_slice(&0xD280_0540_u32.to_le_bytes());
         out[4..8].copy_from_slice(&0xD65F03C0u32.to_le_bytes());
         out
     }
@@ -408,6 +408,9 @@ mod tests {
     }
 
     #[test]
+    // Intentionally asserts the constant boundary predicates that guard against
+    // overflow; a `const` block cannot express these runtime-worded checks.
+    #[allow(clippy::assertions_on_constants)]
     fn round_up_does_not_overflow_for_normal_inputs() {
         // round_up itself is plain arithmetic.  We exercise the bound
         // CodePage::new uses as a guard.  Synthesising a real

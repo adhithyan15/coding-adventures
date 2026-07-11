@@ -1529,6 +1529,10 @@ where
         Ok(response)
     }
 
+    // DNS-over-UDP exchange parameters (interface, resolver address, transaction
+    // id, query/response buffers, retry budget); the argument set is dictated by
+    // the protocol exchange, not incidental sprawl.
+    #[allow(clippy::too_many_arguments)]
     fn network_dns_exchange_udp_retry(
         &mut self,
         interface: u16,
@@ -1576,6 +1580,9 @@ where
         }
     }
 
+    // Primary+fallback DNS-over-UDP exchange; parameter set is fixed by the
+    // protocol (see network_dns_exchange_udp_retry).
+    #[allow(clippy::too_many_arguments)]
     fn network_dns_exchange_udp_fallback(
         &mut self,
         interface: u16,

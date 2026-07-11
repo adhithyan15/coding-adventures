@@ -270,6 +270,8 @@ impl fmt::Debug for LocalMemory {
 
 #[cfg(test)]
 mod tests {
+    // 3.14 etc. are arbitrary float test values, not approximations of PI.
+    #![allow(clippy::approx_constant)]
     use super::*;
 
     #[test]

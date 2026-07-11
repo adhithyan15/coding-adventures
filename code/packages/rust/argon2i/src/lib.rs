@@ -259,6 +259,9 @@ impl AddressStream {
     }
 }
 
+// The parameter list mirrors RFC 9106's FillSegment(r, lane, sl, ...) inputs;
+// keeping them positional matches the spec for auditability.
+#[allow(clippy::too_many_arguments)]
 fn fill_segment(
     memory: &mut [Vec<Vec<u64>>],
     r: usize,
@@ -309,6 +312,9 @@ fn fill_segment(
     }
 }
 
+// Parameters are the full Argon2 input set (RFC 9106 §3.1); validating them
+// together keeps one place that mirrors the spec's argument list.
+#[allow(clippy::too_many_arguments)]
 fn validate(
     password: &[u8],
     salt: &[u8],
@@ -353,6 +359,9 @@ fn validate(
     Ok(())
 }
 
+// The lane/block fill loops below are indexed by `i`/`lane` to mirror RFC 9106's
+// block-addressing pseudocode; index loops keep the code auditable against the spec.
+#[allow(clippy::needless_range_loop)]
 pub fn argon2i(
     password: &[u8],
     salt: &[u8],

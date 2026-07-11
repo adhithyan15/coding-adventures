@@ -60,6 +60,9 @@ fn pad4(buf: &mut Vec<u8>) {
 /// - `code_section_index` — 1-based section index for `.text` (default 1).
 pub struct CodeViewEmitter<'a> {
     reader: &'a DebugSidecarReader,
+    // Captured from the PE header for completeness of the emitter's inputs;
+    // CodeView symbol records are RVA-relative so it is not read directly yet.
+    #[allow(dead_code)]
     image_base: u64,
     symbol_table: &'a HashMap<String, u32>,
     code_rva: u32,

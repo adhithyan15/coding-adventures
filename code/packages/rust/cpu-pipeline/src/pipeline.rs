@@ -397,13 +397,13 @@ impl Pipeline {
                 }
 
                 // Replace flushed stages with bubbles.
-                for i in 0..flush_count {
+                for (i, slot) in next_stages.iter_mut().enumerate().take(flush_count) {
                     let mut bubble = PipelineToken::new_bubble();
                     bubble.stage_entered.insert(
                         self.config.stages[i].name.clone(),
                         self.cycle,
                     );
-                    next_stages[i] = Some(bubble);
+                    *slot = Some(bubble);
                 }
 
                 // Redirect PC and fetch from the correct target.
@@ -451,9 +451,7 @@ impl Pipeline {
                 next_stages[stall_point] = Some(bubble);
 
                 // Stages BEFORE the stall point are frozen.
-                for i in 0..stall_point {
-                    next_stages[i] = self.stages[i].clone();
-                }
+                next_stages[..stall_point].clone_from_slice(&self.stages[..stall_point]);
 
                 // PC does NOT advance during a stall.
             }

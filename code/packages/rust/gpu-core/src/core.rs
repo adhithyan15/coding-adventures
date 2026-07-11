@@ -305,6 +305,9 @@ impl std::fmt::Debug for GPUCore {
 mod tests {
     use super::*;
     use crate::opcodes::*;
+    // `GenericISA` is re-exported at the crate root but not imported into this
+    // module, so `use super::*` does not bring it into scope; import it directly.
+    use crate::generic_isa::GenericISA;
 
     #[test]
     fn test_new_core() {

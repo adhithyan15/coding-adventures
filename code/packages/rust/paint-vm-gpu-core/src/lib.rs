@@ -5,6 +5,12 @@
 //! geometry interpretation in one place so backend crates can focus on API
 //! plumbing, resource uploads, render passes, and readback.
 
+// Many plan-building helpers in this module take the full geometry/style context
+// (transform, clip, paint, gradient, stroke, blend, …) as explicit parameters
+// that mirror the GPU draw-call inputs. Bundling them into params structs would
+// add churn without improving clarity, so we allow the many-arguments lint here.
+#![allow(clippy::too_many_arguments)]
+
 use std::collections::HashMap;
 
 use paint_instructions::{

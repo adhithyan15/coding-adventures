@@ -863,12 +863,12 @@ fn validate_slot_default(slot: &SlotDecl, errors: &mut Vec<CompileError>) {
         }
 
         // Verify the default value matches the declared type.
-        let compatible = match (&slot.r#type, default) {
-            (SlotType::Text, SlotDefault::Text(_)) => true,
-            (SlotType::Number, SlotDefault::Number(_)) => true,
-            (SlotType::Bool, SlotDefault::Bool(_)) => true,
-            _ => false,
-        };
+        let compatible = matches!(
+            (&slot.r#type, default),
+            (SlotType::Text, SlotDefault::Text(_))
+                | (SlotType::Number, SlotDefault::Number(_))
+                | (SlotType::Bool, SlotDefault::Bool(_))
+        );
 
         if !compatible {
             errors.push(CompileError {

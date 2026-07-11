@@ -399,6 +399,9 @@ fn installed_handles() -> &'static Mutex<HashSet<u64>> {
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct KernelMetadata {
     pub n_in: usize,
+    // Recorded for completeness alongside `n_in`; not currently read by the
+    // dispatcher but kept so the metadata mirrors the kernel's full I/O arity.
+    #[allow(dead_code)]
     pub n_out: usize,
     /// Which IR input slot was folded.  Dispatcher uses this to
     /// pick which `ir_op.inputs()` entries to actually pass to the
@@ -463,6 +466,10 @@ pub(crate) fn record_test_kernel_metadata(
 /// mutex acquire inside `MetalExecutor::install_specialised_from_emitted`.
 /// Subsequent calls with the same handle are a single mutex acquire
 /// and a `HashSet::contains` — sub-microsecond.
+// Convenience wrapper over the `_with_origin` variant; retained (and referenced
+// from the docs below) as the origin-less entry point even though current call
+// sites all pass an explicit origin.
+#[allow(dead_code)]
 fn try_auto_install_specialised(specialised: &SpecialisedKernel) -> bool {
     try_auto_install_specialised_with_origin(specialised, None)
 }

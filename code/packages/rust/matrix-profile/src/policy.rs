@@ -114,6 +114,7 @@ impl DefaultPolicy {
     /// regardless of any narrowing/constant pattern.  Useful when a
     /// test just wants to confirm the dispatch path threads through
     /// the policy.
+    #[allow(dead_code)] // retained as API surface / scaffolding for dispatch-path tests
     fn forced_fire(
         observation: &ProfileObservation,
         op_kind: u8,

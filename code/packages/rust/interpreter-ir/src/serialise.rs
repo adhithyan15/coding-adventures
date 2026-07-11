@@ -602,6 +602,8 @@ mod tests {
         assert_eq!(instr.srcs[0], Operand::Int(-42));
     }
 
+    // `3.14` is an arbitrary float payload for round-tripping, not PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn round_trip_float_operand() {
         let mut module = IIRModule::new("t", "x");

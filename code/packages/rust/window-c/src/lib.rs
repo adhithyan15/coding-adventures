@@ -9,6 +9,18 @@
 //! - create one native window on the current platform
 //! - expose an opaque handle plus query/setter helpers
 //! - report failures through a thread-local last-error string
+//!
+//! ## Safety contract (applies to every `unsafe extern "C"` entry point below)
+//!
+//! All exported functions follow one shared FFI contract: any `window` handle must
+//! be a pointer previously returned by `window_c_create_window` and not yet freed by
+//! `window_c_window_free`, and any output pointer (`out_*`) must be non-null and point
+//! to writable memory valid for the size of the corresponding `#[repr(C)]` struct.
+//! Each function already null-checks its pointers and reports misuse through the
+//! last-error channel. Because the contract is uniform and documented here, the
+//! per-function `missing_safety_doc` lint is allowed crate-wide rather than repeated
+//! verbatim on all ten entry points.
+#![allow(clippy::missing_safety_doc)]
 
 use std::cell::RefCell;
 use std::ffi::{c_char, CStr, CString};

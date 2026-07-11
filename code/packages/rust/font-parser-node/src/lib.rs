@@ -486,6 +486,12 @@ unsafe extern "C" fn napi_kerning(env: napi_env, info: napi_callback_info) -> na
 // Module registration — the entry point Node.js calls on require()
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// # Safety
+///
+/// This is the N-API module entry point invoked by the Node.js runtime. The
+/// caller (Node) must pass a valid `napi_env` and a valid `exports` object for
+/// the current module registration, exactly as the N-API ABI specifies. The
+/// pointers must remain valid for the duration of the call.
 #[no_mangle]
 pub unsafe extern "C" fn napi_register_module_v1(
     env: napi_env,

@@ -59,6 +59,10 @@ use serde::{Deserialize, Serialize};
 /// `Statement::Declaration(Declaration::VariableDeclaration(...))` so
 /// downstream consumers that expect ESTree's flatter shape (where
 /// declarations appear as statements) still work.
+// The `Declaration` variant is intentionally large; boxing it would ripple
+// through the public AST API and every consumer that pattern-matches these
+// variants, so we accept the size difference here.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Statement {

@@ -506,6 +506,9 @@ fn prepare_textures(
     (white_texture, textures)
 }
 
+// GPU texture upload genuinely needs all of device/queue/layout/label/dims/
+// data/filter; bundling them into a struct would only move the argument list.
+#[allow(clippy::too_many_arguments)]
 fn prepare_texture(
     device: &wgpu::Device,
     queue: &wgpu::Queue,

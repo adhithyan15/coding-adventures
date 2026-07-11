@@ -1,3 +1,7 @@
+// The index loops here index matrix/polynomial coefficient arrays (`m`, `p`,
+// `out`, `basis_polys`) and use the index in the linear-algebra arithmetic; the
+// range form mirrors the algorithm, so keep it rather than iterating by element.
+#![allow(clippy::needless_range_loop)]
 //! Gosper's algorithm for indefinite hypergeometric summation.
 //!
 //! Track H2 — Rust port of `code/packages/python/cas-summation/src/cas_summation/gosper.py`

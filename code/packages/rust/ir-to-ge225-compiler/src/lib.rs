@@ -945,6 +945,9 @@ impl<'a> CodeGen<'a> {
     ///
     /// For `CMP_NE`, swap the skip sense (`BNZ` instead of `BZE`) and the
     /// result labels.
+    // The four `w_*` operands are distinct instruction word encodings plus the
+    // compare flags; passing them individually keeps the emit logic explicit.
+    #[allow(clippy::too_many_arguments)]
     fn emit_cmp(
         &self, instr: &IrInstruction, start_addr: usize,
         eq: bool, negate: bool,

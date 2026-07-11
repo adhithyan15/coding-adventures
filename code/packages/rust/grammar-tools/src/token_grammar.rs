@@ -521,8 +521,8 @@ fn parse_alias(after_pattern: &str, line_number: usize) -> Result<Option<String>
     if after_pattern.is_empty() {
         return Ok(None);
     }
-    if after_pattern.starts_with("->") {
-        let alias_name = after_pattern[2..].trim();
+    if let Some(alias_name) = after_pattern.strip_prefix("->") {
+        let alias_name = alias_name.trim();
         if alias_name.is_empty() {
             return Err(TokenGrammarError {
                 message: "Missing alias name after '->'".to_string(),
@@ -609,9 +609,9 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         //   2. If the next character is `@`, we have a magic comment.
         //   3. Scan forward to collect the key (non-whitespace chars).
         //   4. Skip whitespace, take the rest as the value.
-        if stripped.starts_with('#') {
+        if let Some(after_hash) = stripped.strip_prefix('#') {
             // Step 1: get everything after '#'
-            let after_hash = stripped[1..].trim_start();
+            let after_hash = after_hash.trim_start();
             // Step 2: check for '@'
             if let Some(rest) = after_hash.strip_prefix('@') {
                 // Step 3: key is the run of non-whitespace chars after '@'

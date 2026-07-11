@@ -3277,6 +3277,9 @@ fn emit_host_dialog(
 /// Non-`Row` children of a section are passed through the regular walker
 /// so the file still compiles if an author puts (say) a `Divider` between
 /// rows; an explicit comment is emitted documenting the unusual nesting.
+// Threads the full row-lowering context through the section walk; splitting
+// would obscure the flow.
+#[allow(clippy::too_many_arguments)]
 fn emit_table_section_rows(
     out: &mut String,
     section: &LayoutNode,
@@ -3864,6 +3867,9 @@ fn is_safe_swift_identifier(s: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    // Tests build `EmitOptions::default()` then set one field; the sequential
+    // form reads clearly and is behavior-identical to an initializer.
+    #![allow(clippy::field_reassign_with_default)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;

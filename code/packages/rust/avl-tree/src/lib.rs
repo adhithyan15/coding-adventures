@@ -149,9 +149,7 @@ pub fn avl_delete<T: Ord + Clone>(
     root: Option<Box<AVLNode<T>>>,
     value: &T,
 ) -> Option<Box<AVLNode<T>>> {
-    let Some(mut node) = root else {
-        return None;
-    };
+    let mut node = root?;
 
     match value.cmp(&node.value) {
         Ordering::Less => node.left = avl_delete(node.left.take(), value),

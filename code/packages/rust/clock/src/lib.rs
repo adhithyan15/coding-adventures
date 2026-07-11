@@ -110,6 +110,8 @@ pub struct Clock {
     cycle: u64,
     value: u8,
     total_ticks: u64,
+    /// Boxed edge callbacks; the trait-object vector is intentional here.
+    #[allow(clippy::type_complexity)]
     listeners: Vec<Box<dyn FnMut(&ClockEdge)>>,
 }
 

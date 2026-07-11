@@ -645,8 +645,6 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
     // commands (dist=0), which the decoder and encoder treat as pure-literal
     // blocks. This avoids injecting spurious bytes into the output stream.
 
-    const MAX_INSERT_PER_CMD: usize = 32; // max_insert_for_copy(4)
-
     let mut final_commands: Vec<Command> = Vec::new();
     let mut insert_buf: Vec<u8>         = Vec::new();
     let mut pos = 0usize;

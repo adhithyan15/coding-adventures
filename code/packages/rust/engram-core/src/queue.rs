@@ -208,6 +208,10 @@ pub fn build_session_queue_with_daily_limits(
     )
 }
 
+// Session-queue construction genuinely depends on many independent inputs
+// (cards, progress, deck filter, limits, positions, schedules); bundling them
+// into a params struct would add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn build_session_queue_with_limits(
     all_cards: &[Card],
     all_progress: &[CardProgress],

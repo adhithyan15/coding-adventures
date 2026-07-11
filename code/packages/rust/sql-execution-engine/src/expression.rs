@@ -45,7 +45,7 @@ use crate::errors::ExecutionError;
 ///
 /// * `node`    — an [`ASTNodeOrToken`] from the grammar-driven parser
 /// * `row_ctx` — the current row's values, keyed by column name
-///              and optionally by `"table.column"` qualified names
+///   and optionally by `"table.column"` qualified names
 ///
 /// # Returns
 ///

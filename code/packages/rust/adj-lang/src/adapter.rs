@@ -1035,6 +1035,10 @@ fn parse_unicodemath_math(source: &str) -> Result<MathExpr, AdapterError> {
         })
 }
 
+// The `\(…\)`, `\[…\]` and `$$…$$` branches intentionally share the same body
+// (`&s[2..len-2]`): they are distinct delimiter pairs of equal width, kept
+// separate for readability rather than merged into one `||` condition.
+#[allow(clippy::if_same_then_else)]
 fn strip_math_delimiters(source: &str) -> &str {
     let mut s = source.trim();
     loop {
@@ -1545,6 +1549,9 @@ fn inverse_hyperbolic_kind(expr: &MathExpr) -> Option<InverseHyperbolic> {
 }
 
 /// The three inverse hyperbolic functions the adapter lowers via logarithm identities.
+// The shared `Ar` prefix is the standard mathematical spelling
+// (arsinh/arcosh/artanh), not an accidental naming collision.
+#[allow(clippy::enum_variant_names)]
 #[derive(Clone, Copy)]
 enum InverseHyperbolic {
     /// `arsinh(x) = ln(x + (x^2 + 1)^0.5)`.

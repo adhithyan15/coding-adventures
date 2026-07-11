@@ -538,6 +538,8 @@ mod tests {
     // Test 7: Float number
     // -----------------------------------------------------------------
 
+    // `3.14` is arbitrary float serialization test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_serialize_float() {
         let result = serialize(&jfloat(3.14)).unwrap();
@@ -1212,6 +1214,8 @@ mod tests {
     // Test 58: Negative float
     // -----------------------------------------------------------------
 
+    // `-3.14` is arbitrary float serialization test data, not related to PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_serialize_negative_float() {
         let result = serialize(&jfloat(-3.14)).unwrap();

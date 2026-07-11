@@ -43,6 +43,15 @@
 //! 3. Default ECC = 23%.
 //! 4. Auto-select compact vs full (force-compact option is v0.2.0).
 
+// This encoder works over a mutable 2D module grid (`&mut Vec<Vec<bool>>`) that
+// the drawing routines mutate in place, and it walks the ISO 24778 layer and
+// capacity tables with 1-based indices (`COMPACT_CAP[layers]`, `FULL_CAP[layers]`,
+// with layers starting at 1). Both patterns are intrinsic to the spec's data
+// model, so we allow ptr_arg and needless_range_loop crate-wide rather than
+// contort the grid type or the layer-indexed loops.
+#![allow(clippy::ptr_arg)]
+#![allow(clippy::needless_range_loop)]
+
 pub use barcode_2d::{Barcode2DError, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
 pub use paint_instructions::PaintScene;
 
@@ -681,6 +690,10 @@ fn draw_orientation_and_mode_message(
 /// Place all data bits using the clockwise layer spiral.
 ///
 /// Fills the mode ring remaining positions first, then spirals outward.
+// The parameters are the grid + reservation mask + bit stream + geometry
+// (center, compact flag, dimensions) the spiral needs; bundling them would not
+// aid clarity.
+#[allow(clippy::too_many_arguments)]
 fn place_data_bits(
     modules: &mut Vec<Vec<bool>>,
     reserved: &mut Vec<Vec<bool>>,

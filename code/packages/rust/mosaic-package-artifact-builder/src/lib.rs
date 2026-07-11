@@ -775,8 +775,10 @@ fn emit_project_shell(
     let mut written: Vec<PathBuf> = Vec::new();
     match backend {
         Backend::React => {
-            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
-            react_opts.emit_project = true;
+            let react_opts = mosaic_emit_react::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -806,10 +808,12 @@ fn emit_project_shell(
             }
         }
         Backend::Electron => {
-            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
-            react_opts.emit_project = true;
             let npm_name = format!("{package_name}-electron");
-            react_opts.package_name = Some(npm_name.clone());
+            let react_opts = mosaic_emit_react::pipeline::EmitOptions {
+                emit_project: true,
+                package_name: Some(npm_name.clone()),
+                ..Default::default()
+            };
             let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -854,8 +858,7 @@ fn emit_project_shell(
             }
         }
         Backend::Html => {
-            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
-            html_opts.emit_project = true;
+            let html_opts = mosaic_emit_html::pipeline::EmitOptions { emit_project: true };
             let r = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -881,8 +884,7 @@ fn emit_project_shell(
             }
         }
         Backend::WebComponent => {
-            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
-            wc_opts.emit_project = true;
+            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions { emit_project: true };
             let r = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -904,8 +906,10 @@ fn emit_project_shell(
             }
         }
         Backend::Flutter => {
-            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
-            fl_opts.emit_project = true;
+            let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -974,8 +978,10 @@ fn emit_project_shell(
             written.push(component_nested);
         }
         Backend::Qt => {
-            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
-            qt_opts.emit_project = true;
+            let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1002,8 +1008,10 @@ fn emit_project_shell(
             }
         }
         Backend::SwiftUI => {
-            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
-            sw_opts.emit_project = true;
+            let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1035,8 +1043,10 @@ fn emit_project_shell(
             }
         }
         Backend::Xaml => {
-            let mut xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
-            xaml_opts.emit_project = true;
+            let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
+                emit_project: true,
+                ..Default::default()
+            };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
