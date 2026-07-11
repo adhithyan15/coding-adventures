@@ -111,7 +111,7 @@ pub struct PermissionChange {
 /// Returns None if the string is not a valid octal number.
 pub fn parse_octal_mode(s: &str) -> Option<u32> {
     // Must be all digits 0-7
-    if s.is_empty() || !s.chars().all(|c| c >= '0' && c <= '7') {
+    if s.is_empty() || !s.chars().all(|c| ('0'..='7').contains(&c)) {
         return None;
     }
     u32::from_str_radix(s, 8).ok()

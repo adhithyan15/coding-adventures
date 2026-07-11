@@ -17,6 +17,11 @@
 //! Were the bridge to decline the field member, the file would drop to
 //! WHITESPACE_ONLY and the arithmetic would NOT fold — assertion (2) would fail.
 
+// Literate-programming test docs: intentional prose paragraphs following lists.
+// clippy 1.97's doc-list-continuation lints flag them as mis-indented list
+// items; the formatting is deliberate, so allow crate-wide for this test.
+#![allow(clippy::doc_lazy_continuation, clippy::doc_overindented_list_items)]
+
 use std::process::Command;
 
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");

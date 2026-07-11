@@ -45,7 +45,7 @@ pub fn remove_with_parents(path: &str) -> Result<(), String> {
         match current.parent() {
             Some(parent) if parent != Path::new("") && parent != Path::new("/") && parent != Path::new(".") => {
                 let parent_str = parent.to_string_lossy();
-                if let Err(_) = fs::remove_dir(parent.to_path_buf()) {
+                if fs::remove_dir(parent).is_err() {
                     // Stop on first failure (parent might not be empty).
                     break;
                 }
