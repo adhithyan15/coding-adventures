@@ -1483,6 +1483,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "lstrip" | "rstrip" | "chomp" | "chars" | "bytes" | "split" | "include?"
                     | "start_with?" | "end_with?" | "index" | "replace" | "sub" | "gsub" | "to_i"
                     | "to_f" | "to_sym" | "empty?" | "tr" | "count" | "delete" | "squeeze"
+                    | "ljust" | "rjust" | "center" | "swapcase"
             ),
             Value::Sym(_) => matches!(
                 name,
@@ -2399,6 +2400,59 @@ pub const RUNTIME: &str = r##"mod __sir {
             "to_f" => Value::Float(str_to_f(&s)),
             "to_sym" => intern(&s),
             "empty?" => Value::Bool(s.is_empty()),
+            "ljust" | "rjust" | "center" => {
+                // Ruby `String#ljust`/`#rjust`/`#center(width, pad = " ")`: pad to
+                // `width` CHARS (not bytes) using `pad` cyclically.  `width <= the
+                // current char length` returns the string unchanged; `center` puts
+                // any odd extra pad char on the RIGHT (Ruby's rule).  An empty pad
+                // degrades to a single space rather than raising, holding the
+                // never-raise floor.  Char-based (`chars().count()` / `str_pad`) so
+                // a multibyte receiver is never split mid-codepoint.
+                let width = args.first().map(as_i64).unwrap_or(0);
+                let pad = match args.get(1) {
+                    Some(Value::Str(p)) if !p.is_empty() => p.to_string(),
+                    _ => " ".to_string(),
+                };
+                let cur = s.chars().count() as i64;
+                if width <= cur {
+                    return Value::Str(s);
+                }
+                // Clamp the fill count to a DoS bound so a hostile width (e.g.
+                // `"".ljust(10**12)`) cannot drive an unbounded allocation — the
+                // same ceiling `String#*` guards, but degrade-not-panic here since
+                // justify is a formatting method.
+                const MAX_PAD: i64 = 100_000_000;
+                let total = (width - cur).min(MAX_PAD) as usize;
+                let result = match name {
+                    "ljust" => format!("{}{}", s, str_pad(&pad, total)),
+                    "rjust" => format!("{}{}", str_pad(&pad, total), s),
+                    _ => {
+                        // center: any odd extra pad char goes on the RIGHT.
+                        let left = total / 2;
+                        format!("{}{}{}", str_pad(&pad, left), s, str_pad(&pad, total - left))
+                    }
+                };
+                Value::Str(Rc::from(result.as_str()))
+            }
+            "swapcase" => {
+                // Ruby `String#swapcase`: flip the case of each ASCII letter
+                // (leaving non-letters and non-ASCII chars untouched), matching the
+                // Python/Go/JS/TS runtimes byte-for-byte.  Iterating `chars()` keeps
+                // a multibyte receiver intact.
+                let swapped: String = s
+                    .chars()
+                    .map(|c| {
+                        if c.is_ascii_uppercase() {
+                            c.to_ascii_lowercase()
+                        } else if c.is_ascii_lowercase() {
+                            c.to_ascii_uppercase()
+                        } else {
+                            c
+                        }
+                    })
+                    .collect();
+                Value::Str(Rc::from(swapped.as_str()))
+            }
             "tr" => {
                 // Ruby `String#tr(from, to)`: position-wise char translation.  A
                 // shorter `to` repeats its last char; an empty `to` deletes
@@ -2488,6 +2542,23 @@ pub const RUNTIME: &str = r##"mod __sir {
             }
             _ => no_method_error(&recv, name),
         }
+    }
+
+    // Build a padding string of exactly `n` CHARS by repeating `pad`
+    // cyclically (truncating the final repeat).  `n == 0` or an empty `pad`
+    // yields `""` — the `ljust`/`rjust`/`center` callers guarantee a non-empty
+    // pad, so the empty-pad guard is purely defensive.  Char-based so a
+    // multibyte pad (e.g. `"ab…"`) is never split mid-codepoint.
+    fn str_pad(pad: &str, n: usize) -> String {
+        if n == 0 || pad.is_empty() {
+            return String::new();
+        }
+        let pad_chars: Vec<char> = pad.chars().collect();
+        let mut out = String::with_capacity(n);
+        for i in 0..n {
+            out.push(pad_chars[i % pad_chars.len()]);
+        }
+        out
     }
 
     // Ruby `String#to_i`: parse the longest leading `[+-]?\d+` prefix,

@@ -145,7 +145,9 @@ rather than panicking:
   - **Hash** (`Map`): `keys`, `values`, `size`, `has_key?`, `each`, `map`,
     `select`.
   - **String** (`Str`): `length`, `upcase`, `downcase`, `reverse`, `strip`,
-    `include?`, `split`.
+    `include?`, `split`, char-set `tr`/`count`/`delete`/`squeeze` (literal
+    sets), and justify `ljust`/`rjust`/`center`/`swapcase` (rune-aware; `center`
+    puts any odd extra pad char on the RIGHT, Ruby's rule).
   - **Numeric** (`Int`/`Float`): `abs`, `to_i`, `to_f`, `even?`, `odd?`,
     `zero?`, `times`; plus a universal `to_s`.
   - Block-taking methods apply the trailing closure via `apply_closure`;
