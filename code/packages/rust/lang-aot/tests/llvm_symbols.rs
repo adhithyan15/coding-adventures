@@ -4,7 +4,7 @@
 //! tagged 64-bit immediate — the LLVM backend carries it as an `i64` tagged word
 //! (`llvm_type_for("symbol") = i64`). `EQ` on symbols is `__dyn_equal` over
 //! the words. A *symbol* program result is returned verbatim (its tagged word) —
-//! the shared `lower_lisp_repr` must NOT `unbox_int` it (`>> 3` would corrupt the
+//! the shared `lower_dyn_repr` must NOT `unbox_int` it (`>> 3` would corrupt the
 //! id+tag), the same type-directed exit coercion that handles bools (W12b-2).
 //! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
 
@@ -18,7 +18,7 @@ fn host_triple() -> String {
     let o = std::process::Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine");
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
-fn lispy_runtime_c() -> std::path::PathBuf {
+fn dynval_runtime_c() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/dynval_runtime.c")
 }
 fn run(src: &str, module: &str) -> i32 {
@@ -31,7 +31,7 @@ fn run(src: &str, module: &str) -> i32 {
     let exe = tmp.join(module);
     let build = std::process::Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-x").arg("none").arg(lispy_runtime_c())
+        .arg("-x").arg("none").arg(dynval_runtime_c())
         .arg("-o").arg(&exe).output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));
     std::process::Command::new(&exe).output().expect("run").status.code().expect("exit code")

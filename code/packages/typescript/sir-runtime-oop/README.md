@@ -75,7 +75,10 @@ methods `each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
 (proc-lenient), predicates routed through SIR `truthy`; (item **M1c**) the
 **`Hash`** catalog (`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/
 `select`/`transform_values`/`transform_keys`/ Enumerable aggregates
-`find`/`any?`/`all?`/`none?`/`count`/`sort_by`/`min_by`/`max_by`/…); and (item **M1c**) the
+`find`/`any?`/`all?`/`none?`/`count`/`sort_by`/`min_by`/`max_by` and Enumerable
+breadth `group_by`/`partition`/`flat_map`/`collect_concat`/`reduce`/`inject`/`sum`
+(all yielding the `[k, v]` pair; `reduce`/`inject` use Ruby's `(memo, pair)`
+convention)/…); and (item **M1c**) the
 **`String`** catalog (`length`,
 `upcase`/`downcase`/`capitalize`, `reverse`, `strip`/`lstrip`/`rstrip`, `chomp`,
 `chars`/`bytes`, `split`, `include?`/`start_with?`/`end_with?`/`index`, `replace`,

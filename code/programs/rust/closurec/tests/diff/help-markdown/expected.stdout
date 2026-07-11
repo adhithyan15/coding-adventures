@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.234.14
+Version: 0.234.19
 
 ## Flags
 

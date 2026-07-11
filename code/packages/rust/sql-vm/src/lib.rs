@@ -1040,13 +1040,104 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | LENGTH   |  1   | Byte-length of a string (returns Integer or NULL)     |
 /// | UPPER    |  1   | ASCII-uppercase the string                            |
 /// | LOWER    |  1   | ASCII-lowercase the string                            |
-/// | TRIM     |  1   | Strip leading and trailing ASCII whitespace           |
-/// | LTRIM    |  1   | Strip leading ASCII whitespace                        |
-/// | RTRIM    |  1   | Strip trailing ASCII whitespace                       |
-/// | SUBSTR   | 2–3  | 1-indexed substring extraction                        |
+/// | TRIM     | 1–2  | Strip whitespace, or a given character set, from both ends |
+/// | LTRIM    | 1–2  | Strip whitespace, or a given character set, from the left  |
+/// | RTRIM    | 1–2  | Strip whitespace, or a given character set, from the right |
+/// | SUBSTR   | 2–3  | 1-indexed substring extraction (alias: SUBSTRING)     |
+/// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
+/// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
+/// Coerce a value to the text form TRIM operates on, matching SQLite's
+/// implicit cast: text is itself; an integer or boolean becomes its decimal
+/// digits (`trim(12321, '1')` → `"232"`). A NULL argument returns `Ok(None)`,
+/// the caller's signal to propagate NULL. Floats and blobs are declined — as
+/// with HEX/QUOTE above, their exact SQLite text form is subtle enough that we
+/// don't guess here.
+fn trim_coerce(name: &str, v: &SqlValue) -> Result<Option<String>, VmError> {
+    match v {
+        SqlValue::Null => Ok(None),
+        SqlValue::Text(s) => Ok(Some(s.clone())),
+        SqlValue::Int(i) => Ok(Some(i.to_string())),
+        SqlValue::Bool(b) => Ok(Some((*b as i64).to_string())),
+        other => Err(VmError::TypeMismatch(format!("{name} expects TEXT, got {other:?}"))),
+    }
+}
+
+/// The shared body of `TRIM` / `LTRIM` / `RTRIM`, parameterised by which end(s)
+/// to strip (`left`, `right`).
+///
+/// **One argument** keeps the historical behaviour — remove whitespace from the
+/// chosen end(s).
+///
+/// **Two arguments** switch to SQLite's *character-set* trim: the second
+/// argument is read as a bag of characters, and any leading (`left`) or
+/// trailing (`right`) character that appears in that bag is removed — repeated
+/// until a character outside the bag is reached. The bag is a *set of
+/// characters*, not a substring: order and repetition inside it don't matter.
+///
+/// ```text
+///   trim('xxhixx', 'x')    -> 'hi'      set = {x}
+///   trim('abcHIcba', 'abc') -> 'HI'     set = {a, b, c}
+///   ltrim('xyxhi', 'xy')   -> 'hi'      only the left end
+///   rtrim('hixyx', 'xy')   -> 'hi'      only the right end
+///   trim('héllo', 'h')     -> 'éllo'    operates on Unicode chars, not bytes
+///   trim('xhix', '')       -> 'xhix'    empty set removes nothing
+///   trim('xxhixx', NULL)   -> NULL      NULL in either argument propagates
+/// ```
+fn trim_builtin(name: &str, args: &[SqlValue], left: bool, right: bool) -> Result<SqlValue, VmError> {
+    // Validate arity *before* indexing. The grammar makes a call's argument list
+    // optional, so `TRIM()` parses and reaches here with an empty `args`; without
+    // this guard `args[0]` would panic (index out of bounds) — a reachable DoS on
+    // any untrusted SQL. Every sibling builtin checks arity first; we match that.
+    if args.is_empty() || args.len() > 2 {
+        return Err(VmError::TypeMismatch(format!("{name} expects 1 or 2 args, got {}", args.len())));
+    }
+
+    // Resolve the subject string, short-circuiting on a NULL argument.
+    let subject = match trim_coerce(name, &args[0])? {
+        None => return Ok(SqlValue::Null),
+        Some(s) => s,
+    };
+
+    if args.len() == 1 {
+        let trimmed = match (left, right) {
+            (true, true) => subject.trim(),
+            (true, false) => subject.trim_start(),
+            (false, true) => subject.trim_end(),
+            (false, false) => subject.as_str(),
+        };
+        return Ok(SqlValue::Text(trimmed.to_string()));
+    }
+
+    // Two-argument (character-set) form.
+    let set = match trim_coerce(name, &args[1])? {
+        None => return Ok(SqlValue::Null),
+        Some(s) => s,
+    };
+    // An empty trim-set matches nothing, so the subject is returned verbatim —
+    // no need to scan every character against the set.
+    if set.is_empty() {
+        return Ok(SqlValue::Text(subject));
+    }
+    // Materialise the set into a `HashSet` for O(1) membership. `str::contains`
+    // would be a linear scan of the set per subject character, making the whole
+    // trim O(N·M) in the subject/set lengths — a quadratic CPU vector an attacker
+    // controls (a long subject of set-members against a long set). The set is
+    // O(M) to build once, so overall cost drops to O(N + M).
+    let set_chars: std::collections::HashSet<char> = set.chars().collect();
+    let in_set = |c: char| set_chars.contains(&c);
+    let mut slice: &str = &subject;
+    if left {
+        slice = slice.trim_start_matches(in_set);
+    }
+    if right {
+        slice = slice.trim_end_matches(in_set);
+    }
+    Ok(SqlValue::Text(slice.to_string()))
+}
+
 fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
     match name {
         "LENGTH" => {
@@ -1082,40 +1173,57 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
         }
 
-        "TRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("TRIM expects 1 arg, got {}", args.len())));
+        "TRIM" => trim_builtin("TRIM", &args, true, true),
+
+        "LTRIM" => trim_builtin("LTRIM", &args, true, false),
+
+        "RTRIM" => trim_builtin("RTRIM", &args, false, true),
+
+        "CONCAT" => {
+            // CONCAT(x, y, …): concatenate every argument's text. A NULL argument
+            // contributes the empty string (it does NOT make the result NULL), so
+            // `concat('a', NULL, 'c')` = 'ac'. The result is always text; at least
+            // one argument is required. `trim_coerce` supplies the Int/Bool→text
+            // rule and declines Float/Blob (their SQLite text form is subtle).
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch("CONCAT expects at least 1 arg".into()));
             }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim().to_string())),
-                other => Err(VmError::TypeMismatch(format!("TRIM expects TEXT, got {:?}", other))),
+            let mut out = String::new();
+            for a in &args {
+                if let Some(s) = trim_coerce("CONCAT", a)? {
+                    out.push_str(&s);
+                }
             }
+            Ok(SqlValue::Text(out))
         }
 
-        "LTRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("LTRIM expects 1 arg, got {}", args.len())));
+        "CONCAT_WS" => {
+            // CONCAT_WS(sep, x, y, …): join the value arguments with `sep`. Unlike
+            // CONCAT, a NULL value argument is SKIPPED entirely (not joined as
+            // empty), so `concat_ws('-', 'a', NULL, 'c')` = 'a-c'. A NULL separator
+            // makes the whole result NULL. At least two arguments are required
+            // (the separator plus one value).
+            if args.len() < 2 {
+                return Err(VmError::TypeMismatch(format!(
+                    "CONCAT_WS expects at least 2 args, got {}",
+                    args.len()
+                )));
             }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_start().to_string())),
-                other => Err(VmError::TypeMismatch(format!("LTRIM expects TEXT, got {:?}", other))),
+            let sep = match trim_coerce("CONCAT_WS", &args[0])? {
+                None => return Ok(SqlValue::Null),
+                Some(s) => s,
+            };
+            let mut parts: Vec<String> = Vec::new();
+            for a in &args[1..] {
+                if let Some(s) = trim_coerce("CONCAT_WS", a)? {
+                    parts.push(s);
+                }
             }
+            Ok(SqlValue::Text(parts.join(&sep)))
         }
 
-        "RTRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("RTRIM expects 1 arg, got {}", args.len())));
-            }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_end().to_string())),
-                other => Err(VmError::TypeMismatch(format!("RTRIM expects TEXT, got {:?}", other))),
-            }
-        }
-
-        "SUBSTR" => {
+        // `SUBSTRING` is a spelling of `SUBSTR` — identical semantics.
+        "SUBSTR" | "SUBSTRING" => {
             if args.len() < 2 || args.len() > 3 {
                 return Err(VmError::TypeMismatch(format!("SUBSTR expects 2 or 3 args, got {}", args.len())));
             }
@@ -1320,6 +1428,158 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 out.push_str(&format!("{byte:02X}"));
             }
             Ok(SqlValue::Text(out))
+        }
+
+        "SIGN" => {
+            // SIGN(x): -1, 0, or +1 for a negative, zero, or positive number;
+            // NULL for NULL or a non-numeric argument.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("SIGN expects 1 arg, got {}", args.len())));
+            }
+            let s = match &args[0] {
+                SqlValue::Int(i) => (*i).signum(),
+                SqlValue::Float(f) => {
+                    if *f > 0.0 {
+                        1
+                    } else if *f < 0.0 {
+                        -1
+                    } else {
+                        0
+                    }
+                }
+                _ => return Ok(SqlValue::Null),
+            };
+            Ok(SqlValue::Int(s))
+        }
+
+        "UNICODE" => {
+            // UNICODE(s): the code point of the first character of `s`; NULL for a
+            // NULL or empty string.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("UNICODE expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Text(s) => match s.chars().next() {
+                    Some(c) => Ok(SqlValue::Int(c as i64)),
+                    None => Ok(SqlValue::Null),
+                },
+                SqlValue::Null => Ok(SqlValue::Null),
+                other => Err(VmError::TypeMismatch(format!("UNICODE expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "CHAR" => {
+            // CHAR(x1, x2, …): a string built from the characters whose code
+            // points are the integer arguments. Non-integer or out-of-range code
+            // points contribute nothing (SQLite is lax here); no args → "".
+            let mut out = String::with_capacity(args.len());
+            for a in &args {
+                if let SqlValue::Int(cp) = a {
+                    if let Some(c) = u32::try_from(*cp).ok().and_then(char::from_u32) {
+                        out.push(c);
+                    }
+                }
+            }
+            Ok(SqlValue::Text(out))
+        }
+
+        "ZEROBLOB" => {
+            // ZEROBLOB(n): a BLOB of `n` zero bytes (n < 0 → empty). NULL → NULL.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("ZEROBLOB expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Int(n) => {
+                    let len = (*n).max(0) as usize;
+                    // Cap the eager allocation. `n` is any i64 the query names, so
+                    // `zeroblob(9999999999)` would otherwise request ~10 GB and
+                    // OOM/abort the process. Real SQLite likewise errors past its
+                    // SQLITE_MAX_LENGTH; we reuse the engine's 1e6 guard (as with
+                    // GROUP BY / COUNT(DISTINCT)) and surface ResourceLimit.
+                    const MAX_BLOB_LEN: usize = 1_000_000;
+                    if len > MAX_BLOB_LEN {
+                        return Err(VmError::ResourceLimit(format!(
+                            "ZEROBLOB length {len} exceeds limit {MAX_BLOB_LEN}"
+                        )));
+                    }
+                    Ok(SqlValue::Blob(vec![0u8; len]))
+                }
+                other => Err(VmError::TypeMismatch(format!("ZEROBLOB expects INTEGER, got {:?}", other))),
+            }
+        }
+
+        "QUOTE" => {
+            // QUOTE(x): the value as an SQL literal — NULL as `NULL`, text
+            // single-quoted with doubled inner quotes, a blob as `X'…'` hex, and
+            // an integer as its digits. (Floats are declined; their exact SQLite
+            // text form is subtle, like HEX above.)
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("QUOTE expects 1 arg, got {}", args.len())));
+            }
+            let lit = match &args[0] {
+                SqlValue::Null => "NULL".to_string(),
+                SqlValue::Int(i) => i.to_string(),
+                SqlValue::Bool(b) => (*b as i64).to_string(),
+                SqlValue::Text(s) => format!("'{}'", s.replace('\'', "''")),
+                SqlValue::Blob(b) => {
+                    let mut h = String::with_capacity(b.len() * 2 + 3);
+                    h.push_str("X'");
+                    for byte in b {
+                        h.push_str(&format!("{byte:02X}"));
+                    }
+                    h.push('\'');
+                    h
+                }
+                other => return Err(VmError::TypeMismatch(format!("QUOTE does not support {:?}", other))),
+            };
+            Ok(SqlValue::Text(lit))
+        }
+
+        "MAX" | "MIN" => {
+            // The SCALAR forms of MAX/MIN — two-or-more arguments — return the
+            // largest / smallest argument, or NULL if ANY argument is NULL
+            // (SQLite semantics). The single-argument forms are the AGGREGATE
+            // max/min and are compiled to `FinalizeAgg`, never reaching here; the
+            // planner routes only the 2+-argument calls to `call_builtin`.
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch(format!("{name} expects at least 1 arg")));
+            }
+            if args.iter().any(|a| matches!(a, SqlValue::Null)) {
+                return Ok(SqlValue::Null);
+            }
+            let want_max = name == "MAX";
+            let mut best = args[0].clone();
+            for a in &args[1..] {
+                let ord = sql_cmp(a, &best);
+                let take = if want_max {
+                    ord == std::cmp::Ordering::Greater
+                } else {
+                    ord == std::cmp::Ordering::Less
+                };
+                if take {
+                    best = a.clone();
+                }
+            }
+            Ok(best)
+        }
+
+        "IIF" => {
+            // IIF(x, y, z) — SQLite's function-form conditional, equivalent to
+            // `CASE WHEN x THEN y ELSE z END`: `y` when `x` is truthy (SQL
+            // three-valued logic — a NULL or falsy `x` picks `z`). Arguments are
+            // already evaluated here; since this engine's expressions have no
+            // side effects, eagerly evaluating both branches is observationally
+            // identical to CASE's short-circuit.
+            if args.len() != 3 {
+                return Err(VmError::TypeMismatch(format!("IIF expects 3 args, got {}", args.len())));
+            }
+            let pick_then = is_truthy(&args[0]);
+            let mut it = args.into_iter();
+            let _cond = it.next();
+            let y = it.next().unwrap();
+            let z = it.next().unwrap();
+            Ok(if pick_then { y } else { z })
         }
 
         other => {
@@ -3495,5 +3755,230 @@ mod tests {
         assert_eq!(h(SqlValue::Blob(vec![0xde, 0xad, 0xbe, 0xef])), "DEADBEEF");
         assert_eq!(h(SqlValue::Int(255)), "323535"); // hex of the text "255"
         assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_sign_and_unicode() {
+        let sign = |v: SqlValue| call_builtin("SIGN", vec![v]).unwrap();
+        assert_eq!(sign(SqlValue::Int(-7)), SqlValue::Int(-1));
+        assert_eq!(sign(SqlValue::Int(0)), SqlValue::Int(0));
+        assert_eq!(sign(SqlValue::Float(3.5)), SqlValue::Int(1));
+        assert_eq!(sign(SqlValue::Text("x".into())), SqlValue::Null); // non-numeric
+        assert_eq!(sign(SqlValue::Null), SqlValue::Null);
+
+        let uni = |s: &str| call_builtin("UNICODE", vec![SqlValue::Text(s.into())]).unwrap();
+        assert_eq!(uni("abc"), SqlValue::Int(97));
+        assert_eq!(uni("Z"), SqlValue::Int(90));
+        assert_eq!(uni(""), SqlValue::Null); // empty → NULL
+        assert_eq!(call_builtin("UNICODE", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_char_and_zeroblob() {
+        assert_eq!(
+            call_builtin("CHAR", vec![SqlValue::Int(72), SqlValue::Int(105), SqlValue::Int(33)]).unwrap(),
+            SqlValue::Text("Hi!".into())
+        );
+        // No args → empty string.
+        assert_eq!(call_builtin("CHAR", vec![]).unwrap(), SqlValue::Text(String::new()));
+
+        assert_eq!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(3)]).unwrap(),
+            SqlValue::Blob(vec![0, 0, 0])
+        );
+        assert_eq!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Blob(vec![]) // negative length → empty
+        );
+        assert_eq!(call_builtin("ZEROBLOB", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        // Adversarial: a huge length is rejected, not eagerly allocated (DoS guard).
+        assert!(matches!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(9_999_999_999)]),
+            Err(VmError::ResourceLimit(_))
+        ));
+    }
+
+    #[test]
+    fn builtin_quote_renders_sql_literals() {
+        let q = |v: SqlValue| match call_builtin("QUOTE", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(q(SqlValue::Null), "NULL");
+        assert_eq!(q(SqlValue::Int(-7)), "-7");
+        assert_eq!(q(SqlValue::Text("it's".into())), "'it''s'"); // inner quote doubled
+        assert_eq!(q(SqlValue::Blob(vec![0xde, 0xad])), "X'DEAD'");
+    }
+
+    #[test]
+    fn builtin_scalar_max_min() {
+        let mx = |vs: Vec<SqlValue>| call_builtin("MAX", vs).unwrap();
+        let mn = |vs: Vec<SqlValue>| call_builtin("MIN", vs).unwrap();
+        assert_eq!(mx(vec![SqlValue::Int(3), SqlValue::Int(9), SqlValue::Int(5)]), SqlValue::Int(9));
+        assert_eq!(mn(vec![SqlValue::Int(3), SqlValue::Int(9), SqlValue::Int(5)]), SqlValue::Int(3));
+        // Any NULL argument → NULL.
+        assert_eq!(mx(vec![SqlValue::Int(1), SqlValue::Null, SqlValue::Int(3)]), SqlValue::Null);
+        // Text ordering.
+        assert_eq!(
+            mn(vec![SqlValue::Text("b".into()), SqlValue::Text("a".into()), SqlValue::Text("c".into())]),
+            SqlValue::Text("a".into())
+        );
+    }
+
+    #[test]
+    fn builtin_iif_selects_by_truthiness() {
+        let iif = |x: SqlValue| {
+            call_builtin("IIF", vec![x, SqlValue::Text("yes".into()), SqlValue::Text("no".into())]).unwrap()
+        };
+        assert_eq!(iif(SqlValue::Int(1)), SqlValue::Text("yes".into()));
+        assert_eq!(iif(SqlValue::Int(0)), SqlValue::Text("no".into()));
+        assert_eq!(iif(SqlValue::Null), SqlValue::Text("no".into())); // NULL → falsy
+        assert_eq!(iif(SqlValue::Bool(true)), SqlValue::Text("yes".into()));
+        // Wrong arity is a type error, not a panic.
+        assert!(call_builtin("IIF", vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+    }
+
+    #[test]
+    fn builtin_trim_one_arg_strips_whitespace() {
+        // The single-argument form keeps its historical whitespace behaviour.
+        let t = |name: &str, s: &str| call_builtin(name, vec![SqlValue::Text(s.into())]).unwrap();
+        assert_eq!(t("TRIM", "  hi  "), SqlValue::Text("hi".into()));
+        assert_eq!(t("LTRIM", "  hi  "), SqlValue::Text("hi  ".into()));
+        assert_eq!(t("RTRIM", "  hi  "), SqlValue::Text("  hi".into()));
+        // NULL propagates; a NULL string trims to NULL.
+        assert_eq!(call_builtin("TRIM", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_trim_two_arg_strips_character_set() {
+        let t = |name: &str, s: &str, set: &str| {
+            call_builtin(name, vec![SqlValue::Text(s.into()), SqlValue::Text(set.into())]).unwrap()
+        };
+        // The second argument is a *set* of characters, matched at each end.
+        assert_eq!(t("TRIM", "xxhixx", "x"), SqlValue::Text("hi".into()));
+        assert_eq!(t("TRIM", "abcHIcba", "abc"), SqlValue::Text("HI".into()));
+        assert_eq!(t("LTRIM", "xyxhi", "xy"), SqlValue::Text("hi".into()));
+        assert_eq!(t("RTRIM", "hixyx", "xy"), SqlValue::Text("hi".into()));
+        // Operates on Unicode characters, not bytes.
+        assert_eq!(t("TRIM", "héllo", "h"), SqlValue::Text("éllo".into()));
+        assert_eq!(t("TRIM", " oé oé", "é "), SqlValue::Text("oé o".into()));
+        // Stripping everything yields the empty string.
+        assert_eq!(t("TRIM", "aaa", "a"), SqlValue::Text("".into()));
+        // An empty trim-set removes nothing.
+        assert_eq!(t("TRIM", "xhix", ""), SqlValue::Text("xhix".into()));
+    }
+
+    #[test]
+    fn builtin_trim_two_arg_null_and_coercion() {
+        // NULL in either argument propagates.
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Text("xxhixx".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Null, SqlValue::Text("x".into())]).unwrap(),
+            SqlValue::Null
+        );
+        // Numeric arguments coerce to their decimal text, like real SQLite:
+        //   trim(12321, '1') -> '232',  trim('5xx', 5) -> 'xx'
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Int(12321), SqlValue::Text("1".into())]).unwrap(),
+            SqlValue::Text("232".into())
+        );
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Text("5xx".into()), SqlValue::Int(5)]).unwrap(),
+            SqlValue::Text("xx".into())
+        );
+        // Three arguments is an arity error, not a panic.
+        assert!(call_builtin(
+            "TRIM",
+            vec![SqlValue::Text("a".into()), SqlValue::Text("b".into()), SqlValue::Text("c".into())]
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn builtin_trim_zero_args_is_error_not_panic() {
+        // The grammar lets `TRIM()` parse (the argument list is optional), so an
+        // empty `args` must be a clean error — never an out-of-bounds panic.
+        for name in ["TRIM", "LTRIM", "RTRIM"] {
+            assert!(call_builtin(name, vec![]).is_err(), "{name}() should error, not panic");
+        }
+    }
+
+    #[test]
+    fn builtin_concat_joins_all_arguments() {
+        let c = |vs: Vec<SqlValue>| call_builtin("CONCAT", vs).unwrap();
+        assert_eq!(
+            c(vec![SqlValue::Text("a".into()), SqlValue::Text("b".into()), SqlValue::Text("c".into())]),
+            SqlValue::Text("abc".into())
+        );
+        // A NULL argument contributes the empty string (does not nullify).
+        assert_eq!(
+            c(vec![SqlValue::Text("a".into()), SqlValue::Null, SqlValue::Text("c".into())]),
+            SqlValue::Text("ac".into())
+        );
+        // Integers/booleans coerce to their decimal text.
+        assert_eq!(
+            c(vec![SqlValue::Int(12), SqlValue::Text("x".into())]),
+            SqlValue::Text("12x".into())
+        );
+        // All-NULL concatenation is the empty string, not NULL.
+        assert_eq!(c(vec![SqlValue::Null]), SqlValue::Text("".into()));
+        // Zero arguments is an arity error.
+        assert!(call_builtin("CONCAT", vec![]).is_err());
+        // Floats are declined (their SQLite text form is subtle), like HEX/QUOTE.
+        assert!(call_builtin("CONCAT", vec![SqlValue::Float(2.5)]).is_err());
+    }
+
+    #[test]
+    fn builtin_concat_ws_joins_with_separator() {
+        let c = |vs: Vec<SqlValue>| call_builtin("CONCAT_WS", vs).unwrap();
+        assert_eq!(
+            c(vec![
+                SqlValue::Text("-".into()),
+                SqlValue::Text("a".into()),
+                SqlValue::Text("b".into()),
+                SqlValue::Text("c".into()),
+            ]),
+            SqlValue::Text("a-b-c".into())
+        );
+        // NULL value arguments are SKIPPED entirely (not joined as empty).
+        assert_eq!(
+            c(vec![
+                SqlValue::Text("-".into()),
+                SqlValue::Text("a".into()),
+                SqlValue::Null,
+                SqlValue::Text("c".into()),
+            ]),
+            SqlValue::Text("a-c".into())
+        );
+        // All-NULL values → empty string (separator never appears).
+        assert_eq!(
+            c(vec![SqlValue::Text("-".into()), SqlValue::Null, SqlValue::Null]),
+            SqlValue::Text("".into())
+        );
+        // A NULL separator makes the whole result NULL.
+        assert_eq!(
+            c(vec![SqlValue::Null, SqlValue::Text("a".into()), SqlValue::Text("b".into())]),
+            SqlValue::Null
+        );
+        // Fewer than two arguments is an arity error.
+        assert!(call_builtin("CONCAT_WS", vec![SqlValue::Text("-".into())]).is_err());
+    }
+
+    #[test]
+    fn builtin_substring_is_an_alias_of_substr() {
+        // SUBSTRING must behave identically to SUBSTR for every arity.
+        for args in [
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(2)],
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(2), SqlValue::Int(3)],
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(-2), SqlValue::Int(1)],
+        ] {
+            assert_eq!(
+                call_builtin("SUBSTRING", args.clone()).unwrap(),
+                call_builtin("SUBSTR", args).unwrap(),
+            );
+        }
     }
 }

@@ -93,7 +93,7 @@ LANG04  aot-core                  ← AOT (consumes profiles)
 LANG15  vm-runtime                ← linkable C ABI
 LANG16  gc-core                   ← heap + GC algorithms
 LANG20  lang-runtime-core         ← THIS CRATE — multi-language overlay
-        ├── lispy-runtime         (PR 2 — Lisp/Scheme/Twig/Clojure)
+        ├── dynval-runtime         (PR 2 — Lisp/Scheme/Twig/Clojure)
         ├── ruby-runtime          (future)
         ├── js-runtime            (future)
         ├── smalltalk-runtime     (future)

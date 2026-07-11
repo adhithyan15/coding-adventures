@@ -2,6 +2,86 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.19] - 2026-07-11
+
+### Added — CLOC12.180: computed member keys end-to-end
+
+Picks up javascript-parser 0.44.0, whose bridge now lowers a computed `[expr]`
+member key to `PropertyKey::Expression`. Computed keys — in a class field
+(`[k] = v`), a class method (`[k](){}`), or an object literal (`{[k]: v}`) — now
+survive the full closurec pipeline instead of dropping to WHITESPACE_ONLY. New
+e2e diff fixture `tests/diff/simple-computed-key/`:
+`class C { [k] = 1 + 2 }` → `class C{[k]=3;}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the computed field's
+initializer: `1 + 2` folds to `3`. Before this bridge change the computed key
+declined, dropping the file to WHITESPACE_ONLY (`class C{[k]=1+2};`).
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
+## [0.234.18] - 2026-07-11
+
+### Added — CLOC12.179: private accessors end-to-end
+
+Picks up javascript-parser 0.43.0, whose bridge now lowers a private getter /
+setter (`get #x(){}`, `set #x(v){}`) to a `ClassMember::Method` with
+`MethodKind::Get` / `MethodKind::Set` and a `PropertyKey::PrivateName` key. A
+private accessor now survives the full closurec pipeline. New e2e diff fixture
+`tests/diff/simple-private-getter/`:
+`class C { get #x(){ return 1 + 2 } }` → `class C{get #x(){return 3}}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the getter's body: `1 + 2`
+folds to `3`. Before this bridge extension the private getter declined, dropping
+the file to WHITESPACE_ONLY (`class C{get #x(){return 1+2}};`). Version-synced
+cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
+## [0.234.17] - 2026-07-11
+
+### Added — CLOC12.178: private methods end-to-end
+
+Picks up javascript-parser 0.42.0, whose bridge now lowers a
+`private_method_definition` node to a `ClassMember::Method` with a
+`PropertyKey::PrivateName` key. A private method now survives the full closurec
+pipeline. New e2e diff fixture `tests/diff/simple-private-method/`:
+`class C { #m(){ return 1 + 2 } }` → `class C{#m(){return 3}}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the private method's body:
+`1 + 2` folds to `3`. Before this bridge change the private method declined,
+dropping the file to WHITESPACE_ONLY (`class C{#m(){return 1+2}};`, arithmetic
+intact). Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout.
+PATCH.
+
+## [0.234.16] - 2026-07-11
+
+### Added — CLOC12.177 PR2: private class fields end-to-end
+
+Picks up javascript-parser 0.41.0, whose bridge now lowers a private field's
+`PRIVATE_NAME` key to `PropertyKey::PrivateName`. A private field now survives the
+full closurec pipeline. New e2e diff fixture `tests/diff/simple-private-field/`:
+`class C { #x = 1 + 2 }` → `class C{#x=3;}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the private field's
+initializer: `1 + 2` folds to `3`. Before this bridge change the private field
+declined, dropping the file to WHITESPACE_ONLY (`class C{#x=1+2};`, arithmetic
+intact). Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout.
+PATCH.
+
+## [0.234.15] - 2026-07-11
+
+### Added — CLOC12.176 PR2: static-init blocks end-to-end
+
+Picks up javascript-parser 0.40.0, whose bridge now produces
+`ClassMember::StaticBlock`. A `static { … }` block now survives the full closurec
+pipeline. New e2e diff fixture `tests/diff/simple-static-block/`:
+`class C { static { x = 1 + 2 } }` → `class C{static{x=3}}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the block's statement list:
+the body's `1 + 2` folds to `3`. Before this bridge change the `static_block`
+member declined, dropping the file to WHITESPACE_ONLY
+(`class C{static{x=1+2}};`, arithmetic intact). The existing WHITESPACE_ONLY
+fixtures (`minify_class_static_block`, `minify_class_static_blocks`) exercise the
+emitter's grammar-AST path; this one exercises the typed-AST bridge + fold path.
+PATCH.
+
 ## [0.234.14] - 2026-07-11
 
 ### Added — CLOC12.175 PR2: class fields end-to-end

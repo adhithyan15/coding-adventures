@@ -27,7 +27,9 @@ The **demonstrated language** of PL07: a four-division program (IDENTIFICATION
 and PROCEDURE required; ENVIRONMENT and DATA optional), `WORKING-STORAGE` data
 entries with level numbers / `PICTURE` / `VALUE`, and PROCEDURE paragraphs of
 sentences built from the core verbs (`MOVE`, `DISPLAY`, `ACCEPT`,
-`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … GIVING`, `PERFORM`, `GO TO`, `IF … ELSE`,
+`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … GIVING`, `COMPUTE … = <expr>` with a
+precedence-layered arithmetic expression (`+ - * / **`, unary sign, parentheses)
+and optional `ROUNDED` / `ON SIZE ERROR`, `PERFORM`, `GO TO`, `IF … ELSE`,
 `STOP RUN`), plus a minimal ENVIRONMENT (CONFIGURATION / INPUT-OUTPUT sections).
 
 The long tail (full FD record descriptions, `REDEFINES`/`OCCURS`, `88`

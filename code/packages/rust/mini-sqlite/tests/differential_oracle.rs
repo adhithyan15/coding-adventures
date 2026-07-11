@@ -442,6 +442,149 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT HEX(id) AS hi, HEX(name) AS hn FROM t ORDER BY id",
     },
+    // --- More scalar functions: SIGN / UNICODE / CHAR / ZEROBLOB / QUOTE. ---
+    Case {
+        id: "sign",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, -7), (2, 0), (3, 42)",
+        ],
+        query: "SELECT SIGN(n) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "unicode",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'abc'), (2, 'Z')",
+        ],
+        query: "SELECT UNICODE(s) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "char_fn",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1)",
+        ],
+        query: "SELECT CHAR(72,105,33) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "zeroblob",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 3), (2, 0)",
+        ],
+        query: "SELECT ZEROBLOB(n) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "quote",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT, n INTEGER)",
+            "INSERT INTO t VALUES (1, 'abc', -7), (2, NULL, 5)",
+        ],
+        query: "SELECT QUOTE(s) AS qs, QUOTE(n) AS qn FROM t ORDER BY id",
+    },
+    // IIF(x, y, z) — the function form of CASE WHEN x THEN y ELSE z END.
+    Case {
+        id: "iif",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 8), (2, 2), (3, NULL)",
+        ],
+        query: "SELECT IIF(n > 5, 'big', 'small') AS r FROM t ORDER BY id",
+    },
+    // Multi-argument MAX/MIN are the SCALAR forms (return the largest/smallest
+    // argument, NULL if any is NULL) — distinct from the 1-arg aggregate.
+    Case {
+        id: "scalar_max_min",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 7), (2, 20)",
+        ],
+        query: "SELECT MAX(n, 10, 3) AS mx, MIN(n, 10, 3) AS mn FROM t ORDER BY id",
+    },
+    Case {
+        id: "scalar_max_null",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 5), (2, NULL)",
+        ],
+        query: "SELECT MAX(n, 3) AS r FROM t ORDER BY id",
+    },
+    // The single-argument aggregate MAX/MIN still work (regression guard).
+    Case {
+        id: "agg_max_min_still_work",
+        setup: &[
+            "CREATE TABLE t (dept TEXT, sal INTEGER)",
+            "INSERT INTO t VALUES ('a', 10), ('a', 30), ('b', 20)",
+        ],
+        query: "SELECT dept, MAX(sal), MIN(sal) FROM t GROUP BY dept ORDER BY dept",
+    },
+    // TRIM/LTRIM/RTRIM with a second argument strip a *set of characters*
+    // rather than whitespace: trim('xxhixx','x') -> 'hi'.
+    Case {
+        id: "trim_charset",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'xxhixx'), (2, 'yyworldyy')",
+        ],
+        query: "SELECT TRIM(s, 'xy') AS t, LTRIM(s, 'xy') AS l, RTRIM(s, 'xy') AS r FROM t ORDER BY id",
+    },
+    // A multi-character set behaves as a bag: any of {a,b,c} at either end goes.
+    Case {
+        id: "trim_charset_multi",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'abcHIcba'), (2, 'aaa')",
+        ],
+        query: "SELECT TRIM(s, 'abc') AS r FROM t ORDER BY id",
+    },
+    // NULL in the trim-set propagates; the single-argument whitespace form and
+    // an empty set are both regression-guarded here.
+    Case {
+        id: "trim_charset_null_and_edge",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, '  hi  '), (2, 'xhix')",
+        ],
+        query: "SELECT TRIM(s) AS ws, TRIM(s, NULL) AS tn, TRIM(s, '') AS te FROM t ORDER BY id",
+    },
+    // CONCAT joins all arguments; a NULL contributes the empty string (it does
+    // not nullify the result), and integers coerce to text.
+    Case {
+        id: "concat",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a TEXT, b TEXT)",
+            "INSERT INTO t VALUES (1, 'foo', 'bar'), (2, 'x', NULL)",
+        ],
+        query: "SELECT CONCAT(a, b, id) AS r FROM t ORDER BY id",
+    },
+    // CONCAT_WS joins the value arguments with a separator, SKIPPING NULLs; a
+    // NULL separator makes the whole result NULL.
+    Case {
+        id: "concat_ws",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a TEXT, b TEXT, c TEXT)",
+            "INSERT INTO t VALUES (1, 'a', 'b', 'c'), (2, 'a', NULL, 'c')",
+        ],
+        query: "SELECT CONCAT_WS('-', a, b, c) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "concat_ws_null_sep",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a TEXT)",
+            "INSERT INTO t VALUES (1, 'a')",
+        ],
+        query: "SELECT CONCAT_WS(NULL, a, 'b') AS r FROM t ORDER BY id",
+    },
+    // SUBSTRING is a spelling of SUBSTR (2- and 3-argument forms).
+    Case {
+        id: "substring_alias",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'hello')",
+        ],
+        query: "SELECT SUBSTRING(s, 2) AS a, SUBSTRING(s, 2, 3) AS b FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

@@ -5,7 +5,7 @@
 //! naive-frontend way: a variable written in 2+ places is promoted to a stack
 //! slot (`alloca`), each assignment a `store`, each read a `load` (`opt -mem2reg`
 //! would collapse them). Two supporting fixes: a `jmp_if` whose condition is the
-//! `i64` `lispy_truthy` result compares against zero (not `trunc void`), and a
+//! `i64` `dyn_truthy` result compares against zero (not `trunc void`), and a
 //! clause block that emits no instructions still gets an explicit fallthrough `br`.
 //! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
 
@@ -19,7 +19,7 @@ fn host_triple() -> String {
     let o = std::process::Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine");
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
-fn lispy_runtime_c() -> std::path::PathBuf {
+fn dynval_runtime_c() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/dynval_runtime.c")
 }
 fn run(src: &str, module: &str) -> i32 {
@@ -32,7 +32,7 @@ fn run(src: &str, module: &str) -> i32 {
     let exe = tmp.join(module);
     let build = std::process::Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-x").arg("none").arg(lispy_runtime_c())
+        .arg("-x").arg("none").arg(dynval_runtime_c())
         .arg("-o").arg(&exe).output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));
     std::process::Command::new(&exe).output().expect("run").status.code().expect("exit code")

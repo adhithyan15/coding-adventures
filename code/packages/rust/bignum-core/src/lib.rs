@@ -74,6 +74,11 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
 
+// The exact-rational rung (NUM-2) lives in its own module and is built entirely on the
+// `BigInteger` below. It is re-exported here so consumers write `bignum_core::BigRational`.
+pub mod rational;
+pub use rational::{BigRational, ParseRatioError};
+
 // ===========================================================================
 //  Sign
 // ===========================================================================
@@ -1778,3 +1783,11 @@ mod tests {
         assert_eq!(BigInteger::from_u64(999).try_pow(0, 1).unwrap(), BigInteger::one());
     }
 }
+
+// ===========================================================================
+//  NUM-3 — exact base-10 decimals, built on the BigInteger above.
+//  (Declared here, at the end of the file, so it never textually collides with
+//  the other numeric-rung module declarations near the top.)
+// ===========================================================================
+pub mod decimal;
+pub use decimal::{BigDecimal, ParseDecimalError, RoundingMode};

@@ -34,16 +34,22 @@
 //! - [`try_parse_cobol`] — the fully fallible form (lexical *and* parse errors → `Err`).
 
 use coding_adventures_cobol_lexer::{tokenize_cobol, try_tokenize_cobol};
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 mod _grammar;
 
 /// Create a [`GrammarParser`] wired to the COBOL grammar and tokens (with the
 /// lexer's column-strip hook), ready to call `.parse()`. Uses the panicking
 /// tokenizer; for the fully fallible path use [`try_parse_cobol`].
+///
+/// The parser opts into the shared recursion-depth cap
+/// ([`DEFAULT_MAX_RULE_DEPTH`]). Deeply-nested syntax — e.g. hundreds of nested
+/// `IF … IF … IF …` — recurses once per level through `parse_rule`; without a
+/// cap that overflows the *native* stack, an uncatchable process abort. With
+/// the cap it surfaces as a recoverable [`GrammarParseError`] instead.
 pub fn create_cobol_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_cobol(source);
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(DEFAULT_MAX_RULE_DEPTH)
 }
 
 /// Parse COBOL-60 `source` into a [`GrammarASTNode`] CST rooted at `"program"`.
@@ -59,6 +65,7 @@ pub fn parse_cobol(source: &str) -> GrammarASTNode {
 pub fn try_parse_cobol(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_cobol(source)?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
+        .with_max_depth(DEFAULT_MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| format!("{e}"))
 }
@@ -218,6 +225,82 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // COMPUTE and arithmetic expressions
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn compute_with_operator_precedence() {
+        // `A + B * C ** D` must nest so that ** binds tightest, then *, then +.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    COMPUTE RESULT = A + B * C ** D.",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        // One additive expr at the top; the multiplicative and exponent layers
+        // each appear once, proving the precedence cascade was built.
+        assert_eq!(count_rule(&ast, "arith_expr"), 1);
+        assert_eq!(count_rule(&ast, "arith_term"), 2); // A, and (B * C ** D)
+        assert_eq!(count_rule(&ast, "arith_factor"), 3); // A, B, (C ** D)
+    }
+
+    #[test]
+    fn compute_parentheses_regroup_precedence() {
+        // Parentheses force the addition to evaluate first: a nested arith_expr.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    COMPUTE X = (A + B) * C.",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        // The parenthesised `A + B` is a second, nested arith_expr.
+        assert_eq!(count_rule(&ast, "arith_expr"), 2);
+    }
+
+    #[test]
+    fn compute_rounded_and_on_size_error() {
+        // ROUNDED and the ON SIZE ERROR clause both parse; the clause carries a
+        // statement to run on overflow.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            // Split across cards so no line exceeds the 72-column code area
+            // (a COBOL statement flows freely from one card to the next).
+            "    COMPUTE TOTAL ROUNDED = PRICE * QTY",
+            "        ON SIZE ERROR DISPLAY \"OVR\".",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        assert!(has_rule(&ast, "size_error"));
+        // The overflow handler is an ordinary statement (a DISPLAY here).
+        assert!(has_rule(&ast, "display_stmt"));
+    }
+
+    #[test]
+    fn compute_negative_literal_vs_subtraction() {
+        // `A - 3` (spaced) is subtraction; `-3` (unspaced) would be a negative
+        // literal. Here we exercise the binary minus.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    COMPUTE D = A - 3.",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        assert_eq!(count_rule(&ast, "arith_term"), 2); // A and 3, split by MINUS
+    }
+
+    // ----------------------------------------------------------------------
     // ENVIRONMENT DIVISION (optional, minimal)
     // ----------------------------------------------------------------------
 
@@ -284,6 +367,32 @@ mod tests {
     fn missing_procedure_division_is_error() {
         let src = program(&["IDENTIFICATION DIVISION.", "PROGRAM-ID. P."]);
         assert!(try_parse_cobol(&src).is_err());
+    }
+
+    /// Deeply-nested `IF … IF … IF …` recurses once per level through the
+    /// generic `parse_rule`. Without the depth cap this overflows the native
+    /// stack — an uncatchable process abort. With [`DEFAULT_MAX_RULE_DEPTH`]
+    /// (opted into by [`create_cobol_parser`] / [`try_parse_cobol`]) it must
+    /// come back as a recoverable `Err`. One `IF` per card so the fixed
+    /// 80-column format doesn't truncate them; a statement flows freely across
+    /// cards, so the nest is genuinely deep. 4096 levels is far past the cap.
+    #[test]
+    fn deeply_nested_if_is_a_clean_error_not_a_stack_overflow() {
+        let mut lines: Vec<String> = vec![
+            "IDENTIFICATION DIVISION.".into(),
+            "PROGRAM-ID. P.".into(),
+            "PROCEDURE DIVISION.".into(),
+            "MAIN.".into(),
+        ];
+        for _ in 0..4096 {
+            lines.push("    IF GROSS-PAY IS GREATER THAN ZERO".into());
+        }
+        lines.push("        DISPLAY ZERO.".into());
+        lines.push("    STOP RUN.".into());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = try_parse_cobol(&program(&refs)).unwrap_err();
+        assert!(err.to_lowercase().contains("nest") || err.to_lowercase().contains("depth"),
+            "depth refusal should be self-explanatory, got: {err}");
     }
 
     /// A lexical error (stray `@` in the code area) surfaces as an `Err`.

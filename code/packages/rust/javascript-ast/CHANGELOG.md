@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.36.0] - 2026-07-11
+
+### Added — CLOC12.177 PR1: private class-member names (`#x` / `#m()`)
+
+New `PrivateName { cv, name }` struct and a `PropertyKey::PrivateName(PrivateName)`
+variant — the key of a private class field (`#x = 1`) or method (`#m(){}`),
+ESTree's `PrivateIdentifier`. The `name` holds the bare name **without** the
+leading `#` (mirroring `Identifier`); the emitter prepends it.
+
+Because `PropertyKey` is `#[serde(untagged)]`, a bare `{ cv, name }` `PrivateName`
+would be structurally identical to an `Identifier` and the deserializer would
+silently pick whichever variant comes first (a `#x` key round-tripping back as a
+plain `x` — data loss). The payload therefore serializes under the distinct key
+`private_name` (`#[serde(rename)]`), giving the variant a unique required field;
+the Rust field stays `name` for API symmetry. Two round-trip tests pin this.
+
+MINOR. Member *access* (`this.#x`) is a distinct later node.
+
 ## [0.35.0] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` (static initialization blocks)

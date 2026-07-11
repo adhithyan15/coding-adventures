@@ -60,7 +60,7 @@ use coding_adventures_javascript_ast::{
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
-        OptionalCallExpression, OptionalMemberExpression, Property,
+        OptionalCallExpression, OptionalMemberExpression, PrivateName, Property,
         PropertyKey, PropertyKind, RegExpLiteral, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -1230,9 +1230,10 @@ fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// otherwise the `async` would be silently dropped, a semantics-changing
 /// miscompile. (Declining the member drops the whole file to WHITESPACE_ONLY.)
 ///
-/// `private_method_definition`, `static_block`, and `async_method` member nodes
-/// are forms this slice does not model — they DECLINE (safe WHITESPACE_ONLY
-/// fallback) rather than surface a mis-emit.
+/// `static_block` (CLOC12.176), `private_method_definition` (CLOC12.178), and
+/// `class_field_declaration` (CLOC12.175) member nodes are modelled; an
+/// `async_method` node is a form this slice does not model — it DECLINES (safe
+/// WHITESPACE_ONLY fallback) rather than surface a mis-emit.
 fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeError> {
     // A `class_element` carries at most one *word* modifier — `static` (which
     // we model) or `async` (which we do not). It may also carry a benign
@@ -1252,13 +1253,20 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
             }
         }
     }
-    // The member itself is a *single* child node. Two shapes are modelled:
-    // a plain `method_definition` (→ `ClassMember::Method`) and a
-    // `class_field_declaration` (→ `ClassMember::Field`, CLOC12.175 PR2). The
-    // grammar's `async_method` / `private_method_definition` / `static_block`
-    // nodes are forms this slice does not represent, so they DECLINE (safe
-    // WHITESPACE_ONLY fallback). (Because these are *distinct nodes*, not just
-    // leading tokens, the node kind must be checked.)
+    // The member itself is a *single* child node. Four shapes are modelled:
+    // a plain `method_definition` (→ `ClassMember::Method`), a
+    // `class_field_declaration` (→ `ClassMember::Field`, CLOC12.175 PR2), a
+    // `static_block` (→ `ClassMember::StaticBlock`, CLOC12.176 PR2), and a
+    // `private_method_definition` (→ `ClassMember::Method` with a private key,
+    // CLOC12.178 PR1). The grammar's `async_method` node is a form this slice
+    // does not represent, so it DECLINES (safe WHITESPACE_ONLY fallback).
+    // (Because these are *distinct nodes*, not just leading tokens, the node
+    // kind must be checked.)
+    //
+    // A `static_block` — and a `private_method_definition` — carry their own
+    // leading `Token("static")` *inside* the node (not on the `class_element`),
+    // so the modifier loop above never sees it: `is_static` from `class_element`
+    // stays false and each arm reads `static` from inside the member node.
     let member = node_children(node)
         .into_iter()
         .next()
@@ -1266,8 +1274,36 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
     match member.rule_name.as_str() {
         "method_definition" => Ok(ClassMember::Method(convert_method_definition(member, is_static)?)),
         "class_field_declaration" => Ok(ClassMember::Field(convert_class_field(member)?)),
+        "static_block" => Ok(ClassMember::StaticBlock(convert_static_block(member)?)),
+        "private_method_definition" => {
+            Ok(ClassMember::Method(convert_private_method_definition(member)?))
+        }
         _ => Err(unsupported(member)),
     }
+}
+
+/// Convert a `static_block` node into a [`BlockStatement`] — a class
+/// static-initialization block `static { … }` (CLOC12.176 PR2).
+///
+/// ```text
+///   static_block = [ Token("static"), Token("{"),
+///                    Node(statement)*,
+///                    Token("}") ]
+/// ```
+///
+/// The block body is exactly a statement list — the *same* shape as a plain
+/// `{ … }` [`convert_block_statement`] — so each `statement` node child is
+/// lowered by the shared [`convert_statement`], covering the full statement
+/// surface (including `let` / `const` / `var`, which map to
+/// `Statement::Declaration`). Tokens (`static`, the braces) are ignored by
+/// [`node_children`], so the leading `static` needs no special handling. An
+/// empty block (`static {}`) yields an empty `body`. Because every statement is
+/// routed through the shared converter, any unmodelled body statement makes the
+/// converter DECLINE (safe WHITESPACE_ONLY fallback) rather than mis-emit.
+fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
+    let stmts: Result<Vec<Statement>, _> =
+        node_children(node).into_iter().map(convert_statement).collect();
+    Ok(BlockStatement { cv: None, body: stmts? })
 }
 
 /// Convert a `class_field_declaration` node into a [`PropertyDefinition`] — a
@@ -1284,13 +1320,38 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
 ///   a method's `static`, which sits one level up on the `class_element`).
 /// - **key** reuses [`convert_property_key`] — the *same* `property_name` node a
 ///   method key uses, so identifier / string / numeric keys all work, and a
-///   computed `[expr]` key DECLINES (a later slice) → WHITESPACE_ONLY, sound.
+///   computed `[expr]` key lowers to `PropertyKey::Expression` with
+///   `computed: true` (CLOC12.180).
 /// - **initializer** is the optional `assignment_expression`; a bare field
 ///   (`y;`) has none and maps to `value: None`.
 ///
 /// A **private** field (`#x`) is a bare `PRIVATE_NAME` token with no
-/// `property_name` node — an unmodelled shape — so it DECLINES (safe fallback)
-/// rather than mis-emit the `#` name.
+/// `property_name` node. [`private_name_key`] detects it and lowers it to a
+/// [`PropertyKey::PrivateName`] (CLOC12.177 PR2); an ordinary keyed field is
+/// unchanged. (A private *method* `#m(){}` is a separate `private_method_definition`
+/// grammar node, lowered by [`convert_private_method_definition`], CLOC12.178 PR1.)
+///
+/// If a class-member node carries a bare **private-name** token (`#x`), lower it
+/// to a [`PropertyKey::PrivateName`]; otherwise return `None`.
+///
+/// A private name lexes as a `Name` token whose `type_name` discriminant is
+/// `Some("PRIVATE_NAME")` and whose `value` **includes** the leading `#`
+/// (e.g. `"#x"`) — unlike a `property_name` node, it is a direct token child of
+/// the `class_field_declaration` / `private_method_definition` node. The stored
+/// [`PrivateName::name`] omits the `#` (mirroring [`Identifier`]), so we strip it
+/// here; the emitter re-adds it. (CLOC12.177 PR2.)
+fn private_name_key(node: &GrammarASTNode) -> Option<PropertyKey> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_name.as_deref() == Some("PRIVATE_NAME") {
+                let name = t.value.strip_prefix('#').unwrap_or(&t.value).to_string();
+                return Some(PropertyKey::PrivateName(PrivateName { cv: None, name }));
+            }
+        }
+    }
+    None
+}
+
 fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, BridgeError> {
     // `static` — a bare NAME token before the `property_name` node.
     let mut is_static = false;
@@ -1302,13 +1363,19 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
         }
     }
 
-    // key — the `property_name` node. A private field carries a `PRIVATE_NAME`
-    // token instead (no `property_name` child); decline it as unmodelled.
-    let key_node = node_children(node)
-        .into_iter()
-        .find(|n| n.rule_name == "property_name")
-        .ok_or_else(|| unsupported(node))?;
-    let key = convert_property_key(key_node)?;
+    // key — normally the `property_name` node. A **private** field (`#x`) instead
+    // carries a bare `PRIVATE_NAME` token as a direct child (no `property_name`
+    // node), so we detect that first and lower it to `PropertyKey::PrivateName`
+    // (CLOC12.177 PR2). An ordinary field falls through to `property_name`.
+    let key = if let Some(pk) = private_name_key(node) {
+        pk
+    } else {
+        let key_node = node_children(node)
+            .into_iter()
+            .find(|n| n.rule_name == "property_name")
+            .ok_or_else(|| unsupported(node))?;
+        convert_property_key(key_node)?
+    };
 
     // initializer — the optional `assignment_expression` after `=`. A bare field
     // has none → `value: None`.
@@ -1320,13 +1387,14 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
         None => None,
     };
 
+    // A computed key `[expr]` bridges to `PropertyKey::Expression` (CLOC12.180),
+    // so the `computed` flag tracks exactly that variant.
+    let computed = matches!(&key, PropertyKey::Expression(_));
     Ok(PropertyDefinition {
         cv: None,
         key,
         value,
-        // Computed keys are declined by `convert_property_key`, so a bridged
-        // field is never computed today (mirrors the method surface).
-        computed: false,
+        computed,
         is_static,
     })
 }
@@ -1391,8 +1459,8 @@ fn convert_method_definition(
         .into_iter()
         .find(|n| n.rule_name == "property_name")
         .ok_or_else(|| internal(node, "method_definition: missing property_name"))?;
-    // `convert_property_key` declines a computed `[expr]` key via
-    // `UnsupportedSyntax` (a later slice), which drops the file — sound.
+    // `convert_property_key` lowers a computed `[expr]` key to
+    // `PropertyKey::Expression` (CLOC12.180); the `computed` flag is set below.
     let key = convert_property_key(key_node)?;
 
     let kind = if saw_get {
@@ -1424,6 +1492,9 @@ fn convert_method_definition(
         None => BlockStatement { cv: None, body: vec![] },
     };
 
+    // A computed key `[expr]` bridges to `PropertyKey::Expression` (CLOC12.180),
+    // so the `computed` flag tracks exactly that variant.
+    let computed = matches!(&key, PropertyKey::Expression(_));
     Ok(MethodDefinition {
         cv: None,
         key,
@@ -1436,8 +1507,109 @@ fn convert_method_definition(
             generator: false,
             is_async: false,
         },
-        // Computed keys are declined above, so a bridged method is never
-        // computed today.
+        computed,
+        is_static,
+    })
+}
+
+/// Convert a `private_method_definition` node into a [`MethodDefinition`] whose
+/// key is a [`PropertyKey::PrivateName`] — a private class method `#m(){}`
+/// (CLOC12.178 PR1).
+///
+/// Grammar (es2025 `private_method_definition`):
+///
+/// ```text
+///   [ "static" ] PRIVATE_NAME LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
+/// | [ "static" ] "get" PRIVATE_NAME ...          // private getter
+/// | [ "static" ] "set" PRIVATE_NAME ...          // private setter
+/// | [ "static" ] STAR   PRIVATE_NAME ...          // private generator
+/// ```
+///
+/// This slice models the **plain** method and the **get / set accessor** forms
+/// (each optionally `static`) — `#m(){}`, `get #x(){}`, `set #x(v){}`. The
+/// private *generator* (`*#m(){}`) and *async* forms carry evaluation semantics
+/// not yet represented, so — like a public generator method — they DECLINE via
+/// `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback), never a mis-emit.
+///
+/// Two shape differences from a public `method_definition`:
+/// - the key is a bare `PRIVATE_NAME` token (`#m`), lowered by
+///   [`private_name_key`] exactly as a private *field* key is — never a
+///   `property_name` node; and
+/// - the `static` modifier lives *inside* this node (the grammar's
+///   `[ "static" ]`), not on the enclosing `class_element`, so it is read here.
+///
+/// A private name can never be the `constructor` (`#constructor` is a
+/// SyntaxError), so the kind is a plain [`MethodKind::Method`] or the
+/// [`MethodKind::Get`] / [`MethodKind::Set`] accessor. Params and body reuse the
+/// shared [`convert_formal_parameters`] / [`convert_formal_parameter`] /
+/// [`convert_function_body`], mirroring [`convert_method_definition`].
+fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
+    // Read `static` and the `get` / `set` accessor keyword (inside this node);
+    // decline the generator / async forms this slice does not model. All of
+    // `static` / `get` / `set` / `*` / `async` precede the PRIVATE_NAME as direct
+    // token children (params live under `formal_parameter(s)` *nodes*, so a
+    // parameter literally named `get` cannot be confused for the modifier).
+    let mut is_static = false;
+    let mut saw_get = false;
+    let mut saw_set = false;
+    let mut decline = false;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.value.as_str() {
+                "static" => is_static = true,
+                "get" => saw_get = true,
+                "set" => saw_set = true,
+                "*" | "async" => decline = true,
+                _ => {}
+            }
+        }
+    }
+    if decline {
+        return Err(unsupported(node));
+    }
+
+    let key = private_name_key(node)
+        .ok_or_else(|| internal(node, "private_method_definition: missing PRIVATE_NAME"))?;
+
+    // Params: a lone `formal_parameter` OR a `formal_parameters` wrapper.
+    let mut params = Vec::new();
+    for n in node_children(node) {
+        match n.rule_name.as_str() {
+            "formal_parameters" => params.extend(convert_formal_parameters(n)?),
+            "formal_parameter" => params.push(convert_formal_parameter(n)?),
+            _ => {}
+        }
+    }
+
+    // Body: the `function_body` node, or an empty block for `#m(){}`.
+    let body = match node_children(node).into_iter().find(|n| n.rule_name == "function_body") {
+        Some(b) => convert_function_body(b)?,
+        None => BlockStatement { cv: None, body: vec![] },
+    };
+
+    // A private name can never be the `constructor` (`#constructor` is a
+    // SyntaxError), so the only kinds are the plain method and the get/set
+    // accessors.
+    let kind = if saw_get {
+        MethodKind::Get
+    } else if saw_set {
+        MethodKind::Set
+    } else {
+        MethodKind::Method
+    };
+
+    Ok(MethodDefinition {
+        cv: None,
+        key,
+        kind,
+        value: FunctionExpression {
+            cv: None,
+            id: None,
+            params,
+            body,
+            generator: false,
+            is_async: false,
+        },
         computed: false,
         is_static,
     })
@@ -3317,13 +3489,16 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
         let val_n = nodes[1];
         let key = convert_property_key(key_n)?;
         let value = convert_expression(val_n)?;
+        // A computed key `[expr]` bridges to `PropertyKey::Expression`
+        // (CLOC12.180); the `computed` flag tracks exactly that variant.
+        let computed = matches!(&key, PropertyKey::Expression(_));
         return Ok(Property {
             cv: None,
             key,
             value: Box::new(value),
             kind: PropertyKind::Init,
             shorthand: false,
-            computed: false,
+            computed,
             method: false,
         });
     }
@@ -3372,11 +3547,19 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     // real property name. The quote-vs-bare *emission* choice is then made
     // soundly in the emitter (`emit_property_key`), which only drops the quotes
     // when the decoded name is a valid identifier (and never for `__proto__`).
+    // A **computed** key `[expr]` — the `property_name` wraps the key expression
+    // between `[` and `]`. Convert the inner expression to
+    // `PropertyKey::Expression`; the emitter re-brackets it (CLOC12.180). The
+    // inner node is an `assignment_expression` (the same node a field
+    // initializer uses), routed through the shared `convert_expression`, so any
+    // unmodelled key expression DECLINES (safe WHITESPACE_ONLY fallback) rather
+    // than mis-emit.
     if has_token(node, "[") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "ComputedPropertyKey".to_string(),
-            location: loc(node),
-        });
+        let inner = node_children(node)
+            .into_iter()
+            .next()
+            .ok_or_else(|| internal(node, "computed key: missing key expression"))?;
+        return Ok(PropertyKey::Expression(Box::new(convert_expression(inner)?)));
     }
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -3679,13 +3862,14 @@ mod tests {
     }
 
     #[test]
-    fn class_computed_key_declines() {
-        // Computed `[k]()` keys are a later slice; the bridge DECLINES (the file
-        // then falls back to WHITESPACE_ONLY — never a miscompile).
-        assert!(matches!(
-            bridge("x = class { [k](){} };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_computed_method_key() {
+        // `[k](){}` — a computed method key bridges to `PropertyKey::Expression`
+        // and sets `computed: true` (CLOC12.180).
+        let c = class_of("x = class { [k](){} };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.computed);
+        assert!(matches!(&m.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
     }
 
     #[test]
@@ -3777,24 +3961,253 @@ mod tests {
     }
 
     #[test]
-    fn class_computed_field_declines() {
-        // `[k] = v;` — a computed field key is a later slice; DECLINE (the file
-        // falls back to WHITESPACE_ONLY, never a miscompile) — mirrors the
-        // computed *method* key decline.
+    fn class_computed_field_key() {
+        // `[k] = v;` — a computed field key bridges to `PropertyKey::Expression`
+        // with `computed: true`, and the initializer is preserved (CLOC12.180).
+        let f = field_of("w = class { [k] = v; };");
+        assert!(f.computed);
+        assert!(matches!(&f.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+        assert!(matches!(&f.value, Some(Expression::Identifier(id)) if id.name == "v"));
+    }
+
+    #[test]
+    fn object_computed_key() {
+        // `{ [k]: v }` — an object computed key also bridges to
+        // `PropertyKey::Expression` with `computed: true`.
+        let p = bridge_ok("x = { [k]: v };");
+        let Expression::AssignmentExpression(a) = first_expr(&p) else {
+            panic!("expected assignment")
+        };
+        let Expression::ObjectExpression(o) = &*a.right else { panic!("expected object") };
+        let ObjectMember::Property(prop) = &o.properties[0] else { panic!("expected property") };
+        assert!(prop.computed);
+        assert!(matches!(&prop.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+    }
+
+    #[test]
+    fn class_private_field_with_initializer() {
+        // `#x = 1;` — a private field carries a bare `PRIVATE_NAME` token instead
+        // of a `property_name` node; the bridge lowers it to
+        // `PropertyKey::PrivateName` with the leading `#` stripped (CLOC12.177 PR2).
+        let f = field_of("w = class { #x = 1; };");
+        assert!(!f.is_static);
+        assert!(!f.computed);
+        assert!(
+            matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"),
+            "expected a private-name key `#x` (stored bare), got {:?}",
+            f.key
+        );
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_bare_private_field() {
+        // `#x;` — a bare private field, no initializer.
+        let f = field_of("z = class { #x; };");
+        assert!(matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert!(f.value.is_none());
+    }
+
+    #[test]
+    fn class_static_private_field() {
+        // `static #x = 1;` — the `static` token precedes the `#x` PRIVATE_NAME
+        // token; `is_static` is set and the key is still a private name.
+        let f = field_of("w = class { static #x = 1; };");
+        assert!(f.is_static);
+        assert!(matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_private_and_public_field_interleave() {
+        // A private field and a public field coexist in source order, each with
+        // the right key kind.
+        let c = class_of("w = class { #x = 1; y = 2; };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "y")));
+    }
+
+    /// Pull the sole `ClassMember::Method` out of `x = class { … };`.
+    fn method_of(src: &str) -> MethodDefinition {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::Method(m) => m.clone(),
+            other => panic!("expected a method member, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_private_method() {
+        // `#m(){}` — a private method is a separate `private_method_definition`
+        // grammar node; the bridge lowers it to a `ClassMember::Method` whose key
+        // is a `PropertyKey::PrivateName` (CLOC12.178 PR1).
+        let m = method_of("w = class { #m(){} };");
+        assert!(!m.is_static);
+        assert!(!m.computed);
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(
+            matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"),
+            "expected a private-name key `#m` (stored bare), got {:?}",
+            m.key
+        );
+        assert!(m.value.params.is_empty());
+        assert!(m.value.body.body.is_empty());
+    }
+
+    #[test]
+    fn class_private_method_with_params_and_body() {
+        // `#add(a,b){ return a+b; }` — params and a body are collected.
+        let m = method_of("w = class { #add(a, b){ return a + b; } };");
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "add"));
+        assert_eq!(m.value.params.len(), 2);
+        assert_eq!(m.value.body.body.len(), 1);
+    }
+
+    #[test]
+    fn class_static_private_method() {
+        // `static #m(){}` — the `static` keyword lives INSIDE the
+        // `private_method_definition` node (unlike a public method's `static`,
+        // which sits on the `class_element`); `is_static` is read from there.
+        let m = method_of("w = class { static #m(){} };");
+        assert!(m.is_static);
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"));
+    }
+
+    #[test]
+    fn class_private_method_and_field_interleave() {
+        // A private method and a private field coexist in source order.
+        let c = class_of("w = class { #x = 1; #m(){} };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m")));
+    }
+
+    #[test]
+    fn class_private_getter() {
+        // `get #x(){}` — a private getter lowers to a `MethodKind::Get` method
+        // with a private-name key (CLOC12.179).
+        let m = method_of("w = class { get #x(){} };");
+        assert!(matches!(m.kind, MethodKind::Get));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert!(m.value.params.is_empty());
+    }
+
+    #[test]
+    fn class_private_setter() {
+        // `set #x(v){}` — a private setter lowers to a `MethodKind::Set` method
+        // with a private-name key and its single parameter.
+        let m = method_of("w = class { set #x(v){} };");
+        assert!(matches!(m.kind, MethodKind::Set));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert_eq!(m.value.params.len(), 1);
+    }
+
+    #[test]
+    fn class_static_private_getter() {
+        // `static get #x(){}` — the `static` and `get` keywords both precede the
+        // private key inside the node.
+        let m = method_of("w = class { static get #x(){} };");
+        assert!(m.is_static);
+        assert!(matches!(m.kind, MethodKind::Get));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+    }
+
+    #[test]
+    fn class_private_generator_still_declines() {
+        // `*#m(){}` — a private *generator* carries evaluation semantics this
+        // slice does not model; it still DECLINES (safe WHITESPACE_ONLY), never a
+        // mis-emit. (A later slice.)
         assert!(matches!(
-            bridge("w = class { [k] = v; };"),
+            bridge("w = class { *#m(){} };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }
 
+    // -----------------------------------------------------------------
+    // ClassMember::StaticBlock bridging (CLOC12.176 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the sole `ClassMember::StaticBlock` body out of
+    /// `x = class { static { … } };`.
+    fn static_block_of(src: &str) -> BlockStatement {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::StaticBlock(b) => b.clone(),
+            other => panic!("expected a static-block member, got {other:?}"),
+        }
+    }
+
     #[test]
-    fn class_private_field_declines() {
-        // `#x = 1;` — a private field carries a `PRIVATE_NAME` token (no
-        // `property_name` node), an unmodelled shape; DECLINE.
+    fn class_static_block_empty() {
+        // `static {}` — an empty static block maps to an empty body. The block's
+        // OWN leading `static` token (inside `static_block`, not on the
+        // `class_element`) needs no handling.
+        let b = static_block_of("y = class { static {} };");
+        assert!(b.body.is_empty());
+    }
+
+    #[test]
+    fn class_static_block_with_statement() {
+        // `static { x = 1; }` — one expression statement in the body.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let b = static_block_of("y = class { static { x = 1; } };");
+        assert_eq!(b.body.len(), 1);
         assert!(matches!(
-            bridge("w = class { #x = 1; };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
+            &b.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
         ));
+    }
+
+    #[test]
+    fn class_static_block_with_declaration() {
+        // `static { let z = 2; }` — a lexical declaration in a static block maps
+        // to `Statement::Declaration` via the shared statement converter, proving
+        // the full statement surface (not just expressions) is reachable.
+        let b = static_block_of("y = class { static { let z = 2; } };");
+        assert_eq!(b.body.len(), 1);
+        assert!(matches!(
+            &b.body[0],
+            Statement::Declaration(Declaration::VariableDeclaration(_))
+        ));
+    }
+
+    #[test]
+    fn class_static_block_multiple_statements() {
+        // `static { x = 1; y = 2; }` — statement order is preserved.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let b = static_block_of("y = class { static { x = 1; y = 2; } };");
+        assert_eq!(b.body.len(), 2);
+        assert!(b
+            .body
+            .iter()
+            .all(|s| matches!(s, Statement::Tagged(TaggedStatement::ExpressionStatement(_)))));
+    }
+
+    #[test]
+    fn class_static_block_and_field_interleave() {
+        // A static block and a field coexist in one body, in source order.
+        let c = class_of("w = class { x = 1; static { y = 2; } m(){} };");
+        assert_eq!(c.body.len(), 3);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::StaticBlock(b) if b.body.len() == 1));
+        assert!(matches!(&c.body[2], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m")));
     }
 
     #[test]

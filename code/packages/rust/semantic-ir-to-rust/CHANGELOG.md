@@ -1,5 +1,69 @@
 # Changelog
 
+## 0.31.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
+
+Mirrors the Python reference (PR #8009) and the Go backend (PR #8015) into the
+Rust backend's inline `__sir` runtime (`map_method` gains the arms; the
+`Value::Map` `respond_to?` arm gains the names), rounding out Hash's Enumerable
+iteration surface.
+
+- `to_h` **without** a block → a shallow copy of the hash (a fresh `Map`, so
+  mutating it never aliases the receiver's entries).
+- `to_h { |k, v| [new_k, new_v] }` → a NEW hash from the block-returned `[k, v]`
+  pairs; the block is yielded the two args `(k, v)`; a non-pair result is skipped
+  (never-panic floor — Ruby's TypeError is deferred to the typed-error cascade),
+  and a later pair with a duplicate key wins (Ruby's rule, `map_set`).
+- `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+  0-based index, returns the receiver.
+- `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair with
+  the memo, returns the (mutated) memo; no-memo arg returns the receiver.
+
+Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object` pass
+the element as a single `[k, v]` pair (the second block param is the
+index/memo), matching Ruby's Enumerable convention.  Every block-invoking arm
+SNAPSHOTS the entries into an owned `Vec` before iterating, so no `RefCell`
+borrow is held across `apply_closure` — the never-panic floor holds against a
+reentrant hash mutation.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_to_h_and_indexed_iteration_compile_and_run`, running to_h (copy + re-map),
+each_with_index (observed pair+index yield, returns self), and each_with_object
+(observed pair+memo yield, returns memo, and no-memo passthrough) under real
+`rustc`, diffed against the Python/Go reference semantics.
+
+## 0.30.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `collect_concat` / `reduce` / `inject` / `sum`
+
+Mirrors the Python `sir-runtime-oop` reference (PR #7978) and the Go backend
+(PR #7983) into the Rust backend's inline `__sir` runtime (`map_method` block
+arms + the `Value::Map` `respond_to?` arm), completing the Hash Enumerable
+reshape/fold surface.  Ruby's `Hash` mixes in `Enumerable`, so every method
+here iterates the hash as a sequence of `[key, value]` pairs.  All yield the
+two-arg `(key, value)` EXCEPT `reduce`/`inject`, which follow Ruby's memo
+convention and yield `(memo, [k, v])` — the pair as ONE argument.
+
+- `group_by { |k, v| key }` — a Hash mapping each block key to the Array of the
+  `[k, v]` pairs that produced it, in first-seen key order and insertion order.
+- `partition { |k, v| pred }` — `[[matching pairs], [rest pairs]]`, each a fresh
+  Array of `[k, v]` pairs preserving order.
+- `flat_map`/`collect_concat { |k, v| … }` — map each pair then concatenate one
+  level: an Array result splices its elements, a scalar is appended as-is.
+- `reduce`/`inject` — Ruby's memo fold over the `[k, v]` pairs; with an explicit
+  seed the fold starts there, without one it seeds from the first pair (an empty
+  seedless reduce is `nil`).
+- `sum(init = 0) { |k, v| … }` — numeric fold seeded at `0` (or the explicit
+  seed arg) over the block results, reusing the polymorphic `plus` helper so
+  integer-only inputs stay `Int` while any float promotes.
+
+Every arm SNAPSHOTS the entries into an owned `Vec` before iterating, so no
+`RefCell` borrow is held across `apply_closure` — the never-panic floor holds
+even against a block that reentrantly mutates the same hash.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_enumerable_breadth_compile_and_run`, running `group_by`/`partition`
+(even-value predicate), `flat_map` (pair projection), `sum` (value projection),
+and `reduce(100)` (memo `acc + pair[1]`, indexed via `SeqIndex`) under real
+`rustc`, diffed against the Python/Go reference semantics.
+
 ## 0.29.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
 
 Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Rust

@@ -3,9 +3,9 @@
 //! The first **tagged-word** cons backend: a McCarthy cons is a tagged 64-bit
 //! word managed by the shared C runtime `dynval_runtime.c` (the SAME runtime the
 //! native AOT path links). `compile_source_to_llvm` runs the native lisp pipeline
-//! (`lower_heap_builtins_runtime` → `intern_symbols` → `lower_lisp_repr`), so
-//! cons/car/cdr become `call_builtin "lispy_*"` over pre-boxed tagged words with a
-//! final `lispy_unbox_int`; `iir-to-llvm` lowers each to `call @__dyn_*`.
+//! (`lower_heap_builtins_runtime` → `intern_symbols` → `lower_dyn_repr`), so
+//! cons/car/cdr become `call_builtin "dyn_*"` over pre-boxed tagged words with a
+//! final `dyn_unbox_int`; `iir-to-llvm` lowers each to `call @__dyn_*`.
 //! **Verified by RUNNING**: emit host-triple IR, link `dynval_runtime.c` with
 //! `clang`, run the native executable — its exit code is the result. (Predicates
 //! F3–F5, whose tagged-boolean result needs its own handling, are W12b-2.)
@@ -21,7 +21,7 @@ fn host_triple() -> String {
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
 /// Path to the shared C runtime (relative to this crate).
-fn lispy_runtime_c() -> std::path::PathBuf {
+fn dynval_runtime_c() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../twig-aot/runtime/dynval_runtime.c")
 }
@@ -38,7 +38,7 @@ fn run(src: &str, module: &str) -> i32 {
     let build = std::process::Command::new("clang")
         // `-x ir <our IR>` then `-x none <C runtime>` (reset so clang treats the .c by extension).
         .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-x").arg("none").arg(lispy_runtime_c())
+        .arg("-x").arg("none").arg(dynval_runtime_c())
         .arg("-o").arg(&exe)
         .output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));

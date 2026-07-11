@@ -1,5 +1,60 @@
 # Changelog
 
+## 0.29.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
+
+Mirrors the Python reference (PR #8009) into the Go backend's inline `__sir`
+runtime, rounding out Hash's Enumerable iteration surface (`_sir_hash_method` for
+the no-block `to_h`, `_sir_hash_block_method` for the block forms, plus the
+`_sir_hash_responds` `respond_to?` arm).
+
+- `to_h` **without** a block → a shallow copy of the hash (a fresh `*Map`, so
+  mutating it does not alias the receiver's entries).
+- `to_h { |k, v| [new_k, new_v] }` → a NEW hash from the block-returned `[k, v]`
+  pairs; the block is yielded the two args `(k, v)`; a non-pair result is skipped
+  (never-raise floor — Ruby's TypeError is deferred to the typed-error cascade),
+  and a later pair with a duplicate key wins (Ruby's rule, `_sir_map_set`).
+- `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+  0-based index, returns the receiver.
+- `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair with
+  the memo, returns the (mutated) memo; no-memo arg returns the receiver.
+
+Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object` pass
+the element as a single `[k, v]` `*Seq` (the second block param is the
+index/memo), matching Ruby's Enumerable convention.
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_to_h_and_indexed_iteration_compile_and_run`, running to_h (copy + re-map),
+each_with_index (observed pair+index yield, returns self), and each_with_object
+(observed pair+memo yield, returns memo, and no-memo passthrough) under real
+`go run`, diffed against the Python reference semantics.
+
+## 0.28.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `reduce` / `inject` / `sum`
+
+Mirrors the Python `sir-runtime-oop` v0.1.20 reference (PR #7978) into the Go
+backend's emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`).
+The block is yielded `(key, value)` (two arguments) — except `reduce`/`inject`,
+which follow Ruby's memo convention and yield `(memo, [key, value])` (the pair
+as one second argument).  Every "element" a result carries is the two-element
+`[key, value]` Array (`&Seq{key, value}`).
+
+- `group_by { |k, v| … }` — a Hash of block key → Array of `[k, v]` pairs, in
+  first-seen key order.
+- `partition { |k, v| … }` — `[[matching pairs], [non-matching pairs]]`.
+- `flat_map`/`collect_concat { |k, v| … }` — one-level splice of block results.
+- `reduce`/`inject(init) { |memo, (k, v)| … }` — fold; a seedless `reduce`
+  starts from the first pair, and an empty seedless `reduce` returns `nil`.
+- `sum(init = 0) { |k, v| … }` — `init` plus the polymorphic-`+` (`_sir_plus`)
+  sum of the block results.
+
+`_sir_hash_responds` now advertises all of the above (the hash block dispatch
+already forwards the positional args before the block, so `reduce`/`sum` read
+their seed).
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_enumerable_breadth_compile_and_run`, running `group_by` (even-value
+predicate ⇒ bool-keyed Hash of pairs), `partition`, `flat_map`, `reduce(0)`, and
+`sum(100)` under real `go run`, diffed against the Python reference semantics.
+
 ## 0.27.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
 
 Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Go

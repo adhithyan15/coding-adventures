@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.5.8 — CONCAT / CONCAT_WS / SUBSTRING string functions
+
+Grows the SQL scalar surface (sql-vm 0.4.4): `CONCAT(x, …)` joins all arguments
+(NULL → empty string), `CONCAT_WS(sep, …)` joins with a separator (skipping NULL
+values, NULL separator → NULL), and `SUBSTRING` is accepted as a spelling of
+`SUBSTR`. Previously all three errored as unknown built-ins. Five new
+differential-oracle cases (`concat`, `concat_ws`, `concat_ws_null_sep`,
+`substring_alias`) diff against real bundled SQLite. Integer/boolean arguments
+coerce to text; Float/Blob are declined (matching the HEX/QUOTE convention — a
+SQLite-exact float-to-text formatter is a separate future step).
+
+## 0.5.7 — Read `WITHOUT ROWID` tables from real .sqlite files
+
+Querying a `WITHOUT ROWID` table in a real `.sqlite` file now works through the
+whole pipeline; previously it failed with `unexpected b-tree page type` because
+such tables live in an *index* b-tree, not a table b-tree. Delivered by
+`sqlite-file` 0.7.0 (`read_without_rowid_table` over `walk_index`) and
+storage-sqlite 0.4.0 (`WITHOUT ROWID` detection + read path). A new
+`file_backed` differential test builds real `WITHOUT ROWID` tables (scalar /
+TEXT / composite primary keys, and an 800-row table spanning interior index
+pages) and diffs mini-sqlite against real bundled SQLite.
+
+## 0.5.6 — Two-argument TRIM/LTRIM/RTRIM (character-set trimming)
+
+Grows the SQL scalar surface: `TRIM(x, y)`, `LTRIM(x, y)`, and `RTRIM(x, y)`
+now strip a caller-supplied *set of characters* rather than only whitespace —
+`TRIM('xxhixx', 'x')` → `'hi'`, `TRIM('abcHIcba', 'abc')` → `'HI'`. Previously
+these errored (`TRIM expects 1 arg, got 2`). Trimming is Unicode-character-aware,
+an empty set is a no-op, NULL in either argument propagates, and numeric
+arguments coerce to text — all matching real SQLite (sql-vm 0.4.3). Three new
+differential-oracle cases (`trim_charset`, `trim_charset_multi`,
+`trim_charset_null_and_edge`) diff against real bundled SQLite; the
+single-argument whitespace forms are unchanged.
+
+## 0.5.5 — Multi-argument MAX/MIN are the scalar functions
+
+Stream A correctness fix: `SELECT MAX(3, 9, 5)` returned `3` (the first argument)
+instead of `9`, because the planner treated *every* `MIN`/`MAX` as the aggregate.
+Two-or-more-argument `MIN`/`MAX` are the SCALAR largest/smallest functions and
+are now dispatched as such (sql-planner 0.2.0 gates on arity; sql-vm 0.4.2 adds
+the scalar builtin); the single-argument aggregate forms are unchanged. Three
+new differential-oracle cases (`scalar_max_min`, `scalar_max_null`, plus an
+`agg_max_min_still_work` regression guard) diff against real bundled SQLite.
+
+## 0.5.4 — IIF(x, y, z) — the function form of CASE
+
+Stream B, corpus growth. `IIF(x, y, z)` now works — SQLite's function-form
+conditional (`CASE WHEN x THEN y ELSE z END`), a pure-`sql-vm` addition (0.4.1)
+that covers much of `CASE`'s utility while full `CASE`/`CAST`/window syntax
+remains blocked on a stale generated grammar. One new differential-oracle case
+(`iif`) diffs mini-sqlite against real bundled SQLite. No mini-sqlite `src/`
+change.
+
+## 0.5.3 — More scalar functions: SIGN / UNICODE / CHAR / ZEROBLOB / QUOTE
+
+Stream B, corpus-growth phase. Five more common scalar functions now work:
+`SIGN`, `UNICODE`, `CHAR`, `ZEROBLOB`, `QUOTE`. They already parsed as function
+calls but hit the engine's `unknown built-in function` fallthrough; implemented
+in `sql-vm` (0.4.0). Five new differential-oracle cases (`sign`, `unicode`,
+`char_fn`, `zeroblob`, `quote`) diff mini-sqlite's results against real bundled
+SQLite. No mini-sqlite `src/` change.
+
 ## 0.5.2 — Introspect a file's indexes (`list_indexes`)
 
 Stream C: the file backend's `list_indexes` now reports a real `.sqlite` file's

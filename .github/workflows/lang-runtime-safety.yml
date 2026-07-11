@@ -32,14 +32,14 @@ on:
     branches: ['**']
     paths:
       - 'code/packages/rust/lang-runtime-core/**'
-      - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/dynval-runtime/**'
       - 'code/packages/rust/twig-vm/**'
       - '.github/workflows/lang-runtime-safety.yml'
   pull_request:
     branches: [main]
     paths:
       - 'code/packages/rust/lang-runtime-core/**'
-      - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/dynval-runtime/**'
       - 'code/packages/rust/twig-vm/**'
       - '.github/workflows/lang-runtime-safety.yml'
 
@@ -57,10 +57,10 @@ jobs:
   #
   # Goal: fast PR iteration.  Miri belongs on **unsafe code only**
   # in this workflow.  The unsafe in this stack lives in
-  # `lang-runtime-core` + `lispy-runtime` (tagged-pointer scheme,
+  # `lang-runtime-core` + `dynval-runtime` (tagged-pointer scheme,
   # heap accessors, FFI).  `twig-vm` has zero unsafe of its own —
   # its Miri value is the integration seam, which is *already*
-  # exercised by lispy-runtime's own Miri suite plus the local
+  # exercised by dynval-runtime's own Miri suite plus the local
   # pre-push verification.  Per-PR twig-vm Miri was costing
   # 1h+ wallclock per PR for redundant coverage, blocking
   # iteration speed.
@@ -103,7 +103,7 @@ jobs:
       #
       # Why `-Zmiri-ignore-leaks`?
       #
-      # PR 2 ships `lispy-runtime` with a `Box::leak`-based "non-
+      # PR 2 ships `dynval-runtime` with a `Box::leak`-based "non-
       # collecting GC" — every `alloc_cons` / `alloc_closure`
       # leaks intentionally because the real collector lands
       # in PR 4+ (LANG16 wiring).  Miri correctly reports these
@@ -137,9 +137,9 @@ jobs:
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p lang-runtime-core --no-fail-fast
 
-      - name: Miri — lispy-runtime
+      - name: Miri — dynval-runtime
         working-directory: code/packages/rust
-        run: cargo +nightly miri test -p lispy-runtime --no-fail-fast
+        run: cargo +nightly miri test -p dynval-runtime --no-fail-fast
 
   # ─────────────────────────────────────────────────────────────────────────
   # Geiger: count unsafe code in our crates + dependencies.
@@ -180,8 +180,8 @@ jobs:
           echo "── lang-runtime-core unsafe summary ─────────────────────"
           cargo geiger -p lang-runtime-core --quiet || true
 
-      - name: Geiger report — lispy-runtime
+      - name: Geiger report — dynval-runtime
         working-directory: code/packages/rust
         run: |
-          echo "── lispy-runtime unsafe summary ─────────────────────────"
-          cargo geiger -p lispy-runtime --quiet || true
+          echo "── dynval-runtime unsafe summary ─────────────────────────"
+          cargo geiger -p dynval-runtime --quiet || true

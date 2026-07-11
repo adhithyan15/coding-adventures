@@ -2,6 +2,52 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.41.1] - 2026-07-11
+
+### Added — CLOC12.177 PR3: CodePrinter private-name conformance port
+
+New upstream conformance port `tests/upstream/code_printer_private_name_test.rs`
+(the twenty-fourth CodePrinter port), mirroring `CodePrinterTest.java`'s
+private-class-member-name printing cases. Isolates the `PrivateName` arm of
+`emit_property_key` (CLOC12.177 PR1). 7 active `#[test]`s, 0 `#[ignore]`:
+initialized private field (`#x=1;`), bare private field (`#x;`), single-`#`
+regression guard, static private field (`static #x=1;`), private method key
+(`#m(){}`), and private/public interleave (`#x=1;m(){}`, `x=1;#y=2;`). Inputs are
+hand-constructed AST (the emitter is the unit under test; the private-field
+bridge is exercised separately in javascript-parser + a closurec e2e fixture, and
+building AST directly covers the private-method key shape whose bridge is a later
+slice). Test-only; adds a `[[test]]` entry to `Cargo.toml` and a row to
+`tests/upstream/ATTRIBUTION.md`. PATCH.
+
+## [0.41.0] - 2026-07-11
+
+### Added — CLOC12.177 PR1: emit private class-member names (`#x`)
+
+`javascript-ast` 0.36.0 added `PropertyKey::PrivateName`. `emit_property_key`
+gains a `PrivateName` arm that prints `#` followed by the stored bare name — so a
+private field (`class C{#x=1;}`), a bare private field (`class C{#x;}`), a static
+private field (`class C{static #x=1;}`), and a private method (`class C{#m(){}}`)
+all print correctly. No quote/shorten logic applies (a private name is a hard
+token boundary, unlike a string key). 5 emit tests. MINOR.
+
+## [0.40.1] - 2026-07-11
+
+### Added — CLOC12.176 PR3: CodePrinter static-block conformance port
+
+New upstream conformance port `tests/upstream/code_printer_static_block_test.rs`
+(the twenty-third CodePrinter port), mirroring `CodePrinterTest.java`'s **static
+initialization block** printing cases. Isolates `emit_static_block` + the shared
+`emit_class_tail` member loop's `StaticBlock` arm (CLOC12.176 PR1). 9 active
+`#[test]`s, 0 `#[ignore]`: empty block (`static{}`, `static` abutting `{`),
+statement body (`static{x}`), real initializer (`static{x=1}`), two statements
+(`static{x;y}`), brace-termination needing no `;` separator (`static{}m(){}`,
+`m(){}static{}`), two blocks back-to-back (`static{}static{}`), and all three
+member kinds in source order (`x=1;static{y=2}m(){}`). Inputs are
+hand-constructed AST (the emitter is the unit under test; the bridge is exercised
+separately in javascript-parser + a closurec e2e fixture). Test-only; adds a
+`[[test]]` entry to `Cargo.toml` and a row to `tests/upstream/ATTRIBUTION.md`.
+PATCH.
+
 ## [0.40.0] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: emit static initialization blocks

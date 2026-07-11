@@ -1,5 +1,22 @@
 # Changelog — twig-vm
 
+## [0.24.2] — 2026-07-11 (DVAL01-2 — dyn_* builtin dispatch names)
+
+DVAL01-2: the dispatcher's references to the tagged-value builtin names move
+`lispy_*` → `dyn_*` (`src/{lib,operand,dispatch}.rs`), in lockstep with the
+IIR name rename. Pure rename — no dispatch behaviour change; the unsafe seam
+into `dynval-runtime` is untouched.
+
+## [0.24.1] — 2026-07-11 (DVAL01-1c — dependency renamed `lispy-runtime` → `dynval-runtime`)
+
+The shared tagged-value crate `lispy-runtime` is renamed to `dynval-runtime`
+(spec DVAL01 §3.2, de-lisping the generic dynamic-value substrate). twig-vm's
+`Cargo.toml` dependency and the `use dynval_runtime::{…}` imports in
+`src/{lib,operand,dispatch}.rs` move to the new name. Pure rename — no ABI,
+tag-layout, or dispatch behaviour change. twig-vm depends on the unsafe in
+this crate, so `scripts/miri-twig-vm.sh` was run locally before pushing (the
+canonical gate); CI's blocking Miri check now targets `-p dynval-runtime`.
+
 ## [0.24.0] — 2026-06-27 (LANG-FULL E4 — shared `str_const` compatibility)
 
 `twig-vm` now executes the shared E4 `str_const` opcode by allocating the same

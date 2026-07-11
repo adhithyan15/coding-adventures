@@ -24,7 +24,7 @@
 //! host linker, so the golden test runs on the dev host (macOS arm64) and on
 //! every CI runner alike.
 
-use lispy_runtime::{
+use dynval_runtime::{
     LispyValue, TAG_BITS, TAG_FALSE, TAG_HEAP, TAG_INT, TAG_NIL, TAG_SYMBOL, TAG_TRUE,
 };
 
@@ -164,7 +164,7 @@ fn c_not_follows_lispy_truthiness() {
     assert_eq!(unsafe { __dyn_not(__dyn_box_int(0)) }, f, "not(0) = #f");
 }
 
-/// `lispy_truthy` returns a RAW machine 0/1 (for `jmp_if_false`): false iff
+/// `dyn_truthy` returns a RAW machine 0/1 (for `jmp_if_false`): false iff
 /// `#f` or nil, true for everything else (including the integer 0 and pairs).
 #[test]
 fn c_truthy_returns_raw_bool() {

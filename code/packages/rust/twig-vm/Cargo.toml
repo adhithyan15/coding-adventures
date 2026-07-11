@@ -1,6 +1,6 @@
 [package]
 name = "twig-vm"
-version = "0.24.0"
+version = "0.24.2"
 edition = "2021"
 description = "LANG47 + LANG52 + LANG55 + LANG56 + LANG57 + LANG62 + LANG64 + LANG66 + LANG-FULL E4 — string heap objects, builtins, host I/O, higher-order list ops, multi-file entry points, record/union/match runtime smoke tests; `str_const` now aliases the heap-string constant path for shared E4 compiler output; MAX_DISPATCH_DEPTH 256→4096 (LANG62), 4096→65536 (LANG64), 65536→131072 (LANG66) for self-hosted compiler pipeline.  Path A increment 6a: exec_const dispatches `const 0 [ref<LispyPair>]` to LispyValue::NIL.  Path A increment 6b: exec_alloc + exec_field_store for typed cons cells.  VMDEBUG01: generic DebugHooks + DebugServer extracted to the new vm-debug crate (source-compatible — twig-vm re-exports everything)."
 
@@ -9,7 +9,7 @@ twig-ir-compiler   = { path = "../twig-ir-compiler" }
 twig-parser        = { path = "../twig-parser" }
 twig-lexer         = { path = "../twig-lexer" }
 twig-module-driver = { path = "../twig-module-driver" }
-lispy-runtime      = { path = "../lispy-runtime" }
+dynval-runtime      = { path = "../dynval-runtime" }
 lang-runtime-core  = { path = "../lang-runtime-core" }
 interpreter-ir     = { path = "../interpreter-ir" }
 # VMDEBUG01: generic DebugHooks + DebugServer extracted from this crate

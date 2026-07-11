@@ -335,8 +335,14 @@ procedure — reusing the FLOW-MATIC frontend and the shared hook API.
 The first cut targets the **demonstrated language**: a complete four-division
 program with `WORKING-STORAGE` items (levels, core PICTUREs, `VALUE`), a handful
 of the most common verbs (`MOVE`, `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE …
-GIVING`, `DISPLAY`, `PERFORM`, `GO TO`, `IF`, `STOP RUN`), and the
-column-strip/continuation/comment handling. The long tail (full ENVIRONMENT/FILE
+GIVING`, `COMPUTE … [ROUNDED] = <expr> [ON SIZE ERROR …]`, `DISPLAY`, `PERFORM`,
+`GO TO`, `IF`, `STOP RUN`), and the
+column-strip/continuation/comment handling. `COMPUTE` brings the first
+operator-symbol grammar: a precedence-layered arithmetic expression
+(`+ - * / **`, unary sign, parentheses) that the grammar encodes as a
+cascade of rules (`arith_expr` → `arith_term` → `arith_factor` → `arith_unary`
+→ `arith_primary`), so precedence and grouping live in the parse tree rather
+than in later code. The long tail (full ENVIRONMENT/FILE
 sections, `REDEFINES`/`OCCURS`, editing PICTUREs, the complete ~300-word reserved
 list, `COPY`) is documented as future work.
 

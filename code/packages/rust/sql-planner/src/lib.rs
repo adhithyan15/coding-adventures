@@ -1115,6 +1115,14 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
         _ => return None,
     };
 
+    // `MIN`/`MAX` are overloaded: with a single argument they are the aggregate
+    // (min/max over a column), but with two-or-more they are the SCALAR function
+    // that returns the smallest/largest of its arguments. Only the aggregate form
+    // is collected here; the multi-argument form is left to `plan_function_call`.
+    if matches!(agg_func, AggFunc::Min | AggFunc::Max) && call_arg_count(func_call) >= 2 {
+        return None;
+    }
+
     // Check for star argument: COUNT(*).
     let has_star = has_token(func_call, "*");
     let distinct = has_token(func_call, "DISTINCT");
@@ -2078,6 +2086,13 @@ fn plan_function_call(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         "MAX" => Some(AggFunc::Max),
         _ => None,
     };
+    // `MIN(a, b, …)` / `MAX(a, b, …)` with two-or-more arguments are the SCALAR
+    // largest/smallest functions, not the aggregate; fall through to the plain
+    // `FunctionCall` path so the VM's `call_builtin` handles them.
+    let agg_func = match agg_func {
+        Some(AggFunc::Min | AggFunc::Max) if call_arg_count(node) >= 2 => None,
+        other => other,
+    };
 
     let has_star = has_token(node, "*");
     let distinct = has_token(node, "DISTINCT");
@@ -2209,6 +2224,21 @@ where
 // ===========================================================================
 
 /// Find the first child node with a specific `rule_name`.
+/// Count the top-level arguments of a `function_call` node — the number of
+/// expression children inside its `value_list`. Used to distinguish the
+/// single-argument aggregate `MIN`/`MAX` from the two-or-more-argument scalar
+/// forms. A call with no `value_list` (`COUNT(*)` or no args) counts as 0.
+fn call_arg_count(node: &GrammarASTNode) -> usize {
+    find_node(node, "value_list")
+        .map(|vl| {
+            vl.children
+                .iter()
+                .filter(|c| matches!(c, ASTNodeOrToken::Node(_)))
+                .count()
+        })
+        .unwrap_or(0)
+}
+
 fn find_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a GrammarASTNode> {
     for child in &node.children {
         if let ASTNodeOrToken::Node(n) = child {

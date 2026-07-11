@@ -187,7 +187,9 @@ Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 `length`, `empty?`, `each`/`each_pair`, `each_key`, `each_value`, `map`,
 `select`/`filter`, `reject`, `transform_values`, `transform_keys`, and the
 Enumerable aggregates `find`/`detect`, `any?`/`all?`/`none?`, `count`,
-`sort_by`, `min_by`/`max_by`;
+`sort_by`, `min_by`/`max_by`, `group_by`, `partition`,
+`flat_map`/`collect_concat`, `reduce`/`inject`, `sum`, `to_h` (block +
+no-block), `each_with_index`, `each_with_object`;
 **String** `length`/`size`, `upcase`, `downcase`, `reverse`, `strip`/`lstrip`/
 `rstrip`, `empty?`, `include?`, `start_with?`, `end_with?`, `split`, `chars`,
 `to_i`, `to_f`, `to_sym`; **Numeric** `abs`, `to_i`, `to_f`, `even?`, `odd?`,

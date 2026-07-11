@@ -57,6 +57,25 @@ pub fn read_table(data: &[u8], name: &str) -> Result<Vec<(i64, Vec<SqlValue>)>, 
         .collect()
 }
 
+/// Read a `WITHOUT ROWID` table by name, returning each row's decoded columns.
+///
+/// A `WITHOUT ROWID` table has no rowid: it stores its rows in an *index* b-tree
+/// keyed by the primary key, so this walks that tree via
+/// [`crate::btree::walk_index`] rather than [`crate::btree::walk_table`]. Each
+/// record still holds every column in the table's declared order — exactly like
+/// an ordinary table's record, only the rowid is absent — so no column needs to
+/// be reconstructed from a rowid. Order is unspecified (an index b-tree yields no
+/// natural rowid ordering); callers sort in SQL when it matters.
+pub fn read_without_rowid_table(data: &[u8], name: &str) -> Result<Vec<Vec<SqlValue>>, SqliteError> {
+    let (header, pager) = Pager::open(data)?;
+    let root_page = table_root_page_from(&pager, &header, name)?;
+    let records = btree::walk_index(&pager, &header, root_page)?;
+    records
+        .into_iter()
+        .map(|record| record::decode(&record).ok_or(SqliteError::Corrupt("bad table row")))
+        .collect()
+}
+
 fn read_schema_from(pager: &Pager<'_>, header: &Header) -> Result<Vec<SchemaEntry>, SqliteError> {
     let rows = btree::walk_table(pager, header, 1)?;
     rows.into_iter()

@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.2.0 — COMPUTE and arithmetic expressions
+
+- `compute_stmt = "COMPUTE" NAME [ "ROUNDED" ] EQ arith_expr [ size_error ]` —
+  the first COBOL verb that takes operator symbols instead of prepositions.
+- **Precedence-layered arithmetic expressions.** A PEG cannot left-recurse, so
+  COBOL's operator precedence is encoded as a rule cascade, loosest binding
+  first: `arith_expr` (`+ -`) → `arith_term` (`* /`) → `arith_factor` (`**`) →
+  `arith_unary` (leading `+`/`-`, binding tighter than `**` so `-2 ** 2` reads
+  as `(-2) ** 2`) → `arith_primary` (`NUMBER | NAME | ( arith_expr )`).
+  Parenthesised sub-expressions recurse through `arith_primary`; deep nesting is
+  bounded by the recursion-depth cap added in 0.1.1.
+- `size_error = "ON" "SIZE" "ERROR" { statement }` recognises the overflow
+  handler (its runtime semantics are a later PR). Exponentiation's
+  right-associativity is likewise left to the evaluator — the grammar keeps
+  operands as flat siblings.
+- Tests: operator-precedence nesting, parentheses regrouping, `ROUNDED` +
+  `ON SIZE ERROR`, and spaced binary minus vs. negative literal.
+
+## 0.1.1 — depth-cap hardening
+
+- **Security (DoS):** opt into the shared parser's recursion-depth cap
+  (`DEFAULT_MAX_RULE_DEPTH`) in both `create_cobol_parser` and `try_parse_cobol`.
+  Deeply-nested syntax (e.g. thousands of nested `IF … IF … IF …`) recurses once
+  per level through the generic `parse_rule`; without the cap it overflowed the
+  *native* stack — an uncatchable `SIGSEGV`/abort that a `Result`-returning entry
+  point cannot report. It now surfaces as a recoverable "input nests deeper than
+  the supported limit" parse error. Regression test added.
+
 ## 0.1.0 — COBOL-60 parser (PL07)
 
 - Grammar-driven parser over `code/grammars/cobol/cobol.grammar`, wrapping

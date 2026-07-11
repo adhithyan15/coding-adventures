@@ -1,0 +1,1 @@
+class C { get #x(){ return 1 + 2 } }

@@ -249,7 +249,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **CI detect outputs must use `steps.toolchains` (not `steps.detect`).** Adding a new language to CI requires THREE places: `allLanguages` in `main.go`, the detect job `outputs:`, AND `steps.toolchains` normalization (BOTH the `is_main=true` and `else` branches).
 - **CodeQL flags `int64 → int` downcasts of CLI input** as `go/incorrect-integer-conversion`. Add explicit platform-sized bounds checks first; for `float64`, reject NaN/Inf/non-integral before the cast.
 - **Miri timeout grows with code, not with test count.** `lang-runtime-safety.yml` had `timeout-minutes: 30`; PR 5 (closures) tripled `twig-vm` Miri wallclock and one of two parallel runs failed at 30:15 from runner variance, not a real bug. Bump generously (90 min) and shard by crate when wallclock crosses 60 min. Locally, `MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm` is the canonical pre-push smoke check; don't trust the timeout to catch slowdown.
-- **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `lispy-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
+- **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `dynval-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
 - **Clippy is a blocking CI gate via the build tool's `-clippy` flag, not a `cargo clippy --workspace` job.** `cargo clippy --workspace` CANNOT run in this repo: platform-gated crates (`paint-metal`/`metal-compute`/`objc-bridge` need macOS, `paint-vm-direct2d`/`paint-vm-gdi` need Windows) `compile_error!` off their platform, so a whole-workspace clippy always fails somewhere. Instead, `build-tool -clippy` runs `cargo clippy --all-targets -- -D warnings` PER affected Rust package, from the crate dir, before its BUILD commands. `clippyStepFor` mirrors each BUILD's own platform guard: unconditional `cargo …` → lint unconditionally; `if [ "$(uname)" = "Darwin" ]; then cargo …` → reuse the condition; pure `echo SKIP` (no cargo) → no clippy. Diff-based on PRs, full on main. Setup gotchas, all learned the hard way wiring this gate:
   (1) `dtolnay/rust-toolchain` installs the **minimal** profile (no clippy) — add `with: components: clippy`.
   (2) **Match the clippy version you verify against to CI's `@stable`.** A stale local toolchain (mise's cached "stable" was 1.94 while CI stable was 1.97) hid ~65 lints that only failed in CI (`manual_checked_ops`, stricter `collapsible_match`/`while_let_loop`/`question_mark`/`unnecessary_sort_by`). Before pushing: `rustup update stable` then `cargo +stable clippy`.
@@ -1474,3 +1474,64 @@ before pushing: `grep -rnE "const [a-z0-9_]+ [a-z_]+\[[0-9]*\]\[" src/`.
 gcc on several pedantic ISO-C rules. "Verified under gcc/clang locally" does not
 cover the ubuntu gcc arm — the pure-ISO guarantee is only firm once CI's gcc has
 run. Watch babysit CI to green, don't assume from a local build.
+
+## Lesson: new grammar frontends must opt into the parser's recursion depth cap
+
+**Context:** Adding `IF` to the COBOL runtime introduced the first *nestable*
+construct. A security review found that deeply-nested `IF … IF … IF …` (one per
+80-column card, so a statement flows across cards and the nest is real)
+overflowed the native stack — an uncatchable `SIGSEGV`/abort that a
+`Result`-returning entry point cannot report.
+
+**Cause:** `parser::GrammarParser::new(...)` defaults `max_depth` to
+`usize::MAX` — the recursion-depth guard is **opt-in**. `cobol-parser` built the
+parser with `GrammarParser::new(...)` and never chained `.with_max_depth(...)`,
+so every deep nest recursed once per level through `parse_rule` with no ceiling.
+The shared parser already HAS the fix (`DEFAULT_MAX_RULE_DEPTH = 128`, below the
+~192–224 overflow point on a 2 MB thread); the frontend just wasn't using it.
+
+**Fix:** Every frontend that constructs a `GrammarParser` must chain
+`.with_max_depth(DEFAULT_MAX_RULE_DEPTH)` on *all* construction paths (both the
+panicking and the `try_` entry points). Deep nesting then returns a clean
+"input nests deeper than the supported limit" parse error. This transitively
+bounds any *runtime* tree-walk (e.g. a recursive `exec_stmt`) too, since the CST
+can no longer be built deeper than the cap.
+
+**Blind spot / grep before pushing a new frontend:**
+`grep -rn "GrammarParser::new" code/packages/rust/<lang>-parser/src/` — every hit
+that lacks a following `.with_max_depth(` is an unguarded native-stack DoS. This
+is the same class as the closurec/json-parser deep-recursion DoS
+(project_closurec_deep_recursion_dos): a nestable construct is the trigger, and
+the mitigation belongs at the parser layer, not the runtime.
+
+## Lesson: grammar `{ }` repetition width is NOT bounded by the parser depth cap
+
+**Context:** After hardening `cobol-parser` with `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`
+(which stops deeply-*nested* input like `IF … IF …` or `((((…))))` from
+overflowing the native stack), the COMPUTE runtime added an expression evaluator.
+A security review found a *second*, distinct stack-overflow DoS that the depth
+cap does **not** catch: a flat operator chain `COMPUTE R = A + A + A + … + A`
+with tens of thousands of terms.
+
+**Cause:** The depth cap counts *rule recursion* (`parse_rule` re-entry). But a
+grammar repetition `arith_expr = arith_term { ("+"|"-") arith_term }` is a **flat
+loop** in the parser — it appends children without recursing, so N terms produce
+ONE `arith_expr` CST node with 2N−1 children at *bounded* parse depth, for
+arbitrarily large N (there is no token/source-size cap). The consumer then folded
+those children into an N-deep left-nested `Expr` tree, and both the tree-walking
+`eval_expr` and the **recursive `Drop` of `Box<Expr>`** recursed N frames deep →
+uncatchable `SIGSEGV` on a few hundred KB of source.
+
+**Fix:** Any reader that folds a grammar *repetition* into a *recursive* tree
+(binary-operator chains, list-of-list structures, etc.) must bound the operand
+count itself — the parser's depth cap won't. Here: thread a single
+`MAX_EXPR_OPERANDS` (1024) budget through every expression reader, charged once
+per primary (across parenthesised levels too, so nested parens can't multiply it),
+returning a clean `RuntimeError` when exhausted. That bounds the folded tree
+height, hence both eval and Drop recursion.
+
+**Blind spot / how to catch it:** when reviewing a new tree-walking evaluator,
+ask two *separate* questions — (1) is nesting depth bounded? (parser cap) and
+(2) is repetition *width* bounded? (needs its own budget). They are different
+axes; the depth cap only answers the first. Cross-refs the depth-cap lesson above
+and [[project_closurec_deep_recursion_dos]].

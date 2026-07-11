@@ -109,17 +109,36 @@ Behaviour, arity, and ABI are identical:
 |---|---|---|
 | `box_int` / `unbox_int`   | `dyn_box_int` / `dyn_unbox_int`   | int ⇄ tagged word |
 | `cons` / `car` / `cdr`    | `dyn_cons` / `dyn_car` / `dyn_cdr` | 2-field heap pair |
-| `pair_p`                  | `dyn_is_pair`                     | heap-tag test |
-| `equal` / `not`           | `dyn_eq` / `dyn_not`              | value eq / logical not |
+| `pair_p`                  | `dyn_pair_p`                      | heap-tag test |
+| `equal` / `not`           | `dyn_equal` / `dyn_not`          | value eq / logical not |
 | `nil` / `make_symbol`     | `dyn_nil` / `dyn_make_symbol`     | nil / interned symbol |
 | `truthy`                  | `dyn_truthy`                      | tagged → raw 0/1 |
 | `to_exit_code`            | `dyn_to_exit_code`               | tagged → process exit int |
 | `tag_*`                   | `dyn_tag_*`                       | tag constants (test ABI) |
 
+> **Implementation note (DVAL01-2, revised from the draft).** The rename is
+> **prefix-preserving** — `pair_p → dyn_pair_p`, `equal → dyn_equal` (the draft
+> proposed the semantic renames `dyn_is_pair` / `dyn_eq`). Reason: DVAL01-1a
+> already shipped the C runtime symbols as `__dyn_pair_p` / `__dyn_equal`, so
+> keeping the IIR name's suffix identical means the name maps to its runtime
+> symbol by a trivial `__`-prefix rule (`dyn_pair_p` → `__dyn_pair_p`) with no
+> divergent lookup table. The `is_pair`/`eq` beautification, if ever wanted, is a
+> separate follow-up that would also re-mangle the runtime symbols.
+
+> **Native emit fix (DVAL01-2).** DVAL01-1a renamed the C runtime symbols to
+> `__dyn_*` and updated the tests, but the aarch64/x86_64 `call_builtin` emit
+> still hard-coded `__twig_<name>` for *every* helper — so the tagged-value
+> builtins emitted `__twig_lispy_cons`, a symbol the runtime does not export.
+> Real programs were unaffected (they lower cons/car via the structural `alloc`
+> path, not `call_builtin`), so the matrix stayed green while 4+4 direct-call
+> unit tests sat red. DVAL01-2 routes `dyn_*` names to `__<name>` (= `__dyn_cons`)
+> and everything else to `__twig_<name>`, aligning native with the runtime + the
+> LLVM `DYN_BUILTINS` table and greening those tests.
+
 The generic **IIR ops** (`box`/`unbox`/`alloc`/`field_*`/`is_null`) are already
 neutral and stay. Whether a target uses the *ops* (structural) or the *runtime
 calls* (native/LLVM) for box/unbox is a per-backend representation choice
-(mirroring `lisp_repr_structural` vs `lisp_repr`), not a language choice.
+(mirroring `dyn_repr_structural` vs `dyn_repr`), not a language choice.
 
 ### 3.2 Runtime & crate re-homing
 
@@ -145,15 +164,20 @@ programs are unaffected.
 
 ## 4. PR breakdown (dependency-ordered; each small, run-verified, all 5 backends green)
 
-1. **DVAL01-0 — this spec.** Sign-off = merge.
-2. **DVAL01-1 — rename the native runtime + ABI.** `lispy_runtime.c` →
-   `dynval_runtime.c`, `__twig_lispy_*` → `__dyn_*`; `lispy-runtime` crate →
-   `dynval-runtime`; update `build.rs`, the golden Miri tests, and the
-   `iir-to-llvm` `LISPY_BUILTINS` / native `V1_BUILTINS` tables. Pure rename;
-   full matrix green + `scripts/miri-twig-vm.sh`.
-3. **DVAL01-2 — rename the IIR builtin names + passes.** `lispy_*` → `dyn_*` in
-   `heap.rs` `RUNTIME_RENAMES`, `lisp_repr*` → `dyn_repr*`; update `lang-aot`
-   wiring. Pure rename; matrix green.
+1. **DVAL01-0 — this spec.** ✅ merged.
+2. **DVAL01-1 — rename the native runtime + ABI.** ✅ merged (as -1a `__dyn_*`
+   symbols, -1b `dynval_runtime.c` file, -1c `dynval-runtime` crate).
+   `lispy_runtime.c` → `dynval_runtime.c`, `__twig_lispy_*` → `__dyn_*`;
+   `lispy-runtime` crate → `dynval-runtime`.
+3. **DVAL01-2 — rename the IIR builtin names + passes.** ✅ **done.** `lispy_*` →
+   `dyn_*` (prefix-preserving — see §3.1 note) in `heap.rs` `RUNTIME_RENAMES`, the
+   `iir-to-llvm` table (`LISPY_BUILTINS` → `DYN_BUILTINS`), the native
+   `V1_BUILTINS` (aarch64/x86_64), `iir-to-cil`, the `dynval-runtime` ABI export
+   symbols + `LispyBinding` registrations, and the VM dispatch (twig-vm,
+   mccarthy-lisp-vm); `lisp_repr*` → `dyn_repr*` passes (files + `lower_*` fns);
+   `lang-aot` wiring + tests. **Also fixed** the latent native emit bug (§3.1
+   native-emit note) so `dyn_*` builtins target `__dyn_*`. Pure rename; the lisp
+   cells stay green across VM/JIT/LLVM/native and cross-backend agreement holds.
 4. **DVAL01-3 — producer-agnostic classification (§3.3).** Decouple `dyn_repr`'s
    `DynValue` seed set from the builtin allow-list; unit-test that a `box_int`
    result is exit-unboxed. Matrix green (superset behaviour).

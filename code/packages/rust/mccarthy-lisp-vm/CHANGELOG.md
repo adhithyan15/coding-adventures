@@ -1,5 +1,17 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.5.3 — 2026-07-11 — DVAL01-2: dyn_* builtin dispatch names
+
+DVAL01-2: the VM's `call_builtin` dispatch on the tagged-value builtin names
+moves `lispy_*` → `dyn_*` in lockstep with the IIR name rename. Pure rename.
+
+## v0.5.2 — 2026-07-11 — DVAL01-1c: dependency renamed `lispy-runtime` → `dynval-runtime`
+
+The shared value-model crate `lispy-runtime` is renamed to `dynval-runtime`
+(spec DVAL01 §3.2). The `Cargo.toml` dependency and the `use dynval_runtime::…`
+imports in `src/lib.rs` move to the new name. Pure rename — the VM still
+executes each `IIRModule` against the same tagged-`i64` value model.
+
 ## v0.5.1 — 2026-06-04 — recursive closures (L2c-3c): no new opcode, docs + test
 
 * **`LABEL` recursive closures need no VM change.**  A `LABEL` used as a

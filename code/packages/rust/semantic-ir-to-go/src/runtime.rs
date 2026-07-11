@@ -1713,13 +1713,16 @@ func _sir_hash_responds(name string) bool {
 	switch name {
 	// Non-block Hash methods.
 	case "keys", "values", "has_key?", "key?", "include?", "member?",
-		"has_value?", "value?", "size", "length", "empty?", "fetch":
+		"has_value?", "value?", "size", "length", "empty?", "fetch", "to_h":
 		return true
 	// Block-taking Hash methods.
 	case "each", "each_pair", "each_key", "each_value", "map",
 		"select", "filter", "reject", "transform_values", "transform_keys",
 		"find", "detect", "any?", "all?", "none?", "count",
-		"sort_by", "min_by", "max_by":
+		"sort_by", "min_by", "max_by",
+		"group_by", "partition", "flat_map", "collect_concat",
+		"reduce", "inject", "sum",
+		"each_with_index", "each_with_object":
 		return true
 	}
 	return false
@@ -2363,6 +2366,18 @@ func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
 			out[i] = &Seq{Items: []Value{e.Key, e.Val}}
 		}
 		return &Seq{Items: out}, true
+	case "to_h":
+		// Ruby `Hash#to_h` with NO block → a shallow copy of the hash (Ruby
+		// returns `self`; a fresh `*Map` matches the value semantics without
+		// aliasing the receiver's entries).  The block form (which re-maps each
+		// pair to a new `[k, v]`) lives in `_sir_hash_block_method`.
+		keys := make([]Value, len(recv.Entries))
+		vals := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			keys[i] = e.Key
+			vals[i] = e.Val
+		}
+		return _sir_map_lit(keys, vals), true
 	case "dig":
 		// Ruby `Hash#dig(k, …)` — a NESTED lookup that walks one key per
 		// argument, returning nil the moment a level is missing (never
@@ -2654,6 +2669,124 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			}
 		}
 		return &Seq{Items: []Value{best.Key, best.Val}}, true
+	// ── Enumerable breadth (grouping / folding / flattening) ───────
+	//
+	// The block is yielded (key, value) two args (except `reduce`/`inject`,
+	// which follow Ruby's memo convention and yield (memo, [key, value]) — the
+	// pair as ONE second argument).  Every "element" a result carries is the
+	// two-element [key, value] Array (`&Seq{key, value}`).
+	case "group_by":
+		// A Hash of block key → Array of [k, v] pairs, in first-seen key order.
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, e := range recv.Entries {
+			k := _sir_apply(block, []Value{e.Key, e.Val})
+			pair := &Seq{Items: []Value{e.Key, e.Val}}
+			if seq, ok := _sir_map_get(acc, k).(*Seq); ok && seq != nil {
+				seq.Items = append(seq.Items, pair)
+			} else {
+				_sir_map_set(acc, k, &Seq{Items: []Value{pair}})
+			}
+		}
+		return acc, true
+	case "partition":
+		// `[matching pairs, non-matching pairs]`, order preserved.
+		yes := []Value{}
+		no := []Value{}
+		for _, e := range recv.Entries {
+			pair := &Seq{Items: []Value{e.Key, e.Val}}
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				yes = append(yes, pair)
+			} else {
+				no = append(no, pair)
+			}
+		}
+		return &Seq{Items: []Value{&Seq{Items: yes}, &Seq{Items: no}}}, true
+	case "flat_map", "collect_concat":
+		// Map each pair through the block, splicing one level: an Array result
+		// contributes its elements, a scalar is appended as-is.
+		out := []Value{}
+		for _, e := range recv.Entries {
+			r := _sir_apply(block, []Value{e.Key, e.Val})
+			if s, ok := r.(*Seq); ok {
+				out = append(out, s.Items...)
+			} else {
+				out = append(out, r)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "reduce", "inject":
+		// `reduce(init) { |memo, (k, v)| … }` folds the pairs; a seedless
+		// `reduce` starts from the first pair.  The block yields the pair as ONE
+		// second argument.  Empty seedless reduce ⇒ nil.
+		pairs := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			pairs[i] = &Seq{Items: []Value{e.Key, e.Val}}
+		}
+		var acc Value
+		var rest []Value
+		if len(args) > 0 {
+			acc = args[0]
+			rest = pairs
+		} else if len(pairs) > 0 {
+			acc = pairs[0]
+			rest = pairs[1:]
+		} else {
+			return nil, true
+		}
+		for _, pair := range rest {
+			acc = _sir_apply(block, []Value{acc, pair})
+		}
+		return acc, true
+	case "sum":
+		// `sum(init = 0) { |k, v| … }` — `init` plus the polymorphic-`+` sum of
+		// the block results (Hash#sum requires a block).
+		var acc Value = int64(0)
+		if len(args) > 0 {
+			acc = args[0]
+		}
+		for _, e := range recv.Entries {
+			acc = _sir_plus([]Value{acc, _sir_apply(block, []Value{e.Key, e.Val})})
+		}
+		return acc, true
+	case "to_h":
+		// `Hash#to_h { |k, v| [new_k, new_v] }` — a NEW hash from the `[k, v]`
+		// pairs the block returns.  The block is yielded the two args `(k, v)`
+		// (matching `each`) and must return a 2-element `*Seq`; a non-pair result
+		// is skipped (the never-raise floor — Ruby raises TypeError, deferred to
+		// the typed-error cascade), and a later pair with a duplicate key wins
+		// (Ruby's rule, and how `_sir_map_set` already behaves).
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, e := range recv.Entries {
+			r := _sir_apply(block, []Value{e.Key, e.Val})
+			if pair, ok := r.(*Seq); ok && len(pair.Items) == 2 {
+				_sir_map_set(acc, pair.Items[0], pair.Items[1])
+			}
+		}
+		return acc, true
+	case "each_with_index":
+		// `each_with_index { |(k, v), i| … }` — yields each `[k, v]` pair with
+		// its 0-based index and returns the receiver.  Unlike the two-arg
+		// `(k, v)` yield of `each`, the element arrives as a single `[k, v]`
+		// `*Seq` (the second block param is the index), matching Ruby's
+		// Enumerable convention.
+		for i, e := range recv.Entries {
+			_sir_apply(block, []Value{&Seq{Items: []Value{e.Key, e.Val}}, int64(i)})
+		}
+		return recv, true
+	case "each_with_object":
+		// `each_with_object(memo) { |(k, v), memo| … }` — yields each `[k, v]`
+		// pair with the memo object and returns the (mutated) memo.  Like
+		// `each_with_index`, the element is the single `[k, v]` pair (the second
+		// block param is the memo).  With no memo argument the receiver is
+		// returned unchanged.
+		if len(args) == 0 {
+			return recv, true
+		}
+		memo := args[0]
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{&Seq{Items: []Value{e.Key, e.Val}}, memo})
+		}
+		return memo, true
 	}
 	return nil, false
 }

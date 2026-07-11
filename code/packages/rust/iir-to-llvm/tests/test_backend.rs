@@ -1355,13 +1355,13 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRLlvmError::UndefinedVariable { function: "f".into(), name: "nope".into() });
 }
 
-/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "lispy_cons"`) lowers
+/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "dyn_cons"`) lowers
 /// to a `call i64 @__dyn_cons(i64, i64)` and emits exactly one matching
 /// `declare`. A lisp heap reference type (`ref<LispyPair>`) is accepted (carried
 /// as a tagged `i64`); a non-lisp `ref<Foo>` is still rejected (see
 /// `validate_rejects_unsupported_type`).
 #[test]
-fn lispy_cons_lowers_to_runtime_call() {
+fn dyn_cons_lowers_to_runtime_call() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1373,7 +1373,7 @@ fn lispy_cons_lowers_to_runtime_call() {
                 "call_builtin",
                 Some("p".into()),
                 vec![
-                    Operand::Var("lispy_cons".into()),
+                    Operand::Var("dyn_cons".into()),
                     Operand::Var("a".into()),
                     Operand::Var("b".into()),
                 ],
@@ -1382,7 +1382,7 @@ fn lispy_cons_lowers_to_runtime_call() {
             IIRInstr::new(
                 "call_builtin",
                 Some("h".into()),
-                vec![Operand::Var("lispy_car".into()), Operand::Var("p".into())],
+                vec![Operand::Var("dyn_car".into()), Operand::Var("p".into())],
                 "any",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "any"),
@@ -1397,7 +1397,7 @@ fn lispy_cons_lowers_to_runtime_call() {
     assert_eq!(ll.matches("declare i64 @__dyn_cons").count(), 1, "one cons declare");
 }
 
-/// An unknown `lispy_*`-shaped builtin that is NOT in `LISPY_BUILTINS` is rejected.
+/// An unknown `dyn_*`-shaped builtin that is NOT in `DYN_BUILTINS` is rejected.
 #[test]
 fn unknown_builtin_still_rejected() {
     let f = IIRFunction::new(
@@ -1408,7 +1408,7 @@ fn unknown_builtin_still_rejected() {
             IIRInstr::new(
                 "call_builtin",
                 Some("x".into()),
-                vec![Operand::Var("lispy_bogus".into())],
+                vec![Operand::Var("dyn_bogus".into())],
                 "i64",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),

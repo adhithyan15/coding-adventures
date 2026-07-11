@@ -337,38 +337,38 @@ struct LlvmStringLiteralRef {
 /// `call`s into the shared C runtime (`twig-aot/runtime/dynval_runtime.c`), the
 /// same runtime the native AOT backend links. Each entry is
 /// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
-/// so the signature is always `i64 (i64 × arity)`. The `lispy_*` IIR names are
+/// so the signature is always `i64 (i64 × arity)`. The `dyn_*` IIR names are
 /// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
-/// `lower_lisp_repr`; they map to the runtime's `__dyn_*` symbols.
+/// `lower_dyn_repr`; they map to the runtime's `__dyn_*` symbols.
 ///
 /// | iir name         | runtime symbol            | McCarthy primitive            |
 /// |------------------|---------------------------|-------------------------------|
-/// | `lispy_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
-/// | `lispy_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
-/// | `lispy_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
-/// | `lispy_equal`    | `__dyn_equal`      | `EQ`                          |
-/// | `lispy_not`      | `__dyn_not`        | logical `not`                 |
-/// | `lispy_truthy`   | `__dyn_truthy`     | `COND` clause test            |
-/// | `lispy_box_int`  | `__dyn_box_int`    | int → tagged word             |
-/// | `lispy_unbox_int`| `__dyn_unbox_int`  | tagged word → int (result)    |
-/// | `lispy_nil`      | `__dyn_nil`        | `()` / nil                    |
-const LISPY_BUILTINS: &[(&str, &str, usize)] = &[
-    ("lispy_cons", "__dyn_cons", 2),
-    ("lispy_car", "__dyn_car", 1),
-    ("lispy_cdr", "__dyn_cdr", 1),
-    ("lispy_pair_p", "__dyn_pair_p", 1),
-    ("lispy_equal", "__dyn_equal", 2),
-    ("lispy_not", "__dyn_not", 1),
-    ("lispy_truthy", "__dyn_truthy", 1),
-    ("lispy_box_int", "__dyn_box_int", 1),
-    ("lispy_unbox_int", "__dyn_unbox_int", 1),
-    ("lispy_to_exit_code", "__dyn_to_exit_code", 1),
-    ("lispy_nil", "__dyn_nil", 0),
+/// | `dyn_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
+/// | `dyn_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
+/// | `dyn_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
+/// | `dyn_equal`    | `__dyn_equal`      | `EQ`                          |
+/// | `dyn_not`      | `__dyn_not`        | logical `not`                 |
+/// | `dyn_truthy`   | `__dyn_truthy`     | `COND` clause test            |
+/// | `dyn_box_int`  | `__dyn_box_int`    | int → tagged word             |
+/// | `dyn_unbox_int`| `__dyn_unbox_int`  | tagged word → int (result)    |
+/// | `dyn_nil`      | `__dyn_nil`        | `()` / nil                    |
+const DYN_BUILTINS: &[(&str, &str, usize)] = &[
+    ("dyn_cons", "__dyn_cons", 2),
+    ("dyn_car", "__dyn_car", 1),
+    ("dyn_cdr", "__dyn_cdr", 1),
+    ("dyn_pair_p", "__dyn_pair_p", 1),
+    ("dyn_equal", "__dyn_equal", 2),
+    ("dyn_not", "__dyn_not", 1),
+    ("dyn_truthy", "__dyn_truthy", 1),
+    ("dyn_box_int", "__dyn_box_int", 1),
+    ("dyn_unbox_int", "__dyn_unbox_int", 1),
+    ("dyn_to_exit_code", "__dyn_to_exit_code", 1),
+    ("dyn_nil", "__dyn_nil", 0),
 ];
 
-/// Look up a `lispy_*` builtin by its IIR name.
-fn lispy_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize)> {
-    LISPY_BUILTINS.iter().find(|(n, _, _)| *n == name)
+/// Look up a `dyn_*` builtin by its IIR name.
+fn dyn_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize)> {
+    DYN_BUILTINS.iter().find(|(n, _, _)| *n == name)
 }
 
 /// Pre-flight validation for IIR → LLVM lowering.
@@ -799,7 +799,7 @@ pub fn lower_iir_to_llvm(
                         "input_i64" => used_input_i64 = true,
                         "input_str" => used_input_str = true,
                         _ => {
-                            if let Some(b) = lispy_builtin(name) {
+                            if let Some(b) = dyn_builtin(name) {
                                 if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
                                     used_lispy.push(b);
                                 }
@@ -3042,7 +3042,7 @@ fn lower_jmp_if(
         } else if cond_ty == "void" {
             // McCarthy W12b-3: a `COND` whose clause test is a tagged-word lisp
             // predicate carries NO operand type on `jmp_if_*` (type_hint "void");
-            // the condition is the `i64` 0/1 from `lispy_truthy`. Compare it
+            // the condition is the `i64` 0/1 from `dyn_truthy`. Compare it
             // against zero to get the `i1` — `trunc void …` would be invalid.
             let i1 = state.fresh("tobool");
             out.push_str(&format!("  {i1} = icmp ne i64 {cond_op}, 0\n"));
@@ -3277,7 +3277,7 @@ fn lower_call_builtin(
     // McCarthy W12b: a tagged-word lisp builtin lowers to a `call` into the C
     // runtime. Every arg + the result is an `i64` (tagged word); the dest gets a
     // fresh SSA name registered in the env so later instructions can use it.
-    if let Some((_iir_name, symbol, arity)) = lispy_builtin(&name) {
+    if let Some((_iir_name, symbol, arity)) = dyn_builtin(&name) {
         let dest = require_dest(instr, &name, state.fn_name)?.to_string();
         let mut args = Vec::with_capacity(*arity);
         for k in 0..*arity {

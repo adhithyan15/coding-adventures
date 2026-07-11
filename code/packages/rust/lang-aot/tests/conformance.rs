@@ -42,7 +42,7 @@ use lang_aot::{
     compile_source_to_wasm, run_mccarthy_on_jit, Language,
 };
 
-use lispy_runtime::LispyValue;
+use dynval_runtime::LispyValue;
 
 // The shared real-CoreCLR harness (`compile_source_to_cil_text` → real `ilasm` →
 // real `dotnet`), reused by the per-feature `clr_real_*` tests. Lives in a

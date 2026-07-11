@@ -1,5 +1,55 @@
 # Changelog — sqlite-file
 
+## 0.7.0 - Unreleased
+
+Phase E5 (cont.): the **name-based convenience reader** for `WITHOUT ROWID`
+tables, so callers no longer need to hand-resolve a root page and pick the right
+b-tree walker.
+
+### Added
+
+- **`read_without_rowid_table(bytes, name) -> Vec<Vec<SqlValue>>`** — the
+  `WITHOUT ROWID` sibling of `read_table`. It resolves the table's root page from
+  `sqlite_schema`, walks its **index** b-tree via `btree::walk_index`, and
+  decodes each record into columns. There is no rowid, so it returns bare column
+  vectors (not `(rowid, columns)`); the record holds every column in declared
+  order, exactly like a rowid table.
+
+## 0.6.0 - Unreleased
+
+Phase E5: **index b-tree walking** — the raw-file primitive behind `WITHOUT
+ROWID` tables (and, later, real index scans). `WITHOUT ROWID` tables store their
+rows in an *index* b-tree keyed by the record itself, which the table-only
+`walk_table` rejected (`unexpected b-tree page type`).
+
+### Added
+
+- **`btree::walk_index(pager, header, root_page) -> Vec<Vec<u8>>`** walks an
+  index b-tree and returns every entry's record bytes. It handles the three ways
+  index pages differ from table pages:
+  - page types `0x0A` (leaf) / `0x02` (interior), not `0x0D` / `0x05`;
+  - cells carry **no rowid** (`[len][payload]`, or `[child][len][payload]` on an
+    interior page);
+  - a SQLite index is a **true b-tree**, so a divider key on an interior page is
+    a genuine entry stored only there — `walk_index` emits interior payloads as
+    well as leaf payloads (a table b-tree copies rowids to the leaves, so
+    `walk_table` never emits interior cells). Confirmed against real SQLite: an
+    800-row `WITHOUT ROWID` table (a two-level index b-tree) round-trips to
+    exactly its 800 records, none duplicated or missing.
+  - overflow uses the **index** inline-split ceiling `X = ((U-12)*64/255) - 23`
+    (smaller than the table ceiling `U - 35`).
+  Bounds-, cycle-, and amplification-guarded exactly like `walk_table` — a
+  corrupt tree yields `Err`, never a panic or unbounded work.
+- Six unit tests (single leaf, empty, interior-emits-divider-plus-children,
+  overflow reassembly, wrong-page-type rejection, child-cycle detection).
+
+### Changed
+
+- The table-leaf overflow reassembly was factored into a shared
+  `split_and_reassemble` helper (parameterised by the inline ceiling) now used
+  by both `walk_table` and `walk_index`; behaviour of the table path is
+  unchanged (its 33 tests still pass).
+
 ## 0.5.0 - Unreleased
 
 Phase E4: **`sqlite_schema` lookup** and the public **`read_table(bytes, name)`**

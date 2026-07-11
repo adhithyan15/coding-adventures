@@ -1481,6 +1481,11 @@ pub const RUNTIME: &str = r##"mod __sir {
                     // Enumerable aggregates (Hash includes Enumerable)
                     | "find" | "detect" | "any?" | "all?" | "none?" | "count"
                     | "sort_by" | "min_by" | "max_by"
+                    // Enumerable breadth (block-taking reshape/fold)
+                    | "group_by" | "partition" | "flat_map" | "collect_concat"
+                    | "reduce" | "inject" | "sum"
+                    // Enumerable iteration / conversion
+                    | "to_h" | "each_with_index" | "each_with_object"
             ),
             Value::Str(_) => matches!(
                 name,
@@ -2539,6 +2544,173 @@ pub const RUNTIME: &str = r##"mod __sir {
                     }
                     best.map(|(_, (k, v))| seq_lit(vec![k, v])).unwrap_or(Value::Nil)
                 }
+                None => unknown_method(&recv, name),
+            },
+            // `group_by { |k, v| key }` — a Hash mapping each block key to the
+            // Array of the `[k, v]` pairs that produced it, in first-seen key
+            // order and insertion order.  (Hash includes Enumerable, so the
+            // element grouped is the two-element pair, matching Ruby.)
+            "group_by" => match &block {
+                Some(b) => {
+                    // Snapshot into an owned Vec FIRST so no `RefCell` borrow of
+                    // the receiver is held while the user block runs — a block
+                    // that reentrantly mutates the same hash cannot double-
+                    // borrow-panic (the never-panic floor).
+                    let snapshot = entries_rc.borrow().clone();
+                    let acc = map_lit(vec![]);
+                    for (k, v) in snapshot {
+                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let bucket = match map_get(&acc, &key) {
+                            seq @ Value::Seq(_) => seq,
+                            _ => seq_lit(vec![]),
+                        };
+                        if let Value::Seq(inner) = &bucket {
+                            inner.borrow_mut().push(seq_lit(vec![k, v]));
+                        }
+                        map_set(&acc, key, bucket);
+                    }
+                    acc
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `partition { |k, v| pred }` — `[[matching pairs], [rest pairs]]`,
+            // each a fresh Array of `[k, v]` pairs preserving insertion order.
+            "partition" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut yes = Vec::new();
+                    let mut no = Vec::new();
+                    for (k, v) in snapshot {
+                        if truthy(&apply_closure(b, vec![k.clone(), v.clone()])) {
+                            yes.push(seq_lit(vec![k, v]));
+                        } else {
+                            no.push(seq_lit(vec![k, v]));
+                        }
+                    }
+                    seq_lit(vec![seq_lit(yes), seq_lit(no)])
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `flat_map`/`collect_concat { |k, v| … }` — map each pair then
+            // concatenate one level: an Array result splices its elements, a
+            // scalar is appended as-is.
+            "flat_map" | "collect_concat" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut out = Vec::new();
+                    for (k, v) in snapshot {
+                        match apply_closure(b, vec![k, v]) {
+                            Value::Seq(inner) => out.extend(inner.borrow().clone()),
+                            other => out.push(other),
+                        }
+                    }
+                    seq_lit(out)
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `reduce`/`inject` — Ruby's memo fold.  Unlike the two-arg `(k, v)`
+            // yield every other Enumerable method here uses, `reduce` follows
+            // Ruby's memo convention: the block receives `(memo, pair)` where
+            // `pair` is the `[k, v]` Array as ONE argument.  With an explicit
+            // seed the fold starts there over every pair; without one it seeds
+            // from the first pair (an empty seedless reduce is `nil`).
+            "reduce" | "inject" => {
+                let b = match &block {
+                    Some(b) => b,
+                    None => return unknown_method(&recv, name),
+                };
+                let snapshot = entries_rc.borrow().clone();
+                let pairs: Vec<Value> =
+                    snapshot.into_iter().map(|(k, v)| seq_lit(vec![k, v])).collect();
+                let (mut acc, rest): (Value, &[Value]) =
+                    if let Some(seed) = pos.into_iter().next() {
+                        (seed, &pairs[..])
+                    } else if let Some((head, tail)) = pairs.split_first() {
+                        (head.clone(), tail)
+                    } else {
+                        return Value::Nil;
+                    };
+                for pair in rest {
+                    acc = apply_closure(b, vec![acc, pair.clone()]);
+                }
+                acc
+            }
+            // `sum(init = 0) { |k, v| … }` — numeric fold seeded at `0` (or the
+            // explicit seed arg, matching Ruby `sum(init)` and the Python/TS
+            // reference's `total = args[0] if args else 0`) over the block
+            // results.  Each step reuses the polymorphic `plus` helper, so
+            // integer-only inputs stay `Int` while any float promotes.
+            "sum" => match &block {
+                Some(b) => {
+                    let seed = pos.into_iter().next().unwrap_or(Value::Int(0));
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut acc = seed;
+                    for (k, v) in snapshot {
+                        acc = plus(vec![acc, apply_closure(b, vec![k, v])]);
+                    }
+                    acc
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#to_h` — WITHOUT a block, a shallow copy of the hash (a fresh
+            // `Map` so mutating it never aliases the receiver's entries).  WITH a
+            // block `{ |k, v| [new_k, new_v] }`, a NEW hash from the `[k, v]`
+            // pairs the block returns: the block is yielded the two args
+            // `(k, v)` (matching `each`), a non-pair result is skipped (the
+            // never-panic floor — Ruby raises TypeError, deferred to the
+            // typed-error cascade), and a later pair with a duplicate key wins
+            // (Ruby's rule, `map_set`).  The block form snapshots the entries
+            // first so a reentrant mutation cannot double-borrow-panic.
+            "to_h" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let acc = map_lit(vec![]);
+                    for (k, v) in snapshot {
+                        if let Value::Seq(pair) = apply_closure(b, vec![k, v]) {
+                            let items = pair.borrow();
+                            if items.len() == 2 {
+                                let nk = items[0].clone();
+                                let nv = items[1].clone();
+                                drop(items);
+                                map_set(&acc, nk, nv);
+                            }
+                        }
+                    }
+                    acc
+                }
+                None => map_lit(entries_rc.borrow().clone()),
+            },
+            // `each_with_index { |(k, v), i| … }` — yields each `[k, v]` pair
+            // with its 0-based index and returns the receiver.  Unlike the
+            // two-arg `(k, v)` yield of `each`, the element arrives as a single
+            // `[k, v]` pair (the second block param is the index), matching
+            // Ruby's Enumerable convention.
+            "each_with_index" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (i, (k, v)) in snapshot.into_iter().enumerate() {
+                        apply_closure(b, vec![seq_lit(vec![k, v]), Value::Int(i as i64)]);
+                    }
+                    recv
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `each_with_object(memo) { |(k, v), memo| … }` — yields each
+            // `[k, v]` pair with the memo object and returns the (mutated) memo.
+            // Like `each_with_index`, the element is the single `[k, v]` pair
+            // (the second block param is the memo).  With no memo argument the
+            // receiver is returned unchanged.
+            "each_with_object" => match &block {
+                Some(b) => match pos.into_iter().next() {
+                    Some(memo) => {
+                        let snapshot = entries_rc.borrow().clone();
+                        for (k, v) in snapshot {
+                            apply_closure(b, vec![seq_lit(vec![k, v]), memo.clone()]);
+                        }
+                        memo
+                    }
+                    None => recv,
+                },
                 None => unknown_method(&recv, name),
             },
             _ => no_method_error(&recv, name),

@@ -1530,11 +1530,18 @@ fn total_handler(vm: &mut VM, expr: IRApply) -> IRNode {
 //   * `DeleteDuplicates`/`Tally` — outputs are **order-preserving**, fixing each
 //     distinct element's position at its first occurrence.
 //
-// Cost note: membership is a linear `canonical_cmp` scan (no hashing — `IRNode`
-// carries an `f64` and is not value-`Hash`-keyable), so the heads are worst-case
-// quadratic. Every input is already bounded by `MAX_LIST_LENGTH`, so this is a
-// deliberate, documented trade (simplicity over a canonical-key index), never an
-// unbounded surface.
+// Cost note: `IRNode` carries an `f64` and so is not value-`Hash`-keyable, but
+// it *is* totally ordered (`canonical_cmp`, built on `f64::total_cmp`) — every
+// head below is built on a single O(n log n) sort (via
+// `group_by_first_occurrence`/`sorted_dedup`/the sorted two-pointer merges) plus
+// O(n) linear passes, rather than an O(n) `contains_element` scan repeated once
+// per input element. `member_q_handler` is the one exception: it makes a single
+// membership query (not one per element of a growing accumulator), so its own
+// O(n) `contains_element` scan was never the quadratic-blowup source and is left
+// as the simplest correct thing — a full sort to answer one query would cost
+// more, not less. Every input is already bounded by `MAX_LIST_LENGTH` regardless,
+// so none of this is an unbounded surface even before considering the algorithmic
+// complexity.
 
 /// Two `IRNode`s are the **same element** iff the W-9 canonical comparator ranks
 /// them `Equal`. This is the single notion of element-equality every W-13 head
@@ -1548,10 +1555,101 @@ fn same_element(a: &IRNode, b: &IRNode) -> bool {
 }
 
 /// True if `set` already contains an element equal (under [`same_element`]) to
-/// `candidate`. The linear membership scan shared by every W-13 head — the source
-/// of the documented worst-case quadratic cost, bounded by `MAX_LIST_LENGTH`.
+/// `candidate`. An O(n) linear scan — correct (and the cheapest option) for a
+/// single membership query, but never reused as the *repeated* per-element check
+/// inside another head's accumulation loop (that shape is what
+/// `group_by_first_occurrence`/`sorted_dedup`/the sorted merges below replace).
 fn contains_element(set: &[IRNode], candidate: &IRNode) -> bool {
     set.iter().any(|e| same_element(e, candidate))
+}
+
+/// Sort `elems` by [`canonical_cmp`] and drop adjacent duplicates (elements
+/// equal under [`same_element`]), keeping one representative of each
+/// equality-class. O(n log n): a `Union`/`Intersection`/`Complement` result is
+/// re-sorted by canonical order regardless, so sorting up front (once) rather
+/// than dedup-while-scanning-unsorted (an O(n) `contains_element` check per
+/// input element) costs nothing extra and removes the quadratic term.
+fn sorted_dedup(mut elems: Vec<IRNode>) -> Vec<IRNode> {
+    elems.sort_by(canonical_cmp);
+    elems.dedup_by(|a, b| same_element(a, b));
+    elems
+}
+
+/// The sorted intersection of two already [`sorted_dedup`]-ed slices — the
+/// classic two-pointer merge, O(len(a) + len(b)) given both inputs are sorted.
+fn sorted_intersect(a: &[IRNode], b: &[IRNode]) -> Vec<IRNode> {
+    use std::cmp::Ordering;
+    let mut out = Vec::new();
+    let (mut i, mut j) = (0, 0);
+    while i < a.len() && j < b.len() {
+        match canonical_cmp(&a[i], &b[j]) {
+            Ordering::Less => i += 1,
+            Ordering::Greater => j += 1,
+            Ordering::Equal => {
+                out.push(a[i].clone());
+                i += 1;
+                j += 1;
+            }
+        }
+    }
+    out
+}
+
+/// The sorted set-difference `a \ b` of two already [`sorted_dedup`]-ed slices
+/// (elements of `a` not present in `b`) — the same two-pointer merge shape as
+/// [`sorted_intersect`], O(len(a) + len(b)).
+fn sorted_difference(a: &[IRNode], b: &[IRNode]) -> Vec<IRNode> {
+    use std::cmp::Ordering;
+    let mut out = Vec::with_capacity(a.len());
+    let (mut i, mut j) = (0, 0);
+    while i < a.len() {
+        if j >= b.len() {
+            out.push(a[i].clone());
+            i += 1;
+            continue;
+        }
+        match canonical_cmp(&a[i], &b[j]) {
+            Ordering::Less => {
+                out.push(a[i].clone());
+                i += 1;
+            }
+            Ordering::Greater => j += 1,
+            Ordering::Equal => {
+                i += 1;
+                j += 1;
+            }
+        }
+    }
+    out
+}
+
+/// Group `elems` by [`same_element`]-equality, returning each distinct group's
+/// `(first_occurrence_original_index, count)` in first-occurrence order — the
+/// shared engine behind `DeleteDuplicates` (which only needs the index) and
+/// `Tally` (which needs both). A single O(n log n) sort of `(original index,
+/// element)` pairs, then one O(n) linear pass to find each equality-class's
+/// minimum original index and size, replaces an O(n) `contains_element` scan
+/// repeated once per input element.
+fn group_by_first_occurrence(elems: &[IRNode]) -> Vec<(usize, usize)> {
+    let mut order: Vec<usize> = (0..elems.len()).collect();
+    order.sort_by(|&i, &j| canonical_cmp(&elems[i], &elems[j]));
+    let mut groups: Vec<(usize, usize)> = Vec::new();
+    let mut i = 0;
+    while i < order.len() {
+        let mut j = i + 1;
+        while j < order.len() && same_element(&elems[order[i]], &elems[order[j]]) {
+            j += 1;
+        }
+        let min_idx = order[i..j]
+            .iter()
+            .copied()
+            .min()
+            .expect("non-empty equality group");
+        groups.push((min_idx, j - i));
+        i = j;
+    }
+    groups.sort_by_key(|(idx, _)| *idx);
+    groups
 }
 
 /// `Union[a, b, …]` → the **sorted**, duplicate-free union of the element lists.
@@ -1560,31 +1658,29 @@ fn contains_element(set: &[IRNode], candidate: &IRNode) -> bool {
 /// (a single argument doubles as "sort-and-unique"). Every argument must be a
 /// `List`; a non-list argument (or zero arguments) leaves the form unevaluated.
 ///
-/// **DoS-capped**: the deduped accumulator is refused (form left unevaluated) the
-/// moment it would exceed [`MAX_LIST_LENGTH`] — symmetric with `Join`/`Flatten`.
-/// The final result is sorted with the W-9 `canonical_cmp` (a *stable* `sort_by`),
-/// so the order is deterministic.
+/// **DoS-capped**: refused (form left unevaluated) if the deduped result would
+/// exceed [`MAX_LIST_LENGTH`] — symmetric with `Join`/`Flatten`. The result is
+/// sorted with the W-9 `canonical_cmp`, so the order is deterministic.
 fn union_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.is_empty() {
         return unevaluated(expr);
     }
-    // Accumulate the deduped union across all argument lists, capping the
-    // accumulator length before each insert.
-    let mut out: Vec<IRNode> = Vec::new();
+    // Every argument list is itself already bounded by `MAX_LIST_LENGTH`
+    // (an invariant every producer of a `List` value upholds), so collecting
+    // all of them before sorting is bounded too -- and cheap: `sorted_dedup`
+    // is one O(n log n) sort, not an O(n) `contains_element` scan repeated
+    // once per element (which made this quadratic in the element count).
+    let mut all: Vec<IRNode> = Vec::new();
     for arg in &expr.args {
         let Some(elems) = list_elements(arg) else {
             return unevaluated(expr);
         };
-        for elem in elems {
-            if !contains_element(&out, &elem) {
-                if out.len() >= MAX_LIST_LENGTH {
-                    return unevaluated(expr);
-                }
-                out.push(elem);
-            }
-        }
+        all.extend(elems);
     }
-    out.sort_by(canonical_cmp);
+    let out = sorted_dedup(all);
+    if out.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
     apply(sym(LIST), out)
 }
 
@@ -1600,32 +1696,28 @@ fn intersection_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.is_empty() {
         return unevaluated(expr);
     }
-    // Materialise every argument up front so a non-list anywhere rejects the whole
-    // form before we start filtering.
+    // Sort+dedup every argument once up front (`sorted_dedup`), then fold a
+    // sorted two-pointer merge (`sorted_intersect`) across them -- O(n log n)
+    // total, replacing an O(n) `contains_element` scan *per rest-list* that
+    // ran once per element of the first list.
     let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
     for arg in &expr.args {
         let Some(elems) = list_elements(arg) else {
             return unevaluated(expr);
         };
-        lists.push(elems);
+        lists.push(sorted_dedup(elems));
     }
-    // Keep each distinct element of the first list that also appears in *all* the
-    // rest. Dedup against `out` so a repeated element in the first list is emitted
-    // once.
     let (first, rest) = lists.split_first().expect("non-empty: checked above");
-    let mut out: Vec<IRNode> = Vec::new();
-    for elem in first {
-        if contains_element(&out, elem) {
-            continue;
+    let mut out = first.clone();
+    for other in rest {
+        if out.is_empty() {
+            break;
         }
-        if rest.iter().all(|other| contains_element(other, elem)) {
-            if out.len() >= MAX_LIST_LENGTH {
-                return unevaluated(expr);
-            }
-            out.push(elem.clone());
-        }
+        out = sorted_intersect(&out, other);
     }
-    out.sort_by(canonical_cmp);
+    if out.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
     apply(sym(LIST), out)
 }
 
@@ -1642,27 +1734,27 @@ fn complement_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.is_empty() {
         return unevaluated(expr);
     }
+    // Same shape as `intersection_handler`: sort+dedup every argument once,
+    // then fold a sorted two-pointer set-difference (`sorted_difference`)
+    // across the `subtract` lists -- O(n log n) total.
     let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
     for arg in &expr.args {
         let Some(elems) = list_elements(arg) else {
             return unevaluated(expr);
         };
-        lists.push(elems);
+        lists.push(sorted_dedup(elems));
     }
     let (all, subtract) = lists.split_first().expect("non-empty: checked above");
-    let mut out: Vec<IRNode> = Vec::new();
-    for elem in all {
-        if contains_element(&out, elem) {
-            continue;
+    let mut out = all.clone();
+    for other in subtract {
+        if out.is_empty() {
+            break;
         }
-        if subtract.iter().all(|other| !contains_element(other, elem)) {
-            if out.len() >= MAX_LIST_LENGTH {
-                return unevaluated(expr);
-            }
-            out.push(elem.clone());
-        }
+        out = sorted_difference(&out, other);
     }
-    out.sort_by(canonical_cmp);
+    if out.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
     apply(sym(LIST), out)
 }
 
@@ -1680,12 +1772,10 @@ fn delete_duplicates_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     let Some(elems) = list_elements(&expr.args[0]) else {
         return unevaluated(expr);
     };
-    let mut out: Vec<IRNode> = Vec::new();
-    for elem in elems {
-        if !contains_element(&out, &elem) {
-            out.push(elem);
-        }
-    }
+    // `group_by_first_occurrence` is one O(n log n) sort, replacing an O(n)
+    // `contains_element` scan repeated once per input element.
+    let groups = group_by_first_occurrence(&elems);
+    let out: Vec<IRNode> = groups.into_iter().map(|(idx, _)| elems[idx].clone()).collect();
     apply(sym(LIST), out)
 }
 
@@ -1725,28 +1815,16 @@ fn tally_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     let Some(elems) = list_elements(&expr.args[0]) else {
         return unevaluated(expr);
     };
-    // Parallel vectors: the distinct elements in first-occurrence order, and their
-    // running counts. A linear scan per element keeps the order without hashing
-    // (the documented quadratic cost, bounded by MAX_LIST_LENGTH).
-    let mut keys: Vec<IRNode> = Vec::new();
-    let mut counts: Vec<i64> = Vec::new();
-    for elem in elems {
-        match keys.iter().position(|k| same_element(k, &elem)) {
-            Some(i) => counts[i] += 1,
-            None => {
-                if keys.len() >= MAX_LIST_LENGTH {
-                    return unevaluated(expr);
-                }
-                keys.push(elem);
-                counts.push(1);
-            }
-        }
+    // `group_by_first_occurrence` is one O(n log n) sort, replacing an O(n)
+    // linear scan (`keys.iter().position(...)`) repeated once per input
+    // element.
+    let groups = group_by_first_occurrence(&elems);
+    if groups.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
     }
-    // Build the {element, count} pairs in the recorded first-occurrence order.
-    let pairs: Vec<IRNode> = keys
+    let pairs: Vec<IRNode> = groups
         .into_iter()
-        .zip(counts)
-        .map(|(k, c)| apply(sym(LIST), vec![k, int(c)]))
+        .map(|(idx, count)| apply(sym(LIST), vec![elems[idx].clone(), int(count as i64)]))
         .collect();
     apply(sym(LIST), pairs)
 }
@@ -5454,6 +5532,85 @@ mod tests {
         let arg = list(big);
         let result = run("Tally", vec![arg.clone()]);
         assert_eq!(result, apply(sym("Tally"), vec![arg]));
+    }
+
+    // ── security regression: O(n) `contains_element` scan repeated once per ──
+    // element made every W-13 head worst-case quadratic ─────────────────────
+    //
+    // `union_over_cap_stays_unevaluated`/`tally_over_cap_stays_unevaluated`
+    // above are the historical repro: each builds MAX_LIST_LENGTH + 1
+    // genuinely *distinct* integers (the true worst case for a linear
+    // membership scan against a growing accumulator — a list of mostly
+    // duplicates never grows the accumulator large enough to matter). Before
+    // this fix, each of those two tests alone took 30-40+ minutes and 100-200%
+    // CPU to reach the cap (confirmed by direct measurement in an earlier
+    // session). `Intersection`/`Complement`/`DeleteDuplicates` share the exact
+    // same `contains_element`-in-a-loop shape and so shared the same
+    // vulnerability, but had no large-input test proving it either way. These
+    // tests close that gap: a large, genuinely-distinct input, with the
+    // wall-clock actually measured (not just "completes without hanging" —
+    // the whole point of a quadratic bug is that it "completes", just far too
+    // slowly), asserting a generous but decisive bound. All of `mod tests`
+    // (329 cases) runs in well under a second after this fix; anything
+    // approaching even a few seconds here would indicate a regression back
+    // toward the quadratic shape.
+
+    #[test]
+    fn intersection_over_a_large_distinct_input_stays_fast() {
+        let n = MAX_LIST_LENGTH as i64;
+        let a: Vec<IRNode> = (0..n).map(int).collect();
+        let b: Vec<IRNode> = (0..n).map(int).collect();
+        let start = std::time::Instant::now();
+        let result = run("Intersection", vec![list(a), list(b)]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "Intersection over {n} distinct elements took {elapsed:?} -- expected \
+             O(n log n), not the old O(n^2) `contains_element`-per-rest-list scan"
+        );
+        match result {
+            IRNode::Apply(a) if a.head == sym(LIST) => assert_eq!(a.args.len(), n as usize),
+            other => panic!("expected a full-length List result, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn complement_over_a_large_distinct_input_stays_fast() {
+        let n = MAX_LIST_LENGTH as i64;
+        let all: Vec<IRNode> = (0..n).map(int).collect();
+        let subtract: Vec<IRNode> = (0..n / 2).map(int).collect();
+        let start = std::time::Instant::now();
+        let result = run("Complement", vec![list(all), list(subtract)]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "Complement over {n} distinct elements took {elapsed:?} -- expected \
+             O(n log n), not the old O(n^2) `contains_element`-per-subtrahend scan"
+        );
+        match result {
+            IRNode::Apply(a) if a.head == sym(LIST) => {
+                assert_eq!(a.args.len(), (n - n / 2) as usize)
+            }
+            other => panic!("expected a List result, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn delete_duplicates_over_a_large_distinct_input_stays_fast() {
+        let n = MAX_LIST_LENGTH as i64;
+        let elems: Vec<IRNode> = (0..n).map(int).collect();
+        let start = std::time::Instant::now();
+        let result = run("DeleteDuplicates", vec![list(elems)]);
+        let elapsed = start.elapsed();
+        assert!(
+            elapsed < std::time::Duration::from_secs(5),
+            "DeleteDuplicates over {n} distinct elements took {elapsed:?} -- expected \
+             O(n log n), not the old O(n^2) `contains_element`-per-element scan"
+        );
+        match result {
+            IRNode::Apply(a) if a.head == sym(LIST) => assert_eq!(a.args.len(), n as usize),
+            other => panic!("expected a full-length List result, got {other:?}"),
+        }
     }
 
     #[test]

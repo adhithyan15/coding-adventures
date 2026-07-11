@@ -4,16 +4,16 @@
 # =============================================================================
 #
 # Run this before pushing any change that touches `twig-vm` or any of
-# its dependencies (`lispy-runtime`, `lang-runtime-core`,
+# its dependencies (`dynval-runtime`, `lang-runtime-core`,
 # `interpreter-ir`).  It's the canonical local check that the
-# integration seam between safe twig-vm code and unsafe lispy-runtime
+# integration seam between safe twig-vm code and unsafe dynval-runtime
 # primitives doesn't have UB.
 #
 # Why local instead of CI?
 #
 # The twig-vm Miri suite takes ~30-90 min on Linux CI runners.  PR 7
 # moved it off the per-PR critical path — `lang-runtime-safety.yml`
-# runs lang-runtime-core + lispy-runtime Miri as blocking checks
+# runs lang-runtime-core + dynval-runtime Miri as blocking checks
 # (~5 min total), and twig-vm Miri runs as `continue-on-error: true`
 # informational + as a nightly regression check.  The canonical
 # verification is local, before push.
@@ -70,7 +70,7 @@ export RUST_BACKTRACE="1"
 # ── Run ──────────────────────────────────────────────────────────────
 
 echo "═══════════════════════════════════════════════════════════════════"
-echo "  Running Miri on twig-vm + lispy-runtime + lang-runtime-core"
+echo "  Running Miri on twig-vm + dynval-runtime + lang-runtime-core"
 echo "  Working directory: ${PACKAGES_RUST}"
 echo "  MIRIFLAGS: ${MIRIFLAGS}"
 echo "  This typically takes 30-90 min.  Press Ctrl-C to abort."
@@ -79,15 +79,15 @@ echo
 
 cd "${PACKAGES_RUST}"
 
-# Run the fast crates first.  If lang-runtime-core or lispy-runtime
+# Run the fast crates first.  If lang-runtime-core or dynval-runtime
 # Miri fails, twig-vm Miri will fail too — surface the smaller
 # failure first.
 echo "→ Miri lang-runtime-core (fast, ~13s)..."
 cargo +nightly miri test -p lang-runtime-core --no-fail-fast
 
 echo
-echo "→ Miri lispy-runtime (fast, ~13s)..."
-cargo +nightly miri test -p lispy-runtime --no-fail-fast
+echo "→ Miri dynval-runtime (fast, ~13s)..."
+cargo +nightly miri test -p dynval-runtime --no-fail-fast
 
 echo
 echo "→ Miri twig-vm (slow, 30-90 min)..."

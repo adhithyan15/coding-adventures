@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arms
+
+`javascript-ast` 0.36.0 added the `PropertyKey::PrivateName` variant. The three
+exhaustive `PropertyKey` matches gain an arm: the object-literal key rebuild
+passes a private name through unchanged (unreachable in valid input — an object
+literal never holds a private key — but the match must stay exhaustive), and the
+two `Object.keys`/`Object.entries` key-name extractors decline the fold on a
+private name (same as a computed key). PATCH.
+
 ## [0.85.16] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm

@@ -139,7 +139,7 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand, SlotState};
 use lang_runtime_core::{
     DispatchCx, InlineCache, LangBinding, RuntimeError, SymbolId,
 };
-use lispy_runtime::{intern, name_of, LispyBinding, LispyICEntry, LispyValue};
+use dynval_runtime::{intern, name_of, LispyBinding, LispyICEntry, LispyValue};
 
 use crate::operand::operand_to_value;
 
@@ -909,8 +909,8 @@ impl ProfileTable {
 /// `.ldp` serialiser.  `None` for values whose class can't be
 /// determined (shouldn't happen in well-formed dispatch — every
 /// `LispyValue` has a class).
-fn lispy_class_str(value: LispyValue) -> Option<&'static str> {
-    use lispy_runtime::LispyClass;
+fn dyn_class_str(value: LispyValue) -> Option<&'static str> {
+    use dynval_runtime::LispyClass;
     match LispyBinding::class_of(value)? {
         LispyClass::Int => Some("int"),
         LispyClass::Nil => Some("nil"),
@@ -1309,7 +1309,7 @@ fn dispatch(
         // recommended by PR 8 security review (Low #2).
         if let Some(dest) = &instr.dest {
             if let Some(value) = frame.get(dest) {
-                if let Some(class_str) = lispy_class_str(value) {
+                if let Some(class_str) = dyn_class_str(value) {
                     profile.note_observation(&func.name, instr_pc, class_str)?;
                 }
             }
@@ -1410,7 +1410,7 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         // `"hello"` literals in Twig source now produce real heap strings that
         // `string-length`, `string-ref`, etc. can operate on.
         Operand::Str(text) => {
-            lispy_runtime::heap::alloc_string(text.as_bytes())
+            dynval_runtime::heap::alloc_string(text.as_bytes())
         }
     };
     frame.set(dest.clone(), value)?;
@@ -1429,7 +1429,7 @@ fn exec_str_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
             "str_const requires Operand::Str, got {src:?}"
         )));
     };
-    let value = lispy_runtime::heap::alloc_string(text.as_bytes());
+    let value = dynval_runtime::heap::alloc_string(text.as_bytes());
     frame.set(dest.clone(), value)?;
     Ok(())
 }
@@ -1466,7 +1466,7 @@ fn e4_string_arg(
     }
     let value = e4_value_arg(op, instr, frame, pos)?;
     // SAFETY: dispatch values come from the VM's tagged value space.
-    unsafe { lispy_runtime::heap::string_bytes(value) }
+    unsafe { dynval_runtime::heap::string_bytes(value) }
         .map(|bytes| bytes.to_vec())
         .ok_or_else(|| {
             RunError::Runtime(RuntimeError::TypeError(format!(
@@ -1510,7 +1510,7 @@ fn exec_str_concat(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> 
     let mut bytes = e4_string_arg("str_concat", instr, frame, 0)?;
     let rhs = e4_string_arg("str_concat", instr, frame, 1)?;
     bytes.extend_from_slice(&rhs);
-    frame.set(dest.clone(), lispy_runtime::heap::alloc_string(&bytes))?;
+    frame.set(dest.clone(), dynval_runtime::heap::alloc_string(&bytes))?;
     Ok(())
 }
 
@@ -1549,7 +1549,7 @@ fn exec_alloc(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     // types would extend this match.
     match instr.type_hint.as_str() {
         "ref<LispyPair>" => {
-            let cell = lispy_runtime::heap::alloc_cons(
+            let cell = dynval_runtime::heap::alloc_cons(
                 LispyValue::NIL,
                 LispyValue::NIL,
             );
@@ -1569,7 +1569,7 @@ fn exec_alloc(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
 ///
 /// `dest` is intentionally unused — `field_store` is a side-effecting
 /// opcode.  In twig-vm we keep the side-table-update semantics in
-/// `lispy_runtime::heap::set_field_unchecked` to centralise the
+/// `dynval_runtime::heap::set_field_unchecked` to centralise the
 /// "mutate a leaked cons" path.
 fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     if instr.srcs.len() != 3 {
@@ -1623,7 +1623,7 @@ fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError>
     // returns Err on non-cons input, so misuse surfaces as a
     // MalformedInstruction rather than memory corruption.
     unsafe {
-        lispy_runtime::heap::set_field_unchecked(pair, index, value)
+        dynval_runtime::heap::set_field_unchecked(pair, index, value)
             .map_err(|e| RunError::MalformedInstruction(format!(
                 "field_store: {e}"
             )))?;
@@ -1666,7 +1666,7 @@ fn exec_field_load(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> 
             // heap-allocating builtin).  In PR 2's Box::leak model every
             // such value is a live cons forever.  `heap::car` returns
             // None on non-cons input, which we surface as Err.
-            unsafe { lispy_runtime::heap::car(pair) }.ok_or_else(|| {
+            unsafe { dynval_runtime::heap::car(pair) }.ok_or_else(|| {
                 RunError::Runtime(RuntimeError::TypeError(format!(
                     "field_load[0] (car): {pair_name:?} is not a cons cell"
                 )))
@@ -1674,7 +1674,7 @@ fn exec_field_load(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> 
         }
         Operand::Int(1) => {
             // SAFETY: same as above for `cdr`.
-            unsafe { lispy_runtime::heap::cdr(pair) }.ok_or_else(|| {
+            unsafe { dynval_runtime::heap::cdr(pair) }.ok_or_else(|| {
                 RunError::Runtime(RuntimeError::TypeError(format!(
                     "field_load[1] (cdr): {pair_name:?} is not a cons cell"
                 )))
@@ -1965,8 +1965,8 @@ fn exec_apply_closure(
     // alloc_closure / alloc_cons / etc.) are dereferenced; integers, booleans,
     // and symbols all have non-HEAP tags and cause as_heap_ptr() to return None
     // before any pointer dereference occurs.  Heap-tagged values come
-    // exclusively from lispy_runtime allocators that Box::leak aligned objects.
-    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+    // exclusively from dynval_runtime allocators that Box::leak aligned objects.
+    let closure = unsafe { dynval_runtime::as_closure(handle) }.ok_or_else(|| {
         RunError::NotCallable(format!("apply_closure: {handle} is not a closure"))
     })?;
     let fn_name_id = closure.fn_name;
@@ -2044,7 +2044,7 @@ fn exec_apply_closure(
 /// Handle `alloc_closure(Str(fn_name), cap0, cap1, …) : "closure"`.
 ///
 /// Allocates a closure pairing `fn_name` with captured values, using the
-/// same `lispy_runtime::heap::alloc_closure` path that the old
+/// same `dynval_runtime::heap::alloc_closure` path that the old
 /// `call_builtin "make_closure"` form used — the representation is
 /// identical so `exec_call_closure` / `exec_apply_closure` can both read
 /// the resulting heap object.
@@ -2130,8 +2130,8 @@ fn exec_alloc_closure(
     }
 
     // Allocate the closure via lispy-runtime's canonical path.
-    // `lispy_runtime::alloc_closure` is re-exported from `lispy_runtime::heap::alloc_closure`.
-    let closure_val = lispy_runtime::alloc_closure(sym_id, captures);
+    // `dynval_runtime::alloc_closure` is re-exported from `dynval_runtime::heap::alloc_closure`.
+    let closure_val = dynval_runtime::alloc_closure(sym_id, captures);
     frame.set(dest.clone(), closure_val)?;
     Ok(())
 }
@@ -2185,7 +2185,7 @@ fn exec_call_closure(
     let handle = operand_to_value(&instr.srcs[0], &|n| frame_ref.get(n))
         .map_err(RunError::OperandConversion)?;
 
-    // SAFETY: `lispy_runtime::as_closure` is an `unsafe fn` that:
+    // SAFETY: `dynval_runtime::as_closure` is an `unsafe fn` that:
     //
     //   1. Calls `handle.as_heap_ptr()` which first checks the tag bits.
     //      LispyValue's tag encoding uses TAG_INT = 0b000, TAG_HEAP = 0b111,
@@ -2196,7 +2196,7 @@ fn exec_call_closure(
     //      `None` — no pointer dereference occurs.
     //
     //   2. For values that DO have TAG_HEAP, the pointer was produced by
-    //      `lispy_runtime::heap::alloc_closure` / `alloc_cons` / etc. which
+    //      `dynval_runtime::heap::alloc_closure` / `alloc_cons` / etc. which
     //      Box::leak a properly-aligned heap allocation with a valid
     //      `ObjectHeader` at offset 0.  Dereferencing that pointer to read
     //      `class_or_kind` is safe given the leak-forever invariant.
@@ -2210,7 +2210,7 @@ fn exec_call_closure(
     //      normal IIR execution path.
     //
     // Together, these guarantees make the call safe in the twig-vm context.
-    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+    let closure = unsafe { dynval_runtime::as_closure(handle) }.ok_or_else(|| {
         RunError::NotCallable(format!("call_closure: {handle} is not a closure"))
     })?;
     let fn_name_id = closure.fn_name;
@@ -2462,7 +2462,7 @@ fn exec_host_call(
                     line.pop();
                 }
             }
-            let val = lispy_runtime::heap::alloc_string(line.as_bytes());
+            let val = dynval_runtime::heap::alloc_string(line.as_bytes());
             if let Some(d) = &instr.dest {
                 frame.set(d.clone(), val)?;
             }
@@ -2527,7 +2527,7 @@ fn exec_host_call(
                     "host/read_file: file exceeds {MAX_FILE_BYTES}-byte limit",
                 )));
             }
-            let val = lispy_runtime::heap::alloc_string(&buf);
+            let val = dynval_runtime::heap::alloc_string(&buf);
             if let Some(d) = &instr.dest {
                 frame.set(d.clone(), val)?;
             }
@@ -2592,7 +2592,7 @@ fn host_arg_string(
         .map_err(RunError::OperandConversion)?;
     // SAFETY: values in the dispatch loop come from the VM's value space —
     // heap tags always reflect real, live allocations.
-    unsafe { lispy_runtime::heap::string_bytes(val) }
+    unsafe { dynval_runtime::heap::string_bytes(val) }
         .ok_or_else(|| RunError::HostArgType {
             function: host_fn.to_string(),
             received: format!("{val}"),
@@ -2671,13 +2671,13 @@ fn invoke_closure_value(
     // Only values with TAG_HEAP (= 0b111) pass the check; integers, booleans,
     // nil, and symbols have distinct tags and return `None` before any
     // pointer dereference.  All heap-tagged values in the dispatcher were
-    // produced by `lispy_runtime` allocators that `Box::leak` properly
+    // produced by `dynval_runtime` allocators that `Box::leak` properly
     // aligned objects — the live-pointer invariant holds for the process
     // lifetime (no GC yet).  An adversarially-crafted integer that happens
     // to have low bits 0b111 cannot be produced by `exec_const` for
     // `Operand::Int(n)`, because `LispyValue::int(n)` shifts left 3,
     // making the low bits always 0.
-    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+    let closure = unsafe { dynval_runtime::as_closure(handle) }.ok_or_else(|| {
         RunError::NotCallable(format!("invoke_closure_value: {handle} is not a closure"))
     })?;
     let fn_name_id = closure.fn_name;
@@ -2776,13 +2776,13 @@ fn collect_list(
         budget.tick()?;
 
         // SAFETY: see `invoke_closure_value` safety note — all heap-tagged
-        // values in the dispatcher came from `lispy_runtime` allocators.
+        // values in the dispatcher came from `dynval_runtime` allocators.
         let (head, tail) = unsafe {
-            let h = lispy_runtime::heap::car(cursor).ok_or_else(|| RunError::HostArgType {
+            let h = dynval_runtime::heap::car(cursor).ok_or_else(|| RunError::HostArgType {
                 function: fn_name.to_string(),
                 received: format!("list tail {cursor} is not a cons cell"),
             })?;
-            let t = lispy_runtime::heap::cdr(cursor).ok_or_else(|| RunError::HostArgType {
+            let t = dynval_runtime::heap::cdr(cursor).ok_or_else(|| RunError::HostArgType {
                 function: fn_name.to_string(),
                 received: format!("list tail {cursor} is not a cons cell"),
             })?;
@@ -2799,7 +2799,7 @@ fn collect_list(
 fn build_list(elements: Vec<LispyValue>) -> LispyValue {
     let mut acc = LispyValue::NIL;
     for elem in elements.into_iter().rev() {
-        acc = lispy_runtime::heap::alloc_cons(elem, acc);
+        acc = dynval_runtime::heap::alloc_cons(elem, acc);
     }
     acc
 }
@@ -3743,7 +3743,7 @@ mod tests {
         // 'foo evaluates to a symbol value with name "foo".
         let v = run_source("'foo").unwrap();
         let sym_id = v.as_symbol().expect("expected symbol value");
-        let name = lispy_runtime::name_of(sym_id).unwrap();
+        let name = dynval_runtime::name_of(sym_id).unwrap();
         assert_eq!(name, "foo");
     }
 
@@ -3974,11 +3974,11 @@ mod tests {
     fn globals_set_and_get_round_trip() {
         let mut g = Globals::new();
         assert!(g.is_empty());
-        let id = lispy_runtime::intern("foo");
+        let id = dynval_runtime::intern("foo");
         g.set(id, LispyValue::int(7));
         assert_eq!(g.len(), 1);
         assert_eq!(g.get(id), Some(LispyValue::int(7)));
-        assert_eq!(g.get(lispy_runtime::intern("bar")), None);
+        assert_eq!(g.get(dynval_runtime::intern("bar")), None);
     }
 
     #[test]
@@ -3991,12 +3991,12 @@ mod tests {
         // leaves the table intact afterwards (so a future
         // multi-run TwigVM can reuse it).
         let mut g = Globals::new();
-        g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
+        g.set(dynval_runtime::intern("seed"), LispyValue::int(99));
         let module = compile_source("(+ 1 2)", "test").unwrap();
         let v = run_with_globals(&module, &mut g).unwrap();
         assert_eq!(v.as_int(), Some(3));
         // Pre-seeded value is still there after the run.
-        assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
+        assert_eq!(g.get(dynval_runtime::intern("seed")), Some(LispyValue::int(99)));
     }
 
     #[test]
@@ -4011,13 +4011,13 @@ mod tests {
         // is exactly the dispatch path this test exercises.  Before TW2 a bare
         // `(define x 5)` also emitted `global_set`, but that is now a local.)
         let mut g = Globals::new();
-        g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
+        g.set(dynval_runtime::intern("seed"), LispyValue::int(99));
         let module = compile_source("(define x 5) (define (f) x) (+ (f) 10)", "test").unwrap();
         let v = run_with_globals(&module, &mut g).unwrap();
         assert_eq!(v.as_int(), Some(15));
         // Both the seed and the program-defined x are present.
-        assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
-        assert_eq!(g.get(lispy_runtime::intern("x")), Some(LispyValue::int(5)));
+        assert_eq!(g.get(dynval_runtime::intern("seed")), Some(LispyValue::int(99)));
+        assert_eq!(g.get(dynval_runtime::intern("x")), Some(LispyValue::int(5)));
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -4089,7 +4089,7 @@ mod tests {
         match err {
             RunError::Runtime(RuntimeError::NoSuchMethod { selector }) => {
                 assert_eq!(
-                    lispy_runtime::name_of(selector).as_deref(),
+                    dynval_runtime::name_of(selector).as_deref(),
                     Some("any-method"),
                 );
             }
@@ -4191,7 +4191,7 @@ mod tests {
         let err = run(&module).unwrap_err();
         match err {
             RunError::Runtime(RuntimeError::NoSuchProperty { key }) => {
-                assert_eq!(lispy_runtime::name_of(key).as_deref(), Some("name"));
+                assert_eq!(dynval_runtime::name_of(key).as_deref(), Some("name"));
             }
             other => panic!("expected Runtime(NoSuchProperty), got {other:?}"),
         }
@@ -4249,7 +4249,7 @@ mod tests {
         let err = run(&module).unwrap_err();
         match err {
             RunError::Runtime(RuntimeError::NoSuchProperty { key }) => {
-                assert_eq!(lispy_runtime::name_of(key).as_deref(), Some("count"));
+                assert_eq!(dynval_runtime::name_of(key).as_deref(), Some("count"));
             }
             other => panic!("expected Runtime(NoSuchProperty), got {other:?}"),
         }
@@ -5527,8 +5527,8 @@ mod tests {
         assert!(v.is_heap(), "Operand::Str should produce a heap value");
         // SAFETY: v was produced by alloc_string in exec_const.
         unsafe {
-            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
-            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert!(dynval_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = dynval_runtime::string_bytes(v).expect("string bytes");
             assert_eq!(bytes, b"hello");
         }
     }
@@ -5542,8 +5542,8 @@ mod tests {
         let v = run(&module_with_main(instrs, 1)).unwrap();
         assert!(v.is_heap(), "str_const should produce a heap value");
         unsafe {
-            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
-            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert!(dynval_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = dynval_runtime::string_bytes(v).expect("string bytes");
             assert_eq!(bytes, b"hello");
         }
     }
@@ -5696,7 +5696,7 @@ mod tests {
         let v = run(&module_with_main(instrs, 4)).unwrap();
         // SAFETY: v was produced by alloc_string.
         unsafe {
-            let bytes = lispy_runtime::string_bytes(v).expect("appended string bytes");
+            let bytes = dynval_runtime::string_bytes(v).expect("appended string bytes");
             assert_eq!(bytes, b"foobar");
         }
     }
@@ -5724,7 +5724,7 @@ mod tests {
         let v = run(&module_with_main(instrs, 5)).unwrap();
         // SAFETY: v was produced by alloc_string.
         unsafe {
-            let bytes = lispy_runtime::string_bytes(v).expect("substring bytes");
+            let bytes = dynval_runtime::string_bytes(v).expect("substring bytes");
             assert_eq!(bytes, b"ell");
         }
     }
@@ -5763,7 +5763,7 @@ mod tests {
         ];
         let v = run(&module_with_main(instrs, 3)).unwrap();
         unsafe {
-            let bytes = lispy_runtime::string_bytes(v).expect("number->string bytes");
+            let bytes = dynval_runtime::string_bytes(v).expect("number->string bytes");
             assert_eq!(bytes, b"42");
         }
     }
@@ -5800,7 +5800,7 @@ mod tests {
         ];
         let v = run(&module_with_main(instrs, 4)).unwrap();
         unsafe {
-            let bytes = lispy_runtime::string_bytes(v).expect("roundtrip string bytes");
+            let bytes = dynval_runtime::string_bytes(v).expect("roundtrip string bytes");
             assert_eq!(bytes, b"my-sym");
         }
     }
@@ -5863,9 +5863,9 @@ mod tests {
         let mut cur = v;
         loop {
             if cur.is_nil() { return out; }
-            let head = unsafe { lispy_runtime::heap::car(cur) }
+            let head = unsafe { dynval_runtime::heap::car(cur) }
                 .expect("car failed — not a cons cell");
-            let tail = unsafe { lispy_runtime::heap::cdr(cur) }
+            let tail = unsafe { dynval_runtime::heap::cdr(cur) }
                 .expect("cdr failed — not a cons cell");
             out.push(head.as_int().expect("element is not an integer"));
             cur = tail;

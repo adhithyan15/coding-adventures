@@ -304,22 +304,22 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
     // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
     // logic — the generic `call_builtin` path marshals args + emits the CALL.
-    BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
-    BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
-    BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_cons",   n_args: 2, returns: true  },
+    BuiltinSig { name: "dyn_car",    n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_cdr",    n_args: 1, returns: true  },
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
     // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
-    BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_unbox_int", n_args: 1, returns: true },
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
-    BuiltinSig { name: "lispy_pair_p",    n_args: 1, returns: true },
-    BuiltinSig { name: "lispy_not",       n_args: 1, returns: true },
-    BuiltinSig { name: "lispy_equal",     n_args: 2, returns: true },
-    BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
+    BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
     // LANG77 W13b — the universal program-exit coercion for a polymorphic
     // (lambda / `any`) result: dispatch on the runtime tag.
     // `int64_t __dyn_to_exit_code(uint64_t)`.
-    BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_to_exit_code", n_args: 1, returns: true },
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
@@ -913,10 +913,19 @@ fn emit_instr(
             load_operand(asm, alloc, arg_regs[i], src);
         }
 
-        // Emit `call rel32` to the `__twig_<name>` symbol.  Both Linux
-        // (PLT32 → relaxed to PC32 by the linker for local resolution)
-        // and Windows (REL32) treat this the same way.
-        let symbol = format!("__twig_{name}");
+        // Emit `call rel32` to the runtime symbol.  Both Linux (PLT32 → relaxed
+        // to PC32 by the linker for local resolution) and Windows (REL32) treat
+        // this the same way.  Two runtime families share this dispatch: the
+        // **twig** runtime exports `__twig_<name>` (`print_i64`, `getchar`, …),
+        // while the **dyn** value runtime (`dynval_runtime.c`) exports
+        // `__dyn_<name>` for the tagged-value builtins, whose IIR names already
+        // carry the `dyn_` namespace (`dyn_cons` → `__dyn_cons`).  So a `dyn_*`
+        // builtin is `__` + name; everything else is `__twig_` + name.
+        let symbol = if name.starts_with("dyn_") {
+            format!("__{name}")
+        } else {
+            format!("__twig_{name}")
+        };
         asm.call_rel32(&symbol, ExternalRelocKind::PltRel32);
 
         // If the helper returns, store RAX into the dest slot.
@@ -1799,14 +1808,14 @@ mod tests {
     }
 
     #[test]
-    fn lispy_runtime_cons_car_emit_external_calls() {
+    fn dynval_runtime_cons_car_emit_external_calls() {
         // `(CAR (CONS 7 9))` through the runtime path: two CALLs to the C
         // lisp runtime, surfaced as external relocations.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7)]),
             instr("const_u64", Some("t"), vec![Op::Int(9)]),
-            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
-            call_builtin(Some("r"), "lispy_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
+            call_builtin(Some("r"), "dyn_car", &["cell"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =
@@ -1819,26 +1828,26 @@ mod tests {
     }
 
     #[test]
-    fn lispy_cons_wrong_arity_is_rejected() {
-        // lispy_cons takes exactly 2 args; one arg is a soft refusal.
+    fn dyn_cons_wrong_arity_is_rejected() {
+        // dyn_cons takes exactly 2 args; one arg is a soft refusal.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7)]),
-            call_builtin(Some("cell"), "lispy_cons", &["h"]),
+            call_builtin(Some("cell"), "dyn_cons", &["h"]),
             instr("ret_u64", None, vec![Op::Var("cell".into())]),
         ];
         assert!(compile_function(&fn_ctx("bad_cons", &[], "u64"), &ir, X86_64Abi::SysV).is_err());
     }
 
     #[test]
-    fn lispy_full_boxed_cons_car_unbox_lowers() {
+    fn dyn_full_boxed_cons_car_unbox_lowers() {
         // The complete L3b-2c-1 CIR for `(CAR (CONS 7 9))`: boxed atoms,
         // cons, car, then unbox the result for the exit code.
         let ir = vec![
             instr("const_u64", Some("h"), vec![Op::Int(7 << 3)]),
             instr("const_u64", Some("t"), vec![Op::Int(9 << 3)]),
-            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
-            call_builtin(Some("boxed"), "lispy_car", &["cell"]),
-            call_builtin(Some("r"), "lispy_unbox_int", &["boxed"]),
+            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
+            call_builtin(Some("boxed"), "dyn_car", &["cell"]),
+            call_builtin(Some("r"), "dyn_unbox_int", &["boxed"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =
@@ -1852,14 +1861,14 @@ mod tests {
     }
 
     #[test]
-    fn lispy_atom_eq_predicates_and_truthy_lower() {
-        // L3b-2c-2: ATOM = not(pair?), normalised via lispy_truthy; plus EQ.
+    fn dyn_atom_eq_predicates_and_truthy_lower() {
+        // L3b-2c-2: ATOM = not(pair?), normalised via dyn_truthy; plus EQ.
         let ir = vec![
             instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
-            call_builtin(Some("p"), "lispy_pair_p", &["x"]),
-            call_builtin(Some("a"), "lispy_not", &["p"]),
-            call_builtin(Some("t"), "lispy_truthy", &["a"]),
-            call_builtin(Some("e"), "lispy_equal", &["x", "x"]),
+            call_builtin(Some("p"), "dyn_pair_p", &["x"]),
+            call_builtin(Some("a"), "dyn_not", &["p"]),
+            call_builtin(Some("t"), "dyn_truthy", &["a"]),
+            call_builtin(Some("e"), "dyn_equal", &["x", "x"]),
             instr("ret_u64", None, vec![Op::Var("e".into())]),
         ];
         let (bytes, relocs) =
@@ -1875,13 +1884,13 @@ mod tests {
         }
     }
 
-    /// W14b (F7): the universal exit coercion `lispy_to_exit_code` — the program
+    /// W14b (F7): the universal exit coercion `dyn_to_exit_code` — the program
     /// boundary for a polymorphic lambda result — lowers to a call into the runtime.
     #[test]
-    fn lispy_to_exit_code_lowers() {
+    fn dyn_to_exit_code_lowers() {
         let ir = vec![
             instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
-            call_builtin(Some("r"), "lispy_to_exit_code", &["x"]),
+            call_builtin(Some("r"), "dyn_to_exit_code", &["x"]),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
         let (bytes, relocs) =

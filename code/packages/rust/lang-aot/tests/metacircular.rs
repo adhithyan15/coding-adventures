@@ -53,7 +53,7 @@ use lang_aot::{
 #[cfg(target_os = "macos")]
 use lang_aot::compile_file_to_macos_executable;
 
-use lispy_runtime::LispyValue;
+use dynval_runtime::LispyValue;
 
 // ===========================================================================
 // EVALUATOR_BODY — McCarthy's 1960 EVAL, written in McCarthy Lisp.

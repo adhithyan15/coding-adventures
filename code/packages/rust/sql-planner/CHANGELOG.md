@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - Unreleased
+
+### Fixed
+
+- **Multi-argument `MIN`/`MAX` are now the SCALAR functions, not the aggregate.**
+  `MIN`/`MAX` are overloaded in SQL: one argument is the aggregate (min/max over
+  a column), but two-or-more is the scalar that returns the smallest/largest of
+  its arguments. Both aggregate-detection sites (`try_plan_as_aggregate` and
+  `plan_function_call`) previously treated *any* `MIN`/`MAX` as the aggregate, so
+  `SELECT MAX(3, 9, 5)` used only the first argument and returned `3` instead of
+  `9`. They now check the argument count (new `call_arg_count` helper) and leave
+  the 2+-argument form as a `FunctionCall`, routed to the VM's `call_builtin`.
+
 ## [0.1.0] — 2026-06-30
 
 ### Added

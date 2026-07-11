@@ -2,7 +2,7 @@
 //!
 //! This is the reference VM for McCarthy Lisp (Lisp 1.0).  It executes
 //! the [`IIRModule`] produced by `mccarthy-lisp-iir-compiler` against
-//! the [`lispy_runtime`] value model and returns a [`LispyValue`].
+//! the [`dynval_runtime`] value model and returns a [`LispyValue`].
 //!
 //! ## Why a dedicated VM (and not `vm-core` or `twig-vm`)
 //!
@@ -15,7 +15,7 @@
 //!   be an architectural mistake.
 //!
 //! The thing both languages genuinely share is the **value model**:
-//! [`lispy_runtime`]'s tagged-`i64` [`LispyValue`] (`int / nil / symbol /
+//! [`dynval_runtime`]'s tagged-`i64` [`LispyValue`] (`int / nil / symbol /
 //! #t / #f / heap-cons`), its interner, and its `cons / car / cdr /
 //! pair? / not / equal?` builtins.  So McCarthy Lisp gets its *own* small
 //! VM built directly on that foundation — exactly what this crate is.
@@ -94,8 +94,8 @@ use std::collections::HashMap;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lang_runtime_core::RuntimeError;
-use lispy_runtime::value::{INT_MAX, INT_MIN};
-use lispy_runtime::{builtins, intern, name_of, LispyValue};
+use dynval_runtime::value::{INT_MAX, INT_MIN};
+use dynval_runtime::{builtins, intern, name_of, LispyValue};
 
 // ===========================================================================
 // Errors
@@ -444,7 +444,7 @@ fn eval_const(instr: &IIRInstr) -> Result<LispyValue, VmError> {
         .ok_or_else(|| VmError::Malformed("`const` requires a source operand".into()))?;
     match src {
         Operand::Int(0) if instr.type_hint == "ref<LispyPair>" => Ok(LispyValue::NIL),
-        Operand::Int(n) => lispy_int(*n),
+        Operand::Int(n) => dyn_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Var(name) => Ok(LispyValue::symbol(intern(name))),
         Operand::Float(_) => Err(VmError::Malformed(
@@ -587,7 +587,7 @@ fn flatten_env(env: LispyValue) -> Result<Vec<LispyValue>, VmError> {
 /// Build a tagged integer, rejecting values outside `lispy-runtime`'s
 /// 61-bit tagged-int range rather than letting `LispyValue::int` silently
 /// truncate them in release builds.
-fn lispy_int(n: i64) -> Result<LispyValue, VmError> {
+fn dyn_int(n: i64) -> Result<LispyValue, VmError> {
     if (INT_MIN..=INT_MAX).contains(&n) {
         Ok(LispyValue::int(n))
     } else {
@@ -604,7 +604,7 @@ fn read_operand(op: &Operand, frame: &Frame) -> Result<LispyValue, VmError> {
             .get(name)
             .copied()
             .ok_or_else(|| VmError::UndefinedRegister(name.clone())),
-        Operand::Int(n) => lispy_int(*n),
+        Operand::Int(n) => dyn_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Float(_) => Err(VmError::Malformed("unexpected Float operand".into())),
         Operand::Str(_) => Err(VmError::Malformed("unexpected Str operand".into())),
@@ -618,7 +618,7 @@ fn read_operand(op: &Operand, frame: &Frame) -> Result<LispyValue, VmError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use lispy_runtime::name_of;
+    use dynval_runtime::name_of;
 
     /// Build a single-`main` module from a list of instructions.
     fn module(instrs: Vec<IIRInstr>) -> IIRModule {

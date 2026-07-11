@@ -438,9 +438,11 @@ input `{3, 1, 2, 1}`, `Union` gives `{1, 2, 3}` but `DeleteDuplicates` gives
 panic-free for `NaN` (via `f64::total_cmp`), and keeps distinct numeric subtypes of
 equal magnitude separate — `2` and `2.0` are distinct elements (`Union[{2, 2.}]`
 keeps both), matching Wolfram. Outputs never exceed the sum of the (already-bounded)
-input lengths and each head re-asserts the `MAX_LIST_LENGTH` cap; membership is a
-linear scan (no hashing — `IRNode` carries an `f64`), so the heads are worst-case
-quadratic in the bounded input. Every malformed form (non-list arg, wrong arity) is
+input lengths and each head re-asserts the `MAX_LIST_LENGTH` cap. `IRNode` carries
+an `f64` and so isn't `Hash`-keyable, but it *is* totally ordered (`canonical_cmp`),
+so every head sorts once (O(n log n)) rather than scanning membership per element —
+an earlier version of this file did the latter and was worst-case quadratic (fixed
+in 0.19.1, see `CHANGELOG.md`). Every malformed form (non-list arg, wrong arity) is
 left unevaluated rather than panicking — the W-5/W-9 fail-soft contract.
 
 **W-14** adds the **conditionals** and **type predicates**. `Which` and `Switch`

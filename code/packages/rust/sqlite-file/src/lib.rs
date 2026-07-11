@@ -65,4 +65,6 @@ pub use error::SqliteError;
 pub use header::{Header, TextEncoding};
 pub use pager::Pager;
 pub use record::SqlValue;
-pub use schema::{read_schema, read_table, table_root_page, SchemaEntry};
+pub use schema::{
+    read_schema, read_table, read_without_rowid_table, table_root_page, SchemaEntry,
+};

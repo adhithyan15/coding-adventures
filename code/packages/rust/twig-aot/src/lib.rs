@@ -104,7 +104,7 @@ use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
 use iir_builtin_lowering::{
-    intern_symbols, lower_global_io, lower_heap_builtins_runtime, lower_lisp_repr,
+    intern_symbols, lower_global_io, lower_heap_builtins_runtime, lower_dyn_repr,
 };
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
@@ -2218,7 +2218,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // Phase 0a: lower lispy heap builtins to **runtime calls** (LANG77,
     // McCarthy L3b-2b).  A lisp frontend (McCarthy Lisp, Twig) emits
     // `call_builtin "cons"/"car"/"cdr"`; this rewrite renames them to
-    // `lispy_cons`/`lispy_car`/`lispy_cdr`, which the backends dispatch to
+    // `dyn_cons`/`dyn_car`/`dyn_cdr`, which the backends dispatch to
     // `__dyn_*` in the linked C lisp runtime
     // (`twig-aot/runtime/dynval_runtime.c`).  Unlike the structural
     // `lower_heap_builtins` (alloc + field_*, used by the managed wasm/jvm/
@@ -2231,18 +2231,18 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // Phase 0a″: compile-time symbol interning (LANG77 / L3b-2c-3).
     // Rewrite each `const Var(name):symbol` to the finished tagged immediate
     // `(id << 32) | TAG_SYMBOL`, with module-wide ids (so the same name → the
-    // same id → `EQ` is word equality). Runs before `lower_lisp_repr` so the
+    // same id → `EQ` is word equality). Runs before `lower_dyn_repr` so the
     // representation pass sees finished symbol immediates. A no-op for modules
     // without symbol literals.
     intern_symbols(module);
 
     // Phase 0a′: type-directed lisp-value representation (LANG77 / L3b-2c).
-    // After cons/car/cdr are `lispy_*` calls, box the integer atoms that flow
+    // After cons/car/cdr are `dyn_*` calls, box the integer atoms that flow
     // into them (so their NaN-box tag is `000`, not the heap tag a raw int's
     // low bits would collide with) and unbox the program result at the exit
-    // boundary.  Gate-free and type-directed: a module with no `lispy_*` calls
+    // boundary.  Gate-free and type-directed: a module with no `dyn_*` calls
     // (every Twig/Nib/Brainfuck program) has nothing to box and is unchanged.
-    lower_lisp_repr(module);
+    lower_dyn_repr(module);
 
     for func in &mut module.functions {
         lower_string_literals_for_aot(func);

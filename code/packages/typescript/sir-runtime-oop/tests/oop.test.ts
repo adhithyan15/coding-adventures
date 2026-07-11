@@ -593,6 +593,57 @@ describe("built-in method catalog: Hash (M1c)", () => {
     ]);
   });
 
+  it("block Enumerable breadth (group_by/partition/flat_map/reduce/inject/sum)", () => {
+    // Hash mixes in Enumerable: every method yields [key, value] EXCEPT
+    // reduce/inject, which follow Ruby's memo convention and yield (memo, pair)
+    // — the [k, v] pair as ONE argument.  Mirrors the Python (#7978), Go
+    // (#7983), Rust (#7989), and JS (#7993) references.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+    const isEven = new Closure((k: Val, v: Val) => (v as number) % 2 === 0);
+    // group_by → a Hash: block key -> Array of [k, v] pairs (first-seen order).
+    expect(callMethod(h, "group_by", isEven)).toEqual(
+      new Map<Val, Val>([
+        [false, [["a", 1], ["c", 3]]],
+        [true, [["b", 2], ["d", 4]]],
+      ]),
+    );
+    // partition → [[matching pairs], [rest pairs]].
+    expect(callMethod(h, "partition", isEven)).toEqual([
+      [["b", 2], ["d", 4]],
+      [["a", 1], ["c", 3]],
+    ]);
+    // flat_map { |k, v| [k, v] } → one-level splice.
+    expect(
+      callMethod(
+        new Map<Val, Val>([["a", 1], ["b", 2]]),
+        "flat_map",
+        new Closure((k: Val, v: Val) => [k, v]),
+      ),
+    ).toEqual(["a", 1, "b", 2]);
+    // sum { |k, v| v } → 10 (seed defaults to 0).
+    expect(callMethod(h, "sum", new Closure((k: Val, v: Val) => v))).toBe(10);
+    // reduce(100) { |acc, pair| acc + pair[1] } → 110 (memo yields the pair).
+    expect(
+      callMethod(h, "reduce", 100, new Closure((acc: Val, pair: Val) => (acc as number) + ((pair as Val[])[1] as number))),
+    ).toBe(110);
+    // inject seedless { |acc, pair| … } seeds from the first [k, v] pair.
+    expect(
+      callMethod(
+        new Map<Val, Val>([["a", 1], ["b", 2]]),
+        "inject",
+        new Closure((acc: Val, pair: Val) => [(acc as Val[])[0], ((acc as Val[])[1] as number) + ((pair as Val[])[1] as number)]),
+      ),
+    ).toEqual(["a", 3]);
+    // Empty seedless reduce → nil; receiver unchanged throughout.
+    expect(callMethod(new Map<Val, Val>(), "reduce", new Closure((a: Val, p: Val) => a))).toBeNull();
+    expect([...h.entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+      ["c", 3],
+      ["d", 4],
+    ]);
+  });
+
   it("respond_to? honesty + nil floor", () => {
     const h = new Map<Val, Val>([["a", 1]]);
     expect(callMethod(h, "respond_to?", "keys")).toBe(true);

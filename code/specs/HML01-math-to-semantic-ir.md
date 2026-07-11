@@ -91,10 +91,23 @@ pub fn compile_source(source: &str, module_name: &str)
     -> Result<semantic_ir::Module, <Lang>LowerError>;
 ```
 
-- **`matlab-to-semantic-ir`** — walks the `matlab-parser` CST, emits SIR22
-  (array/matrix domain) nodes. 1-based-to-0-based index translation happens
-  here, at lowering time — per SIR10's "disambiguation is the frontend's
-  job," the IR never carries a language's indexing convention implicitly.
+- **`matlab-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the `matlab-parser`
+  CST, emits SIR22 (array/matrix domain) nodes. 1-based-to-0-based index
+  translation happens here, at lowering time — per SIR10's "disambiguation
+  is the frontend's job," the IR never carries a language's indexing
+  convention implicitly. A well-scoped first cut (literals, assignment,
+  arithmetic/comparison/logical operators, ranges, transpose, indexing,
+  `if`/`while`/`for`, single-output functions, `disp`) rather than full
+  MATLAB — each excluded construct (stepped/matrix-valued `for`,
+  `end`-relative indexing, matrix division, multi-output functions, nested
+  functions, `break`/`continue`/`return`, `switch`/`try`/`global`, cell
+  arrays, lambdas) returns an explicit error rather than being silently
+  mis-lowered. Scalar-vs-array disambiguation for `+ - * / \ ^` is a
+  syntactic heuristic on literal operands only (real shape inference is a
+  follow-up), which means only *purely-literal* MATLAB arithmetic currently
+  round-trips through the JS backend (SIR22 codegen for the array-domain
+  nodes is separate, not-yet-shipped follow-on work — the frontend/backend
+  split described in this spec).
 - **`octave-to-semantic-ir`** — a thin wrapper: run `octave-runtime`'s
   existing `octavify` source-rewrite shim, then delegate to
   `matlab-to-semantic-ir::compile_source`. Mirrors how `octave-runtime`

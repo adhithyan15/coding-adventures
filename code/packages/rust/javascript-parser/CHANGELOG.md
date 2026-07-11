@@ -2,6 +2,126 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.44.0] - 2026-07-11
+
+### Added — CLOC12.180: bridge computed member keys (`[expr]`)
+
+`convert_property_key` declined every computed `[expr]` key (dropping the file to
+WHITESPACE_ONLY); it now lowers the inner key expression to
+`PropertyKey::Expression` (the typed-AST variant the emitter already brackets).
+Because `convert_property_key` is the shared key converter, one change enables
+computed keys in **all** three positions:
+
+- a class computed **field** (`class C { [k] = v }`),
+- a class computed **method** (`class C { [k](){} }`), and
+- an object-literal computed key (`{ [k]: v }`).
+
+Each construction site (`convert_class_field`, `convert_method_definition`, the
+object `Property` builder) now sets its `computed` flag to
+`matches!(key, PropertyKey::Expression(_))` instead of hard-coding `false`. The
+inner key is routed through the shared `convert_expression`, so an unmodelled key
+expression DECLINES (safe WHITESPACE_ONLY) rather than mis-emit.
+
+2 former decline tests flipped to success (`class_computed_method_key`,
+`class_computed_field_key`); a new `object_computed_key` test covers the object
+position. Full parser suite (216) green. MINOR.
+
+## [0.43.0] - 2026-07-11
+
+### Added — CLOC12.179: bridge private accessors (`get #x()` / `set #x()`)
+
+`convert_private_method_definition` (CLOC12.178) declined the private *accessor*
+forms; it now lowers them. A private getter (`get #x(){}`) becomes a
+`ClassMember::Method` with `MethodKind::Get` and a `PropertyKey::PrivateName`
+key; a private setter (`set #x(v){}`) becomes `MethodKind::Set` with its single
+parameter. The `get` / `set` keyword precedes the `PRIVATE_NAME` token as a
+direct token child (read alongside `static`), so `static get #x(){}` also works.
+
+Still declined: the private **generator** (`*#m(){}`) and **async** forms — like
+a public generator method, they DECLINE (safe WHITESPACE_ONLY), never a mis-emit.
+
+4 new bridge tests (private getter, private setter, static private getter; the
+former `class_private_getter_still_declines` replaced by a
+`class_private_generator_still_declines` guard). MINOR.
+
+## [0.42.0] - 2026-07-11
+
+### Added — CLOC12.178 PR1: bridge private methods → `ClassMember::Method` with a private key
+
+A private class method (`class C { #m(){} }`) parses as its own
+`private_method_definition` grammar node (distinct from `method_definition`),
+which `convert_class_element` previously declined (dropping the file to
+WHITESPACE_ONLY). It now dispatches that node to the new
+`convert_private_method_definition`, producing a `ClassMember::Method` whose key
+is a `PropertyKey::PrivateName` (javascript-ast 0.36.0):
+
+- The key is the node's leading `PRIVATE_NAME` token (`#m`), lowered by the
+  shared `private_name_key` helper (the `#` stripped, re-added by the emitter) —
+  exactly as a private *field* key.
+- The `static` modifier lives *inside* the `private_method_definition` node (the
+  grammar's `[ "static" ]`), unlike a public method's `static` (on the
+  `class_element`), so it is read here. `static #m(){}` works.
+- Params and body reuse the shared `convert_formal_parameters` /
+  `convert_formal_parameter` / `convert_function_body`, mirroring
+  `convert_method_definition`. The kind is always `Method` (a private name can
+  never be the `constructor`).
+- The private **getter / setter / generator** forms (`get #x(){}`, `set #x(v){}`,
+  `*#m(){}`) carry accessor / evaluation semantics not yet modelled, so — like a
+  public generator method — they DECLINE (safe WHITESPACE_ONLY), never a
+  mis-emit. A later slice.
+
+5 new bridge tests (the former `class_private_method_still_declines` flipped to
+success; a `class_private_getter_still_declines` guards the decline path); full
+parser suite (212 tests) green. MINOR.
+
+## [0.41.0] - 2026-07-11
+
+### Added — CLOC12.177 PR2: bridge private class fields → `PropertyKey::PrivateName`
+
+A private class field (`class C { #x = 1; }`) parses as a `class_field_declaration`
+whose key is a bare `PRIVATE_NAME` token (`#x`) rather than a `property_name`
+node, so `convert_class_field` previously declined it (dropping the file to
+WHITESPACE_ONLY). It now detects that token via the new `private_name_key` helper
+and lowers it to `PropertyKey::PrivateName` (javascript-ast 0.36.0):
+
+- The `PRIVATE_NAME` token's `value` **includes** the leading `#` (e.g. `"#x"`);
+  the stored `PrivateName.name` omits it (mirroring `Identifier`), so the helper
+  strips the `#`. The emitter re-adds it.
+- Works for a bare field (`#x;` → `value: None`), an initialized field
+  (`#x = 1;`), and a `static` private field (`static #x = 1;`) — the `static`
+  token precedes the `PRIVATE_NAME` token and still sets `is_static`.
+- A private **method** (`#m(){}`) is a *separate* `private_method_definition`
+  grammar node, not yet bridged — it still DECLINES (safe WHITESPACE_ONLY), never
+  a mis-emit. A later slice.
+
+5 new bridge tests (the former `class_private_field_declines` flipped to success).
+MINOR.
+
+## [0.40.0] - 2026-07-11
+
+### Added — CLOC12.176 PR2: bridge static-init blocks → `ClassMember::StaticBlock`
+
+The grammar already parses a static initialization block (`static { … }`) as a
+`static_block` node inside `class_element`, but the bridge declined it (dropping
+the file to WHITESPACE_ONLY). `convert_class_element` now dispatches a
+`static_block` member to the new `convert_static_block`, producing
+`ClassMember::StaticBlock(BlockStatement)` (javascript-ast 0.35.0):
+
+- The block **body** reuses the shared statement converter (`convert_statement`),
+  so the full statement surface is reachable — expression statements
+  (`x = 1;`), lexical declarations (`let z = 2;` → `Statement::Declaration`),
+  and multiple statements in source order. Identical shape to
+  `convert_block_statement`.
+- The leading `static` keyword lives *inside* the `static_block` node (not
+  hoisted onto `class_element` like a method/field modifier), so the existing
+  modifier loop never sees it — `is_static` stays false and the static-block arm
+  ignores it. No special modifier handling is needed.
+- An empty block (`static {}`) maps to an empty `body`.
+
+Works in both class-expression and class-declaration bodies (shared conversion);
+a static block and a field/method coexist in one body in source order.
+5 new bridge tests. MINOR.
+
 ## [0.39.0] - 2026-07-11
 
 ### Added — CLOC12.175 PR2: bridge class fields → `ClassMember::Field`

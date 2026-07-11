@@ -2,9 +2,9 @@
 //!
 //! A McCarthy predicate (`pair?`/`equal?`/`not`) returns a **tagged boolean**
 //! (`LISPY_TRUE = 5` / `LISPY_FALSE = 3`), NOT a tagged integer. The fix lives in
-//! the shared native pass `iir_builtin_lowering::lower_lisp_repr`: at the
-//! program-exit boundary a boolean result is coerced with `lispy_truthy` (→ raw
-//! `0`/`1`) instead of `lispy_unbox_int` (which would compute `5 >> 3 = 0` for
+//! the shared native pass `iir_builtin_lowering::lower_dyn_repr`: at the
+//! program-exit boundary a boolean result is coerced with `dyn_truthy` (→ raw
+//! `0`/`1`) instead of `dyn_unbox_int` (which would compute `5 >> 3 = 0` for
 //! *true*). Reusable for every tagged-word backend (LLVM/AOT/JIT).
 //!
 //! **Verified by RUNNING**: emit host-triple LLVM IR, link `dynval_runtime.c`
@@ -21,7 +21,7 @@ fn host_triple() -> String {
     let o = std::process::Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine");
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
-fn lispy_runtime_c() -> std::path::PathBuf {
+fn dynval_runtime_c() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/dynval_runtime.c")
 }
 fn run(src: &str, module: &str) -> i32 {
@@ -34,7 +34,7 @@ fn run(src: &str, module: &str) -> i32 {
     let exe = tmp.join(module);
     let build = std::process::Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-x").arg("none").arg(lispy_runtime_c())
+        .arg("-x").arg("none").arg(dynval_runtime_c())
         .arg("-o").arg(&exe).output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));
     std::process::Command::new(&exe).output().expect("run").status.code().expect("exit code")

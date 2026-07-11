@@ -3,6 +3,80 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.4] - Unreleased
+
+### Added
+
+- **`CONCAT(x, …)`** — concatenate every argument's text. A NULL argument
+  contributes the empty string (it does not nullify), so
+  `CONCAT('a', NULL, 'c')` = `'ac'`; the result is always text; at least one
+  argument is required.
+- **`CONCAT_WS(sep, x, …)`** — join the value arguments with `sep`. Unlike
+  CONCAT, a NULL value argument is *skipped* entirely (`CONCAT_WS('-','a',NULL,'c')`
+  = `'a-c'`); a NULL separator makes the whole result NULL; at least two
+  arguments are required.
+- **`SUBSTRING`** — an accepted spelling of the existing `SUBSTR`.
+
+  Integer/boolean arguments coerce to their decimal text; Float/Blob arguments
+  are declined (their SQLite text form is subtle — same convention as HEX/QUOTE).
+
+## [0.4.3] - Unreleased
+
+### Added
+
+- **Two-argument `TRIM(x, y)` / `LTRIM(x, y)` / `RTRIM(x, y)`** — the second
+  argument is a *set of characters* stripped from both / the left / the right
+  end, matching SQLite: `TRIM('xxhixx', 'x')` → `'hi'`,
+  `TRIM('abcHIcba', 'abc')` → `'HI'`. Trimming operates on Unicode characters,
+  not bytes (`TRIM('héllo', 'h')` → `'éllo'`); an empty set removes nothing; a
+  NULL in either argument propagates to NULL; integer/boolean arguments coerce
+  to their decimal text (`TRIM(12321, '1')` → `'232'`). The single-argument
+  whitespace forms are unchanged. The three arms now share one `trim_builtin`
+  helper. The helper validates arity before indexing (so `TRIM()` — which the
+  grammar permits — is a clean error, not an out-of-bounds panic) and resolves
+  the trim-set through a `HashSet` so the operation stays `O(N + M)` rather than
+  `O(N·M)` in the subject / set lengths.
+
+### Added
+
+- **Scalar `MAX(a, b, …)` / `MIN(a, b, …)`** (two-or-more arguments): return the
+  largest / smallest argument, or NULL if any argument is NULL, comparing with
+  SQL value order. The single-argument aggregate forms are unchanged (compiled to
+  `FinalizeAgg`); the planner (sql-planner 0.2.0) now routes only the multi-arg
+  calls here. Fixes `SELECT MAX(3, 9, 5)` returning `3` instead of `9`.
+
+## [0.4.1] - Unreleased
+
+### Added
+
+- **`IIF(x, y, z)`** — SQLite's function-form conditional, equivalent to
+  `CASE WHEN x THEN y ELSE z END`: returns `y` when `x` is truthy (SQL
+  three-valued logic — a NULL or falsy `x` selects `z`), reusing the engine's
+  `is_truthy` helper. Unit-tested and validated against real SQLite by the
+  mini-sqlite differential oracle. (A pure-VM partial for `CASE`, which is
+  blocked on a stale generated grammar — see the mini-sqlite notes.)
+
+## [0.4.0] - Unreleased
+
+### Added
+
+- **Five more scalar built-in functions** in `call_builtin`, matching SQLite:
+  - `SIGN(x)` — `-1`/`0`/`+1` for a negative/zero/positive number; NULL for a
+    NULL or non-numeric argument.
+  - `UNICODE(s)` — the code point of the first character of `s`; NULL for a NULL
+    or empty string.
+  - `CHAR(x1, …)` — a string built from the argument code points (out-of-range
+    or non-integer arguments contribute nothing; no args → `""`).
+  - `ZEROBLOB(n)` — a BLOB of `n` zero bytes (`n < 0` → empty); NULL → NULL. The
+    length is capped at 1,000,000 (returning `ResourceLimit`, like the GROUP BY /
+    COUNT(DISTINCT) guards) so a query such as `zeroblob(9999999999)` can't force
+    a multi-gigabyte eager allocation.
+  - `QUOTE(x)` — the value as an SQL literal (NULL → `NULL`, text single-quoted
+    with doubled inner quotes, blob as `X'…'` hex, integer as its digits; floats
+    declined, like `HEX`).
+  Each is unit-tested and validated end-to-end against real SQLite by the
+  mini-sqlite differential oracle.
+
 ## [0.3.0] - Unreleased
 
 ### Added

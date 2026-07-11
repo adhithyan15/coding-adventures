@@ -1,0 +1,715 @@
+//! # COBOL runtime — running COBOL, where the quirks live.
+//!
+//! A tree-walking interpreter for COBOL-60, built on the `cobol-parser` CST. It
+//! turns WORKING-STORAGE into a **PICTURE-typed data model** and executes the
+//! PROCEDURE DIVISION, capturing everything `DISPLAY`ed. See
+//! [PL08](../../../specs/PL08-cobol-runtime.md).
+//!
+//! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
+//! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
+//! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
+//! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), and `IF … ELSE`
+//! (numeric and alphanumeric comparison) over numeric-display (`9`/`V`, and
+//! signed `S` with trailing-overpunch display) and character pictures — and
+//! returns a descriptive error for anything not yet modelled, rather than
+//! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
+//! `SEPARATE`/`LEADING` variants, editing pictures, `PERFORM`, tables, files, later
+//! standards) is in PL08.
+//!
+//! ```
+//! use coding_adventures_cobol_runtime::run_cobol;
+//! // Card columns 1–6 are the sequence area; code begins in column 8.
+//! let src = "\
+//! 000010 IDENTIFICATION DIVISION.
+//! 000020 PROGRAM-ID. HELLO.
+//! 000030 PROCEDURE DIVISION.
+//! 000040 MAIN.
+//! 000050     DISPLAY \"HELLO, WORLD\".
+//! 000060     STOP RUN.";
+//! assert_eq!(run_cobol(src).unwrap(), "HELLO, WORLD\n");
+//! ```
+
+use coding_adventures_cobol_parser::try_parse_cobol;
+
+mod error;
+mod interp;
+mod picture;
+mod program;
+mod value;
+
+pub use error::RuntimeError;
+
+/// Parse and run a COBOL program, returning everything it `DISPLAY`ed (the
+/// captured console, each `DISPLAY` terminated by a newline).
+///
+/// Lexical and parse errors surface as [`RuntimeError::Parse`]; constructs the
+/// v0.1 runtime does not yet model surface as descriptive runtime errors.
+pub fn run_cobol(source: &str) -> Result<String, RuntimeError> {
+    let cst = try_parse_cobol(source).map_err(RuntimeError::Parse)?;
+    let program = program::read_program(&cst)?;
+    let machine = interp::Machine::new(&program)?;
+    machine.run(&program)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Assemble a program from code lines, carding each (6 sequence columns + a
+    /// space indicator, then the code beginning in column 8).
+    fn program(lines: &[&str]) -> String {
+        lines.iter().map(|l| format!("000000 {l}")).collect::<Vec<_>>().join("\n")
+    }
+
+    #[test]
+    fn hello_world() {
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. HELLO.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY \"HELLO, WORLD\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "HELLO, WORLD\n");
+    }
+
+    #[test]
+    fn character_move_space_pads_and_displays_stored_width() {
+        // MOVE "HI" TO a PIC X(5) → stored "HI   "; DISPLAY shows all 5 columns.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  WORD  PIC X(5).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE \"HI\" TO WORD.",
+            "    DISPLAY WORD.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "HI   \n");
+    }
+
+    #[test]
+    fn character_move_truncates_on_the_right() {
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  WORD  PIC X(3).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE \"HELLO\" TO WORD.",
+            "    DISPLAY WORD.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "HEL\n");
+    }
+
+    #[test]
+    fn numeric_move_zero_fills_and_displays_raw_digits() {
+        // MOVE 42 TO PIC 9(5) → "00042"; DISPLAY shows the raw digits.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 9(5).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE 42 TO N.",
+            "    DISPLAY N.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "00042\n");
+    }
+
+    #[test]
+    fn numeric_move_truncates_and_implied_decimal_has_no_point() {
+        // MOVE 123.456 TO PIC 9(2)V9 → integer keeps "23", fraction keeps "4"
+        // → stored "234"; DISPLAY shows "234" (no decimal point).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 9(2)V9.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE 123.456 TO N.",
+            "    DISPLAY N.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "234\n");
+    }
+
+    #[test]
+    fn display_concatenates_operands_with_no_separator() {
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  A  PIC X(3) VALUE \"FOO\".",
+            "01  B  PIC 9(2) VALUE 7.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY A B \"!\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        // "FOO" + "07" + "!" — no spaces between operands.
+        assert_eq!(out, "FOO07!\n");
+    }
+
+    #[test]
+    fn value_initialization_and_figuratives() {
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 9(3) VALUE ZERO.",
+            "01  S  PIC X(4) VALUE SPACES.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY N.",
+            "    DISPLAY S \"|\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "000\n    |\n");
+    }
+
+    #[test]
+    fn group_item_displays_concatenation_of_children() {
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  FULL-NAME.",
+            "    02  FIRST  PIC X(3) VALUE \"AMY\".",
+            "    02  LAST   PIC X(4) VALUE \"LEE\".",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY FULL-NAME \"|\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        // FIRST "AMY" + LAST "LEE " (space-padded to 4) → "AMYLEE " then "|".
+        assert_eq!(out, "AMYLEE |\n");
+    }
+
+    #[test]
+    fn item_to_item_move_reshapes_to_receiver_picture() {
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  SRC  PIC 9(3) VALUE 42.",
+            "01  DST  PIC 9(5).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE SRC TO DST.",
+            "    DISPLAY DST.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        // SRC holds "042"; moved into 9(5) → "00042".
+        assert_eq!(out, "00042\n");
+    }
+
+    // ----------------------------------------------------------------------
+    // Fixed-point decimal arithmetic
+    // ----------------------------------------------------------------------
+
+    /// Run a program whose WORKING-STORAGE is one field `R PIC <pic>`, execute
+    /// `body`, then `DISPLAY R` — returns R's displayed digits.
+    fn compute(pic: &str, body: &[&str], extra_ws: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  R  PIC {pic}."),
+        ];
+        lines.extend(extra_ws.iter().map(|s| s.to_string()));
+        lines.push("PROCEDURE DIVISION.".to_string());
+        lines.push("MAIN.".to_string());
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        lines.push("    DISPLAY R.".to_string());
+        lines.push("    STOP RUN.".to_string());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs)).unwrap()
+    }
+
+    #[test]
+    fn add_to_accumulates_into_the_receiver() {
+        // R starts 10; ADD 5 3 TO R → 18.
+        assert_eq!(compute("9(3)", &["MOVE 10 TO R.", "ADD 5 3 TO R."], &[]), "018\n");
+    }
+
+    #[test]
+    fn add_giving_leaves_the_to_field_unchanged() {
+        // ADD 2 3 TO A GIVING R → R = 2+3+A(=100) = 105; A untouched.
+        let out = compute(
+            "9(3)",
+            &["ADD 2 3 TO A GIVING R."],
+            &["01  A  PIC 9(3) VALUE 100."],
+        );
+        assert_eq!(out, "105\n");
+    }
+
+    #[test]
+    fn subtract_from_and_unsigned_receiver_keeps_magnitude() {
+        // SUBTRACT 3 FROM R(=10) → 7.
+        assert_eq!(compute("9(3)", &["MOVE 10 TO R.", "SUBTRACT 3 FROM R."], &[]), "007\n");
+        // SUBTRACT 5 FROM R(=3) → -2, but R is unsigned → stores magnitude 2.
+        assert_eq!(compute("9(3)", &["MOVE 3 TO R.", "SUBTRACT 5 FROM R."], &[]), "002\n");
+    }
+
+    #[test]
+    fn multiply_fixed_point_truncates_into_receiver() {
+        // 2.5 * 2.5 = 6.25 → into PIC 9(3)V9 truncates to "0062".
+        let out = compute("9(3)V9", &["MULTIPLY 2.5 BY 2.5 GIVING R."], &[]);
+        assert_eq!(out, "0062\n");
+    }
+
+    #[test]
+    fn multiply_by_updates_the_by_field_without_giving() {
+        // MOVE 6 TO R; MULTIPLY 7 BY R → R = 42.
+        assert_eq!(compute("9(3)", &["MOVE 6 TO R.", "MULTIPLY 7 BY R."], &[]), "042\n");
+    }
+
+    #[test]
+    fn decimal_add_aligns_the_implied_point() {
+        // R PIC 9(2)V99 (4 digits) starts 1.50; ADD 2.25 TO R → 3.75 → "0375".
+        assert_eq!(compute("9(2)V99", &["MOVE 1.5 TO R.", "ADD 2.25 TO R."], &[]), "0375\n");
+    }
+
+    #[test]
+    fn divide_into_giving_truncates_to_receiver_decimals() {
+        // 10 / 3 = 3.333… → into PIC 9(3)V99 truncates to 3.33 → "00333".
+        assert_eq!(compute("9(3)V99", &["DIVIDE 3 INTO 10 GIVING R."], &[]), "00333\n");
+        // 10 / 4 = 2.5 → into PIC 9(3) (no decimals) truncates to 2 → "002".
+        assert_eq!(compute("9(3)", &["DIVIDE 4 INTO 10 GIVING R."], &[]), "002\n");
+    }
+
+    #[test]
+    fn divide_into_without_giving_updates_the_dividend() {
+        // MOVE 20 TO R; DIVIDE 5 INTO R → R = 20/5 = 4.
+        assert_eq!(compute("9(3)", &["MOVE 20 TO R.", "DIVIDE 5 INTO R."], &[]), "004\n");
+    }
+
+    #[test]
+    fn divide_by_zero_is_a_clear_error() {
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  R  PIC 9(3).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DIVIDE 0 INTO 10 GIVING R.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
+    // IF — conditions and branching
+    // ----------------------------------------------------------------------
+
+    /// Run a program with `01 N PIC 9(3) VALUE <n>` and the given procedure body.
+    fn run_if(n: &str, body: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  N  PIC 9(3) VALUE {n}."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs)).unwrap()
+    }
+
+    #[test]
+    fn if_numeric_true_and_false_branches() {
+        // N=5 > 3 → THEN.
+        assert_eq!(
+            run_if("5", &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."]),
+            "BIG\n"
+        );
+        // N=1 not > 3 → ELSE.
+        assert_eq!(
+            run_if("1", &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."]),
+            "SMALL\n"
+        );
+    }
+
+    #[test]
+    fn if_equal_less_and_negated() {
+        assert_eq!(run_if("7", &["IF N EQUAL 7 DISPLAY \"EQ\".", "STOP RUN."]), "EQ\n");
+        assert_eq!(run_if("2", &["IF N LESS 5 DISPLAY \"LT\".", "STOP RUN."]), "LT\n");
+        // IS NOT GREATER: 3 is not > 5 → true.
+        assert_eq!(run_if("3", &["IF N IS NOT GREATER THAN 5 DISPLAY \"OK\".", "STOP RUN."]), "OK\n");
+        // A false condition with no ELSE displays nothing.
+        assert_eq!(run_if("9", &["IF N LESS 5 DISPLAY \"NO\".", "STOP RUN."]), "");
+    }
+
+    #[test]
+    fn if_then_branch_runs_multiple_statements() {
+        // THEN branch has two statements; both run when the condition holds.
+        assert_eq!(
+            run_if("5", &["IF N GREATER 3 MOVE 8 TO N DISPLAY N.", "STOP RUN."]),
+            "008\n"
+        );
+    }
+
+    #[test]
+    fn if_alphanumeric_comparison_space_pads() {
+        // "AB" vs "AB " (space-padded) compare equal.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  W  PIC X(4) VALUE \"AB\".",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF W EQUAL \"AB\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "MATCH\n");
+    }
+
+    #[test]
+    fn stop_run_inside_a_branch_ends_the_program() {
+        // The STOP RUN is inside the THEN branch; the trailing DISPLAY never runs.
+        assert_eq!(
+            run_if("5", &["IF N GREATER 3 DISPLAY \"IN\" STOP RUN.", "DISPLAY \"AFTER\".", "STOP RUN."]),
+            "IN\n"
+        );
+    }
+
+    #[test]
+    fn deeply_nested_if_errors_rather_than_overflowing_the_stack() {
+        // A crafted source can nest `IF`s far past anything real COBOL does.
+        // Parsing that recurses once per level; without the parser's depth cap
+        // it overflows the *native* stack and aborts the process — uncatchable,
+        // not a RuntimeError. `cobol-parser` opts into the cap, so end-to-end
+        // this comes back as a clean parse error. One `IF` per card so the
+        // fixed 80-column format doesn't truncate them (a statement flows
+        // freely across cards, so the nest is real). 4096 is far past the cap.
+        let mut lines: Vec<String> = vec![
+            "IDENTIFICATION DIVISION.".into(),
+            "PROGRAM-ID. P.".into(),
+            "DATA DIVISION.".into(),
+            "WORKING-STORAGE SECTION.".into(),
+            "01  N  PIC 9(3) VALUE 5.".into(),
+            "PROCEDURE DIVISION.".into(),
+            "MAIN.".into(),
+        ];
+        for _ in 0..4096 {
+            lines.push("    IF N GREATER 0".into());
+        }
+        lines.push("    DISPLAY \"DEEP\".".into());
+        lines.push("    STOP RUN.".into());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = run_cobol(&program(&refs)).unwrap_err();
+        assert!(matches!(err, RuntimeError::Parse(_)), "got {err:?}");
+        assert!(err.to_string().to_lowercase().contains("nest"), "message should explain: {err}");
+    }
+
+    // ----------------------------------------------------------------------
+    // COMPUTE — expression evaluation, ROUNDED, ON SIZE ERROR
+    // ----------------------------------------------------------------------
+
+    /// Build a program with three numeric inputs and one receiver `R`, run the
+    /// given procedure body, and return what it DISPLAYed. `A`, `B`, `C` are
+    /// `9(3)`; `R` is whatever `r_pic` says.
+    fn run_compute(a: &str, b: &str, c: &str, r_pic: &str, body: &[&str]) -> Result<String, RuntimeError> {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  A  PIC 9(3) VALUE {a}."),
+            format!("01  B  PIC 9(3) VALUE {b}."),
+            format!("01  C  PIC 9(3) VALUE {c}."),
+            format!("01  R  PIC {r_pic} VALUE 0."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs))
+    }
+
+    #[test]
+    fn compute_respects_operator_precedence() {
+        // A + B * C = 10 + 3*2 = 16 → stored in 9(4)V99 → "001600".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A + B * C.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "001600\n");
+    }
+
+    #[test]
+    fn compute_parentheses_override_precedence() {
+        // (A + B) * C = (10 + 3) * 2 = 26 → "002600".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = (A + B) * C.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "002600\n");
+    }
+
+    #[test]
+    fn compute_exponentiation_and_unary_minus() {
+        // C ** B = 2 ** 3 = 8 → "000800".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = C ** B.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "000800\n");
+        // Unary minus then stored into an unsigned receiver keeps the magnitude:
+        // A - (A + B) = 10 - 13 = -3 → magnitude 3 → "000300".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A - (A + B).", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "000300\n");
+    }
+
+    #[test]
+    fn compute_division_truncates_then_rounds() {
+        // A / B = 10 / 3 = 3.333… → truncated into V99 → "0003.33" = "000333".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A / B.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "000333\n");
+        // With ROUNDED to two places, 3.333… → 3.33 (the third place is < 5).
+        let out = run_compute("20", "3", "2", "9(4)V99",
+            &["COMPUTE R ROUNDED = A / B.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        // 20 / 3 = 6.666… → rounds to 6.67 → "000667".
+        assert_eq!(out, "000667\n");
+    }
+
+    #[test]
+    fn compute_on_size_error_fires_on_overflow() {
+        // A * A * A = 10^3 = 1000, but R is only 9(2) (max 99): integer overflow
+        // → the ON SIZE ERROR handler runs and R is left unchanged (still 0).
+        let out = run_compute("10", "3", "2", "9(2)", &[
+            "COMPUTE R = A * A * A",
+            "    ON SIZE ERROR DISPLAY \"TOO BIG\".",
+            "DISPLAY R.",
+            "STOP RUN.",
+        ]).unwrap();
+        assert_eq!(out, "TOO BIG\n00\n");
+    }
+
+    #[test]
+    fn compute_overflow_without_handler_truncates() {
+        // Same overflow but no handler: COBOL truncates high-order digits
+        // silently (1000 into 9(2) keeps the low "00").
+        let out = run_compute("10", "3", "2", "9(2)",
+            &["COMPUTE R = A * A * A.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "00\n");
+    }
+
+    #[test]
+    fn compute_on_size_error_catches_divide_by_zero() {
+        // Dividing by (C - C) = 0 is a size-error condition; the handler runs.
+        let out = run_compute("10", "3", "2", "9(4)V99", &[
+            "COMPUTE R = A / (C - C)",
+            "    ON SIZE ERROR DISPLAY \"DIV ZERO\".",
+            "DISPLAY R.",
+            "STOP RUN.",
+        ]).unwrap();
+        assert_eq!(out, "DIV ZERO\n000000\n");
+    }
+
+    #[test]
+    fn compute_divide_by_zero_without_handler_is_an_error() {
+        let err = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A / (C - C).", "DISPLAY R.", "STOP RUN."]).unwrap_err();
+        assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
+    }
+
+    #[test]
+    fn compute_huge_flat_operator_chain_errors_not_overflows() {
+        // A flat `A + A + A + …` chain uses grammar repetition, so the parser's
+        // recursion-depth cap does not bound its *width*. Folding it builds a
+        // tree that deep, which would overflow the native stack in eval (and in
+        // the recursive Drop). The operand budget turns it into a clean error
+        // instead. 5000 terms is far past MAX_EXPR_OPERANDS (1024). Split across
+        // cards so the 80-column format doesn't truncate the expression.
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            "01  A  PIC 9(3) VALUE 1.".to_string(),
+            "01  R  PIC 9(9) VALUE 0.".to_string(),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+            "    COMPUTE R = A".to_string(),
+        ];
+        for _ in 0..5000 {
+            lines.push("        + A".to_string());
+        }
+        lines.push("        .".to_string());
+        lines.push("    STOP RUN.".to_string());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = run_cobol(&program(&refs)).unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("too large"), "message should explain: {err}");
+    }
+
+    // ----------------------------------------------------------------------
+    // Honest failure: unmodelled features error, they do not run wrong.
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn unsupported_verb_is_a_clear_error() {
+        // PERFORM is not yet executed (control flow is a later PR).
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SUB.",
+            "    STOP RUN.",
+            "SUB.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("PERFORM"), "message should name the verb: {err}");
+    }
+
+    #[test]
+    fn hostile_picture_size_errors_rather_than_exhausting_memory() {
+        // A ~30-byte program that would allocate gigabytes without the bound.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC X(4000000000).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::UnsupportedPicture(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn invalid_level_number_is_rejected() {
+        // Level 88 (condition-names) is a deferred feature; level 50 is invalid.
+        for lvl in ["88", "50"] {
+            let err = run_cobol(&program(&[
+                "IDENTIFICATION DIVISION.",
+                "PROGRAM-ID. P.",
+                "DATA DIVISION.",
+                "WORKING-STORAGE SECTION.",
+                "01  REC  PIC X(3).",
+                &format!("{lvl}  SUB  PIC X(2)."),
+                "PROCEDURE DIVISION.",
+                "MAIN.",
+                "    STOP RUN.",
+            ]))
+            .unwrap_err();
+            assert!(matches!(err, RuntimeError::Unsupported(_)), "level {lvl}: got {err:?}");
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Signed numerics (PIC S9…) — sign carried through, overpunch on DISPLAY
+    // ----------------------------------------------------------------------
+
+    /// Run a program with a signed receiver `N PIC <pic>` initialised to
+    /// `value`, then the body, returning what it DISPLAYed.
+    fn run_signed(pic: &str, value: &str, body: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  N  PIC {pic} VALUE {value}."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs)).unwrap()
+    }
+
+    #[test]
+    fn signed_value_displays_with_trailing_overpunch() {
+        // -123 in S9(3): magnitude "123", units 3 → 'L' (negative). → "12L".
+        assert_eq!(run_signed("S9(3)", "-123", &["DISPLAY N.", "STOP RUN."]), "12L\n");
+        // +123 → units 3 → 'C' (positive). → "12C".
+        assert_eq!(run_signed("S9(3)", "123", &["DISPLAY N.", "STOP RUN."]), "12C\n");
+        // Zero is unsigned: units 0 → '{' (positive). → "00{".
+        assert_eq!(run_signed("S9(3)", "0", &["DISPLAY N.", "STOP RUN."]), "00{\n");
+    }
+
+    #[test]
+    fn signed_field_keeps_sign_through_arithmetic() {
+        // 3 - 5 = -2 into a signed receiver → magnitude 2, negative → "0K"
+        // (units 2 → 'K'). An unsigned receiver would show "02".
+        assert_eq!(
+            run_signed("S9(2)", "3", &["SUBTRACT 5 FROM N.", "DISPLAY N.", "STOP RUN."]),
+            "0K\n"
+        );
+    }
+
+    #[test]
+    fn signed_value_used_in_arithmetic_carries_its_sign() {
+        // N = -10; ADD 4 → -6 → "0O" (units 6 → 'O', negative).
+        assert_eq!(
+            run_signed("S9(2)", "-10", &["ADD 4 TO N.", "DISPLAY N.", "STOP RUN."]),
+            "0O\n"
+        );
+    }
+
+    #[test]
+    fn moving_signed_into_unsigned_drops_the_sign() {
+        // A signed source moved into an unsigned receiver keeps only magnitude.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  S  PIC S9(3) VALUE -45.",
+            "01  U  PIC 9(3) VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE S TO U.",
+            "    DISPLAY U.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "045\n");
+    }
+
+    #[test]
+    fn compute_into_signed_receiver_shows_negative_overpunch() {
+        // COMPUTE N = 2 - 9 = -7 into S9(2) → "0P" (units 7 → 'P', negative).
+        assert_eq!(
+            run_signed("S9(2)", "0", &["COMPUTE N = 2 - 9.", "DISPLAY N.", "STOP RUN."]),
+            "0P\n"
+        );
+    }
+}
