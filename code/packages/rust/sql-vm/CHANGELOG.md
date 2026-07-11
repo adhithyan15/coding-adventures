@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.1] - Unreleased
+
+### Added
+
+- **`IIF(x, y, z)`** — SQLite's function-form conditional, equivalent to
+  `CASE WHEN x THEN y ELSE z END`: returns `y` when `x` is truthy (SQL
+  three-valued logic — a NULL or falsy `x` selects `z`), reusing the engine's
+  `is_truthy` helper. Unit-tested and validated against real SQLite by the
+  mini-sqlite differential oracle. (A pure-VM partial for `CASE`, which is
+  blocked on a stale generated grammar — see the mini-sqlite notes.)
+
 ## [0.4.0] - Unreleased
 
 ### Added

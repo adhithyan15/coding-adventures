@@ -483,6 +483,15 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT QUOTE(s) AS qs, QUOTE(n) AS qn FROM t ORDER BY id",
     },
+    // IIF(x, y, z) — the function form of CASE WHEN x THEN y ELSE z END.
+    Case {
+        id: "iif",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 8), (2, 2), (3, NULL)",
+        ],
+        query: "SELECT IIF(n > 5, 'big', 'small') AS r FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
