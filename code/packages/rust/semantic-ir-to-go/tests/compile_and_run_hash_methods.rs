@@ -1,7 +1,8 @@
 //! End-to-end proof for the **Ruby `Hash` method catalog** in the Go
 //! backend — the newly-added `merge`, `to_a`, `dig`, `invert`, `delete`,
 //! `store`/`[]=`, `clear`, and the block methods `each_key` / `each_value`
-//! (plus the pre-existing `each_pair`), bringing the Go runtime to parity
+//! (plus the pre-existing `each_pair`) and the transforming block methods
+//! `transform_values` / `transform_keys`, bringing the Go runtime to parity
 //! with the Python/TS `sir-runtime-oop` catalogs.
 //!
 //! Like `compile_and_run_coll_methods.rs`, this hand-builds SIR modules that
@@ -133,6 +134,12 @@ fn catalog_module() -> Module {
         "x",
         builtin("print", vec![var_p("x")]),
     );
+    // `transform_values` replaces every value with the block result; a constant
+    // body makes the expected hash trivially predictable ({a: 99, b: 99}).
+    let const99 = lambda_fn("__lam_const99", "v", ilit(99));
+    // `transform_keys` collapses BOTH keys onto the single symbol `:z`; Ruby
+    // keeps the LAST colliding entry's value, so {a:1,b:2} → {z: 2}.
+    let const_z = lambda_fn("__lam_const_z", "k", sym("z"));
 
     let stmts = vec![
         // {a:1}.merge({b:2}) → {a: 1, b: 2}   (fresh hash, other appended)
@@ -187,6 +194,18 @@ fn catalog_module() -> Module {
             "each_key",
             vec![closure("__lam_print_x")],
         )),
+        // {a:1,b:2}.transform_values { 99 } → {a: 99, b: 99}   (keys untouched)
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "transform_values",
+            vec![closure("__lam_const99")],
+        )),
+        // {a:1,b:2}.transform_keys { :z } → {z: 2}   (collision → last value wins)
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "transform_keys",
+            vec![closure("__lam_const_z")],
+        )),
     ];
 
     let main = Function {
@@ -200,7 +219,7 @@ fn catalog_module() -> Module {
         span: s(),
     };
 
-    program(vec![print_x, main])
+    program(vec![print_x, const99, const_z, main])
 }
 
 fn go_available() -> bool {
@@ -261,6 +280,8 @@ fn hash_methods_compile_and_run() {
             "a",                // each_key yields a
             "b",                // each_key yields b
             "{a: 1, b: 2}",     // each_key returns self
+            "{a: 99, b: 99}",   // transform_values (keys untouched)
+            "{z: 2}",           // transform_keys (collision → last value wins)
         ],
         "unexpected stdout:\n{stdout}"
     );

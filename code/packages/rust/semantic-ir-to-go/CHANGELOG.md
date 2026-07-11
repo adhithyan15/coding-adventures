@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.26.0 — Hash transforming block methods: `transform_values` / `transform_keys`
+
+Mirrors the Python `sir-runtime-oop` v0.1.18 reference into the Go backend's
+emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`), adding two
+non-mutating Ruby `Hash` block methods:
+
+- `transform_values { |v| … }` — builds a **new** hash whose keys are copied
+  verbatim (so no collision is possible) and whose values are the block results.
+  Original insertion order is preserved via a straight append.
+- `transform_keys { |k| … }` — builds a **new** hash whose values are untouched
+  and whose keys are the block results.  Two source keys can map to the SAME new
+  key; Ruby keeps the **last** colliding entry's value, so every write is routed
+  through `_sir_map_put`, which overwrites an existing key in place.
+
+Both yield exactly ONE block argument (the value / the key) and leave the
+receiver unmodified.  `_sir_hash_responds` now also advertises the pre-existing
+`each_key` / `each_value` block methods (previously reachable but not reported by
+`respond_to?`).
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains a `transform_values`
+case ({a:1,b:2} → {a: 99, b: 99}) and a `transform_keys` **collision** case
+({a:1,b:2} with a constant `:z` key → {z: 2}), compiled and run under real
+`go run` with stdout diffed against the Python/TS reference semantics.
+
 ## 0.25.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
 
 Mirrors the Python `sir-runtime-oop` v0.1.17 reference into the Go backend's

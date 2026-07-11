@@ -1716,7 +1716,8 @@ func _sir_hash_responds(name string) bool {
 		"has_value?", "value?", "size", "length", "empty?", "fetch":
 		return true
 	// Block-taking Hash methods.
-	case "each", "each_pair", "map", "select", "filter", "reject":
+	case "each", "each_pair", "each_key", "each_value", "map",
+		"select", "filter", "reject", "transform_values", "transform_keys":
 		return true
 	}
 	return false
@@ -2541,6 +2542,28 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
 				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
 			}
+		}
+		return m, true
+	case "transform_values":
+		// Ruby `Hash#transform_values` yields ONE argument (the value) per
+		// entry and builds a NEW hash whose keys are untouched and whose
+		// values are the block results. Because the keys are copied verbatim
+		// and stay distinct, no collision can occur — a straight append keeps
+		// the original insertion order.
+		m := &Map{Entries: make([]MapEntry, 0, len(recv.Entries))}
+		for _, e := range recv.Entries {
+			m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: _sir_apply(block, []Value{e.Val})})
+		}
+		return m, true
+	case "transform_keys":
+		// Ruby `Hash#transform_keys` yields ONE argument (the key) per entry
+		// and builds a NEW hash whose values are untouched and whose keys are
+		// the block results. Two source keys can map to the SAME new key; Ruby
+		// keeps the LAST such entry's value, so we route every write through
+		// `_sir_map_put`, which overwrites an existing key in place.
+		m := &Map{Entries: make([]MapEntry, 0, len(recv.Entries))}
+		for _, e := range recv.Entries {
+			_sir_map_put(m, _sir_apply(block, []Value{e.Key}), e.Val)
 		}
 		return m, true
 	}

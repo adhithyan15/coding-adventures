@@ -184,7 +184,8 @@ Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 `sort`, `join`, `to_a`, `each`, `map`/`collect`, `select`/`filter`, `reject`,
 `reduce`/`inject`, `find`/`detect`, `any?`, `all?`, `none?`; **Hash** `keys`,
 `values`, `has_key?`/`key?`/`include?`/`member?`, `has_value?`/`value?`, `size`/
-`length`, `empty?`, `each`/`each_pair`, `map`, `select`/`filter`, `reject`;
+`length`, `empty?`, `each`/`each_pair`, `each_key`, `each_value`, `map`,
+`select`/`filter`, `reject`, `transform_values`, `transform_keys`;
 **String** `length`/`size`, `upcase`, `downcase`, `reverse`, `strip`/`lstrip`/
 `rstrip`, `empty?`, `include?`, `start_with?`, `end_with?`, `split`, `chars`,
 `to_i`, `to_f`, `to_sym`; **Numeric** `abs`, `to_i`, `to_f`, `even?`, `odd?`,
