@@ -505,15 +505,27 @@ def test_hash_each_key_each_value() -> None:
     assert vs == [1, 2]
 
 
+def test_hash_transform_values_and_keys() -> None:
+    h = {"a": 1, "b": 2}
+    # transform_values: new hash, values mapped, keys unchanged, non-mutating.
+    assert oop.call_method(h, "transform_values", Closure(lambda v: v * 10)) == {"a": 10, "b": 20}
+    assert h == {"a": 1, "b": 2}
+    # transform_keys: new hash, keys mapped, values unchanged.
+    assert oop.call_method(h, "transform_keys", Closure(lambda k: k.upper())) == {"A": 1, "B": 2}
+    # transform_keys collision: the LAST pair wins.
+    assert oop.call_method({"a": 1, "b": 2}, "transform_keys", Closure(lambda _k: "x")) == {"x": 2}
+
+
 def test_hash_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
     assert oop.call_method({"a": 1}, "respond_to?", "each") is True
-    assert oop.call_method({"a": 1}, "respond_to?", "transform_keys") is False
+    # `transform_keys!` (the in-place bang variant) is still out of catalog.
+    assert oop.call_method({"a": 1}, "respond_to?", "transform_keys!") is False
     # An out-of-catalog Hash method is genuinely unknown → NoMethodError (T1).
     with pytest.raises(SirError) as excinfo:
-        oop.call_method({"a": 1}, "transform_keys")
+        oop.call_method({"a": 1}, "transform_keys!")
     assert excinfo.value.sir_class == "NoMethodError"
-    assert excinfo.value.args[0] == "undefined method 'transform_keys' for Hash"
+    assert excinfo.value.args[0] == "undefined method 'transform_keys!' for Hash"
     # Universal Object methods still resolve on a Hash receiver.
     assert oop.call_method({"a": 1}, "nil?") is False
 

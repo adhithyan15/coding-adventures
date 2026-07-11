@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sir-runtime-oop"
-version = "0.1.17"
+version = "0.1.18"
 description = "OOP runtime for Semantic-IR-emitted Python — class registry, is_a?/ancestry, instance- and class-variable stores, reflective method dispatch"
 requires-python = ">=3.12"
 dependencies = [
