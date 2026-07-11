@@ -632,6 +632,13 @@ const HASH_BLOCK_METHODS = new Set<string>([
   "sort_by",
   "min_by",
   "max_by",
+  "group_by",
+  "partition",
+  "flat_map",
+  "collect_concat",
+  "reduce",
+  "inject",
+  "sum",
 ]);
 
 // Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
@@ -1230,7 +1237,12 @@ function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeo
 
 /** Block-taking `Hash` methods; the block receives `[key, value]` (or a single
  * key/value for `each_key`/`each_value`). Returns `MISS` if not a block method. */
-function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val | typeof MISS {
+function hashBlockMethod(
+  recv: Map<Val, Val>,
+  name: string,
+  args: Val[],
+  block: Closure,
+): Val | typeof MISS {
   switch (name) {
     case "each":
     case "each_pair":
@@ -1326,6 +1338,76 @@ function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val
         }
       }
       return bestPair;
+    }
+    // ── Enumerable breadth (block-taking reshape / fold) ─────────────────────
+    //
+    // Same `[key, value]`-pair iteration as the aggregates: every method yields
+    // `(key, value)` EXCEPT `reduce`/`inject`, which follow Ruby's memo
+    // convention and yield `(memo, pair)` — the `[k, v]` Array as ONE argument.
+    case "group_by": {
+      // A Hash (`Map`) of block key -> Array of the `[k, v]` pairs that produced
+      // it, in first-seen key order (mirrors Array#group_by, which also returns
+      // a Map).
+      const groups = new Map<Val, Val>();
+      for (const [k, v] of [...recv]) {
+        const key = apply(block, [k, v]);
+        const bucket = groups.get(key);
+        if (Array.isArray(bucket)) bucket.push([k, v]);
+        else groups.set(key, [[k, v]]);
+      }
+      return groups;
+    }
+    case "partition": {
+      // `[[matching pairs], [rest pairs]]`, each a fresh Array of `[k, v]` pairs.
+      const yes: Val[] = [];
+      const no: Val[] = [];
+      for (const [k, v] of [...recv]) {
+        if (truthy(apply(block, [k, v]))) yes.push([k, v]);
+        else no.push([k, v]);
+      }
+      return [yes, no];
+    }
+    case "flat_map":
+    case "collect_concat": {
+      // Map each pair then concatenate one level: an Array result splices its
+      // elements, a scalar is appended as-is.
+      const out: Val[] = [];
+      for (const [k, v] of [...recv]) {
+        const mapped = apply(block, [k, v]);
+        if (Array.isArray(mapped)) out.push(...mapped);
+        else out.push(mapped);
+      }
+      return out;
+    }
+    case "reduce":
+    case "inject": {
+      // Ruby's memo fold.  Unlike every other method here (which yields the
+      // two-arg pair), `reduce` yields `(memo, pair)` — the `[k, v]` Array as
+      // ONE argument.  With an explicit seed the fold starts there; without one
+      // it seeds from the first pair; an empty seedless reduce is `nil`.
+      const pairs: Val[] = [...recv].map(([k, v]: [Val, Val]): Val => [k, v]);
+      let acc: Val;
+      let rest: Val[];
+      if (args.length > 0) {
+        acc = args[0];
+        rest = pairs;
+      } else if (pairs.length > 0) {
+        acc = pairs[0];
+        rest = pairs.slice(1);
+      } else {
+        return null;
+      }
+      for (const pair of rest) acc = apply(block, [acc, pair]);
+      return acc;
+    }
+    case "sum": {
+      // Numeric fold seeded at `0` (or the explicit seed arg) over the block
+      // results — the same `+` accumulation Array#sum uses.
+      let acc: Val = args.length > 0 ? args[0] : 0;
+      for (const [k, v] of [...recv]) {
+        acc = (acc as number) + (apply(block, [k, v]) as number);
+      }
+      return acc;
     }
     default:
       return MISS;
@@ -1918,7 +2000,7 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   } else if (recv instanceof Map) {
     const last = args[args.length - 1];
     if (HASH_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
-      const blkResult = hashBlockMethod(recv, name, last);
+      const blkResult = hashBlockMethod(recv, name, args.slice(0, -1), last);
       if (blkResult !== MISS) return blkResult;
     }
     const hashResult = hashMethod(recv, name, args);
