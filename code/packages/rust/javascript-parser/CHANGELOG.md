@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.40.0] - 2026-07-11
+
+### Added — CLOC12.176 PR2: bridge static-init blocks → `ClassMember::StaticBlock`
+
+The grammar already parses a static initialization block (`static { … }`) as a
+`static_block` node inside `class_element`, but the bridge declined it (dropping
+the file to WHITESPACE_ONLY). `convert_class_element` now dispatches a
+`static_block` member to the new `convert_static_block`, producing
+`ClassMember::StaticBlock(BlockStatement)` (javascript-ast 0.35.0):
+
+- The block **body** reuses the shared statement converter (`convert_statement`),
+  so the full statement surface is reachable — expression statements
+  (`x = 1;`), lexical declarations (`let z = 2;` → `Statement::Declaration`),
+  and multiple statements in source order. Identical shape to
+  `convert_block_statement`.
+- The leading `static` keyword lives *inside* the `static_block` node (not
+  hoisted onto `class_element` like a method/field modifier), so the existing
+  modifier loop never sees it — `is_static` stays false and the static-block arm
+  ignores it. No special modifier handling is needed.
+- An empty block (`static {}`) maps to an empty `body`.
+
+Works in both class-expression and class-declaration bodies (shared conversion);
+a static block and a field/method coexist in one body in source order.
+5 new bridge tests. MINOR.
+
 ## [0.39.0] - 2026-07-11
 
 ### Added — CLOC12.175 PR2: bridge class fields → `ClassMember::Field`

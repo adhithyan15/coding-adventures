@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.15] - 2026-07-11
+
+### Added — CLOC12.176 PR2: static-init blocks end-to-end
+
+Picks up javascript-parser 0.40.0, whose bridge now produces
+`ClassMember::StaticBlock`. A `static { … }` block now survives the full closurec
+pipeline. New e2e diff fixture `tests/diff/simple-static-block/`:
+`class C { static { x = 1 + 2 } }` → `class C{static{x=3}}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the block's statement list:
+the body's `1 + 2` folds to `3`. Before this bridge change the `static_block`
+member declined, dropping the file to WHITESPACE_ONLY
+(`class C{static{x=1+2}};`, arithmetic intact). The existing WHITESPACE_ONLY
+fixtures (`minify_class_static_block`, `minify_class_static_blocks`) exercise the
+emitter's grammar-AST path; this one exercises the typed-AST bridge + fold path.
+PATCH.
+
 ## [0.234.14] - 2026-07-11
 
 ### Added — CLOC12.175 PR2: class fields end-to-end
