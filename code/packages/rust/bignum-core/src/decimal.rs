@@ -134,19 +134,37 @@ impl std::error::Error for ParseDecimalError {}
 //  Small integer helpers
 // ===========================================================================
 
+/// The largest magnitude a canonical [`BigDecimal`]'s `scale` may have.
+///
+/// This is a **security budget**, not a precision limit: a value is
+/// `mantissa × 10^(-scale)`, and operations that line two decimals up to a common scale (or
+/// render one) must materialize `10^(scale difference)`. If `scale` were unbounded, a tiny
+/// input like `"1e-2000000000"` (a handful of bytes) could force a `BigInteger` of billions
+/// of digits — gigabytes — during a later `+`, `cmp`, or `Display`, none of which can return
+/// an error. Capping the scale **at construction** (so no `BigDecimal` can even exist with a
+/// larger scale) bounds every such materialization to well under a megabyte. A million places
+/// on either side of the point is astronomically more than money, tax, or dosing ever needs;
+/// callers with genuinely enormous *integers* should use [`BigInteger`] directly.
+pub const MAX_SCALE: i64 = 1_000_000;
+
 /// `10^n` as a [`BigInteger`]. `n` is a `u32` because `10^(2^32)` is already an
 /// astronomically large number; a scale difference that would exceed it is not a real value.
+/// In practice, the [`MAX_SCALE`] budget keeps every `n` reached here below `2 · MAX_SCALE`.
 fn ten_pow(n: u32) -> BigInteger {
     BigInteger::from_i64(10).pow(n)
 }
 
-/// Narrow a non-negative `i64` scale difference to the `u32` that [`ten_pow`] needs.
+/// Narrow a non-negative scale difference to the `u32` that [`ten_pow`] needs. The argument is
+/// `i128` so the difference of two `i64` scales can never overflow before it gets here.
+///
+/// For any value that came through the [`MAX_SCALE`] budget, `diff` is at most `2·MAX_SCALE`,
+/// far inside `u32`. The cap below is a backstop for a caller who supplies an extreme *explicit*
+/// target scale (to `div_round`/`round_to_scale`), the same class as [`BigInteger::pow`]'s
+/// unbounded exponent.
 ///
 /// # Panics
-/// Panics if `diff` is negative (a caller bug) or larger than `u32::MAX` — the latter would
-/// mean materializing a number with billions of digits, which is treated as an abuse of the
-/// type, the same way [`BigInteger::pow`] is unbounded on its exponent.
-fn scale_diff_to_u32(diff: i64) -> u32 {
+/// Panics if `diff` is negative (a caller bug) or larger than `u32::MAX`.
+fn scale_diff_to_u32(diff: i128) -> u32 {
     assert!(diff >= 0, "internal error: negative scale difference");
     u32::try_from(diff).expect("scale difference too large to materialize (over ~4 billion digits)")
 }
@@ -173,8 +191,27 @@ impl BigDecimal {
     }
 
     /// Build `mantissa × 10^(-scale)` and reduce it to canonical form.
+    ///
+    /// # Panics
+    /// Panics if the canonical scale magnitude would exceed [`MAX_SCALE`]. This is the same
+    /// security budget [`FromStr`](std::str::FromStr) enforces (as a recoverable error there);
+    /// it bounds the cost of any later alignment, comparison, or `Display`. Use
+    /// [`checked_from_parts`](Self::checked_from_parts) for the non-panicking form.
     pub fn from_parts(mant: BigInteger, scale: i64) -> Self {
-        BigDecimal { mant, scale }.normalized()
+        Self::checked_from_parts(mant, scale)
+            .expect("BigDecimal scale magnitude exceeds MAX_SCALE")
+    }
+
+    /// Build `mantissa × 10^(-scale)`, reduce it to canonical form, and return `None` if the
+    /// canonical scale magnitude would exceed [`MAX_SCALE`] (the security budget — see its
+    /// documentation for why an unbounded scale is a denial-of-service vector).
+    pub fn checked_from_parts(mant: BigInteger, scale: i64) -> Option<Self> {
+        let d = (BigDecimal { mant, scale }).normalized();
+        if d.scale.unsigned_abs() > MAX_SCALE as u64 {
+            None
+        } else {
+            Some(d)
+        }
     }
 
     /// Promote a whole [`BigInteger`] to a decimal (scale `0`).
@@ -261,8 +298,10 @@ impl BigDecimal {
     /// a power of ten and is exact (it only appends zeros); we never round here.
     fn aligned_mantissas(&self, other: &BigDecimal) -> (BigInteger, BigInteger, i64) {
         let target = self.scale.max(other.scale);
-        let a = &self.mant * &ten_pow(scale_diff_to_u32(target - self.scale));
-        let b = &other.mant * &ten_pow(scale_diff_to_u32(target - other.scale));
+        // `i128` differences cannot overflow (both operands are `i64`); the `MAX_SCALE` budget
+        // keeps each difference at most `2·MAX_SCALE`, so no oversized power is materialized.
+        let a = &self.mant * &ten_pow(scale_diff_to_u32(target as i128 - self.scale as i128));
+        let b = &other.mant * &ten_pow(scale_diff_to_u32(target as i128 - other.scale as i128));
         (a, b, target)
     }
 }
@@ -341,10 +380,11 @@ impl BigDecimal {
             .and_then(|x| x.checked_sub(self.scale))
             .expect("scale overflow in division");
         let rounded = if e >= 0 {
-            let num = &self.mant * &ten_pow(scale_diff_to_u32(e));
+            let num = &self.mant * &ten_pow(scale_diff_to_u32(e as i128));
             round_div(&num, &other.mant, mode)
         } else {
-            let den = &other.mant * &ten_pow(scale_diff_to_u32(-e));
+            // `-(e as i128)` avoids the `i64::MIN` negation overflow that `-e` would hit.
+            let den = &other.mant * &ten_pow(scale_diff_to_u32(-(e as i128)));
             round_div(&self.mant, &den, mode)
         };
         Some(BigDecimal::from_parts(rounded, target_scale))
@@ -358,7 +398,7 @@ impl BigDecimal {
             // Already exactly representable at this (or a coarser-mantissa) scale.
             return self.clone();
         }
-        let drop = scale_diff_to_u32(self.scale - target_scale);
+        let drop = scale_diff_to_u32(self.scale as i128 - target_scale as i128);
         let rounded = round_div(&self.mant, &ten_pow(drop), mode);
         BigDecimal::from_parts(rounded, target_scale)
     }
@@ -447,7 +487,7 @@ impl fmt::Display for BigDecimal {
         let digits = self.mant.abs().to_string(); // base-10 digits, no sign
         let out = if self.scale <= 0 {
             // Whole number with |scale| trailing zeros appended.
-            let zeros = (-self.scale) as usize;
+            let zeros = self.scale.unsigned_abs() as usize; // scale <= 0 here; avoids i64::MIN negation
             format!("{digits}{}", "0".repeat(zeros))
         } else {
             let s = self.scale as usize;
@@ -547,7 +587,10 @@ impl FromStr for BigDecimal {
         let scale = (frac_digits.len() as i64)
             .checked_sub(exp)
             .ok_or(ParseDecimalError::ExponentOverflow)?;
-        Ok(BigDecimal::from_parts(mant, scale))
+        // Enforce the MAX_SCALE security budget here, at the untrusted-input boundary: a tiny
+        // string like "1e-2000000000" must be rejected, not stored, so a later `+`/`cmp`/
+        // `Display` cannot be forced to materialize a multi-gigabyte power of ten.
+        BigDecimal::checked_from_parts(mant, scale).ok_or(ParseDecimalError::ExponentOverflow)
     }
 }
 
@@ -804,6 +847,58 @@ mod tests {
     #[should_panic(expected = "division by zero")]
     fn div_round_by_zero_panics() {
         let _ = d("1").div_round(&d("0"), 2, RoundingMode::HalfUp);
+    }
+
+    // ---- security: the MAX_SCALE budget bounds materialization ----------
+
+    #[test]
+    fn from_str_rejects_scale_amplification_payloads() {
+        // A few-byte string must NOT be storable with a billions-of-digits scale, or a later
+        // `+`/`cmp`/`Display` could be forced to materialize a multi-gigabyte power of ten.
+        assert_eq!(
+            BigDecimal::from_str("1e-2000000000"),
+            Err(ParseDecimalError::ExponentOverflow)
+        );
+        assert_eq!(
+            BigDecimal::from_str("1e2000000000"),
+            Err(ParseDecimalError::ExponentOverflow)
+        );
+        // An exponent that doesn't even fit i64 is also rejected, not wrapped.
+        assert_eq!(
+            BigDecimal::from_str("1e99999999999999999999"),
+            Err(ParseDecimalError::ExponentOverflow)
+        );
+    }
+
+    #[test]
+    fn checked_from_parts_enforces_the_budget() {
+        // Just inside the budget is fine; just outside is rejected.
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), MAX_SCALE).is_some());
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), -MAX_SCALE).is_some());
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), MAX_SCALE + 1).is_none());
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), i64::MIN).is_none());
+        // A budget-respecting value still behaves normally.
+        assert_eq!(d("0.5") + d("0.25"), d("0.75"));
+    }
+
+    #[test]
+    #[should_panic(expected = "MAX_SCALE")]
+    fn from_parts_panics_past_the_budget() {
+        let _ = BigDecimal::from_parts(BigInteger::one(), MAX_SCALE + 1);
+    }
+
+    #[test]
+    fn wide_scale_gaps_align_without_overflow() {
+        // A wide but in-budget scale gap: alignment/cmp/`+`/Display must all work and must not
+        // overflow i64 (scale differences are computed in i128). We use 10^4 rather than the
+        // full MAX_SCALE only so the O(n^2) base-10 rendering stays fast in the test — the code
+        // path is identical, and in-budget scales are nowhere near the i64 limits.
+        let gap = 10_000i64;
+        let big = BigDecimal::from_parts(BigInteger::one(), -gap); // 10^gap
+        let tiny = BigDecimal::from_parts(BigInteger::one(), gap); // 10^-gap
+        assert!(tiny < big);
+        assert!((&big + &tiny).is_positive());
+        assert_eq!(big.to_string().len(), (gap as usize) + 1); // "1" + gap zeros
     }
 
     // ---- ordering, sign -------------------------------------------------
