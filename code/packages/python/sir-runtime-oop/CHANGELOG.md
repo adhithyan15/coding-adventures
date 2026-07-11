@@ -2,6 +2,26 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.20] - 2026-07-11
+
+### Added
+
+- **`Hash` Enumerable breadth part 2** (`_hash_block_method` +
+  `_HASH_BLOCK_METHODS`): `group_by`, `partition`, `flat_map`/`collect_concat`,
+  `reduce`/`inject`, and `sum` (block form).  Ruby's `Hash` iterates as
+  `[key, value]` pairs, so `group_by`/`partition` collect `[k, v]` pairs
+  (`{a:1,b:2}.group_by { |k,v| v.even? }` → `{false: [[:a,1]], true: [[:b,2]]}`),
+  `flat_map` flattens one level of block results, and `sum(init) { |k, v| … }`
+  folds the block results onto `init`.  `reduce`/`inject` follow Ruby's memo
+  convention — the block is yielded `[memo, [k, v]]` (the pair as one argument,
+  matching `h.inject(0) { |sum, (k, v)| … }`); a seedless `reduce` starts from
+  the first pair and an empty seedless `reduce` returns `nil`.
+- `_hash_block_method` now receives the positional `args` preceding the block
+  (mirroring `_array_block_method`), so `reduce`/`inject`/`sum` can read their
+  seed/initial value.
+
+  Reference implementation for a cross-backend cascade (Go/Rust/JS/TS follow).
+
 ## [0.1.19] - 2026-07-11
 
 ### Added
