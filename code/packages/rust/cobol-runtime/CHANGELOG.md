@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0 — COMPUTE / arithmetic expressions (PL08)
+
+- Executes `COMPUTE target [ROUNDED] = <expr> [ON SIZE ERROR …]`.
+- **Expression evaluation** over the parser's precedence-layered tree: `+ - * /`,
+  `**` (exponentiation, right-associative, non-negative integer exponents;
+  negative/fractional/oversized exponents are a clean error), unary sign, and
+  parentheses. Names must resolve to numeric items.
+- **`ROUNDED`** rounds half away from zero to the receiver's decimal places;
+  without it the result truncates (toward zero), consistent with the other verbs.
+- **`ON SIZE ERROR`** runs its statements and leaves the receiver unchanged when
+  the result's integer part overflows the receiver, or when a division by zero
+  occurs in the expression. Without a handler, overflow truncates high-order
+  digits silently (as `MOVE` does) and a zero divisor stays a hard
+  `DivideByZero` error.
+- Division inside an expression is carried to a fixed 12-digit intermediate
+  fractional precision, then rounded/truncated into the receiver — a documented
+  simplification of the standard's composite intermediate-precision rules (see
+  PL08); to be refined in a later PR.
+- Exponentiation is bounded (`MAX_POW_EXP = 1024`) so a hostile `A ** huge`
+  cannot spin the repeated-multiply loop.
+
 ## 0.4.0 — IF / conditional branching (PL08)
 
 - `IF cond THEN… [ELSE …]` with the current grammar's simple relational

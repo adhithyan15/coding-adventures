@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-cobol-runtime"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "Runtime (tree-walking interpreter) for COBOL-60 — a faithful PICTURE-typed data model and statement execution, built on the cobol-parser CST."
 
