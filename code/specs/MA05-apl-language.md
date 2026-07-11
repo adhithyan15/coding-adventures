@@ -198,18 +198,23 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
   glyph, the reduce/scan/outer-product operators, assignment/grouping,
   vector-stranded numeric literals, high-minus (`¯`) negative literals kept
   distinct from the `MINUS` function token, and `⍝` line comments.
-- **MA-4d — `apl-parser`.** The `value_expr`/`function_expr` grammar,
-  monadic/dyadic application, reduce/scan/outer-product operator
-  productions. **Acceptance criteria includes a recursion-depth cap**: §3's
-  right-recursive `value_expr = term | term function_expr value_expr` rule
-  recurses once per chained dyadic primitive with no bound as specified, so
-  a long unbroken chain (`1+2+3+4+…`, thousands deep) is a stack-overflow
-  DoS on a naive recursive-descent implementation — the same class of issue
-  already found in this repo's shared grammar parser for another frontend
-  (the `closurec` deep-recursion crash, which lives in the shared parser,
-  not the language-specific bridge). Fix once in the shared `GrammarParser`
-  if not already capped, so every grammar-driven frontend benefits, not
-  just APL.
+- **MA-4d — `apl-parser`** (✅ done): the `value_expr`/`function_expr`
+  grammar, monadic/dyadic application, reduce/scan/outer-product operator
+  productions — `create_apl_parser`/`parse_apl`/`try_parse_apl`, mirroring
+  every sibling parser crate's shape exactly. **Shipped with its recursion-
+  depth cap from day one** (the shared `GrammarParser`'s guard is per-caller
+  opt-in, not a single global fix — a lone constant can't be safe for every
+  grammar at once, since rule-chain depth per source-nesting level varies
+  wildly; see `macsyma-parser`/`matlab-parser`/`wolfram-parser`'s own
+  retrofitted caps, task #12/PR #7928). `apl-parser`'s own empirically-
+  derived `MAX_RULE_DEPTH = 150` (72 real nesting levels) produced a
+  genuinely counter-intuitive finding: despite APL's much shallower one-
+  precedence-tier grammar (no cascade to climb, ~3 rule calls per nesting
+  level versus MACSYMA/MATLAB/Wolfram's 13-20), its raw native-stack crash
+  floor (209 frames) measured *lower* than theirs (~275-280) — the opposite
+  of the natural "fewer calls per level → higher floor" prediction. See
+  `apl-parser/src/lib.rs`'s `MAX_RULE_DEPTH` doc comment for the full
+  derivation.
 - **MA-4e — `apl-runtime` + `apl-repl` + the `apl` binary.** A working REPL:
   right-to-left evaluation, the primitives in §4, `⍴`/`⍳` array
   construction, reduce/scan/outer-product lowered onto AR-2.

@@ -239,6 +239,7 @@ members = [
     "wolfram-runtime",
     "wolfram-repl",
     "apl-lexer",
+    "apl-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",
