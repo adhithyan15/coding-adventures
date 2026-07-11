@@ -220,6 +220,7 @@ members = [
     "matlab-parser",
     "c-lexer",
     "c-parser",
+    "c-to-semantic-ir",
     "matlab-runtime",
     "matlab-repl",
     "octave-runtime",
