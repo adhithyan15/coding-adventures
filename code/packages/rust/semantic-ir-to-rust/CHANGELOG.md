@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.29.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
+
+Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Rust
+backend's inline `__sir` runtime (`map_method` block arms + the `Value::Map`
+`respond_to?` arm).  Ruby's `Hash` mixes in `Enumerable`, so these iterate the
+hash as a sequence of `[key, value]` pairs: the block is yielded `(key, value)`
+(two arguments, matching `each`), and the "element" an aggregate returns is the
+two-element `[key, value]` Array (`seq_lit(vec![k, v])`).
+
+- `find`/`detect` — first `[k, v]` pair with a truthy block result; `nil` if none.
+- `any?`/`all?`/`none?` — booleans over `block(k, v)` (block form; the block-less
+  forms degrade to the emptiness checks Ruby uses).
+- `count { |k, v| … }` — number of pairs with a truthy block result.
+- `sort_by` — a NEW Array of `[k, v]` pairs sorted by the block key using the
+  runtime's numeric ordering (`num_lt`), stable on ties (Schwartzian).
+- `min_by`/`max_by` — the extremal `[k, v]` pair (first-on-tie; `nil` on empty).
+
+Every arm SNAPSHOTS the entries into an owned `Vec` before iterating, so no
+`RefCell` borrow is held across `apply_closure` — the never-panic floor holds
+even against a block that reentrantly mutates the same hash.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_enumerable_aggregates_compile_and_run`, running `sort_by`/`min_by`/
+`max_by` (by value), `find`/`count`/`any?`/`all?`/`none?` (even-value predicate)
+under real `rustc`, diffed against the Python reference semantics.
+
 ## 0.28.0 — Hash catalog catch-up: `empty?` / `to_a` / `merge` / `dig` / `invert` / `store` / `delete` / `clear` / `reject` / `each_key` / `each_value`
 
 Brings the Rust backend's `map_method` Hash catalog to parity with the
