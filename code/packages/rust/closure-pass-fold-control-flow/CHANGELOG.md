@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.20.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm
+
+The object-literal key-rebuild match gains a `PropertyKey::PrivateName` arm that
+passes the key through unchanged (a private name never occurs in an object
+literal, but the match must stay exhaustive after `javascript-ast` 0.36.0 added
+the variant). PATCH.
+
 ## [0.20.16] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm

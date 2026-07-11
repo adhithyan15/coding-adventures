@@ -991,11 +991,42 @@ pub enum PropertyKind {
     Set,
 }
 
+/// A **private name** — `#x` — the key of a private class member
+/// (`class C { #x = 1; #m(){} }`) and, later, the property of a private
+/// member access (`this.#x`). ESTree calls this a `PrivateIdentifier`.
+///
+/// Mirrors [`Identifier`]: the `name` field holds the bare name **without**
+/// the leading `#` (so `#x` stores `"x"`); the emitter prepends the `#`.
+///
+/// # Why `name` serializes as `private_name`
+///
+/// [`PropertyKey`] is `#[serde(untagged)]`, so a variant is chosen during
+/// deserialization by *structural shape*. A `PrivateName { cv, name }` would
+/// be byte-for-byte identical to an [`Identifier`] (`{ cv, name }`), and the
+/// untagged deserializer would greedily pick whichever variant appears first —
+/// a private `#x` key would silently round-trip back as a plain `x`
+/// identifier (data loss + a mis-emit). Serializing the payload under the
+/// distinct key `private_name` gives the variant a unique required field, so
+/// `{ "name": … }` deserializes as [`Identifier`] and `{ "private_name": … }`
+/// as [`PrivateName`], with no ambiguity. The Rust field stays `name` for API
+/// symmetry with [`Identifier`].
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PrivateName {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    #[serde(rename = "private_name")]
+    pub name: String,
+}
+
 /// The key side of a [`Property`].
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PropertyKey {
     Identifier(Identifier),
+    /// A private class-member key — `#x` / `#m()`. Only legal inside a class
+    /// body; never in an object literal. Disambiguated from `Identifier` in
+    /// the untagged enum by [`PrivateName`]'s `private_name` serde key.
+    PrivateName(PrivateName),
     StringLiteral(StringLiteral),
     NumericLiteral(NumericLiteral),
     /// When the property is `[expr]: value` (computed = true).
@@ -1115,7 +1146,9 @@ pub enum ClassMember {
     /// It has no name, no key, no parameter list, and no initializer — only a
     /// body, which is exactly a [`BlockStatement`]'s statement list, so the
     /// variant wraps `BlockStatement` directly rather than re-modelling it.
-    /// (Private members `#x` and decorators are later additive variants.)
+    /// (A member's *private* key `#x` is modelled by [`PropertyKey::PrivateName`]
+    /// on the `Field`/`Method` variants above; decorators are a later additive
+    /// variant.)
     StaticBlock(BlockStatement),
 }
 
@@ -1419,6 +1452,49 @@ mod tests {
         assert_eq!(traced.clone(), roundtrip(traced.clone()));
         assert_eq!(untraced.clone(), roundtrip(untraced.clone()));
         assert_eq!(type_tag(&traced), "Identifier");
+    }
+
+    // ---- PropertyKey::PrivateName (CLOC12.177) -----------------------
+
+    /// A `PropertyKey::PrivateName` round-trips as a `PrivateName` — NOT as an
+    /// `Identifier`. This is the whole point of the `private_name` serde key:
+    /// the untagged `PropertyKey` enum would otherwise pick `Identifier` (the
+    /// first structurally-matching variant) and silently lose the private-ness.
+    #[test]
+    fn private_name_key_roundtrips_and_stays_private() {
+        let key = PropertyKey::PrivateName(PrivateName { cv: None, name: "x".to_string() });
+        let json = serde_json::to_string(&key).expect("serialize");
+        // The distinguishing serde key must be present (and NOT the plain `name`
+        // that an `Identifier` would use).
+        assert!(
+            json.contains("private_name"),
+            "PrivateName must serialize under `private_name`, got {json}"
+        );
+        let back: PropertyKey = serde_json::from_str(&json).expect("deserialize");
+        assert_eq!(key, back);
+        assert!(
+            matches!(back, PropertyKey::PrivateName(_)),
+            "a private key must not round-trip back as another PropertyKey variant"
+        );
+    }
+
+    /// The traced form (a live `cv`) round-trips too, and a plain
+    /// `PropertyKey::Identifier` still deserializes as `Identifier` — proving the
+    /// new variant did not perturb the existing untagged disambiguation.
+    #[test]
+    fn private_name_traced_and_identifier_key_unaffected() {
+        let traced =
+            PropertyKey::PrivateName(PrivateName { cv: Some("pk.1".to_string()), name: "m".to_string() });
+        let j = serde_json::to_string(&traced).expect("serialize");
+        assert_eq!(traced, serde_json::from_str::<PropertyKey>(&j).expect("deserialize"));
+
+        let ident = PropertyKey::Identifier(Identifier { cv: None, name: "x".to_string() });
+        let ji = serde_json::to_string(&ident).expect("serialize");
+        let back: PropertyKey = serde_json::from_str(&ji).expect("deserialize");
+        assert!(
+            matches!(back, PropertyKey::Identifier(_)),
+            "a plain identifier key must still round-trip as Identifier, got {back:?}"
+        );
     }
 
     #[test]
