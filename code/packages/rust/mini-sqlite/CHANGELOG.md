@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.2 — FULL OUTER JOIN matches SQLite (ledger 6 → 5)
+
+Stream A / L2 of the full-SQLite-replacement roadmap: retire the differential
+oracle's `full_join` divergence — the last *wrong-result* entry in the ledger.
+
+- `SELECT ... FROM a FULL JOIN b ON ...` previously degraded to a cross product
+  (a single forward pass can't emit the right rows that matched no left row).
+  `sql-codegen` (0.5.0) now compiles FULL JOIN as **two passes**: a LEFT JOIN
+  (matched pairs + left-only rows) unioned with a RIGHT anti-join (right rows
+  that matched no left row, NULL-padded on the left). No new VM instructions —
+  it reuses the outer-join match flag. See that crate's changelog.
+- `tests/differential_oracle.rs`: removed `full_join` from the `LEDGER` (now
+  **5** entries, all aggregate computed-column *naming* divergences whose rows
+  already match). Added a second FULL JOIN case, `full_join_multi`, with
+  duplicate join keys on both sides (many-to-many) plus rows unmatched on each
+  side — asserted against real SQLite to guard the two-pass implementation
+  against double-emitting matched pairs or dropping an anti-join row.
+- No mini-sqlite `src/` changes — the fix lands in the shared pipeline; this
+  crate's bump documents the conformance gain the oracle now enforces.
+
 ## 0.4.1 — Scalar functions match SQLite (ledger 7 → 6)
 
 Stream B / L3 of the full-SQLite-replacement roadmap: retire the differential

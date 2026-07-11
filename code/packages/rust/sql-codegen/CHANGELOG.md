@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0] - Unreleased
+
+### Added
+
+- **`FULL OUTER JOIN`** now executes correctly instead of degrading to a cross
+  product. A single nested loop can't tell whether a given right row matched
+  *any* left row (the inner side is re-scanned per outer row), so
+  `compile_join_projected` now emits **two passes** for `JoinKind::Full`: pass 1
+  is an ordinary LEFT JOIN (matched pairs + left-only rows), and pass 2 is a
+  RIGHT *anti*-join that evaluates `ON` but suppresses the matched-pair emit —
+  it emits only the right rows that matched no left row, NULL-padded on the
+  left. The union is a FULL JOIN with no duplicated matched pairs. Ordering
+  across the two passes is handled by the surrounding `ORDER BY` sort.
+- Refactored the join loop body out of `compile_join_projected` into a reusable
+  `emit_join_pass(outer, inner, condition, eval_condition, emit_matched,
+  emit_unmatched, columns)` helper. INNER/LEFT/RIGHT/CROSS are now single calls
+  with the appropriate flags; FULL is two calls. **No new VM instructions** —
+  both passes reuse the existing `ClearMatch`/`SetMatch`/`JumpIfMatched`
+  match-flag machinery.
+
 ## [0.4.0] - Unreleased
 
 ### Added
