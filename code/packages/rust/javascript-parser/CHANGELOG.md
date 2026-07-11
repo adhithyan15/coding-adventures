@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.45.0] - 2026-07-11
+
+### Added — CLOC12.181: bridge generator methods (`*m(){}`)
+
+`convert_method_definition` already detected the leading `*` token (`saw_star`)
+but then DECLINED the method (dropping the file to WHITESPACE_ONLY) as a
+conservative measure. That decline is now stale: `yield` is a modelled
+`YieldExpression` (CLOC12.163), a top-level generator *function* already bridges,
+and the emitter's `emit_class_member` already reprints the `*` from the value's
+`generator` flag. So a generator method now bridges by setting
+`generator: saw_star` on the method's `FunctionExpression` value — a
+generator's `FunctionExpression` flows through every optimization pass exactly
+like a `function*`.
+
+Covers both `class C { *gen(){} }` (declaration) and `x = class { *gen(){} }`
+(expression), plus `static *gen(){}`. The `constructor` classification is guarded
+against a stray `*` (`*constructor(){}` is a SyntaxError — a generator is never a
+constructor). Accessor generators (`get`/`set` + `*`) are grammatically
+impossible; private generator methods (`*#m(){}`) remain declined in
+`convert_private_method_definition` (a later slice).
+
+2 former decline tests flipped to success
+(`class_generator_method_bridges`, `class_decl_generator_method_bridges`); a new
+`class_static_generator_method_bridges` test covers the static form. Async
+methods (`async_method`) still DECLINE one level up (grammar-blocked).
+
 ## [0.44.0] - 2026-07-11
 
 ### Added — CLOC12.180: bridge computed member keys (`[expr]`)

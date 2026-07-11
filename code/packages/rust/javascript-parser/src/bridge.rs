@@ -1411,13 +1411,14 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
 /// ```
 ///
 /// **Modifier tokens precede the `property_name` node.** `get` / `set` mark an
-/// accessor; a `*` (generator) marks a form this slice does not model yet — it
-/// DECLINES via `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback) rather than
-/// emit a plain method and silently drop the `*` (a semantics-changing
-/// miscompile). A key literally named `get` (`get(){}`) parses with the
-/// `property_name` node *first* — no leading accessor token — so it is correctly
-/// an ordinary [`MethodKind::Method`]. (An `async` method is a *separate*
-/// grammar node, `async_method`, declined one level up in
+/// accessor; a `*` marks a **generator method** (`*gen(){}`), bridged since
+/// CLOC12.181 by setting the `value`'s `generator` flag so the emitter re-prints
+/// the `*` (`yield` inside the body is already a modelled `YieldExpression`, and
+/// a generator's `FunctionExpression` value flows through every pass exactly like
+/// a top-level `function*` — CLOC12.163). A key literally named `get`
+/// (`get(){}`) parses with the `property_name` node *first* — no leading accessor
+/// token — so it is correctly an ordinary [`MethodKind::Method`]. (An `async`
+/// method is a *separate* grammar node, `async_method`, declined one level up in
 /// [`convert_class_element`], so `async` never reaches here.)
 ///
 /// **`constructor`.** A non-static, non-accessor method whose key is the plain
@@ -1449,11 +1450,11 @@ fn convert_method_definition(
         }
     }
 
-    // Generator methods carry evaluation semantics this slice does not model —
-    // DECLINE so the whole file falls back rather than mis-emit.
-    if saw_star {
-        return Err(unsupported(node));
-    }
+    // A generator method (`*gen(){}`) is bridged (CLOC12.181): `saw_star` sets
+    // the value's `generator` flag below and the emitter re-prints the `*`. No
+    // decline is needed — `yield` inside the body is a modelled `YieldExpression`
+    // and a generator `FunctionExpression` flows through every pass exactly like
+    // a top-level `function*`.
 
     let key_node = node_children(node)
         .into_iter()
@@ -1468,8 +1469,11 @@ fn convert_method_definition(
     } else if saw_set {
         MethodKind::Set
     } else if !is_static
+        && !saw_star
         && matches!(&key, PropertyKey::Identifier(id) if id.name == "constructor")
     {
+        // `*constructor(){}` is a SyntaxError in real JS — a generator is never a
+        // constructor, so a stray `*` guards the `constructor` classification.
         MethodKind::Constructor
     } else {
         MethodKind::Method
@@ -1504,7 +1508,8 @@ fn convert_method_definition(
             id: None,
             params,
             body,
-            generator: false,
+            // `*gen(){}` → a generator method; the emitter re-prints the `*`.
+            generator: saw_star,
             is_async: false,
         },
         computed,
@@ -3876,12 +3881,27 @@ mod tests {
     }
 
     #[test]
-    fn class_generator_method_declines() {
-        // `*gen(){}` carries generator semantics not modelled here — DECLINE.
-        assert!(matches!(
-            bridge("x = class { *gen(){} };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_generator_method_bridges() {
+        // `*gen(){}` — a generator method bridges (CLOC12.181): plain method
+        // `kind`, and the value's `generator` flag is set so the emitter reprints
+        // the `*`. `yield` in the body is a modelled `YieldExpression`.
+        let c = class_of("x = class { *gen(){ yield 1 } };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert_eq!(m.kind, MethodKind::Method);
+        assert!(m.value.generator);
+        assert!(!m.value.is_async);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "gen"));
+    }
+
+    #[test]
+    fn class_static_generator_method_bridges() {
+        // `static *gen(){}` — the `static` modifier lives on the enclosing
+        // `class_element`; the `*` still sets the generator flag.
+        let c = class_of("x = class { static *gen(){} };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.is_static);
+        assert!(m.value.generator);
+        assert_eq!(m.kind, MethodKind::Method);
     }
 
     #[test]
@@ -4311,13 +4331,13 @@ mod tests {
     }
 
     #[test]
-    fn class_decl_generator_method_declines() {
-        // `*m(){}` is a generator method — a form this slice does not model, so
-        // the whole file DECLINES to WHITESPACE_ONLY (never a miscompile).
-        assert!(matches!(
-            bridge("class C { *m(){} }"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_decl_generator_method_bridges() {
+        // `*m(){}` in a class *declaration* bridges (CLOC12.181): the value's
+        // `generator` flag is set so the emitter reprints the `*`.
+        let c = class_decl_of("class C { *m(){} }");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.value.generator);
+        assert_eq!(m.kind, MethodKind::Method);
     }
 
     #[test]

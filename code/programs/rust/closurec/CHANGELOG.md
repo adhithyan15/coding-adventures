@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.20] - 2026-07-11
+
+### Added — CLOC12.181: generator methods end-to-end
+
+Picks up javascript-parser 0.45.0, whose bridge now sets the `generator` flag on
+a `*m(){}` method's `FunctionExpression` value instead of declining. A generator
+method — `class C { *gen(){} }` or `x = class { *gen(){} }`, optionally `static`
+— now survives the full closurec pipeline instead of dropping to WHITESPACE_ONLY.
+New e2e diff fixture `tests/diff/simple-generator-method/`:
+`class C { *gen(){ return 1 + 2 } }` → `class C{*gen(){return 3}}` at SIMPLE.
+
+The fixture proves two things at once: the `*gen` head round-trips (the emitter
+reprinted the `*` from the propagated `generator` flag), and the SIMPLE pipeline
+descends INTO the generator method's body (`return 1 + 2` folds to `return 3`).
+Before this bridge change the generator method declined, dropping the file to
+WHITESPACE_ONLY (`class C{*gen(){return 1+2}};`).
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.19] - 2026-07-11
 
 ### Added — CLOC12.180: computed member keys end-to-end
