@@ -1,0 +1,252 @@
+# COBOL-60 Token Grammar
+# ============================================================
+#
+# COBOL — COmmon Business-Oriented Language — was designed by CODASYL in 1959
+# under U.S. Department of Defense sponsorship and first specified in the 1960
+# report.  It is the direct descendant of FLOW-MATIC (Grace Hopper's B-0, our
+# PL06): English-keyword verbs, hyphenated data names, and the separation of
+# data description from procedure all came from FLOW-MATIC.  See PL07-cobol-60.md.
+#
+# This is the LEXER half of the frontend.  Like every language frontend in this
+# repo it is fed to the shared `GrammarLexer`; nothing is hand-tokenised.  The
+# ONE piece of COBOL-specific imperative code is the `strip_cobol_columns`
+# pre-tokenize hook (in the crate's lib.rs), which turns 80-column card images
+# into the free-form text this grammar tokenizes — see PL07 and
+# lexer-parser-hooks.md.
+#
+# ------------------------------------------------------------
+# Two features FLOW-MATIC let us skip, now handled here
+# ------------------------------------------------------------
+#
+# 1. FIXED-COLUMN CARDS — handled *before* this grammar runs, by the
+#    `strip_cobol_columns` pre-tokenize hook.  By the time these patterns see the
+#    text, sequence numbers (cols 1-6), the indicator (col 7), and the
+#    identification area (cols 73-80) are already gone; comment lines are
+#    dropped and continuations spliced.  So this grammar is free-form.
+#
+# 2. PICTURE STRINGS — context-sensitive.  A picture like `X(20)` begins with
+#    `X`, which is otherwise a NAME, so it can only be read correctly *after* a
+#    PIC/PICTURE keyword.  We use the lexer's declarative mode-transition feature
+#    (F10): the PIC/PICTURE keyword switches into the `picture` group, one
+#    PIC_STRING is matched, then we switch back.  The core picture pattern
+#    `[9XAVSP()0-9]+` deliberately excludes the period, so a picture terminates
+#    cleanly at a space OR at the entry-ending period (`PIC X(20).`).
+
+# @version 1
+# @case_insensitive true
+case_sensitive: false
+start_mode: default
+
+# ============================================================
+# Historical case handling
+# ============================================================
+#
+# COBOL of 1960 was written on uppercase-only keypunches, exactly like
+# FLOW-MATIC's UNIVAC and BASIC's teletypes.  Following those sister grammars we
+# treat case as insignificant:
+#   case_sensitive: false    — token PATTERNS match regardless of case.
+#   @case_insensitive true   — reserved words are normalized to uppercase on
+#                              lookup, so grammar literals like "DIVISION" match
+#                              DIVISION / division / Division alike.
+# Net effect: KEYWORDs surface uppercase; a NAME's value keeps its source case.
+
+# ============================================================
+# SECTION 1: Literals and names (default group)
+# ============================================================
+#
+# Numeric literal: optional sign, digits, optional fractional part.  This also
+# covers the two-digit LEVEL numbers (01, 02, 77, 88) — the lexer emits them as
+# NUMBER and the parser recognises a level by its value and position (an entry
+# begins `NUMBER NAME …`).  A distinct LEVEL token would need context the lexer
+# does not have, so we keep the lexer dumb here, as with FLOW-MATIC operation
+# numbers.
+#
+# The optional fractional part `(\.[0-9]+)?` requires a digit after the point,
+# so `100.` matches just `100` and leaves the `.` to be lexed as a DOT (the
+# sentence terminator).  This is what disambiguates a decimal point from the
+# period that ends a sentence.
+NUMBER = /-?[0-9]+(\.[0-9]+)?/
+
+# Data / paragraph / section names: the COBOL-family hyphenated identifier,
+# inherited from FLOW-MATIC.  Must start with a letter; may contain internal
+# hyphens (EMP-NAME, GROSS-PAY, MAIN-PARAGRAPH).  The hyphenated RESERVED words
+# (PROGRAM-ID, WORKING-STORAGE, FILE-CONTROL, HIGH-VALUE, …) match this pattern
+# too and are then promoted to KEYWORD via the keywords list below.
+NAME = /[A-Za-z][A-Za-z0-9]*(-[A-Za-z0-9]+)*/
+
+# Nonnumeric literals: COBOL allows either double or single quotes.  Both emit a
+# STRING token (the alias unifies them).  No escape sequences in the 1960
+# language; a quote cannot appear inside its own kind of literal.
+STRING_DQ = /"[^"]*"/ -> STRING
+STRING_SQ = /'[^']*'/ -> STRING
+
+# ============================================================
+# SECTION 2: Punctuation (default group)
+# ============================================================
+#
+# DOT is the sentence / entry terminator — the period that ends nearly every
+# COBOL construct.  LPAREN/RPAREN wrap subscripts (and picture repetition, but
+# those are matched inside the picture group).  COBOL treats the period as a
+# separator that must be followed by a space; we lex it as a bare token and let
+# the parser enforce structure.
+DOT    = "."
+LPAREN = "("
+RPAREN = ")"
+
+# ============================================================
+# SECTION 3: The `picture` group (context-sensitive)
+# ============================================================
+#
+# Active only after a PIC/PICTURE keyword (see the transitions section).  A core
+# picture string is a run of the data-description symbols:
+#   9  digit position      X  any character     A  alphabetic
+#   V  implied decimal      S  operational sign  P  assumed scaling
+# plus repetition `(n)`.  Editing symbols (Z * $ , . + - CR DB …) are the full
+# language's job and are out of scope for this first cut (see PL07 futures).
+#
+# Excluding the period from this class is deliberate: it makes a picture end at
+# the entry-terminating period, so `PIC X(20).` lexes as PIC_STRING("X(20)")
+# then DOT.
+group picture:
+  PIC_STRING = /[9XAVSPxavsp()0-9]+/
+
+# ============================================================
+# SECTION 4: Reserved words (global)
+# ============================================================
+#
+# A focused subset of COBOL-60's ~300 reserved words — enough to lex a complete
+# four-division program.  The full list is future work (see PL07).  A NAME whose
+# uppercased value appears here becomes a KEYWORD; everything else stays a NAME.
+# Keyword-prefix safety is automatic: `DATE-CODE` is not in the set, so it stays
+# a NAME even though `DATE-WRITTEN` is a keyword.
+keywords:
+  # -- Divisions & the DIVISION/SECTION words --
+  IDENTIFICATION
+  ENVIRONMENT
+  DATA
+  PROCEDURE
+  DIVISION
+  SECTION
+  # -- IDENTIFICATION paragraphs --
+  PROGRAM-ID
+  AUTHOR
+  INSTALLATION
+  DATE-WRITTEN
+  DATE-COMPILED
+  SECURITY
+  REMARKS
+  # -- ENVIRONMENT --
+  CONFIGURATION
+  SOURCE-COMPUTER
+  OBJECT-COMPUTER
+  INPUT-OUTPUT
+  FILE-CONTROL
+  SELECT
+  ASSIGN
+  # -- DATA --
+  FILE
+  WORKING-STORAGE
+  FD
+  SD
+  PICTURE
+  PIC
+  VALUE
+  FILLER
+  OCCURS
+  REDEFINES
+  USAGE
+  COMPUTATIONAL
+  COMP
+  # -- Verbs --
+  MOVE
+  ADD
+  SUBTRACT
+  MULTIPLY
+  DIVIDE
+  COMPUTE
+  PERFORM
+  DISPLAY
+  ACCEPT
+  OPEN
+  CLOSE
+  READ
+  WRITE
+  GO
+  STOP
+  RUN
+  ALTER
+  EXAMINE
+  IF
+  ELSE
+  # -- Prepositions / connectives / operators-in-words --
+  TO
+  FROM
+  BY
+  INTO
+  GIVING
+  IS
+  ARE
+  OF
+  IN
+  AND
+  OR
+  NOT
+  GREATER
+  LESS
+  EQUAL
+  THAN
+  THROUGH
+  THRU
+  UNTIL
+  VARYING
+  TIMES
+  DEPENDING
+  ON
+  WHEN
+  NEXT
+  SENTENCE
+  # -- Figurative constants --
+  ZERO
+  ZEROS
+  ZEROES
+  SPACE
+  SPACES
+  HIGH-VALUE
+  HIGH-VALUES
+  LOW-VALUE
+  LOW-VALUES
+  QUOTE
+  QUOTES
+  ALL
+
+# ============================================================
+# SECTION 5: Mode transitions (F10 declarative)
+# ============================================================
+#
+# Enter `picture` mode on a PIC/PICTURE keyword; leave it as soon as the single
+# PIC_STRING has been emitted.  Because `skip:` is global, the space between
+# PICTURE and the picture is consumed in `picture` mode before PIC_STRING is
+# matched.  A flat set-mode toggle (not push/pop) is all we need — pictures do
+# not nest.
+transitions:
+  on KEYWORD="PICTURE" -> set-mode picture
+  on KEYWORD="PIC"     -> set-mode picture
+  on PIC_STRING        -> set-mode default
+
+# ============================================================
+# SECTION 6: Skipped separators (global)
+# ============================================================
+#
+# Whitespace is insignificant (the card layout is already handled by the
+# pre-tokenize hook).  COBOL also allows the comma and semicolon as OPTIONAL
+# separators — pure punctuation noise, equivalent to a space — so we skip them
+# too.  (They never appear inside a core picture, which lives in its own group.)
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  SEPARATOR  = /[,;]/
+
+# ============================================================
+# SECTION 7: Error recovery (global)
+# ============================================================
+errors:
+  UNKNOWN = /./

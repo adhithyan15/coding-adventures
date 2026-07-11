@@ -224,6 +224,7 @@ members = [
     "c-lexer",
     "c-parser",
     "c-to-semantic-ir",
+    "cobol-lexer",
     "matlab-runtime",
     "matlab-repl",
     "octave-runtime",
