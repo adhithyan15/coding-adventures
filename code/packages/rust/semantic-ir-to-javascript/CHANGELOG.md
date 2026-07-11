@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.24.0 — Hash breadth: `fetch` / `clear` / `[]=`
+
+Closes the JavaScript-backend Hash parity gap (the Python/TS reference and the
+Go/Rust runtimes already carry these) by adding three Ruby `Hash` methods to the
+inlined runtime's `hashMethod` switch and the `HASH_METHODS` `respond_to?` set:
+
+- `fetch(k[, default])` — returns the value for `k` if present; a **missing** key
+  with no default raises a typed `KeyError` (unlike `hash[k]`, which returns
+  `nil`), so a translated `rescue KeyError` catches it; a second argument
+  supplies a default returned instead of raising. (The block form is deferred.)
+- `clear` — mutates, removing every pair, and returns the now-empty receiver.
+- `[]=` — wired as an explicit alias of `store` (`recv.set(k, v)`; returns `v`).
+
+Dispatch stays an explicit `switch` on the literal method name (never
+`recv[name]`). Exec-proven end-to-end under Node (the `hash_catalog_methods`
+test now also covers `[]=`, `fetch` present/default, and `clear`; the
+missing-key `KeyError` path remains covered by
+`t3_hash_fetch_missing_raises_key_error`).
+
 ## 0.23.0 — String char-set methods: `tr` / `count` / `delete` / `squeeze`
 
 Adds four non-block Ruby String methods to the inlined runtime's `stringMethod`

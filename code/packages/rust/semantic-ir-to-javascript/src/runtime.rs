@@ -879,8 +879,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const HASH_METHODS = new Set([
     "keys", "values", "size", "length", "empty?", "has_key?", "key?",
     "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
-    "invert", "delete", "store", "each", "each_pair", "map", "select",
-    "filter", "reject",
+    "invert", "delete", "store", "[]=", "fetch", "clear", "each", "each_pair",
+    "map", "select", "filter", "reject",
   ]);
   function hashMethod(recv, name, args) {
     switch (name) {
@@ -928,10 +928,27 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (recv.has(args[0])) { const v = recv.get(args[0]); recv.delete(args[0]); return v; }
         return null;
       }
-      case "store": {
+      case "store": case "[]=": {
         // Ruby `store(k, v)` (alias `[]=`): mutates, returns the value.
         recv.set(args[0], args[1]);
         return args[1];
+      }
+      case "fetch": {
+        // Ruby `Hash#fetch(k)`: returns the value for `k` if present; a MISSING
+        // key with no default raises `KeyError` (unlike `hash[k]`, which returns
+        // nil).  A second argument supplies a default returned instead of
+        // raising.  Typed `SirError` so a translated `rescue KeyError` catches it.
+        // (The block form is out of v0 scope.)
+        if (recv.has(args[0])) { return recv.get(args[0]); }
+        if (args.length > 1) { return args[1]; }
+        raiseError("KeyError", "key not found: " + format(args[0]));
+        return null; // unreachable — raiseError throws
+      }
+      case "clear": {
+        // Ruby `Hash#clear`: MUTATES, removing every pair, and returns the
+        // (now-empty) receiver.
+        recv.clear();
+        return recv;
       }
       case "each": case "each_pair": {
         // Yields (key, value); returns the receiver.
