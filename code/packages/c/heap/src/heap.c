@@ -4,6 +4,7 @@
  */
 #include "heap.h"
 
+#include <stdint.h> /* SIZE_MAX */
 #include <stdlib.h> /* malloc, realloc, free */
 
 /* higher_priority(h, a, b) — true if `a` should sit above `b` in this heap.
@@ -73,7 +74,19 @@ static int ensure_capacity(heap *h) {
     if (h->len < h->cap) {
         return 1;
     }
-    new_cap = h->cap == 0 ? 4 : h->cap * 2;
+    /* Grow by doubling, guarding both the doubling and the byte-size multiply
+     * against size_t overflow (unreachable with real allocators, but cheap and
+     * makes the growth path provably safe). */
+    if (h->cap == 0) {
+        new_cap = 4;
+    } else if (h->cap > SIZE_MAX / 2) {
+        return 0;
+    } else {
+        new_cap = h->cap * 2;
+    }
+    if (new_cap > SIZE_MAX / sizeof(int)) {
+        return 0;
+    }
     grown = (int *)realloc(h->data, new_cap * sizeof(int));
     if (grown == NULL) {
         return 0;

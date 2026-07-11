@@ -5,6 +5,7 @@
  */
 #include "fenwick_tree.h"
 
+#include <stdint.h> /* SIZE_MAX */
 #include <stdlib.h> /* malloc, calloc, free */
 
 /* lowbit(i) — the value of the lowest set bit of i (i & -i). We negate in
@@ -26,6 +27,14 @@ static size_t highest_power_of_two_at_most(size_t n) {
 }
 
 fenwick_status fenwick_init(fenwick_tree *t, size_t n) {
+    /* Reject n == SIZE_MAX up front: n + 1 would wrap to 0, calloc(0, ...) could
+     * return a minimal buffer, and later 1..=n accesses would run wildly out of
+     * bounds. (calloc guards the multiply, but not our n + 1 addition.) */
+    if (n == SIZE_MAX) {
+        t->bit = NULL;
+        t->n = 0;
+        return FENWICK_ALLOC_FAILED;
+    }
     /* calloc zeroes bit[0..n]; the +1 is the unused 1-based slot 0. */
     t->bit = (double *)calloc(n + 1, sizeof(double));
     if (t->bit == NULL) {

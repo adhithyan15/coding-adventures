@@ -17,6 +17,7 @@
 #define FENWICK_TREE_HPP
 
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -24,8 +25,15 @@ namespace ca {
 
 class fenwick_tree {
 public:
-    // Construct an all-zero tree of `n` elements.
-    explicit fenwick_tree(std::size_t n) : n_(n), bit_(n + 1, 0.0) {}
+    // Construct an all-zero tree of `n` elements. `n == SIZE_MAX` is rejected:
+    // n + 1 would wrap to 0, yielding a length-0 vector with n_ == SIZE_MAX and
+    // out-of-bounds operator[] accesses later. (The vector-based constructor is
+    // safe because vector::size() can never reach SIZE_MAX.)
+    explicit fenwick_tree(std::size_t n)
+        : n_((n == std::numeric_limits<std::size_t>::max())
+                 ? throw std::length_error("fenwick_tree size too large")
+                 : n),
+          bit_(n + 1, 0.0) {}
 
     // Construct from initial element values (1..=size()).
     explicit fenwick_tree(const std::vector<double> &values)
