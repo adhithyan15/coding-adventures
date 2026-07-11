@@ -2,7 +2,7 @@
 //!
 //! Compiles McCarthy programs through the **native** AOT tagged-word backend
 //! (`aarch64-backend` → Mach-O object → system `ld`, linking the `cc`-built
-//! runtime archive that bundles `lispy_runtime.c`) and **runs** them, asserting
+//! runtime archive that bundles `dynval_runtime.c`) and **runs** them, asserting
 //! the exit code.
 //!
 //! Before W14a these failed at link: the Mach-O object referenced the runtime

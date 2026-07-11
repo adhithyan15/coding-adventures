@@ -7,7 +7,7 @@
 //! `0`/`1`) instead of `lispy_unbox_int` (which would compute `5 >> 3 = 0` for
 //! *true*). Reusable for every tagged-word backend (LLVM/AOT/JIT).
 //!
-//! **Verified by RUNNING**: emit host-triple LLVM IR, link `lispy_runtime.c`
+//! **Verified by RUNNING**: emit host-triple LLVM IR, link `dynval_runtime.c`
 //! with `clang`, run — the process exit code is the `0`/`1` truth value.
 //! (`COND`, F5, needs PHI-node merge of clause values across blocks — W12b-3.)
 
@@ -22,7 +22,7 @@ fn host_triple() -> String {
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
 fn lispy_runtime_c() -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/lispy_runtime.c")
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/dynval_runtime.c")
 }
 fn run(src: &str, module: &str) -> i32 {
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, module, &host_triple())

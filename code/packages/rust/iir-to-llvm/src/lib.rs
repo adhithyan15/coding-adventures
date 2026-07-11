@@ -334,7 +334,7 @@ struct LlvmStringLiteralRef {
 }
 
 /// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
-/// `call`s into the shared C runtime (`twig-aot/runtime/lispy_runtime.c`), the
+/// `call`s into the shared C runtime (`twig-aot/runtime/dynval_runtime.c`), the
 /// same runtime the native AOT backend links. Each entry is
 /// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
 /// so the signature is always `i64 (i64 × arity)`. The `lispy_*` IIR names are
