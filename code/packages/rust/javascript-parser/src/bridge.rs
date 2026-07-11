@@ -1252,13 +1252,18 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
             }
         }
     }
-    // The member itself is a *single* child node. Two shapes are modelled:
-    // a plain `method_definition` (→ `ClassMember::Method`) and a
-    // `class_field_declaration` (→ `ClassMember::Field`, CLOC12.175 PR2). The
-    // grammar's `async_method` / `private_method_definition` / `static_block`
-    // nodes are forms this slice does not represent, so they DECLINE (safe
-    // WHITESPACE_ONLY fallback). (Because these are *distinct nodes*, not just
-    // leading tokens, the node kind must be checked.)
+    // The member itself is a *single* child node. Three shapes are modelled:
+    // a plain `method_definition` (→ `ClassMember::Method`), a
+    // `class_field_declaration` (→ `ClassMember::Field`, CLOC12.175 PR2), and a
+    // `static_block` (→ `ClassMember::StaticBlock`, CLOC12.176 PR2). The
+    // grammar's `async_method` / `private_method_definition` nodes are forms
+    // this slice does not represent, so they DECLINE (safe WHITESPACE_ONLY
+    // fallback). (Because these are *distinct nodes*, not just leading tokens,
+    // the node kind must be checked.)
+    //
+    // A `static_block` carries its own leading `Token("static")` *inside* the
+    // node (not on the `class_element`), so the modifier loop above never sees
+    // it — `is_static` stays false and the static-block arm ignores it.
     let member = node_children(node)
         .into_iter()
         .next()
@@ -1266,8 +1271,33 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
     match member.rule_name.as_str() {
         "method_definition" => Ok(ClassMember::Method(convert_method_definition(member, is_static)?)),
         "class_field_declaration" => Ok(ClassMember::Field(convert_class_field(member)?)),
+        "static_block" => Ok(ClassMember::StaticBlock(convert_static_block(member)?)),
         _ => Err(unsupported(member)),
     }
+}
+
+/// Convert a `static_block` node into a [`BlockStatement`] — a class
+/// static-initialization block `static { … }` (CLOC12.176 PR2).
+///
+/// ```text
+///   static_block = [ Token("static"), Token("{"),
+///                    Node(statement)*,
+///                    Token("}") ]
+/// ```
+///
+/// The block body is exactly a statement list — the *same* shape as a plain
+/// `{ … }` [`convert_block_statement`] — so each `statement` node child is
+/// lowered by the shared [`convert_statement`], covering the full statement
+/// surface (including `let` / `const` / `var`, which map to
+/// `Statement::Declaration`). Tokens (`static`, the braces) are ignored by
+/// [`node_children`], so the leading `static` needs no special handling. An
+/// empty block (`static {}`) yields an empty `body`. Because every statement is
+/// routed through the shared converter, any unmodelled body statement makes the
+/// converter DECLINE (safe WHITESPACE_ONLY fallback) rather than mis-emit.
+fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
+    let stmts: Result<Vec<Statement>, _> =
+        node_children(node).into_iter().map(convert_statement).collect();
+    Ok(BlockStatement { cv: None, body: stmts? })
 }
 
 /// Convert a `class_field_declaration` node into a [`PropertyDefinition`] — a
@@ -3798,6 +3828,79 @@ mod tests {
             bridge("w = class { #x = 1; };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
+    }
+
+    // -----------------------------------------------------------------
+    // ClassMember::StaticBlock bridging (CLOC12.176 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the sole `ClassMember::StaticBlock` body out of
+    /// `x = class { static { … } };`.
+    fn static_block_of(src: &str) -> BlockStatement {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::StaticBlock(b) => b.clone(),
+            other => panic!("expected a static-block member, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_static_block_empty() {
+        // `static {}` — an empty static block maps to an empty body. The block's
+        // OWN leading `static` token (inside `static_block`, not on the
+        // `class_element`) needs no handling.
+        let b = static_block_of("y = class { static {} };");
+        assert!(b.body.is_empty());
+    }
+
+    #[test]
+    fn class_static_block_with_statement() {
+        // `static { x = 1; }` — one expression statement in the body.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let b = static_block_of("y = class { static { x = 1; } };");
+        assert_eq!(b.body.len(), 1);
+        assert!(matches!(
+            &b.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+    }
+
+    #[test]
+    fn class_static_block_with_declaration() {
+        // `static { let z = 2; }` — a lexical declaration in a static block maps
+        // to `Statement::Declaration` via the shared statement converter, proving
+        // the full statement surface (not just expressions) is reachable.
+        let b = static_block_of("y = class { static { let z = 2; } };");
+        assert_eq!(b.body.len(), 1);
+        assert!(matches!(
+            &b.body[0],
+            Statement::Declaration(Declaration::VariableDeclaration(_))
+        ));
+    }
+
+    #[test]
+    fn class_static_block_multiple_statements() {
+        // `static { x = 1; y = 2; }` — statement order is preserved.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let b = static_block_of("y = class { static { x = 1; y = 2; } };");
+        assert_eq!(b.body.len(), 2);
+        assert!(b
+            .body
+            .iter()
+            .all(|s| matches!(s, Statement::Tagged(TaggedStatement::ExpressionStatement(_)))));
+    }
+
+    #[test]
+    fn class_static_block_and_field_interleave() {
+        // A static block and a field coexist in one body, in source order.
+        let c = class_of("w = class { x = 1; static { y = 2; } m(){} };");
+        assert_eq!(c.body.len(), 3);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::StaticBlock(b) if b.body.len() == 1));
+        assert!(matches!(&c.body[2], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m")));
     }
 
     #[test]

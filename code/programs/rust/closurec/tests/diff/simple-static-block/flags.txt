@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-static-block/input/a.js
+--compilation_level
+SIMPLE
