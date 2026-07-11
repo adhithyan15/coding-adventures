@@ -5,10 +5,10 @@
 # Why this workflow exists (PR 7, refined):
 #
 # `lang-runtime-safety.yml` runs Miri on `lang-runtime-core` +
-# `lispy-runtime` as a *blocking* check on every PR (~5 min, fast).
+# `dynval-runtime` as a *blocking* check on every PR (~5 min, fast).
 # That covers all the unsafe code in the stack.  `twig-vm` has zero
 # unsafe of its own; its Miri value is the integration seam, which
-# is *already* exercised by lispy-runtime's own Miri suite plus a
+# is *already* exercised by dynval-runtime's own Miri suite plus a
 # local pre-push verification.  Running twig-vm Miri on every PR
 # was costing 1h+ wallclock per PR for redundant coverage —
 # blocking iteration speed.
@@ -38,7 +38,7 @@ on:
     branches: [main]
     paths:
       - 'code/packages/rust/lang-runtime-core/**'
-      - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/dynval-runtime/**'
       - 'code/packages/rust/twig-vm/**'
       - 'code/packages/rust/interpreter-ir/**'
       - '.github/workflows/lang-runtime-safety-deep.yml'
@@ -78,7 +78,7 @@ jobs:
       #
       # Why `-Zmiri-ignore-leaks`?
       #
-      # PR 2 ships `lispy-runtime` with a `Box::leak`-based "non-
+      # PR 2 ships `dynval-runtime` with a `Box::leak`-based "non-
       # collecting GC" — every `alloc_cons` / `alloc_closure` leaks
       # intentionally because the real collector lands in PR 4+
       # (LANG16 wiring).  Miri correctly reports these as leaks; we
@@ -121,6 +121,6 @@ jobs:
         working-directory: code/packages/rust
         run: cargo +nightly miri test -p lang-runtime-core --no-fail-fast
 
-      - name: Miri — lispy-runtime
+      - name: Miri — dynval-runtime
         working-directory: code/packages/rust
-        run: cargo +nightly miri test -p lispy-runtime --no-fail-fast
+        run: cargo +nightly miri test -p dynval-runtime --no-fail-fast

@@ -794,7 +794,7 @@ members = [
     "lang-refinement-checker",
     "lang-refinement-protocol",
     "lang-runtime-core",
-    "lispy-runtime",
+    "dynval-runtime",
     "vm-debug",
     "basic-dap",
     "basic-semantic-tokens",

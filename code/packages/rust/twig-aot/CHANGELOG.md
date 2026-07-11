@@ -1,5 +1,9 @@
 # Changelog — `twig-aot`
 
+## 0.33.0 - 2026-07-11 (DVAL01-1c: rename Rust crate lispy-runtime -> dynval-runtime)
+
+DVAL01-1c: the Rust golden-reference crate `lispy-runtime` is renamed to `dynval-runtime` (spec DVAL01 section 3.2). twig-aot's `Cargo.toml` dependency and the `use dynval_runtime::{...}` import in `src/dynval_runtime_golden.rs` (which pins the C runtime's tag constants against the crate's canonical Rust mirror) move to the new name. Pure rename -- no ABI, tag-layout, or behaviour change; the golden test still asserts the C `dynval_runtime.c` encodings match the Rust mirror byte-for-byte.
+
 ## 0.32.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
 
 DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.

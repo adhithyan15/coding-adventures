@@ -1,7 +1,7 @@
 # mccarthy-lisp-vm
 
 McCarthy 1960 Lisp's **own interpreter**, built directly on
-`lispy-runtime`. It executes the `IIRModule` produced by
+`dynval-runtime`. It executes the `IIRModule` produced by
 [`mccarthy-lisp-iir-compiler`](../mccarthy-lisp-iir-compiler) and
 returns a `LispyValue`.
 
@@ -22,7 +22,7 @@ cells** (`(CAR '(A B C))` → `A`; `(CDR '(A B C))` → `(B C)`).
   shouldn't ride on Twig's VM.
 
 What both languages genuinely share is the **value model**:
-`lispy-runtime`'s tagged-`i64` `LispyValue` (`int / nil / symbol / #t /
+`dynval-runtime`'s tagged-`i64` `LispyValue` (`int / nil / symbol / #t /
 #f / heap-cons`), its interner, and its `cons / car / cdr / pair? / not
 / equal?` builtins. So McCarthy Lisp gets its **own** small VM on that
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
@@ -33,7 +33,7 @@ cousin. Same value model, separate VMs.)
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
 | `const`        | `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
-| `call_builtin` | `srcs[0]` is the builtin name (a `Var`), the rest are args; dispatched to a `lispy-runtime` builtin |
+| `call_builtin` | `srcs[0]` is the builtin name (a `Var`), the rest are args; dispatched to a `dynval-runtime` builtin |
 | `call`         | `srcs[0]` is the callee function *name*; the rest are arguments. Runs the callee in a fresh frame (params bound to args) and returns its value into `dest` |
 | `apply`        | `srcs[0]` is a register holding a *closure value* `(*CLOSURE* fn-name . env)`; the rest are arguments. Destructures the closure, flattens the captured `env` into the **leading** call args (then appends the supplied args), looks the function up by name, runs it in a fresh frame — **dynamic** dispatch with captured-variable binding |
 | `mov`          | copy a register (`dest ← srcs[0]`)                                |

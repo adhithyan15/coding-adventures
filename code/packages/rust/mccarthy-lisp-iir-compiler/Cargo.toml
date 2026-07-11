@@ -1,8 +1,8 @@
 [package]
 name = "mccarthy-lisp-iir-compiler"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2021"
-description = "Lowers a McCarthy 1960 Lisp (Lisp 1.0) AST into an IIRModule. Implements the full L2 language: integer/nil literals, QUOTE, the primitives CONS/CAR/CDR/ATOM/EQ, COND, and complete closures — LAMBDA and LABEL, applied or used as first-class values, with free-variable capture by lambda lifting (LABEL values are recursive closures). Emits IIR over the `lispy-runtime` value model so the module runs end-to-end on `mccarthy-lisp-vm` and feeds every IIR backend. Next: wire into lang-aot (L3)."
+description = "Lowers a McCarthy 1960 Lisp (Lisp 1.0) AST into an IIRModule. Implements the full L2 language: integer/nil literals, QUOTE, the primitives CONS/CAR/CDR/ATOM/EQ, COND, and complete closures — LAMBDA and LABEL, applied or used as first-class values, with free-variable capture by lambda lifting (LABEL values are recursive closures). Emits IIR over the `dynval-runtime` value model so the module runs end-to-end on `mccarthy-lisp-vm` and feeds every IIR backend. Next: wire into lang-aot (L3)."
 
 [lib]
 name = "mccarthy_lisp_iir_compiler"
@@ -13,9 +13,9 @@ mccarthy-lisp-parser = { path = "../mccarthy-lisp-parser" }
 interpreter-ir       = { path = "../interpreter-ir" }
 
 [dev-dependencies]
-# McCarthy Lisp's own VM (built on lispy-runtime) is the reference
+# McCarthy Lisp's own VM (built on dynval-runtime) is the reference
 # interpreter for the emitted IIR — used only to run the end-to-end
 # tests.  Deliberately NOT twig-vm (that VM is Twig-specific); the two
-# languages share only the lispy-runtime value model.
+# languages share only the dynval-runtime value model.
 mccarthy-lisp-vm = { path = "../mccarthy-lisp-vm" }
-lispy-runtime    = { path = "../lispy-runtime" }
+dynval-runtime    = { path = "../dynval-runtime" }

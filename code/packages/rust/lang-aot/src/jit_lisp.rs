@@ -5,7 +5,7 @@
 //! Rust callbacks. Unlike the AOT/LLVM tagged-word backends — which lower a
 //! `call_builtin "lispy_*"` to a native `call __dyn_*` into the C runtime
 //! (`dynval_runtime.c`) — the JIT dispatches the *same* `lispy_*` names to Rust
-//! closures backed by the **shared [`lispy_runtime`] crate** (the C runtime's Rust
+//! closures backed by the **shared [`dynval_runtime`] crate** (the C runtime's Rust
 //! twin: an identical `u64` tagged-word model). So the JIT inherits the whole lisp
 //! value model for free; this module is only the thin glue.
 //!
@@ -31,7 +31,7 @@
 //! constant the McCarthy frontend emitted (`TAG_INT`/`TAG_NIL`/`TAG_SYMBOL`
 //! immediates). The frontend never fabricates a heap pointer (it performs no
 //! arithmetic on lisp values), so `car`/`cdr` only ever see a real cons cell or a
-//! non-heap value — for which `lispy_runtime::builtins::{car,cdr}` return `Err`,
+//! non-heap value — for which `dynval_runtime::builtins::{car,cdr}` return `Err`,
 //! which we map to `nil` rather than panicking. The input is McCarthy *source*, run
 //! through the trusted frontend, so untrusted bytes cannot reach `from_raw_bits`
 //! with a forged heap tag. The JIT's default step-cap (fuel) bounds execution — and
@@ -41,8 +41,8 @@
 use crate::{compile_source_to_iir, Language, LangAotError};
 use jit_core::core::JITCore;
 use jit_core::GenericCirJit;
-use lispy_runtime::builtins;
-use lispy_runtime::value::LispyValue;
+use dynval_runtime::builtins;
+use dynval_runtime::value::LispyValue;
 use vm_core::core::VMCore;
 use vm_core::value::Value;
 
@@ -128,7 +128,7 @@ fn b_to_exit_code(a: &[Value]) -> Value {
 }
 
 /// Register every McCarthy `lispy_*` builtin on a VM + JIT pair, backed by the
-/// shared `lispy_runtime` crate. Each is registered on both the VM (the
+/// shared `dynval_runtime` crate. Each is registered on both the VM (the
 /// interpreter fallback for cold/untyped frames) and the `GenericCirJit` (the
 /// compiled path) so the two agree.
 fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
@@ -153,7 +153,7 @@ fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
 ///
 /// The full tagged-word pipeline (`lower_heap_builtins_runtime` → `intern_symbols`
 /// → `lower_lisp_repr`) is applied — the same lowering the native AOT / LLVM
-/// backends use — then the `lispy_*` builtins are wired to `lispy_runtime` and the
+/// backends use — then the `lispy_*` builtins are wired to `dynval_runtime` and the
 /// module is driven through [`JITCore::execute_with_jit`].
 ///
 /// Returns `Ok(None)` if the entry point returns no value (a `void` program).

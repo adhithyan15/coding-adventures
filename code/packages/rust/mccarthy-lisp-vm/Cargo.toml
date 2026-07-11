@@ -1,8 +1,8 @@
 [package]
 name = "mccarthy-lisp-vm"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2021"
-description = "A tiny interpreter for McCarthy 1960 Lisp (Lisp 1.0), built directly on `lispy-runtime`. Executes the `IIRModule` produced by `mccarthy-lisp-iir-compiler` against the lispy-runtime tagged-i64 value model (symbols, cons cells, nil, booleans), returning a `LispyValue`. McCarthy Lisp's own VM — deliberately independent of `twig-vm` (which is Twig-specific); both languages share only the `lispy-runtime` foundation."
+description = "A tiny interpreter for McCarthy 1960 Lisp (Lisp 1.0), built directly on `dynval-runtime`. Executes the `IIRModule` produced by `mccarthy-lisp-iir-compiler` against the dynval-runtime tagged-i64 value model (symbols, cons cells, nil, booleans), returning a `LispyValue`. McCarthy Lisp's own VM — deliberately independent of `twig-vm` (which is Twig-specific); both languages share only the `dynval-runtime` foundation."
 
 [lib]
 name = "mccarthy_lisp_vm"
@@ -10,6 +10,6 @@ path = "src/lib.rs"
 
 [dependencies]
 interpreter-ir    = { path = "../interpreter-ir" }
-lispy-runtime     = { path = "../lispy-runtime" }
-# Provides `RuntimeError`, the error type lispy-runtime's builtins return.
+dynval-runtime     = { path = "../dynval-runtime" }
+# Provides `RuntimeError`, the error type dynval-runtime's builtins return.
 lang-runtime-core = { path = "../lang-runtime-core" }

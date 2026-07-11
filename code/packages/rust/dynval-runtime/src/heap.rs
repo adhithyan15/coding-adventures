@@ -405,7 +405,7 @@ pub fn alloc_builtin_closure(fn_name: SymbolId) -> LispyValue {
 /// # Example
 ///
 /// ```
-/// use lispy_runtime::heap::{alloc_string, is_string, string_bytes};
+/// use dynval_runtime::heap::{alloc_string, is_string, string_bytes};
 ///
 /// let v = alloc_string(b"hello");
 /// assert!(v.is_heap());

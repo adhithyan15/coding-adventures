@@ -24,7 +24,7 @@
 //! host linker, so the golden test runs on the dev host (macOS arm64) and on
 //! every CI runner alike.
 
-use lispy_runtime::{
+use dynval_runtime::{
     LispyValue, TAG_BITS, TAG_FALSE, TAG_HEAP, TAG_INT, TAG_NIL, TAG_SYMBOL, TAG_TRUE,
 };
 
