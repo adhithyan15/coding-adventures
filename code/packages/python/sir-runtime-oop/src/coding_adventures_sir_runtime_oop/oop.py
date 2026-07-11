@@ -660,6 +660,13 @@ _HASH_BLOCK_METHODS = frozenset(
         "sort_by",
         "min_by",
         "max_by",
+        "group_by",
+        "partition",
+        "flat_map",
+        "collect_concat",
+        "reduce",
+        "inject",
+        "sum",
     }
 )
 
@@ -1190,10 +1197,12 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
     return _MISS
 
 
-def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
+def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: Closure) -> Val:
     """Block-taking ``Hash`` methods; the block receives ``[key, value]`` (or a
-    single key/value for ``each_key``/``each_value``).  Returns :data:`_MISS` if
-    ``name`` is not a hash block method."""
+    single key/value for ``each_key``/``each_value``).  ``args`` holds the
+    positional arguments preceding the block (e.g. the seed for
+    ``reduce``/``inject`` or the initial value for ``sum``).  Returns
+    :data:`_MISS` if ``name`` is not a hash block method."""
     if name in ("each", "each_pair"):
         for key, value in list(recv.items()):
             apply(block, [key, value])
@@ -1261,6 +1270,63 @@ def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
             ([k, v] for k, v in recv.items()),
             key=lambda pair: apply(block, [pair[0], pair[1]]),
         )
+    # ── Enumerable breadth (grouping / folding / flattening) ───────────────
+    #
+    # A second batch of ``Enumerable`` block methods on ``Hash``.  Like the
+    # aggregates above, the block is yielded ``[key, value]`` (two arguments)
+    # and every "element" a result contains is a two-element ``[key, value]``
+    # list — except ``reduce``/``inject``, which follow Ruby's memo convention
+    # and yield ``[memo, [key, value]]`` (the pair as a single second argument,
+    # matching ``h.inject(0) { |sum, (k, v)| … }``).
+    if name == "group_by":
+        # A Hash of block key -> list of ``[k, v]`` pairs, in first-seen key
+        # order.  Keys must be hashable (dict-based Hash model).
+        groups: dict[Val, list[Val]] = {}
+        for key, value in recv.items():
+            groups.setdefault(apply(block, [key, value]), []).append([key, value])
+        return groups
+    if name == "partition":
+        # ``[[matching pairs], [non-matching pairs]]``.
+        yes: list[Val] = []
+        no: list[Val] = []
+        for key, value in recv.items():
+            (yes if truthy(apply(block, [key, value])) else no).append([key, value])
+        return [yes, no]
+    if name in ("flat_map", "collect_concat"):
+        # Map each pair through the block, flattening one level of any list
+        # result (a non-list result is appended as-is).
+        out: list[Val] = []
+        for key, value in recv.items():
+            mapped = apply(block, [key, value])
+            if isinstance(mapped, list):
+                out.extend(mapped)
+            else:
+                out.append(mapped)
+        return out
+    if name in ("reduce", "inject"):
+        # ``reduce(init) { |memo, (k, v)| … }`` folds the pairs; a seedless
+        # ``reduce`` starts from the first pair (Ruby's rule).  Yields the pair
+        # as ONE argument (the memo convention), so an empty seedless reduce is
+        # ``nil``.
+        pairs = [[key, value] for key, value in recv.items()]
+        if args:
+            acc: Val = args[0]
+            rest = pairs
+        elif pairs:
+            acc = pairs[0]
+            rest = pairs[1:]
+        else:
+            return None
+        for pair in rest:
+            acc = apply(block, [acc, pair])
+        return acc
+    if name == "sum":
+        # ``sum(init = 0) { |k, v| … }`` — ``init`` plus the sum of the block
+        # results (Hash#sum requires a block, since raw pairs are not addable).
+        total: Val = args[0] if args else 0
+        for key, value in recv.items():
+            total = total + apply(block, [key, value])
+        return total
     return _MISS
 
 
@@ -1924,7 +1990,7 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
             return result
     elif isinstance(recv, dict):
         if name in _HASH_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
-            result = _hash_block_method(recv, name, arg_list[-1])
+            result = _hash_block_method(recv, name, arg_list[:-1], arg_list[-1])
             if result is not _MISS:
                 return result
         result = _hash_method(recv, name, arg_list)
