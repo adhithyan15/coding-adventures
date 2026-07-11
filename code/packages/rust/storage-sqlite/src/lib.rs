@@ -1,0 +1,541 @@
+//! # storage-sqlite — a real `.sqlite` file as a query-engine backend
+//!
+//! The mini-sqlite pipeline (`sql-lexer → parser → planner → optimizer →
+//! codegen → sql-vm`) reads and writes tables through one seam: the
+//! [`Backend`](coding_adventures_sql_backend::Backend) trait. Today the only
+//! implementation is an in-memory table store. This crate adds a **file-backed**
+//! one: [`SqliteFileBackend`] exposes a genuine SQLite database file as a
+//! `Backend`, so the *unmodified* query engine can run `SELECT` against a real
+//! `.sqlite` on disk.
+//!
+//! It is the Rust sibling of `python/storage-sqlite`, which already proved this
+//! architecture end to end. It is built entirely on the from-scratch,
+//! zero-dependency [`sqlite_file`] reader (the Phase E work), so reading a real
+//! database pulls in **no** third-party SQLite — the real library appears only as
+//! a dev-dependency oracle in the tests.
+//!
+//! ## Scope (this increment)
+//!
+//! **Read-only.** The three read methods of `Backend` are implemented for real —
+//! [`SqliteFileBackend::tables`], [`SqliteFileBackend::columns`], and
+//! [`SqliteFileBackend::scan`] — which is everything a `SELECT` needs (the VM
+//! reads a table by opening a scan over it and resolving columns by name). Every
+//! mutating method (`insert`/`update`/`delete`, DDL, indexes) returns
+//! `BackendError::Unsupported`; writing a byte-compatible file is a later
+//! increment (the storage engine's Phase-F writer). Wiring mini-sqlite's
+//! `connect()` to open a file through this backend is the next step after this.
+//!
+//! ## The two things this layer reconciles
+//!
+//! 1. **Column names.** The on-disk format stores a table's rows but not, per
+//!    row, its column names — those live once in the `sqlite_schema` catalog as
+//!    the original `CREATE TABLE` text. [`parse_create_columns`] recovers the
+//!    column list from that text.
+//! 2. **The rowid alias.** A column declared `INTEGER PRIMARY KEY` is an alias
+//!    for the row's 64-bit `rowid`; SQLite stores `NULL` for it in the record and
+//!    keeps the real value as the rowid. `scan` substitutes the rowid back in, so
+//!    `SELECT *` returns what the real library returns.
+
+#![forbid(unsafe_code)]
+
+use std::collections::BTreeMap;
+
+use coding_adventures_sql_backend::{
+    Backend, BackendError, ColumnDef, Cursor, IndexDef, ListRowIterator, Row, RowIterator,
+    SqlValue, TransactionHandle,
+};
+use sqlite_file::{read_schema, read_table, SchemaEntry, SqlValue as FileValue, SqliteError};
+
+/// A read-only [`Backend`] over the bytes of a SQLite database file.
+///
+/// Construct with [`SqliteFileBackend::open`], then hand it to the query engine
+/// like any other backend. The database is held in memory (the importer already
+/// hands us the deserialized bytes); the schema catalog is parsed once up front
+/// so table/column lookups don't re-walk page 1 every time.
+pub struct SqliteFileBackend {
+    data: Vec<u8>,
+    schema: Vec<SchemaEntry>,
+}
+
+impl SqliteFileBackend {
+    /// Open a database from its raw file bytes. Parses (and thereby validates)
+    /// the `sqlite_schema` catalog up front; a non-SQLite or corrupt buffer
+    /// fails here rather than on first query.
+    pub fn open(data: Vec<u8>) -> Result<Self, SqliteError> {
+        let schema = read_schema(&data)?;
+        Ok(Self { data, schema })
+    }
+
+    /// The `sqlite_schema` row for a user table named `table` (case-insensitive),
+    /// or `None` if there is no such table.
+    fn table_entry(&self, table: &str) -> Option<&SchemaEntry> {
+        self.schema
+            .iter()
+            .find(|e| e.object_type == "table" && e.name.eq_ignore_ascii_case(table))
+    }
+}
+
+/// Map a value decoded by the on-disk reader onto the query engine's value type.
+/// The two enums line up one-to-one except that the file layer has no boolean
+/// (SQLite stores booleans as `0`/`1` integers), so nothing produces `Bool`.
+fn file_value_to_backend(value: FileValue) -> SqlValue {
+    match value {
+        FileValue::Null => SqlValue::Null,
+        FileValue::Int(i) => SqlValue::Int(i),
+        FileValue::Real(f) => SqlValue::Float(f),
+        FileValue::Text(s) => SqlValue::Text(s),
+        FileValue::Blob(b) => SqlValue::Blob(b),
+    }
+}
+
+/// One column recovered from a `CREATE TABLE` statement.
+struct ParsedColumn {
+    name: String,
+    type_name: String,
+    /// Whether this column is declared `INTEGER PRIMARY KEY` — i.e. a rowid
+    /// alias, which SQLite stores as `NULL` in the record and materializes from
+    /// the rowid on read.
+    is_rowid_alias: bool,
+    /// Whether this column has **REAL affinity**. It matters on read: SQLite
+    /// stores a float with no fractional part (e.g. `9.0`) as an integer to save
+    /// space, then presents it back as a float *because the column is REAL*. A
+    /// raw record read sees the integer; we must coerce it back.
+    real_affinity: bool,
+}
+
+/// Does a declared type name give a column **REAL affinity**, per SQLite's column
+/// affinity rules? REAL affinity applies when the type contains none of the
+/// higher-precedence markers (`INT` → INTEGER, `CHAR`/`CLOB`/`TEXT` → TEXT,
+/// `BLOB` → none) and does contain `REAL`, `FLOA`, or `DOUB`.
+fn affinity_is_real(type_name: &str) -> bool {
+    let t = type_name.to_ascii_uppercase();
+    if t.contains("INT") || t.contains("CHAR") || t.contains("CLOB") || t.contains("TEXT") {
+        return false;
+    }
+    if t.contains("BLOB") {
+        return false;
+    }
+    t.contains("REAL") || t.contains("FLOA") || t.contains("DOUB")
+}
+
+/// Recover the column list from a table's `CREATE TABLE …` text.
+///
+/// The interesting content is the comma-separated list inside the outermost
+/// parentheses. We split it at *top-level* commas (commas nested inside a
+/// column's own parentheses — e.g. `DECIMAL(10, 2)` or a `CHECK(...)` — don't
+/// separate columns), skip any *table-level* constraint clause (one that starts
+/// with `CONSTRAINT`/`PRIMARY`/`UNIQUE`/`CHECK`/`FOREIGN`), and read each real
+/// column's name and declared type.
+///
+/// This covers the ordinary schemas mini-sqlite and the Anki tables use. Exotic
+/// corners (deeply nested constraint expressions, unusual quoting) are refined in
+/// later increments; the cross-check tests measure it against real SQLite.
+fn parse_create_columns(create_sql: &str) -> Vec<ParsedColumn> {
+    let Some(inner) = outermost_parens(create_sql) else {
+        return Vec::new();
+    };
+
+    let mut columns = Vec::new();
+    for piece in split_top_level_commas(inner) {
+        let piece = piece.trim();
+        if piece.is_empty() || is_table_constraint(piece) {
+            continue;
+        }
+        let (name, rest) = read_identifier(piece);
+        if name.is_empty() {
+            continue;
+        }
+        let rest = rest.trim();
+        let type_name = read_type_name(rest);
+        let is_rowid_alias = column_is_rowid_alias(&type_name, rest);
+        let real_affinity = affinity_is_real(&type_name);
+        columns.push(ParsedColumn {
+            name,
+            type_name,
+            is_rowid_alias,
+            real_affinity,
+        });
+    }
+    columns
+}
+
+/// The text between the first `(` and its matching `)`, or `None` if unbalanced.
+fn outermost_parens(sql: &str) -> Option<&str> {
+    let start = sql.find('(')?;
+    let bytes = sql.as_bytes();
+    let mut depth = 0usize;
+    for (i, &b) in bytes.iter().enumerate().skip(start) {
+        match b {
+            b'(' => depth += 1,
+            b')' => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(&sql[start + 1..i]);
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+/// Split `list` at commas that sit at parenthesis depth zero.
+fn split_top_level_commas(list: &str) -> Vec<&str> {
+    let mut pieces = Vec::new();
+    let mut depth = 0i32;
+    let mut start = 0usize;
+    for (i, ch) in list.char_indices() {
+        match ch {
+            '(' => depth += 1,
+            ')' => depth -= 1,
+            ',' if depth == 0 => {
+                pieces.push(&list[start..i]);
+                start = i + ch.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    pieces.push(&list[start..]);
+    pieces
+}
+
+/// Whether a comma-separated piece is a *table-level* constraint rather than a
+/// column definition.
+fn is_table_constraint(piece: &str) -> bool {
+    let upper = piece.trim_start().to_ascii_uppercase();
+    ["CONSTRAINT", "PRIMARY", "UNIQUE", "CHECK", "FOREIGN"]
+        .iter()
+        .any(|kw| starts_with_keyword(&upper, kw))
+}
+
+/// Whether `upper` begins with SQL keyword `kw` followed by a word boundary.
+fn starts_with_keyword(upper: &str, kw: &str) -> bool {
+    upper.strip_prefix(kw).is_some_and(|rest| {
+        rest.is_empty()
+            || rest
+                .chars()
+                .next()
+                .is_some_and(|c| !c.is_alphanumeric() && c != '_')
+    })
+}
+
+/// Read a leading column identifier, honoring the four quoting styles SQLite
+/// accepts (`"a"`, `` `a` ``, `[a]`, or a bare word). Returns the unquoted name
+/// and the remaining text after it.
+fn read_identifier(piece: &str) -> (String, &str) {
+    let piece = piece.trim_start();
+    let mut chars = piece.char_indices();
+    match chars.next() {
+        Some((_, q @ ('"' | '`'))) => {
+            // Quoted; a doubled quote is an escaped literal quote.
+            let mut name = String::new();
+            let bytes = piece.char_indices().skip(1).collect::<Vec<_>>();
+            let mut i = 0;
+            while i < bytes.len() {
+                let (idx, c) = bytes[i];
+                if c == q {
+                    if bytes.get(i + 1).map(|(_, n)| *n) == Some(q) {
+                        name.push(q);
+                        i += 2;
+                        continue;
+                    }
+                    let after = idx + c.len_utf8();
+                    return (name, &piece[after..]);
+                }
+                name.push(c);
+                i += 1;
+            }
+            (name, "")
+        }
+        Some((_, '[')) => {
+            if let Some(end) = piece.find(']') {
+                (piece[1..end].to_string(), &piece[end + 1..])
+            } else {
+                (String::new(), piece)
+            }
+        }
+        Some(_) => {
+            let end = piece
+                .find(|c: char| c.is_whitespace() || c == '(')
+                .unwrap_or(piece.len());
+            (piece[..end].to_string(), &piece[end..])
+        }
+        None => (String::new(), piece),
+    }
+}
+
+/// Read the declared type name that follows a column's identifier: everything up
+/// to the first column constraint keyword (or the end). May be empty (SQLite
+/// allows typeless columns).
+fn read_type_name(rest: &str) -> String {
+    const CONSTRAINT_KEYWORDS: &[&str] = &[
+        "PRIMARY",
+        "NOT",
+        "NULL",
+        "UNIQUE",
+        "CHECK",
+        "DEFAULT",
+        "COLLATE",
+        "REFERENCES",
+        "GENERATED",
+        "AS",
+    ];
+    let mut type_tokens: Vec<&str> = Vec::new();
+    for token in rest.split_whitespace() {
+        let bare = token.split('(').next().unwrap_or(token);
+        if CONSTRAINT_KEYWORDS
+            .iter()
+            .any(|kw| bare.eq_ignore_ascii_case(kw))
+        {
+            break;
+        }
+        type_tokens.push(token);
+    }
+    type_tokens.join(" ")
+}
+
+/// A column is a rowid alias exactly when its declared type is `INTEGER` (not
+/// `INT`, per SQLite's rule) and its definition contains `PRIMARY KEY`.
+fn column_is_rowid_alias(type_name: &str, rest: &str) -> bool {
+    if !type_name.eq_ignore_ascii_case("integer") {
+        return false;
+    }
+    let upper = rest.to_ascii_uppercase();
+    if let Some(pos) = upper.find("PRIMARY") {
+        return upper[pos + "PRIMARY".len()..]
+            .trim_start()
+            .starts_with("KEY");
+    }
+    false
+}
+
+/// `Unsupported` error for a write attempt against this read-only backend.
+fn unsupported(operation: &str) -> BackendError {
+    BackendError::Unsupported {
+        operation: operation.to_string(),
+    }
+}
+
+impl Backend for SqliteFileBackend {
+    fn tables(&self) -> Vec<String> {
+        // User tables only — SQLite's own bookkeeping tables (`sqlite_*`) are not
+        // part of the queryable schema the engine offers.
+        self.schema
+            .iter()
+            .filter(|e| e.object_type == "table" && !e.name.starts_with("sqlite_"))
+            .map(|e| e.name.clone())
+            .collect()
+    }
+
+    fn columns(&self, table: &str) -> Result<Vec<ColumnDef>, BackendError> {
+        let entry = self
+            .table_entry(table)
+            .ok_or_else(|| BackendError::TableNotFound {
+                table: table.to_string(),
+            })?;
+        let create_sql = entry.sql.as_deref().unwrap_or("");
+        let parsed = parse_create_columns(create_sql);
+        Ok(parsed
+            .into_iter()
+            .map(|c| ColumnDef::new(c.name, c.type_name))
+            .collect())
+    }
+
+    fn scan(&self, table: &str) -> Result<Box<dyn RowIterator>, BackendError> {
+        let entry = self
+            .table_entry(table)
+            .ok_or_else(|| BackendError::TableNotFound {
+                table: table.to_string(),
+            })?;
+        let columns = parse_create_columns(entry.sql.as_deref().unwrap_or(""));
+
+        // Decode every row of the table from the on-disk b-tree.
+        let raw = read_table(&self.data, &entry.name).map_err(|e| BackendError::Internal {
+            message: e.to_string(),
+        })?;
+
+        let mut rows: Vec<Row> = Vec::with_capacity(raw.len());
+        for (rowid, values) in raw {
+            let mut row: Row = BTreeMap::new();
+            for (i, col) in columns.iter().enumerate() {
+                let decoded = values
+                    .get(i)
+                    .cloned()
+                    .map(file_value_to_backend)
+                    .unwrap_or(SqlValue::Null);
+                // Materialize an INTEGER PRIMARY KEY column from the rowid — the
+                // record stores NULL for it.
+                let value = if col.is_rowid_alias && matches!(decoded, SqlValue::Null) {
+                    SqlValue::Int(rowid)
+                } else {
+                    decoded
+                };
+                // Apply REAL affinity: an integer stored in a REAL column is read
+                // back as a float (SQLite's integer-storage space optimization).
+                let value = match value {
+                    SqlValue::Int(i) if col.real_affinity => SqlValue::Float(i as f64),
+                    other => other,
+                };
+                row.insert(col.name.clone(), value);
+            }
+            rows.push(row);
+        }
+        Ok(Box::new(ListRowIterator::new(rows)))
+    }
+
+    // ── Write path: unsupported in this read-only backend ────────────────────
+
+    fn insert(&mut self, _table: &str, _row: Row) -> Result<(), BackendError> {
+        Err(unsupported("insert into a read-only .sqlite file"))
+    }
+
+    fn update(
+        &mut self,
+        _table: &str,
+        _cursor: &dyn Cursor,
+        _assignments: Row,
+    ) -> Result<(), BackendError> {
+        Err(unsupported("update a read-only .sqlite file"))
+    }
+
+    fn delete(&mut self, _table: &str, _cursor: &mut dyn Cursor) -> Result<(), BackendError> {
+        Err(unsupported("delete from a read-only .sqlite file"))
+    }
+
+    fn create_table(
+        &mut self,
+        _table: &str,
+        _columns: Vec<ColumnDef>,
+        _if_not_exists: bool,
+    ) -> Result<(), BackendError> {
+        Err(unsupported("create a table in a read-only .sqlite file"))
+    }
+
+    fn drop_table(&mut self, _table: &str, _if_exists: bool) -> Result<(), BackendError> {
+        Err(unsupported("drop a table in a read-only .sqlite file"))
+    }
+
+    fn add_column(&mut self, _table: &str, _column: ColumnDef) -> Result<(), BackendError> {
+        Err(unsupported("alter a read-only .sqlite file"))
+    }
+
+    fn create_index(&mut self, _index: IndexDef) -> Result<(), BackendError> {
+        Err(unsupported("create an index in a read-only .sqlite file"))
+    }
+
+    fn drop_index(&mut self, _name: &str, _if_exists: bool) -> Result<(), BackendError> {
+        Err(unsupported("drop an index in a read-only .sqlite file"))
+    }
+
+    fn list_indexes(&self, _table: Option<&str>) -> Vec<IndexDef> {
+        // No index access is offered yet; reporting none keeps the planner on the
+        // full-scan path (which `scan` serves) and never asks for `scan_index`.
+        Vec::new()
+    }
+
+    fn scan_index(
+        &self,
+        _index_name: &str,
+        _lo: Option<&[SqlValue]>,
+        _hi: Option<&[SqlValue]>,
+        _lo_inclusive: bool,
+        _hi_inclusive: bool,
+    ) -> Result<Vec<usize>, BackendError> {
+        Err(unsupported("index scan over a read-only .sqlite file"))
+    }
+
+    fn scan_by_rowids(
+        &self,
+        _table: &str,
+        _rowids: &[usize],
+    ) -> Result<Box<dyn RowIterator>, BackendError> {
+        Err(unsupported("rowid lookup over a read-only .sqlite file"))
+    }
+
+    // ── Transactions: benign no-ops (a read-only file needs none) ─────────────
+
+    fn begin_transaction(&mut self) -> Result<TransactionHandle, BackendError> {
+        Ok(0)
+    }
+
+    fn commit(&mut self, _handle: TransactionHandle) -> Result<(), BackendError> {
+        Ok(())
+    }
+
+    fn rollback(&mut self, _handle: TransactionHandle) -> Result<(), BackendError> {
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_a_simple_create_table() {
+        let cols =
+            parse_create_columns("CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT, score REAL)");
+        let names: Vec<&str> = cols.iter().map(|c| c.name.as_str()).collect();
+        assert_eq!(names, ["id", "name", "score"]);
+        assert!(cols[0].is_rowid_alias, "id is INTEGER PRIMARY KEY");
+        assert!(!cols[1].is_rowid_alias);
+        assert_eq!(cols[1].type_name, "TEXT");
+    }
+
+    #[test]
+    fn skips_table_level_constraints_and_nested_commas() {
+        let cols = parse_create_columns(
+            "CREATE TABLE t (a INTEGER, b DECIMAL(10, 2), PRIMARY KEY (a, b))",
+        );
+        let names: Vec<&str> = cols.iter().map(|c| c.name.as_str()).collect();
+        // The DECIMAL(10, 2) comma must not split a column, and the table-level
+        // PRIMARY KEY clause must be skipped.
+        assert_eq!(names, ["a", "b"]);
+        assert_eq!(cols[1].type_name, "DECIMAL(10, 2)");
+    }
+
+    #[test]
+    fn handles_quoted_identifiers() {
+        let cols = parse_create_columns(r#"CREATE TABLE t ("odd name" TEXT, [b] INT, `c` REAL)"#);
+        let names: Vec<&str> = cols.iter().map(|c| c.name.as_str()).collect();
+        assert_eq!(names, ["odd name", "b", "c"]);
+    }
+
+    #[test]
+    fn int_primary_key_is_not_a_rowid_alias() {
+        // Only INTEGER PRIMARY KEY aliases the rowid; INT PRIMARY KEY does not.
+        let cols = parse_create_columns("CREATE TABLE t (id INT PRIMARY KEY, v TEXT)");
+        assert!(!cols[0].is_rowid_alias);
+    }
+
+    #[test]
+    fn real_affinity_follows_sqlite_rules() {
+        assert!(affinity_is_real("REAL"));
+        assert!(affinity_is_real("DOUBLE PRECISION"));
+        assert!(affinity_is_real("FLOAT"));
+        // Higher-precedence markers win.
+        assert!(!affinity_is_real("INTEGER"));
+        assert!(!affinity_is_real("TEXT"));
+        assert!(!affinity_is_real("BLOB"));
+        assert!(!affinity_is_real("")); // BLOB/none affinity
+        assert!(!affinity_is_real("NUMERIC")); // NUMERIC affinity, not REAL
+    }
+
+    #[test]
+    fn value_mapping_covers_every_variant() {
+        assert_eq!(file_value_to_backend(FileValue::Null), SqlValue::Null);
+        assert_eq!(file_value_to_backend(FileValue::Int(7)), SqlValue::Int(7));
+        assert_eq!(
+            file_value_to_backend(FileValue::Real(1.5)),
+            SqlValue::Float(1.5)
+        );
+        assert_eq!(
+            file_value_to_backend(FileValue::Text("hi".into())),
+            SqlValue::Text("hi".into())
+        );
+        assert_eq!(
+            file_value_to_backend(FileValue::Blob(vec![1, 2])),
+            SqlValue::Blob(vec![1, 2])
+        );
+    }
+}

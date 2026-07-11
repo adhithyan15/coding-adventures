@@ -296,6 +296,7 @@ members = [
     "sql-lexer",
     "sql-parser",
     "sqlite-file",
+    "storage-sqlite",
     "smt-lib-format",
     "starlark-ast-to-bytecode-compiler",
     "starlark-compiler",
