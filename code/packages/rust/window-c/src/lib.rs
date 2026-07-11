@@ -22,6 +22,9 @@
 //! verbatim on all ten entry points.
 #![allow(clippy::missing_safety_doc)]
 
+// Platform-conditional: the Apple/GPU backend code is inactive on non-Apple targets; allow the resulting dead_code/unused lints only where it does not build in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 use std::cell::RefCell;
 use std::ffi::{c_char, CStr, CString};
 

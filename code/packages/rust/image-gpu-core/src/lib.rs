@@ -39,6 +39,9 @@
 //! See [`pipeline`](crate::pipeline) for details.  V2 will switch to
 //! proper graph inputs once the protocol gains that hook.
 
+// Platform-conditional: the Apple/GPU backend code is inactive on non-Apple targets; allow the resulting dead_code/unused lints only where it does not build in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 pub use pixel_container::PixelContainer;
 
 mod pipeline;
