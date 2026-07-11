@@ -1598,9 +1598,21 @@ impl Compiler {
     ///   by name, so the output is unchanged). The NULL padding falls out for
     ///   free: `CloseScan` drops the inner cursor's `current_row`, so its columns
     ///   read NULL while the still-open outer cursor keeps its real values.
-    /// - **FULL OUTER** — needs the unmatched *right* rows too, which a single
-    ///   forward pass can't produce; still degrades to a cross product and stays
-    ///   in the conformance ledger (a later increment).
+    /// - **FULL OUTER** — every row from *both* sides, matched pairs joined and
+    ///   unmatched rows NULL-padded on the missing side. A single nested loop
+    ///   can't produce the unmatched *right* rows (the inner side is re-scanned
+    ///   per outer row, so "did this right row ever match *any* left row?" isn't
+    ///   known during the forward pass), so we run two passes and union them.
+    ///   Pass 1 is a LEFT JOIN (outer = left): all matched pairs, plus each left
+    ///   row that matched nothing, NULL-padded on the right. Pass 2 is a RIGHT
+    ///   *anti*-join (outer = right): for each right row we evaluate `ON` against
+    ///   every left row but **suppress the matched-pair emit** (pass 1 already
+    ///   produced those) and emit only the right rows that matched no left row,
+    ///   NULL-padded on the left. The union is exactly a FULL JOIN with no
+    ///   duplicated matched pairs; both passes reuse the same match-flag
+    ///   machinery, so no new VM instructions are needed. Ordering across the two
+    ///   passes is handled by the surrounding `ORDER BY` sort, which runs after
+    ///   every row is emitted.
     fn compile_join_projected(
         &mut self,
         left: &OptimizedPlan,
@@ -1609,17 +1621,67 @@ impl Compiler {
         condition: &Option<SqlExpr>,
         columns: &[OutputColumn],
     ) {
-        // RIGHT JOIN is LEFT JOIN with the operands swapped.
-        let (outer_plan, inner_plan) = if *kind == JoinKind::Right {
-            (right, left)
-        } else {
-            (left, right)
-        };
-        let is_outer = matches!(kind, JoinKind::Left | JoinKind::Right);
-        // INNER/LEFT/RIGHT evaluate the ON condition; CROSS has none, and FULL is
-        // (for now) degraded to a cross product — so neither evaluates it.
-        let eval_condition = condition.is_some()
-            && matches!(kind, JoinKind::Inner | JoinKind::Left | JoinKind::Right);
+        match kind {
+            // FULL OUTER = LEFT JOIN  ∪  RIGHT anti-join (see the doc above).
+            JoinKind::Full => {
+                let eval = condition.is_some();
+                // Pass 1: the LEFT half — matched pairs + left-only rows.
+                self.emit_join_pass(left, right, condition, eval, true, true, columns);
+                // Pass 2: the right rows that matched no left row. `emit_matched`
+                // is false so matched pairs are NOT emitted a second time.
+                self.emit_join_pass(right, left, condition, eval, false, true, columns);
+            }
+            _ => {
+                // RIGHT JOIN is LEFT JOIN with the operands swapped.
+                let (outer_plan, inner_plan) = if *kind == JoinKind::Right {
+                    (right, left)
+                } else {
+                    (left, right)
+                };
+                let is_outer = matches!(kind, JoinKind::Left | JoinKind::Right);
+                // INNER/LEFT/RIGHT evaluate the ON condition; CROSS has none.
+                let eval_condition = condition.is_some()
+                    && matches!(kind, JoinKind::Inner | JoinKind::Left | JoinKind::Right);
+                self.emit_join_pass(
+                    outer_plan,
+                    inner_plan,
+                    condition,
+                    eval_condition,
+                    /* emit_matched   */ true,
+                    /* emit_unmatched */ is_outer,
+                    columns,
+                );
+            }
+        }
+    }
+
+    /// Emit one nested-loop join pass over `outer_plan` × `inner_plan`.
+    ///
+    /// - `eval_condition` — evaluate the `ON` predicate to gate matches (false ⇒
+    ///   every pair "matches", i.e. a cross product).
+    /// - `emit_matched` — project + emit a row for each matched pair. FULL JOIN's
+    ///   second (anti-join) pass sets this false: it needs the match *flag* to
+    ///   know which right rows were unmatched, but must not re-emit pairs.
+    /// - `emit_unmatched` — after the inner loop, if this outer row matched no
+    ///   inner row, emit one row with the inner side NULL-padded (its cursor is
+    ///   closed, so its columns read NULL while the outer cursor holds its row).
+    ///
+    /// The match flag (`ClearMatch`/`SetMatch`/`JumpIfMatched`) is used whenever
+    /// `emit_unmatched` is set — that is the only case that must distinguish a
+    /// matched outer row from an unmatched one.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_join_pass(
+        &mut self,
+        outer_plan: &OptimizedPlan,
+        inner_plan: &OptimizedPlan,
+        condition: &Option<SqlExpr>,
+        eval_condition: bool,
+        emit_matched: bool,
+        emit_unmatched: bool,
+        columns: &[OutputColumn],
+    ) {
+        // The flag is needed only to decide the post-loop NULL-padded emit.
+        let use_match_flag = emit_unmatched;
 
         let outer_loop = self.fresh_label("joinp_outer_loop");
         let outer_end = self.fresh_label("joinp_outer_end");
@@ -1630,7 +1692,7 @@ impl Compiler {
         } else {
             String::new()
         };
-        let after_null = if is_outer {
+        let after_null = if emit_unmatched {
             self.fresh_label("joinp_after_null")
         } else {
             String::new()
@@ -1652,8 +1714,8 @@ impl Compiler {
             outer_end.clone(),
         ));
 
-        // Outer joins start each outer row with the match flag cleared.
-        if is_outer {
+        // Start each outer row with the match flag cleared.
+        if use_match_flag {
             self.emit(Instruction::ClearMatch);
         }
 
@@ -1674,11 +1736,14 @@ impl Compiler {
             }
         }
 
-        // A matched pair: record the match (for outer joins) and project the row.
-        if is_outer {
+        // A matched pair: record the match, and project the row unless this pass
+        // only wants the unmatched (anti-join) rows.
+        if use_match_flag {
             self.emit(Instruction::SetMatch);
         }
-        self.emit_row_projection(columns);
+        if emit_matched {
+            self.emit_row_projection(columns);
+        }
 
         if eval_condition {
             self.emit(Instruction::Label(cond_skip));
@@ -1688,10 +1753,10 @@ impl Compiler {
         self.emit(Instruction::Label(inner_end));
         self.emit(Instruction::CloseScan(inner_alias));
 
-        // Outer join: if no inner row matched this outer row, emit one row with
-        // the inner side NULL (its cursor is now closed, so its columns read
-        // NULL; the outer cursor still holds this outer row).
-        if is_outer {
+        // If no inner row matched this outer row, emit one row with the inner
+        // side NULL (its cursor is now closed, so its columns read NULL; the
+        // outer cursor still holds this outer row).
+        if emit_unmatched {
             self.emit(Instruction::JumpIfMatched(after_null.clone()));
             self.emit_row_projection(columns);
             self.emit(Instruction::Label(after_null));

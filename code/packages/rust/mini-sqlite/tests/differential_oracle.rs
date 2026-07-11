@@ -34,12 +34,15 @@
 //! quietly leave stale ledger entries behind.
 //!
 //! On introduction this harness measured 12 of 22 seed cases already matching
-//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). Three have
-//! since been retired: `INNER JOIN` qualified-column resolution, and correct
-//! `LEFT`/`RIGHT OUTER JOIN` (NULL-padded via a per-outer-row match flag). The
-//! remaining ledger entries — `FULL JOIN`, misnamed aggregate columns, and a
-//! wrong `UPPER()` — are each a tracked increment; the harness is what makes
-//! fixing them verifiable.
+//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). Five have
+//! since been retired: `INNER JOIN` qualified-column resolution; correct
+//! `LEFT`/`RIGHT OUTER JOIN` (NULL-padded via a per-outer-row match flag);
+//! `FULL OUTER JOIN` (a LEFT pass unioned with a RIGHT anti-join pass); and
+//! scalar functions (`UPPER()` returned the right value once same-named output
+//! columns stopped colliding, and columns got SQLite-style names). The
+//! remaining ledger entries are all *aggregate computed-column naming*
+//! divergences (`agg_N` vs `COUNT(*)`/`SUM(n)`); the rows already match. The
+//! harness is what makes fixing each one verifiable.
 
 use coding_adventures_mini_sqlite::{connect, SqlValue};
 
@@ -382,6 +385,19 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a.name, b.tag FROM a FULL JOIN b ON a.id = b.aid ORDER BY a.name, b.tag",
     },
+    // A trickier FULL JOIN: duplicate join keys on both sides (many-to-many)
+    // plus rows unmatched on each side. Guards the two-pass implementation
+    // against emitting a matched pair twice or missing an anti-join row.
+    Case {
+        id: "full_join_multi",
+        setup: &[
+            "CREATE TABLE a (id INTEGER, name TEXT)",
+            "CREATE TABLE b (aid INTEGER, tag TEXT)",
+            "INSERT INTO a VALUES (1, 'x'), (1, 'x2'), (2, 'y'), (4, 'w')",
+            "INSERT INTO b VALUES (1, 'p'), (1, 'q'), (3, 'r')",
+        ],
+        query: "SELECT a.name, b.tag FROM a FULL JOIN b ON a.id = b.aid ORDER BY a.name, b.tag",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
@@ -390,16 +406,13 @@ const CASES: &[Case] = &[
 /// every entry is a real, reproduced gap between mini-sqlite and SQLite, each
 /// slated for a later increment.
 ///
-/// The gaps fall into a few families:
+/// Every remaining entry is now a **computed-column naming** divergence — the
+/// result *rows* already match SQLite. The join and scalar-function *result*
+/// gaps have all been retired: `inner_join` qualified-column resolution,
+/// `LEFT`/`RIGHT OUTER JOIN` NULL-padding, `FULL OUTER JOIN` (a LEFT pass unioned
+/// with a RIGHT anti-join pass), and `string_functions` (positional projection
+/// plus SQLite-style function column names).
 ///
-/// - **Join column resolution** (`inner_join`): a qualified reference like
-///   `a.name` across a join resolves to `NULL`, because a `FROM a` with no
-///   explicit alias opens its cursor keyed under `None` while `LoadColumn` looks
-///   it up under `Some("a")` (`sql-vm` `LoadColumn`). This breaks *even* inner
-///   joins and is the highest-priority fix — it underlies the outer joins too.
-/// - **`FULL JOIN`**: needs the unmatched right rows too, which a single forward
-///   pass can't produce; still degrades to a cross product. (`LEFT`/`RIGHT` are
-///   now implemented via a per-outer-row match flag and no longer diverge.)
 /// - **Computed-column naming** (`count_star`/`sum_min_max`/`avg`/`group_by`/
 ///   `having`): the result *rows* match SQLite exactly, but mini-sqlite names an
 ///   aggregate output column `agg_N` where SQLite uses the expression text
@@ -413,10 +426,6 @@ const CASES: &[Case] = &[
 /// (dropping every value but the last), plus `sql-codegen` labelling function
 /// columns `?` instead of the SQLite-style expression text.
 const LEDGER: &[(&str, &str)] = &[
-    (
-        "full_join",
-        "FULL JOIN needs the unmatched right rows too, which a single forward pass can't produce; still degrades to a cross product. (LEFT/RIGHT are now implemented and no longer ledgered.)",
-    ),
     (
         "count_star",
         "rows match; computed-column naming differs — mini names it agg_0, SQLite names it COUNT(*).",
