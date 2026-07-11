@@ -3,7 +3,37 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.2.0] - Unreleased
+## [0.3.0] - Unreleased
+
+### Added
+
+- **Five scalar built-in functions** in `call_builtin`, matching SQLite:
+  - `IFNULL(a, b)` — the two-argument `COALESCE`.
+  - `NULLIF(a, b)` — NULL when the arguments are equal, else `a`.
+  - `TYPEOF(x)` — the storage-class name (`null`/`integer`/`real`/`text`/`blob`).
+  - `INSTR(haystack, needle)` — 1-based **character** index of the first match
+    (0 if absent, NULL on a NULL argument, 1 for an empty needle).
+  - `HEX(x)` — uppercase hex of the argument's bytes (text → UTF-8, blob → raw,
+    integer → decimal-text bytes; NULL → NULL; floats are declined).
+  These parsed as function calls already but hit the `unknown built-in function`
+  fallthrough; each is now implemented and unit-tested, and validated end-to-end
+  against real SQLite by the mini-sqlite differential oracle.
+
+## [0.2.1] - Unreleased
+
+### Fixed
+
+- **Same-named output columns no longer collide.** Phase-4 materialization used
+  to collapse each row's positional `(name, value)` pairs into a
+  `HashMap<String, SqlValue>` and then re-read one value per output-column name.
+  Two output columns that share a name — e.g. `SELECT UPPER(x), LENGTH(x)` (both
+  default to `?`) or `SELECT id, id` — collided in the map, so every such column
+  returned the *last* value (`SELECT UPPER(x), LENGTH(x)` came back as
+  `LENGTH(x), LENGTH(x)`). The row buffer is already positional and parallel to
+  the locked `output_columns` (both are produced by the same `EmitColumn`
+  sequence, and hidden sort-key columns are truncated off both together), so we
+  now project by **position** and drop the name-keyed map entirely. Fixes the
+  differential-oracle `string_functions` divergence.
 
 ### Added
 

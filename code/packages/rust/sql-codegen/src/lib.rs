@@ -1240,8 +1240,6 @@ impl Compiler {
             .collect();
         let agg_args: Vec<Option<SqlExpr>> =
             aggregates.iter().map(|a| a.arg.clone()).collect();
-        let agg_aliases: Vec<Option<String>> =
-            aggregates.iter().map(|a| a.alias.clone()).collect();
 
         // Phase 1: scan loop body — save group key + update each aggregate.
         let loop_lbl = self.fresh_label("agg_loop");
@@ -1326,11 +1324,11 @@ impl Compiler {
             };
             self.emit(Instruction::EmitColumn(name));
         }
-        // Emit finalized aggregate values.
-        for (i, (fn_tag, alias)) in agg_fns.iter().zip(agg_aliases.iter()).enumerate() {
+        // Emit finalized aggregate values, each named the SQLite way
+        // (`SUM(n)`, `COUNT(*)`, …) unless an explicit alias overrides it.
+        for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
             self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-            let col_name = alias.clone().unwrap_or_else(|| format!("agg_{}", i));
-            self.emit(Instruction::EmitColumn(col_name));
+            self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
         }
         self.emit(Instruction::EmitRow);
     }
@@ -1370,8 +1368,6 @@ impl Compiler {
                     .collect();
                 let agg_args: Vec<Option<SqlExpr>> =
                     aggregates.iter().map(|a| a.arg.clone()).collect();
-                let agg_aliases: Vec<Option<String>> =
-                    aggregates.iter().map(|a| a.alias.clone()).collect();
 
                 let loop_lbl = self.fresh_label("having_loop");
                 let end_lbl = self.fresh_label("having_end");
@@ -1423,10 +1419,7 @@ impl Compiler {
                 // then check predicate, then emit row.
                 for (i, fn_tag) in agg_fns.iter().enumerate() {
                     self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    let col_name = agg_aliases[i]
-                        .clone()
-                        .unwrap_or_else(|| format!("agg_{}", i));
-                    self.emit(Instruction::EmitColumn(col_name));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(&aggregates[i])));
                 }
 
                 // HAVING predicate check — skip the row if false.
@@ -1452,10 +1445,9 @@ impl Compiler {
                     };
                     self.emit(Instruction::EmitColumn(name));
                 }
-                for (i, (fn_tag, alias)) in agg_fns.iter().zip(agg_aliases.iter()).enumerate() {
+                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
                     self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    let col_name = alias.clone().unwrap_or_else(|| format!("agg_{}", i));
-                    self.emit(Instruction::EmitColumn(col_name));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
                 }
                 self.emit(Instruction::EmitRow);
                 self.emit(Instruction::Label(skip_lbl));
@@ -1597,9 +1589,21 @@ impl Compiler {
     ///   by name, so the output is unchanged). The NULL padding falls out for
     ///   free: `CloseScan` drops the inner cursor's `current_row`, so its columns
     ///   read NULL while the still-open outer cursor keeps its real values.
-    /// - **FULL OUTER** — needs the unmatched *right* rows too, which a single
-    ///   forward pass can't produce; still degrades to a cross product and stays
-    ///   in the conformance ledger (a later increment).
+    /// - **FULL OUTER** — every row from *both* sides, matched pairs joined and
+    ///   unmatched rows NULL-padded on the missing side. A single nested loop
+    ///   can't produce the unmatched *right* rows (the inner side is re-scanned
+    ///   per outer row, so "did this right row ever match *any* left row?" isn't
+    ///   known during the forward pass), so we run two passes and union them.
+    ///   Pass 1 is a LEFT JOIN (outer = left): all matched pairs, plus each left
+    ///   row that matched nothing, NULL-padded on the right. Pass 2 is a RIGHT
+    ///   *anti*-join (outer = right): for each right row we evaluate `ON` against
+    ///   every left row but **suppress the matched-pair emit** (pass 1 already
+    ///   produced those) and emit only the right rows that matched no left row,
+    ///   NULL-padded on the left. The union is exactly a FULL JOIN with no
+    ///   duplicated matched pairs; both passes reuse the same match-flag
+    ///   machinery, so no new VM instructions are needed. Ordering across the two
+    ///   passes is handled by the surrounding `ORDER BY` sort, which runs after
+    ///   every row is emitted.
     fn compile_join_projected(
         &mut self,
         left: &OptimizedPlan,
@@ -1608,17 +1612,67 @@ impl Compiler {
         condition: &Option<SqlExpr>,
         columns: &[OutputColumn],
     ) {
-        // RIGHT JOIN is LEFT JOIN with the operands swapped.
-        let (outer_plan, inner_plan) = if *kind == JoinKind::Right {
-            (right, left)
-        } else {
-            (left, right)
-        };
-        let is_outer = matches!(kind, JoinKind::Left | JoinKind::Right);
-        // INNER/LEFT/RIGHT evaluate the ON condition; CROSS has none, and FULL is
-        // (for now) degraded to a cross product — so neither evaluates it.
-        let eval_condition = condition.is_some()
-            && matches!(kind, JoinKind::Inner | JoinKind::Left | JoinKind::Right);
+        match kind {
+            // FULL OUTER = LEFT JOIN  ∪  RIGHT anti-join (see the doc above).
+            JoinKind::Full => {
+                let eval = condition.is_some();
+                // Pass 1: the LEFT half — matched pairs + left-only rows.
+                self.emit_join_pass(left, right, condition, eval, true, true, columns);
+                // Pass 2: the right rows that matched no left row. `emit_matched`
+                // is false so matched pairs are NOT emitted a second time.
+                self.emit_join_pass(right, left, condition, eval, false, true, columns);
+            }
+            _ => {
+                // RIGHT JOIN is LEFT JOIN with the operands swapped.
+                let (outer_plan, inner_plan) = if *kind == JoinKind::Right {
+                    (right, left)
+                } else {
+                    (left, right)
+                };
+                let is_outer = matches!(kind, JoinKind::Left | JoinKind::Right);
+                // INNER/LEFT/RIGHT evaluate the ON condition; CROSS has none.
+                let eval_condition = condition.is_some()
+                    && matches!(kind, JoinKind::Inner | JoinKind::Left | JoinKind::Right);
+                self.emit_join_pass(
+                    outer_plan,
+                    inner_plan,
+                    condition,
+                    eval_condition,
+                    /* emit_matched   */ true,
+                    /* emit_unmatched */ is_outer,
+                    columns,
+                );
+            }
+        }
+    }
+
+    /// Emit one nested-loop join pass over `outer_plan` × `inner_plan`.
+    ///
+    /// - `eval_condition` — evaluate the `ON` predicate to gate matches (false ⇒
+    ///   every pair "matches", i.e. a cross product).
+    /// - `emit_matched` — project + emit a row for each matched pair. FULL JOIN's
+    ///   second (anti-join) pass sets this false: it needs the match *flag* to
+    ///   know which right rows were unmatched, but must not re-emit pairs.
+    /// - `emit_unmatched` — after the inner loop, if this outer row matched no
+    ///   inner row, emit one row with the inner side NULL-padded (its cursor is
+    ///   closed, so its columns read NULL while the outer cursor holds its row).
+    ///
+    /// The match flag (`ClearMatch`/`SetMatch`/`JumpIfMatched`) is used whenever
+    /// `emit_unmatched` is set — that is the only case that must distinguish a
+    /// matched outer row from an unmatched one.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_join_pass(
+        &mut self,
+        outer_plan: &OptimizedPlan,
+        inner_plan: &OptimizedPlan,
+        condition: &Option<SqlExpr>,
+        eval_condition: bool,
+        emit_matched: bool,
+        emit_unmatched: bool,
+        columns: &[OutputColumn],
+    ) {
+        // The flag is needed only to decide the post-loop NULL-padded emit.
+        let use_match_flag = emit_unmatched;
 
         let outer_loop = self.fresh_label("joinp_outer_loop");
         let outer_end = self.fresh_label("joinp_outer_end");
@@ -1629,7 +1683,7 @@ impl Compiler {
         } else {
             String::new()
         };
-        let after_null = if is_outer {
+        let after_null = if emit_unmatched {
             self.fresh_label("joinp_after_null")
         } else {
             String::new()
@@ -1651,8 +1705,8 @@ impl Compiler {
             outer_end.clone(),
         ));
 
-        // Outer joins start each outer row with the match flag cleared.
-        if is_outer {
+        // Start each outer row with the match flag cleared.
+        if use_match_flag {
             self.emit(Instruction::ClearMatch);
         }
 
@@ -1673,11 +1727,14 @@ impl Compiler {
             }
         }
 
-        // A matched pair: record the match (for outer joins) and project the row.
-        if is_outer {
+        // A matched pair: record the match, and project the row unless this pass
+        // only wants the unmatched (anti-join) rows.
+        if use_match_flag {
             self.emit(Instruction::SetMatch);
         }
-        self.emit_row_projection(columns);
+        if emit_matched {
+            self.emit_row_projection(columns);
+        }
 
         if eval_condition {
             self.emit(Instruction::Label(cond_skip));
@@ -1687,10 +1744,10 @@ impl Compiler {
         self.emit(Instruction::Label(inner_end));
         self.emit(Instruction::CloseScan(inner_alias));
 
-        // Outer join: if no inner row matched this outer row, emit one row with
-        // the inner side NULL (its cursor is now closed, so its columns read
-        // NULL; the outer cursor still holds this outer row).
-        if is_outer {
+        // If no inner row matched this outer row, emit one row with the inner
+        // side NULL (its cursor is now closed, so its columns read NULL; the
+        // outer cursor still holds this outer row).
+        if emit_unmatched {
             self.emit(Instruction::JumpIfMatched(after_null.clone()));
             self.emit_row_projection(columns);
             self.emit(Instruction::Label(after_null));
@@ -2089,15 +2146,99 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
 /// 2. If the expression is a bare column reference (`SELECT col`), use the
 ///    column name as the implicit label.  This matches SQL's convention that
 ///    `SELECT id FROM t` exposes a column named `id`.
-/// 3. Fall back to `"?"` for complex expressions without an alias.
+/// 3. For a function call (`SELECT UPPER(name)`), reconstruct the call text —
+///    `UPPER(name)` — as the label.  SQLite names an un-aliased expression
+///    column after the *source text* of the expression, so `SELECT UPPER(name),
+///    LENGTH(name)` returns columns `UPPER(name)` and `LENGTH(name)`.  Giving
+///    the two columns distinct names is not just cosmetic: the VM keys nothing
+///    by name (it projects positionally), but the differential oracle compares
+///    column names against real SQLite, and two `?`-named columns previously
+///    diverged.  We reconstruct rather than thread source spans through the
+///    parser, which matches SQLite exactly for the whitespace-free calls we
+///    emit and degrades to `?` for arguments we cannot render.
+/// 4. Fall back to `"?"` for other complex expressions without an alias.
 fn output_column_name(col: &OutputColumn) -> String {
     if let Some(alias) = &col.alias {
         return alias.clone();
     }
     match &col.expr {
         SqlExpr::Column { name, .. } => name.clone(),
+        SqlExpr::FunctionCall { .. } => render_expr_label(&col.expr).unwrap_or_else(|| "?".to_string()),
         _ => "?".to_string(),
     }
+}
+
+/// Best-effort reconstruction of an expression's *source text*, used as the
+/// implicit column label for un-aliased expressions (mirroring SQLite).
+///
+/// Returns `None` for any node we do not know how to render, so the caller can
+/// fall back to `"?"` rather than emitting a misleading label.  We only render
+/// the shapes that actually appear as function arguments today — columns,
+/// simple literals, and nested calls — because the goal is faithful column
+/// *names*, not a general SQL pretty-printer.
+///
+/// | expression            | rendered label   |
+/// |-----------------------|------------------|
+/// | `UPPER(name)`         | `UPPER(name)`    |
+/// | `SUBSTR(name,1,2)`    | `SUBSTR(name,1,2)` |
+/// | `LENGTH(u.name)`      | `LENGTH(u.name)` |
+/// | `COALESCE(x,'-')`     | `COALESCE(x,'-')`|
+fn render_expr_label(expr: &SqlExpr) -> Option<String> {
+    match expr {
+        SqlExpr::Column { table: Some(t), name } => Some(format!("{t}.{name}")),
+        SqlExpr::Column { table: None, name } => Some(name.clone()),
+        SqlExpr::Literal(v) => Some(match v {
+            SqlValue::Null => "NULL".to_string(),
+            SqlValue::Bool(b) => if *b { "TRUE".to_string() } else { "FALSE".to_string() },
+            SqlValue::Int(n) => n.to_string(),
+            // Render floats via SQLite's own default text form is out of scope;
+            // the plain Rust form matches for the integral/simple cases we emit.
+            SqlValue::Float(f) => f.to_string(),
+            // Single-quote string literals, doubling embedded quotes as SQL does.
+            SqlValue::Text(s) => format!("'{}'", s.replace('\'', "''")),
+            // Blobs have no simple textual column-name form; decline to render.
+            SqlValue::Blob(_) => return None,
+        }),
+        SqlExpr::FunctionCall { name, args, .. } => {
+            let rendered: Option<Vec<String>> = args.iter().map(render_expr_label).collect();
+            Some(format!("{}({})", name, rendered?.join(",")))
+        }
+        _ => None,
+    }
+}
+
+/// SQLite-style implicit column name for an un-aliased aggregate: the function
+/// call text — `COUNT(*)`, `SUM(n)`, `MIN(x)`, `AVG(n)`, `COUNT(DISTINCT id)`.
+///
+/// An explicit `AS` alias always wins. Otherwise this mirrors SQLite, which
+/// names an un-aliased result column after the expression's source text — so a
+/// bare `SELECT COUNT(*)` returns a column literally named `COUNT(*)`, not the
+/// engine-internal `agg_0`. `COUNT(*)` alone has no argument (rendered `*`);
+/// every other aggregate renders its argument via [`render_expr_label`],
+/// prefixed with `DISTINCT ` when the aggregate is distinct.
+fn aggregate_column_name(item: &AggregateItem) -> String {
+    if let Some(alias) = &item.alias {
+        return alias.clone();
+    }
+    let func = match item.func {
+        AggFunc::Count => "COUNT",
+        AggFunc::Sum => "SUM",
+        AggFunc::Avg => "AVG",
+        AggFunc::Min => "MIN",
+        AggFunc::Max => "MAX",
+    };
+    let inner = match &item.arg {
+        None => "*".to_string(),
+        Some(expr) => {
+            let base = render_expr_label(expr).unwrap_or_else(|| "?".to_string());
+            if item.distinct {
+                format!("DISTINCT {base}")
+            } else {
+                base
+            }
+        }
+    };
+    format!("{func}({inner})")
 }
 
 // ===========================================================================

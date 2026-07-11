@@ -142,8 +142,12 @@ rather than panicking:
   - **Array** (`Seq`): `length`/`size`, `first`, `last`, `push`/`append`,
     `pop`, `include?`, `reverse`, `sort`, `join`, `map`, `select`/`filter`,
     `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`.
-  - **Hash** (`Map`): `keys`, `values`, `size`, `has_key?`, `each`, `map`,
-    `select`, `transform_values`, `transform_keys`.
+  - **Hash** (`Map`): `keys`, `values`, `size`/`length`, `empty?`, `has_key?`,
+    `fetch`, `to_a`, `merge`, `dig` (nested), `invert`, `store`/`[]=`, `delete`,
+    `clear`, `each`/`each_pair`, `each_key`, `each_value`, `map`, `select`,
+    `reject`, `transform_values`, `transform_keys`, and the Enumerable
+    aggregates `find`/`detect`, `any?`/`all?`/`none?`, `count`, `sort_by`,
+    `min_by`/`max_by`.
   - **String** (`Str`): `length`, `upcase`, `downcase`, `reverse`, `strip`,
     `include?`, `split`, char-set `tr`/`count`/`delete`/`squeeze` (literal
     sets), and justify `ljust`/`rjust`/`center`/`swapcase` (rune-aware; `center`

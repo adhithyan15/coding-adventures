@@ -302,3 +302,76 @@ enumerating.
 - **Exact/dimensional:** formulas run the existing exact/dimensional CPU path; unit mismatches are
   errors, not silent coercions.
 ```
+
+---
+
+## 10. Context-aware synonym resolution (bind time)
+
+A term and its everyday names must be **interchangeable in context**: given the BMI library, "weight",
+"body weight", "mass", and the canonical `body_mass` are the *same quantity*, and the engine must
+compute the right one whichever the input used. This is not the decomposer's job to normalize away —
+it is a **language guarantee**: the dictionary is the single source of truth for what counts as the
+same term, with provenance.
+
+**What exists:** `define <term> : <kind> surface "syn₁", "syn₂", …` already parses and stores a
+per-term synonym list (`Define.surfaces: Vec<String>`), and those surfaces already **feed the
+decomposer** (they tell the model which words map to the term).
+
+**The gap (this rung):** the surfaces are *not yet used by the engine to resolve a bound term*. An
+`observe weight(70)` against a dictionary that declares `body_mass … surface "weight"` should bind to
+`body_mass` — today only the canonical name binds. This rung wires **bind-time synonym resolution**:
+
+- When an `observe`d slot (or a formula argument) names a **synonym** of a term in an in-scope
+  (imported) dictionary, it resolves to that term's canonical id, and the engine computes the right
+  quantity. The resolution is **context-scoped** — only dictionaries actually `import`/`use`d are
+  consulted, so "weight" means `body_mass` in the BMI context and something else in another.
+- **Ambiguity is an explicit error, never a silent pick:** a surface form claimed by two in-scope
+  dictionaries (or two terms) raises a resolution error naming both candidates — the model must
+  disambiguate (or the libraries must). A synonym that matches nothing is the existing
+  unknown-term error.
+- **The resolution is itself auditable:** the derivation records *which dictionary and which synonym*
+  resolved the binding (surface form → canonical term → the dictionary's provenance), so "why did
+  `weight` become `body_mass`?" is answerable from the trail, not folklore.
+
+Synonyms are content on the existing `surface` mechanism (no grammar change); the rung is the
+engine-side resolver + the ambiguity gate + the audit hook. It is what makes the "the model only
+decomposes and binds" contract robust to the words a real question actually uses.
+
+---
+
+## 11. The full audit trail — multi-step reasoning, end to end
+
+The north-star invariant, stated sharply: **for *any* answer — a single formula, a formula that
+composes lower formulas, a recalled fact feeding a computation, a constraint solve, or all of them in
+one question — the engine can render the complete chain of how it got there, and an independent
+checker can re-verify that chain without the model.** Hallucination is an accounting failure; the
+audit trail is the accounting.
+
+**What exists:** the engine already builds a **`DerivationNode`** tree (`compute.rs`) — leaves cite a
+valued fact by `fact_id` → its `Provenance` → source bytes; `Op` nodes record each arithmetic step;
+and **`DerivedRef`** nodes reference a *previously-bound derived value*, i.e. **cross-step chaining is
+already representable**. There is a **`proof_dag.rs`** for the probabilistic/relational (ProbLog/SLD)
+side — proofs as paths, each carrying the set of clauses used. Provenance carries human-readable
+citation spans.
+
+**The gap (this rung):** these pieces are not yet *composed and rendered* for the formula-library,
+multi-step, cross-modality case, and there is **no full-explanation renderer** (no `explain` /
+`audit_trail` function today; the CLI shows a single derived value's provenance). This rung delivers:
+
+- **One composed proof object per answer.** A formula application chains into the same derivation/proof
+  structure as `let`; a formula that imports and applies a lower formula nests its sub-derivation; a
+  recalled `relate` fact used as an input attaches its edge provenance; a `solve`/`check` attaches the
+  constraint set and the SAT/optimization witness. The result is a single tree/DAG spanning **all four
+  modalities** with a leaf-level byte-provenance for every input and a cited definition for every step.
+- **A full-explanation renderer.** Given that object, emit a human-readable, ordered narrative —
+  *"BMI = body_mass / height²  [WHO, «…», authoritative]; body_mass ← 70 kg from «…weighs 70 kg…»;
+  height ← 1.75 m from «…1.75 m…»; = 22.86 kg/m²"* — and the machine form the checker consumes.
+- **Offline re-verification (`adj-verify`).** An independent pass re-executes the arithmetic, re-checks
+  each citation resolves, re-runs each constraint/solve, and confirms the rendered answer follows —
+  **with the model absent**. A trail that does not re-verify is a failed answer, abstained on.
+- **Abstention is part of the trail.** When a step cannot be grounded (an unresolvable binding, an
+  `INFEASIBLE` constraint, a missing fact), the trail records *where and why* it stopped; a grounded
+  "I don't know, because…" is a first-class, auditable outcome.
+
+This rung is what turns "the engine computed 22.86" into "here is the auditable derivation, and it
+re-checks" — the property the whole ladder exists to demonstrate at MLE scale.

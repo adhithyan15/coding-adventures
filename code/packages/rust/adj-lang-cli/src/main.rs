@@ -110,12 +110,23 @@ fn derived_json(kb: &KnowledgeBase) -> String {
                 Some(r) => format!(",\"exact\":{{\"num\":{},\"den\":{}}}", r.num, r.den),
                 None => String::new(),
             };
+            // A value produced by APPLYING a provenanced `formula`
+            // (ADJ-FORMULA-LIBRARIES rung-0) carries the formula's cited
+            // `source`/`locator`/`trust` — the audit channel proving WHY the
+            // formula is trusted, alongside the derivation tree proving HOW the
+            // number was computed. A plain `let` has no such library claim, so
+            // the field is omitted (output byte-for-byte unchanged there).
+            let provenance = match &d.provenance {
+                Some(p) => format!(",{}", prov(p)),
+                None => String::new(),
+            };
             format!(
-                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}}}",
+                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}}}",
                 esc(&d.name),
                 jnum(d.value),
                 esc(&d.dim.tag()),
-                exact
+                exact,
+                provenance
             )
         })
         .collect();

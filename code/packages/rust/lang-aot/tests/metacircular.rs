@@ -307,7 +307,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     .trim()
     .to_string();
     let runtime_c = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../twig-aot/runtime/lispy_runtime.c");
+        .join("../twig-aot/runtime/dynval_runtime.c");
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, "metacirc", &triple).ok()?;
     let dir = tmp_dir("llvm");
     let ll_path = dir.join("metacirc.ll");

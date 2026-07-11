@@ -339,7 +339,7 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // The **native** backends (aarch64 / x86_64, driven by `twig-aot`) have no
 // managed heap.  Instead they link the shared C lisp runtime
-// (`twig-aot/runtime/lispy_runtime.c`, see LANG77) which implements
+// (`twig-aot/runtime/dynval_runtime.c`, see LANG77) which implements
 // `lispy-runtime`'s tagged-value model — `__dyn_cons`/`car`/`cdr`.
 // For those backends a cons cell is a *runtime call*, not an inline
 // allocation, so the value is a proper NaN-box-tagged `LispyValue` (a

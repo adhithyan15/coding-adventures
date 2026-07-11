@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.39.0] - 2026-07-11
+
+### Added — CLOC12.175 PR2: bridge class fields → `ClassMember::Field`
+
+The grammar already parses a class field (`class_field_declaration`) but the
+bridge declined it (dropping the file to WHITESPACE_ONLY). `convert_class_element`
+now dispatches a `class_field_declaration` member to the new `convert_class_field`,
+producing `ClassMember::Field(PropertyDefinition)` (javascript-ast 0.34.0):
+
+- **key** reuses `convert_property_key` — the same `property_name` node a method
+  key uses (identifier / string / numeric). A computed `[expr]` key DECLINES (a
+  later slice) → WHITESPACE_ONLY, sound, mirroring the method surface.
+- **initializer** is the optional `assignment_expression`; a bare field (`y;`)
+  maps to `value: None`.
+- **`static`** is read from the field's own leading `static` token (inside
+  `class_field_declaration`, not hoisted to `class_element` like a method's).
+- A **private** field (`#x`) — a bare `PRIVATE_NAME` token with no `property_name`
+  node — DECLINES as an unmodelled shape (safe fallback), never a mis-emit.
+
+Works in both class-expression and class-declaration bodies (shared conversion).
+10 new bridge tests. MINOR.
+
+## [0.38.1] - 2026-07-11
+
+### Fixed — CLOC12.175 PR1: `ClassMember` test bindings
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`, making `ClassMember` a
+two-variant enum. The bridge's class-conversion tests bound a member with an
+irrefutable `let ClassMember::Method(m) = &c.body[0];`, which the new variant
+makes refutable. Converted each of the 13 test bindings to
+`let ClassMember::Method(m) = … else { panic!("expected a method member") };`.
+Bridge production code is unchanged — it still emits only `ClassMember::Method`
+(field bridging is CLOC12.175 PR2).
+
 ## [0.38.0] - 2026-07-11
 
 ### Added — CLOC12.174 PR2: bridge `class_declaration` → `Declaration::ClassDeclaration`

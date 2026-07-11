@@ -70,7 +70,7 @@ use coding_adventures_javascript_ast::{
     BooleanLiteral,
     BreakStatement, CallExpression, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
-    MethodDefinition, MethodKind,
+    MethodDefinition, MethodKind, PropertyDefinition,
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ClassDeclaration, FunctionDeclaration, FunctionExpression,
@@ -1015,9 +1015,44 @@ impl<'a> Emitter<'a> {
         for member in body {
             match member {
                 ClassMember::Method(m) => self.emit_class_member(m),
+                ClassMember::Field(f) => self.emit_class_field(f),
             }
         }
         self.write_str("}");
+    }
+
+    /// Emit one class **field** ([`PropertyDefinition`]):
+    /// `[static ]key[=value];` (CLOC12.175).
+    ///
+    /// ```text
+    ///   x = 1        → x=1;
+    ///   y            → y;
+    ///   static z = 2 → static z=2;
+    ///   [k] = v      → [k]=v;
+    /// ```
+    ///
+    /// Two differences from a method member ([`Self::emit_class_member`]): a
+    /// field **ends with `;`** — a method's closing `}` is self-terminating, but
+    /// a field has no brace, so the `;` separates it from the next member — and
+    /// it has no parameter-list/body tail. The `static` prefix and the
+    /// computed-key bracketing reuse the same helpers as a method; the value,
+    /// when present, is emitted at `PREC_ASSIGNMENT` (the RHS of `=`), so a
+    /// looser operand (a bare `a,b` sequence) wraps while an ordinary expression
+    /// prints bare — exactly as an assignment RHS or a default value does.
+    fn emit_class_field(&mut self, f: &PropertyDefinition) {
+        self.maybe_map(&f.cv);
+        if f.is_static {
+            self.write_str("static");
+            self.required_ws();
+        }
+        self.emit_property_key(&f.key);
+        if let Some(value) = &f.value {
+            self.pretty_ws();
+            self.write_str("=");
+            self.pretty_ws();
+            self.emit_expression_inner(value, PREC_ASSIGNMENT);
+        }
+        self.write_str(";");
     }
 
     /// Emit one [`MethodDefinition`]: `[static ][get|set ][*]key(params){body}`.
@@ -3693,6 +3728,73 @@ mod tests {
             body,
         });
         emit_default(program().with_body(vec![ProgramItem::Declaration(d)])).code
+    }
+
+    // ---- class fields (CLOC12.175 PR1) ----------------------
+    //
+    // A field prints `[static ]key[=value];` inside the class body — driven
+    // here through `emit_class_decl` so it exercises the shared `emit_class_tail`
+    // member loop. Contrast with a method: a field ENDS with `;` (a method's `}`
+    // is self-terminating), and it has no params/body.
+
+    /// Build a field member with an identifier key `name`, optional value, and
+    /// `static` flag.
+    fn field(name: &str, value: Option<Expression>, is_static: bool) -> ClassMember {
+        ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            value,
+            computed: false,
+            is_static,
+        })
+    }
+
+    #[test]
+    fn field_with_initializer() {
+        // `class C{x=1;}` — an instance field with an initializer, terminated `;`.
+        assert_eq!(emit_class_decl("C", None, vec![field("x", Some(num(1.0)), false)]), "class C{x=1;}");
+    }
+
+    #[test]
+    fn bare_field_has_no_value() {
+        // `class C{y;}` — a bare field: just the key and the terminator.
+        assert_eq!(emit_class_decl("C", None, vec![field("y", None, false)]), "class C{y;}");
+    }
+
+    #[test]
+    fn static_field() {
+        // `class C{static z=2;}` — the `static` prefix, then `key=value;`.
+        assert_eq!(
+            emit_class_decl("C", None, vec![field("z", Some(num(2.0)), true)]),
+            "class C{static z=2;}"
+        );
+    }
+
+    #[test]
+    fn computed_key_field() {
+        // `class C{[k]=v;}` — a computed key is bracketed, then `=value;`.
+        let f = ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::Expression(Box::new(ident("k"))),
+            value: Some(ident("v")),
+            computed: true,
+            is_static: false,
+        });
+        assert_eq!(emit_class_decl("C", None, vec![f]), "class C{[k]=v;}");
+    }
+
+    #[test]
+    fn field_and_method_interleaved() {
+        // `class C{x=1;m(){}}` — a field then a method: the field's `;` separates
+        // them, the method's `}` is self-terminating, no extra separators.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
+            ),
+            "class C{x=1;m(){}}"
+        );
     }
 
     #[test]

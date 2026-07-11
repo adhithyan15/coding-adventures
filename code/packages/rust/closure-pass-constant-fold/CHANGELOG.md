@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: fold class-field initializers
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added a `Field` arm to the
+class-body member map: a field's initializer (and computed key) is folded with
+`fold_expression`, mirroring how a method value is folded. Reachable once the
+CLOC12.175 PR2 bridge produces the node.
+
 ## [0.85.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` fold arm

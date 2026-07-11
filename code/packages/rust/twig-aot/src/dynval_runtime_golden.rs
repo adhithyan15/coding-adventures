@@ -1,7 +1,7 @@
 //! # Golden divergence guard for the native lisp runtime (LANG77).
 //!
 //! The AOT pipeline ships a C implementation of `lispy-runtime`'s value
-//! model (`runtime/lispy_runtime.c`) so that lisp-family programs compile to
+//! model (`runtime/dynval_runtime.c`) so that lisp-family programs compile to
 //! native executables.  That C runtime and the Rust `lispy-runtime` crate
 //! (used by the VM/JIT) are **two implementations of one documented ABI** —
 //! the 3-bit-tagged 64-bit `LispyValue`.  This test is what makes that split
@@ -30,7 +30,7 @@ use lispy_runtime::{
 
 // The C runtime's exported ABI.  These symbols live in the
 // `libtwig_aot_runtime` archive that `build.rs` compiles from
-// `runtime/lispy_runtime.c` and that cargo links into this test binary.
+// `runtime/dynval_runtime.c` and that cargo links into this test binary.
 //
 // SAFETY: each function is a pure value transform over `u64`s with the tag
 // discipline documented in LANG77; `car`/`cdr` are only ever called here on

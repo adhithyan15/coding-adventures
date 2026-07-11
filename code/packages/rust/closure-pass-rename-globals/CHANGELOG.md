@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.10.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` handling
+(collect + rename) that leaves the field key alone (a property name, not a
+variable) but collects and renames global identifiers referenced in the
+initializer and computed key. Reachable once the CLOC12.175 PR2 bridge produces
+the node.
+
 ## [0.10.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms

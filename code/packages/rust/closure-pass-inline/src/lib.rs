@@ -523,6 +523,12 @@ fn expr_node_count(expr: &Expression) -> usize {
                         ClassMember::Method(md) => {
                             md.value.params.len() + md.value.body.body.len()
                         }
+                        // A field weighs its initializer's node count (a bare
+                        // field `x;` weighs 0) — the same size heuristic applied
+                        // to any expression value.
+                        ClassMember::Field(fd) => {
+                            fd.value.as_ref().map_or(0, |v| expr_node_count(v))
+                        }
                     })
                     .sum::<usize>()
         }
@@ -675,7 +681,13 @@ fn count_decl_names_decl(
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
+                // A field declares no statement-scope name — its key is a
+                // property name, not a binding, and its initializer introduces
+                // no declarations. Only a method contributes params + locals.
+                let m = match member {
+                    ClassMember::Method(m) => m,
+                    ClassMember::Field(_) => continue,
+                };
                 for p in &m.value.params {
                     let FunctionParam::Identifier(id) = p;
                     *out.entry(id.name.clone()).or_insert(0) += 1;
@@ -948,6 +960,19 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             out.insert(id.name.clone());
                         }
                     }
+                    // A field's initializer is evaluated at construction; the
+                    // computed key is evaluated in the enclosing scope. Over-
+                    // collect any binding idents inside either so an inline
+                    // never captures or collides with them. The field KEY name
+                    // itself is a property name, not a binding.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_binding_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_binding_idents_expr(v, out);
+                        }
+                    }
                 }
             }
         }
@@ -1028,9 +1053,23 @@ fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
                 tally_expr(sup, cand, t);
             }
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &m.value.body.body {
-                    tally_stmt(s, cand, t);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            tally_stmt(s, cand, t);
+                        }
+                    }
+                    // SOUNDNESS: a candidate use inside a field initializer
+                    // (or a computed key) is a real use — miss it and the pass
+                    // would inline a callee still called at class construction.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            tally_expr(e, cand, t);
+                        }
+                        if let Some(v) = &f.value {
+                            tally_expr(v, cand, t);
+                        }
+                    }
                 }
             }
         }
@@ -1315,6 +1354,17 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
                             tally_stmt(s, cand, t);
                         }
                     }
+                    // SOUNDNESS: a candidate use inside a field initializer (or
+                    // a computed key) is a real use — count it, mirroring the
+                    // `ClassDeclaration` arm of `tally_decl`.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            tally_expr(e, cand, t);
+                        }
+                        if let Some(v) = &f.value {
+                            tally_expr(v, cand, t);
+                        }
+                    }
                 }
             }
         }
@@ -1406,9 +1456,23 @@ fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_expr(sup, cand);
             }
             for member in &mut cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &mut m.value.body.body {
-                    changed |= inline_in_stmt(s, cand);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            changed |= inline_in_stmt(s, cand);
+                        }
+                    }
+                    // Lockstep with `tally_decl`: substitute inside a field's
+                    // initializer and computed key, the same use positions that
+                    // arm counted.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            changed |= inline_in_expr(e, cand);
+                        }
+                        if let Some(v) = &mut f.value {
+                            changed |= inline_in_expr(v, cand);
+                        }
+                    }
                 }
             }
         }
@@ -1701,6 +1765,16 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                             changed |= inline_in_stmt(s, cand);
                         }
                     }
+                    // Lockstep with `tally_expr`: substitute inside a field's
+                    // initializer and computed key.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            changed |= inline_in_expr(e, cand);
+                        }
+                        if let Some(v) = &mut f.value {
+                            changed |= inline_in_expr(v, cand);
+                        }
+                    }
                 }
             }
         }
@@ -1922,6 +1996,18 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                         }
                         for s in &mut m.value.body.body {
                             substitute_in_stmt(s, &inner);
+                        }
+                    }
+                    // A field's initializer runs at construction with the
+                    // class's own name in scope (but no method params), so
+                    // substitute through it with `class_inner`. The computed
+                    // key is likewise an enclosing-scope sub-expression.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            substitute(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            substitute(v, &class_inner);
                         }
                     }
                 }
@@ -2369,6 +2455,17 @@ fn expr_collect_mutated_params(
                     ClassMember::Method(m) => {
                         for s in &m.value.body.body {
                             stmt_collect_mutated_params(s, params, out);
+                        }
+                    }
+                    // A field's initializer (or computed key) can mutate an
+                    // outer param — recurse. Over-detection only makes the pass
+                    // decline to inline, never wrong.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            expr_collect_mutated_params(e, params, out);
+                        }
+                        if let Some(v) = &f.value {
+                            expr_collect_mutated_params(v, params, out);
                         }
                     }
                 }
@@ -2879,7 +2976,13 @@ fn splice_void_in_decl(
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
-                let ClassMember::Method(m) = member;
+                // Only a method body is a `Vec<Statement>`. A field's
+                // initializer is an expression (a value position), so a void
+                // statement cannot be spliced there — declined by this slice.
+                let m = match member {
+                    ClassMember::Method(m) => m,
+                    ClassMember::Field(_) => continue,
+                };
                 changed |=
                     splice_void_in_stmt_vec(&mut m.value.body.body, cand, avoid, nodes_touched);
             }
@@ -3715,7 +3818,13 @@ fn splice_valued_in_decl(
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
-                let ClassMember::Method(m) = member;
+                // Only a method body is a `Vec<Statement>`. A field's
+                // initializer is a value position — a valued call cannot be
+                // spliced there.
+                let m = match member {
+                    ClassMember::Method(m) => m,
+                    ClassMember::Field(_) => continue,
+                };
                 changed |=
                     splice_valued_in_stmt_vec(&mut m.value.body.body, cand, avoid, nodes_touched);
             }
@@ -3943,6 +4052,18 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                             rename_in_stmt(s, &inner);
                         }
                     }
+                    // A field's initializer and computed key are renamed with
+                    // `class_inner` (the class's own name in scope, no method
+                    // params). The field KEY name is a property name, never a
+                    // renamed use.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rename_in_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rename_in_expr(v, &class_inner);
+                        }
+                    }
                 }
             }
         }
@@ -4056,9 +4177,23 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                 collect_binding_idents_expr(sup, out);
             }
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &m.value.body.body {
-                    collect_used_idents_stmt(s, out);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            collect_used_idents_stmt(s, out);
+                        }
+                    }
+                    // Over-collect identifiers referenced in a field's
+                    // initializer and computed key, so an inline never mints a
+                    // fresh name that collides with one used there.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_binding_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_binding_idents_expr(v, out);
+                        }
+                    }
                 }
             }
         }

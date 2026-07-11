@@ -1,5 +1,62 @@
 # Changelog
 
+## [0.6.0] - Unreleased
+
+### Added
+
+- **SQLite-style names for un-aliased aggregate output columns.** A bare
+  `SELECT COUNT(*)` now returns a column literally named `COUNT(*)` (and
+  `SUM(n)`, `MIN(n)`, `MAX(n)`, `AVG(n)`, `COUNT(DISTINCT x)`) instead of the
+  engine-internal `agg_0`/`agg_N`, matching what real SQLite reports. A new
+  `aggregate_column_name(&AggregateItem)` helper builds the call text from the
+  aggregate's function, argument (rendered via `render_expr_label`, `*` for
+  `COUNT(*)`, `DISTINCT`-prefixed when distinct), and honours an explicit `AS`
+  alias first. Applied at all three emit sites (plain aggregate, and both the
+  predicate-finalize and row-emit paths of `HAVING`); the now-redundant
+  `agg_aliases` bindings were removed. This retires the last five entries of the
+  mini-sqlite differential-conformance ledger (`count_star`, `sum_min_max`,
+  `avg`, `group_by`, `having`) — driving it to **zero**.
+
+## [0.5.0] - Unreleased
+
+### Added
+
+- **`FULL OUTER JOIN`** now executes correctly instead of degrading to a cross
+  product. A single nested loop can't tell whether a given right row matched
+  *any* left row (the inner side is re-scanned per outer row), so
+  `compile_join_projected` now emits **two passes** for `JoinKind::Full`: pass 1
+  is an ordinary LEFT JOIN (matched pairs + left-only rows), and pass 2 is a
+  RIGHT *anti*-join that evaluates `ON` but suppresses the matched-pair emit —
+  it emits only the right rows that matched no left row, NULL-padded on the
+  left. The union is a FULL JOIN with no duplicated matched pairs. Ordering
+  across the two passes is handled by the surrounding `ORDER BY` sort.
+- Refactored the join loop body out of `compile_join_projected` into a reusable
+  `emit_join_pass(outer, inner, condition, eval_condition, emit_matched,
+  emit_unmatched, columns)` helper. INNER/LEFT/RIGHT/CROSS are now single calls
+  with the appropriate flags; FULL is two calls. **No new VM instructions** —
+  both passes reuse the existing `ClearMatch`/`SetMatch`/`JumpIfMatched`
+  match-flag machinery.
+
+## [0.4.0] - Unreleased
+
+### Added
+
+- **SQLite-style column names for un-aliased function calls.** `output_column_name`
+  now labels an un-aliased function-call output column with the reconstructed
+  call text — `SELECT UPPER(name), LENGTH(name)` yields columns `UPPER(name)` and
+  `LENGTH(name)` instead of two `?`s, matching what real SQLite returns (an
+  un-aliased expression column is named after its source text). A new
+  `render_expr_label` helper best-effort-renders columns, simple literals, and
+  nested calls, returning `None` (→ `?`) for shapes it can't faithfully print, so
+  we never emit a misleading name. Aliases still win, and non-function complex
+  expressions keep the `?` default. Together with the sql-vm positional-projection
+  fix this retires the differential-oracle `string_functions` divergence.
+
+### Removed
+
+- Dropped the unused top-level `SortKey` import (it is re-imported inside the test
+  module where it is actually used), clearing a compiler warning.
+
 ## [0.3.0] - Unreleased
 
 ### Added

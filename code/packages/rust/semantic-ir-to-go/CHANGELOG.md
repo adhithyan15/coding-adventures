@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.27.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
+
+Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Go
+backend's emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`).
+Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as a sequence of
+`[key, value]` pairs: the block is yielded `(key, value)` (two arguments,
+matching `each`), and the "element" an aggregate returns is the two-element
+`[key, value]` Array (`&Seq{key, value}`).
+
+- `find`/`detect` — first `[k, v]` pair with a truthy block result; `nil` if none.
+- `any?`/`all?`/`none?` — booleans over `block(k, v)`.
+- `count { |k, v| … }` — number of pairs with a truthy block result.
+- `sort_by` — a NEW Array of `[k, v]` pairs sorted by the block key (stable on
+  ties, Schwartzian; the never-panic `_sir_value_lt` comparator).
+- `min_by`/`max_by` — the extremal `[k, v]` pair (first-on-tie; `nil` on empty).
+
+`_sir_hash_responds` now advertises all of the above.
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_enumerable_aggregates_compile_and_run`, running `sort_by`/`min_by`/
+`max_by` (by value), `find`/`count`/`any?`/`all?`/`none?` (even-value
+predicate) under real `go run`, diffed against the Python reference semantics.
+
 ## 0.26.0 — Hash transforming block methods: `transform_values` / `transform_keys`
 
 Mirrors the Python `sir-runtime-oop` v0.1.18 reference into the Go backend's

@@ -2482,6 +2482,89 @@ fn hash_catalog_methods() {
     }
 }
 
+// ── Ruby Hash transforming block methods: transform_values/transform_keys ──
+//
+// Both are non-mutating and yield exactly ONE block argument per entry:
+//   * `transform_values { |v| … }` → new hash, keys copied verbatim (unique ⇒
+//     no collision), values replaced by the block result.
+//   * `transform_keys { |k| … }` → new hash, values untouched, keys replaced by
+//     the block result; two source keys colliding onto one new key keep the
+//     LAST value at the FIRST-seen position (native `Map.set` semantics).
+// Results are read back via `to_a` (a Map has no faithful `format`, but
+// `to_a` yields observable `[key, value]` Arrays), mirroring the Python
+// reference (#7909).
+#[test]
+fn hash_transform_values_and_keys() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs
+            .into_iter()
+            .map(|(k, v)| MapEntry { key: str_(k), value: v })
+            .collect(),
+        span: sp(),
+    };
+    let ab = || mk(vec![("a", int(1)), ("b", int(2))]);
+    let block_fns = vec![
+        // transform_values { |v| 99 } — constant body ⇒ predictable values.
+        func("__ht_v99", vec![param("v")], vec![], int(99)),
+        // transform_keys { |k| k } — identity ⇒ faithful, non-colliding copy.
+        func("__ht_kid", vec![param("k")], vec![], param_ref("k")),
+        // transform_keys { |k| "z" } — constant key ⇒ every entry collides.
+        func("__ht_kz", vec![param("k")], vec![], str_("z")),
+    ];
+    let stmts = vec![
+        // {a:1,b:2}.transform_values { 99 }.to_a → [[a, 99], [b, 99]]  (keys kept)
+        print(method(
+            method(ab(), "transform_values", vec![method_closure("__ht_v99")]),
+            "to_a",
+            vec![],
+        )),
+        // {a:1,b:2}.transform_keys { |k| k }.to_a → [[a, 1], [b, 2]]  (values kept)
+        print(method(
+            method(ab(), "transform_keys", vec![method_closure("__ht_kid")]),
+            "to_a",
+            vec![],
+        )),
+        // {a:1,b:2}.transform_keys { "z" }.to_a → [[z, 2]]  (collision → last wins)
+        print(method(
+            method(ab(), "transform_keys", vec![method_closure("__ht_kz")]),
+            "to_a",
+            vec![],
+        )),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashtransform".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashtransform") {
+        assert_eq!(stdout, "[[a, 99], [b, 99]]\n[[a, 1], [b, 2]]\n[[z, 2]]");
+    }
+}
+
 // ── source-language display convention: Ruby booleans (SIR spec) ──
 //
 // A Ruby-sourced module renders booleans as `true`/`false`; every other

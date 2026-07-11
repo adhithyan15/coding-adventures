@@ -516,6 +516,35 @@ def test_hash_transform_values_and_keys() -> None:
     assert oop.call_method({"a": 1, "b": 2}, "transform_keys", Closure(lambda _k: "x")) == {"x": 2}
 
 
+def test_hash_enumerable_aggregates() -> None:
+    # Hash mixes in Enumerable: the block is yielded [key, value] and the
+    # "element" an aggregate returns is the two-element [key, value] pair.
+    h = {"a": 1, "b": 2, "c": 3}
+    # find/detect → first matching [k, v] pair (or nil).
+    assert oop.call_method(h, "find", Closure(lambda k, v: v > 1)) == ["b", 2]
+    assert oop.call_method(h, "detect", Closure(lambda k, v: v > 9)) is None
+    # any?/all?/none? over block([k, v]).
+    assert oop.call_method(h, "any?", Closure(lambda k, v: v == 2)) is True
+    assert oop.call_method(h, "all?", Closure(lambda k, v: v > 0)) is True
+    assert oop.call_method(h, "none?", Closure(lambda k, v: v > 9)) is True
+    # count { |k, v| pred } → number of truthy pairs.
+    assert oop.call_method(h, "count", Closure(lambda k, v: v % 2 == 1)) == 2
+    # sort_by → NEW array of [k, v] pairs ordered by the block key.
+    assert oop.call_method(h, "sort_by", Closure(lambda k, v: -v)) == [
+        ["c", 3],
+        ["b", 2],
+        ["a", 1],
+    ]
+    # min_by / max_by → the extremal [k, v] pair.
+    assert oop.call_method(h, "min_by", Closure(lambda k, v: v)) == ["a", 1]
+    assert oop.call_method(h, "max_by", Closure(lambda k, v: v)) == ["c", 3]
+    # min_by / max_by on an empty hash → nil.
+    assert oop.call_method({}, "min_by", Closure(lambda k, v: v)) is None
+    # respond_to? advertises the new aggregates.
+    assert oop.call_method(h, "respond_to?", "min_by") is True
+    assert oop.call_method(h, "respond_to?", "sort_by") is True
+
+
 def test_hash_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
     assert oop.call_method({"a": 1}, "respond_to?", "each") is True

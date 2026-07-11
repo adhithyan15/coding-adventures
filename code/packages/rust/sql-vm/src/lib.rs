@@ -962,21 +962,35 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     // ── Phase 4: materialize ──────────────────────────────────────────────────
     //
     // Each row in `output_rows` is a `Vec<(String, SqlValue)>` in emission
-    // order.  Project it onto `output_columns` to produce `Vec<SqlValue>`.
+    // order.  Strip the names and keep the values — the row is already POSITIONAL
+    // and parallel to `output_columns`, because both are produced by the same
+    // `EmitColumn` sequence (the codegen emits one `EmitColumn` per output column,
+    // in order; `output_columns` was locked from the first row's buffer; and any
+    // hidden sort-key columns are truncated off BOTH the rows and `output_columns`
+    // together in Phase 3).  So position `i` of every row is column `i`.
+    //
+    // We deliberately do NOT rebuild a `name → value` map here.  Two output
+    // columns can legitimately share a name — e.g. `SELECT UPPER(x), LENGTH(x)`
+    // yields two columns both defaulting to the name `?`, and `SELECT id, id`
+    // yields two `id` columns.  Collapsing `(name, value)` pairs into a `HashMap`
+    // would drop all but the last value for each repeated name, so both `UPPER(x)`
+    // and `LENGTH(x)` would come back as `LENGTH(x)`'s value.  Positional
+    // projection is both correct and cheaper.
+    let ncols = output_columns.len();
     let rows: Vec<Vec<SqlValue>> = output_rows
         .into_iter()
         .map(|row| {
-            if output_columns.is_empty() {
-                // No named columns (e.g. SELECT without EmitColumn) — return raw values.
-                row.into_iter().map(|(_, v)| v).collect()
-            } else {
-                // Build a name→value map and project onto the locked column order.
-                let map: HashMap<String, SqlValue> = row.into_iter().collect();
-                output_columns
-                    .iter()
-                    .map(|col| map.get(col).cloned().unwrap_or(SqlValue::Null))
-                    .collect()
+            let mut vals: Vec<SqlValue> = row.into_iter().map(|(_, v)| v).collect();
+            // When column names were locked (the normal SELECT path), keep exactly
+            // one value per column so `columns.len() == row.len()`.  `is_empty()`
+            // means no `EmitColumn` ran (raw-value path) — return the values as-is.
+            if ncols != 0 {
+                vals.truncate(ncols);
+                while vals.len() < ncols {
+                    vals.push(SqlValue::Null);
+                }
             }
+            vals
         })
         .collect();
 
@@ -1208,6 +1222,104 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             let factor = 10_f64.powi(digits);
             let rounded = (x * factor).round() / factor;
             Ok(SqlValue::Float(rounded))
+        }
+
+        "IFNULL" => {
+            // IFNULL(a, b): the two-argument COALESCE — `a` unless it is NULL,
+            // in which case `b`.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("IFNULL expects 2 args, got {}", args.len())));
+            }
+            let mut it = args.into_iter();
+            let a = it.next().unwrap();
+            let b = it.next().unwrap();
+            Ok(if matches!(a, SqlValue::Null) { b } else { a })
+        }
+
+        "NULLIF" => {
+            // NULLIF(a, b): NULL when the two arguments are equal, else `a`.
+            // Equivalent to `CASE WHEN a = b THEN NULL ELSE a END`, so a NULL
+            // first argument still yields NULL.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("NULLIF expects 2 args, got {}", args.len())));
+            }
+            if sql_eq(&args[0], &args[1]) {
+                Ok(SqlValue::Null)
+            } else {
+                Ok(args.into_iter().next().unwrap())
+            }
+        }
+
+        "TYPEOF" => {
+            // TYPEOF(x): SQLite's storage-class name for the value.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("TYPEOF expects 1 arg, got {}", args.len())));
+            }
+            let t = match &args[0] {
+                SqlValue::Null => "null",
+                // SQLite has no boolean storage class — booleans are integers.
+                SqlValue::Bool(_) | SqlValue::Int(_) => "integer",
+                SqlValue::Float(_) => "real",
+                SqlValue::Text(_) => "text",
+                SqlValue::Blob(_) => "blob",
+            };
+            Ok(SqlValue::Text(t.to_string()))
+        }
+
+        "INSTR" => {
+            // INSTR(haystack, needle): 1-based character index of the first
+            // occurrence of `needle` in `haystack`, 0 if absent, NULL if either
+            // argument is NULL. `instr(x, '')` is 1, matching SQLite. (SQLite
+            // also accepts blobs; text covers every current caller, and the
+            // engine's other string builtins are likewise text-only.)
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("INSTR expects 2 args, got {}", args.len())));
+            }
+            if matches!(args[0], SqlValue::Null) || matches!(args[1], SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
+            let hay = match &args[0] {
+                SqlValue::Text(s) => s,
+                other => return Err(VmError::TypeMismatch(format!("INSTR arg1 expects TEXT, got {:?}", other))),
+            };
+            let needle = match &args[1] {
+                SqlValue::Text(s) => s,
+                other => return Err(VmError::TypeMismatch(format!("INSTR arg2 expects TEXT, got {:?}", other))),
+            };
+            let pos = if needle.is_empty() {
+                1
+            } else {
+                match hay.find(needle.as_str()) {
+                    // Byte offset → 1-based character offset.
+                    Some(byte_idx) => hay[..byte_idx].chars().count() as i64 + 1,
+                    None => 0,
+                }
+            };
+            Ok(SqlValue::Int(pos))
+        }
+
+        "HEX" => {
+            // HEX(x): uppercase hexadecimal of the argument's bytes. SQLite reads
+            // the argument as a blob — text uses its UTF-8 bytes, a blob its raw
+            // bytes, and an integer its decimal-text bytes (`hex(255)` → "323535").
+            // NULL maps to NULL. Floats are declined: their SQLite text form
+            // (`2.0`, not Rust's `2`) is subtle enough that we don't guess here.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("HEX expects 1 arg, got {}", args.len())));
+            }
+            let bytes: Vec<u8> = match &args[0] {
+                SqlValue::Null => return Ok(SqlValue::Null),
+                SqlValue::Text(s) => s.as_bytes().to_vec(),
+                SqlValue::Blob(b) => b.clone(),
+                SqlValue::Int(i) => i.to_string().into_bytes(),
+                SqlValue::Bool(b) => (*b as i64).to_string().into_bytes(),
+                other => return Err(VmError::TypeMismatch(format!("HEX expects TEXT/BLOB/INTEGER, got {:?}", other))),
+            };
+            let mut out = String::with_capacity(bytes.len() * 2);
+            for byte in bytes {
+                out.push_str(&format!("{byte:02X}"));
+            }
+            Ok(SqlValue::Text(out))
         }
 
         other => {
@@ -3319,5 +3431,69 @@ mod tests {
             Instruction::DistinctResult,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
+    }
+
+    #[test]
+    fn builtin_ifnull_and_nullif() {
+        // IFNULL passes through a non-NULL, substitutes on NULL.
+        assert_eq!(
+            call_builtin("IFNULL", vec![SqlValue::Int(5), SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Int(5)
+        );
+        assert_eq!(
+            call_builtin("IFNULL", vec![SqlValue::Null, SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Int(-1)
+        );
+        // NULLIF collapses equal args to NULL, else returns the first.
+        assert_eq!(
+            call_builtin("NULLIF", vec![SqlValue::Int(2), SqlValue::Int(2)]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("NULLIF", vec![SqlValue::Int(1), SqlValue::Int(2)]).unwrap(),
+            SqlValue::Int(1)
+        );
+    }
+
+    #[test]
+    fn builtin_typeof_names_each_storage_class() {
+        let t = |v: SqlValue| match call_builtin("TYPEOF", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(t(SqlValue::Null), "null");
+        assert_eq!(t(SqlValue::Int(3)), "integer");
+        assert_eq!(t(SqlValue::Float(1.5)), "real");
+        assert_eq!(t(SqlValue::Text("x".into())), "text");
+        assert_eq!(t(SqlValue::Blob(vec![1])), "blob");
+    }
+
+    #[test]
+    fn builtin_instr_char_positions_and_nulls() {
+        let i = |h: &str, n: &str| {
+            call_builtin("INSTR", vec![SqlValue::Text(h.into()), SqlValue::Text(n.into())]).unwrap()
+        };
+        assert_eq!(i("abc", "b"), SqlValue::Int(2));
+        assert_eq!(i("abc", "x"), SqlValue::Int(0));
+        assert_eq!(i("abc", ""), SqlValue::Int(1)); // instr(x, '') == 1
+        // Multi-byte prefix: 'é' is one character, so the match is at char 2.
+        assert_eq!(i("éb", "b"), SqlValue::Int(2));
+        // NULL in either argument propagates.
+        assert_eq!(
+            call_builtin("INSTR", vec![SqlValue::Null, SqlValue::Text("b".into())]).unwrap(),
+            SqlValue::Null
+        );
+    }
+
+    #[test]
+    fn builtin_hex_encodes_bytes_uppercase() {
+        let h = |v: SqlValue| match call_builtin("HEX", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(h(SqlValue::Text("abc".into())), "616263");
+        assert_eq!(h(SqlValue::Blob(vec![0xde, 0xad, 0xbe, 0xef])), "DEADBEEF");
+        assert_eq!(h(SqlValue::Int(255)), "323535"); // hex of the text "255"
+        assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
     }
 }

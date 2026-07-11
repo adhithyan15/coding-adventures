@@ -804,19 +804,35 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                 collect_all_idents_expr(sup, out);
             }
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                if let PropertyKey::Identifier(id) = &m.key {
-                    out.insert(id.name.clone());
-                }
-                if let Some(id) = &m.value.id {
-                    out.insert(id.name.clone());
-                }
-                for p in &m.value.params {
-                    let FunctionParam::Identifier(id) = p;
-                    out.insert(id.name.clone());
-                }
-                for s in &m.value.body.body {
-                    collect_all_idents_stmt(s, out);
+                match member {
+                    ClassMember::Method(m) => {
+                        if let PropertyKey::Identifier(id) = &m.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let Some(id) = &m.value.id {
+                            out.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            out.insert(id.name.clone());
+                        }
+                        for s in &m.value.body.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                    // A field's key ident + computed-key / initializer idents,
+                    // over-collected so a fresh short name never collides.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Identifier(id) = &f.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_all_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_all_idents_expr(v, out);
+                        }
+                    }
                 }
             }
         }
@@ -1097,6 +1113,18 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             collect_all_idents_stmt(s, out);
                         }
                     }
+                    // A field's key ident + computed-key / initializer idents.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Identifier(id) = &f.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_all_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_all_idents_expr(v, out);
+                        }
+                    }
                 }
             }
         }
@@ -1199,17 +1227,32 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
             let mut class_inner = map.clone();
             class_inner.remove(&cd.id.name);
             for member in &mut cd.body {
-                let ClassMember::Method(m) = member;
-                let mut inner = class_inner.clone();
-                if let Some(id) = &m.value.id {
-                    inner.remove(&id.name);
-                }
-                for p in &m.value.params {
-                    let FunctionParam::Identifier(id) = p;
-                    inner.remove(&id.name);
-                }
-                for s in &mut m.value.body.body {
-                    rewrite_uses_stmt(s, &inner);
+                match member {
+                    ClassMember::Method(m) => {
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            inner.remove(&id.name);
+                        }
+                        for s in &mut m.value.body.body {
+                            rewrite_uses_stmt(s, &inner);
+                        }
+                    }
+                    // A field's computed key + initializer are value positions
+                    // in the class body — rewrite renamed outer locals in them
+                    // with `class_inner`. The field key is a property name, not
+                    // a local, so it is left untouched.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rewrite_uses_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rewrite_uses_expr(v, &class_inner);
+                        }
+                    }
                 }
             }
         }
@@ -1502,6 +1545,18 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         }
                         for s in &mut m.value.body.body {
                             rewrite_uses_stmt(s, &inner);
+                        }
+                    }
+                    // A field's computed key + initializer are value positions;
+                    // rewrite renamed outer locals in them with `class_inner`
+                    // (the class-expression's own name removed). The field key
+                    // is a property name, left untouched.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rewrite_uses_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rewrite_uses_expr(v, &class_inner);
                         }
                     }
                 }

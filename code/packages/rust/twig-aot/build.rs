@@ -56,7 +56,7 @@ const HOST_KEYS: &[&str] = &[
 fn main() {
     // Re-run this build script if any C runtime source changes.
     println!("cargo:rerun-if-changed=runtime/twig_runtime.c");
-    println!("cargo:rerun-if-changed=runtime/lispy_runtime.c");
+    println!("cargo:rerun-if-changed=runtime/dynval_runtime.c");
     println!("cargo:rerun-if-changed=runtime/twig_gc.c");
 
     let out_dir: PathBuf = std::env::var("OUT_DIR")
@@ -86,16 +86,16 @@ fn main() {
     // `twig_aot_runtime.lib`.
     //
     // Both translation units go into the *same* archive: `twig_runtime.c`
-    // (LANG41/75/76 I/O + alloc helpers) and `lispy_runtime.c` (LANG77 the
+    // (LANG41/75/76 I/O + alloc helpers) and `dynval_runtime.c` (LANG77 the
     // shared lisp value model — cons/symbols/pair?/equal?).  Because
     // `cc::Build::compile` emits `cargo:rustc-link-lib=static=...`, the
     // archive is also linked into `twig-aot`'s own test binary, so the
-    // golden test in `src/lispy_runtime_golden.rs` can call the
+    // golden test in `src/dynval_runtime_golden.rs` can call the
     // `__dyn_*` functions directly on the host.
     if host_key.is_some() {
         cc::Build::new()
             .file("runtime/twig_runtime.c")
-            .file("runtime/lispy_runtime.c")
+            .file("runtime/dynval_runtime.c")
             // TWIG-GC (native-aot-substrate PR-1): conservative mark-and-sweep
             // collector that manages cons cells, alloc objects, and any other
             // heap value emitted by IIR `alloc` ops.

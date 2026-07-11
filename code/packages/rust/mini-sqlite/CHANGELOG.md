@@ -1,5 +1,83 @@
 # Changelog
 
+## 0.5.1 — Scalar functions: IFNULL / NULLIF / TYPEOF / INSTR / HEX
+
+Stream A, corpus-growth phase (the differential ledger is at zero, so the
+metric is now the *size* of the seed corpus that matches real SQLite). Five
+common scalar functions used by real-world queries now work: `IFNULL`,
+`NULLIF`, `TYPEOF`, `INSTR`, `HEX`. They already parsed as function calls but
+hit the engine's `unknown built-in function` fallthrough; implemented in
+`sql-vm` (0.3.0). Five new differential-oracle cases (`ifnull`, `nullif`,
+`typeof`, `instr`, `hex`) diff mini-sqlite's results against real bundled
+SQLite. No mini-sqlite `src/` change.
+
+## 0.5.0 — Differential conformance ledger driven to ZERO
+
+Stream B / L3: aggregate output columns are now named the SQLite way —
+`SELECT COUNT(*)` returns a column named `COUNT(*)` (likewise `SUM(n)`,
+`MIN(n)`, `MAX(n)`, `AVG(n)`), not the engine-internal `agg_N`. The fix is in
+`sql-codegen` (0.6.0); no mini-sqlite `src/` change.
+
+This retires the **last five** entries of the differential-conformance
+`LEDGER` in `tests/differential_oracle.rs` (`count_star`, `sum_min_max`, `avg`,
+`group_by`, `having`) — **the ledger is now empty**. Every one of the harness's
+seed cases now matches real bundled SQLite exactly: `INNER`/`LEFT`/`RIGHT`/`FULL`
+joins, scalar functions and their result columns, and aggregate naming. The
+oracle opened at ten reproduced gaps and has been closed out one PR at a time;
+it now enforces full agreement on the seed corpus and stands ready to catch the
+next divergence a new case surfaces.
+
+## 0.4.3 — Query `sqlite_master` over a real file
+
+Stream C / L4: the schema catalog `sqlite_master` (and its alias `sqlite_schema`)
+is now queryable over a real `.sqlite` file — `SELECT name FROM sqlite_master
+WHERE type = 'table'`, `SELECT COUNT(*) FROM sqlite_master`, the full
+five-column shape, and so on. Applications (Anki included) introspect the
+database this way. The `storage-sqlite` backend (0.2.0) exposes the catalog it
+already parses; no mini-sqlite `src/` change. New differential test
+`tests/file_backed.rs::sqlite_master_is_queryable_and_matches_real_sqlite` diffs
+the results against real bundled SQLite over the same file.
+
+## 0.4.2 — FULL OUTER JOIN matches SQLite (ledger 6 → 5)
+
+Stream A / L2 of the full-SQLite-replacement roadmap: retire the differential
+oracle's `full_join` divergence — the last *wrong-result* entry in the ledger.
+
+- `SELECT ... FROM a FULL JOIN b ON ...` previously degraded to a cross product
+  (a single forward pass can't emit the right rows that matched no left row).
+  `sql-codegen` (0.5.0) now compiles FULL JOIN as **two passes**: a LEFT JOIN
+  (matched pairs + left-only rows) unioned with a RIGHT anti-join (right rows
+  that matched no left row, NULL-padded on the left). No new VM instructions —
+  it reuses the outer-join match flag. See that crate's changelog.
+- `tests/differential_oracle.rs`: removed `full_join` from the `LEDGER` (now
+  **5** entries, all aggregate computed-column *naming* divergences whose rows
+  already match). Added a second FULL JOIN case, `full_join_multi`, with
+  duplicate join keys on both sides (many-to-many) plus rows unmatched on each
+  side — asserted against real SQLite to guard the two-pass implementation
+  against double-emitting matched pairs or dropping an anti-join row.
+- No mini-sqlite `src/` changes — the fix lands in the shared pipeline; this
+  crate's bump documents the conformance gain the oracle now enforces.
+
+## 0.4.1 — Scalar functions match SQLite (ledger 7 → 6)
+
+Stream B / L3 of the full-SQLite-replacement roadmap: retire the differential
+oracle's `string_functions` divergence, the last *wrong-value* entry in the
+ledger.
+
+- `SELECT UPPER(name), LENGTH(name)` previously came back as `LENGTH(name),
+  LENGTH(name)` with both columns named `?`. Two independent bugs, one symptom:
+  - **sql-vm** (0.2.1): Phase-4 materialization collapsed each row's positional
+    `(name, value)` pairs through a `HashMap` keyed by column name, so two
+    same-named output columns kept only the *last* value. Now projects by
+    position (the row buffer is already parallel to the locked column list).
+  - **sql-codegen** (0.4.0): un-aliased function columns were labelled `?`. Now
+    labelled with the reconstructed call text (`UPPER(name)`), matching SQLite.
+- `tests/differential_oracle.rs`: removed `string_functions` from the `LEDGER`
+  (now **6** entries — `full_join` plus five aggregate computed-column *naming*
+  divergences); the case is now asserted to match real SQLite exactly.
+- No mini-sqlite `src/` changes — the fixes land in the shared pipeline crates;
+  this crate's bump documents the conformance gain the oracle now enforces.
+
 ## 0.4.0 — Open a real `.sqlite` file
 
 Stream C / L4 of the full-SQLite-replacement roadmap: `connect()` can now open a

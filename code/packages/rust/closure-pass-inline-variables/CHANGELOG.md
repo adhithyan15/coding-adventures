@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.11.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` handling at
+every class member site: count/collect skip the field key (no statement-scope
+binding) but recurse the initializer and computed key, and propagate substitutes
+into the initializer in lockstep — so a candidate use inside a field initializer
+is counted before it can be propagated. Reachable once the CLOC12.175 PR2 bridge
+produces the node.
+
 ## [0.11.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms

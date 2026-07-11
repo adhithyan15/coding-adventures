@@ -531,6 +531,13 @@ fn walk_class_declaration(
     for member in &cd.body {
         match member {
             ClassMember::Method(m) => walk_function_expression(&m.value, ctx, analysis, pending),
+            // A field initializer runs at construction in the class scope —
+            // resolve references in it. The field *key* introduces no binding.
+            ClassMember::Field(f) => {
+                if let Some(v) = &f.value {
+                    walk_expression(v, ctx, analysis, pending);
+                }
+            }
         }
     }
 }
@@ -1006,6 +1013,13 @@ fn walk_expression(
                 match member {
                     ClassMember::Method(m) => {
                         walk_function_expression(&m.value, ctx, analysis, pending)
+                    }
+                    // A field initializer runs at construction in the class
+                    // scope — resolve references in it; the key binds nothing.
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &f.value {
+                            walk_expression(v, ctx, analysis, pending);
+                        }
                     }
                 }
             }

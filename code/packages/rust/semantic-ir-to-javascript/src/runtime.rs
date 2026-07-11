@@ -924,7 +924,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "keys", "values", "size", "length", "empty?", "has_key?", "key?",
     "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
     "invert", "delete", "store", "[]=", "fetch", "clear", "each", "each_pair",
-    "map", "select", "filter", "reject",
+    "map", "select", "filter", "reject", "transform_values", "transform_keys",
   ]);
   function hashMethod(recv, name, args) {
     switch (name) {
@@ -1017,6 +1017,29 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           const t = truthy(blk(k, v));
           if (keepWhenTruthy ? t : !t) { out.set(k, v); }
         }
+        return out;
+      }
+      case "transform_values": {
+        // Ruby `Hash#transform_values { |v| … }`: a NEW hash whose keys are
+        // copied verbatim and whose values are the block results.  The block
+        // yields ONE argument (the value); keys stay untouched (and unique, so
+        // no collision) and insertion order is preserved.  Non-mutating.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const out = new Map();
+        for (const [k, v] of recv) { out.set(k, blk(v)); }
+        return out;
+      }
+      case "transform_keys": {
+        // Ruby `Hash#transform_keys { |k| … }`: a NEW hash whose values are
+        // untouched and whose keys are the block results (yields ONE argument,
+        // the key).  Two source keys can map to the SAME new key; Ruby keeps the
+        // LAST such entry's value at the FIRST-seen position — which is exactly
+        // how `Map.set` behaves on an existing key (updates value, keeps slot).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const out = new Map();
+        for (const [k, v] of recv) { out.set(blk(k), v); }
         return out;
       }
     }
