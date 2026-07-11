@@ -228,6 +228,7 @@ members = [
     "cobol-parser",
     "matlab-runtime",
     "matlab-repl",
+    "matlab-to-semantic-ir",
     "octave-runtime",
     "octave-repl",
     "maxima-runtime",
