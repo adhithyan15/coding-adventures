@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.1 — Scalar functions match SQLite (ledger 7 → 6)
+
+Stream B / L3 of the full-SQLite-replacement roadmap: retire the differential
+oracle's `string_functions` divergence, the last *wrong-value* entry in the
+ledger.
+
+- `SELECT UPPER(name), LENGTH(name)` previously came back as `LENGTH(name),
+  LENGTH(name)` with both columns named `?`. Two independent bugs, one symptom:
+  - **sql-vm** (0.2.1): Phase-4 materialization collapsed each row's positional
+    `(name, value)` pairs through a `HashMap` keyed by column name, so two
+    same-named output columns kept only the *last* value. Now projects by
+    position (the row buffer is already parallel to the locked column list).
+  - **sql-codegen** (0.4.0): un-aliased function columns were labelled `?`. Now
+    labelled with the reconstructed call text (`UPPER(name)`), matching SQLite.
+- `tests/differential_oracle.rs`: removed `string_functions` from the `LEDGER`
+  (now **6** entries — `full_join` plus five aggregate computed-column *naming*
+  divergences); the case is now asserted to match real SQLite exactly.
+- No mini-sqlite `src/` changes — the fixes land in the shared pipeline crates;
+  this crate's bump documents the conformance gain the oracle now enforces.
+
 ## 0.4.0 — Open a real `.sqlite` file
 
 Stream C / L4 of the full-SQLite-replacement roadmap: `connect()` can now open a

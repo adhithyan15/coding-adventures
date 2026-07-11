@@ -962,21 +962,35 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     // ── Phase 4: materialize ──────────────────────────────────────────────────
     //
     // Each row in `output_rows` is a `Vec<(String, SqlValue)>` in emission
-    // order.  Project it onto `output_columns` to produce `Vec<SqlValue>`.
+    // order.  Strip the names and keep the values — the row is already POSITIONAL
+    // and parallel to `output_columns`, because both are produced by the same
+    // `EmitColumn` sequence (the codegen emits one `EmitColumn` per output column,
+    // in order; `output_columns` was locked from the first row's buffer; and any
+    // hidden sort-key columns are truncated off BOTH the rows and `output_columns`
+    // together in Phase 3).  So position `i` of every row is column `i`.
+    //
+    // We deliberately do NOT rebuild a `name → value` map here.  Two output
+    // columns can legitimately share a name — e.g. `SELECT UPPER(x), LENGTH(x)`
+    // yields two columns both defaulting to the name `?`, and `SELECT id, id`
+    // yields two `id` columns.  Collapsing `(name, value)` pairs into a `HashMap`
+    // would drop all but the last value for each repeated name, so both `UPPER(x)`
+    // and `LENGTH(x)` would come back as `LENGTH(x)`'s value.  Positional
+    // projection is both correct and cheaper.
+    let ncols = output_columns.len();
     let rows: Vec<Vec<SqlValue>> = output_rows
         .into_iter()
         .map(|row| {
-            if output_columns.is_empty() {
-                // No named columns (e.g. SELECT without EmitColumn) — return raw values.
-                row.into_iter().map(|(_, v)| v).collect()
-            } else {
-                // Build a name→value map and project onto the locked column order.
-                let map: HashMap<String, SqlValue> = row.into_iter().collect();
-                output_columns
-                    .iter()
-                    .map(|col| map.get(col).cloned().unwrap_or(SqlValue::Null))
-                    .collect()
+            let mut vals: Vec<SqlValue> = row.into_iter().map(|(_, v)| v).collect();
+            // When column names were locked (the normal SELECT path), keep exactly
+            // one value per column so `columns.len() == row.len()`.  `is_empty()`
+            // means no `EmitColumn` ran (raw-value path) — return the values as-is.
+            if ncols != 0 {
+                vals.truncate(ncols);
+                while vals.len() < ncols {
+                    vals.push(SqlValue::Null);
+                }
             }
+            vals
         })
         .collect();
 

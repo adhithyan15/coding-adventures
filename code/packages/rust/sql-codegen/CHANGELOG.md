@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0] - Unreleased
+
+### Added
+
+- **SQLite-style column names for un-aliased function calls.** `output_column_name`
+  now labels an un-aliased function-call output column with the reconstructed
+  call text — `SELECT UPPER(name), LENGTH(name)` yields columns `UPPER(name)` and
+  `LENGTH(name)` instead of two `?`s, matching what real SQLite returns (an
+  un-aliased expression column is named after its source text). A new
+  `render_expr_label` helper best-effort-renders columns, simple literals, and
+  nested calls, returning `None` (→ `?`) for shapes it can't faithfully print, so
+  we never emit a misleading name. Aliases still win, and non-function complex
+  expressions keep the `?` default. Together with the sql-vm positional-projection
+  fix this retires the differential-oracle `string_functions` divergence.
+
+### Removed
+
+- Dropped the unused top-level `SortKey` import (it is re-imported inside the test
+  module where it is actually used), clearing a compiler warning.
+
 ## [0.3.0] - Unreleased
 
 ### Added
