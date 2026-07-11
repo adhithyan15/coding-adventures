@@ -2,6 +2,33 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.20] - 2026-07-11
+
+### Added
+
+- **`Hash` Enumerable breadth** (`hashBlockMethod` + `HASH_BLOCK_METHODS`):
+  `group_by`, `partition`, `flat_map`/`collect_concat`, `reduce`/`inject`, `sum`
+  — the FINAL backend of this cross-backend batch (Python reference #7978, then
+  Go #7983 / Rust #7989 / JS #7993). Ruby's `Hash` mixes in `Enumerable`, so
+  these iterate the hash as `[key, value]` pairs and yield the two-arg
+  `(key, value)` **except** `reduce`/`inject`, which follow Ruby's memo
+  convention and yield `(memo, [k, v])` — the pair as ONE argument.
+  - `group_by { |k, v| key }` → a Hash (`Map`) of block key → Array of the
+    `[k, v]` pairs that produced it, in first-seen key order.
+  - `partition { |k, v| pred }` → `[[matching pairs], [rest pairs]]`.
+  - `flat_map`/`collect_concat { |k, v| … }` → map then concatenate one level.
+  - `reduce`/`inject` → memo fold; explicit seed or first pair; empty seedless
+    → `nil`.
+  - `sum(init = 0) { |k, v| … }` → numeric fold seeded at `0` (or the seed arg).
+
+### Changed
+
+- **`hashBlockMethod` signature** now takes `(recv, name, args, block)` (was
+  `(recv, name, block)`), and the dispatch call site passes the positional args
+  before the block — so `reduce`/`sum` can read a seed argument. Mirrors the
+  same change the Python reference made in #7978. `arrayBlockMethod` already had
+  this shape.
+
 ## [0.1.19] - 2026-07-11
 
 ### Added
