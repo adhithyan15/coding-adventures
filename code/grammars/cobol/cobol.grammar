@@ -104,7 +104,7 @@ paragraph = NAME DOT { sentence } ;
 sentence  = statement { statement } DOT ;
 
 statement = move_stmt | display_stmt | accept_stmt
-          | add_stmt | subtract_stmt | multiply_stmt | divide_stmt
+          | add_stmt | subtract_stmt | multiply_stmt | divide_stmt | compute_stmt
           | perform_stmt | goto_stmt | if_stmt | stop_stmt ;
 
 move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
@@ -114,6 +114,34 @@ add_stmt      = "ADD" operand { operand } "TO" NAME [ "GIVING" NAME ] ;
 subtract_stmt = "SUBTRACT" operand { operand } "FROM" NAME [ "GIVING" NAME ] ;
 multiply_stmt = "MULTIPLY" operand "BY" operand [ "GIVING" NAME ] ;
 divide_stmt   = "DIVIDE" operand "INTO" operand [ "GIVING" NAME ] ;
+
+# COMPUTE evaluates a full arithmetic EXPRESSION and MOVEs the result into the
+# receiver — the one COBOL verb that takes operator symbols instead of
+# prepositions.  `ROUNDED` rounds instead of truncating; `ON SIZE ERROR`
+# supplies statements to run when the result overflows the receiver.  Both are
+# recognised here; their runtime semantics are a later PR.
+compute_stmt = "COMPUTE" NAME [ "ROUNDED" ] EQ arith_expr [ size_error ] ;
+size_error   = "ON" "SIZE" "ERROR" { statement } ;
+
+# Arithmetic expressions, layered so the grammar itself encodes COBOL's operator
+# precedence (a PEG has no left recursion, so each level is `head { op tail }`,
+# left-to-right).  Lowest precedence first:
+#   arith_expr    +  -            additive        (loosest binding)
+#   arith_term    *  /            multiplicative
+#   arith_factor  **              exponentiation
+#   arith_unary   leading + / -   unary sign      (binds tighter than **, so
+#                                                  `-2 ** 2` is `(-2) ** 2`, the
+#                                                  COBOL reading)
+#   arith_primary NUMBER | NAME | ( expr )        (tightest; parentheses recurse)
+# Exponentiation is right-associative in COBOL; the flat `{ POW arith_unary }`
+# repetition keeps every operand as a sibling, leaving the fold direction to the
+# evaluator.  Parenthesised sub-expressions recurse through `arith_primary`, so
+# deep nesting is bounded by the parser's recursion-depth cap (see cobol-parser).
+arith_expr    = arith_term   { ( PLUS | MINUS ) arith_term } ;
+arith_term    = arith_factor { ( STAR | SLASH ) arith_factor } ;
+arith_factor  = arith_unary  { POW arith_unary } ;
+arith_unary   = [ PLUS | MINUS ] arith_primary ;
+arith_primary = NUMBER | NAME | LPAREN arith_expr RPAREN ;
 perform_stmt  = "PERFORM" NAME [ "THROUGH" NAME | "THRU" NAME ]
                         [ operand "TIMES" ] ;
 goto_stmt     = "GO" [ "TO" ] NAME ;

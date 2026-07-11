@@ -93,6 +93,27 @@ DOT    = "."
 LPAREN = "("
 RPAREN = ")"
 
+# Arithmetic operators, used by COMPUTE expressions (`COMPUTE X = A + B * C`).
+# Ordering note: `**` (exponentiation) is listed before `*` so maximal-munch
+# prefers the two-character operator — `A ** B` is a power, not two multiplies.
+# COBOL requires spaces around binary operators, which is what keeps these
+# unambiguous against their look-alikes:
+#   * `-` vs a negative NUMBER: `-3` (no space) is the literal −3 because NUMBER
+#     is defined first and matches the longer run; `- 3` (space) fails NUMBER at
+#     the bare `-` and lexes as MINUS then NUMBER 3.
+#   * `-` vs a hyphenated NAME: `A-B` (no spaces) is one data name (the NAME
+#     pattern swallows the hyphen); subtraction must be written `A - B`.
+#   * `*` as the column-7 comment indicator never reaches us — the
+#     `strip_cobol_columns` hook removed it before tokenizing.
+# `=` is the COMPUTE assignment operator (COBOL's relational "equals" is the
+# word EQUAL, handled in the grammar, so `=` is unambiguous here).
+POW   = "**"
+PLUS  = "+"
+MINUS = "-"
+STAR  = "*"
+SLASH = "/"
+EQ    = "="
+
 # ============================================================
 # SECTION 3: The `picture` group (context-sensitive)
 # ============================================================
@@ -184,6 +205,9 @@ keywords:
   BY
   INTO
   GIVING
+  ROUNDED
+  SIZE
+  ERROR
   IS
   ARE
   OF

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.0 — COMPUTE and arithmetic expressions
+
+- `compute_stmt = "COMPUTE" NAME [ "ROUNDED" ] EQ arith_expr [ size_error ]` —
+  the first COBOL verb that takes operator symbols instead of prepositions.
+- **Precedence-layered arithmetic expressions.** A PEG cannot left-recurse, so
+  COBOL's operator precedence is encoded as a rule cascade, loosest binding
+  first: `arith_expr` (`+ -`) → `arith_term` (`* /`) → `arith_factor` (`**`) →
+  `arith_unary` (leading `+`/`-`, binding tighter than `**` so `-2 ** 2` reads
+  as `(-2) ** 2`) → `arith_primary` (`NUMBER | NAME | ( arith_expr )`).
+  Parenthesised sub-expressions recurse through `arith_primary`; deep nesting is
+  bounded by the recursion-depth cap added in 0.1.1.
+- `size_error = "ON" "SIZE" "ERROR" { statement }` recognises the overflow
+  handler (its runtime semantics are a later PR). Exponentiation's
+  right-associativity is likewise left to the evaluator — the grammar keeps
+  operands as flat siblings.
+- Tests: operator-precedence nesting, parentheses regrouping, `ROUNDED` +
+  `ON SIZE ERROR`, and spaced binary minus vs. negative literal.
+
 ## 0.1.1 — depth-cap hardening
 
 - **Security (DoS):** opt into the shared parser's recursion-depth cap
