@@ -85,6 +85,8 @@ const B: u8 = 2;
 ///
 /// Border pixels use **edge replication**: when a neighbour would be outside
 /// the image, we use the closest in-bounds pixel instead.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 pub fn demosaic_bilinear(
     raw: &[u16],
     width: usize,

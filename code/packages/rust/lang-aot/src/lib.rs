@@ -1585,7 +1585,7 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 "store_mem" => {
                     let mut srcs = Vec::with_capacity(3);
                     srcs.push(Operand::Var(TAPE.to_string()));
-                    srcs.extend(instr.srcs.into_iter());
+                    srcs.extend(instr.srcs);
                     new_instrs.push(IIRInstr::new(
                         "store_byte",
                         None,

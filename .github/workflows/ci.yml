@@ -386,12 +386,16 @@ jobs:
 
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true'
-        uses: dtolnay/rust-toolchain@stable
+        # PINNED, on purpose. The build tool's -clippy gate lints every affected
+        # Rust package with `-D warnings`, and clippy adds/tightens lints on every
+        # stable release — so an unpinned `@stable` would spontaneously turn `main`
+        # red on a new Rust release with zero code change. Pin the toolchain so the
+        # gate is deterministic; bumping it is a deliberate action (update this
+        # version, run `cargo clippy --fix` + resolve the new lints in the same PR).
+        uses: dtolnay/rust-toolchain@1.97.0
         with:
-          # `clippy` is required by the build tool's -clippy gate, which lints
-          # every affected Rust package with `-D warnings` before its BUILD runs.
-          # dtolnay/rust-toolchain installs the minimal profile, so clippy must be
-          # requested explicitly.
+          # dtolnay/rust-toolchain installs the minimal profile, which omits
+          # clippy; the -clippy gate needs it, so request it explicitly.
           components: clippy
 
       - name: Install native Paint VM dependencies

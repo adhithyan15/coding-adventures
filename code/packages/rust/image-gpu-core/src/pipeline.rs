@@ -1350,6 +1350,8 @@ fn all_non_const_computes_with_handles(
 ///
 /// Returns `Err` if any protocol step fails, so the caller can
 /// fall through to generic dispatch.
+// The counter is an assigned job id, not just an index; keep the explicit loop (allow 1.97 explicit_counter_loop).
+#[allow(clippy::explicit_counter_loop)]
 fn dispatch_specialised_via_multi(
     transport: &LocalTransport,
     placed: &ComputeGraph,

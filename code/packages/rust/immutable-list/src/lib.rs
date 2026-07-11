@@ -421,6 +421,8 @@ impl ImmutableList {
     /// assert_eq!(list.get(1), Some("b"));
     /// assert_eq!(list.get(2), None);
     /// ```
+    // Explicit match documents the 'shouldn't happen' case; allow 1.97 question_mark.
+    #[allow(clippy::question_mark)]
     pub fn get(&self, index: usize) -> Option<&str> {
         // Bounds check.
         if index >= self.len {

@@ -1024,16 +1024,15 @@ fn swiftui_modifier_chain(
                 }
             }
             "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
-            "text-align" => {
+            "text-align"
                 // Base-only by design (see the `text_align` binding's
                 // doc comment).  A state layer that sets `text-align` is
                 // intentionally ignored — only `layer_idx == None` wins.
-                if layer_idx.is_none() {
+                if layer_idx.is_none() => {
                     if let Some(a) = text_align_swift(&p.value) {
                         text_align = Some(a);
                     }
                 }
-            }
             // border-style, border-collapse, outline, etc. — silently
             // skipped.  Matches the React emitter's v1 posture.
             _ => {}

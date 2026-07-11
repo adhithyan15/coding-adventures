@@ -1825,7 +1825,7 @@ mod tests {
 
     fn first_stmt(prog: &Program) -> &Statement {
         let ProgramItem::Statement(s) = &prog.body[0] else {
-            panic!("expected Statement; got {:?}", &prog.body[0]);
+            panic!("expected Statement; got {:?}", prog.body[0]);
         };
         s
     }

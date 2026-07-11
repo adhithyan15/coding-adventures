@@ -1322,9 +1322,9 @@ pub fn vec_buf_from_js(env: napi_env, value: napi_value) -> Option<Vec<Vec<u8>>>
     let mut out = Vec::with_capacity(len as usize);
     for i in 0..len {
         let item = array_get(env, value, i);
-        match buffer_from_js(env, item) {
-            Some(bytes) => out.push(bytes),
-            None => return None, // not a Buffer at index i
+        {
+            let bytes = buffer_from_js(env, item)?;
+            out.push(bytes)
         }
     }
     Some(out)

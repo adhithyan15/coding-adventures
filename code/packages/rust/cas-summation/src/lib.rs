@@ -839,13 +839,11 @@ fn polynomial_degree_in_k(node: &IRNode, k: &IRNode) -> Option<i64> {
     if head_str == ADD || head_str == SUB {
         let mut max_deg: i64 = 0;
         for arg in &apply_node.args {
-            match polynomial_degree_in_k(arg, k) {
-                Some(d) => {
-                    if d > max_deg {
-                        max_deg = d;
-                    }
+            {
+                let d = polynomial_degree_in_k(arg, k)?;
+                if d > max_deg {
+                    max_deg = d;
                 }
-                None => return None,
             }
         }
         return Some(max_deg);
@@ -853,9 +851,9 @@ fn polynomial_degree_in_k(node: &IRNode, k: &IRNode) -> Option<i64> {
     if head_str == MUL {
         let mut sum_deg: i64 = 0;
         for arg in &apply_node.args {
-            match polynomial_degree_in_k(arg, k) {
-                Some(d) => sum_deg += d,
-                None => return None,
+            {
+                let d = polynomial_degree_in_k(arg, k)?;
+                sum_deg += d
             }
         }
         return Some(sum_deg);
@@ -1193,9 +1191,9 @@ fn split_bounded_polynomial_factor(
             bounded_factors.push(arg.clone());
             continue;
         }
-        match polynomial_degree_in_k(arg, k) {
-            Some(d) => poly_deg += d,
-            None => return None,   // Unrecognised factor.
+        {
+            let d = polynomial_degree_in_k(arg, k)?;
+            poly_deg += d
         }
     }
     // Pure polynomial — Phase 42 will handle it; no non-constant bounded factor.
@@ -1246,9 +1244,9 @@ fn sqrt_poly_numerator_effective_degree_x2(node: &IRNode, k: &IRNode) -> Option<
             continue;
         }
         // Otherwise must be polynomial in k.
-        match polynomial_degree_in_k(arg, k) {
-            Some(d) => poly_deg_sum += d,
-            None => return None, // Neither Sqrt shape nor polynomial.
+        {
+            let d = polynomial_degree_in_k(arg, k)?;
+            poly_deg_sum += d
         }
     }
     // Must have found exactly one Sqrt factor.
@@ -1288,9 +1286,9 @@ fn split_log_polynomial_factor<'a>(node: &'a IRNode, k: &IRNode) -> Option<(&'a 
             log_factor = Some(arg);
             continue;
         }
-        match polynomial_degree_in_k(arg, k) {
-            Some(d) => poly_deg_sum += d,
-            None => return None, // Neither Log(diverging) nor polynomial — bail.
+        {
+            let d = polynomial_degree_in_k(arg, k)?;
+            poly_deg_sum += d
         }
     }
     let lf = log_factor?; // Must have found exactly one Log(diverging) factor.

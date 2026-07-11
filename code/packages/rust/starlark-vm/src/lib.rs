@@ -435,7 +435,7 @@ fn builtin_min(args: Vec<StarlarkValue>) -> Result<StarlarkValue, StarlarkError>
     for item in &items[1..] {
         match (&min_val, item) {
             (StarlarkValue::Int(a), StarlarkValue::Int(b)) => { if b < a { min_val = item.clone(); } }
-            (StarlarkValue::Float(a), StarlarkValue::Float(b)) => { if b < a { min_val = item.clone(); } }
+            (StarlarkValue::Float(a), StarlarkValue::Float(b)) if b < a => { min_val = item.clone(); }
             _ => {}
         }
     }
@@ -455,7 +455,7 @@ fn builtin_max(args: Vec<StarlarkValue>) -> Result<StarlarkValue, StarlarkError>
     for item in &items[1..] {
         match (&max_val, item) {
             (StarlarkValue::Int(a), StarlarkValue::Int(b)) => { if b > a { max_val = item.clone(); } }
-            (StarlarkValue::Float(a), StarlarkValue::Float(b)) => { if b > a { max_val = item.clone(); } }
+            (StarlarkValue::Float(a), StarlarkValue::Float(b)) if b > a => { max_val = item.clone(); }
             _ => {}
         }
     }

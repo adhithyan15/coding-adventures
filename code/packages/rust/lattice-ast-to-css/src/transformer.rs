@@ -1139,12 +1139,11 @@ impl LatticeTransformer {
                             mixin_name = Some(tok.value.trim_end_matches('(').to_string());
                             mixin_token = Some(tok.clone());
                         }
-                        "Ident" | "IDENT" => {
-                            if mixin_name.is_none() {
+                        "Ident" | "IDENT"
+                            if mixin_name.is_none() => {
                                 mixin_name = Some(tok.value.clone());
                                 mixin_token = Some(tok.clone());
                             }
-                        }
                         _ => {}
                     }
                 }

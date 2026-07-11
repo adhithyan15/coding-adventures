@@ -456,6 +456,8 @@ impl VMCore {
     ///
     /// Useful for identifying hot functions that the JIT should prioritise.
     /// The list is sorted by call count descending.
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn hot_functions(&self, threshold: u32) -> Vec<String> {
         let mut pairs: Vec<(&String, u32)> = self.fn_call_counts
             .iter()

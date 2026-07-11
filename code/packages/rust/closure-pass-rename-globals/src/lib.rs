@@ -224,11 +224,10 @@ fn rename_globals(
             // is still top-level scope-wise; cover it too.
             ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(
                 fd,
-            ))) => {
-                if seen_top.insert(fd.id.name.clone()) {
+            )))
+                if seen_top.insert(fd.id.name.clone()) => {
                     top_level.push(fd.id.name.clone());
                 }
-            }
             _ => {}
         }
     }

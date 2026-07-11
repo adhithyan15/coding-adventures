@@ -985,7 +985,7 @@ mod tests {
         // srcs[0] must be an Operand::Str carrying the synthesised lambda name.
         assert!(
             matches!(&ac.srcs[0], Operand::Str(s) if s.starts_with("__lambda_")),
-            "alloc_closure srcs[0] must be Operand::Str(__lambda_N), got {:?}", &ac.srcs[0]
+            "alloc_closure srcs[0] must be Operand::Str(__lambda_N), got {:?}", ac.srcs[0]
         );
         assert_eq!(ac.type_hint, "closure", "alloc_closure type_hint must be 'closure'");
         // No preceding const instruction should materialise the fn_name.
@@ -1024,7 +1024,7 @@ mod tests {
         // srcs[0] must be a Var (the closure handle register), not a Str or name-string.
         assert!(
             matches!(&cc.srcs[0], Operand::Var(_)),
-            "call_closure srcs[0] must be Operand::Var(handle), got {:?}", &cc.srcs[0]
+            "call_closure srcs[0] must be Operand::Var(handle), got {:?}", cc.srcs[0]
         );
     }
 

@@ -280,11 +280,10 @@ pub fn parse_ifd(bytes: &[u8], ifd_offset: u32) -> Result<Rw2Ifd, String> {
             // Tag 0x0097 — Panasonic raw data strip offset
             0x0097 => ifd.raw_data_offset     = Some(scalar),
             // Standard TIFF StripOffsets (273 = 0x0111) — fallback
-            0x0111 => {
-                if ifd.raw_data_offset.is_none() {
+            0x0111
+                if ifd.raw_data_offset.is_none() => {
                     ifd.raw_data_offset = Some(scalar);
                 }
-            }
             _ => {} // unrecognised tag → ignore
         }
     }

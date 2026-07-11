@@ -246,12 +246,11 @@ impl SystemBoard {
                     self.initialize_kernel();
                 }
             }
-            BootPhase::KernelInit => {
-                if (USER_PROCESS_BASE..USER_PROCESS_BASE + 0x10000).contains(&pc) {
+            BootPhase::KernelInit
+                if (USER_PROCESS_BASE..USER_PROCESS_BASE + 0x10000).contains(&pc) => {
                     self.current_phase = BootPhase::UserProgram;
                     self.trace.add_event(BootPhase::UserProgram, self.cycle, "User program executing");
                 }
-            }
             _ => {}
         }
     }

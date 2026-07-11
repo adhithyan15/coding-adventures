@@ -523,7 +523,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     let defs = resolve(d)?;
                     let mut clauses: Vec<&Statement> = Vec::new();
                     flatten_clauses(statements, &mut clauses)?;
-                    enforce_vocabulary(clauses.into_iter(), defs, &formulas)?;
+                    enforce_vocabulary(clauses, defs, &formulas)?;
                 }
             }
         }

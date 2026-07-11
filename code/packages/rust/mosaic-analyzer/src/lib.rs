@@ -1043,7 +1043,7 @@ mod tests {
         assert!(
             matches!(&root.children[0], MosaicChild::SlotRef(n) if n == "header"),
             "Expected SlotRef(header), got {:?}",
-            &root.children[0]
+            root.children[0]
         );
     }
 }

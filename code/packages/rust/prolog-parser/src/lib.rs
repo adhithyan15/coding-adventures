@@ -297,11 +297,10 @@ fn lower_list(node: &GrammarASTNode, var_map: &mut HashMap<String, LogicVar>) ->
                         items.push(lowered);
                     }
                 }
-                ASTNodeOrToken::Token(t) => {
-                    if t.value == "|" {
+                ASTNodeOrToken::Token(t)
+                    if t.value == "|" => {
                         seen_bar = true;
                     }
-                }
                 _ => {}
             }
         }

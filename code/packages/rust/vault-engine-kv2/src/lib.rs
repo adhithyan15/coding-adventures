@@ -388,6 +388,8 @@ impl SecretEngine for KvV2Engine {
         &self.cfg.mount_path
     }
 
+    // Nested match kept for clarity/exhaustiveness (allow 1.97 collapsible_match).
+    #[allow(clippy::collapsible_match)]
     fn mint(&self, role: &Role, ctx: &MintContext) -> Result<MintedSecret, EngineError> {
         // === Pull engine-specific input from MintContext ===
         // The trait's signature carries this on `ctx` rather than

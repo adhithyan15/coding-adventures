@@ -1502,10 +1502,9 @@ fn collect_var2_coeffs(
             p_parts.push(cp);
         } else if let Some(cq) = split_out_factor(&term, &yp) {
             q_parts.push(cq);
-        } else if let Some(cr) = split_out_factor(&term, y) {
-            r_parts.push(cr);
         } else {
-            return None; // unrecognised term
+            let cr = split_out_factor(&term, y)?;
+            r_parts.push(cr);
         }
     }
 

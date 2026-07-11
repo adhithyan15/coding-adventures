@@ -448,6 +448,8 @@ impl StreamingMultiprocessor {
     /// 1. **Register pressure**: Each warp needs `registers_per_thread * 32` registers.
     /// 2. **Shared memory**: Each block needs `shared_mem_per_block` bytes.
     /// 3. **Hardware limit**: The SM simply can't hold more than `max_warps` warps.
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn compute_occupancy(
         &self,
         registers_per_thread: usize,

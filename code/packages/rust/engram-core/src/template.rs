@@ -228,10 +228,9 @@ struct SectionTag<'a> {
 fn parse_section_tag(tag: &str) -> Option<SectionTag<'_>> {
     let (inverted, field_name) = if let Some(field_name) = tag.strip_prefix('#') {
         (false, field_name.trim())
-    } else if let Some(field_name) = tag.strip_prefix('^') {
-        (true, field_name.trim())
     } else {
-        return None;
+        let field_name = tag.strip_prefix('^')?;
+        (true, field_name.trim())
     };
 
     (!field_name.is_empty()).then_some(SectionTag {
@@ -478,6 +477,8 @@ fn normalize_without_combining_marks(value: &str) -> String {
     normalized
 }
 
+// Explicit loop with multiple break conditions reads clearer than while-let (allow 1.97 while_let_loop).
+#[allow(clippy::while_let_loop)]
 fn parse_template_field_filters(tag: &str) -> (Vec<TemplateFieldFilter>, &str) {
     let mut filters = Vec::new();
     let mut rest = tag.trim();

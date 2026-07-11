@@ -795,7 +795,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 // Build the assignments Row: { column_name → new_value }.
                 let assignments_row: Row = col_names
                     .iter()
-                    .zip(values.into_iter())
+                    .zip(values)
                     .map(|(c, v)| (c.clone(), v))
                     .collect();
 

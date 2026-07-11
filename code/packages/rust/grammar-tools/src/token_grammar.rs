@@ -1043,12 +1043,11 @@ fn split_in_guard(head: &str) -> Option<(&str, &str)> {
         match bytes[i] {
             b'(' => depth += 1,
             b')' => depth -= 1,
-            b' ' if depth == 0 => {
+            b' ' if depth == 0
                 // Check for the literal token ` in ` at a top-level boundary.
-                if head[i..].starts_with(" in ") {
+                && head[i..].starts_with(" in ") => {
                     return Some((&head[..i], &head[i + 4..]));
                 }
-            }
             _ => {}
         }
         i += 1;

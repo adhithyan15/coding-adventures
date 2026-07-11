@@ -1520,7 +1520,7 @@ impl Workbook {
             .collect();
         // Stable, predictable order for callers (and tests): top-to-bottom,
         // left-to-right.
-        hits.sort_by(|a, b| (a.row, a.col).cmp(&(b.row, b.col)));
+        hits.sort_by_key(|a| (a.row, a.col));
         hits
     }
 

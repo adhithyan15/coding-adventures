@@ -700,13 +700,12 @@ fn collect_max_numbered_block_param(node: &GrammarASTNode, max: &mut u8) {
                     }
                 }
             }
-            ASTNodeOrToken::Node(n) => {
+            ASTNodeOrToken::Node(n)
                 // Don't cross into a nested block — its `_N` refs are
                 // scoped to that block's own implicit parameters.
-                if n.rule_name != "block" {
+                if n.rule_name != "block" => {
                     collect_max_numbered_block_param(n, max);
                 }
-            }
             _ => {}
         }
     }
@@ -6164,7 +6163,7 @@ impl Lowerer {
             }
 
             // Pass 2: assign each LHS from its temp.
-            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs.into_iter()) {
+            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -6189,7 +6188,7 @@ impl Lowerer {
             // Fast path: no LHS appears in any RHS, so the sequential
             // lowering Phase 6r used is observably equivalent to the
             // truly-parallel form.  Emit one Stmt per pair.
-            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs.into_iter()) {
+            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);

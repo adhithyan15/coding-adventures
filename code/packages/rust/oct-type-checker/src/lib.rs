@@ -469,6 +469,8 @@ impl TypeChecker {
         }
     }
 
+    // Explicit loop with an internal break condition reads clearer than while-let (allow 1.97 while_let_loop).
+    #[allow(clippy::while_let_loop)]
     fn check_binary(
         &mut self,
         node: &GrammarASTNode,

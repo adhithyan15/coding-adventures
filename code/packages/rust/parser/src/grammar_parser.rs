@@ -568,9 +568,9 @@ impl GrammarParser {
     /// Try to match a named grammar rule with memoization. The depth guard
     /// lives in the [`Self::parse_rule`] wrapper; do not call this directly.
     fn parse_rule_inner(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
-        let rule = match self.rules.get(rule_name) {
-            Some(r) => r.clone(),
-            None => return None,
+        let rule = {
+            let r = self.rules.get(rule_name)?;
+            r.clone()
         };
 
         // Check memo cache.

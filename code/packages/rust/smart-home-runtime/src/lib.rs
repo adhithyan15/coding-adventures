@@ -671,6 +671,8 @@ impl RuntimeEventBusSnapshot {
         }
     }
 
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn average_pending_deliveries_per_subscription(&self) -> usize {
         if self.subscription_count == 0 {
             0
@@ -1245,6 +1247,8 @@ impl RuntimeSubscriptionInventorySummary {
         self.supervision_subscriptions > 0
     }
 
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn average_queued_events_per_subscription(&self) -> usize {
         if self.total_subscriptions == 0 {
             0
@@ -4499,6 +4503,8 @@ impl SmartHomeRuntime {
         self.event_bus.health_summary()
     }
 
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn query_command_results(
         &self,
         query: &RuntimeCommandResultQuery,
@@ -4522,7 +4528,7 @@ impl SmartHomeRuntime {
             .collect::<Vec<_>>();
         match query.sort {
             RuntimeCommandResultSort::SequenceAsc => {
-                results.sort_by(|left, right| left.sequence.cmp(&right.sequence));
+                results.sort_by_key(|left| left.sequence);
             }
             RuntimeCommandResultSort::SequenceDesc => {
                 results.sort_by(|left, right| right.sequence.cmp(&left.sequence));
@@ -4603,6 +4609,8 @@ impl SmartHomeRuntime {
         )
     }
 
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn query_authorization_decisions(
         &self,
         query: &RuntimeAuthorizationDecisionQuery,
@@ -4615,7 +4623,7 @@ impl SmartHomeRuntime {
         let mut decisions = self.registry.query_authorization_decisions(&selector);
         match query.sort {
             RuntimeAuthorizationDecisionSort::DecidedAtAsc => {
-                decisions.sort_by(|left, right| left.decided_at_ms.cmp(&right.decided_at_ms));
+                decisions.sort_by_key(|left| left.decided_at_ms);
             }
             RuntimeAuthorizationDecisionSort::DecidedAtDesc => {
                 decisions.sort_by(|left, right| right.decided_at_ms.cmp(&left.decided_at_ms));

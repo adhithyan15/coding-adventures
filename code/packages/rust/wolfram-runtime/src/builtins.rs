@@ -1173,6 +1173,8 @@ fn transpose_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 ///
 /// Reads structure only; allocates a list at most as long as the nesting depth
 /// (bounded by the token-capped input), so there is no DoS surface.
+// Explicit loop with an internal break condition reads clearer than while-let (allow 1.97 while_let_loop).
+#[allow(clippy::while_let_loop)]
 fn dimensions_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.len() != 1 {
         return unevaluated(expr);

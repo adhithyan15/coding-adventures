@@ -511,6 +511,8 @@ fn render(receiver: Receiver<RendererMsg>, mut state: RenderState) {
 ///
 /// We use `\r` (carriage return) to overwrite the current line. This works
 /// on all platforms. No ANSI escape codes needed.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 fn draw(state: &mut RenderState) {
     let elapsed = state.start_time.elapsed().as_secs_f64();
 

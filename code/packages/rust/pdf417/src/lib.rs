@@ -1060,7 +1060,7 @@ mod tests {
             &PNG_MAGIC,
             "First 8 bytes {:?} do not match PNG magic {:?}",
             &png[..8],
-            &PNG_MAGIC,
+            PNG_MAGIC,
         );
     }
 }

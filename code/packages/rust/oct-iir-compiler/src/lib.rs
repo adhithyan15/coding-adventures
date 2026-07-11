@@ -685,6 +685,8 @@ impl Compiler {
         }
     }
 
+    // Explicit loop with an internal break reads clearer than while-let (allow 1.97 while_let_loop).
+    #[allow(clippy::while_let_loop)]
     fn compile_binary(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
         -> Result<String, OctError>
     {

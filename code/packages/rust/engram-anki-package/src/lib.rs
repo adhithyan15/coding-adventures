@@ -3087,6 +3087,8 @@ fn collect_anki_template_field_references<'a>(
     }
 }
 
+// Explicit loop with an internal break condition reads clearer than while-let (allow 1.97 while_let_loop).
+#[allow(clippy::while_let_loop)]
 fn normalize_anki_template_field_tag(tag: &str) -> Option<&str> {
     if tag.starts_with('#') || tag.starts_with('^') || tag.starts_with('/') {
         return None;

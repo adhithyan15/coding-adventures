@@ -847,13 +847,12 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
-            "text-align" => {
-                if layer_idx.is_none() {
+            "text-align"
+                if layer_idx.is_none() => {
                     if let Some(a) = content_alignment(&p.value) {
                         text_align = Some(a);
                     }
                 }
-            }
             // border-style, border-collapse, outline, width:100% — skipped.
             _ => {}
         }

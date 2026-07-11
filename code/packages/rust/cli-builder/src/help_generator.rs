@@ -408,12 +408,10 @@ fn find_command<'a>(spec: &'a CliSpec, command_path: &[String]) -> Option<&'a Co
         let found = commands.iter().find(|c| {
             c.name == *name || c.aliases.iter().any(|a| a == name)
         });
-        match found {
-            Some(cmd) => {
-                current = Some(cmd);
-                commands = &cmd.commands;
-            }
-            None => return None,
+        {
+            let cmd = found?;
+            current = Some(cmd);
+            commands = &cmd.commands;
         }
     }
 

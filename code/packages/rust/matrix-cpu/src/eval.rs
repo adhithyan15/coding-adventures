@@ -543,6 +543,8 @@ pub fn reduce_u8(
 }
 
 /// Helper: decompose flat index using precomputed strides.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 fn unravel_with_strides(flat: usize, strides: &[usize], rank: usize) -> Vec<usize> {
     let mut coords = vec![0usize; rank];
     let mut remainder = flat;

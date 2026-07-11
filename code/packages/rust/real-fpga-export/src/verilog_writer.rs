@@ -261,7 +261,7 @@ fn expr_to_verilog(expr: &Expr) -> String {
             format!("{}({})", name, astr.join(", "))
         }
 
-        Expr::Attr { base, name: _, .. } => {
+        Expr::Attr { base, .. } => {
             format!("{}'event", expr_to_verilog(base))  // most common: clk'event
         }
     }

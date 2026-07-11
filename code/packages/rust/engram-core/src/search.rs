@@ -584,6 +584,8 @@ impl SearchParser {
         Ok(fold_or(expressions))
     }
 
+    // Explicit loop with multiple break conditions reads clearer than while-let (allow 1.97 while_let_loop).
+    #[allow(clippy::while_let_loop)]
     fn parse_and(&mut self) -> Result<SearchExpr, SearchError> {
         let mut expressions = Vec::new();
 

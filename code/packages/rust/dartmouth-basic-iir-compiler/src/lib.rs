@@ -1418,6 +1418,8 @@ impl Compiler {
         self.emit_basic_string_expr_to(node, None)
     }
 
+    // Explicit loop with an internal break condition reads clearer than while-let (allow 1.97 while_let_loop).
+    #[allow(clippy::while_let_loop)]
     fn emit_basic_string_expr_to(
         &mut self,
         node: &GrammarASTNode,

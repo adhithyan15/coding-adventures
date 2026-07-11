@@ -903,7 +903,7 @@ pub fn encode(
     let mut bits: Vec<bool> = Vec::new();
     for (cw_idx, &cw) in final_cw.iter().enumerate() {
         let bits_in_cw = if cfg.m1_half_cw && cw_idx == cfg.data_cw - 1 { 4 } else { 8 };
-        for b in (0..bits_in_cw as u32).rev() {
+        for b in (0..bits_in_cw).rev() {
             bits.push(((cw >> (b + (8 - bits_in_cw))) & 1) == 1);
         }
     }

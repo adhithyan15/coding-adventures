@@ -589,8 +589,8 @@ fn validate_node(
                     });
                 }
             }
-            LayoutPropValue::EmitRef(emit_name) => {
-                if has_interface && !known_emits.contains(emit_name) {
+            LayoutPropValue::EmitRef(emit_name)
+                if has_interface && !known_emits.contains(emit_name) => {
                     errors.push(CompileError {
                         kind: ErrorKind::UnknownEmit,
                         message: format!(
@@ -599,7 +599,6 @@ fn validate_node(
                         ),
                     });
                 }
-            }
             _ => {}
         }
     }
