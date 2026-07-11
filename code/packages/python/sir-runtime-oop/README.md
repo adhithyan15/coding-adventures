@@ -75,7 +75,7 @@ flow-control** group `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`
 `flat_map`, `any?`/`all?`/`none?` — a trailing `Closure` block is applied via
 `sir-runtime-core`'s `apply` (proc-lenient), predicates routed through SIR
 `truthy`; (item **M1c**) the **`Hash`** catalog
-(`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/`transform_values`/`transform_keys`/…);
+(`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/`transform_values`/`transform_keys`/ Enumerable aggregates `find`/`any?`/`all?`/`none?`/`count`/`sort_by`/`min_by`/`max_by`/…);
 and (item
 **M1c**) the **`String`** catalog (`length`, `upcase`/`downcase`/`capitalize`,
 `reverse`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`/`bytes`, `split`,
