@@ -1,0 +1,14 @@
+name: coding_adventures_sha256
+version: 0.1.0
+description: >
+  SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch in
+  pure Dart. One-shot sha256/sha256Hex plus a streaming Sha256Hasher. Pure-Dart
+  port of the sha256 reference package.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
