@@ -50,7 +50,7 @@ use std::fmt;
 use std::rc::Rc;
 
 use coding_adventures_sql_backend::{
-    backend_as_schema_provider, Backend, InMemoryBackend,
+    backend_as_schema_provider, Backend, InMemoryBackend, TransactionHandle,
 };
 
 // Re-export SqlValue so callers can use coding_adventures_mini_sqlite::SqlValue
@@ -60,6 +60,8 @@ use coding_adventures_sql_codegen::compile;
 use coding_adventures_sql_optimizer::optimize;
 use coding_adventures_sql_planner::{plan_sql, PlanError};
 use coding_adventures_sql_vm::execute as vm_execute;
+// The file-backed storage engine: exposes a real `.sqlite` file as a `Backend`.
+use coding_adventures_storage_sqlite::SqliteFileBackend;
 
 // ===========================================================================
 // Public constants (DB-API 2.0 spec attributes)
@@ -171,8 +173,9 @@ pub struct ConnectOptions {
 
 /// A database connection.
 ///
-/// The connection holds an `InMemoryBackend` wrapped in a shared
-/// `Rc<RefCell<…>>` so that `Cursor` objects can borrow it after creation.
+/// The connection holds its storage backend (an in-memory store, or a real
+/// `.sqlite` file) wrapped in a shared `Rc<RefCell<…>>` so that `Cursor` objects
+/// can borrow it after creation.
 ///
 /// Cloning a `Connection` shares the underlying backend state (both clones
 /// see the same tables).
@@ -181,11 +184,26 @@ pub struct Connection {
     state: Rc<RefCell<ConnectionState>>,
 }
 
-#[derive(Debug)]
 struct ConnectionState {
-    backend: InMemoryBackend,
+    /// The storage engine the pipeline reads/writes through. `InMemoryBackend`
+    /// for `:memory:`; a read-only `SqliteFileBackend` for a real `.sqlite` file.
+    backend: Box<dyn Backend>,
+    /// The active transaction handle, if one is open. Tracked here (rather than
+    /// asked of the backend) because `current_transaction` is not part of the
+    /// `Backend` trait — the connection owns its transaction lifecycle.
+    active_tx: Option<TransactionHandle>,
     autocommit: bool,
     closed: bool,
+}
+
+// `dyn Backend` is not `Debug`, so derive won't do — print the plain fields.
+impl fmt::Debug for ConnectionState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ConnectionState")
+            .field("autocommit", &self.autocommit)
+            .field("closed", &self.closed)
+            .finish_non_exhaustive()
+    }
 }
 
 // ===========================================================================
@@ -224,8 +242,10 @@ pub struct ColumnDescription {
 
 /// Open a new in-memory database connection.
 ///
-/// Only `":memory:"` is supported at Level 1; file paths raise
-/// `NotSupportedError`.
+/// Pass `":memory:"` for a fresh in-memory database, or a filesystem path to
+/// open a real `.sqlite` file. A file is opened **read-only** for now (queries
+/// work; `INSERT`/`UPDATE`/`CREATE` against it error) — the byte-compatible
+/// writer is a later milestone.
 ///
 /// ```rust
 /// use coding_adventures_mini_sqlite::connect;
@@ -236,15 +256,27 @@ pub fn connect(database: &str) -> Result<Connection> {
 }
 
 /// Open a connection with explicit options.
+///
+/// `":memory:"` builds an in-memory backend; any other string is treated as a
+/// path to a SQLite database file, read into memory and exposed through the
+/// read-only [`SqliteFileBackend`]. A missing file or non-SQLite bytes surface
+/// as `OperationalError` (SQLite's class for such runtime failures).
 pub fn connect_with_options(database: &str, options: ConnectOptions) -> Result<Connection> {
-    if database != ":memory:" {
-        return Err(MiniSqliteError::NotSupportedError(
-            "Rust mini-sqlite supports only :memory: in Level 1".to_string(),
-        ));
-    }
+    let backend: Box<dyn Backend> = if database == ":memory:" {
+        Box::new(InMemoryBackend::new())
+    } else {
+        let bytes = std::fs::read(database).map_err(|e| {
+            MiniSqliteError::OperationalError(format!("cannot open database file {database:?}: {e}"))
+        })?;
+        let file_backend = SqliteFileBackend::open(bytes).map_err(|e| {
+            MiniSqliteError::OperationalError(format!("not a valid SQLite database {database:?}: {e}"))
+        })?;
+        Box::new(file_backend)
+    };
     Ok(Connection {
         state: Rc::new(RefCell::new(ConnectionState {
-            backend: InMemoryBackend::new(),
+            backend,
+            active_tx: None,
             autocommit: options.autocommit,
             closed: false,
         })),
@@ -288,7 +320,7 @@ impl Connection {
         let mut state = self.state.borrow_mut();
         state.assert_open()?;
         // Delegate to the backend's commit if there's an active transaction.
-        if let Some(h) = state.backend.current_transaction() {
+        if let Some(h) = state.active_tx.take() {
             state
                 .backend
                 .commit(h)
@@ -303,7 +335,7 @@ impl Connection {
     pub fn rollback(&self) -> Result<()> {
         let mut state = self.state.borrow_mut();
         state.assert_open()?;
-        if let Some(h) = state.backend.current_transaction() {
+        if let Some(h) = state.active_tx.take() {
             state
                 .backend
                 .rollback(h)
@@ -319,7 +351,7 @@ impl Connection {
             return Ok(());
         }
         // Roll back any pending transaction before closing.
-        if let Some(h) = state.backend.current_transaction() {
+        if let Some(h) = state.active_tx.take() {
             let _ = state.backend.rollback(h);
         }
         state.closed = true;
@@ -355,13 +387,13 @@ impl ConnectionState {
         let first_kw = first_keyword(sql_with_params);
         match first_kw.as_str() {
             "BEGIN" => {
-                // Manual `BEGIN` — start a transaction on the backend.
+                // Manual `BEGIN` — start a transaction on the backend and record
+                // its handle on the connection.
                 let handle = self
                     .backend
                     .begin_transaction()
                     .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
-                // Suppress the handle; the caller does not need it.
-                let _ = handle;
+                self.active_tx = Some(handle);
                 return Ok(StatementOutcome {
                     columns: Vec::new(),
                     rows: Vec::new(),
@@ -369,7 +401,7 @@ impl ConnectionState {
                 });
             }
             "COMMIT" => {
-                if let Some(h) = self.backend.current_transaction() {
+                if let Some(h) = self.active_tx.take() {
                     self.backend
                         .commit(h)
                         .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
@@ -381,7 +413,7 @@ impl ConnectionState {
                 });
             }
             "ROLLBACK" => {
-                if let Some(h) = self.backend.current_transaction() {
+                if let Some(h) = self.active_tx.take() {
                     self.backend
                         .rollback(h)
                         .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
@@ -401,16 +433,18 @@ impl ConnectionState {
             first_kw.as_str(),
             "INSERT" | "UPDATE" | "DELETE" | "CREATE" | "DROP"
         );
-        if needs_transaction && !self.autocommit && self.backend.current_transaction().is_none() {
-            self.backend
+        if needs_transaction && !self.autocommit && self.active_tx.is_none() {
+            let handle = self
+                .backend
                 .begin_transaction()
                 .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
+            self.active_tx = Some(handle);
         }
 
         // ── Pipeline ────────────────────────────────────────────────────────
 
         // 1. Plan (parse + plan in one step via plan_sql)
-        let schema_provider = backend_as_schema_provider(&self.backend);
+        let schema_provider = backend_as_schema_provider(&*self.backend);
         let logical_plan = plan_sql(sql_with_params, &schema_provider)
             .map_err(|e| match &e {
                 // UnknownTable is a runtime condition (table was dropped or
@@ -430,7 +464,7 @@ impl ConnectionState {
         let program = compile(&optimized_plan);
 
         // 4. Execute
-        let result = vm_execute(&program, &mut self.backend)
+        let result = vm_execute(&program, &mut *self.backend)
             .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
 
         Ok(StatementOutcome {
@@ -825,18 +859,17 @@ mod tests {
         assert_eq!(PARAM_STYLE, "qmark");
     }
 
-    // ── File-path connections must be rejected ────────────────────────────────
+    // ── File-backed connections ───────────────────────────────────────────────
 
     #[test]
-    fn rejects_file_path_connection() {
-        let err = connect("app.db").unwrap_err();
-        assert!(matches!(err, MiniSqliteError::NotSupportedError(_)));
-
-        let err = connect("/tmp/test.db").unwrap_err();
-        assert!(matches!(err, MiniSqliteError::NotSupportedError(_)));
-
-        let err = connect("relative/path/db.sqlite").unwrap_err();
-        assert!(matches!(err, MiniSqliteError::NotSupportedError(_)));
+    fn missing_or_invalid_database_file_is_an_operational_error() {
+        // A path to a file that does not exist is a runtime failure, not an
+        // unsupported feature: file-backed databases are now supported.
+        let err = connect("this/path/does/not/exist/nowhere.sqlite").unwrap_err();
+        assert!(
+            matches!(err, MiniSqliteError::OperationalError(_)),
+            "missing file should be OperationalError, got {err:?}"
+        );
     }
 
     // ── CREATE TABLE / INSERT / SELECT * ─────────────────────────────────────

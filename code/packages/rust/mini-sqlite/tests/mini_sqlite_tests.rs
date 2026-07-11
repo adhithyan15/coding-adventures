@@ -186,7 +186,9 @@ fn rejects_wrong_parameter_counts() {
 }
 
 #[test]
-fn rejects_file_connections_for_level_zero() {
-    let err = connect("app.db").unwrap_err();
-    assert!(matches!(err, MiniSqliteError::NotSupportedError(_)));
+fn opening_a_missing_file_is_an_operational_error() {
+    // File-backed databases are now supported; a path to a file that does not
+    // exist is a runtime failure (OperationalError), not an unsupported feature.
+    let err = connect("this/file/does/not/exist.sqlite").unwrap_err();
+    assert!(matches!(err, MiniSqliteError::OperationalError(_)));
 }

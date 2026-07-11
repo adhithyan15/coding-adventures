@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.4.0 — Open a real `.sqlite` file
+
+Stream C / L4 of the full-SQLite-replacement roadmap: `connect()` can now open a
+**real SQLite database file**, and the entire query pipeline (parser → planner →
+optimizer → codegen → VM) runs unmodified over it.
+
+- `connect("<path>")` reads the file's bytes and drives the engine through the
+  read-only `SqliteFileBackend` (`storage-sqlite`, built on the zero-dep
+  `sqlite-file` reader — no third-party SQLite at runtime). `":memory:"` is
+  unchanged. A missing file or non-SQLite bytes surface as `OperationalError`;
+  the previous blanket `NotSupportedError` for any non-`:memory:` name is gone.
+- `ConnectionState.backend` is now `Box<dyn Backend>` so either backend plugs in;
+  the connection tracks its own transaction handle (`current_transaction` is not
+  a `Backend`-trait method). File-backed connections are **read-only** for now —
+  `INSERT`/`UPDATE`/`CREATE` against a file return an error rather than silently
+  no-op; the byte-compatible writer is a later milestone.
+- New `tests/file_backed.rs` (rusqlite dev-dep oracle): builds a genuine `.sqlite`
+  file, opens it via `connect(path)`, and asserts `SELECT` (projection, `WHERE`,
+  `ORDER BY`, aggregates, and the `INTEGER PRIMARY KEY` rowid alias) returns what
+  the real library does — proving the whole engine runs over a real file.
+
+This graduates the Rust port past the old Level-0 rule ("file-backed connections
+raise `NotSupportedError`", conformance fixture 12); the fixture's
+`connect_expect_error` still holds because a *missing* file still errors.
+
 ## 0.3.0 — Differential conformance oracle (baseline)
 
 First step of the roadmap to make mini-sqlite a drop-in SQLite replacement
