@@ -3221,6 +3221,83 @@ impl Document {
         // summary of S16's per-source duplicate list.
         self.resolve_citations().duplicate_entries.len().to_string()
     }
+
+    /// The **single-integer TOTAL of the duplicate ("multiply defined") `\label`s** (LTXDOC03 S34) —
+    /// the count of the *later, losing* `\label` definitions of already-defined keys, the
+    /// **label-side twin** of S33's
+    /// [`duplicate_bibliography_count`](Document::duplicate_bibliography_count).
+    ///
+    /// This is the warning-side member of the *label totals family*. S29's
+    /// [`label_definition_count`](Document::label_definition_count) counts the *winning* label
+    /// definitions (the first `\label` of each distinct key); S34 counts the *losing* ones — the
+    /// `\label`s LaTeX would flag with *"Label `key' multiply defined"*. It is to S20's
+    /// [`duplicate_label_definitions`](Document::duplicate_label_definitions) exactly what S33 is to
+    /// S16's `duplicate_bibliography_entries`, and what S29 is to S22's `label_definitions`: a numeric
+    /// summary over the *same* list — here the **losing** duplicate `\label`s — so a reader sees "how
+    /// many labels are multiply defined" without scanning the individual warning lines. It mirrors S33
+    /// on the label side just as S29 (`label_definition_count`) mirrors S30
+    /// (`bibliography_entry_count`).
+    ///
+    /// ## What it does
+    ///
+    /// S1's [`Document::resolve_references`] splits every `\label` into the **winning** first
+    /// definition of each key ([`ReferenceResolution::definitions`] — S22/S29's domain) and the
+    /// **losing** later re-definitions ([`ReferenceResolution::duplicates`] — S20's domain), both in
+    /// [`Document::walk`] pre-order. S20 renders the losing list as one `\label{key}` warning line per
+    /// duplicate; S34 collapses the whole list to a **single count line** — the decimal `.len()` of
+    /// `duplicates`. It reads only the length, never a `key`, `kind`, or `span`, so every losing
+    /// `\label` — section, figure, equation, or inline, regardless of key — folds into one total. Only
+    /// the **losing** definitions are counted; the winning first `\label` of a key lives in
+    /// `definitions` (S22/S29), never in `duplicates`, so it is excluded by construction. We do **not**
+    /// de-duplicate: a key defined *three* times contributes *two* losing duplicates (one per
+    /// *"multiply defined"* warning LaTeX would raise), exactly the two `\label{key}` lines S20 emits.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read the length of [`ReferenceResolution::duplicates`] and render it as its decimal `String`,
+    /// **always** on a single line with **no** trailing newline. This is a **count** renderer, so its
+    /// honest value when there are no duplicate `\label`s is the number `0` — the string `"0"`, **not**
+    /// a `(no duplicate label definitions)` marker (a total count of zero *is* a number; the `(no …)`
+    /// marker discipline belongs to the *list* renderer S20, whose empty case has no lines to show).
+    /// This mirrors S27/S28/S29/S30/S31/S32/S33 exactly, which emit `"0"` for their empty lists. There
+    /// is no source slicing — only `.len()` is taken.
+    ///
+    /// Concretely, for a body that defines `\label{x}` twice and `\label{y}` once:
+    ///
+    /// ```text
+    /// 1
+    /// ```
+    ///
+    /// (one losing duplicate — the second `\label{x}`; the winning first `\label{x}` and the lone
+    /// `\label{y}` are in `definitions`, the "2" S29 reports). A document with **no** duplicate
+    /// `\label`s — no labels at all, or every key defined exactly once — returns `"0"`.
+    ///
+    /// **Partition note.** S29 counts `definitions` (one per distinct key, the winners) and S34 counts
+    /// `duplicates` (the losers); together they **partition** every `\label` in the document —
+    /// `label_definition_count + duplicate_label_count` is exactly the number of `\label`s, because
+    /// [`Document::resolve_references`] routes each `\label` into exactly one of `definitions` or
+    /// `duplicates`.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S34 is a brand-new, read-only method that reuses [`resolve_references`](Document::resolve_references)
+    /// and mutates nothing; it changes no S1–S33 output (they are byte-for-byte unchanged) and leaves the
+    /// `to_latex` round-trip fixed point intact. It is a *second view* of the same `duplicates` list S20
+    /// renders per-source — counting never adds, drops, or reorders the duplicate `\label`s relative to
+    /// what `resolve_references` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only `.len()` is read); a single read of the already-bounded `duplicates` list's length. Borrows
+    /// `self` immutably and returns owned `String` data, so the result outlives any borrow of the
+    /// source.
+    pub fn duplicate_label_count(&self) -> String {
+        // S1 already routed every later `\label` of an already-defined key into `duplicates`, in body
+        // pre-order (first-definition-wins; the winning first `\label`s went to `definitions`, S22/S29).
+        // We only read that list's length. No `key`/`kind`/`span` is read — every losing `\label` folds
+        // into a single total, the "multiply defined" warning-side companion of S29 and the label-side
+        // twin of S33, the numeric summary of S20's per-source duplicate list.
+        self.resolve_references().duplicates.len().to_string()
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -8051,5 +8128,162 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         let winners: usize = doc.bibliography_entry_count().parse().unwrap();
         let losers: usize = doc.duplicate_bibliography_count().parse().unwrap();
         assert_eq!(winners + losers, 4);
+    }
+
+    // LTXDOC03 S34 — single-integer TOTAL of the duplicate ("multiply defined") `\label`s
+    // (`duplicate_label_count`). The label-side twin of S33's `duplicate_bibliography_count`: one
+    // decimal line = `.len()` of the SAME losing-duplicate `\label` list S20's
+    // `duplicate_label_definitions` renders as one `\label{key}` warning line each. S29 counts the
+    // winning `definitions` and S34 the losing `duplicates` — together they PARTITION every `\label`
+    // (each `\label` routes to exactly one of `definitions`/`duplicates`). Being a COUNT renderer, its
+    // empty value is the honest number "0", NOT a `(no …)` marker. The winning first `\label` of a key
+    // is in `definitions` (S22/S29), never `duplicates`, so it is excluded.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s34_multiple_duplicate_labels_count_the_integer() {
+        // `\label{a}` defined three times and `\label{b}` twice → the 2nd and 3rd `a` lose (two) and
+        // the 2nd `b` loses (one) → three losing duplicates, so the count is exactly "3".
+        let src = r"\begin{document}A \label{a} one.
+
+B \label{b} two.
+
+A' \label{a} again.
+
+A'' \label{a} thrice.
+
+B' \label{b} again.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_label_count(), "3");
+    }
+
+    #[test]
+    fn s34_no_duplicates_all_distinct_counts_zero() {
+        // Every `\label` key is distinct → no duplicate loses → "0" (the count of an empty `duplicates`
+        // list). A COUNT renderer's honest value for an empty list is "0".
+        let src = r"\begin{document}One \label{a} here, two \label{b} there, three \label{c} yonder.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_label_count(), "0");
+        // And S20 (the list view) shows its fixed marker for the same doc — the divergence is intended.
+        assert_eq!(
+            doc.duplicate_label_definitions(),
+            "(no duplicate label definitions)"
+        );
+    }
+
+    #[test]
+    fn s34_no_labels_at_all_counts_zero() {
+        // A document with NO `\label` at all → "0", the same honest-zero as the "all distinct" case.
+        let src = r"\begin{document}Just some text with no labels.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_label_count(), "0");
+    }
+
+    #[test]
+    fn s34_one_duplicate_counts_one() {
+        // A single key `\label{dup}` defined twice → only the SECOND loses → "1".
+        let src = r"\begin{document}First \label{dup} here.
+
+Second \label{dup} there.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_label_count(), "1");
+        // The count MUST equal the number of warning lines S20 lists (two views of the SAME list).
+        assert_eq!(
+            doc.duplicate_label_count(),
+            doc.duplicate_label_definitions().lines().count().to_string()
+        );
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+    }
+
+    #[test]
+    fn s34_partitions_with_s29_over_the_labels() {
+        // `a` twice, `b` once, `c` twice → winners are the three distinct keys (S29 = "3"); losers are
+        // the 2nd `a` and 2nd `c` (S34 = "2"). Together they partition all FIVE `\label`s — proving each
+        // `\label` routes to exactly one of `definitions`/`duplicates`. Also cross-checked against the
+        // number of warning lines S20 emits.
+        let src = r"\begin{document}A \label{a} one.
+
+B \label{b} two.
+
+A' \label{a} again.
+
+C \label{c} three.
+
+C' \label{c} again.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_label_count(), "2");
+        // S29 winners — unchanged by S34.
+        assert_eq!(doc.label_definition_count(), "3");
+        // S34 == number of S20 warning lines (two views of the SAME `duplicates` list).
+        assert_eq!(
+            doc.duplicate_label_count(),
+            doc.duplicate_label_definitions().lines().count().to_string()
+        );
+        // Winners + losers partition all five `\label`s.
+        let winners: usize = doc.label_definition_count().parse().unwrap();
+        let losers: usize = doc.duplicate_label_count().parse().unwrap();
+        assert_eq!(winners + losers, 5);
+    }
+
+    #[test]
+    fn s34_is_additive_leaves_s1_s33_outputs_unchanged() {
+        // Same representative doc as the S33 additive test. S34 changes NONE of the S1-S33 outputs — it
+        // only reads `resolve_references`. Its count is a second view of the SAME `duplicates` list S20
+        // renders per-source; pinned here alongside S16/S19/S20/S22/S29/S30/S31/S32/S33 to show S34
+        // neither adds, drops, nor reorders. The body defines `dup` twice (one losing duplicate) and the
+        // bibliography defines `a` twice (one losing `\bibitem`).
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // A couple of representative earlier *list* renderers — byte-for-byte unchanged.
+        // S20 duplicate `\label` warnings (the later `\label{dup}` is the sole losing duplicate).
+        assert_eq!(doc.duplicate_label_definitions(), "\\label{dup}");
+        // S22 flat winning label definitions (four distinct keys, first-definition-wins on `dup`).
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+        // S19 flat winning bibliography entries (three distinct keys; the later `\bibitem{a}` loses).
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+
+        // Prior totals-family renderers — byte-for-byte unchanged.
+        // S27 dangling-reference count — exactly one (`\eqref{eq:ghost}`).
+        assert_eq!(doc.unresolved_reference_count(), "1");
+        // S28 resolved-reference count — exactly two (`\ref{sec:intro}`, `\eqref{eq:e}`).
+        assert_eq!(doc.resolved_reference_count(), "2");
+        // S29 label-definition count — exactly four distinct label keys.
+        assert_eq!(doc.label_definition_count(), "4");
+        // S30 bibliography-entry count — exactly three distinct `\bibitem` keys (`a`, `b`, `c`).
+        assert_eq!(doc.bibliography_entry_count(), "3");
+        // S31 resolved-citation count — exactly three keys resolve (`a`, `b`, `c`).
+        assert_eq!(doc.citation_count(), "3");
+        // S32 unresolved-citation count — exactly one key dangles (`ghost`).
+        assert_eq!(doc.unresolved_citation_count(), "1");
+        // S33 duplicate-bibliography count — exactly one losing `\bibitem` (the later `\bibitem{a}`).
+        assert_eq!(doc.duplicate_bibliography_count(), "1");
+
+        // And S34 itself: exactly ONE `\label` is a losing duplicate (the later `\label{dup}`); the
+        // four winning first `\label`s are in `definitions` (S22/S29), not counted here.
+        assert_eq!(doc.duplicate_label_count(), "1");
+        // S29 winners + S34 losers partition all five `\label`s in the document.
+        let winners: usize = doc.label_definition_count().parse().unwrap();
+        let losers: usize = doc.duplicate_label_count().parse().unwrap();
+        assert_eq!(winners + losers, 5);
     }
 }
