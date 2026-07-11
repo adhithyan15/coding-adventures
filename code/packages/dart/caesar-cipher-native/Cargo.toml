@@ -1,0 +1,24 @@
+# Standalone workspace so this cdylib is not pulled into the main Rust
+# workspace (mirrors python/gf256-native). It depends on the pure `caesar-cipher`
+# crate by path and exposes a stable C ABI that Dart's dart:ffi calls into.
+[workspace]
+
+[package]
+name = "caesar-cipher-native"
+version = "0.1.0"
+edition = "2021"
+description = "C-ABI cdylib wrapping the Rust caesar-cipher crate, called from Dart via dart:ffi (zero third-party deps)"
+
+[lib]
+# `cdylib` produces libcaesar_cipher_native.{so,dylib}/caesar_cipher_native.dll.
+# The lib name (underscored) determines the shared-library file name.
+name = "caesar_cipher_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# The core Caesar cipher crate — the single source of truth for behaviour.
+caesar-cipher = { path = "../../rust/caesar-cipher" }
+
+[profile.release]
+# Small, fast shared library; strip symbols we don't need.
+opt-level = 3

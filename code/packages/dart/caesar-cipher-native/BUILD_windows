@@ -1,0 +1,1 @@
+echo "caesar-cipher-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for caesar_cipher_native.dll)"
