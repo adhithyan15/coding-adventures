@@ -687,6 +687,15 @@ def test_numeric_round_ndigits() -> None:
     assert oop.call_method(1234, "round", -2) == 1200
     assert oop.call_method(1250, "round", -2) == 1300  # half away from zero
     assert oop.call_method(1234.5, "round", -1) == 1230
+    # A rounding place that dwarfs the value is 0 (Ruby parity).
+    assert oop.call_method(1234, "round", -10) == 0
+    assert oop.call_method(1234.5, "round", -10) == 0
+    # DoS guard: a hostile magnitude must short-circuit, not build a bignum.
+    assert oop.call_method(1234, "round", -1_000_000_000) == 0
+    assert oop.call_method(1234.5, "round", -1_000_000_000) == 0
+    # Positive ndigits past Float precision returns the value unchanged (no
+    # 10.0 ** ndigits OverflowError).
+    assert oop.call_method(3.14, "round", 1_000_000) == 3.14
 
 
 def test_numeric_divmod_fdiv() -> None:
@@ -703,6 +712,11 @@ def test_numeric_divmod_fdiv() -> None:
     # divmod by zero raises a typed ZeroDivisionError.
     with pytest.raises(SirError):
         oop.call_method(1, "divmod", 0)
+    # A non-numeric divisor degrades rather than raising an untyped error:
+    # divmod → typed ZeroDivisionError, fdiv → Infinity (0 divisor).
+    with pytest.raises(SirError):
+        oop.call_method(1, "divmod", "x")
+    assert oop.call_method(1, "fdiv", "x") == float("inf")
 
 
 def test_numeric_clamp_between() -> None:

@@ -1586,26 +1586,46 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
         # a positive ``ndigits`` on a Float rounds to that many decimal places
         # (still half-away-from-zero, unlike Python's banker's rounding).  A
         # non-finite Float is returned unchanged (never-raise floor).
+        #
+        # DoS guard: ``ndigits`` is caller-controlled, so ``10 ** (-ndigits)``
+        # could build a multi-gigabyte bignum for a hostile magnitude.  Rounding
+        # to a place value that dwarfs the receiver is exactly ``0`` in Ruby
+        # (``1234.round(-10) == 0``), so we short-circuit to ``0`` once the place
+        # count clearly exceeds the receiver's decimal width instead of
+        # allocating the factor — and cap positive ``ndigits`` past a Float's
+        # precision (the value is already at full precision) to dodge the
+        # ``10.0 ** ndigits`` ``OverflowError``.
         ndigits = int(args[0]) if args and isinstance(args[0], (int, float)) else 0
         if isinstance(recv, float) and not math.isfinite(recv):
             return recv
+        # Decimal width of the integer magnitude — cheap and bounded.
+        int_width = len(str(abs(int(recv)))) if math.isfinite(recv) else 0
         if isinstance(recv, int):
             if ndigits >= 0:
                 return recv
-            # Negative ndigits: round to the nearest power of ten (half-up).
+            if -ndigits > int_width + 1:
+                return 0  # rounding place dwarfs the value ⇒ 0 (Ruby parity)
             factor = 10 ** (-ndigits)
             return int(_ruby_round(recv / factor)) * factor
         if ndigits <= 0:
-            rounded = _ruby_round(recv / (10 ** (-ndigits))) * (10 ** (-ndigits))
-            return int(rounded)
+            if -ndigits > int_width + 1:
+                return 0
+            factor = 10 ** (-ndigits)
+            return int(_ruby_round(recv / factor) * factor)
+        # A binary64 Float carries ~15–17 significant digits; rounding to more
+        # decimals than that returns the value unchanged (and avoids overflow).
+        if ndigits > 17:
+            return recv
         factor = 10.0**ndigits
         return _ruby_round(recv * factor) / factor
     if name == "divmod":
         # Ruby ``Integer#divmod`` / ``Float#divmod``: ``[quotient, remainder]``
         # where the quotient is floored and the remainder takes the divisor's
         # sign (Python's ``divmod`` matches this).  Division by zero raises a
-        # typed ``ZeroDivisionError`` so a translated ``rescue`` catches it.
-        divisor = args[0]
+        # typed ``ZeroDivisionError`` so a translated ``rescue`` catches it.  A
+        # non-numeric divisor degrades to ``0`` → the same typed error (rather
+        # than an untyped ``TypeError`` from Python's ``divmod``).
+        divisor = args[0] if args and isinstance(args[0], (int, float)) else 0
         if divisor == 0:
             raise_error("ZeroDivisionError", "divided by 0")
         quotient, remainder = divmod(recv, divisor)
@@ -1613,8 +1633,10 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
     if name == "fdiv":
         # Ruby ``fdiv``: floating-point division.  Unlike ``/``, dividing by zero
         # yields ``Infinity``/``NaN`` rather than raising (Ruby never raises on
-        # ``Float`` division), honouring the never-raise floor.
-        divisor = float(args[0])
+        # ``Float`` division), honouring the never-raise floor.  A non-numeric
+        # argument degrades to a ``0`` divisor (→ ``Infinity``/``NaN``) rather
+        # than raising an untyped ``ValueError``/``TypeError`` from ``float()``.
+        divisor = float(args[0]) if args and isinstance(args[0], (int, float)) else 0.0
         numer = float(recv)
         if divisor == 0.0:
             if numer == 0.0:
