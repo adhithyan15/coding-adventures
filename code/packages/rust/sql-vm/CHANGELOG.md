@@ -3,6 +3,22 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] - Unreleased
+
+### Added
+
+- **Five scalar built-in functions** in `call_builtin`, matching SQLite:
+  - `IFNULL(a, b)` — the two-argument `COALESCE`.
+  - `NULLIF(a, b)` — NULL when the arguments are equal, else `a`.
+  - `TYPEOF(x)` — the storage-class name (`null`/`integer`/`real`/`text`/`blob`).
+  - `INSTR(haystack, needle)` — 1-based **character** index of the first match
+    (0 if absent, NULL on a NULL argument, 1 for an empty needle).
+  - `HEX(x)` — uppercase hex of the argument's bytes (text → UTF-8, blob → raw,
+    integer → decimal-text bytes; NULL → NULL; floats are declined).
+  These parsed as function calls already but hit the `unknown built-in function`
+  fallthrough; each is now implemented and unit-tested, and validated end-to-end
+  against real SQLite by the mini-sqlite differential oracle.
+
 ## [0.2.1] - Unreleased
 
 ### Fixed
