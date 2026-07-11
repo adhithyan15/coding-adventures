@@ -138,8 +138,12 @@ Each item is a run-verified PR; the runtime grows one quirk at a time.
    sign through `MOVE`/arithmetic/`COMPUTE`; `DISPLAY` renders it as the default
    trailing "zoned" overpunch on the units digit (`−123` → `12L`). The explicit
    `SIGN` clause and its `SEPARATE`/`LEADING` variants are deferred.
-7. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
-7. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`, `TIMES`,
+7. **v0.7 — `PERFORM para [n TIMES]`** (this PR): out-of-line paragraph
+   invocation with return, an integer repeat count (`≤ 0` runs zero times), and a
+   recursion-depth guard against a self-performing paragraph. `PERFORM … THRU`,
+   `… UNTIL`, `… VARYING`, and the inline form are deferred.
+8. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
+9. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`,
    `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.
 8. **Conditions** — level-88 condition-names.
 9. **Tables** — `OCCURS`, subscripts, `REDEFINES`, `USAGE`.
