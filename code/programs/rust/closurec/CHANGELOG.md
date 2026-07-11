@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.16] - 2026-07-11
+
+### Added — CLOC12.177 PR2: private class fields end-to-end
+
+Picks up javascript-parser 0.41.0, whose bridge now lowers a private field's
+`PRIVATE_NAME` key to `PropertyKey::PrivateName`. A private field now survives the
+full closurec pipeline. New e2e diff fixture `tests/diff/simple-private-field/`:
+`class C { #x = 1 + 2 }` → `class C{#x=3;}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the private field's
+initializer: `1 + 2` folds to `3`. Before this bridge change the private field
+declined, dropping the file to WHITESPACE_ONLY (`class C{#x=1+2};`, arithmetic
+intact). Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout.
+PATCH.
+
 ## [0.234.15] - 2026-07-11
 
 ### Added — CLOC12.176 PR2: static-init blocks end-to-end

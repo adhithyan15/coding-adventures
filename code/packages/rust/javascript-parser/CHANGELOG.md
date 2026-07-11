@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.41.0] - 2026-07-11
+
+### Added — CLOC12.177 PR2: bridge private class fields → `PropertyKey::PrivateName`
+
+A private class field (`class C { #x = 1; }`) parses as a `class_field_declaration`
+whose key is a bare `PRIVATE_NAME` token (`#x`) rather than a `property_name`
+node, so `convert_class_field` previously declined it (dropping the file to
+WHITESPACE_ONLY). It now detects that token via the new `private_name_key` helper
+and lowers it to `PropertyKey::PrivateName` (javascript-ast 0.36.0):
+
+- The `PRIVATE_NAME` token's `value` **includes** the leading `#` (e.g. `"#x"`);
+  the stored `PrivateName.name` omits it (mirroring `Identifier`), so the helper
+  strips the `#`. The emitter re-adds it.
+- Works for a bare field (`#x;` → `value: None`), an initialized field
+  (`#x = 1;`), and a `static` private field (`static #x = 1;`) — the `static`
+  token precedes the `PRIVATE_NAME` token and still sets `is_static`.
+- A private **method** (`#m(){}`) is a *separate* `private_method_definition`
+  grammar node, not yet bridged — it still DECLINES (safe WHITESPACE_ONLY), never
+  a mis-emit. A later slice.
+
+5 new bridge tests (the former `class_private_field_declines` flipped to success).
+MINOR.
+
 ## [0.40.0] - 2026-07-11
 
 ### Added — CLOC12.176 PR2: bridge static-init blocks → `ClassMember::StaticBlock`
