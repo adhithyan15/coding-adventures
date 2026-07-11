@@ -562,10 +562,42 @@ describe("built-in method catalog: Hash (M1c)", () => {
     expect([...collide.entries()]).toEqual([["z", 2]]);
   });
 
+  it("block Enumerable aggregates (find/any?/all?/none?/count/sort_by/min_by/max_by)", () => {
+    // Hash mixes in Enumerable: the block is yielded [key, value] and the
+    // "element" an aggregate returns is the two-element [key, value] pair.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3]]);
+    // find/detect → first matching [k, v] pair (or nil).
+    expect(callMethod(h, "find", new Closure((k: Val, v: Val) => (v as number) > 1))).toEqual(["b", 2]);
+    expect(callMethod(h, "detect", new Closure((k: Val, v: Val) => (v as number) > 9))).toBeNull();
+    // any?/all?/none? over block([k, v]).
+    expect(callMethod(h, "any?", new Closure((k: Val, v: Val) => v === 2))).toBe(true);
+    expect(callMethod(h, "all?", new Closure((k: Val, v: Val) => (v as number) > 0))).toBe(true);
+    expect(callMethod(h, "none?", new Closure((k: Val, v: Val) => (v as number) > 9))).toBe(true);
+    // count { |k, v| pred } → number of truthy pairs.
+    expect(callMethod(h, "count", new Closure((k: Val, v: Val) => (v as number) % 2 === 1))).toBe(2);
+    // sort_by → NEW array of [k, v] pairs ordered by the block key.
+    expect(callMethod(h, "sort_by", new Closure((k: Val, v: Val) => -(v as number)))).toEqual([
+      ["c", 3],
+      ["b", 2],
+      ["a", 1],
+    ]);
+    // min_by / max_by → the extremal [k, v] pair.
+    expect(callMethod(h, "min_by", new Closure((k: Val, v: Val) => v))).toEqual(["a", 1]);
+    expect(callMethod(h, "max_by", new Closure((k: Val, v: Val) => v))).toEqual(["c", 3]);
+    // min_by / max_by on an empty hash → nil; receiver unchanged throughout.
+    expect(callMethod(new Map<Val, Val>(), "min_by", new Closure((k: Val, v: Val) => v))).toBeNull();
+    expect([...h.entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+      ["c", 3],
+    ]);
+  });
+
   it("respond_to? honesty + nil floor", () => {
     const h = new Map<Val, Val>([["a", 1]]);
     expect(callMethod(h, "respond_to?", "keys")).toBe(true);
     expect(callMethod(h, "respond_to?", "each")).toBe(true);
+    expect(callMethod(h, "respond_to?", "min_by")).toBe(true);
     expect(callMethod(h, "respond_to?", "transform_values")).toBe(true);
     // `transform_keys!` (in-place bang variant) is still uncatalogued.
     expect(callMethod(h, "respond_to?", "transform_keys!")).toBe(false);
