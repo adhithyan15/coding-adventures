@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.2] - Unreleased
+
+### Added
+
+- **Scalar `MAX(a, b, …)` / `MIN(a, b, …)`** (two-or-more arguments): return the
+  largest / smallest argument, or NULL if any argument is NULL, comparing with
+  SQL value order. The single-argument aggregate forms are unchanged (compiled to
+  `FinalizeAgg`); the planner (sql-planner 0.2.0) now routes only the multi-arg
+  calls here. Fixes `SELECT MAX(3, 9, 5)` returning `3` instead of `9`.
+
 ## [0.4.1] - Unreleased
 
 ### Added

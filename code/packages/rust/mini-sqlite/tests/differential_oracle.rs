@@ -492,6 +492,33 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT IIF(n > 5, 'big', 'small') AS r FROM t ORDER BY id",
     },
+    // Multi-argument MAX/MIN are the SCALAR forms (return the largest/smallest
+    // argument, NULL if any is NULL) — distinct from the 1-arg aggregate.
+    Case {
+        id: "scalar_max_min",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 7), (2, 20)",
+        ],
+        query: "SELECT MAX(n, 10, 3) AS mx, MIN(n, 10, 3) AS mn FROM t ORDER BY id",
+    },
+    Case {
+        id: "scalar_max_null",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 5), (2, NULL)",
+        ],
+        query: "SELECT MAX(n, 3) AS r FROM t ORDER BY id",
+    },
+    // The single-argument aggregate MAX/MIN still work (regression guard).
+    Case {
+        id: "agg_max_min_still_work",
+        setup: &[
+            "CREATE TABLE t (dept TEXT, sal INTEGER)",
+            "INSERT INTO t VALUES ('a', 10), ('a', 30), ('b', 20)",
+        ],
+        query: "SELECT dept, MAX(sal), MIN(sal) FROM t GROUP BY dept ORDER BY dept",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
