@@ -21,7 +21,7 @@ fn host_triple() -> String {
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
 /// Path to the shared C runtime (relative to this crate).
-fn lispy_runtime_c() -> std::path::PathBuf {
+fn dynval_runtime_c() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../twig-aot/runtime/dynval_runtime.c")
 }
@@ -38,7 +38,7 @@ fn run(src: &str, module: &str) -> i32 {
     let build = std::process::Command::new("clang")
         // `-x ir <our IR>` then `-x none <C runtime>` (reset so clang treats the .c by extension).
         .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-x").arg("none").arg(lispy_runtime_c())
+        .arg("-x").arg("none").arg(dynval_runtime_c())
         .arg("-o").arg(&exe)
         .output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));

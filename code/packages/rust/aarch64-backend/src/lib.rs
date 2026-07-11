@@ -1891,7 +1891,7 @@ mod tests {
     }
 
     #[test]
-    fn lispy_runtime_cons_car_emit_external_calls() {
+    fn dynval_runtime_cons_car_emit_external_calls() {
         // `(CAR (CONS 7 9))` via the runtime path: two BLs to the C lisp
         // runtime, recorded as external relocations the linker resolves from
         // the runtime archive.

@@ -1,5 +1,9 @@
 # Changelog — `lang-aot`
 
+## 0.199.0 - 2026-07-11 (DVAL01-1c: rename Rust crate lispy-runtime -> dynval-runtime)
+
+DVAL01-1c: the Rust golden-reference crate `lispy-runtime` is renamed to `dynval-runtime`, completing the crate-level de-lisp of the generic dynamic-value substrate (spec DVAL01 section 3.2). lang-aot's `Cargo.toml` dependency and every `use lispy_runtime` / `lispy_runtime::` import across `src/jit_lisp.rs` and the LLVM/metacircular/conformance integration tests move to `dynval_runtime`; the local test-helper `lispy_runtime_c()` (which returns the path to the now-`dynval_runtime.c` runtime) becomes `dynval_runtime_c()`. Pure rename -- no ABI, tag-layout, or behaviour change. The public type names (`LispyValue` etc.) and the IIR `lispy_*` builtin names are renamed by DVAL01-2, not here. Verified by the cross-backend matrix staying green on all five code-gen backends.
+
 ## 0.198.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
 
 DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.

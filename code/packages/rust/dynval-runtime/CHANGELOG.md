@@ -1,4 +1,32 @@
-# Changelog — lispy-runtime
+# Changelog — dynval-runtime
+
+## [0.6.0] — 2026-07-11 (DVAL01-1c — crate renamed `lispy-runtime` → `dynval-runtime`)
+
+### Changed — language-neutral crate name
+
+Renamed the crate from `lispy-runtime` to **`dynval-runtime`** as part of
+the DVAL01 de-tunnel (`code/specs/DVAL01-generic-dynamic-value-substrate.md`).
+Nothing about the tagged 64-bit value model — integer `n << 3`, `nil`,
+booleans, interned symbols, heap pointers, cons cells, closures, the
+string builtins — is lisp-specific: Python, Ruby, JavaScript and Scheme
+all need exactly this substrate. The crate name no longer implies one
+language family.
+
+This is a **pure rename**: the tag encodings, the ABI, every public item
+(`LispyValue`, `LispyBinding`, `heap::*`, `builtins::*`, `intern`,
+`name_of`) and all runtime behaviour are byte-for-byte unchanged. Only
+the package name (`Cargo.toml`), the workspace member list, and every
+consumer's `use lispy_runtime` → `use dynval_runtime` import move. The
+in-crate *type* names (`LispyValue` etc.) and the IIR `lispy_*` builtin
+names are renamed by later DVAL01 PRs (-2), not here.
+
+Consumers updated: `mccarthy-lisp-iir-compiler`, `mccarthy-lisp-vm`,
+`twig-vm`, `lang-aot`, `twig-aot`. CI (`lang-runtime-safety*.yml`) and
+`scripts/miri-twig-vm.sh` now run Miri on `-p dynval-runtime`.
+
+Verified by the `lang-aot` cross-backend matrix staying green on all five
+code-gen backends (a correct rename is a behavioural no-op) plus the
+`dynval-runtime` Miri golden tests and `scripts/miri-twig-vm.sh`.
 
 ## [0.5.0] — 2026-05-24 (Path A increment 6b — typed cons-cell mutator)
 

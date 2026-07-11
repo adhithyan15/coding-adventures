@@ -1799,7 +1799,7 @@ mod tests {
     }
 
     #[test]
-    fn lispy_runtime_cons_car_emit_external_calls() {
+    fn dynval_runtime_cons_car_emit_external_calls() {
         // `(CAR (CONS 7 9))` through the runtime path: two CALLs to the C
         // lisp runtime, surfaced as external relocations.
         let ir = vec![

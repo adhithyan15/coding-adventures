@@ -158,7 +158,7 @@ impl LispyValue {
     /// # Examples
     ///
     /// ```
-    /// use lispy_runtime::LispyValue;
+    /// use dynval_runtime::LispyValue;
     /// let v = LispyValue::int(42);
     /// assert_eq!(v.as_int(), Some(42));
     /// ```
