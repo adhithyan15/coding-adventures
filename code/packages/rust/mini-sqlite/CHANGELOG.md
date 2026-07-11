@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.9 — Fix ROUND with a negative digit count
+
+Stream A correctness fix (sql-vm 0.4.5): `ROUND(x, n)` with a negative `n` now
+matches SQLite, which treats it as zero digits rather than rounding to
+tens/hundreds — `ROUND(2.567, -1)` returned `0.0` but SQLite gives `3.0`
+(= `ROUND(2.567, 0)`), and `ROUND(12.5, -1)` = `13.0`. A new differential-oracle
+case (`round_negative_digits`) diffs against real bundled SQLite.
+
 ## 0.5.8 — CONCAT / CONCAT_WS / SUBSTRING string functions
 
 Grows the SQL scalar surface (sql-vm 0.4.4): `CONCAT(x, …)` joins all arguments
