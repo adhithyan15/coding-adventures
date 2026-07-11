@@ -1,0 +1,138 @@
+# COBOL-60 Parser Grammar
+# ============================================================
+#
+# The syntactic layer of the COBOL-60 frontend (see PL07-cobol-60.md).  It
+# consumes the token stream produced by cobol.tokens (after the lexer's
+# column-strip pre-tokenize hook) and builds a generic concrete syntax tree via
+# the shared `GrammarParser` (recursive-descent PEG with packrat memoization).
+# Nothing is hand-written.
+#
+# A COBOL program is exactly four divisions, always in order — IDENTIFICATION,
+# ENVIRONMENT, DATA, PROCEDURE — of which only IDENTIFICATION and PROCEDURE are
+# required.  Nearly every construct ends in a period (DOT).
+#
+# ------------------------------------------------------------
+# Grammar reminders (see grammar-format.md)
+# ------------------------------------------------------------
+#   * The FIRST rule (`program`) is the entry point; the whole token stream must
+#     be consumed.
+#   * UPPERCASE names (NAME, NUMBER, STRING, PIC_STRING, DOT, LPAREN, RPAREN)
+#     reference token TYPES.
+#   * "QUOTED" literals match a token's VALUE.  Reserved words are normalized to
+#     uppercase by the lexer, so literals here are uppercase.
+#   * `{ x }` = zero or more (greedy), `[ x ]` = optional, `( x )` = grouping,
+#     `|` = ordered choice.  No left recursion.
+#   * Level numbers arrive as NUMBER tokens (the lexer keeps no LEVEL token); a
+#     data entry is therefore `NUMBER NAME … DOT`.
+
+# @version 1
+
+# ============================================================
+# Program: the four divisions
+# ============================================================
+program = identification_division
+          [ environment_division ]
+          [ data_division ]
+          procedure_division ;
+
+# ============================================================
+# IDENTIFICATION DIVISION
+# ============================================================
+#
+# The header, the required PROGRAM-ID, then optional commentary paragraphs
+# (AUTHOR, DATE-WRITTEN, …) whose bodies are free text up to the next period.
+identification_division =
+    "IDENTIFICATION" "DIVISION" DOT
+    program_id
+    { id_paragraph } ;
+
+program_id = "PROGRAM-ID" DOT NAME DOT ;
+
+id_paragraph = id_keyword DOT { comment_word } DOT ;
+id_keyword   = "AUTHOR" | "INSTALLATION" | "DATE-WRITTEN"
+             | "DATE-COMPILED" | "SECURITY" | "REMARKS" ;
+# Commentary text is arbitrary words; we accept names, numbers, and literals.
+comment_word = NAME | NUMBER | STRING ;
+
+# ============================================================
+# ENVIRONMENT DIVISION (optional)
+# ============================================================
+#
+# A minimal but real subset: the CONFIGURATION SECTION (SOURCE/OBJECT-COMPUTER)
+# and the INPUT-OUTPUT SECTION (FILE-CONTROL / SELECT).  Richer FD descriptions
+# are future work.
+environment_division = "ENVIRONMENT" "DIVISION" DOT { env_section } ;
+env_section = configuration_section | input_output_section ;
+
+configuration_section =
+    "CONFIGURATION" "SECTION" DOT { config_paragraph } ;
+config_paragraph = ( "SOURCE-COMPUTER" | "OBJECT-COMPUTER" ) DOT NAME DOT ;
+
+input_output_section =
+    "INPUT-OUTPUT" "SECTION" DOT "FILE-CONTROL" DOT { select_sentence } ;
+select_sentence = "SELECT" NAME "ASSIGN" "TO" NAME DOT ;
+
+# ============================================================
+# DATA DIVISION (optional)
+# ============================================================
+#
+# The WORKING-STORAGE and FILE sections are lists of data entries.  A data entry
+# is a level number, a name (or FILLER), zero or more clauses, and a period.
+data_division = "DATA" "DIVISION" DOT { data_section } ;
+data_section  = working_storage_section | file_section ;
+
+working_storage_section = "WORKING-STORAGE" "SECTION" DOT { data_entry } ;
+file_section            = "FILE" "SECTION" DOT { file_or_data_entry } ;
+file_or_data_entry      = fd_entry | data_entry ;
+fd_entry                = "FD" NAME { comment_word } DOT ;
+
+data_entry  = NUMBER ( NAME | "FILLER" ) { data_clause } DOT ;
+data_clause = picture_clause | value_clause ;
+
+picture_clause = ( "PICTURE" | "PIC" ) PIC_STRING ;
+value_clause   = "VALUE" [ "IS" ] literal ;
+
+# ============================================================
+# PROCEDURE DIVISION
+# ============================================================
+#
+# Optional sections, then paragraphs (a name, then sentences).  A sentence is one
+# or more statements terminated by a period.  Statement verbs and paragraph names
+# never collide: a statement begins with a verb KEYWORD, a paragraph with a NAME.
+procedure_division = "PROCEDURE" "DIVISION" DOT { paragraph } ;
+paragraph = NAME DOT { sentence } ;
+sentence  = statement { statement } DOT ;
+
+statement = move_stmt | display_stmt | accept_stmt
+          | add_stmt | subtract_stmt | multiply_stmt | divide_stmt
+          | perform_stmt | goto_stmt | if_stmt | stop_stmt ;
+
+move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
+display_stmt  = "DISPLAY" operand { operand } ;
+accept_stmt   = "ACCEPT" NAME ;
+add_stmt      = "ADD" operand { operand } "TO" NAME [ "GIVING" NAME ] ;
+subtract_stmt = "SUBTRACT" operand { operand } "FROM" NAME [ "GIVING" NAME ] ;
+multiply_stmt = "MULTIPLY" operand "BY" operand [ "GIVING" NAME ] ;
+divide_stmt   = "DIVIDE" operand "INTO" operand [ "GIVING" NAME ] ;
+perform_stmt  = "PERFORM" NAME [ "THROUGH" NAME | "THRU" NAME ]
+                        [ operand "TIMES" ] ;
+goto_stmt     = "GO" [ "TO" ] NAME ;
+stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
+
+# IF: a simple relational condition, a then-branch of statements, optional ELSE.
+# Nested sentences terminate at the enclosing sentence's period.
+if_stmt   = "IF" condition { statement } [ "ELSE" { statement } ] ;
+condition = operand relop operand ;
+relop     = [ "IS" ] [ "NOT" ]
+            ( "GREATER" [ "THAN" ] | "LESS" [ "THAN" ] | "EQUAL" [ "TO" ] ) ;
+
+# ============================================================
+# Operands and literals
+# ============================================================
+operand    = NAME | literal ;
+literal    = NUMBER | STRING | figurative ;
+figurative = "ZERO" | "ZEROS" | "ZEROES"
+           | "SPACE" | "SPACES"
+           | "HIGH-VALUE" | "HIGH-VALUES"
+           | "LOW-VALUE" | "LOW-VALUES"
+           | "QUOTE" | "QUOTES" ;
