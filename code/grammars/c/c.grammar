@@ -1,0 +1,109 @@
+# Parser grammar for the C integer-core subset (SIR27)
+# @version 1
+#
+# Syntactic layer of the `c-to-semantic-ir` frontend
+# (code/specs/SIR27-c-to-semantic-ir.md).  Notation (repo standard, PEG /
+# ordered-choice semantics — the first matching alternative wins):
+#
+#   UPPERCASE     token TYPE from c.tokens (INT_LIT, NAME, PLUS, ...)
+#   "keyword"     matches a KEYWORD token whose value is the quoted word
+#   lowercase     grammar rules (non-terminals)
+#   |             ordered alternation (first match wins)
+#   { x }         zero or more repetitions of x  (left-associative operators)
+#   [ x ]         optional (zero or one)         (right-assoc via self-recursion)
+#   ( x )         grouping
+#   ;             rule terminator
+#
+# Entry point: translation_unit
+#
+# The full C expression precedence cascade is encoded loosest-rule-calls-tightest
+# (assignment at the top, primary at the bottom).  The subset is integer-only;
+# see the spec for what is deliberately excluded (pointers, structs, floats, the
+# preprocessor, typedef).
+
+# ---------------------------------------------------------------------------
+# Top level
+# ---------------------------------------------------------------------------
+
+translation_unit = { function_def } ;
+
+function_def = type_spec NAME LPAREN [ param_list ] RPAREN compound_stmt ;
+
+param_list = param { COMMA param } | "void" ;
+param = type_spec NAME ;
+
+# ---------------------------------------------------------------------------
+# Type specifiers — one or more type keywords.  The combination (e.g.
+# "unsigned int", "long long", or a lone <stdint.h> name) is resolved in the
+# lowering pass, not here.
+# ---------------------------------------------------------------------------
+
+type_spec = type_kw { type_kw } ;
+
+type_kw = "void" | "char" | "short" | "int" | "long" | "signed" | "unsigned"
+        | "int8_t" | "int16_t" | "int32_t" | "int64_t"
+        | "uint8_t" | "uint16_t" | "uint32_t" | "uint64_t" | "size_t" ;
+
+# ---------------------------------------------------------------------------
+# Statements
+# ---------------------------------------------------------------------------
+
+compound_stmt = LBRACE { block_item } RBRACE ;
+
+block_item = declaration | statement ;
+
+# A declaration ends in its own semicolon; `init_declarator` is the
+# semicolon-less form reused by the `for` initialiser.
+declaration = init_declarator SEMICOLON ;
+init_declarator = type_spec NAME [ EQ expr ] ;
+
+statement = compound_stmt
+          | if_stmt
+          | while_stmt
+          | for_stmt
+          | return_stmt
+          | expr_stmt ;
+
+if_stmt     = "if" LPAREN expr RPAREN statement [ "else" statement ] ;
+while_stmt  = "while" LPAREN expr RPAREN statement ;
+for_stmt    = "for" LPAREN [ for_clause ] SEMICOLON [ expr ] SEMICOLON [ expr ] RPAREN statement ;
+for_clause  = init_declarator | expr ;
+return_stmt = "return" [ expr ] SEMICOLON ;
+expr_stmt   = [ expr ] SEMICOLON ;
+
+# ---------------------------------------------------------------------------
+# Expressions — the C precedence cascade (loosest first)
+# ---------------------------------------------------------------------------
+
+expr = assignment ;
+
+# Simple assignment only (no compound assignment in v1); right-associative.
+assignment = unary EQ assignment | logical_or ;
+
+logical_or  = logical_and { OR_OR logical_and } ;
+logical_and = bit_or       { AND_AND bit_or } ;
+bit_or      = bit_xor      { PIPE bit_xor } ;
+bit_xor     = bit_and      { CARET bit_and } ;
+bit_and     = equality     { AMP equality } ;
+equality    = relational   { ( EQ_EQ | NE ) relational } ;
+relational  = shift        { ( LE | GE | LT | GT ) shift } ;
+shift       = additive     { ( SHL | SHR ) additive } ;
+additive    = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = cast      { ( STAR | SLASH | PERCENT ) cast } ;
+
+# A cast `(T)e` — the type_spec keyword after `(` disambiguates it from a
+# parenthesised expression (whose contents start with a value, never a type
+# keyword).  Right-recursive so `(uint8_t)(int)x` nests.
+cast = LPAREN type_spec RPAREN cast | unary ;
+
+unary = ( PLUS | MINUS | TILDE | BANG ) unary | postfix ;
+
+postfix = primary { call_suffix } ;
+call_suffix = LPAREN [ arg_list ] RPAREN ;
+arg_list = expr { COMMA expr } ;
+
+primary = INT_LIT
+        | CHAR_LIT
+        | STR_LIT
+        | NAME
+        | LPAREN expr RPAREN ;
