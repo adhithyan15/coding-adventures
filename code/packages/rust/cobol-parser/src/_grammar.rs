@@ -272,6 +272,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"subtract_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"multiply_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"divide_stmt"#.to_string() },
+                GrammarElement::RuleReference { name: r#"compute_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"perform_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"goto_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"if_stmt"#.to_string() },
@@ -366,6 +367,91 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 116,
         },
         GrammarRule {
+            name: r#"compute_stmt"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Literal { value: r#"COMPUTE"#.to_string() },
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"ROUNDED"#.to_string() }) },
+                GrammarElement::TokenReference { name: r#"EQ"#.to_string() },
+                GrammarElement::RuleReference { name: r#"arith_expr"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"size_error"#.to_string() }) },
+            ] },
+            line_number: 123,
+        },
+        GrammarRule {
+            name: r#"size_error"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Literal { value: r#"ON"#.to_string() },
+                GrammarElement::Literal { value: r#"SIZE"#.to_string() },
+                GrammarElement::Literal { value: r#"ERROR"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
+            ] },
+            line_number: 124,
+        },
+        GrammarRule {
+            name: r#"arith_expr"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"arith_term"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::TokenReference { name: r#"PLUS"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"arith_term"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 140,
+        },
+        GrammarRule {
+            name: r#"arith_term"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"arith_factor"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"arith_factor"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 141,
+        },
+        GrammarRule {
+            name: r#"arith_factor"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"arith_unary"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"POW"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"arith_unary"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 142,
+        },
+        GrammarRule {
+            name: r#"arith_unary"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::TokenReference { name: r#"PLUS"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
+                    ] }) },
+                GrammarElement::RuleReference { name: r#"arith_primary"#.to_string() },
+            ] },
+            line_number: 143,
+        },
+        GrammarRule {
+            name: r#"arith_primary"#.to_string(),
+            body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"arith_expr"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+                ] },
+            ] },
+            line_number: 144,
+        },
+        GrammarRule {
             name: r#"perform_stmt"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"PERFORM"#.to_string() },
@@ -385,7 +471,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Literal { value: r#"TIMES"#.to_string() },
                     ] }) },
             ] },
-            line_number: 117,
+            line_number: 145,
         },
         GrammarRule {
             name: r#"goto_stmt"#.to_string(),
@@ -394,7 +480,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"TO"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
             ] },
-            line_number: 119,
+            line_number: 147,
         },
         GrammarRule {
             name: r#"stop_stmt"#.to_string(),
@@ -406,7 +492,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                     ] }) },
             ] },
-            line_number: 120,
+            line_number: 148,
         },
         GrammarRule {
             name: r#"if_stmt"#.to_string(),
@@ -419,7 +505,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
                     ] }) },
             ] },
-            line_number: 124,
+            line_number: 152,
         },
         GrammarRule {
             name: r#"condition"#.to_string(),
@@ -428,7 +514,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"relop"#.to_string() },
                 GrammarElement::RuleReference { name: r#"operand"#.to_string() },
             ] },
-            line_number: 125,
+            line_number: 153,
         },
         GrammarRule {
             name: r#"relop"#.to_string(),
@@ -450,7 +536,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         ] },
                     ] }) },
             ] },
-            line_number: 126,
+            line_number: 154,
         },
         GrammarRule {
             name: r#"operand"#.to_string(),
@@ -458,7 +544,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::RuleReference { name: r#"literal"#.to_string() },
             ] },
-            line_number: 132,
+            line_number: 160,
         },
         GrammarRule {
             name: r#"literal"#.to_string(),
@@ -467,7 +553,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                 GrammarElement::RuleReference { name: r#"figurative"#.to_string() },
             ] },
-            line_number: 133,
+            line_number: 161,
         },
         GrammarRule {
             name: r#"figurative"#.to_string(),
@@ -484,7 +570,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"QUOTE"#.to_string() },
                 GrammarElement::Literal { value: r#"QUOTES"#.to_string() },
             ] },
-            line_number: 134,
+            line_number: 162,
         },
     ],
         version: 1,

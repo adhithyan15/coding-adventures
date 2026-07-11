@@ -225,6 +225,82 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // COMPUTE and arithmetic expressions
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn compute_with_operator_precedence() {
+        // `A + B * C ** D` must nest so that ** binds tightest, then *, then +.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    COMPUTE RESULT = A + B * C ** D.",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        // One additive expr at the top; the multiplicative and exponent layers
+        // each appear once, proving the precedence cascade was built.
+        assert_eq!(count_rule(&ast, "arith_expr"), 1);
+        assert_eq!(count_rule(&ast, "arith_term"), 2); // A, and (B * C ** D)
+        assert_eq!(count_rule(&ast, "arith_factor"), 3); // A, B, (C ** D)
+    }
+
+    #[test]
+    fn compute_parentheses_regroup_precedence() {
+        // Parentheses force the addition to evaluate first: a nested arith_expr.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    COMPUTE X = (A + B) * C.",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        // The parenthesised `A + B` is a second, nested arith_expr.
+        assert_eq!(count_rule(&ast, "arith_expr"), 2);
+    }
+
+    #[test]
+    fn compute_rounded_and_on_size_error() {
+        // ROUNDED and the ON SIZE ERROR clause both parse; the clause carries a
+        // statement to run on overflow.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            // Split across cards so no line exceeds the 72-column code area
+            // (a COBOL statement flows freely from one card to the next).
+            "    COMPUTE TOTAL ROUNDED = PRICE * QTY",
+            "        ON SIZE ERROR DISPLAY \"OVR\".",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        assert!(has_rule(&ast, "size_error"));
+        // The overflow handler is an ordinary statement (a DISPLAY here).
+        assert!(has_rule(&ast, "display_stmt"));
+    }
+
+    #[test]
+    fn compute_negative_literal_vs_subtraction() {
+        // `A - 3` (spaced) is subtraction; `-3` (unspaced) would be a negative
+        // literal. Here we exercise the binary minus.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    COMPUTE D = A - 3.",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "compute_stmt"));
+        assert_eq!(count_rule(&ast, "arith_term"), 2); // A and 3, split by MINUS
+    }
+
+    // ----------------------------------------------------------------------
     // ENVIRONMENT DIVISION (optional, minimal)
     // ----------------------------------------------------------------------
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 — arithmetic operator tokens (COMPUTE)
+
+- Added the arithmetic operator tokens used by `COMPUTE` expressions: `POW`
+  (`**`), `PLUS` (`+`), `MINUS` (`-`), `STAR` (`*`), `SLASH` (`/`), and `EQ`
+  (`=`). `**` is ordered before `*` so maximal-munch reads exponentiation as one
+  token. COBOL's mandatory spacing around binary operators keeps `-` unambiguous
+  against a negative `NUMBER` literal (`-3`) and against a hyphenated `NAME`
+  (`A-B`); documented inline in `cobol.tokens`.
+- New reserved words: `ROUNDED`, `SIZE`, `ERROR` (for `COMPUTE … ROUNDED` and the
+  `ON SIZE ERROR` clause).
+
 ## 0.1.0 — COBOL-60 lexer (PL07)
 
 - Grammar-driven tokenizer over `code/grammars/cobol/cobol.tokens`, wrapping
