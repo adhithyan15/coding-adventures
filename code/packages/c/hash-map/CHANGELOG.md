@@ -19,5 +19,8 @@ All notable changes to this package will be documented in this file.
 - Allocation-free resize (relinks chaining nodes / moves open-addressing slots,
   no key/value re-duplication) that degrades gracefully on allocation failure;
   overflow-guarded capacity doubling.
-- Tests covering all eight (strategy × hash) combinations, resize stress, and
-  empty-key/value edge cases, run under GCC and Clang via `iso-harness`.
+- `hashmap_for_each` enumeration callback (the C equivalent of the Rust crate's
+  `entries()`/`keys()`/`values()`), which the `hash-set` package builds on.
+- Tests covering all eight (strategy × hash) combinations, resize stress,
+  enumeration, and empty-key/value edge cases, run under GCC and Clang via
+  `iso-harness`.

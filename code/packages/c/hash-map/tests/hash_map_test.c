@@ -51,6 +51,16 @@ static void exercise(hashmap *m) {
     ISO_CHECK(get_str_eq(m, "two", "200"));
 }
 
+/* Counter callback for hashmap_for_each. */
+static void count_cb(const void *k, size_t kl, const void *v, size_t vl,
+                     void *user) {
+    (void)k;
+    (void)kl;
+    (void)v;
+    (void)vl;
+    (*(size_t *)user)++;
+}
+
 int main(void) {
     hashmap_strategy strategies[2] = {HASHMAP_CHAINING, HASHMAP_OPEN_ADDRESSING};
     hashmap_hash hashes[4] = {HASHMAP_SIPHASH24, HASHMAP_FNV1A32,
@@ -117,6 +127,21 @@ int main(void) {
         }
         ISO_CHECK_MSG(all_found, "open-addressing entries survive resizing");
         ISO_CHECK(hashmap_load_factor(m) <= 0.75);
+        hashmap_free(m);
+    }
+
+    /* for_each visits exactly `size` entries. */
+    {
+        hashmap *m = hashmap_new(4, HASHMAP_OPEN_ADDRESSING, HASHMAP_DJB2);
+        size_t count = 0;
+        ISO_CHECK(m != NULL);
+        set_str(m, "a", "1");
+        set_str(m, "b", "2");
+        set_str(m, "c", "3");
+        hashmap_delete(m, "b", 1); /* leaves a tombstone, not visited */
+        hashmap_for_each(m, count_cb, &count);
+        ISO_CHECK_EQ_UINT(count, hashmap_size(m));
+        ISO_CHECK_EQ_UINT(count, 2);
         hashmap_free(m);
     }
 

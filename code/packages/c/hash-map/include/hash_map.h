@@ -77,6 +77,17 @@ int hashmap_has(const hashmap *map, const void *key, size_t key_len);
 /* hashmap_delete — remove `key`. Returns 1 if it was present, else 0. */
 int hashmap_delete(hashmap *map, const void *key, size_t key_len);
 
+/* hashmap_iter_fn — callback for hashmap_for_each. Receives borrowed pointers to
+ * one entry's key and value (valid only for the duration of the call), plus the
+ * caller's `user` pointer. */
+typedef void (*hashmap_iter_fn)(const void *key, size_t key_len,
+                                const void *value, size_t value_len,
+                                void *user);
+
+/* hashmap_for_each — invoke `fn` once for every entry, in unspecified order.
+ * This is the C equivalent of the Rust crate's entries()/keys()/values(). */
+void hashmap_for_each(const hashmap *map, hashmap_iter_fn fn, void *user);
+
 /* Accessors. */
 size_t hashmap_size(const hashmap *map);
 size_t hashmap_capacity(const hashmap *map);

@@ -568,6 +568,27 @@ int hashmap_delete(hashmap *map, const void *key, size_t key_len) {
     }
 }
 
+/* ── enumeration ──────────────────────────────────────────────────────────── */
+void hashmap_for_each(const hashmap *map, hashmap_iter_fn fn, void *user) {
+    size_t i;
+    if (map->buckets != NULL) {
+        for (i = 0; i < map->capacity; i++) {
+            node *n = map->buckets[i];
+            while (n != NULL) {
+                fn(n->key, n->key_len, n->val, n->val_len, user);
+                n = n->next;
+            }
+        }
+    } else {
+        for (i = 0; i < map->capacity; i++) {
+            if (map->slots[i].state == SLOT_OCCUPIED) {
+                fn(map->slots[i].key, map->slots[i].key_len, map->slots[i].val,
+                   map->slots[i].val_len, user);
+            }
+        }
+    }
+}
+
 /* ── accessors ────────────────────────────────────────────────────────────── */
 size_t hashmap_size(const hashmap *map) { return map->size; }
 size_t hashmap_capacity(const hashmap *map) { return map->capacity; }
