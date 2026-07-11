@@ -1,0 +1,15 @@
+[package]
+name = "c-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "C (integer-core subset) → Semantic IR (SIR27). Assigns a concrete IntSpec to every expression and inserts Convert nodes per C's integer promotions, so C's width/wrap/truncate semantics survive the narrow waist."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-c-parser = { path = "../c-parser" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+semantic-ir-to-c = { path = "../semantic-ir-to-c" }
+semantic-ir-to-ruby = { path = "../semantic-ir-to-ruby" }
