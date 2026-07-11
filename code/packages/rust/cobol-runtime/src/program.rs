@@ -50,9 +50,7 @@ pub enum Fig {
 /// A named paragraph of statements.
 #[derive(Debug, Clone)]
 pub struct Paragraph {
-    /// The paragraph name — a `PERFORM` / `GO TO` target. Captured now; branched
-    /// on once those verbs land (the next control-flow PR).
-    #[allow(dead_code)]
+    /// The paragraph name — a `PERFORM` (and, later, `GO TO`) target.
     pub name: String,
     pub stmts: Vec<Stmt>,
 }
@@ -80,6 +78,9 @@ pub enum Stmt {
         expr: Expr,
         on_size_error: Vec<Stmt>,
     },
+    /// `PERFORM para [n TIMES]` — run a paragraph out of line, optionally a
+    /// fixed number of times, then return to the statement after the PERFORM.
+    Perform { target: String, times: Option<Operand> },
     /// `IF cond then… [ELSE else…]`.
     If { cond: Cond, then_branch: Vec<Stmt>, else_branch: Vec<Stmt> },
     StopRun,
@@ -396,6 +397,24 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 None => Vec::new(),
             };
             Ok(Stmt::Compute { target, rounded, expr, on_size_error })
+        }
+        "perform_stmt" => {
+            // PERFORM target [THROUGH/THRU target2] [operand TIMES]. The target
+            // is the first direct NAME token; the optional `TIMES` count is an
+            // `operand` node. The THRU range form is deferred.
+            let target = first_token(verb, "NAME")
+                .ok_or_else(|| RuntimeError::Unsupported("PERFORM without a target paragraph".into()))?;
+            if child_tokens(verb)
+                .iter()
+                .any(|(k, v)| k == "KEYWORD" && (v == "THRU" || v == "THROUGH"))
+            {
+                return Err(RuntimeError::Unsupported("PERFORM … THRU (range form)".into()));
+            }
+            let times = match child_node(verb, "operand") {
+                Some(op) => Some(read_operand(op)?),
+                None => None,
+            };
+            Ok(Stmt::Perform { target, times })
         }
         "if_stmt" => {
             // Children in order: IF, condition, then-statements…, [ELSE,

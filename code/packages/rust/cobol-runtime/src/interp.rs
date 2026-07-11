@@ -3,9 +3,18 @@
 
 use crate::error::RuntimeError;
 use crate::picture::Picture;
-use crate::program::{ArithOp, Cond, Expr, Fig, Lit, Operand, Program, RelOp, Stmt};
+use crate::program::{ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, Program, RelOp, Stmt};
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
+
+/// Deepest chain of nested/recursive `PERFORM`s before we bail out with a clean
+/// error. A paragraph that performs itself (directly or in a cycle) would
+/// otherwise recurse until the native stack overflows — an uncatchable abort.
+/// Each level spends several (debug-sized) frames — `exec_perform` →
+/// `run_stmts` → `exec_stmt` → `exec_perform` — so the cap sits well under the
+/// ~200-level overflow point of a default 2 MiB worker/test stack. Real programs
+/// never nest `PERFORM` anywhere near this deep.
+const MAX_PERFORM_DEPTH: usize = 100;
 
 /// Fractional precision COMPUTE carries through an intermediate **division**
 /// before the final round/truncate into the receiver. COBOL's standard defines
@@ -85,17 +94,36 @@ fn overpunch_trailing(magnitude: &str, neg: bool) -> String {
     chars.into_iter().collect()
 }
 
-/// The running machine: the item table, a name→index map, and captured output.
+/// The running machine: the item table, a name→index map, the procedure's
+/// paragraphs (with a name→index map for `PERFORM` targets), and captured output.
 pub struct Machine {
     items: Vec<Item>,
     by_name: HashMap<String, usize>,
+    paragraphs: Vec<Paragraph>,
+    para_index: HashMap<String, usize>,
+    /// Current `PERFORM` nesting depth, bounded by [`MAX_PERFORM_DEPTH`].
+    perform_depth: usize,
     output: String,
 }
 
 impl Machine {
     /// Build the data model from a program's WORKING-STORAGE and initialise it.
     pub fn new(program: &Program) -> Result<Machine, RuntimeError> {
-        let mut m = Machine { items: Vec::new(), by_name: HashMap::new(), output: String::new() };
+        // Index paragraphs by name for PERFORM lookup. A duplicated name keeps
+        // its first occurrence (a PERFORM of an ambiguous name is unusual; the
+        // first definition wins rather than erroring at build time).
+        let mut para_index = HashMap::new();
+        for (i, p) in program.paragraphs.iter().enumerate() {
+            para_index.entry(p.name.clone()).or_insert(i);
+        }
+        let mut m = Machine {
+            items: Vec::new(),
+            by_name: HashMap::new(),
+            paragraphs: program.paragraphs.clone(),
+            para_index,
+            perform_depth: 0,
+            output: String::new(),
+        };
         m.build_items(program)?;
         Ok(m)
     }
@@ -177,12 +205,15 @@ impl Machine {
     // ----------------------------------------------------------------------
 
     /// Run the procedure division and return the captured console output.
-    pub fn run(mut self, program: &Program) -> Result<String, RuntimeError> {
-        'outer: for para in &program.paragraphs {
-            for stmt in &para.stmts {
-                if self.exec_stmt(stmt)? {
-                    break 'outer; // STOP RUN
-                }
+    pub fn run(mut self, _program: &Program) -> Result<String, RuntimeError> {
+        // Execute paragraphs top to bottom (COBOL falls through paragraph
+        // boundaries). We clone each paragraph's statements to run them, since
+        // executing borrows `self` mutably while the paragraphs live in `self`.
+        let count = self.paragraphs.len();
+        for i in 0..count {
+            let stmts = self.paragraphs[i].stmts.clone();
+            if self.run_stmts(&stmts)? {
+                break; // STOP RUN
             }
         }
         // Falling off the end of the procedure division ends the run too.
@@ -205,6 +236,7 @@ impl Machine {
             Stmt::Compute { target, rounded, expr, on_size_error } => {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
             }
+            Stmt::Perform { target, times } => return self.exec_perform(target, times),
             Stmt::If { cond, then_branch, else_branch } => {
                 let branch = if self.eval_cond(cond)? { then_branch } else { else_branch };
                 return self.run_stmts(branch);
@@ -223,6 +255,57 @@ impl Machine {
             }
         }
         Ok(false)
+    }
+
+    /// `PERFORM target [n TIMES]` — run one paragraph out of line, `n` times
+    /// (default 1), then return. A `TIMES` count that is zero or negative runs
+    /// the paragraph zero times (COBOL's rule); a fractional count truncates.
+    /// Nesting is bounded by [`MAX_PERFORM_DEPTH`] so a self-performing paragraph
+    /// fails with a clean error instead of overflowing the stack. Returns `true`
+    /// if a `STOP RUN` fired inside.
+    fn exec_perform(&mut self, target: &str, times: &Option<Operand>) -> Result<bool, RuntimeError> {
+        let idx = *self
+            .para_index
+            .get(target)
+            .ok_or_else(|| RuntimeError::UndefinedName(target.into()))?;
+
+        // Resolve the repeat count: a non-negative integer; ≤ 0 → zero times.
+        let n: usize = match times {
+            None => 1,
+            Some(op) => {
+                let d = self.operand_decimal(op)?;
+                if d.neg {
+                    0
+                } else {
+                    let int = d.int.trim_start_matches('0');
+                    if int.is_empty() {
+                        0
+                    } else {
+                        int.parse::<usize>().map_err(|_| {
+                            RuntimeError::Unsupported("PERFORM … TIMES count is too large".into())
+                        })?
+                    }
+                }
+            }
+        };
+
+        self.perform_depth += 1;
+        if self.perform_depth > MAX_PERFORM_DEPTH {
+            self.perform_depth -= 1;
+            return Err(RuntimeError::Unsupported(
+                "PERFORM nesting too deep (a paragraph performing itself?)".into(),
+            ));
+        }
+        let stmts = self.paragraphs[idx].stmts.clone();
+        let mut stop = false;
+        for _ in 0..n {
+            if self.run_stmts(&stmts)? {
+                stop = true;
+                break;
+            }
+        }
+        self.perform_depth -= 1;
+        Ok(stop)
     }
 
     /// Evaluate a relational condition. Numeric when both sides are numeric;

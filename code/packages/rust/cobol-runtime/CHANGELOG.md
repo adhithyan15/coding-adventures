@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.7.0 — PERFORM (out-of-line paragraph invocation)
+
+- **`PERFORM para [n TIMES]`** runs a named paragraph out of line and returns to
+  the statement after the `PERFORM`. The `Machine` now indexes paragraphs by name
+  and executes them by cloning their statement list (so a performed paragraph and
+  the top-level fall-through share one execution path).
+- The `TIMES` count is a value: `≤ 0` runs the paragraph zero times (COBOL's
+  rule), a fractional count truncates, and an absurd (non-`usize`) count is a
+  clean error.
+- **`STOP RUN`** inside a performed paragraph ends the whole program (the
+  stop-flag propagates out of the `PERFORM`).
+- **Recursion guard:** a paragraph that performs itself (directly or in a cycle)
+  is bounded by `MAX_PERFORM_DEPTH` (100) and fails with a clean error instead of
+  overflowing the native stack.
+- Deferred to later PRs: `PERFORM … THRU`, `… UNTIL`, `… VARYING`, the inline
+  form, and `GO TO`.
+
 ## 0.6.0 — signed numerics (PIC S9…)
 
 - **`PIC S9…` signed numeric fields.** The leading `S` marks the field signed and
