@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.25.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at every exhaustive `Declaration` match site: `count_decl_names_decl`
+(class name + method params + bodies), `tally_decl` and `inline_in_decl` (recurse
+the heritage operand + method bodies, kept in lockstep so a candidate use inside
+a class is never missed then wrongly inlined), `collect_top_level_decl_names`
+(a top-level `class C` binds `C`), `splice_void_in_decl` / `splice_valued_in_decl`
+(splice into each method body), and `collect_used_idents_decl`. All mirror the
+existing `Expression::ClassExpression` handling. Reachable once the CLOC12.174
+PR2 bridge produces the node.
+
 ## [0.25.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

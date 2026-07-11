@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.14.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at each exhaustive match site: `process_stmt` → `false` (a class is not a
+leaf top-level function this pass renames); `stmt_has_function` → `true`
+(a class carries method functions, so the leaf-binding rename is conservatively
+disabled in its presence); `collect_decl_occurrences_stmt` marks the class name
+ineligible (like a function name); and the soundness-critical
+`collect_all_idents_stmt` / `rewrite_uses_stmt` recurse the class name, heritage,
+and every method body (over-collect + shadow-aware rewrite, mirroring the
+`Expression::ClassExpression` arms). Reachable once the CLOC12.174 PR2 bridge
+produces the node.
+
 ## [0.14.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

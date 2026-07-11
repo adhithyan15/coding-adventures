@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.38.0] - 2026-07-10
+
+### Added — CLOC12.174 PR1: emit `ClassDeclaration` (`class C [extends S] {…}`)
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. New
+`emit_class_declaration` prints `class <id>[ extends S]{members}`, reusing
+`emit_class_member` for each member. The shared `[ extends S]{members}` tail was
+factored into a new `emit_class_tail` helper used by **both** `emit_class` (the
+expression form) and `emit_class_declaration`.
+
+Three deliberate differences from the class *expression*, each the exact mirror
+of the `FunctionDeclaration` vs `FunctionExpression` split:
+
+1. **`id` always prints** (it is non-optional), with a `required_ws()` after
+   `class`, like `emit_function_declaration` after `function`.
+2. **No precedence wrap / no statement-start parenthesis** — a class expression
+   is `PREC_UNARY` and wrapped in statement position (`(class{});`) because a
+   leading `class` parses as a declaration, which is precisely what this node
+   *is*. So the declaration form has no `expr_prec` entry and is never wrapped.
+3. **No trailing `;`** — `emit_function_declaration` appends a normalising `;`
+   (gap-030 part B); a class declaration terminates with its `}` alone (upstream
+   Closure).
+
+5 hand-constructed AST unit tests: empty (bare, no `;`), heritage, members
+(method / static / get / set), `constructor` + computed key, and the full
+`class C extends B{m(){}}` shape. Reachable end-to-end once the PR2 bridge
+produces the node.
+
 ## [0.37.1] - 2026-07-08
 
 ### Added — CLOC12.173 PR3: CodePrinter class-expression conformance port

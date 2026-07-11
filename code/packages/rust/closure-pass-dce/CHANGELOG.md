@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.20.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at each of this crate's exhaustive `Declaration` match sites: the transform
+(`dce_class_declaration` runs DCE inside the heritage operand and method bodies,
+mirroring `dce_class`), and two conservative predicates — `tail_is_safe_to_truncate`
+and `block_is_scope_safe_to_flatten` both return `false` for a class declaration
+(a name-binding, block-scoped node, like a function declaration; preserving it is
+never a miscompile). Reachable once the CLOC12.174 PR2 bridge produces the node.
+
 ## [0.20.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

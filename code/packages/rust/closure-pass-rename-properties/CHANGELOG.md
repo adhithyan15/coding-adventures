@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.12.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms to `classify_decl` and `rewrite_decl` that treat a class declaration's
+members exactly like a class expression's — each non-computed method key is a
+renameable property name (with `constructor` pinned as never-renameable). The
+shared member logic was factored into `classify_class_members` /
+`rewrite_class_members` helpers used by both the expression and declaration arms,
+so classification and rewrite stay in lockstep. The class's own name is a
+variable, not a property, so it is untouched. Reachable once the CLOC12.174 PR2
+bridge produces the node.
+
 ## [0.12.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

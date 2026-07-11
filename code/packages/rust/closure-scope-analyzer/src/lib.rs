@@ -68,7 +68,7 @@
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
-    AssignmentTarget, BindingTarget, BlockStatement, ClassMember, CvId, Declaration, Expression, ForInit,
+    AssignmentTarget, BindingTarget, BlockStatement, ClassDeclaration, ClassMember, CvId, Declaration, Expression, ForInit,
     FunctionDeclaration, FunctionExpression, FunctionParam, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
 };
@@ -495,6 +495,43 @@ fn walk_declaration(
     match decl {
         Declaration::VariableDeclaration(vd) => walk_variable_declaration(vd, ctx, analysis, pending),
         Declaration::FunctionDeclaration(fd) => walk_function_declaration(fd, ctx, analysis, pending),
+        Declaration::ClassDeclaration(cd) => walk_class_declaration(cd, ctx, analysis, pending),
+    }
+}
+
+/// Walk a class *declaration* (`class C [extends S] { … }`). Two jobs, mirroring
+/// the split between [`walk_function_declaration`] (the name binding) and the
+/// `Expression::ClassExpression` arm of [`walk_expression`] (the body):
+///
+/// 1. **Bind the class name.** A class declaration introduces a
+///    [`BindingKind::Class`] binding for `cd.id` in the current scope — the
+///    lexical analogue of the `Function`-kind binding a function declaration
+///    hoists. This is what lets a later reference to `C` resolve (and a renaming
+///    pass rename the class consistently).
+/// 2. **Resolve inside the body.** The `extends` heritage is an ordinary
+///    expression evaluated in the enclosing scope; each method `value` is a
+///    function expression walked as its own function scope — identical to the
+///    class-expression handling.
+fn walk_class_declaration(
+    cd: &ClassDeclaration,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    emit_binding(
+        cd.id.name.clone(),
+        BindingKind::Class,
+        ctx.current,
+        cd.id.cv.clone(),
+        analysis,
+    );
+    if let Some(sup) = &cd.super_class {
+        walk_expression(sup, ctx, analysis, pending);
+    }
+    for member in &cd.body {
+        match member {
+            ClassMember::Method(m) => walk_function_expression(&m.value, ctx, analysis, pending),
+        }
     }
 }
 

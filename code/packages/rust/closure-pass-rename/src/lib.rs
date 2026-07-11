@@ -301,6 +301,11 @@ fn process_stmt(
             process_function(fd, nodes_touched, renames)
         }
         Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
+        // A class declaration is not a leaf top-level function whose params
+        // this pass renames — treat it like a variable declaration (no work
+        // here). Its method bodies are separate scopes; leaving them unrenamed
+        // is safe (a missed optimisation, never unsound).
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
         Statement::Tagged(t) => process_tagged(t, nodes_touched, renames),
     }
 }
@@ -427,6 +432,11 @@ fn stmt_has_function(stmt: &Statement) -> bool {
     match stmt {
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => true,
         Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
+        // A class declaration carries method *functions*. Report `true` so the
+        // leaf-binding rename is conservatively disabled in its presence — a
+        // method could capture/re-scope a name, which would make the leaf
+        // rename unsound (see this function's doc comment).
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => true,
         Statement::Tagged(t) => match t {
             TaggedStatement::BlockStatement(b) => b.body.iter().any(stmt_has_function),
             TaggedStatement::IfStatement(is) => {
@@ -650,6 +660,13 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
             out.push((fd.id.name.clone(), false));
             // Do NOT recurse into fd.body — separate scope.
         }
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            // A class declaration binds a name — mark it ineligible for local
+            // renaming, like a nested function name (renaming a class name
+            // needs its own care). Do NOT recurse into the method bodies —
+            // separate scopes.
+            out.push((cd.id.name.clone(), false));
+        }
         Statement::Tagged(t) => match t {
             // Anything below this point is inside an inner block → nested.
             TaggedStatement::BlockStatement(b) => collect_decl_occurrences(b, out, true),
@@ -775,6 +792,33 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
             collect_all_idents_block(&fd.body, out);
+        }
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            // Soundness-critical: collect EVERY identifier the class introduces
+            // or references — its name, the heritage operand, and each method's
+            // key / value-name / params / body — so a freshly-minted short name
+            // never collides with one. Mirrors the `Expression::ClassExpression`
+            // arm of `collect_all_idents_expr` plus the required class name.
+            out.insert(cd.id.name.clone());
+            if let Some(sup) = &cd.super_class {
+                collect_all_idents_expr(sup, out);
+            }
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                if let PropertyKey::Identifier(id) = &m.key {
+                    out.insert(id.name.clone());
+                }
+                if let Some(id) = &m.value.id {
+                    out.insert(id.name.clone());
+                }
+                for p in &m.value.params {
+                    let FunctionParam::Identifier(id) = p;
+                    out.insert(id.name.clone());
+                }
+                for s in &m.value.body.body {
+                    collect_all_idents_stmt(s, out);
+                }
+            }
         }
         Statement::Tagged(t) => match t {
             TaggedStatement::ExpressionStatement(es) => {
@@ -1142,6 +1186,33 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
         // A leaf function has no nested function declarations, so this arm
         // is unreachable in practice; leave nested functions untouched.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            // Rewrite renamed outer locals used in the heritage operand and
+            // inside each method body. The class's own name is marked
+            // ineligible during collection (never in `map`); each method's
+            // id/params SHADOW outer locals, so they are dropped from the active
+            // map before recursing — mirroring the `Expression::ClassExpression`
+            // arm of `rewrite_uses_expr`.
+            if let Some(sup) = &mut cd.super_class {
+                rewrite_uses_expr(sup, map);
+            }
+            let mut class_inner = map.clone();
+            class_inner.remove(&cd.id.name);
+            for member in &mut cd.body {
+                let ClassMember::Method(m) = member;
+                let mut inner = class_inner.clone();
+                if let Some(id) = &m.value.id {
+                    inner.remove(&id.name);
+                }
+                for p in &m.value.params {
+                    let FunctionParam::Identifier(id) = p;
+                    inner.remove(&id.name);
+                }
+                for s in &mut m.value.body.body {
+                    rewrite_uses_stmt(s, &inner);
+                }
+            }
+        }
         Statement::Tagged(t) => rewrite_uses_tagged(t, map),
     }
 }

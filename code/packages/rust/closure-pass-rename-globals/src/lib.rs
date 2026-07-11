@@ -352,6 +352,25 @@ fn count_decl_names_decl(
                 count_decl_names_stmt(s, out, nodes_touched);
             }
         }
+        // A class declaration binds its name (`cd.id`) as a global, and each
+        // method's params + body-locals are declared names too. Counting the
+        // method params here is what upholds the rename invariant used by
+        // `rename_apply_decl`: a method param that shares a global name pushes
+        // that name's count past 1, disqualifying it from renaming — so a
+        // later body walk with the full map can never rewrite a shadowed use.
+        Declaration::ClassDeclaration(cd) => {
+            *out.entry(cd.id.name.clone()).or_insert(0) += 1;
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                for p in &m.value.params {
+                    let FunctionParam::Identifier(id) = p;
+                    *out.entry(id.name.clone()).or_insert(0) += 1;
+                }
+                for s in &m.value.body.body {
+                    count_decl_names_stmt(s, out, nodes_touched);
+                }
+            }
+        }
     }
 }
 
@@ -470,6 +489,31 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
                 if let Some(init) = &d.init {
                     collect_all_idents_expr(init, out);
+                }
+            }
+        }
+        Declaration::ClassDeclaration(cd) => {
+            // Mirror the `Expression::ClassExpression` arm of
+            // `collect_all_idents_expr`: the class name, the heritage operand's
+            // identifiers, and each method's key / value-name / params / body.
+            out.insert(cd.id.name.clone());
+            if let Some(sup) = &cd.super_class {
+                collect_all_idents_expr(sup, out);
+            }
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                if let PropertyKey::Identifier(id) = &m.key {
+                    out.insert(id.name.clone());
+                }
+                if let Some(id) = &m.value.id {
+                    out.insert(id.name.clone());
+                }
+                for p in &m.value.params {
+                    let FunctionParam::Identifier(id) = p;
+                    out.insert(id.name.clone());
+                }
+                for s in &m.value.body.body {
+                    collect_all_idents_stmt(s, out);
                 }
             }
         }
@@ -870,6 +914,27 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             // so it would not be in `map`.
             for s in &mut fd.body.body {
                 rename_apply_stmt(s, map);
+            }
+        }
+        Declaration::ClassDeclaration(cd) => {
+            // Rename the class's own name (a top-level binding, a rename
+            // target) and the `extends` operand (a use position). Then recurse
+            // each method body with the full `map` — mirroring the function
+            // declaration arm. This is safe for the same reason: a method param
+            // (or local) sharing a global name would be counted more than once
+            // by `count_decl_names_decl` (which tallies method params), so that
+            // name is excluded from `map` and a shadowed use is never rewritten.
+            if let Some(new) = map.get(&cd.id.name) {
+                cd.id.name = new.clone();
+            }
+            if let Some(sup) = &mut cd.super_class {
+                rename_apply_expr(sup, map);
+            }
+            for member in &mut cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &mut m.value.body.body {
+                    rename_apply_stmt(s, map);
+                }
             }
         }
     }

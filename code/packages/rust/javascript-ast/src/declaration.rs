@@ -16,7 +16,7 @@
 //! in [`crate::statement`] lets a declaration appear anywhere a
 //! statement does — matching ESTree's flatter shape on the JSON wire.
 
-use crate::expression::{Expression, Identifier};
+use crate::expression::{ClassMember, Expression, Identifier};
 use crate::statement::BlockStatement;
 use crate::CvId;
 use serde::{Deserialize, Serialize};
@@ -28,6 +28,7 @@ use serde::{Deserialize, Serialize};
 pub enum Declaration {
     VariableDeclaration(VariableDeclaration),
     FunctionDeclaration(FunctionDeclaration),
+    ClassDeclaration(ClassDeclaration),
 }
 
 /// `var x = 1, y = 2;`, `let i = 0;`, `const PI = 3.14;`. The `kind`
@@ -101,6 +102,46 @@ pub struct FunctionDeclaration {
 #[serde(untagged)]
 pub enum FunctionParam {
     Identifier(Identifier),
+}
+
+/// `class C { … }`, `class C extends B { … }` — a class written in
+/// **statement** position. This is the *declaration* form: it binds the name
+/// `C` in the enclosing scope, exactly as [`FunctionDeclaration`] binds a
+/// function name.
+///
+/// # How it differs from [`crate::expression::ClassExpression`]
+///
+/// The class *expression* (`x = class {}`, `f(class C {})`) and the class
+/// *declaration* (`class C {}` as a statement) share their entire body shape —
+/// the `extends` heritage and the `{ … }` member list — and so reuse the same
+/// [`ClassMember`] sub-AST. The **one** structural difference is the name:
+///
+/// | node                | `id`                    | why                                    |
+/// |---------------------|-------------------------|----------------------------------------|
+/// | `ClassExpression`   | `Option<Identifier>`    | may be anonymous (`x = class {}`)      |
+/// | `ClassDeclaration`  | `Identifier` (required) | `class {}` in statement position is a  |
+/// |                     |                         | syntax error — a declaration must name |
+/// |                     |                         | its binding                            |
+///
+/// This mirrors exactly the `FunctionExpression` (optional `id`) vs
+/// `FunctionDeclaration` (required `id`) split — a value may be anonymous, a
+/// statement that introduces a binding cannot be.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClassDeclaration {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The bound class name. Required — see the type-level doc for why a
+    /// declaration's `id` is not optional.
+    pub id: Identifier,
+    /// The `extends <expr>` operand, if any — same shape as
+    /// [`crate::expression::ClassExpression::super_class`] (a boxed
+    /// [`Expression`], so an identifier / member / call heritage is all legal).
+    #[serde(skip_serializing_if = "Option::is_none", default, rename = "superClass")]
+    pub super_class: Option<Box<Expression>>,
+    /// The class body — the ordered member list between the braces. May be
+    /// empty (`class C {}`). Reuses [`ClassMember`] from the expression form.
+    pub body: Vec<ClassMember>,
 }
 
 #[cfg(test)]
@@ -281,5 +322,82 @@ mod tests {
         let back: FunctionDeclaration =
             serde_json::from_str(&json).expect("deserialize");
         assert!(back.generator);
+    }
+
+    #[test]
+    fn class_declaration_roundtrips_with_type_tag() {
+        // `class C extends B { m() {} }` — a named declaration with heritage and
+        // one member, exercising the required `id`, the `superClass` operand,
+        // and the reused `ClassMember` body.
+        use crate::expression::{
+            ClassMember, FunctionExpression, MethodDefinition, MethodKind, PropertyKey,
+        };
+        let d = Declaration::ClassDeclaration(ClassDeclaration {
+            cv: Some("cd.1".to_string()),
+            id: Identifier {
+                cv: None,
+                name: "C".to_string(),
+            },
+            super_class: Some(Box::new(Expression::Identifier(Identifier {
+                cv: None,
+                name: "B".to_string(),
+            }))),
+            body: vec![ClassMember::Method(MethodDefinition {
+                cv: None,
+                key: PropertyKey::Identifier(Identifier {
+                    cv: None,
+                    name: "m".to_string(),
+                }),
+                kind: MethodKind::Method,
+                value: FunctionExpression {
+                    cv: None,
+                    id: None,
+                    params: vec![],
+                    body: BlockStatement {
+                        cv: None,
+                        body: vec![],
+                    },
+                    generator: false,
+                    is_async: false,
+                },
+                computed: false,
+                is_static: false,
+            })],
+        });
+        assert_eq!(type_tag(&d), "ClassDeclaration");
+        assert_eq!(roundtrip(d.clone()), d);
+    }
+
+    #[test]
+    fn class_declaration_serializes_superclass_camelcase() {
+        // The heritage field must serialize as ESTree `superClass`, not
+        // `super_class`, and be omitted entirely when there is no heritage.
+        let with = Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "C".to_string(),
+            },
+            super_class: Some(Box::new(Expression::Identifier(Identifier {
+                cv: None,
+                name: "B".to_string(),
+            }))),
+            body: vec![],
+        });
+        let json = serde_json::to_string(&with).expect("serialize");
+        assert!(json.contains("\"superClass\""), "got {}", json);
+        assert!(!json.contains("super_class"), "got {}", json);
+
+        let without = Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "C".to_string(),
+            },
+            super_class: None,
+            body: vec![],
+        });
+        let json = serde_json::to_string(&without).expect("serialize");
+        assert!(!json.contains("superClass"), "heritage omitted; got {}", json);
     }
 }

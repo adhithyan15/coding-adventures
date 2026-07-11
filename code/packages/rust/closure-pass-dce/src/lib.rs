@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition,
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
@@ -862,6 +862,10 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
         Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd.kind != VarKind::Var,
         // A `function` declaration is itself a hoisted binding — unsafe.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // A `class` declaration binds a name too — treated as unsafe like a
+        // function declaration (conservative: preserving it is never a
+        // miscompile, and a genuinely-unused one is removed downstream).
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
     })
 }
 
@@ -1014,6 +1018,10 @@ fn block_is_scope_safe_to_flatten(b: &BlockStatement) -> bool {
             matches!(v.kind, VarKind::Var)
         }
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // A `class` declaration is block-scoped (per the doc above) — hoisting
+        // it out of an inner block would leak the binding, so it is never safe
+        // to flatten, exactly like a nested function declaration.
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
         // Tagged statements never introduce a new lexical binding
         // by themselves. `ExpressionStatement`, control flow,
         // `EmptyStatement`, etc. are all safe.
@@ -1129,6 +1137,43 @@ fn dce_declaration(decl: &Declaration, st: &mut DceState) -> Declaration {
                 is_async: f.is_async,
             })
         }
+        // A class *declaration* runs DCE inside its heritage operand and each
+        // method body, exactly as `dce_class` does for a class *expression* —
+        // only the outer node type and the required `id` differ.
+        Declaration::ClassDeclaration(c) => {
+            Declaration::ClassDeclaration(dce_class_declaration(c, st))
+        }
+    }
+}
+
+/// DCE inside a class *declaration*: the `extends` operand and each method
+/// body. Mirrors `dce_class` (the expression form).
+fn dce_class_declaration(c: &ClassDeclaration, st: &mut DceState) -> ClassDeclaration {
+    ClassDeclaration {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class: c.super_class.as_ref().map(|s| Box::new(dce_expression(s, st))),
+        body: c
+            .body
+            .iter()
+            .map(|m| match m {
+                ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
+                    cv: md.cv.clone(),
+                    key: md.key.clone(),
+                    kind: md.kind,
+                    value: FunctionExpression {
+                        cv: md.value.cv.clone(),
+                        id: md.value.id.clone(),
+                        params: md.value.params.clone(),
+                        body: dce_block_statement(&md.value.body, st),
+                        generator: md.value.generator,
+                        is_async: md.value.is_async,
+                    },
+                    computed: md.computed,
+                    is_static: md.is_static,
+                }),
+            })
+            .collect(),
     }
 }
 

@@ -59,7 +59,7 @@ use coding_adventures_javascript_ast::{
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -641,6 +641,10 @@ fn block_is_scope_safe_to_hoist(b: &BlockStatement) -> bool {
             matches!(v.kind, VarKind::Var)
         }
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // A `class` declaration is block-scoped, so hoisting it out of the
+        // `else` block would leak or collide its binding — unsafe, like a
+        // nested function declaration.
+        Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
         // Tagged statements introduce no lexical binding of their own.
         Statement::Tagged(_) => true,
     })
@@ -1068,6 +1072,19 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
                 is_async: f.is_async,
             })
         }
+        // A class *declaration* folds inside its heritage + method bodies, like
+        // `fold_class` for the expression form. Unlike a function declaration
+        // it hoists no `var`s of its own — a class body is not a `var` scope in
+        // the hoisting sense — so no `hoist_function_body_vars` step applies.
+        Declaration::ClassDeclaration(c) => {
+            let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
+            Declaration::ClassDeclaration(ClassDeclaration {
+                cv: c.cv.clone(),
+                id: c.id.clone(),
+                super_class,
+                body,
+            })
+        }
     }
 }
 
@@ -1360,45 +1377,60 @@ fn fold_variable_declaration(
 // a literal test IS folded for robustness when this pass runs solo.
 // =====================================================================
 
-/// Fold control flow inside a class expression: the `extends` operand is a
-/// plain value-position expression, and each method's function *value* body is
-/// folded and its `var`s hoisted exactly like the `FunctionExpression` arm
-/// (fold the body, then hoist to the function top). `#[inline(never)]` so it
-/// does not inflate `fold_expression`'s frame (stack-overflow DoS guard).
+/// Fold control flow inside the shared `[extends S] { members }` tail of a
+/// class — the heritage operand (a value-position expression) and each method's
+/// function *value* body (folded, then its `var`s hoisted, exactly like the
+/// `FunctionExpression` arm). Reused by both the class *expression*
+/// ([`fold_class`]) and the class *declaration* (the `fold_declaration` arm),
+/// which share their body shape. `#[inline(never)]` so it does not inflate the
+/// caller's frame (stack-overflow DoS guard).
+#[inline(never)]
+fn fold_class_body(
+    super_class: &Option<Box<Expression>>,
+    body: &[ClassMember],
+    st: &mut FoldState,
+) -> (Option<Box<Expression>>, Vec<ClassMember>) {
+    let super_class = super_class
+        .as_ref()
+        .map(|s| Box::new(fold_expression(s, st)));
+    let body = body
+        .iter()
+        .map(|m| match m {
+            ClassMember::Method(md) => {
+                let folded_body = fold_block_statement(&md.value.body, st);
+                let hoisted_body = hoist_function_body_vars(&folded_body, st);
+                ClassMember::Method(MethodDefinition {
+                    cv: md.cv.clone(),
+                    key: md.key.clone(),
+                    kind: md.kind,
+                    value: FunctionExpression {
+                        cv: md.value.cv.clone(),
+                        id: md.value.id.clone(),
+                        params: md.value.params.clone(),
+                        body: hoisted_body,
+                        generator: md.value.generator,
+                        is_async: md.value.is_async,
+                    },
+                    computed: md.computed,
+                    is_static: md.is_static,
+                })
+            }
+        })
+        .collect();
+    (super_class, body)
+}
+
+/// Fold control flow inside a class expression: delegates to
+/// [`fold_class_body`] for the heritage + method bodies. `#[inline(never)]` so
+/// it does not inflate `fold_expression`'s frame (stack-overflow DoS guard).
 #[inline(never)]
 fn fold_class(c: &ClassExpression, st: &mut FoldState) -> Expression {
+    let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
     Expression::ClassExpression(ClassExpression {
         cv: c.cv.clone(),
         id: c.id.clone(),
-        super_class: c
-            .super_class
-            .as_ref()
-            .map(|s| Box::new(fold_expression(s, st))),
-        body: c
-            .body
-            .iter()
-            .map(|m| match m {
-                ClassMember::Method(md) => {
-                    let folded_body = fold_block_statement(&md.value.body, st);
-                    let hoisted_body = hoist_function_body_vars(&folded_body, st);
-                    ClassMember::Method(MethodDefinition {
-                        cv: md.cv.clone(),
-                        key: md.key.clone(),
-                        kind: md.kind,
-                        value: FunctionExpression {
-                            cv: md.value.cv.clone(),
-                            id: md.value.id.clone(),
-                            params: md.value.params.clone(),
-                            body: hoisted_body,
-                            generator: md.value.generator,
-                            is_async: md.value.is_async,
-                        },
-                        computed: md.computed,
-                        is_static: md.is_static,
-                    })
-                }
-            })
-            .collect(),
+        super_class,
+        body,
     })
 }
 

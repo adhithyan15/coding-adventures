@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` walk arm
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+`walk_class_declaration` to the exhaustive `walk_declaration` match: it emits a
+`BindingKind::Class` binding for the class name in the current scope (the lexical
+analogue of the `Function`-kind binding a function declaration hoists — the
+`Class` kind was already reserved for exactly this), then resolves references in
+the `extends` heritage (enclosing scope) and each method value (its own function
+scope). Reachable once the CLOC12.174 PR2 bridge produces the node.
+
 ## [0.12.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)
