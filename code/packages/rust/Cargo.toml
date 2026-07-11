@@ -822,6 +822,7 @@ members = [
     "conduit-dart-bridge",
     "irc-server-native-jni",
     "sha256-native-jni",
+    "md5-native-jni",
     "irc-server-capi",
     "smart-home-core",
     "smart-home-capability-cage",
