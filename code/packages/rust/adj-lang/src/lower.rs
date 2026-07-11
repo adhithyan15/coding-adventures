@@ -4334,7 +4334,7 @@ rule { head: r(a) when: x(t) }";
         // it one native stack frame per level. With ONLY the 10 000-node size budget,
         // a deep spine builds thousands of stack frames before the budget (which trips
         // at the BOTTOM of the descent) fires — a stack overflow / SIGABRT, not a
-        // catchable error. The nesting guard (`FORMULA_MAX_NODE_DEPTH` = 256) caps the
+        // catchable error. The nesting guard (`FORMULA_MAX_NODE_DEPTH`) caps the
         // lowering walkers' recursion, so the spine becomes a clean typed error.
         //
         // We build the spine AS AN AST directly (not from source) to isolate the

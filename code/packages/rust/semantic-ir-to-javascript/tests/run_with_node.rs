@@ -2736,3 +2736,83 @@ fn array_catalog_methods() {
         );
     }
 }
+
+// ── Ruby Hash Enumerable aggregates (find/any?/all?/none?/count/sort_by/…) ──
+//
+// Ruby's Hash mixes in Enumerable, so these iterate the hash as [key, value]
+// pairs: the block is yielded (key, value) and the "element" an aggregate
+// returns is the two-element [key, value] Array.  Because these return plain JS
+// arrays (not a Map), they format directly — no `to_a` round-trip needed.
+#[test]
+fn hash_enumerable_aggregates() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs.into_iter().map(|(k, v)| MapEntry { key: str_(k), value: v }).collect(),
+        span: sp(),
+    };
+    let cab = || mk(vec![("c", int(3)), ("a", int(1)), ("b", int(2))]);
+    let abcd = || mk(vec![("a", int(1)), ("b", int(2)), ("c", int(3)), ("d", int(4))]);
+    let block_fns = vec![
+        // { |k, v| v } — the value, used as the sort/min/max key.
+        func("__he_val", vec![param("k"), param("v")], vec![], param_ref("v")),
+        // { |k, v| v.even? } — an even-value predicate.
+        func("__he_even", vec![param("k"), param("v")], vec![], method(param_ref("v"), "even?", vec![])),
+    ];
+    let stmts = vec![
+        // {c:3,a:1,b:2}.sort_by { |k,v| v } → [[a, 1], [b, 2], [c, 3]]
+        print(method(cab(), "sort_by", vec![method_closure("__he_val")])),
+        // {c:3,a:1,b:2}.min_by { |k,v| v } → [a, 1]
+        print(method(cab(), "min_by", vec![method_closure("__he_val")])),
+        // {c:3,a:1,b:2}.max_by { |k,v| v } → [c, 3]
+        print(method(cab(), "max_by", vec![method_closure("__he_val")])),
+        // {a:1,b:2,c:3,d:4}.find { |k,v| v.even? } → [b, 2]
+        print(method(abcd(), "find", vec![method_closure("__he_even")])),
+        // {a:1,b:2,c:3,d:4}.count { |k,v| v.even? } → 2
+        print(method(abcd(), "count", vec![method_closure("__he_even")])),
+        // {a:1,b:2,c:3,d:4}.any? { v.even? } → #t
+        print(method(abcd(), "any?", vec![method_closure("__he_even")])),
+        // {a:1,b:2,c:3,d:4}.all? { v.even? } → #f
+        print(method(abcd(), "all?", vec![method_closure("__he_even")])),
+        // {a:1,c:3}.none? { v.even? } → #t  (no even values)
+        print(method(
+            mk(vec![("a", int(1)), ("c", int(3))]),
+            "none?",
+            vec![method_closure("__he_even")],
+        )),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashenum".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashenum") {
+        assert_eq!(
+            stdout,
+            "[[a, 1], [b, 2], [c, 3]]\n[a, 1]\n[c, 3]\n[b, 2]\n2\n#t\n#f\n#t"
+        );
+    }
+}

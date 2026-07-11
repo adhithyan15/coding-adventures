@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.27.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
+
+Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the
+JavaScript backend's emitted runtime (`hashMethod` + the `HASH_METHODS`
+`respond_to?` set).  Ruby's `Hash` mixes in `Enumerable`, so these iterate the
+hash as a sequence of `[key, value]` pairs: the block is yielded `(key, value)`
+(two arguments, matching `each`), and the "element" an aggregate returns is the
+two-element `[key, value]` Array.
+
+- `find`/`detect` — first `[k, v]` pair with a truthy block result; `nil` if none.
+- `any?`/`all?`/`none?` — booleans over `block(k, v)` (the block-less forms
+  degrade to the emptiness checks Ruby uses).
+- `count { |k, v| … }` — number of pairs with a truthy block result (block-less
+  `count` returns the size).
+- `sort_by` — a NEW Array of `[k, v]` pairs sorted by the block key (`arrCmp`,
+  the never-throw comparator used by `Array#sort_by`).
+- `min_by`/`max_by` — the extremal `[k, v]` pair (first-on-tie; `nil` on empty).
+
+Because these return plain JS Arrays (not a `Map`), they format directly.
+
+Exec-proof: `tests/run_with_node.rs` gains `hash_enumerable_aggregates`, running
+`sort_by`/`min_by`/`max_by` (by value) and `find`/`count`/`any?`/`all?`/`none?`
+(even-value predicate) under real `node`, diffed against the Python reference.
+
 ## 0.26.0 — Hash transforming block methods: `transform_values` / `transform_keys`
 
 Mirrors the Python `sir-runtime-oop` v0.1.18 reference (PR #7909) into the
