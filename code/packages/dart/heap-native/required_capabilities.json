@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "dart/heap-native",
+  "capabilities": ["ffi:call"],
+  "justification": "ffi:call — uses dart:ffi DynamicLibrary.open to call into the Rust heap-native shared library, which wraps the pure heap crate (i64 heaps + algorithms) over a C ABI. No network, filesystem, or process capabilities."
+}

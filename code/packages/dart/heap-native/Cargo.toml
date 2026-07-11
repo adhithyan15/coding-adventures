@@ -1,0 +1,18 @@
+# Standalone workspace so this cdylib stays out of the main Rust workspace.
+[workspace]
+
+[package]
+name = "heap-native"
+version = "0.1.0"
+edition = "2021"
+description = "C-ABI cdylib wrapping the Rust heap crate (i64 heaps + algorithms), called from Dart via dart:ffi (zero third-party deps)"
+
+[lib]
+name = "heap_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+heap = { path = "../../rust/heap" }
+
+[profile.release]
+opt-level = 3
