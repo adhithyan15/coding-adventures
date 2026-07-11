@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0] - Unreleased
+
+### Added
+
+- **`LEFT` and `RIGHT OUTER JOIN`** now execute correctly. `compile_join_projected`
+  keeps a per-outer-row match flag (new `ClearMatch`/`SetMatch`/`JumpIfMatched`
+  instructions, requiring matching sql-vm support): for each outer row it clears
+  the flag, sets it whenever the `ON` condition holds, and after the inner loop
+  emits one NULL-padded row iff nothing matched — the NULL padding falls out
+  because `CloseScan` drops the inner cursor, so its columns read NULL while the
+  outer cursor keeps its values. `RIGHT a b` compiles as `LEFT b a` (roles swap;
+  the projection references each table by name, so the output is unchanged).
+  Verified against real SQLite by the mini-sqlite differential oracle: `left_join`
+  and `right_join` now match and are removed from the known-divergence ledger.
+- `FULL OUTER JOIN` still degrades to a cross product (a single forward pass
+  can't emit the unmatched right rows); it stays in the ledger for a later
+  increment.
+
 ## [0.2.0] - Unreleased
 
 ### Fixed

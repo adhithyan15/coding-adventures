@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] - Unreleased
+
+### Added
+
+- **Outer-join match flag** — three instructions with no value-stack effect that
+  let `sql-codegen` implement `LEFT`/`RIGHT OUTER JOIN`: `ClearMatch` (reset at
+  the start of each outer row), `SetMatch` (an inner row satisfied `ON`), and
+  `JumpIfMatched` (skip the NULL-padded emit when the outer row matched). The VM
+  keeps a single `join_matched` boolean; a false condition still advances the
+  loop, so termination and stack balance are unchanged.
+
 ## [0.1.0] — 2026-07-01
 
 ### Added
