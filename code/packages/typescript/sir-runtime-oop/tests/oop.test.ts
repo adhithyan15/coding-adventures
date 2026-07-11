@@ -693,6 +693,31 @@ describe("built-in method catalog: Numeric (Integer/Float) (M1c)", () => {
     expect(callMethod(5, "round")).toBe(5);
   });
 
+  it("numeric breadth (N1): round(ndigits) / divmod / fdiv / clamp / between?", () => {
+    // round(ndigits): positive → decimals half-away; ndigits <= 0 → power of ten.
+    expect(callMethod(3.14159, "round", 2)).toBe(3.14);
+    expect(callMethod(1250, "round", -2)).toBe(1300); // half away from zero
+    expect(callMethod(2.675, "round", 2)).toBe(2.68);
+    // divmod: floored quotient, divisor-signed remainder.
+    expect(callMethod(13, "divmod", 4)).toEqual([3, 1]);
+    expect(callMethod(13, "divmod", -4)).toEqual([-4, -3]);
+    // divmod by zero raises a typed ZeroDivisionError; a non-numeric divisor
+    // degrades to 0 → the same typed error (never an untyped throw).
+    expect(() => callMethod(1, "divmod", 0)).toThrow();
+    expect(() => callMethod(1, "divmod", "x")).toThrow();
+    // fdiv: float division that never throws (zero divisor → ±Infinity).
+    expect(callMethod(7, "fdiv", 2)).toBe(3.5);
+    expect(callMethod(1, "fdiv", 0)).toBe(Infinity);
+    expect(callMethod(-1, "fdiv", 0)).toBe(-Infinity);
+    // clamp / between?.
+    expect(callMethod(5, "clamp", 1, 10)).toBe(5);
+    expect(callMethod(-3, "clamp", 1, 10)).toBe(1);
+    expect(callMethod(99, "clamp", 1, 10)).toBe(10);
+    expect(callMethod(5, "between?", 1, 10)).toBe(true);
+    expect(callMethod(0, "between?", 1, 10)).toBe(false);
+    expect(callMethod(10, "between?", 1, 10)).toBe(true);
+  });
+
   it("gcd / pow / digits", () => {
     expect(callMethod(12, "gcd", 18)).toBe(6);
     expect(callMethod(2, "**", 10)).toBe(1024);

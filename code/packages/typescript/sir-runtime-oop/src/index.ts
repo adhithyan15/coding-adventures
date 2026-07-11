@@ -687,6 +687,10 @@ const NUMERIC_METHODS = new Set<string>([
   "floor",
   "ceil",
   "round",
+  "divmod",
+  "fdiv",
+  "clamp",
+  "between?",
   "gcd",
   "pow",
   "**",
@@ -1611,8 +1615,52 @@ function numericMethod(recv: number, name: string, args: Val[]): Val | typeof MI
       return Math.floor(recv);
     case "ceil":
       return Math.ceil(recv);
-    case "round":
-      return Number.isInteger(recv) ? recv : rubyRound(recv);
+    case "round": {
+      // Ruby `round` / `round(ndigits)` — half AWAY from zero (via `rubyRound`,
+      // NOT `Math.round` which is half-toward-+∞).  With no argument (or an
+      // integer receiver and `ndigits >= 0`) the result is an integer; a
+      // positive `ndigits` rounds to that many decimals; `ndigits <= 0` rounds
+      // to a power of ten.  TS numbers are f64 — a hostile-magnitude `ndigits`
+      // degrades naturally (the `factor` saturates to `Infinity` and
+      // `recv / Infinity` is `0`), with no bignum and no allocation.  A
+      // non-finite receiver returns unchanged.
+      const nd = typeof args[0] === "number" ? Math.trunc(args[0]) : 0;
+      if (!Number.isFinite(recv)) return recv;
+      if (Number.isInteger(recv) && nd >= 0) return recv;
+      const factor = Math.pow(10, nd);
+      return rubyRound(recv * factor) / factor;
+    }
+    case "divmod": {
+      // Ruby `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+      // the divisor-signed remainder.  Division by zero raises a typed
+      // `ZeroDivisionError` (so a translated `rescue` catches it).
+      const d = typeof args[0] === "number" ? args[0] : 0;
+      if (d === 0) raiseError("ZeroDivisionError", "divided by 0");
+      const q = Math.floor(recv / d);
+      const r = recv - q * d;
+      return [q, r];
+    }
+    case "fdiv": {
+      // Ruby `fdiv(n)` — floating-point division that NEVER raises: dividing by
+      // zero yields `Infinity`/`-Infinity`/`NaN` (JS `/` already produces these),
+      // honouring the never-raise floor.
+      return recv / (typeof args[0] === "number" ? args[0] : 0);
+    }
+    case "clamp": {
+      // Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
+      // recv > max, else recv.  (The Range form is a follow-up.)
+      const lo = typeof args[0] === "number" ? args[0] : 0;
+      const hi = typeof args[1] === "number" ? args[1] : 0;
+      if (recv < lo) return lo;
+      if (recv > hi) return hi;
+      return recv;
+    }
+    case "between?": {
+      // Ruby `Comparable#between?(min, max)`: `min <= recv <= max`.
+      const lo = typeof args[0] === "number" ? args[0] : 0;
+      const hi = typeof args[1] === "number" ? args[1] : 0;
+      return recv >= lo && recv <= hi;
+    }
     case "gcd":
       return gcdInt(recv, args[0]);
     case "pow":

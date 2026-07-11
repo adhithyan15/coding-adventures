@@ -2,6 +2,31 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.17] - 2026-07-11
+
+### Added — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Completes the numeric-breadth sweep across all five backends (Python
+`sir-runtime-oop` v0.1.17 is the reference; Go/Rust/JS backends already landed).
+Extends the `Integer`/`Float` catalog (`numericMethod` + the `NUMERIC_METHODS`
+`respond_to?` set) with five more Ruby numeric methods:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds to that many decimals (half **away from zero**, via
+  `rubyRound`, not `Math.round`); `ndigits <= 0` rounds to a power of ten. TS
+  numbers are f64, so a hostile-magnitude `ndigits` degrades naturally (the
+  `factor` saturates to `Infinity` and `recv / Infinity` is `0`) — no bignum, no
+  allocation. A non-finite receiver returns unchanged.
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient and the
+  divisor-signed remainder (a JS array, so it prints `[3, 1]`); a zero divisor
+  raises a typed `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that never throws: a zero divisor yields
+  `Infinity`/`-Infinity`/`NaN`.
+- `clamp(min, max)` / `between?(min, max)` — compared numerically.
+
+Dispatch stays an explicit `switch` on the literal method name (never
+reflection). Numeric breadth is now complete across all five backends.
+
 ## [0.1.16] - 2026-07-10
 
 ### Added — String char-set methods: `tr` / `count` / `delete` / `squeeze`
