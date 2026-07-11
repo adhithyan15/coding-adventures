@@ -536,13 +536,41 @@ describe("built-in method catalog: Hash (M1c)", () => {
     expect(vs).toEqual([1, 2]);
   });
 
+  it("block transform_values / transform_keys", () => {
+    // transform_values: keys untouched, values are block results, non-mutating.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    const tv = callMethod(h, "transform_values", new Closure((v: Val) => (v as number) * 10)) as Map<Val, Val>;
+    expect([...tv.entries()]).toEqual([
+      ["a", 10],
+      ["b", 20],
+    ]);
+    expect([...h.entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+    ]); // receiver unchanged
+
+    // transform_keys: values untouched, keys are block results.
+    const tk = callMethod(h, "transform_keys", new Closure((k: Val) => `${k}!`)) as Map<Val, Val>;
+    expect([...tk.entries()]).toEqual([
+      ["a!", 1],
+      ["b!", 2],
+    ]);
+
+    // transform_keys collision: both keys collapse onto "z" — Ruby keeps the
+    // LAST value at the FIRST-seen position, matching the Map pair-fold.
+    const collide = callMethod(h, "transform_keys", new Closure((_k: Val) => "z")) as Map<Val, Val>;
+    expect([...collide.entries()]).toEqual([["z", 2]]);
+  });
+
   it("respond_to? honesty + nil floor", () => {
     const h = new Map<Val, Val>([["a", 1]]);
     expect(callMethod(h, "respond_to?", "keys")).toBe(true);
     expect(callMethod(h, "respond_to?", "each")).toBe(true);
-    expect(callMethod(h, "respond_to?", "transform_keys")).toBe(false);
+    expect(callMethod(h, "respond_to?", "transform_values")).toBe(true);
+    // `transform_keys!` (in-place bang variant) is still uncatalogued.
+    expect(callMethod(h, "respond_to?", "transform_keys!")).toBe(false);
     // T2: an unknown Hash method now raises NoMethodError (was nil).
-    expect(() => callMethod(h, "transform_keys")).toThrow(SirError);
+    expect(() => callMethod(h, "transform_keys!")).toThrow(SirError);
     expect(callMethod(h, "nil?")).toBe(false);
   });
 });
