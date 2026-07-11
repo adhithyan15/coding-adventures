@@ -1,6 +1,6 @@
 # bignum-core
 
-A zero-dependency, `unsafe`-free **arbitrary-precision numeric core**: an unbounded signed integer (`BigInteger`, **NUM-1**) and, built on it, an exact never-rounding rational (`BigRational`, **NUM-2**).
+A zero-dependency, `unsafe`-free **arbitrary-precision numeric core**: an unbounded signed integer (`BigInteger`, **NUM-1**) and, built on it, an exact never-rounding rational (`BigRational`, **NUM-2**) and an exact base-10 decimal (`BigDecimal`, **NUM-3**).
 
 Where a machine `i64` overflows past `9_223_372_036_854_775_807`, a `BigInteger` just keeps going. `100!` (a 158-digit number) is stored exactly, every digit correct. A `BigRational` then makes the four everyday operations — `+ − × ÷` — **exact forever**: `1/3` is `1/3`, and `0.1 + 0.2` is exactly `3/10`, not `0.30000000000000004`.
 
@@ -31,17 +31,17 @@ Because the form is canonical, `PartialEq`/`Eq`/`Hash` are derived and correct.
 ## Layer position
 
 ```
-                    BigDecimal   BigDouble        (later NUM rungs)
-                        └────────────┘
-                              ▼
-                     ┌────────────────┐
-                     │  BigRational   │   ← this crate (NUM-2)
-                     └────────┬───────┘
-                              ▼
-                     ┌────────────────┐
-                     │   BigInteger   │   ← this crate (NUM-1)
-                     │    zero deps   │
-                     └────────────────┘
+                                   BigDouble          (later NUM rung)
+                                       ▲
+                     ┌──────────────┐  │  ┌──────────────┐
+                     │ BigRational  │  │  │  BigDecimal  │  ← this crate (NUM-2, NUM-3)
+                     └──────┬───────┘  │  └──────┬───────┘
+                            └──────────┴─────────┘
+                                       ▼
+                              ┌────────────────┐
+                              │   BigInteger   │   ← this crate (NUM-1)
+                              │    zero deps   │
+                              └────────────────┘
 ```
 
 ## Usage
@@ -179,6 +179,43 @@ cargo test -p bignum-core -- --nocapture
 The suite is **differential**: it checks `BigInteger` against `i128` for every operation on both a hand-picked boundary table (values straddling the 32/64/96-bit limb edges) and tens of thousands of deterministic LCG-generated pairs (no RNG crate, fully reproducible). Beyond `i128` it pins `50!`, `100!`, `2^128`, `10^50`, consecutive-Fibonacci coprimality, radix round-trips, and the `a == q·b + r` division identity at arbitrary width.
 
 `BigRational` is tested the same way: a 40,000-case differential run of `+ − × ÷` and ordering against an in-test `i128` fraction oracle, big cases pinned against Python's `fractions.Fraction` (sums, products, quotients, and powers beyond `i128`), the float-famous `0.1 + 0.2 == 3/10`, canonicalization/sign/zero edge cases, the `try_pow` DoS guard, and the reciprocal/division-by-zero panics.
+
+`BigDecimal` adds a 40,000-case differential of `+ − ×`/ordering and a 20,000-case differential of `div_round` (all seven rounding modes) against an in-test `i128` decimal oracle, plus the rounding truth table pinned against Python's `decimal`.
+
+## BigDecimal — exact base-10 (NUM-3)
+
+`BigDecimal` is a `BigInteger` **mantissa** and an `i64` **scale**: the value is `mantissa × 10^(-scale)`. It works in the base money, tax, and dosing use, so `+ − ×` are always exact and division rounds to a scale and mode you name.
+
+```rust
+use bignum_core::{BigDecimal, RoundingMode};
+use std::str::FromStr;
+
+// 0.1 + 0.2 is exactly 0.3 (a binary f64 cannot hold either operand).
+let sum = &BigDecimal::from_str("0.1").unwrap() + &BigDecimal::from_str("0.2").unwrap();
+assert_eq!(sum.to_string(), "0.3");
+
+// Money stays exact through +, -, *.
+let change = &BigDecimal::from_str("100.00").unwrap() - &BigDecimal::from_str("0.01").unwrap();
+assert_eq!(change.to_string(), "99.99");
+
+// Division rounds — to the scale and mode you state.
+let third = BigDecimal::from_str("10").unwrap()
+    .div_round(&BigDecimal::from_str("3").unwrap(), 4, RoundingMode::HalfEven);
+assert_eq!(third.to_string(), "3.3333");
+
+// Banker's rounding breaks ties to even: 2.5 → 2, 1.25 → 1.2.
+assert_eq!(BigDecimal::from_str("2.5").unwrap().round_to_scale(0, RoundingMode::HalfEven).to_string(), "2");
+```
+
+Every value is canonical — trailing zeros stripped, zero pinned to `(0, 0)` — so `Eq`/`Hash` are derived and value-correct (`1.20 == 1.2`, `100 == 1e2`). Presenting a value at a *fixed* number of places (`"$1.20"`) is a boundary-formatting concern (NUM-6), not a property of the stored number.
+
+| Area | API |
+|------|-----|
+| Construct | `zero`, `one`, `from_parts`, `from_integer`, `from_i64`, `From<BigInteger/i64/u64/i128/u128>` |
+| Exact arithmetic | `add`/`+`, `sub`/`-`, `mul`/`*`, unary `-`, `abs`, `pow(u32)` |
+| Rounding | `RoundingMode` (`Down`/`Up`/`Floor`/`Ceiling`/`HalfUp`/`HalfDown`/`HalfEven`), `div_round`/`checked_div_round`, `round_to_scale` |
+| Query | `is_zero`, `is_negative`, `is_positive`, `signum`, `mantissa`, `scale`, `Ord`/`Eq`/`Hash` |
+| I/O | `FromStr` (plain + scientific) with typed `ParseDecimalError`; plain-decimal `Display`/`Debug` |
 
 ## Zero dependencies
 

@@ -1783,3 +1783,11 @@ mod tests {
         assert_eq!(BigInteger::from_u64(999).try_pow(0, 1).unwrap(), BigInteger::one());
     }
 }
+
+// ===========================================================================
+//  NUM-3 — exact base-10 decimals, built on the BigInteger above.
+//  (Declared here, at the end of the file, so it never textually collides with
+//  the other numeric-rung module declarations near the top.)
+// ===========================================================================
+pub mod decimal;
+pub use decimal::{BigDecimal, ParseDecimalError, RoundingMode};
