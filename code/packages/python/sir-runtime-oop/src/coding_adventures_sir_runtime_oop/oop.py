@@ -1595,7 +1595,13 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
         # allocating the factor — and cap positive ``ndigits`` past a Float's
         # precision (the value is already at full precision) to dodge the
         # ``10.0 ** ndigits`` ``OverflowError``.
-        ndigits = int(args[0]) if args and isinstance(args[0], (int, float)) else 0
+        # ``isfinite`` also rejects an ``inf``/``nan`` ``ndigits`` argument, whose
+        # ``int(...)`` would otherwise raise an untyped ``OverflowError``/``ValueError``.
+        ndigits = (
+            int(args[0])
+            if args and isinstance(args[0], (int, float)) and math.isfinite(args[0])
+            else 0
+        )
         if isinstance(recv, float) and not math.isfinite(recv):
             return recv
         # Decimal width of the integer magnitude — cheap and bounded.

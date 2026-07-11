@@ -696,6 +696,10 @@ def test_numeric_round_ndigits() -> None:
     # Positive ndigits past Float precision returns the value unchanged (no
     # 10.0 ** ndigits OverflowError).
     assert oop.call_method(3.14, "round", 1_000_000) == 3.14
+    # A non-finite ndigits argument degrades to 0 rather than raising an untyped
+    # int(inf)/int(nan) error.
+    assert oop.call_method(5, "round", float("inf")) == 5
+    assert oop.call_method(5, "round", float("nan")) == 5
 
 
 def test_numeric_divmod_fdiv() -> None:
