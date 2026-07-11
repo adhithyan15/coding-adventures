@@ -53,7 +53,7 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "java", "kotlin"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "java", "kotlin", "c", "cpp"}
 
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
@@ -159,6 +159,13 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readJavaDeps(pkgDir)
 	case "kotlin":
 		return readKotlinDeps(pkgDir)
+	case "c", "cpp":
+		// C and C++ packages have no package manifest; their dependencies are
+		// declared inline in the BUILD file via a `# build-tool: deps=…` comment.
+		// The scaffold does not auto-discover inter-package C/C++ deps — a fresh
+		// package starts with just the iso-harness toolchain dep (baked into the
+		// generated BUILD), and any further deps are added to that comment by hand.
+		return nil, nil
 	default:
 		return nil, fmt.Errorf("unknown language: %s", lang)
 	}
@@ -1993,6 +2000,219 @@ class %sTest {
 // Common files (README, CHANGELOG)
 // =========================================================================
 
+// =========================================================================
+// File generation — C and C++ (pure ISO, multi-compiler via iso-harness)
+// =========================================================================
+//
+// C and C++ packages have no package manifest. They declare their toolchain
+// dependency on the shared iso-harness inline in BUILD (`# build-tool: deps=…`)
+// and build through it, so the generated sources are compiled by GCC, Clang,
+// AND MSVC under strict ISO conformance flags. See
+// code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md.
+//
+// The generated tools/run.sh and tools/run.ps1 locate the harness by walking up
+// to the repo directory that contains code/packages/c/iso-harness, so the same
+// template works whether the package lives under code/packages/ or code/programs/
+// and regardless of the C-vs-C++ subdirectory depth.
+
+// isoRunSh renders the POSIX run script shared by C and C++ packages. `lang` is
+// "c" or "cpp"; `sources` is the space-separated source list passed to the
+// harness (e.g. "tests/foo_test.c src/foo.c").
+func isoRunSh(pkgName, symbol, lang, sources string) string {
+	return fmt.Sprintf(`#!/bin/sh
+# Build and run the %s tests under EVERY available C/C++ compiler (pure ISO),
+# via the shared iso-harness (code/packages/c/iso-harness).
+set -e
+SELF=$(cd "$(dirname "$0")/.." && pwd)
+cd "$SELF"
+
+# Locate the iso-harness by walking up to the repo dir that contains it.
+d="$SELF"
+while [ "$d" != "/" ] && [ ! -d "$d/code/packages/c/iso-harness" ]; do
+    d=$(dirname "$d")
+done
+HARNESS="$d/code/packages/c/iso-harness"
+if [ ! -f "$HARNESS/lib/iso-lib.sh" ]; then
+    echo "iso-harness not found (searched upward from $SELF)" >&2
+    exit 1
+fi
+
+# Include both this package's headers and the harness's (for iso_test.h).
+ISO_INCLUDE="include $HARNESS/include"
+export ISO_INCLUDE
+
+# On Linux CI both gcc and clang are installed — require both so the pure-ISO
+# guarantee is firm rather than best-effort. Locally, use whatever is present.
+if [ "${CI:-}" = "true" ] && [ "$(uname)" = "Linux" ]; then
+    ISO_REQUIRE="gcc clang"
+    export ISO_REQUIRE
+fi
+
+. "$HARNESS/lib/iso-lib.sh"
+iso_build_and_run %s %s-tests %s
+`, pkgName, lang, symbol, sources)
+}
+
+// isoRunPs1 renders the Windows/MSVC run script shared by C and C++ packages.
+// `sources` is a comma-separated, quoted PowerShell array body (e.g.
+// `"tests\foo_test.c", "src\foo.c"`).
+func isoRunPs1(pkgName, symbol, lang, sources string) string {
+	return fmt.Sprintf(`# Build and run the %s tests under MSVC (cl.exe) — pure ISO C/C++ — via the
+# shared iso-harness (code\packages\c\iso-harness).
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$self = Split-Path -Parent $PSScriptRoot
+Set-Location $self
+
+# Locate the iso-harness by walking up to the repo dir that contains it.
+$d = $self
+while ($d -and -not (Test-Path (Join-Path $d 'code\packages\c\iso-harness'))) {
+    $d = Split-Path -Parent $d
+}
+if (-not $d) { throw 'iso-harness not found (searched upward from ' + $self + ')' }
+$harness = Join-Path $d 'code\packages\c\iso-harness'
+
+$env:ISO_INCLUDE = "include $harness\include"
+. (Join-Path $harness 'lib\iso-lib.ps1')
+Iso-BuildAndRun -Lang %s -Name %s-tests -Sources @(%s)
+`, pkgName, lang, symbol, sources)
+}
+
+// generateC scaffolds a pure-ISO C17 library: a header, a source file, and a
+// test built through the iso-harness under gcc, clang, and MSVC.
+func generateC(targetDir, pkgName, description, layerCtx string) error {
+	symbol := toSnakeCase(pkgName)
+	guard := strings.ToUpper(symbol) + "_H"
+
+	header := fmt.Sprintf(`/*
+ * %s.h — %s
+ *
+ * Part of the coding-adventures monorepo.%s
+ *
+ * This is pure ISO C17: it compiles under GCC, Clang, and MSVC with
+ * -pedantic-errors / /permissive- and warnings-as-errors. Keep it that way —
+ * no compiler extensions.
+ */
+#ifndef %s
+#define %s
+
+/* Returns a friendly, non-zero value — proof the library links and runs.
+ * Replace this with the package's real API. */
+int %s_answer(void);
+
+#endif /* %s */
+`, symbol, description, layerCtx, guard, guard, symbol, guard)
+
+	source := fmt.Sprintf(`#include "%s.h"
+
+int %s_answer(void) {
+    return 42;
+}
+`, symbol, symbol)
+
+	test := fmt.Sprintf(`/* Tests for %s, using the header-only iso_test.h harness (pure ISO). */
+#include "iso_test.h"
+
+#include "%s.h"
+
+int main(void) {
+    ISO_CHECK_EQ_INT(%s_answer(), 42);
+    return ISO_TEST_RESULT();
+}
+`, pkgName, symbol, symbol)
+
+	build := "# build-tool: deps=c/iso-harness\nsh tools/run.sh\n"
+	buildWin := "powershell -NoProfile -ExecutionPolicy Bypass -File tools\\run.ps1\n"
+	runSh := isoRunSh(pkgName, symbol, "c", fmt.Sprintf("tests/%s_test.c src/%s.c", symbol, symbol))
+	runPs1 := isoRunPs1(pkgName, symbol, "c", fmt.Sprintf("\"tests\\%s_test.c\", \"src\\%s.c\"", symbol, symbol))
+
+	return writeCFamilyFiles(targetDir, map[string]string{
+		filepath.Join("include", symbol+".h"):     header,
+		filepath.Join("src", symbol+".c"):         source,
+		filepath.Join("tests", symbol+"_test.c"):  test,
+		"BUILD":                                   build,
+		"BUILD_windows":                           buildWin,
+		filepath.Join("tools", "run.sh"):          runSh,
+		filepath.Join("tools", "run.ps1"):         runPs1,
+		".gitignore":                              "_build/\n",
+	})
+}
+
+// generateCpp scaffolds a pure-ISO C++17 header-only library plus a test built
+// through the iso-harness under g++, clang++, and MSVC.
+func generateCpp(targetDir, pkgName, description, layerCtx string) error {
+	symbol := toSnakeCase(pkgName)
+	guard := strings.ToUpper(symbol) + "_HPP"
+
+	header := fmt.Sprintf(`// %s.hpp — %s
+//
+// Part of the coding-adventures monorepo.%s
+//
+// This is pure ISO C++17: it compiles under GCC, Clang, and MSVC with
+// -pedantic-errors / /permissive- and warnings-as-errors. Keep it that way —
+// no compiler extensions.
+#ifndef %s
+#define %s
+
+namespace %s {
+
+// Returns a friendly value — proof the header compiles and links.
+// Replace this with the package's real API.
+inline int answer() {
+    return 42;
+}
+
+}  // namespace %s
+
+#endif  // %s
+`, symbol, description, layerCtx, guard, guard, symbol, symbol, guard)
+
+	test := fmt.Sprintf(`// Tests for %s, using the header-only iso_test.h harness (pure ISO).
+#include "iso_test.h"
+
+#include "%s.hpp"
+
+int main() {
+    ISO_CHECK_EQ_INT(%s::answer(), 42);
+    return ISO_TEST_RESULT();
+}
+`, pkgName, symbol, symbol)
+
+	build := "# build-tool: deps=c/iso-harness\nsh tools/run.sh\n"
+	buildWin := "powershell -NoProfile -ExecutionPolicy Bypass -File tools\\run.ps1\n"
+	runSh := isoRunSh(pkgName, symbol, "cpp", fmt.Sprintf("tests/%s_test.cpp", symbol))
+	runPs1 := isoRunPs1(pkgName, symbol, "cpp", fmt.Sprintf("\"tests\\%s_test.cpp\"", symbol))
+
+	return writeCFamilyFiles(targetDir, map[string]string{
+		filepath.Join("include", symbol+".hpp"):    header,
+		filepath.Join("tests", symbol+"_test.cpp"): test,
+		"BUILD":                                    build,
+		"BUILD_windows":                            buildWin,
+		filepath.Join("tools", "run.sh"):           runSh,
+		filepath.Join("tools", "run.ps1"):          runPs1,
+		".gitignore":                               "_build/\n",
+	})
+}
+
+// writeCFamilyFiles creates each file's parent directory and writes it. Scripts
+// under tools/ are made executable; everything else is 0644.
+func writeCFamilyFiles(targetDir string, files map[string]string) error {
+	for path, content := range files {
+		full := filepath.Join(targetDir, path)
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			return err
+		}
+		mode := os.FileMode(0o644)
+		if strings.HasSuffix(path, ".sh") {
+			mode = 0o755
+		}
+		if err := os.WriteFile(full, []byte(content), mode); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func generateCommonFiles(targetDir, pkgName, description, lang string, layer int, directDeps []string) error {
 	today := time.Now().Format("2006-01-02")
 
@@ -2213,6 +2433,14 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		}
 	case "kotlin":
 		if err := generateKotlin(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
+			return err
+		}
+	case "c":
+		if err := generateC(targetDir, cfg.packageName, cfg.description, layerCtx); err != nil {
+			return err
+		}
+	case "cpp":
+		if err := generateCpp(targetDir, cfg.packageName, cfg.description, layerCtx); err != nil {
 			return err
 		}
 	}

@@ -953,3 +953,147 @@ func TestRefusesToOverwrite(t *testing.T) {
 		t.Errorf("stderr should mention directory already exists, got: %s", stderr.String())
 	}
 }
+
+// =========================================================================
+// File generation tests — C and C++ (pure ISO, iso-harness)
+// =========================================================================
+
+func TestGenerateC(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := generateC(tmpDir, "ring-buf", "A ring buffer", ""); err != nil {
+		t.Fatalf("generateC: %v", err)
+	}
+
+	// Header, source, and test use snake_case filenames/symbols derived from the
+	// kebab package name.
+	header, err := os.ReadFile(filepath.Join(tmpDir, "include", "ring_buf.h"))
+	if err != nil {
+		t.Fatalf("cannot read header: %v", err)
+	}
+	if !strings.Contains(string(header), "#ifndef RING_BUF_H") {
+		t.Error("header missing include guard")
+	}
+	if !strings.Contains(string(header), "int ring_buf_answer(void);") {
+		t.Error("header missing API declaration")
+	}
+	if _, err := os.Stat(filepath.Join(tmpDir, "src", "ring_buf.c")); err != nil {
+		t.Error("source file missing")
+	}
+	test, err := os.ReadFile(filepath.Join(tmpDir, "tests", "ring_buf_test.c"))
+	if err != nil {
+		t.Fatalf("cannot read test: %v", err)
+	}
+	if !strings.Contains(string(test), "#include \"iso_test.h\"") {
+		t.Error("test does not use the iso_test.h harness")
+	}
+
+	// BUILD declares the iso-harness toolchain dep and runs the POSIX script.
+	build, err := os.ReadFile(filepath.Join(tmpDir, "BUILD"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD: %v", err)
+	}
+	if !strings.Contains(string(build), "# build-tool: deps=c/iso-harness") {
+		t.Error("BUILD missing iso-harness dependency comment")
+	}
+	if !strings.Contains(string(build), "sh tools/run.sh") {
+		t.Error("BUILD does not invoke tools/run.sh")
+	}
+
+	// BUILD_windows drives the MSVC path via PowerShell.
+	buildWin, err := os.ReadFile(filepath.Join(tmpDir, "BUILD_windows"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD_windows: %v", err)
+	}
+	if !strings.Contains(string(buildWin), "tools\\run.ps1") {
+		t.Error("BUILD_windows does not invoke tools/run.ps1")
+	}
+
+	// run.sh locates the harness by walking up and compiles the C sources.
+	runSh, err := os.ReadFile(filepath.Join(tmpDir, "tools", "run.sh"))
+	if err != nil {
+		t.Fatalf("cannot read run.sh: %v", err)
+	}
+	if !strings.Contains(string(runSh), "code/packages/c/iso-harness") {
+		t.Error("run.sh does not reference the iso-harness location")
+	}
+	if !strings.Contains(string(runSh), "iso_build_and_run c ring_buf-tests tests/ring_buf_test.c src/ring_buf.c") {
+		t.Error("run.sh does not invoke iso_build_and_run with the expected C sources")
+	}
+
+	// _build/ is ignored so compiled artifacts never get committed.
+	gitignore, err := os.ReadFile(filepath.Join(tmpDir, ".gitignore"))
+	if err != nil {
+		t.Fatalf("cannot read .gitignore: %v", err)
+	}
+	if !strings.Contains(string(gitignore), "_build/") {
+		t.Error(".gitignore does not ignore _build/")
+	}
+}
+
+func TestGenerateCpp(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := generateCpp(tmpDir, "static-vector", "A fixed-capacity vector", ""); err != nil {
+		t.Fatalf("generateCpp: %v", err)
+	}
+
+	// Header-only: a .hpp under include/ with a namespaced inline API, and NO src/.
+	header, err := os.ReadFile(filepath.Join(tmpDir, "include", "static_vector.hpp"))
+	if err != nil {
+		t.Fatalf("cannot read header: %v", err)
+	}
+	if !strings.Contains(string(header), "#ifndef STATIC_VECTOR_HPP") {
+		t.Error("header missing include guard")
+	}
+	if !strings.Contains(string(header), "namespace static_vector") {
+		t.Error("header missing namespace")
+	}
+	if _, err := os.Stat(filepath.Join(tmpDir, "src")); !os.IsNotExist(err) {
+		t.Error("C++ header-only package should not create a src/ directory")
+	}
+
+	test, err := os.ReadFile(filepath.Join(tmpDir, "tests", "static_vector_test.cpp"))
+	if err != nil {
+		t.Fatalf("cannot read test: %v", err)
+	}
+	if !strings.Contains(string(test), "static_vector::answer()") {
+		t.Error("test does not call the generated API")
+	}
+
+	runSh, err := os.ReadFile(filepath.Join(tmpDir, "tools", "run.sh"))
+	if err != nil {
+		t.Fatalf("cannot read run.sh: %v", err)
+	}
+	if !strings.Contains(string(runSh), "iso_build_and_run cpp static_vector-tests tests/static_vector_test.cpp") {
+		t.Error("run.sh does not invoke iso_build_and_run with the expected C++ source")
+	}
+}
+
+// C and C++ must be accepted by the language validator and produce packages
+// under the c/ and cpp/ buckets.
+func TestCFamilyLanguagesAreValid(t *testing.T) {
+	for _, lang := range []string{"c", "cpp"} {
+		found := false
+		for _, vl := range validLanguages {
+			if vl == lang {
+				found = true
+			}
+		}
+		if !found {
+			t.Errorf("%q missing from validLanguages", lang)
+		}
+	}
+}
+
+// readDeps must not error for C/C++ (they have no manifest; deps live in the
+// BUILD comment). It returns an empty dependency set.
+func TestReadDepsCFamilyIsEmpty(t *testing.T) {
+	for _, lang := range []string{"c", "cpp"} {
+		deps, err := readDeps(t.TempDir(), lang)
+		if err != nil {
+			t.Errorf("readDeps(%q) errored: %v", lang, err)
+		}
+		if len(deps) != 0 {
+			t.Errorf("readDeps(%q) = %v, want empty", lang, deps)
+		}
+	}
+}

@@ -5,7 +5,10 @@
   "description": "Generate CI-ready package scaffolding for the coding-adventures monorepo",
   "version": "1.0.0",
   "parsing_mode": "gnu",
-  "builtin_flags": { "help": true, "version": true },
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
   "flags": [
     {
       "id": "type",
@@ -13,14 +16,17 @@
       "long": "type",
       "description": "Package type: 'library' goes in code/packages/, 'program' goes in code/programs/",
       "type": "enum",
-      "enum_values": ["library", "program"],
+      "enum_values": [
+        "library",
+        "program"
+      ],
       "default": "library"
     },
     {
       "id": "language",
       "short": "l",
       "long": "language",
-      "description": "Target language(s). Comma-separated or 'all' for all 10 languages: python, go, ruby, typescript, rust, elixir, perl, lua, swift, haskell",
+      "description": "Target language(s). Comma-separated or 'all'. Languages: python, go, ruby, typescript, rust, elixir, perl, lua, swift, haskell, java, kotlin, c, cpp",
       "type": "string",
       "default": "all"
     },
