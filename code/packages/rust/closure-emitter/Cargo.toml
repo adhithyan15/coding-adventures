@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-emitter"
-version = "0.39.0"
+version = "0.39.1"
 edition = "2021"
 description = "JavaScript code emitter for the Closure Compiler clone. Per CLOC07's emit contract. Takes a finalized Program + sidecar and produces output JavaScript text + companion source map. Runs after every pass in the pipeline."
 
@@ -128,3 +128,7 @@ path = "tests/upstream/code_printer_class_test.rs"
 [[test]]
 name = "upstream_code_printer_class_declaration"
 path = "tests/upstream/code_printer_class_declaration_test.rs"
+
+[[test]]
+name = "upstream_code_printer_class_field"
+path = "tests/upstream/code_printer_class_field_test.rs"

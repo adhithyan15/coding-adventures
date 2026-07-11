@@ -2306,6 +2306,25 @@ class-declaration bodies (shared body conversion).
 
 Emit conformance port (PR3) remains.
 
+### PR3 (DONE)
+
+CodePrinter conformance port. New
+`tests/upstream/code_printer_class_field_test.rs` (registered as the
+`upstream_code_printer_class_field` `[[test]]`), the third class port, mirroring
+upstream Closure `CodePrinterTest`'s class-field printing cases. 14 active
+`#[test]`s, 0 `#[ignore]`, driving `emit_class_field` + the shared
+`emit_class_tail` `Field` arm from **hand-built AST** — so it covers shapes the
+grammar/bridge cannot yet parse (computed / numeric / string keys, a
+sequence initializer): `x=1;` / `y;` (bare) / `static z=2;` / `[k]=v;` /
+`static [k]=v;` / `0=1;` / quoted `"a-b"=1;` / the `PREC_ASSIGNMENT` wrap
+`x=(a,b);` / interleave `x=1;m(){}`, `m(){}x=1;`, `x=1;y;static z=2;`.
+`closure-emitter` 0.39.1 (PATCH — test-only, no emitter change).
+
+**CLOC12.175 arc COMPLETE** — the class-field surface is node (PR1) + bridge
+(PR2) + conformance (PR3) end-to-end. Remaining class members (private `#x`,
+`static { … }` static-init blocks, decorators) stay deferred to their own
+additive slices.
+
 ## CLOC12.174 — `ClassDeclaration` (`class C [extends S] { … }`): the class *statement* arc (design)
 
 CLOC12.173 shipped the class **expression** (a value: `x = class {}`, `f(class C {})`).
