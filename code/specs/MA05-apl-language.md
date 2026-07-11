@@ -189,7 +189,15 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
   patterns, 8 rules, zero cross-validation warnings — every declared token
   is referenced). Files: `code/grammars/apl/apl.tokens`,
   `code/grammars/apl/apl.grammar`.
-- **MA-4c — `apl-lexer`.** Single-codepoint glyph tokens, `⍝` line comments.
+- **MA-4c — `apl-lexer`** (✅ done): a thin wrapper crate over the shared
+  `GrammarLexer`, mirroring `macsyma-lexer`'s shape exactly (no pre/post-
+  tokenize hooks needed — every glyph in this subset is single-codepoint and
+  unambiguous, per §3 bullet 4). Statically compiles
+  `code/grammars/apl/apl.tokens` at build time via `grammar-tools
+  generate-rust-compiled-grammars`. 10 tests cover every primitive function
+  glyph, the reduce/scan/outer-product operators, assignment/grouping,
+  vector-stranded numeric literals, high-minus (`¯`) negative literals kept
+  distinct from the `MINUS` function token, and `⍝` line comments.
 - **MA-4d — `apl-parser`.** The `value_expr`/`function_expr` grammar,
   monadic/dyadic application, reduce/scan/outer-product operator
   productions. **Acceptance criteria includes a recursion-depth cap**: §3's
