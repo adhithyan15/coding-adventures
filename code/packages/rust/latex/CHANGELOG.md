@@ -2,6 +2,34 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.69.0] — 2026-07-10
+
+### Added — single-integer TOTAL of the duplicate ("multiply defined") `\bibitem`s (LTXDOC03 S33)
+
+A **new** public method `Document::duplicate_bibliography_count(&self) -> String` that renders the decimal
+**COUNT** of the duplicate (later, losing) `\bibitem`s — the `\bibitem`s of already-defined keys, which
+LaTeX flags with *"Citation `key' multiply defined"* — as one integer line. It is the *count-total*
+companion of S16's `duplicate_bibliography_entries` (which renders one `\bibitem{key}` warning line per
+losing duplicate): S16 and S33 are two *views* of the one `duplicate_entries` list `resolve_citations()`
+produces — S33 collapses the whole list to a single `.len()` tally. It is the **warning-side companion**
+of the resolved (S30/S31) and unresolved (S32) citation totals, completing the *totals family* over the
+citation tables. S30 counts the winning `entries` and S33 the losing `duplicate_entries`; together they
+**partition** every `\bibitem` inside a `thebibliography` — `bibliography_entry_count +
+duplicate_bibliography_count` equals the total number of `\bibitem`s, because `resolve_citations()` routes
+each `\bibitem` into exactly one of `entries`/`duplicate_entries`. It reads only
+`resolve_citations().duplicate_entries.len()` — the winning first `\bibitem` of a key lives in `entries`
+(S19/S30's domain) and is excluded by construction — never a `key`/`span`, no source slicing at all, so
+every losing `\bibitem` folds into one total. We do **not** de-duplicate: a key defined *three* times
+contributes *two* losing duplicates, exactly the two warning lines S16 emits. Being a COUNT renderer, its
+empty case (no bibliography, or every key defined exactly once) is the honest number `"0"` — **not** a
+`(no duplicate bibliography entries)` marker (that discipline belongs to the *list* renderer S16; this
+mirrors S27/S28/S29/S30/S31/S32). One line, no trailing newline. E.g. `\bibitem{smith}` twice +
+`\bibitem{jones}` once → `1`. It is a read-only view over `resolve_citations()`; every S1–S32 output is
+left **byte-for-byte unchanged**; S33 is purely additive and leaves the `to_latex()` round-trip fixed
+point intact. Total & panic-free.
+
+---
+
 ## [0.68.0] — 2026-07-09
 
 ### Added — single-integer TOTAL of the unresolved (dangling) citations (LTXDOC03 S32)

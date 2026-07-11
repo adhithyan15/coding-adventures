@@ -80,6 +80,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **LTXDOC03 S30 — single-integer total of the bibliography entries** | `Document::bibliography_entry_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the winning bibliography entries — the distinct `\bibitem` keys the document defines inside a `thebibliography` environment — as one integer line. It is the **count-total companion of S19's** `bibliography_entries` (which renders one `[n] key` *line per winning entry*, 1-based in source order): S19 and S30 are two views of the one winning `entries` list; S30 collapses the whole list to a single `.len()` tally. It is the exact **citation-side analogue of S29's** `label_definition_count`, completing the *totals family* — S27's `unresolved_reference_count` and S28's `resolved_reference_count` count the two reference tables, S29 counts the label definitions, and S30 counts the bibliography entries. It reads only `resolve_citations().entries.len()` (a later duplicate `\bibitem{dup}` lives in `duplicate_entries`, S16's domain, and is excluded by construction — the count is exactly the number of lines S19 lists) — no source slicing at all. Being a COUNT renderer, its empty case (no `\bibitem` at all) is the honest number `"0"` — **not** a `(no bibliography entries)` marker (that discipline belongs to the *list* renderer S19; this mirrors S27/S28/S29). One line, no trailing newline. E.g. `a` + `b` + `c` + a re-used `a` (duplicate) → `3`. Every S1–S29 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S31 — single-integer total of the resolved citations** | `Document::citation_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the RESOLVED `\cite` keys — the ones some `\bibitem` defines — as one integer line. It is the **count-total companion of S15's** `citations_by_source` (which renders the resolved keys *grouped by their source `\cite`*): S15 and S31 are two views of the one `resolved` list; S31 collapses the whole list to a single `.len()` tally. It is the exact resolved-**citation-side twin of S28's** `resolved_reference_count`, extending the *totals family* onto the resolved-citation table — S27's `unresolved_reference_count` and S28's `resolved_reference_count` count the two reference tables, S29 counts the label definitions, S30 counts the bibliography entries, and S31 counts the resolved citations. It reads only `resolve_citations().resolved.len()` (a dangling `\cite{ghost}` lives in `unresolved`, S17's domain, and is excluded by construction) — never a `cite_span`/`entry_span`, no source slicing at all, so every resolved key folds into one total. Being a COUNT renderer, its empty case (every cited key dangling, or none at all) is the honest number `"0"` — **not** a `(no resolved citations)` marker (that discipline belongs to the *list* renderer S15; this mirrors S27/S28/S29/S30). One line, no trailing newline. E.g. `\cite{a,b}` (both defined) + `\cite{c,ghost}` (only `c` defined) → `3`. Every S1–S30 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 | **LTXDOC03 S32 — single-integer total of the unresolved (dangling) citations** | `Document::unresolved_citation_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the UNRESOLVED (dangling) `\cite` keys — the ones **no** `\bibitem` defines — as one integer line. It is the **count-total companion of S17's** `unresolved_citations_by_source` (which renders the dangling keys *grouped by their source `\cite`*): S17 and S32 are two views of the one `unresolved` list; S32 collapses the whole list to a single `.len()` tally. It is the exact unresolved-**citation-side twin of S27's** `unresolved_reference_count`, and the **dangling sibling of S31's** resolved `citation_count`. Together S31 and S32 **partition** every per-key `\cite` record — `citation_count + unresolved_citation_count` equals the number of cited keys, because `resolve_citations()` routes each key into exactly one of `resolved`/`unresolved`. It reads only `resolve_citations().unresolved.len()` (a resolved `\cite{a}` lives in `resolved`, S15/S31's domain, and is excluded by construction) — never a `cite_span`/dangling `key`, no source slicing at all, so every dangling key folds into one total. Being a COUNT renderer, its empty case (every cited key resolving, or none at all) is the honest number `"0"` — **not** a `(no unresolved citations)` marker (that discipline belongs to the *list* renderer S17; this mirrors S27/S28/S29/S30/S31). One line, no trailing newline. E.g. `\cite{a,b}` (both defined) + `\cite{c,ghost}` (only `c` defined) → `1`. Every S1–S31 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
+| **LTXDOC03 S33 — single-integer total of the duplicate ("multiply defined") `\bibitem`s** | `Document::duplicate_bibliography_count() -> String` — a **new**, read-only method that renders the decimal **COUNT** of the DUPLICATE (later, losing) `\bibitem`s — the ones of already-defined keys, which LaTeX flags *"Citation `key' multiply defined"* — as one integer line. It is the **count-total companion of S16's** `duplicate_bibliography_entries` (which renders one `\bibitem{key}` *warning line per losing duplicate*): S16 and S33 are two views of the one `duplicate_entries` list; S33 collapses the whole list to a single `.len()` tally. It is the **warning-side companion** of the resolved (S30/S31) and unresolved (S32) citation totals, completing the *totals family* over the citation tables. S30 counts the winning `entries` and S33 the losing `duplicate_entries` — together they **partition** every `\bibitem` inside a `thebibliography`: `bibliography_entry_count + duplicate_bibliography_count` equals the number of `\bibitem`s, because `resolve_citations()` routes each `\bibitem` into exactly one of `entries`/`duplicate_entries`. It reads only `resolve_citations().duplicate_entries.len()` (the winning first `\bibitem` of a key lives in `entries`, S19/S30's domain, and is excluded by construction) — never a `key`/`span`, no source slicing at all, so every losing `\bibitem` folds into one total (not de-duplicated: a key defined *three* times contributes *two* losing duplicates, exactly the two S16 warning lines). Being a COUNT renderer, its empty case (no bibliography, or every key defined exactly once) is the honest number `"0"` — **not** a `(no duplicate bibliography entries)` marker (that discipline belongs to the *list* renderer S16; this mirrors S27/S28/S29/S30/S31/S32). One line, no trailing newline. E.g. `\bibitem{smith}` twice + `\bibitem{jones}` once → `1`. Every S1–S32 output is byte-for-byte unchanged, `to_latex()` still a fixed point. Total & panic-free. | ✅ |
 
 The low-level ladder is **complete** (L0–L6). 🎉 The hierarchical **Document** layer (LTXDOC01) is
 now **complete too** — D1–D6 all shipped, taking LaTeX → `Document` AST **end-to-end**: source →
@@ -1266,6 +1267,42 @@ all) renders the honest number `"0"` — **not** a `(no unresolved citations)` m
 to the *list* renderer S17, whose empty case has no lines to show; this mirrors S27/S28/S29/S30/S31). Purely
 additive — reuses `resolve_citations`, mutates nothing, leaves every S1–S31 output and the `to_latex()` fixed
 point unchanged.
+
+### single-integer total of the duplicate ("multiply defined") `\bibitem`s (LTXDOC03 S33)
+
+The decimal **COUNT** of the duplicate (later, losing) `\bibitem`s — the ones of already-defined keys, which
+LaTeX flags *"Citation `key' multiply defined"* — as one integer line. It is the **count-total companion of
+S16's** `duplicate_bibliography_entries` (which renders one `\bibitem{key}` *warning line per losing
+duplicate*): S16 and S33 are two *views* of the one `duplicate_entries` list `resolve_citations()` produces;
+S33 collapses the whole list to a single `.len()` tally. It is the **warning-side companion** of the
+resolved (S30/S31) and unresolved (S32) citation totals, completing the *totals family* over the citation
+tables. S30 counts the winning `entries` and S33 the losing `duplicate_entries` — together they **partition**
+every `\bibitem` inside a `thebibliography`: `bibliography_entry_count + duplicate_bibliography_count` is
+exactly the number of `\bibitem`s, because `resolve_citations()` routes each `\bibitem` into exactly one of
+`entries`/`duplicate_entries`. `duplicate_bibliography_count` reads only
+`resolve_citations().duplicate_entries.len()` — the winning first `\bibitem` of a key lives in `entries`
+(S19/S30's domain) and is excluded by construction — never a `key`/`span`, no source slicing at all, so every
+losing `\bibitem` folds into one total (not de-duplicated: a key defined *three* times contributes *two*
+losing duplicates, exactly the two S16 warning lines).
+
+```rust
+use latex::parse_document;
+
+let src = r"\begin{document}\begin{thebibliography}{9}
+\bibitem{smith} First Smith.\bibitem{jones} Jones.\bibitem{smith} Second Smith.\end{thebibliography}\end{document}";
+let doc = parse_document(src).unwrap();
+assert_eq!(
+    doc.duplicate_bibliography_count(),
+    // one `\bibitem` loses (the second `smith`); the winning first `smith` and lone `jones` are excluded
+    "1",
+);
+```
+
+Being a COUNT renderer, a document with no duplicate `\bibitem`s at all (no bibliography, or every key
+defined exactly once) renders the honest number `"0"` — **not** a `(no duplicate bibliography entries)`
+marker (that discipline belongs to the *list* renderer S16, whose empty case has no lines to show; this
+mirrors S27/S28/S29/S30/S31/S32). Purely additive — reuses `resolve_citations`, mutates nothing, leaves every
+S1–S32 output and the `to_latex()` fixed point unchanged.
 
 ## Usage
 

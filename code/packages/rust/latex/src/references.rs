@@ -3134,6 +3134,93 @@ impl Document {
         // a single total, the unresolved-citation-side twin of S27's unresolved-reference count.
         self.resolve_citations().unresolved.len().to_string()
     }
+
+    /// The **single-integer TOTAL of the duplicate ("multiply defined") `\bibitem`s** (LTXDOC03 S33) —
+    /// the count of the *later, losing* `\bibitem`s of already-defined keys, the **warning-side**
+    /// companion of the resolved (S30/S31) and unresolved (S32) citation totals.
+    ///
+    /// This extends the *totals family* onto the last citation-family table it had not yet summarized.
+    /// S30's [`bibliography_entry_count`](Document::bibliography_entry_count) counts the *winning*
+    /// bibliography entries, S31's [`citation_count`](Document::citation_count) the *resolved* `\cite`
+    /// keys, and S32's [`unresolved_citation_count`](Document::unresolved_citation_count) the *dangling*
+    /// ones; S33 counts the *duplicate* `\bibitem`s — the `\bibitem`s LaTeX would flag with
+    /// *"Citation `key' multiply defined"*. It is to S16's
+    /// [`duplicate_bibliography_entries`](Document::duplicate_bibliography_entries) exactly what S30 is to
+    /// S19's `bibliography_entries`: a numeric summary over the *same* list — here the **losing**
+    /// duplicate `\bibitem`s — so a reader sees "how many `\bibitem`s are multiply defined" without
+    /// scanning the individual warning lines.
+    ///
+    /// ## What it does
+    ///
+    /// S2's [`Document::resolve_citations`] collects every `\bibitem{key}` inside a `thebibliography` in
+    /// [`Document::walk`] pre-order. The **first** `\bibitem` of each key wins (it becomes a row in
+    /// [`CitationResolution::entries`], S19/S30's domain); every **later** `\bibitem` of an
+    /// already-defined key is a *losing* duplicate, routed to
+    /// [`CitationResolution::duplicate_entries`] (S16's domain). S16 renders that list as one
+    /// `\bibitem{key}` warning line per losing duplicate; S33 collapses the whole list to a **single
+    /// count line** — the decimal `.len()` of `duplicate_entries`. It reads only the length, never a
+    /// `key` or a `span`, so every losing `\bibitem` — regardless of key — folds into one total. Only the
+    /// **losing** `\bibitem`s are counted; the winning first `\bibitem` of a key lives in `entries`
+    /// (S19/S30), never in `duplicate_entries`, so it is excluded by construction. We do **not**
+    /// de-duplicate: a key defined *three* times contributes *two* losing duplicates (one per
+    /// *"multiply defined"* warning LaTeX would raise), exactly the two `\bibitem{key}` lines S16 emits.
+    ///
+    /// ## The exact rendering contract
+    ///
+    /// Read the length of [`CitationResolution::duplicate_entries`] and render it as its decimal
+    /// `String`, **always** on a single line with **no** trailing newline. This is a **count** renderer,
+    /// so its honest value when there are no duplicate `\bibitem`s is the number `0` — the string `"0"`,
+    /// **not** a `(no duplicate bibliography entries)` marker (a total count of zero *is* a number; the
+    /// `(no …)` marker discipline belongs to the *list* renderer S16, whose empty case has no lines to
+    /// show). This mirrors S27/S28/S29/S30/S31/S32 exactly, which emit `"0"` for their empty lists. There
+    /// is no source slicing — only `.len()` is taken.
+    ///
+    /// Concretely, for a `thebibliography` that defines `smith` twice and `jones` once:
+    ///
+    /// ```text
+    /// \begin{thebibliography}{9}
+    /// \bibitem{smith} First Smith. 1990.
+    /// \bibitem{jones} Jones. 1991.
+    /// \bibitem{smith} Second Smith. 1992.
+    /// \end{thebibliography}
+    /// ```
+    ///
+    /// only the *second* `\bibitem{smith}` loses, so S33 reports:
+    ///
+    /// ```text
+    /// 1
+    /// ```
+    ///
+    /// (one losing duplicate — the second `\bibitem{smith}`; the winning first `\bibitem{smith}` and the
+    /// lone `\bibitem{jones}` are in `entries`, the "2" S30 reports). A document with **no** duplicate
+    /// `\bibitem`s — no bibliography, or every key defined exactly once — returns `"0"`.
+    ///
+    /// **Partition note.** S30 counts `entries` (one per distinct key, the winners) and S33 counts
+    /// `duplicate_entries` (the losers); together they **partition** every `\bibitem` inside a
+    /// `thebibliography` — `bibliography_entry_count + duplicate_bibliography_count` is exactly the number
+    /// of `\bibitem`s, because [`Document::resolve_citations`] routes each `\bibitem` into exactly one of
+    /// `entries` or `duplicate_entries`.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S33 is a brand-new, read-only method that reuses [`resolve_citations`](Document::resolve_citations)
+    /// and mutates nothing; it changes no S1–S32 output (they are byte-for-byte unchanged) and leaves the
+    /// `to_latex` round-trip fixed point intact. It is a *second view* of the same `duplicate_entries`
+    /// list S16 renders per-source — counting never adds, drops, or reorders the duplicate `\bibitem`s
+    /// relative to what `resolve_citations` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only `.len()` is read); a single read of the already-bounded `duplicate_entries` list's length.
+    /// Borrows `self` immutably and returns owned `String` data, so the result outlives any borrow of the
+    /// source.
+    pub fn duplicate_bibliography_count(&self) -> String {
+        // S2 already routed every later `\bibitem` of an already-defined key into `duplicate_entries`,
+        // in body pre-order (first-entry-wins; the winning first `\bibitem`s went to `entries`, S19/S30).
+        // We only read that list's length. No `key`/`span` is read — every losing `\bibitem` folds into a
+        // single total, the "multiply defined" warning-side companion of S30/S31/S32 and the numeric
+        // summary of S16's per-source duplicate list.
+        self.resolve_citations().duplicate_entries.len().to_string()
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -7824,5 +7911,145 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         // And S32 itself: exactly ONE citation key dangles (`ghost`); the three resolved keys `a`, `b`,
         // `c` are in `resolved` (S15/S31), not counted here.
         assert_eq!(doc.unresolved_citation_count(), "1");
+    }
+
+    // LTXDOC03 S33 — single-integer TOTAL of the duplicate ("multiply defined") `\bibitem`s
+    // (`duplicate_bibliography_count`). The warning-side companion of S30/S31/S32: one decimal line =
+    // `.len()` of the SAME losing-duplicate `\bibitem` list S16's `duplicate_bibliography_entries`
+    // renders as one `\bibitem{key}` warning line each. S30 counts the winning `entries` and S33 the
+    // losing `duplicate_entries` — together they PARTITION every `\bibitem` inside a `thebibliography`
+    // (each `\bibitem` routes to exactly one of `entries`/`duplicate_entries`). Being a COUNT renderer,
+    // its empty value is the honest number "0", NOT a `(no …)` marker. The winning first `\bibitem` of a
+    // key is in `entries` (S19/S30), never `duplicate_entries`, so it is excluded.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s33_multiple_duplicate_bibitems_count_the_integer() {
+        // `\bibitem{a}` defined three times and `\bibitem{b}` twice → the 2nd and 3rd `a` lose (two)
+        // and the 2nd `b` loses (one) → three losing duplicates, so the count is exactly "3".
+        let src = r"\begin{document}\begin{thebibliography}{9}
+\bibitem{a} First A.\bibitem{b} First B.\bibitem{a} Second A.\bibitem{a} Third A.\bibitem{b} Second B.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_count(), "3");
+    }
+
+    #[test]
+    fn s33_no_duplicates_all_distinct_counts_zero() {
+        // Every `\bibitem` key is distinct → no duplicate wins → "0" (the count of an empty
+        // `duplicate_entries` list). A COUNT renderer's honest value for an empty list is "0".
+        let src = r"\begin{document}\begin{thebibliography}{9}\bibitem{a} A.\bibitem{b} B.\bibitem{c} C.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_count(), "0");
+        // And S16 (the list view) shows its fixed marker for the same doc — the divergence is intended.
+        assert_eq!(
+            doc.duplicate_bibliography_entries(),
+            "(no duplicate bibliography entries)"
+        );
+    }
+
+    #[test]
+    fn s33_no_bibitems_at_all_counts_zero() {
+        // A document with NO `\bibitem` at all → "0", the same honest-zero as the "all distinct" case.
+        let src = r"\begin{document}Just some text with no bibliography.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_count(), "0");
+    }
+
+    #[test]
+    fn s33_one_duplicate_counts_one() {
+        // A single key `\bibitem{smith}` defined twice → only the SECOND loses → "1".
+        let src = r"\begin{document}\begin{thebibliography}{9}
+\bibitem{smith} First Smith.\bibitem{jones} Jones.\bibitem{smith} Second Smith.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_count(), "1");
+        // The count MUST equal the number of warning lines S16 lists (two views of the SAME list).
+        assert_eq!(
+            doc.duplicate_bibliography_count(),
+            doc.duplicate_bibliography_entries().lines().count().to_string()
+        );
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{smith}");
+    }
+
+    #[test]
+    fn s33_partitions_with_s30_over_the_bibitems() {
+        // `a` twice, `b` once, `c` twice → winners are the three distinct keys (S30 = "3"); losers are
+        // the 2nd `a` and 2nd `c` (S33 = "2"). Together they partition all FIVE `\bibitem`s — proving
+        // each `\bibitem` routes to exactly one of `entries`/`duplicate_entries`. Also cross-checked
+        // against the number of warning lines S16 emits.
+        let src = r"\begin{document}\begin{thebibliography}{9}
+\bibitem{a} A1.\bibitem{b} B.\bibitem{a} A2.\bibitem{c} C1.\bibitem{c} C2.\end{thebibliography}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.duplicate_bibliography_count(), "2");
+        // S30 winners — unchanged by S33.
+        assert_eq!(doc.bibliography_entry_count(), "3");
+        // S33 == number of S16 warning lines (two views of the SAME `duplicate_entries` list).
+        assert_eq!(
+            doc.duplicate_bibliography_count(),
+            doc.duplicate_bibliography_entries().lines().count().to_string()
+        );
+        // Winners + losers partition all five `\bibitem`s.
+        let winners: usize = doc.bibliography_entry_count().parse().unwrap();
+        let losers: usize = doc.duplicate_bibliography_count().parse().unwrap();
+        assert_eq!(winners + losers, 5);
+    }
+
+    #[test]
+    fn s33_is_additive_leaves_s1_s32_outputs_unchanged() {
+        // Same representative doc as the S32 additive test. S33 changes NONE of the S1-S32 outputs — it
+        // only reads `resolve_citations`. Its count is a second view of the SAME `duplicate_entries` list
+        // S16 renders per-source; pinned here alongside S16/S19/S22/S27/S28/S29/S30/S31/S32 to show S33
+        // neither adds, drops, nor reorders. The bibliography defines a, b, c once each and `a` a second
+        // time — so `a` has exactly ONE losing duplicate.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // A couple of representative earlier *list* renderers — byte-for-byte unchanged.
+        // S16 duplicate `\bibitem` warnings (the later `\bibitem{a}` is the sole losing duplicate).
+        assert_eq!(doc.duplicate_bibliography_entries(), "\\bibitem{a}");
+        // S19 flat winning bibliography entries (three distinct keys; the later `\bibitem{a}` loses).
+        assert_eq!(doc.bibliography_entries(), "[1] a\n[2] b\n[3] c");
+        // S22 flat winning label definitions (four distinct keys, first-definition-wins on `dup`).
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+
+        // Prior totals-family renderers — byte-for-byte unchanged.
+        // S27 dangling-reference count — exactly one (`\eqref{eq:ghost}`).
+        assert_eq!(doc.unresolved_reference_count(), "1");
+        // S28 resolved-reference count — exactly two (`\ref{sec:intro}`, `\eqref{eq:e}`).
+        assert_eq!(doc.resolved_reference_count(), "2");
+        // S29 label-definition count — exactly four distinct label keys.
+        assert_eq!(doc.label_definition_count(), "4");
+        // S30 bibliography-entry count — exactly three distinct `\bibitem` keys (`a`, `b`, `c`).
+        assert_eq!(doc.bibliography_entry_count(), "3");
+        // S31 resolved-citation count — exactly three keys resolve (`a`, `b`, `c`).
+        assert_eq!(doc.citation_count(), "3");
+        // S32 unresolved-citation count — exactly one key dangles (`ghost`).
+        assert_eq!(doc.unresolved_citation_count(), "1");
+
+        // And S33 itself: exactly ONE `\bibitem` is a losing duplicate (the later `\bibitem{a}`); the
+        // three winning first `\bibitem`s `a`, `b`, `c` are in `entries` (S19/S30), not counted here.
+        assert_eq!(doc.duplicate_bibliography_count(), "1");
+        // S30 winners + S33 losers partition all four `\bibitem`s in the bibliography.
+        let winners: usize = doc.bibliography_entry_count().parse().unwrap();
+        let losers: usize = doc.duplicate_bibliography_count().parse().unwrap();
+        assert_eq!(winners + losers, 4);
     }
 }
