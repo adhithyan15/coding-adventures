@@ -25,6 +25,7 @@ members = [
     "barcode-2d",
     "barcode-layout-1d",
     "barcode-1d",
+    "bignum-core",
     "bitset",
     "cfb",
     "ppt",
