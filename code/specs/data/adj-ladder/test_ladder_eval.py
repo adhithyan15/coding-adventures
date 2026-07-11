@@ -162,6 +162,7 @@ SELF_CONTAINED_RUNGS = (
     "rung122_rehabilitation_recovery",
     "rung123_sports_concussion_clearance",
     "rung124_vestibular_response_index",
+    "rung125_electromyography_recruitment",
 )
 
 
