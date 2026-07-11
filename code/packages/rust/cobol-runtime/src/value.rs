@@ -154,6 +154,64 @@ pub fn div(num: &Decimal, den: &Decimal, result_scale: usize) -> Option<Decimal>
     Some(Decimal::from_scaled(scaled, result_scale))
 }
 
+/// The largest `COMPUTE … ** n` exponent we evaluate. Real COBOL exponents are
+/// tiny; the cap exists so a hostile `A ** 999999999` cannot spin the
+/// repeated-multiply loop (a base of 0 or 1 never overflows to stop it early).
+/// Anything larger returns `None` → a clean `RuntimeError`.
+pub const MAX_POW_EXP: u128 = 1024;
+
+/// Exponentiation `base ** exp` for a **non-negative integer** `exp` (repeated
+/// multiplication). Returns `None` for a negative or fractional exponent (COBOL
+/// allows those — reciprocals and roots — but they are a later PR), for an
+/// exponent past [`MAX_POW_EXP`], or on `i128` overflow of an intermediate
+/// product. `base ** 0 == 1` (including `0 ** 0`, per COBOL).
+pub fn pow(base: &Decimal, exp: &Decimal) -> Option<Decimal> {
+    // Reject negative and fractional exponents (unsupported for now).
+    if exp.neg && !exp.is_zero() {
+        return None;
+    }
+    if exp.frac.chars().any(|c| c != '0') {
+        return None;
+    }
+    let e: u128 = if exp.is_zero() {
+        0
+    } else {
+        // Parse the integer magnitude; an over-long literal fails to parse.
+        exp.int.trim_start_matches('0').parse().ok()?
+    };
+    if e > MAX_POW_EXP {
+        return None;
+    }
+    let mut result = Decimal { neg: false, int: "1".into(), frac: String::new() };
+    for _ in 0..e {
+        result = mul(&result, base)?;
+    }
+    Some(result)
+}
+
+/// Round `value` to `scale` fractional digits, **half away from zero** — COBOL's
+/// `ROUNDED`. If the value already has `scale` or fewer fractional digits it is
+/// returned unchanged. `None` only on `i128` overflow of the magnitude (a value
+/// beyond ~38 digits).
+pub fn round(value: &Decimal, scale: usize) -> Option<Decimal> {
+    if value.frac.len() <= scale {
+        return Some(value.clone());
+    }
+    let int = if value.int.is_empty() { "0" } else { value.int.as_str() };
+    let frac_keep = &value.frac[..scale];
+    // The first dropped digit decides the round (half away from zero).
+    let first_dropped = value.frac.as_bytes()[scale] - b'0';
+    let combined = format!("{int}{frac_keep}");
+    let mut mag: i128 = combined.parse().ok()?;
+    if first_dropped >= 5 {
+        mag = mag.checked_add(1)?;
+    }
+    let mut d = Decimal::from_scaled(mag, scale);
+    // Preserve the sign, except a rounded-to-zero magnitude is unsigned.
+    d.neg = value.neg && mag != 0;
+    Some(d)
+}
+
 /// `10^exp` as `i128`, or `None` on overflow.
 fn pow10(exp: usize) -> Option<i128> {
     let mut v: i128 = 1;
@@ -324,6 +382,44 @@ mod tests {
     #[test]
     fn division_by_zero_returns_none() {
         assert_eq!(div(&d("5"), &d("0"), 2), None);
+    }
+
+    #[test]
+    fn exponentiation_integer_powers() {
+        assert_eq!(pow(&d("2"), &d("10")).unwrap(), d("1024"));
+        assert_eq!(pow(&d("5"), &d("0")).unwrap(), d("1")); // x**0 = 1
+        assert_eq!(pow(&d("0"), &d("0")).unwrap(), d("1")); // 0**0 = 1 (COBOL)
+        assert_eq!(pow(&d("10"), &d("3")).unwrap(), d("1000"));
+        // Fractional base: 1.5**2 = 2.25 (fraction lengths sum through mul).
+        assert_eq!(pow(&d("1.5"), &d("2")).unwrap(), d("2.25"));
+    }
+
+    #[test]
+    fn exponentiation_unsupported_and_bounded() {
+        // Negative and fractional exponents are not yet supported → None.
+        assert_eq!(pow(&d("2"), &d("-1")), None);
+        assert_eq!(pow(&d("2"), &d("0.5")), None);
+        // An exponent past the cap is refused (not spun) even for base 1.
+        assert_eq!(pow(&d("1"), &d("100000")), None);
+        // A huge integer base overflows i128 within a few multiplies → None.
+        assert_eq!(pow(&d("1000000000000"), &d("10")), None);
+    }
+
+    #[test]
+    fn rounding_half_away_from_zero() {
+        // Round to 2 places.
+        assert_eq!(round(&d("3.14159"), 2).unwrap(), d("3.14"));
+        assert_eq!(round(&d("2.675"), 2).unwrap(), d("2.68")); // .5 rounds up
+        assert_eq!(round(&d("2.674"), 2).unwrap(), d("2.67"));
+        // Round to 0 places (integer).
+        assert_eq!(round(&d("2.5"), 0).unwrap(), d("3"));
+        assert_eq!(round(&d("2.4"), 0).unwrap(), d("2"));
+        // Carry propagates: 9.99 → 10.0 at 1 place.
+        assert_eq!(round(&d("9.99"), 1).unwrap(), d("10.0"));
+        // Already within scale: unchanged.
+        assert_eq!(round(&d("1.5"), 2).unwrap(), d("1.5"));
+        // Rounds to zero → unsigned zero.
+        assert_eq!(round(&d("-0.004"), 2).unwrap(), d("0.00"));
     }
 
     #[test]

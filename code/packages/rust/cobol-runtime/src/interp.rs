@@ -3,9 +3,17 @@
 
 use crate::error::RuntimeError;
 use crate::picture::Picture;
-use crate::program::{Cond, Fig, Lit, Operand, Program, RelOp, Stmt};
-use crate::value::{add, div, move_into_char, move_into_numeric, mul, sub, Decimal};
+use crate::program::{ArithOp, Cond, Expr, Fig, Lit, Operand, Program, RelOp, Stmt};
+use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
+
+/// Fractional precision COMPUTE carries through an intermediate **division**
+/// before the final round/truncate into the receiver. COBOL's standard defines
+/// an intricate composite intermediate precision; we use a fixed generous scale
+/// here (correct to this many places, then rounded to the receiver). This is a
+/// documented simplification — see PL08 — not the full standard rule. 12 places
+/// stays comfortably inside `i128` for realistic magnitudes.
+const COMPUTE_DIV_SCALE: usize = 12;
 
 /// One field in the data model. Elementary items carry a picture and character
 /// storage; group items (no picture) are the concatenation of their children.
@@ -165,13 +173,24 @@ impl Machine {
             Stmt::Divide { divisor, dividend, giving } => {
                 self.exec_divide(divisor, dividend, giving)?
             }
+            Stmt::Compute { target, rounded, expr, on_size_error } => {
+                return self.exec_compute(target, *rounded, expr, on_size_error);
+            }
             Stmt::If { cond, then_branch, else_branch } => {
                 let branch = if self.eval_cond(cond)? { then_branch } else { else_branch };
-                for s in branch {
-                    if self.exec_stmt(s)? {
-                        return Ok(true); // STOP RUN inside the branch
-                    }
-                }
+                return self.run_stmts(branch);
+            }
+        }
+        Ok(false)
+    }
+
+    /// Execute a sequence of statements, short-circuiting on `STOP RUN` (the
+    /// returned `true` propagates up to unwind any enclosing branches). Shared by
+    /// `IF` branches and `COMPUTE … ON SIZE ERROR` handlers.
+    fn run_stmts(&mut self, stmts: &[Stmt]) -> Result<bool, RuntimeError> {
+        for s in stmts {
+            if self.exec_stmt(s)? {
+                return Ok(true);
             }
         }
         Ok(false)
@@ -319,10 +338,109 @@ impl Machine {
 
     /// The number of fractional digit positions of a named numeric receiver.
     fn numeric_dec_digits(&self, name: &str) -> Result<usize, RuntimeError> {
+        Ok(self.numeric_dims(name)?.1)
+    }
+
+    /// The `(int_digits, dec_digits)` of a named numeric receiver.
+    fn numeric_dims(&self, name: &str) -> Result<(usize, usize), RuntimeError> {
         let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.into()))?;
         match &self.items[idx].picture {
-            Some(Picture::Numeric { dec_digits, .. }) => Ok(*dec_digits),
+            Some(Picture::Numeric { int_digits, dec_digits }) => Ok((*int_digits, *dec_digits)),
             _ => Err(RuntimeError::Unsupported(format!("arithmetic on non-numeric field {name}"))),
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // COMPUTE — expression evaluation, ROUNDED, ON SIZE ERROR
+    // ----------------------------------------------------------------------
+
+    /// `COMPUTE target [ROUNDED] = expr [ON SIZE ERROR …]`.
+    ///
+    /// Evaluate the expression, round or truncate to the receiver's decimal
+    /// places, and store it — unless the result's integer part overflows the
+    /// receiver (or a division by zero occurred). On such a **size error**: run
+    /// the `ON SIZE ERROR` statements and leave the receiver unchanged if a
+    /// handler was given; otherwise fall back to COBOL's handler-less behaviour
+    /// (overflow truncates silently like `MOVE`; a zero divisor is a hard error).
+    fn exec_compute(
+        &mut self,
+        target: &str,
+        rounded: bool,
+        expr: &Expr,
+        on_size_error: &[Stmt],
+    ) -> Result<bool, RuntimeError> {
+        let (int_digits, dec_digits) = self.numeric_dims(target)?;
+
+        let value = match self.eval_expr(expr) {
+            Ok(v) => v,
+            // Division by zero is a size-error condition: the handler catches it;
+            // without one it stays a hard DivideByZero (as bare DIVIDE does).
+            Err(RuntimeError::DivideByZero) if !on_size_error.is_empty() => {
+                return self.run_stmts(on_size_error);
+            }
+            Err(e) => return Err(e),
+        };
+
+        // Round (half away from zero) or leave full precision for the store to
+        // truncate at the receiver's decimal places.
+        let final_value = if rounded {
+            checked(round(&value, dec_digits))?
+        } else {
+            value
+        };
+
+        // Size error = the integer part does not fit. (Fractional truncation is
+        // never a size error.)
+        if final_value.int.trim_start_matches('0').len() > int_digits {
+            if on_size_error.is_empty() {
+                // No handler: COBOL truncates the high-order digits silently,
+                // exactly as move_into_numeric already does.
+                self.store_number(target, final_value)?;
+                return Ok(false);
+            }
+            return self.run_stmts(on_size_error);
+        }
+
+        self.store_number(target, final_value)?;
+        Ok(false)
+    }
+
+    /// Evaluate an arithmetic expression to an exact [`Decimal`]. Division is
+    /// carried to [`COMPUTE_DIV_SCALE`] fractional digits; a zero divisor is a
+    /// [`RuntimeError::DivideByZero`] (which `COMPUTE`'s caller may turn into a
+    /// size error). Names must resolve to numeric items.
+    fn eval_expr(&self, e: &Expr) -> Result<Decimal, RuntimeError> {
+        match e {
+            Expr::Num(s) => Decimal::parse_literal(s)
+                .ok_or_else(|| RuntimeError::Unsupported(format!("numeric literal {s}"))),
+            Expr::Var(name) => self.named_decimal(name),
+            Expr::Unary { neg, operand } => {
+                let mut d = self.eval_expr(operand)?;
+                if *neg && !d.is_zero() {
+                    d.neg = !d.neg;
+                }
+                Ok(d)
+            }
+            Expr::Binary { op, left, right } => {
+                let a = self.eval_expr(left)?;
+                let b = self.eval_expr(right)?;
+                match op {
+                    ArithOp::Add => checked(add(&a, &b)),
+                    ArithOp::Sub => checked(sub(&a, &b)),
+                    ArithOp::Mul => checked(mul(&a, &b)),
+                    ArithOp::Div => {
+                        if b.is_zero() {
+                            return Err(RuntimeError::DivideByZero);
+                        }
+                        checked(div(&a, &b, COMPUTE_DIV_SCALE))
+                    }
+                    ArithOp::Pow => pow(&a, &b).ok_or_else(|| {
+                        RuntimeError::Unsupported(
+                            "COMPUTE ** with a negative, fractional, or oversized exponent".into(),
+                        )
+                    }),
+                }
+            }
         }
     }
 

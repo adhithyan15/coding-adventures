@@ -123,12 +123,19 @@ Each item is a run-verified PR; the runtime grows one quirk at a time.
 1. **v0.1 — execution spine** (merged): data model + `MOVE`/`DISPLAY`/`STOP RUN`.
 2. **v0.2 — arithmetic** (merged): fixed-point `ADD`/`SUBTRACT`/`MULTIPLY`.
 3. **v0.3 — `DIVIDE`** (merged): fixed-point division + divide-by-zero.
-4. **v0.4 — `IF … ELSE`** (this PR): conditional branching; numeric and
+4. **v0.4 — `IF … ELSE`** (merged): conditional branching; numeric and
    alphanumeric comparison; `STOP RUN` unwinds nested branches.
-5. **`COMPUTE`, `ROUNDED`, `ON SIZE ERROR`** — expression evaluation and the
-   rounding/overflow clauses (these also widen the frontend grammar); then
-   **signed numerics + overpunch** display and the `SIGN` clause.
-6. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
+5. **v0.5 — `COMPUTE`** (this PR): evaluate precedence-layered arithmetic
+   expressions (`+ - * / **`, unary sign, parentheses) over the parser's tree;
+   `ROUNDED` (half away from zero) vs default truncation; `ON SIZE ERROR` on
+   integer overflow or division by zero (receiver unchanged, handler runs;
+   without a handler, overflow truncates silently and a zero divisor is a hard
+   error). **Known simplification:** intermediate **division** precision is a
+   fixed 12 fractional digits, not the standard's composite intermediate-precision
+   rule; `**` supports non-negative integer exponents only (bounded at 1024).
+   Both are flagged for a later precision/exponent-faithfulness PR.
+6. **Signed numerics + overpunch** display and the `SIGN` clause.
+7. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
 7. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`, `TIMES`,
    `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.
 8. **Conditions** — level-88 condition-names.

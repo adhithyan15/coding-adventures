@@ -7,11 +7,13 @@
 //!
 //! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
 //! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
-//! and `IF … ELSE` (numeric and alphanumeric comparison) over unsigned
-//! numeric-display and character pictures — and returns a descriptive error for
-//! anything not yet modelled, rather than producing wrong output. The roadmap
-//! toward full COBOL (signed numerics, `COMPUTE`, `ROUNDED`/`ON SIZE ERROR`,
-//! editing pictures, `PERFORM`, tables, files, later standards) is in PL08.
+//! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
+//! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), and `IF … ELSE`
+//! (numeric and alphanumeric comparison) over unsigned numeric-display and
+//! character pictures — and returns a descriptive error for anything not yet
+//! modelled, rather than producing wrong output. The roadmap toward full COBOL
+//! (signed numerics, editing pictures, `PERFORM`, tables, files, later
+//! standards) is in PL08.
 //!
 //! ```
 //! use coding_adventures_cobol_runtime::run_cobol;
@@ -432,6 +434,114 @@ mod tests {
         let err = run_cobol(&program(&refs)).unwrap_err();
         assert!(matches!(err, RuntimeError::Parse(_)), "got {err:?}");
         assert!(err.to_string().to_lowercase().contains("nest"), "message should explain: {err}");
+    }
+
+    // ----------------------------------------------------------------------
+    // COMPUTE — expression evaluation, ROUNDED, ON SIZE ERROR
+    // ----------------------------------------------------------------------
+
+    /// Build a program with three numeric inputs and one receiver `R`, run the
+    /// given procedure body, and return what it DISPLAYed. `A`, `B`, `C` are
+    /// `9(3)`; `R` is whatever `r_pic` says.
+    fn run_compute(a: &str, b: &str, c: &str, r_pic: &str, body: &[&str]) -> Result<String, RuntimeError> {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  A  PIC 9(3) VALUE {a}."),
+            format!("01  B  PIC 9(3) VALUE {b}."),
+            format!("01  C  PIC 9(3) VALUE {c}."),
+            format!("01  R  PIC {r_pic} VALUE 0."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs))
+    }
+
+    #[test]
+    fn compute_respects_operator_precedence() {
+        // A + B * C = 10 + 3*2 = 16 → stored in 9(4)V99 → "001600".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A + B * C.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "001600\n");
+    }
+
+    #[test]
+    fn compute_parentheses_override_precedence() {
+        // (A + B) * C = (10 + 3) * 2 = 26 → "002600".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = (A + B) * C.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "002600\n");
+    }
+
+    #[test]
+    fn compute_exponentiation_and_unary_minus() {
+        // C ** B = 2 ** 3 = 8 → "000800".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = C ** B.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "000800\n");
+        // Unary minus then stored into an unsigned receiver keeps the magnitude:
+        // A - (A + B) = 10 - 13 = -3 → magnitude 3 → "000300".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A - (A + B).", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "000300\n");
+    }
+
+    #[test]
+    fn compute_division_truncates_then_rounds() {
+        // A / B = 10 / 3 = 3.333… → truncated into V99 → "0003.33" = "000333".
+        let out = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A / B.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "000333\n");
+        // With ROUNDED to two places, 3.333… → 3.33 (the third place is < 5).
+        let out = run_compute("20", "3", "2", "9(4)V99",
+            &["COMPUTE R ROUNDED = A / B.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        // 20 / 3 = 6.666… → rounds to 6.67 → "000667".
+        assert_eq!(out, "000667\n");
+    }
+
+    #[test]
+    fn compute_on_size_error_fires_on_overflow() {
+        // A * A * A = 10^3 = 1000, but R is only 9(2) (max 99): integer overflow
+        // → the ON SIZE ERROR handler runs and R is left unchanged (still 0).
+        let out = run_compute("10", "3", "2", "9(2)", &[
+            "COMPUTE R = A * A * A",
+            "    ON SIZE ERROR DISPLAY \"TOO BIG\".",
+            "DISPLAY R.",
+            "STOP RUN.",
+        ]).unwrap();
+        assert_eq!(out, "TOO BIG\n00\n");
+    }
+
+    #[test]
+    fn compute_overflow_without_handler_truncates() {
+        // Same overflow but no handler: COBOL truncates high-order digits
+        // silently (1000 into 9(2) keeps the low "00").
+        let out = run_compute("10", "3", "2", "9(2)",
+            &["COMPUTE R = A * A * A.", "DISPLAY R.", "STOP RUN."]).unwrap();
+        assert_eq!(out, "00\n");
+    }
+
+    #[test]
+    fn compute_on_size_error_catches_divide_by_zero() {
+        // Dividing by (C - C) = 0 is a size-error condition; the handler runs.
+        let out = run_compute("10", "3", "2", "9(4)V99", &[
+            "COMPUTE R = A / (C - C)",
+            "    ON SIZE ERROR DISPLAY \"DIV ZERO\".",
+            "DISPLAY R.",
+            "STOP RUN.",
+        ]).unwrap();
+        assert_eq!(out, "DIV ZERO\n000000\n");
+    }
+
+    #[test]
+    fn compute_divide_by_zero_without_handler_is_an_error() {
+        let err = run_compute("10", "3", "2", "9(4)V99",
+            &["COMPUTE R = A / (C - C).", "DISPLAY R.", "STOP RUN."]).unwrap_err();
+        assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
     }
 
     // ----------------------------------------------------------------------
