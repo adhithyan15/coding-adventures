@@ -560,6 +560,7 @@ members = [
     "erl-nif-bridge",
     "gf256-c",
     "sha256-c",
+    "md5-c",
     "lua-bridge",
     "perl-bridge",
     "polynomial-c",
