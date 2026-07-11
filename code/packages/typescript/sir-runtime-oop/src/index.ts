@@ -602,6 +602,7 @@ const HASH_METHODS = new Set<string>([
   "length",
   "empty?",
   "to_a",
+  "to_h",
   "dig",
   "store",
   "[]=",
@@ -639,6 +640,9 @@ const HASH_BLOCK_METHODS = new Set<string>([
   "reduce",
   "inject",
   "sum",
+  "to_h",
+  "each_with_index",
+  "each_with_object",
 ]);
 
 // Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
@@ -1210,6 +1214,11 @@ function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeo
       return recv.size === 0;
     case "to_a":
       return [...recv.entries()].map(([k, v]: [Val, Val]) => [k, v]);
+    case "to_h":
+      // `Hash#to_h` with NO block → a shallow copy of the hash (a fresh `Map`,
+      // so mutating it never aliases the receiver).  The block form (which
+      // re-maps each pair to a new `[k, v]`) lives in `hashBlockMethod`.
+      return new Map<Val, Val>(recv);
     case "dig":
       // v0: single-level dig.
       return recv.has(args[0]) ? recv.get(args[0]) : null;
@@ -1408,6 +1417,40 @@ function hashBlockMethod(
         acc = (acc as number) + (apply(block, [k, v]) as number);
       }
       return acc;
+    }
+    case "to_h": {
+      // `Hash#to_h { |k, v| [new_k, new_v] }` — a NEW hash from the `[k, v]`
+      // pairs the block returns.  The block is yielded the two args `(k, v)`
+      // (matching `each`) and must return a two-element `[k, v]` pair; a
+      // non-pair result is skipped (Ruby raises TypeError, deferred to the
+      // typed-error cascade), and a later pair with a duplicate key wins
+      // (Ruby's rule, and how `Map.set` behaves).
+      const out = new Map<Val, Val>();
+      for (const [k, v] of [...recv]) {
+        const pair = apply(block, [k, v]);
+        if (Array.isArray(pair) && pair.length === 2) { out.set(pair[0], pair[1]); }
+      }
+      return out;
+    }
+    case "each_with_index": {
+      // Yields each `[k, v]` pair with its 0-based index and returns the
+      // receiver.  Unlike the two-arg `(k, v)` yield of `each`, the element
+      // arrives as a single `[k, v]` Array (the second block param is the
+      // index), matching Ruby's Enumerable convention.
+      let i = 0;
+      for (const [k, v] of [...recv]) { apply(block, [[k, v], i]); i++; }
+      return recv;
+    }
+    case "each_with_object": {
+      // `each_with_object(memo) { |(k, v), memo| … }` — yields each `[k, v]`
+      // pair with the memo object and returns the (mutated) memo.  Like
+      // `each_with_index`, the element is the single `[k, v]` pair (the second
+      // block param is the memo).  With no memo argument the receiver is
+      // returned unchanged.
+      if (args.length === 0) { return recv; }
+      const memo = args[0];
+      for (const [k, v] of [...recv]) { apply(block, [[k, v], memo]); }
+      return memo;
     }
     default:
       return MISS;

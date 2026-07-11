@@ -644,6 +644,51 @@ describe("built-in method catalog: Hash (M1c)", () => {
     ]);
   });
 
+  it("to_h + indexed/object iteration (to_h/each_with_index/each_with_object)", () => {
+    // `to_h` has a no-block (shallow copy) and a block (re-map) form.
+    // `each_with_index`/`each_with_object` yield the [k, v] PAIR as ONE argument
+    // alongside the index/memo (Ruby's Enumerable convention — contrast `each`'s
+    // two-arg (k, v) yield).  Mirrors Python #8009 / Go #8015 / Rust #8020 / JS
+    // #8024.
+    const h = new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3]]);
+    // to_h (no block) → a fresh equal Map that does not alias the receiver.
+    const copy = callMethod(h, "to_h") as Map<Val, Val>;
+    expect(copy).toEqual(new Map<Val, Val>([["a", 1], ["b", 2], ["c", 3]]));
+    copy.set("z", 99);
+    expect(h.has("z")).toBe(false);
+    // to_h with a block re-maps each [k, v] → [new_k, new_v] (upcase key, double
+    // value).
+    expect(
+      callMethod(h, "to_h", new Closure((k: Val, v: Val) => [(k as string).toUpperCase(), (v as number) * 2])),
+    ).toEqual(new Map<Val, Val>([["A", 2], ["B", 4], ["C", 6]]));
+    // to_h block whose new keys collide → the LAST pair wins (Ruby's rule).
+    expect(callMethod(h, "to_h", new Closure((k: Val, v: Val) => ["k", v]))).toEqual(
+      new Map<Val, Val>([["k", 3]]),
+    );
+    // to_h block returning a non-pair is skipped (never-throw floor).
+    expect(callMethod(h, "to_h", new Closure((k: Val, v: Val) => v))).toEqual(new Map<Val, Val>());
+    // each_with_index yields ([k, v], i) and returns the receiver.
+    const seen: Val[] = [];
+    const ewiResult = callMethod(
+      h, "each_with_index", new Closure((pair: Val, i: Val) => { seen.push([pair, i]); return null; }),
+    );
+    expect(seen).toEqual([[["a", 1], 0], [["b", 2], 1], [["c", 3], 2]]);
+    expect(ewiResult).toBe(h);
+    // each_with_object(memo) yields ([k, v], memo) and returns the memo; here we
+    // accumulate the values into a running total wrapped in an array.
+    const total = callMethod(
+      h, "each_with_object", [0], new Closure((pair: Val, memo: Val) => { (memo as Val[])[0] = ((memo as Val[])[0] as number) + ((pair as Val[])[1] as number); return null; }),
+    );
+    expect(total).toEqual([6]);
+    // each_with_object with NO memo argument returns the receiver unchanged.
+    expect(callMethod(h, "each_with_object", new Closure((pair: Val, memo: Val) => null))).toBe(h);
+    // respond_to? advertises the new methods; source hash unchanged throughout.
+    expect(callMethod(h, "respond_to?", "to_h")).toBe(true);
+    expect(callMethod(h, "respond_to?", "each_with_index")).toBe(true);
+    expect(callMethod(h, "respond_to?", "each_with_object")).toBe(true);
+    expect([...h.entries()]).toEqual([["a", 1], ["b", 2], ["c", 3]]);
+  });
+
   it("respond_to? honesty + nil floor", () => {
     const h = new Map<Val, Val>([["a", 1]]);
     expect(callMethod(h, "respond_to?", "keys")).toBe(true);
