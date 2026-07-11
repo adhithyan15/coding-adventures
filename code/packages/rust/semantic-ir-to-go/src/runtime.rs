@@ -1719,7 +1719,9 @@ func _sir_hash_responds(name string) bool {
 	case "each", "each_pair", "each_key", "each_value", "map",
 		"select", "filter", "reject", "transform_values", "transform_keys",
 		"find", "detect", "any?", "all?", "none?", "count",
-		"sort_by", "min_by", "max_by":
+		"sort_by", "min_by", "max_by",
+		"group_by", "partition", "flat_map", "collect_concat",
+		"reduce", "inject", "sum":
 		return true
 	}
 	return false
@@ -2654,6 +2656,85 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			}
 		}
 		return &Seq{Items: []Value{best.Key, best.Val}}, true
+	// ── Enumerable breadth (grouping / folding / flattening) ───────
+	//
+	// The block is yielded (key, value) two args (except `reduce`/`inject`,
+	// which follow Ruby's memo convention and yield (memo, [key, value]) — the
+	// pair as ONE second argument).  Every "element" a result carries is the
+	// two-element [key, value] Array (`&Seq{key, value}`).
+	case "group_by":
+		// A Hash of block key → Array of [k, v] pairs, in first-seen key order.
+		acc := _sir_map_lit([]Value{}, []Value{})
+		for _, e := range recv.Entries {
+			k := _sir_apply(block, []Value{e.Key, e.Val})
+			pair := &Seq{Items: []Value{e.Key, e.Val}}
+			if seq, ok := _sir_map_get(acc, k).(*Seq); ok && seq != nil {
+				seq.Items = append(seq.Items, pair)
+			} else {
+				_sir_map_set(acc, k, &Seq{Items: []Value{pair}})
+			}
+		}
+		return acc, true
+	case "partition":
+		// `[matching pairs, non-matching pairs]`, order preserved.
+		yes := []Value{}
+		no := []Value{}
+		for _, e := range recv.Entries {
+			pair := &Seq{Items: []Value{e.Key, e.Val}}
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				yes = append(yes, pair)
+			} else {
+				no = append(no, pair)
+			}
+		}
+		return &Seq{Items: []Value{&Seq{Items: yes}, &Seq{Items: no}}}, true
+	case "flat_map", "collect_concat":
+		// Map each pair through the block, splicing one level: an Array result
+		// contributes its elements, a scalar is appended as-is.
+		out := []Value{}
+		for _, e := range recv.Entries {
+			r := _sir_apply(block, []Value{e.Key, e.Val})
+			if s, ok := r.(*Seq); ok {
+				out = append(out, s.Items...)
+			} else {
+				out = append(out, r)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "reduce", "inject":
+		// `reduce(init) { |memo, (k, v)| … }` folds the pairs; a seedless
+		// `reduce` starts from the first pair.  The block yields the pair as ONE
+		// second argument.  Empty seedless reduce ⇒ nil.
+		pairs := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			pairs[i] = &Seq{Items: []Value{e.Key, e.Val}}
+		}
+		var acc Value
+		var rest []Value
+		if len(args) > 0 {
+			acc = args[0]
+			rest = pairs
+		} else if len(pairs) > 0 {
+			acc = pairs[0]
+			rest = pairs[1:]
+		} else {
+			return nil, true
+		}
+		for _, pair := range rest {
+			acc = _sir_apply(block, []Value{acc, pair})
+		}
+		return acc, true
+	case "sum":
+		// `sum(init = 0) { |k, v| … }` — `init` plus the polymorphic-`+` sum of
+		// the block results (Hash#sum requires a block).
+		var acc Value = int64(0)
+		if len(args) > 0 {
+			acc = args[0]
+		}
+		for _, e := range recv.Entries {
+			acc = _sir_plus([]Value{acc, _sir_apply(block, []Value{e.Key, e.Val})})
+		}
+		return acc, true
 	}
 	return nil, false
 }

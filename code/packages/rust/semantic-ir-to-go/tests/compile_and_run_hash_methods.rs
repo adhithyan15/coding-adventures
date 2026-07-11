@@ -416,3 +416,115 @@ fn hash_enumerable_aggregates_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+/// Demo for the Hash Enumerable *breadth* batch (group_by / partition /
+/// flat_map / reduce / sum).  Block yields (key, value) — except `reduce`,
+/// which yields (memo, [key, value]).  Results carry `[key, value]` pairs.
+fn breadth_module() -> Module {
+    // { |k, v| v } — the value (sort/sum projection).
+    let by_val = lambda_fn2("__lam_val", "k", "v", var_p("v"));
+    // { |k, v| v.even? } — even-value predicate (group_by / partition).
+    let is_even = lambda_fn2("__lam_even", "k", "v", method(var_p("v"), "even?", vec![]));
+    // { |k, v| [k, v] } — echo the pair (flat_map, so it flattens to k, v, …).
+    let echo_pair = lambda_fn2(
+        "__lam_pair",
+        "k",
+        "v",
+        Expr::SeqLit { items: vec![var_p("k"), var_p("v")], span: s() },
+    );
+    // { |acc, pair| acc + pair[1] } — fold the values (reduce memo convention).
+    let add_val = lambda_fn2(
+        "__lam_addval",
+        "acc",
+        "pair",
+        builtin(
+            "+",
+            vec![
+                var_p("acc"),
+                Expr::SeqIndex {
+                    seq: Box::new(var_p("pair")),
+                    index: Box::new(ilit(1)),
+                    span: s(),
+                },
+            ],
+        ),
+    );
+
+    let stmts = vec![
+        // {a:1,b:2,c:3,d:4}.group_by { |k,v| v.even? }
+        //   → {#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "group_by",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.partition { |k,v| v.even? }
+        //   → [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "partition",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2}.flat_map { |k,v| [k, v] } → [a, 1, b, 2]
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "flat_map",
+            vec![closure("__lam_pair")],
+        )),
+        // {a:1,b:2,c:3,d:4}.reduce(0) { |acc, (k,v)| acc + v } → 10
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "reduce",
+            vec![ilit(0), closure("__lam_addval")],
+        )),
+        // {a:1,b:2,c:3,d:4}.sum(100) { |k,v| v } → 110
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "sum",
+            vec![ilit(100), closure("__lam_val")],
+        )),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![by_val, is_even, echo_pair, add_val, main])
+}
+
+#[test]
+fn hash_enumerable_breadth_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&breadth_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "breadth");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "{#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}", // group_by { even? }
+            "[[[b, 2], [d, 4]], [[a, 1], [c, 3]]]",         // partition { even? }
+            "[a, 1, b, 2]",                                 // flat_map { [k, v] }
+            "10",                                           // reduce(0) { acc + v }
+            "110",                                          // sum(100) { v }
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
