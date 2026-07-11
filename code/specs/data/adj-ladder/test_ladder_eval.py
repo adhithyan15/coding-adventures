@@ -159,6 +159,7 @@ SELF_CONTAINED_RUNGS = (
     "rung119_allergy_skin_testing",
     "rung120_pulmonology_spirometry",
     "rung121_neonatology_perfusion",
+    "rung122_rehabilitation_recovery",
 )
 
 
