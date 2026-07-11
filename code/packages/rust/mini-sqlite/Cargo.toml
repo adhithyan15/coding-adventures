@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-mini-sqlite"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Mini SQLite facade for Rust — Level 1 full pipeline (parser → planner → optimizer → codegen → VM)"
 
@@ -15,3 +15,10 @@ lexer = { path = "../lexer" }
 
 [dev-dependencies]
 serde_json = "1"
+
+# `rusqlite` (bundled C SQLite) is a DEV-dependency ONLY — the differential
+# conformance harness (`tests/differential_oracle.rs`) runs the same SQL through
+# both mini-sqlite and the real C library and diffs the results. Nothing in the
+# shipped crate links it; mini-sqlite is a from-scratch SQLite replacement, and
+# the whole point is that the real library is only ever the measuring oracle.
+rusqlite = { version = "0.32", features = ["bundled"] }
