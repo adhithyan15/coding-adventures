@@ -1475,7 +1475,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 name,
                 "keys" | "values" | "[]" | "size" | "length" | "has_key?" | "key?" | "include?"
                     | "member?" | "fetch" | "each" | "each_pair" | "map" | "collect" | "select"
-                    | "filter"
+                    | "filter" | "transform_values" | "transform_keys"
             ),
             Value::Str(_) => matches!(
                 name,
@@ -2233,6 +2233,43 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
                         .collect();
                     Value::Map(Rc::new(RefCell::new(kept)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#transform_values { |v| … }` — a NEW hash whose keys are
+            // copied verbatim and whose values are the block results.  The
+            // block yields ONE argument (the value); the keys are untouched, so
+            // they stay unique and a straight rebuild preserves insertion order.
+            // Non-mutating — `recv` is never edited in place.
+            "transform_values" => match &block {
+                Some(b) => {
+                    let out: Vec<(Value, Value)> = entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .map(|(k, v)| (k, apply_closure(b, vec![v])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(out)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#transform_keys { |k| … }` — a NEW hash whose values are
+            // untouched and whose keys are the block results (yields ONE
+            // argument, the key).  Two source keys can map to the SAME new key;
+            // Ruby keeps the LAST such entry's value while holding the new key
+            // at its FIRST-seen position, so we overwrite an existing slot in
+            // place (`value_eq` match) and otherwise append.
+            "transform_keys" => match &block {
+                Some(b) => {
+                    let mut out: Vec<(Value, Value)> = Vec::new();
+                    for (k, v) in entries_rc.borrow().clone() {
+                        let nk = apply_closure(b, vec![k]);
+                        match out.iter_mut().find(|(ek, _)| value_eq(ek, &nk)) {
+                            Some(slot) => slot.1 = v,
+                            None => out.push((nk, v)),
+                        }
+                    }
+                    Value::Map(Rc::new(RefCell::new(out)))
                 }
                 None => unknown_method(&recv, name),
             },
