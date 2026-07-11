@@ -408,15 +408,12 @@ impl CSSEmitter {
     fn emit_pseudo_element(&self, node: &GrammarASTNode, _depth: usize) -> String {
         let mut parts: Vec<String> = Vec::new();
         for child in &node.children {
-            match child {
-                ASTNodeOrToken::Token(tok) => {
-                    let type_name = get_token_type_name(tok);
-                    match type_name.as_str() {
-                        "COLON_COLON" => parts.push("::".to_string()),
-                        _ => parts.push(tok.value.clone()),
-                    }
+            if let ASTNodeOrToken::Token(tok) = child {
+                let type_name = get_token_type_name(tok);
+                match type_name.as_str() {
+                    "COLON_COLON" => parts.push("::".to_string()),
+                    _ => parts.push(tok.value.clone()),
                 }
-                _ => {}
             }
         }
         parts.join("")

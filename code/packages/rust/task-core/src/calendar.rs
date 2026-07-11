@@ -64,7 +64,7 @@ fn resolve_calendar<'a>(project: &'a ProjectState, cal: &CalendarId) -> Option<&
 
 /// The [`DaySchedule`] that applies to `date` on `cal`: an exception if one matches,
 /// otherwise the weekday's entry in the weekly pattern.
-fn day_schedule<'a>(cal: &'a Calendar, date: Date) -> &'a DaySchedule {
+fn day_schedule(cal: &Calendar, date: Date) -> &DaySchedule {
     for ex in &cal.exceptions {
         if ex.date == date {
             return &ex.schedule;

@@ -33,7 +33,7 @@ use std::ptr;
 
 thread_local! {
     static LAST_ERROR_CODE: Cell<u32> = const { Cell::new(0) };
-    static LAST_ERROR_MESSAGE: RefCell<Option<CString>> = RefCell::new(None);
+    static LAST_ERROR_MESSAGE: RefCell<Option<CString>> = const { RefCell::new(None) };
 }
 
 #[repr(u32)]

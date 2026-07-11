@@ -366,8 +366,8 @@ fn apply_alph_chunk(pixels: &mut PixelContainer, alph: &[u8]) -> Result<(), Stri
         }
         1 => {
             // VP8L-compressed alpha: decode lossless image, extract G channel.
-            let alpha_px = vp8l::decode_as_alpha(alpha_data, pixels.width, pixels.height)?;
-            alpha_px
+            
+            vp8l::decode_as_alpha(alpha_data, pixels.width, pixels.height)?
         }
         _ => {
             return Err(format!("WebP ALPH: unknown compression method {method}"));
@@ -551,7 +551,7 @@ mod tests {
         out.extend_from_slice(b"VP8L");
         out.extend_from_slice(&(vp8l_bytes.len() as u32).to_le_bytes());
         out.extend_from_slice(vp8l_bytes);
-        if vp8l_bytes.len() % 2 != 0 {
+        if !vp8l_bytes.len().is_multiple_of(2) {
             out.push(0); // padding
         }
 
@@ -608,17 +608,17 @@ mod tests {
         chunks.extend_from_slice(b"ICCP");
         chunks.extend_from_slice(&(iccp_data.len() as u32).to_le_bytes());
         chunks.extend_from_slice(iccp_data);
-        if iccp_data.len() % 2 != 0 { chunks.push(0); }
+        if !iccp_data.len().is_multiple_of(2) { chunks.push(0); }
         // EXIF
         chunks.extend_from_slice(b"EXIF");
         chunks.extend_from_slice(&(exif_data.len() as u32).to_le_bytes());
         chunks.extend_from_slice(exif_data);
-        if exif_data.len() % 2 != 0 { chunks.push(0); }
+        if !exif_data.len().is_multiple_of(2) { chunks.push(0); }
         // VP8L
         chunks.extend_from_slice(b"VP8L");
         chunks.extend_from_slice(&(vp8l_payload.len() as u32).to_le_bytes());
         chunks.extend_from_slice(vp8l_payload);
-        if vp8l_payload.len() % 2 != 0 { chunks.push(0); }
+        if !vp8l_payload.len().is_multiple_of(2) { chunks.push(0); }
 
         let mut riff = Vec::new();
         riff.extend_from_slice(b"RIFF");

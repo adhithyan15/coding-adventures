@@ -104,7 +104,7 @@ fn build_dqt(qtable: &[u16; 64], table_id: u8) -> Vec<u8> {
     let mut d = Vec::with_capacity(65);
     // Precision (upper nibble) | table ID (lower nibble).
     // Precision 0 = 8-bit values (we always use 8-bit since quality≥1 keeps entries ≤255).
-    d.push((0 << 4) | (table_id & 0x0F));
+    d.push(table_id & 0x0F);
     // Write the 64 quantization values in zigzag order.
     // qtable is in row-major order; we reorder to zigzag for the file.
     let mut zigzag_vals = [0u8; 64];
@@ -172,7 +172,7 @@ fn build_sos_header() -> Vec<u8> {
 
     // Component 1: Y — DC table 0, AC table 0 (luma)
     d.push(0x01);         // Component ID
-    d.push((0 << 4) | 0); // DC table 0 | AC table 0
+    d.push(0); // DC table 0 | AC table 0
 
     // Component 2: Cb — DC table 1, AC table 1 (chroma)
     d.push(0x02);
@@ -285,8 +285,8 @@ pub fn encode_jpeg_inner(width: u32, height: u32, rgba: &[u8], quality: u8) -> V
     let mut prev_dc_cr: i16 = 0;
 
     // Number of 8×8 blocks horizontally and vertically.
-    let blocks_wide  = (w + 7) / 8;
-    let blocks_tall  = (h + 7) / 8;
+    let blocks_wide  = w.div_ceil(8);
+    let blocks_tall  = h.div_ceil(8);
 
     for block_row in 0..blocks_tall {
         for block_col in 0..blocks_wide {

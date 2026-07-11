@@ -213,7 +213,7 @@ fn hex_encode(bytes: &[u8]) -> String {
 }
 
 fn hex_decode(s: &str) -> Result<Vec<u8>, StorageError> {
-    if s.len() % 2 != 0 {
+    if !s.len().is_multiple_of(2) {
         return Err(StorageError::Backend {
             message: "fs storage: malformed hex filename".into(),
         });
@@ -844,7 +844,7 @@ mod tests {
             Err(StorageError::Conflict { .. }) => {}
             other => panic!(
                 "expected Conflict, got {}",
-                if matches!(other, Ok(_)) {
+                if other.is_ok() {
                     "Ok"
                 } else {
                     "different Err"

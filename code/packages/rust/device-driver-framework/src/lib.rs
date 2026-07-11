@@ -1098,7 +1098,7 @@ mod tests {
     fn test_disk_write_wrong_size() {
         let mut disk = SimulatedDisk::new("disk0", 0, 64, 512);
         disk.init();
-        assert!(disk.write_block(0, &vec![0; 100]).is_err());
+        assert!(disk.write_block(0, &[0; 100]).is_err());
         assert!(disk.write_block(0, &vec![0; 600]).is_err());
     }
 
@@ -1275,7 +1275,7 @@ mod tests {
     fn test_display_cursor_wraps_at_end_of_row() {
         let mut display = SimulatedDisplay::new("display0", 0);
         display.init();
-        display.write(&vec![0x41; 80]); // Fill row 0
+        display.write(&[0x41; 80]); // Fill row 0
         assert_eq!(display.cursor_row, 1);
         assert_eq!(display.cursor_col, 0);
     }

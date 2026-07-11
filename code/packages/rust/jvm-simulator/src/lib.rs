@@ -534,7 +534,7 @@ mod tests {
         sim.run(10);
         assert_eq!(sim.return_value, Some(4));
 
-        let traces = sim.run(10);
+        let _traces = sim.run(10);
         // Re-run to check traces contain if_icmpeq
         sim.load(&prog, &[], 16);
         let traces = sim.run(10);

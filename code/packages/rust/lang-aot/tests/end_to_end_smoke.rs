@@ -23,7 +23,6 @@
 //!   program (canonical "Hello\n") is fed through `lang-aot`, linked,
 //!   and the resulting executable's stdout is asserted byte-for-byte.
 
-use std::io::Write;
 use std::process::Command;
 
 fn linker_available_windows() -> bool {

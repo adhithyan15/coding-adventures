@@ -293,8 +293,7 @@ pub(crate) fn encode_ascii(input: &[u8]) -> Vec<u8> {
     let mut i = 0;
     while i < input.len() {
         let c = input[i];
-        if c >= 0x30
-            && c <= 0x39
+        if (0x30..=0x39).contains(&c)
             && i + 1 < input.len()
             && input[i + 1] >= 0x30
             && input[i + 1] <= 0x39
@@ -526,7 +525,7 @@ fn init_grid(entry: &SymbolSizeEntry) -> Vec<Vec<bool>> {
 ///   row < 0 and col == nCols:  → (0, col-2)
 ///   row < 0:                   → (row+nRows, col-4)
 ///   col < 0:                   → (row-4, col+nCols)
-fn apply_wrap(mut row: i32, mut col: i32, n_rows: i32, n_cols: i32) -> (i32, i32) {
+fn apply_wrap(row: i32, col: i32, n_rows: i32, n_cols: i32) -> (i32, i32) {
     if row < 0 && col == 0 {
         return (1, 3);
     }
@@ -716,7 +715,7 @@ pub(crate) fn utah_placement(codewords: &[u8], n_rows: usize, n_cols: usize) -> 
     let mut row: i32 = 4;
     let mut col: i32 = 0;
 
-    let mut place_one = |fn_ptr: fn(u8, i32, i32, &mut Vec<Vec<bool>>, &mut Vec<Vec<bool>>),
+    let place_one = |fn_ptr: fn(u8, i32, i32, &mut Vec<Vec<bool>>, &mut Vec<Vec<bool>>),
                          cw_idx: &mut usize,
                          grid: &mut Vec<Vec<bool>>,
                          used: &mut Vec<Vec<bool>>| {
@@ -970,11 +969,7 @@ pub fn encode_and_layout(
 
 #[doc(hidden)]
 pub(crate) mod internal {
-    pub(crate) use super::{
-        build_generator, encode_ascii, gf_mul, get_gf_tables, pad_codewords,
-        rs_encode_block, select_symbol, utah_placement, SymbolShape,
-        RECT_SIZES, SQUARE_SIZES,
-    };
+    
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -983,7 +978,7 @@ pub(crate) mod internal {
 
 #[cfg(test)]
 mod tests {
-    use super::internal::*;
+    
     use super::*;
 
     // ── GF(256)/0x12D arithmetic ─────────────────────────────────────────────

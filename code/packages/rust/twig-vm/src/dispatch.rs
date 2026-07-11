@@ -5123,8 +5123,7 @@ mod tests {
     #[test]
     fn alloc_and_call_closure_no_captures() {
         // inner: just returns user_arg + 1  (ignore capture)
-        let inner_body = vec![
-            IIRInstr::new(
+        let _inner_body = [IIRInstr::new(
                 "call_builtin",
                 Some("res".into()),
                 vec![
@@ -5134,8 +5133,7 @@ mod tests {
                 ],
                 "any",
             ),
-            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
-        ];
+            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any")];
         // main: alloc_closure("inner"), call_closure(c, 41)
         //
         // Note: inner expects (capture_param, user_param) so we must supply

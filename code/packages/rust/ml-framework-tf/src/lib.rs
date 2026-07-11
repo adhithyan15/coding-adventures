@@ -581,6 +581,12 @@ pub mod keras {
         total: usize,
     }
 
+    impl Default for AccuracyMetric {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     impl AccuracyMetric {
         pub fn new() -> Self { AccuracyMetric { correct: 0, total: 0 } }
 
@@ -622,12 +628,18 @@ pub mod keras {
         pub history: std::collections::HashMap<String, Vec<f64>>,
     }
 
+    impl Default for History {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     impl History {
         pub fn new() -> Self { History { history: std::collections::HashMap::new() } }
 
         pub fn on_epoch_end(&mut self, logs: &std::collections::HashMap<String, f64>) {
             for (key, value) in logs {
-                self.history.entry(key.clone()).or_insert_with(Vec::new).push(*value);
+                self.history.entry(key.clone()).or_default().push(*value);
             }
         }
     }

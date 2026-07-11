@@ -10831,7 +10831,7 @@ mod tests {
     fn repeat_fractional_count_does_not_fold() {
         // We don't model ToInteger coercion (`"ab".repeat(2.5)` → 2 in JS).
         let c = repeat_call("ab", 2.5);
-        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        let (_out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "fractional repeat count must not fold");
     }
 

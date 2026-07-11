@@ -1358,7 +1358,7 @@ mod tests {
 
         // Every entry should be present in the deserialized log.
         for (id, entry) in &log.entries {
-            let entry2 = log2.get(id).expect(&format!("entry {} missing after roundtrip", id));
+            let entry2 = log2.get(id).unwrap_or_else(|| panic!("entry {} missing after roundtrip", id));
             assert_eq!(entry.id, entry2.id, "id mismatch for {}", id);
             assert_eq!(entry.parent_ids, entry2.parent_ids, "parent_ids mismatch for {}", id);
             assert_eq!(entry.contributions.len(), entry2.contributions.len(),
@@ -1535,8 +1535,8 @@ mod tests {
         let mut log = CVLog::new(true);
         let id1 = log.create(Some(make_origin("file_a.ts", "1:1")));
         let id2 = log.create(Some(make_origin("file_b.ts", "99:42")));
-        let base1: &str = id1.splitn(2, '.').next().unwrap();
-        let base2: &str = id2.splitn(2, '.').next().unwrap();
+        let base1: &str = id1.split('.').next().unwrap();
+        let base2: &str = id2.split('.').next().unwrap();
         assert_ne!(base1, base2, "different origins should produce different bases");
     }
 
@@ -1548,8 +1548,8 @@ mod tests {
         let mut log2 = CVLog::new(true);
         let id1 = log1.create(Some(make_origin("app.ts", "10:5")));
         let id2 = log2.create(Some(make_origin("app.ts", "10:5")));
-        let base1: &str = id1.splitn(2, '.').next().unwrap();
-        let base2: &str = id2.splitn(2, '.').next().unwrap();
+        let base1: &str = id1.split('.').next().unwrap();
+        let base2: &str = id2.split('.').next().unwrap();
         assert_eq!(base1, base2, "same origin should always produce same base");
     }
 

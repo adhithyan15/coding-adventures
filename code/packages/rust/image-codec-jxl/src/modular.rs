@@ -182,7 +182,7 @@ mod tests {
     #[test]
     fn first_pixel_predicts_zero() {
         // With no neighbours the predictor should return 0.
-        let mut dummy = vec![0i32; 4];
+        let mut dummy = [0i32; 4];
         dummy[0] = 99; // pixel at (0,0) — not yet decoded by predictor
         // For (0,0) we pass an empty-so-far buffer:
         let pred = gradient_predict(0, 0, 2, &[0, 0, 0, 0]);
@@ -193,7 +193,7 @@ mod tests {
     fn residuals_sum_property() {
         // For a ramp image the residuals should be almost all zero except (0,0).
         // (A linear horizontal ramp is predicted perfectly by the gradient predictor.)
-        let values: Vec<i32> = (0..8).map(|x| x as i32 * 10).collect();
+        let values: Vec<i32> = (0..8).map(|x| x * 10).collect();
         let residuals = compute_residuals(&values, 8, 1);
         // First residual = pixel[0] - pred(0,0,w=8) = 0 - 0 = 0
         assert_eq!(residuals[0], 0);

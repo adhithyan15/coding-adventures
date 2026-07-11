@@ -34,7 +34,6 @@ use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
-use mosaic_emit_paint;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
@@ -906,7 +905,7 @@ fn run_pipeline(
             // Helper: place a side-file next to the .xaml file (same
             // directory as `base`).
             let side_file_path = |filename: &str| -> String {
-                match base.rfind(|c| c == '/' || c == '\\') {
+                match base.rfind(['/', '\\']) {
                     Some(idx) => format!("{}/{}", &base[..idx], filename),
                     None => filename.to_string(),
                 }

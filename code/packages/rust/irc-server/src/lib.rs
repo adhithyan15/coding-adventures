@@ -533,8 +533,8 @@ impl IRCServer {
             (client.registered, client.nick.clone(), client.mask())
         };
 
-        if registered {
-            if nick_opt.is_some() {
+        if registered
+            && nick_opt.is_some() {
                 let quit_msg = Message {
                     prefix: Some(mask.clone()),
                     command: "QUIT".to_string(),
@@ -549,7 +549,6 @@ impl IRCServer {
                     });
                 }
             }
-        }
 
         // Remove the client from every channel they were in.
         let channels_to_clean: Vec<String> = self.clients[&conn_id].channels.iter().cloned().collect();

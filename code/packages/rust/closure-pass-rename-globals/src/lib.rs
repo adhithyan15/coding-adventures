@@ -273,7 +273,7 @@ fn rename_globals(
     // The rename table drives CV provenance (#89). Sort by original name
     // so the emitted contributions are deterministic run to run.
     let mut renames: Vec<(String, String)> =
-        map.into_iter().map(|(from, to)| (from, to)).collect();
+        map.into_iter().collect();
     renames.sort();
     (true, renames)
 }

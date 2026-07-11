@@ -605,7 +605,7 @@ fn to_wgpu_color(color: GpuColor) -> wgpu::Color {
 }
 
 fn align_to(value: u32, alignment: u32) -> u32 {
-    ((value + alignment - 1) / alignment) * alignment
+    value.div_ceil(alignment) * alignment
 }
 
 fn intersect_rect(a: GpuRect, b: GpuRect) -> GpuRect {

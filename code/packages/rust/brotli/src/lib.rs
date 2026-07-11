@@ -281,7 +281,7 @@ fn find_icc(insert_len: u32, copy_len: u32) -> Option<u8> {
             && copy_len  >= e.copy_base  && copy_len  <= max_copy
         {
             let total_extra = e.insert_extra + e.copy_extra;
-            if best.map_or(true, |(_, prev_extra)| total_extra < prev_extra) {
+            if best.is_none_or(|(_, prev_extra)| total_extra < prev_extra) {
                 best = Some((icc, total_extra));
             }
         }
@@ -298,11 +298,10 @@ fn find_icc_for_copy(copy_len: u32) -> u8 {
     for icc in 0u8..63 {
         let e = &ICC_TABLE[icc as usize];
         let max_copy = e.copy_base + (1u32 << e.copy_extra) - 1;
-        if copy_len >= e.copy_base && copy_len <= max_copy {
-            if best.map_or(true, |(_, prev_ins)| e.insert_base < prev_ins) {
+        if copy_len >= e.copy_base && copy_len <= max_copy
+            && best.is_none_or(|(_, prev_ins)| e.insert_base < prev_ins) {
                 best = Some((icc, e.insert_base));
             }
-        }
     }
     best.map(|(code, _)| code).unwrap_or(0)
 }
@@ -364,9 +363,9 @@ pub fn literal_context(last_byte: Option<u8>) -> usize {
     match last_byte {
         None => 0,
         Some(p1) => {
-            if p1 >= b'a' && p1 <= b'z' { return 3; }
-            if p1 >= b'A' && p1 <= b'Z' { return 2; }
-            if p1 >= b'0' && p1 <= b'9' { return 1; }
+            if p1.is_ascii_lowercase() { return 3; }
+            if p1.is_ascii_uppercase() { return 2; }
+            if p1.is_ascii_digit() { return 1; }
             0
         }
     }

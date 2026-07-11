@@ -198,9 +198,7 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
     for (s, &c) in norm.iter().enumerate() {
         if c == -1 {
             tbl[high].sym = s as u8;
-            if high > 0 {
-                high -= 1;
-            }
+            high = high.saturating_sub(1);
             sym_next[s] = 1;
         }
     }
@@ -320,7 +318,7 @@ fn build_encode_sym(norm: &[i16], acc_log: u8) -> (Vec<FseEe>, Vec<u16>) {
     for (s, &c) in norm.iter().enumerate() {
         if c == -1 {
             spread[idx_high] = s as u8;
-            if idx_high > 0 { idx_high -= 1; }
+            idx_high = idx_high.saturating_sub(1);
         }
     }
     let idx_limit = idx_high; // highest free slot
@@ -1147,7 +1145,7 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
                 out.extend_from_slice(&compressed);
             } else {
                 // ── Raw block (fallback) ──────────────────────────────
-                let hdr = ((block.len() as u32) << 3) | (0b00 << 1) | (last as u32);
+                let hdr = ((block.len() as u32) << 3) | (last as u32);
                 out.extend_from_slice(&hdr.to_le_bytes()[..3]);
                 out.extend_from_slice(block);
             }
@@ -1279,7 +1277,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 }
                 let byte = data[pos];
                 pos += 1;
-                out.extend(std::iter::repeat(byte).take(bsize));
+                out.extend(std::iter::repeat_n(byte, bsize));
             }
             2 => {
                 // Compressed block.
@@ -1616,7 +1614,7 @@ mod tests {
     fn test_fse_single_sequence_roundtrip() {
         // Encode a single sequence and verify that decoding it gives back
         // the exact same (ll, ml, of) values. This isolates the FSE codec.
-        let seqs = vec![Seq { ll: 3, ml: 5, off: 2 }];
+        let seqs = [Seq { ll: 3, ml: 5, off: 2 }];
 
         // Build encode tables
         let (ee_ll, st_ll) = build_encode_sym(&LL_NORM, LL_ACC_LOG);

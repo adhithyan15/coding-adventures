@@ -192,7 +192,7 @@ impl GateAlu8 {
     /// Compute flags Z, S, P from a result bit vector, plus supplied carry.
     pub fn compute_flags_from_bits(bits: &[u8], carry: bool) -> AluFlags {
         // Zero flag: all bits are 0 (implemented as NOR across all bits)
-        let any_set = bits.iter().any(|&b| b == 1);
+        let any_set = bits.contains(&1);
         let zero = !any_set;
 
         // Sign flag: bit 7 (MSB) is 1

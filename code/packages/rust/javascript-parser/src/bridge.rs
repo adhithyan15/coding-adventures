@@ -3455,7 +3455,7 @@ fn unquote_string(raw: &str) -> String {
 mod tests {
     use super::*;
     use crate::{parse_javascript_typed, DEFAULT_ES_VERSION};
-    use coding_adventures_javascript_tokens::EsVersion;
+    
 
     fn bridge(src: &str) -> Result<Program, BridgeError> {
         let node = parse_javascript_typed(src, DEFAULT_ES_VERSION).expect("parse failed");

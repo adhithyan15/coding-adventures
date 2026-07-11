@@ -374,7 +374,7 @@ mod tests {
     /// Build a minimal 32bpp BMP DIB for a solid-color `width × height` image.
     fn make_solid_32bpp_dib(width: usize, height: usize, rgba: (u8, u8, u8, u8)) -> Vec<u8> {
         let (r, g, b, a) = rgba;
-        let and_stride = ((width + 31) / 32) * 4;
+        let and_stride = width.div_ceil(32) * 4;
         let and_size = and_stride * height;
 
         let mut dib = Vec::<u8>::new();
@@ -393,7 +393,7 @@ mod tests {
                 dib.push(a);
             }
         }
-        dib.extend(std::iter::repeat(0u8).take(and_size));
+        dib.extend(std::iter::repeat_n(0u8, and_size));
         dib
     }
 }

@@ -306,7 +306,7 @@ impl<R: BufRead, W: Write> Server<R, W> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::message::{parse_message, Message, Notification, Request, Response};
+    use crate::message::{parse_message, Message};
     use std::io::{BufReader, BufWriter, Cursor};
     use std::sync::{Arc, Mutex};
 

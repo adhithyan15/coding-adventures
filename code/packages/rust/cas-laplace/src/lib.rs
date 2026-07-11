@@ -448,12 +448,7 @@ fn isqrt_exact(n: i64) -> Option<i64> {
         return Some(0);
     }
     let r = (n as f64).sqrt() as i64;
-    for candidate in [r - 1, r, r + 1] {
-        if candidate >= 0 && candidate * candidate == n {
-            return Some(candidate);
-        }
-    }
-    None
+    [r - 1, r, r + 1].into_iter().find(|&candidate| candidate >= 0 && candidate * candidate == n)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -467,7 +462,7 @@ type Poly = Vec<Frac>;
 
 fn poly_normalize(p: Poly) -> Poly {
     let mut r = p;
-    while r.len() > 1 && r.last().map_or(false, |c| c.is_zero()) {
+    while r.len() > 1 && r.last().is_some_and(|c| c.is_zero()) {
         r.pop();
     }
     if r.is_empty() {
@@ -689,7 +684,7 @@ fn divisors(n: u64) -> Vec<u64> {
     let mut divs = Vec::new();
     let mut i = 1u64;
     while i * i <= n {
-        if n % i == 0 {
+        if n.is_multiple_of(i) {
             divs.push(i);
             if i != n / i {
                 divs.push(n / i);
@@ -800,7 +795,7 @@ fn ir_to_rational(node: &IRNode, s: &IRNode) -> Option<(Poly, Poly)> {
                 };
                 let (n1, d1) = ir_to_rational(&args[0], s)?;
                 if n_exp < 0 {
-                    let pos_n = (-n_exp) as i64;
+                    let pos_n = -n_exp;
                     return Some((
                         poly_normalize(poly_pow(&d1, pos_n)),
                         poly_normalize(poly_pow(&n1, pos_n)),
@@ -927,7 +922,7 @@ fn ilt_irreducible_quad(lin_num: &[Frac], quad_den: &[Frac], t: &IRNode) -> Opti
     };
     let neg_alpha = f_neg(alpha);
 
-    let beta_is_one = beta_rat.map_or(false, |b| b == Frac::one());
+    let beta_is_one = beta_rat.is_some_and(|b| b == Frac::one());
     let alpha_is_zero = alpha.is_zero();
 
     // Build coeff · exp(−α·t) · trig(β·t)
@@ -1156,7 +1151,7 @@ fn match_exp_times_trig(f: &IRNode, t: &IRNode) -> Option<(IRNode, &'static str,
 
 fn match_t_power_times_exp(f: &IRNode, t: &IRNode) -> Option<(i64, IRNode)> {
     let (a, b) = binary_args(f, MUL)?;
-    for (power_node, exp_node) in [(a, b), (b, a)] {
+    if let Some((power_node, exp_node)) = [(a, b), (b, a)].into_iter().next() {
         let n = match_power_of_t(power_node, t)?;
         let shift = match_unary_linear(exp_node, EXP, t)?;
         return Some((n, shift));

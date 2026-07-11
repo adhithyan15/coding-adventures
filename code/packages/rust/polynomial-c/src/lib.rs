@@ -166,10 +166,7 @@ pub unsafe extern "C" fn poly_c_evaluate(coeffs: *const f64, len: usize, x: f64)
     // Clone the slice data so the closure is 'static (no borrow crossing the
     // catch_unwind boundary).
     let owned: Vec<f64> = slice(coeffs, len).to_vec();
-    match panic::catch_unwind(move || polynomial::evaluate(&owned, x)) {
-        Ok(v) => v,
-        Err(_) => f64::NAN, // NaN is the conventional floating-point error sentinel
-    }
+    panic::catch_unwind(move || polynomial::evaluate(&owned, x)).unwrap_or(f64::NAN)
 }
 
 // =============================================================================

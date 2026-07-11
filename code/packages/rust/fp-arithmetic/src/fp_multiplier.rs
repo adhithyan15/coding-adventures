@@ -122,13 +122,13 @@ pub fn fp_mul(a: &FloatBits, b: &FloatBits) -> FloatBits {
 
     // Add implicit leading 1 for normal numbers
     if exp_a != 0 {
-        mant_a |= (1u64 << fmt.mantissa_bits);
+        mant_a |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_a = 1; // Denormal: true exponent = 1 - bias
     }
 
     if exp_b != 0 {
-        mant_b |= (1u64 << fmt.mantissa_bits);
+        mant_b |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_b = 1;
     }

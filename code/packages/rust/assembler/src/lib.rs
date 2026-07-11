@@ -316,7 +316,7 @@ impl Assembler {
             "NOP" => Ok(ArmInstruction::Nop),
 
             "MOV" | "MOVS" => {
-                let set_flags = mnemonic.ends_with('S') && mnemonic != "MOVS" || mnemonic == "MOVS";
+                let _set_flags = mnemonic.ends_with('S') && mnemonic != "MOVS" || mnemonic == "MOVS";
                 let operands = self.split_operands(operands_str);
                 if operands.len() != 2 {
                     return Err(AssemblerError::InvalidOperandCount {

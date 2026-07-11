@@ -58898,8 +58898,7 @@ mod tests {
 
     #[test]
     fn activation_sentinel_alerts_roll_up_activation_attention() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -58939,8 +58938,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+            }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
@@ -59018,8 +59016,7 @@ mod tests {
 
     #[test]
     fn activation_audit_records_join_sentinel_attention_to_evidence() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59059,8 +59056,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+            }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections =
@@ -59138,8 +59134,7 @@ mod tests {
 
     #[test]
     fn activation_runbook_entries_join_playbook_steps_to_audit_context() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59179,8 +59174,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+            }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let steps = activation_playbook_steps_from_candidates(&[], candidates.clone(), &[]);
         let risks = activation_risk_from_candidates(&[], candidates.iter());
@@ -73423,10 +73417,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -73498,9 +73490,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -73636,10 +73626,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -73727,9 +73715,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -73889,10 +73875,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -74014,9 +73998,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -76611,13 +76593,11 @@ mod tests {
         );
         let evidence_rows = vec![evidence_row];
         let evidence_summary = protocol_action_evidence_summary_for_review_test(&evidence_rows);
-        let review_rows = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
+        let review_rows = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
                 1,
                 &evidence_rows[0],
                 false,
-            ),
-        ];
+            )];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewSummary::from_summaries(
                 evidence_summary,
@@ -76740,13 +76720,11 @@ mod tests {
         );
         let evidence_rows = vec![evidence_row];
         let evidence_summary = protocol_action_evidence_summary_for_review_test(&evidence_rows);
-        let review_rows = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
+        let review_rows = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
                 1,
                 &evidence_rows[0],
                 true,
-            ),
-        ];
+            )];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewSummary::from_summaries(
                 evidence_summary,

@@ -721,8 +721,8 @@ fn compute_penalty(modules: &[Vec<bool>], sz: usize) -> u32 {
     let total = (sz * sz) as f64;
     let ratio = (dark as f64 / total) * 100.0;
     let prev5 = (ratio / 5.0).floor() as u32 * 5;
-    let a = if prev5 > 50 { prev5 - 50 } else { 50 - prev5 };
-    let b = if prev5 + 5 > 50 { prev5 + 5 - 50 } else { 50 - (prev5 + 5) };
+    let a = prev5.abs_diff(50);
+    let b = (prev5 + 5).abs_diff(50);
     penalty += (a.min(b) / 5) * 10;
 
     penalty
@@ -742,15 +742,15 @@ fn select_version(input: &str, ecc: EccLevel) -> Result<usize, QRCodeError> {
             EncodingMode::Byte => byte_len * 8,
             EncodingMode::Numeric => {
                 let n = input.chars().count() as u32;
-                (n * 10 + 2) / 3  // ceil(n * 10 / 3)
+                (n * 10).div_ceil(3)  // ceil(n * 10 / 3)
             }
             EncodingMode::Alphanumeric => {
                 let n = input.chars().count() as u32;
-                (n * 11 + 1) / 2  // ceil(n * 11 / 2)
+                (n * 11).div_ceil(2)  // ceil(n * 11 / 2)
             }
         };
         let bits_needed = 4 + char_count_bits(mode, v) + data_bits;
-        let cw_needed = (bits_needed + 7) / 8;
+        let cw_needed = bits_needed.div_ceil(8);
         if cw_needed as usize <= capacity { return Ok(v); }
     }
     Err(QRCodeError::InputTooLong(format!(

@@ -379,7 +379,7 @@ impl Recipient for PassphraseRecipient {
         fill_random(&mut nonce)?;
         let kek = self.derive_wrap_key(&salt)?;
         let aad = PASSPHRASE_MAGIC.as_slice();
-        let (ct, tag) = xchacha20_poly1305_aead_encrypt(&**file_key, &*kek, &nonce, aad);
+        let (ct, tag) = xchacha20_poly1305_aead_encrypt(&**file_key, &kek, &nonce, aad);
         if ct.len() != KEY_LEN {
             return Err(RecipientError::Aead);
         }
@@ -430,7 +430,7 @@ impl Identity for PassphraseRecipient {
 
         let kek = self.derive_wrap_key(salt)?;
         let aad = PASSPHRASE_MAGIC.as_slice();
-        let pt = xchacha20_poly1305_aead_decrypt(ct, &*kek, &nonce, aad, &tag)
+        let pt = xchacha20_poly1305_aead_decrypt(ct, &kek, &nonce, aad, &tag)
             .ok_or(RecipientError::UnwrapFailed)?;
         if pt.len() != KEY_LEN {
             return Err(RecipientError::Aead);
@@ -532,7 +532,7 @@ impl Recipient for X25519Recipient {
         let mut nonce = [0u8; NONCE_LEN];
         fill_random(&mut nonce)?;
         let aad = build_x25519_aad(&e_pk, &self.public_key);
-        let (ct, tag) = xchacha20_poly1305_aead_encrypt(&**file_key, &*wrap_key, &nonce, &aad);
+        let (ct, tag) = xchacha20_poly1305_aead_encrypt(&**file_key, &wrap_key, &nonce, &aad);
         if ct.len() != KEY_LEN {
             return Err(RecipientError::Aead);
         }
@@ -638,7 +638,7 @@ impl Identity for X25519Identity {
         shared.zeroize();
 
         let aad = build_x25519_aad(&e_pk, &self.public_key);
-        let pt = xchacha20_poly1305_aead_decrypt(ct, &*wrap_key, &nonce, &aad, &tag)
+        let pt = xchacha20_poly1305_aead_decrypt(ct, &wrap_key, &nonce, &aad, &tag)
             .ok_or(RecipientError::UnwrapFailed)?;
         if pt.len() != KEY_LEN {
             return Err(RecipientError::Aead);
@@ -781,7 +781,7 @@ mod tests {
         let wrapped = good.wrap(&fk).unwrap();
         match bad.try_unwrap(&wrapped) {
             Err(RecipientError::UnwrapFailed) => {}
-            other => panic!("expected UnwrapFailed, got something else"),
+            _other => panic!("expected UnwrapFailed, got something else"),
         }
     }
 
@@ -793,7 +793,7 @@ mod tests {
         wrapped.0[2 + SALT_LEN + NONCE_LEN] ^= 0x01; // flip ct byte
         match r.try_unwrap(&wrapped) {
             Err(RecipientError::UnwrapFailed) => {}
-            other => panic!("expected UnwrapFailed, got something else"),
+            _other => panic!("expected UnwrapFailed, got something else"),
         }
     }
 
@@ -839,7 +839,7 @@ mod tests {
         // matches (both X25519), so Bob attempts it and AEAD fails.
         match bob.try_unwrap(&wrapped) {
             Err(RecipientError::UnwrapFailed) => {}
-            other => panic!("expected UnwrapFailed, got something else"),
+            _other => panic!("expected UnwrapFailed, got something else"),
         }
     }
 
@@ -852,7 +852,7 @@ mod tests {
         wrapped.0[3] ^= 0x01;
         match id.try_unwrap(&wrapped) {
             Err(RecipientError::UnwrapFailed) => {}
-            other => panic!("expected UnwrapFailed, got something else"),
+            _other => panic!("expected UnwrapFailed, got something else"),
         }
     }
 
@@ -873,7 +873,7 @@ mod tests {
         let x25519_blob = id.recipient().wrap(&fk).unwrap();
         match pr.try_unwrap(&x25519_blob) {
             Ok(None) => {}
-            other => panic!("expected Ok(None), got something else"),
+            _other => panic!("expected Ok(None), got something else"),
         }
     }
 
@@ -885,7 +885,7 @@ mod tests {
         let pw_blob = pr.wrap(&fk).unwrap();
         match id.try_unwrap(&pw_blob) {
             Ok(None) => {}
-            other => panic!("expected Ok(None), got something else"),
+            _other => panic!("expected Ok(None), got something else"),
         }
     }
 
@@ -925,7 +925,7 @@ mod tests {
             Ok(None) => {}
             other => panic!("expected Ok(None), got something else (got {})",
                             if matches!(other, Ok(Some(_))) { "Ok(Some)" }
-                            else if matches!(other, Err(_)) { "Err" }
+                            else if other.is_err() { "Err" }
                             else { "Ok(None)" }),
         }
     }
@@ -957,7 +957,7 @@ mod tests {
         wrap_set[0].1 .0[5] ^= 0x01;
         match try_unwrap_any(&[&alice as &dyn Identity], &wrap_set) {
             Err(RecipientError::UnwrapFailed) => {}
-            other => panic!("expected UnwrapFailed, got something else"),
+            _other => panic!("expected UnwrapFailed, got something else"),
         }
     }
 
@@ -967,7 +967,7 @@ mod tests {
     fn empty_passphrase_rejected() {
         match PassphraseRecipient::with_default_params(Vec::new()) {
             Err(RecipientError::InvalidParameter { .. }) => {}
-            other => panic!("expected InvalidParameter, got something else"),
+            _other => panic!("expected InvalidParameter, got something else"),
         }
     }
 
@@ -1015,7 +1015,7 @@ mod tests {
         let bad = WrappedKey(vec![]);
         match r.try_unwrap(&bad) {
             Err(RecipientError::MalformedWrappedKey) => {}
-            other => panic!("expected MalformedWrappedKey, got something else"),
+            _other => panic!("expected MalformedWrappedKey, got something else"),
         }
     }
 
@@ -1027,7 +1027,7 @@ mod tests {
         wrapped.0.truncate(10);
         match r.try_unwrap(&wrapped) {
             Err(RecipientError::MalformedWrappedKey) => {}
-            other => panic!("expected MalformedWrappedKey, got something else"),
+            _other => panic!("expected MalformedWrappedKey, got something else"),
         }
     }
 
@@ -1039,7 +1039,7 @@ mod tests {
         wrapped.0.truncate(50);
         match id.try_unwrap(&wrapped) {
             Err(RecipientError::MalformedWrappedKey) => {}
-            other => panic!("expected MalformedWrappedKey, got something else"),
+            _other => panic!("expected MalformedWrappedKey, got something else"),
         }
     }
 }

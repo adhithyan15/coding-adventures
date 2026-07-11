@@ -383,17 +383,17 @@ struct SymbolSpec {
 /// Returns `Err(AztecError::InputTooLong)` if no symbol fits.
 fn select_symbol(data_bit_count: usize, min_ecc_pct: u32) -> Result<SymbolSpec, AztecError> {
     // 20% overhead for bit stuffing.
-    let stuffed = (data_bit_count * 12 + 9) / 10; // ceil(x * 1.2)
+    let stuffed = (data_bit_count * 12).div_ceil(10); // ceil(x * 1.2)
 
     for layers in 1..=4 {
         let cap = &COMPACT_CAP[layers];
         let total_bytes = cap.max_bytes_8;
-        let ecc_cw = (min_ecc_pct as usize * total_bytes + 99) / 100; // ceil
+        let ecc_cw = (min_ecc_pct as usize * total_bytes).div_ceil(100); // ceil
         if ecc_cw >= total_bytes {
             continue;
         }
         let data_cw = total_bytes - ecc_cw;
-        if (stuffed + 7) / 8 <= data_cw {
+        if stuffed.div_ceil(8) <= data_cw {
             return Ok(SymbolSpec {
                 compact: true,
                 layers,
@@ -407,12 +407,12 @@ fn select_symbol(data_bit_count: usize, min_ecc_pct: u32) -> Result<SymbolSpec, 
     for layers in 1..=32 {
         let cap = &FULL_CAP[layers];
         let total_bytes = cap.max_bytes_8;
-        let ecc_cw = (min_ecc_pct as usize * total_bytes + 99) / 100; // ceil
+        let ecc_cw = (min_ecc_pct as usize * total_bytes).div_ceil(100); // ceil
         if ecc_cw >= total_bytes {
             continue;
         }
         let data_cw = total_bytes - ecc_cw;
-        if (stuffed + 7) / 8 <= data_cw {
+        if stuffed.div_ceil(8) <= data_cw {
             return Ok(SymbolSpec {
                 compact: false,
                 layers,
@@ -440,7 +440,7 @@ fn select_symbol(data_bit_count: usize, min_ecc_pct: u32) -> Result<SymbolSpec, 
 fn pad_to_bytes(bits: &[u8], target_bytes: usize) -> Vec<u8> {
     let mut out = bits.to_vec();
     // Byte-align
-    while out.len() % 8 != 0 {
+    while !out.len().is_multiple_of(8) {
         out.push(0);
     }
     // Pad to target length
@@ -481,7 +481,7 @@ fn stuff_bits(bits: &[u8]) -> Vec<u8> {
         stuffed.push(bit);
 
         if run_len == 4 {
-            let stuff_bit = (1 - bit) as u8;
+            let stuff_bit = 1 - bit;
             stuffed.push(stuff_bit);
             run_val = stuff_bit as i8;
             run_len = 1;

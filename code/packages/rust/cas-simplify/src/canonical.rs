@@ -69,7 +69,7 @@ fn canonical_apply(node: IRApply) -> IRNode {
 
             // 2. Sort.
             let mut sorted = flat;
-            sorted.sort_by_key(|a| sort_key(a));
+            sorted.sort_by_key(sort_key);
 
             // 3. Empty container.
             if sorted.is_empty() {

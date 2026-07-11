@@ -242,7 +242,7 @@ pub fn parse_ifd(bytes: &[u8], ifd_offset: u32) -> Result<Rw2Ifd, String> {
         // If the value is at an offset, we read from there.
         let scalar: u32 = match (type_code, is_inline) {
             // SHORT (type 3) inline: low 16 bits of value_or_offset
-            (3, true) => (val_field & 0xFFFF) as u32,
+            (3, true) => val_field & 0xFFFF,
             // LONG (type 4) inline
             (4, true) => val_field,
             // BYTE (type 1) inline

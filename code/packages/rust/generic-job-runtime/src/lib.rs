@@ -1780,7 +1780,7 @@ fn fail_pending_jobs_for_worker<Response>(
         let mut pending = pending.lock().expect("pending job table mutex poisoned");
         let failed_ids = pending
             .iter()
-            .filter(|&(id, job)| (job.worker_index == worker_index)).map(|(id, job)| id.clone())
+            .filter(|&(_id, job)| job.worker_index == worker_index).map(|(id, _job)| id.clone())
             .collect::<Vec<_>>();
         let mut failed = Vec::with_capacity(failed_ids.len());
         for id in failed_ids {

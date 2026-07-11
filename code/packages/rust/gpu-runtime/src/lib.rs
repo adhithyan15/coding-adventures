@@ -436,7 +436,7 @@ impl Runtime {
 
         let n          = count as u32;
         let block_size = 256u32;
-        let grid_size  = (n + block_size - 1) / block_size;
+        let grid_size  = n.div_ceil(block_size);
 
         // Pass the actual CUdeviceptr values, not lengths.
         let mut src_ptr = src_buf.device_ptr();
@@ -489,7 +489,7 @@ impl Runtime {
 
         let n          = pixel_count as u32;
         let block_size = 256u32;
-        let grid_size  = (n + block_size - 1) / block_size;
+        let grid_size  = n.div_ceil(block_size);
 
         let mut src_ptr = src_buf.device_ptr();
         let mut dst_ptr = dst_buf.device_ptr();

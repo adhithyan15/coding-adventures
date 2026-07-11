@@ -15,6 +15,12 @@ use crate::types::{HazardAction, HazardResult, PipelineSlot};
 ///   4. Otherwise             -> FLUSH (2 stages)
 pub struct ControlHazardDetector;
 
+impl Default for ControlHazardDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ControlHazardDetector {
     pub fn new() -> Self {
         Self

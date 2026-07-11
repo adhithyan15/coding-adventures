@@ -986,7 +986,7 @@ mod tests {
         );
         assert_eq!(ac.type_hint, "closure", "alloc_closure type_hint must be 'closure'");
         // No preceding const instruction should materialise the fn_name.
-        let const_before = i.iter().rev().skip_while(|x| x.op != "alloc_closure").skip(1).next();
+        let const_before = i.iter().rev().skip_while(|x| x.op != "alloc_closure").nth(1);
         if let Some(prev) = const_before {
             assert_ne!(
                 prev.op, "const",

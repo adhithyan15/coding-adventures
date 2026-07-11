@@ -177,7 +177,7 @@ impl std::error::Error for RSError {}
 ///
 /// Verify root α¹: g(2) = 8 XOR GF256.mul(6,2) XOR GF256.mul(1,4) = 8 XOR 12 XOR 4 = 0 ✓
 pub fn build_generator(n_check: usize) -> Result<Vec<u8>, RSError> {
-    if n_check == 0 || n_check % 2 != 0 {
+    if n_check == 0 || !n_check.is_multiple_of(2) {
         return Err(RSError::InvalidInput(format!(
             "n_check must be a positive even number, got {n_check}"
         )));
@@ -350,7 +350,7 @@ fn poly_mod_be(dividend: &[u8], divisor: &[u8]) -> Vec<u8> {
 /// - `n_check` must be even and ≥ 2.
 /// - `message.len() + n_check ≤ 255`.
 pub fn encode(message: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
-    if n_check == 0 || n_check % 2 != 0 {
+    if n_check == 0 || !n_check.is_multiple_of(2) {
         return Err(RSError::InvalidInput(format!(
             "n_check must be a positive even number, got {n_check}"
         )));
@@ -653,7 +653,7 @@ fn forney(
 ///    ▼ Return first k = len - n_check bytes (strip check bytes)
 /// ```
 pub fn decode(received: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
-    if n_check == 0 || n_check % 2 != 0 {
+    if n_check == 0 || !n_check.is_multiple_of(2) {
         return Err(RSError::InvalidInput(format!(
             "n_check must be a positive even number, got {n_check}"
         )));

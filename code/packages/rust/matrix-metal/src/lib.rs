@@ -659,8 +659,8 @@ pub fn local_transport() -> Result<LocalTransport, String> {
 
 #[cfg(target_vendor = "apple")]
 pub fn register(runtime: &mut Runtime) -> ExecutorId {
-    let id = runtime.register("metal", profile());
-    id
+    
+    runtime.register("metal", profile())
 }
 
 // ─────────────────────────── Non-Apple stub ───────────────────────────

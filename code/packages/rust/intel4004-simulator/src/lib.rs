@@ -2431,7 +2431,7 @@ mod tests {
         // Use R0 as loop counter (start at 13, wraps to 0 after 3 increments).
         // Use R1 to track which iteration we're on (1, 2, 3).
         // Accumulate sum in R2.
-        let (fim_b1, fim_b2) = encode_fim(0, (13 << 4) | 0);
+        let (fim_b1, fim_b2) = encode_fim(0, ((13 << 4)));
         let (isz_b1, isz_b2) = encode_isz(0, 0x04);
         let sim = run_program(&[
             fim_b1, fim_b2,     // R0=13, R1=0

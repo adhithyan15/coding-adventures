@@ -4550,7 +4550,7 @@ CREATE TABLE graves (
 
         assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
         assert_eq!(manifest.collection.format, CollectionFormat::LegacySqlite);
-        assert_eq!(manifest.media.map_present, true);
+        assert!(manifest.media.map_present);
         assert_eq!(
             manifest.media.mapping.get("0").map(String::as_str),
             Some("audio/hola.mp3")
@@ -5650,13 +5650,13 @@ CREATE TABLE graves (
     }
 
     fn assert_golden_v11_apkg_fixture_round_trips_filtered_deck_and_media(apkg: &[u8]) {
-        let manifest = inspect_apkg(&apkg).unwrap();
+        let manifest = inspect_apkg(apkg).unwrap();
         assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
         assert_eq!(manifest.media.media_files.len(), 2);
         assert!(manifest.media.missing_files.is_empty());
         assert!(manifest.media.unmapped_files.is_empty());
 
-        let collection = read_v11_collection(&apkg).unwrap();
+        let collection = read_v11_collection(apkg).unwrap();
         let filtered_deck = collection.decks.iter().find(|deck| deck.id == 3).unwrap();
         assert_eq!(filtered_deck.name, "Filtered::Today");
         assert_eq!(filtered_deck.raw["dyn"], 1);
@@ -5672,7 +5672,7 @@ CREATE TABLE graves (
         assert_eq!(collection.cards[0].original_deck_id, 2);
         assert_eq!(collection.cards[0].data, "filtered-card");
 
-        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+        let state = read_v11_collection_as_engram_state(apkg).unwrap();
         assert_eq!(state.media_assets.len(), 2);
         assert_eq!(state.cards[0].deck_id, "3");
         assert!(state.cards[0].front.contains("[sound:audio/hola.mp3]"));
@@ -6314,7 +6314,7 @@ CREATE TABLE graves (
 
         let manifest = inspect_apkg(&apkg).unwrap();
         assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
-        assert_eq!(manifest.media.map_present, true);
+        assert!(manifest.media.map_present);
         assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
         assert_eq!(manifest.media.mapping["1"], "images/card.png");
         assert!(manifest.media.missing_files.is_empty());
@@ -6655,7 +6655,7 @@ CREATE TABLE graves (
 
         assert_eq!(manifest.collection.name, LEGACY_COLLECTION);
         assert_eq!(collection, b"sqlite collection");
-        assert_eq!(manifest.media.map_present, true);
+        assert!(manifest.media.map_present);
         assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
         assert_eq!(manifest.media.mapping["1"], "images/card.png");
         assert_eq!(manifest.media.media_files.len(), 2);

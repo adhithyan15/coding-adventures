@@ -1839,7 +1839,7 @@ mod tests {
         // Two bounds checks (array_get + array_set) ⇒ at least two `udf #0xDEAD` traps.
         let traps = words.iter().filter(|&&w| w == 0x0000DEAD).count();
         assert!(traps >= 2, "expected ≥2 udf bounds traps, got {traps} in {words:?}");
-        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     /// `f64` array elements lower as raw 8-byte loads/stores; f64 math reads
@@ -1876,7 +1876,7 @@ mod tests {
         ];
         let bytes = compile(&ctx("cons_car", &[], "u64"), &cir)
             .unwrap_or_else(|e| panic!("cons/car heap ops must lower: {e}"));
-        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     // L3b-2b (LANG77): the *runtime-call* form of `(CAR (CONS 7 9))` —
@@ -1995,7 +1995,7 @@ mod tests {
         ];
         let bytes = compile(&ctx("isnull", &[], "u64"), &cir)
             .unwrap_or_else(|e| panic!("is_null must lower: {e}"));
-        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
@@ -2044,7 +2044,7 @@ mod tests {
         ];
         let bytes = compile(&ctx("addc", &[], "u64"), &cir).expect("ok");
         // 4-byte-aligned, non-empty.
-        assert!(bytes.len() > 0);
+        assert!(!bytes.is_empty());
         assert_eq!(bytes.len() % 4, 0);
     }
 
@@ -2057,7 +2057,7 @@ mod tests {
             ret_u64("v0"),
         ];
         let bytes = compile(&ctx("add", &params, "u64"), &cir).expect("ok");
-        assert!(bytes.len() > 0);
+        assert!(!bytes.is_empty());
     }
 
     #[test]
@@ -2077,7 +2077,7 @@ mod tests {
                        srcs: vec![CIROperand::Var("L".into())], ty: "void".into(), deopt_to: None },
         ];
         let bytes = compile(&ctx("loop", &[], "void"), &cir).expect("ok");
-        assert!(bytes.len() > 0);
+        assert!(!bytes.is_empty());
     }
 
     #[test]
@@ -2094,7 +2094,7 @@ mod tests {
                        ty: "void".into(), deopt_to: None },
         ];
         let bytes = compile(&ctx("br", &params, "void"), &cir).expect("ok");
-        assert!(bytes.len() > 0);
+        assert!(!bytes.is_empty());
     }
 
     #[test]
@@ -2107,7 +2107,7 @@ mod tests {
             ret_u64("v0"),
         ];
         let bytes = compile(&ctx("lt", &params, "u64"), &cir).expect("ok");
-        assert!(bytes.len() > 0);
+        assert!(!bytes.is_empty());
     }
 
     #[test]
@@ -2172,64 +2172,64 @@ mod tests {
     #[test]
     fn div_i64_lowers() {
         let bytes = compile_with_binop("div_i64", "i64", true);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn div_u64_lowers() {
         let bytes = compile_with_binop("div_u64", "u64", false);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn mod_i64_lowers() {
         let bytes = compile_with_binop("mod_i64", "i64", true);
         // mod expands to sdiv + msub = 2 extra instructions vs div
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn mod_u64_lowers() {
         let bytes = compile_with_binop("mod_u64", "u64", false);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn and_i64_lowers() {
         let bytes = compile_with_binop("and_i64", "i64", true);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn or_i64_lowers() {
         let bytes = compile_with_binop("or_i64", "i64", true);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn xor_i64_lowers() {
         let bytes = compile_with_binop("xor_i64", "i64", true);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn shl_i64_lowers() {
         let bytes = compile_with_binop("shl_i64", "i64", true);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn shr_i64_lowers_asr() {
         // Signed shift right → ASRV
         let bytes = compile_with_binop("shr_i64", "i64", true);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
     fn shr_u64_lowers_lsr() {
         // Unsigned shift right → LSRV
         let bytes = compile_with_binop("shr_u64", "u64", false);
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
@@ -2241,7 +2241,7 @@ mod tests {
                 srcs: vec![CIROperand::Var("v0".into())], ty: "i64".into(), deopt_to: None },
         ];
         let bytes = compile(&ctx("fneg", &params, "i64"), &cir).expect("neg_i64");
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     #[test]
@@ -2253,7 +2253,7 @@ mod tests {
                 srcs: vec![CIROperand::Var("v0".into())], ty: "i64".into(), deopt_to: None },
         ];
         let bytes = compile(&ctx("fnot", &params, "i64"), &cir).expect("not_i64");
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0);
+        assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
     }
 
     // ---- LANG39: global_load / global_store ----
@@ -2277,7 +2277,7 @@ mod tests {
         let (bytes, _ext, g_relocs) = compile_with_globals(
             &ctx("f_gs", &[], "void"), &cir, &slots
         ).expect("global_store must compile");
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0, "byte-aligned output");
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0, "byte-aligned output");
         assert_eq!(g_relocs.len(), 1, "one global_store → one GlobalWordReloc");
         let r = g_relocs[0];
         assert_eq!(r.add_word, r.adrp_word + 1, "ADD immediately follows ADRP");
@@ -2301,7 +2301,7 @@ mod tests {
         let (bytes, _ext, g_relocs) = compile_with_globals(
             &ctx("f_gl", &[], "i64"), &cir, &slots
         ).expect("global_load must compile");
-        assert!(bytes.len() > 0 && bytes.len() % 4 == 0, "byte-aligned output");
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0, "byte-aligned output");
         assert_eq!(g_relocs.len(), 1, "one global_load → one GlobalWordReloc");
         let r = g_relocs[0];
         assert_eq!(r.add_word, r.adrp_word + 1, "ADD immediately follows ADRP");
@@ -2385,7 +2385,7 @@ mod tests {
         let bytes = compile(&ctx("guard", &params, "void"), &cir).expect("ok");
         // udf #0xDEAD has the bit pattern 0xDEAD.  Search for it.
         let words: Vec<u32> = bytes.chunks(4).map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
-        assert!(words.iter().any(|&w| w == 0x0000DEAD), "expected udf #0xDEAD in {words:?}");
+        assert!(words.contains(&0x0000DEAD), "expected udf #0xDEAD in {words:?}");
     }
 
     // ---- LANG40/LANG41: io_out handler (BL __twig_print_i64 external reloc) ----

@@ -750,7 +750,7 @@ impl<K: Ord + Clone, V: Clone> BPlusTree<K, V> {
     ///
     /// This is O(n) and requires no tree traversal beyond the first leaf,
     /// making it ideal for full table scans.
-    pub fn full_scan<'a>(&'a self) -> Vec<(&'a K, &'a V)> {
+    pub fn full_scan(&self) -> Vec<(&K, &V)> {
         let mut out = Vec::new();
         let mut cur: *const BPlusLeaf<K, V> = self.first_leaf;
         loop {

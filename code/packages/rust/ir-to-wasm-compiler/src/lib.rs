@@ -1116,7 +1116,7 @@ mod tests {
         let ast = parse_brainfuck(",.").unwrap();
         let compiled = compile(&ast, "echo.bf", release_config()).unwrap();
 
-        let module = IrToWasmCompiler::default()
+        let module = IrToWasmCompiler
             .compile(&compiled.program, &[])
             .unwrap();
 
@@ -1137,7 +1137,7 @@ mod tests {
     fn runs_lowered_brainfuck_echo_through_runtime() {
         let ast = parse_brainfuck(",.").unwrap();
         let compiled = compile(&ast, "echo.bf", release_config()).unwrap();
-        let module = IrToWasmCompiler::default()
+        let module = IrToWasmCompiler
             .compile(&compiled.program, &[])
             .unwrap();
         let binary = encode_module(&module).unwrap();
@@ -1175,7 +1175,7 @@ mod tests {
             version: 1,
         };
 
-        let err = IrToWasmCompiler::default()
+        let err = IrToWasmCompiler
             .compile(&program, &[])
             .unwrap_err();
 
@@ -1206,7 +1206,7 @@ mod tests {
     fn run_prog(prog: &IrProgram) -> i32 {
         use wasm_module_encoder::encode_module;
         use wasm_runtime::{WasiConfig, WasiEnv, WasmRuntime};
-        let module = IrToWasmCompiler::default().compile(prog, &[]).unwrap();
+        let module = IrToWasmCompiler.compile(prog, &[]).unwrap();
         let binary = encode_module(&module).unwrap();
         let wasi = WasiEnv::new(WasiConfig::default());
         let runtime = WasmRuntime::with_host(Box::new(wasi));

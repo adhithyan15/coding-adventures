@@ -146,12 +146,12 @@ pub fn fp_add(a: &FloatBits, b: &FloatBits) -> FloatBits {
 
     // Add implicit leading 1 for normal numbers (exponent != 0)
     if exp_a != 0 {
-        mant_a |= (1u64 << fmt.mantissa_bits);
+        mant_a |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_a = 1; // Denormal true exponent = 1 - bias, stored as 1 for alignment
     }
     if exp_b != 0 {
-        mant_b |= (1u64 << fmt.mantissa_bits);
+        mant_b |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_b = 1;
     }

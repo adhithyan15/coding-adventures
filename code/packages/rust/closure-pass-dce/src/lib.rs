@@ -2457,7 +2457,7 @@ mod tests {
 
     /// Helper — extract the unique SwitchStatement from a function
     /// body so we can pattern-match on it.
-    fn extract_switch<'a>(prog: &'a Program) -> &'a SwitchStatement {
+    fn extract_switch(prog: &Program) -> &SwitchStatement {
         let block = extract_function_body(prog);
         match &block.body[0] {
             Statement::Tagged(TaggedStatement::SwitchStatement(s)) => s,

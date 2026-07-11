@@ -1843,7 +1843,7 @@ fn anki_excluded_field_ids(source: &ExternalSourceRecord) -> Vec<String> {
     fields
         .iter()
         .enumerate()
-        .filter(|&(index, field)| anki_field_excluded_from_search(field)).map(|(index, field)| {
+        .filter(|&(_index, field)| anki_field_excluded_from_search(field)).map(|(index, field)| {
                 let ordinal = field
                     .get("ord")
                     .and_then(Value::as_i64)

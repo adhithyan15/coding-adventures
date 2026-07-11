@@ -813,7 +813,7 @@ mod tests {
     fn sanitizer_truncates_at_utf8_boundary() {
         // CJK chars are 3 bytes each in UTF-8. Truncate mid-codepoint
         // would panic in String::truncate; the boundary walk prevents it.
-        let s: String = std::iter::repeat('日').take(10).collect();
+        let s: String = std::iter::repeat_n('日', 10).collect();
         let cleaned = sanitize_for_prompt(&s, 16);
         assert!(cleaned.ends_with('…'));
         assert!(std::str::from_utf8(cleaned.as_bytes()).is_ok());

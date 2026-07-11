@@ -2427,6 +2427,89 @@ fn expect_term_child(
     adapt_term(term_node)
 }
 
+/// Strip surrounding double quotes and process backslash escapes.
+///
+/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
+/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
+/// translate the recognized escape sequences:
+///
+/// | in source | becomes  | why it matters                                   |
+/// |-----------|----------|--------------------------------------------------|
+/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
+/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
+/// | `\\`      | `\`      | a literal backslash                              |
+/// | `\n`      | newline  | multi-line provenance text                       |
+/// | `\t`      | tab      | tabular provenance text                          |
+///
+/// This is load-bearing for byte-provenance: a `source "..."` annotation must
+/// reproduce the cited page's text *character-for-character* after unescaping,
+/// so a span that contains a `"` is carried as `\"` and restored here. An
+/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
+/// dropping the backslash — we never want to mutate a citation we don't
+/// understand. See the `unquote_string_*` unit tests, which pin every row.
+fn unquote_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            if let Some(esc) = chars.next() {
+                match esc {
+                    '"' => out.push('"'),
+                    '\\' => out.push('\\'),
+                    'n' => out.push('\n'),
+                    't' => out.push('\t'),
+                    other => {
+                        // Unknown escape — keep verbatim.
+                        out.push('\\');
+                        out.push(other);
+                    }
+                }
+            } else {
+                // Dangling backslash at end of string — keep it verbatim.
+                out.push('\\');
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
+/// Strip surrounding double quotes for `latex "..."` strings.
+///
+/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
+/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
+/// backslash escaping are interpreted here; every other backslash sequence is
+/// passed through to the LaTeX parser verbatim.
+fn unquote_latex_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            match chars.next() {
+                Some('"') => out.push('"'),
+                Some('\\') => out.push('\\'),
+                Some(other) => {
+                    out.push('\\');
+                    out.push(other);
+                }
+                None => out.push('\\'),
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -2725,87 +2808,4 @@ mod tests {
             other => panic!("expected Contributes, got {other:?}"),
         }
     }
-}
-
-/// Strip surrounding double quotes and process backslash escapes.
-///
-/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
-/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
-/// translate the recognized escape sequences:
-///
-/// | in source | becomes  | why it matters                                   |
-/// |-----------|----------|--------------------------------------------------|
-/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
-/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
-/// | `\\`      | `\`      | a literal backslash                              |
-/// | `\n`      | newline  | multi-line provenance text                       |
-/// | `\t`      | tab      | tabular provenance text                          |
-///
-/// This is load-bearing for byte-provenance: a `source "..."` annotation must
-/// reproduce the cited page's text *character-for-character* after unescaping,
-/// so a span that contains a `"` is carried as `\"` and restored here. An
-/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
-/// dropping the backslash — we never want to mutate a citation we don't
-/// understand. See the `unquote_string_*` unit tests, which pin every row.
-fn unquote_string(raw: &str) -> String {
-    let inner = raw
-        .strip_prefix('"')
-        .and_then(|s| s.strip_suffix('"'))
-        .unwrap_or(raw);
-    let mut out = String::with_capacity(inner.len());
-    let mut chars = inner.chars();
-    while let Some(c) = chars.next() {
-        if c == '\\' {
-            if let Some(esc) = chars.next() {
-                match esc {
-                    '"' => out.push('"'),
-                    '\\' => out.push('\\'),
-                    'n' => out.push('\n'),
-                    't' => out.push('\t'),
-                    other => {
-                        // Unknown escape — keep verbatim.
-                        out.push('\\');
-                        out.push(other);
-                    }
-                }
-            } else {
-                // Dangling backslash at end of string — keep it verbatim.
-                out.push('\\');
-            }
-        } else {
-            out.push(c);
-        }
-    }
-    out
-}
-
-/// Strip surrounding double quotes for `latex "..."` strings.
-///
-/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
-/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
-/// backslash escaping are interpreted here; every other backslash sequence is
-/// passed through to the LaTeX parser verbatim.
-fn unquote_latex_string(raw: &str) -> String {
-    let inner = raw
-        .strip_prefix('"')
-        .and_then(|s| s.strip_suffix('"'))
-        .unwrap_or(raw);
-    let mut out = String::with_capacity(inner.len());
-    let mut chars = inner.chars();
-    while let Some(c) = chars.next() {
-        if c == '\\' {
-            match chars.next() {
-                Some('"') => out.push('"'),
-                Some('\\') => out.push('\\'),
-                Some(other) => {
-                    out.push('\\');
-                    out.push(other);
-                }
-                None => out.push('\\'),
-            }
-        } else {
-            out.push(c);
-        }
-    }
-    out
 }

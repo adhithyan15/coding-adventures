@@ -309,7 +309,7 @@ impl MarkovChain {
             // Record the edge in the topology graph (idempotent if it exists).
             // The graph node for the context is the k-gram key string.
             // The graph node for the target is the individual state label.
-            let _ = self.graph.add_node(&context_key);
+            self.graph.add_node(&context_key);
             let _ = self.graph.add_edge(&context_key, target);
         }
 
@@ -865,7 +865,7 @@ mod tests {
             "stationary distribution should sum to 1.0, got {}",
             sum
         );
-        assert!(dist.len() > 0, "stationary distribution should not be empty");
+        assert!(!dist.is_empty(), "stationary distribution should not be empty");
     }
 
     // -----------------------------------------------------------------------

@@ -23,7 +23,6 @@
 // (up to 90° of sweep) with a cubic Bezier using the standard formula that
 // achieves very low error (< 0.027% of the radius for a full circle).
 
-use trig;
 use point2d::{Point, Rect};
 use bezier2d::CubicBezier;
 

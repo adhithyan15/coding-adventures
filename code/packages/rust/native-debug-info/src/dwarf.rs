@@ -118,7 +118,7 @@ impl<'a> DwarfEmitter<'a> {
     ///
     /// Returns `Err` if the input is not a valid ELF64 little-endian binary.
     pub fn embed_in_elf(&self, elf_bytes: &[u8]) -> Result<Vec<u8>, String> {
-        let mut data = elf_bytes.to_vec();
+        let data = elf_bytes.to_vec();
 
         if data.len() < 4 || &data[..4] != b"\x7fELF" {
             return Err("not a valid ELF file".into());
@@ -160,7 +160,7 @@ impl<'a> DwarfEmitter<'a> {
         }
 
         // Read existing section headers.
-        let mut shdrs: Vec<Vec<u8>> = (0..e_shnum)
+        let shdrs: Vec<Vec<u8>> = (0..e_shnum)
             .map(|i| {
                 let off = shdr_table_start + i * SHDR_SIZE;
                 data[off..off + SHDR_SIZE].to_vec()

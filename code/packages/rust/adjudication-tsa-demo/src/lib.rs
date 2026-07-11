@@ -2044,7 +2044,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
     out.push_str("============================================================\n");
     out.push_str("  TSA adjudication: raw model vs structured pipeline\n");
     out.push_str("============================================================\n");
-    out.push_str("\n");
+    out.push('\n');
     out.push_str("--- ARM A: raw model ---\n");
     out.push_str(&format!("model:           {}\n", raw.model));
     out.push_str(&format!(
@@ -2057,7 +2057,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
     for line in raw.answer.lines() {
         out.push_str(&format!("  {line}\n"));
     }
-    out.push_str("\n");
+    out.push('\n');
     out.push_str("--- ARM B: structured pipeline ---\n");
     match &pipeline.ir_source {
         IrSourceTelemetry::HandBuilt => {
@@ -2135,7 +2135,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
     // pipeline blocked when it did.
     let adj02_vs = &pipeline.pipeline_output.audit_trail.checker_results[0].violations;
     if !adj02_vs.is_empty() {
-        out.push_str("\n");
+        out.push('\n');
         out.push_str(&format!(
             "--- ADJ02 coverage violations ({n}) ---\n",
             n = adj02_vs.len()
@@ -2155,7 +2155,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
         }
     }
     if !pipeline.adj04_drift_findings.is_empty() {
-        out.push_str("\n");
+        out.push('\n');
         out.push_str(&format!(
             "--- ADJ04 round-trip drift findings ({n}) ---\n",
             n = pipeline.adj04_drift_findings.len()
@@ -2176,7 +2176,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
         }
     }
     if !pipeline.adj05_adversarial_findings.is_empty() {
-        out.push_str("\n");
+        out.push('\n');
         out.push_str(&format!(
             "--- ADJ05 adversarial findings ({n}) ---\n",
             n = pipeline.adj05_adversarial_findings.len()
@@ -2208,7 +2208,7 @@ pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> 
             out.push_str(&format!("\nADJ05 errored: {err}\n"));
         }
     }
-    out.push_str("\n");
+    out.push('\n');
     out.push_str(
         "Note: to enable ADJ05, install a second model from a different \
          family (e.g., `ollama pull llama3.1:8b`) and set \

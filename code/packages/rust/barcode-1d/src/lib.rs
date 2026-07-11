@@ -100,8 +100,7 @@ pub fn normalize_symbology(symbology: &str) -> Result<Symbology, String> {
     let normalized = symbology
         .trim()
         .to_ascii_lowercase()
-        .replace('-', "")
-        .replace('_', "");
+        .replace(['-', '_'], "");
     let normalized = if normalized.is_empty() {
         "code39".to_string()
     } else {

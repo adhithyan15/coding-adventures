@@ -37,7 +37,7 @@ use document_ast::{
 };
 use layout_ir::{
     color_black, color_white, edges_all, edges_xy, font_bold, font_spec, rgb,
-    rgba, size_fill, size_fixed, size_wrap, Color, Content, Edges, ExtValue, FontSpec, LayoutNode,
+    rgba, size_fill, size_fixed, size_wrap, Color, Edges, ExtValue, FontSpec, LayoutNode,
     TextAlign, TextContent,
 };
 

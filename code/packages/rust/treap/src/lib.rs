@@ -389,7 +389,7 @@ fn bst_successor<'a, K: Ord>(root: &'a Option<Box<TreapNode<K>>>, key: &K) -> Op
     best
 }
 
-fn bst_kth_smallest<'a, K: Ord>(root: &'a Option<Box<TreapNode<K>>>, k: usize) -> Option<&'a K> {
+fn bst_kth_smallest<K: Ord>(root: &Option<Box<TreapNode<K>>>, k: usize) -> Option<&K> {
     if k == 0 {
         return None;
     }

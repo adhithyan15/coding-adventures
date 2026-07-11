@@ -147,7 +147,7 @@ pub struct BitstreamReport {
 /// Returns `(bitstream_bytes, report)`.
 pub fn emit_bitstream(config: &FpgaConfig) -> (Vec<u8>, BitstreamReport) {
     let (_, _, cram_bits) = part_specs(config.part);
-    let cram_bytes = ((cram_bits + 7) / 8) as usize;
+    let cram_bytes = cram_bits.div_ceil(8) as usize;
 
     let mut out: Vec<u8> = Vec::new();
 

@@ -166,7 +166,7 @@ fn blake2b_long(t: usize, x: &[u8]) -> Result<Vec<u8>, Argon2Error> {
             .map_err(|e| Argon2Error::Blake2b(format!("{:?}", e)));
     }
 
-    let r = (t + 31) / 32 - 2;
+    let r = t.div_ceil(32) - 2;
     let mut v = blake2b(&input, &Blake2bOptions::new().digest_size(64))
         .map_err(|e| Argon2Error::Blake2b(format!("{:?}", e)))?;
     let mut out = Vec::with_capacity(t);
@@ -338,7 +338,7 @@ fn validate(
     if tag_length < 4 {
         return Err(Argon2Error::TagLengthTooSmall(tag_length as usize));
     }
-    if parallelism < 1 || parallelism > 0xFF_FFFF {
+    if !(1..=0xFF_FFFF).contains(&parallelism) {
         return Err(Argon2Error::InvalidParallelism(parallelism));
     }
     if memory_cost < 8 * parallelism {

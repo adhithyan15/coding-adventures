@@ -1511,7 +1511,7 @@ contributes 1000000 from answer == 3 / 10 to opt_a
         assert_eq!(cs.symbols[0].0, "premium");
         assert!(matches!(
             &cs.symbols[0].1,
-            core_compound_money @ _ if format!("{core_compound_money:?}").contains("money")
+            core_compound_money if format!("{core_compound_money:?}").contains("money")
         ));
         assert_eq!(cs.symbols[1].0, "months");
         assert_eq!(cs.constraints.len(), 3);

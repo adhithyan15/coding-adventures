@@ -1782,7 +1782,7 @@ mod tests {
         let _a: RenamePass = Default::default();
         let _b: RenamePass = RenamePass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================

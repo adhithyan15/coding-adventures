@@ -784,7 +784,7 @@ mod tests {
         let values: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
-            .map(|t| (t.value.as_str(), t.type_.clone()))
+            .map(|t| (t.value.as_str(), t.type_))
             .collect();
         // "style" and "part" should be Keyword tokens; "Grid" and "root" Name.
         assert_eq!(values[0], ("style", TokenType::Keyword));

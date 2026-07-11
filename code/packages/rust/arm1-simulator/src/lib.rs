@@ -174,7 +174,7 @@ pub fn op_string(opcode: u32) -> &'static str {
 /// Returns true if the ALU opcode is a test-only operation (TST, TEQ, CMP, CMN)
 /// that does not write to the destination register.
 pub fn is_test_op(opcode: u32) -> bool {
-    opcode >= OP_TST && opcode <= OP_CMN
+    (OP_TST..=OP_CMN).contains(&opcode)
 }
 
 /// Returns true if the ALU opcode is a logical operation.
@@ -241,6 +241,7 @@ pub const HALT_SWI: u32 = 0x123456;
 
 /// Represents the ARM1's four condition flags.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub struct Flags {
     /// Negative -- set when result's bit 31 is 1.
     pub n: bool,
@@ -252,11 +253,6 @@ pub struct Flags {
     pub v: bool,
 }
 
-impl Default for Flags {
-    fn default() -> Self {
-        Self { n: false, z: false, c: false, v: false }
-    }
-}
 
 // =========================================================================
 // Memory Access
@@ -474,7 +470,7 @@ fn shift_ror(value: u32, amount: u32, carry_in: bool, by_register: bool) -> (u32
         return (value, (value >> 31) != 0);
     }
 
-    let result = (value >> amount) | (value << (32 - amount));
+    let result = value.rotate_right(amount);
     let carry = (result >> 31) & 1;
     (result, carry != 0)
 }
@@ -492,7 +488,7 @@ pub fn decode_immediate(imm8: u32, rotate: u32) -> (u32, bool) {
     if rotate_amount == 0 {
         return (imm8, false);
     }
-    let value = (imm8 >> rotate_amount) | (imm8 << (32 - rotate_amount));
+    let value = imm8.rotate_right(rotate_amount);
     let carry_out = (value >> 31) != 0;
     (value, carry_out)
 }
@@ -1326,7 +1322,7 @@ impl ARM1 {
                 // ARM1 quirk: unaligned word loads rotate the data
                 let rotation = (transfer_addr & 3) * 8;
                 if rotation != 0 {
-                    v = (v >> rotation) | (v << (32 - rotation));
+                    v = v.rotate_right(rotation);
                 }
                 v
             };
@@ -1347,11 +1343,10 @@ impl ARM1 {
         }
 
         // Write-back
-        if d.write_back || !d.pre_index {
-            if d.rn != 15 {
+        if (d.write_back || !d.pre_index)
+            && d.rn != 15 {
                 self.write_register(d.rn, addr);
             }
-        }
     }
 
     // =====================================================================
@@ -2170,13 +2165,11 @@ mod tests {
     #[test]
     fn test_barrel_shifter_in_instruction() {
         // ADD R1, R0, R0, LSL #2 (multiply by 5: R0 + R0*4)
-        let add_with_shift = (COND_AL << 28) |
-            (OP_ADD << 21) |
-            (0 << 16) |   // Rn = R0
+        let add_with_shift = ((COND_AL << 28) |
+            (OP_ADD << 21)) |   // Rn = R0
             (1 << 12) |   // Rd = R1
             (2 << 7) |    // shift amount = 2
-            (SHIFT_LSL << 5) |
-            0;             // Rm = R0
+            (SHIFT_LSL << 5);             // Rm = R0
 
         let mut cpu = ARM1::new(4096);
         cpu.load_program_words(&[

@@ -359,7 +359,7 @@ fn builtin_sorted(args: Vec<StarlarkValue>) -> Result<StarlarkValue, StarlarkErr
         StarlarkValue::Tuple(t) => t.clone(),
         _ => return Err(StarlarkError::TypeError("sorted() argument must be iterable".to_string())),
     };
-    let reverse = args.get(1).map_or(false, |v| v.is_truthy());
+    let reverse = args.get(1).is_some_and(|v| v.is_truthy());
     let mut sorted_items = items;
     sorted_items.sort_by(|a, b| {
         match (a, b) {

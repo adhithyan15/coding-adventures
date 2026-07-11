@@ -1590,7 +1590,7 @@ fn compile_expression(
         && expr
             .chars()
             .next()
-            .map_or(false, |c| c.is_alphabetic() || c == '_')
+            .is_some_and(|c| c.is_alphabetic() || c == '_')
     {
         let name_idx = add_name_to(names, expr.to_string());
         instructions.push(Instruction {

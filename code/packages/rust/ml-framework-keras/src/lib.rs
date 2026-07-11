@@ -20,8 +20,6 @@
 //! - `metrics`: Accuracy, BinaryAccuracy, CategoricalAccuracy, MSE, MAE
 //! - `callbacks`: History, EarlyStopping, ModelCheckpoint, LearningRateScheduler
 
-use ml_framework_core::{Tensor, Parameter};
-use std::collections::HashMap;
 
 // =========================================================================
 // Backend module
@@ -377,6 +375,12 @@ pub mod metrics {
 
     /// Accuracy metric.
     pub struct Accuracy { correct: usize, total: usize }
+    impl Default for Accuracy {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     impl Accuracy {
         pub fn new() -> Self { Accuracy { correct: 0, total: 0 } }
     }
@@ -411,6 +415,12 @@ pub mod metrics {
 
     /// MSE metric (not a loss, just for monitoring).
     pub struct MeanSquaredError { sum: f64, count: usize }
+    impl Default for MeanSquaredError {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     impl MeanSquaredError {
         pub fn new() -> Self { MeanSquaredError { sum: 0.0, count: 0 } }
     }
@@ -450,13 +460,19 @@ pub mod callbacks {
         pub epoch: Vec<usize>,
     }
 
+    impl Default for History {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     impl History {
         pub fn new() -> Self { History { history: HashMap::new(), epoch: Vec::new() } }
 
         pub fn on_epoch_end(&mut self, epoch: usize, logs: &HashMap<String, f64>) {
             self.epoch.push(epoch);
             for (key, &value) in logs {
-                self.history.entry(key.clone()).or_insert_with(Vec::new).push(value);
+                self.history.entry(key.clone()).or_default().push(value);
             }
         }
     }
@@ -517,6 +533,12 @@ pub mod models {
         optimizer: Option<Box<dyn optimizers::Optimizer>>,
         loss_fn: Option<Box<dyn losses::Loss>>,
         compiled: bool,
+    }
+
+    impl Default for Sequential {
+        fn default() -> Self {
+            Self::new()
+        }
     }
 
     impl Sequential {

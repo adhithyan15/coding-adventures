@@ -398,6 +398,6 @@ mod tests {
         let _a: CollapsePropertiesPass = Default::default();
         let _b: CollapsePropertiesPass = CollapsePropertiesPass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 }

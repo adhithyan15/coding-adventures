@@ -1200,7 +1200,7 @@ mod tests {
         //   index 2: __twig_print_i64  ← we check this one
         //
         // symtab_off = 312 + code(4) + data(0) + relocs(1×8) = 324.
-        let symtab_off = 312usize + 4 + 0 + 8;
+        let symtab_off = (312usize + 4) + 8;
         let ext_sym_off = symtab_off + 2 * 16; // skip _main and _twig_globals
 
         // nlist_64: n_strx(4) n_type(1) n_sect(1) n_desc(2) n_value(8)
@@ -1230,7 +1230,7 @@ mod tests {
         //                   total = 39 bytes
         let n = 8usize;
         let strtab_len = 1 + 6 + 14 + 18; // 39
-        let expected = 312 + n + 0 + 1 * 8 + 3 * 16 + strtab_len;
+        let expected = (312 + n) + 8 + 3 * 16 + strtab_len;
         let ext = vec![ExternBranchReloc {
             byte_offset: 0,
             symbol: "__twig_print_i64".to_string(),

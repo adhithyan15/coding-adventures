@@ -244,7 +244,7 @@ pub fn decode(opcode: u8) -> DecoderOutput {
                      else if is_jump { sss == 4 || is_jmp_uncond }
                      else if is_call { sss == 6 || is_cal_uncond }
                      else { false };
-    let cond_code = ddd as u8 & 0x03; // low 2 bits of ddd
+    let cond_code = ddd & 0x03; // low 2 bits of ddd
 
     // Write signals
     let write_acc = (is_alu && ddd != 7) // CMP doesn't write
@@ -263,7 +263,7 @@ pub fn decode(opcode: u8) -> DecoderOutput {
                              else { 1 };
 
     // Port number for IN/OUT
-    let port = if is_input { ddd as u8 }
+    let port = if is_input { ddd }
                else if is_output { (opcode >> 1) & 0x1F }
                else { 0 };
 

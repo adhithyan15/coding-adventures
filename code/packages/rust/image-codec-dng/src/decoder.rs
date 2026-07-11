@@ -285,7 +285,7 @@ pub fn decode_dng(bytes: &[u8]) -> Result<PixelContainer, String> {
             let subfile_type = ifd
                 .extra_tags
                 .get(&254)
-                .and_then(|v| read_single_long(v))
+                .and_then(read_single_long)
                 .unwrap_or(0);
             subfile_type == 0 && (ifd.photometric == 32803 || ifd.photometric == 34892)
         })
@@ -305,14 +305,14 @@ pub fn decode_dng(bytes: &[u8]) -> Result<PixelContainer, String> {
     let as_shot_neutral = ifd
         .extra_tags
         .get(&50728)
-        .map(|v| read_rationals(v))
+        .map(read_rationals)
         .unwrap_or_else(|| vec![1.0, 1.0, 1.0]);
 
     // ForwardMatrix1 (50879): SRATIONAL[9] = 3×3 matrix, camera RGB → XYZ D50.
-    let forward_matrix_raw = ifd.extra_tags.get(&50879).map(|v| read_srationals(v));
+    let forward_matrix_raw = ifd.extra_tags.get(&50879).map(read_srationals);
 
     // ColorMatrix1 (50721): SRATIONAL[9] = 3×3 matrix, XYZ D50 → camera RGB.
-    let color_matrix_raw = ifd.extra_tags.get(&50721).map(|v| read_srationals(v));
+    let color_matrix_raw = ifd.extra_tags.get(&50721).map(read_srationals);
 
     // BlackLevel (50714): RATIONAL or LONG — sensor black level.
     //
@@ -325,7 +325,7 @@ pub fn decode_dng(bytes: &[u8]) -> Result<PixelContainer, String> {
                 if *d == 0 {
                     0u32
                 } else {
-                    (*n / d.max(&1)) as u32
+                    *n / d.max(&1)
                 }
             }),
             IfdValue::Longs(lv) => lv.first().copied(),
@@ -341,7 +341,7 @@ pub fn decode_dng(bytes: &[u8]) -> Result<PixelContainer, String> {
     let white_level = ifd
         .extra_tags
         .get(&50717)
-        .and_then(|v| read_single_long(v))
+        .and_then(read_single_long)
         .unwrap_or_else(|| {
             // Cap bps at 31 to prevent u32 shift overflow on malformed files.
             // A DNG with BitsPerSample=32 or higher would cause 1u32 << 32 to

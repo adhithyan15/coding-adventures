@@ -2567,7 +2567,7 @@ mod tests {
             .find(|i| matches!(i, Instruction::SortResult(_)))
             .unwrap();
         if let Instruction::SortResult(keys) = sort_instr {
-            assert_eq!(keys[0].ascending, true);
+            assert!(keys[0].ascending);
         }
     }
 
@@ -2586,7 +2586,7 @@ mod tests {
             .find(|i| matches!(i, Instruction::SortResult(_)))
             .unwrap();
         if let Instruction::SortResult(keys) = sort_instr {
-            assert_eq!(keys[0].ascending, false);
+            assert!(!keys[0].ascending);
         }
     }
 

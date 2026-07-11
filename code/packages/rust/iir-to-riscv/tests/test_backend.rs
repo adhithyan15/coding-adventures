@@ -21,7 +21,7 @@
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_riscv::{lower_iir_to_riscv, validate_for_riscv, IIRRiscvConfig, IIRRiscvError};
-use riscv_simulator::encoding::{encode_add, encode_addi, encode_jalr, encode_sub};
+use riscv_simulator::encoding::{encode_add, encode_addi, encode_sub};
 
 // ---------------------------------------------------------------------------
 // Helpers

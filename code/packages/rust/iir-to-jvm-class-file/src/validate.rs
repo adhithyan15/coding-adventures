@@ -748,7 +748,8 @@ mod tests {
 
     #[test]
     fn byte_string_algebra_still_rejected() {
-        for op in ["str_index"] {
+        {
+            let op = "str_index";
             let errs = validate_for_jvm(&single_fn_module(vec![
                 IIRInstr::new(
                     op,

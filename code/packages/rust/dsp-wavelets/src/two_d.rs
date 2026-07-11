@@ -220,7 +220,7 @@ fn validate_2d_inputs(
     n_rows: u32,
     n_cols: u32,
     levels: u32,
-    boundary: WaveletBoundary,
+    _boundary: WaveletBoundary,
 ) -> Result<(), WaveletError> {
     if image.is_empty() {
         return Err(WaveletError::EmptySignal);

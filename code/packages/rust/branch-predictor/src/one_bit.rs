@@ -344,7 +344,7 @@ mod tests {
         for &taken in &sequence {
             // Before update, check prediction matches DFA accepting
             let dfa_predicts_taken = dfa.accepting().contains(dfa.current_state());
-            let pred_prediction = *pred.table.get(&(0x100u64 % 1024)).unwrap_or(&false);
+            let pred_prediction = *pred.table.get(&0x100u64).unwrap_or(&false);
             assert_eq!(
                 dfa_predicts_taken, pred_prediction,
                 "DFA state {} disagrees with predictor state {}",
@@ -358,7 +358,7 @@ mod tests {
 
             // After update, verify states match
             let dfa_in_taken = dfa.current_state() == "T";
-            let pred_in_taken = *pred.table.get(&(0x100u64 % 1024)).unwrap_or(&false);
+            let pred_in_taken = *pred.table.get(&0x100u64).unwrap_or(&false);
             assert_eq!(dfa_in_taken, pred_in_taken);
         }
     }

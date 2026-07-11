@@ -211,8 +211,8 @@ impl<'a> BitStream<'a> {
         let b = self.data[self.pos];
         self.pos += 1;
         // JPEG byte stuffing: 0xFF 0x00 → 0xFF
-        if b == 0xFF {
-            if self.pos < self.data.len() {
+        if b == 0xFF
+            && self.pos < self.data.len() {
                 let next = self.data[self.pos];
                 if next == 0x00 {
                     // stuffed byte: skip the 0x00
@@ -221,7 +221,6 @@ impl<'a> BitStream<'a> {
                 // If next != 0x00 it's a real marker — stop reading (end of scan)
                 // We'll detect this in the marker loop.
             }
-        }
         self.current = b;
         self.bit = 7;
     }
@@ -396,7 +395,7 @@ pub fn decode_sof3(data: &[u8]) -> Result<(Vec<u16>, u32, u32), String> {
                 // Validate precision before use. Lossless JPEG allows 2..=16 bits.
                 // Precision 0 would cause underflow in `1u16 << (precision - 1)` later;
                 // precision > 16 would overflow the 16-bit output pixels.
-                if precision < 2 || precision > 16 {
+                if !(2..=16).contains(&precision) {
                     return Err(format!(
                         "CR2 SOF3: unsupported precision {} (must be 2..=16)",
                         precision

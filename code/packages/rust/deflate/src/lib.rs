@@ -1616,7 +1616,7 @@ mod tests {
     #[test]
     fn test_single_byte_repeated() {
         roundtrip(b"AAAAAAAAAAAAAAAAAAA");
-        roundtrip(&vec![0u8; 100]);
+        roundtrip(&[0u8; 100]);
     }
 
     #[test]

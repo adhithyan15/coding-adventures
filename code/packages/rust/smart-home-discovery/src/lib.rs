@@ -2697,7 +2697,7 @@ fn parse_dns_name(packet: &[u8], offset: usize) -> Result<(String, usize), Disco
                     "compressed DNS name pointer is truncated",
                 ));
             }
-            let pointer = (((len as usize & 0x3F) << 8) | packet[cursor + 1] as usize);
+            let pointer = ((len as usize & 0x3F) << 8) | packet[cursor + 1] as usize;
             if pointer >= packet.len() {
                 return Err(invalid_mdns_message(
                     "compressed DNS name pointer is out of range",

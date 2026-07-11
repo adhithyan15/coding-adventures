@@ -253,7 +253,7 @@ pub fn moebius_mu(n: i64) -> i64 {
     if factors.iter().any(|(_, exp)| *exp > 1) {
         return 0;
     }
-    if factors.len() % 2 == 0 {
+    if factors.len().is_multiple_of(2) {
         1
     } else {
         -1

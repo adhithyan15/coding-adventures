@@ -716,7 +716,7 @@ fn parse_duration(s: &str) -> Option<f64> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
-    use diagram_ir::*;
+    
 
     const CLASS_SRC: &str = "classDiagram
   class Animal { +name: String; +speak() void }

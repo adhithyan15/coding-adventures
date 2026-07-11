@@ -382,7 +382,7 @@ impl Pipeline {
 
                 // Shift non-flushed stages forward (from back to front).
                 for i in (flush_count..num_stages).rev() {
-                    if i > 0 && i - 1 >= flush_count {
+                    if i > 0 && i > flush_count {
                         next_stages[i] = self.stages[i - 1].clone();
                     } else if i > 0 {
                         let mut bubble = PipelineToken::new_bubble();
@@ -587,11 +587,9 @@ impl Pipeline {
         }
 
         // Count bubbles across all stages.
-        for tok in &self.stages {
-            if let Some(ref t) = tok {
-                if t.is_bubble {
-                    self.stats.bubble_cycles += 1;
-                }
+        for t in self.stages.iter().flatten() {
+            if t.is_bubble {
+                self.stats.bubble_cycles += 1;
             }
         }
 
@@ -1597,8 +1595,8 @@ mod tests {
 
         p.set_hazard_fn(Box::new(
             move |stages: &[Option<PipelineToken>]| -> HazardResponse {
-                if !*flushed_clone.borrow() {
-                    if stages.len() >= 3 {
+                if !*flushed_clone.borrow()
+                    && stages.len() >= 3 {
                         if let Some(ref tok) = stages[2] {
                             if !tok.is_bubble {
                                 *flushed_clone.borrow_mut() = true;
@@ -1611,7 +1609,6 @@ mod tests {
                             }
                         }
                     }
-                }
                 HazardResponse::default()
             },
         ));

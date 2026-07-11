@@ -149,7 +149,7 @@ pub fn round_trip_json(input: &str) -> Result<String, String> {
 /// Rejects odd-length strings and any non-hex character with a
 /// precise error — fail-closed at the trust boundary.
 fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
-    if s.len() % 2 != 0 {
+    if !s.len().is_multiple_of(2) {
         return Err(format!("hex string length must be even, got {}", s.len()));
     }
     let bytes = s.as_bytes();

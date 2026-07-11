@@ -124,12 +124,12 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
     let mut mant_b = bits_msb_to_int(&b.mantissa);
 
     if exp_a != 0 {
-        mant_a |= (1u64 << fmt.mantissa_bits);
+        mant_a |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_a = 1;
     }
     if exp_b != 0 {
-        mant_b |= (1u64 << fmt.mantissa_bits);
+        mant_b |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_b = 1;
     }
@@ -155,7 +155,7 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
     let mut mant_c = bits_msb_to_int(&c.mantissa);
 
     if exp_c != 0 {
-        mant_c |= (1u64 << fmt.mantissa_bits);
+        mant_c |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_c = 1;
     }

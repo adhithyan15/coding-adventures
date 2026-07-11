@@ -720,11 +720,8 @@ impl LatticeTransformer {
         }
 
         if let Some(ASTNodeOrToken::Node(inner)) = node.children.first() {
-            match inner.rule_name.as_str() {
-                "lattice_block_item" => {
-                    return self.expand_lattice_block_item(inner.clone(), scope);
-                }
-                _ => {}
+            if inner.rule_name.as_str() == "lattice_block_item" {
+                return self.expand_lattice_block_item(inner.clone(), scope);
             }
         }
 
@@ -2021,22 +2018,19 @@ impl LatticeTransformer {
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "function_arg" => {
                     for fc in &n.children {
-                        match fc {
-                            ASTNodeOrToken::Token(tok) => {
-                                if tok.value == "," {
-                                    args.push(vec![]);
+                        if let ASTNodeOrToken::Token(tok) = fc {
+                            if tok.value == "," {
+                                args.push(vec![]);
+                            } else {
+                                let val = if get_token_type_name(tok) == "VARIABLE" {
+                                    scope.get(&tok.value)
+                                        .map(|v| v.to_css_text())
+                                        .unwrap_or_else(|| tok.value.clone())
                                 } else {
-                                    let val = if get_token_type_name(tok) == "VARIABLE" {
-                                        scope.get(&tok.value)
-                                            .map(|v| v.to_css_text())
-                                            .unwrap_or_else(|| tok.value.clone())
-                                    } else {
-                                        tok.value.clone()
-                                    };
-                                    args.last_mut().unwrap().push(val);
-                                }
+                                    tok.value.clone()
+                                };
+                                args.last_mut().unwrap().push(val);
                             }
-                            _ => {}
                         }
                     }
                 }

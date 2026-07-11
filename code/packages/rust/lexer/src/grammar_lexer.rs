@@ -1876,16 +1876,14 @@ keywords:
     fn test_math_expression() {
         let tokens = tokenize("x = 1 + 2 * 3");
 
-        let expected = vec![
-            (TokenType::Name, "x"),
+        let expected = [(TokenType::Name, "x"),
             (TokenType::Equals, "="),
             (TokenType::Number, "1"),
             (TokenType::Plus, "+"),
             (TokenType::Number, "2"),
             (TokenType::Star, "*"),
             (TokenType::Number, "3"),
-            (TokenType::Eof, ""),
-        ];
+            (TokenType::Eof, "")];
 
         assert_eq!(tokens.len(), expected.len());
         for (i, (exp_type, exp_val)) in expected.iter().enumerate() {
@@ -2729,7 +2727,7 @@ PLUS = "+""#,
 
         let types: Vec<String> = tokens.iter()
             .filter(|t| token_type_name(t) != "EOF")
-            .map(|t| token_type_name(t))
+            .map(token_type_name)
             .collect();
         // OPEN_TAG was suppressed, only TEXT remains
         assert_eq!(types, vec!["TEXT"]);

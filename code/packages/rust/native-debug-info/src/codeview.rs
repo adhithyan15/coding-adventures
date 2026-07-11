@@ -40,7 +40,7 @@ const DEBUG_SECTION_CHARACTERISTICS: u32 =
     IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_DISCARDABLE | IMAGE_SCN_MEM_READ;
 
 fn pad4(buf: &mut Vec<u8>) {
-    while buf.len() % 4 != 0 {
+    while !buf.len().is_multiple_of(4) {
         buf.push(0);
     }
 }
@@ -259,7 +259,7 @@ impl<'a> CodeViewEmitter<'a> {
             name_table.extend_from_slice(path.as_bytes());
             name_table.push(0);
         }
-        while name_table.len() % 4 != 0 { name_table.push(0); }
+        while !name_table.len().is_multiple_of(4) { name_table.push(0); }
 
         // DEBUG_S_STRINGTABLE
         buf.extend_from_slice(&DEBUG_S_STRINGTABLE.to_le_bytes());

@@ -2195,7 +2195,7 @@ mod tests {
     fn sanitize_comment_strips_terminators() {
         let r = sanitize_comment("a\nb");
         assert!(!r.contains('\n'));
-        let r2 = sanitize_comment(&format!("x\u{2028}y\u{2029}z"));
+        let r2 = sanitize_comment(&"x\u{2028}y\u{2029}z".to_string());
         assert!(!r2.contains('\u{2028}'));
         assert!(!r2.contains('\u{2029}'));
     }

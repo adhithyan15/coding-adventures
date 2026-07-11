@@ -62,7 +62,7 @@ pub fn istft(
     let bins = nf / 2 + 1;
     let frame_floats = bins * 2;
 
-    if spectrogram.len() % frame_floats != 0 {
+    if !spectrogram.len().is_multiple_of(frame_floats) {
         return Err(StftError::InvalidSpectrogram(format!(
             "spectrogram length {} is not a multiple of bins×2 = {}",
             spectrogram.len(),

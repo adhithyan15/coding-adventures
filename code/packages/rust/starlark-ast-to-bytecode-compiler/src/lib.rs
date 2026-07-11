@@ -1700,7 +1700,7 @@ fn compile_comp_clause(
     if sub_nodes.is_empty() || sub_nodes[0].rule_name != "comp_for" {
         return;
     }
-    let clauses: Vec<&ASTNode> = sub_nodes.iter().copied().collect();
+    let clauses: Vec<&ASTNode> = sub_nodes.to_vec();
     compile_comp_for(compiler, &clauses, 0, expr_node, is_list);
 }
 

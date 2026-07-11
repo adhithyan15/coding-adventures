@@ -2809,7 +2809,7 @@ mod r30_ordering {
         let (data, nrow, ncol) = matrix_data("tcrossprod(matrix(1:6, nrow = 2))\n");
         assert_eq!((nrow, ncol), (2, 2));
         assert_eq!(data[0], 35.0); // (1,1)
-        assert_eq!(data[1 * 2 + 1], 56.0); // (2,2): col 1, row 1
+        assert_eq!(data[2 + 1], 56.0); // (2,2): col 1, row 1
     }
 
     #[test]

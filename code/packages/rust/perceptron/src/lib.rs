@@ -13,7 +13,7 @@ impl Perceptron {
     pub fn new(lr: f64, epochs: usize) -> Self {
         Self {
             learning_rate: lr,
-            epochs: epochs,
+            epochs,
             weights: None,
             bias: 0.0,
         }

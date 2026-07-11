@@ -192,7 +192,8 @@ fn validate_safepoint_rejected() {
 fn validate_io_ops_rejected() {
     // io_in is still unsupported (raw byte-level input is not wired to WASM).
     // io_out is now SUPPORTED (LANG32) — it maps to call $__print_i64.
-    for op in &["io_in"] {
+    {
+        let op = &"io_in";
         let m = module_one("f", vec![], "void", vec![
             IIRInstr::new(*op, None, vec![], "void"),
         ]);

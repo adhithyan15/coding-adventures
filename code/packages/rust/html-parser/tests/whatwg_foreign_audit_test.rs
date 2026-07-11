@@ -373,8 +373,8 @@ fn assert_axis_count(suite: &ForeignAuditSuite, axis: &str, minimum: usize) {
     );
 }
 
-fn generic_audit_case<'a>(
-    raw_fixture: &'a str,
+fn generic_audit_case(
+    raw_fixture: &str,
     suite_name: &str,
     case_id: &str,
 ) -> GenericAuditCase {

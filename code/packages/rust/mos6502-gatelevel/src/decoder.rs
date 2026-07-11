@@ -202,7 +202,7 @@ fn optable(opcode: u8) -> Option<(&'static str, u8)> {
 /// Panics on illegal (undocumented) NMOS 6502 opcodes.
 pub fn decode(opcode: u8) -> DecodedInstruction {
     // Gate-level group decode on cc bits (opcode[1:0])
-    let cc_bit0 = (opcode >> 0) & 1;
+    let cc_bit0 = opcode & 1;
     let cc_bit1 = (opcode >> 1) & 1;
 
     // 2-to-4 decoder: produces one-hot class signals
@@ -228,7 +228,7 @@ pub fn is_legal(opcode: u8) -> bool {
 /// All branches follow the pattern `xxy10000` (bits 3–0 = 0000, bit 4 = 1).
 pub fn is_branch(opcode: u8) -> bool {
     let low_nibble_zero = and_gate(
-        and_gate(not_gate((opcode >> 0) & 1), not_gate((opcode >> 1) & 1)),
+        and_gate(not_gate(opcode & 1), not_gate((opcode >> 1) & 1)),
         and_gate(not_gate((opcode >> 2) & 1), not_gate((opcode >> 3) & 1)),
     );
     let bit4_set = and_gate((opcode >> 4) & 1, 1);

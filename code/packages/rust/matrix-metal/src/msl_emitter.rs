@@ -476,7 +476,7 @@ fn emit_matmul_with_folded_matrix(
 
     // Decode the constant matrix.  Bytes must be a multiple of 4
     // (f32) and the count must match a supported square shape.
-    if bytes.len() % 4 != 0 {
+    if !bytes.len().is_multiple_of(4) {
         return None;
     }
     let n_floats = bytes.len() / 4;
@@ -1233,10 +1233,8 @@ mod tests {
             let s = format_f32_literal(v);
             // Strip the trailing 'f' suffix to parse.
             let stripped = s.trim_end_matches('f');
-            let parsed: f32 = stripped.parse().expect(&format!(
-                "format_f32_literal output must parse as f32; got {}",
-                s
-            ));
+            let parsed: f32 = stripped.parse().unwrap_or_else(|_| panic!("format_f32_literal output must parse as f32; got {}",
+                s));
             assert_eq!(parsed.to_bits(), v.to_bits(), "round-trip failed for {}", v);
         }
     }

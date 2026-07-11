@@ -27,7 +27,7 @@
 
 use gate_netlist_format::{Direction, Instance, Level, Module, Net, Netlist, NetSlice, Port};
 use hdl_ir::{
-    ContAssign, Direction as HirDir, Expr, Hir, Module as HirModule, Ty,
+    ContAssign, Direction as HirDir, Expr, Hir, Module as HirModule,
 };
 
 // ---------------------------------------------------------------------------

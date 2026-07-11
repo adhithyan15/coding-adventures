@@ -81,7 +81,7 @@ pub const DISTANCE_MAP: [(i32, i32); 120] = [
 ///
 /// For codes 1..=120 the 2D mapping table is used.  For code 0 or codes
 /// > 120 the distance is used directly (after subtracting 120 and adding the
-/// distance directly in raster order, per the spec).
+/// > distance directly in raster order, per the spec).
 pub fn dist_code_to_offset(dist_code: u32, image_width: u32) -> usize {
     if dist_code == 0 {
         // Distance 0 is invalid; return 1 as a safe fallback.

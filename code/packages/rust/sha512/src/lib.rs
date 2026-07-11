@@ -494,24 +494,24 @@ mod tests {
 
     #[test]
     fn block_boundary_111() {
-        let r = sum512(&vec![0u8; 111]);
+        let r = sum512(&[0u8; 111]);
         assert_eq!(r.len(), 64);
-        assert_eq!(r, sum512(&vec![0u8; 111]));
+        assert_eq!(r, sum512(&[0u8; 111]));
     }
 
     #[test]
     fn block_boundary_112() {
-        assert_eq!(sum512(&vec![0u8; 112]).len(), 64);
+        assert_eq!(sum512(&[0u8; 112]).len(), 64);
     }
 
     #[test]
     fn block_boundary_111_and_112_differ() {
-        assert_ne!(sum512(&vec![0u8; 111]), sum512(&vec![0u8; 112]));
+        assert_ne!(sum512(&[0u8; 111]), sum512(&[0u8; 112]));
     }
 
     #[test]
     fn block_boundary_128() {
-        assert_eq!(sum512(&vec![0u8; 128]).len(), 64);
+        assert_eq!(sum512(&[0u8; 128]).len(), 64);
     }
 
     #[test]

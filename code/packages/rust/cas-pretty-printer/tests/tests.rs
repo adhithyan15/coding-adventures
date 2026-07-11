@@ -537,7 +537,7 @@ fn register_custom_head_formatter() {
             .iter()
             .map(|row| {
                 if let IRNode::Apply(a) = row {
-                    let cells: Vec<String> = a.args.iter().map(|c| fmt(c)).collect();
+                    let cells: Vec<String> = a.args.iter().map(fmt).collect();
                     format!("[{}]", cells.join(", "))
                 } else {
                     fmt(row)

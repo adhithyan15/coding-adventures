@@ -1119,7 +1119,7 @@ fn selected_output_probes(parsed: &ParsedNetlist, kind: AnalysisKind) -> Vec<Out
                 if card
                     .analysis
                     .as_deref()
-                    .map_or(true, |name| analysis_name_matches(name, kind)) =>
+                    .is_none_or(|name| analysis_name_matches(name, kind)) =>
             {
                 Some(card.probes.as_slice())
             }

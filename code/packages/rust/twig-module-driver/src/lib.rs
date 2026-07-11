@@ -3763,7 +3763,7 @@ mod tw05n_tests {
         assert_eq!(
             v.to_string(), "12",
             "make-span should have 12 instructions; got {}",
-            v.to_string()
+            v
         );
     }
 
@@ -3804,7 +3804,7 @@ mod tw05n_tests {
         assert_eq!(
             v.to_string(), "4",
             "dummy-span should have 4 instructions; got {}",
-            v.to_string()
+            v
         );
     }
 
@@ -3840,7 +3840,7 @@ mod tw05n_tests {
         assert_eq!(
             v.to_string(), "#t",
             "summary length should be >1000 chars; result was {}",
-            v.to_string()
+            v
         );
     }
 

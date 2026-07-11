@@ -3386,15 +3386,15 @@ fn api_catalog_routes(request: &WebRequest) -> Result<Vec<&'static ApiRouteDescr
         .filter(|route| {
             method
                 .as_deref()
-                .map_or(true, |method| route.method == method)
+                .is_none_or(|method| route.method == method)
         })
-        .filter(|route| category.map_or(true, |category| route.category == category))
+        .filter(|route| category.is_none_or(|category| route.category == category))
         .filter(|route| {
-            surface.map_or(true, |surface| surface == "all" || route.surface == surface)
+            surface.is_none_or(|surface| surface == "all" || route.surface == surface)
         })
-        .filter(|route| mutating.map_or(true, |mutating| route.mutates_runtime == mutating))
+        .filter(|route| mutating.is_none_or(|mutating| route.mutates_runtime == mutating))
         .filter(|route| {
-            authorized.map_or(true, |authorized| route.runtime_authorized == authorized)
+            authorized.is_none_or(|authorized| route.runtime_authorized == authorized)
         })
         .collect())
 }
@@ -5657,7 +5657,7 @@ fn runtime_event_links_json(entry: &RuntimeEventLogEntry<'_>) -> String {
             event
                 .entity_id
                 .as_ref()
-                .map(|entity_id| audit_entity_links_json(entity_id)),
+                .map(audit_entity_links_json),
             Some(format!(
                 "/api/smart_home/bridges/{}",
                 url_component(event.bridge_id.as_str())
@@ -7906,7 +7906,7 @@ fn state_history_events<'a>(
     Ok(events)
 }
 
-fn history_entity_filter<'a>(request: &'a WebRequest) -> Option<&'a str> {
+fn history_entity_filter(request: &WebRequest) -> Option<&str> {
     query_string(request, "entity_id").or_else(|| query_string(request, "filter_entity_id"))
 }
 

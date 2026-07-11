@@ -493,7 +493,7 @@ mod tests {
             block_dim: (32, 1, 1),
             ..KernelDescriptor::default()
         };
-        assert_eq!(k.total_threads(), 4 * 2 * 1 * 32);
+        assert_eq!(k.total_threads(), (4 * 2) * 32);
     }
 
     #[test]

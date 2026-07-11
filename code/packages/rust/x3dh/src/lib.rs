@@ -372,7 +372,7 @@ mod tests {
     fn prekey_public_matches_secret() {
         let pk = generate_prekey_pair();
         let s = pk.secret();
-        let derived_pub = x25519_public_key(&*s);
+        let derived_pub = x25519_public_key(&s);
         assert_eq!(pk.public, derived_pub);
     }
 
@@ -519,7 +519,7 @@ mod tests {
     fn secret_accessor_returns_correct_value() {
         let pk = generate_prekey_pair();
         let s = pk.secret();
-        let pub_from_accessor = x25519_public_key(&*s);
+        let pub_from_accessor = x25519_public_key(&s);
         assert_eq!(pk.public, pub_from_accessor);
     }
 
@@ -527,7 +527,7 @@ mod tests {
     fn x25519_secret_accessor_roundtrips() {
         let ik = generate_identity_keypair();
         let secret = ik.x25519_secret();
-        let derived_pub = x25519_public_key(&*secret);
+        let derived_pub = x25519_public_key(&secret);
         assert_eq!(ik.x25519_public, derived_pub);
     }
 }

@@ -448,8 +448,7 @@ mod tests {
     use super::*;
     use matrix_ir::{DType, Shape};
     use matrix_profile::{
-        DefaultPolicy, ProfileObservation, RangeClass, ShapeClass, SpecCache, SpecRouter,
-        SpecialisationPolicy, TensorObservation,
+        DefaultPolicy, ProfileObservation, RangeClass, ShapeClass, SpecCache, SpecRouter, TensorObservation,
     };
 
     fn key(op_kind: u8) -> SpecKey {

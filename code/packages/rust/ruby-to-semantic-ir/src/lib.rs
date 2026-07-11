@@ -6057,7 +6057,7 @@ mod tests {
                 Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
                 _ => None,
             })
-            .or_else(|| match &t.body.value {
+            .or(match &t.body.value {
                 e @ Expr::If { .. } => Some(e),
                 _ => None,
             })
@@ -7390,7 +7390,7 @@ b = "y"
 
     /// Helper: extract the `Expr::If` from a top-level `case` statement
     /// — Phase 6u/7d lowers case to `Stmt::ExprStmt(Expr::If(...))`.
-    fn extract_case_if<'a>(b: &'a semantic_ir::Block) -> &'a Expr {
+    fn extract_case_if(b: &semantic_ir::Block) -> &Expr {
         // The case is typically the second statement (first is the
         // `x = ...` LetBinding from the test prelude).
         match &b.stmts[1] {

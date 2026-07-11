@@ -5779,7 +5779,7 @@ impl Lowerer {
         // span covers the whole statement.  Keeping the binding so
         // the lookup helper stays useful for callers that need it
         // (e.g. error messages).
-        .inspect(|s| {
+        .inspect(|_s| {
             let _ = name_span;
         })
     }

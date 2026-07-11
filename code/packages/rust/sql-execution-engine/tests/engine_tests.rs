@@ -264,7 +264,7 @@ fn test_order_by_name_asc() {
         .filter_map(|r| get_str(r, "name"))
         .collect();
     let mut sorted = names.clone();
-    sorted.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()));
+    sorted.sort_by_key(|a| a.to_lowercase());
     assert_eq!(names, sorted);
 }
 

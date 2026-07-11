@@ -323,12 +323,12 @@ fn choose_dimensions(total: usize) -> (u32, u32) {
         .max(MIN_COLS)
         .min(MAX_COLS);
 
-    let mut r = ((total as u32 + c - 1) / c).max(MIN_ROWS);
+    let mut r = (total as u32).div_ceil(c).max(MIN_ROWS);
 
     if r < MIN_ROWS {
         r = MIN_ROWS;
-        c = ((total as u32 + r - 1) / r).max(MIN_COLS).min(MAX_COLS);
-        r = ((total as u32 + c - 1) / c).max(MIN_ROWS);
+        c = (total as u32).div_ceil(r).max(MIN_COLS).min(MAX_COLS);
+        r = (total as u32).div_ceil(c).max(MIN_ROWS);
     }
 
     r = r.min(MAX_ROWS);
@@ -465,12 +465,12 @@ pub fn encode(data: &[u8], options: &PDF417Options) -> Result<ModuleGrid, PDF417
     let total_cwords = full_data.len() + ecc_cwords.len();
 
     let (cols, rows) = if let Some(c) = options.columns {
-        if c < MIN_COLS || c > MAX_COLS {
+        if !(MIN_COLS..=MAX_COLS).contains(&c) {
             return Err(PDF417Error::InvalidDimensions(format!(
                 "columns must be 1–30, got {c}"
             )));
         }
-        let r = ((total_cwords as u32 + c - 1) / c).max(MIN_ROWS);
+        let r = (total_cwords as u32).div_ceil(c).max(MIN_ROWS);
         if r > MAX_ROWS {
             return Err(PDF417Error::InputTooLong(format!(
                 "Data requires {r} rows (max 90) with {c} columns."
@@ -491,7 +491,7 @@ pub fn encode(data: &[u8], options: &PDF417Options) -> Result<ModuleGrid, PDF417
     // ── Pad to fill grid exactly ─────────────────────────────────────────
     let padding_count = (cols * rows) as usize - total_cwords;
     let mut padded_data = full_data;
-    padded_data.extend(std::iter::repeat(PADDING_CW).take(padding_count));
+    padded_data.extend(std::iter::repeat_n(PADDING_CW, padding_count));
 
     // Full codeword sequence: [data+padding, ecc]
     let mut full_sequence = padded_data;

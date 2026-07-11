@@ -439,27 +439,27 @@ mod tests {
 
     #[test]
     fn block_boundary_55() {
-        assert_eq!(sha256(&vec![0u8; 55]).len(), 32);
+        assert_eq!(sha256(&[0u8; 55]).len(), 32);
     }
 
     #[test]
     fn block_boundary_56() {
-        assert_eq!(sha256(&vec![0u8; 56]).len(), 32);
+        assert_eq!(sha256(&[0u8; 56]).len(), 32);
     }
 
     #[test]
     fn block_boundary_55_and_56_differ() {
-        assert_ne!(sha256(&vec![0u8; 55]), sha256(&vec![0u8; 56]));
+        assert_ne!(sha256(&[0u8; 55]), sha256(&[0u8; 56]));
     }
 
     #[test]
     fn block_boundary_64() {
-        assert_eq!(sha256(&vec![0u8; 64]).len(), 32);
+        assert_eq!(sha256(&[0u8; 64]).len(), 32);
     }
 
     #[test]
     fn block_boundary_128() {
-        assert_eq!(sha256(&vec![0u8; 128]).len(), 32);
+        assert_eq!(sha256(&[0u8; 128]).len(), 32);
     }
 
     #[test]

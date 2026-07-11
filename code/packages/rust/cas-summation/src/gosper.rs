@@ -599,10 +599,10 @@ pub fn hyp_ratio(h: &Hyp) -> Option<(Poly, Poly)> {
         numer = poly_scalar(&numer, factor);
     }
     for s in &h.gamma_shifts {
-        numer = poly_mul(&numer, &vec![f_from_i128(*s), F1]);
+        numer = poly_mul(&numer, &[f_from_i128(*s), F1]);
     }
     for t in &h.recip_gamma_shifts {
-        denom = poly_mul(&denom, &vec![f_from_i128(*t), F1]);
+        denom = poly_mul(&denom, &[f_from_i128(*t), F1]);
     }
     Some((numer, denom))
 }

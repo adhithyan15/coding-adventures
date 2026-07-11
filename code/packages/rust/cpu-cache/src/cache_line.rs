@@ -185,7 +185,7 @@ mod tests {
     #[test]
     fn test_touch_updates_lru() {
         let mut line = CacheLine::new(64);
-        line.fill(1, &vec![0; 64], 10);
+        line.fill(1, &[0; 64], 10);
         assert_eq!(line.last_access, 10);
         line.touch(50);
         assert_eq!(line.last_access, 50);
@@ -194,7 +194,7 @@ mod tests {
     #[test]
     fn test_invalidate() {
         let mut line = CacheLine::new(64);
-        line.fill(1, &vec![0; 64], 10);
+        line.fill(1, &[0; 64], 10);
         line.dirty = true;
         line.invalidate();
         assert!(!line.valid);
@@ -205,7 +205,7 @@ mod tests {
     fn test_display() {
         let mut line = CacheLine::new(64);
         assert_eq!(format!("{}", line), "CacheLine(--, tag=0x0, lru=0)");
-        line.fill(0xFF, &vec![0; 64], 42);
+        line.fill(0xFF, &[0; 64], 42);
         assert_eq!(format!("{}", line), "CacheLine(V-, tag=0xFF, lru=42)");
         line.dirty = true;
         assert_eq!(format!("{}", line), "CacheLine(VD, tag=0xFF, lru=42)");

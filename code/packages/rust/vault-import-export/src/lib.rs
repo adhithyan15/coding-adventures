@@ -212,11 +212,11 @@ impl PartialEq for PortableRecord {
         self.kind == other.kind
             && self.title == other.title
             && self.username == other.username
-            && self.password.as_ref().map(|p| &**p) == other.password.as_ref().map(|p| &**p)
+            && self.password.as_deref() == other.password.as_deref()
             && self.url == other.url
             && self.notes == other.notes
-            && self.totp_seed.as_ref().map(|p| &**p)
-                == other.totp_seed.as_ref().map(|p| &**p)
+            && self.totp_seed.as_deref()
+                == other.totp_seed.as_deref()
             && self.tags == other.tags
             && self.custom_fields.len() == other.custom_fields.len()
             && self

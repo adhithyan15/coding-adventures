@@ -2481,7 +2481,7 @@ mod tests {
         let injected = "x\n// pwn();";
         let safe = sanitize_comment(injected);
         assert!(!safe.contains('\n'));
-        let s_ls = format!("a\u{2028}b\u{2029}c\u{0085}d");
+        let s_ls = "a\u{2028}b\u{2029}c\u{0085}d".to_string();
         let safe2 = sanitize_comment(&s_ls);
         for c in &['\u{2028}', '\u{2029}', '\u{0085}'] {
             assert!(!safe2.contains(*c));

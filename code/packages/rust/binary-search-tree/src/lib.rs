@@ -243,10 +243,10 @@ pub fn bst_successor<'a, T: Ord>(
     best
 }
 
-pub fn bst_kth_smallest<'a, T: Ord>(
-    root: &'a Option<Box<BSTNode<T>>>,
+pub fn bst_kth_smallest<T: Ord>(
+    root: &Option<Box<BSTNode<T>>>,
     k: usize,
-) -> Option<&'a T> {
+) -> Option<&T> {
     if k == 0 {
         return None;
     }

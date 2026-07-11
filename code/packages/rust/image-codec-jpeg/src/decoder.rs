@@ -393,8 +393,8 @@ fn decode_scan(
     }
 
     // Allocate planes for decoded samples (one per component, padded to 8×8 blocks).
-    let blocks_wide = (w + 7) / 8;
-    let blocks_tall = (h + 7) / 8;
+    let blocks_wide = w.div_ceil(8);
+    let blocks_tall = h.div_ceil(8);
     let padded_w = blocks_wide * 8;
     let padded_h = blocks_tall * 8;
 

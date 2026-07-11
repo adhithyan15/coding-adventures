@@ -325,7 +325,7 @@ pub unsafe extern "C" fn silicon_mosfet_threshold_voltage(
 ) -> c_int {
     let dev = unsafe { read_c_str(device_type) };
     match dp::MOSFETParams::new(&dev, l, w, t_ox, n_body, phi_ms, q_ox, t) {
-        Err(m) => unsafe { return err_msg(&m, err, err_cap) },
+        Err(m) => unsafe { err_msg(&m, err, err_cap) },
         Ok(p)  => match p.threshold_voltage(v_sb) {
             Ok(vt) => unsafe { ok_f64(vt, out) },
             Err(m) => unsafe { err_msg(&m, err, err_cap) },

@@ -503,7 +503,7 @@ pub fn encode_ac(
         // Actually we need EOB if we didn't emit all 63 coefficients.
         // Simplified: always emit EOB after the loop to signal end.
         // But we only need it if there are trailing zeros.
-        if last_nonzero.map_or(true, |lz| lz < 62) {
+        if last_nonzero.is_none_or(|lz| lz < 62) {
             encode_ac_symbol(writer, 0x00, codes)?; // EOB
         }
     }

@@ -456,13 +456,13 @@ pub fn split_levels(
 /// `target_level = 0` or `band = Approximation` with `target_level < J`
 /// are invalid (those approximations were recursively decomposed
 /// and are not in the flattened output).
-pub fn slice_level<'a>(
-    coeffs: &'a [f32],
+pub fn slice_level(
+    coeffs: &[f32],
     signal_len: usize,
     levels: u32,
     target_level: u32,
     band: Band,
-) -> Result<&'a [f32], WaveletError> {
+) -> Result<&[f32], WaveletError> {
     if target_level == 0 {
         return Err(WaveletError::InvalidParam(
             "target_level must be ≥ 1 (the original signal is not in the DWT output)".into(),
@@ -751,7 +751,7 @@ fn upsample_and_filter(
             // odd positions.
             let src_pos = n as i64 + i as i64;
             if src_pos % 2 == 1 {
-                let k = ((src_pos - 1) / 2) as i64;
+                let k = (src_pos - 1) / 2;
                 let ca_val = sample_with_boundary(ca, k, boundary);
                 let cd_val = sample_with_boundary(cd, k, boundary);
                 acc += h_syn[i] * ca_val + g_syn[i] * cd_val;

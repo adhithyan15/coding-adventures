@@ -445,12 +445,7 @@ fn exact_sqrt_i64(n: i64) -> Option<i64> {
         return None;
     }
     let root = (n as f64).sqrt() as i64;
-    for cand in [root - 1, root, root + 1] {
-        if cand >= 0 && cand * cand == n {
-            return Some(cand);
-        }
-    }
-    None
+    [root - 1, root, root + 1].into_iter().find(|&cand| cand >= 0 && cand * cand == n)
 }
 
 fn exp_r(r: Frac, x: &IRNode) -> IRNode {

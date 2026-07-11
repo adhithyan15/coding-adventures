@@ -367,7 +367,7 @@ impl SearchIndexSummary {
 fn lowercase_ascii(s: &str) -> Vec<u8> {
     let mut out: Vec<u8> = Vec::with_capacity(s.len());
     for b in s.bytes() {
-        if (b'A'..=b'Z').contains(&b) {
+        if b.is_ascii_uppercase() {
             out.push(b + 32);
         } else {
             out.push(b);

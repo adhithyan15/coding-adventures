@@ -505,8 +505,8 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 // block_bits = stored_value + 2 (3-bit stored value per spec).
                 let block_bits = br.read_bits(3) + 2;
                 let block_size = 1u32 << block_bits;
-                let sub_w = (width  + block_size - 1) / block_size;
-                let sub_h = (height + block_size - 1) / block_size;
+                let sub_w = width.div_ceil(block_size);
+                let sub_h = height.div_ceil(block_size);
                 let num_sub = (sub_w * sub_h) as usize;
                 let sub_image_data = read_entropy_segment(&mut br, num_sub, sub_w)?;
                 applied_transforms.push(AppliedTransform::Predictor {
@@ -522,8 +522,8 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                 // Color transform.
                 let block_bits = br.read_bits(3) + 2;
                 let block_size = 1u32 << block_bits;
-                let sub_w = (width  + block_size - 1) / block_size;
-                let sub_h = (height + block_size - 1) / block_size;
+                let sub_w = width.div_ceil(block_size);
+                let sub_h = height.div_ceil(block_size);
                 let num_sub = (sub_w * sub_h) as usize;
                 let sub_image_data = read_entropy_segment(&mut br, num_sub, sub_w)?;
                 applied_transforms.push(AppliedTransform::Color { block_bits, sub_image_data });
@@ -551,7 +551,7 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
                     else if num_colors <= 16 { 2 }
                     else { 1 };
                 // Pixel data is encoded with this reduced width.
-                let packed_width = (width + pack_bits - 1) / pack_bits;
+                let packed_width = width.div_ceil(pack_bits);
                 effective_width = packed_width;
                 applied_transforms.push(AppliedTransform::ColorIndex {
                     palette,

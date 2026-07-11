@@ -129,7 +129,7 @@ pub fn round_trip_json(input: &str) -> Result<String, String> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
-    if s.len() % 2 != 0 {
+    if !s.len().is_multiple_of(2) {
         return Err(format!("hex string length must be even, got {}", s.len()));
     }
     let bytes = s.as_bytes();

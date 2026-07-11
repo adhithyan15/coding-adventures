@@ -23,7 +23,7 @@
 
 use interpreter_ir::function::IIRFunction;
 
-use crate::types::{DispatchCost, TypeSite};
+use crate::types::TypeSite;
 
 /// Sort *sites* in-place by descending impact score.
 ///

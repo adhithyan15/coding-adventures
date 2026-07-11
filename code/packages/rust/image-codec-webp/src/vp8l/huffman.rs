@@ -379,7 +379,7 @@ fn write_complex_code(bw: &mut BitWriter, code_lengths: &[u32]) {
     // Canonical: sym i → code i  (in 4 bits, MSB-first).
     // Reversed for LSB-first writing: reverse_bits_n(i, 4).
     for i in 0..code_lengths.len() {
-        let cl = code_lengths[i].min(15) as u32;
+        let cl = code_lengths[i].min(15);
         // Encode meta-symbol `cl` using 4-bit reversed canonical code.
         let reversed = reverse_bits_n(cl, 4) as u64;
         bw.write_bits(reversed, 4);

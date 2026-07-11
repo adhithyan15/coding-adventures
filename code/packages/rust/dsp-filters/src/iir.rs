@@ -303,7 +303,7 @@ mod tests {
         impulse[0] = 1.0;
         let out = iir(&impulse, &[1.0], &[1.0, -0.5]).unwrap();
         let expected: Vec<f32> =
-            (0..8).map(|i| 0.5f32.powi(i as i32)).collect();
+            (0..8).map(|i| 0.5f32.powi(i)).collect();
         assert_close(&out, &expected, 1e-6);
     }
 

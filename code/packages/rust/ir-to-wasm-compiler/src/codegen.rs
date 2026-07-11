@@ -133,14 +133,14 @@ mod tests {
     // Test 1: name() returns "wasm"
     #[test]
     fn name_is_wasm() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         assert_eq!(gen.name(), "wasm");
     }
 
     // Test 2: validate() returns empty Vec on a valid program
     #[test]
     fn validate_empty_on_valid() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         let errors = gen.validate(&minimal_prog());
         assert!(
             errors.is_empty(),
@@ -154,7 +154,7 @@ mod tests {
     //         This ensures validate() surfaces lowering errors as strings.
     #[test]
     fn validate_fails_on_bad_syscall() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         let bad = IrProgram {
             instructions: vec![
                 IrInstruction::new(
@@ -184,7 +184,7 @@ mod tests {
     // Test 4: generate() returns a WasmModule for a valid program
     #[test]
     fn generate_produces_wasm_module() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         let module = gen.generate(&minimal_prog());
         // A compiled WASM module must have at least one function type and one export
         assert!(!module.exports.is_empty(), "expected at least one export");
@@ -193,7 +193,7 @@ mod tests {
     // Test 5: generate() WasmModule exports the _start function
     #[test]
     fn generate_exports_start() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         let module = gen.generate(&minimal_prog());
         let export_names: Vec<&str> = module.exports.iter().map(|e| e.name.as_str()).collect();
         assert!(
@@ -206,7 +206,7 @@ mod tests {
     // Test 6: validate() then generate() on the same program succeeds end-to-end
     #[test]
     fn validate_then_generate() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         let prog = minimal_prog();
         let errors = gen.validate(&prog);
         assert!(errors.is_empty(), "unexpected errors: {:?}", errors);
@@ -225,7 +225,7 @@ mod tests {
     // Test 8: validate() is idempotent — calling it twice gives the same result
     #[test]
     fn validate_idempotent() {
-        let gen = WasmCodeGenerator::default();
+        let gen = WasmCodeGenerator;
         let prog = minimal_prog();
         let e1 = gen.validate(&prog);
         let e2 = gen.validate(&prog);

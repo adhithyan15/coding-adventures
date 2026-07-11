@@ -902,7 +902,7 @@ mod tests {
         let end_tok = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
-            .last()
+            .next_back()
             .unwrap();
         assert_eq!(end_tok.value, "end");
         assert_eq!(end_tok.type_, TokenType::Keyword);

@@ -217,7 +217,7 @@ mod tests {
 
         // Check that the bindings cover all three children.
         let mut children: Vec<Term> = dag.proofs.iter().map(|p| p.bindings.walk_var(&x)).collect();
-        children.sort_by(|a, b| a.to_string().cmp(&b.to_string()));
+        children.sort_by_key(|a| a.to_string());
         assert_eq!(
             children,
             vec![atom("bart"), atom("lisa"), atom("maggie")]

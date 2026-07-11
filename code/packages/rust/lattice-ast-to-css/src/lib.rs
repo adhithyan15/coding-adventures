@@ -541,12 +541,9 @@ mod tests {
     fn test_default_flag_already_defined() {
         let source = "$color: red; $color: blue !default; h1 { color: $color; }";
         let result = transform_lattice(source);
-        match result {
-            Ok(css) => {
-                assert!(css.contains("color: red"), "!default should not overwrite: {css}");
-                assert!(!css.contains("blue"), "blue should not appear: {css}");
-            }
-            Err(_) => {}
+        if let Ok(css) = result {
+            assert!(css.contains("color: red"), "!default should not overwrite: {css}");
+            assert!(!css.contains("blue"), "blue should not appear: {css}");
         }
     }
 
@@ -650,12 +647,9 @@ mod tests {
             .item { padding: spacing(2); }
         "#;
         let result = transform_lattice(source);
-        match result {
-            Ok(css) => {
-                assert!(css.contains("16") || css.contains("padding:"),
-                    "Arithmetic in function should work: {css}");
-            }
-            Err(_) => {}
+        if let Ok(css) = result {
+            assert!(css.contains("16") || css.contains("padding:"),
+                "Arithmetic in function should work: {css}");
         }
     }
 

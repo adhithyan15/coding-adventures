@@ -976,7 +976,7 @@ mod tests {
         let n = src_data.len() as u32;
 
         let src_buf = device.alloc_with_bytes(&src_data).unwrap();
-        let mut dst_buf = device.alloc(src_data.len()).unwrap();
+        let dst_buf = device.alloc(src_data.len()).unwrap();
 
         let module   = device.compile(CUDA_C).unwrap();
         let function = module.function("invert").unwrap();
