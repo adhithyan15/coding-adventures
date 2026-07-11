@@ -108,6 +108,10 @@ fn numeric_demo() -> Module {
         print_stmt(method(ilit(0), "between?", vec![ilit(1), ilit(10)])), // #f
         // overflow-degrade: i64::MAX.round(-1) returns self, not a wrapped garbage value.
         print_stmt(method(ilit(9223372036854775807), "round", vec![ilit(-1)])),
+        // i64::MIN.divmod(-1) must NOT panic (plain `%` traps on MIN % -1 in
+        // both debug and release); wrapping_rem yields 0 so the quotient wraps
+        // to i64::MIN and the remainder is 0.
+        print_stmt(method(ilit(i64::MIN), "divmod", vec![ilit(-1)])),
     ];
 
     Module {
@@ -234,6 +238,7 @@ fn numeric_methods_compile_and_run() {
             "#t",        // 5.between?(1, 10)
             "#f",        // 0.between?(1, 10)
             "9223372036854775807", // i64::MAX.round(-1) — overflow-degrade to self
+            "[-9223372036854775808, 0]", // i64::MIN.divmod(-1) — no panic (wrapping_rem)
         ],
         "unexpected program output; full stdout:\n{stdout}"
     );

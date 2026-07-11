@@ -2880,8 +2880,13 @@ pub const RUNTIME: &str = r##"mod __sir {
     // Ruby's integer division: the quotient FLOORED toward −∞ (`-7 / 2 == -4`),
     // unlike Rust's truncating `/`.  Callers guarantee `b != 0`.
     fn floor_div_i64(a: i64, b: i64) -> i64 {
+        // `wrapping_rem` (like `wrapping_div`) avoids the `i64::MIN % -1` panic —
+        // plain `%` traps on that case in BOTH debug and release, which would
+        // escape the typed-error floor.  It yields `0` there (the correct
+        // remainder), so the sign-correction branch is skipped and `q` (=
+        // `i64::MIN` from `wrapping_div`) is returned — Ruby parity.
         let q = a.wrapping_div(b);
-        if (a % b != 0) && ((a < 0) != (b < 0)) {
+        if (a.wrapping_rem(b) != 0) && ((a < 0) != (b < 0)) {
             q - 1
         } else {
             q
