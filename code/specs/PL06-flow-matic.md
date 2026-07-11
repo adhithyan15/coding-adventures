@@ -161,49 +161,69 @@ the `NAME` pattern and then promoted to `KEYWORD` via the keyword set — they a
 listed there one per line (the grammar-tools parser stores each `keywords:` line
 verbatim and does not split on spaces).
 
-## Parser (`flow_matic.grammar`) — planned for PR2
+## Parser (`flow_matic.grammar`) — implemented in PR2 (#7963)
 
-The parser wraps `parser::GrammarParser` and produces a generic CST. Proposed
-productions for the demonstrated subset:
+The parser wraps `parser::GrammarParser` (a recursive-descent PEG parser with
+packrat memoization) and produces a generic CST rooted at `program`. The
+implemented productions for the demonstrated subset:
 
 ```
-program        = { statement } ;
-statement      = "(" NUMBER ")" clause { ";" clause } "." ;
+program      = { statement } [ program_end ] ;
+program_end  = LPAREN "END" RPAREN ;
+statement    = LPAREN NUMBER RPAREN clause { SEMICOLON clause } PERIOD ;
 
-clause         = input_clause | output_clause | hsp_clause | compare_clause
-               | if_clause | otherwise_clause | transfer_clause | move_clause
-               | jump_clause | read_item_clause | write_item_clause
-               | test_clause | rewind_clause | closeout_clause | stop_clause ;
+clause       = input_clause | output_clause | hsp_clause
+             | compare_clause | if_clause | otherwise_clause
+             | transfer_clause | move_clause | jump_clause
+             | read_item_clause | write_item_clause
+             | test_clause | rewind_clause | closeout_clause | stop_clause ;
 
-field          = NAME "(" NAME ")" ;                 (* PRODUCT-NO (A) *)
-target         = "OPERATION" NUMBER ;
+field        = NAME LPAREN NAME RPAREN ;             (* PRODUCT-NO (A) *)
+target       = "OPERATION" NUMBER ;
+condition    = "GREATER" | "EQUAL" | "LESS" | ( "END" "OF" "DATA" ) ;
 
-input_clause   = "INPUT"  { NAME NAME } ;            (* logical-name FILE-x pairs *)
-output_clause  = "OUTPUT" { NAME NAME } ;
-hsp_clause     = "HSP" NAME ;
-compare_clause = "COMPARE" field "WITH" field ;
-if_clause      = "IF" ( "GREATER" | "EQUAL" | "LESS"
-                      | "END" "OF" "DATA" ) "GO" "TO" target ;
+input_clause  = "INPUT"  file_pair { file_pair } ;   (* logical-name FILE-x pairs *)
+output_clause = "OUTPUT" file_pair { file_pair } ;
+file_pair     = NAME NAME ;
+hsp_clause    = "HSP" NAME ;
+compare_clause   = "COMPARE" field "WITH" field ;
+if_clause        = "IF" condition "GO" "TO" target ;
 otherwise_clause = "OTHERWISE" "GO" "TO" target ;
 transfer_clause  = "TRANSFER" NAME "TO" NAME ;
 move_clause      = "MOVE" field "TO" field ;
 jump_clause      = "JUMP" "TO" target ;
-read_item_clause = "READ-ITEM" NAME [ ";" if_clause ] ;
-write_item_clause= "WRITE-ITEM" NAME ;
-test_clause      = "TEST" field "AGAINST" ( NAME | NUMBER ) ;
-rewind_clause    = "REWIND" NAME ;
-closeout_clause  = "CLOSE-OUT" "FILES" NAME { ";" NAME } ;
-stop_clause      = "STOP" [ "(" "END" ")" ] ;
+read_item_clause  = "READ-ITEM"  NAME ;
+write_item_clause = "WRITE-ITEM" NAME ;
+test_clause     = "TEST" field "AGAINST" ( NAME | NUMBER ) ;
+rewind_clause   = "REWIND" NAME ;
+closeout_clause = "CLOSE-OUT" "FILES" NAME { SEMICOLON NAME } ;
+stop_clause     = "STOP" [ LPAREN "END" RPAREN ] ;
 ```
 
-Two quirks the PR2 grammar must handle, both resolved by the shared parser's
-backtracking, and both getting explicit tests:
+**Divergences from the PR1 sketch, and why** (per repo spec-sync policy):
+
+- **`END OF DATA` is a `condition`, and `read_item_clause` is just
+  `"READ-ITEM" NAME`.** The PR1 sketch nested the end-of-file test inside
+  `read_item_clause` as `[ ";" if_clause ]`. But in the source it is written as
+  a `;`-separated *sibling* clause (`READ-ITEM A ; IF END OF DATA GO TO
+  OPERATION 14`), so the implemented grammar treats it uniformly as another
+  clause under the statement's `{ SEMICOLON clause }` loop — simpler and
+  consistent with every other `;`-separated clause. `END OF DATA` therefore
+  became a fourth alternative of the extracted `condition` rule.
+- **`program_end` was added** so the canonical program's trailing `(END)`
+  marker (`(17) STOP . (END)`) parses; the whole program now parses end to end.
+- **Token *types* (`LPAREN`, `RPAREN`, …) rather than value literals** are used
+  for punctuation, for clarity.
+
+Two structural quirks, both with explicit tests:
 
 1. **Three-way branch in one statement** — `COMPARE … ; IF GREATER … ; IF EQUAL
    … ; OTHERWISE …` is a single statement whose clauses are `;`-separated.
 2. **`CLOSE-OUT FILES C ; D .`** — here `;` separates *file names* within one
-   clause, overlapping with the clause separator. Backtracking lets
-   `closeout_clause` greedily consume `; D` where a fresh clause would fail.
+   clause, overlapping the clause separator. **PEG greediness** resolves it: the
+   inner `{ SEMICOLON NAME }` runs first and consumes `; D` before the
+   statement's own `{ SEMICOLON clause }` loop ever sees it — no backtracking
+   needed.
 
 ## Test Strategy
 
@@ -220,12 +240,16 @@ backtracking, and both getting explicit tests:
   TO OPERATION 10`, `READ-ITEM A ; IF END OF DATA …`) produce the expected
   streams, and the two-operation program head tokenises with one EOF.
 
-### Parser tests (PR2, planned)
+### Parser tests (PR2, implemented)
 
 - Each clause type produces the expected CST shape.
-- The three-way `IF/OTHERWISE` branch parses as one statement with four clauses.
-- `CLOSE-OUT FILES C ; D .` parses with both file names under one clause.
-- The full canonical program parses end to end.
+- The three-way `IF/OTHERWISE` branch parses as one statement (two `if_clause` +
+  one `otherwise_clause`), and `READ-ITEM A ; IF END OF DATA …` parses the
+  end-of-file test as a sibling `if_clause` with an `END OF DATA` condition.
+- `CLOSE-OUT FILES C ; D .` parses with both file names under one clause (exactly
+  one `closeout_clause`, and no stray second clause).
+- The full canonical program — all 18 operations plus the `(END)` marker —
+  parses end to end.
 
 ## Future Extensions
 
