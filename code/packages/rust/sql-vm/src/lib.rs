@@ -1043,7 +1043,9 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | TRIM     | 1–2  | Strip whitespace, or a given character set, from both ends |
 /// | LTRIM    | 1–2  | Strip whitespace, or a given character set, from the left  |
 /// | RTRIM    | 1–2  | Strip whitespace, or a given character set, from the right |
-/// | SUBSTR   | 2–3  | 1-indexed substring extraction                        |
+/// | SUBSTR   | 2–3  | 1-indexed substring extraction (alias: SUBSTRING)     |
+/// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
+/// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
@@ -1177,7 +1179,51 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
 
         "RTRIM" => trim_builtin("RTRIM", &args, false, true),
 
-        "SUBSTR" => {
+        "CONCAT" => {
+            // CONCAT(x, y, …): concatenate every argument's text. A NULL argument
+            // contributes the empty string (it does NOT make the result NULL), so
+            // `concat('a', NULL, 'c')` = 'ac'. The result is always text; at least
+            // one argument is required. `trim_coerce` supplies the Int/Bool→text
+            // rule and declines Float/Blob (their SQLite text form is subtle).
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch("CONCAT expects at least 1 arg".into()));
+            }
+            let mut out = String::new();
+            for a in &args {
+                if let Some(s) = trim_coerce("CONCAT", a)? {
+                    out.push_str(&s);
+                }
+            }
+            Ok(SqlValue::Text(out))
+        }
+
+        "CONCAT_WS" => {
+            // CONCAT_WS(sep, x, y, …): join the value arguments with `sep`. Unlike
+            // CONCAT, a NULL value argument is SKIPPED entirely (not joined as
+            // empty), so `concat_ws('-', 'a', NULL, 'c')` = 'a-c'. A NULL separator
+            // makes the whole result NULL. At least two arguments are required
+            // (the separator plus one value).
+            if args.len() < 2 {
+                return Err(VmError::TypeMismatch(format!(
+                    "CONCAT_WS expects at least 2 args, got {}",
+                    args.len()
+                )));
+            }
+            let sep = match trim_coerce("CONCAT_WS", &args[0])? {
+                None => return Ok(SqlValue::Null),
+                Some(s) => s,
+            };
+            let mut parts: Vec<String> = Vec::new();
+            for a in &args[1..] {
+                if let Some(s) = trim_coerce("CONCAT_WS", a)? {
+                    parts.push(s);
+                }
+            }
+            Ok(SqlValue::Text(parts.join(&sep)))
+        }
+
+        // `SUBSTRING` is a spelling of `SUBSTR` — identical semantics.
+        "SUBSTR" | "SUBSTRING" => {
             if args.len() < 2 || args.len() > 3 {
                 return Err(VmError::TypeMismatch(format!("SUBSTR expects 2 or 3 args, got {}", args.len())));
             }
@@ -3857,6 +3903,82 @@ mod tests {
         // empty `args` must be a clean error — never an out-of-bounds panic.
         for name in ["TRIM", "LTRIM", "RTRIM"] {
             assert!(call_builtin(name, vec![]).is_err(), "{name}() should error, not panic");
+        }
+    }
+
+    #[test]
+    fn builtin_concat_joins_all_arguments() {
+        let c = |vs: Vec<SqlValue>| call_builtin("CONCAT", vs).unwrap();
+        assert_eq!(
+            c(vec![SqlValue::Text("a".into()), SqlValue::Text("b".into()), SqlValue::Text("c".into())]),
+            SqlValue::Text("abc".into())
+        );
+        // A NULL argument contributes the empty string (does not nullify).
+        assert_eq!(
+            c(vec![SqlValue::Text("a".into()), SqlValue::Null, SqlValue::Text("c".into())]),
+            SqlValue::Text("ac".into())
+        );
+        // Integers/booleans coerce to their decimal text.
+        assert_eq!(
+            c(vec![SqlValue::Int(12), SqlValue::Text("x".into())]),
+            SqlValue::Text("12x".into())
+        );
+        // All-NULL concatenation is the empty string, not NULL.
+        assert_eq!(c(vec![SqlValue::Null]), SqlValue::Text("".into()));
+        // Zero arguments is an arity error.
+        assert!(call_builtin("CONCAT", vec![]).is_err());
+        // Floats are declined (their SQLite text form is subtle), like HEX/QUOTE.
+        assert!(call_builtin("CONCAT", vec![SqlValue::Float(2.5)]).is_err());
+    }
+
+    #[test]
+    fn builtin_concat_ws_joins_with_separator() {
+        let c = |vs: Vec<SqlValue>| call_builtin("CONCAT_WS", vs).unwrap();
+        assert_eq!(
+            c(vec![
+                SqlValue::Text("-".into()),
+                SqlValue::Text("a".into()),
+                SqlValue::Text("b".into()),
+                SqlValue::Text("c".into()),
+            ]),
+            SqlValue::Text("a-b-c".into())
+        );
+        // NULL value arguments are SKIPPED entirely (not joined as empty).
+        assert_eq!(
+            c(vec![
+                SqlValue::Text("-".into()),
+                SqlValue::Text("a".into()),
+                SqlValue::Null,
+                SqlValue::Text("c".into()),
+            ]),
+            SqlValue::Text("a-c".into())
+        );
+        // All-NULL values → empty string (separator never appears).
+        assert_eq!(
+            c(vec![SqlValue::Text("-".into()), SqlValue::Null, SqlValue::Null]),
+            SqlValue::Text("".into())
+        );
+        // A NULL separator makes the whole result NULL.
+        assert_eq!(
+            c(vec![SqlValue::Null, SqlValue::Text("a".into()), SqlValue::Text("b".into())]),
+            SqlValue::Null
+        );
+        // Fewer than two arguments is an arity error.
+        assert!(call_builtin("CONCAT_WS", vec![SqlValue::Text("-".into())]).is_err());
+    }
+
+    #[test]
+    fn builtin_substring_is_an_alias_of_substr() {
+        // SUBSTRING must behave identically to SUBSTR for every arity.
+        for args in [
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(2)],
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(2), SqlValue::Int(3)],
+            vec![SqlValue::Text("hello".into()), SqlValue::Int(-2), SqlValue::Int(1)],
+        ] {
+            assert_eq!(
+                call_builtin("SUBSTRING", args.clone()).unwrap(),
+                call_builtin("SUBSTR", args).unwrap(),
+            );
         }
     }
 }

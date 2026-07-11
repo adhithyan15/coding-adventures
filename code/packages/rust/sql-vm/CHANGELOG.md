@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.4] - Unreleased
+
+### Added
+
+- **`CONCAT(x, …)`** — concatenate every argument's text. A NULL argument
+  contributes the empty string (it does not nullify), so
+  `CONCAT('a', NULL, 'c')` = `'ac'`; the result is always text; at least one
+  argument is required.
+- **`CONCAT_WS(sep, x, …)`** — join the value arguments with `sep`. Unlike
+  CONCAT, a NULL value argument is *skipped* entirely (`CONCAT_WS('-','a',NULL,'c')`
+  = `'a-c'`); a NULL separator makes the whole result NULL; at least two
+  arguments are required.
+- **`SUBSTRING`** — an accepted spelling of the existing `SUBSTR`.
+
+  Integer/boolean arguments coerce to their decimal text; Float/Blob arguments
+  are declined (their SQLite text form is subtle — same convention as HEX/QUOTE).
+
 ## [0.4.3] - Unreleased
 
 ### Added

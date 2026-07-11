@@ -548,6 +548,43 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT TRIM(s) AS ws, TRIM(s, NULL) AS tn, TRIM(s, '') AS te FROM t ORDER BY id",
     },
+    // CONCAT joins all arguments; a NULL contributes the empty string (it does
+    // not nullify the result), and integers coerce to text.
+    Case {
+        id: "concat",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a TEXT, b TEXT)",
+            "INSERT INTO t VALUES (1, 'foo', 'bar'), (2, 'x', NULL)",
+        ],
+        query: "SELECT CONCAT(a, b, id) AS r FROM t ORDER BY id",
+    },
+    // CONCAT_WS joins the value arguments with a separator, SKIPPING NULLs; a
+    // NULL separator makes the whole result NULL.
+    Case {
+        id: "concat_ws",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a TEXT, b TEXT, c TEXT)",
+            "INSERT INTO t VALUES (1, 'a', 'b', 'c'), (2, 'a', NULL, 'c')",
+        ],
+        query: "SELECT CONCAT_WS('-', a, b, c) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "concat_ws_null_sep",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a TEXT)",
+            "INSERT INTO t VALUES (1, 'a')",
+        ],
+        query: "SELECT CONCAT_WS(NULL, a, 'b') AS r FROM t ORDER BY id",
+    },
+    // SUBSTRING is a spelling of SUBSTR (2- and 3-argument forms).
+    Case {
+        id: "substring_alias",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'hello')",
+        ],
+        query: "SELECT SUBSTRING(s, 2) AS a, SUBSTRING(s, 2, 3) AS b FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
