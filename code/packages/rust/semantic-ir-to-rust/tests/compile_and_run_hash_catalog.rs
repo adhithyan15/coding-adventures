@@ -307,3 +307,119 @@ fn hash_catalog_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+/// `{c:3, a:1, b:2}` — symbol keys in a non-sorted order (so `sort_by` is a
+/// real reordering).
+fn cab_map() -> Expr {
+    map_lit(vec![(symlit("c"), ilit(3)), (symlit("a"), ilit(1)), (symlit("b"), ilit(2))])
+}
+
+/// `{a:1, b:2, c:3, d:4}`.
+fn abcd_map() -> Expr {
+    map_lit(vec![
+        (symlit("a"), ilit(1)),
+        (symlit("b"), ilit(2)),
+        (symlit("c"), ilit(3)),
+        (symlit("d"), ilit(4)),
+    ])
+}
+
+fn enum_demo() -> Module {
+    let block_fns = vec![
+        // { |k, v| v } — the value, used as the sort/min/max key.
+        block_fn("__blk_val", &["k", "v"], param("v")),
+        // { |k, v| v.even? } — an even-value predicate.
+        block_fn("__blk_even", &["k", "v"], method(param("v"), "even?", vec![])),
+    ];
+    let main_stmts = vec![
+        // {c:3,a:1,b:2}.sort_by { |k,v| v } → [[a, 1], [b, 2], [c, 3]]
+        print_stmt(method(cab_map(), "sort_by", vec![block("__blk_val")])),
+        // {c:3,a:1,b:2}.min_by { |k,v| v } → [a, 1]
+        print_stmt(method(cab_map(), "min_by", vec![block("__blk_val")])),
+        // {c:3,a:1,b:2}.max_by { |k,v| v } → [c, 3]
+        print_stmt(method(cab_map(), "max_by", vec![block("__blk_val")])),
+        // {a:1,b:2,c:3,d:4}.find { |k,v| v.even? } → [b, 2]
+        print_stmt(method(abcd_map(), "find", vec![block("__blk_even")])),
+        // {a:1,b:2,c:3,d:4}.count { |k,v| v.even? } → 2
+        print_stmt(method(abcd_map(), "count", vec![block("__blk_even")])),
+        // {a:1,b:2,c:3,d:4}.any? { v.even? } → #t
+        print_stmt(method(abcd_map(), "any?", vec![block("__blk_even")])),
+        // {a:1,b:2,c:3,d:4}.all? { v.even? } → #f
+        print_stmt(method(abcd_map(), "all?", vec![block("__blk_even")])),
+        // {a:1,c:3}.none? { v.even? } → #t  (no even values)
+        print_stmt(method(
+            map_lit(vec![(symlit("a"), ilit(1)), (symlit("c"), ilit(3))]),
+            "none?",
+            vec![block("__blk_even")],
+        )),
+    ];
+    demo_module(main_stmts, block_fns)
+}
+
+#[test]
+fn hash_enumerable_aggregates_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&enum_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_hash_enum_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_hash_enum_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out =
+        cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[[a, 1], [b, 2], [c, 3]]", // sort_by { v }
+            "[a, 1]",                   // min_by { v }
+            "[c, 3]",                   // max_by { v }
+            "[b, 2]",                   // find { even? }
+            "2",                        // count { even? }
+            "#t",                       // any? { even? }
+            "#f",                       // all? { even? }
+            "#t",                       // none? { even? } on all-odd values
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}

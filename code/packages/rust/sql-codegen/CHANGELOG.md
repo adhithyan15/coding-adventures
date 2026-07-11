@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.0] - Unreleased
+
+### Added
+
+- **SQLite-style names for un-aliased aggregate output columns.** A bare
+  `SELECT COUNT(*)` now returns a column literally named `COUNT(*)` (and
+  `SUM(n)`, `MIN(n)`, `MAX(n)`, `AVG(n)`, `COUNT(DISTINCT x)`) instead of the
+  engine-internal `agg_0`/`agg_N`, matching what real SQLite reports. A new
+  `aggregate_column_name(&AggregateItem)` helper builds the call text from the
+  aggregate's function, argument (rendered via `render_expr_label`, `*` for
+  `COUNT(*)`, `DISTINCT`-prefixed when distinct), and honours an explicit `AS`
+  alias first. Applied at all three emit sites (plain aggregate, and both the
+  predicate-finalize and row-emit paths of `HAVING`); the now-redundant
+  `agg_aliases` bindings were removed. This retires the last five entries of the
+  mini-sqlite differential-conformance ledger (`count_star`, `sum_min_max`,
+  `avg`, `group_by`, `having`) — driving it to **zero**.
+
 ## [0.5.0] - Unreleased
 
 ### Added

@@ -286,3 +286,133 @@ fn hash_methods_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+/// Two-parameter lambda `fn_name(a, b) -> body`, for Hash Enumerable blocks
+/// which are yielded `(key, value)`.
+fn lambda_fn2(fn_name: &str, p1: &str, p2: &str, body: Expr) -> Function {
+    let mk = |name: &str| semantic_ir::Param {
+        name: name.into(),
+        kind: semantic_ir::ParamKind::Required,
+        sir_type: None,
+        default: None,
+        span: s(),
+    };
+    Function {
+        name: fn_name.into(),
+        params: vec![mk(p1), mk(p2)],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: vec![], value: body, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+/// Demo for the Hash Enumerable aggregates (`find`/`any?`/`all?`/`none?`/
+/// `count`/`sort_by`/`min_by`/`max_by`).  Each block is yielded `(key, value)`;
+/// aggregates that return an "element" return the two-element `[key, value]`
+/// Array.  Expected values match the Python reference for the same ops.
+fn enum_module() -> Module {
+    // { |k, v| v } — the value, used as the sort/min/max key.
+    let by_val = lambda_fn2("__lam_val", "k", "v", var_p("v"));
+    // { |k, v| v.even? } — an even-value predicate.
+    let is_even = lambda_fn2("__lam_even", "k", "v", method(var_p("v"), "even?", vec![]));
+
+    let stmts = vec![
+        // {c:3,a:1,b:2}.sort_by { |k,v| v } → [[a, 1], [b, 2], [c, 3]]
+        print_stmt(method(
+            map_of(vec![("c", 3), ("a", 1), ("b", 2)]),
+            "sort_by",
+            vec![closure("__lam_val")],
+        )),
+        // {c:3,a:1,b:2}.min_by { |k,v| v } → [a, 1]
+        print_stmt(method(
+            map_of(vec![("c", 3), ("a", 1), ("b", 2)]),
+            "min_by",
+            vec![closure("__lam_val")],
+        )),
+        // {c:3,a:1,b:2}.max_by { |k,v| v } → [c, 3]
+        print_stmt(method(
+            map_of(vec![("c", 3), ("a", 1), ("b", 2)]),
+            "max_by",
+            vec![closure("__lam_val")],
+        )),
+        // {a:1,b:2,c:3,d:4}.find { |k,v| v.even? } → [b, 2]
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "find",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.count { |k,v| v.even? } → 2
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "count",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.any? { v.even? } → #t
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "any?",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,b:2,c:3,d:4}.all? { v.even? } → #f
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2), ("c", 3), ("d", 4)]),
+            "all?",
+            vec![closure("__lam_even")],
+        )),
+        // {a:1,c:3}.none? { v.even? } → #t  (no even values)
+        print_stmt(method(
+            map_of(vec![("a", 1), ("c", 3)]),
+            "none?",
+            vec![closure("__lam_even")],
+        )),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![by_val, is_even, main])
+}
+
+#[test]
+fn hash_enumerable_aggregates_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&enum_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "enum");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[a, 1], [b, 2], [c, 3]]", // sort_by { v }
+            "[a, 1]",                   // min_by { v }
+            "[c, 3]",                   // max_by { v }
+            "[b, 2]",                   // find { even? } → first even-valued pair
+            "2",                        // count { even? }
+            "#t",                       // any? { even? }
+            "#f",                       // all? { even? }
+            "#t",                       // none? { even? } on all-odd values
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}

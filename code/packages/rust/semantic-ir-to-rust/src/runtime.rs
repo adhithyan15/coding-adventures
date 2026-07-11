@@ -1478,6 +1478,9 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "store" | "[]=" | "delete" | "clear" | "each" | "each_pair" | "each_key"
                     | "each_value" | "map" | "collect" | "select" | "filter" | "reject"
                     | "transform_values" | "transform_keys"
+                    // Enumerable aggregates (Hash includes Enumerable)
+                    | "find" | "detect" | "any?" | "all?" | "none?" | "count"
+                    | "sort_by" | "min_by" | "max_by"
             ),
             Value::Str(_) => matches!(
                 name,
@@ -2427,6 +2430,117 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 recv
             }
+            // ── Enumerable aggregates (Hash includes Enumerable) ───────
+            //
+            // Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as
+            // a sequence of `[key, value]` pairs: the block is yielded
+            // `(key, value)` (two arguments, matching `each`), and the "element"
+            // an aggregate returns is the two-element `[key, value]` Array
+            // (`seq_lit(vec![k, v])`).  Every arm SNAPSHOTS the entries into an
+            // owned `Vec` before iterating so no `RefCell` borrow is held across
+            // `apply_closure` — a block that reentrantly mutates the same hash
+            // cannot trip a `BorrowMutError` panic.
+            "find" | "detect" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    snapshot
+                        .into_iter()
+                        .find(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .map(|(k, v)| seq_lit(vec![k, v]))
+                        .unwrap_or(Value::Nil)
+                }
+                None => unknown_method(&recv, name),
+            },
+            "any?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(!entries_rc.borrow().is_empty()),
+            },
+            "all?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        snapshot.into_iter().all(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(true),
+            },
+            "none?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        !snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(entries_rc.borrow().is_empty()),
+            },
+            "count" if block.is_some() => {
+                // `count { |k, v| pred }` — number of pairs with a truthy result.
+                let b = block.as_ref().unwrap();
+                let snapshot = entries_rc.borrow().clone();
+                let n = snapshot
+                    .into_iter()
+                    .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                    .count();
+                Value::Int(n as i64)
+            }
+            // `sort_by { |k, v| key }` — a NEW Array of `[k, v]` pairs sorted by
+            // the block key using the runtime's numeric ordering (`num_lt`),
+            // stable on ties.  Keys are computed once (Schwartzian).
+            "sort_by" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut keyed: Vec<(Value, Value)> = snapshot
+                        .into_iter()
+                        .map(|(k, v)| {
+                            (apply_closure(b, vec![k.clone(), v.clone()]), seq_lit(vec![k, v]))
+                        })
+                        .collect();
+                    keyed.sort_by(|(ka, _), (kb, _)| {
+                        if num_lt(ka, kb) {
+                            std::cmp::Ordering::Less
+                        } else if num_lt(kb, ka) {
+                            std::cmp::Ordering::Greater
+                        } else {
+                            std::cmp::Ordering::Equal
+                        }
+                    });
+                    seq_lit(keyed.into_iter().map(|(_, pair)| pair).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `min_by`/`max_by { |k, v| key }` — the `[k, v]` pair with the
+            // smallest / largest block key.  First pair wins a tie (strict `<`);
+            // an empty hash yields `nil`.
+            "min_by" | "max_by" => match &block {
+                Some(b) => {
+                    let want_min = name == "min_by";
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut best: Option<(Value, (Value, Value))> = None;
+                    for (k, v) in snapshot {
+                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let take = match &best {
+                            None => true,
+                            Some((bk, _)) => {
+                                if want_min {
+                                    num_lt(&key, bk)
+                                } else {
+                                    num_lt(bk, &key)
+                                }
+                            }
+                        };
+                        if take {
+                            best = Some((key, (k, v)));
+                        }
+                    }
+                    best.map(|(_, (k, v))| seq_lit(vec![k, v])).unwrap_or(Value::Nil)
+                }
+                None => unknown_method(&recv, name),
+            },
             _ => no_method_error(&recv, name),
         }
     }

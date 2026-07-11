@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.5.1 — Scalar functions: IFNULL / NULLIF / TYPEOF / INSTR / HEX
+
+Stream A, corpus-growth phase (the differential ledger is at zero, so the
+metric is now the *size* of the seed corpus that matches real SQLite). Five
+common scalar functions used by real-world queries now work: `IFNULL`,
+`NULLIF`, `TYPEOF`, `INSTR`, `HEX`. They already parsed as function calls but
+hit the engine's `unknown built-in function` fallthrough; implemented in
+`sql-vm` (0.3.0). Five new differential-oracle cases (`ifnull`, `nullif`,
+`typeof`, `instr`, `hex`) diff mini-sqlite's results against real bundled
+SQLite. No mini-sqlite `src/` change.
+
+## 0.5.0 — Differential conformance ledger driven to ZERO
+
+Stream B / L3: aggregate output columns are now named the SQLite way —
+`SELECT COUNT(*)` returns a column named `COUNT(*)` (likewise `SUM(n)`,
+`MIN(n)`, `MAX(n)`, `AVG(n)`), not the engine-internal `agg_N`. The fix is in
+`sql-codegen` (0.6.0); no mini-sqlite `src/` change.
+
+This retires the **last five** entries of the differential-conformance
+`LEDGER` in `tests/differential_oracle.rs` (`count_star`, `sum_min_max`, `avg`,
+`group_by`, `having`) — **the ledger is now empty**. Every one of the harness's
+seed cases now matches real bundled SQLite exactly: `INNER`/`LEFT`/`RIGHT`/`FULL`
+joins, scalar functions and their result columns, and aggregate naming. The
+oracle opened at ten reproduced gaps and has been closed out one PR at a time;
+it now enforces full agreement on the seed corpus and stands ready to catch the
+next divergence a new case surfaces.
+
 ## 0.4.3 — Query `sqlite_master` over a real file
 
 Stream C / L4: the schema catalog `sqlite_master` (and its alias `sqlite_schema`)
