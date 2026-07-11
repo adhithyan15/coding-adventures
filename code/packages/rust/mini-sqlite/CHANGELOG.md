@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.6 — Two-argument TRIM/LTRIM/RTRIM (character-set trimming)
+
+Grows the SQL scalar surface: `TRIM(x, y)`, `LTRIM(x, y)`, and `RTRIM(x, y)`
+now strip a caller-supplied *set of characters* rather than only whitespace —
+`TRIM('xxhixx', 'x')` → `'hi'`, `TRIM('abcHIcba', 'abc')` → `'HI'`. Previously
+these errored (`TRIM expects 1 arg, got 2`). Trimming is Unicode-character-aware,
+an empty set is a no-op, NULL in either argument propagates, and numeric
+arguments coerce to text — all matching real SQLite (sql-vm 0.4.3). Three new
+differential-oracle cases (`trim_charset`, `trim_charset_multi`,
+`trim_charset_null_and_edge`) diff against real bundled SQLite; the
+single-argument whitespace forms are unchanged.
+
 ## 0.5.5 — Multi-argument MAX/MIN are the scalar functions
 
 Stream A correctness fix: `SELECT MAX(3, 9, 5)` returned `3` (the first argument)

@@ -519,6 +519,35 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT dept, MAX(sal), MIN(sal) FROM t GROUP BY dept ORDER BY dept",
     },
+    // TRIM/LTRIM/RTRIM with a second argument strip a *set of characters*
+    // rather than whitespace: trim('xxhixx','x') -> 'hi'.
+    Case {
+        id: "trim_charset",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'xxhixx'), (2, 'yyworldyy')",
+        ],
+        query: "SELECT TRIM(s, 'xy') AS t, LTRIM(s, 'xy') AS l, RTRIM(s, 'xy') AS r FROM t ORDER BY id",
+    },
+    // A multi-character set behaves as a bag: any of {a,b,c} at either end goes.
+    Case {
+        id: "trim_charset_multi",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'abcHIcba'), (2, 'aaa')",
+        ],
+        query: "SELECT TRIM(s, 'abc') AS r FROM t ORDER BY id",
+    },
+    // NULL in the trim-set propagates; the single-argument whitespace form and
+    // an empty set are both regression-guarded here.
+    Case {
+        id: "trim_charset_null_and_edge",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, '  hi  '), (2, 'xhix')",
+        ],
+        query: "SELECT TRIM(s) AS ws, TRIM(s, NULL) AS tn, TRIM(s, '') AS te FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

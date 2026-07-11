@@ -1040,13 +1040,102 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | LENGTH   |  1   | Byte-length of a string (returns Integer or NULL)     |
 /// | UPPER    |  1   | ASCII-uppercase the string                            |
 /// | LOWER    |  1   | ASCII-lowercase the string                            |
-/// | TRIM     |  1   | Strip leading and trailing ASCII whitespace           |
-/// | LTRIM    |  1   | Strip leading ASCII whitespace                        |
-/// | RTRIM    |  1   | Strip trailing ASCII whitespace                       |
+/// | TRIM     | 1–2  | Strip whitespace, or a given character set, from both ends |
+/// | LTRIM    | 1–2  | Strip whitespace, or a given character set, from the left  |
+/// | RTRIM    | 1–2  | Strip whitespace, or a given character set, from the right |
 /// | SUBSTR   | 2–3  | 1-indexed substring extraction                        |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
+/// Coerce a value to the text form TRIM operates on, matching SQLite's
+/// implicit cast: text is itself; an integer or boolean becomes its decimal
+/// digits (`trim(12321, '1')` → `"232"`). A NULL argument returns `Ok(None)`,
+/// the caller's signal to propagate NULL. Floats and blobs are declined — as
+/// with HEX/QUOTE above, their exact SQLite text form is subtle enough that we
+/// don't guess here.
+fn trim_coerce(name: &str, v: &SqlValue) -> Result<Option<String>, VmError> {
+    match v {
+        SqlValue::Null => Ok(None),
+        SqlValue::Text(s) => Ok(Some(s.clone())),
+        SqlValue::Int(i) => Ok(Some(i.to_string())),
+        SqlValue::Bool(b) => Ok(Some((*b as i64).to_string())),
+        other => Err(VmError::TypeMismatch(format!("{name} expects TEXT, got {other:?}"))),
+    }
+}
+
+/// The shared body of `TRIM` / `LTRIM` / `RTRIM`, parameterised by which end(s)
+/// to strip (`left`, `right`).
+///
+/// **One argument** keeps the historical behaviour — remove whitespace from the
+/// chosen end(s).
+///
+/// **Two arguments** switch to SQLite's *character-set* trim: the second
+/// argument is read as a bag of characters, and any leading (`left`) or
+/// trailing (`right`) character that appears in that bag is removed — repeated
+/// until a character outside the bag is reached. The bag is a *set of
+/// characters*, not a substring: order and repetition inside it don't matter.
+///
+/// ```text
+///   trim('xxhixx', 'x')    -> 'hi'      set = {x}
+///   trim('abcHIcba', 'abc') -> 'HI'     set = {a, b, c}
+///   ltrim('xyxhi', 'xy')   -> 'hi'      only the left end
+///   rtrim('hixyx', 'xy')   -> 'hi'      only the right end
+///   trim('héllo', 'h')     -> 'éllo'    operates on Unicode chars, not bytes
+///   trim('xhix', '')       -> 'xhix'    empty set removes nothing
+///   trim('xxhixx', NULL)   -> NULL      NULL in either argument propagates
+/// ```
+fn trim_builtin(name: &str, args: &[SqlValue], left: bool, right: bool) -> Result<SqlValue, VmError> {
+    // Validate arity *before* indexing. The grammar makes a call's argument list
+    // optional, so `TRIM()` parses and reaches here with an empty `args`; without
+    // this guard `args[0]` would panic (index out of bounds) — a reachable DoS on
+    // any untrusted SQL. Every sibling builtin checks arity first; we match that.
+    if args.is_empty() || args.len() > 2 {
+        return Err(VmError::TypeMismatch(format!("{name} expects 1 or 2 args, got {}", args.len())));
+    }
+
+    // Resolve the subject string, short-circuiting on a NULL argument.
+    let subject = match trim_coerce(name, &args[0])? {
+        None => return Ok(SqlValue::Null),
+        Some(s) => s,
+    };
+
+    if args.len() == 1 {
+        let trimmed = match (left, right) {
+            (true, true) => subject.trim(),
+            (true, false) => subject.trim_start(),
+            (false, true) => subject.trim_end(),
+            (false, false) => subject.as_str(),
+        };
+        return Ok(SqlValue::Text(trimmed.to_string()));
+    }
+
+    // Two-argument (character-set) form.
+    let set = match trim_coerce(name, &args[1])? {
+        None => return Ok(SqlValue::Null),
+        Some(s) => s,
+    };
+    // An empty trim-set matches nothing, so the subject is returned verbatim —
+    // no need to scan every character against the set.
+    if set.is_empty() {
+        return Ok(SqlValue::Text(subject));
+    }
+    // Materialise the set into a `HashSet` for O(1) membership. `str::contains`
+    // would be a linear scan of the set per subject character, making the whole
+    // trim O(N·M) in the subject/set lengths — a quadratic CPU vector an attacker
+    // controls (a long subject of set-members against a long set). The set is
+    // O(M) to build once, so overall cost drops to O(N + M).
+    let set_chars: std::collections::HashSet<char> = set.chars().collect();
+    let in_set = |c: char| set_chars.contains(&c);
+    let mut slice: &str = &subject;
+    if left {
+        slice = slice.trim_start_matches(in_set);
+    }
+    if right {
+        slice = slice.trim_end_matches(in_set);
+    }
+    Ok(SqlValue::Text(slice.to_string()))
+}
+
 fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
     match name {
         "LENGTH" => {
@@ -1082,38 +1171,11 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
         }
 
-        "TRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("TRIM expects 1 arg, got {}", args.len())));
-            }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim().to_string())),
-                other => Err(VmError::TypeMismatch(format!("TRIM expects TEXT, got {:?}", other))),
-            }
-        }
+        "TRIM" => trim_builtin("TRIM", &args, true, true),
 
-        "LTRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("LTRIM expects 1 arg, got {}", args.len())));
-            }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_start().to_string())),
-                other => Err(VmError::TypeMismatch(format!("LTRIM expects TEXT, got {:?}", other))),
-            }
-        }
+        "LTRIM" => trim_builtin("LTRIM", &args, true, false),
 
-        "RTRIM" => {
-            if args.len() != 1 {
-                return Err(VmError::TypeMismatch(format!("RTRIM expects 1 arg, got {}", args.len())));
-            }
-            match &args[0] {
-                SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_end().to_string())),
-                other => Err(VmError::TypeMismatch(format!("RTRIM expects TEXT, got {:?}", other))),
-            }
-        }
+        "RTRIM" => trim_builtin("RTRIM", &args, false, true),
 
         "SUBSTR" => {
             if args.len() < 2 || args.len() > 3 {
@@ -3728,5 +3790,73 @@ mod tests {
         assert_eq!(iif(SqlValue::Bool(true)), SqlValue::Text("yes".into()));
         // Wrong arity is a type error, not a panic.
         assert!(call_builtin("IIF", vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+    }
+
+    #[test]
+    fn builtin_trim_one_arg_strips_whitespace() {
+        // The single-argument form keeps its historical whitespace behaviour.
+        let t = |name: &str, s: &str| call_builtin(name, vec![SqlValue::Text(s.into())]).unwrap();
+        assert_eq!(t("TRIM", "  hi  "), SqlValue::Text("hi".into()));
+        assert_eq!(t("LTRIM", "  hi  "), SqlValue::Text("hi  ".into()));
+        assert_eq!(t("RTRIM", "  hi  "), SqlValue::Text("  hi".into()));
+        // NULL propagates; a NULL string trims to NULL.
+        assert_eq!(call_builtin("TRIM", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_trim_two_arg_strips_character_set() {
+        let t = |name: &str, s: &str, set: &str| {
+            call_builtin(name, vec![SqlValue::Text(s.into()), SqlValue::Text(set.into())]).unwrap()
+        };
+        // The second argument is a *set* of characters, matched at each end.
+        assert_eq!(t("TRIM", "xxhixx", "x"), SqlValue::Text("hi".into()));
+        assert_eq!(t("TRIM", "abcHIcba", "abc"), SqlValue::Text("HI".into()));
+        assert_eq!(t("LTRIM", "xyxhi", "xy"), SqlValue::Text("hi".into()));
+        assert_eq!(t("RTRIM", "hixyx", "xy"), SqlValue::Text("hi".into()));
+        // Operates on Unicode characters, not bytes.
+        assert_eq!(t("TRIM", "héllo", "h"), SqlValue::Text("éllo".into()));
+        assert_eq!(t("TRIM", " oé oé", "é "), SqlValue::Text("oé o".into()));
+        // Stripping everything yields the empty string.
+        assert_eq!(t("TRIM", "aaa", "a"), SqlValue::Text("".into()));
+        // An empty trim-set removes nothing.
+        assert_eq!(t("TRIM", "xhix", ""), SqlValue::Text("xhix".into()));
+    }
+
+    #[test]
+    fn builtin_trim_two_arg_null_and_coercion() {
+        // NULL in either argument propagates.
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Text("xxhixx".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Null, SqlValue::Text("x".into())]).unwrap(),
+            SqlValue::Null
+        );
+        // Numeric arguments coerce to their decimal text, like real SQLite:
+        //   trim(12321, '1') -> '232',  trim('5xx', 5) -> 'xx'
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Int(12321), SqlValue::Text("1".into())]).unwrap(),
+            SqlValue::Text("232".into())
+        );
+        assert_eq!(
+            call_builtin("TRIM", vec![SqlValue::Text("5xx".into()), SqlValue::Int(5)]).unwrap(),
+            SqlValue::Text("xx".into())
+        );
+        // Three arguments is an arity error, not a panic.
+        assert!(call_builtin(
+            "TRIM",
+            vec![SqlValue::Text("a".into()), SqlValue::Text("b".into()), SqlValue::Text("c".into())]
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn builtin_trim_zero_args_is_error_not_panic() {
+        // The grammar lets `TRIM()` parse (the argument list is optional), so an
+        // empty `args` must be a clean error — never an out-of-bounds panic.
+        for name in ["TRIM", "LTRIM", "RTRIM"] {
+            assert!(call_builtin(name, vec![]).is_err(), "{name}() should error, not panic");
+        }
     }
 }
