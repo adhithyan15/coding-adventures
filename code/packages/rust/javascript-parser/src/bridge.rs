@@ -1522,9 +1522,10 @@ fn convert_method_definition(
 /// | [ "static" ] STAR   PRIVATE_NAME ...          // private generator
 /// ```
 ///
-/// This slice models the **plain** form (optionally `static`). The private
-/// getter / setter / generator forms carry accessor or evaluation semantics not
-/// yet represented, so — like a public generator method — they DECLINE via
+/// This slice models the **plain** method and the **get / set accessor** forms
+/// (each optionally `static`) — `#m(){}`, `get #x(){}`, `set #x(v){}`. The
+/// private *generator* (`*#m(){}`) and *async* forms carry evaluation semantics
+/// not yet represented, so — like a public generator method — they DECLINE via
 /// `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback), never a mis-emit.
 ///
 /// Two shape differences from a public `method_definition`:
@@ -1535,21 +1536,27 @@ fn convert_method_definition(
 ///   `[ "static" ]`), not on the enclosing `class_element`, so it is read here.
 ///
 /// A private name can never be the `constructor` (`#constructor` is a
-/// SyntaxError), so the kind is always [`MethodKind::Method`]. Params and body
-/// reuse the shared [`convert_formal_parameters`] / [`convert_formal_parameter`]
-/// / [`convert_function_body`], mirroring [`convert_method_definition`].
+/// SyntaxError), so the kind is a plain [`MethodKind::Method`] or the
+/// [`MethodKind::Get`] / [`MethodKind::Set`] accessor. Params and body reuse the
+/// shared [`convert_formal_parameters`] / [`convert_formal_parameter`] /
+/// [`convert_function_body`], mirroring [`convert_method_definition`].
 fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
-    // Read `static` (inside this node) and detect the accessor / generator forms
-    // this slice declines. `get` / `set` / `*` all precede the PRIVATE_NAME as
-    // direct token children (params live under `formal_parameter(s)` *nodes*, so
-    // a parameter literally named `get` cannot be confused for the modifier).
+    // Read `static` and the `get` / `set` accessor keyword (inside this node);
+    // decline the generator / async forms this slice does not model. All of
+    // `static` / `get` / `set` / `*` / `async` precede the PRIVATE_NAME as direct
+    // token children (params live under `formal_parameter(s)` *nodes*, so a
+    // parameter literally named `get` cannot be confused for the modifier).
     let mut is_static = false;
+    let mut saw_get = false;
+    let mut saw_set = false;
     let mut decline = false;
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
             match t.value.as_str() {
                 "static" => is_static = true,
-                "get" | "set" | "*" | "async" => decline = true,
+                "get" => saw_get = true,
+                "set" => saw_set = true,
+                "*" | "async" => decline = true,
                 _ => {}
             }
         }
@@ -1577,10 +1584,21 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
         None => BlockStatement { cv: None, body: vec![] },
     };
 
+    // A private name can never be the `constructor` (`#constructor` is a
+    // SyntaxError), so the only kinds are the plain method and the get/set
+    // accessors.
+    let kind = if saw_get {
+        MethodKind::Get
+    } else if saw_set {
+        MethodKind::Set
+    } else {
+        MethodKind::Method
+    };
+
     Ok(MethodDefinition {
         cv: None,
         key,
-        kind: MethodKind::Method,
+        kind,
         value: FunctionExpression {
             cv: None,
             id: None,
@@ -4052,12 +4070,42 @@ mod tests {
     }
 
     #[test]
-    fn class_private_getter_still_declines() {
-        // `get #x(){}` — a private *getter* carries accessor semantics this slice
-        // does not model; it still DECLINES (safe WHITESPACE_ONLY), never a
+    fn class_private_getter() {
+        // `get #x(){}` — a private getter lowers to a `MethodKind::Get` method
+        // with a private-name key (CLOC12.179).
+        let m = method_of("w = class { get #x(){} };");
+        assert!(matches!(m.kind, MethodKind::Get));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert!(m.value.params.is_empty());
+    }
+
+    #[test]
+    fn class_private_setter() {
+        // `set #x(v){}` — a private setter lowers to a `MethodKind::Set` method
+        // with a private-name key and its single parameter.
+        let m = method_of("w = class { set #x(v){} };");
+        assert!(matches!(m.kind, MethodKind::Set));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert_eq!(m.value.params.len(), 1);
+    }
+
+    #[test]
+    fn class_static_private_getter() {
+        // `static get #x(){}` — the `static` and `get` keywords both precede the
+        // private key inside the node.
+        let m = method_of("w = class { static get #x(){} };");
+        assert!(m.is_static);
+        assert!(matches!(m.kind, MethodKind::Get));
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "x"));
+    }
+
+    #[test]
+    fn class_private_generator_still_declines() {
+        // `*#m(){}` — a private *generator* carries evaluation semantics this
+        // slice does not model; it still DECLINES (safe WHITESPACE_ONLY), never a
         // mis-emit. (A later slice.)
         assert!(matches!(
-            bridge("w = class { get #x(){} };"),
+            bridge("w = class { *#m(){} };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }
