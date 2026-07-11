@@ -544,3 +544,141 @@ fn hash_enumerable_breadth_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+// ── Hash to_h / each_with_index / each_with_object ─────────────────────────
+//
+// Rounds out Hash's Enumerable iteration surface, mirroring the Python
+// reference (#8009) and the Go backend (#8015).  `to_h` has a no-block (shallow
+// copy) and a block (re-map) form; `each_with_index`/`each_with_object` yield
+// the `[k, v]` PAIR as a single argument alongside the index/memo (Ruby's
+// Enumerable convention — contrast `each`'s two-arg `(k, v)` yield).
+
+/// A two-parameter block that `print`s `[p1, p2]` and returns nil — used to
+/// observe the `(pair, index)` / `(pair, memo)` yields.
+fn block_fn_print2(name: &str, p1: &str, p2: &str) -> Function {
+    let mk = |n: &str| semantic_ir::Param {
+        name: n.into(),
+        kind: semantic_ir::ParamKind::Required,
+        sir_type: None,
+        default: None,
+        span: s(),
+    };
+    Function {
+        name: name.into(),
+        params: vec![mk(p1), mk(p2)],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![print_stmt(seq_lit_e(vec![param(p1), param(p2)]))],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+fn to_h_demo() -> Module {
+    let block_fns = vec![
+        // { |k, v| [k, v * 2] } — re-map each pair, doubling the value.
+        block_fn(
+            "__b_dbl",
+            &["k", "v"],
+            seq_lit_e(vec![param("k"), binop("*", param("v"), ilit(2))]),
+        ),
+        // { |pair, i| print [pair, i] } — observe the (pair, index) yield.
+        block_fn_print2("__b_pi", "pair", "i"),
+        // { |pair, memo| print [pair, memo] } — observe the (pair, memo) yield.
+        block_fn_print2("__b_pm", "pair", "memo"),
+    ];
+    let ab = || map_lit(vec![(symlit("a"), ilit(1)), (symlit("b"), ilit(2))]);
+    let main_stmts = vec![
+        // {a:1,b:2}.to_h (no block) → a shallow copy: {a: 1, b: 2}
+        print_stmt(method(ab(), "to_h", vec![])),
+        // {a:1,b:2}.to_h { |k, v| [k, v * 2] } → {a: 2, b: 4}
+        print_stmt(method(ab(), "to_h", vec![block("__b_dbl")])),
+        // {a:1,b:2}.each_with_index { |pair, i| print [pair, i] }
+        //   → "[[a, 1], 0]", "[[b, 2], 1]", then the returned self "{a: 1, b: 2}"
+        print_stmt(method(ab(), "each_with_index", vec![block("__b_pi")])),
+        // {a:1,b:2}.each_with_object(0) { |pair, memo| print [pair, memo] }
+        //   → "[[a, 1], 0]", "[[b, 2], 0]", then the returned memo "0"
+        print_stmt(method(ab(), "each_with_object", vec![ilit(0), block("__b_pm")])),
+        // {a:1}.each_with_object { |pair, memo| … } with NO memo arg → returns
+        // the receiver unchanged (the block is never called): "{a: 1}"
+        print_stmt(method(
+            map_lit(vec![(symlit("a"), ilit(1))]),
+            "each_with_object",
+            vec![block("__b_pm")],
+        )),
+    ];
+    demo_module(main_stmts, block_fns)
+}
+
+#[test]
+fn hash_to_h_and_indexed_iteration_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&to_h_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_hash_toh_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_hash_toh_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "{a: 1, b: 2}", // to_h (no block) → shallow copy
+            "{a: 2, b: 4}", // to_h { [k, v*2] } → re-mapped
+            "[[a, 1], 0]",  // each_with_index yields ([a,1], 0)
+            "[[b, 2], 1]",  // each_with_index yields ([b,2], 1)
+            "{a: 1, b: 2}", // each_with_index returns self
+            "[[a, 1], 0]",  // each_with_object yields ([a,1], 0)
+            "[[b, 2], 0]",  // each_with_object yields ([b,2], 0)
+            "0",            // each_with_object returns the memo
+            "{a: 1}",       // each_with_object with no memo → returns self
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
