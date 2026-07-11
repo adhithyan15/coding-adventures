@@ -202,11 +202,20 @@ private:
             }
             return;
         }
-        std::size_t new_cap = capacity() > bits_per_word ? capacity() : bits_per_word;
-        while (new_cap <= i) {
+        if (i == (std::size_t)-1) {
+            throw std::length_error("bitset: index too large"); // len = i+1 overflows
+        }
+        // Double capacity, but stop before size_t overflow (which would wrap to
+        // 0 and spin forever). If doubling can't reach i, size to cover bit i.
+        std::size_t cap = capacity();
+        std::size_t new_cap = cap > bits_per_word ? cap : bits_per_word;
+        const std::size_t max_size = (std::size_t)-1;
+        while (new_cap <= i && new_cap <= max_size / 2) {
             new_cap *= 2;
         }
-        words_.resize(new_cap / bits_per_word, 0);
+        std::size_t new_words =
+            (new_cap > i) ? (new_cap / bits_per_word) : (i / bits_per_word + 1);
+        words_.resize(new_words, 0); // std::vector throws on an impossible size
         len_ = i + 1;
     }
 

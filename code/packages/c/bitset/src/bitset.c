@@ -128,11 +128,21 @@ static int ensure_capacity(bitset *b, size_t i) {
         }
         return 1;
     }
+    if (i == SIZE_MAX) {
+        return 0; /* len = i + 1 would overflow; no allocation could hold it */
+    }
+    /* Double capacity, but stop before size_t overflow (which would wrap to 0
+     * and spin forever). If doubling can no longer reach i, size the buffer to
+     * exactly cover bit i (i / 64 + 1 words — overflow-free). */
     new_cap = cap > BITS_PER_WORD ? cap : BITS_PER_WORD;
-    while (new_cap <= i) {
+    while (new_cap <= i && new_cap <= SIZE_MAX / 2) {
         new_cap *= 2;
     }
-    new_word_count = new_cap / BITS_PER_WORD;
+    new_word_count =
+        (new_cap > i) ? (new_cap / BITS_PER_WORD) : (i / BITS_PER_WORD + 1);
+    if (new_word_count > SIZE_MAX / sizeof(uint64_t)) {
+        return 0; /* byte size would overflow */
+    }
     grown = (uint64_t *)realloc(b->words, new_word_count * sizeof(uint64_t));
     if (grown == NULL) {
         return 0;
