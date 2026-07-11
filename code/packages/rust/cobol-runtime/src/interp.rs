@@ -44,6 +44,25 @@ enum Src {
     Fig(Fig),
 }
 
+/// The control-flow signal an executed statement (or block of statements)
+/// produces. Most statements are [`Flow::Normal`]; the two transfers unwind out
+/// of any enclosing `IF`/`PERFORM`/handler up to the top-level program-counter
+/// loop in [`Machine::run`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Flow {
+    /// Continue with the next statement (and, at a paragraph's end, fall through
+    /// to the following paragraph).
+    Normal,
+    /// `STOP RUN` — end the whole program.
+    Stop,
+    /// `GO TO` — transfer control to the paragraph at this index. Because it
+    /// unwinds to the top-level loop, a `GO TO` inside a performed paragraph
+    /// transfers control there (abandoning the `PERFORM`'s return) — the honest
+    /// reading of "GO TO out of a range", and enough for structured top-level
+    /// flow. (`GO TO … DEPENDING`/`ALTER` and range-return niceties are later.)
+    GoTo(usize),
+}
+
 /// Turn an arithmetic result into a `Result`, reporting `i128` overflow (a value
 /// beyond ~38 digits — larger than any real COBOL numeric field) as an error
 /// rather than panicking or wrapping.
@@ -205,26 +224,32 @@ impl Machine {
     // ----------------------------------------------------------------------
 
     /// Run the procedure division and return the captured console output.
+    ///
+    /// Execution is a **program counter** over paragraphs: after a paragraph's
+    /// statements run, control falls through to the next paragraph, unless a
+    /// `GO TO` jumped the counter or a `STOP RUN` ended the program. The loop is
+    /// iterative, so a `GO TO` back-edge (a COBOL loop) never grows the stack.
+    /// Each paragraph's statements are cloned to run them, since executing
+    /// borrows `self` mutably while the paragraphs live in `self`.
     pub fn run(mut self, _program: &Program) -> Result<String, RuntimeError> {
-        // Execute paragraphs top to bottom (COBOL falls through paragraph
-        // boundaries). We clone each paragraph's statements to run them, since
-        // executing borrows `self` mutably while the paragraphs live in `self`.
         let count = self.paragraphs.len();
-        for i in 0..count {
-            let stmts = self.paragraphs[i].stmts.clone();
-            if self.run_stmts(&stmts)? {
-                break; // STOP RUN
+        let mut pc = 0;
+        while pc < count {
+            let stmts = self.paragraphs[pc].stmts.clone();
+            match self.run_stmts(&stmts)? {
+                Flow::Normal => pc += 1,        // fall through
+                Flow::Stop => break,            // STOP RUN
+                Flow::GoTo(target) => pc = target, // jump
             }
         }
         // Falling off the end of the procedure division ends the run too.
         Ok(self.output)
     }
 
-    /// Execute one statement. Returns `true` if it requested `STOP RUN` (which
-    /// unwinds nested `IF` branches and ends the program).
-    fn exec_stmt(&mut self, stmt: &Stmt) -> Result<bool, RuntimeError> {
+    /// Execute one statement, returning its control-flow [`Flow`] signal.
+    fn exec_stmt(&mut self, stmt: &Stmt) -> Result<Flow, RuntimeError> {
         match stmt {
-            Stmt::StopRun => return Ok(true),
+            Stmt::StopRun => return Ok(Flow::Stop),
             Stmt::Display(ops) => self.exec_display(ops)?,
             Stmt::Move { src, dsts } => self.exec_move(src, dsts)?,
             Stmt::Add { operands, to, giving } => self.exec_add(operands, to, giving)?,
@@ -237,33 +262,42 @@ impl Machine {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
             }
             Stmt::Perform { target, times } => return self.exec_perform(target, times),
+            Stmt::GoTo { target } => {
+                let idx = *self
+                    .para_index
+                    .get(target)
+                    .ok_or_else(|| RuntimeError::UndefinedName(target.clone()))?;
+                return Ok(Flow::GoTo(idx));
+            }
             Stmt::If { cond, then_branch, else_branch } => {
                 let branch = if self.eval_cond(cond)? { then_branch } else { else_branch };
                 return self.run_stmts(branch);
             }
         }
-        Ok(false)
+        Ok(Flow::Normal)
     }
 
-    /// Execute a sequence of statements, short-circuiting on `STOP RUN` (the
-    /// returned `true` propagates up to unwind any enclosing branches). Shared by
-    /// `IF` branches and `COMPUTE … ON SIZE ERROR` handlers.
-    fn run_stmts(&mut self, stmts: &[Stmt]) -> Result<bool, RuntimeError> {
+    /// Execute a sequence of statements, short-circuiting on the first non-normal
+    /// [`Flow`] (a `STOP RUN` or `GO TO`), which propagates up to unwind any
+    /// enclosing `IF`/`PERFORM`/handler. Shared by `IF` branches,
+    /// `COMPUTE … ON SIZE ERROR` handlers, and performed paragraphs.
+    fn run_stmts(&mut self, stmts: &[Stmt]) -> Result<Flow, RuntimeError> {
         for s in stmts {
-            if self.exec_stmt(s)? {
-                return Ok(true);
+            match self.exec_stmt(s)? {
+                Flow::Normal => {}
+                other => return Ok(other),
             }
         }
-        Ok(false)
+        Ok(Flow::Normal)
     }
 
     /// `PERFORM target [n TIMES]` — run one paragraph out of line, `n` times
     /// (default 1), then return. A `TIMES` count that is zero or negative runs
     /// the paragraph zero times (COBOL's rule); a fractional count truncates.
     /// Nesting is bounded by [`MAX_PERFORM_DEPTH`] so a self-performing paragraph
-    /// fails with a clean error instead of overflowing the stack. Returns `true`
-    /// if a `STOP RUN` fired inside.
-    fn exec_perform(&mut self, target: &str, times: &Option<Operand>) -> Result<bool, RuntimeError> {
+    /// fails with a clean error instead of overflowing the stack. A `STOP RUN`
+    /// or `GO TO` inside stops the repetition and propagates as its [`Flow`].
+    fn exec_perform(&mut self, target: &str, times: &Option<Operand>) -> Result<Flow, RuntimeError> {
         let idx = *self
             .para_index
             .get(target)
@@ -299,14 +333,15 @@ impl Machine {
         let stmts = self.paragraphs[idx].stmts.clone();
         // Capture the outcome rather than `?`-ing out of the loop, so the depth
         // counter is restored on every path (including an error).
-        let mut outcome = Ok(false);
+        let mut outcome = Ok(Flow::Normal);
         for _ in 0..n {
             match self.run_stmts(&stmts) {
-                Ok(true) => {
-                    outcome = Ok(true); // STOP RUN — stop repeating
+                Ok(Flow::Normal) => {}
+                // STOP RUN or GO TO — stop repeating and propagate it upward.
+                Ok(other) => {
+                    outcome = Ok(other);
                     break;
                 }
-                Ok(false) => {}
                 Err(e) => {
                     outcome = Err(e);
                     break;
@@ -489,7 +524,7 @@ impl Machine {
         rounded: bool,
         expr: &Expr,
         on_size_error: &[Stmt],
-    ) -> Result<bool, RuntimeError> {
+    ) -> Result<Flow, RuntimeError> {
         let (int_digits, dec_digits) = self.numeric_dims(target)?;
 
         let value = match self.eval_expr(expr) {
@@ -517,13 +552,13 @@ impl Machine {
                 // No handler: COBOL truncates the high-order digits silently,
                 // exactly as move_into_numeric already does.
                 self.store_number(target, final_value)?;
-                return Ok(false);
+                return Ok(Flow::Normal);
             }
             return self.run_stmts(on_size_error);
         }
 
         self.store_number(target, final_value)?;
-        Ok(false)
+        Ok(Flow::Normal)
     }
 
     /// Evaluate an arithmetic expression to an exact [`Decimal`]. Division is

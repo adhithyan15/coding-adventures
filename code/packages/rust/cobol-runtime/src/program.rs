@@ -81,6 +81,8 @@ pub enum Stmt {
     /// `PERFORM para [n TIMES]` — run a paragraph out of line, optionally a
     /// fixed number of times, then return to the statement after the PERFORM.
     Perform { target: String, times: Option<Operand> },
+    /// `GO TO para` — transfer control unconditionally to a paragraph (no return).
+    GoTo { target: String },
     /// `IF cond then… [ELSE else…]`.
     If { cond: Cond, then_branch: Vec<Stmt>, else_branch: Vec<Stmt> },
     StopRun,
@@ -415,6 +417,12 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 None => None,
             };
             Ok(Stmt::Perform { target, times })
+        }
+        "goto_stmt" => {
+            // GO [TO] target. The DEPENDING ON form is not in the grammar yet.
+            let target = first_token(verb, "NAME")
+                .ok_or_else(|| RuntimeError::Unsupported("GO TO without a target paragraph".into()))?;
+            Ok(Stmt::GoTo { target })
         }
         "if_stmt" => {
             // Children in order: IF, condition, then-statements…, [ELSE,

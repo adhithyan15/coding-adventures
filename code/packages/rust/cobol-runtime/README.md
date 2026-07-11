@@ -27,9 +27,11 @@ decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned, truncating
 toward zero into the receiver; divide-by-zero is a clean error); `COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
 parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric and
-alphanumeric comparison; and `PERFORM para [n TIMES]` (out-of-line paragraph
-invocation, with a recursion guard). Anything not yet modelled (the explicit
-`SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
-`PERFORM … THRU`/`UNTIL`/`VARYING`, `GO TO`, `EVALUATE`, tables, files, and every
-other verb) returns a descriptive `RuntimeError` — never wrong output. See PL08 for the
+alphanumeric comparison; `PERFORM para [n TIMES]` (out-of-line paragraph
+invocation, with a recursion guard); and `GO TO para` (unconditional transfer,
+run as a program counter over paragraphs, so back-edge loops work). Anything not
+yet modelled (the explicit `SIGN` clause with `SEPARATE`/`LEADING`, editing
+pictures, `COMP`, `PERFORM … THRU`/`UNTIL`/`VARYING`, `GO TO … DEPENDING`,
+`EVALUATE`, tables, files, and every other verb) returns a descriptive
+`RuntimeError` — never wrong output. See PL08 for the
 roadmap toward full COBOL and later standards.
