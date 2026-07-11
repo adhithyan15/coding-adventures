@@ -14,8 +14,12 @@ All notable changes to the Go build tool will be documented in this file.
   package languages map to the single `cpp` toolchain in
   `toolchainForPackageLanguage` (they share compilers: gcc/g++, clang/clang++,
   cl.exe), mirroring the `csharp`/`fsharp` → `dotnet` collapse. See spec
-  `code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md`. CI wiring for the new
-  toolchain lands in a follow-up change.
+  `code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md`.
+- **`cpp` is now a CI-managed toolchain** (`validateCIFullBuildToolchains`): the
+  validator requires `.github/workflows/ci.yml` to bind `needs_cpp` and force it
+  on the main full-build path. ci.yml installs Clang alongside GCC on Linux and
+  MSVC on Windows so the pure-ISO multi-compiler check sees all three across the
+  matrix.
 
 ## [0.3.1] - 2026-03-30
 

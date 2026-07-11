@@ -61,6 +61,7 @@ jobs:
       needs_java: ${{ steps.toolchains.outputs.needs_java }}
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
+      needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
@@ -167,6 +168,8 @@ jobs:
               'needs_kotlin=true' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
               'needs_swift=true' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_cpp=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -185,6 +188,8 @@ jobs:
               'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
               'needs_swift=${{ steps.detect.outputs.needs_swift }}' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_cpp=${{ steps.detect.outputs.needs_cpp }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Plan build matrix
@@ -291,8 +296,12 @@ jobs:
       # linker that Lua needs to compile. By installing MSVC + Lua
       # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
 
-      - name: Set up MSVC (required for Lua on Windows)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+      # MSVC on Windows serves two consumers: Lua (needs the MSVC linker) and
+      # the C/C++ lane (needs `cl.exe` for the MSVC arm of the pure-ISO check).
+      # A single msvc-dev-cmd invocation covers both — invoking the action twice
+      # would double-prepend the MSVC environment.
+      - name: Set up MSVC (Lua linker + C/C++ cl.exe)
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true') && runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Set up Lua
@@ -355,6 +364,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      # ── C/C++ compilers (pure-ISO multi-compiler lane) ──────────
+      #
+      # The goal is that every pure-ISO C/C++ package compiles under GCC, Clang
+      # (LLVM), and MSVC across the 3-OS matrix. Each runner contributes the
+      # compilers only it can host:
+      #   • ubuntu  → GCC (g++/gcc, preinstalled) + Clang (installed below)
+      #   • windows → MSVC (cl.exe, via the msvc-dev-cmd step above)
+      #   • macOS   → Apple Clang (preinstalled)
+      # A real GCC exists only on Linux and real MSVC only on Windows, so no
+      # single machine can host all three — coverage is achieved across the
+      # matrix, and the ISO harness compiles with every compiler it finds.
+      - name: Install Clang alongside GCC (Linux C/C++)
+        if: needs.detect.outputs.needs_cpp == 'true' && runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang
+          gcc --version | head -1
+          clang --version | head -1
 
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true'
