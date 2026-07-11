@@ -600,14 +600,18 @@ impl FromStr for BigDecimal {
         let scale = (frac_digits.len() as i64)
             .checked_sub(exp)
             .ok_or(ParseDecimalError::ExponentOverflow)?;
-        // Enforce the strict MAX_SCALE budget here, at the untrusted-input boundary: a tiny
-        // string like "1e-2000000000" must be rejected, not stored, so a later `+`/`cmp`/
-        // `Display` cannot be forced to materialize a multi-gigabyte power of ten. (The check is
-        // on the parsed scale; trailing-zero normalization can only shrink `|scale|`.)
-        if scale.unsigned_abs() > MAX_SCALE as u64 {
+        // Canonicalize first (this can *change* the scale: trailing-zero stripping lowers it,
+        // which *grows* `|scale|` when the scale is negative — e.g. "100e999999" normalizes to
+        // scale -1000001), then enforce the strict MAX_SCALE budget on the *stored* scale. This
+        // is the untrusted-input boundary: no parsed value may exceed MAX_SCALE, so a later
+        // `+`/`cmp`/`Display` cannot be forced to materialize a huge power of ten, and (because
+        // parse outputs really are ≤ MAX_SCALE) arithmetic stays comfortably under the internal
+        // ceiling. `checked_from_parts` returns `None` rather than panicking on an extreme input.
+        let d = BigDecimal::checked_from_parts(mant, scale).ok_or(ParseDecimalError::ExponentOverflow)?;
+        if d.scale().unsigned_abs() > MAX_SCALE as u64 {
             return Err(ParseDecimalError::ExponentOverflow);
         }
-        Ok(BigDecimal::from_parts(mant, scale))
+        Ok(d)
     }
 }
 
@@ -885,6 +889,15 @@ mod tests {
             BigDecimal::from_str("1e99999999999999999999"),
             Err(ParseDecimalError::ExponentOverflow)
         );
+        // Subtle: the parsed scale (-999999) is within budget, but trailing-zero normalization
+        // drives the *stored* scale to -1000001 (over budget). The check is on the canonical
+        // scale, so this is rejected too — otherwise a value past MAX_SCALE could sneak in.
+        assert_eq!(
+            BigDecimal::from_str("100e999999"),
+            Err(ParseDecimalError::ExponentOverflow)
+        );
+        // A parsed scale exactly at the budget with no leak is still fine.
+        assert!(BigDecimal::from_str("1e-1000000").is_ok());
     }
 
     #[test]
