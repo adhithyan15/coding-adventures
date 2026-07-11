@@ -1113,6 +1113,12 @@ fn emit_method(
                 })?;
                 let src = var_src(f, instr, 0, "box")?;
                 load_var(il, &regs, src)?;
+                // `box System.Int32` boxes a 32-bit value. When the source rides
+                // an `int64` local (E6d-2 dynamic arithmetic works in i64),
+                // narrow with `conv.i4` first.
+                if regs.home(src)?.ty == "int64" {
+                    let _ = writeln!(il, "    conv.i4");
+                }
                 let _ = writeln!(il, "    box [System.Runtime]System.Int32");
                 store_var(il, &regs, dest)?;
             }
@@ -1125,6 +1131,12 @@ fn emit_method(
                 let src = var_src(f, instr, 0, "unbox")?;
                 load_var(il, &regs, src)?;
                 let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
+                // `unbox.any System.Int32` yields a 32-bit value. When the
+                // destination rides an `int64` local (E6d-2 dynamic arithmetic
+                // works in i64), widen with `conv.i8`.
+                if regs.home(dest)?.ty == "int64" {
+                    let _ = writeln!(il, "    conv.i8");
+                }
                 store_var(il, &regs, dest)?;
             }
             // field_store <arr>[<idx>] = <val>  (srcs = arr, Int(idx), val)

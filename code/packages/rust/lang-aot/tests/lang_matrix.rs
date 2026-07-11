@@ -183,6 +183,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-2a: dynamic integer arithmetic over `any` (structural
+    // backends).** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
+    // `car`'s result is a `ref<any>` lisp value, not a machine int — which the
+    // typed backends have no opcode for. The shared `lower_dynamic_arith` pass
+    // expands it structurally to `unbox (car …) → 41 ; add 41 1 → 42 ; box 42`,
+    // using only the `unbox`/`add`/`box` ops the *structural* code-gen backends
+    // (WASM `i31ref` / JVM `Integer` / CLR boxed-int32) already run for `cons`.
+    // Exit 42. NativeAot + LLVM use the NaN-box tagged-i64 value model
+    // (`lower_lisp_repr`, `n<<3`), whose box/unbox is shift/runtime-call based
+    // rather than `box`/`unbox` ops — added in the E6d-2b follow-up. As with
+    // E6d-1, the generic `Vm`/`Jit` run typed `vm-core` IIR (`twig-vm` is the
+    // off-matrix dynamic reference).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(+ (car (cons 41 0)) 1)",
+        expect: Expect::Exit(42),
+        backends: &[Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

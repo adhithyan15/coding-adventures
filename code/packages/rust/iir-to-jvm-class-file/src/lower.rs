@@ -4206,8 +4206,16 @@ fn lower_function(
                     }),
                 };
                 let (dest_slot, _) = lookup_var(dest_name)?;
-                let (src_slot, _) = lookup_var(&src_name)?;
-                emit_iload(&mut code, src_slot);
+                let (src_slot, src_ty) = lookup_var(&src_name)?;
+                // `Integer.valueOf` boxes a 32-bit int. When the value rides a
+                // `long` slot — E6d-2 dynamic arithmetic works in i64 — load it
+                // with `lload` and narrow with `l2i` first.
+                if src_ty == JvmType::Long {
+                    emit_lload(&mut code, src_slot);
+                    code.push(L2I);
+                } else {
+                    emit_iload(&mut code, src_slot);
+                }
                 let mref = cp.add_methodref(
                     "java/lang/Integer",
                     "valueOf",
@@ -4236,7 +4244,7 @@ fn lower_function(
                         detail: "unbox srcs[0] must be a Var".to_string(),
                     }),
                 };
-                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                 let (src_slot, _) = lookup_var(&src_name)?;
                 emit_aload(&mut code, src_slot);
                 let cidx = cp.add_class("java/lang/Integer");
@@ -4245,7 +4253,15 @@ fn lower_function(
                 let mref = cp.add_methodref("java/lang/Integer", "intValue", "()I");
                 code.push(INVOKEVIRTUAL);
                 code.extend_from_slice(&mref.to_be_bytes());
-                emit_istore(&mut code, dest_slot);
+                // `intValue` yields a 32-bit int. When the unboxed destination
+                // rides a `long` slot (E6d-2 dynamic arithmetic works in i64),
+                // widen with `i2l` and `lstore`.
+                if dest_ty == JvmType::Long {
+                    code.push(I2L);
+                    emit_lstore(&mut code, dest_slot);
+                } else {
+                    emit_istore(&mut code, dest_slot);
+                }
             }
 
             "is_null" => {

@@ -440,6 +440,7 @@ pub fn compile_source_to_llvm_with_target(
     // so the result is a plain `i64`. `iir-to-llvm` then lowers each `lispy_*` to a
     // `call @__twig_lispy_*` into `lispy_runtime.c`. A no-op for a scalar program.
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
     iir_builtin_lowering::lower_lisp_repr(&mut module);
     // Concretise any residual scalar `any` (a pure-integer program never enters
@@ -526,6 +527,7 @@ pub fn compile_source_to_wasm(
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // Intern symbol literals to distinct integers in a reserved range, so each
     // distinct symbol is a unique value (boxed as `i31ref`) and `EQ` compares
     // them with `i32.eq` — `(EQ 'A 'A)` true, `(EQ 'A 'B)` false (LANG77 / W1).
@@ -707,6 +709,7 @@ pub fn compile_source_to_jvm_class(
 ) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
     let mut module = compile_source_to_iir(language, source, class_name)?;
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
     concretize_scalar_any_for_jvm(&mut module);
@@ -792,6 +795,7 @@ pub fn compile_source_to_cil_artifact(
     // (where wasm uses `i31ref`/`$LispyPair` and the JVM `Integer`/`Object[]`).
     // A no-op for a module without cons/symbols (W6a scalar still flows through).
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
@@ -818,6 +822,7 @@ pub fn compile_source_to_cil_text(
     // The same managed value-model pipeline the binary CIL path uses, so the
     // textual and binary emitters lower an identical program.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
@@ -887,6 +892,7 @@ pub fn compile_source_to_beam(
     // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
     // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // McCarthy symbols (F6): intern each distinct symbol to a stable `i32` id
     // (`SYMBOL_ID_BASE = 1<<29`). The BEAM carries it as a native Erlang integer,
     // and `EQ` on symbols becomes integer equality (`is_eq_exact`). We use the

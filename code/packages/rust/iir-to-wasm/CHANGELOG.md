@@ -1,5 +1,9 @@
 # Changelog — iir-to-wasm
 
+## [0.37.0] — 2026-07-11 (LANG-FULL E6d-2a: i64-width `box`/`unbox`)
+
+`box`/`unbox` become i64-slot aware for E6d-2 dynamic arithmetic (which works uniformly in i64). `unbox` sign-extends `i31.get_s` (i32) with the new `i64.extend_i32_s` (0xAC) when the destination rides an i64 register; `box` narrows an i64 source with `i32.wrap_i64` before `ref.i31`. Existing i32-atom lisp box/unbox are unchanged (the guard is `slot_is_i64`).
+
 ## [0.36.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `array<str>` elements)
 
 BASIC string arrays (`DIM A$(n)`) store an E4-dyn runtime string **handle** per
