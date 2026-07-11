@@ -595,6 +595,27 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT ROUND(x, -1) AS a, ROUND(x, -5) AS b, ROUND(x, 1) AS c FROM t ORDER BY id",
     },
+    // UNHEX decodes hex digit pairs into a blob (inverse of HEX). Even-length hex
+    // → blob; odd length or a non-hex char → NULL. Compared as blobs directly
+    // (wrapping in HEX would trip a separate, pre-existing HEX(NULL) divergence).
+    Case {
+        id: "unhex",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, '414243'), (2, 'abc'), (3, 'DEADbeef')",
+        ],
+        query: "SELECT UNHEX(s) AS r FROM t ORDER BY id",
+    },
+    // The 2-argument form ignores a set of characters, but only at byte
+    // boundaries: '41.42' with '.' → x'4142', '4-1-4-2' with '-' → NULL.
+    Case {
+        id: "unhex_ignore_set",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT, ig TEXT)",
+            "INSERT INTO t VALUES (1, '41.42', '.'), (2, '4-1-4-2', '-')",
+        ],
+        query: "SELECT UNHEX(s, ig) AS r FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
