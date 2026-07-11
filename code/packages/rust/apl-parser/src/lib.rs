@@ -245,7 +245,7 @@ mod tests {
     // used to validate `parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` and
     // every sibling parser crate's own cap (see e.g. `macsyma-parser`'s
     // identically-shaped tests), but exercises the REAL APL grammar and this
-    // crate's actual `MAX_RULE_DEPTH` (500).
+    // crate's actual `MAX_RULE_DEPTH` (150).
     // -------------------------------------------------------------------
 
     /// Build `n` nested parens around a `5`, e.g. `((5))` for `n == 2`.
