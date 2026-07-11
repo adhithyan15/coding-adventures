@@ -3284,8 +3284,16 @@ func _sir_pow10(n int64) int64 {
 
 // _sir_round_int_to_multiple rounds `v` to the nearest multiple of `factor`
 // half-AWAY-from-zero using all-integer arithmetic (`Integer#round(-n)` /
-// `Float#round(<=0)` parity).  `factor >= 1`.
+// `Float#round(<=0)` parity).  `factor >= 1`.  Ruby's result is a bignum that
+// may not fit int64; rather than return a two's-complement-wrapped (sign-
+// flipped) garbage value, we DEGRADE to the un-rounded receiver when the
+// rounded multiple would overflow int64 (the closest representable answer),
+// holding the never-surprise floor.  `math.MinInt64` cannot be negated, so it
+// takes the same degrade path.
 func _sir_round_int_to_multiple(v, factor int64) int64 {
+	if v == math.MinInt64 {
+		return v
+	}
 	neg := v < 0
 	if neg {
 		v = -v
@@ -3294,6 +3302,13 @@ func _sir_round_int_to_multiple(v, factor int64) int64 {
 	rem := v - q*factor
 	if rem*2 >= factor {
 		q++
+	}
+	// Guard `q*factor` against int64 overflow (q, factor both non-negative).
+	if factor != 0 && q > math.MaxInt64/factor {
+		if neg {
+			return -v
+		}
+		return v
 	}
 	magnitude := q * factor
 	if neg {

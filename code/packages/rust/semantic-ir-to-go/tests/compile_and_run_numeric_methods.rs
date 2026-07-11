@@ -165,6 +165,10 @@ fn catalog_module() -> Module {
         // 5.between?(1, 10) → #t ; 0.between?(1, 10) → #f
         print_stmt(method(ilit(5), "between?", vec![ilit(1), ilit(10)])),
         print_stmt(method(ilit(0), "between?", vec![ilit(1), ilit(10)])),
+        // Overflow guard: rounding int64::MAX to a multiple that would overflow
+        // degrades to the un-rounded value (closest int64) instead of wrapping
+        // to a sign-flipped garbage number.
+        print_stmt(method(ilit(9223372036854775807), "round", vec![ilit(-1)])),
         // 1.upto(3) { |i| print i } → 1,2,3 (three lines).  The block itself
         // prints; the iterator's return value (the receiver) is discarded, so
         // this is a bare ExprStmt, NOT wrapped in another print.
@@ -264,6 +268,7 @@ fn numeric_methods_compile_and_run() {
             "10",        // 99.clamp(1, 10)
             "#t",        // 5.between?(1, 10)
             "#f",        // 0.between?(1, 10)
+            "9223372036854775807", // int64::MAX.round(-1) — overflow-degrade to self
             "1", "2", "3", // 1.upto(3)
             "3", "2", "1", // 3.downto(1)
             "0", "2", "4", // 0.step(4, 2)
