@@ -164,7 +164,9 @@ static void feistel_f(const uint8_t right[32], const uint8_t subkey[6],
 }
 
 /* ── core block cipher (subkeys applied in the given order) ───────────────── */
-static void des_block(const uint8_t block[8], const uint8_t subkeys[16][6],
+/* `subkeys` is read-only, but is left unqualified: ISO C (before C23) forbids
+ * implicitly converting uint8_t[16][6] to const uint8_t[16][6] at a call. */
+static void des_block(const uint8_t block[8], uint8_t subkeys[16][6],
                       uint8_t out[8]) {
     uint8_t bits[64];
     uint8_t perm[64];

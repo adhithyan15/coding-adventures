@@ -124,7 +124,7 @@ static void bytes_to_state(const uint8_t block[16], uint8_t s[4][4]) {
         }
     }
 }
-static void state_to_bytes(const uint8_t s[4][4], uint8_t out[16]) {
+static void state_to_bytes(uint8_t s[4][4], uint8_t out[16]) {
     int col, row;
     for (col = 0; col < 4; col++) {
         for (row = 0; row < 4; row++) {
@@ -132,7 +132,9 @@ static void state_to_bytes(const uint8_t s[4][4], uint8_t out[16]) {
         }
     }
 }
-static void add_round_key(uint8_t s[4][4], const uint8_t rk[4][4]) {
+/* `rk` is read-only but left unqualified: ISO C (before C23) forbids implicitly
+ * converting uint8_t[4][4] to const uint8_t[4][4] at a call site. */
+static void add_round_key(uint8_t s[4][4], uint8_t rk[4][4]) {
     int r, c;
     for (r = 0; r < 4; r++) {
         for (c = 0; c < 4; c++) {
