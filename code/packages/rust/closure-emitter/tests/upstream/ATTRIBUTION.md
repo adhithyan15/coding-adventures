@@ -277,6 +277,26 @@ under the Apache License, Version 2.0:
       PR2) is exercised separately in `javascript-parser` + a `closurec` e2e diff
       fixture.
 
+- `code_printer_private_name_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the **private class-member name** printing cases — a `#x` field key or a
+      `#m()` method key, a `PropertyKey::PrivateName` / ESTree `PrivateIdentifier`)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_field_test.rs`; isolates the `PrivateName`
+      arm of `emit_property_key` that landed with `PropertyKey::PrivateName`
+      (CLOC12.177 PR1). 7 active `#[test]`s and **0 `#[ignore]`** — the emitter
+      conforms to every covered shape: an initialized private field (`#x=1;`); a
+      bare private field (`#x;`); a single-`#` regression guard (no `##`, no
+      missing `#`); a `static` private field (`static #x=1;`); a private method
+      key (`#m(){}`, brace-terminated); and private/public members interleaving
+      (`#x=1;m(){}`, `x=1;#y=2;`). The stored `PrivateName.name` omits the leading
+      `#` (mirroring `Identifier`); the emitter prepends it, with no quote/shorten
+      logic (a private name is a hard token boundary). Inputs are hand-constructed
+      AST; the bridge conversion of a private *field* (CLOC12.177 PR2) is
+      exercised separately in `javascript-parser` + a `closurec` e2e fixture, and
+      building the AST directly lets this port cover the private *method* key
+      shape (whose bridge is a later slice) today.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

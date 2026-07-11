@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.41.1] - 2026-07-11
+
+### Added — CLOC12.177 PR3: CodePrinter private-name conformance port
+
+New upstream conformance port `tests/upstream/code_printer_private_name_test.rs`
+(the twenty-fourth CodePrinter port), mirroring `CodePrinterTest.java`'s
+private-class-member-name printing cases. Isolates the `PrivateName` arm of
+`emit_property_key` (CLOC12.177 PR1). 7 active `#[test]`s, 0 `#[ignore]`:
+initialized private field (`#x=1;`), bare private field (`#x;`), single-`#`
+regression guard, static private field (`static #x=1;`), private method key
+(`#m(){}`), and private/public interleave (`#x=1;m(){}`, `x=1;#y=2;`). Inputs are
+hand-constructed AST (the emitter is the unit under test; the private-field
+bridge is exercised separately in javascript-parser + a closurec e2e fixture, and
+building AST directly covers the private-method key shape whose bridge is a later
+slice). Test-only; adds a `[[test]]` entry to `Cargo.toml` and a row to
+`tests/upstream/ATTRIBUTION.md`. PATCH.
+
 ## [0.41.0] - 2026-07-11
 
 ### Added — CLOC12.177 PR1: emit private class-member names (`#x`)
