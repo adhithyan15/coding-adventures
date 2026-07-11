@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.28.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `collect_concat` / `reduce` / `inject` / `sum` (+ Hash display)
+
+Mirrors the Python reference (PR #7978), the Go backend (PR #7983), and the Rust
+backend (PR #7989) into the JS backend's inline `hashMethod` (+ the `HASH_METHODS`
+`respond_to?` set), completing the Hash Enumerable reshape/fold surface.  Ruby's
+`Hash` mixes in `Enumerable`, so every method iterates the hash as `[key, value]`
+pairs and yields the two-arg `(key, value)` EXCEPT `reduce`/`inject`, which follow
+Ruby's memo convention and yield `(memo, [k, v])` — the pair as ONE argument.
+
+- `group_by { |k, v| key }` — a `Map` from each block key to the Array of the
+  `[k, v]` pairs that produced it, in first-seen key order (mirrors Array#group_by,
+  which also returns a `Map`).
+- `partition { |k, v| pred }` — `[[matching pairs], [rest pairs]]`.
+- `flat_map`/`collect_concat { |k, v| … }` — map then concatenate one level (an
+  Array result splices, a scalar appends).
+- `reduce`/`inject` — Ruby's memo fold over the `[k, v]` pairs; explicit seed or
+  first pair; empty seedless → `nil`.
+- `sum(init = 0) { |k, v| … }` — numeric fold seeded at `0` (or the seed arg) over
+  the block results (native `+`, same as Array#sum).
+
+**Hash display fix:** `formatSeen` previously had no `Map` branch, so a printed
+Hash rendered as `[object Map]` (every prior hash test called `.to_a` first, so
+this was never exercised).  A Hash now renders `{k: v, …}` — the same surface the
+Go/Rust backends emit — so a printed `group_by` result round-trips identically
+across backends.  Cycle-guarded via `seen` like Arrays (`{...}` on a self-cycle).
+
+Exec-proof: `tests/run_with_node.rs` gains `hash_enumerable_breadth`, running
+`group_by`/`partition` (even-value predicate), `flat_map` (pair projection), `sum`
+(value projection), and `reduce(100)` (memo `acc + pair[1]` via `SeqIndex`) under
+real `node`, diffed against the Python/Go/Rust reference semantics.
+
 ## 0.27.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
 
 Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the

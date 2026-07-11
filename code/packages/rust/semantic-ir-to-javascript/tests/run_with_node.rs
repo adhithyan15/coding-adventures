@@ -2816,3 +2816,95 @@ fn hash_enumerable_aggregates() {
         );
     }
 }
+
+// ── Ruby Hash Enumerable breadth (group_by/partition/flat_map/reduce/sum) ──
+//
+// Same [key, value]-pair iteration as the aggregates: every method yields
+// (key, value) EXCEPT reduce/inject, which follow Ruby's memo convention and
+// yield (memo, [k, v]) — the pair as ONE argument.  Mirrors the Python (#7978),
+// Go (#7983), and Rust (#7989) references.
+#[test]
+fn hash_enumerable_breadth() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs.into_iter().map(|(k, v)| MapEntry { key: str_(k), value: v }).collect(),
+        span: sp(),
+    };
+    let abcd = || mk(vec![("a", int(1)), ("b", int(2)), ("c", int(3)), ("d", int(4))]);
+    let block_fns = vec![
+        // { |k, v| v.even? } — group/partition predicate.
+        func("__hb_even", vec![param("k"), param("v")], vec![], method(param_ref("v"), "even?", vec![])),
+        // { |k, v| [k, v] } — flat_map projection that splices the pair.
+        func("__hb_pair", vec![param("k"), param("v")], vec![], seq(vec![param_ref("k"), param_ref("v")])),
+        // { |k, v| v } — sum projection.
+        func("__hb_val", vec![param("k"), param("v")], vec![], param_ref("v")),
+        // { |acc, pair| acc + pair[1] } — reduce over (memo, [k, v]); the pair
+        // arrives as ONE arg, so the value is `pair[1]` via SeqIndex (never the
+        // array `[]` method — the Go/Rust mirror lesson).
+        func(
+            "__hb_add",
+            vec![param("acc"), param("pair")],
+            vec![],
+            bc("+", vec![
+                param_ref("acc"),
+                Expr::SeqIndex { seq: Box::new(param_ref("pair")), index: Box::new(int(1)), span: sp() },
+            ]),
+        ),
+    ];
+    let stmts = vec![
+        // {a:1,b:2,c:3,d:4}.group_by { |k,v| v.even? }
+        //   → {#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}  (first-seen keys)
+        print(method(abcd(), "group_by", vec![method_closure("__hb_even")])),
+        // .partition { |k,v| v.even? } → [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]
+        print(method(abcd(), "partition", vec![method_closure("__hb_even")])),
+        // {a:1,b:2}.flat_map { |k,v| [k,v] } → [a, 1, b, 2]  (one-level splice)
+        print(method(
+            mk(vec![("a", int(1)), ("b", int(2))]),
+            "flat_map",
+            vec![method_closure("__hb_pair")],
+        )),
+        // {a:1,b:2,c:3,d:4}.sum { |k,v| v } → 10  (seed defaults to 0)
+        print(method(abcd(), "sum", vec![method_closure("__hb_val")])),
+        // {a:1,b:2,c:3,d:4}.reduce(100) { |acc,pair| acc + pair[1] } → 110
+        print(method(abcd(), "reduce", vec![int(100), method_closure("__hb_add")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashbreadth".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashbreadth") {
+        assert_eq!(
+            stdout,
+            "{#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}\n\
+             [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]\n\
+             [a, 1, b, 2]\n\
+             10\n\
+             110"
+        );
+    }
+}
