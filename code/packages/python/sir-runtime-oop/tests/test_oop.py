@@ -700,6 +700,10 @@ def test_numeric_round_ndigits() -> None:
     # int(inf)/int(nan) error.
     assert oop.call_method(5, "round", float("inf")) == 5
     assert oop.call_method(5, "round", float("nan")) == 5
+    # A huge integer receiver must round via integer arithmetic (no float
+    # OverflowError from `recv / factor`).
+    assert oop.call_method(10**309, "round", -1) == 10**309
+    assert oop.call_method(5 * 10**400, "round", -3) == 5 * 10**400
 
 
 def test_numeric_divmod_fdiv() -> None:

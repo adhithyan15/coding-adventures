@@ -1604,15 +1604,27 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
         )
         if isinstance(recv, float) and not math.isfinite(recv):
             return recv
-        # Decimal width of the integer magnitude — cheap and bounded.
-        int_width = len(str(abs(int(recv)))) if math.isfinite(recv) else 0
+        # Decimal width of the integer magnitude — cheap and bounded.  ``recv`` is
+        # now an int or a *finite* float (non-finite floats returned above), so we
+        # avoid ``math.isfinite(recv)``: that coerces a huge int to a float and
+        # would itself raise ``OverflowError`` (e.g. ``10**309``).
+        int_width = len(str(abs(recv if isinstance(recv, int) else int(recv))))
         if isinstance(recv, int):
             if ndigits >= 0:
                 return recv
             if -ndigits > int_width + 1:
                 return 0  # rounding place dwarfs the value ⇒ 0 (Ruby parity)
             factor = 10 ** (-ndigits)
-            return int(_ruby_round(recv / factor)) * factor
+            # Round to the nearest multiple of ``factor`` half-away-from-zero
+            # with ALL-INTEGER arithmetic.  ``recv / factor`` would be Python
+            # true division (a float) and raises ``OverflowError`` for a receiver
+            # past ~1.8e308 (e.g. ``(10**309).round(-1)``) — an untyped error;
+            # integer ``divmod`` never overflows.
+            quotient, rem = divmod(abs(recv), factor)
+            if rem * 2 >= factor:
+                quotient += 1
+            magnitude = quotient * factor
+            return -magnitude if recv < 0 else magnitude
         if ndigits <= 0:
             if -ndigits > int_width + 1:
                 return 0
