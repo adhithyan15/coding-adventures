@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-javascript-parser"
-version = "0.44.0"
+version = "0.45.0"
 edition = "2021"
 description = "JavaScript parser — parses JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven parser. Includes correlation-vector plumbing per CLOC03 and a typed-AST bridge (GrammarASTNode → javascript_ast::Program) per CLOC12.136."
 
