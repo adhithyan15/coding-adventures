@@ -1,0 +1,22 @@
+# Standalone workspace so this cdylib stays out of the main Rust workspace
+# (mirrors dart/caesar-cipher-native and python/gf256-native). It depends on the
+# pure sha256 crate by path and exposes a C ABI for dart:ffi.
+[workspace]
+
+[package]
+name = "sha256-native"
+version = "0.1.0"
+edition = "2021"
+description = "C-ABI cdylib wrapping the Rust coding_adventures_sha256 crate, called from Dart via dart:ffi (zero third-party deps)"
+
+[lib]
+# Produces libsha256_native.{so,dylib}/sha256_native.dll.
+name = "sha256_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+# The pure SHA-256 crate — the single source of truth for the algorithm.
+coding_adventures_sha256 = { path = "../../rust/sha256" }
+
+[profile.release]
+opt-level = 3
