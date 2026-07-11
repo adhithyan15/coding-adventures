@@ -134,7 +134,10 @@ Each item is a run-verified PR; the runtime grows one quirk at a time.
    fixed 12 fractional digits, not the standard's composite intermediate-precision
    rule; `**` supports non-negative integer exponents only (bounded at 1024).
    Both are flagged for a later precision/exponent-faithfulness PR.
-6. **Signed numerics + overpunch** display and the `SIGN` clause.
+6. **v0.6 — signed numerics** (this PR): `PIC S9…` fields carry an operational
+   sign through `MOVE`/arithmetic/`COMPUTE`; `DISPLAY` renders it as the default
+   trailing "zoned" overpunch on the units digit (`−123` → `12L`). The explicit
+   `SIGN` clause and its `SEPARATE`/`LEADING` variants are deferred.
 7. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
 7. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`, `TIMES`,
    `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.

@@ -21,6 +21,10 @@ struct Item {
     level: u32,
     picture: Option<Picture>,
     storage: String,
+    /// The operational sign of a signed numeric item (`PIC S9…`). The `storage`
+    /// digits are always the magnitude; this carries the sign separately. Always
+    /// `false` for unsigned and non-numeric items (they drop any sign).
+    neg: bool,
     children: Vec<usize>,
 }
 
@@ -55,6 +59,30 @@ fn fill_fig(f: &Fig, n: usize) -> String {
         Fig::Zero => "0".repeat(n),
         Fig::Space => " ".repeat(n),
     }
+}
+
+/// Overpunch the sign onto the trailing (units) digit of a magnitude digit
+/// string — the ASCII "zoned decimal" encoding COBOL uses to `DISPLAY` a signed
+/// numeric-display field under the default `SIGN IS TRAILING`. The units digit
+/// `d` becomes:
+///
+/// | d | 0 1 2 3 4 5 6 7 8 9 |
+/// |---|---------------------|
+/// | + | { A B C D E F G H I |
+/// | − | } J K L M N O P Q R |
+///
+/// So `+123` → `12C` and `−123` → `12L`. A non-digit units position (there is
+/// none for a real numeric field) is passed through unchanged.
+fn overpunch_trailing(magnitude: &str, neg: bool) -> String {
+    const POS: [char; 10] = ['{', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    const NEG: [char; 10] = ['}', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
+    let mut chars: Vec<char> = magnitude.chars().collect();
+    if let Some(last) = chars.last_mut() {
+        if let Some(d) = last.to_digit(10) {
+            *last = if neg { NEG[d as usize] } else { POS[d as usize] };
+        }
+    }
+    chars.into_iter().collect()
 }
 
 /// The running machine: the item table, a name→index map, and captured output.
@@ -103,6 +131,7 @@ impl Machine {
                 level: def.level,
                 picture,
                 storage,
+                neg: false,
                 children: Vec::new(),
             });
 
@@ -345,7 +374,7 @@ impl Machine {
     fn numeric_dims(&self, name: &str) -> Result<(usize, usize), RuntimeError> {
         let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.into()))?;
         match &self.items[idx].picture {
-            Some(Picture::Numeric { int_digits, dec_digits }) => Ok((*int_digits, *dec_digits)),
+            Some(Picture::Numeric { int_digits, dec_digits, .. }) => Ok((*int_digits, *dec_digits)),
             _ => Err(RuntimeError::Unsupported(format!("arithmetic on non-numeric field {name}"))),
         }
     }
@@ -483,8 +512,8 @@ impl Machine {
             .clone()
             .ok_or_else(|| RuntimeError::Unsupported("MOVE into a group item".into()))?;
 
-        let new_storage = match picture {
-            Picture::Numeric { int_digits, dec_digits } => {
+        let (new_storage, new_neg) = match picture {
+            Picture::Numeric { int_digits, dec_digits, signed } => {
                 let d = match src {
                     Src::Num(d) => d,
                     Src::Fig(Fig::Zero) => Decimal::zero(),
@@ -497,7 +526,10 @@ impl Machine {
                         ))
                     }
                 };
-                move_into_numeric(&d, int_digits, dec_digits)
+                // A signed field keeps the sign (except on zero, which is
+                // unsigned); an unsigned field drops it to magnitude.
+                let neg = signed && d.neg && !d.is_zero();
+                (move_into_numeric(&d, int_digits, dec_digits), neg)
             }
             Picture::Alphanumeric { size } | Picture::Alphabetic { size } => {
                 let chars = match src {
@@ -506,10 +538,11 @@ impl Machine {
                     Src::Fig(Fig::Zero) => "0".repeat(size),
                     Src::Fig(Fig::Space) => " ".repeat(size),
                 };
-                move_into_char(&chars, size)
+                (move_into_char(&chars, size), false)
             }
         };
         self.items[dst].storage = new_storage;
+        self.items[dst].neg = new_neg;
         Ok(())
     }
 
@@ -544,12 +577,13 @@ impl Machine {
     }
 
     /// A numeric item's value as a [`Decimal`], split by its implied decimal.
+    /// A signed item carries its stored operational sign.
     fn item_as_decimal(&self, idx: usize) -> Decimal {
         let item = &self.items[idx];
         if let Some(Picture::Numeric { int_digits, .. }) = &item.picture {
             let int: String = item.storage.chars().take(*int_digits).collect();
             let frac: String = item.storage.chars().skip(*int_digits).collect();
-            Decimal { neg: false, int, frac }
+            Decimal { neg: item.neg, int, frac }
         } else {
             Decimal::zero()
         }
@@ -570,12 +604,14 @@ impl Machine {
     }
 
     /// An item's stored image (elementary → its storage; group → its children).
+    /// A signed numeric item shows its sign as a trailing **overpunch** on the
+    /// units digit — COBOL's default `DISPLAY` of a `PIC S9…` field.
     fn item_image(&self, idx: usize) -> String {
         let item = &self.items[idx];
-        if item.picture.is_some() {
-            item.storage.clone()
-        } else {
-            self.group_image(idx)
+        match &item.picture {
+            Some(Picture::Numeric { signed: true, .. }) => overpunch_trailing(&item.storage, item.neg),
+            Some(_) => item.storage.clone(),
+            None => self.group_image(idx),
         }
     }
 

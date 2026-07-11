@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0 — signed numerics (PIC S9…)
+
+- **`PIC S9…` signed numeric fields.** The leading `S` marks the field signed and
+  bears no storage position (`S9(4)` is still 4 digits). `picture.rs` parses it
+  (and rejects a misplaced `S`, or `S` on a non-numeric field); the operational
+  sign is carried alongside the magnitude digits on each item.
+- **Sign is preserved** through `MOVE` and arithmetic into a signed receiver; an
+  unsigned receiver still drops the sign to magnitude (unchanged). Zero is always
+  unsigned.
+- **`DISPLAY` overpunch.** A signed field displays its sign as a trailing
+  ("zoned decimal") overpunch on the units digit under the default
+  `SIGN IS TRAILING`: `+123` → `12C`, `−123` → `12L`, `0` → `00{`. This is the
+  authentic COBOL rendering of a `DISPLAY`-usage signed field.
+- Deferred to a later PR: the explicit `SIGN` clause and its `SEPARATE` /
+  `LEADING` variants (this PR is the default trailing-overpunch sign only).
+
 ## 0.5.0 — COMPUTE / arithmetic expressions (PL08)
 
 - Executes `COMPUTE target [ROUNDED] = <expr> [ON SIZE ERROR …]`.
