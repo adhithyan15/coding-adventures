@@ -649,6 +649,8 @@ _HASH_BLOCK_METHODS = frozenset(
         "reject",
         "each_key",
         "each_value",
+        "transform_values",
+        "transform_keys",
     }
 )
 
@@ -1201,6 +1203,16 @@ def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
         return {k: v for k, v in recv.items() if truthy(apply(block, [k, v]))}
     if name == "reject":
         return {k: v for k, v in recv.items() if not truthy(apply(block, [k, v]))}
+    if name == "transform_values":
+        # ``transform_values { |v| … }`` — a NEW hash with each value replaced by
+        # the block's result; keys are untouched.  Non-mutating (Ruby's bang
+        # variant is a follow-up).
+        return {key: apply(block, [value]) for key, value in recv.items()}
+    if name == "transform_keys":
+        # ``transform_keys { |k| … }`` — a NEW hash with each key replaced by the
+        # block's result; values are untouched.  On a collision the LAST pair
+        # wins (Ruby's rule, matching dict-comprehension insertion order).
+        return {apply(block, [key]): value for key, value in recv.items()}
     return _MISS
 
 

@@ -2,6 +2,21 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.18] - 2026-07-11
+
+### Added — Hash block methods: `transform_values` / `transform_keys`
+
+Extends the block-taking `Hash` catalog (`_hash_block_method` +
+`_HASH_BLOCK_METHODS`) with two more Ruby `Hash` methods — this establishes the
+**reference** semantics before the embedded backends mirror them:
+
+- `transform_values { |v| … }` — a **new** hash with each value replaced by the
+  block's result; keys are untouched (non-mutating; the `!` bang variant is a
+  follow-up).
+- `transform_keys { |k| … }` — a **new** hash with each key replaced by the
+  block's result; values are untouched. On a key collision the **last** pair
+  wins (Ruby's rule).
+
 ## [0.1.17] - 2026-07-10
 
 ### Added — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
