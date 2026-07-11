@@ -21,8 +21,13 @@ semantics for the N1 breadth sweep before the embedded backends mirror them:
 - `clamp(min, max)` — `min` if `recv < min`, `max` if `recv > max`, else `recv`.
 - `between?(min, max)` — `min <= recv <= max`.
 
-The `clamp`/`between?` `Range` form and `divmod`/`fdiv` on non-numeric arguments
-are deferred, matching the literal-only precedent elsewhere in the catalog.
+The `clamp`/`between?` `Range` form is deferred, matching the literal-only
+precedent elsewhere in the catalog. All arithmetic is hardened to the
+never-raise floor: `round` bounds a hostile `ndigits` (no bignum allocation),
+guards non-finite arguments, and uses all-integer rounding for large-integer
+receivers; `divmod`/`fdiv` saturate bignum operands to `±Infinity` (via
+`_sat_float`) and route a non-numeric argument to the typed `ZeroDivisionError`
+rather than an untyped `OverflowError`/`ValueError`/`TypeError`.
 
 ## [0.1.16] - 2026-07-07
 
