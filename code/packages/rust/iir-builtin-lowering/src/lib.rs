@@ -119,6 +119,7 @@ pub mod lisp_repr_structural;
 pub mod symbol_intern;
 pub mod global_io;
 pub mod closure;
+pub mod dynamic_arith;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -161,6 +162,7 @@ pub use symbol_intern::intern_symbols_structural;
 pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).
 pub use closure::lower_closure_builtins;
+pub use dynamic_arith::lower_dynamic_arith;
 
 use interpreter_ir::IIRModule;
 
