@@ -160,6 +160,7 @@ SELF_CONTAINED_RUNGS = (
     "rung120_pulmonology_spirometry",
     "rung121_neonatology_perfusion",
     "rung122_rehabilitation_recovery",
+    "rung123_sports_concussion_clearance",
 )
 
 
