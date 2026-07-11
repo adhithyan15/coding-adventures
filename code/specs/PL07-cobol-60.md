@@ -204,13 +204,13 @@ opaque token — see the lexer design.
                   free-form COBOL text (Area A + Area B, cols 8–72)
                           │
           ┌───────────────────────────────────┐
-          │  Lexer  (cobol60.tokens)          │   ← PR2
+          │  Lexer  (cobol.tokens)          │   ← PR2
           │  KEYWORD, NAME, LEVEL, PIC-STRING, │
           │  NUMBER, STRING, DOT, ( )          │
           └───────────────────────────────────┘
                           ▼ Vec<Token>
           ┌───────────────────────────────────┐
-          │  Parser (cobol60.grammar)         │   ← PR3+
+          │  Parser (cobol.grammar)         │   ← PR3+
           │  program → 4 divisions → …         │
           └───────────────────────────────────┘
                           ▼ GrammarASTNode (CST)
@@ -221,14 +221,14 @@ opaque token — see the lexer design.
 
 **Rust crates:** `code/packages/rust/cobol-lexer/` (PR2),
 `code/packages/rust/cobol-parser/` (PR3+).
-**Grammar files:** `code/grammars/cobol/cobol60.tokens` and `cobol60.grammar`.
+**Grammar files:** `code/grammars/cobol/cobol.tokens` and `cobol.grammar`.
 
 Both crates are thin wrappers over the shared `lexer::GrammarLexer` /
 `parser::GrammarParser` — nothing hand-written. The **only** COBOL-specific Rust
 logic is the `strip_cobol_columns` pre-tokenize hook, which the shared lexer
 already supports (`GrammarLexer::add_pre_tokenize`, a `Fn(String) -> String`).
 
-## Lexer Design (`cobol60.tokens` + column-strip hook)
+## Lexer Design (`cobol.tokens` + column-strip hook)
 
 ### The column-strip pre-tokenize hook
 
@@ -268,20 +268,25 @@ Keywords normalize to uppercase; `NAME` values preserve their source case.
 ### PICTURE strings — the context-sensitive part
 
 A picture string like `X(20)` begins with `X`, which is otherwise a `NAME`, so it
-can only be lexed correctly *after* a `PIC`/`PICTURE` keyword. Two viable
-mechanisms, in increasing order of ambition:
+can only be lexed correctly *after* a `PIC`/`PICTURE` keyword. PR2 implements this
+with the tokens format's declarative **mode-transition** feature (F10): a
+`PIC`/`PICTURE` keyword fires `set-mode picture`, the `picture` group matches one
+`PIC_STRING`, and emitting that `PIC_STRING` fires `set-mode default`. Because
+`skip:` is global, the space between `PICTURE` and the picture is consumed in
+`picture` mode before `PIC_STRING` matches; and because `picture` is an
+*inheriting* set-mode (not a push), the default patterns remain reachable, so the
+lexer can never get stuck in it.
 
-1. **Pattern-group mode transition** (preferred, the tokens format's `group` +
-   `transitions` feature): seeing `PICTURE`/`PIC` switches the lexer into a
-   `picture` group that matches one `PIC_STRING` token, then transitions back.
-2. **Post-tokenize hook**: a `Vec<Token> -> Vec<Token>` pass that collapses the
-   run of tokens following `PIC`/`PICTURE` into a single `PIC_STRING` (mirrors
-   the BASIC `suppress_rem_content` hook pattern).
+The core picture pattern is `[9XAVSP()0-9]+` (the data symbols `9 X A V S P` plus
+repetition), matched case-insensitively. Excluding the period is deliberate: a
+picture therefore terminates at a space **or** at the entry-ending period, so
+`PIC X(20).` lexes as `PIC_STRING("X(20)")` then `DOT`. Editing pictures (which
+use `. , Z * $ …`) are future work.
 
-The first implementation will use whichever proves cleanest to verify with tests;
-the spec commits only to the *observable* result — one `PIC_STRING` token per
-picture clause — not the mechanism. This will be finalised in PR2 and this
-section updated to match (spec-sync).
+An alternative post-tokenize hook (collapsing the token run after `PIC`) was
+considered and rejected: reconstructing the picture from already-split tokens is
+fragile at the entry-period boundary, whereas the mode transition reads the
+picture as one token directly from the source.
 
 ### `DOT` vs decimal point
 
@@ -290,7 +295,7 @@ numeric literal like `3.14`. The lexer resolves this the usual first-match way:
 the `NUMBER` pattern (`-?[0-9]+(\.[0-9]+)?`) claims `3.14` as one token, so a
 `DOT` is only produced for a period that is not part of a number.
 
-## Parser Design (`cobol60.grammar`) — PR3+
+## Parser Design (`cobol.grammar`) — PR3+
 
 A sketch of the top-level productions (PEG, packrat, no left recursion):
 
@@ -338,10 +343,10 @@ list, `COPY`) is documented as future work.
 ## Implementation Roadmap (small PRs)
 
 1. **PR1 — this spec (`PL07`).** Specs-first, committed before code.
-2. **PR2 — lexer.** `cobol60.tokens` + `cobol-lexer` crate: the
+2. **PR2 — lexer.** `cobol.tokens` + `cobol-lexer` crate: the
    `strip_cobol_columns` pre-tokenize hook, the token inventory above, PICTURE
    handling, and tests over a real fixed-format program.
-3. **PR3 — parser (structure).** `cobol60.grammar` + `cobol-parser`: the four
+3. **PR3 — parser (structure).** `cobol.grammar` + `cobol-parser`: the four
    division headers, DATA DIVISION entries, and PROCEDURE paragraphs/sentences.
 4. **PR4+ — procedure verbs & clauses.** Flesh out statements and data clauses,
    widen the reserved-word set, and grow the tested program corpus.
