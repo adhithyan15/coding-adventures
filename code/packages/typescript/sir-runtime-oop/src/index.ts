@@ -623,6 +623,15 @@ const HASH_BLOCK_METHODS = new Set<string>([
   "each_value",
   "transform_values",
   "transform_keys",
+  "find",
+  "detect",
+  "any?",
+  "all?",
+  "none?",
+  "count",
+  "sort_by",
+  "min_by",
+  "max_by",
 ]);
 
 // Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
@@ -1254,6 +1263,70 @@ function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val
       // `Map` constructor folds a list of pairs (later duplicate keys overwrite
       // the value while the slot stays put).
       return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [apply(block, [k]), v]));
+    // ── Enumerable aggregates (Hash includes Enumerable) ──────────────────
+    //
+    // Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as a
+    // sequence of `[key, value]` pairs: the block is yielded `[key, value]`
+    // (two arguments, matching `each`), and the "element" an aggregate returns
+    // is the two-element `[key, value]` list.
+    case "find":
+    case "detect":
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) return [k, v];
+      }
+      return null;
+    case "any?":
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) return true;
+      }
+      return false;
+    case "all?":
+      for (const [k, v] of recv) {
+        if (!truthy(apply(block, [k, v]))) return false;
+      }
+      return true;
+    case "none?":
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) return false;
+      }
+      return true;
+    case "count": {
+      // `count { |k, v| pred }` — number of pairs with a truthy block result.
+      let n = 0;
+      for (const [k, v] of recv) {
+        if (truthy(apply(block, [k, v]))) n++;
+      }
+      return n;
+    }
+    case "sort_by": {
+      // A NEW Array of `[k, v]` pairs sorted by the block key; `<`/`>` keeps
+      // numbers numeric (matching Array#sort_by).  Keys computed once.
+      const keyed = [...recv].map(([k, v]: [Val, Val]): [Val, Val] => [
+        apply(block, [k, v]),
+        [k, v],
+      ]);
+      keyed.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+      return keyed.map((pair) => pair[1]);
+    }
+    case "min_by":
+    case "max_by": {
+      // The `[k, v]` pair with the extremal block key (first-on-tie; nil on
+      // an empty hash).
+      const entries = [...recv];
+      if (entries.length === 0) return null;
+      const wantMin = name === "min_by";
+      let bestPair: Val = [entries[0][0], entries[0][1]];
+      let bestKey = apply(block, [entries[0][0], entries[0][1]]);
+      for (let i = 1; i < entries.length; i++) {
+        const [k, v] = entries[i];
+        const key = apply(block, [k, v]);
+        if (wantMin ? key < bestKey : key > bestKey) {
+          bestPair = [k, v];
+          bestKey = key;
+        }
+      }
+      return bestPair;
+    }
     default:
       return MISS;
   }
