@@ -127,6 +127,7 @@ members = [
     "excel-parser",
     "fenwick-tree",
     "flow-matic-lexer",
+    "flow-matic-parser",
     "font-parser",
     "font-parser-node",
     "font-parser-python",
