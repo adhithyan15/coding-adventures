@@ -319,6 +319,29 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
                     .iter()
                     .any(|idx| index_arg_references_any_name(idx, names))
         }
+
+        // SIR23 compile-compat stubs: same rationale as the SIR22 stubs
+        // above — the Ruby frontend never produces any symbolic-expression
+        // or pattern/rewrite node today, but every arm still recurses
+        // structurally so the swap-safety check keeps scanning every child
+        // `Expr` for `VarRef`s if a future lowering path starts emitting
+        // them.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_references_any_name(head, names)
+                || args.iter().any(|a| expr_references_any_name(a, names))
+        }
+        Expr::SymPatternBlank { head, .. } => head
+            .as_ref()
+            .is_some_and(|h| expr_references_any_name(h, names)),
+        Expr::SymPatternNamed { pattern, .. } => expr_references_any_name(pattern, names),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_references_any_name(expr, names)
+                || rules.iter().any(|r| expr_references_any_name(r, names))
+        }
     }
 }
 
@@ -4149,6 +4172,39 @@ impl Lowerer {
                 }
                 found
             }
+
+            // SIR23 compile-compat stubs: same rationale as the SIR22 stubs
+            // above — this frontend never emits any symbolic-expression or
+            // pattern/rewrite node today, but every arm still recurses into
+            // its children so a nested `yield` would still be found if such
+            // a node were ever produced.
+            Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+            Expr::SymApply { head, args, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(head, block_scope);
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a, block_scope);
+                }
+                found
+            }
+            Expr::SymPatternBlank { head, .. } => head
+                .as_mut()
+                .map(|h| Self::rewrite_yields_in_expr(h, block_scope))
+                .unwrap_or(false),
+            Expr::SymPatternNamed { pattern, .. } => {
+                Self::rewrite_yields_in_expr(pattern, block_scope)
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(expr, block_scope);
+                for r in rules.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(r, block_scope);
+                }
+                found
+            }
         }
     }
 
@@ -4821,6 +4877,35 @@ impl Lowerer {
                     Self::normalize_calls_in_index_arg(idx, ctx);
                 }
             }
+            // SIR23 compile-compat stubs (never emitted by this frontend):
+            // recurse into every child `Expr`, matching the SIR22 stubs
+            // above, so a parenless block-method call nested inside one of
+            // these would still be normalized.
+            Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+            Expr::SymApply { head, args, .. } => {
+                Self::normalize_calls_in_expr(head, ctx);
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, ctx);
+                }
+            }
+            Expr::SymPatternBlank { head, .. } => {
+                if let Some(h) = head {
+                    Self::normalize_calls_in_expr(h, ctx);
+                }
+            }
+            Expr::SymPatternNamed { pattern, .. } => {
+                Self::normalize_calls_in_expr(pattern, ctx);
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                Self::normalize_calls_in_expr(expr, ctx);
+                for r in rules.iter_mut() {
+                    Self::normalize_calls_in_expr(r, ctx);
+                }
+            }
             // Atomic literals and a non-rewritten VarRef carry no
             // sub-expressions.
             Expr::IntLit { .. }
@@ -5053,6 +5138,35 @@ impl Lowerer {
                 Self::collect_bound_names_expr(target, out);
                 for idx in indices {
                     Self::collect_bound_names_expr_in_index_arg(idx, out);
+                }
+            }
+            // SIR23 compile-compat stubs (never emitted by this frontend):
+            // recurse into every child `Expr`, matching the SIR22 stubs
+            // above, so a name bound inside a nested closure would still be
+            // collected.
+            Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+            Expr::SymApply { head, args, .. } => {
+                Self::collect_bound_names_expr(head, out);
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
+            Expr::SymPatternBlank { head, .. } => {
+                if let Some(h) = head {
+                    Self::collect_bound_names_expr(h, out);
+                }
+            }
+            Expr::SymPatternNamed { pattern, .. } => {
+                Self::collect_bound_names_expr(pattern, out);
+            }
+            Expr::SymRule { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                Self::collect_bound_names_expr(expr, out);
+                for r in rules {
+                    Self::collect_bound_names_expr(r, out);
                 }
             }
             Expr::IntLit { .. }

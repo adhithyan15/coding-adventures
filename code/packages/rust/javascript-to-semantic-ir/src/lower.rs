@@ -3538,6 +3538,24 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
         | Expr::BuiltinCall { .. }
         | Expr::MakeClosure { .. }
         | Expr::Intrinsic { .. } => true,
+
+        // SIR23 symbolic-expression/pattern nodes: the spec's "Effects"
+        // section marks every one of these `Pure` too — same treatment as
+        // the SIR22 array/matrix nodes above.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_may_have_effects(head) || args.iter().any(expr_may_have_effects)
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            head.as_deref().is_some_and(expr_may_have_effects)
+        }
+        Expr::SymPatternNamed { pattern, .. } => expr_may_have_effects(pattern),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_may_have_effects(expr) || rules.iter().any(expr_may_have_effects)
+        }
     }
 }
 

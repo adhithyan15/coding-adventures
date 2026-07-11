@@ -280,6 +280,7 @@ impl fmt::Display for IntSpec {
 /// | `NDArray { elem, rank }`    | dense N-D numeric array     (SIR22)    |
 /// | `Rational`                  | exact rational scalar       (SIR22/SIR23) |
 /// | `Complex`                   | complex scalar `{re, im}`   (SIR22/SIR23) |
+/// | `SymExpr`                   | opaque symbolic-expression handle (SIR23) |
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum SirType {
     /// Top type — unknown/any.  The default; renamed from `Any` in SIR21.
@@ -347,15 +348,25 @@ pub enum SirType {
     /// denominator).  This is a type-level carrier only — SIR22 adds no
     /// numerator/denominator *storage* at the type level (that's a
     /// runtime concern for the backend); the pair representation itself
-    /// is shared with the future symbolic-math extension
+    /// is shared with the symbolic-math extension
     /// [SIR23](../../../../specs/SIR23-symbolic-pattern-semantic-ir.md),
     /// landed once here rather than twice.
     Rational,
     /// A complex scalar (`{ re: f64, im: f64 }`).  Like `Rational`, this
     /// is a type-level carrier with no additional fields — the value
     /// representation is a backend/runtime concern — shared with the
-    /// future SIR23 symbolic extension.
+    /// SIR23 symbolic extension.
     Complex,
+    // ── SIR23 (symbolic expression + pattern/rewrite IR extension) ───
+    /// An opaque symbolic-expression handle — mirrors
+    /// `symbolic_ir::IRNode`'s own dynamically-shaped tree.  Carries no
+    /// static shape: a value of this type may be a bare symbol, a
+    /// number, or an arbitrarily nested `head[args…]` application, none
+    /// of which the type itself distinguishes (the shape lives in the
+    /// `Expr` tree — `SymSymbol`/`SymRational`/`SymApply`/etc. — not in
+    /// the type carrier). See
+    /// [SIR23](../../../../specs/SIR23-symbolic-pattern-semantic-ir.md).
+    SymExpr,
 }
 
 impl SirType {
@@ -469,6 +480,9 @@ impl fmt::Display for SirType {
             },
             SirType::Rational => write!(f, "rational"),
             SirType::Complex => write!(f, "complex"),
+            // SIR23 token — a bare keyword, no fields, same shape as
+            // `Rational`/`Complex` above.
+            SirType::SymExpr => write!(f, "sym-expr"),
         }
     }
 }
@@ -737,5 +751,24 @@ mod tests {
         let inner = SirType::ndarray(SirType::Float, Some(1));
         let outer = SirType::ndarray(inner, None);
         assert_eq!(format!("{}", outer), "(ndarray (ndarray float 1))");
+    }
+
+    // ── SIR23 symbolic-expression type tests ──────────────────────────
+
+    #[test]
+    fn display_sym_expr() {
+        assert_eq!(format!("{}", SirType::SymExpr), "sym-expr");
+    }
+
+    #[test]
+    fn sym_expr_is_not_dynamic() {
+        assert!(!SirType::SymExpr.is_dynamic());
+    }
+
+    #[test]
+    fn sym_expr_equality() {
+        assert_eq!(SirType::SymExpr, SirType::SymExpr);
+        assert_ne!(SirType::SymExpr, SirType::Rational);
+        assert_ne!(SirType::SymExpr, SirType::Complex);
     }
 }

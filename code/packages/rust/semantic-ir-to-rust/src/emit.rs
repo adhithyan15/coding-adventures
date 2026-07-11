@@ -521,6 +521,16 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::Transpose { .. }
         | Expr::IndexGet { .. }
         | Expr::Convert { .. } => {}
+        // SIR23 symbolic-expression/pattern nodes: same rationale as the
+        // SIR22 nodes above — rejected before emit, so none of these carry
+        // a reachable `Assign` for this backend.
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {}
     }
 }
 
@@ -1109,6 +1119,24 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::Convert { span, .. } => {
             panic!(
                 "rust backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                span
+            );
+        }
+        // SIR23 symbolic-expression/pattern nodes — `Feature::SymbolicExpr` /
+        // `Feature::PatternMatching` are not in this backend's accepted-
+        // features list, so `check_module` rejects any module using them
+        // before it ever reaches emit.  Defensive panic covers internal
+        // bugs only (matches the SIR22/SIR26 arm above).
+        Expr::SymSymbol { span, .. }
+        | Expr::SymRational { span, .. }
+        | Expr::SymApply { span, .. }
+        | Expr::SymPatternBlank { span, .. }
+        | Expr::SymPatternNamed { span, .. }
+        | Expr::SymRule { span, .. }
+        | Expr::SymReplaceAll { span, .. } => {
+            panic!(
+                "rust backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 span
             );

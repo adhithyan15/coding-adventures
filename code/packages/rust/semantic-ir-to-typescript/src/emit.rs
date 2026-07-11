@@ -422,6 +422,25 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
                 || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
         }
         Expr::Convert { value, .. } => expr_uses_builtin(value, name),
+        // SIR23 compile-compat stubs: this backend does not accept
+        // `Feature::SymbolicExpr`/`Feature::PatternMatching` (see
+        // `accepts_features` in lib.rs), so `check_module` rejects any
+        // module using these nodes before emission — same rationale as the
+        // SIR22 stubs above.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_uses_builtin(head, name) || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            head.as_deref().is_some_and(|h| expr_uses_builtin(h, name))
+        }
+        Expr::SymPatternNamed { pattern, .. } => expr_uses_builtin(pattern, name),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_uses_builtin(expr, name) || rules.iter().any(|r| expr_uses_builtin(r, name))
+        }
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -923,6 +942,33 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
             }
         }
         Expr::Convert { value, .. } => collect_expr_assigned(value, out),
+        // SIR23 compile-compat stubs: rejected by `check_module` before this
+        // backend ever emits (no `Feature::SymbolicExpr`/`Feature::PatternMatching`
+        // in `accepts_features`), but recurse into every operand so the scan
+        // stays faithful regardless.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+        Expr::SymApply { head, args, .. } => {
+            collect_expr_assigned(head, out);
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            if let Some(h) = head {
+                collect_expr_assigned(h, out);
+            }
+        }
+        Expr::SymPatternNamed { pattern, .. } => collect_expr_assigned(pattern, out),
+        Expr::SymRule { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            collect_expr_assigned(expr, out);
+            for r in rules {
+                collect_expr_assigned(r, out);
+            }
+        }
         // Leaves with no nested blocks/exprs that could hold an Assign.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
@@ -1469,6 +1515,25 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::Convert { .. } => {
             panic!(
                 "typescript backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
+            );
+        }
+        // SIR23 symbolic-expression/pattern nodes.  This backend does not
+        // declare `Feature::SymbolicExpr`/`Feature::PatternMatching` in
+        // `accepts_features` (see lib.rs), so `Backend::check_module` rejects
+        // any module using these nodes before it ever reaches emission.
+        // Panic here to catch a backend/validator drift (mirrors the
+        // SIR22/SIR26 guard above).
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {
+            panic!(
+                "typescript backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );
