@@ -4,6 +4,37 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.1] — 2026-07-11
+
+### Fixed (W-13 — quadratic set-op DoS)
+
+- `Union`/`Intersection`/`Complement`/`DeleteDuplicates`/`Tally` (W-13) each
+  called `contains_element` — an O(n) linear membership scan — once per
+  input element against a growing accumulator, making every one of these
+  heads worst-case O(n²) despite the existing `MAX_LIST_LENGTH` (1,000,000)
+  cap: a single input of ~1,000,000 genuinely distinct elements took
+  30-40+ minutes and 100-200% CPU to reach the cap (confirmed by direct
+  measurement — `union_over_cap_stays_unevaluated`/
+  `tally_over_cap_stays_unevaluated`, this crate's own pre-existing tests,
+  were the accidental discovery). `IRNode` carries an `f64` and so isn't
+  `Hash`-keyable, but it *is* totally ordered (`canonical_cmp`), so every
+  head now sorts once (O(n log n)) instead of scanning repeatedly:
+  `sorted_dedup` for `Union`, sorted two-pointer merges
+  (`sorted_intersect`/`sorted_difference`) for `Intersection`/`Complement`,
+  and a single grouping pass (`group_by_first_occurrence`) for the two
+  order-preserving heads, `DeleteDuplicates`/`Tally`. `MemberQ` is
+  unchanged — a single membership query was never the quadratic-blowup
+  source (that shape only exists when the same O(n) check runs once per
+  element of a *growing* accumulator).
+- Net effect: the entire `wolfram-runtime` test suite (332 tests,
+  including three new large-distinct-input regression tests for
+  `Intersection`/`Complement`/`DeleteDuplicates` alongside the pre-existing
+  `Union`/`Tally` ones) now runs in well under a second, down from
+  30-40+ minutes for the two slowest tests alone.
+- No observable output change for any input under the cap — every
+  existing correctness test (sort order, first-occurrence order, numeric
+  subtype distinctness, `NaN`-safety via `canonical_cmp`) passes unchanged.
+
 ## [0.19.0] — 2026-07-05
 
 The **W-22** deliverable (MA04 §2), second head: `Expand`. The blocker
