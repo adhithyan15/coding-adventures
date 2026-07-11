@@ -64,6 +64,54 @@ Two consequences the design must honor:
    every bound variable. (Ties to the standing rule: *nothing enters the CAS human-authored;
    facts arrive spider→provenance→adversarial-gate.*)
 
+The scope is **elementary school → medical school**, and it is *not only numeric formulas*.
+"Term with a mathematical foundation" is the narrow case; a term can also be a **fact** (water is
+two hydrogen + one oxygen), a **symbolic relationship** (solve `v = IR` for `R`), or a
+**probabilistic** one. Each is an importable, provenanced library; the curriculum layers them.
+
+---
+
+## 2A. The modalities — ADJ is Prolog + ProbLog + a full CAS + a constraint solver
+
+The libraries exercise **every** faculty the ADJ engine has (or will, once the CAS is wired), so a
+med-school question that mixes a recalled fact, an algebraic rearrangement, a numeric plug-in, and a
+feasibility check is answered by *composing libraries*, not by one monolith.
+
+| Modality | What a library expresses | ADJ surface | Substrate status |
+|----------|--------------------------|-------------|------------------|
+| **Relational (Prolog)** | grounded facts & relations — `water` ⟶ 2 `hydrogen` + 1 `oxygen`; anatomy, taxonomy, physiology edges | `rulebook` / `relate` + SLD binding query | **exists** (the 127 recall libs) |
+| **Numeric formulas** | plug-in-the-numbers compute — BMI, FENa, dose = mg/kg × weight | `formulabook` / `formula` (§3) | **rung-0, this spec's FL-2** |
+| **Symbolic (CAS)** | algebra & calculus *symbolically* — rearrange a formula, `solve`, `simplify`, differentiate, series | a `symbolic`/CAS surface wired to the engine | **engine exists (`symbolic-vm`+`cas-*`) but UNWIRED — substrate rung §3A** |
+| **Constraints** | (in)equalities & optimization — `constrain … <relop> …`, `solve for {…}`, `check` satisfiability, minimize/maximize; word problems, systems, dosing feasibility, `INFEASIBLE` first-class | `constrain` / `solve` / `check` (already keywords) → `adj-constraint-solver` → `constraint-vm` | **first-class & wired**; the *solver VM* may need capability growth (tactics/nonlinear) — deepen, not wire |
+| **Probabilistic (ProbLog)** | likelihood-weighted facts / evidence, honest uncertainty & abstention | `prior` / `likelihood` / `contributes` | **exists** (uncertainty primitive) |
+
+Note the asymmetry: **constraints are already first-class in the language and wired to a solver VM**
+(the AST has `Constrain{lhs relop rhs}`, `solve for {…}`, `check`, minimize/maximize); the open work
+there is the *VM's* solver breadth/robustness, tackled as its own capability rung when a curriculum
+library needs a tactic the VM lacks. **CAS is the reverse** — a complete engine that is not yet
+reachable from the language (§3A). Both are engines to *compose/strengthen*, never to rebuild.
+
+**Relational fact libraries need no new substrate.** "Water = 2H + 1O" is a `relate` library today
+(relations already carry arity; a numeric multiplicity is an argument or a small structured term).
+Foundational-science fact libraries (elements, compounds, cell biology, anatomy) sit alongside the
+recall libraries on the existing mechanism — they are *content*, gated by the same provenance write-gate.
+
+---
+
+## 3A. The CAS substrate — wire the existing engine, don't rebuild it
+
+Symbolic math is the one modality **not yet reachable from the language**. The workspace already
+ships a **complete CAS**: `symbolic-ir` + `symbolic-vm` (a *policy-free* evaluator with a `Backend`
+trait, explicitly built to be embedded) and the `cas-*` suite — `cas-solve`, `cas-simplify`,
+`cas-algebraic`, `cas-substitution`, `cas-factor`, `cas-summation`, `cas-trig`, `cas-matrix`,
+`cas-multivariate`, `cas-ode`, `cas-laplace`, `cas-fourier`, `cas-limit-series`, `cas-number-theory`,
+… But **`adj-lang` depends on none of them.** A separate rung (sequenced *after* rung-0 so the numeric
+loop is proven first) adds a `symbolic`/CAS surface to adj-lang that **embeds `symbolic-vm`** (adj-lang
+supplies a `Backend`) — turning a provenanced `formula` into something the engine can *rearrange and
+solve*, not merely evaluate. This is wiring an existing, tested engine to the language, not writing a CAS.
+It unlocks the algebra/calculus layers of the curriculum (solve for an unknown, symbolic simplification,
+symbolic → numeric once variables bind). Same provenance discipline: a symbolic identity is a sourced claim.
+
 ---
 
 ## 3. Rung-0 — the substrate: `formulabook` + `formula name(params) = expr`
@@ -140,19 +188,32 @@ formulas, not baked into them.
 ## 4. The curriculum — kindergarten → medical school (a DAG of libraries)
 
 Each library = **grounded dictionary terms** (provenanced where the term itself is a claim) +
-**one or more provenanced formulas** + a **decompose-and-bind worked query** + an **end-to-end
-test**. Higher layers `import` lower ones (write-once-use-many).
+its content — a **fact set** (`relate`), a **formula** (`formula`), and/or a **symbolic identity**
+(CAS) — + a **decompose-and-bind worked query** + an **end-to-end test**. Higher layers `import`
+lower ones (write-once-use-many). The DAG spans **two intertwined tracks — a MATH track and a
+SCIENCE/KNOWLEDGE track — that meet in medicine.** Complexity is added *slowly*, one layer per PR.
 
-| Layer | Libraries (formulas) | Imports |
-|------|----------------------|---------|
-| **K / early** | `count`, `add`, `subtract`, `compare` | — |
-| **Elementary** | `multiply`, `divide`, `fraction`, `ratio`, `percent`, `average` | K layer |
-| **Middle / HS** | `rate`, `proportion`, `unit_convert`, `power`, `root`, `area`, `volume` | elementary |
-| **Pre-clinical** | `concentration`, `dosage`, `clearance`, `mean_arterial_pressure`, `bsa` | HS + units |
-| **Clinical (MLE apex)** | `bmi`, `anion_gap`, `corrected_calcium`, `fena`, `cockcroft_gault_crcl`, `egfr`, `winters_formula`, weight-based dosing | pre-clinical + ratio/product/unit libs |
+| Layer | MATH track (formula / symbolic) | SCIENCE & KNOWLEDGE track (facts, relations) |
+|------|--------------------------------|----------------------------------------------|
+| **K / early** | `count`, `add`, `subtract`, `compare` | `shapes`, `colors`, `bigger_smaller` |
+| **Elementary** | `multiply`, `divide`, `fraction`, `ratio`, `percent`, `average` | **`chemistry/water` — `composed_of(water, hydrogen, 2)`, `composed_of(water, oxygen, 1)`**; `elements`, `states_of_matter`, `plant_parts` |
+| **Middle / HS** | `rate`, `proportion`, `unit_convert`, `power`, `root`, `area`, `volume`; **`algebra/solve_linear` (SYMBOLIC — rearrange `v = I·R` for any variable)** | `compounds`, `periodic_groups`, `cell_organelles`, `body_systems` |
+| **Pre-clinical** | `concentration`, `dosage`, `clearance`, `mean_arterial_pressure`, `bsa`; **`calculus/rate_of_change` (SYMBOLIC)** | `stoichiometry`, `enzyme_kinetics`, `physiology` relations (composes the 127 recall libs) |
+| **Clinical (MLE apex)** | `bmi`, `anion_gap`, `corrected_calcium`, `fena`, `cockcroft_gault_crcl`, `egfr`, `winters_formula`, weight-based dosing | the recall domains (MICRO/PHARM/CARDIO/…) — knowledge the same query composes with the formulas |
+
+Fact/relation libraries ride the **existing** `relate` substrate (no new language rung); numeric
+formulas need **rung-0** (§3); symbolic entries need the **CAS-wiring rung** (§3A); and
+**constraint** problems (systems of equations, word problems, dosing feasibility, optimization) ride
+the **existing** `constrain`/`solve`/`check` surface — e.g. a "two trains" or "how much of a 20% and
+a 50% solution to mix" word problem is a small provenanced constraint library the model binds and the
+VM solves (or returns `INFEASIBLE`). An MLE item that needs a recalled fact **and** an algebraic
+rearrangement **and** a numeric plug-in **and** a feasibility check is answered by *composing four
+libraries* — the whole point.
 
 The **arithmetic content already exists** in rungs 0–125 (BMI@30, FENa@15, TTKG@13, MCV/MCH/MCHC@19,
-De Ritis@20, lipid/iron indices, Starling@31, …). §6 harvests it.
+De Ritis@20, lipid/iron indices, Starling@31, …); §6 harvests it. The **knowledge** content largely
+exists in the 127 recall libraries; foundational-science fact libraries (chemistry, cell biology)
+extend that track downward toward the elementary layers.
 
 The **knowledge** standard library already exists too: the **127 recall `.adj` libraries** (MICRO,
 PHARM, CARDIO, …). Formula libraries are the **compute** standard library. Together they are the
