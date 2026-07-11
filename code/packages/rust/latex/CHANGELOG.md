@@ -2,6 +2,34 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.70.0] — 2026-07-11
+
+### Added — single-integer TOTAL of the duplicate ("multiply defined") `\label`s (LTXDOC03 S34)
+
+A **new** public method `Document::duplicate_label_count(&self) -> String` that renders the decimal
+**COUNT** of the duplicate (later, losing) `\label`s — the `\label`s of already-defined keys, which LaTeX
+flags with *"Label `key' multiply defined"* — as one integer line. It is the **label-side twin** of S33's
+`duplicate_bibliography_count`: where S33 counts the losing `\bibitem`s, S34 counts the losing `\label`s.
+It is the *count-total* companion of S20's `duplicate_label_definitions` (which renders one `\label{key}`
+warning line per losing duplicate): S20 and S34 are two *views* of the one `duplicates` list
+`resolve_references()` produces — S34 collapses the whole list to a single `.len()` tally. It is the
+**warning-side companion** of S29's `label_definition_count` (which counts the *winning* label
+definitions), completing the *label totals family* just as S33 completed the citation totals family. S29
+counts the winning `definitions` and S34 the losing `duplicates`; together they **partition** every
+`\label` in the document — `label_definition_count + duplicate_label_count` equals the total number of
+`\label`s, because `resolve_references()` routes each `\label` into exactly one of
+`definitions`/`duplicates`. It reads only `resolve_references().duplicates.len()` — the winning first
+`\label` of a key lives in `definitions` (S22/S29's domain) and is excluded by construction — never a
+`key`/`kind`/`span`, no source slicing at all, so every losing `\label` (section, figure, equation, or
+inline) folds into one total. We do **not** de-duplicate: a key defined *three* times contributes *two*
+losing duplicates, exactly the two warning lines S20 emits. Being a COUNT renderer, its empty case (no
+labels, or every key defined exactly once) is the honest number `"0"` — **not** a `(no duplicate label
+definitions)` marker (that discipline belongs to the *list* renderer S20; this mirrors
+S27/S28/S29/S30/S31/S32/S33). One line, no trailing newline. E.g. `\label{x}` twice + `\label{y}` once →
+`1`. It is a read-only view over `resolve_references()`; every S1–S33 output is left **byte-for-byte
+unchanged**; S34 is purely additive and leaves the `to_latex()` round-trip fixed point intact. Total &
+panic-free.
+
 ## [0.69.0] — 2026-07-10
 
 ### Added — single-integer TOTAL of the duplicate ("multiply defined") `\bibitem`s (LTXDOC03 S33)
