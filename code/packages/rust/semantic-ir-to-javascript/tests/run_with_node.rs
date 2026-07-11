@@ -2239,11 +2239,26 @@ fn numeric_catalog_nonblock_methods() {
         print(method(float(2.5), "round", vec![])),   // 3
         print(method(int(5), "succ", vec![])),        // 6
         print(method(int(5), "pred", vec![])),        // 4
+        // numeric breadth (N1): round(ndigits) / divmod / fdiv / clamp / between?
+        print(method(float(3.14159), "round", vec![int(2)])), // 3.14
+        print(method(int(1250), "round", vec![int(-2)])),     // 1300 (half away)
+        print(method(int(13), "divmod", vec![int(4)])),       // [3, 1]
+        print(method(int(13), "divmod", vec![int(-4)])),      // [-4, -3]
+        print(method(int(7), "fdiv", vec![int(2)])),          // 3.5
+        print(method(int(1), "fdiv", vec![int(0)])),          // Infinity (never raises)
+        print(method(int(5), "clamp", vec![int(1), int(10)])),   // 5
+        print(method(int(-3), "clamp", vec![int(1), int(10)])),  // 1
+        print(method(int(99), "clamp", vec![int(1), int(10)])),  // 10
+        print(method(int(5), "between?", vec![int(1), int(10)])), // #t
+        print(method(int(0), "between?", vec![int(1), int(10)])), // #f
     ];
     let module =
         module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Floats, Feature::Strings]);
     if let Some(stdout) = run_module(&module, "numcatalog") {
-        assert_eq!(stdout, "5\n6\n256\n[3, 2, 1]\n4\n3\n6\n4");
+        assert_eq!(
+            stdout,
+            "5\n6\n256\n[3, 2, 1]\n4\n3\n6\n4\n3.14\n1300\n[3, 1]\n[-4, -3]\n3.5\nInfinity\n5\n1\n10\n#t\n#f"
+        );
     }
 }
 

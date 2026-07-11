@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.25.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Mirrors the Python `sir-runtime-oop` v0.1.17 reference (and the Go v0.25.0 /
+Rust v0.26.0 backends) into the JavaScript backend's inlined runtime
+(`numericMethod` + the `NUMERIC_METHODS` `respond_to?` set), adding five Ruby
+numeric methods:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds to that many decimals (half **away from zero**, via
+  `rubyRound`, not `Math.round`); `ndigits <= 0` rounds to a power of ten. JS
+  numbers are f64, so a hostile-magnitude `ndigits` degrades naturally (the
+  `factor` saturates to `Infinity` and `recv / Infinity` is `0`) — no bignum,
+  no allocation, no i64-overflow pitfall. A non-finite receiver returns
+  unchanged.
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient and the
+  divisor-signed remainder (a JS array, so it prints `[3, 1]`); a zero divisor
+  raises a typed `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that never throws: a zero divisor yields
+  `Infinity`/`-Infinity`/`NaN` (JS `/` already produces these).
+- `clamp(min, max)` / `between?(min, max)` — compared numerically.
+
+Dispatch stays an explicit `switch` on the literal method name (never
+reflection). Exec-proven end-to-end under Node (the `numeric_catalog_nonblock_methods`
+test now covers `round(2)`/`round(-2)`, `divmod` incl. the divisor-signed
+remainder, `fdiv` incl. the divide-by-zero `Infinity`, and `clamp`/`between?`).
+
 ## 0.24.0 — Hash breadth: `fetch` / `clear` / `[]=`
 
 Closes the JavaScript-backend Hash parity gap (the Python/TS reference and the
