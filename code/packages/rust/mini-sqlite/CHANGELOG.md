@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.3 — Query `sqlite_master` over a real file
+
+Stream C / L4: the schema catalog `sqlite_master` (and its alias `sqlite_schema`)
+is now queryable over a real `.sqlite` file — `SELECT name FROM sqlite_master
+WHERE type = 'table'`, `SELECT COUNT(*) FROM sqlite_master`, the full
+five-column shape, and so on. Applications (Anki included) introspect the
+database this way. The `storage-sqlite` backend (0.2.0) exposes the catalog it
+already parses; no mini-sqlite `src/` change. New differential test
+`tests/file_backed.rs::sqlite_master_is_queryable_and_matches_real_sqlite` diffs
+the results against real bundled SQLite over the same file.
+
 ## 0.4.2 — FULL OUTER JOIN matches SQLite (ledger 6 → 5)
 
 Stream A / L2 of the full-SQLite-replacement roadmap: retire the differential

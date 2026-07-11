@@ -2273,6 +2273,39 @@ The `Field` arm everywhere mirrors the `Method` arm's recursion but on
 statement body, exactly as this section specified. Bridge + conformance follow in
 PR2/PR3.
 
+### PR2 (DONE)
+
+Bridge-enable. The grammar already parses a field as a `class_field_declaration`
+child of `class_element`:
+
+```text
+class_field_declaration = [ static? , (property_name | PRIVATE_NAME) ,
+                            ( "=" assignment_expression )? , ";" ]
+```
+
+`convert_class_element` now dispatches that node to a new `convert_class_field`
+(→ `ClassMember::Field(PropertyDefinition)`), reusing `convert_property_key` for
+the key and `convert_expression` for the initializer. Confirmed against the actual
+runtime parse tree (dumped, not assumed): a field's `static` lives *inside*
+`class_field_declaration` (unlike a method's, which is hoisted to `class_element`),
+and the key node is the same `property_name` a method key uses.
+
+**Declines (all safe WHITESPACE_ONLY, never a miscompile):** a computed `[expr]`
+key (deferred, mirrors the method surface) and a private `#x` field (bare
+`PRIVATE_NAME` token, unmodelled). Works in both class-expression and
+class-declaration bodies (shared body conversion).
+
+- **`javascript-parser` 0.39.0** (MINOR) — `convert_class_field` + dispatch; 10
+  bridge tests (initialized / bare / static / string-key / interleaved field+method
+  / computed-decline / private-decline / declaration-position).
+- **`closurec` 0.234.14** (PATCH) — e2e fixture `tests/diff/simple-class-field/`:
+  `class C { x = 1 + 2; static s = 5 + 6; }` → `class C{x=3;static s=11;}` at
+  SIMPLE (both initializers fold — proving the pipeline descends into each field —
+  `static` survives, bare declaration emit). Version-synced `cli.spec.json` +
+  help fixture. All closurec tests green.
+
+Emit conformance port (PR3) remains.
+
 ## CLOC12.174 — `ClassDeclaration` (`class C [extends S] { … }`): the class *statement* arc (design)
 
 CLOC12.173 shipped the class **expression** (a value: `x = class {}`, `f(class C {})`).

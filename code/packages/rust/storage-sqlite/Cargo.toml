@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-storage-sqlite"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "A file-backed storage engine for the mini-sqlite pipeline: exposes a real .sqlite database as a sql-backend Backend, so the SQL engine can query it unmodified. The Rust sibling of python/storage-sqlite; read-only for now (built on the zero-dep sqlite-file reader)."
 license = "MIT"
