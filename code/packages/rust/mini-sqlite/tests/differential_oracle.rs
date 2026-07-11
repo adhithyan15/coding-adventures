@@ -404,9 +404,14 @@ const CASES: &[Case] = &[
 ///   `having`): the result *rows* match SQLite exactly, but mini-sqlite names an
 ///   aggregate output column `agg_N` where SQLite uses the expression text
 ///   (`SUM(n)`). A naming-only divergence.
-/// - **Scalar functions** (`string_functions`): function-call output columns are
-///   unnamed (`?`), and `UPPER(name)` returns the wrong value (an integer, not
-///   the uppercased text) — a real codegen/builtin bug.
+///
+/// Scalar functions (`string_functions`) used to be ledgered here: `UPPER(name)`
+/// came back as an integer and the columns were unnamed (`?`). Both are now
+/// fixed and the case matches SQLite — see the commit that retired it. The root
+/// cause was a positional→named→positional round-trip in `sql-vm`'s Phase-4
+/// materialize that collapsed same-named output columns through a `HashMap`
+/// (dropping every value but the last), plus `sql-codegen` labelling function
+/// columns `?` instead of the SQLite-style expression text.
 const LEDGER: &[(&str, &str)] = &[
     (
         "full_join",
@@ -431,10 +436,6 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "having",
         "rows match; computed-column naming differs — agg_0 vs SUM(amt).",
-    ),
-    (
-        "string_functions",
-        "function-call output columns unnamed (?), and UPPER(name) returns the wrong value (int, not uppercased text). Real codegen/builtin bug.",
     ),
 ];
 

@@ -2,6 +2,25 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.18] - 2026-07-11
+
+### Added
+
+- **`Hash#transform_values` / `Hash#transform_keys`** block methods
+  (`hashBlockMethod` + `HASH_BLOCK_METHODS`), completing the cross-backend
+  mirror of this pair (Python reference, then Go/Rust/JS backends):
+  - `transform_values { |v| … }` — a NEW hash whose keys are copied verbatim
+    (unique ⇒ no collision) and whose values are the block results. Yields ONE
+    argument (the value); insertion order preserved; receiver unmodified.
+  - `transform_keys { |k| … }` — a NEW hash whose values are untouched and whose
+    keys are the block results (yields ONE argument, the key). Two source keys
+    can collapse onto one new key; Ruby keeps the **last** value at the
+    **first-seen** position — matching how the `Map` constructor folds a list of
+    pairs.
+- Vitest coverage for both, including a `transform_keys` **collision** case
+  (`{a:1,b:2}` with a constant `"z"` key ⇒ `{z: 2}`) and a receiver-unchanged
+  assertion.
+
 ## [0.1.17] - 2026-07-11
 
 ### Added — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`

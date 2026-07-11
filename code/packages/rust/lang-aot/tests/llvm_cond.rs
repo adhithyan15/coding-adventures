@@ -7,7 +7,7 @@
 //! would collapse them). Two supporting fixes: a `jmp_if` whose condition is the
 //! `i64` `lispy_truthy` result compares against zero (not `trunc void`), and a
 //! clause block that emits no instructions still gets an explicit fallthrough `br`.
-//! **Verified by RUNNING**: emit host IR, link `lispy_runtime.c`, run with `clang`.
+//! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
 
 use lang_aot::{compile_source_to_llvm_with_target, Language};
 
@@ -20,7 +20,7 @@ fn host_triple() -> String {
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
 fn lispy_runtime_c() -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/lispy_runtime.c")
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/dynval_runtime.c")
 }
 fn run(src: &str, module: &str) -> i32 {
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, module, &host_triple())

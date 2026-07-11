@@ -87,9 +87,19 @@ Iso-BuildAndRun -Lang c -Name ring-tests -Sources @('tests\ring_test.c', 'src\ri
 ## Header-only test harness
 
 `include/iso_test.h` is a single header — the intersection of ISO C17 and C++17,
-so it compiles unchanged as either language — providing `ISO_CHECK`,
-`ISO_CHECK_MSG`, `ISO_CHECK_EQ_INT`, and `ISO_TEST_RESULT()`. Sample packages use
-it so they need no external test dependency.
+so it compiles unchanged as either language — with no external test dependency:
+
+| Macro | Checks |
+| --- | --- |
+| `ISO_CHECK(cond)` / `ISO_CHECK_MSG(cond, msg)` | a boolean condition |
+| `ISO_CHECK_EQ_INT(a, b)` / `ISO_CHECK_EQ_UINT(a, b)` | signed / unsigned integer equality |
+| `ISO_CHECK_STR_EQ(a, b)` | NUL-terminated C-string equality (accepts `std::string::c_str()`) |
+| `ISO_CHECK_MEM_EQ(a, b, n)` | byte-wise equality of two buffers (hashes, cipher output) |
+| `ISO_CHECK_EQ_DBL(a, b, eps)` | floating-point equality within a tolerance |
+| `ISO_TEST_RESULT()` | prints a summary; returns 0 (all passed) or 1 |
+
+Each failed check prints file, line, and the offending values, then keeps going
+so one run reports every failure.
 
 ## Self-test
 

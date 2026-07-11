@@ -17,7 +17,7 @@
 //! | CLR         | object/boxing  | `clr-simulator` (in-process floor)            |
 //! | CLR-real    | object/boxing  | real `ilasm` + real `dotnet` (`.il`) — gated  |
 //! | BEAM        | Erlang terms   | a real `erl` — gated                          |
-//! | LLVM        | tagged-word    | `clang` + `lispy_runtime.c` — gated           |
+//! | LLVM        | tagged-word    | `clang` + `dynval_runtime.c` — gated           |
 //! | native AOT  | tagged-word    | `aarch64`/`x86_64` object + system `ld` — gated, macOS |
 //!
 //! External-tool backends return `None` (skip) when the tool is absent, so the
@@ -251,7 +251,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     .trim()
     .to_string();
     let runtime_c = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../twig-aot/runtime/lispy_runtime.c");
+        .join("../twig-aot/runtime/dynval_runtime.c");
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, "conf", &triple).ok()?;
     let dir = tmp_dir("llvm");
     let ll_path = dir.join("conf.ll");

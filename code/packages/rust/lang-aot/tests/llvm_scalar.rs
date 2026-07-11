@@ -1,7 +1,7 @@
 //! # LLVM scalar run-foundation — F1 (LANG77 / McCarthy W12a).
 //!
 //! The LLVM backend is the first **tagged-word** target (the LLVM/AOT/JIT family
-//! that links the shared `lispy_runtime.c`). This slice establishes the
+//! that links the shared `dynval_runtime.c`). This slice establishes the
 //! **verify-by-running** substrate: `lang-aot::compile_source_to_llvm_with_target`
 //! emits host-target LLVM IR, which `clang -x ir` compiles to a native executable
 //! whose process **exit code** carries the McCarthy result. `clang` is already on

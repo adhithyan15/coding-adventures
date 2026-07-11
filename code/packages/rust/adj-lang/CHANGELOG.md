@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased] — `formulabook` / `formula` — importable, provenanced, parameterized formulas (ADJ-FORMULA-LIBRARIES rung-0)
+
+### Added
+
+- **`formulabook <name> { use <dict>… formula… }`** and **`formula <name>(<params>) = <expr>`** — the
+  rung-0 substrate of the *compute* standard library (a sibling of `rulebook`). A `formula` is a named,
+  importable, reusable `let`: `<expr>` reuses the existing `let` expression grammar verbatim, and a leaf
+  naming a declared `<param>` is a **formal parameter**, bound at apply time. Each formula carries the
+  same `source "…" locator "…" trust <tier>` provenance envelope every grounded clause carries.
+- **Formula application** — a consumer's `? name(args)` whose functor names a registered formula (with
+  matching arity) is APPLIED, not treated as a hypothesis query: each parameter binds to its argument
+  (a like-named `observe`d slot or a number literal), the body is substituted, and the result is
+  evaluated through the **existing** `logic_engine::compute` (`ComputeExpr`) path and bound as a derived
+  value named after the formula — carrying the formula's cited provenance for the audit trail.
+- **Two validations**: parameter-scoping (`LowerError::FormulaFreeVariable` — a body identifier that is
+  not a declared parameter) and a provenance-required lint (`LowerError::FormulaMissingProvenance` — a
+  shipped formula must carry a non-empty `source`). Vocabulary enforcement now accepts a formula-application
+  query so the closed-vocabulary gate does not reject the new construct.
+- AST: `Statement::Formulabook { name, uses, formulas }` + `FormulaDef { name, params, body, annotations }`.
+
 ## [0.49.0] - 2026-07-03 — `constrain asciimath "…"` — a second frontend reaches the constraint surface
 
 ### Added

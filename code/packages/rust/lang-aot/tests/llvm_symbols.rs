@@ -6,7 +6,7 @@
 //! the words. A *symbol* program result is returned verbatim (its tagged word) —
 //! the shared `lower_lisp_repr` must NOT `unbox_int` it (`>> 3` would corrupt the
 //! id+tag), the same type-directed exit coercion that handles bools (W12b-2).
-//! **Verified by RUNNING**: emit host IR, link `lispy_runtime.c`, run with `clang`.
+//! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
 
 use lang_aot::{compile_source_to_llvm_with_target, Language};
 
@@ -19,7 +19,7 @@ fn host_triple() -> String {
     String::from_utf8_lossy(&o.stdout).trim().to_string()
 }
 fn lispy_runtime_c() -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/lispy_runtime.c")
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime/dynval_runtime.c")
 }
 fn run(src: &str, module: &str) -> i32 {
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, module, &host_triple())

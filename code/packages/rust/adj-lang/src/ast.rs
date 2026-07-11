@@ -338,6 +338,20 @@ pub enum Statement {
         name: String,
         statements: Vec<Statement>,
     },
+    /// `formulabook <name> { use <dict>… formula… }` — a named, importable
+    /// collection of reusable, provenanced, PARAMETERIZED formulas
+    /// (ADJ-FORMULA-LIBRARIES rung-0). A sibling of [`Statement::Rulebook`]: where
+    /// a rulebook groups belief clauses, a formulabook groups `formula`
+    /// definitions. `uses` records the dictionaries a `use <dict>` brought into
+    /// scope (documentation of the vocabulary the formulas are typed against);
+    /// `formulas` are the definitions themselves. The formulabook adds nothing to
+    /// the KB directly — its formulas are registered so a later `? name(args)`
+    /// can APPLY them (see [`FormulaDef`]).
+    Formulabook {
+        name: String,
+        uses: Vec<String>,
+        formulas: Vec<FormulaDef>,
+    },
     /// `use <dictionary>` — bind a `dictionary` (by name) as the controlled
     /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
     /// M2). Legal at top level or inside a `rulebook`.
@@ -358,6 +372,41 @@ pub enum Statement {
 pub struct RuleLiteral {
     pub negated: bool,
     pub term: Term,
+}
+
+/// A reusable, provenanced, PARAMETERIZED formula — the rung-0 substrate of
+/// ADJ-FORMULA-LIBRARIES. A `formula bmi(body_mass, height) = body_mass /
+/// (height * height)` is, semantically, a **named, importable `let`**: `body` is
+/// the same [`ExprAst`] a `let` binds, and the leaves that name a declared
+/// parameter are FORMAL PARAMETERS, bound at apply time rather than resolved to
+/// an already-`observe`d fact.
+///
+/// ## Provenance is not a decoration — it is the claim
+///
+/// A formula asserts a fact about the world ("BMI is mass ÷ height²"). Like a
+/// `relate` edge, it carries the SAME provenance envelope — `source` / `locator`
+/// / `trust` — captured here as the shared [`Annotation`] vector (so there is
+/// ONE provenance surface and ONE lowering path, `annotations_to_provenance`).
+/// The lowerer enforces a non-empty `source` on a shipped formula (the
+/// provenance-required lint), and stamps the resolved provenance onto the
+/// applied value so the computed answer is auditable back to WHY its formula is
+/// trusted.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaDef {
+    /// The formula's name — also the functor a consumer applies (`? bmi(...)`)
+    /// and the name of the derived value the application binds.
+    pub name: String,
+    /// The formal parameters, in declaration order. A body [`ExprAst::Ref`]
+    /// (or [`ExprAst::Agg`] slot) naming one of these is a parameter reference;
+    /// any other free identifier is a compile error (parameter-scoping).
+    pub params: Vec<String>,
+    /// The formula body — the EXISTING `let` expression AST, reused verbatim.
+    pub body: ExprAst,
+    /// The provenance envelope (`source` / `locator` / `trust`, plus any
+    /// corroborating `cites`), reusing the shared [`Annotation`] set every
+    /// grounded clause carries. Lowered via `annotations_to_provenance`; a
+    /// shipped formula must carry a non-empty `source`.
+    pub annotations: Vec<Annotation>,
 }
 
 /// A single dictionary entry (MYCIN-2026).

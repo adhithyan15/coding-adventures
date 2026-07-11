@@ -621,6 +621,8 @@ const HASH_BLOCK_METHODS = new Set<string>([
   "reject",
   "each_key",
   "each_value",
+  "transform_values",
+  "transform_keys",
 ]);
 
 // Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
@@ -1238,6 +1240,20 @@ function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val
       return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => truthy(apply(block, [k, v]))));
     case "reject":
       return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => !truthy(apply(block, [k, v]))));
+    case "transform_values":
+      // Ruby `Hash#transform_values { |v| … }`: a NEW hash whose keys are copied
+      // verbatim and whose values are the block results.  The block yields ONE
+      // argument (the value); keys stay untouched (and unique, so no collision)
+      // and insertion order is preserved.  Non-mutating.
+      return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [k, apply(block, [v])]));
+    case "transform_keys":
+      // Ruby `Hash#transform_keys { |k| … }`: a NEW hash whose values are
+      // untouched and whose keys are the block results (yields ONE argument, the
+      // key).  Two source keys can map to the SAME new key; Ruby keeps the LAST
+      // such entry's value at the FIRST-seen position — which is exactly how the
+      // `Map` constructor folds a list of pairs (later duplicate keys overwrite
+      // the value while the slot stays put).
+      return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [apply(block, [k]), v]));
     default:
       return MISS;
   }

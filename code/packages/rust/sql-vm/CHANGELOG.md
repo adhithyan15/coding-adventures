@@ -3,7 +3,21 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.2.0] - Unreleased
+## [0.2.1] - Unreleased
+
+### Fixed
+
+- **Same-named output columns no longer collide.** Phase-4 materialization used
+  to collapse each row's positional `(name, value)` pairs into a
+  `HashMap<String, SqlValue>` and then re-read one value per output-column name.
+  Two output columns that share a name — e.g. `SELECT UPPER(x), LENGTH(x)` (both
+  default to `?`) or `SELECT id, id` — collided in the map, so every such column
+  returned the *last* value (`SELECT UPPER(x), LENGTH(x)` came back as
+  `LENGTH(x), LENGTH(x)`). The row buffer is already positional and parallel to
+  the locked `output_columns` (both are produced by the same `EmitColumn`
+  sequence, and hidden sort-key columns are truncated off both together), so we
+  now project by **position** and drop the name-keyed map entirely. Fixes the
+  differential-oracle `string_functions` divergence.
 
 ### Added
 

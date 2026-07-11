@@ -6,6 +6,12 @@ All notable changes to `iso-harness` are documented here.
 
 ### Added
 
+- **Extended `iso_test.h` assertions** for the Rust→C/C++ port campaign:
+  `ISO_CHECK_EQ_UINT` (unsigned/`size_t`), `ISO_CHECK_STR_EQ` (C strings /
+  `std::string::c_str()`), `ISO_CHECK_MEM_EQ` (byte buffers — hashes, cipher
+  output; prints the first differing byte), and `ISO_CHECK_EQ_DBL` (float
+  equality within a tolerance, no `<math.h>`/`-lm`). The self-test fixtures now
+  exercise all of them under GCC, Clang, and MSVC.
 - Initial release of the pure-ISO C/C++ multi-compiler build harness (CCPP01 PR3).
 - `lib/iso-lib.sh` (POSIX shell) and `lib/iso-lib.ps1` (PowerShell/MSVC): compile
   sources with every present compiler under strict conformance flags
