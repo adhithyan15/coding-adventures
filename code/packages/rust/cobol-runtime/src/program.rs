@@ -70,6 +70,8 @@ pub enum Stmt {
     Multiply { a: Operand, by: Operand, giving: Option<String> },
     /// `DIVIDE a INTO b [GIVING g]` — result = b/a, stored in g or b.
     Divide { divisor: Operand, dividend: Operand, giving: Option<String> },
+    /// `IF cond then… [ELSE else…]`.
+    If { cond: Cond, then_branch: Vec<Stmt>, else_branch: Vec<Stmt> },
     StopRun,
 }
 
@@ -78,6 +80,23 @@ pub enum Stmt {
 pub enum Operand {
     Ident(String),
     Lit(Lit),
+}
+
+/// A simple relational condition: `left <relop> right`, optionally negated.
+#[derive(Debug, Clone)]
+pub struct Cond {
+    pub left: Operand,
+    pub op: RelOp,
+    pub negated: bool,
+    pub right: Operand,
+}
+
+/// The relational operator of a condition.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RelOp {
+    Greater,
+    Less,
+    Equal,
 }
 
 // ---------------------------------------------------------------------------
@@ -321,8 +340,64 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             let mut it = ops.into_iter();
             Ok(Stmt::Divide { divisor: it.next().unwrap(), dividend: it.next().unwrap(), giving })
         }
+        "if_stmt" => {
+            // Children in order: IF, condition, then-statements…, [ELSE,
+            // else-statements…]. Split the statement nodes at the ELSE keyword.
+            let cond_node = child_node(verb, "condition")
+                .ok_or_else(|| RuntimeError::Unsupported("IF without a condition".into()))?;
+            let cond = read_condition(cond_node)?;
+            let mut then_branch = Vec::new();
+            let mut else_branch = Vec::new();
+            let mut seen_else = false;
+            for child in &verb.children {
+                match child {
+                    ASTNodeOrToken::Token(t) if t.value == "ELSE" && t.effective_type_name() == "KEYWORD" => {
+                        seen_else = true;
+                    }
+                    ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                        let stmt = read_statement(n)?;
+                        if seen_else {
+                            else_branch.push(stmt);
+                        } else {
+                            then_branch.push(stmt);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            Ok(Stmt::If { cond, then_branch, else_branch })
+        }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }
+}
+
+/// Read a `condition` node (`operand relop operand`).
+fn read_condition(cond: &GrammarASTNode) -> Result<Cond, RuntimeError> {
+    let operands = child_nodes(cond, "operand");
+    if operands.len() != 2 {
+        return Err(RuntimeError::Unsupported("condition must be `operand relop operand`".into()));
+    }
+    let left = read_operand(operands[0])?;
+    let right = read_operand(operands[1])?;
+    let relop = child_node(cond, "relop")
+        .ok_or_else(|| RuntimeError::Unsupported("condition without a relational operator".into()))?;
+    let toks = child_tokens(relop);
+    let negated = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
+    let op = toks
+        .iter()
+        .find_map(|(k, v)| {
+            if k != "KEYWORD" {
+                return None;
+            }
+            match v.as_str() {
+                "GREATER" => Some(RelOp::Greater),
+                "LESS" => Some(RelOp::Less),
+                "EQUAL" => Some(RelOp::Equal),
+                _ => None,
+            }
+        })
+        .ok_or_else(|| RuntimeError::Unsupported("unrecognised relational operator".into()))?;
+    Ok(Cond { left, op, negated, right })
 }
 
 /// All `operand` child nodes of a verb, read to typed [`Operand`]s.

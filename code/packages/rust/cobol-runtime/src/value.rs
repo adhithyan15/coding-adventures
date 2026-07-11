@@ -57,6 +57,27 @@ impl Decimal {
         self.int.chars().chain(self.frac.chars()).all(|c| c == '0')
     }
 
+    /// Compare two decimals by numeric value. Works on the digit strings (not
+    /// `i128`) so it is exact for numbers of any size. `-0` compares equal to
+    /// `+0`.
+    pub fn cmp_value(&self, other: &Decimal) -> std::cmp::Ordering {
+        use std::cmp::Ordering;
+        let neg_self = self.neg && !self.is_zero();
+        let neg_other = other.neg && !other.is_zero();
+        match (neg_self, neg_other) {
+            (false, true) => return Ordering::Greater,
+            (true, false) => return Ordering::Less,
+            _ => {}
+        }
+        let mag = magnitude_cmp(self, other);
+        // If both are negative, the larger magnitude is the smaller value.
+        if neg_self {
+            mag.reverse()
+        } else {
+            mag
+        }
+    }
+
     /// This value as a signed `i128` scaled by `10^scale` (i.e. with exactly
     /// `scale` fractional digits). Returns `None` if it overflows `i128`
     /// (~38 digits — beyond any real COBOL numeric field) or if truncating the
@@ -140,6 +161,27 @@ fn pow10(exp: usize) -> Option<i128> {
         v = v.checked_mul(10)?;
     }
     Some(v)
+}
+
+/// Compare the unsigned magnitudes of two decimals: integer part first (by
+/// significant length, then digit-by-digit), then the fractional part
+/// (zero-padded to equal length).
+fn magnitude_cmp(a: &Decimal, b: &Decimal) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    let ai = a.int.trim_start_matches('0');
+    let bi = b.int.trim_start_matches('0');
+    match ai.len().cmp(&bi.len()) {
+        Ordering::Equal => {}
+        o => return o,
+    }
+    match ai.cmp(bi) {
+        Ordering::Equal => {}
+        o => return o,
+    }
+    let width = a.frac.len().max(b.frac.len());
+    let af = format!("{:0<width$}", a.frac);
+    let bf = format!("{:0<width$}", b.frac);
+    af.cmp(&bf)
 }
 
 /// Move a numeric value into a numeric receiver of `int_digits` integer
@@ -282,5 +324,23 @@ mod tests {
     #[test]
     fn division_by_zero_returns_none() {
         assert_eq!(div(&d("5"), &d("0"), 2), None);
+    }
+
+    #[test]
+    fn decimal_comparison() {
+        use std::cmp::Ordering::*;
+        assert_eq!(d("5").cmp_value(&d("3")), Greater);
+        assert_eq!(d("3").cmp_value(&d("5")), Less);
+        assert_eq!(d("42").cmp_value(&d("42")), Equal);
+        // Different fraction lengths, same value.
+        assert_eq!(d("1.5").cmp_value(&d("1.50")), Equal);
+        assert_eq!(d("1.50").cmp_value(&d("1.5")), Equal);
+        // Magnitude by significant integer length.
+        assert_eq!(d("100").cmp_value(&d("99")), Greater);
+        assert_eq!(d("007").cmp_value(&d("7")), Equal);
+        // Signs: negatives order below positives; -0 == +0.
+        assert_eq!(d("-2").cmp_value(&d("3")), Less);
+        assert_eq!(d("-2").cmp_value(&d("-5")), Greater);
+        assert_eq!(d("-0").cmp_value(&d("0")), Equal);
     }
 }

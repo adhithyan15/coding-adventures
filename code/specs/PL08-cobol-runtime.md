@@ -122,15 +122,17 @@ Each item is a run-verified PR; the runtime grows one quirk at a time.
 
 1. **v0.1 — execution spine** (merged): data model + `MOVE`/`DISPLAY`/`STOP RUN`.
 2. **v0.2 — arithmetic** (merged): fixed-point `ADD`/`SUBTRACT`/`MULTIPLY`.
-3. **v0.3 — `DIVIDE`** (this PR): fixed-point division + divide-by-zero.
-4. **`COMPUTE`, `ROUNDED`, `ON SIZE ERROR`** — expression evaluation and the
+3. **v0.3 — `DIVIDE`** (merged): fixed-point division + divide-by-zero.
+4. **v0.4 — `IF … ELSE`** (this PR): conditional branching; numeric and
+   alphanumeric comparison; `STOP RUN` unwinds nested branches.
+5. **`COMPUTE`, `ROUNDED`, `ON SIZE ERROR`** — expression evaluation and the
    rounding/overflow clauses (these also widen the frontend grammar); then
    **signed numerics + overpunch** display and the `SIGN` clause.
-4. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
-5. **Control flow** — `IF … ELSE … END-IF`, `EVALUATE`, `PERFORM` (`THRU`,
-   `TIMES`, `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.
-6. **Conditions** — level-88 condition-names.
-7. **Tables** — `OCCURS`, subscripts, `REDEFINES`, `USAGE`.
+6. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
+7. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`, `TIMES`,
+   `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.
+8. **Conditions** — level-88 condition-names.
+9. **Tables** — `OCCURS`, subscripts, `REDEFINES`, `USAGE`.
 8. **File I/O** — `SELECT`/`FD`, sequential then indexed/relative, `OPEN`/`READ`/
    `WRITE`/`REWRITE`/`CLOSE`.
 9. **Later standards** — layer COBOL-61/68/74/85/2002/2014 features on the solid
