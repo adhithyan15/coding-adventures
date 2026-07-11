@@ -720,6 +720,10 @@ _NUMERIC_METHODS = frozenset(
         "floor",
         "ceil",
         "round",
+        "divmod",
+        "fdiv",
+        "clamp",
+        "between?",
         "gcd",
         "pow",
         "**",
@@ -1502,6 +1506,17 @@ _MAX_POW_BITS = 1 << 20
 _MAX_DISPLAY_DEPTH = 100
 
 
+def _sat_float(x: Val) -> float:
+    """Coerce ``x`` to ``float``, **saturating** to ``±inf`` when it is a bignum
+    ``int`` past ``float`` range.  Plain ``float(2**5000)`` raises an untyped
+    ``OverflowError``; Ruby instead treats such a value as ``Infinity`` in
+    floating-point contexts, so saturating holds the never-raise floor."""
+    try:
+        return float(x)
+    except OverflowError:
+        return math.inf if x > 0 else -math.inf
+
+
 def _ruby_round(x: float) -> int:
     """Ruby ``Float#round`` (no digits): round half **away from zero** — unlike
     Python's banker's rounding, ``2.5.round == 3`` and ``-2.5.round == -3``."""
@@ -1577,9 +1592,114 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
     if name == "ceil":
         return recv if isinstance(recv, float) and not math.isfinite(recv) else math.ceil(recv)
     if name == "round":
-        if isinstance(recv, int) or (isinstance(recv, float) and not math.isfinite(recv)):
+        # Ruby ``round`` / ``round(ndigits)``.  With no argument (or ``ndigits <=
+        # 0`` on an Integer) the result is an Integer rounded half-away-from-zero;
+        # a positive ``ndigits`` on a Float rounds to that many decimal places
+        # (still half-away-from-zero, unlike Python's banker's rounding).  A
+        # non-finite Float is returned unchanged (never-raise floor).
+        #
+        # DoS guard: ``ndigits`` is caller-controlled, so ``10 ** (-ndigits)``
+        # could build a multi-gigabyte bignum for a hostile magnitude.  Rounding
+        # to a place value that dwarfs the receiver is exactly ``0`` in Ruby
+        # (``1234.round(-10) == 0``), so we short-circuit to ``0`` once the place
+        # count clearly exceeds the receiver's decimal width instead of
+        # allocating the factor — and cap positive ``ndigits`` past a Float's
+        # precision (the value is already at full precision) to dodge the
+        # ``10.0 ** ndigits`` ``OverflowError``.
+        # ``isfinite`` also rejects an ``inf``/``nan`` ``ndigits`` argument, whose
+        # ``int(...)`` would otherwise raise an untyped ``OverflowError``/``ValueError``.
+        ndigits = (
+            int(args[0])
+            if args and isinstance(args[0], (int, float)) and math.isfinite(args[0])
+            else 0
+        )
+        if isinstance(recv, float) and not math.isfinite(recv):
             return recv
-        return _ruby_round(recv)
+        # Decimal width of the integer magnitude — cheap and bounded.  ``recv`` is
+        # now an int or a *finite* float (non-finite floats returned above), so we
+        # avoid ``math.isfinite(recv)``: that coerces a huge int to a float and
+        # would itself raise ``OverflowError`` (e.g. ``10**309``).
+        int_width = len(str(abs(recv if isinstance(recv, int) else int(recv))))
+        if isinstance(recv, int):
+            if ndigits >= 0:
+                return recv
+            if -ndigits > int_width + 1:
+                return 0  # rounding place dwarfs the value ⇒ 0 (Ruby parity)
+            factor = 10 ** (-ndigits)
+            # Round to the nearest multiple of ``factor`` half-away-from-zero
+            # with ALL-INTEGER arithmetic.  ``recv / factor`` would be Python
+            # true division (a float) and raises ``OverflowError`` for a receiver
+            # past ~1.8e308 (e.g. ``(10**309).round(-1)``) — an untyped error;
+            # integer ``divmod`` never overflows.
+            quotient, rem = divmod(abs(recv), factor)
+            if rem * 2 >= factor:
+                quotient += 1
+            magnitude = quotient * factor
+            return -magnitude if recv < 0 else magnitude
+        if ndigits <= 0:
+            if -ndigits > int_width + 1:
+                return 0
+            factor = 10 ** (-ndigits)
+            return int(_ruby_round(recv / factor) * factor)
+        # A binary64 Float carries ~15–17 significant digits; rounding to more
+        # decimals than that returns the value unchanged (and avoids overflow).
+        if ndigits > 17:
+            return recv
+        factor = 10.0**ndigits
+        scaled = recv * factor
+        # A large ``recv`` can overflow the scale-up to ``inf``; ``_ruby_round``
+        # (``math.floor(inf + 0.5)``) would then raise an untyped ``OverflowError``.
+        # A value that large has no fractional part left to round, so return it
+        # unchanged — holding the never-raise floor.
+        if not math.isfinite(scaled):
+            return recv
+        return _ruby_round(scaled) / factor
+    if name == "divmod":
+        # Ruby ``Integer#divmod`` / ``Float#divmod``: ``[quotient, remainder]``
+        # where the quotient is floored and the remainder takes the divisor's
+        # sign (Python's ``divmod`` matches this).  Division by zero raises a
+        # typed ``ZeroDivisionError`` so a translated ``rescue`` catches it.  A
+        # non-numeric divisor degrades to ``0`` → the same typed error (rather
+        # than an untyped ``TypeError`` from Python's ``divmod``).
+        divisor = args[0] if args and isinstance(args[0], (int, float)) else 0
+        if divisor == 0:
+            raise_error("ZeroDivisionError", "divided by 0")
+        # ``divmod(int, int)`` is exact, but a mixed ``int``-receiver / ``float``-
+        # divisor coerces the (possibly bignum) receiver to ``float`` and raises
+        # an untyped ``OverflowError`` past ``float`` range.  Route any
+        # float-involving pair through saturating floats so the surface never
+        # raises (matching Ruby's floating-point ``Infinity``/``NaN`` result).
+        if isinstance(recv, float) or isinstance(divisor, float):
+            quotient, remainder = divmod(_sat_float(recv), _sat_float(divisor))
+        else:
+            quotient, remainder = divmod(recv, divisor)
+        return [quotient, remainder]
+    if name == "fdiv":
+        # Ruby ``fdiv``: floating-point division.  Unlike ``/``, dividing by zero
+        # yields ``Infinity``/``NaN`` rather than raising (Ruby never raises on
+        # ``Float`` division), honouring the never-raise floor.  A non-numeric
+        # argument degrades to a ``0`` divisor (→ ``Infinity``/``NaN``); a bignum
+        # receiver/arg saturates to ``±inf`` via ``_sat_float`` rather than
+        # raising an untyped ``OverflowError`` from ``float()``.
+        divisor = _sat_float(args[0]) if args and isinstance(args[0], (int, float)) else 0.0
+        numer = _sat_float(recv)
+        if divisor == 0.0:
+            if numer == 0.0:
+                return math.nan
+            return math.inf if numer > 0 else -math.inf
+        return numer / divisor
+    if name == "clamp":
+        # Ruby ``Comparable#clamp(min, max)``: return ``min`` if ``recv < min``,
+        # ``max`` if ``recv > max``, else ``recv``.  (The Range form is deferred.)
+        low, high = args[0], args[1]
+        if recv < low:
+            return low
+        if recv > high:
+            return high
+        return recv
+    if name == "between?":
+        # Ruby ``Comparable#between?(min, max)``: ``min <= recv <= max``.
+        return args[0] <= recv <= args[1]
     if name == "gcd":
         return math.gcd(int(recv), int(args[0]))
     if name in ("pow", "**"):

@@ -2,6 +2,33 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.17] - 2026-07-10
+
+### Added — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Extends the `Integer`/`Float` catalog (`_numeric_method` + `_NUMERIC_METHODS`)
+with five more Ruby numeric methods — this establishes the **reference**
+semantics for the N1 breadth sweep before the embedded backends mirror them:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds a `Float` to that many decimals (half **away from zero**, not
+  Python's banker's rounding); `ndigits <= 0` rounds to an `Integer` power of ten.
+  A non-finite `Float` returns unchanged (never-raise floor).
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient and the
+  divisor-signed remainder; division by zero raises a typed `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that **never raises**: dividing by zero
+  yields `Infinity`/`-Infinity`/`NaN` (matching Ruby) rather than raising.
+- `clamp(min, max)` — `min` if `recv < min`, `max` if `recv > max`, else `recv`.
+- `between?(min, max)` — `min <= recv <= max`.
+
+The `clamp`/`between?` `Range` form is deferred, matching the literal-only
+precedent elsewhere in the catalog. All arithmetic is hardened to the
+never-raise floor: `round` bounds a hostile `ndigits` (no bignum allocation),
+guards non-finite arguments, and uses all-integer rounding for large-integer
+receivers; `divmod`/`fdiv` saturate bignum operands to `±Infinity` (via
+`_sat_float`) and route a non-numeric argument to the typed `ZeroDivisionError`
+rather than an untyped `OverflowError`/`ValueError`/`TypeError`.
+
 ## [0.1.16] - 2026-07-07
 
 ### Added — String char-set methods: `tr` / `count` / `delete` / `squeeze`
