@@ -3,7 +3,22 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.4.2] - Unreleased
+## [0.4.3] - Unreleased
+
+### Added
+
+- **Two-argument `TRIM(x, y)` / `LTRIM(x, y)` / `RTRIM(x, y)`** — the second
+  argument is a *set of characters* stripped from both / the left / the right
+  end, matching SQLite: `TRIM('xxhixx', 'x')` → `'hi'`,
+  `TRIM('abcHIcba', 'abc')` → `'HI'`. Trimming operates on Unicode characters,
+  not bytes (`TRIM('héllo', 'h')` → `'éllo'`); an empty set removes nothing; a
+  NULL in either argument propagates to NULL; integer/boolean arguments coerce
+  to their decimal text (`TRIM(12321, '1')` → `'232'`). The single-argument
+  whitespace forms are unchanged. The three arms now share one `trim_builtin`
+  helper. The helper validates arity before indexing (so `TRIM()` — which the
+  grammar permits — is a clean error, not an out-of-bounds panic) and resolves
+  the trim-set through a `HashSet` so the operation stays `O(N + M)` rather than
+  `O(N·M)` in the subject / set lengths.
 
 ### Added
 
