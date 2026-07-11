@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.17] - 2026-07-11
+
+### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm
+
+The computed-key walk gains a `PropertyKey::PrivateName` arm (a no-op): a private
+name is not an identifier reference — it names a slot in the class's private
+brand, resolved lexically at parse time, never through scope — so it binds and
+references nothing. Keeps the match exhaustive after `javascript-ast` 0.36.0
+added the variant. PATCH.
+
 ## [0.12.16] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm

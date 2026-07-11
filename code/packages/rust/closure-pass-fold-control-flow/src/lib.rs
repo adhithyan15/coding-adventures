@@ -1603,6 +1603,9 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                         kind: p.kind,
                         key: match &p.key {
                             PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            // A private name (`#x`) never occurs in an object
+                            // literal, but the match must stay exhaustive.
+                            PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => {
                                 PropertyKey::StringLiteral(s.clone())
                             }

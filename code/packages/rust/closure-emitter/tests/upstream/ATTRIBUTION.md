@@ -257,6 +257,26 @@ under the Apache License, Version 2.0:
       lets the port cover computed / numeric / string-key and sequence-initializer
       shapes the grammar/bridge cannot yet parse.
 
+- `code_printer_static_block_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the **static initialization block** `static { … }` printing cases — a
+      `ClassMember::StaticBlock`, the third and last kind of class member)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_test.rs` /
+      `code_printer_class_declaration_test.rs` / `code_printer_class_field_test.rs`;
+      isolates `emit_static_block` + the shared `emit_class_tail` member loop's
+      `StaticBlock` arm that landed with `ClassMember::StaticBlock` (CLOC12.176
+      PR1). 9 active `#[test]`s and **0 `#[ignore]`** — the emitter conforms to
+      every covered shape: an empty block (`static{}`, with `static` abutting the
+      `{`); a statement body (`static{x}`); a real initializer assignment
+      (`static{x=1}`); a two-statement body (`static{x;y}`); brace-termination so
+      the block needs no `;` separator (`static{}m(){}`, `m(){}static{}`); two
+      static blocks back-to-back (`static{}static{}`); and all three member kinds
+      coexisting in source order (`x=1;static{y=2}m(){}`). Inputs are
+      hand-constructed AST; the bridge conversion of a static block (CLOC12.176
+      PR2) is exercised separately in `javascript-parser` + a `closurec` e2e diff
+      fixture.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

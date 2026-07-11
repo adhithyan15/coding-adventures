@@ -1428,6 +1428,24 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             Ok(SqlValue::Text(lit))
         }
 
+        "IIF" => {
+            // IIF(x, y, z) — SQLite's function-form conditional, equivalent to
+            // `CASE WHEN x THEN y ELSE z END`: `y` when `x` is truthy (SQL
+            // three-valued logic — a NULL or falsy `x` picks `z`). Arguments are
+            // already evaluated here; since this engine's expressions have no
+            // side effects, eagerly evaluating both branches is observationally
+            // identical to CASE's short-circuit.
+            if args.len() != 3 {
+                return Err(VmError::TypeMismatch(format!("IIF expects 3 args, got {}", args.len())));
+            }
+            let pick_then = is_truthy(&args[0]);
+            let mut it = args.into_iter();
+            let _cond = it.next();
+            let y = it.next().unwrap();
+            let z = it.next().unwrap();
+            Ok(if pick_then { y } else { z })
+        }
+
         other => {
             // Unknown function — return NULL rather than crashing.
             // This matches SQLite's behaviour for unrecognised scalar functions.
@@ -3654,5 +3672,18 @@ mod tests {
         assert_eq!(q(SqlValue::Int(-7)), "-7");
         assert_eq!(q(SqlValue::Text("it's".into())), "'it''s'"); // inner quote doubled
         assert_eq!(q(SqlValue::Blob(vec![0xde, 0xad])), "X'DEAD'");
+    }
+
+    #[test]
+    fn builtin_iif_selects_by_truthiness() {
+        let iif = |x: SqlValue| {
+            call_builtin("IIF", vec![x, SqlValue::Text("yes".into()), SqlValue::Text("no".into())]).unwrap()
+        };
+        assert_eq!(iif(SqlValue::Int(1)), SqlValue::Text("yes".into()));
+        assert_eq!(iif(SqlValue::Int(0)), SqlValue::Text("no".into()));
+        assert_eq!(iif(SqlValue::Null), SqlValue::Text("no".into())); // NULL → falsy
+        assert_eq!(iif(SqlValue::Bool(true)), SqlValue::Text("yes".into()));
+        // Wrong arity is a type error, not a panic.
+        assert!(call_builtin("IIF", vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
     }
 }

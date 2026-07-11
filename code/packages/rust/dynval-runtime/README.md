@@ -1,4 +1,4 @@
-# lispy-runtime
+# dynval-runtime
 
 **LANG20 PR 2** — first concrete `LangBinding` implementation. Shipped as `LispyBinding`, the binding for **Lisp / Scheme / Twig / Clojure** frontends. Every Lispy frontend reuses *everything* in this crate (value rep, builtins, heap, intern table, C ABI) and only writes its own AST → IIR step.
 
@@ -80,7 +80,7 @@ assert!(foo.is_symbol());
 ## Tests
 
 ```bash
-cargo test -p lispy-runtime
+cargo test -p dynval-runtime
 ```
 
 101 unit tests + 1 doc test covering:
@@ -103,7 +103,7 @@ The crate uses `unsafe` for the tagged-pointer scheme (`from_heap` / `as_heap_pt
    - **Miri** (with `-Zmiri-ignore-leaks` for the PR-2 intentional-leak allocator) runs the full test suite as an interpreter to catch real UB at runtime — out-of-bounds reads, use-after-free, misaligned access, data races, aliasing violations.
    - **cargo-geiger** publishes an unsafe-expression report per crate so PR reviewers see whether new unsafe was introduced.
 
-The CI runs only when files in `lang-runtime-core/` or `lispy-runtime/` change.
+The CI runs only when files in `lang-runtime-core/` or `dynval-runtime/` change.
 
 ## Where this crate sits
 
@@ -115,7 +115,7 @@ LANG04  aot-core                  ← AOT
 LANG15  vm-runtime                ← linkable C ABI
 LANG16  gc-core                   ← heap + GC algorithms
 LANG20  lang-runtime-core         ← LangBinding trait + supporting types (PR 1)
-        └── lispy-runtime         ← THIS CRATE — first concrete binding (PR 2)
+        └── dynval-runtime         ← THIS CRATE — first concrete binding (PR 2)
             ├── (twig-frontend)   ← PR 3 ports twig-ir-compiler to use this
             ├── (lisp-frontend)   ← future
             ├── (scheme-frontend) ← future

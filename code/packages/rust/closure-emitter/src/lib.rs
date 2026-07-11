@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     ClassDeclaration, FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
-    ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
+    ObjectMember, PrivateName, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     RegExpLiteral,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
@@ -2102,6 +2102,15 @@ impl<'a> Emitter<'a> {
     fn emit_property_key(&mut self, k: &PropertyKey) {
         match k {
             PropertyKey::Identifier(i) => self.emit_identifier(i),
+            // A **private name** — `#x`. The stored `name` omits the leading
+            // `#` (mirroring `Identifier`), so we prepend it here. A private
+            // name is always a hard token boundary, so no quote/shorten logic
+            // applies (unlike a string key); it prints verbatim.
+            PropertyKey::PrivateName(p) => {
+                self.maybe_map(&p.cv);
+                self.write_str("#");
+                self.write_str(&p.name);
+            }
             PropertyKey::StringLiteral(s) => {
                 // Quote-stripping minification, matching Closure's CodePrinter:
                 // a string key whose DECODED value is a valid identifier name may
@@ -3772,6 +3781,75 @@ mod tests {
     fn bare_field_has_no_value() {
         // `class C{y;}` — a bare field: just the key and the terminator.
         assert_eq!(emit_class_decl("C", None, vec![field("y", None, false)]), "class C{y;}");
+    }
+
+    // ---- private-name keys (CLOC12.177) ------------------------------
+
+    /// A private **field** — `#x = 1`. The stored name omits the `#`; the
+    /// emitter prepends it.
+    fn private_field(name: &str, value: Option<Expression>, is_static: bool) -> ClassMember {
+        ClassMember::Field(PropertyDefinition {
+            cv: None,
+            key: PropertyKey::PrivateName(PrivateName { cv: None, name: name.to_string() }),
+            value,
+            computed: false,
+            is_static,
+        })
+    }
+
+    /// A private **method** — `#m(){}`.
+    fn private_method(name: &str) -> ClassMember {
+        ClassMember::Method(MethodDefinition {
+            cv: None,
+            key: PropertyKey::PrivateName(PrivateName { cv: None, name: name.to_string() }),
+            kind: MethodKind::Method,
+            value: method_fn(),
+            computed: false,
+            is_static: false,
+        })
+    }
+
+    #[test]
+    fn private_field_prints_hash() {
+        // `class C{#x=1;}` — the `#` is prepended to the stored bare name.
+        assert_eq!(
+            emit_class_decl("C", None, vec![private_field("x", Some(num(1.0)), false)]),
+            "class C{#x=1;}"
+        );
+    }
+
+    #[test]
+    fn bare_private_field() {
+        // `class C{#x;}` — a bare private field, no initializer.
+        assert_eq!(emit_class_decl("C", None, vec![private_field("x", None, false)]), "class C{#x;}");
+    }
+
+    #[test]
+    fn static_private_field() {
+        // `class C{static #x=1;}` — `static` stacks before the private key.
+        assert_eq!(
+            emit_class_decl("C", None, vec![private_field("x", Some(num(1.0)), true)]),
+            "class C{static #x=1;}"
+        );
+    }
+
+    #[test]
+    fn private_method_prints_hash() {
+        // `class C{#m(){}}` — a private method key also prints `#`.
+        assert_eq!(emit_class_decl("C", None, vec![private_method("m")]), "class C{#m(){}}");
+    }
+
+    #[test]
+    fn private_and_public_members_interleave() {
+        // `class C{#x=1;m(){}}` — a private field and a public method coexist.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![private_field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
+            ),
+            "class C{#x=1;m(){}}"
+        );
     }
 
     #[test]

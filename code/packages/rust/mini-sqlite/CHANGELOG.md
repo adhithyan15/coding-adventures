@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.4 — IIF(x, y, z) — the function form of CASE
+
+Stream B, corpus growth. `IIF(x, y, z)` now works — SQLite's function-form
+conditional (`CASE WHEN x THEN y ELSE z END`), a pure-`sql-vm` addition (0.4.1)
+that covers much of `CASE`'s utility while full `CASE`/`CAST`/window syntax
+remains blocked on a stale generated grammar. One new differential-oracle case
+(`iif`) diffs mini-sqlite against real bundled SQLite. No mini-sqlite `src/`
+change.
+
 ## 0.5.3 — More scalar functions: SIGN / UNICODE / CHAR / ZEROBLOB / QUOTE
 
 Stream B, corpus-growth phase. Five more common scalar functions now work:

@@ -35,13 +35,13 @@ two translation units:
   `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …).
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
   `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
-  plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
+  plus int box/unbox, implementing `dynval-runtime`'s 3-bit-tagged 64-bit
   `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
   McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
   native binary — it is a language-agnostic primitive, not tied to one
   frontend.
 
-The C lisp runtime and the Rust `lispy-runtime` crate (used by the VM/JIT)
+The C lisp runtime and the Rust `dynval-runtime` crate (used by the VM/JIT)
 are two implementations of one documented ABI. The `lispy_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.

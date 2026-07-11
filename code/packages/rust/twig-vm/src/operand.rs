@@ -32,7 +32,7 @@
 
 use lang_runtime_core::RuntimeError;
 
-use lispy_runtime::LispyValue;
+use dynval_runtime::LispyValue;
 
 use interpreter_ir::Operand;
 
@@ -66,7 +66,7 @@ pub fn operand_to_value(
     operand: &Operand,
     frame_lookup: &dyn Fn(&str) -> Option<LispyValue>,
 ) -> Result<LispyValue, RuntimeError> {
-    use lispy_runtime::{TAG_INT, TAG_HEAP, TAG_SYMBOL};
+    use dynval_runtime::{TAG_INT, TAG_HEAP, TAG_SYMBOL};
     let _ = TAG_INT; // touch re-exports so the import is intentional
     let _ = TAG_HEAP;
     let _ = TAG_SYMBOL;
@@ -108,7 +108,7 @@ pub fn operand_to_value(
         // `Operand::Var` string-shaped names in exec_const.
         Operand::Str(text) => {
             use lang_runtime_core::SymbolId;
-            use lispy_runtime::intern;
+            use dynval_runtime::intern;
             let id = intern(text);
             if id == SymbolId::NONE {
                 return Err(RuntimeError::Custom(format!(
