@@ -68,15 +68,12 @@ impl Scanner {
         if offset >= chars.len() {
             return "";
         }
-        // Return a slice of the char at offset
-        let _byte_pos = self.pos;
-        for (i, ch) in self.source[self.pos..].char_indices() {
-            if offset == 0 {
+        // Fast path for offset 0: return the first character directly.
+        if offset == 0 {
+            if let Some(ch) = self.source[self.pos..].chars().next() {
                 let end = self.pos + ch.len_utf8();
                 return &self.source[self.pos..end];
             }
-            let _ = (i, ch);
-            break;
         }
         // Count character offsets
         let mut count = 0;

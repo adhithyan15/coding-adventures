@@ -21,6 +21,13 @@
 //!
 //! On 64-bit systems, VALUE is `u64`. On 32-bit, it's `u32`.
 
+// This crate is an FFI boundary over Ruby's C API: a few public helpers accept
+// raw pointers (e.g. `*const c_char` argv buffers) and pass them straight to
+// `extern "C"` libruby calls. Clippy's `not_unsafe_ptr_arg_deref` would have us
+// mark those wrappers `unsafe`, but the crate's whole purpose is a *safe* Rust
+// surface over libruby, with the pointer contract documented per function.
+#![allow(clippy::not_unsafe_ptr_arg_deref)]
+
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 use std::slice;
 use std::sync::OnceLock;

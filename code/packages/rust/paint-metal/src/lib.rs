@@ -1148,6 +1148,10 @@ mod glyph_run_overlay {
 // Live-drawable present (Apple only)
 // ---------------------------------------------------------------------------
 
+// `metal_layer` is a raw Objective-C `id` handle that we hand to the Metal
+// live-present path. This is an FFI boundary — the caller owns the CAMetalLayer
+// and upholds the pointer contract — so the safe wrapper is intentional.
+#[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[cfg(target_vendor = "apple")]
 pub fn render_to_metal_layer(
     scene: &PaintScene,

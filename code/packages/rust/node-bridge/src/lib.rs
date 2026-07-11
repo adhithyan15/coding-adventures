@@ -1,5 +1,13 @@
 // We use snake_case names to match the N-API C convention exactly.
 #![allow(non_camel_case_types)]
+// This crate is, by design, an FFI boundary: the public wrapper functions
+// accept raw N-API handle pointers (`napi_env`, `napi_value`) and dereference
+// them via the `extern "C"` N-API calls. Clippy's `not_unsafe_ptr_arg_deref`
+// would have us mark every wrapper `unsafe`, but the whole crate exists to
+// present a *safe* Rust surface over N-API — the safety contract is documented
+// per function and upheld by N-API itself. Allow the lint crate-wide rather
+// than annotate ~80 individual FFI shims.
+#![allow(clippy::not_unsafe_ptr_arg_deref)]
 
 //! # node-bridge — Zero-dependency Rust wrapper for Node.js N-API
 //!

@@ -2103,7 +2103,9 @@ pub fn lower_iir_to_beam(
 
                     // DoS guard: check scratch register budget.
                     // alloc_closure needs 1 scratch register (meta.next_reg).
-                    if meta.next_reg >= 255 {
+                    // `next_reg` is a u8, so 255 is its maximum: at that point no
+                    // further scratch register can be allocated without overflow.
+                    if meta.next_reg == 255 {
                         return Err(IIRBeamError::UnsupportedOp {
                             function: fn_name.clone(),
                             op: "alloc_closure: too many registers; no scratch available".into(),

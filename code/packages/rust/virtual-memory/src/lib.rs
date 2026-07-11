@@ -2043,8 +2043,9 @@ mod tests {
 
         // 5th mapping triggers eviction.
         mmu.map_page(1, 0x5000, PagePermissions::default()).unwrap();
-        let phys = mmu.translate(1, 0x5000, false).unwrap();
-        assert!(phys >= 0); // Just verify it works.
+        // Translation must succeed after eviction; `.unwrap()` is the assertion
+        // (the returned physical address is a `usize`, so `>= 0` is vacuous).
+        mmu.translate(1, 0x5000, false).unwrap();
     }
 
     #[test]
@@ -2075,9 +2076,8 @@ mod tests {
         // 4th mapping evicts 0x2000 (LRU).
         mmu.map_page(1, 0x4000, PagePermissions::default()).unwrap();
 
-        // 0x1000 should still be accessible.
-        let phys = mmu.translate(1, 0x1000, false).unwrap();
-        assert!(phys >= 0);
+        // 0x1000 should still be accessible; `.unwrap()` is the assertion.
+        mmu.translate(1, 0x1000, false).unwrap();
     }
 
     #[test]
@@ -2091,8 +2091,8 @@ mod tests {
 
         mmu.map_page(1, 0x4000, PagePermissions::default()).unwrap();
 
-        let phys = mmu.translate(1, 0x4000, false).unwrap();
-        assert!(phys >= 0);
+        // Translation must succeed; `.unwrap()` is the assertion.
+        mmu.translate(1, 0x4000, false).unwrap();
     }
 
     #[test]
