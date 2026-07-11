@@ -1,8 +1,8 @@
 [package]
 name = "bignum-core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "A zero-dependency, arbitrary-precision signed integer (BigInteger) built from a sign and a base-2^32 limb vector, with full add/sub/mul/div-rem, gcd, pow, comparison, and radix parse/format."
+description = "A zero-dependency arbitrary-precision numeric core: a signed integer (BigInteger) built from a sign and a base-2^32 limb vector, plus an exact rational (BigRational) with unbounded, never-rounding +-*/, reciprocal, integer powers, comparison, and parse/format."
 license = "MIT"
 
 [dependencies]
