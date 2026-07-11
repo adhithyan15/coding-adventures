@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "dart/activation-functions-native",
+  "capabilities": ["ffi:call"],
+  "justification": "ffi:call — uses dart:ffi DynamicLibrary.open to call into the Rust activation-functions-native shared library, which wraps the pure activation-functions crate over a C ABI (pure double->double functions). No network, filesystem, or process capabilities."
+}
