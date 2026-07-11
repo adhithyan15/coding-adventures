@@ -942,6 +942,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "sort_by", "min_by", "max_by",
     "group_by", "partition", "flat_map", "collect_concat",
     "reduce", "inject", "sum",
+    "to_h", "each_with_index", "each_with_object",
   ]);
   function hashMethod(recv, name, args) {
     switch (name) {
@@ -1191,6 +1192,47 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         let acc = args.length >= 2 ? args[0] : 0;
         for (const [k, v] of recv) { acc = acc + blk(k, v); }
         return acc;
+      }
+      case "to_h": {
+        // WITHOUT a block, a shallow copy of the hash (a fresh `Map`, so
+        // mutating it never aliases the receiver).  WITH a block
+        // `{ |k, v| [new_k, new_v] }`, a NEW hash from the `[k, v]` pairs the
+        // block returns: the block is yielded the two args `(k, v)` (matching
+        // `each`), a non-pair result is skipped (Ruby raises TypeError,
+        // deferred to the typed-error cascade), and a later pair with a
+        // duplicate key wins (Ruby's rule, and how `Map.set` behaves).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return new Map(recv); }
+        const out = new Map();
+        for (const [k, v] of recv) {
+          const pair = blk(k, v);
+          if (Array.isArray(pair) && pair.length === 2) { out.set(pair[0], pair[1]); }
+        }
+        return out;
+      }
+      case "each_with_index": {
+        // Yields each `[k, v]` pair with its 0-based index and returns the
+        // receiver.  Unlike the two-arg `(k, v)` yield of `each`, the element
+        // arrives as a single `[k, v]` Array (the second block param is the
+        // index), matching Ruby's Enumerable convention.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        let i = 0;
+        for (const [k, v] of recv) { blk([k, v], i); i++; }
+        return recv;
+      }
+      case "each_with_object": {
+        // `each_with_object(memo) { |(k, v), memo| … }` — yields each `[k, v]`
+        // pair with the memo object and returns the (mutated) memo.  Like
+        // `each_with_index`, the element is the single `[k, v]` pair (the second
+        // block param is the memo).  With no memo argument the receiver is
+        // returned unchanged.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        if (args.length < 2) { return recv; }
+        const memo = args[0];
+        for (const [k, v] of recv) { blk([k, v], memo); }
+        return memo;
       }
     }
     return HASH_MISS;
