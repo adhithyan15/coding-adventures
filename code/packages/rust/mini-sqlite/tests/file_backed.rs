@@ -167,3 +167,62 @@ fn sqlite_master_is_queryable_and_matches_real_sqlite() {
 
     let _ = std::fs::remove_dir_all(path.parent().unwrap());
 }
+
+/// The file backend's `list_indexes` matches what real SQLite reports through
+/// `PRAGMA index_list` / `PRAGMA index_info` — tools can introspect a real
+/// database's indexes even though the planner still scans.
+#[test]
+fn list_indexes_matches_real_sqlite() {
+    use coding_adventures_sql_backend::Backend;
+    use coding_adventures_storage_sqlite::SqliteFileBackend;
+
+    let path = build_sqlite_file(&[
+        "CREATE TABLE cards (id INTEGER PRIMARY KEY, due INTEGER, ord INTEGER, note TEXT)",
+        "CREATE INDEX ix_due ON cards(due)",
+        "CREATE UNIQUE INDEX ix_ord ON cards(ord, due)",
+        "CREATE TABLE other (x INTEGER)",
+        "CREATE INDEX ix_x ON other(x)",
+    ]);
+
+    // Normalized (name, unique, columns) from real SQLite for one table.
+    let real = |table: &str| -> Vec<(String, bool, Vec<String>)> {
+        let conn = rusqlite::Connection::open(&path).unwrap();
+        let mut list = conn.prepare(&format!("PRAGMA index_list('{table}')")).unwrap();
+        let idxs: Vec<(String, bool)> = list
+            .query_map([], |r| Ok((r.get::<_, String>(1)?, r.get::<_, i64>(2)? != 0)))
+            .unwrap()
+            .map(Result::unwrap)
+            .collect();
+        let mut out = Vec::new();
+        for (name, uniq) in idxs {
+            let mut info = conn.prepare(&format!("PRAGMA index_info('{name}')")).unwrap();
+            let cols: Vec<String> = info
+                .query_map([], |r| r.get::<_, Option<String>>(2))
+                .unwrap()
+                .map(|c| c.unwrap().unwrap_or_default())
+                .collect();
+            out.push((name, uniq, cols));
+        }
+        out.sort();
+        out
+    };
+
+    let backend = SqliteFileBackend::open(std::fs::read(&path).unwrap()).unwrap();
+    let mine = |table: &str| -> Vec<(String, bool, Vec<String>)> {
+        let mut v: Vec<(String, bool, Vec<String>)> = backend
+            .list_indexes(Some(table))
+            .into_iter()
+            .map(|i| (i.name, i.unique, i.columns))
+            .collect();
+        v.sort();
+        v
+    };
+
+    // cards has ix_due (non-unique, [due]) and ix_ord (unique, [ord, due]).
+    assert_eq!(mine("cards"), real("cards"), "cards indexes");
+    // Filtering to one table excludes the other table's index.
+    assert_eq!(mine("other"), real("other"), "other indexes");
+    assert_eq!(mine("cards").len(), 2);
+
+    let _ = std::fs::remove_dir_all(path.parent().unwrap());
+}
