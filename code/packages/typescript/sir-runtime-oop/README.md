@@ -82,7 +82,8 @@ methods `each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
 char sets*, `each_char`);
 and (item **M1c**) the **`Integer`/`Float`** catalog (`abs`, `to_i`/`to_f`,
 `even?`/`odd?`/`zero?`/`positive?`/`negative?`, `succ`/`pred`,
-`floor`/`ceil`/`round`, `gcd`, `pow`/`**`, `digits`, and block
+`floor`/`ceil`/`round` (with optional `ndigits`), `divmod`, `fdiv`, `clamp`,
+`between?`, `gcd`, `pow`/`**`, `digits`, and block
 `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
 (`to_s`/`to_sym`/`length`/`upcase`/`downcase`/`inspect`), and universal
 **`to_s`/`inspect`** Ruby display forms (so `null`/`true`/`false` need no catalog)
