@@ -1506,6 +1506,17 @@ _MAX_POW_BITS = 1 << 20
 _MAX_DISPLAY_DEPTH = 100
 
 
+def _sat_float(x: Val) -> float:
+    """Coerce ``x`` to ``float``, **saturating** to ``±inf`` when it is a bignum
+    ``int`` past ``float`` range.  Plain ``float(2**5000)`` raises an untyped
+    ``OverflowError``; Ruby instead treats such a value as ``Infinity`` in
+    floating-point contexts, so saturating holds the never-raise floor."""
+    try:
+        return float(x)
+    except OverflowError:
+        return math.inf if x > 0 else -math.inf
+
+
 def _ruby_round(x: float) -> int:
     """Ruby ``Float#round`` (no digits): round half **away from zero** — unlike
     Python's banker's rounding, ``2.5.round == 3`` and ``-2.5.round == -3``."""
@@ -1653,16 +1664,25 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
         divisor = args[0] if args and isinstance(args[0], (int, float)) else 0
         if divisor == 0:
             raise_error("ZeroDivisionError", "divided by 0")
-        quotient, remainder = divmod(recv, divisor)
+        # ``divmod(int, int)`` is exact, but a mixed ``int``-receiver / ``float``-
+        # divisor coerces the (possibly bignum) receiver to ``float`` and raises
+        # an untyped ``OverflowError`` past ``float`` range.  Route any
+        # float-involving pair through saturating floats so the surface never
+        # raises (matching Ruby's floating-point ``Infinity``/``NaN`` result).
+        if isinstance(recv, float) or isinstance(divisor, float):
+            quotient, remainder = divmod(_sat_float(recv), _sat_float(divisor))
+        else:
+            quotient, remainder = divmod(recv, divisor)
         return [quotient, remainder]
     if name == "fdiv":
         # Ruby ``fdiv``: floating-point division.  Unlike ``/``, dividing by zero
         # yields ``Infinity``/``NaN`` rather than raising (Ruby never raises on
         # ``Float`` division), honouring the never-raise floor.  A non-numeric
-        # argument degrades to a ``0`` divisor (→ ``Infinity``/``NaN``) rather
-        # than raising an untyped ``ValueError``/``TypeError`` from ``float()``.
-        divisor = float(args[0]) if args and isinstance(args[0], (int, float)) else 0.0
-        numer = float(recv)
+        # argument degrades to a ``0`` divisor (→ ``Infinity``/``NaN``); a bignum
+        # receiver/arg saturates to ``±inf`` via ``_sat_float`` rather than
+        # raising an untyped ``OverflowError`` from ``float()``.
+        divisor = _sat_float(args[0]) if args and isinstance(args[0], (int, float)) else 0.0
+        numer = _sat_float(recv)
         if divisor == 0.0:
             if numer == 0.0:
                 return math.nan

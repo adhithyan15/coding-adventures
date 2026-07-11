@@ -729,6 +729,16 @@ def test_numeric_divmod_fdiv() -> None:
     with pytest.raises(SirError):
         oop.call_method(1, "divmod", "x")
     assert oop.call_method(1, "fdiv", "x") == float("inf")
+    # A bignum receiver/arg must saturate to ±inf, not raise an untyped
+    # OverflowError from float(bignum).
+    big = 2**5000
+    assert oop.call_method(big, "fdiv", 2) == float("inf")
+    assert oop.call_method(3, "fdiv", big) == 0.0
+    # Mixed int-receiver / float-divisor divmod on a bignum must not raise an
+    # untyped OverflowError; the receiver saturates to inf, so divmod degrades
+    # to NaN (never-raise floor) rather than crashing.
+    q, r = oop.call_method(big, "divmod", 0.5)
+    assert _math.isnan(q) and _math.isnan(r)
 
 
 def test_numeric_clamp_between() -> None:
