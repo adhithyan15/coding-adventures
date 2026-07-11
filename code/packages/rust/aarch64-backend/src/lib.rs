@@ -205,7 +205,7 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
     // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
-    // dispatch to `__dyn_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`,
     // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
     // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
     // logic — the generic `call_builtin` path marshals args + emits the BL.

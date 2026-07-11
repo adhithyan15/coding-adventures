@@ -374,7 +374,7 @@ pub fn compile_file_to_llvm_ir(
 /// — like wasm/JVM/CLR/BEAM — a polymorphic scalar value must be given a concrete
 /// type before lowering; for a pure-integer McCarthy program that type is `i64`.
 /// Heap/reference functions (cons/symbols/lambda — the tagged-word value model
-/// routed through `lispy_runtime.c`, W12b+) are left alone.
+/// routed through `dynval_runtime.c`, W12b+) are left alone.
 fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
     const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
     const LISP_BUILTINS: &[&str] = &[
@@ -408,7 +408,7 @@ fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
 /// reproducible target (`x86_64-unknown-linux-gnu`) — McCarthy W12a.
 ///
 /// The fifth `--emit` value model and the first **tagged-word** target (the
-/// LLVM/AOT/JIT family that links the shared `lispy_runtime.c`, as opposed to the
+/// LLVM/AOT/JIT family that links the shared `dynval_runtime.c`, as opposed to the
 /// managed object models of wasm/JVM/CLR or BEAM's native terms). This scalar
 /// run-foundation concretises `any`→`i64` and lowers to LLVM IR; the cons /
 /// predicate / symbol / lambda lowering (`call __dyn_*`) is W12b+.
@@ -438,7 +438,7 @@ pub fn compile_source_to_llvm_with_target(
     // `intern_symbols` assigns each symbol a tagged immediate; `lower_lisp_repr`
     // boxes integer literals to tagged words and inserts the final `lispy_unbox_int`
     // so the result is a plain `i64`. `iir-to-llvm` then lowers each `lispy_*` to a
-    // `call @__dyn_*` into `lispy_runtime.c`. A no-op for a scalar program.
+    // `call @__dyn_*` into `dynval_runtime.c`. A no-op for a scalar program.
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);

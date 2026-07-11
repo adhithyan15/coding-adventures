@@ -1,12 +1,12 @@
 //! # LLVM cons — F2 (LANG77 / McCarthy W12b-1).
 //!
 //! The first **tagged-word** cons backend: a McCarthy cons is a tagged 64-bit
-//! word managed by the shared C runtime `lispy_runtime.c` (the SAME runtime the
+//! word managed by the shared C runtime `dynval_runtime.c` (the SAME runtime the
 //! native AOT path links). `compile_source_to_llvm` runs the native lisp pipeline
 //! (`lower_heap_builtins_runtime` → `intern_symbols` → `lower_lisp_repr`), so
 //! cons/car/cdr become `call_builtin "lispy_*"` over pre-boxed tagged words with a
 //! final `lispy_unbox_int`; `iir-to-llvm` lowers each to `call @__dyn_*`.
-//! **Verified by RUNNING**: emit host-triple IR, link `lispy_runtime.c` with
+//! **Verified by RUNNING**: emit host-triple IR, link `dynval_runtime.c` with
 //! `clang`, run the native executable — its exit code is the result. (Predicates
 //! F3–F5, whose tagged-boolean result needs its own handling, are W12b-2.)
 
@@ -23,10 +23,10 @@ fn host_triple() -> String {
 /// Path to the shared C runtime (relative to this crate).
 fn lispy_runtime_c() -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../twig-aot/runtime/lispy_runtime.c")
+        .join("../twig-aot/runtime/dynval_runtime.c")
 }
 
-/// Compile to host LLVM IR, link `lispy_runtime.c` with `clang`, run, return exit code.
+/// Compile to host LLVM IR, link `dynval_runtime.c` with `clang`, run, return exit code.
 fn run(src: &str, module: &str) -> i32 {
     let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, module, &host_triple())
         .unwrap_or_else(|e| panic!("compile {src:?} to LLVM: {e}"));
