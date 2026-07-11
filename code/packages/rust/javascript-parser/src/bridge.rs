@@ -60,7 +60,7 @@ use coding_adventures_javascript_ast::{
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
-        OptionalCallExpression, OptionalMemberExpression, Property,
+        OptionalCallExpression, OptionalMemberExpression, PrivateName, Property,
         PropertyKey, PropertyKind, RegExpLiteral, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
@@ -1319,8 +1319,32 @@ fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeE
 ///   (`y;`) has none and maps to `value: None`.
 ///
 /// A **private** field (`#x`) is a bare `PRIVATE_NAME` token with no
-/// `property_name` node — an unmodelled shape — so it DECLINES (safe fallback)
-/// rather than mis-emit the `#` name.
+/// `property_name` node. [`private_name_key`] detects it and lowers it to a
+/// [`PropertyKey::PrivateName`] (CLOC12.177 PR2); an ordinary keyed field is
+/// unchanged. (A private *method* `#m(){}` is a separate `private_method_definition`
+/// grammar node — a later slice.)
+///
+/// If a class-member node carries a bare **private-name** token (`#x`), lower it
+/// to a [`PropertyKey::PrivateName`]; otherwise return `None`.
+///
+/// A private name lexes as a `Name` token whose `type_name` discriminant is
+/// `Some("PRIVATE_NAME")` and whose `value` **includes** the leading `#`
+/// (e.g. `"#x"`) — unlike a `property_name` node, it is a direct token child of
+/// the `class_field_declaration` / `private_method_definition` node. The stored
+/// [`PrivateName::name`] omits the `#` (mirroring [`Identifier`]), so we strip it
+/// here; the emitter re-adds it. (CLOC12.177 PR2.)
+fn private_name_key(node: &GrammarASTNode) -> Option<PropertyKey> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_name.as_deref() == Some("PRIVATE_NAME") {
+                let name = t.value.strip_prefix('#').unwrap_or(&t.value).to_string();
+                return Some(PropertyKey::PrivateName(PrivateName { cv: None, name }));
+            }
+        }
+    }
+    None
+}
+
 fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, BridgeError> {
     // `static` — a bare NAME token before the `property_name` node.
     let mut is_static = false;
@@ -1332,13 +1356,19 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
         }
     }
 
-    // key — the `property_name` node. A private field carries a `PRIVATE_NAME`
-    // token instead (no `property_name` child); decline it as unmodelled.
-    let key_node = node_children(node)
-        .into_iter()
-        .find(|n| n.rule_name == "property_name")
-        .ok_or_else(|| unsupported(node))?;
-    let key = convert_property_key(key_node)?;
+    // key — normally the `property_name` node. A **private** field (`#x`) instead
+    // carries a bare `PRIVATE_NAME` token as a direct child (no `property_name`
+    // node), so we detect that first and lower it to `PropertyKey::PrivateName`
+    // (CLOC12.177 PR2). An ordinary field falls through to `property_name`.
+    let key = if let Some(pk) = private_name_key(node) {
+        pk
+    } else {
+        let key_node = node_children(node)
+            .into_iter()
+            .find(|n| n.rule_name == "property_name")
+            .ok_or_else(|| unsupported(node))?;
+        convert_property_key(key_node)?
+    };
 
     // initializer — the optional `assignment_expression` after `=`. A bare field
     // has none → `value: None`.
@@ -3821,11 +3851,64 @@ mod tests {
     }
 
     #[test]
-    fn class_private_field_declines() {
-        // `#x = 1;` — a private field carries a `PRIVATE_NAME` token (no
-        // `property_name` node), an unmodelled shape; DECLINE.
+    fn class_private_field_with_initializer() {
+        // `#x = 1;` — a private field carries a bare `PRIVATE_NAME` token instead
+        // of a `property_name` node; the bridge lowers it to
+        // `PropertyKey::PrivateName` with the leading `#` stripped (CLOC12.177 PR2).
+        let f = field_of("w = class { #x = 1; };");
+        assert!(!f.is_static);
+        assert!(!f.computed);
+        assert!(
+            matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"),
+            "expected a private-name key `#x` (stored bare), got {:?}",
+            f.key
+        );
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_bare_private_field() {
+        // `#x;` — a bare private field, no initializer.
+        let f = field_of("z = class { #x; };");
+        assert!(matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        assert!(f.value.is_none());
+    }
+
+    #[test]
+    fn class_static_private_field() {
+        // `static #x = 1;` — the `static` token precedes the `#x` PRIVATE_NAME
+        // token; `is_static` is set and the key is still a private name.
+        let f = field_of("w = class { static #x = 1; };");
+        assert!(f.is_static);
+        assert!(matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_private_and_public_field_interleave() {
+        // A private field and a public field coexist in source order, each with
+        // the right key kind.
+        let c = class_of("w = class { #x = 1; y = 2; };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::PrivateName(p) if p.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "y")));
+    }
+
+    #[test]
+    fn class_private_method_still_declines() {
+        // `#m(){}` — a private *method* is a separate `private_method_definition`
+        // grammar node, not yet bridged; it still DECLINES (safe WHITESPACE_ONLY),
+        // never a mis-emit. (A later slice.)
         assert!(matches!(
-            bridge("w = class { #x = 1; };"),
+            bridge("w = class { #m(){} };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }
