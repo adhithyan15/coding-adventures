@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.46.0] - 2026-07-11
+
+### Added — CLOC12.182: bridge private generator methods (`*#m(){}`)
+
+`convert_private_method_definition` detected the leading `*` token but bundled it
+into a blanket `"*" | "async" => decline` arm, dropping the file to
+WHITESPACE_ONLY. The `*` is now split out into its own `saw_star` flag and set on
+the method value's `FunctionExpression.generator`, exactly like a public
+generator method (CLOC12.181) — `yield` is a modelled `YieldExpression`, and the
+emitter's `emit_class_member` already reprints the `*` before the private-name
+key. Covers `*#g(){}` and `static *#g(){}`.
+
+Only the private **async** form (`async #m(){}`) still DECLINES — `await` is not
+yet modelled (grammar-blocked, gap-165). A private name can never be the
+`constructor`, so the generator's kind stays [`MethodKind::Method`]; private
+get/set accessors (CLOC12.179) are unaffected.
+
+The former `class_private_generator_still_declines` test flipped to
+`class_private_generator` (asserting the generator flag); added
+`class_static_private_generator` and `class_private_async_method_declines` to
+lock in the static form and the remaining async decline.
+
 ## [0.45.0] - 2026-07-11
 
 ### Added — CLOC12.181: bridge generator methods (`*m(){}`)
