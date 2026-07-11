@@ -1,0 +1,14 @@
+name: coding_adventures_md5
+version: 0.1.0
+description: >
+  MD5 message-digest algorithm (RFC 1321) implemented from scratch in pure Dart.
+  One-shot sumMd5/hexString plus a streaming Md5Digest. Pure-Dart port of the
+  md5 reference package.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0

@@ -34,13 +34,12 @@
 //! quietly leave stale ledger entries behind.
 //!
 //! On introduction this harness measured 12 of 22 seed cases already matching
-//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). The first has
-//! since been retired: qualified column references across an `INNER JOIN` now
-//! resolve correctly (the join threads its projection through the inner loop and
-//! keys each cursor by its effective alias). The remaining ledger entries — outer
-//! joins dropping their `ON` clause, misnamed aggregate columns, and a wrong
-//! `UPPER()` — are each a tracked increment; the harness is what makes fixing
-//! them verifiable.
+//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). Three have
+//! since been retired: `INNER JOIN` qualified-column resolution, and correct
+//! `LEFT`/`RIGHT OUTER JOIN` (NULL-padded via a per-outer-row match flag). The
+//! remaining ledger entries — `FULL JOIN`, misnamed aggregate columns, and a
+//! wrong `UPPER()` — are each a tracked increment; the harness is what makes
+//! fixing them verifiable.
 
 use coding_adventures_mini_sqlite::{connect, SqlValue};
 
@@ -398,9 +397,9 @@ const CASES: &[Case] = &[
 ///   explicit alias opens its cursor keyed under `None` while `LoadColumn` looks
 ///   it up under `Some("a")` (`sql-vm` `LoadColumn`). This breaks *even* inner
 ///   joins and is the highest-priority fix — it underlies the outer joins too.
-/// - **Outer joins** (`left_join`/`right_join`/`full_join`): `sql-codegen` drops
-///   the `ON` clause and degrades to a cross join for any non-inner kind (the
-///   `JoinKind::Inner` guard), with no NULL-padding.
+/// - **`FULL JOIN`**: needs the unmatched right rows too, which a single forward
+///   pass can't produce; still degrades to a cross product. (`LEFT`/`RIGHT` are
+///   now implemented via a per-outer-row match flag and no longer diverge.)
 /// - **Computed-column naming** (`count_star`/`sum_min_max`/`avg`/`group_by`/
 ///   `having`): the result *rows* match SQLite exactly, but mini-sqlite names an
 ///   aggregate output column `agg_N` where SQLite uses the expression text
@@ -410,16 +409,8 @@ const CASES: &[Case] = &[
 ///   the uppercased text) — a real codegen/builtin bug.
 const LEDGER: &[(&str, &str)] = &[
     (
-        "left_join",
-        "outer joins mis-compile: ON clause dropped, degrades to cross join (sql-codegen JoinKind::Inner guard); no NULL-padding.",
-    ),
-    (
-        "right_join",
-        "RIGHT JOIN not implemented; same outer-join codegen gap.",
-    ),
-    (
         "full_join",
-        "FULL JOIN not implemented; same outer-join codegen gap.",
+        "FULL JOIN needs the unmatched right rows too, which a single forward pass can't produce; still degrades to a cross product. (LEFT/RIGHT are now implemented and no longer ledgered.)",
     ),
     (
         "count_star",

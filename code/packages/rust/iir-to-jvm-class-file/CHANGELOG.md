@@ -1,5 +1,9 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.31.0] — 2026-07-11 (LANG-FULL E6d-2a: i64-width `box`/`unbox`)
+
+`box`/`unbox` width-adapt for E6d-2 dynamic arithmetic (i64): `box` of a `long`-slot value emits `lload; l2i` before `Integer.valueOf`; `unbox` into a `long` slot emits `i2l; lstore` after `intValue`. i32-slot lisp box/unbox unchanged.
+
 ## [0.30.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: `java.lang.String[]` reference arrays)
 
 BASIC string arrays (`DIM A$(n)`) lower to a JVM `java.lang.String[]` — the first

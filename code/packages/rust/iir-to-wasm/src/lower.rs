@@ -421,6 +421,15 @@ fn encode_i64_extend_i32_u() -> Vec<u8> {
     vec![0xADu8]
 }
 
+/// Emit `i64.extend_i32_s` (0xAC) — sign-extend an i32 to i64.
+///
+/// Used when a boxed `i31ref` (unboxed to a signed i32 by `i31.get_s`) rides an
+/// i64 register — E6d-2 dynamic arithmetic works uniformly in i64, so a boxed
+/// operand must sign-extend (a negative lisp integer stays negative).
+fn encode_i64_extend_i32_s() -> Vec<u8> {
+    vec![0xACu8]
+}
+
 fn encode_global_get(idx: u32) -> Vec<u8> {
     use wasm_leb128::encode_unsigned;
     let mut bytes = vec![0x23u8]; // global.get opcode
@@ -2508,6 +2517,12 @@ fn emit_instr(
             let src_reg = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
 
             code.extend(encode_local_get(src_reg));
+            // An `i31ref` payload is a 32-bit value. When the boxed source rides
+            // an i64 register (E6d-2 dynamic arithmetic works in i64), narrow it
+            // with `i32.wrap_i64` before `ref.i31`.
+            if slot_is_i64(src_reg) {
+                code.extend(encode_i32_wrap_i64());
+            }
             encode_gc_instruction(code, &GcInstruction::I31New);
             code.extend(encode_local_set(rd));
         }
@@ -2534,6 +2549,12 @@ fn emit_instr(
 
             code.extend(encode_local_get(src_reg));
             encode_gc_instruction(code, &GcInstruction::I31GetS);
+            // `i31.get_s` yields an i32. When the unboxed destination rides an
+            // i64 register (E6d-2 dynamic arithmetic works in i64), sign-extend
+            // it so the `local.set` types match.
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_extend_i32_s());
+            }
             code.extend(encode_local_set(rd));
         }
 

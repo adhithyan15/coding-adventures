@@ -43,7 +43,7 @@ IMPLEMENTATION_LANGUAGES = (
 
 BUCKET_CLASSES = {
     "implementation": IMPLEMENTATION_LANGUAGES,
-    "emerging_implementation": ("cpp",),
+    "emerging_implementation": ("c", "cpp"),
     "execution_target": ("wasm",),
     "domain_language": ("mosaic", "twig"),
     "build_language": ("starlark",),
@@ -68,6 +68,7 @@ DISPLAY_PRIORITY = (
     "dart",
     "swift",
     "cpp",
+    "c",
     "wasm",
     "mosaic",
     "twig",

@@ -2,6 +2,21 @@
 
 All notable changes to this program will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **C and C++ scaffold templates** (`--language c` / `--language cpp`). Generates
+  a pure-ISO package wired to the shared iso-harness: `BUILD`
+  (`# build-tool: deps=c/iso-harness` + `sh tools/run.sh`), `BUILD_windows`
+  (PowerShell/MSVC), `tools/run.sh` + `tools/run.ps1` that locate the harness by
+  walking up the tree and compile under every present compiler, an
+  `include/` header (C: `.h` + `src/.c`; C++: header-only `.hpp`), a
+  `tests/…_test.{c,cpp}` using the header-only `iso_test.h`, and a `.gitignore`
+  for `_build/`. C/C++ have no package manifest, so `readDeps` returns an empty
+  set (deps go in the BUILD comment). See
+  `code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md`.
+
 ## [1.1.0] - 2026-03-25
 
 ### Added

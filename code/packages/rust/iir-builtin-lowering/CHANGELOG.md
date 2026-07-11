@@ -1,5 +1,9 @@
 # Changelog — iir-builtin-lowering
 
+## 0.17.0 — 2026-07-11 (LANG-FULL E6d-2a: dynamic integer arithmetic over `any`)
+
+New `dynamic_arith` pass (`lower_dynamic_arith`): a dynamic (lisp) frontends `call_builtin "+"/"-"/"*"/"/"/quotient/remainder/modulo` and comparisons `=/<//>/<=/>=` over **boxed** `ref<any>` operands are expanded structurally to `unbox → typed op → box` — the same `unbox`/`add`/`box` ops the code-gen backends already run for `cons`. A raw (already-`i64`) operand is used directly. Integer contract (layer 2); i64 machine width. Proof: `(+ (car (cons 41 0)) 1)` → 42. 5 unit tests.
+
 All notable changes to this crate are documented here.
 
 ---

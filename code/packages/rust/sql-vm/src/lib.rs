@@ -295,6 +295,11 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     let mut columns_locked = false;
     // Transaction handle (used by CommitTransaction / RollbackTransaction).
     let mut tx_handle: Option<u64> = None;
+    // Outer-join match flag: set true when an inner row satisfies the ON
+    // condition for the current outer row, so LEFT/RIGHT JOIN can decide whether
+    // to emit a NULL-padded row after the inner loop. See ClearMatch/SetMatch/
+    // JumpIfMatched.
+    let mut join_matched = false;
 
     // ── Phase 2: main execution loop ──────────────────────────────────────────
     //
@@ -677,6 +682,23 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::JumpIfTrue(label) => {
                 let v = pop(&mut stack)?;
                 if is_truthy(&v) {
+                    pc = *label_index
+                        .get(&label)
+                        .ok_or_else(|| VmError::LabelNotFound(label.clone()))?;
+                }
+            }
+
+            // ── Outer-join match flag (no stack effect) ────────────────────
+            Instruction::ClearMatch => {
+                join_matched = false;
+            }
+
+            Instruction::SetMatch => {
+                join_matched = true;
+            }
+
+            Instruction::JumpIfMatched(label) => {
+                if join_matched {
                     pc = *label_index
                         .get(&label)
                         .ok_or_else(|| VmError::LabelNotFound(label.clone()))?;

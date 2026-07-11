@@ -1,0 +1,14 @@
+name: coding_adventures_activation_functions
+version: 0.1.0
+description: >
+  Neural-network activation functions (linear, sigmoid, ReLU, leaky ReLU, tanh,
+  softplus) and their derivatives, in pure Dart. Pure-Dart port of the
+  activation-functions reference package.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
