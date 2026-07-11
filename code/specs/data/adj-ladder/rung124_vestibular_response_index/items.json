@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 124 \u2014 vestibular response index from four stated quantities (a NEW panel: vestibular-function / caloric testing). From a lone caloric response divided by a net gain (a baseline gain with a fixation suppression subtracted and a habituation decrement subtracted again), compute the vestibular index (caloric_response/(baseline_gain-fixation_suppression-habituation_decrement)), the net gain (baseline_gain-fixation_suppression-habituation_decrement), or the combined loss (fixation_suppression+habituation_decrement). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a LONE TERM OVER AN ALL-MINUS THREE-TERM DENOMINATOR a/(b-c-d) (subtract the fixation suppression from the baseline gain, subtract the habituation decrement, then divide the caloric response by that whole net gain, so a/(b-c-d) = (a/((b-c)-d)); the ALL-SUBTRACTION sibling of rung-116's a/(b+c+d), and the ladder's first denominator that subtracts TWO lone terms from a lone term. Distinct from rung-117 a/(b+c-d), which adds the first two and subtracts the third; rung-124 subtracts BOTH c and d from the lone b. The last-term sign-flip a/(b-c+d) rides alongside as the swapped distractor. The harness matches the scalar to the printed options. The vestibular index is a rate (caloric response per unit of net vestibular gain), framed as an INDEX so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via -, + and / \u2014 no constant leaks, and neither the net gain, the combined loss, nor the vestibular index ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dropping the denominator parentheses so only the baseline gain divides (a/b-c-d, evaluating (a/b)-c-d, a wrong grouping) and flipping the sign of the last subtracted term (a/(b-c+d), a wrong grouping). The core confusion tested is that a/(b-c-d) is (a/((b-c)-d)), not a/b-c-d and not a/(b-c+d). This rung SUBTRACTS two lone terms inside the denominator so positivity is NOT automatic; each table guards baseline_gain > fixation_suppression + habituation_decrement (net gain >= 2), caloric_response > baseline_gain*(fixation_suppression+habituation_decrement) (crossed positive), and baseline_gain - fixation_suppression + habituation_decrement >= 2 (swapped positive), keeping the five family values pairwise distinct and all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r124vt-01",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 42 divided by a baseline gain of 8 minus a fixation suppression of 2 minus a habituation decrement of 3. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(42)\nobserve baseline_gain(8)\nobserve fixation_suppression(2)\nobserve habituation_decrement(3)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r124vt-02",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 42 divided by a baseline gain of 8 minus a fixation suppression of 2 minus a habituation decrement of 3. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(42)\nobserve baseline_gain(8)\nobserve fixation_suppression(2)\nobserve habituation_decrement(3)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r124vt-03",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 42 divided by a baseline gain of 8 minus a fixation suppression of 2 minus a habituation decrement of 3. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(42)\nobserve baseline_gain(8)\nobserve fixation_suppression(2)\nobserve habituation_decrement(3)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r124vt-04",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 64 divided by a baseline gain of 10 minus a fixation suppression of 2 minus a habituation decrement of 4. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(64)\nobserve baseline_gain(10)\nobserve fixation_suppression(2)\nobserve habituation_decrement(4)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.40000000000000036,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r124vt-05",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 64 divided by a baseline gain of 10 minus a fixation suppression of 2 minus a habituation decrement of 4. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(64)\nobserve baseline_gain(10)\nobserve fixation_suppression(2)\nobserve habituation_decrement(4)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.40000000000000036,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r124vt-06",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 64 divided by a baseline gain of 10 minus a fixation suppression of 2 minus a habituation decrement of 4. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(64)\nobserve baseline_gain(10)\nobserve fixation_suppression(2)\nobserve habituation_decrement(4)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.40000000000000036,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r124vt-07",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 85 divided by a baseline gain of 12 minus a fixation suppression of 2 minus a habituation decrement of 5. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(85)\nobserve baseline_gain(12)\nobserve fixation_suppression(2)\nobserve habituation_decrement(5)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.08333333333333304,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r124vt-08",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 85 divided by a baseline gain of 12 minus a fixation suppression of 2 minus a habituation decrement of 5. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(85)\nobserve baseline_gain(12)\nobserve fixation_suppression(2)\nobserve habituation_decrement(5)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.08333333333333304,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r124vt-09",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 85 divided by a baseline gain of 12 minus a fixation suppression of 2 minus a habituation decrement of 5. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(85)\nobserve baseline_gain(12)\nobserve fixation_suppression(2)\nobserve habituation_decrement(5)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.08333333333333304,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r124vt-10",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 114 divided by a baseline gain of 14 minus a fixation suppression of 2 minus a habituation decrement of 6. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(114)\nobserve baseline_gain(14)\nobserve fixation_suppression(2)\nobserve habituation_decrement(6)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.14285714285714235,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r124vt-11",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 114 divided by a baseline gain of 14 minus a fixation suppression of 2 minus a habituation decrement of 6. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(114)\nobserve baseline_gain(14)\nobserve fixation_suppression(2)\nobserve habituation_decrement(6)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 19.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.14285714285714235,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r124vt-12",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 114 divided by a baseline gain of 14 minus a fixation suppression of 2 minus a habituation decrement of 6. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(114)\nobserve baseline_gain(14)\nobserve fixation_suppression(2)\nobserve habituation_decrement(6)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 19.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.14285714285714235,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r124vt-13",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 154 divided by a baseline gain of 16 minus a fixation suppression of 2 minus a habituation decrement of 7. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(154)\nobserve baseline_gain(16)\nobserve fixation_suppression(2)\nobserve habituation_decrement(7)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r124vt-14",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 154 divided by a baseline gain of 16 minus a fixation suppression of 2 minus a habituation decrement of 7. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(154)\nobserve baseline_gain(16)\nobserve fixation_suppression(2)\nobserve habituation_decrement(7)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r124vt-15",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 154 divided by a baseline gain of 16 minus a fixation suppression of 2 minus a habituation decrement of 7. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(154)\nobserve baseline_gain(16)\nobserve fixation_suppression(2)\nobserve habituation_decrement(7)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r124vt-16",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 184 divided by a baseline gain of 18 minus a fixation suppression of 2 minus a habituation decrement of 8. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(184)\nobserve baseline_gain(18)\nobserve fixation_suppression(2)\nobserve habituation_decrement(8)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.22222222222222143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r124vt-17",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 184 divided by a baseline gain of 18 minus a fixation suppression of 2 minus a habituation decrement of 8. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(184)\nobserve baseline_gain(18)\nobserve fixation_suppression(2)\nobserve habituation_decrement(8)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.22222222222222143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r124vt-18",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 184 divided by a baseline gain of 18 minus a fixation suppression of 2 minus a habituation decrement of 8. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(184)\nobserve baseline_gain(18)\nobserve fixation_suppression(2)\nobserve habituation_decrement(8)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 23.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.22222222222222143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r124vt-19",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 225 divided by a baseline gain of 20 minus a fixation suppression of 2 minus a habituation decrement of 9. What is the vestibular index (the caloric response divided by the net gain)?",
+      "program": "observe caloric_response(225)\nobserve baseline_gain(20)\nobserve fixation_suppression(2)\nobserve habituation_decrement(9)\nlet answer = caloric_response / (baseline_gain - fixation_suppression - habituation_decrement)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r124vt-20",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 225 divided by a baseline gain of 20 minus a fixation suppression of 2 minus a habituation decrement of 9. What is the the net gain (the baseline gain minus the fixation suppression minus the habituation decrement, the divisor the caloric response is divided by)?",
+      "program": "observe caloric_response(225)\nobserve baseline_gain(20)\nobserve fixation_suppression(2)\nobserve habituation_decrement(9)\nlet answer = baseline_gain - fixation_suppression - habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r124vt-21",
+      "qtype": "vestibular_index",
+      "stem": "A vestibular caloric-testing chart records a caloric response of 225 divided by a baseline gain of 20 minus a fixation suppression of 2 minus a habituation decrement of 9. What is the the combined loss (the fixation suppression plus the habituation decrement, the total amount subtracted from the baseline gain)?",
+      "program": "observe caloric_response(225)\nobserve baseline_gain(20)\nobserve fixation_suppression(2)\nobserve habituation_decrement(9)\nlet answer = fixation_suppression + habituation_decrement\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
