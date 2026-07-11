@@ -408,6 +408,23 @@ pub enum Instruction {
     /// ## Stack effect: `[..., val] → [...]`
     JumpIfFalse(String),
 
+    // ── Outer-join match flag ─────────────────────────────────────────────────
+    //
+    // A single boolean the VM keeps to implement `LEFT`/`RIGHT JOIN`. For each
+    // outer row we `ClearMatch`, `SetMatch` inside the inner loop whenever the
+    // `ON` condition holds, and after the inner loop `JumpIfMatched` over the
+    // NULL-padded emit — so an outer row with no match still produces one row
+    // (with the inner side's columns NULL). None of these touch the value stack.
+
+    /// Reset the outer-join match flag to `false` (start of each outer row).
+    ClearMatch,
+
+    /// Set the outer-join match flag to `true` (an inner row satisfied `ON`).
+    SetMatch,
+
+    /// Jump to `label` if the outer-join match flag is currently `true`.
+    JumpIfMatched(String),
+
     /// Halt the main scan loop and signal to the VM to move to post-processing.
     ///
     /// This instruction terminates the main program.  Post-op instructions
@@ -1569,6 +1586,21 @@ impl Compiler {
     ///    columns after the join loop closed (the old `compile_scan_loop`
     ///    fallback) evaluated them with no live cursor, producing a single
     ///    all-NULL row. They belong in the per-pair body.
+    /// ## Join kinds
+    ///
+    /// - **INNER / CROSS** — the classic nested loop; a matched pair (or every
+    ///   pair, for CROSS) is projected and emitted.
+    /// - **LEFT / RIGHT OUTER** — every *outer* row must appear at least once.
+    ///   We keep a per-outer-row match flag ([`Instruction::ClearMatch`] /
+    ///   [`Instruction::SetMatch`]); after the inner loop, if nothing matched we
+    ///   emit one row with the inner side NULL. `RIGHT a b` is just `LEFT b a`
+    ///   (the outer/inner roles swap; the projection still references each table
+    ///   by name, so the output is unchanged). The NULL padding falls out for
+    ///   free: `CloseScan` drops the inner cursor's `current_row`, so its columns
+    ///   read NULL while the still-open outer cursor keeps its real values.
+    /// - **FULL OUTER** — needs the unmatched *right* rows too, which a single
+    ///   forward pass can't produce; still degrades to a cross product and stays
+    ///   in the conformance ledger (a later increment).
     fn compile_join_projected(
         &mut self,
         left: &OptimizedPlan,
@@ -1577,26 +1609,38 @@ impl Compiler {
         condition: &Option<SqlExpr>,
         columns: &[OutputColumn],
     ) {
-        // As in `compile_join`, only INNER joins evaluate the `ON` condition for
-        // now; outer joins still degrade to a cross product (tracked separately
-        // in the conformance ledger) — but their columns now resolve correctly.
-        let has_condition = condition.is_some() && *kind == JoinKind::Inner;
+        // RIGHT JOIN is LEFT JOIN with the operands swapped.
+        let (outer_plan, inner_plan) = if *kind == JoinKind::Right {
+            (right, left)
+        } else {
+            (left, right)
+        };
+        let is_outer = matches!(kind, JoinKind::Left | JoinKind::Right);
+        // INNER/LEFT/RIGHT evaluate the ON condition; CROSS has none, and FULL is
+        // (for now) degraded to a cross product — so neither evaluates it.
+        let eval_condition = condition.is_some()
+            && matches!(kind, JoinKind::Inner | JoinKind::Left | JoinKind::Right);
 
         let outer_loop = self.fresh_label("joinp_outer_loop");
         let outer_end = self.fresh_label("joinp_outer_end");
         let inner_loop = self.fresh_label("joinp_inner_loop");
         let inner_end = self.fresh_label("joinp_inner_end");
-        let cond_skip = if has_condition {
+        let cond_skip = if eval_condition {
             self.fresh_label("joinp_cond_skip")
+        } else {
+            String::new()
+        };
+        let after_null = if is_outer {
+            self.fresh_label("joinp_after_null")
         } else {
             String::new()
         };
 
         // Effective alias = explicit alias, else the table name. This is the key
         // both the cursor and the column qualifiers agree on.
-        let (outer_table, outer_alias_opt) = extract_scan_info(left);
+        let (outer_table, outer_alias_opt) = extract_scan_info(outer_plan);
         let outer_alias = Some(outer_alias_opt.unwrap_or_else(|| outer_table.clone()));
-        let (inner_table, inner_alias_opt) = extract_scan_info(right);
+        let (inner_table, inner_alias_opt) = extract_scan_info(inner_plan);
         let inner_alias = Some(inner_alias_opt.unwrap_or_else(|| inner_table.clone()));
 
         // Outer scan.
@@ -1608,6 +1652,11 @@ impl Compiler {
             outer_end.clone(),
         ));
 
+        // Outer joins start each outer row with the match flag cleared.
+        if is_outer {
+            self.emit(Instruction::ClearMatch);
+        }
+
         // Inner scan (re-opened per outer row).
         self.emit(Instruction::OpenScan(inner_table, inner_alias.clone()));
         self.emit(Instruction::Label(inner_loop.clone()));
@@ -1618,24 +1667,20 @@ impl Compiler {
         ));
 
         // Optional join condition (both cursors are live here, correctly keyed).
-        if let Some(cond) = condition {
-            if has_condition {
+        if eval_condition {
+            if let Some(cond) = condition {
                 self.compile_expr(cond);
                 self.emit(Instruction::JumpIfFalse(cond_skip.clone()));
             }
         }
 
-        // Project the matched pair: evaluate each output column against the two
-        // live cursors and emit the row.
-        self.emit(Instruction::BeginRow);
-        for col in columns {
-            self.compile_expr(&col.expr);
-            let name = output_column_name(col);
-            self.emit(Instruction::EmitColumn(name));
+        // A matched pair: record the match (for outer joins) and project the row.
+        if is_outer {
+            self.emit(Instruction::SetMatch);
         }
-        self.emit(Instruction::EmitRow);
+        self.emit_row_projection(columns);
 
-        if has_condition {
+        if eval_condition {
             self.emit(Instruction::Label(cond_skip));
         }
 
@@ -1643,9 +1688,30 @@ impl Compiler {
         self.emit(Instruction::Label(inner_end));
         self.emit(Instruction::CloseScan(inner_alias));
 
+        // Outer join: if no inner row matched this outer row, emit one row with
+        // the inner side NULL (its cursor is now closed, so its columns read
+        // NULL; the outer cursor still holds this outer row).
+        if is_outer {
+            self.emit(Instruction::JumpIfMatched(after_null.clone()));
+            self.emit_row_projection(columns);
+            self.emit(Instruction::Label(after_null));
+        }
+
         self.emit(Instruction::Jump(outer_loop));
         self.emit(Instruction::Label(outer_end));
         self.emit(Instruction::CloseScan(outer_alias));
+    }
+
+    /// Emit `BeginRow`, one `EmitColumn` per output column, then `EmitRow` —
+    /// projecting the current cursor state into one result row.
+    fn emit_row_projection(&mut self, columns: &[OutputColumn]) {
+        self.emit(Instruction::BeginRow);
+        for col in columns {
+            self.compile_expr(&col.expr);
+            let name = output_column_name(col);
+            self.emit(Instruction::EmitColumn(name));
+        }
+        self.emit(Instruction::EmitRow);
     }
 
     // -----------------------------------------------------------------------
