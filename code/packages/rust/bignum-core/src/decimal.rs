@@ -260,8 +260,11 @@ impl BigDecimal {
                 break;
             }
             // The last digit was 0: mant·10^-s == (mant/10)·10^-(s-1), so drop it and adjust.
+            // `saturating_sub` keeps a pathological near-`i64::MIN` parsed scale from underflowing
+            // (which would panic under overflow checks) — a scale anywhere near `i64::MIN` is
+            // astronomically past every ceiling, so the caller's budget check rejects it anyway.
             self.mant = q;
-            self.scale -= 1;
+            self.scale = self.scale.saturating_sub(1);
         }
         self
     }
@@ -898,6 +901,16 @@ mod tests {
         );
         // A parsed scale exactly at the budget with no leak is still fine.
         assert!(BigDecimal::from_str("1e-1000000").is_ok());
+        // Pathological: a near-i64::MIN parsed scale with trailing zeros must return an error,
+        // NOT panic on an i64 underflow inside normalization (saturating_sub guards it).
+        assert_eq!(
+            BigDecimal::from_str("100e9223372036854775807"),
+            Err(ParseDecimalError::ExponentOverflow)
+        );
+        assert_eq!(
+            BigDecimal::from_str("1000e9223372036854775806"),
+            Err(ParseDecimalError::ExponentOverflow)
+        );
     }
 
     #[test]
