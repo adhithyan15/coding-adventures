@@ -16,12 +16,14 @@ use coding_adventures_cobol_runtime::run_cobol;
 let out = run_cobol(source)?; // everything the program DISPLAYed
 ```
 
-## Scope (v0.1)
+## Scope
 
-A small but **fully correct** slice: unsigned numeric-display (`9`/`V`) and
-character (`X`/`A`) pictures; the item tree from level numbers; `VALUE`
-initialisation; figurative `ZERO`/`SPACE`; `MOVE` with the exact
-justify/pad/truncate rules; `DISPLAY`; `STOP RUN`. Anything not yet modelled
-(signed `S`, editing pictures, `COMP`, arithmetic, `PERFORM`, tables, files, and
-every other verb) returns a descriptive `RuntimeError` — never wrong output. See
-PL08 for the roadmap toward full COBOL and later standards.
+A small but **fully correct** slice, growing one quirk at a time: unsigned
+numeric-display (`9`/`V`) and character (`X`/`A`) pictures; the item tree from
+level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
+the exact justify/pad/truncate rules; `DISPLAY`; `STOP RUN`; and fixed-point
+decimal `ADD`/`SUBTRACT`/`MULTIPLY` (decimal-point aligned, truncating into the
+receiver). Anything not yet modelled (signed `S`, `DIVIDE`, `ROUNDED`/`ON SIZE
+ERROR`, editing pictures, `COMP`, `PERFORM`, tables, files, and every other verb)
+returns a descriptive `RuntimeError` — never wrong output. See PL08 for the
+roadmap toward full COBOL and later standards.
