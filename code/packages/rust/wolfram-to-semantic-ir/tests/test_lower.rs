@@ -545,8 +545,7 @@ fn a_chain_at_exactly_the_cap_still_compiles() {
 // operator chains above (a run of TOKENS with an optional trailing
 // `arglist` node each, not a run of `Node` operands). Found during
 // security review, after the initial per-production chain-length audit
-// above missed it — see `check_postfix_chain_length`/`check_amp_chain_length`
-// in `src/lower.rs`.
+// above missed it — see `add_chain_depth` in `src/lower.rs`.
 
 #[test]
 fn a_huge_chained_bracket_application_is_rejected_cleanly_not_crashed() {
@@ -584,5 +583,36 @@ fn a_bracket_chain_at_exactly_the_cap_still_compiles() {
 
     let bad_chains = 257;
     let bad_src = format!("x{}\n", "[0]".repeat(bad_chains));
+    assert!(compile_source(&bad_src, "test").is_err());
+}
+
+// A prior version of the chained-application guard capped "how many
+// bracket groups" and "how many indices per group" as two INDEPENDENT
+// counts, each bounded to MAX_EXPR_DEPTH. That looks safe per-axis but the
+// two axes multiply: an LDBRACKET group folds one Part per index, so N
+// chained groups each carrying M indices builds N*M levels of nesting, not
+// N. Found during round 2 of security review — see `add_chain_depth`'s
+// doc comment in src/lower.rs.
+
+#[test]
+fn a_multiplicative_bracket_times_index_combination_is_rejected_cleanly() {
+    // 256 chained [[..]] groups, each with 256 indices: the old per-axis
+    // caps (group_count <= 256 AND indices_per_group <= 256) both
+    // individually passed, but the real nesting depth was 256*256 = 65536.
+    let indices = (0..256).map(|_| "1").collect::<Vec<_>>().join(",");
+    let group = format!("[[{indices}]]");
+    let src = format!("x{}\n", group.repeat(256));
+    assert!(compile_source(&src, "test").is_err());
+}
+
+#[test]
+fn a_cumulative_chain_depth_at_exactly_the_cap_still_compiles() {
+    // A single group with exactly MAX_EXPR_DEPTH (256) indices should still
+    // compile (256 <= 256); one more group of any size should not.
+    let indices = (0..256).map(|_| "1").collect::<Vec<_>>().join(",");
+    let ok_src = format!("x[[{indices}]]\n");
+    assert!(compile_source(&ok_src, "test").is_ok());
+
+    let bad_src = format!("x[[{indices}]][0]\n");
     assert!(compile_source(&bad_src, "test").is_err());
 }

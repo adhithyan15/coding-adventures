@@ -736,8 +736,21 @@ impl Lowerer {
     /// `postfix = atom { LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist
     /// RBRACKET RBRACKET }` -- function application and the `[[ … ]]` part
     /// sugar, both postfix, left-associative and chainable.
+    ///
+    /// Tracks a *cumulative* nesting-depth budget (`chain_depth`) across the
+    /// whole chain rather than separately capping "how many bracket groups"
+    /// and "how many indices/args per group": those two axes multiply, not
+    /// add -- an `LDBRACKET` group folds one `Part` per index, so N chained
+    /// groups each carrying M indices builds N×M levels of nesting, not N.
+    /// A prior version of this guard counted groups only (bounding N to
+    /// `MAX_EXPR_DEPTH`) and relied on `check_apply_arg_count` to separately
+    /// bound M per group to `MAX_EXPR_DEPTH` -- a security review found this
+    /// still permits up to `MAX_EXPR_DEPTH`² levels of real nesting (256×256
+    /// far exceeds the intended cap), confirmed to reproduce the same class
+    /// of native stack overflow `check_chain_length`'s own doc comment
+    /// describes. See [`Self::add_chain_depth`] for the shared budget this
+    /// function and [`Self::lower_amp_apply`] both draw from.
     fn lower_postfix(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, WolframLowerError> {
-        self.check_postfix_chain_length(node)?;
         let mut result = self.lower_child(
             node.children
                 .first()
@@ -745,6 +758,7 @@ impl Lowerer {
             depth + 1,
         )?;
 
+        let mut chain_depth: usize = 0;
         let mut i = 1;
         while i < node.children.len() {
             let Some(token) = as_token(&node.children[i]) else {
@@ -762,6 +776,7 @@ impl Lowerer {
                         .transpose()?
                         .unwrap_or_default();
                     self.check_apply_arg_count(node, args.len())?;
+                    chain_depth = self.add_chain_depth(node, chain_depth, args.len().max(1))?;
                     result = self.build_application(result, args, node);
                 }
                 "LDBRACKET" => {
@@ -774,6 +789,7 @@ impl Lowerer {
                         .transpose()?
                         .unwrap_or_default();
                     self.check_apply_arg_count(node, indices.len())?;
+                    chain_depth = self.add_chain_depth(node, chain_depth, indices.len().max(1))?;
                     for index in indices {
                         let span = self.span_of(node);
                         result = self.sym_apply(
@@ -914,10 +930,14 @@ impl Lowerer {
     ///
     /// Both repetitions here (`{ AMP }` and `{ amp_apply }`) are flat,
     /// token-or-node runs the grammar folds into ONE `amp` node's children
-    /// rather than nesting -- exactly the same shape `check_chain_length`
-    /// guards for `additive`/`multiplicative`/etc, so both are capped
-    /// before their respective wrapping loops run (see
-    /// [`Self::check_amp_chain_length`]).
+    /// rather than nesting. `amp_count` levels of `Function`-wrapping is
+    /// exact (each `&` adds exactly one level, no multiplication risk), but
+    /// each trailing `amp_apply` suffix can itself carry a multi-index
+    /// `[[…]]` Part-fold or a multi-arg associative-head call -- see
+    /// [`Self::lower_postfix`]'s doc comment for why a per-suffix-count cap
+    /// alone is insufficient (the same multiplicative gap applies here), so
+    /// the `&`-run and every suffix share one cumulative
+    /// [`Self::add_chain_depth`] budget.
     fn lower_amp(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, WolframLowerError> {
         let amp_count = node
             .children
@@ -927,7 +947,7 @@ impl Lowerer {
         if amp_count == 0 {
             return self.lower_first_node(node, depth);
         }
-        self.check_amp_chain_length(node, amp_count)?;
+        let mut chain_depth = self.add_chain_depth(node, 0, amp_count)?;
         let body = self.lower_first_node(node, depth + 1)?;
         let mut result = body;
         for _ in 0..amp_count {
@@ -936,20 +956,26 @@ impl Lowerer {
         }
         for suffix in child_nodes(node) {
             if suffix.rule_name == "amp_apply" {
-                result = self.lower_amp_apply(result, suffix, depth + 1)?;
+                let (new_result, new_depth) =
+                    self.lower_amp_apply(result, suffix, depth + 1, chain_depth)?;
+                result = new_result;
+                chain_depth = new_depth;
             }
         }
         Ok(result)
     }
 
     /// Apply one `amp_apply` suffix (`[args]` or `[[i]]`) to an
-    /// already-built pure function.
+    /// already-built pure function, threading and returning the updated
+    /// cumulative chain-depth budget (see [`Self::lower_amp`]'s doc
+    /// comment).
     fn lower_amp_apply(
         &mut self,
         func: Expr,
         suffix: &GrammarASTNode,
         depth: usize,
-    ) -> Result<Expr, WolframLowerError> {
+        chain_depth: usize,
+    ) -> Result<(Expr, usize), WolframLowerError> {
         let is_part = suffix
             .children
             .iter()
@@ -959,15 +985,16 @@ impl Lowerer {
             None => vec![],
         };
         self.check_apply_arg_count(suffix, args.len())?;
+        let chain_depth = self.add_chain_depth(suffix, chain_depth, args.len().max(1))?;
         if is_part {
             let mut result = func;
             for index in args {
                 let span = self.span_of(suffix);
                 result = self.sym_apply(self.sym_symbol_bare(PART_HEAD, span.clone()), vec![result, index], span);
             }
-            Ok(result)
+            Ok((result, chain_depth))
         } else {
-            Ok(self.build_application(func, args, suffix))
+            Ok((self.build_application(func, args, suffix), chain_depth))
         }
     }
 
@@ -1122,70 +1149,45 @@ impl Lowerer {
         Ok(())
     }
 
-    /// Reject a chain of postfix application/part groups
-    /// (`f[…][…][…]…`/`x[[…]][[…]][[…]]…`, in any mix) longer than
-    /// `MAX_EXPR_DEPTH`.
+    /// Add `delta` to a running cumulative nesting-depth budget shared
+    /// across an entire postfix/amp-apply chain, rejecting once the total
+    /// exceeds `MAX_EXPR_DEPTH`.
     ///
-    /// `lower_postfix`'s `while` loop is iterative, not recursive through
-    /// `lower_node` -- each `LBRACKET`/`LDBRACKET` group wraps the running
-    /// `result` as the head (or `Part` target) of a brand-new `SymApply`,
-    /// so this chain never engages `MAX_EXPR_DEPTH`'s own recursion check
-    /// no matter how many groups there are. This is the exact same bug
-    /// class [`Self::check_chain_length`] guards against, on a grammar
-    /// shape [`Self::check_chain_length`] itself does not cover (the chain
-    /// here is expressed as a run of TOKENS with an optional trailing
-    /// `arglist` node each, not a run of `Node` operands) -- found during
-    /// security review after the initial per-production audit missed it,
-    /// since `postfix` was not in the list of "obviously chain-shaped"
-    /// rules the additive/multiplicative/logical/alternatives/mapapply/
-    /// patterntest/replaceall productions made explicit.
-    fn check_postfix_chain_length(&self, node: &GrammarASTNode) -> Result<(), WolframLowerError> {
-        let group_count = node
-            .children
-            .iter()
-            .filter(|c| as_token(c).is_some_and(|t| matches!(token_type(t), "LBRACKET" | "LDBRACKET")))
-            .count();
-        if group_count > MAX_EXPR_DEPTH {
+    /// Used by [`Self::lower_postfix`] and [`Self::lower_amp`]/
+    /// [`Self::lower_amp_apply`], whose bracket/part/pure-function-apply
+    /// chains are iterative loops that rebuild a result across many
+    /// grammar-flattened repetitions -- never recursing through the
+    /// depth-capped `lower_node` -- so nothing else bounds how deep the
+    /// resulting tree gets.
+    ///
+    /// This must be a single *cumulative* budget, not independent per-axis
+    /// counts: a security review found that separately capping "how many
+    /// bracket groups" (to `MAX_EXPR_DEPTH`) and "how many indices/args per
+    /// group" (also to `MAX_EXPR_DEPTH`, via [`Self::check_apply_arg_count`])
+    /// still permits up to `MAX_EXPR_DEPTH`² levels of real nesting, since
+    /// an `LDBRACKET` group folds one `Part` per index and those two axes
+    /// multiply rather than add. Every call site therefore threads the same
+    /// running total through the whole chain and charges each group's own
+    /// contribution (`args.len()`/`indices.len()`, floored at 1) against
+    /// it, so the *cumulative* depth the entire chain can add is bounded to
+    /// `MAX_EXPR_DEPTH` regardless of how it's distributed across groups.
+    fn add_chain_depth(
+        &self,
+        node: &GrammarASTNode,
+        current: usize,
+        delta: usize,
+    ) -> Result<usize, WolframLowerError> {
+        let next = current.saturating_add(delta);
+        if next > MAX_EXPR_DEPTH {
             return Err(self.err_at(
                 node,
                 format!(
-                    "too many chained application/part groups ({group_count}, exceeds \
+                    "chained application/part/pure-function nesting too deep ({next}, exceeds \
                      {MAX_EXPR_DEPTH})"
                 ),
             ));
         }
-        Ok(())
-    }
-
-    /// Reject an `amp` node (`expr & & & …`, and/or `expr & […] […] …`)
-    /// whose `&` run or trailing `amp_apply` suffix run exceeds
-    /// `MAX_EXPR_DEPTH`.
-    ///
-    /// Both `lower_amp`'s `&`-wrapping loop (`for _ in 0..amp_count`) and
-    /// its `amp_apply` suffix loop are the same iterative-wrap-in-a-loop
-    /// shape [`Self::check_postfix_chain_length`] guards for ordinary
-    /// postfix application -- same bug class, same fix.
-    fn check_amp_chain_length(&self, node: &GrammarASTNode, amp_count: usize) -> Result<(), WolframLowerError> {
-        if amp_count > MAX_EXPR_DEPTH {
-            return Err(self.err_at(
-                node,
-                format!("too many chained `&` (amp_count {amp_count}, exceeds {MAX_EXPR_DEPTH})"),
-            ));
-        }
-        let suffix_count = child_nodes(node)
-            .into_iter()
-            .filter(|n| n.rule_name == "amp_apply")
-            .count();
-        if suffix_count > MAX_EXPR_DEPTH {
-            return Err(self.err_at(
-                node,
-                format!(
-                    "too many chained pure-function applications ({suffix_count}, exceeds \
-                     {MAX_EXPR_DEPTH})"
-                ),
-            ));
-        }
-        Ok(())
+        Ok(next)
     }
 
     // -------------------------------------------------------------------

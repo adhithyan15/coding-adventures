@@ -44,11 +44,12 @@
   native stack overflow without the guard, then restored it and confirmed
   the same test passes cleanly. Mirrors `matlab-to-semantic-ir`'s own
   post-hoc discovery of this exact bug class, applied here proactively.
-- 59 tests: 49 unit tests over exact `Expr` shapes for every grammar
+- 61 tests: 51 unit tests over exact `Expr` shapes for every grammar
   production plus DoS-guard regressions (a 60,000-term flat chain, a
-  60,000-deep chained bracket/part/pure-function-apply/`&`-run, deeply
-  nested parens, and exact-boundary pairs at `MAX_EXPR_DEPTH`/
-  `MAX_EXPR_DEPTH + 1`), 9 validator/capability-rejection tests, 1 doctest.
+  60,000-deep chained bracket/part/pure-function-apply/`&`-run, a
+  256×256-multiplicative bracket/index combination, deeply nested parens,
+  and exact-boundary pairs), 9 validator/capability-rejection tests, 1
+  doctest.
 - Marks `wolfram-to-semantic-ir` done in `HML01-math-to-semantic-ir.md`'s
   Stream B rollout.
 
@@ -79,6 +80,27 @@
   the two new checks, reproduced the same `SIGABRT` on the exact same input
   that had crashed pre-fix, then restored them and confirmed the dedicated
   regression tests pass.
+- **HIGH — the fix above's own two new guards were independently
+  bypassable, found in round 2 of security review.** `check_postfix_chain_length`
+  capped the number of bracket/part *groups* to `MAX_EXPR_DEPTH`;
+  `check_apply_arg_count` separately capped the number of indices/args
+  *within* one group to `MAX_EXPR_DEPTH`. Those two axes multiply, not add —
+  an `LDBRACKET` group folds one `Part` per index, so N chained groups each
+  carrying M indices builds N×M levels of real nesting. Both per-axis caps
+  individually passing (N ≤ 256 and M ≤ 256) still permitted up to
+  256×256 = 65,536 levels, confirmed via security review to reproduce the
+  same `SIGABRT` stack overflow at that scale. Fixed by replacing both
+  per-production guards (`check_postfix_chain_length`/
+  `check_amp_chain_length`) with a single cumulative `add_chain_depth`
+  budget threaded through the whole `postfix`/`amp`/`amp_apply` chain,
+  charging each group's own contribution (`args.len()`/`indices.len()`,
+  floored at 1 — a safe conservative upper bound, since a plain
+  non-associative call only adds one real level regardless of its
+  argument count) against a single running total capped at
+  `MAX_EXPR_DEPTH` for the *entire* chain, not per group. Verified
+  adversarially: reproduced the 256×256 crash with the new guard disabled,
+  then confirmed the fix rejects it cleanly and the dedicated regression
+  test passes.
 - **MEDIUM — `compile_source`'s panic handling defeated its own "fails
   cleanly" hardening guarantee.** `compile_source` is documented as the
   hardened entry point specifically so pathological input fails with a
