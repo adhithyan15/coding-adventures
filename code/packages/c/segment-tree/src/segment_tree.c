@@ -81,14 +81,16 @@ int segment_tree_init(segment_tree *t, const int *values, size_t n,
         t->tree[0] = identity;
         return 1;
     }
-    /* 4n+4 nodes always suffice for the recursive layout; guard the multiply. */
+    /* 4n+4 nodes always suffice for the recursive layout. Guard 4*n+4 against
+     * size_t overflow, then use calloc so the node_count * sizeof(int) byte
+     * multiply is ALSO overflow-checked (calloc returns NULL on overflow). */
     if (n > (SIZE_MAX - 4) / 4) {
         t->tree = NULL;
         t->n = 0;
         return 0;
     }
     node_count = 4 * n + 4;
-    t->tree = (int *)malloc(node_count * sizeof(int));
+    t->tree = (int *)calloc(node_count, sizeof(int));
     if (t->tree == NULL) {
         t->n = 0;
         return 0;
