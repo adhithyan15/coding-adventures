@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-mini-sqlite"
-version = "0.4.2"
+version = "0.5.1"
 edition = "2021"
 description = "Mini SQLite facade for Rust — Level 1 full pipeline (parser → planner → optimizer → codegen → VM), over in-memory or real .sqlite-file backends"
 

@@ -34,15 +34,16 @@
 //! quietly leave stale ledger entries behind.
 //!
 //! On introduction this harness measured 12 of 22 seed cases already matching
-//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). Five have
-//! since been retired: `INNER JOIN` qualified-column resolution; correct
-//! `LEFT`/`RIGHT OUTER JOIN` (NULL-padded via a per-outer-row match flag);
-//! `FULL OUTER JOIN` (a LEFT pass unioned with a RIGHT anti-join pass); and
+//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). **All ten have
+//! since been retired** — the ledger is now empty and every seed case matches
+//! real SQLite. The gaps closed, in order: `INNER JOIN` qualified-column
+//! resolution; `LEFT`/`RIGHT OUTER JOIN` NULL-padding (a per-outer-row match
+//! flag); `FULL OUTER JOIN` (a LEFT pass unioned with a RIGHT anti-join pass);
 //! scalar functions (`UPPER()` returned the right value once same-named output
-//! columns stopped colliding, and columns got SQLite-style names). The
-//! remaining ledger entries are all *aggregate computed-column naming*
-//! divergences (`agg_N` vs `COUNT(*)`/`SUM(n)`); the rows already match. The
-//! harness is what makes fixing each one verifiable.
+//! columns stopped colliding, and columns got SQLite-style names); and finally
+//! aggregate computed-column names (`agg_N` → `COUNT(*)`/`SUM(n)`/`AVG(n)`). The
+//! harness is what made fixing each one verifiable — and what will catch the
+//! next divergence a new case surfaces.
 
 use coding_adventures_mini_sqlite::{connect, SqlValue};
 
@@ -398,54 +399,81 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a.name, b.tag FROM a FULL JOIN b ON a.id = b.aid ORDER BY a.name, b.tag",
     },
+    // --- Scalar functions: IFNULL / NULLIF / TYPEOF / INSTR / HEX. Aliased so
+    //     the case exercises the function *values* (column naming is covered
+    //     elsewhere); each is diffed against real SQLite. ---
+    Case {
+        id: "ifnull",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10), (2, NULL), (3, 30)",
+        ],
+        query: "SELECT IFNULL(v, -1) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "nullif",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1), (2), (3)",
+        ],
+        query: "SELECT NULLIF(id, 2) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "typeof",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1, 10, 'a'), (2, NULL, NULL)",
+        ],
+        query: "SELECT TYPEOF(v) AS tv, TYPEOF(name) AS tn, TYPEOF(id) AS ti FROM t ORDER BY id",
+    },
+    Case {
+        id: "instr",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1, 'abc'), (2, 'bbc'), (3, NULL)",
+        ],
+        query: "SELECT INSTR(name, 'b') AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "hex",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (255, 'abc'), (16, 'z')",
+        ],
+        query: "SELECT HEX(id) AS hi, HEX(name) AS hn FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
 /// exempt from the equality gate. **Shrinking this list is the conformance
-/// metric.** This is the honest baseline the harness measured on introduction —
-/// every entry is a real, reproduced gap between mini-sqlite and SQLite, each
-/// slated for a later increment.
+/// metric**, and it is now **empty** — every seed case matches real SQLite.
 ///
-/// Every remaining entry is now a **computed-column naming** divergence — the
-/// result *rows* already match SQLite. The join and scalar-function *result*
-/// gaps have all been retired: `inner_join` qualified-column resolution,
-/// `LEFT`/`RIGHT OUTER JOIN` NULL-padding, `FULL OUTER JOIN` (a LEFT pass unioned
-/// with a RIGHT anti-join pass), and `string_functions` (positional projection
-/// plus SQLite-style function column names).
+/// It opened at ten reproduced gaps and was driven to zero one oracle-gated
+/// increment at a time, in order:
 ///
-/// - **Computed-column naming** (`count_star`/`sum_min_max`/`avg`/`group_by`/
-///   `having`): the result *rows* match SQLite exactly, but mini-sqlite names an
-///   aggregate output column `agg_N` where SQLite uses the expression text
-///   (`SUM(n)`). A naming-only divergence.
+/// - **`inner_join`** — a qualified reference like `a.name` across a join
+///   resolved to `NULL` (cursor keyed under `None` while `LoadColumn` looked it
+///   up under `Some("a")`); fixed by keying cursors on the effective alias.
+/// - **`left_join`/`right_join`** — outer joins now NULL-pad the unmatched side
+///   via a per-outer-row match flag (`RIGHT a b` = `LEFT b a`).
+/// - **`full_join`** — a LEFT pass unioned with a RIGHT anti-join pass.
+/// - **`string_functions`** — `UPPER(name)` returned an integer because a
+///   positional→named→positional round-trip in `sql-vm`'s Phase-4 materialize
+///   collapsed same-named output columns through a `HashMap` (last value wins);
+///   fixed with positional projection, plus SQLite-style function column names.
+/// - **`count_star`/`sum_min_max`/`avg`/`group_by`/`having`** — the aggregate
+///   *rows* always matched; the output columns are now named the SQLite way
+///   (`COUNT(*)`, `SUM(n)`, `AVG(n)`) instead of the engine-internal `agg_N`.
 ///
-/// Scalar functions (`string_functions`) used to be ledgered here: `UPPER(name)`
-/// came back as an integer and the columns were unnamed (`?`). Both are now
-/// fixed and the case matches SQLite — see the commit that retired it. The root
-/// cause was a positional→named→positional round-trip in `sql-vm`'s Phase-4
-/// materialize that collapsed same-named output columns through a `HashMap`
-/// (dropping every value but the last), plus `sql-codegen` labelling function
-/// columns `?` instead of the SQLite-style expression text.
+/// A newly discovered divergence is added back here with a reason rather than
+/// silently skipped, so the list stays an honest measure.
 const LEDGER: &[(&str, &str)] = &[
-    (
-        "count_star",
-        "rows match; computed-column naming differs — mini names it agg_0, SQLite names it COUNT(*).",
-    ),
-    (
-        "sum_min_max",
-        "rows match; computed-column naming differs — agg_N vs SUM(n)/MIN(n)/MAX(n).",
-    ),
-    (
-        "avg",
-        "rows match; computed-column naming differs — agg_0 vs AVG(n).",
-    ),
-    (
-        "group_by",
-        "rows match; computed-column naming differs — agg_0 vs SUM(amt).",
-    ),
-    (
-        "having",
-        "rows match; computed-column naming differs — agg_0 vs SUM(amt).",
-    ),
+    // Empty — every seed case now matches real SQLite. The ledger opened at ten
+    // reproduced gaps and has been driven to zero, one oracle-gated increment at
+    // a time: INNER/LEFT/RIGHT/FULL JOIN semantics, scalar-function results and
+    // names, and finally aggregate computed-column names (`agg_N` → `COUNT(*)`/
+    // `SUM(n)`). New divergences, when found, are added back here with a reason
+    // rather than silently skipped — shrinking this list remains the metric.
 ];
 
 #[test]

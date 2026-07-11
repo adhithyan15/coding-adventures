@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.29.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
+
+Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Rust
+backend's inline `__sir` runtime (`map_method` block arms + the `Value::Map`
+`respond_to?` arm).  Ruby's `Hash` mixes in `Enumerable`, so these iterate the
+hash as a sequence of `[key, value]` pairs: the block is yielded `(key, value)`
+(two arguments, matching `each`), and the "element" an aggregate returns is the
+two-element `[key, value]` Array (`seq_lit(vec![k, v])`).
+
+- `find`/`detect` — first `[k, v]` pair with a truthy block result; `nil` if none.
+- `any?`/`all?`/`none?` — booleans over `block(k, v)` (block form; the block-less
+  forms degrade to the emptiness checks Ruby uses).
+- `count { |k, v| … }` — number of pairs with a truthy block result.
+- `sort_by` — a NEW Array of `[k, v]` pairs sorted by the block key using the
+  runtime's numeric ordering (`num_lt`), stable on ties (Schwartzian).
+- `min_by`/`max_by` — the extremal `[k, v]` pair (first-on-tie; `nil` on empty).
+
+Every arm SNAPSHOTS the entries into an owned `Vec` before iterating, so no
+`RefCell` borrow is held across `apply_closure` — the never-panic floor holds
+even against a block that reentrantly mutates the same hash.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_enumerable_aggregates_compile_and_run`, running `sort_by`/`min_by`/
+`max_by` (by value), `find`/`count`/`any?`/`all?`/`none?` (even-value predicate)
+under real `rustc`, diffed against the Python reference semantics.
+
+## 0.28.0 — Hash catalog catch-up: `empty?` / `to_a` / `merge` / `dig` / `invert` / `store` / `delete` / `clear` / `reject` / `each_key` / `each_value`
+
+Brings the Rust backend's `map_method` Hash catalog to parity with the
+Go/JS/TS/Python `sir-runtime-oop` reference, which already shipped these.  All
+dispatch through the same EXPLICIT method-name `match` (never reflection) and
+route key comparison through `value_eq`:
+
+- **`empty?`** — `true` iff the hash has no pairs.
+- **`to_a`** — an Array of two-element `[key, value]` Arrays, in insertion order.
+- **`merge(other)`** — a NEW hash with `other` overlaid on a copy of the receiver;
+  on a collision `other` wins while the key holds its first-seen position. A
+  non-`Map` argument is ignored.
+- **`dig(k, …)`** — a NESTED lookup walking one key per argument, returning `nil`
+  the moment a level is missing (never raising). Recurses into a nested `Map`
+  (by key) or `Seq` (by integer index, negative-from-end), matching the Go/JS
+  backends' nested `dig` (a superset of the single-level Python/TS `dig`).
+- **`invert`** — a NEW hash mapping each value back to its key; equal values
+  collapse onto one key with the last pair's key at the first-seen position.
+- **`store(k, v)` / `[]=`** — MUTATES the receiver (overwrite-in-place or append)
+  and returns the value.
+- **`delete(k)`** — MUTATES: removes the first entry with a matching key and
+  returns its value; a missing key yields `nil`.
+- **`clear`** — MUTATES, emptying the receiver, and returns it.
+- **`reject { |k, v| … }`** — a NEW hash of the pairs for which the block is
+  falsy (the complement of `select`).
+- **`each_key { |k| … }` / `each_value { |v| … }`** — yield ONE argument per
+  entry and return the receiver.
+
+`responds_to?` now advertises all of the above.
+
+Exec-proof: new `tests/compile_and_run_hash_catalog.rs` compiles and runs (under
+real `rustc`) a module exercising every new arm — including a nested `dig`
+hit/miss, a `merge` collision, an `invert`, a mutating `delete`/`store`/`clear`,
+and `reject`/`each_key`/`each_value` — diffing stdout against the Python
+reference semantics.
+
 ## 0.27.0 — Hash transforming block methods: `transform_values` / `transform_keys`
 
 Mirrors the Python `sir-runtime-oop` v0.1.18 reference (PR #7909) into the

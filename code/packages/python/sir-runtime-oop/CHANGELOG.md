@@ -2,6 +2,21 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.19] - 2026-07-11
+
+### Added
+
+- **`Hash` Enumerable aggregates** (`_hash_block_method` + `_HASH_BLOCK_METHODS`):
+  `find`/`detect`, `any?`, `all?`, `none?`, `count` (block form), `sort_by`,
+  `min_by`, `max_by`.  Ruby's `Hash` mixes in `Enumerable`, so these iterate the
+  hash as a sequence of `[key, value]` pairs — the block is yielded
+  `[key, value]` (two arguments, matching `each`), and the "element" an
+  aggregate returns is the two-element `[key, value]` list.  For example
+  `{a: 1, b: 2}.min_by { |k, v| v }` is `[:a, 1]`, and
+  `{a: 1, b: 2, c: 3}.sort_by { |k, v| -v }` is `[[:c, 3], [:b, 2], [:a, 1]]`.
+  `min_by`/`max_by` on an empty hash return `nil`.  This is the reference
+  implementation for a cross-backend cascade (Go/Rust/JS/TS mirrors follow).
+
 ## [0.1.18] - 2026-07-11
 
 ### Added — Hash block methods: `transform_values` / `transform_keys`

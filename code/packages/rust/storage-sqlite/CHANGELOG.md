@@ -1,5 +1,25 @@
 # Changelog — storage-sqlite
 
+## 0.2.0 — Queryable `sqlite_master` / `sqlite_schema` catalog
+
+`SELECT … FROM sqlite_master` (and its modern alias `sqlite_schema`) now works
+over a real `.sqlite` file — applications introspect the database this way, so
+the file backend must expose the schema catalog it already parses internally.
+
+- `columns("sqlite_master")` returns the fixed five-column shape SQLite uses:
+  `type text, name text, tbl_name text, rootpage integer, sql text`.
+- `scan("sqlite_master")` yields one row per catalog object (tables, indexes,
+  views, triggers) in on-disk (rowid) order — the same order SQLite returns.
+  `rootpage` is `0` for objects with no b-tree (views/triggers), and `sql` is
+  `NULL` only where SQLite stored none (e.g. auto-created indexes).
+- Both names are matched case-insensitively. The catalog is **not** listed by
+  `tables()` (nor by SQLite's `.tables`), but it is fully queryable — filters,
+  projections, aggregates, and `ORDER BY` all run through the normal pipeline.
+- Verified by a new differential test (`mini-sqlite/tests/file_backed.rs`,
+  `sqlite_master_is_queryable_and_matches_real_sqlite`) that diffs mini-sqlite's
+  answers against real bundled SQLite (`rusqlite`, dev-dep) over the same file,
+  plus unit tests for the name matching and column shape.
+
 ## 0.1.0 — SqliteFileBackend (read-only)
 
 First increment of Stream C / L4 in the mini-sqlite → full-SQLite-replacement

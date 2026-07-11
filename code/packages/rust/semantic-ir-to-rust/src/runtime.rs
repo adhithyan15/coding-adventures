@@ -1473,9 +1473,14 @@ pub const RUNTIME: &str = r##"mod __sir {
             ),
             Value::Map(_) => matches!(
                 name,
-                "keys" | "values" | "[]" | "size" | "length" | "has_key?" | "key?" | "include?"
-                    | "member?" | "fetch" | "each" | "each_pair" | "map" | "collect" | "select"
-                    | "filter" | "transform_values" | "transform_keys"
+                "keys" | "values" | "[]" | "size" | "length" | "empty?" | "has_key?" | "key?"
+                    | "include?" | "member?" | "fetch" | "to_a" | "merge" | "dig" | "invert"
+                    | "store" | "[]=" | "delete" | "clear" | "each" | "each_pair" | "each_key"
+                    | "each_value" | "map" | "collect" | "select" | "filter" | "reject"
+                    | "transform_values" | "transform_keys"
+                    // Enumerable aggregates (Hash includes Enumerable)
+                    | "find" | "detect" | "any?" | "all?" | "none?" | "count"
+                    | "sort_by" | "min_by" | "max_by"
             ),
             Value::Str(_) => matches!(
                 name,
@@ -2270,6 +2275,269 @@ pub const RUNTIME: &str = r##"mod __sir {
                         }
                     }
                     Value::Map(Rc::new(RefCell::new(out)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            "empty?" => Value::Bool(entries_rc.borrow().is_empty()),
+            // `Hash#to_a` — an Array of two-element `[key, value]` Arrays, in
+            // insertion order.
+            "to_a" => seq_lit(
+                entries_rc
+                    .borrow()
+                    .iter()
+                    .map(|(k, v)| seq_lit(vec![k.clone(), v.clone()]))
+                    .collect(),
+            ),
+            // `Hash#merge(other)` — a NEW hash with `other`'s entries overlaid on
+            // a copy of the receiver; on a key collision `other` WINS while the
+            // key holds its FIRST-seen position (Ruby / Python `{**a, **b}`
+            // semantics).  Non-`Map` args are ignored (no faithful merge source).
+            "merge" => {
+                let mut out: Vec<(Value, Value)> = entries_rc.borrow().clone();
+                if let Some(Value::Map(other)) = pos.first() {
+                    for (k, v) in other.borrow().iter() {
+                        match out.iter_mut().find(|(ek, _)| value_eq(ek, k)) {
+                            Some(slot) => slot.1 = v.clone(),
+                            None => out.push((k.clone(), v.clone())),
+                        }
+                    }
+                }
+                Value::Map(Rc::new(RefCell::new(out)))
+            }
+            // `Hash#dig(k, …)` — a NESTED lookup that walks one key per argument,
+            // returning `nil` the moment a level is missing (never raising).  A
+            // single argument degrades to a plain lookup; extra arguments recurse
+            // into a nested `Map` (by key) or `Seq` (by integer index, folding a
+            // negative index from the end once) — matching Go/JS.  A level that
+            // is neither stops the walk with `nil`.
+            "dig" => {
+                let mut cur = recv.clone();
+                for k in &pos {
+                    cur = match &cur {
+                        Value::Map(entries) => entries
+                            .borrow()
+                            .iter()
+                            .find(|(ek, _)| value_eq(ek, k))
+                            .map(|(_, v)| v.clone())
+                            .unwrap_or(Value::Nil),
+                        // `Array#dig` indexes by an Integer; a non-integer key
+                        // is a MISS (nil), never a panic — honouring the
+                        // never-panic floor and matching the JS backend (which
+                        // digs an Array only when the key is a number).
+                        Value::Seq(items) => match k {
+                            Value::Int(raw) => {
+                                let items = items.borrow();
+                                let len = items.len() as i64;
+                                let idx = if *raw < 0 { raw + len } else { *raw };
+                                if idx >= 0 && idx < len {
+                                    items[idx as usize].clone()
+                                } else {
+                                    Value::Nil
+                                }
+                            }
+                            _ => Value::Nil,
+                        },
+                        _ => Value::Nil,
+                    };
+                    if matches!(cur, Value::Nil) {
+                        return Value::Nil;
+                    }
+                }
+                cur
+            }
+            // `Hash#invert` — a NEW hash mapping each value back to its key.  Two
+            // equal values collapse onto one key; Ruby keeps the LAST pair's key
+            // at the value's FIRST-seen position (Python dict-comprehension rule).
+            "invert" => {
+                let mut out: Vec<(Value, Value)> = Vec::new();
+                for (k, v) in entries_rc.borrow().iter() {
+                    match out.iter_mut().find(|(ek, _)| value_eq(ek, v)) {
+                        Some(slot) => slot.1 = k.clone(),
+                        None => out.push((v.clone(), k.clone())),
+                    }
+                }
+                Value::Map(Rc::new(RefCell::new(out)))
+            }
+            // `Hash#store(k, v)` / `Hash#[]=` — MUTATES the receiver (overwrites
+            // an existing key in place, else appends) and returns the value.
+            "store" | "[]=" => {
+                let key = pos.first().cloned().unwrap_or(Value::Nil);
+                let val = pos.get(1).cloned().unwrap_or(Value::Nil);
+                {
+                    let mut entries = entries_rc.borrow_mut();
+                    match entries.iter_mut().find(|(ek, _)| value_eq(ek, &key)) {
+                        Some(slot) => slot.1 = val.clone(),
+                        None => entries.push((key, val.clone())),
+                    }
+                }
+                val
+            }
+            // `Hash#delete(k)` — MUTATES: removes the first entry whose key equals
+            // `k` and returns its value; a missing key yields `nil` (never raises).
+            "delete" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                let mut entries = entries_rc.borrow_mut();
+                match entries.iter().position(|(ek, _)| value_eq(ek, &needle)) {
+                    Some(i) => entries.remove(i).1,
+                    None => Value::Nil,
+                }
+            }
+            // `Hash#clear` — MUTATES, removing every pair, and returns the (now
+            // empty) receiver.
+            "clear" => {
+                entries_rc.borrow_mut().clear();
+                recv
+            }
+            // `Hash#reject { |k, v| … }` — a NEW hash of the pairs for which the
+            // block is FALSY (the complement of `select`).  Non-mutating.
+            // Each block arm SNAPSHOTS the entries into an owned `Vec` in a
+            // `let` binding *before* iterating, so the `RefCell` borrow is
+            // released prior to any `apply_closure` call.  A block that
+            // reentrantly mutates the SAME hash (`h.each_key { h.store(...) }`)
+            // therefore cannot trip a `BorrowMutError` panic — the never-panic
+            // floor holds even now that mutating Hash arms (`store`/`delete`/
+            // `clear`) exist.
+            "reject" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let kept: Vec<(Value, Value)> = snapshot
+                        .into_iter()
+                        .filter(|(k, v)| !truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(kept)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#each_key { |k| … }` — yields ONE argument (the key) per entry
+            // and returns the receiver.
+            "each_key" => {
+                if let Some(b) = &block {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (k, _) in snapshot {
+                        apply_closure(b, vec![k]);
+                    }
+                }
+                recv
+            }
+            // `Hash#each_value { |v| … }` — yields ONE argument (the value) per
+            // entry and returns the receiver.
+            "each_value" => {
+                if let Some(b) = &block {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (_, v) in snapshot {
+                        apply_closure(b, vec![v]);
+                    }
+                }
+                recv
+            }
+            // ── Enumerable aggregates (Hash includes Enumerable) ───────
+            //
+            // Ruby's `Hash` mixes in `Enumerable`, so these iterate the hash as
+            // a sequence of `[key, value]` pairs: the block is yielded
+            // `(key, value)` (two arguments, matching `each`), and the "element"
+            // an aggregate returns is the two-element `[key, value]` Array
+            // (`seq_lit(vec![k, v])`).  Every arm SNAPSHOTS the entries into an
+            // owned `Vec` before iterating so no `RefCell` borrow is held across
+            // `apply_closure` — a block that reentrantly mutates the same hash
+            // cannot trip a `BorrowMutError` panic.
+            "find" | "detect" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    snapshot
+                        .into_iter()
+                        .find(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .map(|(k, v)| seq_lit(vec![k, v]))
+                        .unwrap_or(Value::Nil)
+                }
+                None => unknown_method(&recv, name),
+            },
+            "any?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(!entries_rc.borrow().is_empty()),
+            },
+            "all?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        snapshot.into_iter().all(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(true),
+            },
+            "none?" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    Value::Bool(
+                        !snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                    )
+                }
+                None => Value::Bool(entries_rc.borrow().is_empty()),
+            },
+            "count" if block.is_some() => {
+                // `count { |k, v| pred }` — number of pairs with a truthy result.
+                let b = block.as_ref().unwrap();
+                let snapshot = entries_rc.borrow().clone();
+                let n = snapshot
+                    .into_iter()
+                    .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                    .count();
+                Value::Int(n as i64)
+            }
+            // `sort_by { |k, v| key }` — a NEW Array of `[k, v]` pairs sorted by
+            // the block key using the runtime's numeric ordering (`num_lt`),
+            // stable on ties.  Keys are computed once (Schwartzian).
+            "sort_by" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut keyed: Vec<(Value, Value)> = snapshot
+                        .into_iter()
+                        .map(|(k, v)| {
+                            (apply_closure(b, vec![k.clone(), v.clone()]), seq_lit(vec![k, v]))
+                        })
+                        .collect();
+                    keyed.sort_by(|(ka, _), (kb, _)| {
+                        if num_lt(ka, kb) {
+                            std::cmp::Ordering::Less
+                        } else if num_lt(kb, ka) {
+                            std::cmp::Ordering::Greater
+                        } else {
+                            std::cmp::Ordering::Equal
+                        }
+                    });
+                    seq_lit(keyed.into_iter().map(|(_, pair)| pair).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `min_by`/`max_by { |k, v| key }` — the `[k, v]` pair with the
+            // smallest / largest block key.  First pair wins a tie (strict `<`);
+            // an empty hash yields `nil`.
+            "min_by" | "max_by" => match &block {
+                Some(b) => {
+                    let want_min = name == "min_by";
+                    let snapshot = entries_rc.borrow().clone();
+                    let mut best: Option<(Value, (Value, Value))> = None;
+                    for (k, v) in snapshot {
+                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let take = match &best {
+                            None => true,
+                            Some((bk, _)) => {
+                                if want_min {
+                                    num_lt(&key, bk)
+                                } else {
+                                    num_lt(bk, &key)
+                                }
+                            }
+                        };
+                        if take {
+                            best = Some((key, (k, v)));
+                        }
+                    }
+                    best.map(|(_, (k, v))| seq_lit(vec![k, v])).unwrap_or(Value::Nil)
                 }
                 None => unknown_method(&recv, name),
             },

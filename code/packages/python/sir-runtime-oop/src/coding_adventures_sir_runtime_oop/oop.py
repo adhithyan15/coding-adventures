@@ -651,6 +651,15 @@ _HASH_BLOCK_METHODS = frozenset(
         "each_value",
         "transform_values",
         "transform_keys",
+        "find",
+        "detect",
+        "any?",
+        "all?",
+        "none?",
+        "count",
+        "sort_by",
+        "min_by",
+        "max_by",
     }
 )
 
@@ -1213,6 +1222,45 @@ def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
         # block's result; values are untouched.  On a collision the LAST pair
         # wins (Ruby's rule, matching dict-comprehension insertion order).
         return {apply(block, [key]): value for key, value in recv.items()}
+    # ── Enumerable aggregates (Hash includes Enumerable) ───────────────────
+    #
+    # Ruby's ``Hash`` mixes in ``Enumerable``, so these iterate the hash as a
+    # sequence of ``[key, value]`` pairs: the block is yielded ``[key, value]``
+    # (two arguments, matching ``each``), and the "element" an aggregate returns
+    # is the two-element ``[key, value]`` list — e.g.
+    # ``{a: 1, b: 2}.min_by { |k, v| v }`` is ``[:a, 1]``.
+    if name in ("find", "detect"):
+        # First ``[k, v]`` pair whose block result is truthy; ``nil`` if none.
+        for key, value in recv.items():
+            if truthy(apply(block, [key, value])):
+                return [key, value]
+        return None
+    if name == "any?":
+        return any(truthy(apply(block, [k, v])) for k, v in recv.items())
+    if name == "all?":
+        return all(truthy(apply(block, [k, v])) for k, v in recv.items())
+    if name == "none?":
+        return not any(truthy(apply(block, [k, v])) for k, v in recv.items())
+    if name == "count":
+        # ``count { |k, v| pred }`` — number of pairs with a truthy block result.
+        return sum(1 for k, v in recv.items() if truthy(apply(block, [k, v])))
+    if name == "sort_by":
+        # A NEW Array of ``[k, v]`` pairs sorted by the block key.  Python's sort
+        # is stable, matching Ruby; a non-comparable key raises ``TypeError``.
+        return sorted(
+            ([k, v] for k, v in recv.items()),
+            key=lambda pair: apply(block, [pair[0], pair[1]]),
+        )
+    if name in ("min_by", "max_by"):
+        # The ``[k, v]`` pair minimising / maximising the block key; ``nil`` on an
+        # empty hash.
+        if not recv:
+            return None
+        chooser = min if name == "min_by" else max
+        return chooser(
+            ([k, v] for k, v in recv.items()),
+            key=lambda pair: apply(block, [pair[0], pair[1]]),
+        )
     return _MISS
 
 

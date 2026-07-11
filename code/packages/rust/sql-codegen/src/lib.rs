@@ -1240,8 +1240,6 @@ impl Compiler {
             .collect();
         let agg_args: Vec<Option<SqlExpr>> =
             aggregates.iter().map(|a| a.arg.clone()).collect();
-        let agg_aliases: Vec<Option<String>> =
-            aggregates.iter().map(|a| a.alias.clone()).collect();
 
         // Phase 1: scan loop body — save group key + update each aggregate.
         let loop_lbl = self.fresh_label("agg_loop");
@@ -1326,11 +1324,11 @@ impl Compiler {
             };
             self.emit(Instruction::EmitColumn(name));
         }
-        // Emit finalized aggregate values.
-        for (i, (fn_tag, alias)) in agg_fns.iter().zip(agg_aliases.iter()).enumerate() {
+        // Emit finalized aggregate values, each named the SQLite way
+        // (`SUM(n)`, `COUNT(*)`, …) unless an explicit alias overrides it.
+        for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
             self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-            let col_name = alias.clone().unwrap_or_else(|| format!("agg_{}", i));
-            self.emit(Instruction::EmitColumn(col_name));
+            self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
         }
         self.emit(Instruction::EmitRow);
     }
@@ -1370,8 +1368,6 @@ impl Compiler {
                     .collect();
                 let agg_args: Vec<Option<SqlExpr>> =
                     aggregates.iter().map(|a| a.arg.clone()).collect();
-                let agg_aliases: Vec<Option<String>> =
-                    aggregates.iter().map(|a| a.alias.clone()).collect();
 
                 let loop_lbl = self.fresh_label("having_loop");
                 let end_lbl = self.fresh_label("having_end");
@@ -1423,10 +1419,7 @@ impl Compiler {
                 // then check predicate, then emit row.
                 for (i, fn_tag) in agg_fns.iter().enumerate() {
                     self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    let col_name = agg_aliases[i]
-                        .clone()
-                        .unwrap_or_else(|| format!("agg_{}", i));
-                    self.emit(Instruction::EmitColumn(col_name));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(&aggregates[i])));
                 }
 
                 // HAVING predicate check — skip the row if false.
@@ -1453,10 +1446,9 @@ impl Compiler {
                     };
                     self.emit(Instruction::EmitColumn(name));
                 }
-                for (i, (fn_tag, alias)) in agg_fns.iter().zip(agg_aliases.iter()).enumerate() {
+                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
                     self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    let col_name = alias.clone().unwrap_or_else(|| format!("agg_{}", i));
-                    self.emit(Instruction::EmitColumn(col_name));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
                 }
                 self.emit(Instruction::EmitRow);
                 self.emit(Instruction::Label(skip_lbl));
@@ -2214,6 +2206,40 @@ fn render_expr_label(expr: &SqlExpr) -> Option<String> {
         }
         _ => None,
     }
+}
+
+/// SQLite-style implicit column name for an un-aliased aggregate: the function
+/// call text — `COUNT(*)`, `SUM(n)`, `MIN(x)`, `AVG(n)`, `COUNT(DISTINCT id)`.
+///
+/// An explicit `AS` alias always wins. Otherwise this mirrors SQLite, which
+/// names an un-aliased result column after the expression's source text — so a
+/// bare `SELECT COUNT(*)` returns a column literally named `COUNT(*)`, not the
+/// engine-internal `agg_0`. `COUNT(*)` alone has no argument (rendered `*`);
+/// every other aggregate renders its argument via [`render_expr_label`],
+/// prefixed with `DISTINCT ` when the aggregate is distinct.
+fn aggregate_column_name(item: &AggregateItem) -> String {
+    if let Some(alias) = &item.alias {
+        return alias.clone();
+    }
+    let func = match item.func {
+        AggFunc::Count => "COUNT",
+        AggFunc::Sum => "SUM",
+        AggFunc::Avg => "AVG",
+        AggFunc::Min => "MIN",
+        AggFunc::Max => "MAX",
+    };
+    let inner = match &item.arg {
+        None => "*".to_string(),
+        Some(expr) => {
+            let base = render_expr_label(expr).unwrap_or_else(|| "?".to_string());
+            if item.distinct {
+                format!("DISTINCT {base}")
+            } else {
+                base
+            }
+        }
+    };
+    format!("{func}({inner})")
 }
 
 // ===========================================================================
