@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.42.0] - 2026-07-11
+
+### Added — CLOC12.178 PR1: bridge private methods → `ClassMember::Method` with a private key
+
+A private class method (`class C { #m(){} }`) parses as its own
+`private_method_definition` grammar node (distinct from `method_definition`),
+which `convert_class_element` previously declined (dropping the file to
+WHITESPACE_ONLY). It now dispatches that node to the new
+`convert_private_method_definition`, producing a `ClassMember::Method` whose key
+is a `PropertyKey::PrivateName` (javascript-ast 0.36.0):
+
+- The key is the node's leading `PRIVATE_NAME` token (`#m`), lowered by the
+  shared `private_name_key` helper (the `#` stripped, re-added by the emitter) —
+  exactly as a private *field* key.
+- The `static` modifier lives *inside* the `private_method_definition` node (the
+  grammar's `[ "static" ]`), unlike a public method's `static` (on the
+  `class_element`), so it is read here. `static #m(){}` works.
+- Params and body reuse the shared `convert_formal_parameters` /
+  `convert_formal_parameter` / `convert_function_body`, mirroring
+  `convert_method_definition`. The kind is always `Method` (a private name can
+  never be the `constructor`).
+- The private **getter / setter / generator** forms (`get #x(){}`, `set #x(v){}`,
+  `*#m(){}`) carry accessor / evaluation semantics not yet modelled, so — like a
+  public generator method — they DECLINE (safe WHITESPACE_ONLY), never a
+  mis-emit. A later slice.
+
+5 new bridge tests (the former `class_private_method_still_declines` flipped to
+success; a `class_private_getter_still_declines` guards the decline path); full
+parser suite (212 tests) green. MINOR.
+
 ## [0.41.0] - 2026-07-11
 
 ### Added — CLOC12.177 PR2: bridge private class fields → `PropertyKey::PrivateName`

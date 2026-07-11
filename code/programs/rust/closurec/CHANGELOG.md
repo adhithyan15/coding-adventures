@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.17] - 2026-07-11
+
+### Added — CLOC12.178: private methods end-to-end
+
+Picks up javascript-parser 0.42.0, whose bridge now lowers a
+`private_method_definition` node to a `ClassMember::Method` with a
+`PropertyKey::PrivateName` key. A private method now survives the full closurec
+pipeline. New e2e diff fixture `tests/diff/simple-private-method/`:
+`class C { #m(){ return 1 + 2 } }` → `class C{#m(){return 3}}` at SIMPLE.
+
+The fixture proves the SIMPLE pipeline descends INTO the private method's body:
+`1 + 2` folds to `3`. Before this bridge change the private method declined,
+dropping the file to WHITESPACE_ONLY (`class C{#m(){return 1+2}};`, arithmetic
+intact). Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout.
+PATCH.
+
 ## [0.234.16] - 2026-07-11
 
 ### Added — CLOC12.177 PR2: private class fields end-to-end
