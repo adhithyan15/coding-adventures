@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.38.0] - 2026-07-11
+
+### Added — CLOC12.174 PR2: bridge `class_declaration` → `Declaration::ClassDeclaration`
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` node (PR1). The
+bridge's `convert_source_element` now converts a top-level class **declaration**
+(`class C { … }`) into `Declaration::ClassDeclaration` via the new
+`convert_class_declaration`, instead of declining (`UnsupportedSyntax`, which
+dropped the whole file to WHITESPACE_ONLY).
+
+The grammar wraps a class declaration in `decorated_class_declaration` →
+`class_declaration` at the source-element level (both the decorated wrapper and a
+bare `class_declaration` are handled; a *decorated* form carrying actual
+`@decorator`s declines — a later slice). The `class_declaration` node's flat
+child shape is **identical to `class_expression`** (`class` / NAME / optional
+`class_heritage` / `class_body`) except the name is **required** — so
+`convert_class_declaration` reuses `convert_class_heritage` and
+`convert_class_element` unchanged, and DECLINES a nameless class rather than
+fabricate an empty id. Generator / async / computed / multi-member methods decline
+to WHITESPACE_ONLY exactly as for the expression form (never a miscompile).
+
+10 bridge unit tests (`class_decl_*`) cover the accepted forms (empty, `extends`
+identifier / member, method, static, constructor, get/set, full shape) and the
+generator / async declines.
+
 ## [0.37.0] - 2026-07-08
 
 ### Added — CLOC12.173 PR2: bridge class expressions `class { … }` → `ClassExpression` (closes gap-167)
