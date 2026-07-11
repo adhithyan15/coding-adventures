@@ -134,18 +134,29 @@ impl std::error::Error for ParseDecimalError {}
 //  Small integer helpers
 // ===========================================================================
 
-/// The largest magnitude a canonical [`BigDecimal`]'s `scale` may have.
+/// The largest scale magnitude accepted from **untrusted input** — the strict budget
+/// [`FromStr`](std::str::FromStr) enforces (rejecting with `ExponentOverflow`).
 ///
-/// This is a **security budget**, not a precision limit: a value is
-/// `mantissa × 10^(-scale)`, and operations that line two decimals up to a common scale (or
-/// render one) must materialize `10^(scale difference)`. If `scale` were unbounded, a tiny
-/// input like `"1e-2000000000"` (a handful of bytes) could force a `BigInteger` of billions
-/// of digits — gigabytes — during a later `+`, `cmp`, or `Display`, none of which can return
-/// an error. Capping the scale **at construction** (so no `BigDecimal` can even exist with a
-/// larger scale) bounds every such materialization to well under a megabyte. A million places
-/// on either side of the point is astronomically more than money, tax, or dosing ever needs;
-/// callers with genuinely enormous *integers* should use [`BigInteger`] directly.
+/// This is a **security budget**, not a precision limit: a value is `mantissa × 10^(-scale)`,
+/// and operations that line two decimals up to a common scale (or render one) must materialize
+/// `10^(scale difference)`. If a parser accepted an unbounded scale, a tiny input like
+/// `"1e-2000000000"` (a handful of bytes) could force a `BigInteger` of billions of digits —
+/// gigabytes — during a later `+`, `cmp`, or `Display`, none of which can return an error.
+/// Bounding the parsed scale keeps every such materialization on parsed values well under a
+/// megabyte. A million places on either side of the point is astronomically more than money,
+/// tax, or dosing ever needs; callers with genuinely enormous *integers* should use
+/// [`BigInteger`] directly.
 pub const MAX_SCALE: i64 = 1_000_000;
+
+/// The hard ceiling every constructor (hence every arithmetic result) enforces. It is
+/// deliberately **wider** than [`MAX_SCALE`] so that `+ − ×` of two parse-budget operands —
+/// whose result scale can reach `2·MAX_SCALE` (a product) or `MAX_SCALE + 1` (an additive
+/// carry) — never trips it, i.e. ordinary arithmetic on validated inputs never panics. It
+/// still bounds any materialization to a few megabytes; only a pathological explicit
+/// [`from_parts`](BigDecimal::from_parts) or a long chain of scale-growing operations can
+/// reach it, at which point [`from_parts`](BigDecimal::from_parts) panics (the same "unbounded
+/// on purpose, caller's responsibility" contract as [`BigInteger::pow`]).
+const INTERNAL_SCALE_LIMIT: i64 = 8_000_000;
 
 /// `10^n` as a [`BigInteger`]. `n` is a `u32` because `10^(2^32)` is already an
 /// astronomically large number; a scale difference that would exceed it is not a real value.
@@ -193,21 +204,23 @@ impl BigDecimal {
     /// Build `mantissa × 10^(-scale)` and reduce it to canonical form.
     ///
     /// # Panics
-    /// Panics if the canonical scale magnitude would exceed [`MAX_SCALE`]. This is the same
-    /// security budget [`FromStr`](std::str::FromStr) enforces (as a recoverable error there);
-    /// it bounds the cost of any later alignment, comparison, or `Display`. Use
-    /// [`checked_from_parts`](Self::checked_from_parts) for the non-panicking form.
+    /// Panics only if the canonical scale magnitude would exceed the internal
+    /// `INTERNAL_SCALE_LIMIT` — a ceiling wide enough that `+ − ×` of any two
+    /// [`MAX_SCALE`]-budget values never reaches it, so ordinary arithmetic on validated inputs
+    /// never panics. Reaching it takes a pathological explicit scale or a long chain of
+    /// scale-growing operations (the same unbounded-on-purpose contract as [`BigInteger::pow`]).
+    /// Use [`checked_from_parts`](Self::checked_from_parts) for the non-panicking form.
     pub fn from_parts(mant: BigInteger, scale: i64) -> Self {
         Self::checked_from_parts(mant, scale)
-            .expect("BigDecimal scale magnitude exceeds MAX_SCALE")
+            .expect("BigDecimal scale magnitude exceeds the internal ceiling")
     }
 
     /// Build `mantissa × 10^(-scale)`, reduce it to canonical form, and return `None` if the
-    /// canonical scale magnitude would exceed [`MAX_SCALE`] (the security budget — see its
-    /// documentation for why an unbounded scale is a denial-of-service vector).
+    /// canonical scale magnitude would exceed the internal ceiling that bounds materialization
+    /// (see [`from_parts`](Self::from_parts) and [`MAX_SCALE`]).
     pub fn checked_from_parts(mant: BigInteger, scale: i64) -> Option<Self> {
         let d = (BigDecimal { mant, scale }).normalized();
-        if d.scale.unsigned_abs() > MAX_SCALE as u64 {
+        if d.scale.unsigned_abs() > INTERNAL_SCALE_LIMIT as u64 {
             None
         } else {
             Some(d)
@@ -587,10 +600,14 @@ impl FromStr for BigDecimal {
         let scale = (frac_digits.len() as i64)
             .checked_sub(exp)
             .ok_or(ParseDecimalError::ExponentOverflow)?;
-        // Enforce the MAX_SCALE security budget here, at the untrusted-input boundary: a tiny
+        // Enforce the strict MAX_SCALE budget here, at the untrusted-input boundary: a tiny
         // string like "1e-2000000000" must be rejected, not stored, so a later `+`/`cmp`/
-        // `Display` cannot be forced to materialize a multi-gigabyte power of ten.
-        BigDecimal::checked_from_parts(mant, scale).ok_or(ParseDecimalError::ExponentOverflow)
+        // `Display` cannot be forced to materialize a multi-gigabyte power of ten. (The check is
+        // on the parsed scale; trailing-zero normalization can only shrink `|scale|`.)
+        if scale.unsigned_abs() > MAX_SCALE as u64 {
+            return Err(ParseDecimalError::ExponentOverflow);
+        }
+        Ok(BigDecimal::from_parts(mant, scale))
     }
 }
 
@@ -871,20 +888,37 @@ mod tests {
     }
 
     #[test]
-    fn checked_from_parts_enforces_the_budget() {
-        // Just inside the budget is fine; just outside is rejected.
-        assert!(BigDecimal::checked_from_parts(BigInteger::one(), MAX_SCALE).is_some());
-        assert!(BigDecimal::checked_from_parts(BigInteger::one(), -MAX_SCALE).is_some());
-        assert!(BigDecimal::checked_from_parts(BigInteger::one(), MAX_SCALE + 1).is_none());
+    fn checked_from_parts_enforces_the_internal_ceiling() {
+        use super::INTERNAL_SCALE_LIMIT;
+        // Construction (and every arithmetic result) is bounded by the wider internal ceiling,
+        // not the strict parse budget — so results a bit past MAX_SCALE still exist.
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), MAX_SCALE + 1).is_some());
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), INTERNAL_SCALE_LIMIT).is_some());
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), -INTERNAL_SCALE_LIMIT).is_some());
+        assert!(BigDecimal::checked_from_parts(BigInteger::one(), INTERNAL_SCALE_LIMIT + 1).is_none());
         assert!(BigDecimal::checked_from_parts(BigInteger::one(), i64::MIN).is_none());
-        // A budget-respecting value still behaves normally.
-        assert_eq!(d("0.5") + d("0.25"), d("0.75"));
     }
 
     #[test]
-    #[should_panic(expected = "MAX_SCALE")]
-    fn from_parts_panics_past_the_budget() {
-        let _ = BigDecimal::from_parts(BigInteger::one(), MAX_SCALE + 1);
+    #[should_panic(expected = "internal ceiling")]
+    fn from_parts_panics_past_the_internal_ceiling() {
+        use super::INTERNAL_SCALE_LIMIT;
+        let _ = BigDecimal::from_parts(BigInteger::one(), INTERNAL_SCALE_LIMIT + 1);
+    }
+
+    #[test]
+    fn arithmetic_on_parse_budget_operands_never_panics() {
+        // Regression: a `*` or `+` whose result scale exceeds the *parse* budget must NOT panic
+        // — both operands parse cleanly (in budget), and the wider internal ceiling absorbs the
+        // combined scale. (This is the case a naive construction-time cap got wrong.)
+        let a = BigDecimal::from_str("1e-600000").unwrap(); // scale 600000, in budget
+        let prod = &a * &a; // result scale 1_200_000 > MAX_SCALE, but < INTERNAL_SCALE_LIMIT
+        assert_eq!(prod.scale(), 1_200_000);
+        assert!(prod.is_positive());
+        let big = BigDecimal::from_str("5e1000000").unwrap(); // scale -1_000_000 (at budget)
+        let sum = &big + &big; // additive carry pushes canonical scale to -1_000_001
+        assert_eq!(sum.scale(), -1_000_001);
+        assert!(sum.is_positive());
     }
 
     #[test]
