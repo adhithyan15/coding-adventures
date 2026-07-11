@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-flow-matic-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Lexer for FLOW-MATIC (B-0, 1955–1959) — tokenizes FLOW-MATIC source using the grammar-driven lexer and the flow_matic.tokens grammar file."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
