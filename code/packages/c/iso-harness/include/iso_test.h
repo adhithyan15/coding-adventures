@@ -36,6 +36,7 @@
 #define ISO_TEST_H
 
 #include <stdio.h>
+#include <string.h> /* strcmp, memcmp — for ISO_CHECK_STR_EQ / ISO_CHECK_MEM_EQ */
 
 /* Test bookkeeping. `static` gives these internal linkage so including the
  * header in a single-file test never causes multiple-definition errors. */
@@ -76,6 +77,84 @@ static int iso_test_checks_failed = 0;
             iso_test_checks_failed++;                                          \
             printf("  FAIL %s:%d  ISO_CHECK_EQ_INT(%s, %s): %ld != %ld\n",     \
                    __FILE__, __LINE__, #a, #b, iso_a_, iso_b_);                \
+        }                                                                      \
+    } while (0)
+
+/* ISO_CHECK_EQ_UINT(a, b) — unsigned integer equality (e.g. size_t results).
+ * Both sides widen to `unsigned long` for one portable printf format. */
+#define ISO_CHECK_EQ_UINT(a, b)                                                \
+    do {                                                                       \
+        unsigned long iso_a_ = (unsigned long)(a);                            \
+        unsigned long iso_b_ = (unsigned long)(b);                            \
+        iso_test_checks_run++;                                                 \
+        if (iso_a_ != iso_b_) {                                                \
+            iso_test_checks_failed++;                                          \
+            printf("  FAIL %s:%d  ISO_CHECK_EQ_UINT(%s, %s): %lu != %lu\n",    \
+                   __FILE__, __LINE__, #a, #b, iso_a_, iso_b_);                \
+        }                                                                      \
+    } while (0)
+
+/* ISO_CHECK_STR_EQ(a, b) — NUL-terminated C-string equality via strcmp. Prints
+ * both strings on failure.
+ *
+ * Temporary-safe by design: it never stores the char pointers across statements.
+ * That matters in C++, where the common idiom passes `temporary.c_str()` — if we
+ * saved that pointer in a local it would dangle the moment the temporary string
+ * died (GCC/Clang catch this as -Wdangling-gsl under -Werror). Instead each of
+ * `a` and `b` is evaluated inside the strcmp/printf full-expression, so any
+ * temporary lives exactly as long as the call that reads it.
+ *
+ * Trade-off: on the FAILURE path `a` and `b` are evaluated a second time (for
+ * the printf), so pass pure expressions — which test assertions always are. */
+#define ISO_CHECK_STR_EQ(a, b)                                                 \
+    do {                                                                       \
+        iso_test_checks_run++;                                                 \
+        if (strcmp((a), (b)) != 0) {                                           \
+            iso_test_checks_failed++;                                          \
+            printf("  FAIL %s:%d  ISO_CHECK_STR_EQ(%s, %s): \"%s\" != \"%s\"\n",\
+                   __FILE__, __LINE__, #a, #b, (a), (b));                      \
+        }                                                                      \
+    } while (0)
+
+/* ISO_CHECK_MEM_EQ(a, b, n) — byte-wise equality of two buffers of length `n`
+ * via memcmp. Ideal for hash digests, cipher output, and serialized bytes. On
+ * failure it prints the index and the two differing byte values. */
+#define ISO_CHECK_MEM_EQ(a, b, n)                                              \
+    do {                                                                       \
+        const unsigned char *iso_a_ = (const unsigned char *)(a);             \
+        const unsigned char *iso_b_ = (const unsigned char *)(b);             \
+        size_t iso_n_ = (size_t)(n);                                           \
+        iso_test_checks_run++;                                                 \
+        if (memcmp(iso_a_, iso_b_, iso_n_) != 0) {                            \
+            size_t iso_i_ = 0;                                                 \
+            while (iso_i_ < iso_n_ && iso_a_[iso_i_] == iso_b_[iso_i_]) {      \
+                iso_i_++;                                                      \
+            }                                                                  \
+            iso_test_checks_failed++;                                          \
+            printf("  FAIL %s:%d  ISO_CHECK_MEM_EQ(%s, %s): byte %lu: "        \
+                   "0x%02x != 0x%02x\n",                                       \
+                   __FILE__, __LINE__, #a, #b, (unsigned long)iso_i_,          \
+                   iso_a_[iso_i_], iso_b_[iso_i_]);                            \
+        }                                                                      \
+    } while (0)
+
+/* ISO_CHECK_EQ_DBL(a, b, eps) — floating-point equality within a tolerance.
+ * The absolute difference is computed inline (no <math.h> / no -lm needed). */
+#define ISO_CHECK_EQ_DBL(a, b, eps)                                            \
+    do {                                                                       \
+        double iso_a_ = (double)(a);                                           \
+        double iso_b_ = (double)(b);                                           \
+        double iso_d_ = iso_a_ - iso_b_;                                       \
+        if (iso_d_ < 0) {                                                      \
+            iso_d_ = -iso_d_;                                                   \
+        }                                                                      \
+        iso_test_checks_run++;                                                 \
+        if (iso_d_ > (double)(eps)) {                                          \
+            iso_test_checks_failed++;                                          \
+            printf("  FAIL %s:%d  ISO_CHECK_EQ_DBL(%s, %s): %g != %g "         \
+                   "(|d|=%g > %g)\n",                                          \
+                   __FILE__, __LINE__, #a, #b, iso_a_, iso_b_, iso_d_,         \
+                   (double)(eps));                                            \
         }                                                                      \
     } while (0)
 
