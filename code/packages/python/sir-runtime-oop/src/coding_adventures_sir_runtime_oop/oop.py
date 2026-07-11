@@ -1635,7 +1635,14 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
         if ndigits > 17:
             return recv
         factor = 10.0**ndigits
-        return _ruby_round(recv * factor) / factor
+        scaled = recv * factor
+        # A large ``recv`` can overflow the scale-up to ``inf``; ``_ruby_round``
+        # (``math.floor(inf + 0.5)``) would then raise an untyped ``OverflowError``.
+        # A value that large has no fractional part left to round, so return it
+        # unchanged — holding the never-raise floor.
+        if not math.isfinite(scaled):
+            return recv
+        return _ruby_round(scaled) / factor
     if name == "divmod":
         # Ruby ``Integer#divmod`` / ``Float#divmod``: ``[quotient, remainder]``
         # where the quotient is floored and the remainder takes the divisor's

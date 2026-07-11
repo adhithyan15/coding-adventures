@@ -704,6 +704,10 @@ def test_numeric_round_ndigits() -> None:
     # OverflowError from `recv / factor`).
     assert oop.call_method(10**309, "round", -1) == 10**309
     assert oop.call_method(5 * 10**400, "round", -3) == 5 * 10**400
+    # A near-max Float with a positive ndigits must not overflow the scale-up
+    # (recv * 10**ndigits → inf → _ruby_round(inf) OverflowError); return as-is.
+    assert oop.call_method(1.7e308, "round", 5) == 1.7e308
+    assert oop.call_method(1e300, "round", 17) == 1e300
 
 
 def test_numeric_divmod_fdiv() -> None:
