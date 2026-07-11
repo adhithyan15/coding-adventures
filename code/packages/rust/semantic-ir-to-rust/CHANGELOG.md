@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.26.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
+
+Mirrors the Python `sir-runtime-oop` v0.1.17 reference (and the Go backend
+v0.25.0) into the Rust backend's emitted runtime (`numeric_method` +
+`responds_to`), adding five Ruby numeric methods:
+
+- `round(ndigits)` — `round` gains an optional digits argument: a positive
+  `ndigits` rounds a Float to that many decimals (half **away from zero**, via
+  `ruby_round`); `ndigits <= 0` rounds to a power of ten. Rust's `i64`/`f64` are
+  FIXED width, so the Python bignum→float `OverflowError` pitfall does not apply
+  — the only guards are a place count past i64's ~18 decimal digits (dwarfs the
+  value ⇒ `0`, Ruby parity), a positive `ndigits` past Float precision / an
+  overflowing scale-up (returns the value unchanged), and an `i64::MAX`/`MIN`
+  overflow-degrade in `round_int_to_multiple` (returns the un-rounded value
+  rather than a sign-flipped wrap).
+- `divmod(n)` — `[quotient, remainder]` with a floored quotient (`floor_div_i64`)
+  and the divisor-signed remainder (a `Seq`, so it prints `[3, 1]`); a zero
+  divisor raises a typed `ZeroDivisionError`.
+- `fdiv(n)` — floating-point division that never panics: a zero divisor yields
+  `±Inf`/`NaN` (f64 division already produces these).
+- `clamp(min, max)` / `between?(min, max)` — compared numerically.
+
+Dispatch stays an explicit `match` on the interned method name (never
+reflection). Exec-proven end-to-end via `rustc` (the numeric exec-proof test now
+covers `round(2)`/`round(-2)`, `divmod` incl. the divisor-signed remainder,
+`fdiv` incl. the divide-by-zero `Infinity`, `clamp`/`between?`, and the
+`i64::MAX.round(-1)` overflow-degrade). Completes the numeric breadth on the Rust
+backend.
+
 ## 0.25.0 — String justify methods: `ljust` / `rjust` / `center` / `swapcase`
 
 Closes the last String parity gap with the Python/Go/JS/TS runtimes (which

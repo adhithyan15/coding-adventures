@@ -149,7 +149,8 @@ rather than panicking:
     sets), and justify `ljust`/`rjust`/`center`/`swapcase` (rune-aware; `center`
     puts any odd extra pad char on the RIGHT, Ruby's rule).
   - **Numeric** (`Int`/`Float`): `abs`, `to_i`, `to_f`, `even?`, `odd?`,
-    `zero?`, `times`; plus a universal `to_s`.
+    `zero?`, `round` (with optional `ndigits`), `divmod`, `fdiv`, `clamp`,
+    `between?`, `times`; plus a universal `to_s`.
   - Block-taking methods apply the trailing closure via `apply_closure`;
     `sym_to_proc` implements `Symbol#to_proc` (`&:sym`).
   - **Strict vs. lenient reads** — `Array#[]` / `Hash#[]` are lenient (out of
