@@ -129,6 +129,41 @@ cargo test -p bignum-core -- --nocapture
 
 The suite is **differential**: it checks `BigInteger` against `i128` for every operation on both a hand-picked boundary table (values straddling the 32/64/96-bit limb edges) and tens of thousands of deterministic LCG-generated pairs (no RNG crate, fully reproducible). Beyond `i128` it pins `50!`, `100!`, `2^128`, `10^50`, consecutive-Fibonacci coprimality, radix round-trips, and the `a == q·b + r` division identity at arbitrary width.
 
+## BigDecimal — exact base-10 (NUM-3)
+
+`BigDecimal` is a `BigInteger` **mantissa** and an `i64` **scale**: the value is `mantissa × 10^(-scale)`. It works in the base money, tax, and dosing use, so `+ − ×` are always exact and division rounds to a scale and mode you name.
+
+```rust
+use bignum_core::{BigDecimal, RoundingMode};
+use std::str::FromStr;
+
+// 0.1 + 0.2 is exactly 0.3 (a binary f64 cannot hold either operand).
+let sum = &BigDecimal::from_str("0.1").unwrap() + &BigDecimal::from_str("0.2").unwrap();
+assert_eq!(sum.to_string(), "0.3");
+
+// Money stays exact through +, -, *.
+let change = &BigDecimal::from_str("100.00").unwrap() - &BigDecimal::from_str("0.01").unwrap();
+assert_eq!(change.to_string(), "99.99");
+
+// Division rounds — to the scale and mode you state.
+let third = BigDecimal::from_str("10").unwrap()
+    .div_round(&BigDecimal::from_str("3").unwrap(), 4, RoundingMode::HalfEven);
+assert_eq!(third.to_string(), "3.3333");
+
+// Banker's rounding breaks ties to even: 2.5 → 2, 1.25 → 1.2.
+assert_eq!(BigDecimal::from_str("2.5").unwrap().round_to_scale(0, RoundingMode::HalfEven).to_string(), "2");
+```
+
+Every value is canonical — trailing zeros stripped, zero pinned to `(0, 0)` — so `Eq`/`Hash` are derived and value-correct (`1.20 == 1.2`, `100 == 1e2`). Presenting a value at a *fixed* number of places (`"$1.20"`) is a boundary-formatting concern (NUM-6), not a property of the stored number.
+
+| Area | API |
+|------|-----|
+| Construct | `zero`, `one`, `from_parts`, `from_integer`, `from_i64`, `From<BigInteger/i64/u64/i128/u128>` |
+| Exact arithmetic | `add`/`+`, `sub`/`-`, `mul`/`*`, unary `-`, `abs`, `pow(u32)` |
+| Rounding | `RoundingMode` (`Down`/`Up`/`Floor`/`Ceiling`/`HalfUp`/`HalfDown`/`HalfEven`), `div_round`/`checked_div_round`, `round_to_scale` |
+| Query | `is_zero`, `is_negative`, `is_positive`, `signum`, `mantissa`, `scale`, `Ord`/`Eq`/`Hash` |
+| I/O | `FromStr` (plain + scientific) with typed `ParseDecimalError`; plain-decimal `Display`/`Debug` |
+
 ## Zero dependencies
 
 This is a standalone foundation package. Its `Cargo.toml` has an empty `[dependencies]`, and `#![forbid(unsafe_code)]` guarantees no `unsafe`.

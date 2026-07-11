@@ -5,6 +5,37 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-07-11
+
+### Added
+
+- **`BigDecimal`** (NUM-3): an arbitrary-precision **exact base-10** number — a `BigInteger`
+  mantissa and an `i64` scale, with value `mantissa × 10^(-scale)`. Works in the base money,
+  tax, and dosing are counted in, so `0.1 + 0.2` is exactly `0.3` and `100.00 − 0.01` is
+  exactly `99.99` (neither of which a binary `f64` can represent). Held in one canonical form
+  — trailing zeros stripped from the mantissa, zero pinned to `(0, 0)` — so `Clone`/`Eq`/`Hash`
+  are derived and value-correct (`1.20 == 1.2`, `100 == 1e2`).
+- **`RoundingMode`**: `Down`, `Up`, `Floor`, `Ceiling`, `HalfUp`, `HalfDown`, `HalfEven`
+  (banker's). Division is the one base-10 operation that need not terminate, so it is done to
+  a scale and mode you choose.
+- Exact `add`/`sub`/`mul` (inherent + `std::ops`, owned & borrowed), `Neg`, `abs`, and
+  `pow(u32)` (all exact); `div_round(other, target_scale, mode)` and `checked_div_round`;
+  `round_to_scale(target_scale, mode)`.
+- Total ordering by scale-aligned mantissa comparison, `is_zero`/`is_negative`/`is_positive`/
+  `signum`, `mantissa`/`scale` accessors, `from_parts`/`from_integer`/`from_i64`/`zero`/`one`
+  and `From<BigInteger/i64/u64/i128/u128>`.
+- Parsing (`FromStr`) of plain (`"123.45"`, `"-0.001"`) and scientific (`"1.5e-3"`,
+  `"6.022E23"`) notation with a typed `ParseDecimalError`; plain-decimal `Display` (never
+  scientific) and a readable `Debug`.
+- Tests: exact-arithmetic identities (incl. `0.1 + 0.2 == 0.3`), the full rounding truth
+  table pinned against Python's `decimal` (`2.5`/`-2.5` across all seven modes, `1.25`→`1.2`
+  and `1.35`→`1.4` under half-even), `div_round` pins, a 40,000-case differential of
+  `+ − ×`/ordering and a 20,000-case differential of `div_round` (all seven modes) against an
+  in-test `i128` decimal oracle, plus parse/round-trip and zero/canonical edges.
+- Literate programming throughout; zero third-party dependencies; `#![forbid(unsafe_code)]`.
+- The `BigDecimal` module is declared at the end of `lib.rs` so it never textually collides
+  with the other numeric-rung module declarations.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added
