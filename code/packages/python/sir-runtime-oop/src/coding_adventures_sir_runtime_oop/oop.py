@@ -720,6 +720,10 @@ _NUMERIC_METHODS = frozenset(
         "floor",
         "ceil",
         "round",
+        "divmod",
+        "fdiv",
+        "clamp",
+        "between?",
         "gcd",
         "pow",
         "**",
@@ -1577,9 +1581,58 @@ def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
     if name == "ceil":
         return recv if isinstance(recv, float) and not math.isfinite(recv) else math.ceil(recv)
     if name == "round":
-        if isinstance(recv, int) or (isinstance(recv, float) and not math.isfinite(recv)):
+        # Ruby ``round`` / ``round(ndigits)``.  With no argument (or ``ndigits <=
+        # 0`` on an Integer) the result is an Integer rounded half-away-from-zero;
+        # a positive ``ndigits`` on a Float rounds to that many decimal places
+        # (still half-away-from-zero, unlike Python's banker's rounding).  A
+        # non-finite Float is returned unchanged (never-raise floor).
+        ndigits = int(args[0]) if args and isinstance(args[0], (int, float)) else 0
+        if isinstance(recv, float) and not math.isfinite(recv):
             return recv
-        return _ruby_round(recv)
+        if isinstance(recv, int):
+            if ndigits >= 0:
+                return recv
+            # Negative ndigits: round to the nearest power of ten (half-up).
+            factor = 10 ** (-ndigits)
+            return int(_ruby_round(recv / factor)) * factor
+        if ndigits <= 0:
+            rounded = _ruby_round(recv / (10 ** (-ndigits))) * (10 ** (-ndigits))
+            return int(rounded)
+        factor = 10.0**ndigits
+        return _ruby_round(recv * factor) / factor
+    if name == "divmod":
+        # Ruby ``Integer#divmod`` / ``Float#divmod``: ``[quotient, remainder]``
+        # where the quotient is floored and the remainder takes the divisor's
+        # sign (Python's ``divmod`` matches this).  Division by zero raises a
+        # typed ``ZeroDivisionError`` so a translated ``rescue`` catches it.
+        divisor = args[0]
+        if divisor == 0:
+            raise_error("ZeroDivisionError", "divided by 0")
+        quotient, remainder = divmod(recv, divisor)
+        return [quotient, remainder]
+    if name == "fdiv":
+        # Ruby ``fdiv``: floating-point division.  Unlike ``/``, dividing by zero
+        # yields ``Infinity``/``NaN`` rather than raising (Ruby never raises on
+        # ``Float`` division), honouring the never-raise floor.
+        divisor = float(args[0])
+        numer = float(recv)
+        if divisor == 0.0:
+            if numer == 0.0:
+                return math.nan
+            return math.inf if numer > 0 else -math.inf
+        return numer / divisor
+    if name == "clamp":
+        # Ruby ``Comparable#clamp(min, max)``: return ``min`` if ``recv < min``,
+        # ``max`` if ``recv > max``, else ``recv``.  (The Range form is deferred.)
+        low, high = args[0], args[1]
+        if recv < low:
+            return low
+        if recv > high:
+            return high
+        return recv
+    if name == "between?":
+        # Ruby ``Comparable#between?(min, max)``: ``min <= recv <= max``.
+        return args[0] <= recv <= args[1]
     if name == "gcd":
         return math.gcd(int(recv), int(args[0]))
     if name in ("pow", "**"):

@@ -82,8 +82,9 @@ flow-control** group `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`
 `to_i`/`to_f`/`to_sym`, `empty?`, `*`/`+`, `tr`/`count`/`delete`/`squeeze`
 *(literal char sets)*, `each_char`); and (item **M1c**) the
 **`Integer`/`Float`** catalog (`abs`, `to_i`/`to_f`, `even?`/`odd?`/`zero?`/
-`positive?`/`negative?`, `succ`/`pred`, `floor`/`ceil`/`round`, `gcd`, `pow`/`**`,
-`digits`, and block `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
+`positive?`/`negative?`, `succ`/`pred`, `floor`/`ceil`/`round` (with optional
+`ndigits`), `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `pow`/`**`, `digits`,
+and block `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
 (`to_s`/`to_sym`/`length`/`upcase`/`downcase`/`inspect`), and universal
 **`to_s`/`inspect`** Ruby display forms (so `nil`/`true`/`false` need no catalog)
 plus **`Array#join`**.

@@ -678,6 +678,42 @@ def test_numeric_gcd_pow_digits() -> None:
     assert oop.call_method(0, "digits") == [0]
 
 
+def test_numeric_round_ndigits() -> None:
+    # A positive ndigits rounds a Float to that many decimals, half away from zero.
+    assert oop.call_method(3.14159, "round", 2) == 3.14
+    assert oop.call_method(2.675, "round", 2) == 2.68
+    assert oop.call_method(-2.5, "round", 0) == -3
+    # ndigits <= 0 rounds to an Integer power of ten.
+    assert oop.call_method(1234, "round", -2) == 1200
+    assert oop.call_method(1250, "round", -2) == 1300  # half away from zero
+    assert oop.call_method(1234.5, "round", -1) == 1230
+
+
+def test_numeric_divmod_fdiv() -> None:
+    assert oop.call_method(13, "divmod", 4) == [3, 1]
+    # Remainder takes the divisor's sign (Ruby/Python floored division).
+    assert oop.call_method(13, "divmod", -4) == [-4, -3]
+    assert oop.call_method(7, "fdiv", 2) == 3.5
+    # fdiv never raises: dividing by zero yields Infinity / NaN.
+    assert oop.call_method(1, "fdiv", 0) == float("inf")
+    assert oop.call_method(-1, "fdiv", 0) == float("-inf")
+    import math as _math
+
+    assert _math.isnan(oop.call_method(0, "fdiv", 0))
+    # divmod by zero raises a typed ZeroDivisionError.
+    with pytest.raises(SirError):
+        oop.call_method(1, "divmod", 0)
+
+
+def test_numeric_clamp_between() -> None:
+    assert oop.call_method(5, "clamp", 1, 10) == 5
+    assert oop.call_method(-3, "clamp", 1, 10) == 1
+    assert oop.call_method(99, "clamp", 1, 10) == 10
+    assert oop.call_method(5, "between?", 1, 10) is True
+    assert oop.call_method(0, "between?", 1, 10) is False
+    assert oop.call_method(10, "between?", 1, 10) is True
+
+
 def test_numeric_to_s() -> None:
     assert oop.call_method(42, "to_s") == "42"
     assert oop.call_method(3.14, "to_s") == "3.14"
