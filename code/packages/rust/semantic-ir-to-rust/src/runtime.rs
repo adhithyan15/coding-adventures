@@ -2700,7 +2700,12 @@ pub const RUNTIME: &str = r##"mod __sir {
                             raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
                         }
                         let q = floor_div_i64(*n, *d);
-                        let r = n - q.wrapping_mul(*d);
+                        // `wrapping_sub`/`wrapping_mul`: for `n == i64::MIN` with a
+                        // non-dividing `d`, the FLOORED quotient rounds away from
+                        // zero so the true `q*d` exceeds i64 range; a checked `-`
+                        // would panic in debug.  The true remainder always fits
+                        // in i64, so wrapping recovers it exactly in both profiles.
+                        let r = n.wrapping_sub(q.wrapping_mul(*d));
                         Value::Seq(Rc::new(RefCell::new(vec![Value::Int(q), Value::Int(r)])))
                     }
                     _ => {
