@@ -432,6 +432,24 @@ pub struct Derived {
     pub exact: Option<ExactRational>,
     pub dim: Dimension,
     pub tree: DerivationNode,
+    /// Provenance for the *formula* that produced this value, when it came from
+    /// APPLYING a provenanced `formula` (ADJ-FORMULA-LIBRARIES rung-0): the
+    /// formula's cited `source` / `locator` / `trust`. A plain `let` leaves this
+    /// `None` — its audit trail is the derivation `tree` over observed facts, and
+    /// there is no library claim to cite. This is the channel by which a computed
+    /// answer carries **why** its formula is trustworthy, so an independent
+    /// checker can re-verify the citation without the model.
+    pub provenance: Option<crate::Provenance>,
+}
+
+impl Derived {
+    /// Attach the applied formula's provenance (its cited `source`/`locator`/
+    /// `trust`). Consumes and returns `self` so it composes with [`compute`]:
+    /// `compute(name, expr, kb)?.with_provenance(prov)`.
+    pub fn with_provenance(mut self, provenance: crate::Provenance) -> Self {
+        self.provenance = Some(provenance);
+        self
+    }
 }
 
 /// Why a computation could not be carried out. These are clean errors — the
@@ -496,6 +514,9 @@ pub fn compute(
         exact,
         dim,
         tree,
+        // A plain `let` carries no library-formula provenance; a formula
+        // application attaches it afterward via [`Derived::with_provenance`].
+        provenance: None,
     })
 }
 

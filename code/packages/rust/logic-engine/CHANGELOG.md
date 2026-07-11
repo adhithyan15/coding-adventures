@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] — optional provenance on `Derived`
+
+### Added
+
+- `Derived::provenance: Option<Provenance>` + `Derived::with_provenance(..)` — a
+  computed value may now carry the cited `source`/`locator`/`trust` of the
+  **formula** that produced it (ADJ-FORMULA-LIBRARIES rung-0 formula application).
+  `compute` sets it to `None`; a plain `let` leaves it `None` (its audit trail is
+  the derivation tree over observed facts). This is the channel by which a computed
+  answer carries *why* its formula is trustworthy, so an independent checker can
+  re-verify the citation without the model.
+
 ## [0.37.0] - 2026-07-02 — sign function (`Sign`)
 
 ### Added

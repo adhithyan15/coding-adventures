@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] — render applied-formula provenance in the `derived` section
+
+### Added
+
+- A `derived` value produced by APPLYING a provenanced `formula`
+  (ADJ-FORMULA-LIBRARIES rung-0) now renders the formula's cited
+  `source`/`locator`/`trust`/`corroborations` alongside its `name`/`value`/`dim` —
+  the audit channel proving WHY the formula is trusted, beside the derivation tree
+  proving HOW the number was computed. A plain `let` (no library claim) omits the
+  field, so existing output is byte-for-byte unchanged.
+
 ## [0.11.0] - 2026-06-29 — surface `let`-derived dimensioned values
 
 ### Added

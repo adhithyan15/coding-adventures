@@ -32,8 +32,8 @@ use logic_engine::{
 use std::collections::HashMap;
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn,
-    OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
+    NamedFn, OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
 };
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
@@ -143,6 +143,30 @@ pub enum LowerError {
         outer: String,
         inner: String,
     },
+    /// A `formula`'s body referenced a free identifier that is not one of its
+    /// declared parameters (ADJ-FORMULA-LIBRARIES rung-0 parameter-scoping). A
+    /// formula is a *closed* parameterized expression — every leaf must name a
+    /// parameter — so a stray identifier is a clean compile error, never a silent
+    /// mis-binding to some observed slot at apply time. Carries the offending
+    /// formula and variable.
+    FormulaFreeVariable {
+        formula: String,
+        variable: String,
+    },
+    /// A shipped `formula` carried no `source` (the provenance-required lint,
+    /// mirroring the recall-library adversarial write gate). A formula is a *claim
+    /// about the world* ("BMI is mass ÷ height²") and may not enter a library
+    /// unsourced — humans correct provenance, they do not author formulas by fiat.
+    FormulaMissingProvenance {
+        formula: String,
+    },
+    /// A `? name(args)` applied a `formula` whose argument was neither a plain
+    /// identifier (bind a parameter to a like-named slot) nor a number literal.
+    /// A compound / variable argument has no meaning as a formula binding at
+    /// rung-0, so it is rejected rather than silently mis-applied.
+    FormulaBadArgument {
+        formula: String,
+    },
     /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
     /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
     /// the caller used `compile` directly on a program that still has imports,
@@ -181,6 +205,26 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     // structure is used afterward to scope vocabulary enforcement per `use`.
     let mut flat: Vec<&Statement> = Vec::new();
     flatten_clauses(&program.statements, &mut flat)?;
+
+    // ADJ-FORMULA-LIBRARIES rung-0: register every `formula` from every
+    // `formulabook` into a name→definition map, up front (formulas are
+    // order-independent declarations). Each is validated as it is registered:
+    // parameter-scoping (no free identifier in the body) and the
+    // provenance-required lint (a shipped formula must be sourced). A later
+    // `? name(args)` looks the name up here and APPLIES it — a named, importable,
+    // reusable `let` (see the `Statement::Query` arm below).
+    let mut formulas: HashMap<&str, &FormulaDef> = HashMap::new();
+    for stmt in flat.iter().copied() {
+        if let Statement::Formulabook {
+            formulas: defs, ..
+        } = stmt
+        {
+            for fd in defs {
+                validate_formula(fd)?;
+                formulas.insert(fd.name.as_str(), fd);
+            }
+        }
+    }
 
     for stmt in flat.iter().copied() {
         match stmt {
@@ -323,11 +367,36 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 kb.add_rule(rule);
             }
             Statement::Query { conclusion } => {
-                // Lower with a per-query variable scope so repeated `$Var`s in one
-                // goal share identity (Prolog clause-scope semantics). A ground
-                // hypothesis query lowers identically to before (no variables).
-                let mut vars = HashMap::new();
-                queries.push(lower_term_scoped(conclusion, &mut vars));
+                // ADJ-FORMULA-LIBRARIES rung-0: is this a FORMULA APPLICATION? If the
+                // goal's functor names a declared `formula` with matching arity
+                // (`? bmi(body_mass, height)`), APPLY it: bind each parameter to its
+                // argument, substitute into the formula body, and evaluate through the
+                // SAME `ComputeExpr` evaluator a `let` uses — a formula is a named,
+                // importable, reusable `let`. The result is bound as a derived value
+                // named after the formula, carrying the formula's cited provenance so
+                // the computed answer is auditable back to WHY its formula is trusted.
+                if let Some(fd) = formula_for_query(conclusion, &formulas) {
+                    let substituted = apply_formula(fd, conclusion)?;
+                    let cexpr = lower_expr(&substituted);
+                    let derived =
+                        compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
+                            LowerError::ComputationFailed {
+                                name: fd.name.clone(),
+                                detail: format!("{e:?}"),
+                            }
+                        })?;
+                    // The provenance-required lint already guaranteed a non-empty
+                    // source at registration; stamp the resolved envelope onto the
+                    // value so the derivation carries the formula's cites + trust.
+                    let prov = annotations_to_provenance(&fd.annotations)?;
+                    kb.add_derived(derived.with_provenance(prov));
+                } else {
+                    // An ordinary query. Lower with a per-query variable scope so
+                    // repeated `$Var`s in one goal share identity (Prolog clause-scope
+                    // semantics). A ground hypothesis query lowers as before.
+                    let mut vars = HashMap::new();
+                    queries.push(lower_term_scoped(conclusion, &mut vars));
+                }
             }
             Statement::Let { name, expr } => {
                 // Evaluate the formula against the facts (and any earlier
@@ -390,6 +459,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             // — `flatten_clauses` expanded it into its inner clauses already.
             Statement::Use(_) => {}
             Statement::Rulebook { .. } => {}
+            // A `formulabook` adds nothing to the KB itself — its formulas were
+            // registered (and validated) in the pre-pass above, ready to be
+            // APPLIED by a matching `? name(args)`. The inner `use <dict>`
+            // bindings are documentation of the vocabulary the formulas are typed
+            // against (rung-0 does not enforce dictionary typing of parameters).
+            Statement::Formulabook { .. } => {}
             // ---- import (MYCIN-2026 M3) ----
             // Imports are resolved away by `crate::resolve` before lowering; one
             // reaching here means `compile` was called on an unresolved program.
@@ -439,7 +514,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 .statements
                 .iter()
                 .filter(|s| !matches!(s, Statement::Rulebook { .. }));
-            enforce_vocabulary(top_clauses, defs)?;
+            enforce_vocabulary(top_clauses, defs, &formulas)?;
         }
         // Each rulebook is its own scope (its `use`, else the top-level `use`).
         for s in &program.statements {
@@ -448,12 +523,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     let defs = resolve(d)?;
                     let mut clauses: Vec<&Statement> = Vec::new();
                     flatten_clauses(statements, &mut clauses)?;
-                    enforce_vocabulary(clauses.into_iter(), defs)?;
+                    enforce_vocabulary(clauses.into_iter(), defs, &formulas)?;
                 }
             }
         }
     } else if !dictionary.is_empty() {
-        enforce_vocabulary(flat.iter().copied(), &dictionary)?;
+        enforce_vocabulary(flat.iter().copied(), &dictionary, &formulas)?;
     }
 
     Ok(LoweredProgram {
@@ -532,6 +607,7 @@ fn first_use(statements: &[Statement]) -> Option<&str> {
 fn enforce_vocabulary<'a>(
     statements: impl IntoIterator<Item = &'a Statement>,
     dictionary: &[Define],
+    formulas: &HashMap<&str, &FormulaDef>,
 ) -> Result<(), LowerError> {
     use std::collections::HashMap;
     let dict: HashMap<&str, &DefineKind> = dictionary
@@ -578,6 +654,14 @@ fn enforce_vocabulary<'a>(
     // hypothesis.
     let check_query = |t: &AstTerm| -> Result<(), LowerError> {
         let (functor, _) = term_functor_value(t);
+        // A FORMULA APPLICATION query (`? bmi(body_mass, height)`) names a
+        // registered formula, not a hypothesis or relation — accept it here so
+        // the closed-vocabulary gate does not reject the very construct this
+        // feature introduces. The formula's own parameter-scoping was checked at
+        // registration.
+        if formulas.contains_key(functor) {
+            return Ok(());
+        }
         match dict.get(functor) {
             Some(DefineKind::Relation { .. }) => Ok(()),
             _ => check_hypothesis(t),
@@ -841,6 +925,141 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
 }
 
 // ---------------------------------------------------------------------------
+// Formula libraries (ADJ-FORMULA-LIBRARIES rung-0)
+// ---------------------------------------------------------------------------
+
+/// Validate a `formula` at registration time: (1) **parameter-scoping** — every
+/// identifier leaf in the body must name a declared parameter, so a stray
+/// identifier is a clean compile error rather than a silent mis-binding at apply
+/// time; and (2) the **provenance-required lint** — a shipped formula must carry
+/// a non-empty `source`, mirroring the recall-library adversarial write gate.
+fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
+    let params: std::collections::HashSet<&str> =
+        fd.params.iter().map(String::as_str).collect();
+    let mut refs = Vec::new();
+    collect_refs(&fd.body, &mut refs);
+    for r in refs {
+        if !params.contains(r.as_str()) {
+            return Err(LowerError::FormulaFreeVariable {
+                formula: fd.name.clone(),
+                variable: r,
+            });
+        }
+    }
+    // Reuse the shared provenance path (the same relate/rule/prior use), then
+    // enforce that the primary `source` span is non-empty.
+    let prov = annotations_to_provenance(&fd.annotations)?;
+    if prov.source.trim().is_empty() {
+        return Err(LowerError::FormulaMissingProvenance {
+            formula: fd.name.clone(),
+        });
+    }
+    Ok(())
+}
+
+/// Collect every identifier leaf of an [`ExprAst`] — a [`ExprAst::Ref`] name or
+/// an [`ExprAst::Agg`] slot — into `out`. Used by [`validate_formula`] to check
+/// parameter-scoping. Numbers and operators contribute no identifiers.
+fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
+    match expr {
+        ExprAst::Ref(name) => out.push(name.clone()),
+        ExprAst::Agg(_, slot) => out.push(slot.clone()),
+        ExprAst::Lit(_) => {}
+        ExprAst::Bin(_, a, b) | ExprAst::Call2(_, a, b) => {
+            collect_refs(a, out);
+            collect_refs(b, out);
+        }
+        ExprAst::Abs(a)
+        | ExprAst::Floor(a)
+        | ExprAst::Ceil(a)
+        | ExprAst::Round(a)
+        | ExprAst::Trunc(a)
+        | ExprAst::Sign(a)
+        | ExprAst::Call(_, a) => collect_refs(a, out),
+    }
+}
+
+/// If the query `goal` is a FORMULA APPLICATION — its functor names a registered
+/// formula and its argument count matches that formula's parameter count —
+/// return the matching definition. A ground atom, a `$variable` goal, or an
+/// arity mismatch returns `None` (it is an ordinary query, not an application).
+fn formula_for_query<'a>(
+    goal: &AstTerm,
+    formulas: &HashMap<&str, &'a FormulaDef>,
+) -> Option<&'a FormulaDef> {
+    if let AstTerm::Compound { functor, args } = goal {
+        if let Some(fd) = formulas.get(functor.as_str()) {
+            if fd.params.len() == args.len() {
+                return Some(fd);
+            }
+        }
+    }
+    None
+}
+
+/// APPLY a formula: bind each parameter to the correspondingly-positioned
+/// argument and substitute into the formula body, yielding a parameter-free
+/// [`ExprAst`] ready for the existing [`lower_expr`]/`compute` path. An argument
+/// that is a plain identifier binds the parameter to a like-named slot
+/// (`ExprAst::Ref`); a number literal binds it to that constant (`ExprAst::Lit`).
+/// Any other argument shape is a [`LowerError::FormulaBadArgument`].
+fn apply_formula(fd: &FormulaDef, goal: &AstTerm) -> Result<ExprAst, LowerError> {
+    let args: &[AstTerm] = match goal {
+        AstTerm::Compound { args, .. } => args,
+        _ => &[],
+    };
+    let mut subst: HashMap<String, ExprAst> = HashMap::new();
+    for (param, arg) in fd.params.iter().zip(args.iter()) {
+        let bound = match arg {
+            AstTerm::Atom(name) => ExprAst::Ref(name.clone()),
+            AstTerm::Num(x) => ExprAst::Lit(*x),
+            _ => {
+                return Err(LowerError::FormulaBadArgument {
+                    formula: fd.name.clone(),
+                })
+            }
+        };
+        subst.insert(param.clone(), bound);
+    }
+    Ok(substitute_expr(&fd.body, &subst))
+}
+
+/// Substitute parameter references in a formula body with their bound argument
+/// expressions. A [`ExprAst::Ref`] naming a parameter becomes the bound
+/// expression; a non-parameter identifier is left as-is (validation already
+/// proved every identifier is a parameter, so this branch is defensive). An
+/// [`ExprAst::Agg`] slot naming a parameter is rewritten to the bound slot name
+/// when the binding is itself a slot reference (an aggregation folds a named
+/// slot, so only a `Ref` binding is meaningful there).
+fn substitute_expr(expr: &ExprAst, subst: &HashMap<String, ExprAst>) -> ExprAst {
+    match expr {
+        ExprAst::Ref(name) => subst.get(name).cloned().unwrap_or_else(|| expr.clone()),
+        ExprAst::Lit(_) => expr.clone(),
+        ExprAst::Agg(op, slot) => match subst.get(slot) {
+            Some(ExprAst::Ref(bound)) => ExprAst::Agg(*op, bound.clone()),
+            _ => expr.clone(),
+        },
+        ExprAst::Bin(op, a, b) => ExprAst::Bin(
+            *op,
+            Box::new(substitute_expr(a, subst)),
+            Box::new(substitute_expr(b, subst)),
+        ),
+        ExprAst::Call2(f, a, b) => ExprAst::Call2(
+            *f,
+            Box::new(substitute_expr(a, subst)),
+            Box::new(substitute_expr(b, subst)),
+        ),
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(substitute_expr(a, subst))),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst))),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst))),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst))),
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst))),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst))),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst))),
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -849,6 +1068,242 @@ mod tests {
     use super::*;
     use crate::compile;
     use logic_engine::{enumerate_all, search, SearchMode, SearchResult};
+
+    // ---- ADJ-FORMULA-LIBRARIES rung-0: formulabook / formula ----
+
+    #[test]
+    fn formula_applies_and_carries_its_cited_provenance() {
+        // A single-file program that DEFINES a provenanced formula, binds its
+        // variables from `observe`d facts, and APPLIES it — the whole rung-0 loop.
+        // The engine computes 70 / 1.75² = 22.857 on the CPU, and the derived value
+        // carries the formula's WHO citation (source non-empty, trust authoritative).
+        let src = r#"
+            dictionary bmi_vocab {
+                define body_mass : finding
+                define height    : finding
+                define bmi       : finding
+            }
+            formulabook body_metrics {
+                use bmi_vocab
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "BMI is weight in kilograms divided by the square of height in metres."
+                    locator "https://www.who.int/health-topics/obesity"
+                    trust authoritative
+            }
+            observe body_mass(70)
+            observe height(1.75)
+            ? bmi(body_mass, height)
+        "#;
+        let lowered = compile(src).unwrap();
+        // A formula application is a derived value, not a differential query.
+        assert!(lowered.queries.is_empty(), "formula query is not a hypothesis");
+        let d = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("the formula bound a derived `bmi`");
+        assert!(
+            (d.value - 22.857).abs() < 0.01,
+            "expected ≈22.857, got {}",
+            d.value
+        );
+        let prov = d.provenance.as_ref().expect("derivation carries provenance");
+        assert!(!prov.source.is_empty(), "the WHO source span is attached");
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+        assert_eq!(
+            prov.locator.as_deref(),
+            Some("https://www.who.int/health-topics/obesity")
+        );
+    }
+
+    #[test]
+    fn formula_rebinds_to_differently_named_arguments() {
+        // The parameters are FORMAL: applying `bmi(weight, stature)` substitutes
+        // param→argument, so the engine reads the `weight`/`stature` slots even
+        // though the formula was written over `body_mass`/`height`.
+        let src = r#"
+            formulabook m {
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "WHO BMI definition." trust authoritative
+            }
+            observe weight(80)
+            observe stature(2)
+            ? bmi(weight, stature)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("bmi").unwrap();
+        assert!((d.value - 20.0).abs() < 1e-9, "80 / 2² = 20, got {}", d.value);
+    }
+
+    #[test]
+    fn formula_free_variable_is_a_clean_scoping_error() {
+        // `b` is not a declared parameter — a stray identifier must be rejected,
+        // never silently mis-bound to some observed slot at apply time.
+        let src = r#"
+            formulabook m {
+                formula f(a) = a + b
+                    source "x" trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaFreeVariable { ref variable, .. })
+                    if variable == "b"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn shipped_formula_without_provenance_is_rejected() {
+        // The provenance-required lint: a formula is a claim about the world and
+        // may not enter a library unsourced.
+        let src = r#"
+            formulabook m {
+                formula f(a) = a + a
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaMissingProvenance { ref formula })
+                    if formula == "f"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn three_parameter_formula_applies() {
+        // Arity > 2: a mean-arterial-pressure-shaped 3-parameter formula. Confirms
+        // parameters bind positionally and the body substitutes all three.
+        let src = r#"
+            formulabook hemo {
+                formula weighted3(a, b, c) = (a + b + c) / 3
+                    source "arithmetic mean of three readings" trust authoritative
+            }
+            observe a(3)
+            observe b(6)
+            observe c(9)
+            ? weighted3(a, b, c)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("weighted3").unwrap();
+        assert!((d.value - 6.0).abs() < 1e-9, "(3+6+9)/3 = 6, got {}", d.value);
+    }
+
+    #[test]
+    fn formulabook_round_trips_through_the_parser() {
+        // Round-trip render: the surface `formulabook` parses to exactly the
+        // expected typed AST — name, parameters, body shape, and the provenance
+        // annotations — so a downstream consumer (formatter, doc-gen) can rebuild it.
+        let program = crate::parse(
+            "formulabook m {\n\
+               use v\n\
+               formula bmi(body_mass, height) = body_mass / (height * height)\n\
+                 source \"WHO\" locator \"loc\" trust authoritative\n\
+             }\n",
+        )
+        .unwrap();
+        let fb = program
+            .statements
+            .iter()
+            .find(|s| matches!(s, Statement::Formulabook { .. }))
+            .expect("a formulabook statement");
+        let Statement::Formulabook {
+            name,
+            uses,
+            formulas,
+        } = fb
+        else {
+            unreachable!()
+        };
+        assert_eq!(name, "m");
+        assert_eq!(uses, &vec!["v".to_string()]);
+        assert_eq!(formulas.len(), 1);
+        let f = &formulas[0];
+        assert_eq!(f.name, "bmi");
+        assert_eq!(f.params, vec!["body_mass".to_string(), "height".to_string()]);
+        // body = body_mass / (height * height)
+        assert_eq!(
+            f.body,
+            ExprAst::Bin(
+                ArithOp::Div,
+                Box::new(ExprAst::Ref("body_mass".into())),
+                Box::new(ExprAst::Bin(
+                    ArithOp::Mul,
+                    Box::new(ExprAst::Ref("height".into())),
+                    Box::new(ExprAst::Ref("height".into())),
+                )),
+            )
+        );
+        assert_eq!(
+            f.annotations,
+            vec![
+                Annotation::Source("WHO".into()),
+                Annotation::Locator("loc".into()),
+                Annotation::Trust(TrustTierName::Authoritative),
+            ]
+        );
+    }
+
+    #[test]
+    fn formula_end_to_end_via_import_of_the_shipped_library() {
+        // The real consumer surface: `import "bmi.adj"` + bind + apply. Uses the
+        // SHIPPED library file (loaded from disk) through an in-memory provider, so
+        // this test also proves `code/specs/data/adj-formula-stdlib/clinical/bmi.adj`
+        // parses, lints (provenance-required), and computes.
+        use crate::{compile_with_imports, ImportLimits, ImportProvider};
+        use std::collections::HashMap;
+
+        struct Mem {
+            files: HashMap<String, String>,
+        }
+        impl ImportProvider for Mem {
+            fn resolve(&self, _importer: &str, literal: &str) -> Result<String, String> {
+                self.files
+                    .contains_key(literal)
+                    .then(|| literal.to_string())
+                    .ok_or_else(|| format!("no such file: {literal}"))
+            }
+            fn load(&self, canonical: &str) -> Result<String, String> {
+                self.files
+                    .get(canonical)
+                    .cloned()
+                    .ok_or_else(|| format!("no such file: {canonical}"))
+            }
+        }
+
+        let bmi_lib = include_str!(
+            "../../../../specs/data/adj-formula-stdlib/clinical/bmi.adj"
+        );
+        let consumer = "import \"bmi.adj\"\n\
+                        observe body_mass(70)\n\
+                        observe height(1.75)\n\
+                        ? bmi(body_mass, height)\n";
+        let mut files = HashMap::new();
+        files.insert("bmi.adj".to_string(), bmi_lib.to_string());
+        files.insert("consumer.adj".to_string(), consumer.to_string());
+        let provider = Mem { files };
+
+        let lowered =
+            compile_with_imports("consumer.adj", &provider, ImportLimits::default()).unwrap();
+        let d = lowered.kb.derived_for("bmi").expect("applied imported formula");
+        assert!(
+            (d.value - 22.857).abs() < 0.01,
+            "expected ≈22.857, got {}",
+            d.value
+        );
+        let prov = d.provenance.as_ref().expect("carries the library citation");
+        assert!(
+            prov.source.contains("weight") || prov.source.contains("BMI"),
+            "WHO source span attached: {}",
+            prov.source
+        );
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
 
     // ---- REL-2: relational recall (relate edges + binding queries) ----
 
