@@ -226,3 +226,63 @@ fn list_indexes_matches_real_sqlite() {
 
     let _ = std::fs::remove_dir_all(path.parent().unwrap());
 }
+
+/// `WITHOUT ROWID` tables — stored in an index b-tree, not a table b-tree — read
+/// end-to-end through the full pipeline and match real SQLite. Covers a scalar
+/// INTEGER primary key, a TEXT primary key, a composite primary key, and a large
+/// table whose index b-tree spans multiple levels (interior pages), so the
+/// interior-key emission in `walk_index` is exercised through the whole engine.
+#[test]
+fn without_rowid_tables_match_real_sqlite() {
+    // A big WITHOUT ROWID table (800 rows → a two-level index b-tree) plus two
+    // small ones exercising TEXT and composite primary keys.
+    let mut setup = vec![
+        "CREATE TABLE kv (k INTEGER PRIMARY KEY, v TEXT) WITHOUT ROWID".to_string(),
+        "CREATE TABLE names (name TEXT PRIMARY KEY, age INTEGER) WITHOUT ROWID".to_string(),
+        "CREATE TABLE pairs (a INTEGER, b INTEGER, note TEXT, PRIMARY KEY (a, b)) WITHOUT ROWID"
+            .to_string(),
+        "INSERT INTO names VALUES ('Ada', 36), ('Grace', 45), ('Alan', 41)".to_string(),
+        "INSERT INTO pairs VALUES (1, 2, 'x'), (1, 3, 'y'), (2, 1, 'z')".to_string(),
+    ];
+    let mut big = String::from("INSERT INTO kv VALUES ");
+    for i in 0..800 {
+        if i > 0 {
+            big.push(',');
+        }
+        big.push_str(&format!("({i}, 'val{i}')"));
+    }
+    setup.push(big);
+    let setup_refs: Vec<&str> = setup.iter().map(String::as_str).collect();
+    let path = build_sqlite_file(&setup_refs);
+
+    let conn = connect(path.to_str().unwrap()).expect("open file-backed connection");
+
+    // Each check: (query, column count). Diff mini-sqlite against real SQLite.
+    let checks: &[(&str, usize)] = &[
+        // Interior-page keys must appear: a full scan of the 800-row table.
+        ("SELECT COUNT(*) FROM kv", 1),
+        // Spot rows from across the tree (small, mid, and the maximum key).
+        ("SELECT k, v FROM kv WHERE k IN (0, 5, 400, 799) ORDER BY k", 2),
+        ("SELECT k FROM kv WHERE k >= 797 ORDER BY k", 1),
+        ("SELECT SUM(k) FROM kv", 1),
+        // TEXT primary key.
+        ("SELECT name, age FROM names ORDER BY name", 2),
+        ("SELECT name FROM names WHERE age > 40 ORDER BY age", 1),
+        // Composite primary key — every column is stored in the record.
+        ("SELECT a, b, note FROM pairs ORDER BY a, b", 3),
+    ];
+    for (q, ncols) in checks {
+        let mut cur = conn
+            .execute(q, &[])
+            .unwrap_or_else(|e| panic!("mini failed on {q}: {e:?}"));
+        let mine: Vec<Vec<String>> = cur
+            .fetchall()
+            .iter()
+            .map(|row| row.iter().map(norm_mini).collect())
+            .collect();
+        let theirs = real_rows(&path, q, *ncols);
+        assert_eq!(mine, theirs, "WITHOUT ROWID divergence on: {q}");
+    }
+
+    let _ = std::fs::remove_dir_all(path.parent().unwrap());
+}

@@ -1,5 +1,20 @@
 # Changelog — sqlite-file
 
+## 0.7.0 - Unreleased
+
+Phase E5 (cont.): the **name-based convenience reader** for `WITHOUT ROWID`
+tables, so callers no longer need to hand-resolve a root page and pick the right
+b-tree walker.
+
+### Added
+
+- **`read_without_rowid_table(bytes, name) -> Vec<Vec<SqlValue>>`** — the
+  `WITHOUT ROWID` sibling of `read_table`. It resolves the table's root page from
+  `sqlite_schema`, walks its **index** b-tree via `btree::walk_index`, and
+  decodes each record into columns. There is no rowid, so it returns bare column
+  vectors (not `(rowid, columns)`); the record holds every column in declared
+  order, exactly like a rowid table.
+
 ## 0.6.0 - Unreleased
 
 Phase E5: **index b-tree walking** — the raw-file primitive behind `WITHOUT

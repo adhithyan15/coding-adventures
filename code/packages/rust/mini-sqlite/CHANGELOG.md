@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.7 — Read `WITHOUT ROWID` tables from real .sqlite files
+
+Querying a `WITHOUT ROWID` table in a real `.sqlite` file now works through the
+whole pipeline; previously it failed with `unexpected b-tree page type` because
+such tables live in an *index* b-tree, not a table b-tree. Delivered by
+`sqlite-file` 0.7.0 (`read_without_rowid_table` over `walk_index`) and
+storage-sqlite 0.4.0 (`WITHOUT ROWID` detection + read path). A new
+`file_backed` differential test builds real `WITHOUT ROWID` tables (scalar /
+TEXT / composite primary keys, and an 800-row table spanning interior index
+pages) and diffs mini-sqlite against real bundled SQLite.
+
 ## 0.5.6 — Two-argument TRIM/LTRIM/RTRIM (character-set trimming)
 
 Grows the SQL scalar surface: `TRIM(x, y)`, `LTRIM(x, y)`, and `RTRIM(x, y)`
