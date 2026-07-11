@@ -2243,6 +2243,36 @@ construction, so a candidate use inside it must still be counted.
 Static-init blocks (`static { … }`), private names (`#x`), and decorators remain
 deferred to their own additive slices, exactly as for the method surface.
 
+### PR1 (DONE)
+
+Landed as the atomic node + emit + all-arms commit. `ClassMember` is now a
+two-variant enum (`Method` | `Field`). Confirmed blast radius (per the per-crate
+build, the ground truth):
+
+- **`javascript-ast` 0.34.0** — `ClassMember::Field(PropertyDefinition)` +
+  `PropertyDefinition { cv, key: PropertyKey, value: Option<Expression>, computed,
+  is_static }`; 4 roundtrip tests (initialized / bare / static / computed-key,
+  the last using a `[a+b]` `BinaryExpression` key so it is unambiguously
+  `PropertyKey::Expression` rather than collapsing to `Identifier` under the
+  untagged serde — the same limitation methods already have).
+- **`closure-emitter` 0.39.0** — `emit_class_field` (printing `[static ]key[=value];`,
+  value at `PREC_ASSIGNMENT`) wired into the shared `emit_class_tail` member loop;
+  6 emit tests.
+- **Pass crates (PATCH each), `Field` arms added at every site the compiler
+  flagged non-exhaustive/refutable:** constant-fold (1), fold-control-flow (1),
+  dce (2), scope-analyzer (2), rename-properties (2), inline-variables (5),
+  rename-globals (5), rename (4: 2 decl + 2 expression handlers), **inline (13:**
+  the widest — the soundness-critical `tally`/`inline`/`mutated-params`/
+  `used-idents` sites recurse the initializer + computed key, the scope-aware
+  `substitute`/`rename` sites use the class-inner map, and `count_decl_names` +
+  both `splice_*_in_decl` correctly skip a field**).** All 11 crates build + test
+  green.
+
+The `Field` arm everywhere mirrors the `Method` arm's recursion but on
+`f.value: Option<Expression>` (+ the computed-key expression) rather than a
+statement body, exactly as this section specified. Bridge + conformance follow in
+PR2/PR3.
+
 ## CLOC12.174 — `ClassDeclaration` (`class C [extends S] { … }`): the class *statement* arc (design)
 
 CLOC12.173 shipped the class **expression** (a value: `x = class {}`, `f(class C {})`).

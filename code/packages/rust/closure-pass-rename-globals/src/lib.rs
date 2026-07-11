@@ -361,13 +361,19 @@ fn count_decl_names_decl(
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                for p in &m.value.params {
-                    let FunctionParam::Identifier(id) = p;
-                    *out.entry(id.name.clone()).or_insert(0) += 1;
-                }
-                for s in &m.value.body.body {
-                    count_decl_names_stmt(s, out, nodes_touched);
+                match member {
+                    ClassMember::Method(m) => {
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            *out.entry(id.name.clone()).or_insert(0) += 1;
+                        }
+                        for s in &m.value.body.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                    // A field has no params, and its initializer declares no
+                    // statement-scope names at the class-body level.
+                    ClassMember::Field(_) => {}
                 }
             }
         }
@@ -501,19 +507,36 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                 collect_all_idents_expr(sup, out);
             }
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                if let PropertyKey::Identifier(id) = &m.key {
-                    out.insert(id.name.clone());
-                }
-                if let Some(id) = &m.value.id {
-                    out.insert(id.name.clone());
-                }
-                for p in &m.value.params {
-                    let FunctionParam::Identifier(id) = p;
-                    out.insert(id.name.clone());
-                }
-                for s in &m.value.body.body {
-                    collect_all_idents_stmt(s, out);
+                match member {
+                    ClassMember::Method(m) => {
+                        if let PropertyKey::Identifier(id) = &m.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let Some(id) = &m.value.id {
+                            out.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            out.insert(id.name.clone());
+                        }
+                        for s in &m.value.body.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
+                    // A field contributes its key ident + every identifier in a
+                    // computed key and the initializer (over-collect for
+                    // rename-collision safety).
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Identifier(id) = &f.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_all_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_all_idents_expr(v, out);
+                        }
+                    }
                 }
             }
         }
@@ -820,6 +843,19 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             collect_all_idents_stmt(s, out);
                         }
                     }
+                    // A field's key ident + computed-key / initializer
+                    // identifiers, over-collected for collision-avoidance.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Identifier(id) = &f.key {
+                            out.insert(id.name.clone());
+                        }
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_all_idents_expr(e, out);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_all_idents_expr(v, out);
+                        }
+                    }
                 }
             }
         }
@@ -931,9 +967,23 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
                 rename_apply_expr(sup, map);
             }
             for member in &mut cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &mut m.value.body.body {
-                    rename_apply_stmt(s, map);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            rename_apply_stmt(s, map);
+                        }
+                    }
+                    // Rewrite renamed globals used in a field's computed key and
+                    // initializer. The field *key* (an identifier name) is a
+                    // property, not a variable, so it is not renamed here.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rename_apply_expr(e, map);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rename_apply_expr(v, map);
+                        }
+                    }
                 }
             }
         }
@@ -1239,6 +1289,19 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         }
                         for s in &mut m.value.body.body {
                             rename_apply_stmt(s, &inner);
+                        }
+                    }
+                    // A field's computed key + initializer are value-position
+                    // expressions in the class body — rename globals in them
+                    // with `class_inner` (the class's own name, a local binding
+                    // for a class *expression*, removed). The field key name is
+                    // a property, not a variable, so it is not renamed.
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            rename_apply_expr(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            rename_apply_expr(v, &class_inner);
                         }
                     }
                 }

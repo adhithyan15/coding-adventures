@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.20.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` arms (in both
+the class-expression and class-declaration member loops) that run `dce_expression`
+over the field's initializer and computed key, mirroring the `Method` arm.
+Reachable once the CLOC12.175 PR2 bridge produces the node.
+
 ## [0.20.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms

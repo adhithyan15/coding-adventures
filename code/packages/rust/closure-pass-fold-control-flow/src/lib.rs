@@ -59,7 +59,7 @@ use coding_adventures_javascript_ast::{
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -1415,6 +1415,16 @@ fn fold_class_body(
                     is_static: md.is_static,
                 })
             }
+            // A class field folds control flow inside its initializer (an
+            // expression that runs at construction). The key is cloned; the
+            // value is optional.
+            ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                cv: fd.cv.clone(),
+                key: fd.key.clone(),
+                value: fd.value.as_ref().map(|v| fold_expression(v, st)),
+                computed: fd.computed,
+                is_static: fd.is_static,
+            }),
         })
         .collect();
     (super_class, body)

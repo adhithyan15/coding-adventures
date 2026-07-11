@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.12.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: rename class-field property keys
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` arms
+(classify + rewrite) that treat the field's key as a renameable property name
+(like a method key, with no constructor guard) and recurse into the computed key
+and initializer. Reachable once the CLOC12.175 PR2 bridge produces the node.
+
 ## [0.12.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms

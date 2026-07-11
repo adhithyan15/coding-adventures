@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: resolve references in field initializers
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`. Added `Field` arms (class
+declaration + class expression) that walk the field's initializer and computed
+key so references inside a field initializer (evaluated at construction in the
+class scope) are resolved. Reachable once the CLOC12.175 PR2 bridge produces the
+node.
+
 ## [0.12.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` walk arm

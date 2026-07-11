@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.34.0] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` (class fields / `PropertyDefinition`)
+
+The class-body member enum `ClassMember` grows a second variant beside `Method`:
+
+- `ClassMember::Field(PropertyDefinition)` models a class field
+  `[static] key [= initializer];`.
+- `PropertyDefinition { cv, key: PropertyKey, value: Option<Expression>, computed, is_static }`
+  — a bare field (`x;`) has `value: None`; an initialized field (`x = 1;`) carries
+  the initializer. The `key` reuses the existing `PropertyKey` (so a computed
+  `[expr]` field is `PropertyKey::Expression`), and `is_static` serializes as the
+  JSON key `static`.
+
+Reuses `PropertyKey` from the method form — no new key modelling. Four roundtrip
+tests cover initialized / bare / static / computed-key fields.
+
 ## [0.33.0] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `ClassDeclaration` node (the class *statement*)
