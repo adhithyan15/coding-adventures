@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0 — Differential conformance oracle (baseline)
+
+First step of the roadmap to make mini-sqlite a drop-in SQLite replacement
+(`code/specs/mini-sqlite-full-conformance.md`, Stream A / L2).
+
+- **`tests/differential_oracle.rs`** — a differential-conformance harness that
+  runs the same SQL through mini-sqlite *and* real bundled SQLite (`rusqlite`, a
+  **dev-dependency only** — never linked by the shipped crate) and asserts they
+  agree: matching columns (case-insensitive), matching rows (order-sensitive only
+  under `ORDER BY`), and error-vs-success agreement. This is the measuring
+  instrument the whole conformance roadmap is gated on, mirroring the
+  `sqlite-file` crate's cross-check against the real on-disk format.
+- On introduction it measured **12 of 22 seed cases already matching SQLite** and
+  reproduced **10 genuine gaps**, recorded in an explicit known-divergence
+  `LEDGER` (shrinking the ledger is the conformance metric): qualified column
+  refs across a join resolve to NULL (breaks even `INNER JOIN`); `LEFT`/`RIGHT`/
+  `FULL JOIN` drop their `ON` clause; aggregate columns are misnamed (`agg_N` vs
+  `SUM(n)`); and `UPPER()` returns the wrong value. Each is a tracked follow-up
+  increment. No shipped code changed in this release — only the test harness.
+
 ## 0.2.1 — Security hardening (post-review fixes)
 
 - `quote_sql_string`: strip NUL bytes from `Text` parameters before escaping.
