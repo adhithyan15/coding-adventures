@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.30.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `collect_concat` / `reduce` / `inject` / `sum`
+
+Mirrors the Python `sir-runtime-oop` reference (PR #7978) and the Go backend
+(PR #7983) into the Rust backend's inline `__sir` runtime (`map_method` block
+arms + the `Value::Map` `respond_to?` arm), completing the Hash Enumerable
+reshape/fold surface.  Ruby's `Hash` mixes in `Enumerable`, so every method
+here iterates the hash as a sequence of `[key, value]` pairs.  All yield the
+two-arg `(key, value)` EXCEPT `reduce`/`inject`, which follow Ruby's memo
+convention and yield `(memo, [k, v])` — the pair as ONE argument.
+
+- `group_by { |k, v| key }` — a Hash mapping each block key to the Array of the
+  `[k, v]` pairs that produced it, in first-seen key order and insertion order.
+- `partition { |k, v| pred }` — `[[matching pairs], [rest pairs]]`, each a fresh
+  Array of `[k, v]` pairs preserving order.
+- `flat_map`/`collect_concat { |k, v| … }` — map each pair then concatenate one
+  level: an Array result splices its elements, a scalar is appended as-is.
+- `reduce`/`inject` — Ruby's memo fold over the `[k, v]` pairs; with an explicit
+  seed the fold starts there, without one it seeds from the first pair (an empty
+  seedless reduce is `nil`).
+- `sum(init = 0) { |k, v| … }` — numeric fold seeded at `0` (or the explicit
+  seed arg) over the block results, reusing the polymorphic `plus` helper so
+  integer-only inputs stay `Int` while any float promotes.
+
+Every arm SNAPSHOTS the entries into an owned `Vec` before iterating, so no
+`RefCell` borrow is held across `apply_closure` — the never-panic floor holds
+even against a block that reentrantly mutates the same hash.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_enumerable_breadth_compile_and_run`, running `group_by`/`partition`
+(even-value predicate), `flat_map` (pair projection), `sum` (value projection),
+and `reduce(100)` (memo `acc + pair[1]`, indexed via `SeqIndex`) under real
+`rustc`, diffed against the Python/Go reference semantics.
+
 ## 0.29.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
 
 Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Rust
