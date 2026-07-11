@@ -2138,6 +2138,128 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.174 — `ClassDeclaration` (`class C [extends S] { … }`): the class *statement* arc (design)
+
+CLOC12.173 shipped the class **expression** (a value: `x = class {}`, `f(class C {})`).
+Its closing note flagged the remaining half explicitly: *"The bridge for a class
+**declaration** (a `ProgramItem`, not an `Expression`) is a separate future arc…
+The two share the member sub-AST once PR1 lands."* That arc is CLOC12.174, and the
+member sub-AST (`ClassMember` / `MethodDefinition` / `MethodKind`) now exists, so
+this is a **small, additive** arc — no new member modelling, only a new
+*declaration-position* node that reuses it.
+
+A class declaration is the **statement** form: `class C { … }` written where a
+statement is expected, binding the name `C` in the enclosing scope. It mirrors
+`FunctionDeclaration` (the `function f(){}` statement) exactly as `ClassExpression`
+mirrors `FunctionExpression`.
+
+### Model (ESTree-aligned)
+
+```rust
+// javascript-ast/src/declaration.rs — a new variant of the `Declaration` enum
+pub enum Declaration {
+    VariableDeclaration(VariableDeclaration),
+    FunctionDeclaration(FunctionDeclaration),
+    ClassDeclaration(ClassDeclaration),          // NEW
+}
+
+pub struct ClassDeclaration {
+    pub cv: Option<CvId>,
+    pub id: Identifier,                          // REQUIRED — a declaration always binds a name
+    pub super_class: Option<Box<Expression>>,    // `extends <expr>` heritage (reused shape)
+    pub body: Vec<ClassMember>,                  // reuse ClassMember from expression.rs
+}
+```
+
+**The one structural difference from `ClassExpression`: `id` is `Identifier`, not
+`Option<Identifier>`.** A class *expression* may be anonymous (`x = class {}`); a
+class *declaration* must name its binding (`class {}` in statement position is a
+syntax error), exactly as `FunctionDeclaration.id` is required where
+`FunctionExpression.id` is optional. `super_class` and `body` are byte-identical
+in shape to `ClassExpression` and reuse the same `ClassMember` / `MethodDefinition`
+/ `MethodKind` types (imported from `expression.rs`) — no new member modelling.
+
+### Emit (`closure-emitter`)
+
+`class <id>[ extends S]{members}` — the same body shape as `emit_class`, with three
+deliberate differences from a class *expression*, all mirroring the
+declaration/expression split already established for functions:
+
+1. **No precedence wrap and no statement-start parenthesisation.** A class
+   expression is tagged `PREC_UNARY` and `emit_expression_statement` wraps a
+   leading one (`(class{});`) because a statement-position `class` would otherwise
+   parse as a *declaration* — which is precisely what a `ClassDeclaration` **is**.
+   So the declaration form is emitted bare, with no `expr_prec` entry and no
+   wrap-set membership.
+2. **`id` always prints** (it is non-optional), with a `required_ws()` after
+   `class` exactly as `emit_function_declaration` does after `function`.
+3. **No trailing `;`.** `emit_function_declaration` appends a normalising `;`
+   after its `}` (gap-030 part B). A **class** declaration does *not* — upstream
+   Closure terminates a `ClassDeclaration` with its `}` alone (a class body is
+   self-delimiting and never subject to ASI hazards the way a bare
+   `function(){}` value is). PR3's conformance port validates this against
+   `CodePrinterTest`.
+
+Implementation reuses `emit_class_member` unchanged. The shared
+`[ extends S]{members}` tail is factored into a small helper used by **both**
+`emit_class` (after its optional-id head) and the new `emit_class_declaration`
+(after its required-id head), so the heritage-precedence + member-loop logic lives
+in one place.
+
+### Pass arms — the atomic-PR1 blast radius
+
+Adding a variant to the `Declaration` enum makes **every exhaustive `match` on
+`Declaration` fail to compile** until an arm is added — that is the point of the
+atomic PR1 (enum + emit + all arms in ONE commit, workspace green). The
+`Declaration` match sites are: `closure-emitter`, `closure-pass-constant-fold`,
+`closure-pass-dce`, `closure-pass-fold-control-flow`, `closure-pass-inline`,
+`closure-pass-inline-variables`, `closure-pass-rename`, `closure-pass-rename-globals`,
+`closure-pass-rename-properties`, `closure-pass-treeshake`,
+`closure-pass-remove-unused-vars`, `closure-scope-analyzer`, plus `bridge.rs` /
+`run.rs` (touched in PR2, not PR1). Each new arm **mirrors that crate's existing
+`Expression::ClassExpression` handling** — which already knows how to walk
+`super_class` and each method `value` (a nested function scope) — since 173 PR1
+added exactly that machinery. So the arm is "recurse into the heritage operand and
+each member body," reusing the same helper the ClassExpression arm calls. Rebuild
+/ transform arms delegate to an `#[inline(never)]` helper (frame-size DoS lesson,
+per 173). The declared *name* `C` is a binding a variable-renaming pass may rename
+(like `FunctionDeclaration.id`), unlike a method key (a property name) — the arm
+follows the `FunctionDeclaration` arm's treatment of `.id`, not the method-key
+treatment. Non-exhaustive matches with a catch-all (`treeshake` /
+`remove-unused-vars` may already absorb it) need no arm; the per-crate CI
+build-tool is the source of truth for which do (a compile error there — NOT a
+green `grep -c "test result: FAILED"`, the flawed check called out in 173 — is
+what proves the arm was needed).
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all pass arms, ONE commit).** `javascript-ast`
+  (MINOR) adds `ClassDeclaration` + the `Declaration::ClassDeclaration` variant;
+  `closure-emitter` (MINOR) adds `emit_class_declaration` + the shared class-tail
+  helper + the `Declaration::ClassDeclaration` emit arm; every pass crate that
+  matches `Declaration` exhaustively gets its mirror-of-FunctionDeclaration arm.
+  Hand-constructed emitter unit tests (named class, `extends`, one method,
+  `static`/`get`/`set`, computed key, `constructor` — asserting **no** trailing
+  `;` and **no** wrapping paren).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  convert the grammar's `class_declaration` node → `Declaration::ClassDeclaration`,
+  reusing the `convert_class_heritage` / `convert_class_element` /
+  `convert_method_definition` converters that 173 PR2 already built for the
+  expression form (only the top-level node kind and the required-`id` differ).
+  Dump the parse-tree shape first. Add a `closurec` e2e diff fixture
+  (`tests/diff/simple-class-decl/`). Same decline-to-WHITESPACE_ONLY safety for
+  the member shapes the grammar can't yet cleanly bridge (generator / async /
+  computed / multi-member), never a miscompile.
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_class_declaration_test.rs` mirroring upstream
+  `CodePrinterTest`'s class-**declaration** printing cases (statement position, no
+  wrap, no trailing `;`, heritage, members) — hand-constructed AST, so it also
+  covers the member shapes the grammar cannot yet parse.
+
+Serialised after 173 (shares the member sub-AST it introduced). Fields
+(`PropertyDefinition`) and static blocks remain deferred to their own additive
+slices, identical to the ClassExpression deferral.
+
 ## CLOC12.173 — `ClassExpression` (`class [id] [extends S] { … }`): the class arc (design)
 
 `ClassExpression` is the next `Expression` node, and unlike every arc since
