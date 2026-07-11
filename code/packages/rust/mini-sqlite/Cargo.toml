@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-mini-sqlite"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "Mini SQLite facade for Rust — Level 1 full pipeline (parser → planner → optimizer → codegen → VM)"
+description = "Mini SQLite facade for Rust — Level 1 full pipeline (parser → planner → optimizer → codegen → VM), over in-memory or real .sqlite-file backends"
 
 [dependencies]
 coding-adventures-sql-backend = { path = "../sql-backend" }
@@ -12,6 +12,10 @@ coding-adventures-sql-codegen = { path = "../sql-codegen" }
 coding-adventures-sql-vm = { path = "../sql-vm" }
 coding-adventures-sql-lexer = { path = "../sql-lexer" }
 lexer = { path = "../lexer" }
+# The file-backed storage engine — lets `connect("<path>.sqlite")` run the full
+# pipeline over a real database file. Built on the zero-dep `sqlite-file` reader,
+# so no third-party SQLite is linked at runtime.
+coding-adventures-storage-sqlite = { path = "../storage-sqlite" }
 
 [dev-dependencies]
 serde_json = "1"
