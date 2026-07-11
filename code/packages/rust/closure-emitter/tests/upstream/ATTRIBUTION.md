@@ -236,6 +236,27 @@ under the Apache License, Version 2.0:
       building the AST directly lets the port cover the generator / async /
       computed-key / multi-member shapes the grammar cannot yet parse.
 
+- `code_printer_class_field_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the class-**field** `[static ]key[=value];` printing cases — a
+      `PropertyDefinition` member, the non-method class member)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_test.rs` /
+      `code_printer_class_declaration_test.rs`; isolates `emit_class_field` + the
+      shared `emit_class_tail` member loop's `Field` arm that landed with
+      `ClassMember::Field` (CLOC12.175 PR1). 14 active `#[test]`s and **0
+      `#[ignore]`** — the emitter conforms to every covered shape: an initialized
+      field (`x=1;`, `x=y;`); a **bare** field (`y;`, with no stray `=`); the
+      `static` prefix (`static z=2;`, `static z;`); computed / literal keys
+      (`[k]=v;`, `static [k]=v;`, `0=1;`, a non-identifier string key stays quoted
+      `"a-b"=1;`); the initializer emitted at `PREC_ASSIGNMENT` so a bare comma
+      *sequence* wraps (`x=(a,b);`); and fields interleaving with methods and each
+      other (`x=1;m(){}`, `m(){}x=1;`, `x=1;y;static z=2;`). Inputs are
+      hand-constructed AST; the bridge conversion of a field (CLOC12.175 PR2) is
+      exercised separately in `javascript-parser`, and building the AST directly
+      lets the port cover computed / numeric / string-key and sequence-initializer
+      shapes the grammar/bridge cannot yet parse.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

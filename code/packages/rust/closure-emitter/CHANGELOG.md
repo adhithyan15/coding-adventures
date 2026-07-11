@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.39.1] - 2026-07-11
+
+### Added — CLOC12.175 PR3: CodePrinter class-field conformance port
+
+New `tests/upstream/code_printer_class_field_test.rs` (registered as the
+`upstream_code_printer_class_field` `[[test]]`), the third class port — mirroring
+upstream Closure `CodePrinterTest`'s class-**field** printing cases. 14 active
+`#[test]`s, 0 `#[ignore]`, driving `emit_class_field` + the shared
+`emit_class_tail` `Field` arm from HAND-BUILT AST (so it also covers computed /
+numeric / string keys and a sequence initializer the grammar/bridge cannot yet
+parse): initialized field (`x=1;`), bare field (`y;`, no stray `=`), `static`
+prefix (`static z=2;` / `static z;`), computed / literal keys (`[k]=v;` /
+`static [k]=v;` / `0=1;` / quoted `"a-b"=1;`), the `PREC_ASSIGNMENT` sequence wrap
+(`x=(a,b);`), and field/method interleave (`x=1;m(){}` / `m(){}x=1;` /
+`x=1;y;static z=2;`). PATCH — test-only, no emitter change.
+
 ## [0.39.0] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: emit class fields
