@@ -44,7 +44,10 @@ use coding_adventures_sql_backend::{
     Backend, BackendError, ColumnDef, Cursor, IndexDef, ListRowIterator, Row, RowIterator,
     SqlValue, TransactionHandle,
 };
-use sqlite_file::{read_schema, read_table, SchemaEntry, SqlValue as FileValue, SqliteError};
+use sqlite_file::{
+    read_schema, read_table, read_without_rowid_table, SchemaEntry, SqlValue as FileValue,
+    SqliteError,
+};
 
 /// A read-only [`Backend`] over the bytes of a SQLite database file.
 ///
@@ -133,6 +136,60 @@ fn file_value_to_backend(value: FileValue) -> SqlValue {
         FileValue::Real(f) => SqlValue::Float(f),
         FileValue::Text(s) => SqlValue::Text(s),
         FileValue::Blob(b) => SqlValue::Blob(b),
+    }
+}
+
+/// Assemble one query-engine [`Row`] from a record's raw column values.
+///
+/// `rowid` is `Some` for an ordinary table (so an `INTEGER PRIMARY KEY` column,
+/// stored as `NULL` in the record, can be materialized from it) and `None` for a
+/// `WITHOUT ROWID` table (which stores every column directly and has no rowid).
+/// REAL affinity is applied either way: an integer stored in a REAL column is
+/// presented back as a float, matching SQLite's integer-storage optimization.
+fn build_row(values: &[FileValue], columns: &[ParsedColumn], rowid: Option<i64>) -> Row {
+    let mut row: Row = BTreeMap::new();
+    for (i, col) in columns.iter().enumerate() {
+        let decoded = values
+            .get(i)
+            .cloned()
+            .map(file_value_to_backend)
+            .unwrap_or(SqlValue::Null);
+        // Materialize a rowid-alias column from the rowid, but only for a rowid
+        // table (`rowid.is_some()`); a WITHOUT ROWID table stores the value.
+        let value = match (col.is_rowid_alias, &decoded, rowid) {
+            (true, SqlValue::Null, Some(r)) => SqlValue::Int(r),
+            _ => decoded,
+        };
+        let value = match value {
+            SqlValue::Int(n) if col.real_affinity => SqlValue::Float(n as f64),
+            other => other,
+        };
+        row.insert(col.name.clone(), value);
+    }
+    row
+}
+
+/// Does this `CREATE TABLE` declare a `WITHOUT ROWID` table? Such a table stores
+/// its rows in an index b-tree keyed by the primary key — read via
+/// [`read_without_rowid_table`], not [`read_table`].
+///
+/// The `WITHOUT ROWID` clause follows the closing paren of the column list, so we
+/// test only the text *after* the outermost parentheses (case-insensitively, with
+/// whitespace normalized). Checking the whole SQL would risk a false positive
+/// from a column name or string literal that happened to contain the words.
+fn is_without_rowid(create_sql: &str) -> bool {
+    // The column list's closing paren is the last `)` in a well-formed CREATE
+    // TABLE (any inner `PRIMARY KEY(...)` closes before it).
+    match create_sql.rfind(')') {
+        Some(idx) => {
+            let tail: String = create_sql[idx + 1..]
+                .to_ascii_uppercase()
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ");
+            tail.contains("WITHOUT ROWID")
+        }
+        None => false,
     }
 }
 
@@ -434,39 +491,33 @@ impl Backend for SqliteFileBackend {
             .ok_or_else(|| BackendError::TableNotFound {
                 table: table.to_string(),
             })?;
-        let columns = parse_create_columns(entry.sql.as_deref().unwrap_or(""));
+        let create_sql = entry.sql.as_deref().unwrap_or("");
+        let columns = parse_create_columns(create_sql);
 
-        // Decode every row of the table from the on-disk b-tree.
-        let raw = read_table(&self.data, &entry.name).map_err(|e| BackendError::Internal {
-            message: e.to_string(),
-        })?;
-
-        let mut rows: Vec<Row> = Vec::with_capacity(raw.len());
-        for (rowid, values) in raw {
-            let mut row: Row = BTreeMap::new();
-            for (i, col) in columns.iter().enumerate() {
-                let decoded = values
-                    .get(i)
-                    .cloned()
-                    .map(file_value_to_backend)
-                    .unwrap_or(SqlValue::Null);
-                // Materialize an INTEGER PRIMARY KEY column from the rowid — the
-                // record stores NULL for it.
-                let value = if col.is_rowid_alias && matches!(decoded, SqlValue::Null) {
-                    SqlValue::Int(rowid)
-                } else {
-                    decoded
-                };
-                // Apply REAL affinity: an integer stored in a REAL column is read
-                // back as a float (SQLite's integer-storage space optimization).
-                let value = match value {
-                    SqlValue::Int(i) if col.real_affinity => SqlValue::Float(i as f64),
-                    other => other,
-                };
-                row.insert(col.name.clone(), value);
-            }
-            rows.push(row);
-        }
+        let rows: Vec<Row> = if is_without_rowid(create_sql) {
+            // A `WITHOUT ROWID` table lives in an index b-tree keyed by its
+            // primary key. It has no rowid, so we read it through `walk_index`
+            // (via `read_without_rowid_table`) and build each row with `None` for
+            // the rowid — the record already stores every column, including the
+            // primary key, directly.
+            let raw = read_without_rowid_table(&self.data, &entry.name).map_err(|e| {
+                BackendError::Internal {
+                    message: e.to_string(),
+                }
+            })?;
+            raw.into_iter()
+                .map(|values| build_row(&values, &columns, None))
+                .collect()
+        } else {
+            // Ordinary rowid table: walk the table b-tree, and materialize an
+            // INTEGER PRIMARY KEY column from the rowid (the record stores NULL).
+            let raw = read_table(&self.data, &entry.name).map_err(|e| BackendError::Internal {
+                message: e.to_string(),
+            })?;
+            raw.into_iter()
+                .map(|(rowid, values)| build_row(&values, &columns, Some(rowid)))
+                .collect()
+        };
         Ok(Box::new(ListRowIterator::new(rows)))
     }
 

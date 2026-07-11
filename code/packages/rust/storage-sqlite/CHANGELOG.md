@@ -1,5 +1,24 @@
 # Changelog — storage-sqlite
 
+## 0.4.0 — `WITHOUT ROWID` tables read end-to-end
+
+`SqliteFileBackend::scan` now reads `WITHOUT ROWID` tables. These store their
+rows in an *index* b-tree (keyed by the primary key, no rowid), which the
+table-only read path rejected as `unexpected b-tree page type`.
+
+- `scan` detects the `WITHOUT ROWID` clause (checked only in the text after the
+  column-list parens, so a column named like the clause can't false-positive)
+  and reads such tables via `sqlite_file::read_without_rowid_table` (built on
+  `walk_index`) instead of `read_table`.
+- The per-row assembly is factored into a shared `build_row` helper. A rowid
+  table still materializes its `INTEGER PRIMARY KEY` column from the rowid; a
+  `WITHOUT ROWID` table passes `None` for the rowid because the record already
+  stores every column, including the primary key, directly. REAL affinity is
+  applied on both paths.
+- Verified end-to-end against real bundled SQLite (in mini-sqlite's
+  `file_backed` tests): scalar / TEXT / composite primary keys, plus an 800-row
+  table whose index b-tree spans interior pages.
+
 ## 0.3.0 — `list_indexes` reports the file's real indexes
 
 `Backend::list_indexes` was a stub returning `Vec::new()`; it now reports the
