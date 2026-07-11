@@ -581,7 +581,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const NUM_MISS = Symbol("num-miss");
   const NUMERIC_METHODS = new Set([
     "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?", "positive?",
-    "negative?", "succ", "next", "pred", "floor", "ceil", "round", "gcd",
+    "negative?", "succ", "next", "pred", "floor", "ceil", "round",
+    "divmod", "fdiv", "clamp", "between?", "gcd",
     "pow", "**", "digits", "times", "upto", "downto", "step",
   ]);
   // Lenient numeric coercion: a non-number argument becomes 0 rather than
@@ -612,7 +613,50 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       case "pred": return recv - 1;
       case "floor": return Math.floor(recv);
       case "ceil": return Math.ceil(recv);
-      case "round": return rubyRound(recv);
+      case "round": {
+        // Ruby `round` / `round(ndigits)` — half AWAY from zero (via `rubyRound`,
+        // NOT `Math.round` which is half-toward-+∞).  With no argument (or an
+        // integer receiver and `ndigits >= 0`) the result is an integer; a
+        // positive `ndigits` rounds to that many decimals; `ndigits <= 0` rounds
+        // to a power of ten.  JS numbers are f64 — integers lose exactness past
+        // 2^53, so a hostile-magnitude `ndigits` degrades naturally (the `factor`
+        // saturates to `Infinity` and `recv / Infinity` is `0`), with no bignum
+        // and no allocation.  A non-finite receiver returns unchanged.
+        const nd = typeof args[0] === "number" ? Math.trunc(args[0]) : 0;
+        if (!Number.isFinite(recv)) { return recv; }
+        if (Number.isInteger(recv) && nd >= 0) { return recv; }
+        const factor = Math.pow(10, nd);
+        return rubyRound(recv * factor) / factor;
+      }
+      case "divmod": {
+        // Ruby `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+        // the divisor-signed remainder.  Division by zero raises a typed
+        // `ZeroDivisionError` (so a translated `rescue` catches it).
+        const d = numArg(args[0]);
+        if (d === 0) { raiseError("ZeroDivisionError", "divided by 0"); }
+        const q = Math.floor(recv / d);
+        const r = recv - q * d;
+        return [q, r];
+      }
+      case "fdiv": {
+        // Ruby `fdiv(n)` — floating-point division that NEVER raises: dividing by
+        // zero yields `Infinity`/`-Infinity`/`NaN` (JS `/` already produces
+        // these), honouring the never-raise floor.
+        return recv / numArg(args[0]);
+      }
+      case "clamp": {
+        // Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
+        // recv > max, else recv.  (The Range form is a follow-up.)
+        const lo = numArg(args[0]);
+        const hi = numArg(args[1]);
+        if (recv < lo) { return lo; }
+        if (recv > hi) { return hi; }
+        return recv;
+      }
+      case "between?": {
+        // Ruby `Comparable#between?(min, max)`: `min <= recv <= max`.
+        return recv >= numArg(args[0]) && recv <= numArg(args[1]);
+      }
       case "gcd": return gcdInt(recv, numArg(args[0]));
       case "pow": case "**": return Math.pow(recv, numArg(args[0]));
       case "digits": {
