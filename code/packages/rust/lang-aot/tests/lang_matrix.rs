@@ -161,7 +161,7 @@ const PROGRAMS: &[Prog] = &[
     // uniform `ref<any>` value) — run for EVERY language, so Twig's first genuinely
     // dynamic value lowers to the exact heap-object family McCarthy Lisp already runs
     // on all five code-gen backends (WASM `anyref`+`$LispyPair`, JVM `Object[]`, CLR
-    // `object[]`, LLVM tagged-i64 + `__twig_lispy_*` runtime, native).  The entry
+    // `object[]`, LLVM tagged-i64 + `__dyn_*` runtime, native).  The entry
     // result (a boxed `42`) is unboxed to the process exit code.  The generic Vm/Jit
     // columns run `vm-core` typed IIR, which has no `ref<any>`/`alloc`, so dynamic
     // Twig is proven on the code-gen columns (which cross-check each other + the

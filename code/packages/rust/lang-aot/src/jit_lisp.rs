@@ -3,7 +3,7 @@
 //! The eighth and final backend. `jit-core`'s [`GenericCirJit`] is a *universal
 //! bytecode JIT*: any typed-IIR language plugs in by registering its builtins as
 //! Rust callbacks. Unlike the AOT/LLVM tagged-word backends — which lower a
-//! `call_builtin "lispy_*"` to a native `call __twig_lispy_*` into the C runtime
+//! `call_builtin "lispy_*"` to a native `call __dyn_*` into the C runtime
 //! (`lispy_runtime.c`) — the JIT dispatches the *same* `lispy_*` names to Rust
 //! closures backed by the **shared [`lispy_runtime`] crate** (the C runtime's Rust
 //! twin: an identical `u64` tagged-word model). So the JIT inherits the whole lisp
@@ -105,7 +105,7 @@ fn b_unbox_int(a: &[Value]) -> Value {
 }
 /// `lispy_to_exit_code` — the program-exit coercion for a **polymorphic** result
 /// (a `LAMBDA` whose return type is `any`): dispatch on the runtime tag, exactly as
-/// `__twig_lispy_to_exit_code` does in `lispy_runtime.c`. Integer → its raw value;
+/// `__dyn_to_exit_code` does in `lispy_runtime.c`. Integer → its raw value;
 /// `#t`/`#f`/nil → `1`/`0`/`0`; a symbol or pair → its tagged word verbatim. Built
 /// from `LispyValue`'s existing predicates — not duplicated.
 fn b_to_exit_code(a: &[Value]) -> Value {

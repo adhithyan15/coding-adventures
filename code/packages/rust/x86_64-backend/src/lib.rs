@@ -300,7 +300,7 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
     // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
-    // dispatch to `__twig_lispy_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // dispatch to `__dyn_*` in `twig-aot/runtime/lispy_runtime.c`,
     // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
     // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
     // logic — the generic `call_builtin` path marshals args + emits the CALL.
@@ -308,7 +308,7 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
     BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
-    // program-exit boundary.  `int64_t __twig_lispy_unbox_int(uint64_t)`.
+    // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
     BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
@@ -318,7 +318,7 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
     // LANG77 W13b — the universal program-exit coercion for a polymorphic
     // (lambda / `any`) result: dispatch on the runtime tag.
-    // `int64_t __twig_lispy_to_exit_code(uint64_t)`.
+    // `int64_t __dyn_to_exit_code(uint64_t)`.
     BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
@@ -1814,8 +1814,8 @@ mod tests {
                 .expect("lispy runtime calls must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(symbols.contains(&"__twig_lispy_cons"), "missing cons call: {symbols:?}");
-        assert!(symbols.contains(&"__twig_lispy_car"), "missing car call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
     }
 
     #[test]
@@ -1846,7 +1846,7 @@ mod tests {
                 .expect("boxed cons/car/unbox must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        for want in ["__twig_lispy_cons", "__twig_lispy_car", "__twig_lispy_unbox_int"] {
+        for want in ["__dyn_cons", "__dyn_car", "__dyn_unbox_int"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
@@ -1868,8 +1868,8 @@ mod tests {
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         for want in [
-            "__twig_lispy_pair_p", "__twig_lispy_not",
-            "__twig_lispy_truthy", "__twig_lispy_equal",
+            "__dyn_pair_p", "__dyn_not",
+            "__dyn_truthy", "__dyn_equal",
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
@@ -1890,8 +1890,8 @@ mod tests {
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
         assert!(
-            symbols.contains(&"__twig_lispy_to_exit_code"),
-            "missing __twig_lispy_to_exit_code: {symbols:?}",
+            symbols.contains(&"__dyn_to_exit_code"),
+            "missing __dyn_to_exit_code: {symbols:?}",
         );
     }
 

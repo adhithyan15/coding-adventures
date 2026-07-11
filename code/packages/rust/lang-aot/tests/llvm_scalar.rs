@@ -6,7 +6,7 @@
 //! emits host-target LLVM IR, which `clang -x ir` compiles to a native executable
 //! whose process **exit code** carries the McCarthy result. `clang` is already on
 //! the box, so no extra toolchain is needed (skipped if `clang` is absent).
-//! The cons/predicate/symbol/lambda lowering (`call __twig_lispy_*`) is W12b+.
+//! The cons/predicate/symbol/lambda lowering (`call __dyn_*`) is W12b+.
 
 use lang_aot::{compile_source_to_llvm_with_target, Language};
 

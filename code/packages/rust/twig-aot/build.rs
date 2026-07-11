@@ -91,7 +91,7 @@ fn main() {
     // `cc::Build::compile` emits `cargo:rustc-link-lib=static=...`, the
     // archive is also linked into `twig-aot`'s own test binary, so the
     // golden test in `src/lispy_runtime_golden.rs` can call the
-    // `__twig_lispy_*` functions directly on the host.
+    // `__dyn_*` functions directly on the host.
     if host_key.is_some() {
         cc::Build::new()
             .file("runtime/twig_runtime.c")

@@ -10,7 +10,7 @@
 //!      misread by the body. `lisp_arg_regs` now includes user-`call` arguments.
 //!   2. **Polymorphic result coercion** — the program exit sees a `call` typed
 //!      `any`; its runtime tag (int/bool/symbol/pair) is unknown at compile time,
-//!      so it is coerced by `__twig_lispy_to_exit_code`, a RUNTIME tag switch
+//!      so it is coerced by `__dyn_to_exit_code`, a RUNTIME tag switch
 //!      (int → `>> 3`, `#t`/`#f`/nil → `1`/`0`/`0`, symbol/pair → verbatim).
 //!
 //! **Verified by RUNNING**: emit host IR, link `lispy_runtime.c`, run with `clang`.

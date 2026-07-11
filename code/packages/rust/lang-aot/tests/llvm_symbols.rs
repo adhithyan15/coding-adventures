@@ -2,7 +2,7 @@
 //!
 //! A McCarthy symbol is interned (by the shared `intern_symbols` pass) to a stable
 //! tagged 64-bit immediate — the LLVM backend carries it as an `i64` tagged word
-//! (`llvm_type_for("symbol") = i64`). `EQ` on symbols is `__twig_lispy_equal` over
+//! (`llvm_type_for("symbol") = i64`). `EQ` on symbols is `__dyn_equal` over
 //! the words. A *symbol* program result is returned verbatim (its tagged word) —
 //! the shared `lower_lisp_repr` must NOT `unbox_int` it (`>> 3` would corrupt the
 //! id+tag), the same type-directed exit coercion that handles bools (W12b-2).
