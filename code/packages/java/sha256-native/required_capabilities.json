@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "java/sha256-native",
+  "capabilities": ["ffi:call"],
+  "justification": "ffi:call — loads the sha256_native_jni cdylib via System.loadLibrary and calls its JNI methods to compute SHA-256 in Rust. No network, filesystem, or process access."
+}
