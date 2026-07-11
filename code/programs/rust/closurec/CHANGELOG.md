@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.21] - 2026-07-11
+
+### Added — CLOC12.182: private generator methods end-to-end
+
+Picks up javascript-parser 0.46.0, whose bridge now sets the `generator` flag on
+a `*#g(){}` private method's `FunctionExpression` value instead of declining. A
+private generator method — `class C { *#g(){} }`, optionally `static` — now
+survives the full closurec pipeline instead of dropping to WHITESPACE_ONLY.
+New e2e diff fixture `tests/diff/simple-private-generator-method/`:
+`class C { *#g(){ return 1 + 2 } }` → `class C{*#g(){return 3}}` at SIMPLE.
+
+The fixture proves two things at once: the `*#g` head round-trips (the emitter
+reprinted the `*` before the private-name key from the propagated `generator`
+flag), and the SIMPLE pipeline descends INTO the private generator's body
+(`return 1 + 2` folds to `return 3`). Before this bridge change the private
+generator declined, dropping the file to WHITESPACE_ONLY
+(`class C{*#g(){return 1+2}};`).
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.20] - 2026-07-11
 
 ### Added — CLOC12.181: generator methods end-to-end

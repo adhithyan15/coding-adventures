@@ -1530,11 +1530,13 @@ fn convert_method_definition(
 /// | [ "static" ] STAR   PRIVATE_NAME ...          // private generator
 /// ```
 ///
-/// This slice models the **plain** method and the **get / set accessor** forms
-/// (each optionally `static`) — `#m(){}`, `get #x(){}`, `set #x(v){}`. The
-/// private *generator* (`*#m(){}`) and *async* forms carry evaluation semantics
-/// not yet represented, so — like a public generator method — they DECLINE via
-/// `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback), never a mis-emit.
+/// This slice models the **plain** method, the **get / set accessor**, and the
+/// **generator** (`*#m(){}`) forms (each optionally `static`) — `#m(){}`,
+/// `get #x(){}`, `set #x(v){}`, `*#g(){}`. The private *generator* bridges
+/// exactly like a public one (CLOC12.182): `saw_star` sets the value's
+/// `generator` flag and the emitter reprints the `*`. Only the private *async*
+/// form (`async #m(){}`) still DECLINES via `UnsupportedSyntax` (safe
+/// WHITESPACE_ONLY fallback), never a mis-emit — `await` is not yet modelled.
 ///
 /// Two shape differences from a public `method_definition`:
 /// - the key is a bare `PRIVATE_NAME` token (`#m`), lowered by
@@ -1549,14 +1551,16 @@ fn convert_method_definition(
 /// shared [`convert_formal_parameters`] / [`convert_formal_parameter`] /
 /// [`convert_function_body`], mirroring [`convert_method_definition`].
 fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
-    // Read `static` and the `get` / `set` accessor keyword (inside this node);
-    // decline the generator / async forms this slice does not model. All of
-    // `static` / `get` / `set` / `*` / `async` precede the PRIVATE_NAME as direct
-    // token children (params live under `formal_parameter(s)` *nodes*, so a
-    // parameter literally named `get` cannot be confused for the modifier).
+    // Read `static`, the `get` / `set` accessor keyword, and the `*` generator
+    // marker (inside this node); decline only the `async` form this slice does
+    // not model. All of `static` / `get` / `set` / `*` / `async` precede the
+    // PRIVATE_NAME as direct token children (params live under
+    // `formal_parameter(s)` *nodes*, so a parameter literally named `get` cannot
+    // be confused for the modifier).
     let mut is_static = false;
     let mut saw_get = false;
     let mut saw_set = false;
+    let mut saw_star = false;
     let mut decline = false;
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -1564,7 +1568,8 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
                 "static" => is_static = true,
                 "get" => saw_get = true,
                 "set" => saw_set = true,
-                "*" | "async" => decline = true,
+                "*" => saw_star = true,
+                "async" => decline = true,
                 _ => {}
             }
         }
@@ -1612,7 +1617,8 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
             id: None,
             params,
             body,
-            generator: false,
+            // `*#g(){}` → a private generator method; the emitter reprints the `*`.
+            generator: saw_star,
             is_async: false,
         },
         computed: false,
@@ -4150,12 +4156,35 @@ mod tests {
     }
 
     #[test]
-    fn class_private_generator_still_declines() {
-        // `*#m(){}` — a private *generator* carries evaluation semantics this
-        // slice does not model; it still DECLINES (safe WHITESPACE_ONLY), never a
-        // mis-emit. (A later slice.)
+    fn class_private_generator() {
+        // `*#m(){}` — a private *generator* bridges (CLOC12.182): a plain
+        // `MethodKind::Method` with a private-name key whose value's `generator`
+        // flag is set so the emitter reprints the `*`. `yield` in the body is a
+        // modelled `YieldExpression`.
+        let m = method_of("w = class { *#m(){ yield 1 } };");
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(m.value.generator);
+        assert!(!m.value.is_async);
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"));
+    }
+
+    #[test]
+    fn class_static_private_generator() {
+        // `static *#m(){}` — the `static` and `*` markers both precede the
+        // private key inside the node; the generator flag is still set.
+        let m = method_of("w = class { static *#m(){} };");
+        assert!(m.is_static);
+        assert!(m.value.generator);
+        assert!(matches!(m.kind, MethodKind::Method));
+    }
+
+    #[test]
+    fn class_private_async_method_declines() {
+        // `async #m(){}` — a private *async* method carries `await` semantics not
+        // yet modelled (grammar-blocked); it still DECLINES (safe WHITESPACE_ONLY),
+        // never a mis-emit.
         assert!(matches!(
-            bridge("w = class { *#m(){} };"),
+            bridge("w = class { async #m(){} };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }
