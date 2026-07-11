@@ -1484,6 +1484,8 @@ pub const RUNTIME: &str = r##"mod __sir {
                     // Enumerable breadth (block-taking reshape/fold)
                     | "group_by" | "partition" | "flat_map" | "collect_concat"
                     | "reduce" | "inject" | "sum"
+                    // Enumerable iteration / conversion
+                    | "to_h" | "each_with_index" | "each_with_object"
             ),
             Value::Str(_) => matches!(
                 name,
@@ -2648,6 +2650,67 @@ pub const RUNTIME: &str = r##"mod __sir {
                     }
                     acc
                 }
+                None => unknown_method(&recv, name),
+            },
+            // `Hash#to_h` — WITHOUT a block, a shallow copy of the hash (a fresh
+            // `Map` so mutating it never aliases the receiver's entries).  WITH a
+            // block `{ |k, v| [new_k, new_v] }`, a NEW hash from the `[k, v]`
+            // pairs the block returns: the block is yielded the two args
+            // `(k, v)` (matching `each`), a non-pair result is skipped (the
+            // never-panic floor — Ruby raises TypeError, deferred to the
+            // typed-error cascade), and a later pair with a duplicate key wins
+            // (Ruby's rule, `map_set`).  The block form snapshots the entries
+            // first so a reentrant mutation cannot double-borrow-panic.
+            "to_h" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    let acc = map_lit(vec![]);
+                    for (k, v) in snapshot {
+                        if let Value::Seq(pair) = apply_closure(b, vec![k, v]) {
+                            let items = pair.borrow();
+                            if items.len() == 2 {
+                                let nk = items[0].clone();
+                                let nv = items[1].clone();
+                                drop(items);
+                                map_set(&acc, nk, nv);
+                            }
+                        }
+                    }
+                    acc
+                }
+                None => map_lit(entries_rc.borrow().clone()),
+            },
+            // `each_with_index { |(k, v), i| … }` — yields each `[k, v]` pair
+            // with its 0-based index and returns the receiver.  Unlike the
+            // two-arg `(k, v)` yield of `each`, the element arrives as a single
+            // `[k, v]` pair (the second block param is the index), matching
+            // Ruby's Enumerable convention.
+            "each_with_index" => match &block {
+                Some(b) => {
+                    let snapshot = entries_rc.borrow().clone();
+                    for (i, (k, v)) in snapshot.into_iter().enumerate() {
+                        apply_closure(b, vec![seq_lit(vec![k, v]), Value::Int(i as i64)]);
+                    }
+                    recv
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `each_with_object(memo) { |(k, v), memo| … }` — yields each
+            // `[k, v]` pair with the memo object and returns the (mutated) memo.
+            // Like `each_with_index`, the element is the single `[k, v]` pair
+            // (the second block param is the memo).  With no memo argument the
+            // receiver is returned unchanged.
+            "each_with_object" => match &block {
+                Some(b) => match pos.into_iter().next() {
+                    Some(memo) => {
+                        let snapshot = entries_rc.borrow().clone();
+                        for (k, v) in snapshot {
+                            apply_closure(b, vec![seq_lit(vec![k, v]), memo.clone()]);
+                        }
+                        memo
+                    }
+                    None => recv,
+                },
                 None => unknown_method(&recv, name),
             },
             _ => no_method_error(&recv, name),

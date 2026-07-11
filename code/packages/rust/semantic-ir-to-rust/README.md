@@ -147,9 +147,12 @@ rather than panicking:
     `clear`, `each`/`each_pair`, `each_key`, `each_value`, `map`, `select`,
     `reject`, `transform_values`, `transform_keys`, the Enumerable
     aggregates `find`/`detect`, `any?`/`all?`/`none?`, `count`, `sort_by`,
-    `min_by`/`max_by`, and the Enumerable breadth `group_by`, `partition`,
+    `min_by`/`max_by`, the Enumerable breadth `group_by`, `partition`,
     `flat_map`/`collect_concat`, `reduce`/`inject`, `sum` (all yielding the
-    `[k, v]` pair — `reduce`/`inject` follow Ruby's `(memo, pair)` convention).
+    `[k, v]` pair — `reduce`/`inject` follow Ruby's `(memo, pair)` convention),
+    and `to_h` (block + no-block), `each_with_index`, `each_with_object` (the
+    last two yield the `[k, v]` pair as a single argument alongside the
+    index/memo).
   - **String** (`Str`): `length`, `upcase`, `downcase`, `reverse`, `strip`,
     `include?`, `split`, char-set `tr`/`count`/`delete`/`squeeze` (literal
     sets), and justify `ljust`/`rjust`/`center`/`swapcase` (rune-aware; `center`

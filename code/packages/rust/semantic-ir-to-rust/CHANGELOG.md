@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.31.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
+
+Mirrors the Python reference (PR #8009) and the Go backend (PR #8015) into the
+Rust backend's inline `__sir` runtime (`map_method` gains the arms; the
+`Value::Map` `respond_to?` arm gains the names), rounding out Hash's Enumerable
+iteration surface.
+
+- `to_h` **without** a block → a shallow copy of the hash (a fresh `Map`, so
+  mutating it never aliases the receiver's entries).
+- `to_h { |k, v| [new_k, new_v] }` → a NEW hash from the block-returned `[k, v]`
+  pairs; the block is yielded the two args `(k, v)`; a non-pair result is skipped
+  (never-panic floor — Ruby's TypeError is deferred to the typed-error cascade),
+  and a later pair with a duplicate key wins (Ruby's rule, `map_set`).
+- `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+  0-based index, returns the receiver.
+- `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair with
+  the memo, returns the (mutated) memo; no-memo arg returns the receiver.
+
+Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object` pass
+the element as a single `[k, v]` pair (the second block param is the
+index/memo), matching Ruby's Enumerable convention.  Every block-invoking arm
+SNAPSHOTS the entries into an owned `Vec` before iterating, so no `RefCell`
+borrow is held across `apply_closure` — the never-panic floor holds against a
+reentrant hash mutation.
+
+Exec-proof: `tests/compile_and_run_hash_catalog.rs` gains
+`hash_to_h_and_indexed_iteration_compile_and_run`, running to_h (copy + re-map),
+each_with_index (observed pair+index yield, returns self), and each_with_object
+(observed pair+memo yield, returns memo, and no-memo passthrough) under real
+`rustc`, diffed against the Python/Go reference semantics.
+
 ## 0.30.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `collect_concat` / `reduce` / `inject` / `sum`
 
 Mirrors the Python `sir-runtime-oop` reference (PR #7978) and the Go backend
