@@ -74,6 +74,11 @@ use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
 
+// The exact-rational rung (NUM-2) lives in its own module and is built entirely on the
+// `BigInteger` below. It is re-exported here so consumers write `bignum_core::BigRational`.
+pub mod rational;
+pub use rational::{BigRational, ParseRatioError};
+
 // ===========================================================================
 //  Sign
 // ===========================================================================

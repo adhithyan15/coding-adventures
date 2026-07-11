@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.3 — More scalar functions: SIGN / UNICODE / CHAR / ZEROBLOB / QUOTE
+
+Stream B, corpus-growth phase. Five more common scalar functions now work:
+`SIGN`, `UNICODE`, `CHAR`, `ZEROBLOB`, `QUOTE`. They already parsed as function
+calls but hit the engine's `unknown built-in function` fallthrough; implemented
+in `sql-vm` (0.4.0). Five new differential-oracle cases (`sign`, `unicode`,
+`char_fn`, `zeroblob`, `quote`) diff mini-sqlite's results against real bundled
+SQLite. No mini-sqlite `src/` change.
+
 ## 0.5.2 — Introspect a file's indexes (`list_indexes`)
 
 Stream C: the file backend's `list_indexes` now reports a real `.sqlite` file's
