@@ -527,7 +527,7 @@ fn expr_node_count(expr: &Expression) -> usize {
                         // field `x;` weighs 0) — the same size heuristic applied
                         // to any expression value.
                         ClassMember::Field(fd) => {
-                            fd.value.as_ref().map_or(0, |v| expr_node_count(v))
+                            fd.value.as_ref().map_or(0, expr_node_count)
                         }
                     })
                     .sum::<usize>()
