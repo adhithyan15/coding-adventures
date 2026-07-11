@@ -89,3 +89,81 @@ fn writes_to_a_file_backed_connection_are_rejected_for_now() {
 
     let _ = std::fs::remove_dir_all(path.parent().unwrap());
 }
+
+/// Normalize a mini-sqlite `SqlValue` to a comparable string so results from the
+/// two engines can be diffed regardless of representation nuance.
+fn norm_mini(v: &SqlValue) -> String {
+    match v {
+        SqlValue::Null => "NULL".to_string(),
+        SqlValue::Bool(b) => (*b as i64).to_string(),
+        SqlValue::Int(i) => i.to_string(),
+        SqlValue::Float(f) => format!("{f:?}"),
+        SqlValue::Text(s) => format!("T:{s}"),
+        SqlValue::Blob(b) => format!("B:{b:?}"),
+    }
+}
+
+/// The same normalization for a real-SQLite (`rusqlite`) value.
+fn norm_real(v: &rusqlite::types::Value) -> String {
+    use rusqlite::types::Value;
+    match v {
+        Value::Null => "NULL".to_string(),
+        Value::Integer(i) => i.to_string(),
+        Value::Real(f) => format!("{f:?}"),
+        Value::Text(s) => format!("T:{s}"),
+        Value::Blob(b) => format!("B:{b:?}"),
+    }
+}
+
+/// Run `query` through real SQLite over the same file and return normalized rows.
+fn real_rows(path: &std::path::Path, query: &str, ncols: usize) -> Vec<Vec<String>> {
+    let conn = rusqlite::Connection::open(path).expect("open real sqlite");
+    let mut stmt = conn.prepare(query).expect("prepare");
+    let rows = stmt
+        .query_map([], |row| {
+            let mut out = Vec::with_capacity(ncols);
+            for i in 0..ncols {
+                out.push(norm_real(&row.get::<_, rusqlite::types::Value>(i).unwrap()));
+            }
+            Ok(out)
+        })
+        .expect("query_map")
+        .map(|r| r.unwrap())
+        .collect();
+    rows
+}
+
+/// The schema catalog (`sqlite_master` / `sqlite_schema`) is queryable and its
+/// contents match real SQLite — applications introspect the database this way.
+#[test]
+fn sqlite_master_is_queryable_and_matches_real_sqlite() {
+    let path = build_sqlite_file(&[
+        "CREATE TABLE cards (id INTEGER PRIMARY KEY, due INTEGER, note TEXT)",
+        "CREATE TABLE notes (id INTEGER PRIMARY KEY, flds TEXT)",
+        "CREATE INDEX ix_due ON cards(due)",
+        "INSERT INTO cards VALUES (1, 100, 'a'), (2, 50, 'b')",
+    ]);
+    let conn = connect(path.to_str().unwrap()).expect("open file-backed connection");
+
+    // A representative spread: filtered projection, the `sqlite_schema` alias,
+    // an aggregate, and the full five-column row shape including `rootpage`/`sql`.
+    let checks: &[(&str, usize)] = &[
+        ("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name", 1),
+        ("SELECT name FROM sqlite_schema WHERE type = 'index' ORDER BY name", 1),
+        ("SELECT COUNT(*) FROM sqlite_master", 1),
+        ("SELECT type, name, tbl_name FROM sqlite_master ORDER BY name, type", 3),
+        ("SELECT type, name, tbl_name, rootpage, sql FROM sqlite_master ORDER BY name, type", 5),
+    ];
+    for (q, ncols) in checks {
+        let mut cur = conn.execute(q, &[]).unwrap_or_else(|e| panic!("mini failed on {q}: {e:?}"));
+        let mine: Vec<Vec<String>> = cur
+            .fetchall()
+            .iter()
+            .map(|row| row.iter().map(norm_mini).collect())
+            .collect();
+        let theirs = real_rows(&path, q, *ncols);
+        assert_eq!(mine, theirs, "sqlite_master divergence on: {q}");
+    }
+
+    let _ = std::fs::remove_dir_all(path.parent().unwrap());
+}

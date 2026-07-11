@@ -73,6 +73,54 @@ impl SqliteFileBackend {
             .iter()
             .find(|e| e.object_type == "table" && e.name.eq_ignore_ascii_case(table))
     }
+
+    /// Is `name` the schema catalog table? SQLite exposes the catalog under two
+    /// interchangeable names, `sqlite_master` (historical) and `sqlite_schema`
+    /// (modern), both case-insensitive. It is not returned by [`Backend::tables`]
+    /// (nor by SQLite's `.tables`), but `SELECT … FROM sqlite_master` must work —
+    /// applications, Anki included, introspect the database this way.
+    fn is_schema_table(name: &str) -> bool {
+        name.eq_ignore_ascii_case("sqlite_master") || name.eq_ignore_ascii_case("sqlite_schema")
+    }
+
+    /// The fixed five-column shape of `sqlite_master`, matching real SQLite:
+    /// `CREATE TABLE sqlite_master(type text, name text, tbl_name text, rootpage
+    /// integer, sql text)`.
+    fn schema_column_defs() -> Vec<ColumnDef> {
+        vec![
+            ColumnDef::new("type", "text"),
+            ColumnDef::new("name", "text"),
+            ColumnDef::new("tbl_name", "text"),
+            ColumnDef::new("rootpage", "integer"),
+            ColumnDef::new("sql", "text"),
+        ]
+    }
+
+    /// Project the parsed schema catalog into `sqlite_master` rows — one per
+    /// catalog object (tables, indexes, views, triggers), in the b-tree/rowid
+    /// order SQLite itself stores them. `rootpage` is `0` for objects with no
+    /// b-tree (views and triggers), exactly as SQLite reports it; `sql` is NULL
+    /// only when SQLite stored no text (e.g. auto-created indexes).
+    fn schema_rows(&self) -> Vec<Row> {
+        self.schema
+            .iter()
+            .map(|e| {
+                let mut row: Row = BTreeMap::new();
+                row.insert("type".to_string(), SqlValue::Text(e.object_type.clone()));
+                row.insert("name".to_string(), SqlValue::Text(e.name.clone()));
+                row.insert("tbl_name".to_string(), SqlValue::Text(e.table_name.clone()));
+                row.insert(
+                    "rootpage".to_string(),
+                    SqlValue::Int(e.root_page.unwrap_or(0) as i64),
+                );
+                row.insert(
+                    "sql".to_string(),
+                    e.sql.clone().map_or(SqlValue::Null, SqlValue::Text),
+                );
+                row
+            })
+            .collect()
+    }
 }
 
 /// Map a value decoded by the on-disk reader onto the query engine's value type.
@@ -328,6 +376,9 @@ impl Backend for SqliteFileBackend {
     }
 
     fn columns(&self, table: &str) -> Result<Vec<ColumnDef>, BackendError> {
+        if Self::is_schema_table(table) {
+            return Ok(Self::schema_column_defs());
+        }
         let entry = self
             .table_entry(table)
             .ok_or_else(|| BackendError::TableNotFound {
@@ -342,6 +393,9 @@ impl Backend for SqliteFileBackend {
     }
 
     fn scan(&self, table: &str) -> Result<Box<dyn RowIterator>, BackendError> {
+        if Self::is_schema_table(table) {
+            return Ok(Box::new(ListRowIterator::new(self.schema_rows())));
+        }
         let entry = self
             .table_entry(table)
             .ok_or_else(|| BackendError::TableNotFound {
@@ -537,5 +591,22 @@ mod tests {
             file_value_to_backend(FileValue::Blob(vec![1, 2])),
             SqlValue::Blob(vec![1, 2])
         );
+    }
+
+    #[test]
+    fn recognizes_both_schema_table_names_case_insensitively() {
+        assert!(SqliteFileBackend::is_schema_table("sqlite_master"));
+        assert!(SqliteFileBackend::is_schema_table("SQLite_Master"));
+        assert!(SqliteFileBackend::is_schema_table("sqlite_schema"));
+        assert!(SqliteFileBackend::is_schema_table("SQLITE_SCHEMA"));
+        assert!(!SqliteFileBackend::is_schema_table("cards"));
+        assert!(!SqliteFileBackend::is_schema_table("sqlite_sequence"));
+    }
+
+    #[test]
+    fn schema_catalog_has_the_five_sqlite_master_columns() {
+        let cols = SqliteFileBackend::schema_column_defs();
+        let names: Vec<&str> = cols.iter().map(|c| c.name.as_str()).collect();
+        assert_eq!(names, ["type", "name", "tbl_name", "rootpage", "sql"]);
     }
 }
