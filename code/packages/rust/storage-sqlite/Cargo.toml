@@ -1,0 +1,21 @@
+[package]
+name = "coding-adventures-storage-sqlite"
+version = "0.1.0"
+edition = "2021"
+description = "A file-backed storage engine for the mini-sqlite pipeline: exposes a real .sqlite database as a sql-backend Backend, so the SQL engine can query it unmodified. The Rust sibling of python/storage-sqlite; read-only for now (built on the zero-dep sqlite-file reader)."
+license = "MIT"
+
+[dependencies]
+# The from-scratch, zero-dependency SQLite on-disk reader (Phase E). This crate
+# turns its row output into the `Backend` interface the query engine speaks.
+sqlite-file = { path = "../sqlite-file" }
+# The `Backend` trait and its value/row types that the whole mini-sqlite pipeline
+# (planner → codegen → VM) reads through.
+coding-adventures-sql-backend = { path = "../sql-backend" }
+
+[dev-dependencies]
+# `rusqlite` (bundled C SQLite) is a DEV-dependency ONLY — the cross-check tests
+# build genuine `.sqlite` files and assert this backend reads back exactly what
+# the real library wrote. Nothing at runtime links it (that is the whole point of
+# building on the zero-dep `sqlite-file` reader).
+rusqlite = { version = "0.32", features = ["bundled"] }
