@@ -1015,6 +1015,59 @@ fn classify_decl(decl: &Declaration, cls: &mut Classify, nodes_touched: &mut u32
                 classify_stmt(s, cls, nodes_touched);
             }
         }
+        // A class *declaration* classifies its members exactly like a class
+        // *expression* — the class name is a variable binding, not a property,
+        // so only the member keys + bodies matter.
+        Declaration::ClassDeclaration(cd) => classify_class_members(&cd.super_class, &cd.body, cls),
+    }
+}
+
+/// Classify the property names inside the shared `[extends S] { members }` tail
+/// of a class — reused by the class *expression* arm of [`classify_expr`] and
+/// the class *declaration* arm of [`classify_decl`], which share their body
+/// shape. Each non-computed method key is recorded as a property name (with the
+/// `constructor` keyword pinned as un-renameable), computed-key expressions are
+/// recursed, and each method body is classified. The class's own name is a
+/// variable, not a property, so it never enters here.
+fn classify_class_members(
+    super_class: &Option<Box<Expression>>,
+    body: &[ClassMember],
+    cls: &mut Classify,
+) {
+    if let Some(sup) = super_class {
+        classify_expr(sup, cls);
+    }
+    for member in body {
+        match member {
+            ClassMember::Method(m) => {
+                if !m.computed {
+                    match &m.key {
+                        // `constructor` is a class-semantic keyword-as-key, NOT
+                        // an ordinary property: renaming it would turn the
+                        // constructor into a plain prototype method and the
+                        // class would silently get an implicit ctor — `new C(x)`
+                        // would stop initialising (miscompile). Pin it via the
+                        // same channel as a quoted key so it is never eligible
+                        // for renaming anywhere.
+                        PropertyKey::Identifier(id) if id.name == "constructor" => {
+                            cls.see_quoted("constructor")
+                        }
+                        PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
+                        PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
+                        _ => {}
+                    }
+                } else if let PropertyKey::Expression(e) = &m.key {
+                    // A computed key `[expr]` is a dynamic access — no static
+                    // name recorded, but recurse for nested property accesses
+                    // inside the key expression.
+                    classify_expr(e, cls);
+                }
+                let mut nested = 0u32;
+                for s in &m.value.body.body {
+                    classify_stmt(s, cls, &mut nested);
+                }
+            }
+        }
     }
 }
 
@@ -1275,43 +1328,7 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         //     property names.
         //
         // The `extends` operand is an ordinary expression — recurse into it.
-        Expression::ClassExpression(ce) => {
-            if let Some(sup) = &ce.super_class {
-                classify_expr(sup, cls);
-            }
-            for member in &ce.body {
-                match member {
-                    ClassMember::Method(m) => {
-                        if !m.computed {
-                            match &m.key {
-                                // `constructor` is a class-semantic keyword-as-key,
-                                // NOT an ordinary property: renaming it would turn
-                                // the constructor into a plain prototype method and
-                                // the class would silently get an implicit ctor —
-                                // `new C(x)` would stop initialising (miscompile).
-                                // Pin it via the same channel as a quoted key so it
-                                // is never eligible for renaming anywhere.
-                                PropertyKey::Identifier(id) if id.name == "constructor" => {
-                                    cls.see_quoted("constructor")
-                                }
-                                PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
-                                PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
-                                _ => {}
-                            }
-                        } else if let PropertyKey::Expression(e) = &m.key {
-                            // A computed key `[expr]` is a dynamic access — no
-                            // static name recorded, but recurse for nested
-                            // property accesses inside the key expression.
-                            classify_expr(e, cls);
-                        }
-                        let mut nested = 0u32;
-                        for s in &m.value.body.body {
-                            classify_stmt(s, cls, &mut nested);
-                        }
-                    }
-                }
-            }
-        }
+        Expression::ClassExpression(ce) => classify_class_members(&ce.super_class, &ce.body, cls),
         // Classify property accesses inside an arrow-value's body too —
         // a quoted `o["foo"]` written there must still disable renaming
         // of `foo`. Params are variable names, never property names, so
@@ -1387,6 +1404,53 @@ fn rewrite_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
         Declaration::FunctionDeclaration(fd) => {
             for s in &mut fd.body.body {
                 rewrite_stmt(s, map);
+            }
+        }
+        // A class *declaration* rewrites its members exactly like a class
+        // *expression* (the class name is a variable, untouched by property
+        // renaming) — same shared helper, kept in lockstep with `classify_decl`.
+        Declaration::ClassDeclaration(cd) => {
+            rewrite_class_members(&mut cd.super_class, &mut cd.body, map)
+        }
+    }
+}
+
+/// Rewrite the property keys inside the shared `[extends S] { members }` tail of
+/// a class — the mirror of [`classify_class_members`], reused by both the class
+/// *expression* and *declaration* arms so the classification and the rewrite
+/// cover exactly the same positions. Renames each non-computed method key found
+/// in `map` (never `constructor`), recurses computed-key expressions, and
+/// rewrites each method body.
+fn rewrite_class_members(
+    super_class: &mut Option<Box<Expression>>,
+    body: &mut [ClassMember],
+    map: &HashMap<String, String>,
+) {
+    if let Some(sup) = super_class {
+        rewrite_expr(sup, map);
+    }
+    for member in body {
+        match member {
+            ClassMember::Method(m) => {
+                if m.computed {
+                    if let PropertyKey::Expression(e) = &mut m.key {
+                        rewrite_expr(e, map);
+                    }
+                } else if let PropertyKey::Identifier(id) = &mut m.key {
+                    // Never rewrite a `constructor` key (see classify: it is
+                    // `see_quoted`-pinned, so it is not in `map` anyway — this
+                    // guard is belt-and-braces against a future map that might
+                    // contain it, since renaming it is a construction-semantics
+                    // miscompile).
+                    if id.name != "constructor" {
+                        if let Some(new) = map.get(&id.name) {
+                            id.name = new.clone();
+                        }
+                    }
+                }
+                for s in &mut m.value.body.body {
+                    rewrite_stmt(s, map);
+                }
             }
         }
     }
@@ -1624,36 +1688,7 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // `map`, so it is left alone); each method VALUE body is walked for
         // nested property accesses like a `FunctionExpression` body; and the
         // `extends` operand recurses as an ordinary expression.
-        Expression::ClassExpression(ce) => {
-            if let Some(sup) = &mut ce.super_class {
-                rewrite_expr(sup, map);
-            }
-            for member in &mut ce.body {
-                match member {
-                    ClassMember::Method(m) => {
-                        if m.computed {
-                            if let PropertyKey::Expression(e) = &mut m.key {
-                                rewrite_expr(e, map);
-                            }
-                        } else if let PropertyKey::Identifier(id) = &mut m.key {
-                            // Never rewrite a `constructor` key (see classify:
-                            // it is `see_quoted`-pinned, so it is not in `map`
-                            // anyway — this guard is belt-and-braces against a
-                            // future map that might contain it, since renaming
-                            // it is a construction-semantics miscompile).
-                            if id.name != "constructor" {
-                                if let Some(new) = map.get(&id.name) {
-                                    id.name = new.clone();
-                                }
-                            }
-                        }
-                        for s in &mut m.value.body.body {
-                            rewrite_stmt(s, map);
-                        }
-                    }
-                }
-            }
-        }
+        Expression::ClassExpression(ce) => rewrite_class_members(&mut ce.super_class, &mut ce.body, map),
         // Rewrite property accesses inside an arrow-value's body, the
         // mirror of classifying them above.
         Expression::ArrowFunctionExpression(ae) => match &mut ae.body {

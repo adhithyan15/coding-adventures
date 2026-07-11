@@ -380,6 +380,11 @@ fn decl_is_inert(decl: &Declaration) -> bool {
         // function is called, which (given every preceding item is inert)
         // cannot happen before a later `const` initializes.
         Declaration::FunctionDeclaration(_) => true,
+        // A class declaration is NOT inert: evaluating its `extends` heritage
+        // (`class C extends f() {}`) and creating the class runs code at the
+        // declaration site — unlike a function declaration, which only hoists.
+        // Conservatively (and correctly) treat it as running code.
+        Declaration::ClassDeclaration(_) => false,
         Declaration::VariableDeclaration(vd) => vd.declarations.iter().all(|d| match &d.init {
             None => true,
             Some(init) => is_literal(init),
@@ -457,6 +462,19 @@ fn count_decl_names_decl(
             }
             for s in &fd.body.body {
                 count_decl_names_stmt(s, out, nodes_touched);
+            }
+        }
+        // A class declaration binds its name (`cd.id`), and its method bodies
+        // declare their own locals — count both, mirroring the function
+        // declaration arm (name + body-declared names). Counting more names is
+        // conservative: it only ever prevents an unsafe inline, never causes one.
+        Declaration::ClassDeclaration(cd) => {
+            *out.entry(cd.id.name.clone()).or_insert(0) += 1;
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &m.value.body.body {
+                    count_decl_names_stmt(s, out, nodes_touched);
+                }
             }
         }
     }
@@ -592,6 +610,22 @@ fn count_uses_decl(decl: &Declaration, name: &str, count: &mut usize) {
         Declaration::FunctionDeclaration(fd) => {
             for s in &fd.body.body {
                 count_uses_stmt(s, name, count);
+            }
+        }
+        // A class declaration can USE `name` in its `extends` operand
+        // (`class C extends name {}`) and inside its method bodies. We MUST
+        // count every such use — missing one would let the pass inline/remove
+        // `name` while the class still references it (a miscompile). Mirrors the
+        // `Expression::ClassExpression` arm of `count_uses_expr`.
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &cd.super_class {
+                count_uses_expr(sup, name, count);
+            }
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &m.value.body.body {
+                    count_uses_stmt(s, name, count);
+                }
             }
         }
     }
@@ -929,6 +963,21 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
         Declaration::FunctionDeclaration(fd) => {
             for s in &mut fd.body.body {
                 changed |= propagate_in_stmt(s, cand);
+            }
+        }
+        // Substitute the const into the same positions `count_uses_decl`
+        // inspects — the `extends` operand and each method body — so the count
+        // and the rewrite stay in lockstep. Mirrors the
+        // `Expression::ClassExpression` arm of `propagate_in_expr`.
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &mut cd.super_class {
+                changed |= propagate_in_expr(sup, cand);
+            }
+            for member in &mut cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &mut m.value.body.body {
+                    changed |= propagate_in_stmt(s, cand);
+                }
             }
         }
     }

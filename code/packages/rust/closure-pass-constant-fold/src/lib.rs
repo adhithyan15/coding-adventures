@@ -95,7 +95,7 @@ use coding_adventures_javascript_ast::{
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition,
     FunctionDeclaration, FunctionExpression, Identifier,
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -465,7 +465,27 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
                 is_async: f.is_async,
             })
         }
+        // A class *declaration* (`class C { … }`) folds identically to a class
+        // *expression* inside its heritage + member bodies — only the outer node
+        // type and the required `id` differ. Both route through the shared
+        // `fold_class_body` helper.
+        Declaration::ClassDeclaration(c) => fold_class_declaration(c, st),
     }
+}
+
+/// Fold a class *declaration* (`class C [extends S] { … }`): the `extends`
+/// operand and each method body, via the shared [`fold_class_body`] helper.
+/// Mirrors [`fold_class`] (the expression form); `#[inline(never)]` keeps its
+/// locals off the caller's frame (DoS lesson).
+#[inline(never)]
+fn fold_class_declaration(c: &ClassDeclaration, st: &mut FoldState) -> Declaration {
+    let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
+    Declaration::ClassDeclaration(ClassDeclaration {
+        cv: c.cv.clone(),
+        id: c.id.clone(),
+        super_class,
+        body,
+    })
 }
 
 fn fold_variable_declaration(v: &VariableDeclaration, st: &mut FoldState) -> VariableDeclaration {
@@ -488,48 +508,65 @@ fn fold_variable_declaration(v: &VariableDeclaration, st: &mut FoldState) -> Var
 // Expressions — the actual folding
 // =====================================================================
 
-/// Fold inside a class expression: the `extends` operand (an expression) and
-/// each method's body (statements). Kept `#[inline(never)]` so its locals do
-/// not inflate `fold_expression`'s frame — see the call site.
+/// Fold the shared `[extends S] { members }` tail of a class — the heritage
+/// operand (an expression) and each method's body (statements). Reused by both
+/// the class *expression* ([`fold_class`]) and the class *declaration*
+/// ([`fold_class_declaration`]), since the two node forms share their body
+/// shape and differ only in the outer node type + whether `id` is optional.
+/// Kept `#[inline(never)]` so its locals do not inflate the caller's frame —
+/// see the DoS lesson.
+#[inline(never)]
+fn fold_class_body(
+    super_class: &Option<Box<Expression>>,
+    body: &[ClassMember],
+    st: &mut FoldState,
+) -> (Option<Box<Expression>>, Vec<ClassMember>) {
+    let super_class = super_class
+        .as_ref()
+        .map(|s| Box::new(fold_expression(s, st)));
+    let body = body
+        .iter()
+        .map(|m| match m {
+            ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
+                cv: md.cv.clone(),
+                key: md.key.clone(),
+                kind: md.kind,
+                value: FunctionExpression {
+                    cv: md.value.cv.clone(),
+                    id: md.value.id.clone(),
+                    params: md.value.params.clone(),
+                    body: BlockStatement {
+                        cv: md.value.body.cv.clone(),
+                        body: md
+                            .value
+                            .body
+                            .body
+                            .iter()
+                            .map(|s| fold_statement(s, st))
+                            .collect(),
+                    },
+                    generator: md.value.generator,
+                    is_async: md.value.is_async,
+                },
+                computed: md.computed,
+                is_static: md.is_static,
+            }),
+        })
+        .collect();
+    (super_class, body)
+}
+
+/// Fold inside a class expression: delegates to [`fold_class_body`] for the
+/// heritage + method bodies. Kept `#[inline(never)]` so its locals do not
+/// inflate `fold_expression`'s frame — see the call site.
 #[inline(never)]
 fn fold_class(c: &ClassExpression, st: &mut FoldState) -> Expression {
+    let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
     Expression::ClassExpression(ClassExpression {
         cv: c.cv.clone(),
         id: c.id.clone(),
-        super_class: c
-            .super_class
-            .as_ref()
-            .map(|s| Box::new(fold_expression(s, st))),
-        body: c
-            .body
-            .iter()
-            .map(|m| match m {
-                ClassMember::Method(md) => ClassMember::Method(MethodDefinition {
-                    cv: md.cv.clone(),
-                    key: md.key.clone(),
-                    kind: md.kind,
-                    value: FunctionExpression {
-                        cv: md.value.cv.clone(),
-                        id: md.value.id.clone(),
-                        params: md.value.params.clone(),
-                        body: BlockStatement {
-                            cv: md.value.body.cv.clone(),
-                            body: md
-                                .value
-                                .body
-                                .body
-                                .iter()
-                                .map(|s| fold_statement(s, st))
-                                .collect(),
-                        },
-                        generator: md.value.generator,
-                        is_async: md.value.is_async,
-                    },
-                    computed: md.computed,
-                    is_static: md.is_static,
-                }),
-            })
-            .collect(),
+        super_class,
+        body,
     })
 }
 

@@ -669,6 +669,22 @@ fn count_decl_names_decl(
                 count_decl_names_stmt(s, out, nodes_touched);
             }
         }
+        // A class declaration binds its name, and each method's params + locals
+        // are declared names — count all, mirroring the function arm. Counting
+        // method params keeps inline-collision detection conservative.
+        Declaration::ClassDeclaration(cd) => {
+            *out.entry(cd.id.name.clone()).or_insert(0) += 1;
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                for p in &m.value.params {
+                    let FunctionParam::Identifier(id) = p;
+                    *out.entry(id.name.clone()).or_insert(0) += 1;
+                }
+                for s in &m.value.body.body {
+                    count_decl_names_stmt(s, out, nodes_touched);
+                }
+            }
+        }
     }
 }
 
@@ -1001,6 +1017,21 @@ fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
         Declaration::FunctionDeclaration(fd) => {
             for s in &fd.body.body {
                 tally_stmt(s, cand, t);
+            }
+        }
+        // Tally candidate uses inside a class declaration's heritage operand
+        // and method bodies — missing one would let the pass inline a callee
+        // that is still called from inside the class (a miscompile). Mirrors the
+        // `Expression::ClassExpression` arm of `tally_expr`.
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &cd.super_class {
+                tally_expr(sup, cand, t);
+            }
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &m.value.body.body {
+                    tally_stmt(s, cand, t);
+                }
             }
         }
     }
@@ -1365,6 +1396,20 @@ fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
         Declaration::FunctionDeclaration(fd) => {
             for s in &mut fd.body.body {
                 changed |= inline_in_stmt(s, cand);
+            }
+        }
+        // Perform the inline substitution inside a class declaration's heritage
+        // operand and method bodies, kept in lockstep with `tally_decl` above.
+        // Mirrors the `Expression::ClassExpression` arm of `inline_in_expr`.
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &mut cd.super_class {
+                changed |= inline_in_expr(sup, cand);
+            }
+            for member in &mut cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &mut m.value.body.body {
+                    changed |= inline_in_stmt(s, cand);
+                }
             }
         }
     }
@@ -2105,6 +2150,11 @@ fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
         Declaration::FunctionDeclaration(fd) => {
             out.insert(fd.id.name.clone());
         }
+        // A top-level `class C {}` binds `C` in the program scope, exactly like
+        // a top-level function name.
+        Declaration::ClassDeclaration(cd) => {
+            out.insert(cd.id.name.clone());
+        }
         Declaration::VariableDeclaration(vd) => {
             for decl in &vd.declarations {
                 let BindingTarget::Identifier(id) = &decl.id;
@@ -2823,6 +2873,17 @@ fn splice_void_in_decl(
         // A function body is a `Vec<Statement>` the call may live in.
         Declaration::FunctionDeclaration(fd) => {
             splice_void_in_stmt_vec(&mut fd.body.body, cand, avoid, nodes_touched)
+        }
+        // Each class method body is a `Vec<Statement>` a void call may live in
+        // — splice into every method, mirroring the function-body arm.
+        Declaration::ClassDeclaration(cd) => {
+            let mut changed = false;
+            for member in &mut cd.body {
+                let ClassMember::Method(m) = member;
+                changed |=
+                    splice_void_in_stmt_vec(&mut m.value.body.body, cand, avoid, nodes_touched);
+            }
+            changed
         }
         // Variable initializers are expressions — a call there is a value
         // position, declined by this slice.
@@ -3649,6 +3710,17 @@ fn splice_valued_in_decl(
         Declaration::FunctionDeclaration(fd) => {
             splice_valued_in_stmt_vec(&mut fd.body.body, cand, avoid, nodes_touched)
         }
+        // Each class method body is a `Vec<Statement>` a valued call may live
+        // in — splice into every method, mirroring the function-body arm.
+        Declaration::ClassDeclaration(cd) => {
+            let mut changed = false;
+            for member in &mut cd.body {
+                let ClassMember::Method(m) = member;
+                changed |=
+                    splice_valued_in_stmt_vec(&mut m.value.body.body, cand, avoid, nodes_touched);
+            }
+            changed
+        }
         // A variable initializer is a value position; the call must be the
         // ENTIRE init (handled at the list level by `try_capture_in_stmt` /
         // `capture_splice_for_vardecl`), so there is nothing to descend into
@@ -3974,6 +4046,20 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
         Declaration::FunctionDeclaration(fd) => {
             for s in &fd.body.body {
                 collect_used_idents_stmt(s, out);
+            }
+        }
+        // Collect identifiers used in a class declaration's heritage operand and
+        // method bodies, so an inline never mints a fresh name that collides
+        // with one referenced inside the class.
+        Declaration::ClassDeclaration(cd) => {
+            if let Some(sup) = &cd.super_class {
+                collect_binding_idents_expr(sup, out);
+            }
+            for member in &cd.body {
+                let ClassMember::Method(m) = member;
+                for s in &m.value.body.body {
+                    collect_used_idents_stmt(s, out);
+                }
             }
         }
     }

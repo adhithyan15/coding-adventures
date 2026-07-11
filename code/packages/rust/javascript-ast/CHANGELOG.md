@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.33.0] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `ClassDeclaration` node (the class *statement*)
+
+The declaration half of the class arc whose *expression* form shipped in 0.32.0
+(CLOC12.173). New `Declaration` variant `ClassDeclaration(ClassDeclaration)`:
+
+- `ClassDeclaration { cv, id: Identifier, super_class: Option<Box<Expression>>, body: Vec<ClassMember> }`
+  — `class C [extends S] { members }` in statement position.
+- **Reuses** `ClassMember` / `MethodDefinition` / `MethodKind` from the expression
+  form — no new member modelling.
+- The one structural difference from `ClassExpression`: `id` is `Identifier`
+  (required), not `Option<Identifier>` — a class declaration must bind a name
+  (`class {}` in statement position is a syntax error), exactly as
+  `FunctionDeclaration.id` is required where `FunctionExpression.id` is optional.
+
+Round-trip tests cover the `ClassDeclaration` type tag and the ESTree
+`superClass` camelCase field (present with heritage, omitted without).
+
 ## [0.32.0] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` node + class member sub-AST

@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` fold arm
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant, making
+this crate's exhaustive `Declaration` match non-exhaustive. Added a
+`fold_class_declaration` arm that folds inside the `extends` operand and each
+method body — identical to `fold_class` for the expression form. The shared
+member-folding logic was factored into a new `#[inline(never)] fold_class_body`
+helper used by both. Reachable once the CLOC12.174 PR2 bridge produces the node.
+
 ## [0.85.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: fold inside a `ClassExpression`

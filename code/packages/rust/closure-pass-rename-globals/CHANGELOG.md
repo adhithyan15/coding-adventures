@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.10.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+arms at each exhaustive `Declaration` match site: `count_decl_names_decl` (class
+name + method params + bodies — counting params upholds the rename invariant that
+a global shadowed by a method param is disqualified), `collect_all_idents_decl`
+(class name + heritage + member keys/params/bodies), and `rename_apply_decl`
+(rename the class's own name as a global binding, the `extends` operand as a use,
+and recurse each method body with the full map). Reachable once the CLOC12.174
+PR2 bridge produces the node.
+
 ## [0.10.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)

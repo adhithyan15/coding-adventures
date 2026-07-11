@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-rename-properties"
-version = "0.12.13"
+version = "0.12.14"
 edition = "2021"
 description = "Aggressive property renaming pass for the Closure Compiler clone (ADVANCED-only). Consistently shortens program-private object property names that are never quoted/computed and not in the built-in or externs do-not-rename boundary."
 

@@ -73,7 +73,7 @@ use coding_adventures_javascript_ast::{
     MethodDefinition, MethodKind,
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
-    FunctionDeclaration, FunctionExpression,
+    ClassDeclaration, FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
     ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
@@ -783,6 +783,7 @@ impl<'a> Emitter<'a> {
                 self.emit_variable_declaration(v, /*top_level=*/ true);
             }
             Declaration::FunctionDeclaration(f) => self.emit_function_declaration(f),
+            Declaration::ClassDeclaration(c) => self.emit_class_declaration(c),
         }
     }
 
@@ -947,7 +948,62 @@ impl<'a> Emitter<'a> {
             self.required_ws();
             self.emit_identifier(id);
         }
-        if let Some(sup) = &c.super_class {
+        self.emit_class_tail(&c.super_class, &c.body);
+    }
+
+    /// Emit a [`ClassDeclaration`] — `class <id>[ extends S]{members}`.
+    ///
+    /// The *statement* form of a class. Byte-identical to [`Self::emit_class`]
+    /// (the expression form) for the `[ extends S]{members}` tail — both call
+    /// [`Self::emit_class_tail`] — with three deliberate differences, each the
+    /// exact mirror of the [`FunctionDeclaration`] vs `FunctionExpression`
+    /// split:
+    ///
+    /// 1. **`id` always prints.** A declaration's `id` is non-optional (a class
+    ///    written as a statement must bind a name — `class {}` in statement
+    ///    position is a syntax error), so — unlike the expression form's
+    ///    `if let Some(id)` — the name is emitted unconditionally, with a
+    ///    `required_ws()` after `class` exactly as
+    ///    [`Self::emit_function_declaration`] does after `function`.
+    /// 2. **No precedence wrap / no statement-start parenthesis.** A class
+    ///    *expression* is tagged `PREC_UNARY` and
+    ///    [`Self::emit_expression_statement`] wraps a leading one (`(class{});`)
+    ///    because a statement-position `class` would otherwise parse as a
+    ///    *declaration* — which is precisely what this node **is**. So the
+    ///    declaration form has no `expr_prec` entry and is never wrapped.
+    /// 3. **No trailing `;`.** [`Self::emit_function_declaration`] appends a
+    ///    normalising `;` after its `}` (gap-030 part B); a **class**
+    ///    declaration does not — upstream Closure terminates a class declaration
+    ///    with its `}` alone (a class body is self-delimiting and, unlike a bare
+    ///    `function(){}` value, subject to no ASI hazard). The PR3 conformance
+    ///    port validates this against `CodePrinterTest`.
+    fn emit_class_declaration(&mut self, c: &ClassDeclaration) {
+        self.maybe_map(&c.cv);
+        self.write_str("class");
+        // `id` is required for a declaration — always emit it (with the
+        // mandatory `class C` separating space).
+        self.required_ws();
+        self.emit_identifier(&c.id);
+        self.emit_class_tail(&c.super_class, &c.body);
+    }
+
+    /// Emit the shared `[ extends S]{members}` tail of a class — the part after
+    /// the `class[ id]` head that is identical for the expression
+    /// ([`Self::emit_class`]) and declaration ([`Self::emit_class_declaration`])
+    /// forms.
+    ///
+    /// The `extends` operand is emitted at `PREC_PRIMARY`: a `LeftHandSide`
+    /// superclass (identifier `extends B`, member `extends ns.B`, call
+    /// `extends mixin(B)`) stays bare, while anything looser (a conditional
+    /// `extends (a?b:c)`) is wrapped — exactly the grammar's requirement.
+    /// Members print back-to-back with no separators (each carries its own
+    /// `{…}`).
+    fn emit_class_tail(
+        &mut self,
+        super_class: &Option<Box<Expression>>,
+        body: &[ClassMember],
+    ) {
+        if let Some(sup) = super_class {
             self.required_ws();
             self.write_str("extends");
             self.required_ws();
@@ -956,7 +1012,7 @@ impl<'a> Emitter<'a> {
         // No space before the brace even in pretty mode — Closure prints
         // `class C{...}` (the members carry their own layout).
         self.write_str("{");
-        for member in &c.body {
+        for member in body {
             match member {
                 ClassMember::Method(m) => self.emit_class_member(m),
             }
@@ -3609,6 +3665,95 @@ mod tests {
         // after the function-declaration's closing `}` to
         // match upstream Closure v20240317.
         assert_eq!(out.code, "function f(x){return x};");
+    }
+
+    // ---- class declarations (CLOC12.174 PR1) ----------------
+    //
+    // The *statement* form of a class. Emitted at top level via
+    // `ProgramItem::Declaration` (not `emit_expr`, which is for expression
+    // position). Contrast with the ClassExpression tests above: a class
+    // *expression* in statement position is parenthesised (`(class C{});`),
+    // whereas the declaration is emitted bare with no wrap and — crucially —
+    // NO trailing `;` (unlike `function f(){};`, gap-030 part B).
+
+    /// Build a top-level `class <id>[ extends S]{members}` program and emit it
+    /// in the default (minified) mode, returning the output code.
+    fn emit_class_decl(id: &str, super_class: Option<Expression>, body: Vec<ClassMember>) -> String {
+        let d = Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: id.to_string() },
+            super_class: super_class.map(Box::new),
+            body,
+        });
+        emit_default(program().with_body(vec![ProgramItem::Declaration(d)])).code
+    }
+
+    #[test]
+    fn class_declaration_empty_is_bare_and_unterminated() {
+        // `class C {}` — bare (no wrapping paren, unlike the expression form's
+        // `(class C{});`) and NO trailing `;` (unlike `function f(){};`).
+        assert_eq!(emit_class_decl("C", None, vec![]), "class C{}");
+    }
+
+    #[test]
+    fn class_declaration_heritage() {
+        // `class C extends B {}` — the `extends` operand prints bare (an
+        // identifier is a LeftHandSide, tighter than the class body).
+        assert_eq!(
+            emit_class_decl("C", Some(ident("B")), vec![]),
+            "class C extends B{}"
+        );
+    }
+
+    #[test]
+    fn class_declaration_members_reuse_emit_class_member() {
+        // A method, a static method, and get/set accessors — each printed by
+        // the shared `emit_class_member` (the same helper the expression form
+        // uses), back-to-back with no separators.
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("m", MethodKind::Method, false)]),
+            "class C{m(){}}"
+        );
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("m", MethodKind::Method, true)]),
+            "class C{static m(){}}"
+        );
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("x", MethodKind::Get, false)]),
+            "class C{get x(){}}"
+        );
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("x", MethodKind::Set, false)]),
+            "class C{set x(){}}"
+        );
+    }
+
+    #[test]
+    fn class_declaration_constructor_and_computed_key() {
+        // The constructor prints with no keyword prefix (its `kind` only
+        // matters to the passes). A computed key `[k]` is bracketed.
+        assert_eq!(
+            emit_class_decl("C", None, vec![method("constructor", MethodKind::Constructor, false)]),
+            "class C{constructor(){}}"
+        );
+        let computed = ClassMember::Method(MethodDefinition {
+            cv: None,
+            key: PropertyKey::Expression(Box::new(ident("k"))),
+            kind: MethodKind::Method,
+            value: method_fn(),
+            computed: true,
+            is_static: false,
+        });
+        assert_eq!(emit_class_decl("C", None, vec![computed]), "class C{[k](){}}");
+    }
+
+    #[test]
+    fn class_declaration_full_shape_named_heritage_and_member() {
+        // `class C extends B { m() {} }` — the whole shape in one assertion.
+        assert_eq!(
+            emit_class_decl("C", Some(ident("B")), vec![method("m", MethodKind::Method, false)]),
+            "class C extends B{m(){}}"
+        );
     }
 
     #[test]

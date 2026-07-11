@@ -2260,6 +2260,30 @@ Serialised after 173 (shares the member sub-AST it introduced). Fields
 (`PropertyDefinition`) and static blocks remain deferred to their own additive
 slices, identical to the ClassExpression deferral.
 
+**PR1 (DONE).** `javascript-ast` 0.33.0 adds `ClassDeclaration` + the
+`Declaration::ClassDeclaration` variant exactly as modelled; `closure-emitter`
+0.38.0 adds `emit_class_declaration` + the shared `emit_class_tail` helper
+(factored out of `emit_class`), with 5 unit tests asserting the bare, no-`;`,
+no-wrap shape. The atomic pass-arm set turned out **larger than the design note's
+match-site list**: the note named 12 crates but only enumerated the ones with a
+central `fn *_declaration`; in fact `closure-pass-inline` (7 sites) and
+`closure-pass-rename` (5 sites) ALSO match `Declaration` exhaustively at many
+predicate/collect/rewrite helpers, and both needed arms — the per-crate CI
+build-tool (a compile error, the ground truth) is what surfaced them, exactly the
+lesson 173 recorded. Final arm-bearing crates: `constant-fold` 0.85.14, `dce`
+0.20.14, `fold-control-flow` 0.20.14, `inline` 0.25.14, `inline-variables`
+0.11.14, `rename` 0.14.14, `rename-globals` 0.10.14, `rename-properties` 0.12.14,
+`scope-analyzer` 0.12.14. `treeshake` / `remove-unused-vars` route through
+catch-alls (no arm). Each arm mirrors the crate's existing
+`Expression::ClassExpression` handling plus the required class-name binding;
+soundness-critical passes (`inline` tally/inline, `inline-variables`
+count-uses/propagate, `rename` collect/rewrite) recurse the heritage + every
+method body so a class use is never missed. Where a class-body walk was
+duplicated between the expression and declaration forms it was factored into a
+shared helper (`fold_class_body`, `classify_class_members` /
+`rewrite_class_members`). Reachable end-to-end once the PR2 bridge produces the
+node.
+
 ## CLOC12.173 — `ClassExpression` (`class [id] [extends S] { … }`): the class arc (design)
 
 `ClassExpression` is the next `Expression` node, and unlike every arc since

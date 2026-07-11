@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.20.14] - 2026-07-10
+
+### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms
+
+`javascript-ast` 0.33.0 added the `Declaration::ClassDeclaration` variant. Added
+the transform arm to `fold_declaration` (folds control flow inside the heritage
+operand and method bodies via a new shared `#[inline(never)] fold_class_body`
+helper, also refactored out of `fold_class`), and a `false` arm to
+`block_is_scope_safe_to_hoist` (a block-scoped class declaration must not be
+hoisted out of an `else`, like a nested function declaration). Reachable once the
+CLOC12.174 PR2 bridge produces the node.
+
 ## [0.20.13] - 2026-07-08
 
 ### Added — CLOC12.173 PR1: `ClassExpression` match arm (mirrors `FunctionExpression`)
