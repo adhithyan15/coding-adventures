@@ -900,9 +900,7 @@ mod tests {
 
         // end: KEYWORD
         let end_tok = tokens
-            .iter()
-            .filter(|t| t.type_ != TokenType::Eof)
-            .next_back()
+            .iter().rfind(|t| t.type_ != TokenType::Eof)
             .unwrap();
         assert_eq!(end_tok.value, "end");
         assert_eq!(end_tok.type_, TokenType::Keyword);

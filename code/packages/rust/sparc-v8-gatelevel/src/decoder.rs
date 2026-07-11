@@ -174,7 +174,7 @@ mod tests {
     #[test]
     fn decode_sethi() {
         // SETHI 1, %o0  (rd=%o0=8, imm22=1)
-        let word = ((8 << 25)) | (0b100 << 22) | 1;
+        let word = (8 << 25) | (0b100 << 22) | 1;
         match decode(word) {
             Instruction::Sethi { rd, imm22 } => {
                 assert_eq!(rd, 8);
@@ -196,7 +196,7 @@ mod tests {
     #[test]
     fn decode_bicc_ba() {
         // BA = cond=1000(8), op2=010, op=00; annul=0, disp22=4
-        let word = ((0b1000 << 25)) | (0b010 << 22) | 4;
+        let word = (0b1000 << 25) | (0b010 << 22) | 4;
         match decode(word) {
             Instruction::Bicc { cond, disp22, annul } => {
                 assert_eq!(cond, 8);

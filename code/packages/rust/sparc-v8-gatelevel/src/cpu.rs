@@ -445,7 +445,7 @@ mod tests {
 
     /// Encode `sethi imm22, %rd` → op=00, rd, op2=100, imm22.
     fn enc_sethi(rd: u32, imm22: u32) -> u32 {
-        ((rd << 25)) | (0b100 << 22) | (imm22 & 0x003F_FFFF)
+        (rd << 25) | (0b100 << 22) | (imm22 & 0x003F_FFFF)
     }
 
     /// Encode `add rs1, rs2, rd` (op=10, op3=0, i=0).
@@ -515,17 +515,17 @@ mod tests {
 
     /// Encode `ba disp22` (cond=8, op2=010).
     fn enc_ba(disp22: i32) -> u32 {
-        ((8u32 << 25)) | (0b010u32 << 22) | ((disp22 as u32) & 0x003F_FFFF)
+        (8u32 << 25) | (0b010u32 << 22) | ((disp22 as u32) & 0x003F_FFFF)
     }
 
     /// Encode `be disp22` (cond=4).
     fn enc_be(disp22: i32) -> u32 {
-        ((4u32 << 25)) | (0b010u32 << 22) | ((disp22 as u32) & 0x003F_FFFF)
+        (4u32 << 25) | (0b010u32 << 22) | ((disp22 as u32) & 0x003F_FFFF)
     }
 
     /// Encode `bne disp22` (cond=12).
     fn enc_bne(disp22: i32) -> u32 {
-        ((12u32 << 25)) | (0b010u32 << 22) | ((disp22 as u32) & 0x003F_FFFF)
+        (12u32 << 25) | (0b010u32 << 22) | ((disp22 as u32) & 0x003F_FFFF)
     }
 
     /// Encode `jmpl rs1 + imm13, rd` (op3=0x38, i=1).

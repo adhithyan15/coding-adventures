@@ -37,7 +37,7 @@ fn legendre_p(n: i64, x_name: &str) -> IRNode {
 
 /// Run `load("name")` through the VM and return the result.
 fn load_pkg(session: &mut MacsymaSession, name: &str) -> IRNode {
-    let mut session_ref = session;
+    let session_ref = session;
     eval_with_session(session_ref, apply(sym(LOAD), vec![str_node(name)]))
 }
 

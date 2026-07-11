@@ -282,7 +282,7 @@ mod tests {
         // Verify the magnitude is much higher than at the edges
         // away from the discontinuity (column 0 or 4).
         let edge_resp = out[2 * 5 + 2].abs();
-        let flat_resp = out[(2 * 5)].abs();
+        let flat_resp = out[2 * 5].abs();
         assert!(
             edge_resp > 2.0,
             "edge response too small: {}",
