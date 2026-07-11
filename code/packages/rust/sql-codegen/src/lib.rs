@@ -73,7 +73,7 @@ use coding_adventures_sql_backend::{ColumnDef, SqlValue};
 use coding_adventures_sql_optimizer::OptimizedPlan;
 use coding_adventures_sql_planner::{
     AggFunc, AggregateItem, Assignment, BinaryOp as PlanBinaryOp, InsertSource, JoinKind,
-    OutputColumn, SortKey, SqlExpr, UnaryOp as PlanUnaryOp,
+    OutputColumn, SqlExpr, UnaryOp as PlanUnaryOp,
 };
 
 // ---------------------------------------------------------------------------
@@ -2090,14 +2090,64 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
 /// 2. If the expression is a bare column reference (`SELECT col`), use the
 ///    column name as the implicit label.  This matches SQL's convention that
 ///    `SELECT id FROM t` exposes a column named `id`.
-/// 3. Fall back to `"?"` for complex expressions without an alias.
+/// 3. For a function call (`SELECT UPPER(name)`), reconstruct the call text —
+///    `UPPER(name)` — as the label.  SQLite names an un-aliased expression
+///    column after the *source text* of the expression, so `SELECT UPPER(name),
+///    LENGTH(name)` returns columns `UPPER(name)` and `LENGTH(name)`.  Giving
+///    the two columns distinct names is not just cosmetic: the VM keys nothing
+///    by name (it projects positionally), but the differential oracle compares
+///    column names against real SQLite, and two `?`-named columns previously
+///    diverged.  We reconstruct rather than thread source spans through the
+///    parser, which matches SQLite exactly for the whitespace-free calls we
+///    emit and degrades to `?` for arguments we cannot render.
+/// 4. Fall back to `"?"` for other complex expressions without an alias.
 fn output_column_name(col: &OutputColumn) -> String {
     if let Some(alias) = &col.alias {
         return alias.clone();
     }
     match &col.expr {
         SqlExpr::Column { name, .. } => name.clone(),
+        SqlExpr::FunctionCall { .. } => render_expr_label(&col.expr).unwrap_or_else(|| "?".to_string()),
         _ => "?".to_string(),
+    }
+}
+
+/// Best-effort reconstruction of an expression's *source text*, used as the
+/// implicit column label for un-aliased expressions (mirroring SQLite).
+///
+/// Returns `None` for any node we do not know how to render, so the caller can
+/// fall back to `"?"` rather than emitting a misleading label.  We only render
+/// the shapes that actually appear as function arguments today — columns,
+/// simple literals, and nested calls — because the goal is faithful column
+/// *names*, not a general SQL pretty-printer.
+///
+/// | expression            | rendered label   |
+/// |-----------------------|------------------|
+/// | `UPPER(name)`         | `UPPER(name)`    |
+/// | `SUBSTR(name,1,2)`    | `SUBSTR(name,1,2)` |
+/// | `LENGTH(u.name)`      | `LENGTH(u.name)` |
+/// | `COALESCE(x,'-')`     | `COALESCE(x,'-')`|
+fn render_expr_label(expr: &SqlExpr) -> Option<String> {
+    match expr {
+        SqlExpr::Column { table: Some(t), name } => Some(format!("{t}.{name}")),
+        SqlExpr::Column { table: None, name } => Some(name.clone()),
+        SqlExpr::Literal(v) => Some(match v {
+            SqlValue::Null => "NULL".to_string(),
+            SqlValue::Bool(b) => if *b { "TRUE".to_string() } else { "FALSE".to_string() },
+            SqlValue::Int(n) => n.to_string(),
+            // Render floats via SQLite's own default text form is out of scope;
+            // the plain Rust form matches for the integral/simple cases we emit.
+            SqlValue::Float(f) => f.to_string(),
+            // Single-quote string literals, doubling embedded quotes as SQL does.
+            SqlValue::Text(s) => format!("'{}'", s.replace('\'', "''")),
+            // Blobs have no simple textual column-name form; decline to render.
+            SqlValue::Blob(_) => return None,
+        }),
+        SqlExpr::FunctionCall { name, args, .. } => {
+            let rendered: Option<Vec<String>> = args.iter().map(render_expr_label).collect();
+            Some(format!("{}({})", name, rendered?.join(",")))
+        }
+        _ => None,
     }
 }
 
