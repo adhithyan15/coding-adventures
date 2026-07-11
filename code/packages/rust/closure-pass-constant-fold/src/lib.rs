@@ -95,7 +95,7 @@ use coding_adventures_javascript_ast::{
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
     FunctionDeclaration, FunctionExpression, Identifier,
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -550,6 +550,16 @@ fn fold_class_body(
                 },
                 computed: md.computed,
                 is_static: md.is_static,
+            }),
+            // A class field folds inside its initializer (a plain expression
+            // that runs at construction) — `x = 1 + 2` → `x = 3`. The key is
+            // cloned like a method key (not folded); the value is optional.
+            ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                cv: fd.cv.clone(),
+                key: fd.key.clone(),
+                value: fd.value.as_ref().map(|v| fold_expression(v, st)),
+                computed: fd.computed,
+                is_static: fd.is_static,
             }),
         })
         .collect();

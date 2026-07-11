@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.25.15] - 2026-07-11
+
+### Added — CLOC12.175 PR1: `ClassMember::Field` arms
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`, making every exhaustive
+`ClassMember` match and every `let ClassMember::Method(m) = member` binding
+non-exhaustive / refutable. Added `Field` handling at all 13 sites:
+
+- **Soundness-critical** — `tally_decl`/`tally_expr` count candidate uses inside a
+  field initializer and computed key; `inline_in_decl`/`inline_in_expr` substitute
+  there in lockstep; `expr_collect_mutated_params` and `collect_used_idents_decl`
+  over-collect from the initializer. Missing any would let the pass inline a callee
+  still used at class construction.
+- **Scope-aware** — `substitute`/`rename_in_expr` recurse the initializer and
+  computed key with the class-inner map (the class's own name in scope, no method
+  params).
+- **Correctly skipped** — `count_decl_names_decl` (a field binds no
+  statement-scope name) and `splice_void_in_decl`/`splice_valued_in_decl` (a field
+  initializer is an expression, not a `Vec<Statement>`).
+
+Reachable once the CLOC12.175 PR2 bridge produces the node.
+
 ## [0.25.14] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: `Declaration::ClassDeclaration` match arms

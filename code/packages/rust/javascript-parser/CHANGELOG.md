@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.38.1] - 2026-07-11
+
+### Fixed — CLOC12.175 PR1: `ClassMember` test bindings
+
+`javascript-ast` 0.34.0 added `ClassMember::Field`, making `ClassMember` a
+two-variant enum. The bridge's class-conversion tests bound a member with an
+irrefutable `let ClassMember::Method(m) = &c.body[0];`, which the new variant
+makes refutable. Converted each of the 13 test bindings to
+`let ClassMember::Method(m) = … else { panic!("expected a method member") };`.
+Bridge production code is unchanged — it still emits only `ClassMember::Method`
+(field bridging is CLOC12.175 PR2).
+
 ## [0.38.0] - 2026-07-11
 
 ### Added — CLOC12.174 PR2: bridge `class_declaration` → `Declaration::ClassDeclaration`

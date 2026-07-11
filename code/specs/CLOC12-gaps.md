@@ -2138,6 +2138,141 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.175 — class fields (`PropertyDefinition`): the first non-method class member (design)
+
+CLOC12.173/174 shipped the class **expression** and **declaration** with a body of
+**methods only** (`ClassMember::Method`). Both arcs' closing notes named the same
+deferral: *instance/static **fields** (`PropertyDefinition`)… arrive in later
+feature PRs, each an additive `ClassMember` variant.* CLOC12.175 is that slice —
+the **first non-method class member**, and the first time `ClassMember` becomes a
+multi-variant enum.
+
+A class field is `x = 1;` / `y;` / `static z = 2;` / `[k] = v;` inside a class
+body — a named slot with an optional initializer, no parameter list, no body.
+
+### Model (ESTree-aligned, Rhino-informed)
+
+```rust
+// javascript-ast/src/expression.rs — a new variant of the `ClassMember` enum
+pub enum ClassMember {
+    Method(MethodDefinition),
+    Field(PropertyDefinition),                 // NEW
+    // static { … } (static-block) is a later additive variant.
+}
+
+pub struct PropertyDefinition {
+    pub cv: Option<CvId>,
+    pub key: PropertyKey,          // reuse — same four shapes as a method key
+    pub value: Option<Expression>, // `x = <expr>` (Some) vs bare `x;` (None)
+    pub computed: bool,            // `[expr] = v` (mirrors MethodDefinition.computed)
+    #[serde(rename = "static")]
+    pub is_static: bool,           // `static x = 1;`
+}
+```
+
+**Why a separate `PropertyDefinition`, not reuse `MethodDefinition`.** A field has
+**no** `MethodKind` (it is never a constructor/getter/setter), **no** function
+`value` (its value is an *optional plain expression*, not a `FunctionExpression`),
+and no params/body. This matches the conformance target — Closure's Rhino uses a
+dedicated `MEMBER_FIELD_DEF` node, distinct from `MEMBER_FUNCTION_DEF`. `PropertyKey`
+(identifier / string / numeric / `Expression` for computed) *is* reused — a field
+key and a method key have the same four shapes.
+
+### Emit (`closure-emitter`)
+
+Inside a class body a field prints `[static ]key[=value];`:
+
+```text
+  class C { x = 1 }        → class C{x=1;}
+  class C { y }            → class C{y;}
+  class C { static z = 2 } → class C{static z=2;}
+  class C { [k] = v }      → class C{[k]=v;}
+```
+
+Two differences from a method member: a field **ends with `;`** (a method's `}`
+is self-terminating; a field has no closing brace so it needs the separator), and
+it has **no** parameter-list/body tail. The `static` prefix and computed-key
+bracketing reuse the existing `emit_class_member` machinery; the value (when
+present) emits at `PREC_ASSIGNMENT` (the RHS of `=`), exactly like an
+object-property value or a default. Fields and methods interleave in a body with
+no separators beyond the field's own `;`.
+
+### Pass arms — the `ClassMember` blast radius
+
+Today `ClassMember` is single-variant, so nearly every pass matches it as
+`match member { ClassMember::Method(m) => … }` or `let ClassMember::Method(m) =
+member;`. Adding `Field` makes:
+
+- every `match` **non-exhaustive** → the compiler forces a `Field` arm at each
+  site (the per-crate build-tool is the ground truth for which, per the 174
+  lesson — a compile error, not a green `grep`);
+- every `let ClassMember::Method(m) = member;` (an *irrefutable* let today,
+  including several written in the 174 pass arms) **refutable** → each must become
+  a `match`/`if let`.
+
+The correct `Field` arm **recurses into the field `value`** (a normal expression —
+fold it, resolve references in it, rewrite renamed uses in it) and into a
+computed key's expression, mirroring how the `Method` arm recurses into the method
+body. A field **key** is a property name: the property-renaming pass renames it
+exactly like a method key (no `constructor` special-case — a field is never the
+constructor), and the variable-renaming passes leave it untouched. Passes that
+only walk *executable* positions (dce's dead-code predicates, inline's call
+tally) treat a field like a method — its initializer is code that runs at
+construction, so a candidate use inside it must still be counted.
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all `ClassMember` arms, ONE commit).** `javascript-ast`
+  (MINOR) adds the `Field` variant + `PropertyDefinition`; `closure-emitter` (MINOR)
+  adds the `Field` arm to `emit_class_member`/`emit_class_tail` printing
+  `[static ]key[=value];`; every pass crate whose `ClassMember` match went
+  non-exhaustive gets its `Field` arm (mirroring the `Method` arm's recursion into
+  the value + computed key), and every now-refutable `let ClassMember::Method`
+  becomes a `match`. Hand-constructed emitter unit tests (bare field, `=value`,
+  `static`, computed key, field+method interleaved).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  convert the grammar's field `class_element` production → `ClassMember::Field`.
+  Dump the parse-tree shape first. Add a `closurec` e2e fixture
+  (`tests/diff/simple-class-field/`). Decline grammar-unsupported field shapes to
+  WHITESPACE_ONLY (never a miscompile).
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_class_field_test.rs` mirroring upstream
+  `CodePrinterTest`'s class-field printing cases — hand-constructed AST, so it also
+  covers computed / static / no-initializer shapes the grammar may not yet parse.
+
+Static-init blocks (`static { … }`), private names (`#x`), and decorators remain
+deferred to their own additive slices, exactly as for the method surface.
+
+### PR1 (DONE)
+
+Landed as the atomic node + emit + all-arms commit. `ClassMember` is now a
+two-variant enum (`Method` | `Field`). Confirmed blast radius (per the per-crate
+build, the ground truth):
+
+- **`javascript-ast` 0.34.0** — `ClassMember::Field(PropertyDefinition)` +
+  `PropertyDefinition { cv, key: PropertyKey, value: Option<Expression>, computed,
+  is_static }`; 4 roundtrip tests (initialized / bare / static / computed-key,
+  the last using a `[a+b]` `BinaryExpression` key so it is unambiguously
+  `PropertyKey::Expression` rather than collapsing to `Identifier` under the
+  untagged serde — the same limitation methods already have).
+- **`closure-emitter` 0.39.0** — `emit_class_field` (printing `[static ]key[=value];`,
+  value at `PREC_ASSIGNMENT`) wired into the shared `emit_class_tail` member loop;
+  6 emit tests.
+- **Pass crates (PATCH each), `Field` arms added at every site the compiler
+  flagged non-exhaustive/refutable:** constant-fold (1), fold-control-flow (1),
+  dce (2), scope-analyzer (2), rename-properties (2), inline-variables (5),
+  rename-globals (5), rename (4: 2 decl + 2 expression handlers), **inline (13:**
+  the widest — the soundness-critical `tally`/`inline`/`mutated-params`/
+  `used-idents` sites recurse the initializer + computed key, the scope-aware
+  `substitute`/`rename` sites use the class-inner map, and `count_decl_names` +
+  both `splice_*_in_decl` correctly skip a field**).** All 11 crates build + test
+  green.
+
+The `Field` arm everywhere mirrors the `Method` arm's recursion but on
+`f.value: Option<Expression>` (+ the computed-key expression) rather than a
+statement body, exactly as this section specified. Bridge + conformance follow in
+PR2/PR3.
+
 ## CLOC12.174 — `ClassDeclaration` (`class C [extends S] { … }`): the class *statement* arc (design)
 
 CLOC12.173 shipped the class **expression** (a value: `x = class {}`, `f(class C {})`).

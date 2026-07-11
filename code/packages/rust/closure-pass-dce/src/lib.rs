@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
@@ -1172,6 +1172,16 @@ fn dce_class_declaration(c: &ClassDeclaration, st: &mut DceState) -> ClassDeclar
                     computed: md.computed,
                     is_static: md.is_static,
                 }),
+                // A class field runs DCE inside its initializer (an expression
+                // that runs at construction). The key is cloned; the value is
+                // optional.
+                ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                    cv: fd.cv.clone(),
+                    key: fd.key.clone(),
+                    value: fd.value.as_ref().map(|v| dce_expression(v, st)),
+                    computed: fd.computed,
+                    is_static: fd.is_static,
+                }),
             })
             .collect(),
     }
@@ -1226,6 +1236,16 @@ fn dce_class(c: &ClassExpression, st: &mut DceState) -> Expression {
                     },
                     computed: md.computed,
                     is_static: md.is_static,
+                }),
+                // A class field runs DCE inside its initializer (an expression
+                // that runs at construction). The key is cloned; the value is
+                // optional.
+                ClassMember::Field(fd) => ClassMember::Field(PropertyDefinition {
+                    cv: fd.cv.clone(),
+                    key: fd.key.clone(),
+                    value: fd.value.as_ref().map(|v| dce_expression(v, st)),
+                    computed: fd.computed,
+                    is_static: fd.is_static,
                 }),
             })
             .collect(),

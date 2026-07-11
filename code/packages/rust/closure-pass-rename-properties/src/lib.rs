@@ -1067,6 +1067,24 @@ fn classify_class_members(
                     classify_stmt(s, cls, &mut nested);
                 }
             }
+            // A class field's KEY is a renameable property name, exactly like a
+            // method key — but a field is NEVER the constructor, so there is no
+            // `constructor` pin here. A computed key + the initializer value
+            // may contain nested property accesses, so recurse both.
+            ClassMember::Field(f) => {
+                if !f.computed {
+                    match &f.key {
+                        PropertyKey::Identifier(id) => cls.see_dotted(&id.name),
+                        PropertyKey::StringLiteral(s) => cls.see_quoted(&s.value),
+                        _ => {}
+                    }
+                } else if let PropertyKey::Expression(e) = &f.key {
+                    classify_expr(e, cls);
+                }
+                if let Some(v) = &f.value {
+                    classify_expr(v, cls);
+                }
+            }
         }
     }
 }
@@ -1450,6 +1468,23 @@ fn rewrite_class_members(
                 }
                 for s in &mut m.value.body.body {
                     rewrite_stmt(s, map);
+                }
+            }
+            // Rewrite a field key (a renameable property name, no `constructor`
+            // pin) and recurse the computed key + initializer, kept in lockstep
+            // with `classify_class_members`.
+            ClassMember::Field(f) => {
+                if f.computed {
+                    if let PropertyKey::Expression(e) = &mut f.key {
+                        rewrite_expr(e, map);
+                    }
+                } else if let PropertyKey::Identifier(id) = &mut f.key {
+                    if let Some(new) = map.get(&id.name) {
+                        id.name = new.clone();
+                    }
+                }
+                if let Some(v) = &mut f.value {
+                    rewrite_expr(v, map);
                 }
             }
         }

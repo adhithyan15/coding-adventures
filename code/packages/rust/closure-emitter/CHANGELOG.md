@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.39.0] - 2026-07-11
+
+### Added — CLOC12.175 PR1: emit class fields
+
+`javascript-ast` 0.34.0 added `ClassMember::Field(PropertyDefinition)`. The
+shared class-body member loop (`emit_class_tail`, used by both the class
+expression and the class declaration) gains a `Field` arm calling the new
+`emit_class_field`, which prints `[static ]key[=value];` — the initializer at
+`PREC_ASSIGNMENT`, a bare field emitting just `key;`. Six emit tests cover
+initialized / bare / static / computed-key fields and a field interleaved with a
+method.
+
 ## [0.38.1] - 2026-07-11
 
 ### Added — CLOC12.174 PR3: CodePrinter class-declaration conformance port

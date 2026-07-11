@@ -3539,7 +3539,7 @@ mod tests {
     fn class_method() {
         let c = class_of("x = class { m(a,b){return a} };");
         assert_eq!(c.body.len(), 1);
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Method);
         assert!(!m.is_static);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m"));
@@ -3551,14 +3551,14 @@ mod tests {
         // A single param parses as a direct `formal_parameter` (no wrapper);
         // it must still be collected.
         let c = class_of("x = class { m(v){return v} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.value.params.len(), 1);
     }
 
     #[test]
     fn class_static_method() {
         let c = class_of("x = class { static m(){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(m.is_static);
         assert_eq!(m.kind, MethodKind::Method);
     }
@@ -3566,7 +3566,7 @@ mod tests {
     #[test]
     fn class_getter() {
         let c = class_of("x = class { get g(){return 1} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Get);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "g"));
     }
@@ -3574,7 +3574,7 @@ mod tests {
     #[test]
     fn class_setter() {
         let c = class_of("x = class { set s(v){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Set);
         assert_eq!(m.value.params.len(), 1);
     }
@@ -3585,7 +3585,7 @@ mod tests {
         // puts the `property_name` node first (no leading accessor token), so
         // the bridge must classify it as an ordinary method.
         let c = class_of("x = class { get(){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Method);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "get"));
     }
@@ -3593,7 +3593,7 @@ mod tests {
     #[test]
     fn class_constructor() {
         let c = class_of("x = class { constructor(a){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert_eq!(m.kind, MethodKind::Constructor);
         assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "constructor"));
     }
@@ -3604,7 +3604,7 @@ mod tests {
         // non-static `constructor` member is. (Legal JS: a static method may be
         // named `constructor`.)
         let c = class_of("x = class { static constructor(){} };");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(m.is_static);
         assert_eq!(m.kind, MethodKind::Method);
     }
@@ -3681,7 +3681,7 @@ mod tests {
     fn class_decl_single_method() {
         let c = class_decl_of("class C { m(){} }");
         assert_eq!(c.body.len(), 1);
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(matches!(m.kind, MethodKind::Method));
         assert!(!m.is_static);
         match &m.key {
@@ -3693,24 +3693,24 @@ mod tests {
     #[test]
     fn class_decl_static_method() {
         let c = class_decl_of("class C { static m(){} }");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(m.is_static);
     }
 
     #[test]
     fn class_decl_constructor() {
         let c = class_decl_of("class C { constructor(){} }");
-        let ClassMember::Method(m) = &c.body[0];
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
         assert!(matches!(m.kind, MethodKind::Constructor));
     }
 
     #[test]
     fn class_decl_getter_setter() {
         let g = class_decl_of("class C { get x(){} }");
-        let ClassMember::Method(gm) = &g.body[0];
+        let ClassMember::Method(gm) = &g.body[0] else { panic!("expected a method member") };
         assert!(matches!(gm.kind, MethodKind::Get));
         let s = class_decl_of("class C { set x(v){} }");
-        let ClassMember::Method(sm) = &s.body[0];
+        let ClassMember::Method(sm) = &s.body[0] else { panic!("expected a method member") };
         assert!(matches!(sm.kind, MethodKind::Set));
     }
 

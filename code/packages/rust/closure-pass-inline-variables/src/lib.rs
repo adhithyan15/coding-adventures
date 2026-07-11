@@ -471,9 +471,15 @@ fn count_decl_names_decl(
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &m.value.body.body {
-                    count_decl_names_stmt(s, out, nodes_touched);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                    // A field initializer is an expression — it declares no
+                    // statement-scope names at the class-body level.
+                    ClassMember::Field(_) => {}
                 }
             }
         }
@@ -622,9 +628,20 @@ fn count_uses_decl(decl: &Declaration, name: &str, count: &mut usize) {
                 count_uses_expr(sup, name, count);
             }
             for member in &cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &m.value.body.body {
-                    count_uses_stmt(s, name, count);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &m.value.body.body {
+                            count_uses_stmt(s, name, count);
+                        }
+                    }
+                    // A field initializer can USE `name` (`x = name`) — count
+                    // it, else the pass could inline/remove a still-referenced
+                    // binding (a miscompile).
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &f.value {
+                            count_uses_expr(v, name, count);
+                        }
+                    }
                 }
             }
         }
@@ -884,6 +901,12 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                             count_uses_stmt(s, name, count);
                         }
                     }
+                    // A field initializer can use `name` — count it (soundness).
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &f.value {
+                            count_uses_expr(v, name, count);
+                        }
+                    }
                 }
             }
         }
@@ -974,9 +997,19 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
                 changed |= propagate_in_expr(sup, cand);
             }
             for member in &mut cd.body {
-                let ClassMember::Method(m) = member;
-                for s in &mut m.value.body.body {
-                    changed |= propagate_in_stmt(s, cand);
+                match member {
+                    ClassMember::Method(m) => {
+                        for s in &mut m.value.body.body {
+                            changed |= propagate_in_stmt(s, cand);
+                        }
+                    }
+                    // Propagate the const into a field initializer, kept in
+                    // lockstep with `count_uses_decl`.
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &mut f.value {
+                            changed |= propagate_in_expr(v, cand);
+                        }
+                    }
                 }
             }
         }
@@ -1252,6 +1285,12 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                     ClassMember::Method(m) => {
                         for s in &mut m.value.body.body {
                             changed |= propagate_in_stmt(s, cand);
+                        }
+                    }
+                    // Propagate the const into a field initializer.
+                    ClassMember::Field(f) => {
+                        if let Some(v) = &mut f.value {
+                            changed |= propagate_in_expr(v, cand);
                         }
                     }
                 }
