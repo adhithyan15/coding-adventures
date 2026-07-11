@@ -143,7 +143,7 @@ rather than panicking:
     `pop`, `include?`, `reverse`, `sort`, `join`, `map`, `select`/`filter`,
     `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`.
   - **Hash** (`Map`): `keys`, `values`, `size`, `has_key?`, `each`, `map`,
-    `select`.
+    `select`, `transform_values`, `transform_keys`.
   - **String** (`Str`): `length`, `upcase`, `downcase`, `reverse`, `strip`,
     `include?`, `split`, char-set `tr`/`count`/`delete`/`squeeze` (literal
     sets), and justify `ljust`/`rjust`/`center`/`swapcase` (rune-aware; `center`

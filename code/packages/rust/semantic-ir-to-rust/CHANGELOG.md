@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.27.0 — Hash transforming block methods: `transform_values` / `transform_keys`
+
+Mirrors the Python `sir-runtime-oop` v0.1.18 reference (PR #7909) into the
+Rust backend's inline `__sir` runtime (`map_method` + the `Value::Map`
+`responds_to?` arm), adding two non-mutating Ruby `Hash` block methods:
+
+- `transform_values { |v| … }` — builds a **new** hash whose keys are copied
+  verbatim (so they stay unique and no collision is possible) and whose values
+  are the block results.  Yields ONE block argument (the value); insertion order
+  is preserved by rebuilding in place.
+- `transform_keys { |k| … }` — builds a **new** hash whose values are untouched
+  and whose keys are the block results (yields ONE argument, the key).  Two
+  source keys can collapse onto one new key; Ruby keeps the **last** colliding
+  entry's value while holding the new key at its **first-seen** position, so we
+  overwrite an existing slot in place (via `value_eq`) and otherwise append.
+
+Both leave the receiver unmodified.
+
+Exec-proof: new `tests/compile_and_run_hash_transform.rs` compiles and runs
+(under real `rustc`) a module exercising `transform_values` ({a:1,b:2} → {a: 99,
+b: 99}), an identity `transform_keys` ({a:1,b:2} → {a: 1, b: 2}), and a
+**collision** `transform_keys` (constant `:z` key ⇒ {z: 2}), diffing stdout
+against the Python/TS reference semantics.
+
 ## 0.26.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
 
 Mirrors the Python `sir-runtime-oop` v0.1.17 reference (and the Go backend
