@@ -545,6 +545,46 @@ def test_hash_enumerable_aggregates() -> None:
     assert oop.call_method(h, "respond_to?", "sort_by") is True
 
 
+def test_hash_enumerable_grouping_folding() -> None:
+    # Enumerable breadth part 2: group_by/partition/flat_map/reduce/sum. The
+    # block is yielded [key, value] and results carry [key, value] pairs;
+    # reduce follows Ruby's memo convention (memo, pair).
+    h = {"a": 1, "b": 2, "c": 3, "d": 4}
+    # group_by { |k, v| v.even? } → {False: [[a,1],[c,3]], True: [[b,2],[d,4]]}
+    assert oop.call_method(h, "group_by", Closure(lambda k, v: v % 2 == 0)) == {
+        False: [["a", 1], ["c", 3]],
+        True: [["b", 2], ["d", 4]],
+    }
+    # partition { |k, v| v > 2 } → [[[c,3],[d,4]], [[a,1],[b,2]]]
+    assert oop.call_method(h, "partition", Closure(lambda k, v: v > 2)) == [
+        [["c", 3], ["d", 4]],
+        [["a", 1], ["b", 2]],
+    ]
+    # flat_map { |k, v| [k, v] } → [a, 1, b, 2, c, 3, d, 4]  (one-level flatten)
+    assert oop.call_method(h, "flat_map", Closure(lambda k, v: [k, v])) == [
+        "a", 1, "b", 2, "c", 3, "d", 4,
+    ]
+    # collect_concat alias behaves identically.
+    assert oop.call_method({"a": 1}, "collect_concat", Closure(lambda k, v: [v])) == [1]
+    # reduce(0) { |sum, (k, v)| sum + v } → 10
+    assert oop.call_method(h, "reduce", 0, Closure(lambda acc, pair: acc + pair[1])) == 10
+    # inject (seedless) starts the memo from the first [k, v] pair, then folds
+    # later pairs; here it appends each later value → [a, 1, 2].
+    assert (
+        oop.call_method({"a": 1, "b": 2}, "inject", Closure(lambda acc, pair: acc + [pair[1]]))
+        == ["a", 1, 2]
+    )
+    # empty seedless reduce → nil
+    assert oop.call_method({}, "reduce", Closure(lambda acc, pair: acc)) is None
+    # sum(0) { |k, v| v } → 10 ; sum(100) { |k, v| v } → 110
+    assert oop.call_method(h, "sum", 0, Closure(lambda k, v: v)) == 10
+    assert oop.call_method(h, "sum", 100, Closure(lambda k, v: v)) == 110
+    # respond_to? advertises the new methods; receiver unchanged throughout.
+    assert oop.call_method(h, "respond_to?", "group_by") is True
+    assert oop.call_method(h, "respond_to?", "reduce") is True
+    assert list(h.items()) == [("a", 1), ("b", 2), ("c", 3), ("d", 4)]
+
+
 def test_hash_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
     assert oop.call_method({"a": 1}, "respond_to?", "each") is True
