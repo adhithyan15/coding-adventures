@@ -1322,6 +1322,112 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             Ok(SqlValue::Text(out))
         }
 
+        "SIGN" => {
+            // SIGN(x): -1, 0, or +1 for a negative, zero, or positive number;
+            // NULL for NULL or a non-numeric argument.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("SIGN expects 1 arg, got {}", args.len())));
+            }
+            let s = match &args[0] {
+                SqlValue::Int(i) => (*i).signum(),
+                SqlValue::Float(f) => {
+                    if *f > 0.0 {
+                        1
+                    } else if *f < 0.0 {
+                        -1
+                    } else {
+                        0
+                    }
+                }
+                _ => return Ok(SqlValue::Null),
+            };
+            Ok(SqlValue::Int(s))
+        }
+
+        "UNICODE" => {
+            // UNICODE(s): the code point of the first character of `s`; NULL for a
+            // NULL or empty string.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("UNICODE expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Text(s) => match s.chars().next() {
+                    Some(c) => Ok(SqlValue::Int(c as i64)),
+                    None => Ok(SqlValue::Null),
+                },
+                SqlValue::Null => Ok(SqlValue::Null),
+                other => Err(VmError::TypeMismatch(format!("UNICODE expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "CHAR" => {
+            // CHAR(x1, x2, …): a string built from the characters whose code
+            // points are the integer arguments. Non-integer or out-of-range code
+            // points contribute nothing (SQLite is lax here); no args → "".
+            let mut out = String::with_capacity(args.len());
+            for a in &args {
+                if let SqlValue::Int(cp) = a {
+                    if let Some(c) = u32::try_from(*cp).ok().and_then(char::from_u32) {
+                        out.push(c);
+                    }
+                }
+            }
+            Ok(SqlValue::Text(out))
+        }
+
+        "ZEROBLOB" => {
+            // ZEROBLOB(n): a BLOB of `n` zero bytes (n < 0 → empty). NULL → NULL.
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("ZEROBLOB expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Int(n) => {
+                    let len = (*n).max(0) as usize;
+                    // Cap the eager allocation. `n` is any i64 the query names, so
+                    // `zeroblob(9999999999)` would otherwise request ~10 GB and
+                    // OOM/abort the process. Real SQLite likewise errors past its
+                    // SQLITE_MAX_LENGTH; we reuse the engine's 1e6 guard (as with
+                    // GROUP BY / COUNT(DISTINCT)) and surface ResourceLimit.
+                    const MAX_BLOB_LEN: usize = 1_000_000;
+                    if len > MAX_BLOB_LEN {
+                        return Err(VmError::ResourceLimit(format!(
+                            "ZEROBLOB length {len} exceeds limit {MAX_BLOB_LEN}"
+                        )));
+                    }
+                    Ok(SqlValue::Blob(vec![0u8; len]))
+                }
+                other => Err(VmError::TypeMismatch(format!("ZEROBLOB expects INTEGER, got {:?}", other))),
+            }
+        }
+
+        "QUOTE" => {
+            // QUOTE(x): the value as an SQL literal — NULL as `NULL`, text
+            // single-quoted with doubled inner quotes, a blob as `X'…'` hex, and
+            // an integer as its digits. (Floats are declined; their exact SQLite
+            // text form is subtle, like HEX above.)
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("QUOTE expects 1 arg, got {}", args.len())));
+            }
+            let lit = match &args[0] {
+                SqlValue::Null => "NULL".to_string(),
+                SqlValue::Int(i) => i.to_string(),
+                SqlValue::Bool(b) => (*b as i64).to_string(),
+                SqlValue::Text(s) => format!("'{}'", s.replace('\'', "''")),
+                SqlValue::Blob(b) => {
+                    let mut h = String::with_capacity(b.len() * 2 + 3);
+                    h.push_str("X'");
+                    for byte in b {
+                        h.push_str(&format!("{byte:02X}"));
+                    }
+                    h.push('\'');
+                    h
+                }
+                other => return Err(VmError::TypeMismatch(format!("QUOTE does not support {:?}", other))),
+            };
+            Ok(SqlValue::Text(lit))
+        }
+
         other => {
             // Unknown function — return NULL rather than crashing.
             // This matches SQLite's behaviour for unrecognised scalar functions.
@@ -3495,5 +3601,58 @@ mod tests {
         assert_eq!(h(SqlValue::Blob(vec![0xde, 0xad, 0xbe, 0xef])), "DEADBEEF");
         assert_eq!(h(SqlValue::Int(255)), "323535"); // hex of the text "255"
         assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_sign_and_unicode() {
+        let sign = |v: SqlValue| call_builtin("SIGN", vec![v]).unwrap();
+        assert_eq!(sign(SqlValue::Int(-7)), SqlValue::Int(-1));
+        assert_eq!(sign(SqlValue::Int(0)), SqlValue::Int(0));
+        assert_eq!(sign(SqlValue::Float(3.5)), SqlValue::Int(1));
+        assert_eq!(sign(SqlValue::Text("x".into())), SqlValue::Null); // non-numeric
+        assert_eq!(sign(SqlValue::Null), SqlValue::Null);
+
+        let uni = |s: &str| call_builtin("UNICODE", vec![SqlValue::Text(s.into())]).unwrap();
+        assert_eq!(uni("abc"), SqlValue::Int(97));
+        assert_eq!(uni("Z"), SqlValue::Int(90));
+        assert_eq!(uni(""), SqlValue::Null); // empty → NULL
+        assert_eq!(call_builtin("UNICODE", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+    }
+
+    #[test]
+    fn builtin_char_and_zeroblob() {
+        assert_eq!(
+            call_builtin("CHAR", vec![SqlValue::Int(72), SqlValue::Int(105), SqlValue::Int(33)]).unwrap(),
+            SqlValue::Text("Hi!".into())
+        );
+        // No args → empty string.
+        assert_eq!(call_builtin("CHAR", vec![]).unwrap(), SqlValue::Text(String::new()));
+
+        assert_eq!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(3)]).unwrap(),
+            SqlValue::Blob(vec![0, 0, 0])
+        );
+        assert_eq!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(-1)]).unwrap(),
+            SqlValue::Blob(vec![]) // negative length → empty
+        );
+        assert_eq!(call_builtin("ZEROBLOB", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        // Adversarial: a huge length is rejected, not eagerly allocated (DoS guard).
+        assert!(matches!(
+            call_builtin("ZEROBLOB", vec![SqlValue::Int(9_999_999_999)]),
+            Err(VmError::ResourceLimit(_))
+        ));
+    }
+
+    #[test]
+    fn builtin_quote_renders_sql_literals() {
+        let q = |v: SqlValue| match call_builtin("QUOTE", vec![v]).unwrap() {
+            SqlValue::Text(s) => s,
+            other => panic!("expected text, got {other:?}"),
+        };
+        assert_eq!(q(SqlValue::Null), "NULL");
+        assert_eq!(q(SqlValue::Int(-7)), "-7");
+        assert_eq!(q(SqlValue::Text("it's".into())), "'it''s'"); // inner quote doubled
+        assert_eq!(q(SqlValue::Blob(vec![0xde, 0xad])), "X'DEAD'");
     }
 }

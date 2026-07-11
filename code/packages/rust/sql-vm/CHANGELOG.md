@@ -3,6 +3,27 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] - Unreleased
+
+### Added
+
+- **Five more scalar built-in functions** in `call_builtin`, matching SQLite:
+  - `SIGN(x)` — `-1`/`0`/`+1` for a negative/zero/positive number; NULL for a
+    NULL or non-numeric argument.
+  - `UNICODE(s)` — the code point of the first character of `s`; NULL for a NULL
+    or empty string.
+  - `CHAR(x1, …)` — a string built from the argument code points (out-of-range
+    or non-integer arguments contribute nothing; no args → `""`).
+  - `ZEROBLOB(n)` — a BLOB of `n` zero bytes (`n < 0` → empty); NULL → NULL. The
+    length is capped at 1,000,000 (returning `ResourceLimit`, like the GROUP BY /
+    COUNT(DISTINCT) guards) so a query such as `zeroblob(9999999999)` can't force
+    a multi-gigabyte eager allocation.
+  - `QUOTE(x)` — the value as an SQL literal (NULL → `NULL`, text single-quoted
+    with doubled inner quotes, blob as `X'…'` hex, integer as its digits; floats
+    declined, like `HEX`).
+  Each is unit-tested and validated end-to-end against real SQLite by the
+  mini-sqlite differential oracle.
+
 ## [0.3.0] - Unreleased
 
 ### Added

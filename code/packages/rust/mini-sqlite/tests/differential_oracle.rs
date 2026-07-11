@@ -442,6 +442,47 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT HEX(id) AS hi, HEX(name) AS hn FROM t ORDER BY id",
     },
+    // --- More scalar functions: SIGN / UNICODE / CHAR / ZEROBLOB / QUOTE. ---
+    Case {
+        id: "sign",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, -7), (2, 0), (3, 42)",
+        ],
+        query: "SELECT SIGN(n) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "unicode",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'abc'), (2, 'Z')",
+        ],
+        query: "SELECT UNICODE(s) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "char_fn",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1)",
+        ],
+        query: "SELECT CHAR(72,105,33) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "zeroblob",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1, 3), (2, 0)",
+        ],
+        query: "SELECT ZEROBLOB(n) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "quote",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT, n INTEGER)",
+            "INSERT INTO t VALUES (1, 'abc', -7), (2, NULL, 5)",
+        ],
+        query: "SELECT QUOTE(s) AS qs, QUOTE(n) AS qn FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
