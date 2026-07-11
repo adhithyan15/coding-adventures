@@ -1495,7 +1495,8 @@ pub const RUNTIME: &str = r##"mod __sir {
                     name,
                     "abs" | "to_i" | "to_int" | "to_f" | "even?" | "odd?" | "zero?"
                         | "positive?" | "negative?" | "succ" | "next" | "pred" | "floor"
-                        | "ceil" | "round" | "gcd" | "pow" | "**" | "digits" | "times"
+                        | "ceil" | "round" | "divmod" | "fdiv" | "clamp" | "between?"
+                        | "gcd" | "pow" | "**" | "digits" | "times"
                         | "upto" | "downto" | "step"
                 )
             }
@@ -2644,11 +2645,109 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Value::Float(x) if x.is_finite() => Value::Int(x.ceil() as i64),
                 _ => Value::Int(0),
             },
-            "round" => match &recv {
-                Value::Int(_) => recv,
-                Value::Float(x) if x.is_finite() => Value::Int(ruby_round(*x)),
-                _ => Value::Int(0),
-            },
+            // `round` / `round(ndigits)` — half AWAY from zero (via `ruby_round`,
+            // matching the Python/Go reference: `2.5.round == 3`).  A positive
+            // `ndigits` on a Float rounds to that many decimals; `ndigits <= 0`
+            // rounds to a power of ten.  Rust's i64/f64 are FIXED width (no
+            // bignum), so the only guards are a place count past i64's ~18
+            // decimal digits (dwarfs the value ⇒ 0, Ruby parity) and a positive
+            // `ndigits` past Float precision / an overflowing scale-up (returns
+            // the value unchanged).
+            "round" => {
+                let ndigits = pos.first().map(as_i64_lenient).unwrap_or(0);
+                match &recv {
+                    Value::Int(iv) => {
+                        if ndigits >= 0 {
+                            recv
+                        } else if -ndigits > 18 {
+                            Value::Int(0)
+                        } else {
+                            Value::Int(round_int_to_multiple(*iv, pow10(-ndigits)))
+                        }
+                    }
+                    Value::Float(x) if x.is_finite() => {
+                        if ndigits <= 0 {
+                            if -ndigits > 18 {
+                                Value::Int(0)
+                            } else {
+                                Value::Int(round_int_to_multiple(ruby_round(*x), pow10(-ndigits)))
+                            }
+                        } else if ndigits > 17 {
+                            recv // already at full Float precision
+                        } else {
+                            let scale = 10f64.powi(ndigits as i32);
+                            let scaled = *x * scale;
+                            if scaled.is_finite() {
+                                Value::Float(ruby_round(scaled) as f64 / scale)
+                            } else {
+                                recv // overflow guard: no fractional part left
+                            }
+                        }
+                    }
+                    _ => Value::Int(0),
+                }
+            }
+            // `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+            // the divisor-signed remainder.  Division by zero raises a typed
+            // `ZeroDivisionError`.  Int/int uses exact integer math; a Float
+            // operand promotes to f64 (f64 division of nonzero/nonzero never
+            // panics).
+            "divmod" => {
+                let arg = pos.first().cloned().unwrap_or(Value::Int(0));
+                match (&recv, &arg) {
+                    (Value::Int(n), Value::Int(d)) => {
+                        if *d == 0 {
+                            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+                        }
+                        let q = floor_div_i64(*n, *d);
+                        // `wrapping_sub`/`wrapping_mul`: for `n == i64::MIN` with a
+                        // non-dividing `d`, the FLOORED quotient rounds away from
+                        // zero so the true `q*d` exceeds i64 range; a checked `-`
+                        // would panic in debug.  The true remainder always fits
+                        // in i64, so wrapping recovers it exactly in both profiles.
+                        let r = n.wrapping_sub(q.wrapping_mul(*d));
+                        Value::Seq(Rc::new(RefCell::new(vec![Value::Int(q), Value::Int(r)])))
+                    }
+                    _ => {
+                        let df = as_f64_lenient(&arg);
+                        if df == 0.0 {
+                            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+                        }
+                        let nf = as_f64_lenient(&recv);
+                        let q = (nf / df).floor();
+                        let r = nf - q * df;
+                        Value::Seq(Rc::new(RefCell::new(vec![Value::Float(q), Value::Float(r)])))
+                    }
+                }
+            }
+            // `fdiv(n)` — floating-point division that NEVER raises: dividing by
+            // zero yields `±Infinity`/`NaN` (f64 division already produces these
+            // rather than panicking), honouring the never-raise floor.
+            "fdiv" => {
+                let arg = pos.first().cloned().unwrap_or(Value::Int(0));
+                Value::Float(as_f64_lenient(&recv) / as_f64_lenient(&arg))
+            }
+            // `clamp(min, max)` — `min` if recv < min, `max` if recv > max, else
+            // recv.  Compared numerically (Range form deferred).
+            "clamp" => {
+                let lo = pos.first().cloned().unwrap_or(Value::Int(0));
+                let hi = pos.get(1).cloned().unwrap_or(Value::Int(0));
+                let rv = as_f64_lenient(&recv);
+                if rv < as_f64_lenient(&lo) {
+                    lo
+                } else if rv > as_f64_lenient(&hi) {
+                    hi
+                } else {
+                    recv
+                }
+            }
+            // `between?(min, max)` — `min <= recv <= max`.
+            "between?" => {
+                let lo = pos.first().map(|v| as_f64_lenient(v)).unwrap_or(0.0);
+                let hi = pos.get(1).map(|v| as_f64_lenient(v)).unwrap_or(0.0);
+                let rv = as_f64_lenient(&recv);
+                Value::Bool(rv >= lo && rv <= hi)
+            }
             // `gcd(other)` — the integer greatest common divisor, always
             // non-negative (Ruby: `(-12).gcd(8) == 4`).  Both receiver and
             // argument are truncated to i64 via the lenient coercion.
@@ -2780,6 +2879,65 @@ pub const RUNTIME: &str = r##"mod __sir {
             (x + 0.5).floor() as i64
         } else {
             (x - 0.5).ceil() as i64
+        }
+    }
+
+    // Ruby's integer division: the quotient FLOORED toward −∞ (`-7 / 2 == -4`),
+    // unlike Rust's truncating `/`.  Callers guarantee `b != 0`.
+    fn floor_div_i64(a: i64, b: i64) -> i64 {
+        // `wrapping_rem` (like `wrapping_div`) avoids the `i64::MIN % -1` panic —
+        // plain `%` traps on that case in BOTH debug and release, which would
+        // escape the typed-error floor.  It yields `0` there (the correct
+        // remainder), so the sign-correction branch is skipped and `q` (=
+        // `i64::MIN` from `wrapping_div`) is returned — Ruby parity.
+        let q = a.wrapping_div(b);
+        if (a.wrapping_rem(b) != 0) && ((a < 0) != (b < 0)) {
+            q - 1
+        } else {
+            q
+        }
+    }
+
+    // `10.pow(n)` for a small non-negative `n`.  Callers bound `n <= 18` (an i64
+    // holds ≤ ~9.2e18), so the result never overflows i64.
+    fn pow10(n: i64) -> i64 {
+        let mut result = 1i64;
+        let mut i = 0;
+        while i < n {
+            result = result.saturating_mul(10);
+            i += 1;
+        }
+        result
+    }
+
+    // Round `v` to the nearest multiple of `factor` (>= 1) half-AWAY-from-zero
+    // with ALL-INTEGER arithmetic (`Integer#round(-n)` / `Float#round(<=0)`
+    // parity).  Ruby's result is a bignum that may not fit i64; rather than
+    // return a two's-complement-wrapped (sign-flipped) garbage value, we DEGRADE
+    // to the un-rounded value when the rounded multiple would overflow i64 (the
+    // closest representable answer).  `i64::MIN` cannot be negated, so it takes
+    // the same degrade path.
+    fn round_int_to_multiple(v: i64, factor: i64) -> i64 {
+        if v == i64::MIN {
+            return v;
+        }
+        let neg = v < 0;
+        let mag = v.unsigned_abs();
+        let f = factor as u64;
+        let mut q = mag / f;
+        let rem = mag - q * f;
+        if rem.saturating_mul(2) >= f {
+            q += 1;
+        }
+        // Guard `q * factor` against i64 overflow.
+        if q > (i64::MAX as u64) / f {
+            return v; // rounded multiple overflows ⇒ degrade to the value
+        }
+        let magnitude = (q * f) as i64;
+        if neg {
+            -magnitude
+        } else {
+            magnitude
         }
     }
 

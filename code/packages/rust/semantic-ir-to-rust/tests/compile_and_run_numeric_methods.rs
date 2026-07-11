@@ -94,6 +94,27 @@ fn numeric_demo() -> Module {
         print_stmt(method(ilit(2), "pow", vec![ilit(10)])),  // 1024
         print_stmt(method(ilit(2), "**", vec![ilit(8)])),    // 256
         print_stmt(method(ilit(123), "digits", vec![])),     // [3, 2, 1]
+        // numeric breadth (N1) ----------------------------------------
+        print_stmt(method(flit(3.14159), "round", vec![ilit(2)])), // 3.14
+        print_stmt(method(ilit(1250), "round", vec![ilit(-2)])),   // 1300 (half away)
+        print_stmt(method(ilit(13), "divmod", vec![ilit(4)])),     // [3, 1]
+        print_stmt(method(ilit(13), "divmod", vec![ilit(-4)])),    // [-4, -3]
+        print_stmt(method(ilit(7), "fdiv", vec![ilit(2)])),        // 3.5
+        print_stmt(method(ilit(1), "fdiv", vec![ilit(0)])),        // inf (never raises)
+        print_stmt(method(ilit(5), "clamp", vec![ilit(1), ilit(10)])),   // 5
+        print_stmt(method(ilit(-3), "clamp", vec![ilit(1), ilit(10)])),  // 1
+        print_stmt(method(ilit(99), "clamp", vec![ilit(1), ilit(10)])),  // 10
+        print_stmt(method(ilit(5), "between?", vec![ilit(1), ilit(10)])), // #t
+        print_stmt(method(ilit(0), "between?", vec![ilit(1), ilit(10)])), // #f
+        // overflow-degrade: i64::MAX.round(-1) returns self, not a wrapped garbage value.
+        print_stmt(method(ilit(9223372036854775807), "round", vec![ilit(-1)])),
+        // i64::MIN.divmod(-1) must NOT panic (plain `%` traps on MIN % -1 in
+        // both debug and release); wrapping_rem yields 0 so the quotient wraps
+        // to i64::MIN and the remainder is 0.
+        print_stmt(method(ilit(i64::MIN), "divmod", vec![ilit(-1)])),
+        // i64::MIN.divmod(3): the floored quotient makes the true q*d exceed i64
+        // range, so the remainder reconstruction must wrap (not a checked `-`).
+        print_stmt(method(ilit(i64::MIN), "divmod", vec![ilit(3)])),
     ];
 
     Module {
@@ -208,6 +229,20 @@ fn numeric_methods_compile_and_run() {
             "1024",      // 2.pow(10)
             "256",       // 2 ** 8
             "[3, 2, 1]", // 123.digits
+            "3.14",      // 3.14159.round(2)
+            "1300",      // 1250.round(-2) — half away from zero
+            "[3, 1]",    // 13.divmod(4)
+            "[-4, -3]",  // 13.divmod(-4) — divisor-signed remainder
+            "3.5",       // 7.fdiv(2)
+            "inf",       // 1.fdiv(0) — never raises
+            "5",         // 5.clamp(1, 10)
+            "1",         // (-3).clamp(1, 10)
+            "10",        // 99.clamp(1, 10)
+            "#t",        // 5.between?(1, 10)
+            "#f",        // 0.between?(1, 10)
+            "9223372036854775807", // i64::MAX.round(-1) — overflow-degrade to self
+            "[-9223372036854775808, 0]", // i64::MIN.divmod(-1) — no panic (wrapping_rem)
+            "[-3074457345618258603, 1]", // i64::MIN.divmod(3) — no panic (wrapping_sub)
         ],
         "unexpected program output; full stdout:\n{stdout}"
     );
