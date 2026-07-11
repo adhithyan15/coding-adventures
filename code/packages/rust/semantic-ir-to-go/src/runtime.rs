@@ -1683,7 +1683,8 @@ func _sir_numeric_responds(name string) bool {
 	// `_sir_numeric_method` switch above).
 	case "abs", "to_i", "to_int", "to_f", "even?", "odd?", "zero?",
 		"positive?", "negative?", "succ", "next", "pred",
-		"floor", "ceil", "round", "gcd", "pow", "**", "digits":
+		"floor", "ceil", "round", "divmod", "fdiv", "clamp", "between?",
+		"gcd", "pow", "**", "digits":
 		return true
 	}
 	return false
@@ -3094,19 +3095,111 @@ func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
 		}
 		return int64(math.Ceil(f)), true
 	case "round":
-		// Ruby `Float#round` (no digits) rounds half AWAY from zero — unlike
-		// Go's `math.Round` which also rounds half away, but we route through
-		// the explicit helper to stay in lockstep with the Python/TS
-		// `_ruby_round` (`2.5.round == 3`, `(-2.5).round == -3`).  An integer
-		// receiver is the identity; a non-finite float degrades to 0.
+		// Ruby `round` / `round(ndigits)` — half AWAY from zero (unlike Go's
+		// `math.Round`, routed through `_sir_ruby_round` to stay in lockstep
+		// with the Python/TS reference: `2.5.round == 3`, `(-2.5).round == -3`).
+		// With no argument (or `ndigits >= 0` on an Integer) the result is an
+		// integer; a positive `ndigits` on a Float rounds to that many decimals;
+		// `ndigits <= 0` rounds to a power of ten.  A non-finite float degrades
+		// to the receiver/0.  Go's int64/float64 are FIXED width (no bignum), so
+		// the only guard needed is against `10^k` overflowing int64: a place
+		// count past int64's ~18 decimal digits dwarfs the value ⇒ 0 (Ruby
+		// `1234.round(-30) == 0`), and a large positive `ndigits` past float
+		// precision returns the value unchanged.
+		ndigits := int64(0)
+		if len(args) > 0 {
+			ndigits = _sir_as_int_trunc(args[0])
+		}
 		if isInt {
-			return _sir_as_int(recv), true
+			iv := _sir_as_int(recv)
+			if ndigits >= 0 {
+				return iv, true
+			}
+			if -ndigits > 18 {
+				return int64(0), true
+			}
+			factor := _sir_pow10(-ndigits)
+			return _sir_round_int_to_multiple(iv, factor), true
 		}
 		f := _sir_as_float(recv)
 		if math.IsNaN(f) || math.IsInf(f, 0) {
 			return int64(0), true
 		}
-		return _sir_ruby_round(f), true
+		if ndigits <= 0 {
+			if -ndigits > 18 {
+				return int64(0), true
+			}
+			factor := _sir_pow10(-ndigits)
+			return _sir_round_int_to_multiple(_sir_ruby_round(f), factor), true
+		}
+		if ndigits > 17 {
+			return f, true // already at full Float precision
+		}
+		scale := math.Pow(10, float64(ndigits))
+		scaled := f * scale
+		if math.IsInf(scaled, 0) {
+			return f, true // overflow guard: no fractional part left to round
+		}
+		return float64(_sir_ruby_round(scaled)) / scale, true
+	case "divmod":
+		// Ruby `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
+		// the divisor-signed remainder.  Division by zero raises a typed
+		// `ZeroDivisionError` (so a translated `rescue` matches).  Int/int uses
+		// exact integer math; a float operand promotes to float64 (Go float
+		// division of a nonzero-divided-by-nonzero never panics).
+		if len(args) < 1 {
+			return nil, false
+		}
+		divIsInt := _sir_is_int(args[0])
+		if isInt && divIsInt {
+			d := _sir_as_int(args[0])
+			if d == 0 {
+				panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+			}
+			n := _sir_as_int(recv)
+			q := _sir_floor_div(n, d)
+			r := n - q*d
+			return &Seq{Items: []Value{q, r}}, true
+		}
+		df := _sir_as_float(args[0])
+		if df == 0 {
+			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+		}
+		nf := _sir_as_float(recv)
+		q := math.Floor(nf / df)
+		r := nf - q*df
+		return &Seq{Items: []Value{q, r}}, true
+	case "fdiv":
+		// Ruby `fdiv(n)`: floating-point division that NEVER raises — dividing
+		// by zero yields ±Infinity/NaN (Go float division already produces these
+		// rather than panicking), honouring the never-raise floor.
+		if len(args) < 1 {
+			return nil, false
+		}
+		return _sir_as_float(recv) / _sir_as_float(args[0]), true
+	case "clamp":
+		// Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
+		// recv > max, else recv.  Compared numerically (float view) so mixed
+		// int/float bounds behave; the original receiver value is returned
+		// unchanged when in range.  (The Range form is deferred.)
+		if len(args) < 2 {
+			return nil, false
+		}
+		rv := _sir_as_float(recv)
+		if rv < _sir_as_float(args[0]) {
+			return args[0], true
+		}
+		if rv > _sir_as_float(args[1]) {
+			return args[1], true
+		}
+		return recv, true
+	case "between?":
+		// Ruby `Comparable#between?(min, max)`: `min <= recv <= max`.
+		if len(args) < 2 {
+			return nil, false
+		}
+		rv := _sir_as_float(recv)
+		return rv >= _sir_as_float(args[0]) && rv <= _sir_as_float(args[1]), true
 	case "gcd":
 		// `a.gcd(b)` is the (non-negative) greatest common divisor, via
 		// Euclid on the truncated magnitudes (matching Python `math.gcd` and
@@ -3161,6 +3254,52 @@ func _sir_ruby_round(x float64) int64 {
 		return int64(math.Floor(x + 0.5))
 	}
 	return int64(math.Ceil(x - 0.5))
+}
+
+// _sir_is_int reports whether a runtime Value is an integer (not a float).
+func _sir_is_int(v Value) bool {
+	_, ok := _sir_int_val(v)
+	return ok
+}
+
+// _sir_floor_div is Ruby's integer division: the quotient FLOORED toward −∞
+// (`-7 / 2 == -4`), unlike Go's truncating `/`.  Callers guarantee `b != 0`.
+func _sir_floor_div(a, b int64) int64 {
+	q := a / b
+	if (a%b != 0) && ((a < 0) != (b < 0)) {
+		q--
+	}
+	return q
+}
+
+// _sir_pow10 returns 10**n for a small non-negative n.  Callers bound n ≤ 18
+// (int64 holds ≤ ~9.2e18), so the result never overflows int64.
+func _sir_pow10(n int64) int64 {
+	result := int64(1)
+	for i := int64(0); i < n; i++ {
+		result *= 10
+	}
+	return result
+}
+
+// _sir_round_int_to_multiple rounds `v` to the nearest multiple of `factor`
+// half-AWAY-from-zero using all-integer arithmetic (`Integer#round(-n)` /
+// `Float#round(<=0)` parity).  `factor >= 1`.
+func _sir_round_int_to_multiple(v, factor int64) int64 {
+	neg := v < 0
+	if neg {
+		v = -v
+	}
+	q := v / factor
+	rem := v - q*factor
+	if rem*2 >= factor {
+		q++
+	}
+	magnitude := q * factor
+	if neg {
+		return -magnitude
+	}
+	return magnitude
 }
 
 func _sir_gcd(a, b int64) int64 {

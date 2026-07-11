@@ -148,6 +148,23 @@ fn catalog_module() -> Module {
         print_stmt(method(flit(3.7), "floor", vec![])),
         print_stmt(method(flit(3.2), "ceil", vec![])),
         print_stmt(method(flit(2.5), "round", vec![])),
+        // Numeric breadth (N1): round(ndigits) / divmod / fdiv / clamp / between?
+        // 3.14159.round(2) → 3.14 ; 1250.round(-2) → 1300 (half away from zero)
+        print_stmt(method(flit(3.14159), "round", vec![ilit(2)])),
+        print_stmt(method(ilit(1250), "round", vec![ilit(-2)])),
+        // 13.divmod(4) → [3, 1] ; 13.divmod(-4) → [-4, -3] (divisor-signed rem)
+        print_stmt(method(ilit(13), "divmod", vec![ilit(4)])),
+        print_stmt(method(ilit(13), "divmod", vec![ilit(-4)])),
+        // 7.fdiv(2) → 3.5 ; 1.fdiv(0) → Infinity (never raises)
+        print_stmt(method(ilit(7), "fdiv", vec![ilit(2)])),
+        print_stmt(method(ilit(1), "fdiv", vec![ilit(0)])),
+        // 5.clamp(1, 10) → 5 ; (-3).clamp(1, 10) → 1 ; 99.clamp(1, 10) → 10
+        print_stmt(method(ilit(5), "clamp", vec![ilit(1), ilit(10)])),
+        print_stmt(method(ilit(-3), "clamp", vec![ilit(1), ilit(10)])),
+        print_stmt(method(ilit(99), "clamp", vec![ilit(1), ilit(10)])),
+        // 5.between?(1, 10) → #t ; 0.between?(1, 10) → #f
+        print_stmt(method(ilit(5), "between?", vec![ilit(1), ilit(10)])),
+        print_stmt(method(ilit(0), "between?", vec![ilit(1), ilit(10)])),
         // 1.upto(3) { |i| print i } → 1,2,3 (three lines).  The block itself
         // prints; the iterator's return value (the receiver) is discarded, so
         // this is a bare ExprStmt, NOT wrapped in another print.
@@ -236,6 +253,17 @@ fn numeric_methods_compile_and_run() {
             "3",         // 3.7.floor
             "4",         // 3.2.ceil
             "3",         // 2.5.round
+            "3.14",      // 3.14159.round(2)
+            "1300",      // 1250.round(-2) — half away from zero
+            "[3, 1]",    // 13.divmod(4)
+            "[-4, -3]",  // 13.divmod(-4) — divisor-signed remainder
+            "3.5",       // 7.fdiv(2)
+            "inf",       // 1.fdiv(0) — never raises
+            "5",         // 5.clamp(1, 10)
+            "1",         // (-3).clamp(1, 10)
+            "10",        // 99.clamp(1, 10)
+            "#t",        // 5.between?(1, 10)
+            "#f",        // 0.between?(1, 10)
             "1", "2", "3", // 1.upto(3)
             "3", "2", "1", // 3.downto(1)
             "0", "2", "4", // 0.step(4, 2)

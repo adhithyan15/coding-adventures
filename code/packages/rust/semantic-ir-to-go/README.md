@@ -188,7 +188,8 @@ Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 **String** `length`/`size`, `upcase`, `downcase`, `reverse`, `strip`/`lstrip`/
 `rstrip`, `empty?`, `include?`, `start_with?`, `end_with?`, `split`, `chars`,
 `to_i`, `to_f`, `to_sym`; **Numeric** `abs`, `to_i`, `to_f`, `even?`, `odd?`,
-`zero?`, `positive?`, `negative?`, `succ`/`next`, `pred`, `times`; **Symbol**
+`zero?`, `positive?`, `negative?`, `succ`/`next`, `pred`, `round` (with optional
+`ndigits`), `divmod`, `fdiv`, `clamp`, `between?`, `times`; **Symbol**
 `to_s`, `to_sym`, `length`/`size`, `upcase`, `downcase`, `empty?`; **universal**
 `nil?`, `==`, `!=`, `class`, `to_s`, `itself`.
 
