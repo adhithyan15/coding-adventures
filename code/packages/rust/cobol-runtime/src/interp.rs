@@ -3,7 +3,7 @@
 
 use crate::error::RuntimeError;
 use crate::picture::Picture;
-use crate::program::{Fig, Lit, Operand, Program, Stmt};
+use crate::program::{Cond, Fig, Lit, Operand, Program, RelOp, Stmt};
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, sub, Decimal};
 use std::collections::HashMap;
 
@@ -28,6 +28,25 @@ enum Src {
 /// rather than panicking or wrapping.
 fn checked(r: Option<Decimal>) -> Result<Decimal, RuntimeError> {
     r.ok_or_else(|| RuntimeError::Unsupported("arithmetic overflow (result exceeds ~38 digits)".into()))
+}
+
+/// The character form of a source value for an alphanumeric comparison (a
+/// figurative yields `""` here — it is expanded to the other operand's length
+/// by the caller).
+fn src_chars(src: &Src) -> String {
+    match src {
+        Src::Chars(s) => s.clone(),
+        Src::Num(d) => d.digits(),
+        Src::Fig(_) => String::new(),
+    }
+}
+
+/// Expand a figurative constant to `n` characters.
+fn fill_fig(f: &Fig, n: usize) -> String {
+    match f {
+        Fig::Zero => "0".repeat(n),
+        Fig::Space => " ".repeat(n),
+    }
 }
 
 /// The running machine: the item table, a name→index map, and captured output.
@@ -122,25 +141,79 @@ impl Machine {
 
     /// Run the procedure division and return the captured console output.
     pub fn run(mut self, program: &Program) -> Result<String, RuntimeError> {
-        for para in &program.paragraphs {
+        'outer: for para in &program.paragraphs {
             for stmt in &para.stmts {
-                match stmt {
-                    Stmt::StopRun => return Ok(self.output),
-                    Stmt::Display(ops) => self.exec_display(ops)?,
-                    Stmt::Move { src, dsts } => self.exec_move(src, dsts)?,
-                    Stmt::Add { operands, to, giving } => self.exec_add(operands, to, giving)?,
-                    Stmt::Subtract { operands, from, giving } => {
-                        self.exec_subtract(operands, from, giving)?
-                    }
-                    Stmt::Multiply { a, by, giving } => self.exec_multiply(a, by, giving)?,
-                    Stmt::Divide { divisor, dividend, giving } => {
-                        self.exec_divide(divisor, dividend, giving)?
-                    }
+                if self.exec_stmt(stmt)? {
+                    break 'outer; // STOP RUN
                 }
             }
         }
         // Falling off the end of the procedure division ends the run too.
         Ok(self.output)
+    }
+
+    /// Execute one statement. Returns `true` if it requested `STOP RUN` (which
+    /// unwinds nested `IF` branches and ends the program).
+    fn exec_stmt(&mut self, stmt: &Stmt) -> Result<bool, RuntimeError> {
+        match stmt {
+            Stmt::StopRun => return Ok(true),
+            Stmt::Display(ops) => self.exec_display(ops)?,
+            Stmt::Move { src, dsts } => self.exec_move(src, dsts)?,
+            Stmt::Add { operands, to, giving } => self.exec_add(operands, to, giving)?,
+            Stmt::Subtract { operands, from, giving } => self.exec_subtract(operands, from, giving)?,
+            Stmt::Multiply { a, by, giving } => self.exec_multiply(a, by, giving)?,
+            Stmt::Divide { divisor, dividend, giving } => {
+                self.exec_divide(divisor, dividend, giving)?
+            }
+            Stmt::If { cond, then_branch, else_branch } => {
+                let branch = if self.eval_cond(cond)? { then_branch } else { else_branch };
+                for s in branch {
+                    if self.exec_stmt(s)? {
+                        return Ok(true); // STOP RUN inside the branch
+                    }
+                }
+            }
+        }
+        Ok(false)
+    }
+
+    /// Evaluate a relational condition. Numeric when both sides are numeric;
+    /// otherwise an alphanumeric (space-padded) character comparison — COBOL's
+    /// rule. Figurative constants take the category/length of the other operand.
+    fn eval_cond(&self, cond: &Cond) -> Result<bool, RuntimeError> {
+        use std::cmp::Ordering;
+        let l = self.src_from_operand(&cond.left)?;
+        let r = self.src_from_operand(&cond.right)?;
+
+        let ordering = match (&l, &r) {
+            (Src::Num(a), Src::Num(b)) => a.cmp_value(b),
+            (Src::Num(a), Src::Fig(Fig::Zero)) => a.cmp_value(&Decimal::zero()),
+            (Src::Fig(Fig::Zero), Src::Num(b)) => Decimal::zero().cmp_value(b),
+            _ => {
+                // Alphanumeric comparison: build each side's characters, expand a
+                // figurative to the other operand's length, then space-pad both
+                // to equal length and compare.
+                let mut ls = src_chars(&l);
+                let mut rs = src_chars(&r);
+                if let Src::Fig(f) = &l {
+                    ls = fill_fig(f, rs.len().max(1));
+                }
+                if let Src::Fig(f) = &r {
+                    rs = fill_fig(f, ls.len().max(1));
+                }
+                let width = ls.len().max(rs.len());
+                let lp = format!("{ls:<width$}");
+                let rp = format!("{rs:<width$}");
+                lp.cmp(&rp)
+            }
+        };
+
+        let base = match cond.op {
+            RelOp::Greater => ordering == Ordering::Greater,
+            RelOp::Less => ordering == Ordering::Less,
+            RelOp::Equal => ordering == Ordering::Equal,
+        };
+        Ok(base ^ cond.negated)
     }
 
     fn exec_display(&mut self, ops: &[Operand]) -> Result<(), RuntimeError> {

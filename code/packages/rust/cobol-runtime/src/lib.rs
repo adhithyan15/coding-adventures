@@ -6,12 +6,12 @@
 //! [PL08](../../../specs/PL08-cobol-runtime.md).
 //!
 //! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
-//! `STOP RUN` and fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`
-//! over unsigned numeric-display and character pictures — and returns a
-//! descriptive error for anything not yet modelled, rather than producing wrong
-//! output. The roadmap toward full COBOL (signed numerics, `COMPUTE`,
-//! `ROUNDED`/`ON SIZE ERROR`, editing pictures, `PERFORM`, tables, files, later
-//! standards) is in PL08.
+//! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
+//! and `IF … ELSE` (numeric and alphanumeric comparison) over unsigned
+//! numeric-display and character pictures — and returns a descriptive error for
+//! anything not yet modelled, rather than producing wrong output. The roadmap
+//! toward full COBOL (signed numerics, `COMPUTE`, `ROUNDED`/`ON SIZE ERROR`,
+//! editing pictures, `PERFORM`, tables, files, later standards) is in PL08.
 //!
 //! ```
 //! use coding_adventures_cobol_runtime::run_cobol;
@@ -323,6 +323,115 @@ mod tests {
         ]))
         .unwrap_err();
         assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
+    // IF — conditions and branching
+    // ----------------------------------------------------------------------
+
+    /// Run a program with `01 N PIC 9(3) VALUE <n>` and the given procedure body.
+    fn run_if(n: &str, body: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  N  PIC 9(3) VALUE {n}."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs)).unwrap()
+    }
+
+    #[test]
+    fn if_numeric_true_and_false_branches() {
+        // N=5 > 3 → THEN.
+        assert_eq!(
+            run_if("5", &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."]),
+            "BIG\n"
+        );
+        // N=1 not > 3 → ELSE.
+        assert_eq!(
+            run_if("1", &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."]),
+            "SMALL\n"
+        );
+    }
+
+    #[test]
+    fn if_equal_less_and_negated() {
+        assert_eq!(run_if("7", &["IF N EQUAL 7 DISPLAY \"EQ\".", "STOP RUN."]), "EQ\n");
+        assert_eq!(run_if("2", &["IF N LESS 5 DISPLAY \"LT\".", "STOP RUN."]), "LT\n");
+        // IS NOT GREATER: 3 is not > 5 → true.
+        assert_eq!(run_if("3", &["IF N IS NOT GREATER THAN 5 DISPLAY \"OK\".", "STOP RUN."]), "OK\n");
+        // A false condition with no ELSE displays nothing.
+        assert_eq!(run_if("9", &["IF N LESS 5 DISPLAY \"NO\".", "STOP RUN."]), "");
+    }
+
+    #[test]
+    fn if_then_branch_runs_multiple_statements() {
+        // THEN branch has two statements; both run when the condition holds.
+        assert_eq!(
+            run_if("5", &["IF N GREATER 3 MOVE 8 TO N DISPLAY N.", "STOP RUN."]),
+            "008\n"
+        );
+    }
+
+    #[test]
+    fn if_alphanumeric_comparison_space_pads() {
+        // "AB" vs "AB " (space-padded) compare equal.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  W  PIC X(4) VALUE \"AB\".",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF W EQUAL \"AB\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "MATCH\n");
+    }
+
+    #[test]
+    fn stop_run_inside_a_branch_ends_the_program() {
+        // The STOP RUN is inside the THEN branch; the trailing DISPLAY never runs.
+        assert_eq!(
+            run_if("5", &["IF N GREATER 3 DISPLAY \"IN\" STOP RUN.", "DISPLAY \"AFTER\".", "STOP RUN."]),
+            "IN\n"
+        );
+    }
+
+    #[test]
+    fn deeply_nested_if_errors_rather_than_overflowing_the_stack() {
+        // A crafted source can nest `IF`s far past anything real COBOL does.
+        // Parsing that recurses once per level; without the parser's depth cap
+        // it overflows the *native* stack and aborts the process — uncatchable,
+        // not a RuntimeError. `cobol-parser` opts into the cap, so end-to-end
+        // this comes back as a clean parse error. One `IF` per card so the
+        // fixed 80-column format doesn't truncate them (a statement flows
+        // freely across cards, so the nest is real). 4096 is far past the cap.
+        let mut lines: Vec<String> = vec![
+            "IDENTIFICATION DIVISION.".into(),
+            "PROGRAM-ID. P.".into(),
+            "DATA DIVISION.".into(),
+            "WORKING-STORAGE SECTION.".into(),
+            "01  N  PIC 9(3) VALUE 5.".into(),
+            "PROCEDURE DIVISION.".into(),
+            "MAIN.".into(),
+        ];
+        for _ in 0..4096 {
+            lines.push("    IF N GREATER 0".into());
+        }
+        lines.push("    DISPLAY \"DEEP\".".into());
+        lines.push("    STOP RUN.".into());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = run_cobol(&program(&refs)).unwrap_err();
+        assert!(matches!(err, RuntimeError::Parse(_)), "got {err:?}");
+        assert!(err.to_string().to_lowercase().contains("nest"), "message should explain: {err}");
     }
 
     // ----------------------------------------------------------------------

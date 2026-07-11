@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0 — IF / conditional branching (PL08)
+
+- `IF cond THEN… [ELSE …]` with the current grammar's simple relational
+  condition (`[IS] [NOT] (GREATER [THAN] | LESS [THAN] | EQUAL [TO])`).
+- Comparison is **numeric** when both operands are numeric (exact, digit-string
+  based — any size, sign-aware, differing fraction lengths compare equal) and
+  **alphanumeric** otherwise (space-padded to equal length, COBOL's rule);
+  figurative constants take the other operand's category/length.
+- Both branches may hold multiple statements; branches nest, and a `STOP RUN`
+  inside a branch ends the whole program (statement execution now returns a
+  stop-flag that unwinds nested IFs).
+- Remaining control flow (`PERFORM`, `GO TO`, `EVALUATE`, `END-IF`) and `COMPUTE`
+  stay deferred. Roadmap in PL08.
+- **DoS hardening:** deeply-nested `IF … IF … IF …` (the first construct that
+  nests) can no longer overflow the native stack — `cobol-parser` 0.1.1 opts into
+  the parser's depth cap, so it returns a clean parse error end to end.
+  Regression test added here too.
+
+
 ## 0.3.0 — DIVIDE (PL08)
 
 - `DIVIDE a INTO b [GIVING g]` — result = b / a. Fixed-point division computed to

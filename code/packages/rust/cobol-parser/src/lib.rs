@@ -34,16 +34,22 @@
 //! - [`try_parse_cobol`] — the fully fallible form (lexical *and* parse errors → `Err`).
 
 use coding_adventures_cobol_lexer::{tokenize_cobol, try_tokenize_cobol};
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 mod _grammar;
 
 /// Create a [`GrammarParser`] wired to the COBOL grammar and tokens (with the
 /// lexer's column-strip hook), ready to call `.parse()`. Uses the panicking
 /// tokenizer; for the fully fallible path use [`try_parse_cobol`].
+///
+/// The parser opts into the shared recursion-depth cap
+/// ([`DEFAULT_MAX_RULE_DEPTH`]). Deeply-nested syntax — e.g. hundreds of nested
+/// `IF … IF … IF …` — recurses once per level through `parse_rule`; without a
+/// cap that overflows the *native* stack, an uncatchable process abort. With
+/// the cap it surfaces as a recoverable [`GrammarParseError`] instead.
 pub fn create_cobol_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_cobol(source);
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(DEFAULT_MAX_RULE_DEPTH)
 }
 
 /// Parse COBOL-60 `source` into a [`GrammarASTNode`] CST rooted at `"program"`.
@@ -59,6 +65,7 @@ pub fn parse_cobol(source: &str) -> GrammarASTNode {
 pub fn try_parse_cobol(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_cobol(source)?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
+        .with_max_depth(DEFAULT_MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| format!("{e}"))
 }
@@ -284,6 +291,32 @@ mod tests {
     fn missing_procedure_division_is_error() {
         let src = program(&["IDENTIFICATION DIVISION.", "PROGRAM-ID. P."]);
         assert!(try_parse_cobol(&src).is_err());
+    }
+
+    /// Deeply-nested `IF … IF … IF …` recurses once per level through the
+    /// generic `parse_rule`. Without the depth cap this overflows the native
+    /// stack — an uncatchable process abort. With [`DEFAULT_MAX_RULE_DEPTH`]
+    /// (opted into by [`create_cobol_parser`] / [`try_parse_cobol`]) it must
+    /// come back as a recoverable `Err`. One `IF` per card so the fixed
+    /// 80-column format doesn't truncate them; a statement flows freely across
+    /// cards, so the nest is genuinely deep. 4096 levels is far past the cap.
+    #[test]
+    fn deeply_nested_if_is_a_clean_error_not_a_stack_overflow() {
+        let mut lines: Vec<String> = vec![
+            "IDENTIFICATION DIVISION.".into(),
+            "PROGRAM-ID. P.".into(),
+            "PROCEDURE DIVISION.".into(),
+            "MAIN.".into(),
+        ];
+        for _ in 0..4096 {
+            lines.push("    IF GROSS-PAY IS GREATER THAN ZERO".into());
+        }
+        lines.push("        DISPLAY ZERO.".into());
+        lines.push("    STOP RUN.".into());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = try_parse_cobol(&program(&refs)).unwrap_err();
+        assert!(err.to_lowercase().contains("nest") || err.to_lowercase().contains("depth"),
+            "depth refusal should be self-explanatory, got: {err}");
     }
 
     /// A lexical error (stray `@` in the code area) surfaces as an `Err`.
