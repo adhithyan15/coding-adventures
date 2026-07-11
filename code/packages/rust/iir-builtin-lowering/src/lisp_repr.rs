@@ -99,16 +99,16 @@ const LISP_BUILTINS: &[&str] = &[
     "lispy_equal",
 ];
 
-/// The unbox helper (`__twig_lispy_unbox_int`, arithmetic `>> 3`).
+/// The unbox helper (`__dyn_unbox_int`, arithmetic `>> 3`).
 const UNBOX_BUILTIN: &str = "lispy_unbox_int";
 
-/// The truthiness helper (`__twig_lispy_truthy`): a tagged `LispyValue` → a
+/// The truthiness helper (`__dyn_truthy`): a tagged `LispyValue` → a
 /// raw machine `0`/`1` (false iff `#f` or nil), so the backend's
 /// `jmp_if_false` — which tests a raw word against zero — branches correctly
 /// on a `COND` predicate that produced a tagged boolean.
 const TRUTHY_BUILTIN: &str = "lispy_truthy";
 
-/// The universal exit-coercion helper (`__twig_lispy_to_exit_code`): a tagged
+/// The universal exit-coercion helper (`__dyn_to_exit_code`): a tagged
 /// `LispyValue` of *statically unknown* runtime tag → a raw `i64` exit code,
 /// dispatching on the tag at RUN time (int → `>> 3`; `#t`/`#f`/nil → `1`/`0`;
 /// symbol/pair → the tagged word verbatim). Used for a **lambda** result (F7):

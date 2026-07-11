@@ -340,7 +340,7 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 // The **native** backends (aarch64 / x86_64, driven by `twig-aot`) have no
 // managed heap.  Instead they link the shared C lisp runtime
 // (`twig-aot/runtime/lispy_runtime.c`, see LANG77) which implements
-// `lispy-runtime`'s tagged-value model — `__twig_lispy_cons`/`car`/`cdr`.
+// `lispy-runtime`'s tagged-value model — `__dyn_cons`/`car`/`cdr`.
 // For those backends a cons cell is a *runtime call*, not an inline
 // allocation, so the value is a proper NaN-box-tagged `LispyValue` (a
 // heap-tagged pointer) rather than a raw machine word.  That tag is what
@@ -358,15 +358,15 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // | Frontend builtin | Native runtime symbol  |
 // |------------------|------------------------|
-// | `cons`           | `lispy_cons` (→ `__twig_lispy_cons(car, cdr)`) |
-// | `car`            | `lispy_car`  (→ `__twig_lispy_car(pair)`)      |
-// | `cdr`            | `lispy_cdr`  (→ `__twig_lispy_cdr(pair)`)      |
+// | `cons`           | `lispy_cons` (→ `__dyn_cons(car, cdr)`) |
+// | `car`            | `lispy_car`  (→ `__dyn_car(pair)`)      |
+// | `cdr`            | `lispy_cdr`  (→ `__dyn_cdr(pair)`)      |
 //
 // The argument order already matches the C ABI (`cons head tail` →
 // `lispy_cons(car, cdr)`), so the transform is a pure **rename** of the
 // builtin name in `srcs[0]` — no operand shuffling, no instruction
 // expansion.  The native backends turn `call_builtin "lispy_cons"` into
-// `BL/CALL __twig_lispy_cons` via their generic `call_builtin` dispatch +
+// `BL/CALL __dyn_cons` via their generic `call_builtin` dispatch +
 // the `V1_BUILTINS` table; no new backend opcodes are needed.
 //
 // `null?` / `make_nil` / `make_symbol` are intentionally **not** renamed

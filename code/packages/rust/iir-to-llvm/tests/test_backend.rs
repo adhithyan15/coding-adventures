@@ -1356,7 +1356,7 @@ fn errors_display_without_panic() {
 }
 
 /// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "lispy_cons"`) lowers
-/// to a `call i64 @__twig_lispy_cons(i64, i64)` and emits exactly one matching
+/// to a `call i64 @__dyn_cons(i64, i64)` and emits exactly one matching
 /// `declare`. A lisp heap reference type (`ref<LispyPair>`) is accepted (carried
 /// as a tagged `i64`); a non-lisp `ref<Foo>` is still rejected (see
 /// `validate_rejects_unsupported_type`).
@@ -1389,12 +1389,12 @@ fn lispy_cons_lowers_to_runtime_call() {
         ],
     );
     let ll = lower(&module_with(f));
-    assert!(ll.contains("declare i64 @__twig_lispy_cons(i64, i64)"), "cons declare; got:\n{ll}");
-    assert!(ll.contains("declare i64 @__twig_lispy_car(i64)"), "car declare; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__twig_lispy_cons(i64 "), "cons call site; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__twig_lispy_car(i64 "), "car call site; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_cons(i64, i64)"), "cons declare; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_car(i64)"), "car declare; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_cons(i64 "), "cons call site; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_car(i64 "), "car call site; got:\n{ll}");
     // Exactly one declare per used builtin (no duplicates from two call sites).
-    assert_eq!(ll.matches("declare i64 @__twig_lispy_cons").count(), 1, "one cons declare");
+    assert_eq!(ll.matches("declare i64 @__dyn_cons").count(), 1, "one cons declare");
 }
 
 /// An unknown `lispy_*`-shaped builtin that is NOT in `LISPY_BUILTINS` is rejected.

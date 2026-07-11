@@ -203,7 +203,7 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // (the C runtime's `LispyValue`), and the polymorphic `any` flows as the
         // same word. A lisp heap reference (`ref<LispyPair>`, and any future
         // `ref<Lispy…>`) is likewise carried as a tagged `i64` — the runtime owns
-        // the cell layout, the backend only moves words and calls `__twig_lispy_*`.
+        // the cell layout, the backend only moves words and calls `__dyn_*`.
         // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
         "any" => Ok("i64"),
         t if t.starts_with("ref<Lispy") => Ok("i64"),
@@ -339,31 +339,31 @@ struct LlvmStringLiteralRef {
 /// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
 /// so the signature is always `i64 (i64 × arity)`. The `lispy_*` IIR names are
 /// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
-/// `lower_lisp_repr`; they map to the runtime's `__twig_lispy_*` symbols.
+/// `lower_lisp_repr`; they map to the runtime's `__dyn_*` symbols.
 ///
 /// | iir name         | runtime symbol            | McCarthy primitive            |
 /// |------------------|---------------------------|-------------------------------|
-/// | `lispy_cons`     | `__twig_lispy_cons`       | `CONS` — build a pair `[a|b]`  |
-/// | `lispy_car`/`cdr`| `__twig_lispy_car`/`cdr`  | `CAR`/`CDR`                    |
-/// | `lispy_pair_p`   | `__twig_lispy_pair_p`     | `pair?` (→ `ATOM`)            |
-/// | `lispy_equal`    | `__twig_lispy_equal`      | `EQ`                          |
-/// | `lispy_not`      | `__twig_lispy_not`        | logical `not`                 |
-/// | `lispy_truthy`   | `__twig_lispy_truthy`     | `COND` clause test            |
-/// | `lispy_box_int`  | `__twig_lispy_box_int`    | int → tagged word             |
-/// | `lispy_unbox_int`| `__twig_lispy_unbox_int`  | tagged word → int (result)    |
-/// | `lispy_nil`      | `__twig_lispy_nil`        | `()` / nil                    |
+/// | `lispy_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
+/// | `lispy_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
+/// | `lispy_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
+/// | `lispy_equal`    | `__dyn_equal`      | `EQ`                          |
+/// | `lispy_not`      | `__dyn_not`        | logical `not`                 |
+/// | `lispy_truthy`   | `__dyn_truthy`     | `COND` clause test            |
+/// | `lispy_box_int`  | `__dyn_box_int`    | int → tagged word             |
+/// | `lispy_unbox_int`| `__dyn_unbox_int`  | tagged word → int (result)    |
+/// | `lispy_nil`      | `__dyn_nil`        | `()` / nil                    |
 const LISPY_BUILTINS: &[(&str, &str, usize)] = &[
-    ("lispy_cons", "__twig_lispy_cons", 2),
-    ("lispy_car", "__twig_lispy_car", 1),
-    ("lispy_cdr", "__twig_lispy_cdr", 1),
-    ("lispy_pair_p", "__twig_lispy_pair_p", 1),
-    ("lispy_equal", "__twig_lispy_equal", 2),
-    ("lispy_not", "__twig_lispy_not", 1),
-    ("lispy_truthy", "__twig_lispy_truthy", 1),
-    ("lispy_box_int", "__twig_lispy_box_int", 1),
-    ("lispy_unbox_int", "__twig_lispy_unbox_int", 1),
-    ("lispy_to_exit_code", "__twig_lispy_to_exit_code", 1),
-    ("lispy_nil", "__twig_lispy_nil", 0),
+    ("lispy_cons", "__dyn_cons", 2),
+    ("lispy_car", "__dyn_car", 1),
+    ("lispy_cdr", "__dyn_cdr", 1),
+    ("lispy_pair_p", "__dyn_pair_p", 1),
+    ("lispy_equal", "__dyn_equal", 2),
+    ("lispy_not", "__dyn_not", 1),
+    ("lispy_truthy", "__dyn_truthy", 1),
+    ("lispy_box_int", "__dyn_box_int", 1),
+    ("lispy_unbox_int", "__dyn_unbox_int", 1),
+    ("lispy_to_exit_code", "__dyn_to_exit_code", 1),
+    ("lispy_nil", "__dyn_nil", 0),
 ];
 
 /// Look up a `lispy_*` builtin by its IIR name.
@@ -757,7 +757,7 @@ pub fn lower_iir_to_llvm(
     // BA-pow: `f64_pow` lowers to `call double @pow(double, double)` — libm.
     let mut used_f64_pow = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
-    // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
+    // first-seen order, so each gets exactly one `declare i64 @__dyn_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
     for f in &module.functions {
         for i in &f.instructions {

@@ -732,10 +732,10 @@ pub fn pack_object_with_globals_and_externals(
         ext_strx.push(strtab.len() as u32);
         // Mach-O C decoration: a C symbol `foo` is `_foo` in the object/archive
         // (the same legacy underscore `_main`/`_twig_globals` carry above). The
-        // backend hands us the raw C name (e.g. `__twig_lispy_car`, `__twig_print_i64`),
+        // backend hands us the raw C name (e.g. `__dyn_car`, `__twig_print_i64`),
         // platform-agnostic; the Mach-O packager owns the leading underscore so the
         // undefined reference matches the symbol the `cc`-built runtime archive
-        // exports (`___twig_lispy_car`). On ELF there is no decoration, so
+        // exports (`___dyn_car`). On ELF there is no decoration, so
         // `elf_object.rs` deliberately leaves the name unchanged. Without this the
         // system linker reports "Undefined symbols" for every `__twig_*` runtime
         // call on macOS — the McCarthy-lisp / `io_out` runtime-link gap.
@@ -1243,28 +1243,28 @@ mod tests {
 
     /// W14a: an external symbol is written into the Mach-O string table with the
     /// leading `_` C decoration, so the undefined reference matches the symbol the
-    /// `cc`-built runtime archive exports. The raw C name `__twig_lispy_car` must
-    /// appear as `___twig_lispy_car` (three underscores) in the strtab bytes.
+    /// `cc`-built runtime archive exports. The raw C name `__dyn_car` must
+    /// appear as `___dyn_car` (three underscores) in the strtab bytes.
     #[test]
     fn full_extern_symbol_is_mach_o_decorated() {
         let ext = vec![ExternBranchReloc {
             byte_offset: 0,
-            symbol: "__twig_lispy_car".to_string(),
+            symbol: "__dyn_car".to_string(),
         }];
         let bytes = arm64_full(vec![0x00u8; 8], 0, &[], &ext);
         // The decorated name (with NUL terminator) is present...
         assert!(
             bytes
-                .windows(b"___twig_lispy_car\0".len())
-                .any(|w| w == b"___twig_lispy_car\0"),
-            "strtab must contain the `_`-decorated `___twig_lispy_car`",
+                .windows(b"___dyn_car\0".len())
+                .any(|w| w == b"___dyn_car\0"),
+            "strtab must contain the `_`-decorated `___dyn_car`",
         );
         // ...and the raw, *undecorated* name is NOT (it would never resolve).
         assert!(
             !bytes
-                .windows(b"\0__twig_lispy_car\0".len())
-                .any(|w| w == b"\0__twig_lispy_car\0"),
-            "the undecorated `__twig_lispy_car` must not appear as a standalone strtab entry",
+                .windows(b"\0__dyn_car\0".len())
+                .any(|w| w == b"\0__dyn_car\0"),
+            "the undecorated `__dyn_car` must not appear as a standalone strtab entry",
         );
     }
 

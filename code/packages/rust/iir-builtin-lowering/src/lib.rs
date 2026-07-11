@@ -133,7 +133,7 @@ pub use error::BuiltinLoweringError;
 pub use heap::lower_heap_builtins;
 // Re-export the native runtime-call heap lowering (LANG77) — the target-aware
 // counterpart of `lower_heap_builtins` that routes cons/car/cdr to the linked
-// C lisp runtime (`__twig_lispy_*`) instead of inline `alloc`/`field_*`.
+// C lisp runtime (`__dyn_*`) instead of inline `alloc`/`field_*`.
 // Used by `twig-aot` for the native backends.
 pub use heap::lower_heap_builtins_runtime;
 // Re-export the type-directed lisp-value representation pass (LANG77 / L3b-2c):

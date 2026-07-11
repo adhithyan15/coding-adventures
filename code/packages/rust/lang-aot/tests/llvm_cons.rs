@@ -5,7 +5,7 @@
 //! native AOT path links). `compile_source_to_llvm` runs the native lisp pipeline
 //! (`lower_heap_builtins_runtime` → `intern_symbols` → `lower_lisp_repr`), so
 //! cons/car/cdr become `call_builtin "lispy_*"` over pre-boxed tagged words with a
-//! final `lispy_unbox_int`; `iir-to-llvm` lowers each to `call @__twig_lispy_*`.
+//! final `lispy_unbox_int`; `iir-to-llvm` lowers each to `call @__dyn_*`.
 //! **Verified by RUNNING**: emit host-triple IR, link `lispy_runtime.c` with
 //! `clang`, run the native executable — its exit code is the result. (Predicates
 //! F3–F5, whose tagged-boolean result needs its own handling, are W12b-2.)

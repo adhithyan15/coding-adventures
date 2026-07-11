@@ -44,14 +44,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* TWIG-GC (twig_gc.c) — used by __twig_lispy_cons to allocate cons cells on
+/* TWIG-GC (twig_gc.c) — used by __dyn_cons to allocate cons cells on
  * the managed heap instead of leaking via calloc. */
 extern int64_t __twig_gc_alloc(int64_t n);
 
 /* ── Tag constants ──────────────────────────────────────────────────────
  *
  * These mirror lispy-runtime/src/value.rs.  The golden test reads them back
- * through the `__twig_lispy_tag_*` accessors below and asserts each equals
+ * through the `__dyn_tag_*` accessors below and asserts each equals
  * the corresponding `pub const` in the Rust crate.
  */
 #define LISPY_TAG_BITS   0x7ULL  /* mask covering the low 3 bits           */
@@ -78,17 +78,17 @@ extern int64_t __twig_gc_alloc(int64_t n);
  *   unbox_int(56) = 7
  *   unbox_int(box_int(-1)) = -1   (sign-extended)
  */
-uint64_t __twig_lispy_box_int(int64_t n) {
+uint64_t __dyn_box_int(int64_t n) {
     return ((uint64_t)n) << 3;
 }
 
-int64_t __twig_lispy_unbox_int(uint64_t v) {
+int64_t __dyn_unbox_int(uint64_t v) {
     return ((int64_t)v) >> 3;
 }
 
 /* The nil singleton.  Provided as a function for the lowering/boundary even
  * though it is a compile-time constant — keeps the backend uniform. */
-uint64_t __twig_lispy_nil(void) {
+uint64_t __dyn_nil(void) {
     return LISPY_NIL;
 }
 
@@ -107,7 +107,7 @@ uint64_t __twig_lispy_nil(void) {
  * collected when the cell becomes unreachable.  Out-of-memory returns nil
  * rather than crashing inside the runtime.
  */
-uint64_t __twig_lispy_cons(uint64_t car, uint64_t cdr) {
+uint64_t __dyn_cons(uint64_t car, uint64_t cdr) {
     int64_t ptr = __twig_gc_alloc(2 * (int64_t)sizeof(uint64_t));
     if (ptr == 0) {
         return LISPY_NIL;
@@ -122,19 +122,19 @@ uint64_t __twig_lispy_cons(uint64_t car, uint64_t cdr) {
  * Reading car/cdr of a non-pair is undefined (V1 has no type checking — the
  * frontend is responsible for only calling car/cdr on pairs), matching the
  * permissive contract of the rest of the runtime. */
-uint64_t __twig_lispy_car(uint64_t pair) {
+uint64_t __dyn_car(uint64_t pair) {
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[0];
 }
 
-uint64_t __twig_lispy_cdr(uint64_t pair) {
+uint64_t __dyn_cdr(uint64_t pair) {
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[1];
 }
 
 /* `pair?` — true iff the value is heap-tagged.  Returns a *tagged* boolean
  * (#t/#f), not a C 0/1, so the result is itself a LispyValue. */
-uint64_t __twig_lispy_pair_p(uint64_t v) {
+uint64_t __dyn_pair_p(uint64_t v) {
     return ((v & LISPY_TAG_BITS) == LISPY_TAG_HEAP) ? LISPY_TRUE : LISPY_FALSE;
 }
 
@@ -146,12 +146,12 @@ uint64_t __twig_lispy_pair_p(uint64_t v) {
  *   not(#f)  = #t      not(nil) = #t
  *   not(#t)  = #f      not(0)   = #f   (0 is a truthy integer)
  */
-uint64_t __twig_lispy_not(uint64_t v) {
+uint64_t __dyn_not(uint64_t v) {
     int is_falsey = (v == LISPY_FALSE) || (v == LISPY_NIL);
     return is_falsey ? LISPY_TRUE : LISPY_FALSE;
 }
 
-/* __twig_lispy_truthy — normalise a tagged value to a RAW machine boolean
+/* __dyn_truthy — normalise a tagged value to a RAW machine boolean
  * (0 or 1) for a conditional branch.
  *
  * Unlike `not`, this does NOT return a tagged `LispyValue` — it returns a
@@ -166,11 +166,11 @@ uint64_t __twig_lispy_not(uint64_t v) {
  *   truthy(#t)  = 1      truthy(box_int 0)= 1   (0 is a truthy atom)
  *   truthy('A)  = 1      truthy(pair)     = 1
  */
-int64_t __twig_lispy_truthy(uint64_t v) {
+int64_t __dyn_truthy(uint64_t v) {
     return (v == LISPY_FALSE || v == LISPY_NIL) ? 0 : 1;
 }
 
-/* __twig_lispy_to_exit_code — coerce ANY tagged LispyValue to a raw exit code,
+/* __dyn_to_exit_code — coerce ANY tagged LispyValue to a raw exit code,
  * dispatching on its RUNTIME tag.  This is the program-exit boundary for a
  * value whose tag the compiler cannot know statically — a lambda result (F7),
  * which the frontend types as the polymorphic `any`.  The static coercions each
@@ -190,7 +190,7 @@ int64_t __twig_lispy_truthy(uint64_t v) {
  *   to_exit_code(#t/#f/nil) == truthy(#t/#f/nil)    == 1/0/0
  *   to_exit_code(symbol)    == (symbol returned verbatim)
  */
-int64_t __twig_lispy_to_exit_code(uint64_t v) {
+int64_t __dyn_to_exit_code(uint64_t v) {
     switch (v & LISPY_TAG_BITS) {
         case LISPY_TAG_INT:   return ((int64_t)v) >> 3;  /* integer atom    */
         case LISPY_TAG_TRUE:  return 1;                  /* #t              */
@@ -214,7 +214,7 @@ int64_t __twig_lispy_to_exit_code(uint64_t v) {
  * pathological cyclic structures cannot occur because V1 cons is
  * write-once at construction with no mutation primitive.
  */
-uint64_t __twig_lispy_equal(uint64_t a, uint64_t b) {
+uint64_t __dyn_equal(uint64_t a, uint64_t b) {
     int a_pair = (a & LISPY_TAG_BITS) == LISPY_TAG_HEAP;
     int b_pair = (b & LISPY_TAG_BITS) == LISPY_TAG_HEAP;
 
@@ -225,10 +225,10 @@ uint64_t __twig_lispy_equal(uint64_t a, uint64_t b) {
         return LISPY_FALSE;
     }
     /* both pairs — recurse on car and cdr */
-    if (__twig_lispy_equal(__twig_lispy_car(a), __twig_lispy_car(b)) != LISPY_TRUE) {
+    if (__dyn_equal(__dyn_car(a), __dyn_car(b)) != LISPY_TRUE) {
         return LISPY_FALSE;
     }
-    return __twig_lispy_equal(__twig_lispy_cdr(a), __twig_lispy_cdr(b));
+    return __dyn_equal(__dyn_cdr(a), __dyn_cdr(b));
 }
 
 /* ── Symbol interning ───────────────────────────────────────────────────
@@ -270,7 +270,7 @@ static uint64_t lispy_fnv1a(const char *s, int64_t len) {
     return h;
 }
 
-uint64_t __twig_lispy_make_symbol(const char *name, int64_t len) {
+uint64_t __dyn_make_symbol(const char *name, int64_t len) {
     if (len < 0) {
         len = 0;
     }
@@ -317,10 +317,10 @@ uint64_t __twig_lispy_make_symbol(const char *name, int64_t len) {
  * believes each tag constant is and assert it against lispy-runtime's
  * `pub const`s.  They are never called by compiled programs.
  */
-uint64_t __twig_lispy_tag_int(void)    { return LISPY_TAG_INT;    }
-uint64_t __twig_lispy_tag_nil(void)    { return LISPY_TAG_NIL;    }
-uint64_t __twig_lispy_tag_symbol(void) { return LISPY_TAG_SYMBOL; }
-uint64_t __twig_lispy_tag_false(void)  { return LISPY_TAG_FALSE;  }
-uint64_t __twig_lispy_tag_true(void)   { return LISPY_TAG_TRUE;   }
-uint64_t __twig_lispy_tag_heap(void)   { return LISPY_TAG_HEAP;   }
-uint64_t __twig_lispy_tag_mask(void)   { return LISPY_TAG_BITS;   }
+uint64_t __dyn_tag_int(void)    { return LISPY_TAG_INT;    }
+uint64_t __dyn_tag_nil(void)    { return LISPY_TAG_NIL;    }
+uint64_t __dyn_tag_symbol(void) { return LISPY_TAG_SYMBOL; }
+uint64_t __dyn_tag_false(void)  { return LISPY_TAG_FALSE;  }
+uint64_t __dyn_tag_true(void)   { return LISPY_TAG_TRUE;   }
+uint64_t __dyn_tag_heap(void)   { return LISPY_TAG_HEAP;   }
+uint64_t __dyn_tag_mask(void)   { return LISPY_TAG_BITS;   }

@@ -6,8 +6,8 @@
 //! the exit code.
 //!
 //! Before W14a these failed at link: the Mach-O object referenced the runtime
-//! helpers by their raw C name (`__twig_lispy_car`), but the archive — built with
-//! the Mach-O C ABI — exports them decorated (`___twig_lispy_car`). `ld` saw the
+//! helpers by their raw C name (`__dyn_car`), but the archive — built with
+//! the Mach-O C ABI — exports them decorated (`___dyn_car`). `ld` saw the
 //! two as different symbols and reported "Undefined symbols for architecture
 //! arm64". `code-packager` now applies the leading-`_` decoration to external
 //! symbols (the same one `_main`/`_twig_globals` already carried), closing the gap
@@ -60,7 +60,7 @@ fn mccarthy_core_runs_natively_on_macos() {
 fn mccarthy_lambda_runs_natively_on_macos() {
     if !ld_available() { eprintln!("no system linker — skipping"); return; }
     // F7 — `LAMBDA`: arg boxed across the call, polymorphic result coerced at exit
-    // by `__twig_lispy_to_exit_code`. Native AOT is the seventh backend to run these.
+    // by `__dyn_to_exit_code`. Native AOT is the seventh backend to run these.
     assert_eq!(run("((LAMBDA (X) X) 5)", "n_lam_id"), 5);
     assert_eq!(run("((LAMBDA (X) (CAR X)) (CONS 7 9))", "n_lam_car"), 7);
     assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))", "n_lam_cdr"), 9);

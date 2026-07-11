@@ -2215,7 +2215,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // McCarthy L3b-2b).  A lisp frontend (McCarthy Lisp, Twig) emits
     // `call_builtin "cons"/"car"/"cdr"`; this rewrite renames them to
     // `lispy_cons`/`lispy_car`/`lispy_cdr`, which the backends dispatch to
-    // `__twig_lispy_*` in the linked C lisp runtime
+    // `__dyn_*` in the linked C lisp runtime
     // (`twig-aot/runtime/lispy_runtime.c`).  Unlike the structural
     // `lower_heap_builtins` (alloc + field_*, used by the managed wasm/jvm/
     // clr/beam backends), this keeps the value NaN-box **tagged** — which is
@@ -2510,7 +2510,7 @@ fn compile_one_with_globals(
 // lib unit-test module (not an integration test) so the build-script's
 // `cargo:rustc-link-lib=static=twig_aot_runtime` directive reliably places
 // the runtime archive on this binary's link line — letting the test call the
-// `__twig_lispy_*` C functions directly.
+// `__dyn_*` C functions directly.
 #[cfg(test)]
 mod lispy_runtime_golden;
 

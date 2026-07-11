@@ -26,7 +26,7 @@
 //! ## Why not runtime `make_symbol` + string literals?
 //!
 //! That path (emit the name bytes into a data section, call
-//! `__twig_lispy_make_symbol(ptr, len)`) is what you need to *print* a symbol's
+//! `__dyn_make_symbol(ptr, len)`) is what you need to *print* a symbol's
 //! name or create symbols dynamically (`read`/`gensym`/`eval`). The native
 //! backend has no data-section string-constant machinery yet, and static
 //! programs don't need it — so it is deferred. Compile-time interning delivers
