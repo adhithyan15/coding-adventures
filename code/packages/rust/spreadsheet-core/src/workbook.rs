@@ -1280,9 +1280,7 @@ impl Workbook {
     ) -> Option<Vec<u32>> {
         // Guards: unknown sheet, oversized range (DoS), key column outside the
         // range, or nothing to reorder (empty/inverted/single row).
-        if self.sheets.get(sheet.0 as usize).is_none() {
-            return None;
-        }
+        self.sheets.get(sheet.0 as usize)?;
         if range.cell_count() > MAX_RANGE_CELLS {
             return None;
         }

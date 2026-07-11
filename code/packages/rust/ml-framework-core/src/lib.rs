@@ -389,7 +389,7 @@ impl Tensor {
         if inner.device == device {
             return self.clone();
         }
-        let mut t = Tensor::from_slice(&inner.data, &inner.shape, inner.requires_grad, device);
+        let t = Tensor::from_slice(&inner.data, &inner.shape, inner.requires_grad, device);
         t.inner.borrow_mut().requires_grad = inner.requires_grad;
         t
     }
@@ -399,7 +399,8 @@ impl Tensor {
     // =====================================================================
 
     fn with_grad_fn(data: Vec<f64>, shape: Vec<usize>, device: &str, grad_fn: GradFn, needs_grad: bool) -> Self {
-        let t = Tensor {
+        
+        Tensor {
             inner: Rc::new(RefCell::new(TensorInner {
                 data,
                 shape,
@@ -408,8 +409,7 @@ impl Tensor {
                 grad_fn: if needs_grad { Some(grad_fn) } else { None },
                 device: device.to_string(),
             })),
-        };
-        t
+        }
     }
 
     // =====================================================================
@@ -631,7 +631,7 @@ impl Tensor {
                 GradFn::Mean(self.inner.clone(), None), a.requires_grad);
         }
         let d = dim.unwrap();
-        let sum_result = drop(a);
+        drop(a);
         let sum_result = self.sum(dim, keepdim);
         let count = self.inner.borrow().shape[d] as f64;
         let data: Vec<f64> = sum_result.data().iter().map(|x| x / count).collect();
@@ -1103,7 +1103,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
                 vec![Some(grad_data)]
             }
         }
-        GradFn::Reshape(_, original_shape) => {
+        GradFn::Reshape(_, _original_shape) => {
             vec![Some(grad_output.to_vec())] // Data doesn't change, just reshape grad back
         }
         GradFn::Transpose(_, dim0, dim1) => {
@@ -1112,7 +1112,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
             let d1 = *dim1;
             // The grad_output is in transposed shape; we need to transpose it back
             // For 2-D case:
-            let a_inner = get_saved_tensors(&GradFn::Transpose(
+            let _a_inner = get_saved_tensors(&GradFn::Transpose(
                 // We need the original tensor to know the shape
                 // Luckily we have it from the grad_fn
                 Rc::new(RefCell::new(TensorInner {
@@ -1140,8 +1140,8 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
         GradFn::Clamp(a, min_val, max_val) => {
             let ab = a.borrow();
             vec![Some(ab.data.iter().zip(grad_output.iter()).map(|(&x, &g)| {
-                let clamped_low = min_val.map_or(false, |lo| x <= lo);
-                let clamped_high = max_val.map_or(false, |hi| x >= hi);
+                let clamped_low = min_val.is_some_and(|lo| x <= lo);
+                let clamped_high = max_val.is_some_and(|hi| x >= hi);
                 if clamped_low || clamped_high { 0.0 } else { g }
             }).collect())]
         }

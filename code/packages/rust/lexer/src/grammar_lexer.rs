@@ -1571,9 +1571,7 @@ impl<'a> GrammarLexer<'a> {
                 match matched.as_str() {
                     "(" | "[" | "{" => bracket_depth += 1,
                     ")" | "]" | "}" => {
-                        if bracket_depth > 0 {
-                            bracket_depth -= 1;
-                        }
+                        bracket_depth = bracket_depth.saturating_sub(1);
                     }
                     _ => {}
                 }
@@ -1622,7 +1620,7 @@ impl<'a> GrammarLexer<'a> {
         // At EOF: emit remaining DEDENTs.
         if bracket_depth == 0 {
             // Emit a final NEWLINE if the last token isn't one.
-            let need_newline = tokens.last().map_or(false, |t| t.type_ != TokenType::Newline);
+            let need_newline = tokens.last().is_some_and(|t| t.type_ != TokenType::Newline);
             if need_newline {
                 tokens.push(Token { cv: None,
                     type_: TokenType::Newline,
@@ -1733,9 +1731,7 @@ impl<'a> GrammarLexer<'a> {
                 match token.value.as_str() {
                     "(" | "[" | "{" => suppress_depth += 1,
                     ")" | "]" | "}" => {
-                        if suppress_depth > 0 {
-                            suppress_depth -= 1;
-                        }
+                        suppress_depth = suppress_depth.saturating_sub(1);
                     }
                     _ => {}
                 }

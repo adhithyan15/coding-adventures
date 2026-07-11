@@ -452,7 +452,7 @@ impl StreamingMultiprocessor {
         threads_per_block: usize,
     ) -> f64 {
         let warp_w = self.config.warp_width;
-        let warps_per_block = (threads_per_block + warp_w - 1) / warp_w;
+        let warps_per_block = threads_per_block.div_ceil(warp_w);
 
         // Limit 1: register file
         let regs_per_warp = registers_per_thread * self.config.warp_width;
@@ -503,7 +503,7 @@ impl ComputeUnit for StreamingMultiprocessor {
 
     fn dispatch(&mut self, work: WorkItem) -> Result<(), ResourceError> {
         // Calculate resource requirements.
-        let num_warps = (work.thread_count + self.config.warp_width - 1) / self.config.warp_width;
+        let num_warps = work.thread_count.div_ceil(self.config.warp_width);
         let regs_needed = work.registers_per_thread * self.config.warp_width * num_warps;
         let smem_needed = work.shared_mem_bytes;
 

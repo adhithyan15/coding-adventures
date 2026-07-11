@@ -251,44 +251,41 @@ fn extract_module_form(node: &GrammarASTNode) -> Result<ModuleInfo, TwigParseErr
     let mut typed_mode: Option<TypedMode> = None;
 
     for clause_node in ast_children(node) {
-        match clause_node.rule_name.as_str() {
-            "module_clause" => {
-                // Unwrap the single child of module_clause.
-                for inner in ast_children(clause_node) {
-                    match inner.rule_name.as_str() {
-                        "export_clause" => {
-                            for t in tokens_named(inner, "NAME") {
-                                exports.push(t.value.clone());
-                            }
+        if clause_node.rule_name.as_str() == "module_clause" {
+            // Unwrap the single child of module_clause.
+            for inner in ast_children(clause_node) {
+                match inner.rule_name.as_str() {
+                    "export_clause" => {
+                        for t in tokens_named(inner, "NAME") {
+                            exports.push(t.value.clone());
                         }
-                        "import_clause" => {
-                            for t in tokens_named(inner, "NAME") {
-                                imports.push(t.value.clone());
-                            }
-                        }
-                        "typed_clause" => {
-                            // (typed strict|lenient|off)
-                            if let Some(mode_tok) = first_token_named(inner, "NAME") {
-                                typed_mode = Some(match mode_tok.value.as_str() {
-                                    "strict"  => TypedMode::Strict,
-                                    "lenient" => TypedMode::Lenient,
-                                    "off"     => TypedMode::Off,
-                                    other => return Err(TwigParseError {
-                                        message: format!(
-                                            "(typed ...) expects strict, lenient, or off; got {:?}",
-                                            other
-                                        ),
-                                        line: mode_tok.line,
-                                        column: mode_tok.column,
-                                    }),
-                                });
-                            }
-                        }
-                        _ => {}
                     }
+                    "import_clause" => {
+                        for t in tokens_named(inner, "NAME") {
+                            imports.push(t.value.clone());
+                        }
+                    }
+                    "typed_clause" => {
+                        // (typed strict|lenient|off)
+                        if let Some(mode_tok) = first_token_named(inner, "NAME") {
+                            typed_mode = Some(match mode_tok.value.as_str() {
+                                "strict"  => TypedMode::Strict,
+                                "lenient" => TypedMode::Lenient,
+                                "off"     => TypedMode::Off,
+                                other => return Err(TwigParseError {
+                                    message: format!(
+                                        "(typed ...) expects strict, lenient, or off; got {:?}",
+                                        other
+                                    ),
+                                    line: mode_tok.line,
+                                    column: mode_tok.column,
+                                }),
+                            });
+                        }
+                    }
+                    _ => {}
                 }
             }
-            _ => {}
         }
     }
     Ok(ModuleInfo {
@@ -745,7 +742,7 @@ fn extract_define(node: &GrammarASTNode, depth: usize) -> Result<Define, TwigPar
                 ASTNodeOrToken::Node(n) if n.rule_name == "type_annotation" => Some(n),
                 _ => None,
             })
-            .map(|ann_node| extract_type_annotation(ann_node))
+            .map(extract_type_annotation)
             .transpose()?;
 
         let expr = body_exprs.into_iter().next().unwrap();
@@ -929,7 +926,7 @@ fn extract_typed_param(
             ASTNodeOrToken::Node(n) if n.rule_name == "type_annotation" => Some(n),
             _ => None,
         })
-        .map(|ann_node| extract_type_annotation(ann_node))
+        .map(extract_type_annotation)
         .transpose()?;
     Ok((name_tok.value.clone(), ann))
 }

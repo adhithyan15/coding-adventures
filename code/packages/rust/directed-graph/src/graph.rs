@@ -521,11 +521,10 @@ impl Graph {
         // might not be connected (it could have multiple disconnected components).
         let nodes = self.nodes();
         for node in &nodes {
-            if color.get(node.as_str()) == Some(&WHITE) {
-                if dfs(node.as_str(), &self.forward, &mut color) {
+            if color.get(node.as_str()) == Some(&WHITE)
+                && dfs(node.as_str(), &self.forward, &mut color) {
                     return true;
                 }
-            }
         }
 
         false

@@ -866,7 +866,7 @@ impl ProfileTable {
                 "ProfileTable instruction-slot count exceeds MAX_PROFILED_INSTRUCTION_SLOTS ({MAX_PROFILED_INSTRUCTION_SLOTS})"
             )));
         }
-        let slot = self.instruction_slots.entry(key).or_insert_with(SlotState::new);
+        let slot = self.instruction_slots.entry(key).or_default();
         slot.record(class_str);
         Ok(())
     }
@@ -2439,7 +2439,7 @@ fn exec_host_call(
         "read_line" => {
             use std::io::{BufRead as _, Read as _};
             /// Maximum bytes we will read for a single line.
-            const MAX_LINE_BYTES: u64 = 1 * 1024 * 1024; // 1 MiB
+            const MAX_LINE_BYTES: u64 = 1024 * 1024; // 1 MiB
             let mut line = String::new();
             let stdin = std::io::stdin();
             let mut limited = stdin.lock().take(MAX_LINE_BYTES + 1);

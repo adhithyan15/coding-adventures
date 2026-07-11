@@ -233,7 +233,7 @@ fn u_divmod(a: &[Rat], b: &[Rat]) -> (UniQPoly, UniQPoly) {
     let lc_b = *nb.last().unwrap();
     let mut q_rev: Vec<Rat> = vec![];
     let mut rem: Vec<Rat> = na;
-    while rem.len() > 0 && rem.len() - 1 >= db {
+    while !rem.is_empty() && rem.len() > db {
         let shift = rem.len() - 1 - db;
         let c = rem.last().unwrap().div(&lc_b);
         q_rev.push(c);

@@ -351,14 +351,10 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
                             coef: c,
                             term: Box::new(pb),
                         })
-                    } else if let Some(c) = int_const(b) {
-                        Some(Predicate::Mul {
+                    } else { int_const(b).map(|c| Predicate::Mul {
                             coef: c,
                             term: Box::new(pa),
-                        })
-                    } else {
-                        None // var × var is non-linear
-                    }
+                        }) }
                 }
                 _ => None, // division / aggregation: out of LIA scope
             }

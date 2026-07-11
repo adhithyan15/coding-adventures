@@ -2058,7 +2058,7 @@ fn emit_icon(
     if let Some(LayoutPropValue::String(s)) =
         find_prop_value(node, "glyph").or_else(|| find_prop_value(node, "name"))
     {
-        if let Some(replacement) = semantic_glyph_xaml_element(&s) {
+        if let Some(replacement) = semantic_glyph_xaml_element(s) {
             return Ok(format!("{pad}<{replacement}{style}/>\n"));
         }
     }

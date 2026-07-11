@@ -2458,7 +2458,7 @@ fn compile_module_to_text_raw(
             // jumps to an arbitrary address).
             const BL_MAX: i64 =  (1i64 << 25) - 1; //  33_554_431 words ≈ +128 MiB
             const BL_MIN: i64 = -(1i64 << 25);      // -33_554_432 words ≈ -128 MiB
-            if delta_words < BL_MIN || delta_words > BL_MAX {
+            if !(BL_MIN..=BL_MAX).contains(&delta_words) {
                 // The call target is >128 MiB away — this should never happen
                 // for programs that fit in a single flat binary, but if it does
                 // we surface it as a linker error rather than patching garbage.

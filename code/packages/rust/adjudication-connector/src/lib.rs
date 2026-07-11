@@ -326,7 +326,7 @@ pub fn lower_to_kb_with_provenance(
         let head = compound(&functor, vec![atom(&edge.source.0), atom(&edge.target.0)]);
         let id = if edge.polarity == Polarity::Denied {
             let deny_head = compound(
-                &format!("not_{functor}"),
+                format!("not_{functor}"),
                 vec![atom(&edge.source.0), atom(&edge.target.0)],
             );
             lowered.kb.add_fact(Fact::certain(deny_head))
@@ -420,7 +420,7 @@ pub fn lower_to_kb(ir_doc: &IRDocument) -> Result<KnowledgeBase, LoweringError> 
         // as a witness for audit-trail replay.
         if edge.polarity == Polarity::Denied {
             let deny_head = compound(
-                &format!("not_{functor}"),
+                format!("not_{functor}"),
                 vec![atom(&edge.source.0), atom(&edge.target.0)],
             );
             kb.add_fact(Fact::certain(deny_head));

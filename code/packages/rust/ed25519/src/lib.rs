@@ -676,7 +676,7 @@ fn words_mod_l(n: &[u64]) -> Vec<u64> {
             break;
         }
 
-        let shift = if r_bits > l_bits { r_bits - l_bits } else { 0 };
+        let shift = r_bits.saturating_sub(l_bits);
 
         // Compute L << shift
         let shifted = words_shl(&l_words, shift);

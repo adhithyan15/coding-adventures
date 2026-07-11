@@ -79,7 +79,7 @@ use std::fmt;
 /// Use [`fft`] (which takes a real or complex slice) for the
 /// higher-level API.
 pub fn fft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
-    if signal.len() % 2 != 0 {
+    if !signal.len().is_multiple_of(2) {
         return Err(FftError::InvalidInput(format!(
             "interleaved buffer must have even length; got {}",
             signal.len()
@@ -98,7 +98,7 @@ pub fn fft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
 ///
 /// Length of `spectrum` must be `2 * N` where `N` is a power of two.
 pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
-    if spectrum.len() % 2 != 0 {
+    if !spectrum.len().is_multiple_of(2) {
         return Err(FftError::InvalidInput(format!(
             "interleaved buffer must have even length; got {}",
             spectrum.len()
@@ -148,7 +148,7 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
         // scalar oracle (power-of-two) or Bluestein (anything else).
         // Both share the interleaved `[re, im]` buffer convention so
         // we can dispatch with no buffer rewrap.
-        if signal.len() % 2 != 0 {
+        if !signal.len().is_multiple_of(2) {
             return Err(FftError::InvalidInput(format!(
                 "interleaved complex buffer must have even length; got {}",
                 signal.len()

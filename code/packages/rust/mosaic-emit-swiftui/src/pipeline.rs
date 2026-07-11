@@ -2588,7 +2588,7 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     // readers while keeping the line-comment scope intact.
     fn escape_for_line_comment(s: &str) -> String {
         let escaped = escape_swift_string(s);
-        escaped.replace('\r', " ").replace('\n', " ")
+        escaped.replace(['\r', '\n'], " ")
     }
     if let Some(g) = find_string_prop(node, "group") {
         writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();

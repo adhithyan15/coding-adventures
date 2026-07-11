@@ -414,7 +414,7 @@ impl Compiler {
                     body.pop();
                 }
             }
-            if !body.last().map_or(false, |i| i.op == "ret") {
+            if !body.last().is_some_and(|i| i.op == "ret") {
                 let r = self.fresh_tmp();
                 self.emit(&mut body, "const", Some(&r),
                           vec![Operand::Int(0)], "i64");

@@ -75,7 +75,6 @@
 
 use fp_arithmetic::{FloatFormat, FP32};
 
-use crate::generic_isa::GenericISA;
 use crate::memory::LocalMemory;
 use crate::opcodes::Instruction;
 use crate::protocols::{InstructionSet, ProcessingElement};

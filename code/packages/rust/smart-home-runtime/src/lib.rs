@@ -804,16 +804,13 @@ impl RuntimeEventDeliverySummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeEventSort {
+    #[default]
     SequenceAsc,
     SequenceDesc,
 }
 
-impl Default for RuntimeEventSort {
-    fn default() -> Self {
-        Self::SequenceAsc
-    }
-}
 
 /// Borrowed view of one runtime event and its replay cursor position.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -911,17 +908,14 @@ impl RuntimeEventLogSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeCommandResultSort {
+    #[default]
     SequenceAsc,
     SequenceDesc,
     StatusThenSequenceDesc,
 }
 
-impl Default for RuntimeCommandResultSort {
-    fn default() -> Self {
-        Self::SequenceAsc
-    }
-}
 
 /// Read-side query for command results already captured in the runtime event log.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1311,16 +1305,13 @@ impl RuntimeEventBusHealthSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeSubscriptionSort {
+    #[default]
     SubscriptionId,
     QueuedEventsDesc,
 }
 
-impl Default for RuntimeSubscriptionSort {
-    fn default() -> Self {
-        Self::SubscriptionId
-    }
-}
 
 /// Read-side query for active event-bus subscriptions.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -1501,18 +1492,15 @@ impl WorkerRestartPlan {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum SupervisedWorkerSort {
+    #[default]
     BridgeId,
     HeartbeatDueAt,
     RestartCountDesc,
     StatusThenBridgeId,
 }
 
-impl Default for SupervisedWorkerSort {
-    fn default() -> Self {
-        Self::BridgeId
-    }
-}
 
 /// Read-side query for supervised integration workers.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2384,18 +2372,15 @@ impl DiscoverySupervisorRunReport {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum DiscoveryWorkerSort {
+    #[default]
     WorkerId,
     NextDueAt,
     StatusThenWorkerId,
     ConsecutiveFailuresDesc,
 }
 
-impl Default for DiscoveryWorkerSort {
-    fn default() -> Self {
-        Self::WorkerId
-    }
-}
 
 /// Read-side query for scheduled discovery workers.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2660,17 +2645,14 @@ impl DesiredEntityState {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum DesiredStateSort {
+    #[default]
     EntityId,
     RequestedByThenEntityId,
     CommandTimeoutDesc,
 }
 
-impl Default for DesiredStateSort {
-    fn default() -> Self {
-        Self::EntityId
-    }
-}
 
 /// Read-side query for desired-state supervision targets.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2863,18 +2845,15 @@ impl RuntimePairingSession {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimePairingSessionSort {
+    #[default]
     SessionId,
     ExpiresAt,
     StartedAtDesc,
     StatusThenExpiresAt,
 }
 
-impl Default for RuntimePairingSessionSort {
-    fn default() -> Self {
-        Self::SessionId
-    }
-}
 
 /// Read-side query for bridge pairing ceremonies.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -3466,16 +3445,13 @@ impl RuntimeDiscoverToolOutput {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeAuthorizationDecisionSort {
     DecidedAtAsc,
+    #[default]
     DecidedAtDesc,
 }
 
-impl Default for RuntimeAuthorizationDecisionSort {
-    fn default() -> Self {
-        Self::DecidedAtDesc
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeAuthorizationDecisionQuery {
@@ -3531,7 +3507,9 @@ pub enum RuntimeCapabilityGrantScopeKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeCapabilityGrantSort {
+    #[default]
     GrantId,
     PrincipalId,
     GrantedAtAsc,
@@ -3540,11 +3518,6 @@ pub enum RuntimeCapabilityGrantSort {
     ExpiresAtDesc,
 }
 
-impl Default for RuntimeCapabilityGrantSort {
-    fn default() -> Self {
-        Self::GrantId
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeCapabilityGrantQuery {
@@ -3599,18 +3572,15 @@ impl RuntimeCapabilityGrantQuery {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeRoomSort {
+    #[default]
     RoomId,
     AttentionDesc,
     EntityCountDesc,
     SceneCountDesc,
 }
 
-impl Default for RuntimeRoomSort {
-    fn default() -> Self {
-        Self::RoomId
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeRoomQuery {

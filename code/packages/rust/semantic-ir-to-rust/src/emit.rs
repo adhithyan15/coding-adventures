@@ -1673,7 +1673,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if name == "global_set" {
         // Two args; pass first by reference, second by value.
         out.push_str("(__sir::global_set(&(");
-        if args.len() >= 1 {
+        if !args.is_empty() {
             emit_expr(out, &args[0], indent);
         }
         out.push_str("), ");
@@ -1797,13 +1797,13 @@ fn emit_make_closure(
         emit_expr(out, &c.value, indent + 1);
         out.push_str(";\n");
     }
-    let _ = write!(
+    let _ = writeln!(
         out,
-        "{}__sir::Value::Closure(::std::rc::Rc::new(__sir::Closure {{ fun: Box::new(move |__args: Vec<__sir::Value>| {{\n",
+        "{}__sir::Value::Closure(::std::rc::Rc::new(__sir::Closure {{ fun: Box::new(move |__args: Vec<__sir::Value>| {{",
         pad
     );
     let inner_pad = indent_str(indent + 2);
-    let _ = write!(out, "{}let mut __it = __args.into_iter();\n", inner_pad);
+    let _ = writeln!(out, "{}let mut __it = __args.into_iter();", inner_pad);
     let _ = write!(out, "{}{}(", inner_pad, function_emit_name(fn_name));
     let mut first = true;
     for n in &cap_names {
@@ -1865,7 +1865,7 @@ fn emit_make_closure(
         out.push_str("__it.next().unwrap_or(__sir::Value::Nil)");
     }
     out.push_str(")\n");
-    let _ = write!(out, "{}}}) }}))\n", pad);
+    let _ = writeln!(out, "{}}}) }}))", pad);
     let _ = write!(out, "{}}}", indent_str(indent));
 }
 

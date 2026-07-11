@@ -180,6 +180,7 @@ impl Default for Barcode1DRenderConfig {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+#[derive(Default)]
 pub struct PaintBarcode1DOptions {
     pub render_config: Barcode1DRenderConfig,
     pub human_readable_text: Option<String>,
@@ -188,17 +189,6 @@ pub struct PaintBarcode1DOptions {
     pub symbols: Option<Vec<Barcode1DSymbolDescriptor>>,
 }
 
-impl Default for PaintBarcode1DOptions {
-    fn default() -> Self {
-        Self {
-            render_config: Barcode1DRenderConfig::default(),
-            human_readable_text: None,
-            metadata: HashMap::new(),
-            label: None,
-            symbols: None,
-        }
-    }
-}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunsFromBinaryPatternOptions {

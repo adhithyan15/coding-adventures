@@ -1561,6 +1561,7 @@ impl<'a> DeviceDescriptor<'a> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 struct UploadState {
     program_id: u16,
     expected_len: usize,
@@ -1569,17 +1570,6 @@ struct UploadState {
     active: bool,
 }
 
-impl Default for UploadState {
-    fn default() -> Self {
-        Self {
-            program_id: 0,
-            expected_len: 0,
-            expected_crc32: 0,
-            received_len: 0,
-            active: false,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 struct BackgroundRun {

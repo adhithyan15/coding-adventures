@@ -126,7 +126,7 @@ impl IrToWasmCompiler {
         }
 
         if needs_memory(program) || scratch_base.is_some() {
-            let page_count = ((total_bytes + 65_535) / 65_536).max(1);
+            let page_count = total_bytes.div_ceil(65_536).max(1);
             module.memories.push(MemoryType {
                 limits: Limits {
                     min: page_count,
@@ -1089,7 +1089,7 @@ fn is_if_else_label(label: &str) -> bool {
 }
 
 fn align_up(value: u32, alignment: u32) -> u32 {
-    ((value + alignment - 1) / alignment) * alignment
+    value.div_ceil(alignment) * alignment
 }
 
 fn total_data_size(decls: &[IrDataDecl]) -> u32 {

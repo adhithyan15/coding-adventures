@@ -288,8 +288,7 @@ fn serialize_pretty_recursive(
     // current_indent: indentation for closing brackets at this level.
     // next_indent: indentation for content one level deeper.
     let indent_unit: String =
-        std::iter::repeat(config.indent_char)
-            .take(config.indent_size)
+        std::iter::repeat_n(config.indent_char, config.indent_size)
             .collect();
     let current_indent = indent_unit.repeat(depth);
     let next_indent = indent_unit.repeat(depth + 1);

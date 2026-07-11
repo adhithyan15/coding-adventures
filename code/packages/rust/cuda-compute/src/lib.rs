@@ -724,7 +724,7 @@ impl CudaDevice {
         block: [u32; 3],
         args:  &mut [*mut c_void],
     ) -> Result<(), CudaError> {
-        if grid.iter().any(|&d| d == 0) || block.iter().any(|&d| d == 0) {
+        if grid.contains(&0) || block.contains(&0) {
             return Err(CudaError::DriverError {
                 code: -1,
                 message: format!(

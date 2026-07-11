@@ -1491,9 +1491,8 @@ fn card_bury_kind(state: &AppState, card_id: &str, now: u64) -> Option<BuryCardK
             .buried_until
             .is_some_and(|buried_until| buried_until > now)
         || (progress.state == CardState::Buried
-            && !progress
-                .buried_until
-                .is_some_and(|buried_until| buried_until <= now))
+            && progress
+                .buried_until.is_none_or(|buried_until| buried_until > now))
     {
         return None;
     }
@@ -1672,7 +1671,7 @@ fn review_reschedules_card(state: &AppState, session_id: &str, card_id: &str) ->
         .filter(|source| {
             source.target == ExternalSourceTarget::Deck && source.target_id == review_deck_id
         })
-        .any(|source| is_non_rescheduling_filtered_deck_source(source))
+        .any(is_non_rescheduling_filtered_deck_source)
 }
 
 fn is_non_rescheduling_filtered_deck_source(source: &ExternalSourceRecord) -> bool {
@@ -1753,7 +1752,7 @@ fn leech_threshold_met(lapses: u32, threshold: u32) -> bool {
         return false;
     }
     let half_threshold = ((threshold as f64) / 2.0).ceil().max(1.0) as u32;
-    (lapses - threshold) % half_threshold == 0
+    (lapses - threshold).is_multiple_of(half_threshold)
 }
 
 fn answer_time_ms_for_review(

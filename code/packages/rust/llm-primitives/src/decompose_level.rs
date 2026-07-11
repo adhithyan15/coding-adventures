@@ -488,7 +488,7 @@ fn sanitize_for_prompt(s: &str, max_len: usize) -> String {
             cut -= 1;
         }
         cleaned.truncate(cut);
-        cleaned.push_str("…");
+        cleaned.push('…');
     }
     cleaned
 }

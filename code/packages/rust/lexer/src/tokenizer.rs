@@ -118,18 +118,12 @@ fn simple_token_type(ch: char) -> Option<TokenType> {
 /// };
 /// ```
 #[derive(Debug, Clone)]
+#[derive(Default)]
 pub struct LexerConfig {
     /// The list of reserved words that should be classified as KEYWORD tokens.
     pub keywords: Vec<String>,
 }
 
-impl Default for LexerConfig {
-    fn default() -> Self {
-        LexerConfig {
-            keywords: Vec::new(),
-        }
-    }
-}
 
 // ===========================================================================
 // Lexer struct

@@ -4247,7 +4247,7 @@ impl IntegrationMeshReadinessHandoffPackage {
     }
 
     fn release_ready(summary: &IntegrationMeshActionReadinessSummary) -> Option<Self> {
-        summary.release_ready.then(|| Self {
+        summary.release_ready.then_some(Self {
             sequence: 0,
             package_kind: IntegrationMeshReadinessHandoffKind::ReleaseReady,
             handoff_status: IntegrationMeshReadinessHandoffStatus::Ready,

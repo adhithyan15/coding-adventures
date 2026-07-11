@@ -868,11 +868,11 @@ unsafe fn setup_pipeline_color_attachment(desc: Id) {
 
 #[cfg(target_vendor = "apple")]
 unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
-    let byte_len = data.len() * std::mem::size_of::<f32>();
+    let byte_len = std::mem::size_of_val(data);
     // MTLResourceStorageModeShared = 0
     let buffer: Id = msg!(
         device, "newBufferWithBytes:length:options:",
-        data.as_ptr() as Id, byte_len as usize, 0usize
+        data.as_ptr() as Id, byte_len, 0usize
     );
     assert!(!buffer.is_null(), "Failed to create Metal buffer");
     buffer

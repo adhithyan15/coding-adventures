@@ -300,7 +300,7 @@ pub fn pack_words(words: &[i32]) -> Vec<u8> {
 }
 
 pub fn unpack_words(program: &[u8]) -> Result<Vec<i32>, String> {
-    if program.len() % WORD_BYTES != 0 {
+    if !program.len().is_multiple_of(WORD_BYTES) {
         return Err(format!("GE-225 byte stream must be a multiple of {WORD_BYTES} bytes, got {}", program.len()));
     }
     Ok(program

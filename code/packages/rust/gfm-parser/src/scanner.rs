@@ -69,7 +69,7 @@ impl Scanner {
             return "";
         }
         // Return a slice of the char at offset
-        let mut byte_pos = self.pos;
+        let _byte_pos = self.pos;
         for (i, ch) in self.source[self.pos..].char_indices() {
             if offset == 0 {
                 let end = self.pos + ch.len_utf8();

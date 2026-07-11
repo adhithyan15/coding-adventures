@@ -469,7 +469,7 @@ impl Compiler {
         // Defensive epilogue: if the program didn't explicitly END, fall
         // through to a `const 0; ret 0` so we don't run off the function.
         // Most well-formed BASIC programs do end with `END`.
-        if !self.instrs.last().map_or(false, |i| i.op.starts_with("ret")) {
+        if !self.instrs.last().is_some_and(|i| i.op.starts_with("ret")) {
             self.emit_end();
         }
         Ok(())
@@ -2669,8 +2669,7 @@ fn print_helper_functions() -> Vec<IIRFunction> {
     ];
 
     let mut funcs = Vec::new();
-    for (name, params, body) in vec![
-        ("__basic_print_uint", vec![("n".to_string(), "i64".to_string())], uint_body),
+    for (name, params, body) in [("__basic_print_uint", vec![("n".to_string(), "i64".to_string())], uint_body),
         ("__basic_print_int", vec![("n".to_string(), "i64".to_string())], int_body),
         ("__basic_print_zeros", vec![("count".to_string(), "i64".to_string())], zeros_body),
         ("__basic_print_fixed_mag",
@@ -2680,8 +2679,7 @@ fn print_helper_functions() -> Vec<IIRFunction> {
               ("skip_zero".to_string(), "i64".to_string())],
          fixed_body),
         ("__basic_print_real_e", vec![("mag".to_string(), "f64".to_string())], real_e_body),
-        ("__basic_print_real", vec![("x".to_string(), "f64".to_string())], real_body),
-    ] {
+        ("__basic_print_real", vec![("x".to_string(), "f64".to_string())], real_body)] {
         let len = body.len();
         let mut f = IIRFunction::new(
             name,

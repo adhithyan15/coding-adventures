@@ -737,7 +737,7 @@ impl Compiler {
                 mi.exports
                     .iter()
                     .filter(|name| self.fn_globals.contains(*name))
-                    .map(|name| IIRExport::new(name))
+                    .map(IIRExport::new)
                     .collect()
             })
             .unwrap_or_default();

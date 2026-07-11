@@ -550,7 +550,7 @@ fn inv_handler(simplify: bool) -> Handler {
 fn pow_numeric(base: Numeric, exp: Numeric) -> Numeric {
     // Int^Int (small positive exponent) — stay exact.
     if let (Numeric::Int(b), Numeric::Int(e)) = (base, exp) {
-        if e >= 0 && e <= 62 {
+        if (0..=62).contains(&e) {
             // b^e fits in i64 when |b| <= 1 or e <= ~19 for b==2
             // Use checked_pow to avoid overflow.
             if let Some(result) = (b as i128).checked_pow(e as u32) {
@@ -570,7 +570,7 @@ fn pow_numeric(base: Numeric, exp: Numeric) -> Numeric {
     }
     // Rat^Int — exact when exponent is a non-negative integer.
     if let (Numeric::Rat(n, d), Numeric::Int(e)) = (base, exp) {
-        if e >= 0 && e <= 30 {
+        if (0..=30).contains(&e) {
             let eu = e as u32;
             if let (Some(nn), Some(dd)) = ((n as i128).checked_pow(eu), (d as i128).checked_pow(eu))
             {
@@ -841,11 +841,10 @@ fn abs_handler(simplify: bool) -> Handler {
                 return vm.eval(apply_node("Abs", vec![inner_apply.args[0].clone()]));
             }
             // Rule 4c: abs(Mul(-1, x)) = abs(x)
-            if inner_apply.head == IRNode::Symbol(MUL.to_string()) && inner_apply.args.len() == 2 {
-                if inner_apply.args[0] == IRNode::Integer(-1) {
+            if inner_apply.head == IRNode::Symbol(MUL.to_string()) && inner_apply.args.len() == 2
+                && inner_apply.args[0] == IRNode::Integer(-1) {
                     return vm.eval(apply_node("Abs", vec![inner_apply.args[1].clone()]));
                 }
-            }
             // Rule 4d: abs(x^{2k}) = x^{2k}  (even power ≥ 0 always)
             if inner_apply.head == IRNode::Symbol(POW.to_string()) && inner_apply.args.len() == 2 {
                 if let IRNode::Integer(n) = &inner_apply.args[1] {
@@ -4598,12 +4597,12 @@ fn try_sinh_cosh_poly_product(
         let scale = rc_div(sign, a_power)?;
         let scaled = rp_mul_scalar(&derivative, scale)?;
         if head.as_str() == SINH {
-            if degree % 2 == 0 {
+            if degree.is_multiple_of(2) {
                 cosh_poly = rp_add(&cosh_poly, &scaled)?;
             } else {
                 sinh_poly = rp_add(&sinh_poly, &scaled)?;
             }
-        } else if degree % 2 == 0 {
+        } else if degree.is_multiple_of(2) {
             sinh_poly = rp_add(&sinh_poly, &scaled)?;
         } else {
             cosh_poly = rp_add(&cosh_poly, &scaled)?;
@@ -5440,7 +5439,7 @@ fn factor_common_symbolic_term(node: &IRNode) -> Option<IRNode> {
     // recognise the pattern.
     let parsed: Vec<(i64, HashMap<IRNode, usize>)> = terms
         .iter()
-        .map(|term| term_integer_coefficient_and_powers(term))
+        .map(term_integer_coefficient_and_powers)
         .collect::<Option<Vec<_>>>()?;
 
     // --- Integer GCD ---
@@ -6828,7 +6827,7 @@ const APART: &str = "Apart";
 /// Strip trailing zero coefficients in place.
 fn rp_normalize(p: &[RatC]) -> RatPoly {
     let mut out: RatPoly = p.to_vec();
-    while out.last().map_or(false, |c| rc_is_zero(*c)) {
+    while out.last().is_some_and(|c| rc_is_zero(*c)) {
         out.pop();
     }
     out
@@ -6886,8 +6885,8 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
         // Keep ascending order.
         tail_roots.sort_by(|a, b| {
             // a = (an, ad), b = (bn, bd) — compare an*bd vs bn*ad.
-            let lhs = a.0 as i128 * b.1 as i128;
-            let rhs = b.0 as i128 * a.1 as i128;
+            let lhs = a.0 * b.1;
+            let rhs = b.0 * a.1;
             lhs.cmp(&rhs)
         });
         return Some(tail_roots);
@@ -6898,7 +6897,7 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
         let mut out = Vec::new();
         let mut d: u128 = 1;
         while d <= abs {
-            if abs % d == 0 {
+            if abs.is_multiple_of(d) {
                 out.push(d as i128);
             }
             d += 1;
@@ -6927,7 +6926,7 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
     let mut roots: Vec<RatC> = Vec::new();
     for cand in candidates {
         if let Some(v) = rp_evaluate(&int_poly, cand) {
-            if rc_is_zero(v) && !roots.iter().any(|r| *r == cand) {
+            if rc_is_zero(v) && !roots.contains(&cand) {
                 roots.push(cand);
             }
         }

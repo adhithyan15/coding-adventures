@@ -69,7 +69,7 @@ use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
 use serde::{Deserialize, Serialize};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 mod _grammar;
 
@@ -1114,7 +1114,7 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
                 kind: ErrorKind::InternalError,
                 message: format!(
                     "Expected qualified_name AST node at start of node, got {:?}",
-                    children.get(0)
+                    children.first()
                 ),
             });
         }
@@ -1213,7 +1213,7 @@ fn extract_qualified_name(qn_ast: &GrammarASTNode) -> Result<String, CompileErro
 
     // Unqualified shape — single NAME token.
     if children.len() == 1 {
-        if let Some(ASTNodeOrToken::Token(t)) = children.get(0) {
+        if let Some(ASTNodeOrToken::Token(t)) = children.first() {
             if t.type_ == TokenType::Name {
                 return Ok(t.value.clone());
             }

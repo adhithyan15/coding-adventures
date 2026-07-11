@@ -420,8 +420,8 @@ fn build_hint_map(root: &AnnotatedNode) -> HashMap<(u32, u32), &'static str> {
     map
 }
 
-fn collect_hints<'a>(
-    node: &'a AnnotatedNode,
+fn collect_hints(
+    node: &AnnotatedNode,
     map: &mut HashMap<(u32, u32), &'static str>,
 ) {
     use type_declarations::AnnotatedChild;

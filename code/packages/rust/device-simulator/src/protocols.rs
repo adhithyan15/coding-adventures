@@ -384,6 +384,7 @@ impl DeviceTrace {
 /// 3. **Load imbalance**: Are some CUs doing more work than others?
 /// 4. **L2 effectiveness**: Is the cache helping?
 #[derive(Debug, Clone)]
+#[derive(Default)]
 pub struct DeviceStats {
     /// Total simulation cycles.
     pub total_cycles: u64,
@@ -407,19 +408,6 @@ pub struct DeviceStats {
     pub total_blocks_dispatched: u64,
 }
 
-impl Default for DeviceStats {
-    fn default() -> Self {
-        Self {
-            total_cycles: 0,
-            active_cycles: 0,
-            idle_cycles: 0,
-            total_flops: 0,
-            global_memory_stats: GlobalMemoryStats::default(),
-            total_kernels_launched: 0,
-            total_blocks_dispatched: 0,
-        }
-    }
-}
 
 // =========================================================================
 // AcceleratorDevice trait -- the unified device interface

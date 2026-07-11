@@ -62,7 +62,7 @@
 use std::collections::HashMap;
 use std::fmt;
 
-use fp_arithmetic::{FloatBits, FloatFormat, FP32, float_to_bits, bits_to_float};
+use fp_arithmetic::{FloatBits, FloatFormat, float_to_bits, bits_to_float};
 
 /// A configurable floating-point register file.
 ///
@@ -102,7 +102,7 @@ impl FPRegisterFile {
     /// Panics if `num_registers` is 0 or greater than 256.
     pub fn new(num_registers: usize, fmt: FloatFormat) -> Self {
         assert!(
-            num_registers >= 1 && num_registers <= 256,
+            (1..=256).contains(&num_registers),
             "num_registers must be 1-256, got {}",
             num_registers
         );

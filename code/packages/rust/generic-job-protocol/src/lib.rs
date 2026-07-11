@@ -129,6 +129,7 @@ impl<T> JobResponse<T> {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[derive(Default)]
 pub struct JobMetadata {
     #[serde(default)]
     pub created_at_ms: u64,
@@ -148,20 +149,6 @@ pub struct JobMetadata {
     pub tags: BTreeMap<String, String>,
 }
 
-impl Default for JobMetadata {
-    fn default() -> Self {
-        Self {
-            created_at_ms: 0,
-            deadline_at_ms: None,
-            priority: 0,
-            affinity_key: None,
-            sequence: None,
-            attempt: 0,
-            trace_id: None,
-            tags: BTreeMap::new(),
-        }
-    }
-}
 
 impl JobMetadata {
     pub fn with_created_at_ms(mut self, created_at_ms: u64) -> Self {

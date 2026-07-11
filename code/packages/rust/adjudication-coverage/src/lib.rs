@@ -681,8 +681,7 @@ pub fn check_hierarchical_coverage(
             continue;
         };
         let children: Vec<&IRNode> = contains_children
-            .get(&parent.id)
-            .map(|v| v.clone())
+            .get(&parent.id).cloned()
             .unwrap_or_default();
         check_parent_decomposition(
             parent,

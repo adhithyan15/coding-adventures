@@ -412,11 +412,10 @@ impl GrammarParser {
         if self.pos > self.furthest_pos {
             self.furthest_pos = self.pos;
             self.furthest_expected = vec![expected.to_string()];
-        } else if self.pos == self.furthest_pos {
-            if !self.furthest_expected.contains(&expected.to_string()) {
+        } else if self.pos == self.furthest_pos
+            && !self.furthest_expected.contains(&expected.to_string()) {
                 self.furthest_expected.push(expected.to_string());
             }
-        }
     }
 
     /// Parse the token stream according to the grammar.
@@ -1137,10 +1136,10 @@ fn element_references_newline(element: &GrammarElement) -> bool {
         GrammarElement::TokenReference { name } => name == "NEWLINE",
         GrammarElement::RuleReference { name } => name == "NEWLINE",
         GrammarElement::Sequence { elements } => {
-            elements.iter().any(|e| element_references_newline(e))
+            elements.iter().any(element_references_newline)
         }
         GrammarElement::Alternation { choices } => {
-            choices.iter().any(|c| element_references_newline(c))
+            choices.iter().any(element_references_newline)
         }
         GrammarElement::Repetition { element: inner }
         | GrammarElement::Optional { element: inner }

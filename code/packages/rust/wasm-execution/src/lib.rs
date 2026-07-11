@@ -1125,7 +1125,7 @@ pub fn build_control_flow_map(
 
     for (i, instr) in instructions.iter().enumerate() {
         match instr.opcode {
-            0x02 | 0x03 | 0x04 => {
+            0x02..=0x04 => {
                 // block, loop, if
                 stack.push((i, instr.opcode, None));
             }
@@ -1363,7 +1363,7 @@ fn get_table<'a>(ctx: &mut WasmExecutionContext, idx: usize) -> Result<&'a mut T
 fn block_arity(block_type: i64, func_types: &[FuncType]) -> usize {
     match block_type {
         0x40 => 0,                      // empty
-        0x7F | 0x7E | 0x7D | 0x7C => 1, // single value type
+        0x7C..=0x7F => 1, // single value type
         n if n >= 0 && (n as usize) < func_types.len() => func_types[n as usize].results.len(),
         _ => 0,
     }
@@ -2072,7 +2072,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 2147483648.0 || a < -2147483648.0 {
+        if !(-2147483648.0..2147483648.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as i32));
@@ -2088,7 +2088,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 4294967296.0 || a < 0.0 {
+        if !(0.0..4294967296.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
@@ -2104,7 +2104,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 2147483648.0 || a < -2147483649.0 {
+        if !(-2147483649.0..2147483648.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as i32));
@@ -2120,7 +2120,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 4294967296.0 || a < 0.0 {
+        if !(0.0..4294967296.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));

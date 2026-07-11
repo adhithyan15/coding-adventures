@@ -115,8 +115,8 @@ fn write_external_entry(buf: &mut Vec<u8>, tag: u16, type_code: u16, count: u32,
 /// 168..N    pixel data (RGB)
 /// ```
 pub fn encode_tiff(pixels: &PixelContainer) -> Vec<u8> {
-    let width = pixels.width as u32;
-    let height = pixels.height as u32;
+    let width = pixels.width;
+    let height = pixels.height;
     let pixel_bytes = (width as usize) * (height as usize) * 3;
 
     // ── Compute file layout offsets ─────────────────────────────────────────

@@ -71,6 +71,7 @@ use crate::ieee754::{bits_msb_to_int, int_to_bits_msb, is_nan, is_inf, is_zero, 
 /// normal computation stages. When `special` is `Some`, stages simply pass
 /// the data through without processing.
 #[derive(Debug, Clone)]
+#[derive(Default)]
 struct StageData {
     /// If `Some`, this is a pre-computed result (NaN, Inf, zero) that bypasses
     /// the normal pipeline stages. In hardware, this is a multiplexer that
@@ -98,28 +99,6 @@ struct StageData {
     c_aligned: u64,
 }
 
-impl Default for StageData {
-    fn default() -> Self {
-        StageData {
-            special: None,
-            sign_a: 0, sign_b: 0,
-            exp_a: 0, exp_b: 0,
-            mant_a: 0, mant_b: 0,
-            guard_bits: 0,
-            result_sign: 0,
-            result_mant: 0,
-            result_exp: 0,
-            product: 0,
-            product_sign: 0,
-            product_leading: 0,
-            c_sign: 0,
-            exp_c: 0,
-            mant_c: 0,
-            product_exp: 0,
-            c_aligned: 0,
-        }
-    }
-}
 
 // =========================================================================
 // PipelinedFPAdder — 5-stage pipelined floating-point adder
@@ -237,11 +216,11 @@ impl PipelinedFPAdder {
 
         let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
         let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-        let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-        let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+        let mut mant_a = bits_msb_to_int(&a.mantissa);
+        let mut mant_b = bits_msb_to_int(&b.mantissa);
 
-        if exp_a != 0 { mant_a = (1u64 << f.mantissa_bits) | mant_a; } else { exp_a = 1; }
-        if exp_b != 0 { mant_b = (1u64 << f.mantissa_bits) | mant_b; } else { exp_b = 1; }
+        if exp_a != 0 { mant_a |= (1u64 << f.mantissa_bits); } else { exp_a = 1; }
+        if exp_b != 0 { mant_b |= (1u64 << f.mantissa_bits); } else { exp_b = 1; }
 
         let guard_bits = 3u32;
         mant_a <<= guard_bits;
@@ -507,11 +486,11 @@ impl PipelinedFPMultiplier {
 
         let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
         let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-        let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-        let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+        let mut mant_a = bits_msb_to_int(&a.mantissa);
+        let mut mant_b = bits_msb_to_int(&b.mantissa);
 
-        if exp_a != 0 { mant_a = (1u64 << f.mantissa_bits) | mant_a; } else { exp_a = 1; }
-        if exp_b != 0 { mant_b = (1u64 << f.mantissa_bits) | mant_b; } else { exp_b = 1; }
+        if exp_a != 0 { mant_a |= (1u64 << f.mantissa_bits); } else { exp_a = 1; }
+        if exp_b != 0 { mant_b |= (1u64 << f.mantissa_bits); } else { exp_b = 1; }
 
         StageData {
             result_sign, result_exp: exp_a + exp_b - f.bias,
@@ -728,14 +707,14 @@ impl PipelinedFMA {
 
         let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
         let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-        let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-        let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+        let mut mant_a = bits_msb_to_int(&a.mantissa);
+        let mut mant_b = bits_msb_to_int(&b.mantissa);
         let mut exp_c = bits_msb_to_int(&c.exponent) as i32;
-        let mut mant_c = bits_msb_to_int(&c.mantissa) as u64;
+        let mut mant_c = bits_msb_to_int(&c.mantissa);
 
-        if exp_a != 0 { mant_a = (1u64 << f.mantissa_bits) | mant_a; } else { exp_a = 1; }
-        if exp_b != 0 { mant_b = (1u64 << f.mantissa_bits) | mant_b; } else { exp_b = 1; }
-        if exp_c != 0 { mant_c = (1u64 << f.mantissa_bits) | mant_c; } else { exp_c = 1; }
+        if exp_a != 0 { mant_a |= (1u64 << f.mantissa_bits); } else { exp_a = 1; }
+        if exp_b != 0 { mant_b |= (1u64 << f.mantissa_bits); } else { exp_b = 1; }
+        if exp_c != 0 { mant_c |= (1u64 << f.mantissa_bits); } else { exp_c = 1; }
 
         StageData {
             product_sign, c_sign: c.sign,

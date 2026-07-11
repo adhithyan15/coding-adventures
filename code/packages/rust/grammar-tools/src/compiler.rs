@@ -74,7 +74,7 @@ use crate::token_grammar::{
 pub fn compile_token_grammar(grammar: &TokenGrammar, source_file: &str) -> String {
     // Strip newlines so a crafted filename cannot break out of the comment line
     // and inject arbitrary code into the generated file.
-    let source_file = source_file.replace('\n', "_").replace('\r', "_");
+    let source_file = source_file.replace(['\n', '\r'], "_");
     let source_file = source_file.as_str();
     let source_line = if source_file.is_empty() {
         String::new()
@@ -154,7 +154,7 @@ pub fn token_grammar() -> TokenGrammar {{
 /// Returns a `String` of valid Rust source code.
 pub fn compile_parser_grammar(grammar: &ParserGrammar, source_file: &str) -> String {
     // Strip newlines so a crafted filename cannot break out of the comment line.
-    let source_file = source_file.replace('\n', "_").replace('\r', "_");
+    let source_file = source_file.replace(['\n', '\r'], "_");
     let source_file = source_file.as_str();
     let source_line = if source_file.is_empty() {
         String::new()

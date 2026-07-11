@@ -1176,10 +1176,10 @@ impl Lowerer {
             "method_with_block" => {
                 // Phase 6g
                 let expr = self.lower_method_with_block(node)?;
-                return Ok(Stmt::ExprStmt {
+                Ok(Stmt::ExprStmt {
                     expr,
                     span: self.span_of(node),
-                });
+                })
             }
             "modifier_statement" => {
                 // Phase 6q: trailing-modifier conditionals/loops.
@@ -5779,9 +5779,8 @@ impl Lowerer {
         // span covers the whole statement.  Keeping the binding so
         // the lookup helper stays useful for callers that need it
         // (e.g. error messages).
-        .map(|s| {
+        .inspect(|s| {
             let _ = name_span;
-            s
         })
     }
 
@@ -9244,7 +9243,7 @@ impl Lowerer {
                             // the explicit-call form `__dir__()` is a
                             // deliberate follow-up slice.
                             if tok.value == "__dir__" && !self.declared_locals.contains("__dir__") {
-                                let dir = match self.file_name.rfind(|c| c == '/' || c == '\\') {
+                                let dir = match self.file_name.rfind(['/', '\\']) {
                                     Some(i) => self.file_name[..i].to_string(),
                                     None => ".".to_string(),
                                 };

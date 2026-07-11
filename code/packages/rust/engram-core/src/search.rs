@@ -1843,15 +1843,13 @@ fn anki_excluded_field_ids(source: &ExternalSourceRecord) -> Vec<String> {
     fields
         .iter()
         .enumerate()
-        .filter_map(|(index, field)| {
-            anki_field_excluded_from_search(field).then(|| {
+        .filter(|&(index, field)| anki_field_excluded_from_search(field)).map(|(index, field)| {
                 let ordinal = field
                     .get("ord")
                     .and_then(Value::as_i64)
                     .unwrap_or(index as i64);
                 format!("{}:field:{ordinal}", source.target_id)
             })
-        })
         .collect()
 }
 
@@ -2033,7 +2031,7 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
     match filter {
         TagFilter::Hierarchical(tag) if tag == "*" => true,
         TagFilter::Hierarchical(tag) if tag == "none" => {
-            note.map_or(true, |note| note.tags.is_empty())
+            note.is_none_or(|note| note.tags.is_empty())
         }
         TagFilter::Hierarchical(tag) => note.is_some_and(|note| {
             note.tags
@@ -2046,7 +2044,7 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
                 return true;
             }
             if pattern == "none" {
-                return note.map_or(true, |note| note.tags.is_empty());
+                return note.is_none_or(|note| note.tags.is_empty());
             }
             note.is_some_and(|note| {
                 note.tags.iter().any(|candidate| {
@@ -2396,7 +2394,7 @@ fn state_matches(
 ) -> bool {
     match state {
         CardSearchState::New => imported_anki_state_matches(state, card_sources, metadata, now)
-            .unwrap_or_else(|| progress.map_or(true, is_new_progress_overlay)),
+            .unwrap_or_else(|| progress.is_none_or(is_new_progress_overlay)),
         CardSearchState::Due => imported_anki_card_is_due(card_sources, metadata, now)
             .unwrap_or_else(|| progress.is_some_and(|progress| is_reviewable(progress, now))),
         CardSearchState::Learning => {
@@ -2593,7 +2591,7 @@ fn property_matches(
         ),
         CardProperty::Rated => reviews.iter().any(|review| {
             !anki_review_is_manual_reschedule(review, metadata)
-                && filter.rating.map_or(true, |rating| review.rating == rating)
+                && filter.rating.is_none_or(|rating| review.rating == rating)
                 && compare_number(
                     f64::from(relative_day_bucket(
                         review.reviewed_at,
@@ -2677,7 +2675,7 @@ fn imported_fsrs_retrievability(
     metadata: &SearchMetadata<'_>,
     now: u64,
 ) -> Option<f64> {
-    if progress.map_or(true, is_new_progress_overlay) {
+    if progress.is_none_or(is_new_progress_overlay) {
         return None;
     }
 
@@ -2800,7 +2798,7 @@ fn imported_new_card_position(
     progress: Option<&CardProgress>,
     card_sources: &[&ExternalSourceRecord],
 ) -> Option<i64> {
-    if !progress.map_or(true, is_new_progress_overlay) {
+    if !progress.is_none_or(is_new_progress_overlay) {
         return None;
     }
 
@@ -2933,7 +2931,7 @@ fn rated_matches(
 ) -> bool {
     reviews.iter().any(|review| {
         !anki_review_is_manual_reschedule(review, metadata)
-            && filter.rating.map_or(true, |rating| review.rating == rating)
+            && filter.rating.is_none_or(|rating| review.rating == rating)
             && happened_recently(review.reviewed_at, filter.days, metadata, now)
     })
 }

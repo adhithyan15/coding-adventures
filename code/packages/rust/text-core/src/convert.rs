@@ -123,7 +123,7 @@ pub fn numbervalue(
         function: "NUMBERVALUE",
         input: text.to_string(),
     })?;
-    Ok(parsed / 100f64.powi(percent_count as i32))
+    Ok(parsed / 100f64.powi(percent_count))
 }
 
 /// `FIXED(number, decimals, [no_commas])` — format `number` with exactly

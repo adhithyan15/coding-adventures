@@ -3713,12 +3713,12 @@ fn lay_runtime_str_block(
 ) {
     let key = String::from_utf8_lossy(bytes).into_owned();
     let fn_blocks = runtime_str_blocks.entry(fn_name.to_string()).or_default();
-    if !fn_blocks.contains_key(&key) {
+    fn_blocks.entry(key).or_insert_with(|| {
         let block_offset = string_data.len() as u32;
         string_data.extend_from_slice(&len.to_le_bytes());
         string_data.extend_from_slice(bytes);
-        fn_blocks.insert(key, block_offset);
-    }
+        block_offset
+    });
     runtime_str_vars
         .entry(fn_name.to_string())
         .or_default()

@@ -534,7 +534,7 @@ impl IRCServer {
         };
 
         if registered {
-            if let Some(_) = nick_opt {
+            if nick_opt.is_some() {
                 let quit_msg = Message {
                     prefix: Some(mask.clone()),
                     command: "QUIT".to_string(),
@@ -1537,10 +1537,10 @@ impl IRCServer {
                     sorted.sort_unstable();
                     format!("+{}", sorted.iter().collect::<String>())
                 };
-                return vec![Response {
+                vec![Response {
                     conn_id,
                     msg: self.make_msg(RPL_CHANNELMODEIS, &[&nick, &chan_name, &mode_str]),
-                }];
+                }]
             } else {
                 // Set: acknowledge by broadcasting MODE to channel members.
                 let mode_str = msg.params[1].clone();
@@ -1561,19 +1561,19 @@ impl IRCServer {
                     command: "MODE".to_string(),
                     params: vec![chan_name.clone(), mode_str],
                 };
-                return self.channels[&chan_name].members.keys()
+                self.channels[&chan_name].members.keys()
                     .cloned()
                     .map(|mid| Response { conn_id: mid, msg: mode_broadcast.clone() })
-                    .collect();
+                    .collect()
             }
         } else {
             // ── User MODE ─────────────────────────────────────────────────────
             if msg.params.len() == 1 {
                 // Query: return user modes.  We don't track user modes in v1.
-                return vec![Response {
+                vec![Response {
                     conn_id,
                     msg: self.make_msg("221", &[&nick, "+"]),
-                }];
+                }]
             } else {
                 // Set user mode: acknowledge.
                 let mode_str = msg.params[1].clone();
@@ -1583,7 +1583,7 @@ impl IRCServer {
                     command: "MODE".to_string(),
                     params: vec![target, mode_str],
                 };
-                return vec![Response { conn_id, msg: mode_broadcast }];
+                vec![Response { conn_id, msg: mode_broadcast }]
             }
         }
     }

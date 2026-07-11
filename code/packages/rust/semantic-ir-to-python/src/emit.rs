@@ -959,9 +959,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         // A module is a namespace with no superclass; register it so it
         // can participate in `is_a?`/ancestry, then emit its body.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}_sir_oop_define_class({}, None)\n",
+                "{}_sir_oop_define_class({}, None)",
                 pad,
                 quote_py_string(name)
             );
@@ -990,13 +990,13 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
-            let _ = write!(out, "{}try:\n", pad);
+            let _ = writeln!(out, "{}try:", pad);
             emit_stmt_list(out, body, indent + 1);
             if !rescues.is_empty() {
                 // Catch broadly (matching the TS backend's catch-all) so a
                 // native Python error can still be matched by `rescue
                 // StandardError`; the dispatch + re-raise is in the body.
-                let _ = write!(out, "{}except Exception as __exc:\n", pad);
+                let _ = writeln!(out, "{}except Exception as __exc:", pad);
                 let ipad = indent_str(indent + 1);
                 for (i, r) in rescues.iter().enumerate() {
                     let mut types = String::from("[");
@@ -1008,27 +1008,27 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
                     }
                     types.push(']');
                     let kw = if i == 0 { "if" } else { "elif" };
-                    let _ = write!(
+                    let _ = writeln!(
                         out,
-                        "{}{} _sir_exc_rescue_matches(__exc, {}):\n",
+                        "{}{} _sir_exc_rescue_matches(__exc, {}):",
                         ipad, kw, types
                     );
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
                         let bpad = indent_str(indent + 2);
-                        let _ = write!(out, "{}{} = __exc\n", bpad, sanitize_ident(bind));
+                        let _ = writeln!(out, "{}{} = __exc", bpad, sanitize_ident(bind));
                         emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false);
                     } else {
                         emit_stmt_list(out, &r.body, indent + 2);
                     }
                 }
                 // No clause matched → propagate the original exception.
-                let _ = write!(out, "{}else:\n", ipad);
+                let _ = writeln!(out, "{}else:", ipad);
                 let bpad = indent_str(indent + 2);
-                let _ = write!(out, "{}raise\n", bpad);
+                let _ = writeln!(out, "{}raise", bpad);
             }
             if let Some(ens) = ensure_body {
-                let _ = write!(out, "{}finally:\n", pad);
+                let _ = writeln!(out, "{}finally:", pad);
                 emit_stmt_list(out, ens, indent + 1);
             }
         }
@@ -1051,7 +1051,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
 /// block is non-empty.
 fn emit_stmt_list(out: &mut String, stmts: &[Stmt], indent: usize) {
     if stmts.is_empty() {
-        let _ = write!(out, "{}pass\n", indent_str(indent));
+        let _ = writeln!(out, "{}pass", indent_str(indent));
         return;
     }
     for s in stmts {
@@ -1071,7 +1071,7 @@ fn emit_stmt_list_allow_only_value(
 ) {
     if stmts.is_empty() {
         if emit_pass_if_empty {
-            let _ = write!(out, "{}pass\n", indent_str(indent));
+            let _ = writeln!(out, "{}pass", indent_str(indent));
         }
         return;
     }
@@ -1080,7 +1080,7 @@ fn emit_stmt_list_allow_only_value(
     }
 }
 
-fn pick_global_set<'a>(e: &'a Expr) -> Option<(&'a str, &'a Expr)> {
+fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
     if let Expr::BuiltinCall { name, args, .. } = e {
         if name == "global_set" && args.len() == 2 {
             if let Expr::SymLit { name: gn, .. } = &args[0] {
@@ -1854,7 +1854,7 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
     let name = fresh_block_name();
     let pad = indent_str(indent);
     let mut def = String::new();
-    let _ = write!(def, "{}def {}():\n", pad, name);
+    let _ = writeln!(def, "{}def {}():", pad, name);
     // Names re-bound (Assign{Local}) but bound in an enclosing scope must
     // be declared `nonlocal` so the assignment mutates the outer binding
     // rather than shadowing it.  Names introduced by a let / loop var in
@@ -1863,7 +1863,7 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
     for n in &nonlocals {
-        let _ = write!(def, "{}nonlocal {}\n", inner_pad, sanitize_ident(n));
+        let _ = writeln!(def, "{}nonlocal {}", inner_pad, sanitize_ident(n));
     }
     // Body statements, then `return <value>` — emitted via the normal
     // statement path so any further nested loops hoist correctly.
@@ -1895,7 +1895,7 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
     let pad = indent_str(indent);
     let has_value = !matches!(b.value, Expr::NilLit { .. });
     if b.stmts.is_empty() && !has_value {
-        let _ = write!(out, "{}pass\n", pad);
+        let _ = writeln!(out, "{}pass", pad);
         return;
     }
     for s in &b.stmts {
@@ -2016,11 +2016,11 @@ fn collect_nonlocals_block(
 // ---------------------------------------------------------------------------
 
 thread_local! {
-    static BLOCK_COUNTER: RefCell<usize> = RefCell::new(0);
+    static BLOCK_COUNTER: RefCell<usize> = const { RefCell::new(0) };
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
     /// Pending nested-`def` sources, awaiting flush before the current
     /// statement (see [`flush_hoist`]).
-    static HOIST: RefCell<Vec<String>> = RefCell::new(Vec::new());
+    static HOIST: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
 }
 
 fn fresh_block_name() -> String {

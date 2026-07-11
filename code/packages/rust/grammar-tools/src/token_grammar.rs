@@ -416,11 +416,10 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
 
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
-    let (pattern_str, alias) = if after_eq.starts_with('/') {
+    let (pattern_str, alias) = if let Some(rest) = after_eq.strip_prefix('/') {
         // Regex pattern — find the closing slash by scanning character-by-character.
         // We track bracket depth so that / inside [...] character classes is
         // not mistaken for the closing delimiter. We also skip escaped chars.
-        let rest = &after_eq[1..];
         let close_idx = {
             let mut i = 0;
             let bytes = rest.as_bytes();
@@ -475,9 +474,8 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
                 });
             }
         }
-    } else if after_eq.starts_with('"') {
+    } else if let Some(rest) = after_eq.strip_prefix('"') {
         // Literal pattern — find the closing quote.
-        let rest = &after_eq[1..];
         match rest.find('"') {
             Some(close_idx) => {
                 let literal_body = &rest[..close_idx];
@@ -615,9 +613,9 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             // Step 1: get everything after '#'
             let after_hash = stripped[1..].trim_start();
             // Step 2: check for '@'
-            if after_hash.starts_with('@') {
+            if let Some(rest) = after_hash.strip_prefix('@') {
                 // Step 3: key is the run of non-whitespace chars after '@'
-                let rest = &after_hash[1..]; // skip '@'
+                // skip '@'
                 let key_end = rest.find(|c: char| c.is_whitespace()).unwrap_or(rest.len());
                 let key = &rest[..key_end];
                 // Step 4: value is the trimmed remainder

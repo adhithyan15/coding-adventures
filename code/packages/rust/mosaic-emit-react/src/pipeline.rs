@@ -638,7 +638,7 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
         for p in &e.params {
             let field = to_camel_case_first_lower(&p.name);
             validate_slot_or_field_name(&field)
-                .map_err(|n| PipelineEmitError::UnsafeSlotName(n))?;
+                .map_err(PipelineEmitError::UnsafeSlotName)?;
             let ts = emit_payload_to_ts(&p.r#type);
             variant.push_str(&format!("; {field}: {ts}"));
         }

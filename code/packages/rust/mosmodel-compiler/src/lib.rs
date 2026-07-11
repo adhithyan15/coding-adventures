@@ -934,7 +934,7 @@ pub fn emit_rust_binding(component: &MosmodelComponent) -> String {
 
     // ---- impl block with builder methods ----
     out.push_str(&format!("impl {name} {{\n"));
-    out.push_str(&format!("    pub fn new() -> Self {{ Self::default() }}\n\n"));
+    out.push_str(&"    pub fn new() -> Self { Self::default() }\n\n".to_string());
 
     for slot in &component.slots {
         let field = kebab_to_snake(&slot.name);

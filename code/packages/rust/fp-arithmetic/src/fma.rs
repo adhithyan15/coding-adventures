@@ -120,16 +120,16 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
     // ===================================================================
     let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
     let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-    let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-    let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+    let mut mant_a = bits_msb_to_int(&a.mantissa);
+    let mut mant_b = bits_msb_to_int(&b.mantissa);
 
     if exp_a != 0 {
-        mant_a = (1u64 << fmt.mantissa_bits) | mant_a;
+        mant_a |= (1u64 << fmt.mantissa_bits);
     } else {
         exp_a = 1;
     }
     if exp_b != 0 {
-        mant_b = (1u64 << fmt.mantissa_bits) | mant_b;
+        mant_b |= (1u64 << fmt.mantissa_bits);
     } else {
         exp_b = 1;
     }
@@ -152,10 +152,10 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
     // Step 2: Align c's mantissa to the product's exponent
     // ===================================================================
     let mut exp_c = bits_msb_to_int(&c.exponent) as i32;
-    let mut mant_c = bits_msb_to_int(&c.mantissa) as u64;
+    let mut mant_c = bits_msb_to_int(&c.mantissa);
 
     if exp_c != 0 {
-        mant_c = (1u64 << fmt.mantissa_bits) | mant_c;
+        mant_c |= (1u64 << fmt.mantissa_bits);
     } else {
         exp_c = 1;
     }

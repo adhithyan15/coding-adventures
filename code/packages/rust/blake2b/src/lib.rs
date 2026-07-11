@@ -204,7 +204,7 @@ fn validate(
     salt: &[u8],
     personal: &[u8],
 ) -> Result<(), Blake2bError> {
-    if digest_size < 1 || digest_size > MAX_DIGEST {
+    if !(1..=MAX_DIGEST).contains(&digest_size) {
         return Err(Blake2bError::InvalidDigestSize(digest_size));
     }
     if key.len() > MAX_KEY {

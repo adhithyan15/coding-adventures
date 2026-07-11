@@ -109,7 +109,7 @@ pub fn demosaic_bilinear(
             // Read a neighbour value, clamping coordinates to image bounds.
             // This implements edge replication: border pixels simply reflect
             // their own boundary row/column.
-            let get = |r: isize, c: isize| -> u16 {
+            let _get = |r: isize, c: isize| -> u16 {
                 let rr = r.clamp(0, (height as isize) - 1) as usize;
                 let cc = c.clamp(0, (width as isize) - 1) as usize;
                 raw[rr * width + cc]

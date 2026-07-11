@@ -92,7 +92,7 @@ impl ContinuousDistribution for Normal {
     }
 
     fn quantile(&self, p: f64) -> f64 {
-        if p < 0.0 || p > 1.0 || p.is_nan() {
+        if !(0.0..=1.0).contains(&p) || p.is_nan() {
             return f64::NAN;
         }
         if p == 0.0 {
@@ -134,7 +134,7 @@ fn standard_normal_quantile(p: f64) -> f64 {
         -3.969683028665376e+01,
         2.209460984245205e+02,
         -2.759285104469687e+02,
-        1.383577518672690e+02,
+        1.383_577_518_672_69e2,
         -3.066479806614716e+01,
         2.506628277459239e+00,
     ];

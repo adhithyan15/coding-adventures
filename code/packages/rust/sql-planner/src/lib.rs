@@ -453,7 +453,7 @@ impl std::error::Error for PlanError {}
 /// // ... implement SchemaProvider ...
 /// ```
 pub fn plan_sql(sql: &str, schema: &dyn SchemaProvider) -> Result<LogicalPlan, PlanError> {
-    let ast = parse_sql(sql).map_err(|e| PlanError::ParseError(e))?;
+    let ast = parse_sql(sql).map_err(PlanError::ParseError)?;
     plan(&ast, schema)
 }
 
@@ -1034,7 +1034,7 @@ fn extract_clause_expr(clause: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 None
             }
         })
-        .map(|n| plan_expression(n))
+        .map(plan_expression)
         .ok_or_else(|| {
             PlanError::UnsupportedStatement(format!(
                 "clause without expression: {:?}",
@@ -1185,7 +1185,6 @@ fn plan_insert(stmt: &GrammarASTNode, schema: &dyn SchemaProvider) -> Result<Log
         schema
             .column_names(&table)
             .ok()
-            .map(|cols| cols)
     };
 
     // The VALUES rows.

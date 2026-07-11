@@ -76,7 +76,7 @@ impl CodeGenerator<IrProgram, WasmModule> for WasmCodeGenerator {
     /// or a single-element `Vec` containing the lowering error message
     /// when something goes wrong.
     fn validate(&self, ir: &IrProgram) -> Vec<String> {
-        match IrToWasmCompiler::default().compile(ir, &[]) {
+        match IrToWasmCompiler.compile(ir, &[]) {
             Ok(_) => vec![],
             Err(e) => vec![e.to_string()],
         }
@@ -89,7 +89,7 @@ impl CodeGenerator<IrProgram, WasmModule> for WasmCodeGenerator {
     /// Panics if `validate(ir)` would have returned errors.  Always call
     /// `validate` first in production code.
     fn generate(&self, ir: &IrProgram) -> WasmModule {
-        IrToWasmCompiler::default()
+        IrToWasmCompiler
             .compile(ir, &[])
             .expect("WasmCodeGenerator::generate called on invalid IrProgram; call validate() first")
     }

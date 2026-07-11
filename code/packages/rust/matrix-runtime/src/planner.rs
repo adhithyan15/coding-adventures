@@ -197,7 +197,7 @@ pub fn plan(graph: &Graph, registry: &Registry) -> Result<ComputeGraph, PlanErro
         // Is this executor a candidate for every op?
         let universal = candidates
             .iter()
-            .all(|cs| cs.iter().any(|&id| id == exec.id));
+            .all(|cs| cs.contains(&exec.id));
         if !universal {
             continue;
         }

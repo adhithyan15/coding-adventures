@@ -50,16 +50,13 @@
 /// We default to row-major because Rust, C, and most ML frameworks use
 /// row-major. Traditional BLAS uses column-major (Fortran heritage).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum StorageOrder {
+    #[default]
     RowMajor,
     ColumnMajor,
 }
 
-impl Default for StorageOrder {
-    fn default() -> Self {
-        StorageOrder::RowMajor
-    }
-}
 
 /// Transpose flags for GEMM and GEMV.
 ///

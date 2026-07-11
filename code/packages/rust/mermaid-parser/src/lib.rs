@@ -308,7 +308,7 @@ fn token_name(token: &Token) -> &str {
     token
         .type_name
         .as_deref()
-        .unwrap_or_else(|| match token.type_ {
+        .unwrap_or(match token.type_ {
             TokenType::Name => "NAME",
             TokenType::Keyword => "KEYWORD",
             TokenType::Newline => "NEWLINE",
@@ -325,8 +325,7 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask,
-    PieSlice, RelKind, SankeyFlow, SankeyNode,
+    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask, RelKind,
     SeriesKind, StructuralDiagram, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram, TemporalKind,
@@ -664,7 +663,7 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
     // Detect status keywords in the first part.
     let status_keywords = ["done", "active", "crit", "milestone"];
     let first = parts[0];
-    let (status, remaining) = if status_keywords.iter().any(|&kw| first == kw) {
+    let (status, remaining) = if status_keywords.contains(&first) {
         (parse_task_status(first), &parts[1..])
     } else {
         (TaskStatus::Normal, &parts[..])

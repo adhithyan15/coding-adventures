@@ -298,7 +298,7 @@ fn decode_cfa(
     let sensor_values: Vec<u16> = match bits {
         8 => {
             if raw.len() < num_pixels {
-                return Err(format!("TIFF: CFA 8-bit buffer too short"));
+                return Err("TIFF: CFA 8-bit buffer too short".to_string());
             }
             raw[..num_pixels].iter().map(|&b| b as u16 * 257).collect()
         }

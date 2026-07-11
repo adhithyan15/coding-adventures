@@ -342,7 +342,7 @@ pub fn mirr(
         return Err(FinancialError::EmptyInput { function: "mirr" });
     }
     let n = cash_flows.len() as i32;
-    let n_minus_1 = (n - 1) as i32;
+    let n_minus_1 = (n - 1);
 
     let pv_outflows: f64 = cash_flows
         .iter()

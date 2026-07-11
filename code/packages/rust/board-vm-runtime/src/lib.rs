@@ -66,7 +66,9 @@ impl Default for ByteBuffer {
 pub struct ByteBufferError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum Value {
+    #[default]
     Unit,
     Bool(bool),
     U8(u8),
@@ -77,11 +79,6 @@ pub enum Value {
     Bytes(ByteBuffer),
 }
 
-impl Default for Value {
-    fn default() -> Self {
-        Self::Unit
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Handle {

@@ -198,10 +198,7 @@ fn eval_not(
     // Grammar: [ "NOT" ] comparison
     if !node.children.is_empty() && is_keyword_token(&node.children[0], "NOT") {
         let val = eval_expr(&node.children[1], row_ctx)?;
-        Ok(match val {
-            None => None,
-            Some(v) => Some(SqlPrimitive::Bool(!is_truthy(&Some(v)))),
-        })
+        Ok(val.map(|v| SqlPrimitive::Bool(!is_truthy(&Some(v)))))
     } else {
         eval_first_child(node, row_ctx)
     }

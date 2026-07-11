@@ -68,7 +68,7 @@ use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
     TemplateElement, TemplateLiteral,
     BooleanLiteral,
-    BreakStatement, CallExpression, CatchClause, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
+    BreakStatement, CallExpression, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
     MethodDefinition, MethodKind,
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,

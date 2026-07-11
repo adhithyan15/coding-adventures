@@ -133,7 +133,7 @@ impl Parser {
         // Build the token classifier from the active flag set.
         let flag_infos: Vec<FlagInfo> = active_flags
             .iter()
-            .map(|f| FlagInfo::from_flag_def(f))
+            .map(FlagInfo::from_flag_def)
             .collect();
         let classifier = TokenClassifier::new(flag_infos);
 
@@ -725,7 +725,7 @@ impl Parser {
             if let Some(exp) = expected {
                 // Check if this token matches the expected command name or alias.
                 if let Some(cmd) = current_commands.iter().find(|c| c.name == *token || c.aliases.iter().any(|a| a == token)) {
-                    if cmd.name == *exp || cmd.aliases.iter().any(|a| *a == *exp) {
+                    if cmd.name == *exp || cmd.aliases.contains(exp) {
                         indices.insert(i);
                         current_commands = &cmd.commands;
                         expected = remaining_commands.next();

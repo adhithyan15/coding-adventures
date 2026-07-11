@@ -406,7 +406,7 @@ impl BrainfuckVM {
                       instr: &interpreter_ir::instr::IIRInstr|
                       -> Result<Option<Value>, VMError> {
                     // Operand bounds checks before indexing.
-                    let addr_src = instr.srcs.get(0).ok_or_else(|| {
+                    let addr_src = instr.srcs.first().ok_or_else(|| {
                         VMError::Custom("store_mem: missing address operand".into())
                     })?;
                     let val_src = instr.srcs.get(1).ok_or_else(|| {

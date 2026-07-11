@@ -563,7 +563,7 @@ pub fn parse(text: &str) -> Result<JsonValue, JsonValueError> {
         coding_adventures_json_parser::parse_json(text)
     })
     .map_err(|_| {
-        JsonValueError::new(format!("failed to parse JSON text"))
+        JsonValueError::new("failed to parse JSON text".to_string())
     })?;
 
     // Step 2: Convert the AST to a JsonValue.

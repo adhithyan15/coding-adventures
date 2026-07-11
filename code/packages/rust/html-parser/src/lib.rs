@@ -5964,8 +5964,7 @@ impl HtmlParser {
 
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
-        {
-            if incoming_name == "nobr" {
+            && incoming_name == "nobr" {
                 let formatting_above_nobr = self.formatting_above_open_element("nobr");
                 self.close_open_element_silently("nobr");
                 if !formatting_above_nobr.is_empty() {
@@ -5973,7 +5972,6 @@ impl HtmlParser {
                         trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
                 }
             }
-        }
 
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
@@ -6884,7 +6882,7 @@ impl HtmlParser {
             })
             .map_or(0, |index| index + 1);
         let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+            element_at_path(&self.document, path).is_some_and(&predicate)
         }) else {
             return false;
         };
@@ -7079,7 +7077,7 @@ impl HtmlParser {
     fn close_open_heading_if_in_scope(&mut self, expected_name: Option<&str>) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| {
-                is_heading_element(name) && expected_name.map_or(true, |expected| name == expected)
+                is_heading_element(name) && expected_name.is_none_or(|expected| name == expected)
             })
         }) else {
             return false;
@@ -7218,7 +7216,7 @@ impl HtmlParser {
 
     fn close_open_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+            element_at_path(&self.document, path).is_some_and(&predicate)
         }) else {
             return false;
         };
@@ -7278,7 +7276,7 @@ impl HtmlParser {
         });
         let lower_bound = last_ruby.map_or(0, |index| index + 1);
         let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+            element_at_path(&self.document, path).is_some_and(&predicate)
         }) else {
             return false;
         };
@@ -7659,7 +7657,7 @@ impl HtmlParser {
                 path.starts_with(&first_div_path)
                     && element_at_path(&self.document, path).is_some_and(|name| name == "div")
             })
-            .last()
+            .next_back()
             .cloned()
             .unwrap_or_else(|| first_div_path.clone());
 
@@ -9398,7 +9396,7 @@ fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) 
         let marker = index == chain.len() - 1
             || is_fragment_table_shell_wrapper(element_name, context_element);
         let namespace = marker
-            .then_some(foreign_context.and_then(|(namespace, _)| Some(namespace)))
+            .then_some(foreign_context.map(|(namespace, _)| namespace))
             .flatten();
         let child_index = {
             let parent = element_at_path_mut(&mut document, &parent_path)
@@ -11224,7 +11222,7 @@ fn browser_image_map_descriptor(
         missing_alt_area_count: map
             .areas
             .iter()
-            .filter(|area| area.alt.as_deref().map_or(true, str::is_empty))
+            .filter(|area| area.alt.as_deref().is_none_or(str::is_empty))
             .count(),
         missing_href_area_count: map.areas.iter().filter(|area| area.href.is_none()).count(),
         missing_coords_area_count: map
@@ -11294,7 +11292,7 @@ fn browser_image_map_block_reasons(
     missing_image_reference: bool,
 ) -> Vec<String> {
     let mut reasons = Vec::new();
-    if map.name.as_deref().map_or(true, str::is_empty) {
+    if map.name.as_deref().is_none_or(str::is_empty) {
         reasons.push("missing-name".to_string());
     }
     if map.areas.is_empty() {
@@ -11309,7 +11307,7 @@ fn browser_image_map_block_reasons(
     if map
         .areas
         .iter()
-        .any(|area| area.alt.as_deref().map_or(true, str::is_empty))
+        .any(|area| area.alt.as_deref().is_none_or(str::is_empty))
     {
         reasons.push("areas-without-alt".to_string());
     }
@@ -12458,9 +12456,7 @@ fn browser_navigation_target_descriptor(
     base_href: Option<&str>,
     base_target: Option<&str>,
 ) -> Option<BrowserNavigationTargetDescriptor> {
-    if element.attribute("href").is_none() {
-        return None;
-    }
+    element.attribute("href")?;
 
     let rel_tokens = browser_rel_tokens(element);
     let ping = browser_anchor_ping(element);
@@ -21273,7 +21269,7 @@ fn browser_control_validation_barred_reason(
 }
 
 fn browser_control_successful(control_type: &str, element: &Element, disabled: bool) -> bool {
-    if disabled || element.attribute("name").map_or(true, str::is_empty) {
+    if disabled || element.attribute("name").is_none_or(str::is_empty) {
         return false;
     }
 
@@ -24330,7 +24326,7 @@ fn browser_form_control(
     }
 }
 
-fn first_direct_child_named<'a>(element: &'a Element, name: &str) -> Option<*const Element> {
+fn first_direct_child_named(element: &Element, name: &str) -> Option<*const Element> {
     element.children.iter().find_map(|child| match child {
         Node::Element(child_element) if child_element.name == name => {
             Some(child_element as *const Element)
@@ -24618,7 +24614,7 @@ fn browser_table_block_reasons(table: &BrowserTable, cells: &[BrowserTableCell])
     if table.row_count == 0 {
         reasons.push("missing-rows".to_string());
     }
-    if table.caption.as_deref().map_or(true, str::is_empty) {
+    if table.caption.as_deref().is_none_or(str::is_empty) {
         reasons.push("missing-caption".to_string());
     }
     if table.header_cell_count == 0 {

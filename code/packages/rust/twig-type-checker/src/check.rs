@@ -115,7 +115,7 @@ fn classify_define(def: &Define, env: &mut TypeEnv) {
                     lam.param_annotations
                         .get(i)
                         .and_then(|opt_ann| opt_ann.as_ref())
-                        .and_then(|ann| annotation_to_refined_type(ann))
+                        .and_then(annotation_to_refined_type)
                 })
                 .collect();
             env.register_fn_refinements(def.name.clone(), refinements);

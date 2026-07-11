@@ -1540,7 +1540,7 @@ pub fn zlib_decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     }
 
     // (CMF * 256 + FLG) must be a multiple of 31.
-    if (cmf as u32 * 256 + flg as u32) % 31 != 0 {
+    if !(cmf as u32 * 256 + flg as u32).is_multiple_of(31) {
         return Err("zlib_decompress: invalid zlib header checksum".to_string());
     }
 

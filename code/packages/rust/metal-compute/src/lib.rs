@@ -470,7 +470,7 @@ mod apple {
         /// is a multiple of `thread_width`.  Typically 256 or 512.
         pub fn preferred_threads_1d(&self) -> u32 {
             let mut size = self.thread_width.min(self.max_threads);
-            while size * 2 <= self.max_threads && size * 2 % self.thread_width == 0 {
+            while size * 2 <= self.max_threads && (size * 2).is_multiple_of(self.thread_width) {
                 size *= 2;
             }
             size as u32

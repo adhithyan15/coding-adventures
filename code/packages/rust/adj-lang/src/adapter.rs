@@ -419,7 +419,7 @@ fn adapt_context_order(node: &GrammarASTNode) -> Result<Statement, AdapterError>
             _ => None,
         })
         .collect();
-    if idents.is_empty() || idents.len() % 2 != 0 {
+    if idents.is_empty() || !idents.len().is_multiple_of(2) {
         return Err(AdapterError::MissingChild {
             rule: "context_order_decl".into(),
             position: "higher > lower context pairs",

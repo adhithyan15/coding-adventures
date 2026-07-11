@@ -117,18 +117,18 @@ pub fn fp_mul(a: &FloatBits, b: &FloatBits) -> FloatBits {
     // ===================================================================
     let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
     let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-    let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-    let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+    let mut mant_a = bits_msb_to_int(&a.mantissa);
+    let mut mant_b = bits_msb_to_int(&b.mantissa);
 
     // Add implicit leading 1 for normal numbers
     if exp_a != 0 {
-        mant_a = (1u64 << fmt.mantissa_bits) | mant_a;
+        mant_a |= (1u64 << fmt.mantissa_bits);
     } else {
         exp_a = 1; // Denormal: true exponent = 1 - bias
     }
 
     if exp_b != 0 {
-        mant_b = (1u64 << fmt.mantissa_bits) | mant_b;
+        mant_b |= (1u64 << fmt.mantissa_bits);
     } else {
         exp_b = 1;
     }
