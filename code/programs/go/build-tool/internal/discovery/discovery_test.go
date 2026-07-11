@@ -126,6 +126,37 @@ func TestInferLanguageFSharp(t *testing.T) {
 	}
 }
 
+func TestInferLanguageC(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/c/ringbuf")
+	if lang != "c" {
+		t.Fatalf("expected c, got %s", lang)
+	}
+}
+
+func TestInferLanguageCpp(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/cpp/conduit")
+	if lang != "cpp" {
+		t.Fatalf("expected cpp, got %s", lang)
+	}
+}
+
+// The single-letter "c" language must match only a literal `c/` directory. It
+// must never fire inside "csharp" or "cpp" path components, and "cpp" must never
+// fire inside "csharp". These guard against the exact-match regressing to a
+// substring match.
+func TestInferLanguageCDoesNotCollide(t *testing.T) {
+	cases := map[string]string{
+		"/repo/code/packages/csharp/graph": "csharp",
+		"/repo/code/packages/cpp/conduit":  "cpp",
+		"/repo/code/programs/c/hello":      "c",
+	}
+	for path, want := range cases {
+		if got := inferLanguage(path); got != want {
+			t.Fatalf("inferLanguage(%q) = %q, want %q", path, got, want)
+		}
+	}
+}
+
 func TestInferLanguageUnknown(t *testing.T) {
 	lang := inferLanguage("/repo/code/packages/zig/something")
 	if lang != "unknown" {

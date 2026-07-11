@@ -2,6 +2,21 @@
 
 All notable changes to the Go build tool will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **C and C++ as first-class languages.** `inferLanguage` now recognizes `c`
+  and `cpp` path components (exact-match, so `c` never fires inside `csharp` or
+  `cpp`). Existing C++ packages (`cpp/conduit`, `cpp/conduit-hello`,
+  `cpp/mosaic-flux-qt`) are now inferred as language `cpp` instead of `unknown`.
+- **`cpp` CI toolchain.** Added to `allToolchains`; both the `c` and `cpp`
+  package languages map to the single `cpp` toolchain in
+  `toolchainForPackageLanguage` (they share compilers: gcc/g++, clang/clang++,
+  cl.exe), mirroring the `csharp`/`fsharp` → `dotnet` collapse. See spec
+  `code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md`. CI wiring for the new
+  toolchain lands in a follow-up change.
+
 ## [0.3.1] - 2026-03-30
 
 ### Fixed

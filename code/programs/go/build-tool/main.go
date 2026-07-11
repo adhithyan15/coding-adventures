@@ -141,7 +141,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, wasm, csharp, fsharp, dotnet, all")
+	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, wasm, c, cpp, csharp, fsharp, dotnet, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -537,7 +537,7 @@ func run() int {
 
 // allToolchains is the canonical list of build toolchains we may need in CI.
 // The order is stable and matches the order used in CI setup.
-var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet"}
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet", "cpp"}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {
@@ -545,6 +545,11 @@ func toolchainForPackageLanguage(language string) string {
 		return "rust"
 	case "csharp", "fsharp", "dotnet":
 		return "dotnet"
+	case "c", "cpp":
+		// C and C++ share compilers (gcc/g++, clang/clang++, cl.exe), so a
+		// single "cpp" toolchain installs the compilers for both languages —
+		// mirroring the csharp/fsharp → dotnet collapse above.
+		return "cpp"
 	default:
 		return language
 	}

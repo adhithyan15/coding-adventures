@@ -19,6 +19,9 @@ func TestAllToolchainsConstant(t *testing.T) {
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
 		"swift": true, "dart": true, "java": true, "kotlin": true, "haskell": true, "dotnet": true,
+		// "cpp" installs the C/C++ compilers (gcc/g++, clang/clang++, cl.exe)
+		// and serves both the "c" and "cpp" package languages.
+		"cpp": true,
 	}
 	if len(allToolchains) != len(expected) {
 		t.Errorf("allToolchains has %d entries, want %d", len(allToolchains), len(expected))
@@ -203,6 +206,8 @@ func TestToolchainForPackageLanguage(t *testing.T) {
 		"kotlin":  "kotlin",
 		"python":  "python",
 		"swift":   "swift",
+		"c":       "cpp",
+		"cpp":     "cpp",
 		"unknown": "unknown",
 	}
 
