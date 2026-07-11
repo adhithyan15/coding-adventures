@@ -40,6 +40,7 @@ statement   = prior_decl
             | dictionary_decl
             | define_decl
             | rulebook_decl
+            | formulabook_decl
             | use_decl
             | import_decl
             ;
@@ -278,6 +279,43 @@ surface_clause = "surface" STRING { COMMA STRING } ;
 rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE ;
 
 use_decl      = "use" IDENT ;
+
+# ----------------------------------------------------------------
+# Formulabook + formula (ADJ-FORMULA-LIBRARIES rung-0 — the importable,
+# provenanced, PARAMETERIZED formula as a first-class library construct, a
+# SIBLING of `rulebook`). This is the substrate the ladder always named but
+# never built: a reusable, cited formula that lives in a library, is `import`ed,
+# and is APPLIED — not inlined per question.
+#
+#   formulabook body_metrics {
+#       use bmi_vocab
+#       formula bmi(body_mass, height) = body_mass / (height * height)
+#           source "BMI is body mass divided by the square of body height … kg/m²."
+#           locator "https://www.who.int/…/body-mass-index"
+#           trust authoritative
+#   }
+#
+# A `formulabook <name> { … }` groups formulas under one importable name; a
+# `use <dict>` brings a dictionary's terms into scope so the formula's parameter
+# names are typed vocabulary. A `formula <name>(<p>, …) = <expr>` is a NAMED,
+# PARAMETERIZED `let`: `<expr>` REUSES the existing `let` expression grammar
+# (`expr`) verbatim — fractions / products / sums / calls / parens over
+# identifiers + numbers — and the only new idea is that a leaf naming a `<param>`
+# is a FORMAL PARAMETER, bound at apply time (`? bmi(body_mass, height)`) instead
+# of a `Ref` to an already-`observe`d fact. Each formula carries the SAME
+# provenance envelope every grounded clause carries (`source "…" locator "…"
+# trust <tier>`, the `{ annotation }` tail); a shipped formula MUST be sourced
+# (the provenance-required lint, enforced in the lowerer). `formulabook`/`formula`
+# are IDENT-matched literals — no lexer keywords, exactly like `rulebook`/`define`.
+# ----------------------------------------------------------------
+
+formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE ;
+
+formulabook_item = use_decl | formula_decl ;
+
+formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN EQUALS expr { annotation } ;
+
+formula_params   = IDENT { COMMA IDENT } ;
 
 # ----------------------------------------------------------------
 # Import (MYCIN-2026 M3 — composition across files). `import "<path>"`

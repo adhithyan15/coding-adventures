@@ -32,8 +32,8 @@ use math_frontend::{BigOp, BinOp, Func, MathExpr, Number, RelOp as MathRelOp, Un
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn,
-    OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
+    NamedFn, OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
 };
 
 /// Errors raised while adapting a generic AST to the typed AST.
@@ -155,6 +155,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "dictionary_decl" => adapt_dictionary(child),
         "define_decl" => adapt_define(child).map(Statement::Define),
         "rulebook_decl" => adapt_rulebook(child),
+        "formulabook_decl" => adapt_formulabook(child),
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
@@ -784,6 +785,89 @@ fn adapt_rulebook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         })
         .collect::<Result<Vec<_>, _>>()?;
     Ok(Statement::Rulebook { name, statements })
+}
+
+fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE
+    // The name is the first Name token that isn't the `formulabook` keyword; each
+    // `formulabook_item` wraps either a `use_decl` (a vocabulary binding) or a
+    // `formula_decl` (a definition).
+    let name = first_name_not(node, "formulabook")
+        .ok_or(AdapterError::MissingChild {
+            rule: "formulabook_decl".into(),
+            position: "formulabook name",
+        })?
+        .to_string();
+    let mut uses = Vec::new();
+    let mut formulas = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            if item.rule_name == "formulabook_item" {
+                let inner = first_child_node(item, "formulabook_item", "use_decl or formula_decl")?;
+                match inner.rule_name.as_str() {
+                    "use_decl" => {
+                        if let Statement::Use(u) = adapt_use(inner)? {
+                            uses.push(u);
+                        }
+                    }
+                    "formula_decl" => formulas.push(adapt_formula(inner)?),
+                    other => {
+                        return Err(AdapterError::UnexpectedRule {
+                            expected: "use_decl or formula_decl",
+                            actual: other.to_string(),
+                        })
+                    }
+                }
+            }
+        }
+    }
+    Ok(Statement::Formulabook {
+        name,
+        uses,
+        formulas,
+    })
+}
+
+fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
+    // formula_decl = "formula" IDENT LPAREN [ formula_params ] RPAREN EQUALS expr { annotation }
+    //
+    // The name is the first Name token that isn't the `formula` keyword (the
+    // parameter Name tokens live INSIDE the nested `formula_params` node, so they
+    // are not direct children and cannot be mistaken for the name).
+    let name = first_name_not(node, "formula")
+        .ok_or(AdapterError::MissingChild {
+            rule: "formula_decl".into(),
+            position: "formula name",
+        })?
+        .to_string();
+    // formula_params = IDENT { COMMA IDENT } — the parameter names are the Name
+    // tokens of the `formula_params` child (COMMA is a punctuation token). Absent
+    // (a zero-parameter formula) yields an empty vector.
+    let params = first_named_child(node, "formula_params")
+        .map(|p| {
+            p.children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                    _ => None,
+                })
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    // The body reuses the EXISTING `let` expression grammar/adapter verbatim.
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "formula_decl".into(),
+        position: "body expr",
+    })?;
+    let body = adapt_expr(expr_node)?;
+    // Same provenance envelope as every grounded clause (`{ annotation }`).
+    let annotations = collect_annotations(node)?;
+    Ok(FormulaDef {
+        name,
+        params,
+        body,
+        annotations,
+    })
 }
 
 fn adapt_use(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
