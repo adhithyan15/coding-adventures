@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.38.1] - 2026-07-11
+
+### Added — CLOC12.174 PR3: CodePrinter class-declaration conformance port
+
+New upstream port `tests/upstream/code_printer_class_declaration_test.rs`
+(registered as `[[test]] upstream_code_printer_class_declaration`), the companion
+to the class-expression port. Isolates `emit_class_declaration` + the shared
+`emit_class_tail` helper from PR1. **20 active `#[test]`s, 0 `#[ignore]`** — the
+declaration emits **bare** (no wrapping paren, unlike the expression form's
+`(class …);`; no trailing `;`, unlike a `function` declaration), the four
+`extends`-operand precedence cases (identifier / member / call bare, conditional
+wrapped `extends (a?b:c)`), the member forms (method / params+body / `static` /
+`get` / `set` / `constructor` / stacked `static get` / generator `*m` / `async m`
+/ computed `[k]`, `[0]`, `[a+b]` / two members back-to-back), and the full shape
+`class C extends B{m(){}}`. Inputs are hand-constructed AST, so the port also
+covers the generator / async / computed-key / multi-member shapes the grammar
+cannot yet parse. Test-only change (no production edit); ATTRIBUTION.md updated.
+This closes the CLOC12.174 class-declaration arc.
+
 ## [0.38.0] - 2026-07-10
 
 ### Added — CLOC12.174 PR1: emit `ClassDeclaration` (`class C [extends S] {…}`)

@@ -214,6 +214,28 @@ under the Apache License, Version 2.0:
       lets the port cover generator / async / computed-key methods and
       multi-member classes the grammar cannot yet parse.
 
+- `code_printer_class_declaration_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the class-**declaration** `class <id>[ extends S]{members}` printing
+      cases — the `class` keyword in statement position)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Companion to `code_printer_class_test.rs`; isolates
+      `emit_class_declaration` + the shared `emit_class_tail` helper that landed
+      with `Declaration::ClassDeclaration` (CLOC12.174 PR1). 20 active `#[test]`s
+      and **0 `#[ignore]`** — the emitter conforms to every covered shape: the
+      declaration is emitted **bare** (no wrapping paren — unlike the expression
+      form's `(class …);` — and **no trailing `;`** — unlike a `function`
+      declaration); the four `extends`-operand precedence cases (identifier /
+      member / call heritage print bare, a conditional heritage wraps:
+      `extends (a?b:c)`); the member forms (method / params+body / `static` /
+      `get` / `set` / `constructor` / stacked `static get` / generator `*m` /
+      `async m` / computed `[k]`, `[0]`, `[a+b]` / two members back-to-back); and
+      the whole-node full shape (`class C extends B{m(){}}`). Inputs are
+      hand-constructed AST; the bridge conversion of `class_declaration`
+      (CLOC12.174 PR2) is exercised separately in `javascript-parser`, and
+      building the AST directly lets the port cover the generator / async /
+      computed-key / multi-member shapes the grammar cannot yet parse.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
