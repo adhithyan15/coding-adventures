@@ -14,6 +14,8 @@
 //! make it all the way through this pipeline; that is exactly what this
 //! test proves, gated on `node` availability like its JS counterpart.
 
+use std::fs::OpenOptions;
+use std::io::Write as _;
 use std::process::Command;
 
 use matlab_to_semantic_ir::compile_source;
@@ -39,7 +41,20 @@ fn run_via_node(name: &str, src: &str) -> String {
 
     let mut path = std::env::temp_dir();
     path.push(format!("matlab_sir_e2e_{name}_{}.js", std::process::id()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    // `create_new` fails if the path already exists (including as a
+    // symlink) instead of following it -- unlike `std::fs::write`, which
+    // truncates through a symlink at this predictable, shared-temp-dir
+    // path. Each test uses a unique name+PID, so this should never
+    // legitimately collide; if it does, failing loudly is correct for a
+    // test rather than silently overwriting whatever the path pointed to.
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&path)
+        .expect("create temp js (create_new, not following an existing symlink)");
+    file.write_all(artifact.source.as_bytes())
+        .expect("write temp js");
+    drop(file);
 
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);

@@ -1,3 +1,5 @@
+use std::time::{Duration, Instant};
+
 use matlab_to_semantic_ir::compile_source;
 use semantic_ir::{ElementwiseOpKind, Expr, Function, IndexArg, Module, Stmt};
 
@@ -611,4 +613,98 @@ fn chained_assignment_is_rejected() {
 fn parse_error_is_reported_as_a_lower_error() {
     let err = compile_source("x = ;\n", "prog").expect_err("malformed source should fail to parse");
     assert!(err.message.contains("parse error"));
+}
+
+// ── security regression: flat arithmetic chains must not overflow the ────
+// native stack ─────────────────────────────────────────────────────────
+//
+// The MATLAB grammar collapses a flat run of same-precedence operators
+// (`1 + 1 + 1 + ...`) into ONE CST node with many children -- it never
+// nests via parens, so a long unparenthesized chain never trips the
+// ordinary grammar-nesting depth guard the way `((((...))))` does. Two
+// related bugs were confirmed (and fixed) here during security review,
+// both reproduced with a 60,000-term chain that crashed the pre-fix code
+// with a real stack overflow (SIGABRT):
+//
+// 1. `build_additive`/`build_multiplicative` used to re-derive each
+//    operand's scalar-ness by calling `expr_is_known_scalar` on the
+//    entire *already-accumulated* left-hand tree at every fold step --
+//    O(chain length) native stack on the final step alone. Fixed by
+//    tracking scalar-ness incrementally (O(1) per fold step) instead.
+// 2. Even with (1) fixed, folding N operands left-associatively still
+//    builds an N-deep binary `Expr` tree, and that tree's *own* depth is
+//    what every later recursive pass over it pays for (the validator, any
+//    backend's emit, even plain `Drop` -- none of which cap depth
+//    themselves). No amount of construction-time cleverness bounds an
+//    already-N-deep tree, so `check_chain_length` now rejects a chain
+//    longer than `MAX_EXPR_DEPTH` operands outright, before building
+//    anything -- the same "reject cleanly rather than build something
+//    nobody can safely walk again" principle `MAX_EXPR_DEPTH` already
+//    applies to grammar nesting.
+//
+// These tests are the adversarial repro that caught both bugs, kept as a
+// permanent regression guard: the pathological chain that used to crash
+// must now fail cleanly and quickly, while an ordinary chain well under
+// the cap must still lower correctly.
+
+fn flat_additive_chain_source(terms: usize) -> String {
+    let mut src = String::with_capacity(terms * 2 + 8);
+    src.push_str("y = 1");
+    for _ in 1..terms {
+        src.push_str("+1");
+    }
+    src.push_str(";\n");
+    src
+}
+
+fn flat_multiplicative_chain_source(terms: usize) -> String {
+    let mut src = String::with_capacity(terms * 2 + 8);
+    src.push_str("y = 1");
+    for _ in 1..terms {
+        src.push_str("*1");
+    }
+    src.push_str(";\n");
+    src
+}
+
+#[test]
+fn a_pathologically_long_flat_additive_chain_is_cleanly_rejected() {
+    // 60,000 terms matches the exact size the security review used to
+    // reproduce the crash against the pre-fix code. It must now fail with
+    // a clean, fast error instead of overflowing the native stack.
+    let src = flat_additive_chain_source(60_000);
+    let start = Instant::now();
+    let err = compile_source(&src, "prog")
+        .expect_err("a 60,000-term chain must be rejected, not built into an unwalkable tree");
+    let elapsed = start.elapsed();
+    assert!(
+        elapsed < Duration::from_secs(10),
+        "rejecting a 60,000-term chain took {elapsed:?} -- expected a fast, early check"
+    );
+    assert!(err.message.contains("too long"));
+}
+
+#[test]
+fn a_pathologically_long_flat_multiplicative_chain_is_cleanly_rejected() {
+    let src = flat_multiplicative_chain_source(60_000);
+    let err = compile_source(&src, "prog")
+        .expect_err("a 60,000-term chain must be rejected, not built into an unwalkable tree");
+    assert!(err.message.contains("too long"));
+}
+
+#[test]
+fn an_ordinary_length_flat_additive_chain_still_lowers_correctly() {
+    // Well under the cap -- confirms the guard doesn't reject legitimate
+    // (if unusually long) hand-written expressions, and that the
+    // incremental scalar-tracking fix still produces the correct fast
+    // path for a chain longer than any single test above it exercises.
+    let src = flat_additive_chain_source(100);
+    let m = compile_ok(&src);
+    let main = main_fn(&m);
+    match &main.body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => {
+            assert!(matches!(value, Expr::BuiltinCall { name, .. } if name == "+"));
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
 }

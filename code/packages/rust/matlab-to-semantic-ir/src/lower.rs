@@ -811,7 +811,13 @@ impl Lowerer {
                     ),
                 ));
             }
-            let indices = self.lower_index_args(call_suffix, ctx)?;
+            // A fresh statement's own expression tree gets its own
+            // `MAX_EXPR_DEPTH` budget (depth 0), matching the `rhs` lowering
+            // just below and every other statement-boundary expression in
+            // this file -- see `lower_index_args`'s doc comment for why
+            // *nested* index/call positions instead thread the caller's
+            // depth rather than restarting.
+            let indices = self.lower_index_args(call_suffix, ctx, 0)?;
             let value = self.lower_expr(rhs, ctx)?;
             return Ok(Lowered::Stmt(Box::new(Stmt::IndexSet {
                 target: Box::new(Expr::VarRef {
@@ -942,6 +948,7 @@ impl Lowerer {
         if !has_op {
             return Ok(None);
         }
+        self.check_chain_length(node)?;
         let mut acc: Option<Expr> = None;
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
@@ -987,6 +994,7 @@ impl Lowerer {
         if !has_op {
             return Ok(None);
         }
+        self.check_chain_length(node)?;
         let mut acc: Option<Expr> = None;
         let mut pending: Option<String> = None;
         for child in &node.children {
@@ -1081,7 +1089,16 @@ impl Lowerer {
         if !has_op {
             return Ok(None);
         }
-        let mut acc: Option<Expr> = None;
+        self.check_chain_length(node)?;
+        // `acc` tracks the accumulated `Expr` *and* whether it is itself
+        // known-scalar, updated incrementally (O(1) per fold step) rather
+        // than re-derived by calling `expr_is_known_scalar` on the
+        // ever-growing `lhs` at every step -- that re-walk would cost
+        // O(chain length) stack on the final step of an ordinary flat
+        // `1 + 1 + ... + 1` chain (no parens, so `MAX_EXPR_DEPTH`'s
+        // grammar-nesting guard never engages), an uncatchable stack
+        // overflow on a long enough chain.
+        let mut acc: Option<(Expr, bool)> = None;
         let mut pending: Option<String> = None;
         for child in &node.children {
             match child {
@@ -1090,9 +1107,12 @@ impl Lowerer {
                 }
                 ASTNodeOrToken::Node(n) => {
                     let operand = self.lower_expr_d(n, ctx, depth + 1)?;
+                    let operand_scalar = expr_is_known_scalar(&operand);
                     acc = Some(match (acc.take(), pending.take()) {
-                        (None, _) => operand,
-                        (Some(lhs), Some(op)) => self.build_additive(lhs, operand, &op),
+                        (None, _) => (operand, operand_scalar),
+                        (Some((lhs, lhs_scalar)), Some(op)) => {
+                            self.build_additive(lhs, lhs_scalar, operand, operand_scalar, &op)
+                        }
                         (Some(_), None) => {
                             return Err(
                                 self.err_at(node, "malformed additive expression".to_string())
@@ -1104,20 +1124,36 @@ impl Lowerer {
             }
         }
         match acc {
-            Some(e) => Ok(Some(e)),
+            Some((e, _)) => Ok(Some(e)),
             None => Err(self.err_at(node, "empty additive expression".to_string())),
         }
     }
 
-    fn build_additive(&mut self, lhs: Expr, rhs: Expr, op: &str) -> Expr {
+    /// Combine one fold step of an additive chain. `lhs_scalar`/`rhs_scalar`
+    /// are the caller's already-known scalar-ness of each operand (see
+    /// `try_additive`'s doc comment on why these are threaded rather than
+    /// re-derived); returns the built `Expr` plus whether *it* is itself
+    /// known-scalar (`lhs_scalar && rhs_scalar`, matching the `BuiltinCall`
+    /// condition below), for the next fold step to reuse in turn.
+    fn build_additive(
+        &mut self,
+        lhs: Expr,
+        lhs_scalar: bool,
+        rhs: Expr,
+        rhs_scalar: bool,
+        op: &str,
+    ) -> (Expr, bool) {
         let span = lhs.span().clone();
-        if expr_is_known_scalar(&lhs) && expr_is_known_scalar(&rhs) {
-            Expr::BuiltinCall {
-                name: op.to_string(),
-                args: vec![lhs, rhs],
-                effects: EffectSet::PURE,
-                span,
-            }
+        if lhs_scalar && rhs_scalar {
+            (
+                Expr::BuiltinCall {
+                    name: op.to_string(),
+                    args: vec![lhs, rhs],
+                    effects: EffectSet::PURE,
+                    span,
+                },
+                true,
+            )
         } else {
             // `Expr::ElementwiseOp` requires `MatrixOps` + `ArrayColumnMajor`
             // per the validator's own ground truth -- not `NDArrays`.
@@ -1128,12 +1164,15 @@ impl Lowerer {
             } else {
                 ElementwiseOpKind::Sub
             };
-            Expr::ElementwiseOp {
-                op: kind,
-                lhs: Box::new(lhs),
-                rhs: Box::new(rhs),
-                span,
-            }
+            (
+                Expr::ElementwiseOp {
+                    op: kind,
+                    lhs: Box::new(lhs),
+                    rhs: Box::new(rhs),
+                    span,
+                },
+                false,
+            )
         }
     }
 
@@ -1151,7 +1190,11 @@ impl Lowerer {
         if !has_op {
             return Ok(None);
         }
-        let mut acc: Option<Expr> = None;
+        self.check_chain_length(node)?;
+        // See `try_additive`'s doc comment: `acc` tracks scalar-ness
+        // incrementally alongside the accumulated `Expr` rather than
+        // re-deriving it by re-walking the growing tree every fold step.
+        let mut acc: Option<(Expr, bool)> = None;
         let mut pending: Option<String> = None;
         for child in &node.children {
             match child {
@@ -1160,11 +1203,17 @@ impl Lowerer {
                 }
                 ASTNodeOrToken::Node(n) => {
                     let operand = self.lower_expr_d(n, ctx, depth + 1)?;
+                    let operand_scalar = expr_is_known_scalar(&operand);
                     acc = Some(match (acc.take(), pending.take()) {
-                        (None, _) => operand,
-                        (Some(lhs), Some(op)) => {
-                            self.build_multiplicative(lhs, operand, &op, node)?
-                        }
+                        (None, _) => (operand, operand_scalar),
+                        (Some((lhs, lhs_scalar)), Some(op)) => self.build_multiplicative(
+                            lhs,
+                            lhs_scalar,
+                            operand,
+                            operand_scalar,
+                            &op,
+                            node,
+                        )?,
                         (Some(_), None) => {
                             return Err(self.err_at(
                                 node,
@@ -1177,123 +1226,162 @@ impl Lowerer {
             }
         }
         match acc {
-            Some(e) => Ok(Some(e)),
+            Some((e, _)) => Ok(Some(e)),
             None => Err(self.err_at(node, "empty multiplicative expression".to_string())),
         }
     }
 
+    /// `lhs_scalar`/`rhs_scalar` are the caller's already-known scalar-ness
+    /// of each operand -- see `try_additive`'s doc comment on why these are
+    /// threaded rather than re-derived by calling `expr_is_known_scalar` on
+    /// the growing accumulator at every fold step (the same unbounded-
+    /// recursion hazard applies here identically). Returns the built `Expr`
+    /// plus whether it is itself known-scalar, for the next fold step.
     fn build_multiplicative(
         &mut self,
         lhs: Expr,
+        lhs_scalar: bool,
         rhs: Expr,
+        rhs_scalar: bool,
         op: &str,
         node: &GrammarASTNode,
-    ) -> Result<Expr, MatlabLowerError> {
+    ) -> Result<(Expr, bool), MatlabLowerError> {
         let span = lhs.span().clone();
-        let lhs_scalar = expr_is_known_scalar(&lhs);
-        let rhs_scalar = expr_is_known_scalar(&rhs);
         match op {
             ".*" => {
                 if lhs_scalar && rhs_scalar {
-                    Ok(Expr::BuiltinCall {
-                        name: "*".to_string(),
-                        args: vec![lhs, rhs],
-                        effects: EffectSet::PURE,
-                        span,
-                    })
+                    Ok((
+                        Expr::BuiltinCall {
+                            name: "*".to_string(),
+                            args: vec![lhs, rhs],
+                            effects: EffectSet::PURE,
+                            span,
+                        },
+                        true,
+                    ))
                 } else {
                     self.observed.add(Feature::MatrixOps);
                     self.observed.add(Feature::ArrayColumnMajor);
-                    Ok(Expr::ElementwiseOp {
-                        op: ElementwiseOpKind::Mul,
-                        lhs: Box::new(lhs),
-                        rhs: Box::new(rhs),
-                        span,
-                    })
+                    Ok((
+                        Expr::ElementwiseOp {
+                            op: ElementwiseOpKind::Mul,
+                            lhs: Box::new(lhs),
+                            rhs: Box::new(rhs),
+                            span,
+                        },
+                        false,
+                    ))
                 }
             }
             "./" => {
                 if lhs_scalar && rhs_scalar {
-                    Ok(Expr::BuiltinCall {
-                        name: "/".to_string(),
-                        args: vec![lhs, rhs],
-                        effects: EffectSet::PURE,
-                        span,
-                    })
+                    Ok((
+                        Expr::BuiltinCall {
+                            name: "/".to_string(),
+                            args: vec![lhs, rhs],
+                            effects: EffectSet::PURE,
+                            span,
+                        },
+                        true,
+                    ))
                 } else {
                     self.observed.add(Feature::MatrixOps);
                     self.observed.add(Feature::ArrayColumnMajor);
-                    Ok(Expr::ElementwiseOp {
-                        op: ElementwiseOpKind::Div,
-                        lhs: Box::new(lhs),
-                        rhs: Box::new(rhs),
-                        span,
-                    })
+                    Ok((
+                        Expr::ElementwiseOp {
+                            op: ElementwiseOpKind::Div,
+                            lhs: Box::new(lhs),
+                            rhs: Box::new(rhs),
+                            span,
+                        },
+                        false,
+                    ))
                 }
             }
             ".\\" => {
                 if lhs_scalar && rhs_scalar {
-                    Ok(Expr::BuiltinCall {
-                        name: "/".to_string(),
-                        args: vec![rhs, lhs],
-                        effects: EffectSet::PURE,
-                        span,
-                    })
+                    Ok((
+                        Expr::BuiltinCall {
+                            name: "/".to_string(),
+                            args: vec![rhs, lhs],
+                            effects: EffectSet::PURE,
+                            span,
+                        },
+                        true,
+                    ))
                 } else {
                     self.observed.add(Feature::MatrixOps);
                     self.observed.add(Feature::ArrayColumnMajor);
-                    Ok(Expr::ElementwiseOp {
-                        op: ElementwiseOpKind::Div,
-                        lhs: Box::new(rhs),
-                        rhs: Box::new(lhs),
-                        span,
-                    })
+                    Ok((
+                        Expr::ElementwiseOp {
+                            op: ElementwiseOpKind::Div,
+                            lhs: Box::new(rhs),
+                            rhs: Box::new(lhs),
+                            span,
+                        },
+                        false,
+                    ))
                 }
             }
             "*" => {
                 if lhs_scalar && rhs_scalar {
-                    Ok(Expr::BuiltinCall {
-                        name: "*".to_string(),
-                        args: vec![lhs, rhs],
-                        effects: EffectSet::PURE,
-                        span,
-                    })
+                    Ok((
+                        Expr::BuiltinCall {
+                            name: "*".to_string(),
+                            args: vec![lhs, rhs],
+                            effects: EffectSet::PURE,
+                            span,
+                        },
+                        true,
+                    ))
                 } else if lhs_scalar || rhs_scalar {
                     self.observed.add(Feature::MatrixOps);
                     self.observed.add(Feature::ArrayColumnMajor);
-                    Ok(Expr::ElementwiseOp {
-                        op: ElementwiseOpKind::Mul,
-                        lhs: Box::new(lhs),
-                        rhs: Box::new(rhs),
-                        span,
-                    })
+                    Ok((
+                        Expr::ElementwiseOp {
+                            op: ElementwiseOpKind::Mul,
+                            lhs: Box::new(lhs),
+                            rhs: Box::new(rhs),
+                            span,
+                        },
+                        false,
+                    ))
                 } else {
                     self.observed.add(Feature::MatrixOps);
                     self.observed.add(Feature::ArrayColumnMajor);
-                    Ok(Expr::MatMul {
-                        lhs: Box::new(lhs),
-                        rhs: Box::new(rhs),
-                        span,
-                    })
+                    Ok((
+                        Expr::MatMul {
+                            lhs: Box::new(lhs),
+                            rhs: Box::new(rhs),
+                            span,
+                        },
+                        false,
+                    ))
                 }
             }
             "/" => {
                 if lhs_scalar && rhs_scalar {
-                    Ok(Expr::BuiltinCall {
-                        name: "/".to_string(),
-                        args: vec![lhs, rhs],
-                        effects: EffectSet::PURE,
-                        span,
-                    })
+                    Ok((
+                        Expr::BuiltinCall {
+                            name: "/".to_string(),
+                            args: vec![lhs, rhs],
+                            effects: EffectSet::PURE,
+                            span,
+                        },
+                        true,
+                    ))
                 } else if lhs_scalar || rhs_scalar {
                     self.observed.add(Feature::MatrixOps);
                     self.observed.add(Feature::ArrayColumnMajor);
-                    Ok(Expr::ElementwiseOp {
-                        op: ElementwiseOpKind::Div,
-                        lhs: Box::new(lhs),
-                        rhs: Box::new(rhs),
-                        span,
-                    })
+                    Ok((
+                        Expr::ElementwiseOp {
+                            op: ElementwiseOpKind::Div,
+                            lhs: Box::new(lhs),
+                            rhs: Box::new(rhs),
+                            span,
+                        },
+                        false,
+                    ))
                 } else {
                     Err(self.err_at(
                         node,
@@ -1305,12 +1393,15 @@ impl Lowerer {
             }
             "\\" => {
                 if lhs_scalar && rhs_scalar {
-                    Ok(Expr::BuiltinCall {
-                        name: "/".to_string(),
-                        args: vec![rhs, lhs],
-                        effects: EffectSet::PURE,
-                        span,
-                    })
+                    Ok((
+                        Expr::BuiltinCall {
+                            name: "/".to_string(),
+                            args: vec![rhs, lhs],
+                            effects: EffectSet::PURE,
+                            span,
+                        },
+                        true,
+                    ))
                 } else {
                     Err(self.err_at(
                         node,
@@ -1461,7 +1552,7 @@ impl Lowerer {
                         })?;
                         if ctx.locals.contains(&name) || ctx.params.contains(&name) {
                             let span = self.span_of(primary);
-                            let indices = self.lower_index_args(suffix, ctx)?;
+                            let indices = self.lower_index_args(suffix, ctx, depth + 1)?;
                             acc = Some(Expr::IndexGet {
                                 target: Box::new(Expr::VarRef {
                                     name,
@@ -1479,7 +1570,7 @@ impl Lowerer {
                             // this there would be no way for a lowered MATLAB
                             // program to produce observable output at all.
                             let span = self.span_of(primary);
-                            let args = self.lower_call_args(suffix, ctx)?;
+                            let args = self.lower_call_args(suffix, ctx, depth + 1)?;
                             if args.len() != 1 {
                                 return Err(self.err_at(
                                     primary,
@@ -1494,7 +1585,7 @@ impl Lowerer {
                             });
                         } else if self.function_names.contains(&name) {
                             let span = self.span_of(primary);
-                            let args = self.lower_call_args(suffix, ctx)?;
+                            let args = self.lower_call_args(suffix, ctx, depth + 1)?;
                             acc = Some(Expr::DirectCall {
                                 fn_name: name,
                                 args,
@@ -1515,7 +1606,7 @@ impl Lowerer {
                             .take()
                             .expect("acc is set after the first suffix in the fold");
                         let span = base.span().clone();
-                        let indices = self.lower_index_args(suffix, ctx)?;
+                        let indices = self.lower_index_args(suffix, ctx, depth + 1)?;
                         acc = Some(Expr::IndexGet {
                             target: Box::new(base),
                             indices,
@@ -1639,11 +1730,24 @@ impl Lowerer {
     // indexing / call arguments
     // -------------------------------------------------------------------
 
+    /// `depth` is the *enclosing expression's* depth, not a fresh count --
+    /// each index argument is lowered via [`Self::lower_expr_d`] at
+    /// `depth + 1`, not the depth-resetting [`Self::lower_expr`], so that a
+    /// chain of nested indexing (`A(A(A(...))))`) actually accumulates
+    /// against [`MAX_EXPR_DEPTH`] instead of each level silently restarting
+    /// its own budget (the bug this comment exists to prevent regressing).
     fn lower_index_args(
         &mut self,
         call_suffix: &GrammarASTNode,
         ctx: &mut FunctionCtx,
+        depth: usize,
     ) -> Result<Vec<IndexArg>, MatlabLowerError> {
+        if depth > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                call_suffix,
+                format!("expression nesting too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
         // `Expr::IndexGet`/`Stmt::IndexSet` only require `NDArrays` per the
         // validator's own ground truth.
         self.observed.add(Feature::NDArrays);
@@ -1654,7 +1758,7 @@ impl Lowerer {
         let mut out = Vec::new();
         for arg in child_nodes(arg_list) {
             if arg.rule_name == "arg" {
-                out.push(self.lower_one_index_arg(arg, ctx)?);
+                out.push(self.lower_one_index_arg(arg, ctx, depth + 1)?);
             }
         }
         Ok(out)
@@ -1663,11 +1767,14 @@ impl Lowerer {
     /// Lower one index-position argument, translating 1-based MATLAB
     /// indexing to the IR's 0-based convention: a literal integer index
     /// constant-folds (`A(3)` → `Scalar(IntLit(2))`); anything else emits
-    /// `BuiltinCall("-", [idx, 1])` (`A(i)` → `Scalar(i - 1)`).
+    /// `BuiltinCall("-", [idx, 1])` (`A(i)` → `Scalar(i - 1)`). See
+    /// [`Self::lower_index_args`] on why `depth` is threaded rather than
+    /// restarted.
     fn lower_one_index_arg(
         &mut self,
         arg: &GrammarASTNode,
         ctx: &mut FunctionCtx,
+        depth: usize,
     ) -> Result<IndexArg, MatlabLowerError> {
         if let Some(tok) = arg.token() {
             if tok.value == ":" {
@@ -1678,7 +1785,7 @@ impl Lowerer {
             [only] => *only,
             _ => return Err(self.err_at(arg, "malformed index argument".to_string())),
         };
-        let idx = self.lower_expr(inner, ctx)?;
+        let idx = self.lower_expr_d(inner, ctx, depth)?;
         let span = idx.span().clone();
         let shifted = match idx {
             Expr::IntLit { value, .. } => Expr::IntLit {
@@ -1701,11 +1808,21 @@ impl Lowerer {
         Ok(IndexArg::Scalar(Box::new(shifted)))
     }
 
+    /// See [`Self::lower_index_args`] on why `depth` is the caller's
+    /// enclosing depth (threaded via [`Self::lower_expr_d`]), not a fresh
+    /// count restarted via the depth-resetting [`Self::lower_expr`].
     fn lower_call_args(
         &mut self,
         call_suffix: &GrammarASTNode,
         ctx: &mut FunctionCtx,
+        depth: usize,
     ) -> Result<Vec<Expr>, MatlabLowerError> {
+        if depth > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                call_suffix,
+                format!("expression nesting too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
         let arg_list = match self.first_child_named(call_suffix, "arg_list") {
             Some(a) => a,
             None => return Ok(vec![]),
@@ -1727,7 +1844,7 @@ impl Lowerer {
                 [only] => *only,
                 _ => return Err(self.err_at(arg, "malformed call argument".to_string())),
             };
-            out.push(self.lower_expr(inner, ctx)?);
+            out.push(self.lower_expr_d(inner, ctx, depth + 1)?);
         }
         Ok(out)
     }
@@ -1814,6 +1931,45 @@ impl Lowerer {
             column: node.start_column.unwrap_or(1),
         }
     }
+
+    /// Reject a same-precedence operator chain (`additive`/`multiplicative`/
+    /// `comparison`/`logical_or`/`logical_and`) with more than
+    /// `MAX_EXPR_DEPTH` operands.
+    ///
+    /// The MATLAB grammar collapses a flat run of `+`/`-`/`*`/... into ONE
+    /// CST node with many children rather than nesting through parens, so a
+    /// long unparenthesized chain never trips the ordinary grammar-nesting
+    /// depth guard. But folding N operands left-associatively still builds
+    /// an N-deep *binary* `Expr` tree — and that tree's own depth is what
+    /// matters for every later recursive pass over it (this crate's own
+    /// scalar-ness check, but just as much the shared validator, any
+    /// backend's emit pass, and even plain `Drop`, none of which cap
+    /// depth themselves). A 60,000-term chain was confirmed to overflow
+    /// the native stack during security review, even after fixing this
+    /// file's own O(1)-per-fold-step scalar tracking, precisely because
+    /// the resulting tree was still 60,000 levels deep regardless of how
+    /// cheaply each level was built. Capping the operand *count* here — not
+    /// just the construction cost — is the only fix that actually bounds
+    /// the tree, so this check is deliberately unconditional (it does not
+    /// try to distinguish "still cheap to build" from "already too deep to
+    /// ever safely walk again").
+    fn check_chain_length(&self, node: &GrammarASTNode) -> Result<(), MatlabLowerError> {
+        let operand_count = node
+            .children
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(_)))
+            .count();
+        if operand_count > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "expression chain too long ({operand_count} operands, exceeds \
+                     {MAX_EXPR_DEPTH})"
+                ),
+            ));
+        }
+        Ok(())
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1859,12 +2015,34 @@ fn number_literal_expr(tok: &Token, span: &Span) -> Expr {
 /// disambiguation" section — this is a syntactic, non-evaluating check on
 /// the *lowered* expression tree, not full constant folding.
 fn expr_is_known_scalar(e: &Expr) -> bool {
+    expr_is_known_scalar_d(e, 0)
+}
+
+/// Depth-capped core of [`expr_is_known_scalar`]. This is defense in depth,
+/// not the primary fix for deep recursion here: every call site that folds a
+/// *chain* of same-precedence operators (`build_additive`/
+/// `build_multiplicative`) tracks each operand's scalar-ness incrementally
+/// instead of re-deriving it by re-walking the whole accumulated left-hand
+/// tree on every fold step -- re-deriving it that way would cost O(depth)
+/// stack per step (O(chain length) at the final step) for an ordinary flat
+/// `1 + 1 + 1 + ... + 1` chain, which has no bound at all from
+/// `MAX_EXPR_DEPTH` (that guard counts *grammar nesting*, not the length of
+/// one flat repetition -- a long unparenthesized chain never nests at the
+/// CST level). This cap only protects a caller that (incorrectly) invokes
+/// `expr_is_known_scalar` on a re-walked accumulator in the future;
+/// returning `false` past the cap is always semantically safe, since a
+/// "not provably scalar" verdict only ever falls through to the equally
+/// correct array-domain node.
+fn expr_is_known_scalar_d(e: &Expr, depth: usize) -> bool {
+    if depth > MAX_EXPR_DEPTH {
+        return false;
+    }
     match e {
         Expr::IntLit { .. } | Expr::FloatLit { .. } => true,
         Expr::BuiltinCall { name, args, .. }
             if matches!(name.as_str(), "+" | "-" | "*" | "/" | "neg") =>
         {
-            args.iter().all(expr_is_known_scalar)
+            args.iter().all(|a| expr_is_known_scalar_d(a, depth + 1))
         }
         _ => false,
     }

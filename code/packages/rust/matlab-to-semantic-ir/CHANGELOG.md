@@ -30,9 +30,47 @@
   node at all yet), `switch`/`try`/`global`/`persistent`, cell arrays,
   anonymous functions, auto-vivification on indexed assignment, and
   chained assignment.
-- 62 tests: 54 unit tests over lowering shapes and rejected constructs, 5
-  validator/capability-rejection tests (mirroring the SIR22/SIR23 core
-  verification pattern), 3 end-to-end tests that actually execute lowered
-  MATLAB through `semantic-ir-to-javascript` and `node` (gated on `node`
-  availability).
+- 66 tests: 57 unit tests over lowering shapes, rejected constructs, and
+  the DoS-guard regressions below, 5 validator/capability-rejection tests
+  (mirroring the SIR22/SIR23 core verification pattern), 3 end-to-end
+  tests that actually execute lowered MATLAB through
+  `semantic-ir-to-javascript` and `node` (gated on `node` availability).
 - Marks `matlab-to-semantic-ir` done in `HML01-math-to-semantic-ir.md` §3.
+
+### Fixed (security review, before first push)
+
+- **DoS: unbounded native-stack recursion on a flat arithmetic chain.**
+  MATLAB's grammar collapses a flat run of `+`/`-`/`*`/... (no parens) into
+  one CST node with many children, so a long unparenthesized chain never
+  trips the ordinary grammar-nesting depth guard. Two compounding bugs,
+  both confirmed to crash (SIGABRT) on a 60,000-term chain during review:
+  (1) `build_additive`/`build_multiplicative` re-derived each operand's
+  scalar-ness by calling `expr_is_known_scalar` on the *entire
+  already-accumulated* left tree at every fold step — O(chain length)
+  stack on the final step alone — fixed by tracking scalar-ness
+  incrementally (O(1) per step) instead; (2) even with (1) fixed, folding
+  N operands left-associatively still builds an N-deep binary `Expr` tree,
+  and that depth is what every later recursive pass over it (the
+  validator, any backend, even `Drop`) pays for regardless of how cheaply
+  it was built — fixed by capping the operand *count* itself
+  (`check_chain_length`, applied to `additive`/`multiplicative`/
+  `comparison`/`logical_or`/`logical_and`) at `MAX_EXPR_DEPTH`, rejecting a
+  pathological chain before building anything. `expr_is_known_scalar` also
+  gained its own depth cap as defense in depth.
+- **DoS (masked, not yet independently exploitable): index/call arguments
+  reset the expression-depth counter instead of threading it.**
+  `lower_index_args`/`lower_call_args`/`lower_one_index_arg` called the
+  depth-*resetting* `lower_expr` instead of continuing the caller's depth,
+  so a chain of nested indexing/calls (`A(A(A(...))))`) never accumulated
+  against `MAX_EXPR_DEPTH` — each level silently restarted its own budget.
+  Currently masked by `coding-adventures-matlab-parser`'s own independent
+  nesting limit (which rejects sufficiently deep source first), but that
+  is a different crate's protection, not this one's — fixed by threading
+  `depth + 1` through all three functions via `lower_expr_d`, mirroring
+  `python-to-semantic-ir`'s `lower_expr_in` pattern.
+- **Test-only, LOW severity: predictable temp-file path in
+  `tests/e2e_node.rs`.** The end-to-end harness wrote to a predictable
+  path under the shared system temp directory via `std::fs::write`, which
+  follows an existing symlink; switched to
+  `OpenOptions::new().write(true).create_new(true)`, which fails instead
+  of following one.

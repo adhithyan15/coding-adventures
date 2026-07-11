@@ -56,8 +56,11 @@ documented (and demonstrated) in `tests/test_validator.rs`.
 
 ### Testing
 
-- `tests/test_lower.rs` — unit tests over every lowering rule and every
-  documented scope limit's rejection.
+- `tests/test_lower.rs` — unit tests over every lowering rule, every
+  documented scope limit's rejection, and a DoS-guard regression pair
+  (`a_pathologically_long_flat_{additive,multiplicative}_chain_is_cleanly_rejected`)
+  reproducing a native-stack-overflow bug security review caught and this
+  crate fixed before its first push — see `CHANGELOG.md`'s "Fixed" entry.
 - `tests/test_validator.rs` — every lowered module passes
   `semantic_ir::validate`; a module using SIR22 nodes is correctly
   *rejected* by `semantic-ir-to-javascript`'s capability check (that backend
