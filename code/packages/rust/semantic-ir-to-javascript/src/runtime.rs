@@ -130,6 +130,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       seen.delete(v);
       return "[" + body + "]";
     }
+    // A Ruby Hash is a JS `Map`.  It renders `{k: v, …}` (colon-space between
+    // key and value, comma-space between pairs) — the SAME surface the Go/Rust
+    // backends emit, so a printed hash (e.g. a `group_by` result) round-trips
+    // identically across backends.  Cycle-guarded via `seen` like Arrays.
+    if (v instanceof Map) {
+      if (seen.has(v)) { return "{...}"; }
+      seen.add(v);
+      const body = [...v]
+        .map(([k, val]) => formatSeen(k, seen) + ": " + formatSeen(val, seen))
+        .join(", ");
+      seen.delete(v);
+      return "{" + body + "}";
+    }
     return String(v);
   }
 
@@ -927,6 +940,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "map", "select", "filter", "reject", "transform_values", "transform_keys",
     "find", "detect", "any?", "all?", "none?", "count",
     "sort_by", "min_by", "max_by",
+    "group_by", "partition", "flat_map", "collect_concat",
+    "reduce", "inject", "sum",
   ]);
   function hashMethod(recv, name, args) {
     switch (name) {
@@ -1108,6 +1123,74 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           }
         }
         return bestPair;
+      }
+      // ── Enumerable breadth (block-taking reshape / fold) ─────────
+      //
+      // Same [key, value]-pair iteration as the aggregates above: every method
+      // yields (key, value) EXCEPT `reduce`/`inject`, which follow Ruby's memo
+      // convention and yield (memo, pair) — the [k, v] Array as ONE argument.
+      case "group_by": {
+        // A Map from each block key to the Array of the [k, v] pairs that
+        // produced it, in first-seen key order (mirrors Array#group_by, which
+        // also returns a Map).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const groups = new Map();
+        for (const [k, v] of recv) {
+          const gk = blk(k, v);
+          const bucket = groups.get(gk);
+          if (bucket) { bucket.push([k, v]); } else { groups.set(gk, [[k, v]]); }
+        }
+        return groups;
+      }
+      case "partition": {
+        // [[matching pairs], [rest pairs]] — each a fresh Array of [k, v] pairs.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const yes = [];
+        const no = [];
+        for (const [k, v] of recv) {
+          if (truthy(blk(k, v))) { yes.push([k, v]); } else { no.push([k, v]); }
+        }
+        return [yes, no];
+      }
+      case "flat_map": case "collect_concat": {
+        // Map each pair then concatenate one level: an Array result splices its
+        // elements, a scalar is appended as-is.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const out = [];
+        for (const [k, v] of recv) {
+          const r = blk(k, v);
+          if (Array.isArray(r)) { out.push(...r); } else { out.push(r); }
+        }
+        return out;
+      }
+      case "reduce": case "inject": {
+        // Ruby's memo fold.  Unlike every other method here (which yields the
+        // two-arg pair), `reduce` yields (memo, pair) — the [k, v] Array as ONE
+        // argument.  `reduce(seed) { … }` seeds from the arg; seedless seeds
+        // from the first pair; an empty seedless reduce is nil.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const pairs = [...recv]; // Map iteration yields [k, v] Arrays
+        let acc;
+        let start;
+        if (args.length >= 2) { acc = args[0]; start = 0; }
+        else if (pairs.length > 0) { acc = pairs[0]; start = 1; }
+        else { return null; }
+        for (let i = start; i < pairs.length; i++) { acc = blk(acc, pairs[i]); }
+        return acc;
+      }
+      case "sum": {
+        // Numeric fold seeded at 0 (or the explicit seed arg) over the block
+        // results — the same native `+` accumulation Array#sum uses, so
+        // integer inputs stay integers and any float promotes.
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        let acc = args.length >= 2 ? args[0] : 0;
+        for (const [k, v] of recv) { acc = acc + blk(k, v); }
+        return acc;
       }
     }
     return HASH_MISS;
