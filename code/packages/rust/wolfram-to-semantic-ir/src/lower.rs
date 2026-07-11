@@ -737,6 +737,7 @@ impl Lowerer {
     /// RBRACKET RBRACKET }` -- function application and the `[[ … ]]` part
     /// sugar, both postfix, left-associative and chainable.
     fn lower_postfix(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, WolframLowerError> {
+        self.check_postfix_chain_length(node)?;
         let mut result = self.lower_child(
             node.children
                 .first()
@@ -910,6 +911,13 @@ impl Lowerer {
 
     /// `amp = power AMP { AMP } { amp_apply } | power` -- the `&`
     /// pure-function postfix and any immediate trailing application.
+    ///
+    /// Both repetitions here (`{ AMP }` and `{ amp_apply }`) are flat,
+    /// token-or-node runs the grammar folds into ONE `amp` node's children
+    /// rather than nesting -- exactly the same shape `check_chain_length`
+    /// guards for `additive`/`multiplicative`/etc, so both are capped
+    /// before their respective wrapping loops run (see
+    /// [`Self::check_amp_chain_length`]).
     fn lower_amp(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, WolframLowerError> {
         let amp_count = node
             .children
@@ -919,6 +927,7 @@ impl Lowerer {
         if amp_count == 0 {
             return self.lower_first_node(node, depth);
         }
+        self.check_amp_chain_length(node, amp_count)?;
         let body = self.lower_first_node(node, depth + 1)?;
         let mut result = body;
         for _ in 0..amp_count {
@@ -1108,6 +1117,72 @@ impl Lowerer {
             return Err(self.err_at(
                 node,
                 format!("too many arguments ({count}, exceeds {MAX_EXPR_DEPTH})"),
+            ));
+        }
+        Ok(())
+    }
+
+    /// Reject a chain of postfix application/part groups
+    /// (`f[…][…][…]…`/`x[[…]][[…]][[…]]…`, in any mix) longer than
+    /// `MAX_EXPR_DEPTH`.
+    ///
+    /// `lower_postfix`'s `while` loop is iterative, not recursive through
+    /// `lower_node` -- each `LBRACKET`/`LDBRACKET` group wraps the running
+    /// `result` as the head (or `Part` target) of a brand-new `SymApply`,
+    /// so this chain never engages `MAX_EXPR_DEPTH`'s own recursion check
+    /// no matter how many groups there are. This is the exact same bug
+    /// class [`Self::check_chain_length`] guards against, on a grammar
+    /// shape [`Self::check_chain_length`] itself does not cover (the chain
+    /// here is expressed as a run of TOKENS with an optional trailing
+    /// `arglist` node each, not a run of `Node` operands) -- found during
+    /// security review after the initial per-production audit missed it,
+    /// since `postfix` was not in the list of "obviously chain-shaped"
+    /// rules the additive/multiplicative/logical/alternatives/mapapply/
+    /// patterntest/replaceall productions made explicit.
+    fn check_postfix_chain_length(&self, node: &GrammarASTNode) -> Result<(), WolframLowerError> {
+        let group_count = node
+            .children
+            .iter()
+            .filter(|c| as_token(c).is_some_and(|t| matches!(token_type(t), "LBRACKET" | "LDBRACKET")))
+            .count();
+        if group_count > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "too many chained application/part groups ({group_count}, exceeds \
+                     {MAX_EXPR_DEPTH})"
+                ),
+            ));
+        }
+        Ok(())
+    }
+
+    /// Reject an `amp` node (`expr & & & …`, and/or `expr & […] […] …`)
+    /// whose `&` run or trailing `amp_apply` suffix run exceeds
+    /// `MAX_EXPR_DEPTH`.
+    ///
+    /// Both `lower_amp`'s `&`-wrapping loop (`for _ in 0..amp_count`) and
+    /// its `amp_apply` suffix loop are the same iterative-wrap-in-a-loop
+    /// shape [`Self::check_postfix_chain_length`] guards for ordinary
+    /// postfix application -- same bug class, same fix.
+    fn check_amp_chain_length(&self, node: &GrammarASTNode, amp_count: usize) -> Result<(), WolframLowerError> {
+        if amp_count > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("too many chained `&` (amp_count {amp_count}, exceeds {MAX_EXPR_DEPTH})"),
+            ));
+        }
+        let suffix_count = child_nodes(node)
+            .into_iter()
+            .filter(|n| n.rule_name == "amp_apply")
+            .count();
+        if suffix_count > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "too many chained pure-function applications ({suffix_count}, exceeds \
+                     {MAX_EXPR_DEPTH})"
+                ),
             ));
         }
         Ok(())

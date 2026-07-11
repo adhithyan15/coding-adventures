@@ -68,19 +68,57 @@ const PARSE_STACK_SIZE: usize = 512 * 1024 * 1024;
 /// [`WolframLowerError`] instead of a native, uncatchable stack overflow on
 /// an ordinary caller thread. Prefer this over `compile` for any input that
 /// was not already parsed under an equivalent guard.
+///
+/// Both thread-spawn failure (OS resource exhaustion, e.g. hitting a
+/// per-process thread-count or address-space limit under many concurrent
+/// calls) and a worker-thread panic (from anywhere in the parse/lower
+/// pipeline, not just a stack overflow — which is unrecoverable regardless
+/// and aborts the whole process before `join` ever runs) are converted into
+/// a [`WolframLowerError`] rather than propagated as a panic on the calling
+/// thread — a bare `.expect()` on either would otherwise silently defeat
+/// this function's own "fails cleanly" guarantee, caught during security
+/// review.
 pub fn compile_source(
     source: &str,
     module_name: &str,
 ) -> Result<semantic_ir::Module, WolframLowerError> {
     let source = source.to_string();
     let module_name = module_name.to_string();
-    std::thread::Builder::new()
+    let handle = std::thread::Builder::new()
         .name("wolfram-to-semantic-ir-compile".to_string())
         .stack_size(PARSE_STACK_SIZE)
         .spawn(move || compile_on_this_thread(&source, &module_name))
-        .expect("failed to spawn wolfram-to-semantic-ir compile worker thread")
-        .join()
-        .expect("wolfram-to-semantic-ir compile worker thread panicked")
+        .map_err(|e| WolframLowerError {
+            message: format!("failed to spawn wolfram-to-semantic-ir compile worker thread: {e}"),
+            line: 1,
+            column: 1,
+        })?;
+    match handle.join() {
+        Ok(result) => result,
+        Err(panic_payload) => Err(WolframLowerError {
+            message: format!(
+                "wolfram-to-semantic-ir compile worker thread panicked: {}",
+                panic_message(&panic_payload)
+            ),
+            line: 1,
+            column: 1,
+        }),
+    }
+}
+
+/// Extract a human-readable message from a `std::thread::Result::Err`
+/// panic payload, which is `Box<dyn Any + Send>` and in practice almost
+/// always a `&'static str` (a string-literal panic) or a `String` (a
+/// formatted panic, e.g. via `panic!("{}", ...)`) — falls back to a fixed
+/// placeholder for the rare payload that is neither.
+fn panic_message(payload: &Box<dyn std::any::Any + Send>) -> String {
+    if let Some(s) = payload.downcast_ref::<&str>() {
+        s.to_string()
+    } else if let Some(s) = payload.downcast_ref::<String>() {
+        s.clone()
+    } else {
+        "<non-string panic payload>".to_string()
+    }
 }
 
 fn compile_on_this_thread(

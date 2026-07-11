@@ -62,17 +62,20 @@ token).
 
 ### Recursion-depth hardening
 
-Applied from day one, not retrofitted after a security-review finding
-(unlike `matlab-to-semantic-ir`'s own history): every flat, same-precedence
-operator chain (`+`, `*`, `&&`, `||`, `|`, `/@`/`@@`, `/.`/`//.`, `?`) is
-capped at `MAX_EXPR_DEPTH` operands *before* any tree is built, because the
-Wolfram grammar — like MATLAB's — collapses a long unparenthesized chain
-into one CST node with many children rather than nesting through parens, so
-it never trips the ordinary grammar-nesting depth guard. Verified
-adversarially during development (not just asserted): temporarily removing
-the guard and re-running the 60,000-term regression test reproduces a real
-`SIGABRT` native stack overflow, confirming the guard is load-bearing, not
-decorative.
+Every flat, same-precedence operator chain (`+`, `*`, `&&`, `||`, `|`,
+`/@`/`@@`, `/.`/`//.`, `?`) — and, after a security-review finding fixed
+before first push, every chained postfix application/part group
+(`f[…][…]…`) and `&`-run/pure-function-apply suffix run — is capped at
+`MAX_EXPR_DEPTH` operands *before* any tree is built, because the Wolfram
+grammar — like MATLAB's — collapses a long unparenthesized chain into one
+CST node with many children rather than nesting through parens, so it
+never trips the ordinary grammar-nesting depth guard. The first eight
+productions were covered from day one; the postfix/amp chains were an
+initial gap the security review caught (see `CHANGELOG.md`'s "Fixed"
+entry) — both classes are now verified adversarially: temporarily removing
+each guard and re-running its 60,000-term regression test reproduces a
+real `SIGABRT` native stack overflow, confirming the guards are
+load-bearing, not decorative.
 
 `compile_source` additionally parses on an enlarged-stack worker thread
 (see "Usage" above), reusing `wolfram-runtime`'s own validated-safe
@@ -86,8 +89,10 @@ nesting for this particular grammar.
 - `tests/test_lower.rs` — unit tests asserting exact `Expr` shapes for
   every grammar production, plus DoS-guard regression tests at the same
   60,000-term scale `matlab-to-semantic-ir`'s own security review
-  established, and an exact-boundary test (`MAX_EXPR_DEPTH` operands parse,
-  one more is rejected).
+  established (covering both the flat operator chains and the
+  postfix/amp chained-application gap the review found here), and
+  exact-boundary tests (`MAX_EXPR_DEPTH` operands/groups parse, one more is
+  rejected).
 - `tests/test_validator.rs` — every lowered module passes
   `semantic_ir::validate` (manifest declares exactly the SIR23 features
   used) and is correctly *rejected* by `semantic-ir-to-javascript`'s

@@ -537,3 +537,52 @@ fn a_chain_at_exactly_the_cap_still_compiles() {
     let bad_src = format!("{}\n", (0..bad_terms).map(|_| "1").collect::<Vec<_>>().join(" + "));
     assert!(compile_source(&bad_src, "test").is_err());
 }
+
+// A chained application/part/pure-function-apply run is iterative in
+// `lower_postfix`/`lower_amp`, not recursive through `lower_node` -- it
+// never engages `MAX_EXPR_DEPTH`'s own recursion check no matter how many
+// groups there are, which is a different grammar shape from the flat
+// operator chains above (a run of TOKENS with an optional trailing
+// `arglist` node each, not a run of `Node` operands). Found during
+// security review, after the initial per-production chain-length audit
+// above missed it — see `check_postfix_chain_length`/`check_amp_chain_length`
+// in `src/lower.rs`.
+
+#[test]
+fn a_huge_chained_bracket_application_is_rejected_cleanly_not_crashed() {
+    let chains = 60_000;
+    let src = format!("x{}\n", "[0]".repeat(chains));
+    assert!(compile_source(&src, "test").is_err());
+}
+
+#[test]
+fn a_huge_chained_double_bracket_part_is_rejected_cleanly_not_crashed() {
+    let chains = 60_000;
+    let src = format!("x{}\n", "[[0]]".repeat(chains));
+    assert!(compile_source(&src, "test").is_err());
+}
+
+#[test]
+fn a_huge_chained_pure_function_amp_apply_is_rejected_cleanly_not_crashed() {
+    let chains = 60_000;
+    let src = format!("(#&){}\n", "[0]".repeat(chains));
+    assert!(compile_source(&src, "test").is_err());
+}
+
+#[test]
+fn a_huge_chained_ampersand_run_is_rejected_cleanly_not_crashed() {
+    let count = 60_000;
+    let src = format!("x{}\n", " &".repeat(count));
+    assert!(compile_source(&src, "test").is_err());
+}
+
+#[test]
+fn a_bracket_chain_at_exactly_the_cap_still_compiles() {
+    let ok_chains = 256;
+    let ok_src = format!("x{}\n", "[0]".repeat(ok_chains));
+    assert!(compile_source(&ok_src, "test").is_ok());
+
+    let bad_chains = 257;
+    let bad_src = format!("x{}\n", "[0]".repeat(bad_chains));
+    assert!(compile_source(&bad_src, "test").is_err());
+}
