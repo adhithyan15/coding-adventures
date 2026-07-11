@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — depth-cap hardening
+
+- **Security (DoS):** opt into the shared parser's recursion-depth cap
+  (`DEFAULT_MAX_RULE_DEPTH`) in both `create_cobol_parser` and `try_parse_cobol`.
+  Deeply-nested syntax (e.g. thousands of nested `IF … IF … IF …`) recurses once
+  per level through the generic `parse_rule`; without the cap it overflowed the
+  *native* stack — an uncatchable `SIGSEGV`/abort that a `Result`-returning entry
+  point cannot report. It now surfaces as a recoverable "input nests deeper than
+  the supported limit" parse error. Regression test added.
+
 ## 0.1.0 — COBOL-60 parser (PL07)
 
 - Grammar-driven parser over `code/grammars/cobol/cobol.grammar`, wrapping

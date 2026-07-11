@@ -405,6 +405,35 @@ mod tests {
         );
     }
 
+    #[test]
+    fn deeply_nested_if_errors_rather_than_overflowing_the_stack() {
+        // A crafted source can nest `IF`s far past anything real COBOL does.
+        // Parsing that recurses once per level; without the parser's depth cap
+        // it overflows the *native* stack and aborts the process — uncatchable,
+        // not a RuntimeError. `cobol-parser` opts into the cap, so end-to-end
+        // this comes back as a clean parse error. One `IF` per card so the
+        // fixed 80-column format doesn't truncate them (a statement flows
+        // freely across cards, so the nest is real). 4096 is far past the cap.
+        let mut lines: Vec<String> = vec![
+            "IDENTIFICATION DIVISION.".into(),
+            "PROGRAM-ID. P.".into(),
+            "DATA DIVISION.".into(),
+            "WORKING-STORAGE SECTION.".into(),
+            "01  N  PIC 9(3) VALUE 5.".into(),
+            "PROCEDURE DIVISION.".into(),
+            "MAIN.".into(),
+        ];
+        for _ in 0..4096 {
+            lines.push("    IF N GREATER 0".into());
+        }
+        lines.push("    DISPLAY \"DEEP\".".into());
+        lines.push("    STOP RUN.".into());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = run_cobol(&program(&refs)).unwrap_err();
+        assert!(matches!(err, RuntimeError::Parse(_)), "got {err:?}");
+        assert!(err.to_string().to_lowercase().contains("nest"), "message should explain: {err}");
+    }
+
     // ----------------------------------------------------------------------
     // Honest failure: unmodelled features error, they do not run wrong.
     // ----------------------------------------------------------------------
