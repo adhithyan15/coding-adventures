@@ -297,15 +297,24 @@ impl Machine {
             ));
         }
         let stmts = self.paragraphs[idx].stmts.clone();
-        let mut stop = false;
+        // Capture the outcome rather than `?`-ing out of the loop, so the depth
+        // counter is restored on every path (including an error).
+        let mut outcome = Ok(false);
         for _ in 0..n {
-            if self.run_stmts(&stmts)? {
-                stop = true;
-                break;
+            match self.run_stmts(&stmts) {
+                Ok(true) => {
+                    outcome = Ok(true); // STOP RUN — stop repeating
+                    break;
+                }
+                Ok(false) => {}
+                Err(e) => {
+                    outcome = Err(e);
+                    break;
+                }
             }
         }
         self.perform_depth -= 1;
-        Ok(stop)
+        outcome
     }
 
     /// Evaluate a relational condition. Numeric when both sides are numeric;
