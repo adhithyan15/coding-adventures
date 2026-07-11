@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.28.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `reduce` / `inject` / `sum`
+
+Mirrors the Python `sir-runtime-oop` v0.1.20 reference (PR #7978) into the Go
+backend's emitted runtime (`_sir_hash_block_method` + `_sir_hash_responds`).
+The block is yielded `(key, value)` (two arguments) — except `reduce`/`inject`,
+which follow Ruby's memo convention and yield `(memo, [key, value])` (the pair
+as one second argument).  Every "element" a result carries is the two-element
+`[key, value]` Array (`&Seq{key, value}`).
+
+- `group_by { |k, v| … }` — a Hash of block key → Array of `[k, v]` pairs, in
+  first-seen key order.
+- `partition { |k, v| … }` — `[[matching pairs], [non-matching pairs]]`.
+- `flat_map`/`collect_concat { |k, v| … }` — one-level splice of block results.
+- `reduce`/`inject(init) { |memo, (k, v)| … }` — fold; a seedless `reduce`
+  starts from the first pair, and an empty seedless `reduce` returns `nil`.
+- `sum(init = 0) { |k, v| … }` — `init` plus the polymorphic-`+` (`_sir_plus`)
+  sum of the block results.
+
+`_sir_hash_responds` now advertises all of the above (the hash block dispatch
+already forwards the positional args before the block, so `reduce`/`sum` read
+their seed).
+
+Exec-proof: `tests/compile_and_run_hash_methods.rs` gains
+`hash_enumerable_breadth_compile_and_run`, running `group_by` (even-value
+predicate ⇒ bool-keyed Hash of pairs), `partition`, `flat_map`, `reduce(0)`, and
+`sum(100)` under real `go run`, diffed against the Python reference semantics.
+
 ## 0.27.0 — Hash Enumerable aggregates: `find` / `any?` / `all?` / `none?` / `count` / `sort_by` / `min_by` / `max_by`
 
 Mirrors the Python `sir-runtime-oop` v0.1.19 reference (PR #7957) into the Go
