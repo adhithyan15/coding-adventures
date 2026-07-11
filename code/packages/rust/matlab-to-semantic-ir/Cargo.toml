@@ -1,0 +1,21 @@
+[package]
+name = "matlab-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "MATLAB CST → narrow-waist Semantic IR (SIR22 array/matrix domain). Fourth frontend for the SIR10 narrow-waist IR, first to target SIR22."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-matlab-parser = { path = "../matlab-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode`
+# whose leaf tokens are `lexer::token::Token`; we walk both directly.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# The scalar-only (non-array) subset of a lowered module can round-trip
+# through the JS backend and actually execute with the system `node`
+# (gated on availability). Array/matrix (SIR22) codegen is not yet
+# implemented by this backend, so those tests instead verify structural
+# validity plus the capability-rejection path (see README "Testing").
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
