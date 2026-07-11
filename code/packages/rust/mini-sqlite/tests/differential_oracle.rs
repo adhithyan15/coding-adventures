@@ -34,11 +34,13 @@
 //! quietly leave stale ledger entries behind.
 //!
 //! On introduction this harness measured 12 of 22 seed cases already matching
-//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]) — most notably
-//! that qualified column references across a join resolve to `NULL` (breaking
-//! even `INNER JOIN`), the outer joins drop their `ON` clause, aggregate columns
-//! are misnamed, and `UPPER()` returns the wrong value. Each is a tracked
-//! increment; the harness is what makes fixing them verifiable.
+//! real SQLite, and reproduced ten genuine gaps (see [`LEDGER`]). The first has
+//! since been retired: qualified column references across an `INNER JOIN` now
+//! resolve correctly (the join threads its projection through the inner loop and
+//! keys each cursor by its effective alias). The remaining ledger entries — outer
+//! joins dropping their `ON` clause, misnamed aggregate columns, and a wrong
+//! `UPPER()` — are each a tracked increment; the harness is what makes fixing
+//! them verifiable.
 
 use coding_adventures_mini_sqlite::{connect, SqlValue};
 
@@ -407,10 +409,6 @@ const CASES: &[Case] = &[
 ///   unnamed (`?`), and `UPPER(name)` returns the wrong value (an integer, not
 ///   the uppercased text) — a real codegen/builtin bug.
 const LEDGER: &[(&str, &str)] = &[
-    (
-        "inner_join",
-        "qualified column refs across a join resolve to NULL (cursor keyed under None vs the Some(table) qualifier in LoadColumn). Highest-priority fix.",
-    ),
     (
         "left_join",
         "outer joins mis-compile: ON clause dropped, degrades to cross join (sql-codegen JoinKind::Inner guard); no NULL-padding.",
