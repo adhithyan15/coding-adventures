@@ -423,3 +423,124 @@ fn hash_enumerable_aggregates_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+// ── Hash Enumerable breadth (group_by / partition / flat_map / reduce / sum) ──
+//
+// These block-taking reshape/fold methods complete the Rust `map_method`
+// Enumerable surface, mirroring the Go/Python reference (#7978, #7983).  Every
+// method yields the two-arg `(k, v)` pair EXCEPT `reduce`/`inject`, which
+// follow Ruby's memo convention and yield `(memo, [k, v])` — the pair as ONE
+// argument.  Expected values are exactly what the Python reference produces.
+
+/// `[a, b, …]` array literal from element expressions.
+fn seq_lit_e(items: Vec<Expr>) -> Expr {
+    Expr::SeqLit { items, span: s() }
+}
+
+/// `xs[i]` — SIR-native indexing (NOT the `[]` method envelope).
+fn seqidx(seq: Expr, index: Expr) -> Expr {
+    Expr::SeqIndex { seq: Box::new(seq), index: Box::new(index), span: s() }
+}
+
+/// `a op b` builtin (used for the polymorphic `+` in the `reduce` block).
+fn binop(name: &str, lhs: Expr, rhs: Expr) -> Expr {
+    Expr::BuiltinCall { name: name.into(), args: vec![lhs, rhs], effects: EffectSet::PURE, span: s() }
+}
+
+fn breadth_demo() -> Module {
+    let block_fns = vec![
+        // { |k, v| v.even? } — the group/partition predicate.
+        block_fn("__b_even", &["k", "v"], method(param("v"), "even?", vec![])),
+        // { |k, v| [k, v] } — flat_map projection that splices the pair.
+        block_fn("__b_pair", &["k", "v"], seq_lit_e(vec![param("k"), param("v")])),
+        // { |k, v| v } — sum projection.
+        block_fn("__b_val", &["k", "v"], param("v")),
+        // { |acc, pair| acc + pair[1] } — reduce over `(memo, [k, v])`; the
+        // pair arrives as ONE arg, so the value is `pair[1]` via `SeqIndex`
+        // (never the array `[]` method, which the Go mirror learned the hard
+        // way — see #7983).
+        block_fn("__b_add", &["acc", "pair"], binop("+", param("acc"), seqidx(param("pair"), ilit(1)))),
+    ];
+    let main_stmts = vec![
+        // {a:1,b:2,c:3,d:4}.group_by { |k,v| v.even? }
+        //   → {#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}  (first-seen keys)
+        print_stmt(method(abcd_map(), "group_by", vec![block("__b_even")])),
+        // .partition { |k,v| v.even? } → [[[b, 2], [d, 4]], [[a, 1], [c, 3]]]
+        print_stmt(method(abcd_map(), "partition", vec![block("__b_even")])),
+        // {a:1,b:2}.flat_map { |k,v| [k,v] } → [a, 1, b, 2]  (one-level splice)
+        print_stmt(method(
+            map_lit(vec![(symlit("a"), ilit(1)), (symlit("b"), ilit(2))]),
+            "flat_map",
+            vec![block("__b_pair")],
+        )),
+        // {a:1,b:2,c:3,d:4}.sum { |k,v| v } → 10  (seed defaults to 0)
+        print_stmt(method(abcd_map(), "sum", vec![block("__b_val")])),
+        // {a:1,b:2,c:3,d:4}.reduce(100) { |acc,pair| acc + pair[1] } → 110
+        print_stmt(method(abcd_map(), "reduce", vec![ilit(100), block("__b_add")])),
+    ];
+    demo_module(main_stmts, block_fns)
+}
+
+#[test]
+fn hash_enumerable_breadth_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&breadth_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_hash_breadth_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_hash_breadth_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "{#f: [[a, 1], [c, 3]], #t: [[b, 2], [d, 4]]}", // group_by { even? }
+            "[[[b, 2], [d, 4]], [[a, 1], [c, 3]]]",         // partition { even? }
+            "[a, 1, b, 2]",                                 // flat_map { [k, v] }
+            "10",                                           // sum { v }
+            "110",                                          // reduce(100) { acc + pair[1] }
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
