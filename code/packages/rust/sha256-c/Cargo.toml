@@ -1,0 +1,14 @@
+[package]
+name = "sha256-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the coding_adventures_sha256 crate — for Swift/C compile-time interop"
+
+# staticlib (.a) — used by Swift Package Manager for compile-time linking
+# cdylib     (.so / .dylib) — available for dynamic linking if needed
+[lib]
+name = "sha256_c"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
