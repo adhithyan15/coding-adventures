@@ -1,0 +1,83 @@
+% ============================================================================
+% arithmetic.adj — the elementary-arithmetic formula library (ADJ-FORMULA-LIBRARIES FL-3).
+% ============================================================================
+% The BOTTOM of the compute standard library's MATH track: the four primitive
+% operations a kindergartner→elementary student learns, each an importable,
+% byte-provenanced, PARAMETERIZED formula. Every higher formula library (ratio,
+% percent, average → BMI, FENa, Cockcroft-Gault) composes THESE — write-once,
+% use-many. Like `clinical/bmi.adj`, a consumer states NO arithmetic: it imports
+% this file, binds the operands from its own byte-provenance decomposition, and
+% asks the engine to apply the cited primitive on the CPU.
+%
+%     import "arithmetic.adj"
+%     observe addend_one(3)     % "…3 apples…"   (span cited by the model)
+%     observe addend_two(4)     % "…4 apples…"   (span cited by the model)
+%     ? sum(addend_one, addend_two)   % engine → 7, carrying the cited definition
+%
+% The formulas (and their sources) live HERE; the numbers (and their spans) come
+% from the input. Zero math is performed by the model.
+%
+% Each operation names its operands with the conventional arithmetic vocabulary
+% (addend/minuend/subtrahend/factor/dividend/divisor) so the audit trail reads in
+% plain arithmetic terms, and the dictionary's surface synonyms let a decomposer
+% map everyday words ("total", "times", "shared among") onto them.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The operands and results of the four primitive operations. Each is
+% an observable quantity the formulas range over; rung-0's grammar types an
+% observable slot as `finding` (dimensional typing is a later rung — the engine
+% still infers + checks dimensions when a formula is APPLIED). The `surface`
+% lists are the everyday names a decomposer maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary arithmetic_vocab {
+    define addend_one  : finding  surface "first addend", "first number", "one addend"
+    define addend_two  : finding  surface "second addend", "second number", "other addend"
+    define sum         : finding  surface "sum", "total", "combined amount"
+
+    define minuend     : finding  surface "minuend", "starting amount", "amount before"
+    define subtrahend  : finding  surface "subtrahend", "amount taken away", "amount removed"
+    define difference  : finding  surface "difference", "remainder", "amount left"
+
+    define factor_one  : finding  surface "first factor", "multiplicand", "one factor"
+    define factor_two  : finding  surface "second factor", "multiplier", "other factor"
+    define product     : finding  surface "product", "result of multiplying"
+
+    define dividend    : finding  surface "dividend", "amount to divide", "amount shared"
+    define divisor     : finding  surface "divisor", "number of parts", "number of shares"
+    define quotient    : finding  surface "quotient", "result of dividing", "share each"
+}
+
+% ----------------------------------------------------------------------------
+% The four primitives. Each is a named, importable, reusable `let` over its two
+% formal parameters, and each carries the same provenance envelope every grounded
+% clause carries — a definitional quote from an authoritative mathematics
+% reference (required on a shipped formula; the linter rejects an unsourced one).
+% ----------------------------------------------------------------------------
+formulabook elementary_arithmetic {
+    use arithmetic_vocab
+
+    % Addition — combine two quantities into their total.
+    formula sum(addend_one, addend_two) = addend_one + addend_two
+        source "A sum is a quantity obtained by the addition of two or more quantities, the summands or addends."
+        locator "https://mathworld.wolfram.com/Sum.html"
+        trust authoritative
+
+    % Subtraction — the amount left after taking the subtrahend from the minuend.
+    formula difference(minuend, subtrahend) = minuend - subtrahend
+        source "The difference of two numbers is the result of subtracting the second (the subtrahend) from the first (the minuend)."
+        locator "https://mathworld.wolfram.com/Difference.html"
+        trust authoritative
+
+    % Multiplication — the result of multiplying the two factors.
+    formula product(factor_one, factor_two) = factor_one * factor_two
+        source "A product is the result of multiplying together two or more quantities, called the factors, or multiplicand and multiplier."
+        locator "https://mathworld.wolfram.com/Product.html"
+        trust authoritative
+
+    % Division — the result of dividing the dividend by the divisor.
+    formula quotient(dividend, divisor) = dividend / divisor
+        source "The quotient is the result of dividing one number (the dividend) by another (the divisor)."
+        locator "https://mathworld.wolfram.com/Quotient.html"
+        trust authoritative
+}
