@@ -209,6 +209,22 @@ pub enum LowerError {
     FormulaExpansionTooLarge {
         limit: usize,
     },
+    /// A single expression nested deeper than [`FORMULA_MAX_NODE_DEPTH`] AST levels
+    /// (ADJ-RULE-SUBSTRATE RS-1). Distinct from [`FormulaExpansionTooLarge`], which
+    /// bounds total *size*: a left-leaning operator spine (`x + 0 + 0 + … + 0`, a
+    /// thousand terms) is small in nodes-per-level but arbitrarily DEEP, and the
+    /// recursive expansion/substitution walkers descend it frame-for-frame. Without a
+    /// depth bound a crafted deep spine overflows the native stack (an abort, not a
+    /// catchable error) before the node budget — which only trips at the BOTTOM of the
+    /// descent — ever fires. This guard caps walker recursion at [`FORMULA_MAX_NODE_DEPTH`]
+    /// (the stack-safe bound `adapter` uses for the same reason), so a pathological
+    /// spine is a clean, typed error long before it can exhaust the stack. It never
+    /// rejects a legitimate expression: those are a handful of levels deep, and
+    /// anything past the evaluator's own `MAX_EVAL_DEPTH` it would reject anyway.
+    /// Carries the depth limit reached.
+    FormulaNestingTooDeep {
+        limit: usize,
+    },
     /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
     /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
     /// the caller used `compile` directly on a program that still has imports,
@@ -1165,6 +1181,39 @@ const FORMULA_MAX_APPLY_DEPTH: usize = 256;
 /// applications deep) yet a negligible fraction of the exponential blow-up.
 const FORMULA_MAX_EXPANSION_NODES: usize = 10_000;
 
+/// Maximum AST-nesting depth the expansion/substitution/clone walkers may descend
+/// in a single expression (ADJ-RULE-SUBSTRATE RS-1). The node budget bounds total
+/// SIZE but not DEPTH: a left-leaning operator spine (`x + 0 + 0 + … + 0`) is one
+/// node wide per level yet arbitrarily deep, and the recursive walkers descend it
+/// frame-for-frame — so a deep spine would overflow the native stack (an uncatchable
+/// abort) before the node budget, which only trips at the bottom of the descent,
+/// could fire. This caps walker recursion so a pathological spine is a clean typed
+/// error, never a crash.
+///
+/// The value (96) matches [`adapter`](crate::adapter)'s `SUBST_DEPTH_BUDGET`, chosen
+/// there for the identical reason: these walkers carry non-trivial per-frame state
+/// (a `HashMap` of substitutions, `Vec` accumulators), so a *few hundred* debug-build
+/// frames already approach the default ~2 MiB worker-thread stack. 96 keeps the walk
+/// comfortably within that budget on any stack the compiler might run on, while being
+/// far deeper than any legitimate formula body or bound expression (a handful of
+/// levels); anything deeper the evaluator's own `MAX_EVAL_DEPTH` would reject anyway.
+const FORMULA_MAX_NODE_DEPTH: usize = 96;
+
+/// Descend one AST level, failing with a clean [`LowerError::FormulaNestingTooDeep`]
+/// the moment the walker would exceed [`FORMULA_MAX_NODE_DEPTH`] frames. Returns the
+/// child depth to pass to the recursive call, so a walker reads
+/// `walk(child, …, descend(node_depth)?)` at every recursion — the check happens
+/// BEFORE the recursive call is made, so the stack never actually grows past the cap.
+fn descend(node_depth: usize) -> Result<usize, LowerError> {
+    if node_depth >= FORMULA_MAX_NODE_DEPTH {
+        Err(LowerError::FormulaNestingTooDeep {
+            limit: FORMULA_MAX_NODE_DEPTH,
+        })
+    } else {
+        Ok(node_depth + 1)
+    }
+}
+
 /// Charge one node against the expansion budget, failing with a clean
 /// [`LowerError::FormulaExpansionTooLarge`] the moment the cap is exceeded. Called
 /// on every node [`substitute_expr`] / [`charged_clone`] / [`expand_rec`]
@@ -1187,31 +1236,39 @@ fn charge(budget: &mut usize) -> Result<(), LowerError> {
 /// one unmetered step (the `g(x) = x * x` duplication vector), so cloning THROUGH
 /// the budget is what makes the exponential bail early — the clone of the second
 /// `x` trips the cap and unwinds before the doubled tree exists.
-fn charged_clone(expr: &ExprAst, budget: &mut usize) -> Result<ExprAst, LowerError> {
+fn charged_clone(
+    expr: &ExprAst,
+    budget: &mut usize,
+    node_depth: usize,
+) -> Result<ExprAst, LowerError> {
     charge(budget)?;
+    // Bound the descent as well as the size: a bound argument subtree can itself be
+    // an arbitrarily deep operator spine, so cloning it must not recurse without a
+    // frame cap (see [`FORMULA_MAX_NODE_DEPTH`]).
+    let d = descend(node_depth)?;
     Ok(match expr {
         ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::Agg(_, _) => expr.clone(),
         ExprAst::Bin(op, a, b) => ExprAst::Bin(
             *op,
-            Box::new(charged_clone(a, budget)?),
-            Box::new(charged_clone(b, budget)?),
+            Box::new(charged_clone(a, budget, d)?),
+            Box::new(charged_clone(b, budget, d)?),
         ),
         ExprAst::Call2(f, a, b) => ExprAst::Call2(
             *f,
-            Box::new(charged_clone(a, budget)?),
-            Box::new(charged_clone(b, budget)?),
+            Box::new(charged_clone(a, budget, d)?),
+            Box::new(charged_clone(b, budget, d)?),
         ),
-        ExprAst::Abs(a) => ExprAst::Abs(Box::new(charged_clone(a, budget)?)),
-        ExprAst::Floor(a) => ExprAst::Floor(Box::new(charged_clone(a, budget)?)),
-        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget)?)),
-        ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget)?)),
-        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget)?)),
-        ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget)?)),
-        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget)?)),
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Apply(name, args) => {
             let mut out = Vec::with_capacity(args.len());
             for a in args {
-                out.push(charged_clone(a, budget)?);
+                out.push(charged_clone(a, budget, d)?);
             }
             ExprAst::Apply(name.clone(), out)
         }
@@ -1278,7 +1335,7 @@ fn expand_applies(
     // positions (`f(x) = g(x) + g(x)`) is popped off the path between the two uses,
     // so reuse is never mistaken for recursion.
     let mut active: Vec<String> = Vec::new();
-    let expanded = expand_rec(expr, formulas, depth, &mut chain, &mut active, &mut budget)?;
+    let expanded = expand_rec(expr, formulas, depth, &mut chain, &mut active, &mut budget, 0)?;
     Ok((expanded, chain))
 }
 
@@ -1294,6 +1351,7 @@ fn expand_rec(
     chain: &mut Vec<Provenance>,
     active: &mut Vec<String>,
     budget: &mut usize,
+    node_depth: usize,
 ) -> Result<ExprAst, LowerError> {
     // Charge one node for every node we visit/emit. This is the SIZE guard: the
     // shared budget is threaded through the entire recursion, so an exponentially
@@ -1302,6 +1360,14 @@ fn expand_rec(
     // a 2ⁿ tree. The depth guard alone cannot bound this (depth grows linearly
     // while size grows exponentially).
     charge(budget)?;
+    // The DEPTH guard, orthogonal to both the size budget and the formula-apply
+    // depth: this walker descends one native stack frame per AST level, so a deep
+    // operator spine (`x + 0 + 0 + …`) — small in size, huge in depth — would
+    // overflow the stack (an uncatchable abort) if only the size budget bounded it,
+    // because that budget trips only at the BOTTOM of the descent. `d` is the depth
+    // to pass to every child recursion; `descend` errors cleanly the moment the walk
+    // would exceed `FORMULA_MAX_NODE_DEPTH` frames (see there).
+    let d = descend(node_depth)?;
     match expr {
         ExprAst::Apply(name, args) => {
             // Resolve the callee against the SAME registry the top-level query path
@@ -1325,7 +1391,7 @@ fn expand_rec(
             for (param, arg) in fd.params.iter().zip(args.iter()) {
                 subst.insert(
                     param.clone(),
-                    expand_rec(arg, formulas, depth, chain, active, budget)?,
+                    expand_rec(arg, formulas, depth, chain, active, budget, d)?,
                 );
             }
             // The cycle guard: if this formula is already OPEN on the expansion path,
@@ -1355,9 +1421,9 @@ fn expand_rec(
             // (formula-calls-formula) at depth + 1. The callee is pushed onto the
             // active path for the duration of its body expansion and popped after, so
             // a later SIBLING application of the same formula is not seen as a cycle.
-            let substituted = substitute_expr(&fd.body, &subst, budget)?;
+            let substituted = substitute_expr(&fd.body, &subst, budget, d)?;
             active.push(name.clone());
-            let expanded = expand_rec(&substituted, formulas, depth + 1, chain, active, budget);
+            let expanded = expand_rec(&substituted, formulas, depth + 1, chain, active, budget, d);
             active.pop();
             expanded
         }
@@ -1366,24 +1432,24 @@ fn expand_rec(
         // Binary nodes: expand both operands at the same depth.
         ExprAst::Bin(op, a, b) => Ok(ExprAst::Bin(
             *op,
-            Box::new(expand_rec(a, formulas, depth, chain, active, budget)?),
-            Box::new(expand_rec(b, formulas, depth, chain, active, budget)?),
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(b, formulas, depth, chain, active, budget, d)?),
         )),
         ExprAst::Call2(f, a, b) => Ok(ExprAst::Call2(
             *f,
-            Box::new(expand_rec(a, formulas, depth, chain, active, budget)?),
-            Box::new(expand_rec(b, formulas, depth, chain, active, budget)?),
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(b, formulas, depth, chain, active, budget, d)?),
         )),
         // Unary nodes: expand the single operand.
-        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
-        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
-        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
-        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
-        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
-        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
         ExprAst::Call(f, a) => Ok(ExprAst::Call(
             *f,
-            Box::new(expand_rec(a, formulas, depth, chain, active, budget)?),
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
         )),
     }
 }
@@ -1466,7 +1532,7 @@ fn apply_formula(fd: &FormulaDef, goal: &AstTerm) -> Result<ExprAst, LowerError>
     // deeper formula-calls-formula expansion of the resulting body runs later, in
     // `expand_applies`, under that call's own shared budget.
     let mut budget: usize = 0;
-    substitute_expr(&fd.body, &subst, &mut budget)
+    substitute_expr(&fd.body, &subst, &mut budget, 0)
 }
 
 /// Substitute parameter references in a formula body with their bound argument
@@ -1480,19 +1546,24 @@ fn substitute_expr(
     expr: &ExprAst,
     subst: &HashMap<String, ExprAst>,
     budget: &mut usize,
+    node_depth: usize,
 ) -> Result<ExprAst, LowerError> {
     // Charge for the node we are about to emit. Every substituted node counts
     // against the shared expansion budget, so a body that duplicates a bound
     // subtree (`x * x`) can only do so until the cap trips — the exponential tree
     // is never fully materialised.
     charge(budget)?;
+    // Bound the descent too: a formula body (or a bound argument) may be a deep
+    // operator spine, and the size budget alone only trips at the BOTTOM of the
+    // descent — too late to prevent a stack overflow (see [`FORMULA_MAX_NODE_DEPTH`]).
+    let d = descend(node_depth)?;
     Ok(match expr {
         // A parameter reference expands to its bound argument subtree — cloned
         // THROUGH the budget so a large binding cannot be duplicated for free. This
         // is the guarded version of the old `.clone()`; the second `x` in `x * x`
         // is what trips the cap on an adversarial composition.
         ExprAst::Ref(name) => match subst.get(name) {
-            Some(bound) => charged_clone(bound, budget)?,
+            Some(bound) => charged_clone(bound, budget, d)?,
             None => expr.clone(),
         },
         ExprAst::Lit(_) => expr.clone(),
@@ -1502,21 +1573,21 @@ fn substitute_expr(
         },
         ExprAst::Bin(op, a, b) => ExprAst::Bin(
             *op,
-            Box::new(substitute_expr(a, subst, budget)?),
-            Box::new(substitute_expr(b, subst, budget)?),
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            Box::new(substitute_expr(b, subst, budget, d)?),
         ),
         ExprAst::Call2(f, a, b) => ExprAst::Call2(
             *f,
-            Box::new(substitute_expr(a, subst, budget)?),
-            Box::new(substitute_expr(b, subst, budget)?),
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            Box::new(substitute_expr(b, subst, budget, d)?),
         ),
-        ExprAst::Abs(a) => ExprAst::Abs(Box::new(substitute_expr(a, subst, budget)?)),
-        ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst, budget)?)),
-        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst, budget)?)),
-        ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget)?)),
-        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget)?)),
-        ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget)?)),
-        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget, d)?)),
         // Substitute into a formula application's ARGUMENTS, preserving the callee
         // name. This is what makes `formula ratio(numerator, denominator) =
         // quotient(numerator, denominator)` compose: applying `ratio(a, b)`
@@ -1526,7 +1597,7 @@ fn substitute_expr(
         ExprAst::Apply(name, args) => {
             let mut out = Vec::with_capacity(args.len());
             for a in args {
-                out.push(substitute_expr(a, subst, budget)?);
+                out.push(substitute_expr(a, subst, budget, d)?);
             }
             ExprAst::Apply(name.clone(), out)
         }
@@ -4252,6 +4323,40 @@ rule { head: r(a) when: x(t) }";
                 crate::CompileError::Lower(LowerError::FormulaExpansionTooLarge { .. })
             ),
             "exponential composition must trip the size guard, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn deep_operator_spine_trips_the_nesting_guard_not_the_stack() {
+        // ADVERSARIAL DoS REPRO #2 — the DEPTH vector the size budget cannot cover.
+        // A left-leaning operator spine (`x + 0 + 0 + … + 0`) is one node wide per
+        // level but arbitrarily DEEP; the expansion/substitution/clone walkers descend
+        // it one native stack frame per level. With ONLY the 10 000-node size budget,
+        // a deep spine builds thousands of stack frames before the budget (which trips
+        // at the BOTTOM of the descent) fires — a stack overflow / SIGABRT, not a
+        // catchable error. The nesting guard (`FORMULA_MAX_NODE_DEPTH` = 256) caps the
+        // lowering walkers' recursion, so the spine becomes a clean typed error.
+        //
+        // We build the spine AS AN AST directly (not from source) to isolate the
+        // lowering guard: the upstream recursive-descent parser has its own, separate
+        // deep-expression limit — a pre-existing walker this rung does not touch —
+        // that would overflow the ~2 MiB test-thread stack on a spine this deep before
+        // lowering ever ran. Constructing the tree with an iterative loop and calling
+        // `expand_applies` directly exercises exactly the code RS-1 added, and proves
+        // it returns `FormulaNestingTooDeep` on a 2 MiB stack instead of aborting.
+        let mut spine = ExprAst::Ref("x".to_string());
+        for _ in 0..400 {
+            spine = ExprAst::Bin(
+                ArithOp::Add,
+                Box::new(spine),
+                Box::new(ExprAst::Lit(0.0)),
+            );
+        }
+        let formulas: HashMap<&str, &FormulaDef> = HashMap::new();
+        let result = expand_applies(&spine, &formulas, 0);
+        assert!(
+            matches!(result, Err(LowerError::FormulaNestingTooDeep { limit }) if limit == FORMULA_MAX_NODE_DEPTH),
+            "a deep operator spine must trip the nesting guard, got {result:?}"
         );
     }
 
