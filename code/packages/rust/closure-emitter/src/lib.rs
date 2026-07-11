@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     ClassDeclaration, FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
-    ObjectMember, PrivateName, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
+    ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     RegExpLiteral,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
@@ -2809,7 +2809,7 @@ mod tests {
     #![allow(clippy::approx_constant)]
     #![allow(clippy::neg_multiply)]
     use super::*;
-    use coding_adventures_javascript_ast::{CatchClause, Program, SourceType};
+    use coding_adventures_javascript_ast::{CatchClause, PrivateName, Program, SourceType};
     use coding_adventures_javascript_tokens::EsVersion;
 
     fn program() -> Program {
