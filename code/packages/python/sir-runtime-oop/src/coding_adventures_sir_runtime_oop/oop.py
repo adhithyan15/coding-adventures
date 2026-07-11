@@ -628,6 +628,7 @@ _HASH_METHODS = frozenset(
         "length",
         "empty?",
         "to_a",
+        "to_h",
         "dig",
         "store",
         "[]=",
@@ -667,6 +668,9 @@ _HASH_BLOCK_METHODS = frozenset(
         "reduce",
         "inject",
         "sum",
+        "to_h",
+        "each_with_index",
+        "each_with_object",
     }
 )
 
@@ -1179,6 +1183,12 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
         return len(recv) == 0
     if name == "to_a":
         return [[key, value] for key, value in recv.items()]
+    if name == "to_h":
+        # ``Hash#to_h`` with NO block returns a shallow copy of the hash (Ruby
+        # returns ``self`` re-wrapped; a fresh ``dict`` matches the value
+        # semantics without aliasing the receiver).  The block form lives in
+        # ``_hash_block_method`` (it re-maps each pair to a new ``[k, v]``).
+        return dict(recv)
     if name == "dig":
         # v0: single-level dig; nested dig is a documented follow-up.
         return recv.get(args[0])
@@ -1327,6 +1337,38 @@ def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: 
         for key, value in recv.items():
             total = total + apply(block, [key, value])
         return total
+    if name == "to_h":
+        # ``Hash#to_h { |k, v| [new_k, new_v] }`` — a NEW hash whose entries are
+        # the ``[k, v]`` pairs the block returns.  The block is yielded the two
+        # arguments ``(key, value)`` (matching ``each``) and MUST return a
+        # two-element ``[k, v]`` pair; a later pair with a duplicate key wins
+        # (Ruby's rule, and how ``dict`` assignment already behaves).
+        result: dict[Val, Val] = {}
+        for key, value in recv.items():
+            pair = apply(block, [key, value])
+            result[pair[0]] = pair[1]
+        return result
+    if name == "each_with_index":
+        # ``each_with_index { |(k, v), i| … }`` — yields each ``[k, v]`` pair
+        # together with its 0-based position and returns the receiver.  Unlike
+        # the two-arg ``(k, v)`` yield of ``each``, the element here arrives as a
+        # single ``[k, v]`` pair (the second block param is the index), matching
+        # Ruby's Enumerable convention.
+        for index, (key, value) in enumerate(recv.items()):
+            apply(block, [[key, value], index])
+        return recv
+    if name == "each_with_object":
+        # ``each_with_object(memo) { |(k, v), memo| … }`` — yields each ``[k, v]``
+        # pair with the memo object and returns the (mutated) memo.  Like
+        # ``each_with_index``, the element is the single ``[k, v]`` pair (the
+        # second block param is the memo).  With no memo argument the receiver is
+        # returned unchanged.
+        if not args:
+            return recv
+        memo = args[0]
+        for key, value in recv.items():
+            apply(block, [[key, value], memo])
+        return memo
     return _MISS
 
 

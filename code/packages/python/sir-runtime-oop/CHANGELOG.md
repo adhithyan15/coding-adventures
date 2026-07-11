@@ -2,6 +2,30 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.21] - 2026-07-11
+
+### Added
+
+- **`Hash#to_h`, `Hash#each_with_index`, `Hash#each_with_object`** — rounding out
+  Hash's Enumerable iteration surface.
+  - `to_h` **without** a block (`_hash_method` + `_HASH_METHODS`) returns a
+    shallow copy of the hash (a fresh `dict`, so mutating it does not alias the
+    receiver).
+  - `to_h { |k, v| [new_k, new_v] }` (`_hash_block_method` + `_HASH_BLOCK_METHODS`)
+    returns a NEW hash whose entries are the `[k, v]` pairs the block returns;
+    the block is yielded the two args `(key, value)` and colliding new keys keep
+    the LAST pair (Ruby's rule).
+  - `each_with_index { |(k, v), i| … }` yields each `[k, v]` pair with its
+    0-based position and returns the receiver.
+  - `each_with_object(memo) { |(k, v), memo| … }` yields each `[k, v]` pair with
+    the memo and returns the (mutated) memo; with no memo argument the receiver
+    is returned unchanged.
+  - Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object`
+    pass the element as a single `[k, v]` pair (the second block param is the
+    index/memo), matching Ruby's Enumerable convention.
+- This is the Python reference for the next cross-backend mirror (Go/Rust/JS/TS
+  to follow).
+
 ## [0.1.20] - 2026-07-11
 
 ### Added
