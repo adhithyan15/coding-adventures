@@ -60,7 +60,7 @@ type Package struct {
 	Name          string   // Qualified name, e.g. "python/logic-gates"
 	Path          string   // Absolute path to the package directory
 	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "csharp", "fsharp", "dotnet", "starlark", or "unknown"
+	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "c", "cpp", "csharp", "fsharp", "dotnet", "starlark", or "unknown"
 	BuildContent  string   // Raw BUILD file content (used for Starlark detection)
 	IsStarlark    bool     // Whether this BUILD file is Starlark (vs shell)
 	DeclaredSrcs  []string // Explicit source files from Starlark srcs field
@@ -119,13 +119,17 @@ func readLines(filepath string) []string {
 // inferLanguage inspects the directory path to determine the programming
 // language. We look for known language names ("python", "ruby", "go", "rust",
 // "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "haskell",
-// "starlark", "csharp", "fsharp", "dotnet") as path components.
+// "starlark", "c", "cpp", "csharp", "fsharp", "dotnet") as path components.
 // For example, "/repo/code/packages/python/logic-gates" yields "python" and
 // "/repo/code/programs/dotnet/hello-world-csharp" yields "dotnet".
+//
+// The match is by *exact* path component, so "c" matches only a literal `c/`
+// directory (e.g. code/packages/c/ringbuf) — it never matches inside "csharp"
+// or "cpp". Likewise "cpp" matches only a `cpp/` directory.
 func inferLanguage(path string) string {
 	// Split the path into its components and search for a known language.
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "haskell", "starlark", "java", "kotlin", "csharp", "fsharp", "dotnet"} {
+	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "haskell", "starlark", "java", "kotlin", "cpp", "c", "csharp", "fsharp", "dotnet"} {
 		for _, part := range parts {
 			if part == lang {
 				return lang
