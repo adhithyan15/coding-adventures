@@ -9,10 +9,11 @@
 //! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
 //! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), and `IF … ELSE`
-//! (numeric and alphanumeric comparison) over unsigned numeric-display and
-//! character pictures — and returns a descriptive error for anything not yet
-//! modelled, rather than producing wrong output. The roadmap toward full COBOL
-//! (signed numerics, editing pictures, `PERFORM`, tables, files, later
+//! (numeric and alphanumeric comparison) over numeric-display (`9`/`V`, and
+//! signed `S` with trailing-overpunch display) and character pictures — and
+//! returns a descriptive error for anything not yet modelled, rather than
+//! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
+//! `SEPARATE`/`LEADING` variants, editing pictures, `PERFORM`, tables, files, later
 //! standards) is in PL08.
 //!
 //! ```
@@ -633,19 +634,82 @@ mod tests {
         }
     }
 
+    // ----------------------------------------------------------------------
+    // Signed numerics (PIC S9…) — sign carried through, overpunch on DISPLAY
+    // ----------------------------------------------------------------------
+
+    /// Run a program with a signed receiver `N PIC <pic>` initialised to
+    /// `value`, then the body, returning what it DISPLAYed.
+    fn run_signed(pic: &str, value: &str, body: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  N  PIC {pic} VALUE {value}."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs)).unwrap()
+    }
+
     #[test]
-    fn signed_picture_is_unsupported_not_wrong() {
-        let err = run_cobol(&program(&[
+    fn signed_value_displays_with_trailing_overpunch() {
+        // -123 in S9(3): magnitude "123", units 3 → 'L' (negative). → "12L".
+        assert_eq!(run_signed("S9(3)", "-123", &["DISPLAY N.", "STOP RUN."]), "12L\n");
+        // +123 → units 3 → 'C' (positive). → "12C".
+        assert_eq!(run_signed("S9(3)", "123", &["DISPLAY N.", "STOP RUN."]), "12C\n");
+        // Zero is unsigned: units 0 → '{' (positive). → "00{".
+        assert_eq!(run_signed("S9(3)", "0", &["DISPLAY N.", "STOP RUN."]), "00{\n");
+    }
+
+    #[test]
+    fn signed_field_keeps_sign_through_arithmetic() {
+        // 3 - 5 = -2 into a signed receiver → magnitude 2, negative → "0K"
+        // (units 2 → 'K'). An unsigned receiver would show "02".
+        assert_eq!(
+            run_signed("S9(2)", "3", &["SUBTRACT 5 FROM N.", "DISPLAY N.", "STOP RUN."]),
+            "0K\n"
+        );
+    }
+
+    #[test]
+    fn signed_value_used_in_arithmetic_carries_its_sign() {
+        // N = -10; ADD 4 → -6 → "0O" (units 6 → 'O', negative).
+        assert_eq!(
+            run_signed("S9(2)", "-10", &["ADD 4 TO N.", "DISPLAY N.", "STOP RUN."]),
+            "0O\n"
+        );
+    }
+
+    #[test]
+    fn moving_signed_into_unsigned_drops_the_sign() {
+        // A signed source moved into an unsigned receiver keeps only magnitude.
+        let out = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
             "DATA DIVISION.",
             "WORKING-STORAGE SECTION.",
-            "01  N  PIC S9(3).",
+            "01  S  PIC S9(3) VALUE -45.",
+            "01  U  PIC 9(3) VALUE 0.",
             "PROCEDURE DIVISION.",
             "MAIN.",
+            "    MOVE S TO U.",
+            "    DISPLAY U.",
             "    STOP RUN.",
         ]))
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::UnsupportedPicture(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "045\n");
+    }
+
+    #[test]
+    fn compute_into_signed_receiver_shows_negative_overpunch() {
+        // COMPUTE N = 2 - 9 = -7 into S9(2) → "0P" (units 7 → 'P', negative).
+        assert_eq!(
+            run_signed("S9(2)", "0", &["COMPUTE N = 2 - 9.", "DISPLAY N.", "STOP RUN."]),
+            "0P\n"
+        );
     }
 }

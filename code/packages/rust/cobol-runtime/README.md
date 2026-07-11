@@ -18,15 +18,17 @@ let out = run_cobol(source)?; // everything the program DISPLAYed
 
 ## Scope
 
-A small but **fully correct** slice, growing one quirk at a time: unsigned
-numeric-display (`9`/`V`) and character (`X`/`A`) pictures; the item tree from
+A small but **fully correct** slice, growing one quirk at a time: numeric-display
+(`9`/`V`, and signed `S9…` with trailing-overpunch `DISPLAY`) and character
+(`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules; `DISPLAY`; `STOP RUN`; fixed-point
 decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned, truncating
 toward zero into the receiver; divide-by-zero is a clean error); `COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
 parentheses), `ROUNDED`, and `ON SIZE ERROR`; and `IF … ELSE` with numeric and
-alphanumeric comparison. Anything not yet modelled (signed `S`, editing
-pictures, `COMP`, `PERFORM`, `GO TO`, `EVALUATE`, tables, files, and every other
-verb) returns a descriptive `RuntimeError` — never wrong output. See PL08 for the
+alphanumeric comparison. Anything not yet modelled (the explicit `SIGN` clause
+with `SEPARATE`/`LEADING`, editing pictures, `COMP`, `PERFORM`, `GO TO`,
+`EVALUATE`, tables, files, and every other verb) returns a descriptive
+`RuntimeError` — never wrong output. See PL08 for the
 roadmap toward full COBOL and later standards.

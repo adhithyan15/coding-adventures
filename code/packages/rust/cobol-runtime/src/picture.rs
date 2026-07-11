@@ -4,10 +4,10 @@
 //! storage-bearing character positions; a numeric field's implied decimal point
 //! (`V`) and default operational sign (`S`) occupy none.
 //!
-//! v0.1 models three pure categories — unsigned numeric-display (`9` with an
-//! optional `V`), alphanumeric (`X`), and alphabetic (`A`) — each with `(n)`
-//! repetition. Everything else (`S`, `P`, editing symbols, mixed classes)
-//! returns [`RuntimeError::UnsupportedPicture`]; those are the next PRs.
+//! It models numeric-display (`9` with an optional `V` and an optional leading
+//! `S` operational sign), alphanumeric (`X`), and alphabetic (`A`) — each with
+//! `(n)` repetition. Everything else (`P` scaling, editing symbols, mixed
+//! classes) returns [`RuntimeError::UnsupportedPicture`]; those are the next PRs.
 
 use crate::error::RuntimeError;
 
@@ -19,9 +19,12 @@ const MAX_PICTURE_SIZE: usize = 65_535;
 /// A parsed PICTURE clause.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Picture {
-    /// Unsigned numeric-display: `int_digits` positions before the implied
-    /// decimal point and `dec_digits` after it. `PIC 9(3)V99` → {3, 2}.
-    Numeric { int_digits: usize, dec_digits: usize },
+    /// Numeric-display: `int_digits` positions before the implied decimal point
+    /// and `dec_digits` after it. `PIC 9(3)V99` → {3, 2}. `signed` is set by a
+    /// leading `S` (`PIC S9(3)`), which bears no storage position but lets the
+    /// field hold and display a sign; an unsigned field drops any sign to
+    /// magnitude on receipt.
+    Numeric { int_digits: usize, dec_digits: usize, signed: bool },
     /// Alphanumeric (`X`): `size` character positions.
     Alphanumeric { size: usize },
     /// Alphabetic (`A`): `size` character positions.
@@ -32,7 +35,8 @@ impl Picture {
     /// Number of storage-bearing character positions.
     pub fn size(&self) -> usize {
         match self {
-            Picture::Numeric { int_digits, dec_digits } => int_digits + dec_digits,
+            // The `S` sign bears no storage position, so size ignores it.
+            Picture::Numeric { int_digits, dec_digits, .. } => int_digits + dec_digits,
             Picture::Alphanumeric { size } | Picture::Alphabetic { size } => *size,
         }
     }
@@ -56,30 +60,43 @@ impl Picture {
         // real source is upper-case, but be forgiving.
         let up: Vec<char> = symbols.iter().map(|c| c.to_ascii_uppercase()).collect();
 
-        let all_x = up.iter().all(|&c| c == 'X');
-        let all_a = up.iter().all(|&c| c == 'A');
-        let numeric = up.iter().all(|&c| c == '9' || c == 'V');
-
-        if all_x {
-            return Ok(Picture::Alphanumeric { size: up.len() });
+        // A leading `S` marks a signed numeric field and bears no storage
+        // position; strip it and remember. `S` anywhere but the front is invalid.
+        let signed = up.first() == Some(&'S');
+        let body = if signed { &up[1..] } else { &up[..] };
+        if body.iter().any(|&c| c == 'S') || (signed && body.is_empty()) {
+            return Err(RuntimeError::UnsupportedPicture(pic.to_string()));
         }
-        if all_a {
-            return Ok(Picture::Alphabetic { size: up.len() });
+
+        let all_x = body.iter().all(|&c| c == 'X');
+        let all_a = body.iter().all(|&c| c == 'A');
+        let numeric = body.iter().all(|&c| c == '9' || c == 'V');
+
+        // `S` only makes sense on a numeric field.
+        if signed && !numeric {
+            return Err(RuntimeError::UnsupportedPicture(pic.to_string()));
+        }
+
+        if !signed && all_x {
+            return Ok(Picture::Alphanumeric { size: body.len() });
+        }
+        if !signed && all_a {
+            return Ok(Picture::Alphabetic { size: body.len() });
         }
         if numeric {
             // At most one V, splitting integer and fractional digits.
-            if up.iter().filter(|&&c| c == 'V').count() > 1 {
+            if body.iter().filter(|&&c| c == 'V').count() > 1 {
                 return Err(RuntimeError::UnsupportedPicture(pic.to_string()));
             }
-            let v_at = up.iter().position(|&c| c == 'V');
+            let v_at = body.iter().position(|&c| c == 'V');
             let (int_digits, dec_digits) = match v_at {
-                Some(i) => (i, up.len() - i - 1),
-                None => (up.len(), 0),
+                Some(i) => (i, body.len() - i - 1),
+                None => (body.len(), 0),
             };
-            return Ok(Picture::Numeric { int_digits, dec_digits });
+            return Ok(Picture::Numeric { int_digits, dec_digits, signed });
         }
 
-        // Signed (S), scaling (P), editing symbols, or a mixed class — not v0.1.
+        // Scaling (P), editing symbols, or a mixed class — not yet modelled.
         Err(RuntimeError::UnsupportedPicture(pic.to_string()))
     }
 }
@@ -140,13 +157,13 @@ mod tests {
 
     #[test]
     fn numeric_with_implied_decimal() {
-        assert_eq!(Picture::parse("9(3)V99").unwrap(), Picture::Numeric { int_digits: 3, dec_digits: 2 });
+        assert_eq!(Picture::parse("9(3)V99").unwrap(), Picture::Numeric { int_digits: 3, dec_digits: 2, signed: false });
         assert_eq!(Picture::parse("9(3)V99").unwrap().size(), 5);
     }
 
     #[test]
     fn plain_integer_and_expanded_forms_agree() {
-        assert_eq!(Picture::parse("999").unwrap(), Picture::Numeric { int_digits: 3, dec_digits: 0 });
+        assert_eq!(Picture::parse("999").unwrap(), Picture::Numeric { int_digits: 3, dec_digits: 0, signed: false });
         assert_eq!(Picture::parse("9(3)").unwrap(), Picture::parse("999").unwrap());
     }
 
@@ -158,8 +175,25 @@ mod tests {
     }
 
     #[test]
-    fn signed_and_editing_are_unsupported_not_wrong() {
-        assert!(Picture::parse("S9(4)").is_err());
+    fn signed_numeric_pictures() {
+        // A leading S makes the field signed but adds no storage position.
+        assert_eq!(
+            Picture::parse("S9(4)").unwrap(),
+            Picture::Numeric { int_digits: 4, dec_digits: 0, signed: true }
+        );
+        assert_eq!(Picture::parse("S9(4)").unwrap().size(), 4);
+        assert_eq!(
+            Picture::parse("S9(3)V99").unwrap(),
+            Picture::Numeric { int_digits: 3, dec_digits: 2, signed: true }
+        );
+    }
+
+    #[test]
+    fn misplaced_sign_and_editing_are_unsupported_not_wrong() {
+        // S is only valid as the leading symbol, and only on a numeric field.
+        assert!(Picture::parse("9S9").is_err());
+        assert!(Picture::parse("SX(3)").is_err());
+        assert!(Picture::parse("S").is_err());
         assert!(Picture::parse("ZZ9").is_err());
         assert!(Picture::parse("9(3)PPP").is_err());
     }
