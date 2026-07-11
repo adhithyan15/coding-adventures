@@ -78,9 +78,11 @@ pub enum Stmt {
         expr: Expr,
         on_size_error: Vec<Stmt>,
     },
-    /// `PERFORM para [n TIMES]` — run a paragraph out of line, optionally a
-    /// fixed number of times, then return to the statement after the PERFORM.
-    Perform { target: String, times: Option<Operand> },
+    /// `PERFORM para [n TIMES | UNTIL cond]` — run a paragraph out of line, then
+    /// return. Bare: once. `n TIMES`: a fixed count. `UNTIL cond`: repeat while
+    /// the condition is false (tested before each iteration). `times` and `until`
+    /// are mutually exclusive; both `None` means once.
+    Perform { target: String, times: Option<Operand>, until: Option<Cond> },
     /// `GO TO para` — transfer control unconditionally to a paragraph (no return).
     GoTo { target: String },
     /// `IF cond then… [ELSE else…]`.
@@ -416,7 +418,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 Some(op) => Some(read_operand(op)?),
                 None => None,
             };
-            Ok(Stmt::Perform { target, times })
+            let until = match child_node(verb, "condition") {
+                Some(cond) => Some(read_condition(cond)?),
+                None => None,
+            };
+            Ok(Stmt::Perform { target, times, until })
         }
         "goto_stmt" => {
             // GO [TO] target. The DEPENDING ON form is not in the grammar yet.

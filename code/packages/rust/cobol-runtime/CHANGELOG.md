@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.0 — PERFORM … UNTIL (conditional loop)
+
+- **`PERFORM para UNTIL cond`** repeats a paragraph while the condition is false,
+  testing it **before** each iteration (so an initially-true condition runs the
+  paragraph zero times) — COBOL's default `WITH TEST BEFORE`.
+- The repeat loop is iterative, so even a never-satisfied `UNTIL` (an infinite
+  loop — the programmer's bug, valid COBOL) does not grow the native stack. A
+  `STOP RUN` / `GO TO` inside the body propagates out as its `Flow`.
+- `PERFORM … VARYING` / `… THRU` / `WITH TEST AFTER` and the inline form remain
+  deferred.
+
 ## 0.8.0 — GO TO (unconditional transfer) + program-counter execution
 
 - **`GO TO para`** transfers control unconditionally to a paragraph. The

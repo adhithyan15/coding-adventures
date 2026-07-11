@@ -206,6 +206,26 @@ mod tests {
     }
 
     #[test]
+    fn perform_until_and_times() {
+        // PERFORM … UNTIL <condition> carries a condition node; PERFORM … TIMES
+        // carries an operand. Both are the optional trailing clause.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM STEP UNTIL I GREATER 9.",
+            "    PERFORM STEP 3 TIMES.",
+            "    STOP RUN.",
+            "STEP.",
+            "    DISPLAY I.",
+        ]));
+        assert_eq!(count_rule(&ast, "perform_stmt"), 2);
+        // The UNTIL clause introduces a condition inside a perform_stmt.
+        assert!(has_rule(&ast, "condition"));
+    }
+
+    #[test]
     fn if_else_statement() {
         let ast = root(&program(&[
             "IDENTIFICATION DIVISION.",

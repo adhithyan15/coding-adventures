@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — PERFORM … UNTIL
+
+- `perform_stmt` gains the `UNTIL condition` clause as an alternative to
+  `operand TIMES`: `PERFORM para [THRU …] [ operand TIMES | UNTIL condition ]`.
+  Reuses the existing `condition` rule. `UNTIL` was already a reserved word, so
+  the lexer is unchanged.
+
 ## 0.2.0 — COMPUTE and arithmetic expressions
 
 - `compute_stmt = "COMPUTE" NAME [ "ROUNDED" ] EQ arith_expr [ size_error ]` —

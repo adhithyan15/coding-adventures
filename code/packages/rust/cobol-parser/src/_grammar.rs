@@ -466,9 +466,15 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                         ] },
                     ] }) },
-                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::RuleReference { name: r#"operand"#.to_string() },
-                        GrammarElement::Literal { value: r#"TIMES"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::RuleReference { name: r#"operand"#.to_string() },
+                            GrammarElement::Literal { value: r#"TIMES"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"UNTIL"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"condition"#.to_string() },
+                        ] },
                     ] }) },
             ] },
             line_number: 145,

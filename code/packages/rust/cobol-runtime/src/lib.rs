@@ -9,9 +9,10 @@
 //! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
 //! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), `IF … ELSE`
-//! (numeric and alphanumeric comparison), `PERFORM para [n TIMES]`
-//! (out-of-line paragraph invocation), and `GO TO para` (unconditional transfer,
-//! including back-edge loops) over numeric-display (`9`/`V`, and
+//! (numeric and alphanumeric comparison), `PERFORM para [n TIMES | UNTIL cond]`
+//! (out-of-line paragraph invocation, fixed-count and conditional loops), and
+//! `GO TO para` (unconditional transfer, including back-edge loops) over
+//! numeric-display (`9`/`V`, and
 //! signed `S` with trailing-overpunch display) and character pictures — and
 //! returns a descriptive error for anything not yet modelled, rather than
 //! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
@@ -799,6 +800,74 @@ mod tests {
         ]))
         .unwrap();
         assert_eq!(out, "IN\n");
+    }
+
+    #[test]
+    fn perform_until_loops_while_condition_is_false() {
+        // Count I from 1 to 3: PERFORM STEP UNTIL I GREATER 2 runs STEP while
+        // I is not > 2. STEP adds 1 and displays, so I goes 1, 2, 3 and stops
+        // once I = 3 (which is > 2, tested before the would-be 4th run).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM STEP UNTIL I GREATER 2.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "STEP.",
+            "    ADD 1 TO I.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        // STEP runs at I=0→1, I=1→2, I=2→3; next test I=3>2 true → stop.
+        assert_eq!(out, "1\n2\n3\nDONE\n");
+    }
+
+    #[test]
+    fn perform_until_tests_before_so_can_run_zero_times() {
+        // The condition is already true, so the paragraph never runs.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 5.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM NOISE UNTIL I GREATER 2.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "NOISE.",
+            "    DISPLAY \"X\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DONE\n");
+    }
+
+    #[test]
+    fn perform_until_propagates_stop_run() {
+        // A STOP RUN inside the UNTIL body ends the program immediately.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM STEP UNTIL I GREATER 9.",
+            "    DISPLAY \"NEVER\".",
+            "    STOP RUN.",
+            "STEP.",
+            "    DISPLAY \"ONCE\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "ONCE\n");
     }
 
     #[test]

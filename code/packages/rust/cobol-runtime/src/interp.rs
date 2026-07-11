@@ -261,7 +261,9 @@ impl Machine {
             Stmt::Compute { target, rounded, expr, on_size_error } => {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
             }
-            Stmt::Perform { target, times } => return self.exec_perform(target, times),
+            Stmt::Perform { target, times, until } => {
+                return self.exec_perform(target, times, until)
+            }
             Stmt::GoTo { target } => {
                 let idx = *self
                     .para_index
@@ -291,19 +293,31 @@ impl Machine {
         Ok(Flow::Normal)
     }
 
-    /// `PERFORM target [n TIMES]` — run one paragraph out of line, `n` times
-    /// (default 1), then return. A `TIMES` count that is zero or negative runs
-    /// the paragraph zero times (COBOL's rule); a fractional count truncates.
-    /// Nesting is bounded by [`MAX_PERFORM_DEPTH`] so a self-performing paragraph
-    /// fails with a clean error instead of overflowing the stack. A `STOP RUN`
-    /// or `GO TO` inside stops the repetition and propagates as its [`Flow`].
-    fn exec_perform(&mut self, target: &str, times: &Option<Operand>) -> Result<Flow, RuntimeError> {
+    /// `PERFORM target [n TIMES | UNTIL cond]` — run one paragraph out of line,
+    /// then return. Bare form: once. `n TIMES`: a fixed count (`≤ 0` runs zero
+    /// times, a fractional count truncates). `UNTIL cond`: repeat while the
+    /// condition is false, testing it **before** each iteration (so a
+    /// initially-true condition runs zero times).
+    ///
+    /// The repeat loop is iterative, so even a never-satisfied `UNTIL` (an
+    /// infinite loop — the programmer's bug, valid COBOL) does not grow the
+    /// stack. Nesting of *distinct* performs is bounded by [`MAX_PERFORM_DEPTH`]
+    /// so a self-performing paragraph fails cleanly instead of overflowing. A
+    /// `STOP RUN` or `GO TO` inside stops the repetition and propagates as its
+    /// [`Flow`].
+    fn exec_perform(
+        &mut self,
+        target: &str,
+        times: &Option<Operand>,
+        until: &Option<Cond>,
+    ) -> Result<Flow, RuntimeError> {
         let idx = *self
             .para_index
             .get(target)
             .ok_or_else(|| RuntimeError::UndefinedName(target.into()))?;
 
-        // Resolve the repeat count: a non-negative integer; ≤ 0 → zero times.
+        // Resolve the fixed repeat count (only used when there is no UNTIL):
+        // a non-negative integer; ≤ 0 → zero times.
         let n: usize = match times {
             None => 1,
             Some(op) => {
@@ -332,19 +346,35 @@ impl Machine {
         }
         let stmts = self.paragraphs[idx].stmts.clone();
         // Capture the outcome rather than `?`-ing out of the loop, so the depth
-        // counter is restored on every path (including an error).
+        // counter is restored on every path (including an error). One body
+        // iteration returns Some(flow-to-propagate) to stop, or None to continue.
         let mut outcome = Ok(Flow::Normal);
-        for _ in 0..n {
-            match self.run_stmts(&stmts) {
-                Ok(Flow::Normal) => {}
-                // STOP RUN or GO TO — stop repeating and propagate it upward.
-                Ok(other) => {
-                    outcome = Ok(other);
+        let run_body = |m: &mut Self| match m.run_stmts(&stmts) {
+            Ok(Flow::Normal) => None,
+            other => Some(other), // Stop / GoTo / Err — stop repeating, propagate
+        };
+        match until {
+            Some(cond) => loop {
+                // TEST BEFORE: stop as soon as the condition holds.
+                match self.eval_cond(cond) {
+                    Ok(true) => break,
+                    Ok(false) => {}
+                    Err(e) => {
+                        outcome = Err(e);
+                        break;
+                    }
+                }
+                if let Some(flow) = run_body(self) {
+                    outcome = flow;
                     break;
                 }
-                Err(e) => {
-                    outcome = Err(e);
-                    break;
+            },
+            None => {
+                for _ in 0..n {
+                    if let Some(flow) = run_body(self) {
+                        outcome = flow;
+                        break;
+                    }
                 }
             }
         }
