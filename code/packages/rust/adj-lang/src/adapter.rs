@@ -233,12 +233,15 @@ fn adapt_evidence(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
 }
 
 fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
-    // predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr
+    // predicate = ( apply | IDENT ) ( GE | LE | GT | LT | EQEQ ) expr
     //
-    // The slot IDENT and the operator are both lexed as TokenType::Name
-    // (the operator carries a custom type_name like "GE"), so we
-    // distinguish by *value*: the operator's value is one of the five
-    // comparison symbols; everything else Name-typed is the slot.
+    // The LHS is either a bare slot IDENT or (RS-1) a FORMULA APPLICATION.
+    //   - A bare slot appears as a direct `Name` token that is NOT one of the five
+    //     comparison operators (operators are also lexed as Name, distinguished by
+    //     value).
+    //   - A formula application appears as an `apply` CHILD NODE (its own IDENT is
+    //     nested inside, so it is never mistaken for the bare slot).
+    // The RHS is the (single) direct `expr` child node.
     let mut slot: Option<String> = None;
     let mut op: Option<CmpOp> = None;
     for c in &node.children {
@@ -256,10 +259,17 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
             }
         }
     }
-    let slot = slot.ok_or(AdapterError::MissingChild {
-        rule: "predicate".into(),
-        position: "slot identifier",
-    })?;
+    // The LHS: a formula application if an `apply` node is present, else the bare
+    // slot reference. (An application has no bare slot Name at this level, so the
+    // two are mutually exclusive.)
+    let lhs = if let Some(app) = first_named_child(node, "apply") {
+        adapt_apply(app)?
+    } else {
+        ExprAst::Ref(slot.ok_or(AdapterError::MissingChild {
+            rule: "predicate".into(),
+            position: "slot identifier or formula application",
+        })?)
+    };
     let op = op.ok_or(AdapterError::MissingChild {
         rule: "predicate".into(),
         position: "comparison operator",
@@ -283,7 +293,7 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
                 position: "right-hand expression",
             })?
     };
-    Ok(Evidence::Predicate { slot, op, rhs })
+    Ok(Evidence::Predicate { lhs, op, rhs })
 }
 
 fn adapt_interacts(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -1006,6 +1016,14 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     }
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
+    }
+    // ADJ-RULE-SUBSTRATE RS-1: a FORMULA APPLICATION as a sub-expression,
+    // `name(arg, …)`. Checked after `agg` (so `sum(slot)` stays an aggregation)
+    // and before the bare-IDENT / parenthesised-`expr` fallbacks. The application's
+    // argument `expr` nodes live INSIDE the `apply` node, so they are not mistaken
+    // for a parenthesised `expr` factor here.
+    if let Some(app) = first_named_child(node, "apply") {
+        return adapt_apply(app);
     }
     if let Some(inner) = first_named_child(node, "expr") {
         return adapt_expr(inner);
@@ -2228,6 +2246,34 @@ fn adapt_agg(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     Ok(ExprAst::Agg(op, slot))
 }
 
+/// `apply = IDENT LPAREN [ expr { COMMA expr } ] RPAREN` — a FORMULA APPLICATION
+/// as a sub-expression (ADJ-RULE-SUBSTRATE RS-1). The callee name is the single
+/// direct `Name` token (the parentheses/commas are punctuation tokens; the
+/// argument `expr` nodes are the direct child rule nodes). A zero-argument
+/// application (`f()`) yields an empty argument vector.
+fn adapt_apply(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    let name = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "apply".into(),
+            position: "formula name",
+        })?;
+    let args = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(adapt_expr(n)),
+            _ => None,
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(ExprAst::Apply(name, args))
+}
+
 fn arith_op_from_value(v: &str) -> Option<ArithOp> {
     match v {
         "+" => Some(ArithOp::Add),
@@ -2677,8 +2723,8 @@ mod tests {
             } => {
                 assert_eq!(lr, 1_000_000.0);
                 match evidence {
-                    Evidence::Predicate { slot, op, rhs } => {
-                        assert_eq!(slot, "gross_income");
+                    Evidence::Predicate { lhs, op, rhs } => {
+                        assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "gross_income"));
                         assert_eq!(op, CmpOp::Ge);
                         assert!(matches!(rhs, ExprAst::Lit(v) if v == 14600.0));
                     }
@@ -2702,12 +2748,12 @@ mod tests {
             let src = format!("contributes 2.0 from age {sym} 18 to adult");
             match parse_one(&src) {
                 Statement::Contributes {
-                    evidence: Evidence::Predicate { op, rhs, slot },
+                    evidence: Evidence::Predicate { op, rhs, lhs },
                     ..
                 } => {
                     assert_eq!(op, *expected, "operator {sym}");
                     assert!(matches!(rhs, ExprAst::Lit(v) if v == 18.0));
-                    assert_eq!(slot, "age");
+                    assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "age"));
                 }
                 other => panic!("expected predicate Contributes for {sym}, got {other:?}"),
             }
@@ -2719,10 +2765,10 @@ mod tests {
         let src = "contributes 1000000 from answer == 3 / 10 to opt_a";
         match parse_one(src) {
             Statement::Contributes {
-                evidence: Evidence::Predicate { slot, op, rhs },
+                evidence: Evidence::Predicate { lhs, op, rhs },
                 ..
             } => {
-                assert_eq!(slot, "answer");
+                assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "answer"));
                 assert_eq!(op, CmpOp::Eq);
                 assert!(matches!(rhs, ExprAst::Bin(ArithOp::Div, _, _)));
             }

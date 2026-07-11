@@ -373,6 +373,14 @@ fn count_decl_names_decl(
                     // A field has no params, and its initializer declares no
                     // statement-scope names at the class-body level.
                     ClassMember::Field(_) => {}
+                    // A static-init block has no params, but its statements
+                    // declare their own locals — count them, upholding the same
+                    // rename invariant as a method body.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
                 }
             }
         }
@@ -534,6 +542,14 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                         }
                         if let Some(v) = &f.value {
                             collect_all_idents_expr(v, out);
+                        }
+                    }
+                    // A static-init block has no key/name/params; over-collect
+                    // every identifier in its statements for rename-collision
+                    // safety, mirroring the method-body walk.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_all_idents_stmt(s, out);
                         }
                     }
                 }
@@ -855,6 +871,13 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             collect_all_idents_expr(v, out);
                         }
                     }
+                    // A static-init block has no key/name/params; over-collect
+                    // every identifier in its statements for collision-avoidance.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
                 }
             }
         }
@@ -981,6 +1004,13 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
                         }
                         if let Some(v) = &mut f.value {
                             rename_apply_expr(v, map);
+                        }
+                    }
+                    // Rewrite renamed globals used in the static-init block's
+                    // statements, mirroring the method-body rewrite.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rename_apply_stmt(s, map);
                         }
                     }
                 }
@@ -1301,6 +1331,14 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         }
                         if let Some(v) = &mut f.value {
                             rename_apply_expr(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at class-definition
+                    // time with the class's own name in scope — rename globals in
+                    // them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rename_apply_stmt(s, &class_inner);
                         }
                     }
                 }

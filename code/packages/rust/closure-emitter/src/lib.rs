@@ -1016,6 +1016,7 @@ impl<'a> Emitter<'a> {
             match member {
                 ClassMember::Method(m) => self.emit_class_member(m),
                 ClassMember::Field(f) => self.emit_class_field(f),
+                ClassMember::StaticBlock(b) => self.emit_static_block(b),
             }
         }
         self.write_str("}");
@@ -1053,6 +1054,25 @@ impl<'a> Emitter<'a> {
             self.emit_expression_inner(value, PREC_ASSIGNMENT);
         }
         self.write_str(";");
+    }
+
+    /// Emit one **static initialization block** ([`ClassMember::StaticBlock`]):
+    /// `static{<statements>}` (CLOC12.176).
+    ///
+    /// ```text
+    ///   static { }        → static{}
+    ///   static { x = 1 }  → static{x=1}
+    ///   static { a();b() } → static{a();b()}
+    /// ```
+    ///
+    /// The `static` keyword abuts the `{` with **no** space (the brace is a hard
+    /// token boundary, so `static{…}` parses). The body is emitted by the shared
+    /// [`Self::emit_block_statement`], which prints the `{ … }` and the statement
+    /// list exactly as a function body does. Like a method (and unlike a field),
+    /// a static block is **brace-terminated** — it needs no trailing `;`.
+    fn emit_static_block(&mut self, b: &BlockStatement) {
+        self.write_str("static");
+        self.emit_block_statement(b);
     }
 
     /// Emit one [`MethodDefinition`]: `[static ][get|set ][*]key(params){body}`.
@@ -3802,6 +3822,66 @@ mod tests {
         // `class C {}` — bare (no wrapping paren, unlike the expression form's
         // `(class C{});`) and NO trailing `;` (unlike `function f(){};`).
         assert_eq!(emit_class_decl("C", None, vec![]), "class C{}");
+    }
+
+    // ---- static initialization blocks (CLOC12.176) -------------------
+
+    /// A `static { <statements> }` member.
+    fn static_block(stmts: Vec<Statement>) -> ClassMember {
+        ClassMember::StaticBlock(BlockStatement { cv: None, body: stmts })
+    }
+
+    /// An expression statement wrapping `expr`.
+    fn expr_stmt(expr: Expression) -> Statement {
+        Statement::expression_statement(ExpressionStatement { cv: None, expression: expr })
+    }
+
+    #[test]
+    fn empty_static_block() {
+        // `class C{static{}}` — the `static` keyword abuts the `{` with no space,
+        // and the empty block is brace-terminated (no trailing `;`).
+        assert_eq!(emit_class_decl("C", None, vec![static_block(vec![])]), "class C{static{}}");
+    }
+
+    #[test]
+    fn static_block_with_statement() {
+        // `class C{static{x}}` — a single statement body prints inside the block.
+        assert_eq!(
+            emit_class_decl("C", None, vec![static_block(vec![expr_stmt(ident("x"))])]),
+            "class C{static{x}}"
+        );
+    }
+
+    #[test]
+    fn static_block_with_two_statements() {
+        // `class C{static{x;y}}` — two statements are `;`-separated inside the block.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![static_block(vec![expr_stmt(ident("x")), expr_stmt(ident("y"))])],
+            ),
+            "class C{static{x;y}}"
+        );
+    }
+
+    #[test]
+    fn static_block_interleaved_with_field_and_method() {
+        // `class C{x=1;static{}m(){}}` — a field, a static block, and a method
+        // coexist in source order; the static block is brace-terminated so it
+        // abuts the following method with no separator.
+        assert_eq!(
+            emit_class_decl(
+                "C",
+                None,
+                vec![
+                    field("x", Some(num(1.0)), false),
+                    static_block(vec![]),
+                    method("m", MethodKind::Method, false),
+                ],
+            ),
+            "class C{x=1;static{}m(){}}"
+        );
     }
 
     #[test]

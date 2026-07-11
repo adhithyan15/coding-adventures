@@ -1,5 +1,26 @@
 # Changelog — storage-sqlite
 
+## 0.3.0 — `list_indexes` reports the file's real indexes
+
+`Backend::list_indexes` was a stub returning `Vec::new()`; it now reports the
+index objects in the parsed `sqlite_schema` catalog (optionally filtered to one
+table), so tools can introspect a real database's indexes the way `PRAGMA
+index_list` does. The planner still full-scans (no `scan_index` yet).
+
+- Explicit `CREATE INDEX` objects yield their `unique` flag and column list,
+  recovered from the stored SQL: `parse_index_columns` takes the parenthesised
+  column list (each column reduced to its bare identifier, so `col DESC` /
+  `col COLLATE NOCASE` → `col`), and `index_is_unique` scans only the tokens
+  before the column-list `(` and stops at `INDEX` (so a name containing
+  "unique" is not misread).
+- Auto-indexes (the ones SQLite creates to back `UNIQUE`/`PRIMARY KEY`) carry no
+  catalog SQL; they are reported with `auto = true`, `unique = true`, and an
+  empty column list (not recoverable from the catalog SQL).
+- Verified by a new differential test (`mini-sqlite/tests/file_backed.rs::
+  list_indexes_matches_real_sqlite`) that diffs the result — index names, unique
+  flags, and column lists — against real SQLite's `PRAGMA index_list` /
+  `PRAGMA index_info` over the same file, plus unit tests for the two parsers.
+
 ## 0.2.0 — Queryable `sqlite_master` / `sqlite_schema` catalog
 
 `SELECT … FROM sqlite_master` (and its modern alias `sqlite_schema`) now works

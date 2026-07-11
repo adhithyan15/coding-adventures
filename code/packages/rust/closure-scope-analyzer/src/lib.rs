@@ -538,6 +538,11 @@ fn walk_class_declaration(
                     walk_expression(v, ctx, analysis, pending);
                 }
             }
+            // A static-init block runs at class-definition time and is its own
+            // block scope — walk it as a free-standing block statement so its
+            // local `let`/`const`/`var` land in a block scope and references
+            // resolve. It introduces no member key or binding name.
+            ClassMember::StaticBlock(b) => walk_block_statement(b, ctx, analysis, pending),
         }
     }
 }
@@ -1020,6 +1025,11 @@ fn walk_expression(
                         if let Some(v) = &f.value {
                             walk_expression(v, ctx, analysis, pending);
                         }
+                    }
+                    // A static-init block is its own block scope — walk it as a
+                    // free-standing block statement (mirrors the declaration form).
+                    ClassMember::StaticBlock(b) => {
+                        walk_block_statement(b, ctx, analysis, pending)
                     }
                 }
             }

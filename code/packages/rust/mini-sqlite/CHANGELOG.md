@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2 — Introspect a file's indexes (`list_indexes`)
+
+Stream C: the file backend's `list_indexes` now reports a real `.sqlite` file's
+indexes (name, unique, columns, auto) from the parsed catalog — see
+`storage-sqlite` 0.3.0. New differential test
+`tests/file_backed.rs::list_indexes_matches_real_sqlite` diffs the result
+against real SQLite's `PRAGMA index_list` / `PRAGMA index_info`. No mini-sqlite
+`src/` change.
+
 ## 0.5.1 — Scalar functions: IFNULL / NULLIF / TYPEOF / INSTR / HEX
 
 Stream A, corpus-growth phase (the differential ledger is at zero, so the

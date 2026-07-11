@@ -480,6 +480,14 @@ fn count_decl_names_decl(
                     // A field initializer is an expression — it declares no
                     // statement-scope names at the class-body level.
                     ClassMember::Field(_) => {}
+                    // A static-init block's statements declare their own locals —
+                    // count them conservatively, mirroring the method-body arm
+                    // (over-counting only ever prevents an unsafe inline).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
                 }
             }
         }
@@ -640,6 +648,14 @@ fn count_uses_decl(decl: &Declaration, name: &str, count: &mut usize) {
                     ClassMember::Field(f) => {
                         if let Some(v) = &f.value {
                             count_uses_expr(v, name, count);
+                        }
+                    }
+                    // SOUNDNESS: a static-init block's statements run at class-
+                    // definition time and can USE `name` — count every such use,
+                    // mirroring the method-body arm.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_uses_stmt(s, name, count);
                         }
                     }
                 }
@@ -907,6 +923,13 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                             count_uses_expr(v, name, count);
                         }
                     }
+                    // SOUNDNESS: a static-init block's statements can use `name` —
+                    // count each, mirroring the method-body arm.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_uses_stmt(s, name, count);
+                        }
+                    }
                 }
             }
         }
@@ -1008,6 +1031,13 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
                     ClassMember::Field(f) => {
                         if let Some(v) = &mut f.value {
                             changed |= propagate_in_expr(v, cand);
+                        }
+                    }
+                    // Propagate the const into the static-init block's statements,
+                    // kept in lockstep with `count_uses` (which counts them).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= propagate_in_stmt(s, cand);
                         }
                     }
                 }
@@ -1291,6 +1321,13 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                     ClassMember::Field(f) => {
                         if let Some(v) = &mut f.value {
                             changed |= propagate_in_expr(v, cand);
+                        }
+                    }
+                    // Propagate the const into the static-init block's statements,
+                    // kept in lockstep with `count_uses` (which counts them).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= propagate_in_stmt(s, cand);
                         }
                     }
                 }

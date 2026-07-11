@@ -32,8 +32,107 @@ use coding_adventures_wolfram_lexer::{tokenize_wolfram, try_tokenize_wolfram};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 mod _grammar;
 
+/// Recursion-depth cap for the Wolfram [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep `(((…)))`/`f[g[h[…]]]` nesting recurses once per
+/// `parse_rule` call and can overflow the *native* thread stack — an
+/// uncatchable process abort — before this crate's own `Result`-returning
+/// entry points ever get a chance to report anything).
+///
+/// # Why not the shared [`DEFAULT_MAX_RULE_DEPTH`] (128)
+///
+/// Wolfram's precedence cascade is unusually deep. One layer of `(...)`
+/// grouping or `f[...]` application loops all the way back through the
+/// *entire* cascade — `assignment -> replaceall -> rule -> condition ->
+/// alternatives -> logical_or -> logical_and -> logical_not -> amp ->
+/// comparison -> additive -> multiplicative -> unary -> power -> mapapply ->
+/// patterntest -> postfix -> atom -> group -> expr` — 20 named-rule calls per
+/// source-nesting level, several times deeper than a shallow ECMAScript-style
+/// cascade. `DEFAULT_MAX_RULE_DEPTH` (tuned for that shallow shape) allows
+/// only ~5 real nesting levels here (measured) — too easy for completely
+/// ordinary nested Wolfram function calls (`f[g[h[x]]]` chains are routine)
+/// to trip.
+///
+/// # How this number was derived — and a real conflict that changed it
+///
+/// Following the exact methodology behind `DEFAULT_MAX_RULE_DEPTH`: a
+/// throwaway, isolated subprocess (never run in-process — a genuine overflow
+/// aborts the whole process, so this must be explored somewhere a crash is
+/// safe) built `((((…0…))))` with thousands of nesting levels through this
+/// crate's own `create_wolfram_parser`, and binary-searched — on a worker
+/// thread with the **default ~2 MiB stack** (no `stack_size` override) — for
+/// the `with_max_depth` value at which the parse stops overflowing and starts
+/// returning a clean `Err`. Result (debug build, this toolchain, stable
+/// across 5 repeated trials): safe at 275, overflowing at 278. A cap can only
+/// refuse to recurse further, it cannot shrink the frames already pushed, so
+/// ~276 `parse_rule` frames is the hard ceiling this grammar can ever reach
+/// on a 2 MiB stack — about 11 real bracket-nesting levels at the absolute
+/// edge (zero margin). A first pass at this constant used `200` (comfortable
+/// margin below that floor, ~8 real levels) — safe for a bare default-stack
+/// caller, matching `macsyma-parser` and `matlab-parser`'s own caps.
+///
+/// **That value broke `wolfram-runtime`'s existing, passing
+/// `moderate_nesting_still_evaluates` test** (40 levels of `(...)` nesting,
+/// expected to evaluate — a legitimate case, not a DoS probe). Investigating
+/// why revealed `wolfram-runtime` does not rely on a bare thread at all: its
+/// `eval_to_outputs` spawns the *actual* parse onto a worker thread with a
+/// **512 MiB** stack (`EVAL_STACK_SIZE`) and gates input with its own
+/// *token-count* cap (`MAX_STATEMENT_TOKENS = 2000`, checked against the real
+/// lexer output **before** the parser ever runs) — not a bracket-depth
+/// count. That is exactly the "frontend that already guards itself on an
+/// enlarged stack" scenario `DEFAULT_MAX_RULE_DEPTH`'s own doc comment warns
+/// a parser-level cap would preempt (it names
+/// `python-to-semantic-ir`/`javascript-to-semantic-ir` as the same pattern).
+/// Wolfram's 20-rule-per-level cascade makes this unavoidable: **even 40
+/// levels of real nesting needs ~840 `parse_rule` frames — already past the
+/// bare-2-MiB-stack crash floor (~276) *regardless of any cap we pick*.**
+/// `wolfram-runtime`'s reliance on its own big-stack thread is load-bearing,
+/// not incidental; no `with_max_depth` value can simultaneously (a) sit below
+/// ~276 (to protect a bare-stack caller) and (b) sit above ~840 (to keep this
+/// existing, legitimate case working). Those two requirements are
+/// mathematically incompatible for this grammar, so this crate cannot be the
+/// thing that makes a *bare*-stack caller of `parse_wolfram` safe from ~12+
+/// levels of nesting — only `wolfram-runtime`'s own enlarged-stack + token-cap
+/// design (unaffected by anything in this crate) does that today.
+///
+/// Given that, this constant is calibrated for the **only real consumer's**
+/// actual deployment (an enlarged-stack worker thread), not a bare default
+/// stack: `2000` gives 98 real nesting levels (measured: 98 parses cleanly,
+/// 99 trips the cap) — well past the tested 40, with margin for later
+/// "moderate" examples — while comfortably tripping (fast: well under a
+/// second) before `wolfram-runtime`'s own 512 MiB stack could ever overflow
+/// (512 MiB is ~256× the 2 MiB floor above, i.e. safe past ~70,000 raw
+/// frames). It does *not* try to reach `wolfram-runtime`'s own theoretical
+/// worst case (`MAX_STATEMENT_TOKENS = 2000` tokens could encode up to ~999
+/// nesting levels) — measured directly, parsing real nesting anywhere near
+/// that scale takes **tens of seconds** even on a big stack (this
+/// implementation's packrat memo keys are `format!`-allocated strings, and
+/// the furthest-failure tracking is an O(n) `Vec::contains` scan per
+/// attempt — a real, separate performance concern, flagged as follow-up work
+/// rather than fixed here), so a cap that size would trade one DoS vector
+/// (stack overflow) for another (a multi-second-to-multi-minute CPU burn per
+/// request). `2000` stays inside the fast, practical range while fully
+/// covering every currently-legitimate case.
+///
+/// **The upshot for future callers**: unlike `macsyma-parser` /
+/// `matlab-parser` (whose `200` genuinely protects a bare default-stack
+/// caller), this crate's cap does *not* make `parse_wolfram` /
+/// `create_wolfram_parser` / `try_parse_wolfram` safe to call directly on an
+/// ordinary thread with deeply-nested input — a caller without its own
+/// enlarged-stack + complexity-budget strategy (like `wolfram-runtime`'s)
+/// remains exposed to a native stack overflow past ~11 real nesting levels,
+/// exactly as before this change. Such a caller should either reuse
+/// `wolfram-runtime`'s pattern (parse on a large `stack_size` thread, gate
+/// input by token count first) or explicitly tighten the cap itself, e.g.
+/// `create_wolfram_parser(src).with_max_depth(150)`, accepting a much lower
+/// real-nesting ceiling in exchange for bare-thread safety.
+const MAX_RULE_DEPTH: usize = 2000;
+
 /// Create a [`GrammarParser`] wired to the Wolfram grammar and the tokens of
-/// `source`.
+/// `source`, with the recursion-depth guard ([`MAX_RULE_DEPTH`]) enabled so
+/// pathologically deep nesting fails cleanly instead of overflowing the
+/// native stack.
 ///
 /// # Panics
 ///
@@ -41,7 +140,7 @@ mod _grammar;
 /// path.
 pub fn create_wolfram_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_wolfram(source);
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse Wolfram source text into a [`GrammarASTNode`] rooted at `program`.
@@ -68,6 +167,7 @@ pub fn parse_wolfram(source: &str) -> GrammarASTNode {
 pub fn try_parse_wolfram(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_wolfram(source)?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
+        .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| e.to_string())
 }
@@ -391,5 +491,120 @@ mod tests {
         assert!(try_parse_wolfram("+ &\n").is_err());
         // An applied pure function with an unclosed bracket is a syntax error.
         assert!(try_parse_wolfram("(#^2)&[5\n").is_err());
+    }
+
+    // --- Recursion-depth guard (DoS hardening) --------------------------
+    //
+    // These three tests mirror the exact methodology used to validate
+    // `parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` (see that file's own
+    // `test_deeply_nested_input_returns_error_not_overflow` /
+    // `test_nesting_up_to_cap_still_parses` /
+    // `test_opt_in_cap_trips_before_overflow_on_default_stack`), but exercise
+    // the REAL Wolfram grammar and the crate's actual `MAX_RULE_DEPTH` (2000).
+    //
+    // Unlike `macsyma-parser`/`matlab-parser`, these tests run on an
+    // **enlarged** worker thread (matching `wolfram-runtime`'s own
+    // `EVAL_STACK_SIZE`), not the bare default ~2 MiB stack — see
+    // `MAX_RULE_DEPTH`'s doc comment for why: Wolfram's 20-rule-per-level
+    // cascade means even the legitimate, already-tested 40-level nesting case
+    // (`wolfram-runtime`'s `moderate_nesting_still_evaluates`) needs more
+    // native stack than a bare default thread has, with or without this
+    // crate's cap. Testing on a bare thread here would just prove the
+    // (already-known, unrelated-to-this-cap) fact that a bare-stack caller
+    // crashes on moderate Wolfram nesting; it would not tell us anything about
+    // whether `MAX_RULE_DEPTH` itself is well-calibrated.
+
+    /// Build `n` nested parens around a `0`, e.g. `((0))\n` for `n == 2`.
+    fn nested_paren_source(n: usize) -> String {
+        format!("{}0{}\n", "(".repeat(n), ")".repeat(n))
+    }
+
+    /// Deeply-nested input must produce a recoverable error, not overflow the
+    /// native stack (an uncatchable process abort). We parse 5000 levels — far
+    /// past `MAX_RULE_DEPTH` — on a worker thread with a 1 GiB stack (double
+    /// `wolfram-runtime`'s own 512 MiB `EVAL_STACK_SIZE`), so the *guard* is
+    /// what stops the recursion, not the stack running out.
+    ///
+    /// Note: unlike the synthetic single-rule grammar in `grammar_parser.rs`,
+    /// Wolfram's entry rule (`program = { statement_line }`) is a zero-or-more
+    /// repetition. When the single top-level statement fails deep inside
+    /// (because the depth cap refused to recurse further), the repetition
+    /// itself still succeeds trivially with *zero* statements matched, so the
+    /// `GrammarParseError` surfaced by `parse()` is the generic "unexpected
+    /// leftover token" message rather than the specific "nests deeper than
+    /// the supported limit" phrasing `grammar_parser.rs`'s tests see for a
+    /// grammar whose entry point IS the recursive rule. Either way the parse
+    /// still fails cleanly with a `Result::Err` instead of crashing, which is
+    /// the property under test here.
+    #[test]
+    fn test_deeply_nested_input_returns_error_not_overflow() {
+        let handle = std::thread::Builder::new()
+            .name("wolfram-depth-guard-regression".to_string())
+            .stack_size(1024 * 1024 * 1024)
+            .spawn(|| {
+                let source = nested_paren_source(5000);
+                let result = try_parse_wolfram(&source);
+                assert!(
+                    result.is_err(),
+                    "deeply-nested input must fail with an error, not parse or crash"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("depth guard must keep the worker thread from crashing");
+    }
+
+    /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still parses cleanly,
+    /// and one layer deeper cleanly trips the guard. These exact boundary
+    /// counts (98 legitimate levels — comfortably past `wolfram-runtime`'s own
+    /// tested 40-level `moderate_nesting_still_evaluates` case) were found
+    /// empirically by binary-searching `create_wolfram_parser` against
+    /// increasing nesting counts at the production cap, on a worker thread
+    /// sized like `wolfram-runtime`'s own 512 MiB `EVAL_STACK_SIZE` — see
+    /// `MAX_RULE_DEPTH`'s doc comment.
+    #[test]
+    fn test_nesting_up_to_cap_still_parses() {
+        let handle = std::thread::Builder::new()
+            .stack_size(512 * 1024 * 1024)
+            .spawn(|| {
+                let ok_source = nested_paren_source(98);
+                let ast = parse_wolfram(&ok_source);
+                assert_eq!(ast.rule_name, "program");
+
+                let tripped_source = nested_paren_source(99);
+                assert!(
+                    try_parse_wolfram(&tripped_source).is_err(),
+                    "one nesting level past the cap's measured limit must fail"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle.join().expect("worker thread must not crash");
+    }
+
+    /// A caller relying on `MAX_RULE_DEPTH` must have the guard trip *before*
+    /// the native stack overflows — otherwise a production caller would still
+    /// crash. We parse far-too-deep input on a worker thread sized like
+    /// `wolfram-runtime`'s own 512 MiB `EVAL_STACK_SIZE` (the realistic
+    /// deployment this cap is calibrated for — see `MAX_RULE_DEPTH`'s doc
+    /// comment for why a *bare* default-stack thread cannot be the target
+    /// here). A clean `Err` (not a `join()` failure from a crashed thread, and
+    /// fast — not the multi-second-plus cost of parsing thousands of real
+    /// nesting levels) proves `MAX_RULE_DEPTH` sits safely below the native
+    /// overflow point on that stack, and trips quickly rather than doing
+    /// expensive work first.
+    #[test]
+    fn test_opt_in_cap_trips_before_overflow_on_enlarged_stack() {
+        let handle = std::thread::Builder::new()
+            .stack_size(512 * 1024 * 1024)
+            .spawn(|| {
+                let source = nested_paren_source(5000);
+                let result = try_parse_wolfram(&source);
+                assert!(result.is_err(), "deeply-nested input must error, not crash");
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the enlarged stack");
     }
 }

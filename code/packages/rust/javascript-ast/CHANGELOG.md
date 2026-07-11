@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.35.0] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` (static initialization blocks)
+
+`ClassMember` grows a third variant beside `Method` and `Field`:
+
+- `ClassMember::StaticBlock(BlockStatement)` models a `static { … }` block — a
+  statement list that runs once at class-definition time. It has no name, key,
+  param list, or initializer, so the variant wraps the existing `BlockStatement`
+  (its body is exactly a `Vec<Statement>`) rather than re-modelling it.
+
+3 roundtrip tests (empty block / block with a statement / static block interleaved
+with a field).
+
 ## [0.34.0] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: `ClassMember::Field` (class fields / `PropertyDefinition`)

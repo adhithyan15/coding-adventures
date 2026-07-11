@@ -178,6 +178,39 @@ fn affinity_is_real(type_name: &str) -> bool {
 /// This covers the ordinary schemas mini-sqlite and the Anki tables use. Exotic
 /// corners (deeply nested constraint expressions, unusual quoting) are refined in
 /// later increments; the cross-check tests measure it against real SQLite.
+/// Recover the indexed column names from a `CREATE INDEX … ON t (a, b, …)`
+/// statement — the parenthesised list, split at top level and reduced to each
+/// leading identifier (so `col DESC` or `col COLLATE NOCASE` yields `col`).
+/// Expression indexes (`ON t (a + b)`) degrade to their first identifier, which
+/// is the best a name-only view can offer.
+fn parse_index_columns(create_index_sql: &str) -> Vec<String> {
+    let Some(inner) = outermost_parens(create_index_sql) else {
+        return Vec::new();
+    };
+    split_top_level_commas(inner)
+        .into_iter()
+        .filter_map(|piece| {
+            let (name, _) = read_identifier(piece);
+            (!name.is_empty()).then_some(name)
+        })
+        .collect()
+}
+
+/// Whether a `CREATE INDEX` statement declares a UNIQUE index. We scan only the
+/// tokens *before* the column-list `(`, and stop at `INDEX`, so an index or
+/// table whose name merely contains "unique" is not misread as unique.
+fn index_is_unique(create_index_sql: &str) -> bool {
+    let head = create_index_sql.split('(').next().unwrap_or("");
+    for tok in head.split_whitespace() {
+        match tok.to_ascii_uppercase().as_str() {
+            "UNIQUE" => return true,
+            "INDEX" => return false,
+            _ => {}
+        }
+    }
+    false
+}
+
 fn parse_create_columns(create_sql: &str) -> Vec<ParsedColumn> {
     let Some(inner) = outermost_parens(create_sql) else {
         return Vec::new();
@@ -481,10 +514,35 @@ impl Backend for SqliteFileBackend {
         Err(unsupported("drop an index in a read-only .sqlite file"))
     }
 
-    fn list_indexes(&self, _table: Option<&str>) -> Vec<IndexDef> {
-        // No index access is offered yet; reporting none keeps the planner on the
-        // full-scan path (which `scan` serves) and never asks for `scan_index`.
-        Vec::new()
+    fn list_indexes(&self, table: Option<&str>) -> Vec<IndexDef> {
+        // Report the catalog's index objects (optionally filtered to one table),
+        // recovered from the same parsed `sqlite_schema` we serve everything from.
+        // We still don't offer `scan_index`, so the planner stays on the full
+        // scan — but tools that introspect indexes (PRAGMA-style) can now see
+        // them. Explicit `CREATE INDEX` objects carry their SQL, from which we
+        // recover the unique flag and column list. Auto-indexes (the ones SQLite
+        // creates to back `UNIQUE`/`PRIMARY KEY` constraints) store no SQL text
+        // in the catalog; they are always unique, and their columns aren't
+        // recoverable from the catalog SQL, so we report them with an empty list.
+        self.schema
+            .iter()
+            .filter(|e| e.object_type == "index")
+            .filter(|e| table.is_none_or(|t| e.table_name.eq_ignore_ascii_case(t)))
+            .map(|e| {
+                let auto = e.sql.is_none();
+                let (unique, columns) = match &e.sql {
+                    Some(sql) => (index_is_unique(sql), parse_index_columns(sql)),
+                    None => (true, Vec::new()),
+                };
+                IndexDef {
+                    name: e.name.clone(),
+                    table: e.table_name.clone(),
+                    columns,
+                    unique,
+                    auto,
+                }
+            })
+            .collect()
     }
 
     fn scan_index(
@@ -608,5 +666,31 @@ mod tests {
         let cols = SqliteFileBackend::schema_column_defs();
         let names: Vec<&str> = cols.iter().map(|c| c.name.as_str()).collect();
         assert_eq!(names, ["type", "name", "tbl_name", "rootpage", "sql"]);
+    }
+
+    #[test]
+    fn parses_indexed_columns_from_create_index() {
+        assert_eq!(parse_index_columns("CREATE INDEX ix ON t (a)"), ["a"]);
+        assert_eq!(
+            parse_index_columns("CREATE UNIQUE INDEX ix ON t (ord, due)"),
+            ["ord", "due"]
+        );
+        // Sort order / collation suffixes reduce to the bare column name.
+        assert_eq!(
+            parse_index_columns("CREATE INDEX ix ON t (a DESC, b COLLATE NOCASE)"),
+            ["a", "b"]
+        );
+        assert_eq!(
+            parse_index_columns(r#"CREATE INDEX ix ON t ("odd name")"#),
+            ["odd name"]
+        );
+    }
+
+    #[test]
+    fn detects_unique_index_without_false_positives() {
+        assert!(index_is_unique("CREATE UNIQUE INDEX ix ON t (a)"));
+        assert!(!index_is_unique("CREATE INDEX ix ON t (a)"));
+        // "unique" appearing only in a name (after INDEX) is not a UNIQUE index.
+        assert!(!index_is_unique("CREATE INDEX my_unique_idx ON t (a)"));
     }
 }

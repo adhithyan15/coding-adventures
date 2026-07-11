@@ -925,6 +925,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "include?", "member?", "has_value?", "value?", "to_a", "merge", "dig",
     "invert", "delete", "store", "[]=", "fetch", "clear", "each", "each_pair",
     "map", "select", "filter", "reject", "transform_values", "transform_keys",
+    "find", "detect", "any?", "all?", "none?", "count",
+    "sort_by", "min_by", "max_by",
   ]);
   function hashMethod(recv, name, args) {
     switch (name) {
@@ -1041,6 +1043,71 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const out = new Map();
         for (const [k, v] of recv) { out.set(blk(k), v); }
         return out;
+      }
+      // ── Enumerable aggregates (Hash includes Enumerable) ─────────
+      //
+      // Ruby's Hash mixes in Enumerable, so these iterate the hash as a
+      // sequence of [key, value] pairs: the block is yielded (key, value)
+      // (two arguments, matching `each`), and the "element" an aggregate
+      // returns is the two-element [key, value] Array.
+      case "find": case "detect": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return [k, v]; } }
+        return null;
+      }
+      case "any?": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return recv.size > 0; }
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return true; } }
+        return false;
+      }
+      case "all?": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return true; }
+        for (const [k, v] of recv) { if (!truthy(blk(k, v))) { return false; } }
+        return true;
+      }
+      case "none?": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return recv.size === 0; }
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return false; } }
+        return true;
+      }
+      case "count": {
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return recv.size; }
+        let n = 0;
+        for (const [k, v] of recv) { if (truthy(blk(k, v))) { n++; } }
+        return n;
+      }
+      case "sort_by": {
+        // A NEW Array of [k, v] pairs sorted by the block key (`arrCmp` is the
+        // never-throw numeric-aware comparator used by Array#sort_by).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        const keyed = [];
+        for (const [k, v] of recv) { keyed.push([blk(k, v), [k, v]]); }
+        keyed.sort((a, b) => arrCmp(a[0], b[0]));
+        return keyed.map((p) => p[1]);
+      }
+      case "min_by": case "max_by": {
+        // The [k, v] pair with the extremal block key (first-on-tie; nil on
+        // an empty hash).
+        const blk = args[args.length - 1];
+        if (typeof blk !== "function") { return HASH_MISS; }
+        if (recv.size === 0) { return null; }
+        const wantMin = name === "min_by";
+        let bestPair = null;
+        let bestKey;
+        for (const [k, v] of recv) {
+          const key = blk(k, v);
+          if (bestPair === null || (wantMin ? key < bestKey : key > bestKey)) {
+            bestPair = [k, v];
+            bestKey = key;
+          }
+        }
+        return bestPair;
       }
     }
     return HASH_MISS;

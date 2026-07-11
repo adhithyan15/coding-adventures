@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.11.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms at all 5 sites: count/propagate recurse the block's statements (SOUNDNESS: a candidate use inside a static block runs at class-def time and must be counted before the const is propagated there); a static block declares no class-body name.
+
 ## [0.11.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: `ClassMember::Field` arms

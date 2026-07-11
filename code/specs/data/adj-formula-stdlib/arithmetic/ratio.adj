@@ -1,0 +1,57 @@
+% ============================================================================
+% ratio.adj — the ratio formula library (ADJ-RULE-SUBSTRATE RS-1 / FL-4).
+% ============================================================================
+% The FIRST *composed* entry of the compute standard library: a formula that
+% CALLS another formula. Where `arithmetic.adj` ships the four leaf primitives
+% (sum/difference/product/quotient), this ships `ratio` — and `ratio` does not
+% re-derive division, it APPLIES the cited `quotient` primitive. This is the
+% RS-1 composition core made concrete: a formula application is a first-class
+% sub-expression, so `ratio(a, b) = quotient(a, b)` is write-once-reuse-many all
+% the way down.
+%
+%     import "ratio.adj"                 % transitively imports arithmetic.adj
+%     observe numerator(3)               % "…3 parts…"   (span cited by the model)
+%     observe denominator(4)             % "…of 4…"      (span cited by the model)
+%     ? ratio(numerator, denominator)    % engine → 0.75, carrying BOTH citations
+%
+% The engine expands `ratio` → `quotient` on the CPU and composes the provenance
+% chain: the answer cites MathWorld's *ratio* definition (primary) AND MathWorld's
+% *quotient* definition (corroboration). Zero math is performed by the model, and
+% the audit trail names every formula that participated.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on the elementary primitives — `quotient` in particular.
+% The import is RELATIVE to this file; a consumer that imports `ratio.adj` gets
+% `quotient` (and its siblings) transitively, so `ratio`'s body resolves.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `ratio`'s operands name the two quantities compared. Rung-0 types
+% an observable slot as `finding`; the `surface` synonyms let a decomposer map
+% everyday phrasing ("per", "for every", "out of") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary ratio_vocab {
+    define numerator   : finding  surface "numerator", "antecedent", "part", "first quantity"
+    define denominator : finding  surface "denominator", "consequent", "whole", "second quantity"
+    define ratio       : finding  surface "ratio", "rate", "proportion"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formula. `ratio(numerator, denominator) = quotient(numerator,
+% denominator)` is a formula CALLING a formula: its body is a single application
+% of the cited `quotient` primitive from `arithmetic.adj`, not a bare `/`. The
+% engine resolves the application, substitutes `quotient`'s body on the CPU, and
+% carries `quotient`'s citation alongside this one. `ratio` still asserts its own
+% claim about the world (a ratio is the quotient of two quantities) and so
+% carries its own required, authoritative source.
+% ----------------------------------------------------------------------------
+formulabook ratios {
+    use ratio_vocab
+
+    formula ratio(numerator, denominator) = quotient(numerator, denominator)
+        source "The ratio of two numbers r and s is written r/s and is the quotient of r divided by s."
+        locator "https://mathworld.wolfram.com/Ratio.html"
+        trust authoritative
+}

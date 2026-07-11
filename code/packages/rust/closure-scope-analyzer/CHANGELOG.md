@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms (declaration + expression) walking the block as a free-standing `walk_block_statement` — a static block is its own block scope, so local `let`/`const`/`var` land in a block scope and references resolve.
+
 ## [0.12.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: resolve references in field initializers

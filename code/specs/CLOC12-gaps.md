@@ -2138,6 +2138,125 @@ shipped node + emit + conformance-port ahead of the parser. `emit_await` is thus
 fully covered; only the parser→typed-AST reachability remains, tracked here.
 
 
+## CLOC12.176 — static initialization blocks (`static { … }`): the third `ClassMember` variant (design)
+
+CLOC12.173/174 shipped the class **expression** / **declaration** with a
+methods-only body; CLOC12.175 added the **field** member (`ClassMember::Field`),
+making `ClassMember` a two-variant enum. Both the 173 and 175 closing notes named
+the same next deferral: *static-init blocks (`static { … }`)… a later additive
+`ClassMember` variant.* CLOC12.176 is that slice — the **static initialization
+block**, and the first class member whose body is a **statement list** rather than
+a key/value.
+
+A static block is `static { <statements> }` inside a class body — a block of
+statements that run **once, at class-definition time**, in the class's static
+scope. It has no name, no key, no parameter list, and no initializer — only a
+body. (ES2022.)
+
+### Model (ESTree-aligned, Rhino-informed)
+
+```rust
+// javascript-ast/src/expression.rs — a new variant of the `ClassMember` enum
+pub enum ClassMember {
+    Method(MethodDefinition),
+    Field(PropertyDefinition),
+    StaticBlock(BlockStatement),               // NEW — `static { … }`
+    // private members (`#x`) and decorators are later additive variants.
+}
+```
+
+**Why reuse `BlockStatement`, not a new struct.** A static block's body is
+*exactly* a `Vec<Statement>` — the same shape a `BlockStatement` (or a method's
+`function_body`) already carries. It has no other data (no name, no `static` flag
+— being a static block *is* the staticness, and there is no non-static form). So
+the variant wraps the existing `BlockStatement` directly, exactly as `Field`
+reused `PropertyKey` / `Expression` rather than re-modelling them. This matches
+the conformance target — ESTree's `StaticBlock` node is a `BlockStatement`-shaped
+body; Closure's Rhino uses a `CLASS_MEMBERS` child that is a block.
+
+### Emit (`closure-emitter`)
+
+Inside a class body a static block prints `static{<statements>}`:
+
+```text
+  class C { static { } }          → class C{static{}}
+  class C { static { x = 1 } }    → class C{static{x=1}}
+  class C { static { a(); b() } } → class C{static{a();b()}}
+```
+
+The `static` keyword is printed (no space before `{` in minified output — the
+`{` is a hard token boundary), then the block body via the same statement-list
+emitter a function body uses, then the closing `}`. Like a method (and unlike a
+field), a static block is **brace-terminated** — it needs **no** trailing `;`.
+Fields, methods, and static blocks interleave in a body with no separators beyond
+each member's own terminator.
+
+### Pass arms — the `ClassMember` blast radius (again)
+
+`ClassMember` becomes a **three-variant** enum. Every pass that matches it
+(`match member { Method | Field }`) goes non-exhaustive → the compiler forces a
+`StaticBlock` arm at each site (the per-crate build is the ground truth, per the
+174/175 lesson — and note `javascript-parser`'s **test** bindings, a transitive
+consumer CI's affected-graph builds, per the 175 lesson). Any now-refutable
+`let ClassMember::Method(m) = member;` / `Field` match likewise updates.
+
+The correct `StaticBlock` arm **recurses into the block's statements** exactly as
+the `Method` arm recurses into `m.value.body.body` — a static block's statements
+run at class-definition time in the class scope, so a candidate use / renameable
+reference inside one must still be counted / rewritten. A static block has **no
+key** (nothing for the property-renaming pass to rename) and **no binding name**
+(nothing for the variable-rename/inline decl-name passes to record) — only the
+statement body recurses.
+
+### PR breakdown
+
+- **PR1 (atomic node + emit + all `ClassMember` arms, ONE commit).**
+  `javascript-ast` (MINOR) adds `ClassMember::StaticBlock(BlockStatement)`;
+  `closure-emitter` (MINOR) adds the `StaticBlock` arm to `emit_class_tail`
+  printing `static{…}`; every pass crate whose `ClassMember` match went
+  non-exhaustive gets its `StaticBlock` arm (recursing the block statements like a
+  method body), and every now-refutable `let ClassMember::Method`/`Field` becomes
+  a `match`. Hand-constructed emitter unit tests (empty block, block with a
+  statement, block interleaved with a field/method).
+- **PR2 (bridge-enable).** `javascript-parser` (MINOR) + `closurec` (PATCH):
+  `convert_class_element` dispatches a `static_block` member node →
+  `ClassMember::StaticBlock`, converting its `statement*` children via the shared
+  statement converter (reused from `convert_function_body`). Dump the parse-tree
+  shape first. Add a `closurec` e2e fixture (`tests/diff/simple-static-block/`).
+- **PR3 (CodePrinter conformance port).** `closure-emitter` (PATCH): new
+  `tests/upstream/code_printer_static_block_test.rs` mirroring upstream
+  `CodePrinterTest`'s static-block printing cases — hand-constructed AST.
+
+Private names (`#x`) and decorators remain deferred to their own additive slices,
+exactly as for the field and method surfaces.
+
+### PR1 (DONE)
+
+Landed as the atomic node + emit + all-arms commit. `ClassMember` is now a
+**three-variant** enum (`Method` | `Field` | `StaticBlock`).
+
+- **`javascript-ast` 0.35.0** — `ClassMember::StaticBlock(BlockStatement)` (reusing
+  `BlockStatement` — a static block's body is exactly a `Vec<Statement>`); 3
+  roundtrip tests.
+- **`closure-emitter` 0.40.0** — `emit_static_block` printing `static{…}` (the
+  `static` keyword abuts `{`, body via the shared `emit_block_statement`, no
+  trailing `;`) wired into `emit_class_tail`; 4 emit tests.
+- **Pass crates (PATCH each), `StaticBlock` arm at every site the compiler flagged
+  non-exhaustive:** constant-fold 1, fold-control-flow 1, dce 2, scope-analyzer 2,
+  rename-properties 2, inline-variables 5, rename-globals 5, rename 4, **inline
+  13.** Each arm recurses the block's `Vec<Statement>` exactly as the `Method` arm
+  recurses `m.value.body.body`. Soundness-critical (inline / inline-variables):
+  a candidate use inside a static block runs at class-def time, so tally/count/
+  collect recurse the block statements *before* inline substitutes there. Scope:
+  scope-analyzer walks it as its own block scope; rename/rename-globals use the
+  class-inner map; `splice_*` splice into the block (its body IS a statement vec,
+  unlike a field value). A static block has **no key** (nothing to property-rename)
+  and **no binding name** (nothing for decl-name passes to record).
+
+`javascript-parser`'s bridge test bindings needed **no** change — they already use
+`let ClassMember::Method(m) = … else { panic! }` (let-else from the 175 fix), which
+a third variant falls through automatically. All 11 crates build + test green.
+
 ## CLOC12.175 — class fields (`PropertyDefinition`): the first non-method class member (design)
 
 CLOC12.173/174 shipped the class **expression** and **declaration** with a body of

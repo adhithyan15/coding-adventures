@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added a `StaticBlock` arm to `fold_class_body`: each statement of the block is folded (rebuilding the `BlockStatement`), mirroring the method-body fold. Reachable once the PR2 bridge produces the node.
+
 ## [0.85.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: fold class-field initializers

@@ -4,6 +4,56 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.4.1] — 2026-07-11
+
+### Fixed
+
+- **DoS hardening (partial — see "Known limitation" below)**:
+  `create_wolfram_parser` / `parse_wolfram` / `try_parse_wolfram` now opt the
+  underlying `GrammarParser` into a recursion-depth cap
+  (`MAX_RULE_DEPTH = 2000`) via `.with_max_depth(...)`. Previously the parser
+  recursed once per nested `(...)`/`f[...]` layer with no limit at all;
+  deeply nested input (thousands of levels) could overflow the *native*
+  thread stack — an uncatchable process abort — before ever reaching a
+  `Result`-returning entry point, on **any** thread regardless of stack size.
+- Wolfram's precedence cascade is unusually deep (`assignment` down to
+  `group` is a 20-rule chain — the exact example that motivated keeping
+  `parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` (128) as an opt-in,
+  per-caller default rather than a global one), so 128 would have allowed
+  only ~5 real nesting levels — too easy for ordinary nested function calls
+  like `f[g[h[x]]]` to trip. A first pass at `200` (empirically: safe at 275
+  raw `parse_rule` frames / crashing at 278 on a bare ~2 MiB default-stack
+  thread) broke `wolfram-runtime`'s own existing, legitimate
+  `moderate_nesting_still_evaluates` test (40 levels of real nesting) — that
+  crate already parses on its own 512 MiB worker thread
+  (`EVAL_STACK_SIZE`) gated by a token-count budget rather than a
+  parser-level depth cap, because even 40 real nesting levels costs ~840
+  `parse_rule` frames, already past the bare-2-MiB-stack crash floor
+  regardless of the cap chosen here. `2000` (98 real nesting levels) is
+  calibrated for that big-stack deployment instead. See the `MAX_RULE_DEPTH`
+  doc comment in `src/lib.rs` for the full derivation.
+- **Known limitation, disclosed rather than silently shipped**: `2000` does
+  **not** protect a caller that invokes `create_wolfram_parser` / `parse_wolfram`
+  / `try_parse_wolfram` on an ordinary default-stack thread — such a caller
+  remains exposed to the native-stack-overflow DoS past ~11 real nesting
+  levels, exactly as before this change (no `with_max_depth` value can sit
+  both below the ~276-frame bare-stack crash floor and above the ~840 frames
+  `wolfram-runtime`'s own legitimate 40-level test needs — those two
+  constraints are mathematically incompatible for this grammar). Today
+  `wolfram-runtime` is this crate's only consumer, and it already mitigates
+  correctly (big stack + its own token-count cap checked before parsing). A
+  future caller without an equivalent strategy should either follow the same
+  pattern or call `.with_max_depth(...)` with an explicit, much lower value
+  suited to a bare thread (e.g. `150`) directly on the `GrammarParser`
+  `create_wolfram_parser` returns.
+- Added 3 regression tests exercising the guard on the real Wolfram grammar,
+  run on an enlarged worker thread matching `wolfram-runtime`'s own
+  `EVAL_STACK_SIZE` (not a bare thread, since a bare thread cannot validate
+  this crate's cap without also tripping over the limitation above): a
+  deep-nesting test proving the cap trips instead of overflowing, and a
+  boundary test proving legitimate nesting up to 98 levels still parses
+  while 99 trips the cap.
+
 ## [0.4.0] — 2026-06-25
 
 ### Added (W-21 — pattern operator grammar)

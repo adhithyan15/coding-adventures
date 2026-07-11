@@ -42,6 +42,7 @@ pub enum Term {
 /// `from pmh(hypertension) to acs`  →  [`Evidence::Term`]
 /// `from gross_income >= 14600 to required_to_file`  →  [`Evidence::Predicate`]
 /// `from answer == 3 / 10 to opt_a`  →  [`Evidence::Predicate`]
+/// `from bmi(body_mass, height) >= 30 to obese`  →  [`Evidence::Predicate`]
 ///
 /// The predicate form is the surface syntax for a deterministic rule:
 /// it lowers to a predicate-gated contribution whose likelihood ratio
@@ -52,7 +53,15 @@ pub enum Term {
 pub enum Evidence {
     Term(Term),
     Predicate {
-        slot: String,
+        /// The left-hand side being compared. Ordinarily a bare slot reference
+        /// (`ExprAst::Ref("gross_income")`) — an observed or `let`-derived value.
+        /// As of ADJ-RULE-SUBSTRATE RS-1 it may also be a **formula application**
+        /// (`ExprAst::Apply("bmi", …)`) so a rulebook can *branch on a formula*:
+        /// the lowerer computes the formula into a derived value (composing its
+        /// provenance) and gates the contribution on that derived slot. Carried as
+        /// an [`ExprAst`] rather than a bare `String` precisely so both shapes fit
+        /// one field with one lowering path.
+        lhs: ExprAst,
         op: CmpOp,
         rhs: ExprAst,
     },
@@ -209,6 +218,38 @@ pub enum ExprAst {
     Call2(BinFn, Box<ExprAst>, Box<ExprAst>),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
+    /// A **formula application** used as a sub-expression: `name(arg₁, …, argₙ)`
+    /// (ADJ-RULE-SUBSTRATE RS-1 — the composition core). This is the node that
+    /// makes "a formula IS a rule" concrete at the expression level: wherever the
+    /// compute grammar appears — inside a formula body (→ *formula-calls-formula*),
+    /// inside a `let`, or on the left of a `contributes … from <app> <op> <thr>`
+    /// predicate (→ a rulebook *branches on a formula*) — a named formula may be
+    /// applied to argument expressions.
+    ///
+    /// ## How it resolves (lowering, not a second evaluator)
+    ///
+    /// An `Apply` is not evaluated directly. At lowering time the lowerer looks
+    /// the name up in the SAME formula registry the top-level `? name(args)` query
+    /// path uses, binds the callee's parameters to the (already-expanded) argument
+    /// expressions, and substitutes them into the callee's body — *recursively*, so
+    /// a callee body that itself contains an `Apply` expands too. The fully
+    /// expanded, `Apply`-free `ExprAst` then lowers through the existing
+    /// `lower_expr`/`compute` path. A recursion-depth guard turns a self- or
+    /// mutually-recursive formula into a clean `FormulaRecursionTooDeep` error
+    /// rather than a stack overflow (see `expand_applies` in `lower.rs`).
+    ///
+    /// ## Why a distinct node (not `Call`/`Agg`)
+    ///
+    /// [`ExprAst::Call`]/[`ExprAst::Call2`] are the *built-in* transcendental /
+    /// binary functions the `latex "…"` surface understands (a closed set that maps
+    /// to native engine ops); [`ExprAst::Agg`] folds every observation of ONE slot.
+    /// An `Apply` is different in kind: it names a **user-defined library formula**,
+    /// resolved against imported `formulabook`s. Keeping it a separate node makes an
+    /// unknown formula (`FormulaUnknown`) and an arity mismatch (`FormulaArity`)
+    /// distinguishable from an ordinary aggregation or built-in call, and leaves
+    /// `sum(slot)` aggregation untouched (the aggregation keywords are matched
+    /// *before* an application in the grammar).
+    Apply(String, Vec<ExprAst>),
 }
 
 /// One source line in an Adj-Lang program.

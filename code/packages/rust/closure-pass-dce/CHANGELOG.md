@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.20.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms (class expression + declaration) running `dce_block_statement` over the block, mirroring the method body.
+
 ## [0.20.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: `ClassMember::Field` arms

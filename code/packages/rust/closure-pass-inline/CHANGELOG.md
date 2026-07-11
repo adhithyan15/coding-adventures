@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.25.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms at all 13 sites. SOUNDNESS-critical: tally/inline/mutated-params/used-idents recurse the block's statements (a candidate use runs at class-def time — counted before inlining); substitute/rename use the class-inner map; `expr_node_count` weighs one unit per statement; `splice_void`/`splice_valued` splice into the block (its body IS a `Vec<Statement>`, unlike a field value).
+
 ## [0.25.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: `ClassMember::Field` arms

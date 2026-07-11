@@ -1085,6 +1085,15 @@ fn classify_class_members(
                     classify_expr(v, cls);
                 }
             }
+            // A static-init block has NO key (nothing renameable as a property
+            // name), but its statements may contain property accesses — classify
+            // each, mirroring the method-body recursion.
+            ClassMember::StaticBlock(b) => {
+                let mut nested = 0u32;
+                for s in &b.body {
+                    classify_stmt(s, cls, &mut nested);
+                }
+            }
         }
     }
 }
@@ -1485,6 +1494,14 @@ fn rewrite_class_members(
                 }
                 if let Some(v) = &mut f.value {
                     rewrite_expr(v, map);
+                }
+            }
+            // A static-init block has no key to rewrite; its statements may
+            // contain property accesses — rewrite each, in lockstep with
+            // `classify_class_members`.
+            ClassMember::StaticBlock(b) => {
+                for s in &mut b.body {
+                    rewrite_stmt(s, map);
                 }
             }
         }
