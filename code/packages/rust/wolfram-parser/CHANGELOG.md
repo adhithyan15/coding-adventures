@@ -4,6 +4,35 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.4.1] — 2026-07-11
+
+### Fixed
+
+- **DoS hardening**: `create_wolfram_parser` / `try_parse_wolfram` now opt the
+  underlying `GrammarParser` into a recursion-depth cap
+  (`MAX_RULE_DEPTH = 200`) via `.with_max_depth(...)`. Previously the parser
+  recursed once per nested `(...)`/`f[...]` layer with no limit; deeply
+  nested input (thousands of levels) could overflow the *native* thread
+  stack — an uncatchable process abort — before ever reaching a
+  `Result`-returning entry point. Now such input cleanly returns a `String`
+  error instead of crashing the host process.
+- Wolfram's precedence cascade is unusually deep (`assignment` down to
+  `group` is a 20-rule chain — the exact example that motivated keeping
+  `parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` (128) as an opt-in,
+  per-caller default rather than a global one), so 128 would have allowed
+  only ~5 real nesting levels — too easy for ordinary nested function calls
+  like `f[g[h[x]]]` to trip. `200` was derived empirically instead: a
+  throwaway, isolated subprocess binary-searched, on a default ~2 MiB stack
+  worker thread, for the largest `with_max_depth` value that still returns a
+  clean error instead of overflowing (found: safe at 275, crashing at 278).
+  See the `MAX_RULE_DEPTH` doc comment in `src/lib.rs` for the full
+  derivation.
+- Added 3 regression tests exercising the guard on the real Wolfram grammar:
+  a big-stack deep-nesting test, a default-stack deep-nesting test (proving
+  the cap trips before the native stack would overflow), and a boundary test
+  proving legitimate nesting up to 8 levels still parses while 9 trips the
+  cap.
+
 ## [0.4.0] — 2026-06-25
 
 ### Added (W-21 — pattern operator grammar)
