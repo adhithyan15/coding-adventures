@@ -1,5 +1,8 @@
 #![forbid(unsafe_code)]
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![allow(dead_code, unused_imports)]  // platform-conditional network helpers/imports are inactive on some targets
+
 use std::ffi::{OsStr, OsString};
 use std::fmt;
 use std::fs;

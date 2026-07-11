@@ -73,6 +73,9 @@
 // without pulling in the Apple-only FFI surface. At runtime on
 // non-Apple the panic makes the unsupported path loud.
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 pub const VERSION: &str = "0.2.0";
 
 pub use paint_instructions::PixelContainer;

@@ -386,13 +386,16 @@ jobs:
 
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true'
-        # PINNED, on purpose. The build tool's -clippy gate lints every affected
-        # Rust package with `-D warnings`, and clippy adds/tightens lints on every
-        # stable release — so an unpinned `@stable` would spontaneously turn `main`
-        # red on a new Rust release with zero code change. Pin the toolchain so the
-        # gate is deterministic; bumping it is a deliberate action (update this
-        # version, run `cargo clippy --fix` + resolve the new lints in the same PR).
-        uses: dtolnay/rust-toolchain@1.97.0
+        # Uses the `stable` channel (matching the rest of this repo's Rust CI).
+        # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
+        # release, so a new Rust release can surface new lints on `main` — treat
+        # that as normal maintenance (run `cargo clippy --fix` + resolve). Pinning
+        # to a specific version was tried but broke BUILDs that invoke
+        # `rustup run stable` / `rustup target add` (wasm + embedded firmware),
+        # because a version-pinned default toolchain is not the `stable` alias
+        # those scripts expect. Reproduce CI's clippy locally with the *current*
+        # stable (`rustup update stable`), not a stale cached toolchain.
+        uses: dtolnay/rust-toolchain@stable
         with:
           # dtolnay/rust-toolchain installs the minimal profile, which omits
           # clippy; the -clippy gate needs it, so request it explicitly.

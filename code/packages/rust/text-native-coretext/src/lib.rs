@@ -38,6 +38,9 @@
 //! targets the module compiles as an empty shell so downstream wrapper
 //! crates can reference it unconditionally.
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 use text_interfaces::{
     Direction, FontMetrics, FontQuery, FontResolutionError, FontResolver, Glyph, ShapeOptions,
     ShapedRun, ShapedText, ShapingError, TextShaper,

@@ -16,6 +16,9 @@
 //!   -> paint-codec-png
 //! ```
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(clippy::let_unit_value))]
+
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
