@@ -78,7 +78,9 @@ methods `each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
 `find`/`any?`/`all?`/`none?`/`count`/`sort_by`/`min_by`/`max_by` and Enumerable
 breadth `group_by`/`partition`/`flat_map`/`collect_concat`/`reduce`/`inject`/`sum`
 (all yielding the `[k, v]` pair; `reduce`/`inject` use Ruby's `(memo, pair)`
-convention)/…); and (item **M1c**) the
+convention), and `to_h` (block + no-block)/`each_with_index`/`each_with_object`
+(the last two yield the `[k, v]` pair as a single argument alongside the
+index/memo)/…); and (item **M1c**) the
 **`String`** catalog (`length`,
 `upcase`/`downcase`/`capitalize`, `reverse`, `strip`/`lstrip`/`rstrip`, `chomp`,
 `chars`/`bytes`, `split`, `include?`/`start_with?`/`end_with?`/`index`, `replace`,

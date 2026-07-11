@@ -2,6 +2,28 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.21] - 2026-07-11
+
+### Added
+
+- **`Hash#to_h`, `Hash#each_with_index`, `Hash#each_with_object`** — the FINAL
+  backend of this cross-backend batch (Python reference #8009, then Go #8015 /
+  Rust #8020 / JS #8024), rounding out Hash's Enumerable iteration surface.
+  - `to_h` **without** a block (`hashMethod` + `HASH_METHODS`) → a shallow copy
+    of the hash (`new Map(recv)`, so mutating it does not alias the receiver).
+  - `to_h { |k, v| [new_k, new_v] }` (`hashBlockMethod` + `HASH_BLOCK_METHODS`)
+    → a NEW hash from the block-returned `[k, v]` pairs; the block is yielded the
+    two args `(k, v)`; a non-pair result (checked `Array.isArray` + length 2) is
+    skipped, and colliding new keys keep the LAST pair (Ruby's rule).
+  - `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+    0-based index, returns the receiver.
+  - `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair
+    with the memo, returns the memo; with no memo argument the receiver is
+    returned unchanged.
+  - Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object`
+    pass the element as a single `[k, v]` Array (the second block param is the
+    index/memo), matching Ruby's Enumerable convention.
+
 ## [0.1.20] - 2026-07-11
 
 ### Added
