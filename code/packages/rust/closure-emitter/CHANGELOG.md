@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.41.0] - 2026-07-11
+
+### Added — CLOC12.177 PR1: emit private class-member names (`#x`)
+
+`javascript-ast` 0.36.0 added `PropertyKey::PrivateName`. `emit_property_key`
+gains a `PrivateName` arm that prints `#` followed by the stored bare name — so a
+private field (`class C{#x=1;}`), a bare private field (`class C{#x;}`), a static
+private field (`class C{static #x=1;}`), and a private method (`class C{#m(){}}`)
+all print correctly. No quote/shorten logic applies (a private name is a hard
+token boundary, unlike a string key). 5 emit tests. MINOR.
+
 ## [0.40.1] - 2026-07-11
 
 ### Added — CLOC12.176 PR3: CodePrinter static-block conformance port

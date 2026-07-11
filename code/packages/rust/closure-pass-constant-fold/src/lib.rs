@@ -722,6 +722,10 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                         key: match &p.key {
                             // Identifier / literal keys: pass through.
                             PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                            // A private name (`#x`) is only legal as a class-member
+                            // key, never in an object literal — but the match must
+                            // stay exhaustive, so pass it through unchanged.
+                            PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
                             PropertyKey::NumericLiteral(n) => PropertyKey::NumericLiteral(n.clone()),
                             PropertyKey::Expression(e) => {
@@ -5117,6 +5121,10 @@ fn fold_object_entries_pairs(properties: &[ObjectMember]) -> Option<Vec<Expressi
             PropertyKey::StringLiteral(s) => s.value.clone(),
             PropertyKey::NumericLiteral(n) => format_js_number(n.value),
             PropertyKey::Expression(_) => return None, // computed
+            // A private name is not a public property key — an object literal
+            // can never hold one, and `Object.keys/entries` would not enumerate
+            // it — so decline the fold (same as a computed key).
+            PropertyKey::PrivateName(_) => return None,
         };
         // A non-computed `{__proto__: v}` is the §B.3.1 prototype setter, not an
         // own property, so `Object.entries` would not enumerate it — decline.
@@ -5194,6 +5202,10 @@ fn fold_object_keys_names(properties: &[ObjectMember]) -> Option<Vec<Expression>
             PropertyKey::StringLiteral(s) => s.value.clone(),
             PropertyKey::NumericLiteral(n) => format_js_number(n.value),
             PropertyKey::Expression(_) => return None, // computed
+            // A private name is not a public property key — an object literal
+            // can never hold one, and `Object.keys/entries` would not enumerate
+            // it — so decline the fold (same as a computed key).
+            PropertyKey::PrivateName(_) => return None,
         };
         // NOTE (previously: a `contains('\\')` decline guarded against escapes).
         // A `PropertyKey::StringLiteral`'s `value` now holds the DECODED property

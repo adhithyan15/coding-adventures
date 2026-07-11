@@ -1093,6 +1093,10 @@ fn walk_property(
                 });
             }
             PropertyKey::StringLiteral(_) | PropertyKey::NumericLiteral(_) => {}
+            // A private name (`#x`) is not an identifier *reference* — it names a
+            // slot in the class's private brand, resolved lexically at parse
+            // time, never through scope. It binds and references nothing here.
+            PropertyKey::PrivateName(_) => {}
             PropertyKey::Expression(e) => walk_expression(e, ctx, analysis, pending),
         }
     }
