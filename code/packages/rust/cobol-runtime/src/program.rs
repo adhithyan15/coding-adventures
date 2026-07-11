@@ -387,7 +387,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 .any(|(k, v)| k == "KEYWORD" && v == "ROUNDED");
             let expr_node = child_node(verb, "arith_expr")
                 .ok_or_else(|| RuntimeError::Unsupported("COMPUTE without an expression".into()))?;
-            let expr = read_arith_expr(expr_node)?;
+            let expr = read_arith_expr_bounded(expr_node)?;
             let on_size_error = match child_node(verb, "size_error") {
                 Some(se) => child_nodes(se, "statement")
                     .into_iter()
@@ -466,38 +466,59 @@ fn read_condition(cond: &GrammarASTNode) -> Result<Cond, RuntimeError> {
 // left-to-right (left-associative); `**` folds right-to-left (COBOL's
 // right-associative exponentiation). A single operand with no operator collapses
 // to the operand itself, so `COMPUTE X = A` carries no spurious tree nodes.
+//
+// DoS bound: the grammar's `{ … }` repetition is *flat* (no rule recursion), so
+// the parser's recursion-depth cap does NOT limit how *wide* a chain can be —
+// `A + A + … + A` with N terms is one node with 2N−1 children at bounded parse
+// depth. Folding that yields an N-deep `Expr` tree, and both `eval_expr` and the
+// recursive `Drop` of `Box<Expr>` would then overflow the native stack. So a
+// single [`MAX_EXPR_OPERANDS`] budget is threaded through the whole expression
+// (counting every primary, across parenthesised levels too); exhausting it is a
+// clean `RuntimeError`, which keeps the folded tree — hence the eval/Drop
+// recursion depth — bounded.
+
+/// Largest number of primaries (`NUMBER`/`NAME`/parenthesised group) a single
+/// `COMPUTE` expression may contain. Real expressions have a handful; the cap is
+/// only a native-stack backstop against a hostile flat chain.
+const MAX_EXPR_OPERANDS: usize = 1024;
+
+/// Read a `COMPUTE` expression, bounding its size against a stack-overflow DoS.
+fn read_arith_expr_bounded(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
+    let mut budget = MAX_EXPR_OPERANDS;
+    read_arith_expr(node, &mut budget)
+}
 
 /// `arith_expr = arith_term { ( "+" | "-" ) arith_term }` — additive, left-assoc.
-fn read_arith_expr(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
+fn read_arith_expr(node: &GrammarASTNode, budget: &mut usize) -> Result<Expr, RuntimeError> {
     read_binary_chain(node, read_arith_term, |t| match t {
         "PLUS" => Some(ArithOp::Add),
         "MINUS" => Some(ArithOp::Sub),
         _ => None,
-    })
+    }, budget)
 }
 
 /// `arith_term = arith_factor { ( "*" | "/" ) arith_factor }` — multiplicative.
-fn read_arith_term(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
+fn read_arith_term(node: &GrammarASTNode, budget: &mut usize) -> Result<Expr, RuntimeError> {
     read_binary_chain(node, read_arith_factor, |t| match t {
         "STAR" => Some(ArithOp::Mul),
         "SLASH" => Some(ArithOp::Div),
         _ => None,
-    })
+    }, budget)
 }
 
 /// `arith_factor = arith_unary { "**" arith_unary }` — exponentiation, folded
 /// right-associatively so `A ** B ** C` = `A ** (B ** C)`.
-fn read_arith_factor(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
+fn read_arith_factor(node: &GrammarASTNode, budget: &mut usize) -> Result<Expr, RuntimeError> {
     let units = child_nodes(node, "arith_unary");
     let mut rev = units.iter().rev();
     let last = rev
         .next()
         .ok_or_else(|| RuntimeError::Unsupported("empty arithmetic factor".into()))?;
-    let mut expr = read_arith_unary(last)?;
+    let mut expr = read_arith_unary(last, budget)?;
     for u in rev {
         expr = Expr::Binary {
             op: ArithOp::Pow,
-            left: Box::new(read_arith_unary(u)?),
+            left: Box::new(read_arith_unary(u, budget)?),
             right: Box::new(expr),
         };
     }
@@ -506,19 +527,23 @@ fn read_arith_factor(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
 
 /// `arith_unary = [ "+" | "-" ] arith_primary` — a leading minus negates; a
 /// leading plus is a no-op.
-fn read_arith_unary(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
+fn read_arith_unary(node: &GrammarASTNode, budget: &mut usize) -> Result<Expr, RuntimeError> {
     let neg = child_tokens(node).iter().any(|(k, _)| k == "MINUS");
     let prim = child_node(node, "arith_primary")
         .ok_or_else(|| RuntimeError::Unsupported("unary operator without an operand".into()))?;
-    let e = read_arith_primary(prim)?;
+    let e = read_arith_primary(prim, budget)?;
     Ok(if neg { Expr::Unary { neg: true, operand: Box::new(e) } } else { e })
 }
 
-/// `arith_primary = NUMBER | NAME | "(" arith_expr ")"`.
-fn read_arith_primary(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
+/// `arith_primary = NUMBER | NAME | "(" arith_expr ")"`. Charges one unit of the
+/// expression's operand budget.
+fn read_arith_primary(node: &GrammarASTNode, budget: &mut usize) -> Result<Expr, RuntimeError> {
+    *budget = budget
+        .checked_sub(1)
+        .ok_or_else(|| RuntimeError::Unsupported("COMPUTE expression too large".into()))?;
     // A parenthesised sub-expression recurses back to the top of the cascade.
     if let Some(inner) = child_node(node, "arith_expr") {
-        return read_arith_expr(inner);
+        return read_arith_expr(inner, budget);
     }
     for (k, v) in child_tokens(node) {
         match k.as_str() {
@@ -532,18 +557,20 @@ fn read_arith_primary(node: &GrammarASTNode) -> Result<Expr, RuntimeError> {
 
 /// Fold a `head { op tail }` node into a left-associative binary tree. `sub`
 /// reads each operand node; `map_op` maps an operator token's type name to an
-/// [`ArithOp`] (returning `None` for tokens that are not operators).
+/// [`ArithOp`] (returning `None` for tokens that are not operators). `budget`
+/// bounds the total operand count (see [`MAX_EXPR_OPERANDS`]).
 fn read_binary_chain(
     node: &GrammarASTNode,
-    sub: fn(&GrammarASTNode) -> Result<Expr, RuntimeError>,
+    sub: fn(&GrammarASTNode, &mut usize) -> Result<Expr, RuntimeError>,
     map_op: fn(&str) -> Option<ArithOp>,
+    budget: &mut usize,
 ) -> Result<Expr, RuntimeError> {
     let mut expr: Option<Expr> = None;
     let mut pending: Option<ArithOp> = None;
     for child in &node.children {
         match child {
             ASTNodeOrToken::Node(n) => {
-                let operand = sub(n)?;
+                let operand = sub(n, budget)?;
                 expr = Some(match (expr.take(), pending.take()) {
                     (Some(left), Some(op)) => Expr::Binary {
                         op,

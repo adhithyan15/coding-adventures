@@ -544,6 +544,36 @@ mod tests {
         assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
     }
 
+    #[test]
+    fn compute_huge_flat_operator_chain_errors_not_overflows() {
+        // A flat `A + A + A + …` chain uses grammar repetition, so the parser's
+        // recursion-depth cap does not bound its *width*. Folding it builds a
+        // tree that deep, which would overflow the native stack in eval (and in
+        // the recursive Drop). The operand budget turns it into a clean error
+        // instead. 5000 terms is far past MAX_EXPR_OPERANDS (1024). Split across
+        // cards so the 80-column format doesn't truncate the expression.
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            "01  A  PIC 9(3) VALUE 1.".to_string(),
+            "01  R  PIC 9(9) VALUE 0.".to_string(),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+            "    COMPUTE R = A".to_string(),
+        ];
+        for _ in 0..5000 {
+            lines.push("        + A".to_string());
+        }
+        lines.push("        .".to_string());
+        lines.push("    STOP RUN.".to_string());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        let err = run_cobol(&program(&refs)).unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("too large"), "message should explain: {err}");
+    }
+
     // ----------------------------------------------------------------------
     // Honest failure: unmodelled features error, they do not run wrong.
     // ----------------------------------------------------------------------
