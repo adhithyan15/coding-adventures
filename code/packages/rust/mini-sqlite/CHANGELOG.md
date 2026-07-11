@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.8 — CONCAT / CONCAT_WS / SUBSTRING string functions
+
+Grows the SQL scalar surface (sql-vm 0.4.4): `CONCAT(x, …)` joins all arguments
+(NULL → empty string), `CONCAT_WS(sep, …)` joins with a separator (skipping NULL
+values, NULL separator → NULL), and `SUBSTRING` is accepted as a spelling of
+`SUBSTR`. Previously all three errored as unknown built-ins. Five new
+differential-oracle cases (`concat`, `concat_ws`, `concat_ws_null_sep`,
+`substring_alias`) diff against real bundled SQLite. Integer/boolean arguments
+coerce to text; Float/Blob are declined (matching the HEX/QUOTE convention — a
+SQLite-exact float-to-text formatter is a separate future step).
+
 ## 0.5.7 — Read `WITHOUT ROWID` tables from real .sqlite files
 
 Querying a `WITHOUT ROWID` table in a real `.sqlite` file now works through the
