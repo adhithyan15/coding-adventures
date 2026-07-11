@@ -1089,6 +1089,18 @@ impl Compiler {
                 self.compile_inner(input);
             }
 
+            // ── Join: thread the projection through the join's inner loop so
+            //    qualified columns resolve against the correct cursor. ─────────
+            OptimizedPlan::Join {
+                left,
+                right,
+                kind,
+                condition,
+            } => {
+                let cols = columns.to_vec();
+                self.compile_join_projected(left, right, kind, condition, &cols);
+            }
+
             // ── All other inputs (plain Scan, etc.): standard scan loop ──────
             _ => {
                 let cols = columns.to_vec();
@@ -1521,6 +1533,106 @@ impl Compiler {
 
         // Emit matched row.
         self.emit(Instruction::BeginRow);
+        self.emit(Instruction::EmitRow);
+
+        if has_condition {
+            self.emit(Instruction::Label(cond_skip));
+        }
+
+        self.emit(Instruction::Jump(inner_loop));
+        self.emit(Instruction::Label(inner_end));
+        self.emit(Instruction::CloseScan(inner_alias));
+
+        self.emit(Instruction::Jump(outer_loop));
+        self.emit(Instruction::Label(outer_end));
+        self.emit(Instruction::CloseScan(outer_alias));
+    }
+
+    /// Compile a nested-loop join of `left` and `right` **with a projection**:
+    /// the `columns` are evaluated and emitted *inside* the inner loop, once per
+    /// matched pair. This is the path a real `SELECT … FROM a JOIN b` takes
+    /// (the planner always wraps a join in a `Project`).
+    ///
+    /// ## Why this exists separately from [`compile_join`]
+    ///
+    /// Two problems had to be fixed together for qualified columns to resolve:
+    ///
+    /// 1. **Cursor keys must be distinct and match the column qualifiers.** A
+    ///    `FROM a` with no `AS` alias would otherwise open its cursor under the
+    ///    `None` key — and so would `FROM b`, so the two collided and *both*
+    ///    `a.x` and `b.y` read from whichever advanced last (resolving to NULL).
+    ///    Here each side is keyed by its **effective alias** — the explicit alias
+    ///    if given, else the table name — which is exactly what a `LoadColumn`
+    ///    qualifier (`a.x` → `LoadColumn(Some("a"), "x")`) looks up. Now the `ON`
+    ///    condition *and* the projected columns resolve against the right row.
+    /// 2. **The projection must run inside the loop.** Emitting the output
+    ///    columns after the join loop closed (the old `compile_scan_loop`
+    ///    fallback) evaluated them with no live cursor, producing a single
+    ///    all-NULL row. They belong in the per-pair body.
+    fn compile_join_projected(
+        &mut self,
+        left: &OptimizedPlan,
+        right: &OptimizedPlan,
+        kind: &JoinKind,
+        condition: &Option<SqlExpr>,
+        columns: &[OutputColumn],
+    ) {
+        // As in `compile_join`, only INNER joins evaluate the `ON` condition for
+        // now; outer joins still degrade to a cross product (tracked separately
+        // in the conformance ledger) — but their columns now resolve correctly.
+        let has_condition = condition.is_some() && *kind == JoinKind::Inner;
+
+        let outer_loop = self.fresh_label("joinp_outer_loop");
+        let outer_end = self.fresh_label("joinp_outer_end");
+        let inner_loop = self.fresh_label("joinp_inner_loop");
+        let inner_end = self.fresh_label("joinp_inner_end");
+        let cond_skip = if has_condition {
+            self.fresh_label("joinp_cond_skip")
+        } else {
+            String::new()
+        };
+
+        // Effective alias = explicit alias, else the table name. This is the key
+        // both the cursor and the column qualifiers agree on.
+        let (outer_table, outer_alias_opt) = extract_scan_info(left);
+        let outer_alias = Some(outer_alias_opt.unwrap_or_else(|| outer_table.clone()));
+        let (inner_table, inner_alias_opt) = extract_scan_info(right);
+        let inner_alias = Some(inner_alias_opt.unwrap_or_else(|| inner_table.clone()));
+
+        // Outer scan.
+        self.emit(Instruction::OpenScan(outer_table, outer_alias.clone()));
+        self.emit(Instruction::Label(outer_loop.clone()));
+        self.emit(Instruction::AdvanceCursor(outer_alias.clone()));
+        self.emit(Instruction::JumpIfExhausted(
+            outer_alias.clone(),
+            outer_end.clone(),
+        ));
+
+        // Inner scan (re-opened per outer row).
+        self.emit(Instruction::OpenScan(inner_table, inner_alias.clone()));
+        self.emit(Instruction::Label(inner_loop.clone()));
+        self.emit(Instruction::AdvanceCursor(inner_alias.clone()));
+        self.emit(Instruction::JumpIfExhausted(
+            inner_alias.clone(),
+            inner_end.clone(),
+        ));
+
+        // Optional join condition (both cursors are live here, correctly keyed).
+        if let Some(cond) = condition {
+            if has_condition {
+                self.compile_expr(cond);
+                self.emit(Instruction::JumpIfFalse(cond_skip.clone()));
+            }
+        }
+
+        // Project the matched pair: evaluate each output column against the two
+        // live cursors and emit the row.
+        self.emit(Instruction::BeginRow);
+        for col in columns {
+            self.compile_expr(&col.expr);
+            let name = output_column_name(col);
+            self.emit(Instruction::EmitColumn(name));
+        }
         self.emit(Instruction::EmitRow);
 
         if has_condition {

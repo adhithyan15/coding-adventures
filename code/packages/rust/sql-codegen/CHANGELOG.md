@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0] - Unreleased
+
+### Fixed
+
+- **Qualified columns across a join now resolve correctly.** `SELECT a.name,
+  b.tag FROM a JOIN b ON a.id = b.aid` previously returned a single all-`NULL`
+  row: a `FROM a`/`FROM b` with no `AS` alias opened both cursors under the same
+  `None` key (so they collided and every `a.x`/`b.y` read whichever advanced
+  last), and the projection was emitted *after* the join loop with no live
+  cursor. New `compile_join_projected` keys each side by its **effective alias**
+  (explicit alias, else table name — exactly what a `LoadColumn` qualifier looks
+  up) and emits the projected columns *inside* the inner loop, so both the `ON`
+  condition and the output columns resolve against the right row. `Project(Join)`
+  now routes through this path. Verified against real SQLite by the mini-sqlite
+  differential-conformance oracle (the `inner_join` case, previously a ledger
+  divergence, now matches). Outer joins still degrade to a cross product (tracked
+  separately); their columns now resolve correctly too.
+
 ## [0.1.0] - 2026-07-01
 
 ### Added
