@@ -529,6 +529,9 @@ fn expr_node_count(expr: &Expression) -> usize {
                         ClassMember::Field(fd) => {
                             fd.value.as_ref().map_or(0, |v| expr_node_count(v))
                         }
+                        // A static-init block weighs one unit per body statement,
+                        // the same size heuristic a function body uses.
+                        ClassMember::StaticBlock(b) => b.body.len(),
                     })
                     .sum::<usize>()
         }
@@ -681,19 +684,29 @@ fn count_decl_names_decl(
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
-                // A field declares no statement-scope name — its key is a
-                // property name, not a binding, and its initializer introduces
-                // no declarations. Only a method contributes params + locals.
-                let m = match member {
-                    ClassMember::Method(m) => m,
-                    ClassMember::Field(_) => continue,
-                };
-                for p in &m.value.params {
-                    let FunctionParam::Identifier(id) = p;
-                    *out.entry(id.name.clone()).or_insert(0) += 1;
-                }
-                for s in &m.value.body.body {
-                    count_decl_names_stmt(s, out, nodes_touched);
+                match member {
+                    // A method contributes its params + body-declared locals.
+                    ClassMember::Method(m) => {
+                        for p in &m.value.params {
+                            let FunctionParam::Identifier(id) = p;
+                            *out.entry(id.name.clone()).or_insert(0) += 1;
+                        }
+                        for s in &m.value.body.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
+                    // A field declares no statement-scope name — its key is a
+                    // property name, not a binding, and its initializer
+                    // introduces no declarations.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's inner statements declare their own
+                    // locals — count them conservatively (mirroring the method
+                    // body) so inline-collision detection stays sound.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            count_decl_names_stmt(s, out, nodes_touched);
+                        }
+                    }
                 }
             }
         }
@@ -973,6 +986,16 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             collect_binding_idents_expr(v, out);
                         }
                     }
+                    // A static-init block's statements run at construction; over-
+                    // collect every identifier they touch (via the broader
+                    // `collect_used_idents_stmt`) so an inline never captures or
+                    // collides with a static-block-local binding. Over-collecting
+                    // into this avoid-set only makes the pass more conservative.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_used_idents_stmt(s, out);
+                        }
+                    }
                 }
             }
         }
@@ -1068,6 +1091,13 @@ fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
                         }
                         if let Some(v) = &f.value {
                             tally_expr(v, cand, t);
+                        }
+                    }
+                    // SOUNDNESS: a candidate use inside a static-init block's
+                    // statements is a real use — they run at class construction.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            tally_stmt(s, cand, t);
                         }
                     }
                 }
@@ -1365,6 +1395,13 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
                             tally_expr(v, cand, t);
                         }
                     }
+                    // SOUNDNESS: candidate uses inside a static-init block's
+                    // statements count too — mirror `tally_decl`'s arm.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            tally_stmt(s, cand, t);
+                        }
+                    }
                 }
             }
         }
@@ -1471,6 +1508,13 @@ fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
                         }
                         if let Some(v) = &mut f.value {
                             changed |= inline_in_expr(v, cand);
+                        }
+                    }
+                    // Lockstep with `tally`: substitute inside the static-init
+                    // block's statements, the same positions that arm counted.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= inline_in_stmt(s, cand);
                         }
                     }
                 }
@@ -1775,6 +1819,13 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                             changed |= inline_in_expr(v, cand);
                         }
                     }
+                    // Lockstep with `tally`: substitute inside the static-init
+                    // block's statements, the same positions that arm counted.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            changed |= inline_in_stmt(s, cand);
+                        }
+                    }
                 }
             }
         }
@@ -2008,6 +2059,14 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                         }
                         if let Some(v) = &mut f.value {
                             substitute(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at construction with
+                    // the class's own name in scope (no method params) —
+                    // substitute through them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            substitute_in_stmt(s, &class_inner);
                         }
                     }
                 }
@@ -2466,6 +2525,14 @@ fn expr_collect_mutated_params(
                         }
                         if let Some(v) = &f.value {
                             expr_collect_mutated_params(v, params, out);
+                        }
+                    }
+                    // A static-init block's statements can mutate an outer param
+                    // — recurse. Over-detection only makes the pass decline to
+                    // inline, never wrong.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            stmt_collect_mutated_params(s, params, out);
                         }
                     }
                 }
@@ -2976,15 +3043,26 @@ fn splice_void_in_decl(
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
-                // Only a method body is a `Vec<Statement>`. A field's
-                // initializer is an expression (a value position), so a void
-                // statement cannot be spliced there — declined by this slice.
-                let m = match member {
-                    ClassMember::Method(m) => m,
-                    ClassMember::Field(_) => continue,
-                };
-                changed |=
-                    splice_void_in_stmt_vec(&mut m.value.body.body, cand, avoid, nodes_touched);
+                match member {
+                    // A method body is a `Vec<Statement>` a void call may live in.
+                    ClassMember::Method(m) => {
+                        changed |= splice_void_in_stmt_vec(
+                            &mut m.value.body.body,
+                            cand,
+                            avoid,
+                            nodes_touched,
+                        );
+                    }
+                    // A field's initializer is an expression (a value position),
+                    // so a void statement cannot be spliced there.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's body IS a `Vec<Statement>` — splice
+                    // into it like a method body.
+                    ClassMember::StaticBlock(b) => {
+                        changed |=
+                            splice_void_in_stmt_vec(&mut b.body, cand, avoid, nodes_touched);
+                    }
+                }
             }
             changed
         }
@@ -3818,15 +3896,26 @@ fn splice_valued_in_decl(
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
-                // Only a method body is a `Vec<Statement>`. A field's
-                // initializer is a value position — a valued call cannot be
-                // spliced there.
-                let m = match member {
-                    ClassMember::Method(m) => m,
-                    ClassMember::Field(_) => continue,
-                };
-                changed |=
-                    splice_valued_in_stmt_vec(&mut m.value.body.body, cand, avoid, nodes_touched);
+                match member {
+                    // A method body is a `Vec<Statement>` a valued call may live in.
+                    ClassMember::Method(m) => {
+                        changed |= splice_valued_in_stmt_vec(
+                            &mut m.value.body.body,
+                            cand,
+                            avoid,
+                            nodes_touched,
+                        );
+                    }
+                    // A field's initializer is a value position — a valued call
+                    // cannot be spliced there.
+                    ClassMember::Field(_) => {}
+                    // A static-init block's body IS a `Vec<Statement>` — splice
+                    // into it like a method body.
+                    ClassMember::StaticBlock(b) => {
+                        changed |=
+                            splice_valued_in_stmt_vec(&mut b.body, cand, avoid, nodes_touched);
+                    }
+                }
             }
             changed
         }
@@ -4064,6 +4153,14 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                             rename_in_expr(v, &class_inner);
                         }
                     }
+                    // A static-init block's statements are alpha-renamed with
+                    // `class_inner` (the class's own name in scope, no method
+                    // params).
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rename_in_stmt(s, &class_inner);
+                        }
+                    }
                 }
             }
         }
@@ -4192,6 +4289,14 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                         }
                         if let Some(v) = &f.value {
                             collect_binding_idents_expr(v, out);
+                        }
+                    }
+                    // Over-collect identifiers referenced in the static-init
+                    // block's statements, so an inline never mints a fresh name
+                    // that collides with one used there.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_used_idents_stmt(s, out);
                         }
                     }
                 }

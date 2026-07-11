@@ -1425,6 +1425,13 @@ fn fold_class_body(
                 computed: fd.computed,
                 is_static: fd.is_static,
             }),
+            // A static-init block folds control flow inside its statements (they
+            // run at class-definition time) and is its own `var`-hoisting scope,
+            // so it folds + hoists exactly like a method body.
+            ClassMember::StaticBlock(b) => {
+                let folded = fold_block_statement(b, st);
+                ClassMember::StaticBlock(hoist_function_body_vars(&folded, st))
+            }
         })
         .collect();
     (super_class, body)

@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.40.0] - 2026-07-11
+
+### Added — CLOC12.176 PR1: emit static initialization blocks
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). The shared `emit_class_tail` member loop gains a `StaticBlock` arm calling the new
+`emit_static_block`, which prints `static{<statements>}` — the `static` keyword
+abutting the `{` (a hard token boundary), the body via the shared
+`emit_block_statement`, and no trailing `;` (brace-terminated like a method). 4
+emit tests (`static{}`, `static{x}`, `static{x;y}`, field/block/method interleave).
+
 ## [0.39.1] - 2026-07-11
 
 ### Added — CLOC12.175 PR3: CodePrinter class-field conformance port

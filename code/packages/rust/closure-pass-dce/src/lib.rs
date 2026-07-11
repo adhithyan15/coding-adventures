@@ -1182,6 +1182,10 @@ fn dce_class_declaration(c: &ClassDeclaration, st: &mut DceState) -> ClassDeclar
                     computed: fd.computed,
                     is_static: fd.is_static,
                 }),
+                // A static-init block runs DCE inside each of its statements
+                // (they run at class-definition time) — mirroring the method
+                // body. No key, no binding name; only the statement list recurses.
+                ClassMember::StaticBlock(b) => ClassMember::StaticBlock(dce_block_statement(b, st)),
             })
             .collect(),
     }
@@ -1247,6 +1251,10 @@ fn dce_class(c: &ClassExpression, st: &mut DceState) -> Expression {
                     computed: fd.computed,
                     is_static: fd.is_static,
                 }),
+                // A static-init block runs DCE inside each of its statements
+                // (they run at class-definition time) — mirroring the method
+                // body. No key, no binding name; only the statement list recurses.
+                ClassMember::StaticBlock(b) => ClassMember::StaticBlock(dce_block_statement(b, st)),
             })
             .collect(),
     })

@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.20.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added a `StaticBlock` arm that folds + `var`-hoists the block (a static block is its own hoisting scope), exactly like a method body.
+
 ## [0.20.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: fold class-field initializers

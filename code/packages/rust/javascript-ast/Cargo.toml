@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-javascript-ast"
-version = "0.34.0"
+version = "0.35.0"
 edition = "2021"
 description = "Backend-agnostic JavaScript AST — full ESTree-compatible node taxonomy with optional per-node CV id. Reusable by the Closure-Compiler-clone and the future V8-in-Rust clone. Per CLOC02 / CLOC09."
 
