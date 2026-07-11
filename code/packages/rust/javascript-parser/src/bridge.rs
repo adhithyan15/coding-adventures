@@ -49,7 +49,7 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use coding_adventures_javascript_ast::{
     declaration::{
-        BindingTarget, Declaration, FunctionDeclaration, FunctionParam, VarKind,
+        BindingTarget, ClassDeclaration, Declaration, FunctionDeclaration, FunctionParam, VarKind,
         VariableDeclaration, VariableDeclarator,
     },
     expression::{
@@ -241,6 +241,23 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
         "function_declaration" | "generator_declaration" => {
             let decl = convert_function_declaration(child)?;
             Ok(ProgramItem::Declaration(Declaration::FunctionDeclaration(decl)))
+        }
+        // A class *declaration* (`class C { … }`) — CLOC12.174 PR2. The grammar
+        // wraps it in `decorated_class_declaration` (the outer rule that would
+        // also carry `@decorator`s); the bare `class_declaration` alternative is
+        // handled too for robustness. A decorated form with actual decorators
+        // carries extra child nodes this slice does not model, so it DECLINES
+        // (safe WHITESPACE_ONLY fallback).
+        "decorated_class_declaration" => match node_children(child).as_slice() {
+            [cd] if cd.rule_name == "class_declaration" => {
+                let decl = convert_class_declaration(cd)?;
+                Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
+            }
+            _ => Err(unsupported(child)),
+        },
+        "class_declaration" => {
+            let decl = convert_class_declaration(child)?;
+            Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
         }
         "statement" => {
             let stmt = convert_statement(child)?;
@@ -1097,6 +1114,72 @@ fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, Br
     }
 
     Ok(ClassExpression { cv: None, id, super_class, body })
+}
+
+/// Convert a `class_declaration` grammar node into a [`ClassDeclaration`] — the
+/// **statement** form (`class C { … }`), CLOC12.174 PR2.
+///
+/// The parse-tree shape (confirmed by dumping the grammar parser's output — see
+/// the throwaway probe removed with this PR) is the *same flat child list* as
+/// `class_expression`, with **one difference: the name is required**:
+///
+/// ```text
+///   class_declaration = [ Token("class"),
+///                         Token(NAME),          // REQUIRED — a declaration binds a name
+///                         Node(class_heritage)?,
+///                         Node(class_body) ]
+/// ```
+///
+/// (At the `source_element` level this node is wrapped in
+/// `decorated_class_declaration`, unwrapped by [`convert_source_element`].)
+/// Heritage and body are byte-identical to the expression form, so this reuses
+/// [`convert_class_heritage`] and [`convert_class_element`] unchanged — only the
+/// name handling differs: a missing name is not a valid declaration, so it
+/// DECLINES (safe WHITESPACE_ONLY fallback) rather than fabricating an empty id.
+fn convert_class_declaration(node: &GrammarASTNode) -> Result<ClassDeclaration, BridgeError> {
+    // Name: the required class name — the single direct-child token that is not
+    // the `class` keyword. Unlike `class_expression` (optional id), a *missing*
+    // name here DECLINES: a class declaration with no name is not valid syntax
+    // this slice represents.
+    let id = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.value != "class" => Some(t.value.clone()),
+            _ => None,
+        })
+        .map(|name| Identifier { cv: None, name })
+        .ok_or_else(|| unsupported(node))?;
+
+    // Heritage (`extends <operand>`), if present — same converter as the
+    // expression form.
+    let mut super_class: Option<Box<Expression>> = None;
+    if let Some(heritage) = node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Node(n) if n.rule_name == "class_heritage" => Some(n),
+        _ => None,
+    }) {
+        super_class = Some(Box::new(convert_class_heritage(heritage)?));
+    }
+
+    // Body: iterate `class_element` children of the `class_body` node — same
+    // converter as the expression form.
+    let body_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "class_body" => Some(n),
+            _ => None,
+        })
+        .ok_or_else(|| internal(node, "class_declaration: missing class_body"))?;
+
+    let mut body = Vec::new();
+    for el in node_children(body_node) {
+        if el.rule_name == "class_element" {
+            body.push(convert_class_element(el)?);
+        }
+    }
+
+    Ok(ClassDeclaration { cv: None, id, super_class, body })
 }
 
 /// Convert a `class_heritage` (`extends <operand>`) node into the super-class
@@ -3549,6 +3632,111 @@ mod tests {
     fn class_async_method_declines() {
         assert!(matches!(
             bridge("x = class { async am(){} };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    // -----------------------------------------------------------------
+    // ClassDeclaration bridging (CLOC12.174 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the `ClassDeclaration` out of a top-level `class … { … }` statement.
+    fn class_decl_of(src: &str) -> ClassDeclaration {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Declaration(Declaration::ClassDeclaration(c)) => c.clone(),
+            other => panic!("expected a ClassDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_decl_empty() {
+        let c = class_decl_of("class C {}");
+        assert_eq!(c.id.name, "C");
+        assert!(c.super_class.is_none());
+        assert!(c.body.is_empty());
+    }
+
+    #[test]
+    fn class_decl_extends_identifier() {
+        let c = class_decl_of("class C extends B {}");
+        assert_eq!(c.id.name, "C");
+        match c.super_class.as_deref() {
+            Some(Expression::Identifier(id)) => assert_eq!(id.name, "B"),
+            other => panic!("expected Identifier super-class, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_decl_extends_member() {
+        // `extends ns.B` — heritage is a member expression (a node operand).
+        let c = class_decl_of("class C extends ns.B {}");
+        assert!(matches!(
+            c.super_class.as_deref(),
+            Some(Expression::MemberExpression(_))
+        ));
+    }
+
+    #[test]
+    fn class_decl_single_method() {
+        let c = class_decl_of("class C { m(){} }");
+        assert_eq!(c.body.len(), 1);
+        let ClassMember::Method(m) = &c.body[0];
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(!m.is_static);
+        match &m.key {
+            PropertyKey::Identifier(id) => assert_eq!(id.name, "m"),
+            other => panic!("expected identifier key, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_decl_static_method() {
+        let c = class_decl_of("class C { static m(){} }");
+        let ClassMember::Method(m) = &c.body[0];
+        assert!(m.is_static);
+    }
+
+    #[test]
+    fn class_decl_constructor() {
+        let c = class_decl_of("class C { constructor(){} }");
+        let ClassMember::Method(m) = &c.body[0];
+        assert!(matches!(m.kind, MethodKind::Constructor));
+    }
+
+    #[test]
+    fn class_decl_getter_setter() {
+        let g = class_decl_of("class C { get x(){} }");
+        let ClassMember::Method(gm) = &g.body[0];
+        assert!(matches!(gm.kind, MethodKind::Get));
+        let s = class_decl_of("class C { set x(v){} }");
+        let ClassMember::Method(sm) = &s.body[0];
+        assert!(matches!(sm.kind, MethodKind::Set));
+    }
+
+    #[test]
+    fn class_decl_full_shape() {
+        // `class C extends B { m(){} }` — name + heritage + one member together.
+        let c = class_decl_of("class C extends B { m(){} }");
+        assert_eq!(c.id.name, "C");
+        assert!(c.super_class.is_some());
+        assert_eq!(c.body.len(), 1);
+    }
+
+    #[test]
+    fn class_decl_generator_method_declines() {
+        // `*m(){}` is a generator method — a form this slice does not model, so
+        // the whole file DECLINES to WHITESPACE_ONLY (never a miscompile).
+        assert!(matches!(
+            bridge("class C { *m(){} }"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    #[test]
+    fn class_decl_async_method_declines() {
+        assert!(matches!(
+            bridge("class C { async am(){} }"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }

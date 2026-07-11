@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.13] - 2026-07-11
+
+### Added — CLOC12.174 PR2: class-declaration end-to-end (`tests/diff/simple-class-decl/`)
+
+With `javascript-parser` 0.38.0's bridge, a top-level class **declaration**
+(`class C { … }`) now flows through the full SIMPLE pipeline
+(parser → typed-AST bridge → passes → emitter) instead of dropping the whole file
+to WHITESPACE_ONLY. New e2e diff fixture `tests/diff/simple-class-decl/`: input
+`class C { m() { return 1 + 2 } }` minifies to `class C{m(){return 3}}` —
+asserting the class declaration round-trips, the method body folds (`1 + 2` → `3`,
+proving the pass descended into the method), and it emits **bare** (no trailing
+`;`, no wrapping paren — unlike the class *expression* form's `(class …);`).
+
 ## [0.234.12] - 2026-07-08
 
 ### Added — CLOC12.173 PR2: class expressions flow through the SIMPLE/ADVANCED pipelines (gap-167)

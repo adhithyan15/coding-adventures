@@ -2284,6 +2284,27 @@ shared helper (`fold_class_body`, `classify_class_members` /
 `rewrite_class_members`). Reachable end-to-end once the PR2 bridge produces the
 node.
 
+**PR2 (DONE) — `javascript-parser` 0.38.0 + `closurec` 0.234.13.** The bridge's
+`convert_source_element` converts a top-level `class_declaration` →
+`Declaration::ClassDeclaration` via new `convert_class_declaration`, so a class
+declaration flows through the full pipeline instead of declining to
+WHITESPACE_ONLY. **The design held with one grammar-shape refinement found by
+dumping the parse tree:** at the `source_element` level the node is wrapped in
+`decorated_class_declaration` → `class_declaration` (the outer rule that would
+also carry `@decorator`s), so the source-element arm unwraps it (and declines a
+genuinely *decorated* form — a later slice). The inner `class_declaration` node's
+flat child shape is **identical to `class_expression`** (`class` / NAME / optional
+`class_heritage` / `class_body`) save the required name, so
+`convert_class_declaration` reuses `convert_class_heritage` /
+`convert_class_element` unchanged and DECLINES a nameless class rather than
+fabricate an empty id. Generator / async / computed / multi-member methods decline
+to WHITESPACE_ONLY exactly as for the expression form. 10 bridge unit tests
+(`class_decl_*`); `closurec` e2e fixture `tests/diff/simple-class-decl/`
+(`class C { m() { return 1 + 2 } }` → `class C{m(){return 3}}`) proves the class
+round-trips, the method body folds, and the declaration emits **bare** (no
+trailing `;`, no wrapping paren). PR3 (upstream CodePrinter class-declaration
+conformance port) remains.
+
 ## CLOC12.173 — `ClassExpression` (`class [id] [extends S] { … }`): the class arc (design)
 
 `ClassExpression` is the next `Expression` node, and unlike every arc since
