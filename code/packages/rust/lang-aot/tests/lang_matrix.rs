@@ -157,7 +157,7 @@ const PROGRAMS: &[Prog] = &[
     // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
     // The Twig frontend emits `call_builtin "cons"/"car" [any]`; the shared
     // `iir-builtin-lowering` passes — `lower_heap_builtins` (cons→`alloc`+`field_store`;
-    // car→`field_load[0]`) then `lower_lisp_repr_structural` (use-site boxing to the
+    // car→`field_load[0]`) then `lower_dyn_repr_structural` (use-site boxing to the
     // uniform `ref<any>` value) — run for EVERY language, so Twig's first genuinely
     // dynamic value lowers to the exact heap-object family McCarthy Lisp already runs
     // on all five code-gen backends (WASM `anyref`+`$LispyPair`, JVM `Object[]`, CLR
@@ -191,7 +191,7 @@ const PROGRAMS: &[Prog] = &[
     // using only the `unbox`/`add`/`box` ops the *structural* code-gen backends
     // (WASM `i31ref` / JVM `Integer` / CLR boxed-int32) already run for `cons`.
     // Exit 42. NativeAot + LLVM use the NaN-box tagged-i64 value model
-    // (`lower_lisp_repr`, `n<<3`), whose box/unbox is shift/runtime-call based
+    // (`lower_dyn_repr`, `n<<3`), whose box/unbox is shift/runtime-call based
     // rather than `box`/`unbox` ops — added in the E6d-2b follow-up. As with
     // E6d-1, the generic `Vm`/`Jit` run typed `vm-core` IIR (`twig-vm` is the
     // off-matrix dynamic reference).

@@ -1,4 +1,4 @@
-//! # lisp_repr — type-directed lisp-value representation for native AOT (LANG77 / L3b-2c).
+//! # dyn_repr — type-directed lisp-value representation for native AOT (LANG77 / L3b-2c).
 //!
 //! ## The problem this solves
 //!
@@ -29,16 +29,16 @@
 //! lisp value model. We detect that structurally:
 //!
 //! - A `const Int(n) : i64` is **boxed** (`n << 3`) iff its register is used
-//!   as an **argument to a lisp builtin** (`lispy_cons`/`lispy_car`/
-//!   `lispy_cdr`, and the predicates added in later slices). A McCarthy
+//!   as an **argument to a lisp builtin** (`dyn_cons`/`dyn_car`/
+//!   `dyn_cdr`, and the predicates added in later slices). A McCarthy
 //!   program — which has no machine arithmetic at all — feeds every integer
 //!   into `cons`, so all its integers box. A Twig arithmetic program feeds
-//!   integers into `add`/`print_i64`, never a `lispy_*` call, so none box.
+//!   integers into `add`/`print_i64`, never a `dyn_*` call, so none box.
 //! - A `const Int(0) : ref<LispyPair>` (the nil sentinel emitted by the
 //!   frontend) becomes the **nil tag** `0b001`. Only lisp frontends ever
 //!   emit that type hint, so this is unambiguous.
 //! - A register **holds a boxed `LispyValue`** if it is the result of a lisp
-//!   builtin (`lispy_cons`/`car`/`cdr`) or a boxed constant.
+//!   builtin (`dyn_cons`/`car`/`cdr`) or a boxed constant.
 //!
 //! ## The machine boundary: unbox at program exit
 //!
@@ -46,10 +46,10 @@
 //! In McCarthy 1.0 (no arithmetic) the only such boundary is the **program's
 //! result**: the entry function returns a `LispyValue`, but the process exit
 //! code is a raw integer. So in the **entry function only**, a `ret %x` whose
-//! `%x` is a boxed `LispyValue` becomes `%u = lispy_unbox_int(%x); ret %u`.
+//! `%x` is a boxed `LispyValue` becomes `%u = dyn_unbox_int(%x); ret %u`.
 //! Non-entry functions return `LispyValue`s to their callers and are left
 //! tagged. (`box(n)` then `unbox` at the same boundary is the identity, so a
-//! program like `42` — whose constant never reaches a `lispy_*` call, hence
+//! program like `42` — whose constant never reaches a `dyn_*` call, hence
 //! is never boxed, hence is never unboxed — still exits `42`.)
 //!
 //! ## Scope of this slice (L3b-2c-1)
@@ -91,22 +91,22 @@ const INT_MIN_BOXABLE: i64 = -(1 << 60);
 /// atoms — e.g. the `5` in `(ATOM 5)` or `(EQ 5 5)` — must box so their tag
 /// is `000`, not the heap tag a raw int's low bits collide with).
 const LISP_BUILTINS: &[&str] = &[
-    "lispy_cons",
-    "lispy_car",
-    "lispy_cdr",
-    "lispy_pair_p",
-    "lispy_not",
-    "lispy_equal",
+    "dyn_cons",
+    "dyn_car",
+    "dyn_cdr",
+    "dyn_pair_p",
+    "dyn_not",
+    "dyn_equal",
 ];
 
 /// The unbox helper (`__dyn_unbox_int`, arithmetic `>> 3`).
-const UNBOX_BUILTIN: &str = "lispy_unbox_int";
+const UNBOX_BUILTIN: &str = "dyn_unbox_int";
 
 /// The truthiness helper (`__dyn_truthy`): a tagged `LispyValue` → a
 /// raw machine `0`/`1` (false iff `#f` or nil), so the backend's
 /// `jmp_if_false` — which tests a raw word against zero — branches correctly
 /// on a `COND` predicate that produced a tagged boolean.
-const TRUTHY_BUILTIN: &str = "lispy_truthy";
+const TRUTHY_BUILTIN: &str = "dyn_truthy";
 
 /// The universal exit-coercion helper (`__dyn_to_exit_code`): a tagged
 /// `LispyValue` of *statically unknown* runtime tag → a raw `i64` exit code,
@@ -116,7 +116,7 @@ const TRUTHY_BUILTIN: &str = "lispy_truthy";
 /// right coercion can't be picked at compile time the way `unbox_int` (int) /
 /// `truthy` (bool) / verbatim (symbol) are — this single runtime switch handles
 /// every case.
-const EXIT_CODE_BUILTIN: &str = "lispy_to_exit_code";
+const EXIT_CODE_BUILTIN: &str = "dyn_to_exit_code";
 
 /// True when a module's source language uses the tagged-word lisp value model
 /// (today: McCarthy 1960 Lisp). Gates the lambda-aware `call` handling so a Twig
@@ -147,21 +147,21 @@ fn lisp_builtin_name(instr: &IIRInstr) -> Option<&str> {
     }
 }
 
-/// Rename `call_builtin "not"` → `lispy_not` when its argument is the result
-/// of a `lispy_*` builtin — the `ATOM` = `not(pair?)` shape. `not` is also a
+/// Rename `call_builtin "not"` → `dyn_not` when its argument is the result
+/// of a `dyn_*` builtin — the `ATOM` = `not(pair?)` shape. `not` is also a
 /// numeric builtin (Twig's machine boolean-not), so this *type-directed* check
 /// is what keeps the two apart: a Twig `not` (whose argument is a raw `cmp`
-/// result, not a `lispy_*` value) is left untouched for the numeric lowering.
+/// result, not a `dyn_*` value) is left untouched for the numeric lowering.
 fn rename_lisp_not(func: &mut IIRFunction) {
-    // Dests of the `lispy_*` builtins that produce tagged values (cons/car/cdr
+    // Dests of the `dyn_*` builtins that produce tagged values (cons/car/cdr
     // and the predicates renamed by `lower_heap_builtins_runtime`).
-    let mut lispy_results: HashSet<String> = HashSet::new();
+    let mut dyn_results: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
         if instr.op == "call_builtin" {
             if let Some(Operand::Var(name)) = instr.srcs.first() {
-                if name.starts_with("lispy_") {
+                if name.starts_with("dyn_") {
                     if let Some(dest) = &instr.dest {
-                        lispy_results.insert(dest.clone());
+                        dyn_results.insert(dest.clone());
                     }
                 }
             }
@@ -173,9 +173,9 @@ fn rename_lisp_not(func: &mut IIRFunction) {
         }
         let is_not = matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "not");
         let arg_is_lispy =
-            matches!(instr.srcs.get(1), Some(Operand::Var(a)) if lispy_results.contains(a));
+            matches!(instr.srcs.get(1), Some(Operand::Var(a)) if dyn_results.contains(a));
         if is_not && arg_is_lispy {
-            instr.srcs[0] = Operand::Var("lispy_not".to_string());
+            instr.srcs[0] = Operand::Var("dyn_not".to_string());
         }
     }
 }
@@ -183,10 +183,10 @@ fn rename_lisp_not(func: &mut IIRFunction) {
 /// Apply the representation pass to every function in `module`.
 ///
 /// Runs in `twig-aot::prepare_module_for_aot` **after**
-/// `lower_heap_builtins_runtime` (so cons/car/cdr are already `lispy_*`
-/// calls). Safe to run on any module: a program with no `lispy_*` calls (every
+/// `lower_heap_builtins_runtime` (so cons/car/cdr are already `dyn_*`
+/// calls). Safe to run on any module: a program with no `dyn_*` calls (every
 /// Twig/Nib/Brainfuck program) has nothing to box and is left unchanged.
-pub fn lower_lisp_repr(module: &mut IIRModule) {
+pub fn lower_dyn_repr(module: &mut IIRModule) {
     let entry = module.entry_point.clone();
     // The set of **lisp functions** (uniform value model at their boundary):
     // those that use the heap / lisp predicates or take a lisp (`any`) param,
@@ -201,33 +201,33 @@ pub fn lower_lisp_repr(module: &mut IIRModule) {
     // lisp and corrupt it. The empty set for a non-lisp module makes every new
     // `call`-handling branch inert — the pass stays a faithful no-op for Twig.
     let lisp_funcs = if is_lisp_language(&module.language) {
-        crate::lisp_repr_structural::lisp_functions(module)
+        crate::dyn_repr_structural::lisp_functions(module)
     } else {
         HashSet::new()
     };
     for func in &mut module.functions {
         let is_entry = entry.as_deref() == Some(func.name.as_str());
-        lower_lisp_repr_function(func, is_entry, &lisp_funcs);
+        lower_dyn_repr_function(func, is_entry, &lisp_funcs);
     }
 }
 
-fn lower_lisp_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: &HashSet<String>) {
-    // ── 0. Type-directed `not` → `lispy_not`. ──
+fn lower_dyn_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: &HashSet<String>) {
+    // ── 0. Type-directed `not` → `dyn_not`. ──
     //
     // `not` is ambiguous: a *numeric* builtin (Twig's machine boolean-not) and
     // the second half of McCarthy's `ATOM` (= `not(pair?)`, a lisp not). The
     // unconditional rename pass can't tell them apart, so it leaves `not`
-    // alone. Here we have enough context: rename `not` → `lispy_not` only when
-    // its argument is the result of a `lispy_*` builtin (e.g. `lispy_pair_p`),
+    // alone. Here we have enough context: rename `not` → `dyn_not` only when
+    // its argument is the result of a `dyn_*` builtin (e.g. `dyn_pair_p`),
     // which is exactly the `ATOM` shape. Twig's `not` (arg is a raw `cmp`
-    // result, not a `lispy_*` value) is left for the numeric lowering.
+    // result, not a `dyn_*` value) is left for the numeric lowering.
     rename_lisp_not(func);
 
     // ── 1. Registers that feed a lisp call (their integer atoms box). ──
     //
     // Two callers put a value into a lisp context, so an integer *atom* passed
     // to either must be boxed (`n << 3`) to become a tagged `LispyValue`:
-    //   • a lisp **builtin** (`call_builtin "lispy_*"`) — `cons`/`car`/`equal`/…;
+    //   • a lisp **builtin** (`call_builtin "dyn_*"`) — `cons`/`car`/`equal`/…;
     //   • a user **lambda / function** (`call` returning the polymorphic `any`),
     //     whose parameters are themselves lisp values (F7). Without this, an int
     //     argument arrives raw — e.g. `5` has tag bits `0b101` (= `#t`) and `7`
@@ -249,7 +249,7 @@ fn lower_lisp_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: 
     // ── 2. Classify which registers hold a tagged `LispyValue` (no mutation). ──
     //
     // Seeds:
-    //   • a lisp-builtin result (`lispy_cons`/`car`/`cdr`/`pair_p`/`not`/`equal`),
+    //   • a lisp-builtin result (`dyn_cons`/`car`/`cdr`/`pair_p`/`not`/`equal`),
     //   • the nil sentinel const (`Int(0) : ref<LispyPair>`),
     //   • an integer const that feeds a lisp builtin (a lisp atom).
     //
@@ -327,7 +327,7 @@ fn lower_lisp_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: 
     // A `COND` predicate evaluates to a tagged LispyValue (e.g. `#f` = 3 from
     // `ATOM`). The backend's `jmp_if_false` tests a *raw* word against zero, so
     // a bare `#f` (3 ≠ 0) would read as true. We wrap such a condition in
-    // `lispy_truthy` (→ raw 0/1). Type-directed: only conditions that hold a
+    // `dyn_truthy` (→ raw 0/1). Type-directed: only conditions that hold a
     // tagged value are wrapped, so a Twig `if` (whose condition is a raw `cmp`
     // result, not in `boxed_regs`) is left untouched. (A bare integer-literal
     // predicate that is not `mov`-connected to a tagged value stays raw and
@@ -343,7 +343,7 @@ fn lower_lisp_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: 
 }
 
 /// Rewrite each `jmp_if_false %cond, label` whose `%cond` holds a tagged
-/// `LispyValue` into `%t = lispy_truthy(%cond); jmp_if_false %t, label`, so the
+/// `LispyValue` into `%t = dyn_truthy(%cond); jmp_if_false %t, label`, so the
 /// branch tests lisp truthiness (false iff `#f`/nil) rather than the raw
 /// tagged word. A condition not in `boxed_regs` (a raw machine bool from a
 /// `cmp`, or an unboxed integer — non-zero, hence already truthy) is left
@@ -376,7 +376,7 @@ fn wrap_tagged_conditions(func: &mut IIRFunction, boxed_regs: &HashSet<String>) 
             Some(cond) => {
                 let t_reg = format!("__truthy_{truthy_counter}");
                 truthy_counter += 1;
-                // %t = call_builtin "lispy_truthy", %cond  : i64
+                // %t = call_builtin "dyn_truthy", %cond  : i64
                 new_instrs.push(IIRInstr::new(
                     "call_builtin",
                     Some(t_reg.clone()),
@@ -396,7 +396,7 @@ fn wrap_tagged_conditions(func: &mut IIRFunction, boxed_regs: &HashSet<String>) 
 }
 
 /// In the entry function, rewrite each `ret %x` whose `%x` holds a boxed
-/// `LispyValue` into `%u = lispy_unbox_int(%x); ret %u`, so the process exit
+/// `LispyValue` into `%u = dyn_unbox_int(%x); ret %u`, so the process exit
 /// code is the raw integer value rather than the tagged word.
 fn insert_unbox_before_lisp_rets(
     func: &mut IIRFunction,
@@ -407,7 +407,7 @@ fn insert_unbox_before_lisp_rets(
     // `call` whose return type is the polymorphic `any` (or a lisp `ref<Lispy…>`).
     // Its runtime tag (int / bool / symbol / pair) is unknown at compile time, so
     // none of the static coercions (`unbox_int` / `truthy` / verbatim) is right on
-    // its own. Returning such a value runs it through `lispy_to_exit_code`, a
+    // its own. Returning such a value runs it through `dyn_to_exit_code`, a
     // runtime tag switch. (Lisp *builtin* results — `car`/`cons`/… — are already
     // in `boxed_regs` and keep their existing handling; only plain `call`s join
     // this set.)
@@ -432,8 +432,8 @@ fn insert_unbox_before_lisp_rets(
     // value produced by a predicate (`pair?`/`equal?`/`not`) is a tagged boolean
     // (`LISPY_TRUE = 5` / `LISPY_FALSE = 3`), NOT a tagged integer. Unboxing it
     // (`>> 3`) would give `0` for *true* — wrong. So at the program-exit boundary
-    // a boolean result is coerced with `lispy_truthy` (→ raw `0`/`1`) instead of
-    // `lispy_unbox_int`. A register is "boolean" if the instruction that produced
+    // a boolean result is coerced with `dyn_truthy` (→ raw `0`/`1`) instead of
+    // `dyn_unbox_int`. A register is "boolean" if the instruction that produced
     // it carries the `bool` type hint (the predicates do).
     let bool_regs: HashSet<String> = func
         .instructions
@@ -444,7 +444,7 @@ fn insert_unbox_before_lisp_rets(
 
     // McCarthy symbol-result handling (F6): a SYMBOL is already a finished tagged
     // immediate from `intern_symbols` (`(id << shift) | TAG_SYMBOL`), NOT a boxed
-    // integer — `lispy_unbox_int` (`>> 3`) would corrupt the id+tag. The program
+    // integer — `dyn_unbox_int` (`>> 3`) would corrupt the id+tag. The program
     // result IS the tagged symbol word, so such a `ret` is returned verbatim (just
     // retyped to `i64`, the tagged-word width).
     let symbol_regs: HashSet<String> = func
@@ -478,10 +478,10 @@ fn insert_unbox_before_lisp_rets(
             }
             Some(reg) => {
                 // Pick the exit coercion by what we statically know about `reg`:
-                //   • a lambda / user-`call` result (tag unknown) → `lispy_to_exit_code`
+                //   • a lambda / user-`call` result (tag unknown) → `dyn_to_exit_code`
                 //     (a RUNTIME tag switch — int/bool/symbol/pair all handled);
-                //   • a boolean (predicate) result → `lispy_truthy` (→ 0/1);
-                //   • otherwise a boxed integer → `lispy_unbox_int` (→ `>> 3`).
+                //   • a boolean (predicate) result → `dyn_truthy` (→ 0/1);
+                //   • otherwise a boxed integer → `dyn_unbox_int` (→ `>> 3`).
                 // All three yield a raw `i64`.
                 let coerce = if call_result_regs.contains(&reg) {
                     EXIT_CODE_BUILTIN
@@ -576,18 +576,18 @@ mod tests {
         panic!("no const {dest}");
     }
 
-    /// `(CAR (CONS 7 9))`: 7 and 9 feed lispy_cons → boxed; the car result is
+    /// `(CAR (CONS 7 9))`: 7 and 9 feed dyn_cons → boxed; the car result is
     /// returned by the entry fn → unboxed.
     #[test]
     fn cons_car_boxes_ints_and_unboxes_result() {
         let mut m = module(vec![
             konst("v0", 7, "i64"),
             konst("v1", 9, "i64"),
-            call_builtin(Some("cell"), "lispy_cons", &["v0", "v1"], "ref<LispyPair>"),
-            call_builtin(Some("r"), "lispy_car", &["cell"], "any"),
+            call_builtin(Some("cell"), "dyn_cons", &["v0", "v1"], "ref<LispyPair>"),
+            call_builtin(Some("r"), "dyn_car", &["cell"], "any"),
             ret("r"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         // 7 → 56, 9 → 72 (boxed: n << 3).
         assert_eq!(find_const(&m, "v0"), 7 << 3, "7 must box to 56");
         assert_eq!(find_const(&m, "v1"), 9 << 3, "9 must box to 72");
@@ -597,18 +597,18 @@ mod tests {
         assert_eq!(last.op, "ret");
         let unbox = &instrs[instrs.len() - 2];
         assert_eq!(unbox.op, "call_builtin");
-        assert_eq!(unbox.srcs[0], Operand::Var("lispy_unbox_int".into()));
+        assert_eq!(unbox.srcs[0], Operand::Var("dyn_unbox_int".into()));
         assert_eq!(unbox.srcs[1], Operand::Var("r".into()));
         // ret now refers to the unbox result, not the boxed car.
         assert_ne!(last.srcs[0], Operand::Var("r".into()));
     }
 
-    /// A bare integer `42`: the constant never reaches a `lispy_*` call, so it
+    /// A bare integer `42`: the constant never reaches a `dyn_*` call, so it
     /// is not boxed, and the ret is not unboxed — exit 42 unchanged.
     #[test]
     fn scalar_int_is_left_raw() {
         let mut m = module(vec![konst("v0", 42, "i64"), ret("v0")]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "v0"), 42, "scalar int must not be boxed");
         let last = m.functions[0].instructions.last().unwrap();
         assert_eq!(last.op, "ret");
@@ -617,7 +617,7 @@ mod tests {
     }
 
     /// A Twig-style arithmetic program: integers feed `add` (a machine op),
-    /// never a `lispy_*` call, so nothing is boxed or unboxed.
+    /// never a `dyn_*` call, so nothing is boxed or unboxed.
     #[test]
     fn machine_arithmetic_is_untouched() {
         let mut m = module(vec![
@@ -631,7 +631,7 @@ mod tests {
             ),
             ret("s"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "a"), 30);
         assert_eq!(find_const(&m, "b"), 12);
         assert_eq!(m.functions[0].instructions.len(), 4, "no unbox: result is machine-typed");
@@ -643,10 +643,10 @@ mod tests {
         let mut m = module(vec![
             konst("n", 0, "ref<LispyPair>"),
             konst("v", 5, "i64"),
-            call_builtin(Some("cell"), "lispy_cons", &["v", "n"], "ref<LispyPair>"),
+            call_builtin(Some("cell"), "dyn_cons", &["v", "n"], "ref<LispyPair>"),
             ret("cell"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "n"), TAG_NIL, "nil sentinel → 1");
         assert_eq!(find_const(&m, "v"), 5 << 3, "5 boxed → 40");
     }
@@ -661,13 +661,13 @@ mod tests {
             "any",
             vec![
                 konst("v0", 7, "i64"),
-                call_builtin(Some("cell"), "lispy_cons", &["v0", "v0"], "ref<LispyPair>"),
+                call_builtin(Some("cell"), "dyn_cons", &["v0", "v0"], "ref<LispyPair>"),
                 ret("cell"),
             ],
         );
         let mut m = module(vec![konst("z", 0, "i64"), ret("z")]);
         m.functions.push(callee);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         // helper's ret must NOT be rewritten to an unbox (it returns a pair).
         let helper = m.functions.iter().find(|f| f.name == "helper").unwrap();
         let last = helper.instructions.last().unwrap();
@@ -677,7 +677,7 @@ mod tests {
 
     /// End-to-end of the two native passes as `twig-aot` runs them: the
     /// frontend emits `call_builtin "cons"/"car"`; `lower_heap_builtins_runtime`
-    /// renames them to `lispy_*`; then `lower_lisp_repr` boxes the atoms and
+    /// renames them to `dyn_*`; then `lower_dyn_repr` boxes the atoms and
     /// unboxes the result. This is the exact `(CAR (CONS 7 9))` pipeline.
     #[test]
     fn composes_with_runtime_rename() {
@@ -688,59 +688,59 @@ mod tests {
             call_builtin(Some("r"), "car", &["cell"], "any"),
             ret("r"),
         ]);
-        // Pass 1: rename cons/car → lispy_cons/lispy_car.
+        // Pass 1: rename cons/car → dyn_cons/dyn_car.
         crate::heap::lower_heap_builtins_runtime(&mut m);
         // Pass 2: box atoms + unbox result.
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
 
         assert_eq!(find_const(&m, "v0"), 7 << 3);
         assert_eq!(find_const(&m, "v1"), 9 << 3);
         let instrs = &m.functions[0].instructions;
-        // cons/car are now lispy_*.
-        assert_eq!(instrs[2].srcs[0], Operand::Var("lispy_cons".into()));
-        assert_eq!(instrs[3].srcs[0], Operand::Var("lispy_car".into()));
+        // cons/car are now dyn_*.
+        assert_eq!(instrs[2].srcs[0], Operand::Var("dyn_cons".into()));
+        assert_eq!(instrs[3].srcs[0], Operand::Var("dyn_car".into()));
         // The tail is: unbox(r) ; ret %unbox.
         let last = instrs.last().unwrap();
         assert_eq!(last.op, "ret");
         let unbox = &instrs[instrs.len() - 2];
-        assert_eq!(unbox.srcs[0], Operand::Var("lispy_unbox_int".into()));
+        assert_eq!(unbox.srcs[0], Operand::Var("dyn_unbox_int".into()));
     }
 
     // ── L3b-2c-2: ATOM/EQ predicates + COND truthiness ──────────────────
 
     /// `(ATOM 5)` lowers (after the rename) to `not(pair?(5))`. The `5` feeds
-    /// `lispy_pair_p`, so it must box.
+    /// `dyn_pair_p`, so it must box.
     #[test]
     fn predicate_arg_int_is_boxed() {
         let mut m = module(vec![
             konst("v0", 5, "i64"),
-            call_builtin(Some("p"), "lispy_pair_p", &["v0"], "bool"),
-            call_builtin(Some("a"), "lispy_not", &["p"], "bool"),
+            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("a"), "dyn_not", &["p"], "bool"),
             ret("a"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "v0"), 5 << 3, "ATOM's int atom must box");
     }
 
     /// A `jmp_if_false` whose condition is a tagged value (a predicate result)
-    /// gets a `lispy_truthy` normaliser inserted before it.
+    /// gets a `dyn_truthy` normaliser inserted before it.
     #[test]
     fn tagged_cond_is_wrapped_with_truthy() {
         let mut m = module(vec![
             konst("v0", 5, "i64"),
-            call_builtin(Some("p"), "lispy_pair_p", &["v0"], "bool"),
-            call_builtin(Some("a"), "lispy_not", &["p"], "bool"),
+            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("a"), "dyn_not", &["p"], "bool"),
             jmp_if_false("a", "L_next"),
             IIRInstr::new("label", None, vec![Operand::Var("L_next".into())], "void"),
             ret("a"),
         ]);
-        lower_lisp_repr(&mut m);
-        // TWO `lispy_truthy` calls now: (1) the `COND` clause-test wrap, and
+        lower_dyn_repr(&mut m);
+        // TWO `dyn_truthy` calls now: (1) the `COND` clause-test wrap, and
         // (2) the bool-typed `ret a` result coercion (McCarthy W12b-2 — a
         // boolean program result becomes raw 0/1 via `truthy`, not `unbox_int`).
-        assert_eq!(count_builtin(&m, "lispy_truthy"), 2, "cond test + bool result both wrapped");
-        // The boolean result is coerced with `lispy_truthy`, NOT `lispy_unbox_int`.
-        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 0, "bool result must not be unboxed");
+        assert_eq!(count_builtin(&m, "dyn_truthy"), 2, "cond test + bool result both wrapped");
+        // The boolean result is coerced with `dyn_truthy`, NOT `dyn_unbox_int`.
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 0, "bool result must not be unboxed");
         // The jmp_if_false now tests the truthy result, not the raw tagged bool.
         let jif = m.functions[0].instructions.iter().find(|i| i.op == "jmp_if_false").unwrap();
         assert!(
@@ -751,7 +751,7 @@ mod tests {
 
     /// McCarthy W12b-2 — the program-exit coercion is **type-directed**:
     /// an INTEGER result is unboxed (`>> 3`), a BOOLEAN result (a predicate) is
-    /// run through `lispy_truthy` (→ raw 0/1). Unboxing `LISPY_TRUE` (=5) would
+    /// run through `dyn_truthy` (→ raw 0/1). Unboxing `LISPY_TRUE` (=5) would
     /// give `5 >> 3 = 0` — *wrong* for true. So a bool result must never be unboxed.
     #[test]
     fn integer_result_unboxed_boolean_result_truthied() {
@@ -759,24 +759,24 @@ mod tests {
         let mut int_m = module(vec![
             konst("a", 56, "i64"),
             konst("b", 72, "i64"),
-            call_builtin(Some("p"), "lispy_cons", &["a", "b"], "ref<LispyPair>"),
-            call_builtin(Some("h"), "lispy_car", &["p"], "i64"),
+            call_builtin(Some("p"), "dyn_cons", &["a", "b"], "ref<LispyPair>"),
+            call_builtin(Some("h"), "dyn_car", &["p"], "i64"),
             ret("h"),
         ]);
-        lower_lisp_repr(&mut int_m);
-        assert_eq!(count_builtin(&int_m, "lispy_unbox_int"), 1, "int result is unboxed");
-        assert_eq!(count_builtin(&int_m, "lispy_truthy"), 0, "int result is not truthied");
+        lower_dyn_repr(&mut int_m);
+        assert_eq!(count_builtin(&int_m, "dyn_unbox_int"), 1, "int result is unboxed");
+        assert_eq!(count_builtin(&int_m, "dyn_truthy"), 0, "int result is not truthied");
 
         // (ATOM 7) = (not (pair? 7)) — a boolean result → truthy, NOT unbox.
         let mut bool_m = module(vec![
             konst("v0", 56, "i64"),
-            call_builtin(Some("p"), "lispy_pair_p", &["v0"], "bool"),
-            call_builtin(Some("a"), "lispy_not", &["p"], "bool"),
+            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
+            call_builtin(Some("a"), "dyn_not", &["p"], "bool"),
             ret("a"),
         ]);
-        lower_lisp_repr(&mut bool_m);
-        assert_eq!(count_builtin(&bool_m, "lispy_truthy"), 1, "bool result is truthied");
-        assert_eq!(count_builtin(&bool_m, "lispy_unbox_int"), 0, "bool result is NOT unboxed");
+        lower_dyn_repr(&mut bool_m);
+        assert_eq!(count_builtin(&bool_m, "dyn_truthy"), 1, "bool result is truthied");
+        assert_eq!(count_builtin(&bool_m, "dyn_unbox_int"), 0, "bool result is NOT unboxed");
     }
 
     /// McCarthy W13 (F6): a SYMBOL program result is returned verbatim (its tagged
@@ -789,9 +789,9 @@ mod tests {
             IIRInstr::new("const", Some("s".into()), vec![Operand::Var("A".into())], SYMBOL_HINT),
             ret("s"),
         ]);
-        lower_lisp_repr(&mut m);
-        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 0, "a symbol result is NOT unboxed");
-        assert_eq!(count_builtin(&m, "lispy_truthy"), 0, "a symbol result is NOT truthied");
+        lower_dyn_repr(&mut m);
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 0, "a symbol result is NOT unboxed");
+        assert_eq!(count_builtin(&m, "dyn_truthy"), 0, "a symbol result is NOT truthied");
         // The final instruction is a bare `ret` of the symbol register.
         let last = m.functions[0].instructions.last().unwrap();
         assert_eq!(last.op, "ret", "ends with a bare ret of the tagged symbol word");
@@ -829,14 +829,14 @@ mod tests {
 
     /// McCarthy W13b (F7): a `call` to a lisp function boxes its integer atom
     /// argument (`5 << 3 = 40`) and coerces its polymorphic result at the program
-    /// exit with the runtime tag switch `lispy_to_exit_code`.
+    /// exit with the runtime tag switch `dyn_to_exit_code`.
     #[test]
     fn lambda_call_boxes_int_arg_and_coerces_result() {
         let mut m = apply_identity_module("lambda_0", "mccarthy-lisp");
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "a"), 40, "int atom arg must box before the lambda");
-        assert_eq!(count_builtin(&m, "lispy_to_exit_code"), 1, "lambda result → to_exit_code");
-        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 0, "polymorphic result is NOT unboxed");
+        assert_eq!(count_builtin(&m, "dyn_to_exit_code"), 1, "lambda result → to_exit_code");
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 0, "polymorphic result is NOT unboxed");
     }
 
     /// The same IIR shape in a **Twig** module is left completely untouched: an
@@ -846,14 +846,14 @@ mod tests {
     #[test]
     fn non_lisp_call_is_left_untouched() {
         let mut m = apply_identity_module("fib", "twig");
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "a"), 5, "a Twig int arg stays a raw machine word");
-        assert_eq!(count_builtin(&m, "lispy_to_exit_code"), 0, "a Twig call is never coerced");
-        assert_eq!(count_builtin(&m, "lispy_box_int"), 0, "a Twig arg is never boxed");
+        assert_eq!(count_builtin(&m, "dyn_to_exit_code"), 0, "a Twig call is never coerced");
+        assert_eq!(count_builtin(&m, "dyn_box_int"), 0, "a Twig arg is never boxed");
     }
 
     /// A raw machine condition (e.g. a Twig `cmp` result, not in boxed_regs)
-    /// is left alone — no `lispy_truthy` wrap.
+    /// is left alone — no `dyn_truthy` wrap.
     #[test]
     fn raw_cond_is_not_wrapped() {
         let mut m = module(vec![
@@ -869,8 +869,8 @@ mod tests {
             IIRInstr::new("label", None, vec![Operand::Var("L_next".into())], "void"),
             ret("c"),
         ]);
-        lower_lisp_repr(&mut m);
-        assert_eq!(count_builtin(&m, "lispy_truthy"), 0, "raw cmp cond must NOT be wrapped");
+        lower_dyn_repr(&mut m);
+        assert_eq!(count_builtin(&m, "dyn_truthy"), 0, "raw cmp cond must NOT be wrapped");
     }
 
     /// A COND result funnelled by `mov` from a lisp value (a `car` result)
@@ -880,15 +880,15 @@ mod tests {
         let mut m = module(vec![
             konst("v0", 7, "i64"),
             konst("v1", 9, "i64"),
-            call_builtin(Some("cell"), "lispy_cons", &["v0", "v1"], "ref<LispyPair>"),
-            call_builtin(Some("c"), "lispy_car", &["cell"], "any"),
+            call_builtin(Some("cell"), "dyn_cons", &["v0", "v1"], "ref<LispyPair>"),
+            call_builtin(Some("c"), "dyn_car", &["cell"], "any"),
             mov("result", "c"),
             ret("result"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         // The car result flows through `mov result, c`; `result` is therefore a
         // tagged value and the entry ret must unbox it.
-        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 1, "mov'd lisp result must unbox");
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 1, "mov'd lisp result must unbox");
         let last = m.functions[0].instructions.last().unwrap();
         assert_eq!(last.op, "ret");
         assert!(matches!(&last.srcs[0], Operand::Var(v) if v.starts_with("__unbox_")));
@@ -907,24 +907,24 @@ mod tests {
             mov("result", "nilv"),
             ret("result"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "seven"), 7 << 3, "clause literal must box (mov-tied to nil)");
         assert_eq!(find_const(&m, "nilv"), TAG_NIL, "nil tagged");
-        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 1, "result must unbox at ret");
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 1, "result must unbox at ret");
     }
 
-    /// ATOM shape `not(pair?(x))`: the generic `not` whose arg is a `lispy_*`
-    /// result is renamed to `lispy_not`.
+    /// ATOM shape `not(pair?(x))`: the generic `not` whose arg is a `dyn_*`
+    /// result is renamed to `dyn_not`.
     #[test]
     fn not_after_lispy_result_becomes_lispy_not() {
         let mut m = module(vec![
             konst("v0", 5, "i64"),
-            call_builtin(Some("p"), "lispy_pair_p", &["v0"], "bool"),
+            call_builtin(Some("p"), "dyn_pair_p", &["v0"], "bool"),
             call_builtin(Some("a"), "not", &["p"], "bool"),
             ret("a"),
         ]);
-        lower_lisp_repr(&mut m);
-        assert_eq!(count_builtin(&m, "lispy_not"), 1, "ATOM's not must become lispy_not");
+        lower_dyn_repr(&mut m);
+        assert_eq!(count_builtin(&m, "dyn_not"), 1, "ATOM's not must become dyn_not");
         assert_eq!(count_builtin(&m, "not"), 0);
     }
 
@@ -944,24 +944,24 @@ mod tests {
             call_builtin(Some("r"), "not", &["c"], "bool"),
             ret("r"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(count_builtin(&m, "not"), 1, "Twig's machine not must be left alone");
-        assert_eq!(count_builtin(&m, "lispy_not"), 0);
+        assert_eq!(count_builtin(&m, "dyn_not"), 0);
     }
 
     /// A symbol immediate (`const Int(id<<32|2):symbol`, from `intern_symbols`)
     /// is treated as a tagged value but must NOT be boxed — shifting it would
-    /// corrupt the id/tag. Here `'A` feeds `lispy_equal`, so it would be a box
+    /// corrupt the id/tag. Here `'A` feeds `dyn_equal`, so it would be a box
     /// candidate but for the symbol guard.
     #[test]
     fn symbol_immediate_is_tagged_but_not_boxed() {
         let sym_bits = (1_i64 << 32) | 0b010; // id 1, symbol tag
         let mut m = module(vec![
             IIRInstr::new("const", Some("s".into()), vec![Operand::Int(sym_bits)], "symbol"),
-            call_builtin(Some("e"), "lispy_equal", &["s", "s"], "bool"),
+            call_builtin(Some("e"), "dyn_equal", &["s", "s"], "bool"),
             ret("e"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "s"), sym_bits, "symbol immediate must be left unboxed");
     }
 
@@ -972,10 +972,10 @@ mod tests {
         let huge = (1_i64 << 61) | 1;
         let mut m = module(vec![
             konst("v0", huge, "i64"),
-            call_builtin(Some("cell"), "lispy_cons", &["v0", "v0"], "ref<LispyPair>"),
+            call_builtin(Some("cell"), "dyn_cons", &["v0", "v0"], "ref<LispyPair>"),
             ret("cell"),
         ]);
-        lower_lisp_repr(&mut m);
+        lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "v0"), huge, "out-of-range int must be left raw");
     }
 }

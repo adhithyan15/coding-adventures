@@ -358,14 +358,14 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // | Frontend builtin | Native runtime symbol  |
 // |------------------|------------------------|
-// | `cons`           | `lispy_cons` (→ `__dyn_cons(car, cdr)`) |
-// | `car`            | `lispy_car`  (→ `__dyn_car(pair)`)      |
-// | `cdr`            | `lispy_cdr`  (→ `__dyn_cdr(pair)`)      |
+// | `cons`           | `dyn_cons` (→ `__dyn_cons(car, cdr)`) |
+// | `car`            | `dyn_car`  (→ `__dyn_car(pair)`)      |
+// | `cdr`            | `dyn_cdr`  (→ `__dyn_cdr(pair)`)      |
 //
 // The argument order already matches the C ABI (`cons head tail` →
-// `lispy_cons(car, cdr)`), so the transform is a pure **rename** of the
+// `dyn_cons(car, cdr)`), so the transform is a pure **rename** of the
 // builtin name in `srcs[0]` — no operand shuffling, no instruction
-// expansion.  The native backends turn `call_builtin "lispy_cons"` into
+// expansion.  The native backends turn `call_builtin "dyn_cons"` into
 // `BL/CALL __dyn_cons` via their generic `call_builtin` dispatch +
 // the `V1_BUILTINS` table; no new backend opcodes are needed.
 //
@@ -375,15 +375,15 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 //
 // `pair?` / `not` / `equal?` (the `ATOM`/`EQ` predicates) ARE renamed as of
 // L3b-2c-2 — they consume/produce tagged `LispyValue`s, which the
-// representation pass (`lower_lisp_repr`) has set up by the time the native
+// representation pass (`lower_dyn_repr`) has set up by the time the native
 // backend runs.
 
 /// The frontend→native-runtime builtin renames (LANG77 / L3b-2b, L3b-2c-2).
 const RUNTIME_RENAMES: &[(&str, &str)] = &[
     // L3b-2b — the cons data path.
-    ("cons", "lispy_cons"),
-    ("car", "lispy_car"),
-    ("cdr", "lispy_cdr"),
+    ("cons", "dyn_cons"),
+    ("car", "dyn_car"),
+    ("cdr", "dyn_cdr"),
     // L3b-2c-2 — the predicates (ATOM = pair? + not; EQ = equal?).
     //
     // `pair?` and `equal?` are unambiguous lisp builtins (no machine meaning),
@@ -391,12 +391,12 @@ const RUNTIME_RENAMES: &[(&str, &str)] = &[
     // *numeric* builtin (machine boolean-not, used by Twig), so renaming it
     // unconditionally would hijack Twig's `not`. McCarthy's `not` (the second
     // half of `ATOM` = `not(pair?)`) is renamed *type-directed* in
-    // `lisp_repr` — only when its argument is a `lispy_*` result.
-    ("pair?", "lispy_pair_p"),
-    ("equal?", "lispy_equal"),
+    // `dyn_repr` — only when its argument is a `dyn_*` result.
+    ("pair?", "dyn_pair_p"),
+    ("equal?", "dyn_equal"),
 ];
 
-/// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `lispy_*`
+/// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `dyn_*`
 /// runtime-call form (see the module note above).  In-place, allocation-free
 /// (a rename never expands an instruction), and a no-op for any
 /// `call_builtin` not in [`RUNTIME_RENAMES`].
@@ -787,13 +787,13 @@ mod tests {
     #[test]
     fn runtime_cons_is_renamed_not_expanded() {
         // The runtime lowering does NOT expand cons to alloc+field_store —
-        // it stays a single `call_builtin`, just renamed to `lispy_cons`.
+        // it stays a single `call_builtin`, just renamed to `dyn_cons`.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
         lower_heap_builtins_runtime(&mut m);
         assert_eq!(m.functions[0].instructions.len(), 1, "cons must stay one instr");
         let instr = &m.functions[0].instructions[0];
         assert_eq!(instr.op, "call_builtin");
-        assert_eq!(builtin_name(instr), "lispy_cons");
+        assert_eq!(builtin_name(instr), "dyn_cons");
     }
 
     #[test]
@@ -803,7 +803,7 @@ mod tests {
         lower_heap_builtins_runtime(&mut m);
         let instr = &m.functions[0].instructions[0];
         assert_eq!(instr.dest.as_deref(), Some("%cell"));
-        // srcs = [Var("lispy_cons"), Var("%h"), Var("%t")] — args unchanged.
+        // srcs = [Var("dyn_cons"), Var("%h"), Var("%t")] — args unchanged.
         assert_eq!(instr.srcs[1], Operand::Var("%h".into()));
         assert_eq!(instr.srcs[2], Operand::Var("%t".into()));
     }
@@ -824,8 +824,8 @@ mod tests {
         );
         let mut m = make_module(vec![car, cdr]);
         lower_heap_builtins_runtime(&mut m);
-        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "lispy_car");
-        assert_eq!(builtin_name(&m.functions[0].instructions[1]), "lispy_cdr");
+        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_car");
+        assert_eq!(builtin_name(&m.functions[0].instructions[1]), "dyn_cdr");
         // car/cdr stay 1-arg, dest preserved.
         assert_eq!(m.functions[0].instructions[0].srcs[1], Operand::Var("%pair".into()));
         assert_eq!(m.functions[0].instructions[0].dest.as_deref(), Some("%head"));
@@ -834,12 +834,12 @@ mod tests {
     #[test]
     fn runtime_renames_atom_eq_predicates() {
         // L3b-2c-2: pair?/equal? are renamed here (unambiguous lisp builtins).
-        // `not` is renamed type-directed in lisp_repr (it is also a numeric
+        // `not` is renamed type-directed in dyn_repr (it is also a numeric
         // builtin), so it is NOT renamed by this pass — see
         // `runtime_leaves_not_for_type_directed_rename`.
         for (name, renamed) in [
-            ("pair?", "lispy_pair_p"),
-            ("equal?", "lispy_equal"),
+            ("pair?", "dyn_pair_p"),
+            ("equal?", "dyn_equal"),
         ] {
             let instr = IIRInstr::new(
                 "call_builtin",
@@ -859,8 +859,8 @@ mod tests {
     #[test]
     fn runtime_leaves_not_for_type_directed_rename() {
         // `not` is a numeric builtin too (machine boolean-not), so this pass
-        // must NOT rename it — lisp_repr renames it only when its arg is a
-        // lispy_* result (ATOM = not(pair?)). Renaming here would hijack Twig.
+        // must NOT rename it — dyn_repr renames it only when its arg is a
+        // dyn_* result (ATOM = not(pair?)). Renaming here would hijack Twig.
         let instr = IIRInstr::new(
             "call_builtin",
             Some("%r".into()),

@@ -1,5 +1,9 @@
 # Changelog — iir-builtin-lowering
 
+## 0.20.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_* + passes)
+
+DVAL01-2 (spec DVAL01 sections 3.1-3.3): the IIR builtin *names* are de-lisped. The RUNTIME_RENAMES second column (`cons`->`dyn_cons`, `car`->`dyn_car`, `cdr`->`dyn_cdr`, `pair?`->`dyn_pair_p`, `equal?`->`dyn_equal`) and every `lispy_*` IIR name (`box_int`/`unbox_int`/`truthy`/`to_exit_code`/`nil`/`make_symbol`) become `dyn_*`. The boxing passes `lisp_repr`/`lisp_repr_structural` (files + `lower_lisp_repr`/`lower_lisp_repr_structural` fns) are renamed `dyn_repr`/`dyn_repr_structural`/`lower_dyn_repr`. Prefix-preserving (`dyn_pair_p`, not `dyn_is_pair`) so the IIR name maps cleanly to the already-shipped `__dyn_*` runtime symbol. Pure rename -- no lowering behaviour change; all backends stay in agreement.
+
 ## 0.19.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
 
 DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.

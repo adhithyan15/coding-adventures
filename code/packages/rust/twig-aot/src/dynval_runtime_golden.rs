@@ -164,7 +164,7 @@ fn c_not_follows_lispy_truthiness() {
     assert_eq!(unsafe { __dyn_not(__dyn_box_int(0)) }, f, "not(0) = #f");
 }
 
-/// `lispy_truthy` returns a RAW machine 0/1 (for `jmp_if_false`): false iff
+/// `dyn_truthy` returns a RAW machine 0/1 (for `jmp_if_false`): false iff
 /// `#f` or nil, true for everything else (including the integer 0 and pairs).
 #[test]
 fn c_truthy_returns_raw_bool() {

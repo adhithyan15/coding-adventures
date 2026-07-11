@@ -3,8 +3,8 @@
 //! The eighth and final backend. `jit-core`'s [`GenericCirJit`] is a *universal
 //! bytecode JIT*: any typed-IIR language plugs in by registering its builtins as
 //! Rust callbacks. Unlike the AOT/LLVM tagged-word backends — which lower a
-//! `call_builtin "lispy_*"` to a native `call __dyn_*` into the C runtime
-//! (`dynval_runtime.c`) — the JIT dispatches the *same* `lispy_*` names to Rust
+//! `call_builtin "dyn_*"` to a native `call __dyn_*` into the C runtime
+//! (`dynval_runtime.c`) — the JIT dispatches the *same* `dyn_*` names to Rust
 //! closures backed by the **shared [`dynval_runtime`] crate** (the C runtime's Rust
 //! twin: an identical `u64` tagged-word model). So the JIT inherits the whole lisp
 //! value model for free; this module is only the thin glue.
@@ -93,17 +93,17 @@ fn b_equal(a: &[Value]) -> Value {
         _ => nil(),
     }
 }
-/// `lispy_truthy` — a tagged value → a raw machine `0`/`1` (false iff `#f`/nil),
+/// `dyn_truthy` — a tagged value → a raw machine `0`/`1` (false iff `#f`/nil),
 /// for the backend's `jmp_if_false` in a `COND`. Derived from `LispyValue::is_truthy`.
 fn b_truthy(a: &[Value]) -> Value {
     Value::Int(a.first().map(|x| to_lv(x).is_truthy() as i64).unwrap_or(0))
 }
-/// `lispy_unbox_int` — a tagged integer → its raw machine value, the program-exit
+/// `dyn_unbox_int` — a tagged integer → its raw machine value, the program-exit
 /// coercion for an integer result. Derived from `LispyValue::as_int` (`>> 3`).
 fn b_unbox_int(a: &[Value]) -> Value {
     Value::Int(a.first().and_then(|x| to_lv(x).as_int()).unwrap_or(0))
 }
-/// `lispy_to_exit_code` — the program-exit coercion for a **polymorphic** result
+/// `dyn_to_exit_code` — the program-exit coercion for a **polymorphic** result
 /// (a `LAMBDA` whose return type is `any`): dispatch on the runtime tag, exactly as
 /// `__dyn_to_exit_code` does in `dynval_runtime.c`. Integer → its raw value;
 /// `#t`/`#f`/nil → `1`/`0`/`0`; a symbol or pair → its tagged word verbatim. Built
@@ -127,21 +127,21 @@ fn b_to_exit_code(a: &[Value]) -> Value {
     )
 }
 
-/// Register every McCarthy `lispy_*` builtin on a VM + JIT pair, backed by the
+/// Register every McCarthy `dyn_*` builtin on a VM + JIT pair, backed by the
 /// shared `dynval_runtime` crate. Each is registered on both the VM (the
 /// interpreter fallback for cold/untyped frames) and the `GenericCirJit` (the
 /// compiled path) so the two agree.
 fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
     for (name, f) in [
-        ("lispy_cons", b_cons as fn(&[Value]) -> Value),
-        ("lispy_car", b_car),
-        ("lispy_cdr", b_cdr),
-        ("lispy_pair_p", b_pair_p),
-        ("lispy_not", b_not),
-        ("lispy_equal", b_equal),
-        ("lispy_truthy", b_truthy),
-        ("lispy_unbox_int", b_unbox_int),
-        ("lispy_to_exit_code", b_to_exit_code),
+        ("dyn_cons", b_cons as fn(&[Value]) -> Value),
+        ("dyn_car", b_car),
+        ("dyn_cdr", b_cdr),
+        ("dyn_pair_p", b_pair_p),
+        ("dyn_not", b_not),
+        ("dyn_equal", b_equal),
+        ("dyn_truthy", b_truthy),
+        ("dyn_unbox_int", b_unbox_int),
+        ("dyn_to_exit_code", b_to_exit_code),
     ] {
         vm.builtins_mut().register(name, move |args: &[Value]| Ok(f(args)));
         backend.register_builtin(name, move |args: &[Value]| f(args));
@@ -152,8 +152,8 @@ fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
 /// program's integer result (the entry point's return value).
 ///
 /// The full tagged-word pipeline (`lower_heap_builtins_runtime` → `intern_symbols`
-/// → `lower_lisp_repr`) is applied — the same lowering the native AOT / LLVM
-/// backends use — then the `lispy_*` builtins are wired to `dynval_runtime` and the
+/// → `lower_dyn_repr`) is applied — the same lowering the native AOT / LLVM
+/// backends use — then the `dyn_*` builtins are wired to `dynval_runtime` and the
 /// module is driven through [`JITCore::execute_with_jit`].
 ///
 /// Returns `Ok(None)` if the entry point returns no value (a `void` program).
@@ -163,7 +163,7 @@ pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
     let mut module = compile_source_to_iir(Language::McCarthyLisp, source, "jit")?;
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_lisp_repr(&mut module);
+    iir_builtin_lowering::lower_dyn_repr(&mut module);
 
     let mut vm = VMCore::new();
     let backend = GenericCirJit::new(); // default step-cap (fuel) bounds execution

@@ -1,4 +1,4 @@
-//! # `extern "C"` ABI surface — the `lispy_*` symbols.
+//! # `extern "C"` ABI surface — the `dyn_*` symbols.
 //!
 //! Per LANG20 §"Per-language symbols", each `<lang>-runtime` crate
 //! exposes `extern "C"` entry points that JIT- and AOT-emitted
@@ -17,12 +17,12 @@
 //!
 //! System-V x86_64 / AAPCS64 / RV64 ELF psABI for the platform.
 //! Standard C calling convention — the JIT codegen knows how to
-//! emit a direct call (`call lispy_cons` on x86_64; `bl lispy_cons`
+//! emit a direct call (`call dyn_cons` on x86_64; `bl dyn_cons`
 //! on AArch64).
 //!
 //! ## Error handling
 //!
-//! PR 2 ships a **panic-on-misuse** policy: the `lispy_*` symbols
+//! PR 2 ships a **panic-on-misuse** policy: the `dyn_*` symbols
 //! are intended to be called from JIT/AOT codegen that has
 //! already type-checked its inputs (via guards).  A wrong-type
 //! call panics with a clear message.  PR 4+ will introduce the
@@ -37,9 +37,9 @@
 //!
 //! ## What's locked
 //!
-//! - Symbol names: `lispy_cons`, `lispy_car`, `lispy_cdr`,
-//!   `lispy_make_symbol`, `lispy_make_closure`,
-//!   `lispy_apply_closure`.  Adding a new operation gets a new
+//! - Symbol names: `dyn_cons`, `dyn_car`, `dyn_cdr`,
+//!   `dyn_make_symbol`, `dyn_make_closure`,
+//!   `dyn_apply_closure`.  Adding a new operation gets a new
 //!   symbol; renaming an existing one is a breaking ABI change.
 //! - Argument and return types: all `u64` (values), `*const u8`
 //!   (byte slices), `usize` (lengths).  No `bool`, no `&str`.
@@ -48,7 +48,7 @@
 //! ## What's not locked yet
 //!
 //! - The error channel (PR 4+ — see "Error handling" above).
-//! - Whether `lispy_apply_closure` blocks the calling thread or
+//! - Whether `dyn_apply_closure` blocks the calling thread or
 //!   trampolines through a cooperative scheduler (concurrency
 //!   model is out of LANG20 scope per §"Out of scope").
 
@@ -62,33 +62,33 @@ use crate::value::LispyValue;
 // Cons cell operations
 // ---------------------------------------------------------------------------
 
-/// `lispy_cons(car, cdr) -> u64` — allocate a cons cell and
+/// `dyn_cons(car, cdr) -> u64` — allocate a cons cell and
 /// return the tagged `LispyValue` bits.
 ///
 /// # Safety
 ///
 /// `car` and `cdr` must each be the bits of a value previously
-/// returned by a `lispy_*` constructor (or a constant such as
+/// returned by a `dyn_*` constructor (or a constant such as
 /// `LispyValue::NIL.bits()` or `LispyValue::int(n).bits()`).  An
 /// arbitrary `u64` whose low 3 bits happen to equal `0b111`
 /// would form a fake heap pointer; storing it in the new cell
-/// and later passing the cell through `lispy_car` would
+/// and later passing the cell through `dyn_car` would
 /// dereference an attacker-chosen address.
 #[no_mangle]
-pub unsafe extern "C" fn lispy_cons(car: u64, cdr: u64) -> u64 {
+pub unsafe extern "C" fn dyn_cons(car: u64, cdr: u64) -> u64 {
     // SAFETY: caller upholds that both bits are valid LispyValues.
     let car_v = unsafe { LispyValue::from_raw_bits(car) };
     let cdr_v = unsafe { LispyValue::from_raw_bits(cdr) };
     heap::alloc_cons(car_v, cdr_v).bits()
 }
 
-/// `lispy_car(pair) -> u64` — extract the first element of a
+/// `dyn_car(pair) -> u64` — extract the first element of a
 /// cons cell.
 ///
 /// # Safety
 ///
 /// `pair` must be the bits of a value previously returned by
-/// `lispy_cons`.  An arbitrary `u64` with low 3 bits = `0b111`
+/// `dyn_cons`.  An arbitrary `u64` with low 3 bits = `0b111`
 /// would form a fake heap pointer that the function dereferences.
 ///
 /// # Panics
@@ -97,30 +97,30 @@ pub unsafe extern "C" fn lispy_cons(car: u64, cdr: u64) -> u64 {
 /// JIT/AOT codegen emits a type guard before this call; the
 /// panic indicates the speculation was wrong (JIT bug or stale IC).
 #[no_mangle]
-pub unsafe extern "C" fn lispy_car(pair: u64) -> u64 {
+pub unsafe extern "C" fn dyn_car(pair: u64) -> u64 {
     let v = unsafe { LispyValue::from_raw_bits(pair) };
     // SAFETY: caller upholds that `pair` is a valid LispyValue.
     unsafe { heap::car(v) }
-        .unwrap_or_else(|| panic!("lispy_car: argument {:#x} is not a cons cell", pair))
+        .unwrap_or_else(|| panic!("dyn_car: argument {:#x} is not a cons cell", pair))
         .bits()
 }
 
-/// `lispy_cdr(pair) -> u64` — extract the rest of a cons cell.
+/// `dyn_cdr(pair) -> u64` — extract the rest of a cons cell.
 ///
 /// # Safety
 ///
-/// Same contract as [`lispy_car`]: `pair` must be the bits of a
-/// value previously returned by `lispy_cons`.
+/// Same contract as [`dyn_car`]: `pair` must be the bits of a
+/// value previously returned by `dyn_cons`.
 ///
 /// # Panics
 ///
-/// Same as [`lispy_car`].
+/// Same as [`dyn_car`].
 #[no_mangle]
-pub unsafe extern "C" fn lispy_cdr(pair: u64) -> u64 {
+pub unsafe extern "C" fn dyn_cdr(pair: u64) -> u64 {
     let v = unsafe { LispyValue::from_raw_bits(pair) };
     // SAFETY: caller upholds that `pair` is a valid LispyValue.
     unsafe { heap::cdr(v) }
-        .unwrap_or_else(|| panic!("lispy_cdr: argument {:#x} is not a cons cell", pair))
+        .unwrap_or_else(|| panic!("dyn_cdr: argument {:#x} is not a cons cell", pair))
         .bits()
 }
 
@@ -128,7 +128,7 @@ pub unsafe extern "C" fn lispy_cdr(pair: u64) -> u64 {
 // Symbol interning
 // ---------------------------------------------------------------------------
 
-/// `lispy_make_symbol(bytes, len) -> u64` — intern a symbol from
+/// `dyn_make_symbol(bytes, len) -> u64` — intern a symbol from
 /// a UTF-8 byte slice and return the tagged immediate symbol value.
 ///
 /// # Safety
@@ -137,11 +137,11 @@ pub unsafe extern "C" fn lispy_cdr(pair: u64) -> u64 {
 /// must be valid UTF-8 (the intern table requires owned `String`s);
 /// invalid UTF-8 panics.
 #[no_mangle]
-pub unsafe extern "C" fn lispy_make_symbol(bytes: *const u8, len: usize) -> u64 {
+pub unsafe extern "C" fn dyn_make_symbol(bytes: *const u8, len: usize) -> u64 {
     // SAFETY: caller upholds (bytes, len) describes a live byte slice.
     let slice = unsafe { std::slice::from_raw_parts(bytes, len) };
     let name = std::str::from_utf8(slice)
-        .unwrap_or_else(|e| panic!("lispy_make_symbol: invalid UTF-8: {e}"));
+        .unwrap_or_else(|e| panic!("dyn_make_symbol: invalid UTF-8: {e}"));
     let id = intern::intern(name);
     LispyValue::symbol(id).bits()
 }
@@ -150,7 +150,7 @@ pub unsafe extern "C" fn lispy_make_symbol(bytes: *const u8, len: usize) -> u64 
 // Closure construction
 // ---------------------------------------------------------------------------
 
-/// `lispy_make_closure(fn_name_id, captures, n) -> u64` — allocate
+/// `dyn_make_closure(fn_name_id, captures, n) -> u64` — allocate
 /// a closure with the given underlying function name and captured
 /// values, returning the tagged closure value.
 ///
@@ -162,7 +162,7 @@ pub unsafe extern "C" fn lispy_make_symbol(bytes: *const u8, len: usize) -> u64 
 ///
 /// `captures` must point at exactly `n` valid `u64` values.
 #[no_mangle]
-pub unsafe extern "C" fn lispy_make_closure(
+pub unsafe extern "C" fn dyn_make_closure(
     fn_name_id: u32,
     captures: *const u64,
     n: u32,
@@ -188,7 +188,7 @@ pub unsafe extern "C" fn lispy_make_closure(
 // Closure application
 // ---------------------------------------------------------------------------
 
-/// `lispy_apply_closure(closure, args, n) -> u64` — apply a
+/// `dyn_apply_closure(closure, args, n) -> u64` — apply a
 /// closure to user-supplied arguments and return the result.
 ///
 /// Per the TW00 apply-closure semantics, the closure's captured
@@ -204,9 +204,9 @@ pub unsafe extern "C" fn lispy_make_closure(
 ///
 /// # Safety
 ///
-/// Same as [`lispy_make_closure`] (`args` must be a live slice).
+/// Same as [`dyn_make_closure`] (`args` must be a live slice).
 #[no_mangle]
-pub unsafe extern "C" fn lispy_apply_closure(
+pub unsafe extern "C" fn dyn_apply_closure(
     closure: u64,
     args: *const u64,
     n: u32,
@@ -215,7 +215,7 @@ pub unsafe extern "C" fn lispy_apply_closure(
     // (specifically a closure heap value).
     let v = unsafe { LispyValue::from_raw_bits(closure) };
     if !unsafe { heap::is_closure(v) } {
-        panic!("lispy_apply_closure: argument {closure:#x} is not a closure");
+        panic!("dyn_apply_closure: argument {closure:#x} is not a closure");
     }
     // PR 2 doesn't actually invoke the closure — but we still
     // validate the args slice the caller provided so this entry
@@ -227,7 +227,7 @@ pub unsafe extern "C" fn lispy_apply_closure(
         let _ = unsafe { std::slice::from_raw_parts(args, n as usize) };
     }
     panic!(
-        "lispy_apply_closure: closure dispatch is not wired in PR 2; \
+        "dyn_apply_closure: closure dispatch is not wired in PR 2; \
          lands in PR 4 (vm-core wiring)"
     );
 }
@@ -236,23 +236,23 @@ pub unsafe extern "C" fn lispy_apply_closure(
 // Inspection helpers (used by tests / debuggers)
 // ---------------------------------------------------------------------------
 
-/// `lispy_closure_capture_count(closure) -> u32` — return the
+/// `dyn_closure_capture_count(closure) -> u32` — return the
 /// number of captured values in a closure.
 ///
 /// # Safety
 ///
-/// Same contract as [`lispy_car`]: `closure` must be the bits of
+/// Same contract as [`dyn_car`]: `closure` must be the bits of
 /// a valid `LispyValue` previously produced by this crate.
 ///
 /// # Panics
 ///
 /// Panics if the value is well-formed but not a closure.
 #[no_mangle]
-pub unsafe extern "C" fn lispy_closure_capture_count(closure: u64) -> u32 {
+pub unsafe extern "C" fn dyn_closure_capture_count(closure: u64) -> u32 {
     // SAFETY: caller upholds the safety contract.
     let v = unsafe { LispyValue::from_raw_bits(closure) };
     let clos: &Closure = unsafe { heap::as_closure(v) }
-        .unwrap_or_else(|| panic!("lispy_closure_capture_count: not a closure"));
+        .unwrap_or_else(|| panic!("dyn_closure_capture_count: not a closure"));
     clos.capture_count() as u32
 }
 
@@ -265,15 +265,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn lispy_cons_round_trip() {
+    fn dyn_cons_round_trip() {
         // SAFETY: the inputs are bits of valid LispyValues
         // (LispyValue::int constructors).
-        let v = unsafe { lispy_cons(LispyValue::int(1).bits(), LispyValue::int(2).bits()) };
+        let v = unsafe { dyn_cons(LispyValue::int(1).bits(), LispyValue::int(2).bits()) };
         let pair = unsafe { LispyValue::from_raw_bits(v) };
         assert!(pair.is_heap());
         unsafe {
-            assert_eq!(lispy_car(v), LispyValue::int(1).bits());
-            assert_eq!(lispy_cdr(v), LispyValue::int(2).bits());
+            assert_eq!(dyn_car(v), LispyValue::int(1).bits());
+            assert_eq!(dyn_cdr(v), LispyValue::int(2).bits());
         }
     }
 
@@ -286,45 +286,45 @@ mod tests {
     // `binding::tests`.
 
     #[test]
-    fn lispy_make_symbol_interns() {
+    fn dyn_make_symbol_interns() {
         let bytes = b"abi_symbol_test";
-        let v = unsafe { lispy_make_symbol(bytes.as_ptr(), bytes.len()) };
+        let v = unsafe { dyn_make_symbol(bytes.as_ptr(), bytes.len()) };
         let val = unsafe { LispyValue::from_raw_bits(v) };
         assert!(val.is_symbol());
         // Same name interns to the same id.
-        let v2 = unsafe { lispy_make_symbol(bytes.as_ptr(), bytes.len()) };
+        let v2 = unsafe { dyn_make_symbol(bytes.as_ptr(), bytes.len()) };
         assert_eq!(v, v2);
     }
 
     #[test]
-    fn lispy_make_symbol_handles_empty_bytes() {
-        let v = unsafe { lispy_make_symbol(b"".as_ptr(), 0) };
+    fn dyn_make_symbol_handles_empty_bytes() {
+        let v = unsafe { dyn_make_symbol(b"".as_ptr(), 0) };
         let val = unsafe { LispyValue::from_raw_bits(v) };
         assert!(val.is_symbol());
         assert_eq!(val.as_symbol(), Some(SymbolId::EMPTY));
     }
 
     #[test]
-    fn lispy_make_closure_records_captures() {
+    fn dyn_make_closure_records_captures() {
         let captures = [LispyValue::int(1).bits(), LispyValue::int(2).bits()];
-        let v = unsafe { lispy_make_closure(7, captures.as_ptr(), 2) };
+        let v = unsafe { dyn_make_closure(7, captures.as_ptr(), 2) };
         unsafe {
-            assert_eq!(lispy_closure_capture_count(v), 2);
+            assert_eq!(dyn_closure_capture_count(v), 2);
             let clos = heap::as_closure(LispyValue::from_raw_bits(v)).unwrap();
             assert_eq!(clos.fn_name, SymbolId(7));
         }
     }
 
     #[test]
-    fn lispy_make_closure_with_zero_captures() {
-        let v = unsafe { lispy_make_closure(3, std::ptr::null(), 0) };
+    fn dyn_make_closure_with_zero_captures() {
+        let v = unsafe { dyn_make_closure(3, std::ptr::null(), 0) };
         unsafe {
-            assert_eq!(lispy_closure_capture_count(v), 0);
+            assert_eq!(dyn_closure_capture_count(v), 0);
         }
     }
 
-    // `lispy_apply_closure` panic tests are intentionally omitted
-    // for the same reason as `lispy_car` / `lispy_cdr` (panic-
+    // `dyn_apply_closure` panic tests are intentionally omitted
+    // for the same reason as `dyn_car` / `dyn_cdr` (panic-
     // across-FFI is UB).  The closure validation logic
     // (`heap::is_closure`) is tested via the binding tests.
 }

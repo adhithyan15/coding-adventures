@@ -20,7 +20,7 @@
 //! ```
 //!
 //! Every op it emits — `unbox` / `add` / `box` — is one the code-gen backends
-//! already run (the same ops `lower_heap_builtins` + the `lisp_repr` passes use
+//! already run (the same ops `lower_heap_builtins` + the `dyn_repr` passes use
 //! for `cons`/`car`), so **all five code-gen backends light up from this one
 //! change**. A raw (already-unboxed) operand — an integer literal `const … :
 //! i64` — is used directly, no spurious unbox.
@@ -38,7 +38,7 @@
 //!
 //! After `lower_heap_builtins` (so `car`'s result is a concrete `ref<any>`
 //! `field_load`, and boxed operands are identifiable) and **before** the
-//! `lisp_repr` boxing pass (which then treats the `box`ed result as any other
+//! `dyn_repr` boxing pass (which then treats the `box`ed result as any other
 //! lisp value and unboxes it at the program's return boundary).
 //!
 //! ## Integer contract (layer 2)
@@ -188,7 +188,7 @@ pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction) {
         ));
 
         // Re-box the machine result as a lisp value (`ref<any>`), preserving the
-        // original destination name. The `lisp_repr` pass then treats it like
+        // original destination name. The `dyn_repr` pass then treats it like
         // any other lisp value (unboxing it at the return boundary).
         out.push(IIRInstr::new("box", Some(dest), vec![Operand::Var(s)], REF_ANY));
     }

@@ -1,4 +1,4 @@
-//! # lisp_repr_structural — lisp-value representation for the *managed* backends (LANG77 / L3b-3a-3c).
+//! # dyn_repr_structural — lisp-value representation for the *managed* backends (LANG77 / L3b-3a-3c).
 //!
 //! ## The problem this solves
 //!
@@ -11,7 +11,7 @@
 //! either: you cannot store an `i64` into an `anyref` field, and `any` is not a
 //! concrete type.
 //!
-//! This pass is the managed-backend twin of [`crate::lower_lisp_repr`] (which
+//! This pass is the managed-backend twin of [`crate::lower_dyn_repr`] (which
 //! does the same job for the *native* NaN-box runtime, boxing with `n << 3`).
 //! Here the value model is **uniform-anyref**: every lisp value is a WasmGC
 //! `anyref`; a small integer atom is boxed as an `i31ref` (`box` → `ref.i31`),
@@ -210,7 +210,7 @@ fn call_lisp_arg_indices(instr: &IIRInstr, lisp_funcs: &HashSet<String>) -> Vec<
 /// untouched. Lisp functions share a **uniform-anyref boundary** — every
 /// parameter, call argument, call result, and (non-entry) return is an
 /// `anyref` — so a `LAMBDA`/`LABEL` can be called and can recurse.
-pub fn lower_lisp_repr_structural(module: &mut IIRModule) {
+pub fn lower_dyn_repr_structural(module: &mut IIRModule) {
     let entry = module.entry_point.clone();
     let lisp_funcs = lisp_functions(module);
     for func in &mut module.functions {
@@ -668,7 +668,7 @@ mod tests {
     #[test]
     fn predicate_atom_arg_is_boxed_and_bool_result_is_i32() {
         let mut m = atom_module();
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
 
         // The atom feeding `pair?` is boxed (and narrowed to i32); `not`'s arg
@@ -695,7 +695,7 @@ mod tests {
     #[test]
     fn boxes_atoms_and_unboxes_the_result() {
         let mut m = cons_car_module();
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
 
         // Two `box`es (for atoms 7 and 9) and one `unbox` (the result) appear.
@@ -753,7 +753,7 @@ mod tests {
         let mut m = IIRModule::new("cond", "mccarthy-lisp");
         m.entry_point = Some("main".to_string());
         m.functions = vec![f];
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
 
         // The atom guard `a` is boxed and tested via is_null + not.
@@ -775,7 +775,7 @@ mod tests {
     #[test]
     fn unbox_immediately_precedes_ret() {
         let mut m = cons_car_module();
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
         let pos = f.instructions.iter().position(|i| i.op == "ret").unwrap();
         assert_eq!(f.instructions[pos - 1].op, "unbox", "unbox must feed ret");
@@ -799,7 +799,7 @@ mod tests {
         m.entry_point = Some("main".to_string());
         m.functions = vec![f];
         let before = m.functions[0].instructions.len();
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         // No box/unbox inserted; return type untouched (concretize handles it).
         assert_eq!(m.functions[0].instructions.len(), before);
         assert!(m.functions[0].instructions.iter().all(|i| i.op != "box" && i.op != "unbox"));
@@ -834,7 +834,7 @@ mod tests {
         let mut m = IIRModule::new("lam", "mccarthy-lisp");
         m.entry_point = Some("main".to_string());
         m.functions = vec![lam, main];
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
 
         let lam = &m.functions[0];
         let main = &m.functions[1];
@@ -885,7 +885,7 @@ mod tests {
         let mut m = IIRModule::new("rec", "mccarthy-lisp");
         m.entry_point = Some("main".to_string()); // label_0 is non-entry
         m.functions = vec![f];
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
 
         // The atom branch `mov fun = a` became `box fun = a`.
@@ -934,7 +934,7 @@ mod tests {
         let mut m = IIRModule::new("big", "mccarthy-lisp");
         m.entry_point = Some("main".to_string());
         m.functions = vec![f];
-        lower_lisp_repr_structural(&mut m);
+        lower_dyn_repr_structural(&mut m);
         let f = &m.functions[0];
         // The big const is still i64 (not narrowed). A box is still inserted
         // (the store needs a ref), but the const width is preserved so the

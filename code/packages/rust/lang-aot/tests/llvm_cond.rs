@@ -5,7 +5,7 @@
 //! naive-frontend way: a variable written in 2+ places is promoted to a stack
 //! slot (`alloca`), each assignment a `store`, each read a `load` (`opt -mem2reg`
 //! would collapse them). Two supporting fixes: a `jmp_if` whose condition is the
-//! `i64` `lispy_truthy` result compares against zero (not `trunc void`), and a
+//! `i64` `dyn_truthy` result compares against zero (not `trunc void`), and a
 //! clause block that emits no instructions still gets an explicit fallthrough `br`.
 //! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
 

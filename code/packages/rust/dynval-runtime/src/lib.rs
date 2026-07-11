@@ -20,7 +20,7 @@
 //! ```
 //!
 //! Each frontend reuses **everything in this crate** — `LispyValue`,
-//! `LispyBinding`, all builtins, the `lispy_*` C ABI — and only
+//! `LispyBinding`, all builtins, the `dyn_*` C ABI — and only
 //! writes its own AST → IIR step.
 //!
 //! ## What this PR ships
@@ -42,9 +42,9 @@
 //! - [`builtins`] — TW00 builtin handlers (`+`, `-`, `*`, `/`,
 //!   `=`, `<`, `>`, `cons`, `car`, `cdr`, `null?`, `pair?`,
 //!   `number?`, `symbol?`, `print`).
-//! - [`abi`] — `extern "C"` surface (`lispy_cons`, `lispy_car`,
-//!   `lispy_cdr`, `lispy_make_symbol`, `lispy_make_closure`,
-//!   `lispy_apply_closure`).
+//! - [`abi`] — `extern "C"` surface (`dyn_cons`, `dyn_car`,
+//!   `dyn_cdr`, `dyn_make_symbol`, `dyn_make_closure`,
+//!   `dyn_apply_closure`).
 //!
 //! ## What this PR does NOT ship
 //!
@@ -120,13 +120,13 @@ mod integration_tests {
     /// exactly 8 bytes.  Re-asserted at the crate level to catch
     /// future refactors that move types between modules.
     #[test]
-    fn lispy_binding_value_is_8_bytes() {
+    fn dyn_binding_value_is_8_bytes() {
         assert_eq!(std::mem::size_of::<<LispyBinding as LangBinding>::Value>(), 8);
     }
 
     /// LANG20 invariant: `LANGUAGE_NAME` is lower-snake-case ASCII.
     #[test]
-    fn lispy_language_name_is_correct() {
+    fn dyn_language_name_is_correct() {
         assert_eq!(LispyBinding::LANGUAGE_NAME, "lispy");
     }
 

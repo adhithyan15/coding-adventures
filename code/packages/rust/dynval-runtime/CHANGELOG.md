@@ -1,5 +1,14 @@
 # Changelog — dynval-runtime
 
+## [0.7.0] — 2026-07-11 (DVAL01-2 — de-lisp the ABI export symbols)
+
+DVAL01-2: the Rust ABI mirror's `extern "C"` export symbols are de-lisped
+(`lispy_cons`/`lispy_car`/`lispy_cdr`/`lispy_make_symbol`/`lispy_make_closure`/
+`lispy_apply_closure` → `dyn_*`), and the `LispyBinding` builtin-name
+registrations the VM dispatches on move to `dyn_*` in lockstep with the IIR
+name rename. The tagged-value model, tags, and `LispyValue`/`LispyBinding`
+*type* names are unchanged (a later cleanup). Pure rename.
+
 ## [0.6.0] — 2026-07-11 (DVAL01-1c — crate renamed `lispy-runtime` → `dynval-runtime`)
 
 ### Changed — language-neutral crate name

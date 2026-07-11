@@ -1,5 +1,9 @@
 # Changelog — `x86_64-backend`
 
+## 0.27.0 - 2026-07-11 (DVAL01-2: dyn_* builtin names + fix native runtime-symbol emit)
+
+DVAL01-2: mirrors the aarch64 change on x86_64. De-lisps the V1 builtin lisp entries (`lispy_*`->`dyn_*`) and fixes the same latent DVAL01-1a emit bug: `call_builtin` now emits `__<name>` for `dyn_*` helpers (= `__dyn_cons`, matching the runtime) and `__twig_<name>` otherwise, instead of unconditionally `__twig_<name>`. Fixes the 4 previously-red external-symbol unit tests.
+
 ## 0.26.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
 
 DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.

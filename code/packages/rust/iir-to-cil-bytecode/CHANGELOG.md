@@ -1,5 +1,9 @@
 # Changelog — iir-to-cil-bytecode
 
+## 0.40.1 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_*)
+
+DVAL01-2: the CIL structural lowering's references to the `lispy_cons` IIR name are renamed to `dyn_cons` (heap builtins are handled structurally; the name only appears in a comment + a lowering test). Pure rename.
+
 ## [0.40.0] — 2026-07-11 (LANG-FULL E6d-2a: i64-width `box`/`unbox`)
 
 `box`/`unbox` width-adapt for E6d-2 dynamic arithmetic (i64): `box` of an `int64` local emits `conv.i4` before `box System.Int32`; `unbox` into an `int64` local emits `conv.i8` after `unbox.any System.Int32`. int32-slot lisp box/unbox unchanged.

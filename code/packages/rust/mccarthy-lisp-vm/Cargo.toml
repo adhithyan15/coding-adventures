@@ -1,6 +1,6 @@
 [package]
 name = "mccarthy-lisp-vm"
-version = "0.5.2"
+version = "0.5.3"
 edition = "2021"
 description = "A tiny interpreter for McCarthy 1960 Lisp (Lisp 1.0), built directly on `dynval-runtime`. Executes the `IIRModule` produced by `mccarthy-lisp-iir-compiler` against the dynval-runtime tagged-i64 value model (symbols, cons cells, nil, booleans), returning a `LispyValue`. McCarthy Lisp's own VM — deliberately independent of `twig-vm` (which is Twig-specific); both languages share only the `dynval-runtime` foundation."
 

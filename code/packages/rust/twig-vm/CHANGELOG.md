@@ -1,5 +1,12 @@
 # Changelog — twig-vm
 
+## [0.24.2] — 2026-07-11 (DVAL01-2 — dyn_* builtin dispatch names)
+
+DVAL01-2: the dispatcher's references to the tagged-value builtin names move
+`lispy_*` → `dyn_*` (`src/{lib,operand,dispatch}.rs`), in lockstep with the
+IIR name rename. Pure rename — no dispatch behaviour change; the unsafe seam
+into `dynval-runtime` is untouched.
+
 ## [0.24.1] — 2026-07-11 (DVAL01-1c — dependency renamed `lispy-runtime` → `dynval-runtime`)
 
 The shared tagged-value crate `lispy-runtime` is renamed to `dynval-runtime`

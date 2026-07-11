@@ -245,13 +245,13 @@ impl LispyValue {
     ///
     /// The caller must ensure `bits` was originally produced by a
     /// safe constructor of `LispyValue` (or equivalently, came
-    /// from a prior `lispy_*` FFI call).  An arbitrary `u64` may
+    /// from a prior `dyn_*` FFI call).  An arbitrary `u64` may
     /// have a heap-tag pattern (`bits & 0b111 == 0b111`) without
     /// a real heap allocation behind it; downstream
     /// `heap::car` / `cdr` / `as_closure` would then dereference
     /// an attacker-controlled address.
     ///
-    /// FFI entry points (`lispy_cons` etc.) are `unsafe extern "C"`
+    /// FFI entry points (`dyn_cons` etc.) are `unsafe extern "C"`
     /// and use this constructor inside their `unsafe` block.
     #[inline]
     pub const unsafe fn from_raw_bits(bits: u64) -> LispyValue {
@@ -430,7 +430,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn lispy_value_is_8_bytes() {
+    fn dyn_value_is_8_bytes() {
         // ABI commitment — checked at compile time via `const _:`
         // above, but also exposed here so the failure message is
         // legible.

@@ -2,9 +2,9 @@
 //!
 //! A McCarthy predicate (`pair?`/`equal?`/`not`) returns a **tagged boolean**
 //! (`LISPY_TRUE = 5` / `LISPY_FALSE = 3`), NOT a tagged integer. The fix lives in
-//! the shared native pass `iir_builtin_lowering::lower_lisp_repr`: at the
-//! program-exit boundary a boolean result is coerced with `lispy_truthy` (→ raw
-//! `0`/`1`) instead of `lispy_unbox_int` (which would compute `5 >> 3 = 0` for
+//! the shared native pass `iir_builtin_lowering::lower_dyn_repr`: at the
+//! program-exit boundary a boolean result is coerced with `dyn_truthy` (→ raw
+//! `0`/`1`) instead of `dyn_unbox_int` (which would compute `5 >> 3 = 0` for
 //! *true*). Reusable for every tagged-word backend (LLVM/AOT/JIT).
 //!
 //! **Verified by RUNNING**: emit host-triple LLVM IR, link `dynval_runtime.c`
