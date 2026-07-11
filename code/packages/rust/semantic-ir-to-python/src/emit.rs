@@ -416,6 +416,24 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
                 || indices.iter().any(|ix| index_arg_uses_builtin(ix, name))
         }
         Expr::Convert { value, .. } => expr_uses_builtin(value, name),
+        // SIR23 symbolic-expression/pattern nodes are not accepted by this
+        // backend yet (see `ACCEPTED_FEATURES` in `lib.rs`), so a validated
+        // module never contains them in practice — same rationale as the
+        // SIR22 arms above; recurse into every sub-expression regardless.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => false,
+        Expr::SymApply { head, args, .. } => {
+            expr_uses_builtin(head, name) || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            head.as_deref().is_some_and(|h| expr_uses_builtin(h, name))
+        }
+        Expr::SymPatternNamed { pattern, .. } => expr_uses_builtin(pattern, name),
+        Expr::SymRule { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            expr_uses_builtin(expr, name) || rules.iter().any(|r| expr_uses_builtin(r, name))
+        }
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -1245,6 +1263,24 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::Convert { .. } => {
             panic!(
                 "python backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
+            );
+        }
+        // SIR23 symbolic-expression/pattern nodes. This backend does not
+        // declare `Feature::SymbolicExpr`/`Feature::PatternMatching` in
+        // `ACCEPTED_FEATURES` (see `lib.rs`), so `Backend::check_module`
+        // rejects any module using these nodes before emission is ever
+        // reached — matching the SIR22/SIR26 guard above.
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {
+            panic!(
+                "python backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );

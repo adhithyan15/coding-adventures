@@ -846,6 +846,28 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 e.kind_name()
             );
         }
+        // ── SIR23: symbolic expression + pattern/rewrite nodes (deferred) ──
+        // Neither `Feature::SymbolicExpr` nor `Feature::PatternMatching` is
+        // in `ACCEPTED_FEATURES` (see lib.rs), so `check_module` rejects any
+        // module using these nodes before lowering reaches this emitter —
+        // per the SIR23 spec's "Backend impact": real codegen (a tagged
+        // term-tree value built/consumed via `sir-runtime-symbolic`'s
+        // `__SirSym.apply`/`replaceAll`/`replaceRepeated`) is a follow-up PR
+        // once that runtime package exists, not required for this spec to
+        // land safely. These panics only guard against the capability check
+        // ever drifting, exactly like the SIR22/SIR26 arm above.
+        Expr::SymSymbol { span, .. }
+        | Expr::SymRational { span, .. }
+        | Expr::SymApply { span, .. }
+        | Expr::SymPatternBlank { span, .. }
+        | Expr::SymPatternNamed { span, .. }
+        | Expr::SymRule { span, .. }
+        | Expr::SymReplaceAll { span, .. } => {
+            panic!(
+                "javascript backend reached a deferred SIR23 expression ({}) at {span} — not accepted yet",
+                e.kind_name()
+            );
+        }
     }
 }
 

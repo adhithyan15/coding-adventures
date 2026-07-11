@@ -2,6 +2,123 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.22.0 — SIR23: symbolic expression + pattern/rewrite IR extension
+
+Implements [SIR23](../../../specs/SIR23-symbolic-pattern-semantic-ir.md) —
+the narrow-waist vocabulary for symbolic-CAS math languages (the substrate
+for `wolfram-to-semantic-ir`, `macsyma-to-semantic-ir`,
+`maxima-to-semantic-ir`). Additive only, following the exact discipline
+SIR22 used for the array/matrix extension: every existing SIR10/SIR16/
+SIR17/SIR18/SIR21/SIR22/SIR26 module remains valid; no existing `Expr`/
+`Stmt`/`SirType`/`Feature` variant, validator rule, or backend behaviour
+changed. Every new node kind maps 1:1 onto `symbolic_ir::IRNode`'s existing
+five-variant shape (`Symbol`/`Integer`/`Rational`/`Float`/`Str`/`Apply`);
+`IntLit`/`FloatLit`/`StrLit` already cover `Integer`/`Float`/`Str` (SIR10/
+SIR16), so no new literal nodes were needed for those three.
+
+**New `SirType` variant** (`types.rs`):
+- `SymExpr` — an opaque symbolic-expression handle; carries no static shape
+  (the shape lives in the `Expr` tree, not the type carrier). Prints
+  `sym-expr`.
+
+**New `Expr` variants** (`nodes.rs`):
+- `SymSymbol { name: String, span }` — a bare symbolic-expression symbol
+  (Wolfram `x`, `Plus`, `f`) used as *data*, distinct from `VarRef` (a
+  host-language variable lookup) and `SymLit` (a Ruby-style interned
+  `:symbol`).
+- `SymRational { numer: i64, denom: i64, span }` — an exact rational scalar
+  in reduced form; the IR carries but does not itself reduce the fraction.
+- `SymApply { head: Box<Expr>, args: Vec<Expr>, span }` — `head[args…]` /
+  `head(args…)` as data. `head` is a full `Expr` (not a bare `String`)
+  because a *computed* head is legal Wolfram (`f[x][y]`) — the one place
+  this spec's node shapes deliberately diverge from SIR22's simpler
+  bare-name shapes.
+- `SymPatternBlank { head: Option<Box<Expr>>, span }` — Wolfram `_`
+  (`head: None`) or `_h` (head-constrained, `head: Some(SymSymbol("h"))`).
+- `SymPatternNamed { name: String, pattern: Box<Expr>, span }` — a named
+  pattern variable, Wolfram `x_` / `x_h`.
+- `SymRule { lhs: Box<Expr>, rhs: Box<Expr>, delayed: bool, span }` — a
+  rewrite rule; `delayed: false` is `->` (`Rule`), `true` is `:>`
+  (`RuleDelayed`).
+- `SymReplaceAll { expr: Box<Expr>, rules: Vec<Expr>, repeated: bool, span }`
+  — rule application; `repeated: false` is `/.` (one pass), `true` is `//.`
+  (fixed point). The full binding/traversal/iteration-cap contract every
+  backend implementing this node must honour lives in the spec's "Matcher
+  semantics" section, not in the IR shape itself.
+
+**No new `Stmt` variant** — unlike SIR22's `IndexSet`, every SIR23 node is
+`Expr`-shaped and `Pure` (see "Effects" below); `effects.rs` needed zero
+changes.
+
+**New `Feature` flags** (`manifest.rs`): `SymbolicExpr` (`SymSymbol`/
+`SymApply`) and `PatternMatching` (`SymPatternBlank`/`SymPatternNamed`/
+`SymRule`/`SymReplaceAll`). `SymRational` reuses SIR22's existing
+`Rationals` feature rather than adding a new one, per the spec's explicit
+"share, don't duplicate" instruction for `Rational`/`Complex`.
+
+**Effects** (`validator.rs`): every new `Expr` variant is `Pure` — building,
+matching, and substituting a symbolic term has no observable side effect
+distinct from the value it computes. The validator's `check_expr` observes
+the matching `Feature`(s) for each new node and recurses into every child
+`Expr` (`SymApply`'s `head`+`args`, `SymPatternBlank`'s optional `head`,
+`SymPatternNamed`'s `pattern`, `SymRule`'s `lhs`+`rhs`, `SymReplaceAll`'s
+`expr`+`rules`), so a module using these nodes without declaring the
+feature is a validator error, exactly like every other feature-observation
+rule in this crate.
+
+**Walker** (`walker.rs`, `backend.rs`): both the public `Visitor` traversal
+and `backend.rs`'s internal `walk_intrinsics_in_expr` recurse into every new
+node's children, including the computed-head case (`SymApply`'s `head` may
+itself be a `SymApply`, e.g. `f[x][y]`).
+
+**Printer** (`text/printer.rs`): new S-expression forms, each `sym-`
+prefixed so none collides with an existing head keyword (notably the
+pre-existing `(sym name)` form is `Expr::SymLit`, a different concept) —
+`(sym-symbol name)`, `(sym-rational numer denom)`, `(sym-apply head arg...)`,
+`(sym-pattern-blank [head])`, `(sym-pattern-named name pattern)`,
+`(sym-rule lhs rhs eager|delayed)`, `(sym-replace-all expr (rules rule...)
+once|repeated)`.
+
+**Backend capability rejection**: no backend changes are required for this
+spec to land safely, per the SIR23 spec's "Backend impact" — a backend that
+doesn't declare `SymbolicExpr`/`PatternMatching` in `accepts_features()`
+cleanly rejects any module using these nodes via the existing SIR10
+capability-check mechanism (`Backend::check_module`), proven with new
+`backend.rs` tests constructing a real module whose body nests
+`SymReplaceAll` around a `SymApply` and a `SymRule` with a
+`SymPatternNamed`/`SymPatternBlank` left-hand side — the full symbolic +
+pattern-matching vocabulary in one tree. All five existing Rust-workspace
+backends (`semantic-ir-to-{javascript,typescript,rust,go,python}`) and
+three frontends (`{javascript,ruby,python}-to-semantic-ir`) had exhaustive
+`match` statements over `Expr` that would otherwise fail to compile; each
+gained the minimal compile-compat arm needed to keep `cargo build
+--workspace` green — panic guards in the five backends (unreachable because
+`ACCEPTED_FEATURES` never lists `SymbolicExpr`/`PatternMatching`), and
+faithful structural recursion in the three frontends (none of which emit
+these nodes today), following the exact precedent SIR22 set for its own
+five-backend/three-frontend rollout. Per the spec's own rollout, JS/TS real
+codegen against a `sir-runtime-symbolic` runtime package is explicitly
+future work — that package does not exist yet, so even the JS/TS backends
+get only the compile-compat panic guard in this PR, mirroring how SIR22's
+core PR didn't ship `sir-runtime-array` codegen either. `c-to-semantic-ir`
+and `semantic-ir-to-c` required no changes (no exhaustive `Expr` match).
+
+**Versioning** (`metadata.rs`): `CURRENT_SIR_VERSION` bumped `"2"` → `"3"`,
+following the same "adding a feature is a v.bump" policy that moved `"1"`
+→ `"2"` in SIR22. A frontend lowering a Wolfram/Macsyma/Maxima-family CAS
+language sets `metadata.sir_version` to `"3"` when its module uses any
+SIR23 node. The two `v2`-asserting golden tests (`lib.rs`,
+`text/printer.rs`) were updated to `v3`.
+
+Extensive unit tests added for every new node kind (construction, span
+handling, printer round-trip, walker traversal, validator
+feature-observation) plus new `backend.rs`/`validator.rs` tests proving the
+capability-rejection path against real `SymApply`/`SymPatternBlank`/
+`SymRule`/`SymReplaceAll` node usage — both a validator-level test per node
+kind (rejected undeclared, accepted declared) and an end-to-end test
+through the actual `Backend::check_module` path — not just a hand-set
+manifest flag or a unit assertion on the validator's internal state.
+
 ## 0.21.0 — SIR22: array/matrix IR extension
 
 Implements [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md) — the

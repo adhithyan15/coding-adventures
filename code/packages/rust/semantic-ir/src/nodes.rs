@@ -915,6 +915,121 @@ pub enum Expr {
         to: IntSpec,
         span: Span,
     },
+
+    // ── SIR23: symbolic expression + pattern/rewrite nodes ─────────
+    //
+    // Every node kind below is mapped 1:1 onto `symbolic_ir::IRNode`'s
+    // existing five-variant shape (`Symbol`/`Integer`/`Rational`/`Float`/
+    // `Str`/`Apply`) — see the SIR23 spec's "Motivation" and "New `Expr`
+    // variants" sections.  `IntLit`/`FloatLit`/`StrLit` above already
+    // cover `IRNode::Integer`/`Float`/`Str`; the seven variants below
+    // cover `Symbol`/`Rational`/`Apply` plus the pattern-matching and
+    // rewrite-rule vocabulary a Wolfram-family CAS frontend needs.  All
+    // are `Pure` (see `effects.rs`'s SIR23 doc note) — building,
+    // matching, and substituting a symbolic term has no observable side
+    // effect distinct from the value it computes; SIR23 adds no new
+    // `Stmt` variant at all (unlike SIR22's `IndexSet`).
+    /// A bare symbolic-expression symbol — Wolfram `x`, `Plus`, `f` used
+    /// as *data* rather than evaluated as a variable reference.
+    /// Distinct from [`Expr::VarRef`] (a host-language variable lookup)
+    /// and [`Expr::SymLit`] (a Ruby-style interned `:symbol` literal) —
+    /// `SymSymbol` is a leaf of a *symbolic-expression tree*, mirroring
+    /// `symbolic_ir::IRNode::Symbol`.
+    SymSymbol {
+        name: String,
+        span: Span,
+    },
+
+    /// An exact rational scalar in **reduced form** (numerator and
+    /// denominator share no common factor; denominator positive) —
+    /// Wolfram `1/3`, `Rational[1, 3]`.  The frontend normalizes exactly
+    /// as `symbolic_ir::IRNode::rational` does; the IR itself does not
+    /// reduce or validate the fraction (SIR10 "types carry, don't
+    /// verify").  Mirrors `symbolic_ir::IRNode::Rational`.
+    SymRational {
+        numer: i64,
+        denom: i64,
+        span: Span,
+    },
+
+    /// `head[args…]` / `head(args…)` as **data** — the same expression
+    /// may appear as a value, a pattern target, or a rewrite-rule
+    /// left-hand side (the SIR23 spec's "fidelity decision": patterns
+    /// and rules are first-class data, not a frontend-side
+    /// evaluate-then-lower shortcut).  `head` is a full `Expr`, not a
+    /// bare name, because a *computed* head is legal Wolfram (`f[x][y]`
+    /// applies the result of `f[x]` to `y`) — usually it is a
+    /// `SymSymbol`, but the IR does not narrow the type.  Mirrors
+    /// `symbolic_ir::IRNode::Apply`.
+    SymApply {
+        head: Box<Expr>,
+        args: Vec<Expr>,
+        span: Span,
+    },
+
+    /// A pattern blank — Wolfram `_` (`head: None`) or `_h` (`head:
+    /// Some(SymSymbol("h"))`, a head-constrained blank that matches only
+    /// a subtree whose own "head" — per Wolfram's `Head[]` convention —
+    /// is structurally `h`).  Only meaningful inside a [`SymRule`]'s
+    /// `lhs` (directly, or nested inside a [`SymPatternNamed`]); the
+    /// validator does not itself enforce that placement restriction
+    /// (mirrors how [`Expr::KeywordArg`] restricts its own placement via
+    /// a runtime flag rather than a type-level rule) — a "wild" blank
+    /// appearing outside a pattern position is a frontend bug, not a
+    /// distinct IR shape.
+    ///
+    /// [`SymRule`]: Expr::SymRule
+    /// [`SymPatternNamed`]: Expr::SymPatternNamed
+    SymPatternBlank {
+        head: Option<Box<Expr>>,
+        span: Span,
+    },
+
+    /// A **named** pattern variable — Wolfram `x_` (desugars to
+    /// `SymPatternNamed { name: "x", pattern: SymPatternBlank { head:
+    /// None } }`) or `x_h` (`pattern: SymPatternBlank { head: Some(h) }`).
+    /// Binds `name` to whatever subtree `pattern` matches, for the rest
+    /// of that match attempt — the SIR23 spec's matcher contract: a
+    /// repeated occurrence of the same `name` elsewhere in a rule's
+    /// `lhs` requires structural equality with the first binding, not
+    /// just any match.
+    SymPatternNamed {
+        name: String,
+        pattern: Box<Expr>,
+        span: Span,
+    },
+
+    /// A rewrite rule — Wolfram `lhs -> rhs` (`delayed: false`, `Rule`:
+    /// the rhs is built once, at rule-construction time) or `lhs :> rhs`
+    /// (`delayed: true`, `RuleDelayed`: the rhs is re-evaluated fresh
+    /// per match).  Only the flag distinguishes the two; both share the
+    /// same `lhs`/`rhs` shape.
+    SymRule {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        delayed: bool,
+        span: Span,
+    },
+
+    /// Apply a set of rewrite rules to `expr` — Wolfram `expr /. rules`
+    /// (`repeated: false`, `ReplaceAll`: one top-down, left-to-right
+    /// pass) or `expr //. rules` (`repeated: true`, `ReplaceRepeated`:
+    /// reruns to a fixed point).  `rules` is typically a `Vec` of
+    /// [`SymRule`](Expr::SymRule)s, though the spec allows an element
+    /// that is itself a `SymApply` evaluating to a list of rules at
+    /// runtime (a backend concern, not an IR shape).  See the SIR23
+    /// spec's "Matcher semantics" for the full binding contract —
+    /// notably that every backend implementing `repeated: true` **must**
+    /// enforce an iteration cap: an unbounded `//.` is a guaranteed
+    /// non-terminating program for some inputs, matching the DoS-cap
+    /// convention every other unbounded SIR construct in this repo
+    /// already follows.
+    SymReplaceAll {
+        expr: Box<Expr>,
+        rules: Vec<Expr>,
+        repeated: bool,
+        span: Span,
+    },
 }
 
 /// The five elementwise (broadcast) binary arithmetic operators
@@ -1032,6 +1147,13 @@ impl Expr {
             Expr::Transpose { span, .. } => span,
             Expr::IndexGet { span, .. } => span,
             Expr::Convert { span, .. } => span,
+            Expr::SymSymbol { span, .. } => span,
+            Expr::SymRational { span, .. } => span,
+            Expr::SymApply { span, .. } => span,
+            Expr::SymPatternBlank { span, .. } => span,
+            Expr::SymPatternNamed { span, .. } => span,
+            Expr::SymRule { span, .. } => span,
+            Expr::SymReplaceAll { span, .. } => span,
         }
     }
 
@@ -1069,6 +1191,13 @@ impl Expr {
             Expr::Transpose { .. } => "transpose",
             Expr::IndexGet { .. } => "index-get",
             Expr::Convert { .. } => "convert",
+            Expr::SymSymbol { .. } => "sym-symbol",
+            Expr::SymRational { .. } => "sym-rational",
+            Expr::SymApply { .. } => "sym-apply",
+            Expr::SymPatternBlank { .. } => "sym-pattern-blank",
+            Expr::SymPatternNamed { .. } => "sym-pattern-named",
+            Expr::SymRule { .. } => "sym-rule",
+            Expr::SymReplaceAll { .. } => "sym-replace-all",
         }
     }
 }
@@ -1770,6 +1899,255 @@ mod tests {
             assert_eq!(indices.len(), 3);
         } else {
             panic!("expected IndexGet");
+        }
+    }
+
+    // ── SIR23: symbolic expression + pattern/rewrite nodes ───────────
+
+    #[test]
+    fn sir23_expr_kind_names_and_spans() {
+        let span = s();
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (
+                Expr::SymSymbol {
+                    name: "x".into(),
+                    span: span.clone(),
+                },
+                "sym-symbol",
+            ),
+            (
+                Expr::SymRational {
+                    numer: 1,
+                    denom: 3,
+                    span: span.clone(),
+                },
+                "sym-rational",
+            ),
+            (
+                Expr::SymApply {
+                    head: Box::new(Expr::SymSymbol {
+                        name: "Plus".into(),
+                        span: span.clone(),
+                    }),
+                    args: vec![
+                        Expr::IntLit {
+                            value: 1,
+                            span: span.clone(),
+                        },
+                        Expr::IntLit {
+                            value: 2,
+                            span: span.clone(),
+                        },
+                    ],
+                    span: span.clone(),
+                },
+                "sym-apply",
+            ),
+            (
+                Expr::SymPatternBlank {
+                    head: None,
+                    span: span.clone(),
+                },
+                "sym-pattern-blank",
+            ),
+            (
+                Expr::SymPatternNamed {
+                    name: "x".into(),
+                    pattern: Box::new(Expr::SymPatternBlank {
+                        head: None,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                },
+                "sym-pattern-named",
+            ),
+            (
+                Expr::SymRule {
+                    lhs: Box::new(Expr::SymSymbol {
+                        name: "x".into(),
+                        span: span.clone(),
+                    }),
+                    rhs: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    }),
+                    delayed: false,
+                    span: span.clone(),
+                },
+                "sym-rule",
+            ),
+            (
+                Expr::SymReplaceAll {
+                    expr: Box::new(Expr::SymSymbol {
+                        name: "x".into(),
+                        span: span.clone(),
+                    }),
+                    rules: vec![],
+                    repeated: false,
+                    span: span.clone(),
+                },
+                "sym-replace-all",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
+    fn sym_apply_head_is_an_expr_not_a_bare_string() {
+        // The SIR23 spec's explicit callout: `head` is a full `Expr` (not
+        // a bare `String`) because a *computed* head is legal Wolfram
+        // (`f[x][y]` applies the result of `f[x]` to `y`).  Pin that a
+        // SymApply's own head may itself be a SymApply.
+        let inner = Expr::SymApply {
+            head: Box::new(Expr::SymSymbol {
+                name: "f".into(),
+                span: s(),
+            }),
+            args: vec![Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }],
+            span: s(),
+        };
+        let outer = Expr::SymApply {
+            head: Box::new(inner),
+            args: vec![Expr::SymSymbol {
+                name: "y".into(),
+                span: s(),
+            }],
+            span: s(),
+        };
+        match outer {
+            Expr::SymApply { head, .. } => {
+                assert!(matches!(*head, Expr::SymApply { .. }));
+            }
+            _ => panic!("expected SymApply"),
+        }
+    }
+
+    #[test]
+    fn sym_pattern_blank_head_constrained_vs_bare() {
+        // Wolfram `_` (head: None) vs `_h` (head: Some(SymSymbol("h"))).
+        let bare = Expr::SymPatternBlank {
+            head: None,
+            span: s(),
+        };
+        let constrained = Expr::SymPatternBlank {
+            head: Some(Box::new(Expr::SymSymbol {
+                name: "Integer".into(),
+                span: s(),
+            })),
+            span: s(),
+        };
+        assert_ne!(bare, constrained);
+        match constrained {
+            Expr::SymPatternBlank { head: Some(h), .. } => {
+                assert_eq!(
+                    *h,
+                    Expr::SymSymbol {
+                        name: "Integer".into(),
+                        span: s()
+                    }
+                );
+            }
+            _ => panic!("expected head-constrained SymPatternBlank"),
+        }
+    }
+
+    #[test]
+    fn sym_pattern_named_desugars_x_underscore() {
+        // Wolfram `x_` desugars to SymPatternNamed { name: "x", pattern:
+        // SymPatternBlank { head: None } } per the SIR23 spec.
+        let e = Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank {
+                head: None,
+                span: s(),
+            }),
+            span: s(),
+        };
+        match e {
+            Expr::SymPatternNamed { name, pattern, .. } => {
+                assert_eq!(name, "x");
+                assert!(matches!(*pattern, Expr::SymPatternBlank { head: None, .. }));
+            }
+            _ => panic!("expected SymPatternNamed"),
+        }
+    }
+
+    #[test]
+    fn sym_rule_delayed_flag_distinguishes_rule_from_rule_delayed() {
+        // `->` (Rule, delayed: false) vs `:>` (RuleDelayed, delayed: true).
+        let rule = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let rule_delayed = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            delayed: true,
+            span: s(),
+        };
+        assert_ne!(rule, rule_delayed);
+    }
+
+    #[test]
+    fn sym_replace_all_repeated_flag_distinguishes_replace_all_from_repeated() {
+        // `/.` (ReplaceAll, repeated: false) vs `//.` (ReplaceRepeated,
+        // repeated: true).
+        let once = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![],
+            repeated: false,
+            span: s(),
+        };
+        let fixed_point = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "x".into(),
+                span: s(),
+            }),
+            rules: vec![],
+            repeated: true,
+            span: s(),
+        };
+        assert_ne!(once, fixed_point);
+    }
+
+    #[test]
+    fn sym_rational_carries_numer_denom_without_reducing() {
+        // The IR is a carrier, not a verifier (SIR10): it does not itself
+        // reduce 2/4 to 1/2 — that's the frontend's job, mirroring
+        // `symbolic_ir::IRNode::rational`'s own contract.
+        let unreduced = Expr::SymRational {
+            numer: 2,
+            denom: 4,
+            span: s(),
+        };
+        match unreduced {
+            Expr::SymRational { numer, denom, .. } => {
+                assert_eq!((numer, denom), (2, 4));
+            }
+            _ => panic!("expected SymRational"),
         }
     }
 

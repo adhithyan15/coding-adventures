@@ -31,7 +31,18 @@ use std::fmt;
 ///   moved `"0"` → `"1"` applies again here.  A frontend lowering
 ///   MATLAB/Octave sets `metadata.sir_version` to this value when its
 ///   module uses any SIR22 node.
-pub const CURRENT_SIR_VERSION: &str = "2";
+/// - `"3"` — SIR23: the symbolic expression + pattern/rewrite IR
+///   extension.  One new `SirType` variant (`SymExpr`), seven new
+///   `Expr` variants (`SymSymbol`/`SymRational`/`SymApply`/
+///   `SymPatternBlank`/`SymPatternNamed`/`SymRule`/`SymReplaceAll`), no
+///   new `Stmt` variant (every SIR23 node is `Pure`), and two new
+///   `Feature` flags (`SymbolicExpr`/`PatternMatching`; `Rationals`/
+///   `Complex` are reused from SIR22) — again additive, again new SIR
+///   text tokens, so the same policy bumps `"2"` → `"3"`.  A frontend
+///   lowering a Wolfram/Macsyma/Maxima-family CAS language sets
+///   `metadata.sir_version` to this value when its module uses any
+///   SIR23 node.
+pub const CURRENT_SIR_VERSION: &str = "3";
 
 /// Advisory metadata.  All fields are optional.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -122,7 +133,7 @@ mod tests {
             .with_sir_version(CURRENT_SIR_VERSION);
         assert_eq!(m.source_language.as_deref(), Some("twig"));
         assert_eq!(m.source_version.as_deref(), Some("0.7"));
-        assert_eq!(m.sir_version.as_deref(), Some("2"));
+        assert_eq!(m.sir_version.as_deref(), Some("3"));
         assert!(!m.is_empty());
     }
 
@@ -147,11 +158,11 @@ mod tests {
     }
 
     #[test]
-    fn current_sir_version_is_two() {
-        // Bumped 1 → 2 in SIR22 (array/matrix IR extension: new
-        // SirType/Expr/Stmt/Feature text tokens), following the same
-        // "adding a feature is a v.bump" policy that moved 0 → 1 in
-        // SIR21 T1b.
-        assert_eq!(CURRENT_SIR_VERSION, "2");
+    fn current_sir_version_is_three() {
+        // Bumped 2 → 3 in SIR23 (symbolic expression + pattern/rewrite IR
+        // extension: new SirType/Expr/Feature text tokens), following the
+        // same "adding a feature is a v.bump" policy that moved 1 → 2 in
+        // SIR22.
+        assert_eq!(CURRENT_SIR_VERSION, "3");
     }
 }

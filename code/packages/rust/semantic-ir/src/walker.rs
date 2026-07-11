@@ -356,6 +356,34 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
         Expr::Convert { value, .. } => {
             v.visit_expr(value);
         }
+
+        // ── SIR23: symbolic expression + pattern/rewrite nodes ──────
+        Expr::SymSymbol { .. } => {}
+        Expr::SymRational { .. } => {}
+        Expr::SymApply { head, args, .. } => {
+            v.visit_expr(head);
+            for a in args {
+                v.visit_expr(a);
+            }
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            if let Some(h) = head {
+                v.visit_expr(h);
+            }
+        }
+        Expr::SymPatternNamed { pattern, .. } => {
+            v.visit_expr(pattern);
+        }
+        Expr::SymRule { lhs, rhs, .. } => {
+            v.visit_expr(lhs);
+            v.visit_expr(rhs);
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            v.visit_expr(expr);
+            for r in rules {
+                v.visit_expr(r);
+            }
+        }
     }
 }
 
@@ -905,5 +933,213 @@ mod tests {
         c.visit_module(&m);
         // The index-arg IntLit(0) and the value IntLit(9) — 2 total.
         assert_eq!(c.ints, 2);
+    }
+
+    // ── SIR23: symbolic expression + pattern/rewrite walker tests ────
+
+    #[test]
+    fn visitor_walks_sym_apply_head_and_args() {
+        // f(1, 2) as symbolic data: head `f` (not an IntLit) plus two
+        // IntLit args.
+        let m = module_with_body_value(Expr::SymApply {
+            head: Box::new(Expr::SymSymbol {
+                name: "f".into(),
+                span: s(),
+            }),
+            args: vec![
+                Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                },
+                Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                },
+            ],
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_sym_apply_computed_head() {
+        // f[x][y] — the outer SymApply's head is itself a SymApply whose
+        // own args contain an IntLit; the walker must recurse into it.
+        let m = module_with_body_value(Expr::SymApply {
+            head: Box::new(Expr::SymApply {
+                head: Box::new(Expr::SymSymbol {
+                    name: "f".into(),
+                    span: s(),
+                }),
+                args: vec![Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }],
+                span: s(),
+            }),
+            args: vec![Expr::IntLit {
+                value: 2,
+                span: s(),
+            }],
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_sym_pattern_blank_head() {
+        // `_h` — the head-constrained blank's `head` must be visited.
+        // Use an IntLit stand-in (not a realistic head, but sufficient to
+        // prove the walker recurses).
+        let m = module_with_body_value(Expr::SymPatternBlank {
+            head: Some(Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            })),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+
+        // Bare `_` (head: None) has no children to visit.
+        let m2 = module_with_body_value(Expr::SymPatternBlank {
+            head: None,
+            span: s(),
+        });
+        let mut c2 = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c2.visit_module(&m2);
+        assert_eq!(c2.ints, 0);
+    }
+
+    #[test]
+    fn visitor_walks_sym_pattern_named_pattern() {
+        let m = module_with_body_value(Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank {
+                head: Some(Box::new(Expr::IntLit {
+                    value: 7,
+                    span: s(),
+                })),
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_sym_rule_lhs_and_rhs() {
+        let m = module_with_body_value(Expr::SymRule {
+            lhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            delayed: true,
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_sym_replace_all_expr_and_rules() {
+        // expr /. {rule1, rule2} — the target expr plus every rule in the
+        // rules vec must be visited.
+        let rule1 = Expr::SymRule {
+            lhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let rule2 = Expr::SymRule {
+            lhs: Box::new(Expr::IntLit {
+                value: 3,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 4,
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let m = module_with_body_value(Expr::SymReplaceAll {
+            expr: Box::new(Expr::IntLit {
+                value: 0,
+                span: s(),
+            }),
+            rules: vec![rule1, rule2],
+            repeated: true,
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        // expr(0) + rule1(1,2) + rule2(3,4) = 5 IntLits total.
+        assert_eq!(c.ints, 5);
+    }
+
+    #[test]
+    fn visitor_sym_symbol_and_sym_rational_have_no_children() {
+        let m = module_with_body_value(Expr::SymSymbol {
+            name: "x".into(),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 0);
+
+        let m2 = module_with_body_value(Expr::SymRational {
+            numer: 1,
+            denom: 2,
+            span: s(),
+        });
+        let mut c2 = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c2.visit_module(&m2);
+        assert_eq!(c2.ints, 0);
     }
 }

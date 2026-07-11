@@ -447,6 +447,34 @@ where
         Expr::Convert { value, .. } => {
             walk_intrinsics_in_expr(value, f, depth + 1);
         }
+
+        // ── SIR23: symbolic expression + pattern/rewrite nodes ──────
+        Expr::SymSymbol { .. } => {}
+        Expr::SymRational { .. } => {}
+        Expr::SymApply { head, args, .. } => {
+            walk_intrinsics_in_expr(head, f, depth + 1);
+            for a in args {
+                walk_intrinsics_in_expr(a, f, depth + 1);
+            }
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            if let Some(h) = head {
+                walk_intrinsics_in_expr(h, f, depth + 1);
+            }
+        }
+        Expr::SymPatternNamed { pattern, .. } => {
+            walk_intrinsics_in_expr(pattern, f, depth + 1);
+        }
+        Expr::SymRule { lhs, rhs, .. } => {
+            walk_intrinsics_in_expr(lhs, f, depth + 1);
+            walk_intrinsics_in_expr(rhs, f, depth + 1);
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            walk_intrinsics_in_expr(expr, f, depth + 1);
+            for r in rules {
+                walk_intrinsics_in_expr(r, f, depth + 1);
+            }
+        }
     }
 }
 
@@ -721,6 +749,170 @@ mod tests {
         assert!(errs
             .iter()
             .all(|e| e.kind == BackendErrorKind::UnsupportedFeature));
+    }
+
+    // ── SIR23: capability-rejection tests ────────────────────────────
+    //
+    // Per the SIR23 spec's "Backend impact" section: "Rust/Go/Python
+    // backends: not required in this first wave; they reject modules
+    // declaring SymbolicExpr/PatternMatching per the existing
+    // capability-rejection path."  Same style as the SIR22 block above:
+    // prove the claim against the *actual* mechanism
+    // (`Backend::check_module`), not just by reasoning about it.
+
+    #[test]
+    fn backend_without_symbolic_expr_rejects_module_declaring_it() {
+        let b = NoFeaturesBackend;
+        let m = module_with_feature(Feature::SymbolicExpr);
+        let errs = b.check_module(&m);
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
+        assert!(errs[0].message.contains("symbolic-expr"));
+    }
+
+    #[test]
+    fn backend_without_pattern_matching_rejects_module_declaring_it() {
+        let b = NoFeaturesBackend;
+        let m = module_with_feature(Feature::PatternMatching);
+        let errs = b.check_module(&m);
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
+        assert!(errs[0].message.contains("pattern-matching"));
+    }
+
+    #[test]
+    fn backend_accepting_all_features_allows_symbolic_expr_and_pattern_matching() {
+        let b = AllFeaturesBackend;
+        let m = module_with_feature(Feature::SymbolicExpr);
+        assert!(b.check_module(&m).is_empty());
+        let m2 = module_with_feature(Feature::PatternMatching);
+        assert!(b.check_module(&m2).is_empty());
+    }
+
+    /// The single most important correctness property in the SIR23 spec:
+    /// end-to-end capability-rejection with no bypass.  Build a real
+    /// module whose body contains an actual `Expr::SymReplaceAll` wrapping
+    /// an `Expr::SymApply` and rewriting via an `Expr::SymRule` whose
+    /// left-hand side is an `Expr::SymPatternNamed`/`Expr::SymPatternBlank`
+    /// — the full symbolic + pattern-matching vocabulary the spec
+    /// introduces, in one tree — declare the matching manifest features,
+    /// and confirm a backend that only accepts the SIR v0 baseline still
+    /// rejects it via the *actual* `Backend::check_module` path (not a
+    /// hand-set manifest flag in isolation, and not just a unit assertion
+    /// on the validator's internal state).
+    #[test]
+    fn backend_rejects_module_whose_body_uses_sym_replace_all_and_sym_apply() {
+        let b = NoFeaturesBackend;
+        let mut m = module_with_feature(Feature::SymbolicExpr);
+        m.manifest.add(Feature::PatternMatching);
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                // f(x) /. (x_ -> 0)
+                value: Expr::SymReplaceAll {
+                    expr: Box::new(Expr::SymApply {
+                        head: Box::new(Expr::SymSymbol {
+                            name: "f".into(),
+                            span: s(),
+                        }),
+                        args: vec![Expr::SymSymbol {
+                            name: "x".into(),
+                            span: s(),
+                        }],
+                        span: s(),
+                    }),
+                    rules: vec![Expr::SymRule {
+                        lhs: Box::new(Expr::SymPatternNamed {
+                            name: "x".into(),
+                            pattern: Box::new(Expr::SymPatternBlank {
+                                head: None,
+                                span: s(),
+                            }),
+                            span: s(),
+                        }),
+                        rhs: Box::new(Expr::IntLit {
+                            value: 0,
+                            span: s(),
+                        }),
+                        delayed: false,
+                        span: s(),
+                    }],
+                    repeated: false,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let errs = b.check_module(&m);
+        // Both declared-but-unaccepted features are reported.
+        assert_eq!(errs.len(), 2);
+        assert!(errs
+            .iter()
+            .all(|e| e.kind == BackendErrorKind::UnsupportedFeature));
+    }
+
+    /// Companion to the rejection test above: the identical module tree,
+    /// compiled against a backend that accepts every feature, must pass
+    /// `check_module` cleanly — proving the rejection above is really
+    /// about capability declaration, not some incidental shape problem in
+    /// the constructed tree.
+    #[test]
+    fn backend_accepting_symbolic_features_allows_the_same_module() {
+        let b = AllFeaturesBackend;
+        let mut m = module_with_feature(Feature::SymbolicExpr);
+        m.manifest.add(Feature::PatternMatching);
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::SymReplaceAll {
+                    expr: Box::new(Expr::SymApply {
+                        head: Box::new(Expr::SymSymbol {
+                            name: "f".into(),
+                            span: s(),
+                        }),
+                        args: vec![Expr::SymSymbol {
+                            name: "x".into(),
+                            span: s(),
+                        }],
+                        span: s(),
+                    }),
+                    rules: vec![Expr::SymRule {
+                        lhs: Box::new(Expr::SymPatternNamed {
+                            name: "x".into(),
+                            pattern: Box::new(Expr::SymPatternBlank {
+                                head: None,
+                                span: s(),
+                            }),
+                            span: s(),
+                        }),
+                        rhs: Box::new(Expr::IntLit {
+                            value: 0,
+                            span: s(),
+                        }),
+                        delayed: false,
+                        span: s(),
+                    }],
+                    repeated: false,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        assert!(b.check_module(&m).is_empty());
     }
 
     #[test]

@@ -860,6 +860,26 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 e.span()
             );
         }
+        // ── SIR23 (symbolic expression + pattern/rewrite IR) ──────────
+        // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+        // `SymPatternNamed`/`SymRule`/`SymReplaceAll` observe
+        // `Feature::SymbolicExpr` and/or `Feature::PatternMatching`, neither
+        // of which `ACCEPTED_FEATURES` declares, so the SIR10 capability
+        // gate rejects any module using one of these nodes before it ever
+        // reaches emit — mirrors the SIR22/SIR26 deferred-node panic above.
+        Expr::SymSymbol { .. }
+        | Expr::SymRational { .. }
+        | Expr::SymApply { .. }
+        | Expr::SymPatternBlank { .. }
+        | Expr::SymPatternNamed { .. }
+        | Expr::SymRule { .. }
+        | Expr::SymReplaceAll { .. } => {
+            panic!(
+                "go backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
+                e.kind_name(),
+                e.span()
+            );
+        }
     }
 }
 

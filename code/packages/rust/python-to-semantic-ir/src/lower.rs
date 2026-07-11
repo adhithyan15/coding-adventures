@@ -3742,6 +3742,32 @@ fn collect_callees_expr(expr: &Expr, out: &mut HashSet<String>) {
                 }
             }
         }
+        // SIR23 symbolic-expression/pattern nodes: the Python frontend never
+        // emits these either, but recurse into every child `Expr` slot for
+        // the same reason as the SIR22 nodes above.
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => {}
+        Expr::SymApply { head, args, .. } => {
+            collect_callees_expr(head, out);
+            for a in args {
+                collect_callees_expr(a, out);
+            }
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            if let Some(h) = head {
+                collect_callees_expr(h, out);
+            }
+        }
+        Expr::SymPatternNamed { pattern, .. } => collect_callees_expr(pattern, out),
+        Expr::SymRule { lhs, rhs, .. } => {
+            collect_callees_expr(lhs, out);
+            collect_callees_expr(rhs, out);
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            collect_callees_expr(expr, out);
+            for r in rules {
+                collect_callees_expr(r, out);
+            }
+        }
         // Atoms and references bind nothing.
         Expr::IntLit { .. }
         | Expr::BoolLit { .. }
