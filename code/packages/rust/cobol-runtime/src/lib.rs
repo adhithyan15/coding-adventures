@@ -9,13 +9,14 @@
 //! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
 //! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), `IF … ELSE`
-//! (numeric and alphanumeric comparison), and `PERFORM para [n TIMES]`
-//! (out-of-line paragraph invocation) over numeric-display (`9`/`V`, and
+//! (numeric and alphanumeric comparison), `PERFORM para [n TIMES]`
+//! (out-of-line paragraph invocation), and `GO TO para` (unconditional transfer,
+//! including back-edge loops) over numeric-display (`9`/`V`, and
 //! signed `S` with trailing-overpunch display) and character pictures — and
 //! returns a descriptive error for anything not yet modelled, rather than
 //! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
 //! `SEPARATE`/`LEADING` variants, editing pictures, `PERFORM … THRU`/`UNTIL`/
-//! `VARYING`, `GO TO`, tables, files, later standards) is in PL08.
+//! `VARYING`, `GO TO … DEPENDING`, tables, files, later standards) is in PL08.
 //!
 //! ```
 //! use coding_adventures_cobol_runtime::run_cobol;
@@ -582,19 +583,103 @@ mod tests {
 
     #[test]
     fn unsupported_verb_is_a_clear_error() {
-        // GO TO is not yet executed (it is a later control-flow PR).
+        // ACCEPT is parsed but not yet executed (console input is a later PR).
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 9(3).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    ACCEPT N.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("ACCEPT"), "message should name the verb: {err}");
+    }
+
+    // ----------------------------------------------------------------------
+    // GO TO — unconditional paragraph transfer, and GO TO loops
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn go_to_transfers_control_and_skips_fallthrough() {
+        // GO TO SKIP jumps past MIDDLE; "MIDDLE" is never displayed.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY \"START\".",
+            "    GO TO SKIP.",
+            "MIDDLE.",
+            "    DISPLAY \"MIDDLE\".",
+            "SKIP.",
+            "    DISPLAY \"END\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "START\nEND\n");
+    }
+
+    #[test]
+    fn go_to_forms_a_loop_that_terminates() {
+        // A back-edge GO TO drives a counting loop (iterative — no stack growth).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE 0 TO I.",
+            "LOOP.",
+            "    ADD 1 TO I.",
+            "    DISPLAY I.",
+            "    IF I LESS 3 GO TO LOOP.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "1\n2\n3\n");
+    }
+
+    #[test]
+    fn go_to_out_of_a_performed_paragraph_transfers_at_top_level() {
+        // A GO TO inside a performed paragraph transfers control at the top
+        // level, abandoning the PERFORM's return: MAIN's DISPLAY after the
+        // PERFORM never runs.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SUB.",
+            "    DISPLAY \"AFTER MAIN\".",
+            "    STOP RUN.",
+            "SUB.",
+            "    GO TO ELSEWHERE.",
+            "ELSEWHERE.",
+            "    DISPLAY \"ELSEWHERE\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "ELSEWHERE\n");
+    }
+
+    #[test]
+    fn go_to_unknown_paragraph_is_an_error() {
         let err = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
             "PROCEDURE DIVISION.",
             "MAIN.",
-            "    GO TO SUB.",
-            "SUB.",
-            "    STOP RUN.",
+            "    GO TO NOWHERE.",
         ]))
         .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
-        assert!(err.to_string().contains("GO"), "message should name the verb: {err}");
+        assert!(matches!(err, RuntimeError::UndefinedName(_)), "got {err:?}");
     }
 
     // ----------------------------------------------------------------------

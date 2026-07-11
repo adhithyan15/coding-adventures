@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.0 — GO TO (unconditional transfer) + program-counter execution
+
+- **`GO TO para`** transfers control unconditionally to a paragraph. The
+  procedure division now runs as a **program counter** over paragraphs: after a
+  paragraph, control falls through to the next unless a `GO TO` jumped the counter
+  or `STOP RUN` ended the program.
+- The statement control signal changed from a stop-`bool` to a `Flow`
+  (`Normal` / `Stop` / `GoTo(idx)`) that unwinds out of enclosing
+  `IF`/`PERFORM`/`ON SIZE ERROR` up to the top-level loop.
+- **`GO TO` back-edges form loops** (`IF … GO TO LOOP`) — driven iteratively by
+  the program counter, so a loop never grows the native stack.
+- A `GO TO` inside a performed paragraph transfers control at the top level
+  (abandoning the `PERFORM`'s return) — the honest reading of "GO TO out of a
+  range". `GO TO … DEPENDING ON`, `ALTER`, and range-return niceties are deferred.
+
 ## 0.7.0 — PERFORM (out-of-line paragraph invocation)
 
 - **`PERFORM para [n TIMES]`** runs a named paragraph out of line and returns to
