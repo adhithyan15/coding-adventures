@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.5] - Unreleased
+
+### Fixed
+
+- **`ROUND(x, n)` with a negative digit count** now matches SQLite, which treats
+  a negative `n` as zero rather than rounding to tens/hundreds:
+  `ROUND(2.567, -1)` = `ROUND(2.567, 0)` = `3.0` (was `0.0`), and
+  `ROUND(12.5, -1)` = `13.0`. Positive/zero digit counts, round-half-away-from-
+  zero, and NULL propagation are unchanged.
+
 ## [0.4.4] - Unreleased
 
 ### Added

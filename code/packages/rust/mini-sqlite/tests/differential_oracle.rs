@@ -585,6 +585,16 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT SUBSTRING(s, 2) AS a, SUBSTRING(s, 2, 3) AS b FROM t ORDER BY id",
     },
+    // ROUND with a NEGATIVE digit count is treated as zero digits (SQLite never
+    // rounds to tens/hundreds): round(2.567,-1) = round(2.567,0) = 3.0, not 0.0.
+    Case {
+        id: "round_negative_digits",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, x REAL)",
+            "INSERT INTO t VALUES (1, 2.567), (2, 12.5)",
+        ],
+        query: "SELECT ROUND(x, -1) AS a, ROUND(x, -5) AS b, ROUND(x, 1) AS c FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

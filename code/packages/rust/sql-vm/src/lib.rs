@@ -1326,6 +1326,11 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             } else {
                 0
             };
+            // SQLite treats a NEGATIVE digit count as zero — it never rounds to
+            // tens/hundreds. `round(2.567, -1)` is `round(2.567, 0)` = `3.0`, not
+            // `0.0`. Clamp the low end here (leaving large positive counts alone,
+            // where the value is already unchanged within f64 precision).
+            let digits = digits.max(0);
             // Round half away from zero (SQLite semantics), to `digits` decimal places.
             let factor = 10_f64.powi(digits);
             let rounded = (x * factor).round() / factor;
@@ -3980,5 +3985,33 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_round_clamps_negative_digits_to_zero() {
+        let round = |x: f64, d: Option<i64>| {
+            let mut args = vec![SqlValue::Float(x)];
+            if let Some(d) = d {
+                args.push(SqlValue::Int(d));
+            }
+            call_builtin("ROUND", args).unwrap()
+        };
+        // Positive / zero digit counts are unchanged.
+        assert_eq!(round(2.567, None), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(0)), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(2)), SqlValue::Float(2.57));
+        // Round half away from zero.
+        assert_eq!(round(2.5, None), SqlValue::Float(3.0));
+        assert_eq!(round(-2.5, None), SqlValue::Float(-3.0));
+        // A NEGATIVE digit count behaves as 0 — NOT tens/hundreds rounding.
+        assert_eq!(round(2.567, Some(-1)), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(-5)), SqlValue::Float(3.0));
+        assert_eq!(round(12.5, Some(-1)), SqlValue::Float(13.0));
+        // NULL propagation on either argument.
+        assert_eq!(call_builtin("ROUND", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert_eq!(
+            call_builtin("ROUND", vec![SqlValue::Float(2.5), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
     }
 }
