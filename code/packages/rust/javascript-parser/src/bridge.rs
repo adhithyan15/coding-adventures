@@ -1320,7 +1320,8 @@ fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeE
 ///   a method's `static`, which sits one level up on the `class_element`).
 /// - **key** reuses [`convert_property_key`] — the *same* `property_name` node a
 ///   method key uses, so identifier / string / numeric keys all work, and a
-///   computed `[expr]` key DECLINES (a later slice) → WHITESPACE_ONLY, sound.
+///   computed `[expr]` key lowers to `PropertyKey::Expression` with
+///   `computed: true` (CLOC12.180).
 /// - **initializer** is the optional `assignment_expression`; a bare field
 ///   (`y;`) has none and maps to `value: None`.
 ///
@@ -1386,13 +1387,14 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
         None => None,
     };
 
+    // A computed key `[expr]` bridges to `PropertyKey::Expression` (CLOC12.180),
+    // so the `computed` flag tracks exactly that variant.
+    let computed = matches!(&key, PropertyKey::Expression(_));
     Ok(PropertyDefinition {
         cv: None,
         key,
         value,
-        // Computed keys are declined by `convert_property_key`, so a bridged
-        // field is never computed today (mirrors the method surface).
-        computed: false,
+        computed,
         is_static,
     })
 }
@@ -1457,8 +1459,8 @@ fn convert_method_definition(
         .into_iter()
         .find(|n| n.rule_name == "property_name")
         .ok_or_else(|| internal(node, "method_definition: missing property_name"))?;
-    // `convert_property_key` declines a computed `[expr]` key via
-    // `UnsupportedSyntax` (a later slice), which drops the file — sound.
+    // `convert_property_key` lowers a computed `[expr]` key to
+    // `PropertyKey::Expression` (CLOC12.180); the `computed` flag is set below.
     let key = convert_property_key(key_node)?;
 
     let kind = if saw_get {
@@ -1490,6 +1492,9 @@ fn convert_method_definition(
         None => BlockStatement { cv: None, body: vec![] },
     };
 
+    // A computed key `[expr]` bridges to `PropertyKey::Expression` (CLOC12.180),
+    // so the `computed` flag tracks exactly that variant.
+    let computed = matches!(&key, PropertyKey::Expression(_));
     Ok(MethodDefinition {
         cv: None,
         key,
@@ -1502,9 +1507,7 @@ fn convert_method_definition(
             generator: false,
             is_async: false,
         },
-        // Computed keys are declined above, so a bridged method is never
-        // computed today.
-        computed: false,
+        computed,
         is_static,
     })
 }
@@ -3489,13 +3492,16 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
         let val_n = nodes[1];
         let key = convert_property_key(key_n)?;
         let value = convert_expression(val_n)?;
+        // A computed key `[expr]` bridges to `PropertyKey::Expression`
+        // (CLOC12.180); the `computed` flag tracks exactly that variant.
+        let computed = matches!(&key, PropertyKey::Expression(_));
         return Ok(Property {
             cv: None,
             key,
             value: Box::new(value),
             kind: PropertyKind::Init,
             shorthand: false,
-            computed: false,
+            computed,
             method: false,
         });
     }
@@ -3544,11 +3550,19 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     // real property name. The quote-vs-bare *emission* choice is then made
     // soundly in the emitter (`emit_property_key`), which only drops the quotes
     // when the decoded name is a valid identifier (and never for `__proto__`).
+    // A **computed** key `[expr]` — the `property_name` wraps the key expression
+    // between `[` and `]`. Convert the inner expression to
+    // `PropertyKey::Expression`; the emitter re-brackets it (CLOC12.180). The
+    // inner node is an `assignment_expression` (the same node a field
+    // initializer uses), routed through the shared `convert_expression`, so any
+    // unmodelled key expression DECLINES (safe WHITESPACE_ONLY fallback) rather
+    // than mis-emit.
     if has_token(node, "[") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "ComputedPropertyKey".to_string(),
-            location: loc(node),
-        });
+        let inner = node_children(node)
+            .into_iter()
+            .next()
+            .ok_or_else(|| internal(node, "computed key: missing key expression"))?;
+        return Ok(PropertyKey::Expression(Box::new(convert_expression(inner)?)));
     }
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -3851,13 +3865,14 @@ mod tests {
     }
 
     #[test]
-    fn class_computed_key_declines() {
-        // Computed `[k]()` keys are a later slice; the bridge DECLINES (the file
-        // then falls back to WHITESPACE_ONLY — never a miscompile).
-        assert!(matches!(
-            bridge("x = class { [k](){} };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_computed_method_key() {
+        // `[k](){}` — a computed method key bridges to `PropertyKey::Expression`
+        // and sets `computed: true` (CLOC12.180).
+        let c = class_of("x = class { [k](){} };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.computed);
+        assert!(matches!(&m.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
     }
 
     #[test]
@@ -3949,14 +3964,29 @@ mod tests {
     }
 
     #[test]
-    fn class_computed_field_declines() {
-        // `[k] = v;` — a computed field key is a later slice; DECLINE (the file
-        // falls back to WHITESPACE_ONLY, never a miscompile) — mirrors the
-        // computed *method* key decline.
-        assert!(matches!(
-            bridge("w = class { [k] = v; };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_computed_field_key() {
+        // `[k] = v;` — a computed field key bridges to `PropertyKey::Expression`
+        // with `computed: true`, and the initializer is preserved (CLOC12.180).
+        let f = field_of("w = class { [k] = v; };");
+        assert!(f.computed);
+        assert!(matches!(&f.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+        assert!(matches!(&f.value, Some(Expression::Identifier(id)) if id.name == "v"));
+    }
+
+    #[test]
+    fn object_computed_key() {
+        // `{ [k]: v }` — an object computed key also bridges to
+        // `PropertyKey::Expression` with `computed: true`.
+        let p = bridge_ok("x = { [k]: v };");
+        let Expression::AssignmentExpression(a) = first_expr(&p) else {
+            panic!("expected assignment")
+        };
+        let Expression::ObjectExpression(o) = &*a.right else { panic!("expected object") };
+        let ObjectMember::Property(prop) = &o.properties[0] else { panic!("expected property") };
+        assert!(prop.computed);
+        assert!(matches!(&prop.key, PropertyKey::Expression(e)
+            if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
     }
 
     #[test]

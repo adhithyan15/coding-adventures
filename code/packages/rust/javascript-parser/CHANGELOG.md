@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.44.0] - 2026-07-11
+
+### Added — CLOC12.180: bridge computed member keys (`[expr]`)
+
+`convert_property_key` declined every computed `[expr]` key (dropping the file to
+WHITESPACE_ONLY); it now lowers the inner key expression to
+`PropertyKey::Expression` (the typed-AST variant the emitter already brackets).
+Because `convert_property_key` is the shared key converter, one change enables
+computed keys in **all** three positions:
+
+- a class computed **field** (`class C { [k] = v }`),
+- a class computed **method** (`class C { [k](){} }`), and
+- an object-literal computed key (`{ [k]: v }`).
+
+Each construction site (`convert_class_field`, `convert_method_definition`, the
+object `Property` builder) now sets its `computed` flag to
+`matches!(key, PropertyKey::Expression(_))` instead of hard-coding `false`. The
+inner key is routed through the shared `convert_expression`, so an unmodelled key
+expression DECLINES (safe WHITESPACE_ONLY) rather than mis-emit.
+
+2 former decline tests flipped to success (`class_computed_method_key`,
+`class_computed_field_key`); a new `object_computed_key` test covers the object
+position. Full parser suite (216) green. MINOR.
+
 ## [0.43.0] - 2026-07-11
 
 ### Added — CLOC12.179: bridge private accessors (`get #x()` / `set #x()`)
