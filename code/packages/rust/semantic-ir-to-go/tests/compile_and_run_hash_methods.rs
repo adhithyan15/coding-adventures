@@ -528,3 +528,108 @@ fn hash_enumerable_breadth_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+// ── Hash to_h / each_with_index / each_with_object ─────────────────────────
+//
+// Rounds out Hash's Enumerable iteration surface, mirroring the Python
+// reference (#8009).  `to_h` has a no-block (shallow copy) and a block (re-map)
+// form; `each_with_index`/`each_with_object` yield the `[k, v]` PAIR as a single
+// argument alongside the index/memo (Ruby's Enumerable convention — contrast
+// `each`'s two-arg `(k, v)` yield).
+fn to_h_module() -> Module {
+    // { |k, v| [k, v * 2] } — re-map each pair, doubling the value.
+    let dbl = lambda_fn2(
+        "__lam_dbl",
+        "k",
+        "v",
+        Expr::SeqLit {
+            items: vec![var_p("k"), builtin("*", vec![var_p("v"), ilit(2)])],
+            span: s(),
+        },
+    );
+    // { |pair, i| print [pair, i] } — observe the (pair, index) yield.
+    let print_pi = lambda_fn2(
+        "__lam_pi",
+        "pair",
+        "i",
+        builtin("print", vec![Expr::SeqLit { items: vec![var_p("pair"), var_p("i")], span: s() }]),
+    );
+    // { |pair, memo| print [pair, memo] } — observe the (pair, memo) yield.
+    let print_pm = lambda_fn2(
+        "__lam_pm",
+        "pair",
+        "memo",
+        builtin("print", vec![Expr::SeqLit { items: vec![var_p("pair"), var_p("memo")], span: s() }]),
+    );
+
+    let stmts = vec![
+        // {a:1,b:2}.to_h (no block) → a shallow copy: {a: 1, b: 2}
+        print_stmt(method(map_of(vec![("a", 1), ("b", 2)]), "to_h", vec![])),
+        // {a:1,b:2}.to_h { |k, v| [k, v * 2] } → {a: 2, b: 4}
+        print_stmt(method(map_of(vec![("a", 1), ("b", 2)]), "to_h", vec![closure("__lam_dbl")])),
+        // {a:1,b:2}.each_with_index { |pair, i| print [pair, i] }
+        //   → "[[a, 1], 0]", "[[b, 2], 1]", then the returned self "{a: 1, b: 2}"
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "each_with_index",
+            vec![closure("__lam_pi")],
+        )),
+        // {a:1,b:2}.each_with_object(0) { |pair, memo| print [pair, memo] }
+        //   → "[[a, 1], 0]", "[[b, 2], 0]", then the returned memo "0"
+        print_stmt(method(
+            map_of(vec![("a", 1), ("b", 2)]),
+            "each_with_object",
+            vec![ilit(0), closure("__lam_pm")],
+        )),
+        // {a:1}.each_with_object { |pair, memo| … } with NO memo arg → returns
+        // the receiver unchanged (the block is never called): "{a: 1}"
+        print_stmt(method(map_of(vec![("a", 1)]), "each_with_object", vec![closure("__lam_pm")])),
+    ];
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    };
+
+    program(vec![dbl, print_pi, print_pm, main])
+}
+
+#[test]
+fn hash_to_h_and_indexed_iteration_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let artifact = compile(&to_h_module()).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "toh");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "{a: 1, b: 2}",   // to_h (no block) → shallow copy
+            "{a: 2, b: 4}",   // to_h { [k, v*2] } → re-mapped
+            "[[a, 1], 0]",    // each_with_index yields ([a,1], 0)
+            "[[b, 2], 1]",    // each_with_index yields ([b,2], 1)
+            "{a: 1, b: 2}",   // each_with_index returns self
+            "[[a, 1], 0]",    // each_with_object yields ([a,1], 0)
+            "[[b, 2], 0]",    // each_with_object yields ([b,2], 0)
+            "0",              // each_with_object returns the memo
+            "{a: 1}",         // each_with_object with no memo → returns self
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
