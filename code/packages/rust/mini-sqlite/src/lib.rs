@@ -401,12 +401,10 @@ impl ConnectionState {
             first_kw.as_str(),
             "INSERT" | "UPDATE" | "DELETE" | "CREATE" | "DROP"
         );
-        if needs_transaction && !self.autocommit {
-            if self.backend.current_transaction().is_none() {
-                self.backend
-                    .begin_transaction()
-                    .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
-            }
+        if needs_transaction && !self.autocommit && self.backend.current_transaction().is_none() {
+            self.backend
+                .begin_transaction()
+                .map_err(|e| MiniSqliteError::OperationalError(e.to_string()))?;
         }
 
         // ── Pipeline ────────────────────────────────────────────────────────
@@ -1253,11 +1251,12 @@ mod tests {
                     let op = step["op"].as_str().unwrap_or("");
                     if op == "connect_expect_error" {
                         let db = step["database"].as_str().unwrap_or(":memory:");
-                        match connect(db) {
-                            Ok(_) => panic!(
+                        // A file-path connect must be rejected at Level 1; an Err
+                        // is the expected outcome, so only success is a failure.
+                        if connect(db).is_ok() {
+                            panic!(
                                 "{fixture_id}: connect({db:?}) should have returned Err but succeeded"
-                            ),
-                            Err(_) => {} // expected — continue to next step
+                            );
                         }
                     }
                 }

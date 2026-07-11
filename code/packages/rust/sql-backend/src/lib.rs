@@ -867,7 +867,7 @@ impl Backend for InMemoryBackend {
     fn list_indexes(&self, table: Option<&str>) -> Vec<IndexDef> {
         self.indexes
             .values()
-            .filter(|index| table.map_or(true, |table| same_name(&index.table, table)))
+            .filter(|index| table.is_none_or(|table| same_name(&index.table, table)))
             .cloned()
             .collect()
     }
