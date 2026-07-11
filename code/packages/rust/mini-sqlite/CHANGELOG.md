@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.5 — Multi-argument MAX/MIN are the scalar functions
+
+Stream A correctness fix: `SELECT MAX(3, 9, 5)` returned `3` (the first argument)
+instead of `9`, because the planner treated *every* `MIN`/`MAX` as the aggregate.
+Two-or-more-argument `MIN`/`MAX` are the SCALAR largest/smallest functions and
+are now dispatched as such (sql-planner 0.2.0 gates on arity; sql-vm 0.4.2 adds
+the scalar builtin); the single-argument aggregate forms are unchanged. Three
+new differential-oracle cases (`scalar_max_min`, `scalar_max_null`, plus an
+`agg_max_min_still_work` regression guard) diff against real bundled SQLite.
+
 ## 0.5.4 — IIF(x, y, z) — the function form of CASE
 
 Stream B, corpus growth. `IIF(x, y, z)` now works — SQLite's function-form

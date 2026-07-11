@@ -1428,6 +1428,34 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             Ok(SqlValue::Text(lit))
         }
 
+        "MAX" | "MIN" => {
+            // The SCALAR forms of MAX/MIN — two-or-more arguments — return the
+            // largest / smallest argument, or NULL if ANY argument is NULL
+            // (SQLite semantics). The single-argument forms are the AGGREGATE
+            // max/min and are compiled to `FinalizeAgg`, never reaching here; the
+            // planner routes only the 2+-argument calls to `call_builtin`.
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch(format!("{name} expects at least 1 arg")));
+            }
+            if args.iter().any(|a| matches!(a, SqlValue::Null)) {
+                return Ok(SqlValue::Null);
+            }
+            let want_max = name == "MAX";
+            let mut best = args[0].clone();
+            for a in &args[1..] {
+                let ord = sql_cmp(a, &best);
+                let take = if want_max {
+                    ord == std::cmp::Ordering::Greater
+                } else {
+                    ord == std::cmp::Ordering::Less
+                };
+                if take {
+                    best = a.clone();
+                }
+            }
+            Ok(best)
+        }
+
         "IIF" => {
             // IIF(x, y, z) — SQLite's function-form conditional, equivalent to
             // `CASE WHEN x THEN y ELSE z END`: `y` when `x` is truthy (SQL
@@ -3672,6 +3700,21 @@ mod tests {
         assert_eq!(q(SqlValue::Int(-7)), "-7");
         assert_eq!(q(SqlValue::Text("it's".into())), "'it''s'"); // inner quote doubled
         assert_eq!(q(SqlValue::Blob(vec![0xde, 0xad])), "X'DEAD'");
+    }
+
+    #[test]
+    fn builtin_scalar_max_min() {
+        let mx = |vs: Vec<SqlValue>| call_builtin("MAX", vs).unwrap();
+        let mn = |vs: Vec<SqlValue>| call_builtin("MIN", vs).unwrap();
+        assert_eq!(mx(vec![SqlValue::Int(3), SqlValue::Int(9), SqlValue::Int(5)]), SqlValue::Int(9));
+        assert_eq!(mn(vec![SqlValue::Int(3), SqlValue::Int(9), SqlValue::Int(5)]), SqlValue::Int(3));
+        // Any NULL argument → NULL.
+        assert_eq!(mx(vec![SqlValue::Int(1), SqlValue::Null, SqlValue::Int(3)]), SqlValue::Null);
+        // Text ordering.
+        assert_eq!(
+            mn(vec![SqlValue::Text("b".into()), SqlValue::Text("a".into()), SqlValue::Text("c".into())]),
+            SqlValue::Text("a".into())
+        );
     }
 
     #[test]
