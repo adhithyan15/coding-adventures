@@ -4,6 +4,8 @@
 // letter counts, brute-force, and the frequency-analysis attack.
 #include "iso_test.h"
 
+#include <climits> // INT_MIN, INT_MAX — extreme-shift edge cases
+
 #include "caesar_cipher.hpp"
 
 int main() {
@@ -25,6 +27,12 @@ int main() {
     ISO_CHECK_STR_EQ(encrypt("abc", 29).c_str(), "def");
     ISO_CHECK_STR_EQ(encrypt("abc", -23).c_str(), "def");
     ISO_CHECK_STR_EQ(encrypt("unchanged 123!", 26).c_str(), "unchanged 123!");
+
+    // Extreme shifts must not invoke UB (INT_MIN negation) and must round-trip.
+    ISO_CHECK_STR_EQ(decrypt(encrypt("Round Trip!", INT_MIN), INT_MIN).c_str(),
+                     "Round Trip!");
+    ISO_CHECK_STR_EQ(decrypt(encrypt("Round Trip!", INT_MAX), INT_MAX).c_str(),
+                     "Round Trip!");
 
     // Letter counts (case-insensitive, non-letters ignored).
     auto counts = letter_counts("Hello, World!");

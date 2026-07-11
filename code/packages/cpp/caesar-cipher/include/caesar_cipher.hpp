@@ -77,8 +77,10 @@ inline std::string encrypt(const std::string &text, int shift) {
 }
 
 // decrypt — the inverse of encrypt (shift backwards).
+// Avoids computing `-shift` (which is undefined behavior for shift == INT_MIN):
+// normalise first, then encrypt by the complementary positive shift.
 inline std::string decrypt(const std::string &text, int shift) {
-    return encrypt(text, -shift);
+    return encrypt(text, 26 - detail::normalise_shift(shift));
 }
 
 // rot13 — encrypt with a shift of 13; its own inverse.

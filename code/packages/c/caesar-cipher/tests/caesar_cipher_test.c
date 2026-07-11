@@ -7,6 +7,8 @@
  */
 #include "iso_test.h"
 
+#include <limits.h> /* INT_MIN, INT_MAX — extreme-shift edge cases */
+
 #include "caesar_cipher.h"
 
 int main(void) {
@@ -44,6 +46,15 @@ int main(void) {
     /* A shift of 0 (or any multiple of 26) is the identity. */
     caesar_encrypt("unchanged 123!", 26, buf, sizeof buf);
     ISO_CHECK_STR_EQ(buf, "unchanged 123!");
+
+    /* Extreme shifts must not invoke UB (INT_MIN negation) and must round-trip:
+     * encrypt then decrypt with the same extreme shift restores the plaintext. */
+    caesar_encrypt("Round Trip!", INT_MIN, buf, sizeof buf);
+    caesar_decrypt(buf, INT_MIN, round, sizeof round);
+    ISO_CHECK_STR_EQ(round, "Round Trip!");
+    caesar_encrypt("Round Trip!", INT_MAX, buf, sizeof buf);
+    caesar_decrypt(buf, INT_MAX, round, sizeof round);
+    ISO_CHECK_STR_EQ(round, "Round Trip!");
 
     /* Return value is the character count (excludes the NUL). */
     ISO_CHECK_EQ_INT(caesar_encrypt("abcde", 1, buf, sizeof buf), 5);

@@ -60,8 +60,10 @@ long caesar_encrypt(const char *text, int shift, char *out, size_t out_size) {
     int normalised;
     size_t i;
 
-    if (out_size < len + 1) {
-        return -1; /* not enough room for the text plus its NUL terminator */
+    if (out_size <= len) {
+        /* Need len chars + a NUL, i.e. out_size >= len + 1. Written as
+         * `out_size <= len` so it cannot overflow even if len == SIZE_MAX. */
+        return -1;
     }
     normalised = normalise_shift(shift);
     for (i = 0; i < len; i++) {
@@ -72,8 +74,14 @@ long caesar_encrypt(const char *text, int shift, char *out, size_t out_size) {
 }
 
 long caesar_decrypt(const char *text, int shift, char *out, size_t out_size) {
-    /* Decrypting by `shift` is encrypting by `-shift`. */
-    return caesar_encrypt(text, -shift, out, out_size);
+    /* Decrypting by `shift` is encrypting by `-shift`. We must NOT compute
+     * `-shift` directly: for shift == INT_MIN the negation overflows (undefined
+     * behavior). Instead normalise first (normalise_shift is well-defined for
+     * every int, since `INT_MIN % 26` is defined), then encrypt by the
+     * complementary positive shift 26 - normalised, which is congruent to
+     * -shift (mod 26). caesar_encrypt re-normalises, so a value of 26 is fine. */
+    int inverse = 26 - normalise_shift(shift);
+    return caesar_encrypt(text, inverse, out, out_size);
 }
 
 long caesar_rot13(const char *text, char *out, size_t out_size) {
