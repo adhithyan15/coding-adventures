@@ -3,6 +3,20 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.6] - Unreleased
+
+### Added
+
+- **`UNHEX(x)` / `UNHEX(x, ignore)`** — the inverse of `HEX`: decode a string of
+  hexadecimal digit pairs into a blob (case-insensitive). `unhex('414243')` →
+  `x'414243'`, `unhex('')` → empty blob; an odd number of digits or a non-hex
+  character yields NULL. The optional second argument is a set of ignorable
+  characters, which SQLite permits only at a byte boundary — never splitting a
+  pair: `unhex('41.42', '.')` → `x'4142'` but `unhex('4-1-4-2', '-')` → NULL.
+  Integer/boolean arguments coerce to their decimal text; NULL in either argument
+  → NULL. Output is bounded by the input length (no unbounded allocation), and
+  arity is checked before indexing.
+
 ## [0.4.5] - Unreleased
 
 ### Fixed

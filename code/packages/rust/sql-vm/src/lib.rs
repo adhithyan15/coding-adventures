@@ -1046,6 +1046,7 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | SUBSTR   | 2–3  | 1-indexed substring extraction (alias: SUBSTRING)     |
 /// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
 /// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
+/// | UNHEX    | 1–2  | Decode hex digit pairs into a blob (inverse of HEX)   |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
@@ -1433,6 +1434,70 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 out.push_str(&format!("{byte:02X}"));
             }
             Ok(SqlValue::Text(out))
+        }
+
+        "UNHEX" => {
+            // UNHEX(x) / UNHEX(x, ignore): the inverse of HEX — decode a string of
+            // hexadecimal digit pairs into a blob. Case-insensitive.
+            //
+            //   unhex('414243')  -> x'414243'  ("ABC")
+            //   unhex('')        -> x''          (empty blob)
+            //   unhex('abc')     -> NULL         (odd number of digits)
+            //   unhex('4g')      -> NULL         (non-hex character)
+            //   unhex(12)        -> x'12'        (integer coerces to its digits)
+            //
+            // The optional second argument is a *set of ignorable characters*.
+            // An ignorable character may appear only at a byte boundary — never
+            // splitting a hex pair — matching SQLite exactly:
+            //
+            //   unhex('41.42', '.')   -> x'4142'   ('.' sits between pairs)
+            //   unhex('4-1-4-2', '-') -> NULL      ('-' splits the pair '4'…'1')
+            //
+            // NULL in either argument yields NULL. Integer/boolean `x` coerces to
+            // its decimal text (via `trim_coerce`); Float/Blob are declined, as
+            // with HEX/QUOTE.
+            if args.is_empty() || args.len() > 2 {
+                return Err(VmError::TypeMismatch(format!("UNHEX expects 1 or 2 args, got {}", args.len())));
+            }
+            let x = match trim_coerce("UNHEX", &args[0])? {
+                None => return Ok(SqlValue::Null),
+                Some(s) => s,
+            };
+            let ignore: std::collections::HashSet<char> = if args.len() == 2 {
+                match trim_coerce("UNHEX", &args[1])? {
+                    None => return Ok(SqlValue::Null),
+                    Some(s) => s.chars().collect(),
+                }
+            } else {
+                std::collections::HashSet::new()
+            };
+            // Output is at most half the input length — bounded by the argument,
+            // so no unbounded allocation.
+            let mut out: Vec<u8> = Vec::with_capacity(x.len() / 2);
+            let mut high: Option<u8> = None;
+            for c in x.chars() {
+                if let Some(v) = c.to_digit(16) {
+                    match high {
+                        None => high = Some(v as u8),
+                        Some(h) => {
+                            out.push(h * 16 + v as u8);
+                            high = None;
+                        }
+                    }
+                } else if ignore.contains(&c) {
+                    // Only allowed at a byte boundary, never mid-pair.
+                    if high.is_some() {
+                        return Ok(SqlValue::Null);
+                    }
+                } else {
+                    // Any other character invalidates the whole string.
+                    return Ok(SqlValue::Null);
+                }
+            }
+            if high.is_some() {
+                return Ok(SqlValue::Null); // a trailing, unpaired hex digit
+            }
+            Ok(SqlValue::Blob(out))
         }
 
         "SIGN" => {
@@ -3985,6 +4050,47 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_unhex_decodes_hex_pairs() {
+        let u1 = |s: &str| call_builtin("UNHEX", vec![SqlValue::Text(s.into())]).unwrap();
+        // Even-length hex → blob; case-insensitive.
+        assert_eq!(u1("414243"), SqlValue::Blob(vec![0x41, 0x42, 0x43]));
+        assert_eq!(u1("abcdef"), SqlValue::Blob(vec![0xab, 0xcd, 0xef]));
+        assert_eq!(u1("ABCDEF"), SqlValue::Blob(vec![0xab, 0xcd, 0xef]));
+        assert_eq!(u1(""), SqlValue::Blob(vec![])); // empty → empty blob
+        // Odd length or a non-hex character → NULL.
+        assert_eq!(u1("abc"), SqlValue::Null);
+        assert_eq!(u1("4g"), SqlValue::Null);
+        assert_eq!(u1("41 42"), SqlValue::Null);
+        // NULL propagates; an integer coerces to its decimal digits.
+        assert_eq!(call_builtin("UNHEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert_eq!(
+            call_builtin("UNHEX", vec![SqlValue::Int(12)]).unwrap(),
+            SqlValue::Blob(vec![0x12])
+        );
+        // Result is a blob.
+        assert!(matches!(u1("41"), SqlValue::Blob(_)));
+    }
+
+    #[test]
+    fn builtin_unhex_ignore_set_only_at_byte_boundaries() {
+        let u2 = |s: &str, ig: &str| {
+            call_builtin("UNHEX", vec![SqlValue::Text(s.into()), SqlValue::Text(ig.into())]).unwrap()
+        };
+        // An ignorable char between pairs is fine.
+        assert_eq!(u2("41.42", "."), SqlValue::Blob(vec![0x41, 0x42]));
+        assert_eq!(u2("41", "x"), SqlValue::Blob(vec![0x41])); // ignore char absent
+        // An ignorable char that splits a pair invalidates the string.
+        assert_eq!(u2("4-1-4-2", "-"), SqlValue::Null);
+        // A NULL ignore set yields NULL.
+        assert_eq!(
+            call_builtin("UNHEX", vec![SqlValue::Text("41".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        // Zero args is an arity error, not a panic.
+        assert!(call_builtin("UNHEX", vec![]).is_err());
     }
 
     #[test]

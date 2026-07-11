@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.10 — UNHEX (decode hex to blob)
+
+Grows the SQL scalar surface (sql-vm 0.4.6): `UNHEX(x)` / `UNHEX(x, ignore)`
+decodes hexadecimal digit pairs into a blob — the inverse of `HEX`. Odd length
+or non-hex characters → NULL; the optional ignore-set is honoured only at byte
+boundaries (`unhex('41.42','.')` → `x'4142'`, `unhex('4-1-4-2','-')` → NULL).
+Two new differential-oracle cases (`unhex`, `unhex_ignore_set`) diff against real
+bundled SQLite.
+
+Note: adding UNHEX surfaced a separate, pre-existing divergence — `HEX(NULL)`
+returns NULL here but real SQLite returns an empty string. That is left for its
+own fix; the UNHEX oracle cases compare blobs directly to avoid it.
+
 ## 0.5.9 — Fix ROUND with a negative digit count
 
 Stream A correctness fix (sql-vm 0.4.5): `ROUND(x, n)` with a negative `n` now
