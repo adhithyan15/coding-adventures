@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.26.0 — Hash transforming block methods: `transform_values` / `transform_keys`
+
+Mirrors the Python `sir-runtime-oop` v0.1.18 reference (PR #7909) into the
+JavaScript backend's emitted runtime (`hashMethod` + the `HASH_METHODS`
+`respond_to?` set), adding two non-mutating Ruby `Hash` block methods:
+
+- `transform_values { |v| … }` — builds a **new** `Map` whose keys are copied
+  verbatim (unique ⇒ no collision) and whose values are the block results.
+  Yields ONE block argument (the value); insertion order is preserved.
+- `transform_keys { |k| … }` — builds a **new** `Map` whose values are untouched
+  and whose keys are the block results (yields ONE argument, the key).  Two
+  source keys can collapse onto one new key; Ruby keeps the **last** colliding
+  entry's value at the **first-seen** position — which is exactly how native
+  `Map.set` behaves on an existing key (updates the value, keeps the slot).
+
+Both leave the receiver unmodified (a non-function block returns a shallow copy
+of the receiver, matching the sibling `select`/`reject` arms).
+
+Exec-proof: `tests/run_with_node.rs` gains `hash_transform_values_and_keys`,
+running under real `node` a `transform_values` case
+(`{a:1,b:2}.transform_values { 99 }.to_a` → `[[a, 99], [b, 99]]`), an identity
+`transform_keys` (→ `[[a, 1], [b, 2]]`), and a **collision** `transform_keys`
+(constant `"z"` key ⇒ `[[z, 2]]`), diffed against the Python/TS reference.
+
 ## 0.25.0 — Numeric breadth: `divmod` / `fdiv` / `round(ndigits)` / `clamp` / `between?`
 
 Mirrors the Python `sir-runtime-oop` v0.1.17 reference (and the Go v0.25.0 /
