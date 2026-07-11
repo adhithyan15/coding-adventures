@@ -585,6 +585,52 @@ def test_hash_enumerable_grouping_folding() -> None:
     assert list(h.items()) == [("a", 1), ("b", 2), ("c", 3), ("d", 4)]
 
 
+def test_hash_to_h_and_indexed_iteration() -> None:
+    # `to_h` (no block) returns a shallow copy; mutating it leaves the source
+    # untouched.  `to_h { |k, v| [nk, nv] }` re-maps each pair.  Indexed/object
+    # iteration (`each_with_index`, `each_with_object`) yields the [k, v] pair
+    # as ONE argument alongside the index/memo (the second block param), matching
+    # Ruby's Enumerable convention (contrast `each`'s two-arg (k, v) yield).
+    h = {"a": 1, "b": 2, "c": 3}
+    # to_h, no block → a fresh equal dict that does not alias the receiver.
+    copy = oop.call_method(h, "to_h")
+    assert copy == {"a": 1, "b": 2, "c": 3}
+    copy["z"] = 99
+    assert "z" not in h
+    # to_h with a block re-maps each [k, v] → [new_k, new_v]; here upcase the key
+    # and double the value.
+    assert oop.call_method(h, "to_h", Closure(lambda k, v: [k.upper(), v * 2])) == {
+        "A": 2,
+        "B": 4,
+        "C": 6,
+    }
+    # to_h block whose new keys collide → the LAST pair wins (Ruby's rule).
+    assert oop.call_method(h, "to_h", Closure(lambda k, v: ["k", v])) == {"k": 3}
+    # each_with_index yields ([k, v], i) and returns the receiver.
+    seen: list[Val] = []
+    result = oop.call_method(
+        h, "each_with_index", Closure(lambda pair, i: seen.append([pair, i]))
+    )
+    assert seen == [[["a", 1], 0], [["b", 2], 1], [["c", 3], 2]]
+    assert result is h
+    # each_with_object(memo) yields ([k, v], memo) and returns the memo; here we
+    # accumulate the values into a running total wrapped in a list.
+    total = oop.call_method(
+        h,
+        "each_with_object",
+        [0],
+        Closure(lambda pair, memo: memo.__setitem__(0, memo[0] + pair[1])),
+    )
+    assert total == [6]
+    # each_with_object with NO memo argument returns the receiver unchanged.
+    assert oop.call_method(h, "each_with_object", Closure(lambda pair, memo: None)) is h
+    # respond_to? advertises the new methods; source hash unchanged throughout.
+    assert oop.call_method(h, "respond_to?", "to_h") is True
+    assert oop.call_method(h, "respond_to?", "each_with_index") is True
+    assert oop.call_method(h, "respond_to?", "each_with_object") is True
+    assert h == {"a": 1, "b": 2, "c": 3}
+
+
 def test_hash_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
     assert oop.call_method({"a": 1}, "respond_to?", "each") is True
