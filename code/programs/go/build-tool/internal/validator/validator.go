@@ -50,6 +50,11 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"dart":       true,
 	"swift":      true,
 	"haskell":    true,
+	// C/C++: CI installs Clang alongside GCC on Linux and MSVC on Windows so the
+	// pure-ISO multi-compiler check has all three across the matrix. Adding this
+	// makes validateCIFullBuildToolchains require ci.yml to bind needs_cpp and
+	// force it on the main full-build path.
+	"cpp": true,
 }
 
 // ValidateBuildFiles returns an error describing every package whose BUILD file
