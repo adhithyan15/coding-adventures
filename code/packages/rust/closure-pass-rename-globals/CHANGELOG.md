@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.10.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms at all 5 sites: count-decl-names + collect + rename recurse the block's statements; a static block introduces no class-body binding name; rename uses the class-inner map (the class's own name in scope).
+
 ## [0.10.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: `ClassMember::Field` arms

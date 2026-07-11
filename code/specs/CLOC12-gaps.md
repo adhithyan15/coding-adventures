@@ -2230,6 +2230,33 @@ statement body recurses.
 Private names (`#x`) and decorators remain deferred to their own additive slices,
 exactly as for the field and method surfaces.
 
+### PR1 (DONE)
+
+Landed as the atomic node + emit + all-arms commit. `ClassMember` is now a
+**three-variant** enum (`Method` | `Field` | `StaticBlock`).
+
+- **`javascript-ast` 0.35.0** — `ClassMember::StaticBlock(BlockStatement)` (reusing
+  `BlockStatement` — a static block's body is exactly a `Vec<Statement>`); 3
+  roundtrip tests.
+- **`closure-emitter` 0.40.0** — `emit_static_block` printing `static{…}` (the
+  `static` keyword abuts `{`, body via the shared `emit_block_statement`, no
+  trailing `;`) wired into `emit_class_tail`; 4 emit tests.
+- **Pass crates (PATCH each), `StaticBlock` arm at every site the compiler flagged
+  non-exhaustive:** constant-fold 1, fold-control-flow 1, dce 2, scope-analyzer 2,
+  rename-properties 2, inline-variables 5, rename-globals 5, rename 4, **inline
+  13.** Each arm recurses the block's `Vec<Statement>` exactly as the `Method` arm
+  recurses `m.value.body.body`. Soundness-critical (inline / inline-variables):
+  a candidate use inside a static block runs at class-def time, so tally/count/
+  collect recurse the block statements *before* inline substitutes there. Scope:
+  scope-analyzer walks it as its own block scope; rename/rename-globals use the
+  class-inner map; `splice_*` splice into the block (its body IS a statement vec,
+  unlike a field value). A static block has **no key** (nothing to property-rename)
+  and **no binding name** (nothing for decl-name passes to record).
+
+`javascript-parser`'s bridge test bindings needed **no** change — they already use
+`let ClassMember::Method(m) = … else { panic! }` (let-else from the 175 fix), which
+a third variant falls through automatically. All 11 crates build + test green.
+
 ## CLOC12.175 — class fields (`PropertyDefinition`): the first non-method class member (design)
 
 CLOC12.173/174 shipped the class **expression** and **declaration** with a body of

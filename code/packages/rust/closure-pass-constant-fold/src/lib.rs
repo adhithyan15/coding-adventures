@@ -561,6 +561,13 @@ fn fold_class_body(
                 computed: fd.computed,
                 is_static: fd.is_static,
             }),
+            // A static-init block folds inside each of its statements (they run
+            // at class-definition time) — mirroring the method-body fold. It has
+            // no key and no binding name; only the statement list is rebuilt.
+            ClassMember::StaticBlock(b) => ClassMember::StaticBlock(BlockStatement {
+                cv: b.cv.clone(),
+                body: b.body.iter().map(|s| fold_statement(s, st)).collect(),
+            }),
         })
         .collect();
     (super_class, body)

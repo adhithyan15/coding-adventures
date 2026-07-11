@@ -833,6 +833,14 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                             collect_all_idents_expr(v, out);
                         }
                     }
+                    // A static-init block has no key/name/params; over-collect
+                    // every identifier in its statements so a fresh short name
+                    // never collides.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
                 }
             }
         }
@@ -1125,6 +1133,14 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             collect_all_idents_expr(v, out);
                         }
                     }
+                    // A static-init block has no key/name/params; over-collect
+                    // every identifier in its statements so a fresh short name
+                    // never collides.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &b.body {
+                            collect_all_idents_stmt(s, out);
+                        }
+                    }
                 }
             }
         }
@@ -1251,6 +1267,14 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                         }
                         if let Some(v) = &mut f.value {
                             rewrite_uses_expr(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at class-def time with
+                    // the class's own name in scope — rewrite renamed outer
+                    // locals in them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rewrite_uses_stmt(s, &class_inner);
                         }
                     }
                 }
@@ -1557,6 +1581,14 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         }
                         if let Some(v) = &mut f.value {
                             rewrite_uses_expr(v, &class_inner);
+                        }
+                    }
+                    // A static-init block's statements run at class-def time with
+                    // the class's own name in scope — rewrite renamed outer
+                    // locals in them with `class_inner`.
+                    ClassMember::StaticBlock(b) => {
+                        for s in &mut b.body {
+                            rewrite_uses_stmt(s, &class_inner);
                         }
                     }
                 }

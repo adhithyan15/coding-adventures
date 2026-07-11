@@ -1108,9 +1108,15 @@ pub enum ClassMember {
     Method(MethodDefinition),
     /// A **field** (class property): `x = 1;`, `y;`, `static z = 2;`,
     /// `[k] = v;`. A named slot with an *optional* initializer — no parameter
-    /// list, no body. See [`PropertyDefinition`]. (A `static { … }` static-block
-    /// member is a later additive variant.)
+    /// list, no body. See [`PropertyDefinition`].
     Field(PropertyDefinition),
+    /// A **static initialization block**: `static { … }`. A block of statements
+    /// that runs *once, at class-definition time*, in the class's static scope.
+    /// It has no name, no key, no parameter list, and no initializer — only a
+    /// body, which is exactly a [`BlockStatement`]'s statement list, so the
+    /// variant wraps `BlockStatement` directly rather than re-modelling it.
+    /// (Private members `#x` and decorators are later additive variants.)
+    StaticBlock(BlockStatement),
 }
 
 /// A method-like class member. Unlike an object-literal [`Property`] it can be
@@ -2288,6 +2294,47 @@ mod tests {
             computed: true,
             is_static: false,
         })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    // ---- ClassMember::StaticBlock (CLOC12.176) -----------------------
+
+    #[test]
+    fn class_static_block_empty_roundtrips() {
+        // `class { static {} }` — an empty static-init block.
+        let e = class_with(vec![ClassMember::StaticBlock(TestBlock { cv: None, body: vec![] })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_static_block_with_statement_roundtrips() {
+        // `class { static { return } }` — a static block whose body carries a
+        // statement (the statement list round-trips through the wire format).
+        let e = class_with(vec![ClassMember::StaticBlock(TestBlock {
+            cv: None,
+            body: vec![Statement::return_statement(ReturnStatement { cv: None, argument: None })],
+        })]);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    #[test]
+    fn class_static_block_interleaved_with_field_roundtrips() {
+        // `class { x = 1; static {} }` — a field and a static block coexist in
+        // one body, in source order, and both survive the round-trip.
+        let e = class_with(vec![
+            ClassMember::Field(PropertyDefinition {
+                cv: None,
+                key: ident_key("x"),
+                value: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+                computed: false,
+                is_static: false,
+            }),
+            ClassMember::StaticBlock(TestBlock { cv: None, body: vec![] }),
+        ]);
         assert_eq!(e.clone(), roundtrip(e));
     }
 }

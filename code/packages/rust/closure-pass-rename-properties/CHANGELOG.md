@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.12.16] - 2026-07-11
+
+### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm
+
+`javascript-ast` 0.35.0 added `ClassMember::StaticBlock(BlockStatement)`, the third class member (a `static { … }` initialization block). Added `StaticBlock` arms (classify + rewrite): a static block has no key to rename, but its statements may hold property accesses, so each statement is classified / rewritten.
+
 ## [0.12.15] - 2026-07-11
 
 ### Added — CLOC12.175 PR1: rename class-field property keys
