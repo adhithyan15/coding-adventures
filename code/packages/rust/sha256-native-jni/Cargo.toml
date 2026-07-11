@@ -1,0 +1,17 @@
+[package]
+name = "sha256-native-jni"
+version = "0.1.0"
+edition = "2021"
+description = "JNI native library bridging Java/Kotlin to the Rust coding_adventures_sha256 crate"
+publish = false
+
+[lib]
+# cdylib → libsha256_native_jni.{so,dylib,dll}, loaded via
+# System.loadLibrary("sha256_native_jni"). The `lib` crate type lets the
+# pure-Rust helpers be unit-tested without a JVM.
+crate-type = ["cdylib", "lib"]
+name = "sha256_native_jni"
+
+[dependencies]
+jni-bridge = { path = "../jni-bridge" }
+coding_adventures_sha256 = { path = "../sha256" }
