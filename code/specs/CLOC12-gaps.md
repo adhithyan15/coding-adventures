@@ -2302,8 +2302,24 @@ to WHITESPACE_ONLY exactly as for the expression form. 10 bridge unit tests
 (`class_decl_*`); `closurec` e2e fixture `tests/diff/simple-class-decl/`
 (`class C { m() { return 1 + 2 } }` → `class C{m(){return 3}}`) proves the class
 round-trips, the method body folds, and the declaration emits **bare** (no
-trailing `;`, no wrapping paren). PR3 (upstream CodePrinter class-declaration
-conformance port) remains.
+trailing `;`, no wrapping paren).
+
+**PR3 (DONE) — `closure-emitter` 0.38.1.** New upstream port
+`tests/upstream/code_printer_class_declaration_test.rs` (registered as `[[test]]
+upstream_code_printer_class_declaration`), the companion to the class-expression
+port. Isolates `emit_class_declaration` + the shared `emit_class_tail` helper from
+PR1. **20 active `#[test]`s, 0 `#[ignore]`** — the declaration emits bare (no wrap,
+no trailing `;`), the four `extends`-operand precedence cases (identifier / member
+/ call bare, conditional wrapped `extends (a?b:c)`), the member forms (method /
+params+body / `static` / `get` / `set` / `constructor` / stacked `static get` /
+generator `*m` / `async m` / computed `[k]`, `[0]`, `[a+b]` / two members
+back-to-back), and the full shape `class C extends B{m(){}}`. Inputs are
+hand-constructed AST, so the port also covers the generator / async / computed-key
+/ multi-member shapes the grammar cannot yet parse. Test-only change (no
+production edit); ATTRIBUTION.md updated. **This closes the CLOC12.174
+class-declaration arc.** Deferred to their own additive slices (as for the
+expression form): instance/static class **fields** (`PropertyDefinition`), static
+initialization blocks, private names, decorators.
 
 ## CLOC12.173 — `ClassExpression` (`class [id] [extends S] { … }`): the class arc (design)
 
