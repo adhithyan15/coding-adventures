@@ -22,8 +22,9 @@ A small but **fully correct** slice, growing one quirk at a time: unsigned
 numeric-display (`9`/`V`) and character (`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules; `DISPLAY`; `STOP RUN`; and fixed-point
-decimal `ADD`/`SUBTRACT`/`MULTIPLY` (decimal-point aligned, truncating into the
-receiver). Anything not yet modelled (signed `S`, `DIVIDE`, `ROUNDED`/`ON SIZE
-ERROR`, editing pictures, `COMP`, `PERFORM`, tables, files, and every other verb)
-returns a descriptive `RuntimeError` — never wrong output. See PL08 for the
-roadmap toward full COBOL and later standards.
+decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned, truncating
+toward zero into the receiver; divide-by-zero is a clean error). Anything not yet
+modelled (signed `S`, `COMPUTE`, `ROUNDED`/`ON SIZE ERROR`, editing pictures,
+`COMP`, `PERFORM`, tables, files, and every other verb) returns a descriptive
+`RuntimeError` — never wrong output. See PL08 for the roadmap toward full COBOL
+and later standards.

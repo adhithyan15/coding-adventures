@@ -6,12 +6,12 @@
 //! [PL08](../../../specs/PL08-cobol-runtime.md).
 //!
 //! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
-//! `STOP RUN` and fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` over
-//! unsigned numeric-display and character pictures — and returns a descriptive
-//! error for anything not yet modelled, rather than producing wrong output. The
-//! roadmap toward full COBOL (signed numerics, `DIVIDE`, `ROUNDED`/`ON SIZE
-//! ERROR`, editing pictures, `PERFORM`, tables, files, later standards) is in
-//! PL08.
+//! `STOP RUN` and fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`
+//! over unsigned numeric-display and character pictures — and returns a
+//! descriptive error for anything not yet modelled, rather than producing wrong
+//! output. The roadmap toward full COBOL (signed numerics, `COMPUTE`,
+//! `ROUNDED`/`ON SIZE ERROR`, editing pictures, `PERFORM`, tables, files, later
+//! standards) is in PL08.
 //!
 //! ```
 //! use coding_adventures_cobol_runtime::run_cobol;
@@ -292,6 +292,37 @@ mod tests {
     fn decimal_add_aligns_the_implied_point() {
         // R PIC 9(2)V99 (4 digits) starts 1.50; ADD 2.25 TO R → 3.75 → "0375".
         assert_eq!(compute("9(2)V99", &["MOVE 1.5 TO R.", "ADD 2.25 TO R."], &[]), "0375\n");
+    }
+
+    #[test]
+    fn divide_into_giving_truncates_to_receiver_decimals() {
+        // 10 / 3 = 3.333… → into PIC 9(3)V99 truncates to 3.33 → "00333".
+        assert_eq!(compute("9(3)V99", &["DIVIDE 3 INTO 10 GIVING R."], &[]), "00333\n");
+        // 10 / 4 = 2.5 → into PIC 9(3) (no decimals) truncates to 2 → "002".
+        assert_eq!(compute("9(3)", &["DIVIDE 4 INTO 10 GIVING R."], &[]), "002\n");
+    }
+
+    #[test]
+    fn divide_into_without_giving_updates_the_dividend() {
+        // MOVE 20 TO R; DIVIDE 5 INTO R → R = 20/5 = 4.
+        assert_eq!(compute("9(3)", &["MOVE 20 TO R.", "DIVIDE 5 INTO R."], &[]), "004\n");
+    }
+
+    #[test]
+    fn divide_by_zero_is_a_clear_error() {
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  R  PIC 9(3).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DIVIDE 0 INTO 10 GIVING R.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
     }
 
     // ----------------------------------------------------------------------

@@ -103,14 +103,15 @@ rather than producing wrong output.
 - `DISPLAY` (items and literals, concatenated, newline-terminated).
 - `STOP RUN`.
 
-**Added in v0.2:** fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` (the
-current grammar's `TO`/`FROM`/`BY` + `GIVING` forms) — decimal-point aligned,
-truncating into the receiver, unsigned receivers keeping the magnitude; overflow
-beyond ~38 digits is an error, never a panic.
+**Added in v0.2 / v0.3:** fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` /
+`DIVIDE` (the current grammar's `TO`/`FROM`/`BY`/`INTO` + `GIVING` forms) —
+decimal-point aligned, truncating toward zero into the receiver, unsigned
+receivers keeping the magnitude; overflow beyond ~38 digits is an error (never a
+panic), and divide-by-zero surfaces as `RuntimeError::DivideByZero`.
 
-**Deferred to later PRs (return `RuntimeError::Unsupported` for now):**
-signed `S` numerics and overpunch-sign display; `P` scaling; `DIVIDE` and
-`ROUNDED`/`ON SIZE ERROR` (the latter need frontend clauses); editing pictures
+**Deferred to later PRs (return a descriptive `RuntimeError` for now):**
+signed `S` numerics and overpunch-sign display; `P` scaling; `COMPUTE` and
+`ROUNDED`/`ON SIZE ERROR` (which need frontend clauses); editing pictures
 (`Z * $ , . + - CR DB B 0 /`); `USAGE COMP`/`COMP-3` (binary / packed decimal);
 group `MOVE`; name qualification (`OF`/`IN`); `REDEFINES`/`OCCURS`; and every
 verb not listed above.
@@ -120,10 +121,11 @@ verb not listed above.
 Each item is a run-verified PR; the runtime grows one quirk at a time.
 
 1. **v0.1 — execution spine** (merged): data model + `MOVE`/`DISPLAY`/`STOP RUN`.
-2. **v0.2 — arithmetic** (this PR): fixed-point `ADD`/`SUBTRACT`/`MULTIPLY`.
-3. **Remaining arithmetic** — `DIVIDE`, `COMPUTE`, `ROUNDED`, `ON SIZE ERROR`
-   (the last two also widen the frontend grammar); then **signed numerics +
-   overpunch** display and the `SIGN` clause.
+2. **v0.2 — arithmetic** (merged): fixed-point `ADD`/`SUBTRACT`/`MULTIPLY`.
+3. **v0.3 — `DIVIDE`** (this PR): fixed-point division + divide-by-zero.
+4. **`COMPUTE`, `ROUNDED`, `ON SIZE ERROR`** — expression evaluation and the
+   rounding/overflow clauses (these also widen the frontend grammar); then
+   **signed numerics + overpunch** display and the `SIGN` clause.
 4. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
 5. **Control flow** — `IF … ELSE … END-IF`, `EVALUATE`, `PERFORM` (`THRU`,
    `TIMES`, `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.

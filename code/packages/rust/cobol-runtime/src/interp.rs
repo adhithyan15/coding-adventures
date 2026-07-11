@@ -4,7 +4,7 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{Fig, Lit, Operand, Program, Stmt};
-use crate::value::{add, move_into_char, move_into_numeric, mul, sub, Decimal};
+use crate::value::{add, div, move_into_char, move_into_numeric, mul, sub, Decimal};
 use std::collections::HashMap;
 
 /// One field in the data model. Elementary items carry a picture and character
@@ -133,6 +133,9 @@ impl Machine {
                         self.exec_subtract(operands, from, giving)?
                     }
                     Stmt::Multiply { a, by, giving } => self.exec_multiply(a, by, giving)?,
+                    Stmt::Divide { divisor, dividend, giving } => {
+                        self.exec_divide(divisor, dividend, giving)?
+                    }
                 }
             }
         }
@@ -210,6 +213,44 @@ impl Machine {
             }
         };
         self.store_number(&target, product)
+    }
+
+    /// `DIVIDE a INTO b [GIVING g]` → (b ÷ a), truncated to the receiver's
+    /// decimal places, stored in g, or in b (the dividend) when no GIVING.
+    fn exec_divide(
+        &mut self,
+        divisor: &Operand,
+        dividend: &Operand,
+        giving: &Option<String>,
+    ) -> Result<(), RuntimeError> {
+        let d = self.operand_decimal(divisor)?;
+        if d.is_zero() {
+            return Err(RuntimeError::DivideByZero);
+        }
+        let n = self.operand_decimal(dividend)?;
+        let target = match (giving, dividend) {
+            (Some(g), _) => g.clone(),
+            (None, Operand::Ident(name)) => name.clone(),
+            (None, _) => {
+                return Err(RuntimeError::Unsupported(
+                    "DIVIDE … INTO <literal> without GIVING has no receiver".into(),
+                ))
+            }
+        };
+        // Compute to the receiver's fractional precision (COBOL truncates there
+        // absent ROUNDED); store_number then aligns the integer part.
+        let scale = self.numeric_dec_digits(&target)?;
+        let quotient = checked(div(&n, &d, scale))?;
+        self.store_number(&target, quotient)
+    }
+
+    /// The number of fractional digit positions of a named numeric receiver.
+    fn numeric_dec_digits(&self, name: &str) -> Result<usize, RuntimeError> {
+        let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.into()))?;
+        match &self.items[idx].picture {
+            Some(Picture::Numeric { dec_digits, .. }) => Ok(*dec_digits),
+            _ => Err(RuntimeError::Unsupported(format!("arithmetic on non-numeric field {name}"))),
+        }
     }
 
     /// The numeric value of an operand (numeric literal, `ZERO`, or numeric

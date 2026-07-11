@@ -16,6 +16,8 @@ pub enum RuntimeError {
     UnsupportedPicture(String),
     /// A statement or construct the v0.1 runtime does not yet execute.
     Unsupported(String),
+    /// `DIVIDE` by zero with no `ON SIZE ERROR` clause to catch it.
+    DivideByZero,
 }
 
 impl fmt::Display for RuntimeError {
@@ -30,6 +32,7 @@ impl fmt::Display for RuntimeError {
                 write!(f, "unsupported PICTURE in runtime v0.1: {p}")
             }
             RuntimeError::Unsupported(m) => write!(f, "unsupported in runtime v0.1: {m}"),
+            RuntimeError::DivideByZero => write!(f, "divide by zero"),
         }
     }
 }

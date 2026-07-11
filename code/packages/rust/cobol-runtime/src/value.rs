@@ -52,6 +52,11 @@ impl Decimal {
         format!("{}{}", self.int, self.frac)
     }
 
+    /// Whether this value is zero (all digit positions are `0`).
+    pub fn is_zero(&self) -> bool {
+        self.int.chars().chain(self.frac.chars()).all(|c| c == '0')
+    }
+
     /// This value as a signed `i128` scaled by `10^scale` (i.e. with exactly
     /// `scale` fractional digits). Returns `None` if it overflows `i128`
     /// (~38 digits — beyond any real COBOL numeric field) or if truncating the
@@ -101,6 +106,40 @@ pub fn mul(a: &Decimal, b: &Decimal) -> Option<Decimal> {
     let (sa, sb) = (a.frac.len(), b.frac.len());
     let r = a.to_scaled(sa)?.checked_mul(b.to_scaled(sb)?)?;
     Some(Decimal::from_scaled(r, sa + sb))
+}
+
+/// Fixed-point division `num / den`, truncated (toward zero, as COBOL does
+/// without `ROUNDED`) to exactly `result_scale` fractional digits.
+///
+/// Returns `None` on `i128` overflow of the intermediate scaling; the caller is
+/// expected to have already rejected a zero divisor (`den == 0` here also yields
+/// `None`, but a zero divisor should surface as [`RuntimeError::DivideByZero`]).
+///
+/// Derivation: with `num = N/10^sn` and `den = D/10^sd`, the value scaled by
+/// `10^result_scale` is `floor( (N · 10^(sd + result_scale)) / (D · 10^sn) )`.
+pub fn div(num: &Decimal, den: &Decimal, result_scale: usize) -> Option<Decimal> {
+    let (sn, sd) = (num.frac.len(), den.frac.len());
+    let n = num.to_scaled(sn)?;
+    let d = den.to_scaled(sd)?;
+    if d == 0 {
+        return None;
+    }
+    // Scale the numerator up and the denominator up so the quotient carries
+    // `result_scale` fractional digits.
+    let numerator = n.checked_mul(pow10(sd + result_scale)?)?;
+    let denominator = d.checked_mul(pow10(sn)?)?;
+    // i128 division truncates toward zero — exactly COBOL's un-rounded behaviour.
+    let scaled = numerator.checked_div(denominator)?;
+    Some(Decimal::from_scaled(scaled, result_scale))
+}
+
+/// `10^exp` as `i128`, or `None` on overflow.
+fn pow10(exp: usize) -> Option<i128> {
+    let mut v: i128 = 1;
+    for _ in 0..exp {
+        v = v.checked_mul(10)?;
+    }
+    Some(v)
 }
 
 /// Move a numeric value into a numeric receiver of `int_digits` integer
@@ -222,5 +261,26 @@ mod tests {
         // (2.5 * 2.5 = 6.25) moved into PIC 9(3)V9 → "0062" (low-order truncated).
         let r = mul(&d("2.5"), &d("2.5")).unwrap();
         assert_eq!(move_into_numeric(&r, 3, 1), "0062");
+    }
+
+    #[test]
+    fn division_truncates_toward_zero() {
+        // 10 / 4 = 2.5 → to 0 decimals truncates to 2.
+        assert_eq!(div(&d("10"), &d("4"), 0).unwrap(), d("2"));
+        // 10 / 3 = 3.333… → to 2 decimals truncates to 3.33.
+        assert_eq!(div(&d("10"), &d("3"), 2).unwrap(), d("3.33"));
+        // Exact: 9 / 3 = 3.00 at 2 decimals.
+        assert_eq!(div(&d("9"), &d("3"), 2).unwrap(), d("3.00"));
+    }
+
+    #[test]
+    fn division_of_fractional_operands() {
+        // 7.5 / 2.5 = 3.0
+        assert_eq!(div(&d("7.5"), &d("2.5"), 1).unwrap(), d("3.0"));
+    }
+
+    #[test]
+    fn division_by_zero_returns_none() {
+        assert_eq!(div(&d("5"), &d("0"), 2), None);
     }
 }

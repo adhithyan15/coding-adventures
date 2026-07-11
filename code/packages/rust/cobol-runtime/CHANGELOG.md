@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 — DIVIDE (PL08)
+
+- `DIVIDE a INTO b [GIVING g]` — result = b / a. Fixed-point division computed to
+  the receiver's fractional precision and **truncated toward zero** (COBOL's
+  behaviour absent `ROUNDED`): `10 / 3` into `9(3)V99` → `"00333"`.
+- **Divide by zero** (no `ON SIZE ERROR` to catch it) surfaces as
+  `RuntimeError::DivideByZero`, never a panic. Intermediate scaling uses checked
+  `i128` arithmetic (overflow → error).
+- Remaining arithmetic — `COMPUTE`, `ROUNDED`/`ON SIZE ERROR` (need frontend
+  clauses) — and signed `S` numerics stay deferred. Roadmap in PL08.
+
+
 ## 0.2.0 — Fixed-point decimal arithmetic (PL08)
 
 - `ADD` / `SUBTRACT` / `MULTIPLY` with the current grammar's forms

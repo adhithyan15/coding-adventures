@@ -68,6 +68,8 @@ pub enum Stmt {
     Subtract { operands: Vec<Operand>, from: String, giving: Option<String> },
     /// `MULTIPLY a BY b [GIVING g]` — result = a*b, stored in g or b.
     Multiply { a: Operand, by: Operand, giving: Option<String> },
+    /// `DIVIDE a INTO b [GIVING g]` — result = b/a, stored in g or b.
+    Divide { divisor: Operand, dividend: Operand, giving: Option<String> },
     StopRun,
 }
 
@@ -301,6 +303,23 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             let giving = if has_giving { names.into_iter().next() } else { None };
             let mut it = ops.into_iter();
             Ok(Stmt::Multiply { a: it.next().unwrap(), by: it.next().unwrap(), giving })
+        }
+        "divide_stmt" => {
+            // DIVIDE a INTO b [GIVING g]: first operand is the divisor, second
+            // the dividend; result = b / a.
+            let ops = read_operands(verb)?;
+            if ops.len() != 2 {
+                return Err(RuntimeError::Unsupported("DIVIDE needs exactly two operands".into()));
+            }
+            let has_giving = child_tokens(verb).iter().any(|(k, v)| k == "KEYWORD" && v == "GIVING");
+            let names: Vec<String> = child_tokens(verb)
+                .into_iter()
+                .filter(|(k, _)| k == "NAME")
+                .map(|(_, v)| v)
+                .collect();
+            let giving = if has_giving { names.into_iter().next() } else { None };
+            let mut it = ops.into_iter();
+            Ok(Stmt::Divide { divisor: it.next().unwrap(), dividend: it.next().unwrap(), giving })
         }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }
