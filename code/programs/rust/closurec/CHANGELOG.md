@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.14] - 2026-07-11
+
+### Added — CLOC12.175 PR2: class fields end-to-end
+
+Picks up javascript-parser 0.39.0, whose bridge now produces
+`ClassMember::Field`. A class field now survives the full closurec pipeline. New
+e2e diff fixture `tests/diff/simple-class-field/`:
+`class C { x = 1 + 2; static s = 5 + 6; }` → `class C{x=3;static s=11;}` at SIMPLE
+— both field initializers constant-fold (proving the pipeline descends into each
+field's initializer via the PR1 pass arms), the `static` modifier survives, and
+the class declaration emits bare. PATCH; version-synced `cli.spec.json` +
+`tests/diff/help-markdown/expected.stdout` to 0.234.14.
+
 ## [0.234.13] - 2026-07-11
 
 ### Added — CLOC12.174 PR2: class-declaration end-to-end (`tests/diff/simple-class-decl/`)

@@ -56,7 +56,7 @@ use coding_adventures_javascript_ast::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
         AssignmentOperator, AssignmentTarget,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
-        ClassExpression, ClassMember, MethodDefinition, MethodKind,
+        ClassExpression, ClassMember, MethodDefinition, MethodKind, PropertyDefinition,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         ChainExpression, ImportExpression, ImportMeta, MemberExpression, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression, ObjectMember,
@@ -1209,13 +1209,18 @@ fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// Convert one `class_element` into a [`ClassMember`].
 ///
 /// ```text
-///   class_element = [ Token("static")? , Node(method_definition) ]
+///   class_element = [ Token("static")? , Node(method_definition) , Token(";") ]
+///                 | Node(class_field_declaration)          // CLOC12.175 PR2
+///                 | …declined shapes (async_method, private, static_block, ;)
 /// ```
 ///
-/// A leading bare `Token("static")` marks a static member; the sole
-/// `method_definition` child carries the rest. (Field and `static { … }`
-/// static-block members are a later slice; they are not produced by this
-/// grammar today, so a `class_element` always wraps exactly one method.)
+/// A *method* member is `[Token("static")?, method_definition, ";"]` — a leading
+/// bare `Token("static")` marks it static; the `method_definition` child carries
+/// the rest. A *field* member is a single `class_field_declaration` node that
+/// carries its **own** `static` token internally (the grammar does NOT hoist a
+/// field's `static` to the `class_element` level, unlike a method's), so the
+/// `is_static` scanned here stays `false` for a field and
+/// [`convert_class_field`] reads the field's own modifier.
 ///
 /// **`async` lives here, not on `method_definition`.** The grammar attaches an
 /// `async` method's `async` keyword to the *`class_element`* (`async m(){}` →
@@ -1224,6 +1229,10 @@ fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// does not model, so any `class_element` token other than `static` DECLINES —
 /// otherwise the `async` would be silently dropped, a semantics-changing
 /// miscompile. (Declining the member drops the whole file to WHITESPACE_ONLY.)
+///
+/// `private_method_definition`, `static_block`, and `async_method` member nodes
+/// are forms this slice does not model — they DECLINE (safe WHITESPACE_ONLY
+/// fallback) rather than surface a mis-emit.
 fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeError> {
     // A `class_element` carries at most one *word* modifier — `static` (which
     // we model) or `async` (which we do not). It may also carry a benign
@@ -1243,20 +1252,83 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
             }
         }
     }
-    // The member itself is a *single* child node. Only a plain
-    // `method_definition` is modelled today; the grammar's `async_method` node
-    // (an `async` method) — and any future field / static-block node — is a
-    // form this slice does not represent, so it DECLINES (safe WHITESPACE_ONLY
-    // fallback) rather than surfacing an internal error. (Because `async` is a
-    // *distinct node*, not just a leading token, the node kind must be checked.)
+    // The member itself is a *single* child node. Two shapes are modelled:
+    // a plain `method_definition` (→ `ClassMember::Method`) and a
+    // `class_field_declaration` (→ `ClassMember::Field`, CLOC12.175 PR2). The
+    // grammar's `async_method` / `private_method_definition` / `static_block`
+    // nodes are forms this slice does not represent, so they DECLINE (safe
+    // WHITESPACE_ONLY fallback). (Because these are *distinct nodes*, not just
+    // leading tokens, the node kind must be checked.)
     let member = node_children(node)
         .into_iter()
         .next()
         .ok_or_else(|| internal(node, "class_element: empty"))?;
-    if member.rule_name != "method_definition" {
-        return Err(unsupported(member));
+    match member.rule_name.as_str() {
+        "method_definition" => Ok(ClassMember::Method(convert_method_definition(member, is_static)?)),
+        "class_field_declaration" => Ok(ClassMember::Field(convert_class_field(member)?)),
+        _ => Err(unsupported(member)),
     }
-    Ok(ClassMember::Method(convert_method_definition(member, is_static)?))
+}
+
+/// Convert a `class_field_declaration` node into a [`PropertyDefinition`] — a
+/// class field `[static] key [= initializer] ;` (CLOC12.175 PR2).
+///
+/// ```text
+///   class_field_declaration = [ Token("static")? ,
+///                               (Node(property_name) | Token(PRIVATE_NAME)) ,
+///                               [ Token("="), Node(assignment_expression) ]? ,
+///                               Token(";") ]
+/// ```
+///
+/// - **`static`** is a bare leading `Token("static")` *inside* this node (unlike
+///   a method's `static`, which sits one level up on the `class_element`).
+/// - **key** reuses [`convert_property_key`] — the *same* `property_name` node a
+///   method key uses, so identifier / string / numeric keys all work, and a
+///   computed `[expr]` key DECLINES (a later slice) → WHITESPACE_ONLY, sound.
+/// - **initializer** is the optional `assignment_expression`; a bare field
+///   (`y;`) has none and maps to `value: None`.
+///
+/// A **private** field (`#x`) is a bare `PRIVATE_NAME` token with no
+/// `property_name` node — an unmodelled shape — so it DECLINES (safe fallback)
+/// rather than mis-emit the `#` name.
+fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, BridgeError> {
+    // `static` — a bare NAME token before the `property_name` node.
+    let mut is_static = false;
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "property_name" => break,
+            ASTNodeOrToken::Token(t) if t.value == "static" => is_static = true,
+            _ => {}
+        }
+    }
+
+    // key — the `property_name` node. A private field carries a `PRIVATE_NAME`
+    // token instead (no `property_name` child); decline it as unmodelled.
+    let key_node = node_children(node)
+        .into_iter()
+        .find(|n| n.rule_name == "property_name")
+        .ok_or_else(|| unsupported(node))?;
+    let key = convert_property_key(key_node)?;
+
+    // initializer — the optional `assignment_expression` after `=`. A bare field
+    // has none → `value: None`.
+    let value = match node_children(node)
+        .into_iter()
+        .find(|n| n.rule_name == "assignment_expression")
+    {
+        Some(v) => Some(convert_expression(v)?),
+        None => None,
+    };
+
+    Ok(PropertyDefinition {
+        cv: None,
+        key,
+        value,
+        // Computed keys are declined by `convert_property_key`, so a bridged
+        // field is never computed today (mirrors the method surface).
+        computed: false,
+        is_static,
+    })
 }
 
 /// Convert a `method_definition` node into a [`MethodDefinition`].
@@ -3634,6 +3706,108 @@ mod tests {
             bridge("x = class { async am(){} };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
+    }
+
+    // -----------------------------------------------------------------
+    // ClassMember::Field bridging (CLOC12.175 PR2)
+    // -----------------------------------------------------------------
+
+    /// Pull the sole `ClassMember::Field` out of `x = class { <field> };`.
+    fn field_of(src: &str) -> PropertyDefinition {
+        let c = class_of(src);
+        assert_eq!(c.body.len(), 1, "expected exactly one member");
+        match &c.body[0] {
+            ClassMember::Field(f) => f.clone(),
+            other => panic!("expected a field member, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_field_with_initializer() {
+        // `x = 1;` — an identifier key with a numeric initializer.
+        let f = field_of("y = class { x = 1; };");
+        assert!(!f.is_static);
+        assert!(!f.computed);
+        assert!(matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 1.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_bare_field_has_no_value() {
+        // `y;` — a bare field with no initializer maps to `value: None`.
+        let f = field_of("z = class { y; };");
+        assert!(matches!(&f.key, PropertyKey::Identifier(id) if id.name == "y"));
+        assert!(f.value.is_none());
+    }
+
+    #[test]
+    fn class_static_field() {
+        // `static z = 2;` — the field's OWN `static` token (inside
+        // `class_field_declaration`, not on the `class_element`).
+        let f = field_of("w = class { static z = 2; };");
+        assert!(f.is_static);
+        assert!(matches!(&f.key, PropertyKey::Identifier(id) if id.name == "z"));
+        match &f.value {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 2.0),
+            other => panic!("expected a numeric initializer, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn class_string_key_field() {
+        // A quoted key decodes to a `StringLiteral` key (the emitter later
+        // decides quote-vs-bare); the initializer is an identifier reference.
+        let f = field_of("w = class { \"a-b\" = q; };");
+        match &f.key {
+            PropertyKey::StringLiteral(s) => assert_eq!(s.value, "a-b"),
+            other => panic!("expected a string key, got {other:?}"),
+        }
+        assert!(matches!(&f.value, Some(Expression::Identifier(id)) if id.name == "q"));
+    }
+
+    #[test]
+    fn class_field_and_method_interleave() {
+        // A field and a method coexist in one body, in source order.
+        let c = class_of("w = class { x = 1; m(){} };");
+        assert_eq!(c.body.len(), 2);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
+        assert!(matches!(&c.body[1], ClassMember::Method(m)
+            if matches!(&m.key, PropertyKey::Identifier(id) if id.name == "m")));
+    }
+
+    #[test]
+    fn class_computed_field_declines() {
+        // `[k] = v;` — a computed field key is a later slice; DECLINE (the file
+        // falls back to WHITESPACE_ONLY, never a miscompile) — mirrors the
+        // computed *method* key decline.
+        assert!(matches!(
+            bridge("w = class { [k] = v; };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    #[test]
+    fn class_private_field_declines() {
+        // `#x = 1;` — a private field carries a `PRIVATE_NAME` token (no
+        // `property_name` node), an unmodelled shape; DECLINE.
+        assert!(matches!(
+            bridge("w = class { #x = 1; };"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    #[test]
+    fn class_field_declaration_form() {
+        // The field surface works in *declaration* position too (the body
+        // conversion is shared between class expression and declaration).
+        let c = class_decl_of("class C { x = 1; }");
+        assert_eq!(c.body.len(), 1);
+        assert!(matches!(&c.body[0], ClassMember::Field(f)
+            if matches!(&f.key, PropertyKey::Identifier(id) if id.name == "x")));
     }
 
     // -----------------------------------------------------------------
