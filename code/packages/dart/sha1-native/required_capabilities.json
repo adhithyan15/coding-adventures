@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "dart/sha1-native",
+  "capabilities": ["ffi:call"],
+  "justification": "ffi:call — uses dart:ffi DynamicLibrary.open to call into the Rust sha1-native shared library (libsha1_native.so/.dylib), which wraps the pure coding_adventures_sha1 crate over a C ABI. No network, filesystem, or process capabilities."
+}
