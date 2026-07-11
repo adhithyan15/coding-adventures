@@ -2447,11 +2447,20 @@ fn hash_catalog_methods() {
         )), // [a, b, c]
         print(method(local("m"), "delete", vec![str_("a")])), // 1 (mutates m)
         print(method(local("m"), "keys", vec![])),            // [b]
+        // `[]=` (store alias): mutate, returns the stored value.
+        print(method(local("m"), "[]=", vec![str_("z"), int(9)])), // 9
+        // `fetch` present key → value; with a default arg on a missing key →
+        // the default (no raise).  (The missing-no-default KeyError path is
+        // proven separately in `t3_hash_fetch_missing_raises_key_error`.)
+        print(method(local("m"), "fetch", vec![str_("z")])), // 9
+        print(method(local("m"), "fetch", vec![str_("nope"), int(0)])), // 0
+        // `clear` empties the receiver and returns it (size 0 afterwards).
+        print(method(method(local("m"), "clear", vec![]), "size", vec![])), // 0
     ];
     let module =
         module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Maps, Feature::Strings]);
     if let Some(stdout) = run_module(&module, "hashcatalog") {
-        assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]");
+        assert_eq!(stdout, "[a, b]\n[1, 2]\n2\n[[a, 1], [b, 2]]\n2\n[a, b, c]\n1\n[b]\n9\n9\n0\n0");
     }
 }
 
