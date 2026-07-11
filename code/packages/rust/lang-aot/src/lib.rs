@@ -434,15 +434,15 @@ pub fn compile_source_to_llvm_with_target(
     let mut module = compile_source_to_iir(language, source, module_name)?;
     // The TAGGED-WORD lisp pipeline (McCarthy W12b) — the SAME passes the native
     // AOT path runs, NOT the managed structural pass. `lower_heap_builtins_runtime`
-    // turns cons/car/cdr/pair?/equal?/not into `call_builtin "lispy_*"`;
-    // `intern_symbols` assigns each symbol a tagged immediate; `lower_lisp_repr`
-    // boxes integer literals to tagged words and inserts the final `lispy_unbox_int`
-    // so the result is a plain `i64`. `iir-to-llvm` then lowers each `lispy_*` to a
+    // turns cons/car/cdr/pair?/equal?/not into `call_builtin "dyn_*"`;
+    // `intern_symbols` assigns each symbol a tagged immediate; `lower_dyn_repr`
+    // boxes integer literals to tagged words and inserts the final `dyn_unbox_int`
+    // so the result is a plain `i64`. `iir-to-llvm` then lowers each `dyn_*` to a
     // `call @__dyn_*` into `dynval_runtime.c`. A no-op for a scalar program.
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_lisp_repr(&mut module);
+    iir_builtin_lowering::lower_dyn_repr(&mut module);
     // Concretise any residual scalar `any` (a pure-integer program never enters
     // the lisp passes above) to `i64`.
     concretize_scalar_any_for_llvm(&mut module);
@@ -458,7 +458,7 @@ pub fn compile_source_to_llvm_with_target(
 /// `iir-to-wasm` requires concrete types — it rejects `"any"` (a lisp
 /// `LispyValue`, which on the native path is just a tagged machine word but on
 /// WasmGC is `anyref`). For a function with **no heap / reference ops**
-/// (`alloc`/`field_*`/`is_null` or any `lispy_*`/`cons`/`car`/`cdr` builtin),
+/// (`alloc`/`field_*`/`is_null` or any `dyn_*`/`cons`/`car`/`cdr` builtin),
 /// every value is a machine integer, so `"any"` safely means `"i64"`. We do
 /// **not** touch functions that use the heap (cons cells, symbols) — those
 /// need the boxed-`anyref` value model, a follow-up slice (L3b-3a-3).
@@ -472,7 +472,7 @@ fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
         // Does this function touch the lisp heap / reference model? A function
         // with **lisp parameters** (a `LAMBDA`/`LABEL` — params typed `any` /
         // `symbol` / `ref<…>`) participates in the uniform-anyref boundary and is
-        // owned by `lower_lisp_repr_structural`, so skip it here too (it has
+        // owned by `lower_dyn_repr_structural`, so skip it here too (it has
         // already retyped them to `ref<…>` by the time this runs).
         let uses_lisp = func.params.iter().any(|(_, t)| {
             t == "any" || t == "symbol" || t.starts_with("ref<")
@@ -539,7 +539,7 @@ pub fn compile_source_to_wasm(
     //   • pure-scalar functions → `concretize_scalar_any_for_wasm` retypes their
     //     `any` to `i64`.
     // Together they leave every value concretely typed (LANG77 / L3b-3a-3c).
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_wasm(&mut module);
 
     let config = iir_to_wasm::IIRWasmConfig::default();
@@ -711,7 +711,7 @@ pub fn compile_source_to_jvm_class(
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_jvm(&mut module);
 
     let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
@@ -797,7 +797,7 @@ pub fn compile_source_to_cil_artifact(
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
@@ -824,7 +824,7 @@ pub fn compile_source_to_cil_text(
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
-    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);

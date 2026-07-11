@@ -1,5 +1,12 @@
 # Changelog — `twig-aot`
 
+## 0.34.0 - 2026-07-11 (DVAL01-2: dyn_* builtin names in the golden extern block)
+
+DVAL01-2: the `dynval_runtime_golden.rs` `extern` block and `src/lib.rs`
+references to the tagged-value builtin names move `lispy_*` -> `dyn_*`, tracking
+the IIR name rename. The C runtime symbols (`__dyn_*`) were already renamed in
+DVAL01-1a; this aligns the Rust-side names. Pure rename.
+
 ## 0.33.0 - 2026-07-11 (DVAL01-1c: rename Rust crate lispy-runtime -> dynval-runtime)
 
 DVAL01-1c: the Rust golden-reference crate `lispy-runtime` is renamed to `dynval-runtime` (spec DVAL01 section 3.2). twig-aot's `Cargo.toml` dependency and the `use dynval_runtime::{...}` import in `src/dynval_runtime_golden.rs` (which pins the C runtime's tag constants against the crate's canonical Rust mirror) move to the new name. Pure rename -- no ABI, tag-layout, or behaviour change; the golden test still asserts the C `dynval_runtime.c` encodings match the Rust mirror byte-for-byte.

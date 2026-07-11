@@ -906,7 +906,7 @@ impl ProfileTable {
 /// `.ldp` serialiser.  `None` for values whose class can't be
 /// determined (shouldn't happen in well-formed dispatch — every
 /// `LispyValue` has a class).
-fn lispy_class_str(value: LispyValue) -> Option<&'static str> {
+fn dyn_class_str(value: LispyValue) -> Option<&'static str> {
     use dynval_runtime::LispyClass;
     match LispyBinding::class_of(value)? {
         LispyClass::Int => Some("int"),
@@ -1306,7 +1306,7 @@ fn dispatch(
         // recommended by PR 8 security review (Low #2).
         if let Some(dest) = &instr.dest {
             if let Some(value) = frame.get(dest) {
-                if let Some(class_str) = lispy_class_str(value) {
+                if let Some(class_str) = dyn_class_str(value) {
                     profile.note_observation(&func.name, instr_pc, class_str)?;
                 }
             }

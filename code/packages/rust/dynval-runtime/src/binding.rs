@@ -496,7 +496,7 @@ mod tests {
     }
 
     #[test]
-    fn lispy_class_to_class_id_is_stable() {
+    fn dyn_class_to_class_id_is_stable() {
         // Two calls return the same id (no random state).
         assert_eq!(LispyClass::Int.to_class_id(), LispyClass::Int.to_class_id());
         // Distinct kinds get distinct ids.

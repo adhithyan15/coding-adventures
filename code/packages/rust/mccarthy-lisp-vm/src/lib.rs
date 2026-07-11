@@ -444,7 +444,7 @@ fn eval_const(instr: &IIRInstr) -> Result<LispyValue, VmError> {
         .ok_or_else(|| VmError::Malformed("`const` requires a source operand".into()))?;
     match src {
         Operand::Int(0) if instr.type_hint == "ref<LispyPair>" => Ok(LispyValue::NIL),
-        Operand::Int(n) => lispy_int(*n),
+        Operand::Int(n) => dyn_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Var(name) => Ok(LispyValue::symbol(intern(name))),
         Operand::Float(_) => Err(VmError::Malformed(
@@ -587,7 +587,7 @@ fn flatten_env(env: LispyValue) -> Result<Vec<LispyValue>, VmError> {
 /// Build a tagged integer, rejecting values outside `lispy-runtime`'s
 /// 61-bit tagged-int range rather than letting `LispyValue::int` silently
 /// truncate them in release builds.
-fn lispy_int(n: i64) -> Result<LispyValue, VmError> {
+fn dyn_int(n: i64) -> Result<LispyValue, VmError> {
     if (INT_MIN..=INT_MAX).contains(&n) {
         Ok(LispyValue::int(n))
     } else {
@@ -604,7 +604,7 @@ fn read_operand(op: &Operand, frame: &Frame) -> Result<LispyValue, VmError> {
             .get(name)
             .copied()
             .ok_or_else(|| VmError::UndefinedRegister(name.clone())),
-        Operand::Int(n) => lispy_int(*n),
+        Operand::Int(n) => dyn_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Float(_) => Err(VmError::Malformed("unexpected Float operand".into())),
         Operand::Str(_) => Err(VmError::Malformed("unexpected Str operand".into())),

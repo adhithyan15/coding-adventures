@@ -1,5 +1,10 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.5.3 — 2026-07-11 — DVAL01-2: dyn_* builtin dispatch names
+
+DVAL01-2: the VM's `call_builtin` dispatch on the tagged-value builtin names
+moves `lispy_*` → `dyn_*` in lockstep with the IIR name rename. Pure rename.
+
 ## v0.5.2 — 2026-07-11 — DVAL01-1c: dependency renamed `lispy-runtime` → `dynval-runtime`
 
 The shared value-model crate `lispy-runtime` is renamed to `dynval-runtime`

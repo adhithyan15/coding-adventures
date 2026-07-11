@@ -1,5 +1,9 @@
 # Changelog — iir-to-llvm
 
+## 0.39.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_*)
+
+DVAL01-2: the LLVM name->runtime-symbol table `LISPY_BUILTINS` is renamed `DYN_BUILTINS` and its first column de-lisped (`lispy_cons`->`dyn_cons`, ... -> the unchanged `__dyn_*` C symbols). `lispy_builtin()` lookup -> `dyn_builtin()`. Pure rename; LLVM lowering unchanged.
+
 ## 0.38.0 - 2026-07-11 (DVAL01-1b: rename C runtime file lispy_runtime.c -> dynval_runtime.c)
 
 DVAL01-1b: the shared C runtime file is renamed `lispy_runtime.c` -> `dynval_runtime.c` (and the golden test `lispy_runtime_golden.rs` -> `dynval_runtime_golden.rs`), continuing the de-lisp of the generic dynamic-value substrate (spec DVAL01). Pure file/path rename -- no symbol, ABI, or behaviour change; the link/build path strings that reference the runtime are updated to match. The `lispy-runtime` Rust crate rename follows in DVAL01-1c.

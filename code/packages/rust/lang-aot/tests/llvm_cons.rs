@@ -3,9 +3,9 @@
 //! The first **tagged-word** cons backend: a McCarthy cons is a tagged 64-bit
 //! word managed by the shared C runtime `dynval_runtime.c` (the SAME runtime the
 //! native AOT path links). `compile_source_to_llvm` runs the native lisp pipeline
-//! (`lower_heap_builtins_runtime` → `intern_symbols` → `lower_lisp_repr`), so
-//! cons/car/cdr become `call_builtin "lispy_*"` over pre-boxed tagged words with a
-//! final `lispy_unbox_int`; `iir-to-llvm` lowers each to `call @__dyn_*`.
+//! (`lower_heap_builtins_runtime` → `intern_symbols` → `lower_dyn_repr`), so
+//! cons/car/cdr become `call_builtin "dyn_*"` over pre-boxed tagged words with a
+//! final `dyn_unbox_int`; `iir-to-llvm` lowers each to `call @__dyn_*`.
 //! **Verified by RUNNING**: emit host-triple IR, link `dynval_runtime.c` with
 //! `clang`, run the native executable — its exit code is the result. (Predicates
 //! F3–F5, whose tagged-boolean result needs its own handling, are W12b-2.)

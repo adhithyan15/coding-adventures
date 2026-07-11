@@ -1,5 +1,14 @@
 # Changelog — `lang-aot`
 
+## 0.200.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_* + passes)
+
+DVAL01-2: the lang-aot wiring, `jit_lisp.rs`, and the LLVM/JIT/metacircular/
+conformance integration tests move to the `dyn_*` IIR builtin names and the
+renamed `dyn_repr`/`dyn_repr_structural` passes. Verified: the McCarthy-lisp
+cells stay green across VM/JIT/LLVM/native (native now emits the correct
+`__dyn_*` runtime symbols); cross-backend agreement is preserved. Pure rename
+of the builtin-name surface + the native emit fix (see aarch64/x86_64-backend).
+
 ## 0.199.0 - 2026-07-11 (DVAL01-1c: rename Rust crate lispy-runtime -> dynval-runtime)
 
 DVAL01-1c: the Rust golden-reference crate `lispy-runtime` is renamed to `dynval-runtime`, completing the crate-level de-lisp of the generic dynamic-value substrate (spec DVAL01 section 3.2). lang-aot's `Cargo.toml` dependency and every `use lispy_runtime` / `lispy_runtime::` import across `src/jit_lisp.rs` and the LLVM/metacircular/conformance integration tests move to `dynval_runtime`; the local test-helper `lispy_runtime_c()` (which returns the path to the now-`dynval_runtime.c` runtime) becomes `dynval_runtime_c()`. Pure rename -- no ABI, tag-layout, or behaviour change. The public type names (`LispyValue` etc.) and the IIR `lispy_*` builtin names are renamed by DVAL01-2, not here. Verified by the cross-backend matrix staying green on all five code-gen backends.

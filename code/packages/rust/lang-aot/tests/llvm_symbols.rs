@@ -4,7 +4,7 @@
 //! tagged 64-bit immediate — the LLVM backend carries it as an `i64` tagged word
 //! (`llvm_type_for("symbol") = i64`). `EQ` on symbols is `__dyn_equal` over
 //! the words. A *symbol* program result is returned verbatim (its tagged word) —
-//! the shared `lower_lisp_repr` must NOT `unbox_int` it (`>> 3` would corrupt the
+//! the shared `lower_dyn_repr` must NOT `unbox_int` it (`>> 3` would corrupt the
 //! id+tag), the same type-directed exit coercion that handles bools (W12b-2).
 //! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
 
