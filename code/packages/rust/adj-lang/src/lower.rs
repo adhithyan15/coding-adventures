@@ -167,6 +167,48 @@ pub enum LowerError {
     FormulaBadArgument {
         formula: String,
     },
+    /// A formula application `name(args)` in an expression named a formula that is
+    /// not registered by any imported `formulabook` (ADJ-RULE-SUBSTRATE RS-1). A
+    /// bare `IDENT` with no parentheses is an ordinary slot reference and does NOT
+    /// reach here; only an `IDENT(...)` application whose callee is unknown does.
+    /// Distinct from the aggregation/built-in-call paths (`sum(slot)`, `\sin(x)`),
+    /// which are recognised earlier — so an unknown *formula* is a clean, specific
+    /// diagnostic, never confused with a mistyped aggregation.
+    FormulaUnknown {
+        name: String,
+    },
+    /// A formula application supplied the wrong number of arguments for the named
+    /// formula (ADJ-RULE-SUBSTRATE RS-1). Carries the formula, the arity it
+    /// declares, and the count it was applied with.
+    FormulaArity {
+        formula: String,
+        expected: usize,
+        got: usize,
+    },
+    /// A formula application expanded deeper than [`FORMULA_MAX_APPLY_DEPTH`]
+    /// (ADJ-RULE-SUBSTRATE RS-1). A self- or mutually-recursive formula
+    /// (`formula f(x) = f(x)`) would otherwise expand forever; the depth guard
+    /// turns it into this clean, typed error — the compute analogue of the
+    /// resolver's recursion guard — so the process abstains with a reason instead
+    /// of hanging or overflowing the stack. Carries the depth limit reached.
+    FormulaRecursionTooDeep {
+        formula: String,
+        limit: usize,
+    },
+    /// A formula application expanded into more than [`FORMULA_MAX_EXPANSION_NODES`]
+    /// total AST nodes (ADJ-RULE-SUBSTRATE RS-1). **Depth alone cannot bound size:**
+    /// a body that references a parameter more than once (`formula g(x) = x * x`)
+    /// duplicates the bound argument subtree on every substitution, so a chain of
+    /// such formulas (`pᵢ(x) = pᵢ₋₁(x) * pᵢ₋₁(x)`) grows the expanded expression as
+    /// `2ⁿ` while the recursion depth grows only linearly — the depth guard never
+    /// fires and the process OOMs. This node budget is charged on every substituted
+    /// / emitted node and bails BEFORE the exponential tree is materialised, turning
+    /// an adversarial formulabook into a clean, fast, typed error. The cap is
+    /// generous for any legitimate composed formula (a handful of applications) yet
+    /// a tiny fraction of the blow-up. Carries the node limit reached.
+    FormulaExpansionTooLarge {
+        limit: usize,
+    },
     /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
     /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
     /// the caller used `compile` directly on a program that still has imports,
@@ -197,6 +239,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut queries = Vec::new();
     let mut constraints = ConstraintSystem::default();
     let mut dictionary: Vec<Define> = Vec::new();
+    // ADJ-RULE-SUBSTRATE RS-1: `contributes … from <formula-app> <op> <thr>` clauses
+    // whose gated LHS is a FORMULA APPLICATION are collected here and lowered in a
+    // second pass, after every statement (and therefore every `observe`) has been
+    // seen — see the `Evidence::Predicate` arm for why a library's branch precedes
+    // its consumer's observations.
+    let mut deferred_formula_predicates: Vec<DeferredFormulaPredicate> = Vec::new();
 
     // Flatten rulebooks (MYCIN-2026 M2): a `rulebook <name> { … }` is a named
     // container whose clauses lower into the KB exactly as if written at top
@@ -269,17 +317,44 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // Numeric predicate evidence → predicate-gated contribution.
                     // The comparison is evaluated on the CPU at decision time;
                     // a saturating `lr` makes the rule deterministic.
-                    Evidence::Predicate { slot, op, rhs } => {
-                        let clause = PredicateContributionClause::from_lr_expr(
-                            lower_term(conclusion),
-                            slot.clone(),
-                            lower_cmp_op(*op),
-                            lower_expr(rhs),
-                            *lr,
-                        )
-                        .with_provenance(prov);
-                        kb.add_predicate_contribution(clause);
-                    }
+                    Evidence::Predicate { lhs, op, rhs } => match lhs {
+                        // The ordinary case: the LHS is a bare slot identifier — an
+                        // observed value or a `let`-derived one. Gate on it directly;
+                        // the comparison runs on the CPU at decision time (a
+                        // saturating `lr` makes the rule deterministic). This slot is
+                        // read at DECISION time, so it needn't exist yet.
+                        ExprAst::Ref(slot) => {
+                            let clause = PredicateContributionClause::from_lr_expr(
+                                lower_term(conclusion),
+                                slot.clone(),
+                                lower_cmp_op(*op),
+                                lower_expr(rhs),
+                                *lr,
+                            )
+                            .with_provenance(prov);
+                            kb.add_predicate_contribution(clause);
+                        }
+                        // RS-1 BRANCH ON A FORMULA: the LHS is a formula application
+                        // (`bmi(body_mass, height) >= 30`). The formula reads observed
+                        // slots (`body_mass`/`height`) that a *consumer* supplies —
+                        // and, because a library declares the branch while the consumer
+                        // `observe`s the numbers, those observations arrive AFTER this
+                        // clause in lowering order. So we DEFER: record the branch now
+                        // and compute the formula once the KB is fully populated (see
+                        // the deferred-predicate pass after the statement loop). The
+                        // formula becomes a derived slot; the predicate then gates on
+                        // it exactly like any other derived value.
+                        _ => {
+                            deferred_formula_predicates.push(DeferredFormulaPredicate {
+                                lhs: lhs.clone(),
+                                op: *op,
+                                rhs: rhs.clone(),
+                                lr: *lr,
+                                conclusion: lower_term(conclusion),
+                                prov,
+                            });
+                        }
+                    },
                 }
             }
             Statement::Interacts {
@@ -377,7 +452,14 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // the computed answer is auditable back to WHY its formula is trusted.
                 if let Some(fd) = formula_for_query(conclusion, &formulas) {
                     let substituted = apply_formula(fd, conclusion)?;
-                    let cexpr = lower_expr(&substituted);
+                    // RS-1 composition: the substituted body may ITSELF apply other
+                    // formulas (`ratio(n, d) = quotient(n, d)`). Expand every nested
+                    // application recursively — with the depth guard — collecting the
+                    // provenance chain of each applied formula, then lower the
+                    // fully-expanded (application-free) expression through the SAME
+                    // `compute` path a `let` uses.
+                    let (expanded, chain) = expand_applies(&substituted, &formulas, 0)?;
+                    let cexpr = lower_expr(&expanded);
                     let derived =
                         compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
                             LowerError::ComputationFailed {
@@ -387,8 +469,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         })?;
                     // The provenance-required lint already guaranteed a non-empty
                     // source at registration; stamp the resolved envelope onto the
-                    // value so the derivation carries the formula's cites + trust.
-                    let prov = annotations_to_provenance(&fd.annotations)?;
+                    // value — and COMPOSE the nested chain, so a value computed via
+                    // `quotient` carries BOTH `ratio`'s cite (primary) and
+                    // `quotient`'s (a corroboration). The derivation is auditable
+                    // back to every formula that produced it.
+                    let primary = annotations_to_provenance(&fd.annotations)?;
+                    let prov = compose_provenance(primary, &chain);
                     kb.add_derived(derived.with_provenance(prov));
                 } else {
                     // An ordinary query. Lower with a per-query variable scope so
@@ -403,13 +489,25 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // `let`s) seen so far — statements lower in source order, so a
                 // `let` sees every `observe` above it. The engine builds the
                 // derivation tree; the model never computed anything.
-                let cexpr = lower_expr(expr);
+                //
+                // RS-1: a `let` may itself APPLY a library formula
+                // (`let r = ratio(a, b)`); expand every nested application first,
+                // collecting the applied-formula provenance chain.
+                let (expanded, chain) = expand_applies(expr, &formulas, 0)?;
+                let cexpr = lower_expr(&expanded);
                 let derived = compute(name.clone(), &cexpr, &kb).map_err(|e| {
                     LowerError::ComputationFailed {
                         name: name.clone(),
                         detail: format!("{e:?}"),
                     }
                 })?;
+                // A plain `let` over observed slots has an empty chain and no
+                // library provenance (its audit trail is the derivation tree). A
+                // `let` that applied formulas carries their composed cites.
+                let derived = match compose_chain(&chain) {
+                    Some(prov) => derived.with_provenance(prov),
+                    None => derived,
+                };
                 kb.add_derived(derived);
             }
             Statement::Uncertain {
@@ -472,6 +570,49 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 return Err(LowerError::UnresolvedImport { path: path.clone() })
             }
         }
+    }
+
+    // ADJ-RULE-SUBSTRATE RS-1 — deferred branch-on-formula pass. Every statement
+    // (and therefore every `observe`d input) is now in the KB, so we can compute
+    // each formula-application predicate LHS into a derived value and gate the
+    // contribution on it. This is what lets a *library* declare `contributes … from
+    // bmi(body_mass, height) >= 30 to obese` and a separate *consumer* supply the
+    // numbers: the branch and the observations meet here, in the completed KB.
+    for d in &deferred_formula_predicates {
+        // Expand the application (recursively; formula-calls-formula supported),
+        // collecting its provenance chain, then compute it against the full KB.
+        let (expanded, chain) = expand_applies(&d.lhs, &formulas, 0)?;
+        let slot_name = match &d.lhs {
+            ExprAst::Apply(name, _) => name.clone(),
+            // A compound LHS expression that merely *contains* an application gets a
+            // stable synthesized slot name (direct applications are the common case).
+            _ => "__branch_lhs".to_string(),
+        };
+        let cexpr = lower_expr(&expanded);
+        let derived =
+            compute(slot_name.clone(), &cexpr, &kb).map_err(|e| LowerError::ComputationFailed {
+                name: slot_name.clone(),
+                detail: format!("{e:?}"),
+            })?;
+        // The derived slot carries the applied formula's composed provenance — so
+        // the audit trail for a fired `obese` verdict cites BOTH the WHO obesity
+        // threshold (on the contribution clause) AND the BMI definition (here).
+        let derived = match compose_chain(&chain) {
+            Some(prov) => derived.with_provenance(prov),
+            None => derived,
+        };
+        kb.add_derived(derived);
+        // The RHS threshold may itself apply a formula; expand before lowering.
+        let (rhs_expanded, _) = expand_applies(&d.rhs, &formulas, 0)?;
+        let clause = PredicateContributionClause::from_lr_expr(
+            d.conclusion.clone(),
+            slot_name,
+            lower_cmp_op(d.op),
+            lower_expr(&rhs_expanded),
+            d.lr,
+        )
+        .with_provenance(d.prov.clone());
+        kb.add_predicate_contribution(clause);
     }
 
     // Compile-time vocabulary enforcement (MYCIN-2026 M1 + M2). Two modes:
@@ -802,6 +943,14 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             Box::new(lower_expr(b)),
         ),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+        // A formula application (RS-1) is never lowered directly: it is expanded
+        // away by [`expand_applies`] BEFORE `lower_expr` runs, so a fully-expanded
+        // expression contains no `Apply`. This arm exists only to keep the match
+        // total; should a lowering site ever forget to expand, it lowers to a
+        // reference on a poisoned slot name so `compute` fails cleanly with
+        // `UnknownSlot` rather than silently miscomputing — never a panic, never a
+        // wrong number.
+        ExprAst::Apply(name, _) => ComputeExpr::Ref(format!("<unexpanded formula application: {name}>")),
     }
 }
 
@@ -976,7 +1125,298 @@ fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
         | ExprAst::Trunc(a)
         | ExprAst::Sign(a)
         | ExprAst::Call(_, a) => collect_refs(a, out),
+        // A formula application's callee NAME is a formula reference, not an
+        // identifier leaf — so it is NOT a candidate free variable (parameter
+        // scoping only constrains the value leaves). Only its ARGUMENTS carry
+        // identifier leaves that must resolve to declared parameters. (Whether the
+        // callee name resolves to a known formula is checked at APPLY time, not
+        // here, so a formula may legally reference a sibling declared later in the
+        // same book — forward references resolve in the expansion pass.)
+        ExprAst::Apply(_, args) => {
+            for a in args {
+                collect_refs(a, out);
+            }
+        }
     }
+}
+
+// ---------------------------------------------------------------------------
+// Formula-application composition (ADJ-RULE-SUBSTRATE RS-1)
+// ---------------------------------------------------------------------------
+
+/// Maximum formula-application nesting depth. Mirrors the arithmetic evaluator's
+/// own [`logic_engine::compute::MAX_EVAL_DEPTH`] (=256): a genuine composed
+/// formula (`ratio = quotient(…)`, `cockcroft_gault = quotient(product(…), …)`)
+/// is a handful of applications deep, so this is a **safety backstop** — not a
+/// modelling constraint — against a self- or mutually-recursive formula
+/// (`formula f(x) = f(x)`) expanding forever. Exceeding it is a clean, typed
+/// [`LowerError::FormulaRecursionTooDeep`], never a stack overflow.
+const FORMULA_MAX_APPLY_DEPTH: usize = 256;
+
+/// Maximum TOTAL number of AST nodes a single formula application may expand into
+/// (ADJ-RULE-SUBSTRATE RS-1). This is the size guard that the depth guard
+/// ([`FORMULA_MAX_APPLY_DEPTH`]) cannot subsume: a body that names a parameter
+/// more than once (`g(x) = x * x`) duplicates the bound subtree on substitution,
+/// so composing such formulas grows the expanded tree exponentially (`2ⁿ`) while
+/// depth grows linearly. Charged on every substituted / emitted node and checked
+/// BEFORE a duplicated subtree is materialised, so an adversarial formulabook
+/// bails in microseconds instead of OOMing. 10_000 nodes is orders of magnitude
+/// more than any legitimate composed clinical formula needs (they are a handful of
+/// applications deep) yet a negligible fraction of the exponential blow-up.
+const FORMULA_MAX_EXPANSION_NODES: usize = 10_000;
+
+/// Charge one node against the expansion budget, failing with a clean
+/// [`LowerError::FormulaExpansionTooLarge`] the moment the cap is exceeded. Called
+/// on every node [`substitute_expr`] / [`charged_clone`] / [`expand_rec`]
+/// materialise, so the `2ⁿ` tree is never fully built — the guard trips partway
+/// through the first oversized clone and unwinds.
+fn charge(budget: &mut usize) -> Result<(), LowerError> {
+    *budget += 1;
+    if *budget > FORMULA_MAX_EXPANSION_NODES {
+        Err(LowerError::FormulaExpansionTooLarge {
+            limit: FORMULA_MAX_EXPANSION_NODES,
+        })
+    } else {
+        Ok(())
+    }
+}
+
+/// Deep-clone `expr`, charging the expansion [`budget`](charge) for every node.
+/// Used by [`substitute_expr`] when a parameter reference is replaced by its bound
+/// argument subtree: a naive `.clone()` would copy an arbitrarily large subtree in
+/// one unmetered step (the `g(x) = x * x` duplication vector), so cloning THROUGH
+/// the budget is what makes the exponential bail early — the clone of the second
+/// `x` trips the cap and unwinds before the doubled tree exists.
+fn charged_clone(expr: &ExprAst, budget: &mut usize) -> Result<ExprAst, LowerError> {
+    charge(budget)?;
+    Ok(match expr {
+        ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::Agg(_, _) => expr.clone(),
+        ExprAst::Bin(op, a, b) => ExprAst::Bin(
+            *op,
+            Box::new(charged_clone(a, budget)?),
+            Box::new(charged_clone(b, budget)?),
+        ),
+        ExprAst::Call2(f, a, b) => ExprAst::Call2(
+            *f,
+            Box::new(charged_clone(a, budget)?),
+            Box::new(charged_clone(b, budget)?),
+        ),
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(charged_clone(a, budget)?)),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(charged_clone(a, budget)?)),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget)?)),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget)?)),
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget)?)),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget)?)),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget)?)),
+        ExprAst::Apply(name, args) => {
+            let mut out = Vec::with_capacity(args.len());
+            for a in args {
+                out.push(charged_clone(a, budget)?);
+            }
+            ExprAst::Apply(name.clone(), out)
+        }
+    })
+}
+
+/// A `contributes … from <formula-app> <op> <thr>` clause held for the deferred
+/// branch-on-formula pass (see [`lower`]). Its LHS formula must be computed after
+/// every `observe` is in the KB, so the branch (declared in a library) and the
+/// numbers (supplied by a consumer) can meet.
+struct DeferredFormulaPredicate {
+    /// The formula-application LHS (e.g. `bmi(body_mass, height)`).
+    lhs: ExprAst,
+    op: CmpOp,
+    /// The threshold expression (`30`); may itself apply a formula.
+    rhs: ExprAst,
+    /// The saturating likelihood ratio (already `check_lr`-validated).
+    lr: f64,
+    /// The verdict this branch supports (`obese`), already lowered.
+    conclusion: CoreTerm,
+    /// The branch clause's OWN provenance (e.g. WHO's obesity threshold) — distinct
+    /// from the applied formula's provenance, which rides on the derived slot.
+    prov: Provenance,
+}
+
+/// Recursively expand every [`ExprAst::Apply`] in `expr` into the applied
+/// formula's substituted body — the RS-1 composition core — returning the
+/// fully-expanded, application-free [`ExprAst`] ready for [`lower_expr`], PLUS the
+/// ordered provenance chain of every formula applied during expansion.
+///
+/// ## What "expand" means
+///
+/// `formula ratio(numerator, denominator) = quotient(numerator, denominator)`
+/// applied as `ratio(a, b)` first substitutes `numerator → a`, `denominator → b`
+/// to get `quotient(a, b)`; expanding THAT substitutes `quotient`'s own body
+/// (`dividend / divisor`) to get `a / b`. Both formulas' provenances are collected
+/// so the composed derivation cites each (see [`compose_provenance`]).
+///
+/// ## Totality — always halt or error, never hang
+///
+/// `depth` counts formula-body entries (not AST nodes): each time we descend into
+/// a callee's substituted body we recurse at `depth + 1`, and once it reaches
+/// [`FORMULA_MAX_APPLY_DEPTH`] a self/mutually-recursive formula returns a clean
+/// [`LowerError::FormulaRecursionTooDeep`] instead of overflowing the stack. This
+/// is the compute analogue of the resolver's recursion guard — the substrate is
+/// total by construction.
+fn expand_applies(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+    depth: usize,
+) -> Result<(ExprAst, Vec<Provenance>), LowerError> {
+    let mut chain = Vec::new();
+    // One shared node budget for the WHOLE expansion. The depth guard bounds
+    // recursion LEVELS; this bounds total expanded SIZE, so a body that reuses a
+    // parameter (`x * x`) composed n deep cannot balloon to 2^n nodes — the cap
+    // trips first, in O(cap) time, with a clean `FormulaExpansionTooLarge`.
+    let mut budget: usize = 0;
+    // The names of the formulas currently OPEN on the expansion path (a stack). A
+    // formula that names itself — directly (`loop(x) = loop(x)`) or through a cycle
+    // (`a = b`, `b = a`) — reappears on this path at the moment it re-enters, so we
+    // reject it in O(1) at recursion depth 1 rather than letting `expand_rec` nest
+    // hundreds of frames deep and overflow the stack before the numeric depth guard
+    // trips. This is path-scoped: a formula legitimately applied twice in SIBLING
+    // positions (`f(x) = g(x) + g(x)`) is popped off the path between the two uses,
+    // so reuse is never mistaken for recursion.
+    let mut active: Vec<String> = Vec::new();
+    let expanded = expand_rec(expr, formulas, depth, &mut chain, &mut active, &mut budget)?;
+    Ok((expanded, chain))
+}
+
+/// The recursive worker for [`expand_applies`]. Walks the expression; at an
+/// [`ExprAst::Apply`] it resolves the callee, checks arity, expands the arguments
+/// (siblings, same depth), records the callee's provenance, substitutes into the
+/// callee body, and expands THAT body at `depth + 1`. Every other node is rebuilt
+/// with its children expanded at the same depth.
+fn expand_rec(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+    depth: usize,
+    chain: &mut Vec<Provenance>,
+    active: &mut Vec<String>,
+    budget: &mut usize,
+) -> Result<ExprAst, LowerError> {
+    // Charge one node for every node we visit/emit. This is the SIZE guard: the
+    // shared budget is threaded through the entire recursion, so an exponentially
+    // branching composition (`pₙ(x) = pₙ₋₁(x) * pₙ₋₁(x)`) trips the cap after
+    // `FORMULA_MAX_EXPANSION_NODES` visits — in O(cap) time — instead of building
+    // a 2ⁿ tree. The depth guard alone cannot bound this (depth grows linearly
+    // while size grows exponentially).
+    charge(budget)?;
+    match expr {
+        ExprAst::Apply(name, args) => {
+            // Resolve the callee against the SAME registry the top-level query path
+            // uses. An unknown name is a clean, specific error — distinct from an
+            // aggregation or built-in call, which never reach here (they are separate
+            // AST nodes recognised earlier in the grammar).
+            let fd = *formulas
+                .get(name.as_str())
+                .ok_or_else(|| LowerError::FormulaUnknown { name: name.clone() })?;
+            if fd.params.len() != args.len() {
+                return Err(LowerError::FormulaArity {
+                    formula: name.clone(),
+                    expected: fd.params.len(),
+                    got: args.len(),
+                });
+            }
+            // Expand the ARGUMENTS first — an argument may itself be an application
+            // (`ratio(product(a, b), c)`). They are siblings of this call, so they
+            // expand at the SAME depth (they are not a deeper formula body).
+            let mut subst: HashMap<String, ExprAst> = HashMap::new();
+            for (param, arg) in fd.params.iter().zip(args.iter()) {
+                subst.insert(
+                    param.clone(),
+                    expand_rec(arg, formulas, depth, chain, active, budget)?,
+                );
+            }
+            // The cycle guard: if this formula is already OPEN on the expansion path,
+            // re-entering it is (directly or mutually) recursive. ADJ formulas have
+            // no base case, so a cycle can only diverge — reject it here, in O(1), at
+            // the moment of re-entry, so we never nest deep enough to overflow the
+            // stack.
+            if active.iter().any(|n| n == name) {
+                return Err(LowerError::FormulaRecursionTooDeep {
+                    formula: name.clone(),
+                    limit: FORMULA_MAX_APPLY_DEPTH,
+                });
+            }
+            // The depth guard: a belt-and-suspenders bound on a legitimately deep (but
+            // acyclic) composition. Entering the callee's body is one level deeper.
+            if depth + 1 >= FORMULA_MAX_APPLY_DEPTH {
+                return Err(LowerError::FormulaRecursionTooDeep {
+                    formula: name.clone(),
+                    limit: FORMULA_MAX_APPLY_DEPTH,
+                });
+            }
+            // Record this formula's provenance in the composition chain (outer
+            // formulas appear before the inner formulas they call).
+            chain.push(annotations_to_provenance(&fd.annotations)?);
+            // Bind params → expanded args, substitute into the callee body (charged
+            // against the same budget), and expand that body in turn
+            // (formula-calls-formula) at depth + 1. The callee is pushed onto the
+            // active path for the duration of its body expansion and popped after, so
+            // a later SIBLING application of the same formula is not seen as a cycle.
+            let substituted = substitute_expr(&fd.body, &subst, budget)?;
+            active.push(name.clone());
+            let expanded = expand_rec(&substituted, formulas, depth + 1, chain, active, budget);
+            active.pop();
+            expanded
+        }
+        // Leaves carry no application.
+        ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::Agg(_, _) => Ok(expr.clone()),
+        // Binary nodes: expand both operands at the same depth.
+        ExprAst::Bin(op, a, b) => Ok(ExprAst::Bin(
+            *op,
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget)?),
+            Box::new(expand_rec(b, formulas, depth, chain, active, budget)?),
+        )),
+        ExprAst::Call2(f, a, b) => Ok(ExprAst::Call2(
+            *f,
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget)?),
+            Box::new(expand_rec(b, formulas, depth, chain, active, budget)?),
+        )),
+        // Unary nodes: expand the single operand.
+        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(a, formulas, depth, chain, active, budget)?))),
+        ExprAst::Call(f, a) => Ok(ExprAst::Call(
+            *f,
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget)?),
+        )),
+    }
+}
+
+/// Compose a derived value's provenance from a `primary` envelope plus the chain
+/// of formulas applied to produce it (RS-1). The primary is the outer claim's own
+/// cite (e.g. `ratio`'s definition); each applied formula's primary span becomes a
+/// **corroborating** [`Citation`] (documentary only — it carries no LR weight, it
+/// just lets the audit trail list every formula that participated). So a value
+/// computed as `ratio` *via* `quotient` renders BOTH citations.
+fn compose_provenance(mut primary: Provenance, chain: &[Provenance]) -> Provenance {
+    for p in chain {
+        if !p.source.trim().is_empty() {
+            primary.corroborations.push(Citation::new(
+                p.source.clone(),
+                p.locator.clone().unwrap_or_default(),
+            ));
+        }
+        // Preserve any corroborations the applied formula itself carried.
+        for c in &p.corroborations {
+            primary.corroborations.push(c.clone());
+        }
+    }
+    primary
+}
+
+/// Compose provenance for a derivation that has NO claim of its own (a `let`, or a
+/// branch-on-formula derived slot) but applied one or more formulas. The first
+/// applied formula is the primary; the rest corroborate. Returns `None` when the
+/// chain is empty (a plain `let` over observed slots — no library claim to cite).
+fn compose_chain(chain: &[Provenance]) -> Option<Provenance> {
+    let (first, rest) = chain.split_first()?;
+    Some(compose_provenance(first.clone(), rest))
 }
 
 /// If the query `goal` is a FORMULA APPLICATION — its functor names a registered
@@ -1021,7 +1461,12 @@ fn apply_formula(fd: &FormulaDef, goal: &AstTerm) -> Result<ExprAst, LowerError>
         };
         subst.insert(param.clone(), bound);
     }
-    Ok(substitute_expr(&fd.body, &subst))
+    // A shallow, one-level substitution of leaf bindings (a query's args are atoms
+    // or numbers) — its own local budget guards a body that reuses a parameter; the
+    // deeper formula-calls-formula expansion of the resulting body runs later, in
+    // `expand_applies`, under that call's own shared budget.
+    let mut budget: usize = 0;
+    substitute_expr(&fd.body, &subst, &mut budget)
 }
 
 /// Substitute parameter references in a formula body with their bound argument
@@ -1031,9 +1476,25 @@ fn apply_formula(fd: &FormulaDef, goal: &AstTerm) -> Result<ExprAst, LowerError>
 /// [`ExprAst::Agg`] slot naming a parameter is rewritten to the bound slot name
 /// when the binding is itself a slot reference (an aggregation folds a named
 /// slot, so only a `Ref` binding is meaningful there).
-fn substitute_expr(expr: &ExprAst, subst: &HashMap<String, ExprAst>) -> ExprAst {
-    match expr {
-        ExprAst::Ref(name) => subst.get(name).cloned().unwrap_or_else(|| expr.clone()),
+fn substitute_expr(
+    expr: &ExprAst,
+    subst: &HashMap<String, ExprAst>,
+    budget: &mut usize,
+) -> Result<ExprAst, LowerError> {
+    // Charge for the node we are about to emit. Every substituted node counts
+    // against the shared expansion budget, so a body that duplicates a bound
+    // subtree (`x * x`) can only do so until the cap trips — the exponential tree
+    // is never fully materialised.
+    charge(budget)?;
+    Ok(match expr {
+        // A parameter reference expands to its bound argument subtree — cloned
+        // THROUGH the budget so a large binding cannot be duplicated for free. This
+        // is the guarded version of the old `.clone()`; the second `x` in `x * x`
+        // is what trips the cap on an adversarial composition.
+        ExprAst::Ref(name) => match subst.get(name) {
+            Some(bound) => charged_clone(bound, budget)?,
+            None => expr.clone(),
+        },
         ExprAst::Lit(_) => expr.clone(),
         ExprAst::Agg(op, slot) => match subst.get(slot) {
             Some(ExprAst::Ref(bound)) => ExprAst::Agg(*op, bound.clone()),
@@ -1041,22 +1502,35 @@ fn substitute_expr(expr: &ExprAst, subst: &HashMap<String, ExprAst>) -> ExprAst 
         },
         ExprAst::Bin(op, a, b) => ExprAst::Bin(
             *op,
-            Box::new(substitute_expr(a, subst)),
-            Box::new(substitute_expr(b, subst)),
+            Box::new(substitute_expr(a, subst, budget)?),
+            Box::new(substitute_expr(b, subst, budget)?),
         ),
         ExprAst::Call2(f, a, b) => ExprAst::Call2(
             *f,
-            Box::new(substitute_expr(a, subst)),
-            Box::new(substitute_expr(b, subst)),
+            Box::new(substitute_expr(a, subst, budget)?),
+            Box::new(substitute_expr(b, subst, budget)?),
         ),
-        ExprAst::Abs(a) => ExprAst::Abs(Box::new(substitute_expr(a, subst))),
-        ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst))),
-        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst))),
-        ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst))),
-        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst))),
-        ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst))),
-        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst))),
-    }
+        ExprAst::Abs(a) => ExprAst::Abs(Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget)?)),
+        ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget)?)),
+        // Substitute into a formula application's ARGUMENTS, preserving the callee
+        // name. This is what makes `formula ratio(numerator, denominator) =
+        // quotient(numerator, denominator)` compose: applying `ratio(a, b)`
+        // substitutes `numerator → a`, `denominator → b` INSIDE the nested
+        // `quotient(numerator, denominator)`, yielding `quotient(a, b)` — which the
+        // expansion pass then resolves in turn.
+        ExprAst::Apply(name, args) => {
+            let mut out = Vec::with_capacity(args.len());
+            for a in args {
+                out.push(substitute_expr(a, subst, budget)?);
+            }
+            ExprAst::Apply(name.clone(), out)
+        }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -3662,5 +4136,239 @@ rule { head: r(a) when: x(t) }";
         assert!(lowered.kb.context_outranks("federal", "state"));
         assert!(lowered.kb.context_outranks("federal", "circuit"));
         assert!(!lowered.kb.context_outranks("state", "federal"));
+    }
+
+    // ---- ADJ-RULE-SUBSTRATE RS-1: formula application as a sub-expression ----
+
+    #[test]
+    fn formula_calls_formula_composes_and_carries_both_cites() {
+        // `ratio` applies `quotient` in its BODY (formula-calls-formula). The
+        // engine expands the application on the CPU and composes the provenance
+        // chain: ratio's own cite is primary; quotient's rides as a corroboration.
+        let src = r#"
+            formulabook f {
+                formula quotient(dividend, divisor) = dividend / divisor
+                    source "quotient def" locator "q-loc" trust authoritative
+                formula ratio(numerator, denominator) = quotient(numerator, denominator)
+                    source "ratio def" locator "r-loc" trust authoritative
+            }
+            observe numerator(3)
+            observe denominator(4)
+            ? ratio(numerator, denominator)
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("ratio")
+            .expect("ratio bound a derived value");
+        assert!((d.value - 0.75).abs() < 1e-9, "3/4 = 0.75, got {}", d.value);
+        let prov = d.provenance.as_ref().expect("carries composed provenance");
+        assert_eq!(prov.source, "ratio def", "ratio's cite is primary");
+        // quotient's cite composes in as a corroboration — both are auditable.
+        assert!(
+            prov.corroborations.iter().any(|c| c.source == "quotient def"),
+            "quotient's cite composed as a corroboration: {:?}",
+            prov.corroborations
+        );
+    }
+
+    #[test]
+    fn nested_application_in_arguments_expands() {
+        // An application may appear in ANOTHER application's arguments:
+        // `ratio(product(a, b), c)` — the engine expands inside-out. 6*? no:
+        // product(2,3)=6, then ratio(6, 4) = 6/4 = 1.5.
+        let src = r#"
+            formulabook f {
+                formula quotient(dividend, divisor) = dividend / divisor
+                    source "q" trust authoritative
+                formula product(factor_one, factor_two) = factor_one * factor_two
+                    source "p" trust authoritative
+                formula ratio(numerator, denominator) = quotient(numerator, denominator)
+                    source "r" trust authoritative
+            }
+            observe a(2)
+            observe b(3)
+            observe c(4)
+            let composed = ratio(product(a, b), c)
+            ? composed
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered.kb.derived_for("composed").unwrap();
+        assert!((d.value - 1.5).abs() < 1e-9, "(2*3)/4 = 1.5, got {}", d.value);
+    }
+
+    #[test]
+    fn self_referential_formula_is_a_clean_recursion_error() {
+        // `loop(x) = loop(x)` would expand forever; the depth guard turns it into a
+        // clean typed error rather than a stack overflow or a hang.
+        let src = r#"
+            formulabook f {
+                formula loop(x) = loop(x)
+                    source "s" trust inferred
+            }
+            observe x(1)
+            ? loop(x)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaRecursionTooDeep { ref formula, .. })
+                    if formula == "loop"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn exponentially_branching_composition_trips_the_size_guard_not_the_stack() {
+        // ADVERSARIAL DoS REPRO. A formula whose body reuses its parameter twice
+        // (`pᵢ(x) = pᵢ₋₁(x) * pᵢ₋₁(x)`) doubles the expanded node count at every rung
+        // while depth grows only LINEARLY — so the depth guard alone would let ~14
+        // rungs balloon past 2¹⁴ nodes and, at higher rungs, exhaust memory. The
+        // shared node budget (`FORMULA_MAX_EXPANSION_NODES`) is the real defense: it
+        // bails the instant the cap is crossed, in O(cap) time, with a specific typed
+        // error — NOT a hang, an OOM, or a stack overflow. (Verified out-of-band:
+        // with the cap lifted, the 20-rung bomb takes ~4.6s and quadruples per added
+        // rung; with the cap in place it errors in well under a millisecond.)
+        //
+        // 22 rungs => the fully-expanded tree would hold ~2²² leaves; the guard must
+        // trip long before that. We only assert the *kind* of error, so the exact cap
+        // value can move without churning this test.
+        let mut src = String::from("formulabook bomb {\n");
+        src.push_str("    formula p0(x) = x * x\n        source \"s\" trust inferred\n");
+        for i in 1..=22 {
+            src.push_str(&format!(
+                "    formula p{i}(x) = p{prev}(x) * p{prev}(x)\n        source \"s\" trust inferred\n",
+                prev = i - 1
+            ));
+        }
+        src.push_str("}\nobserve x(1)\n? p22(x)\n");
+
+        let err = compile(&src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaExpansionTooLarge { .. })
+            ),
+            "exponential composition must trip the size guard, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn unknown_formula_application_is_a_clean_error() {
+        // An `IDENT(args)` whose callee is no registered formula is a specific,
+        // typed error — distinct from an aggregation or a built-in call.
+        let src = r#"
+            formulabook f {
+                formula a(x) = nope(x)
+                    source "s" trust inferred
+            }
+            observe x(1)
+            ? a(x)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaUnknown { ref name })
+                    if name == "nope"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn arity_mismatch_in_application_is_a_clean_error() {
+        // Applying a 2-parameter formula to 1 argument is a clean arity error.
+        let src = r#"
+            formulabook f {
+                formula quotient(dividend, divisor) = dividend / divisor
+                    source "s" trust authoritative
+                formula bad(x) = quotient(x)
+                    source "s" trust inferred
+            }
+            observe x(1)
+            ? bad(x)
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::FormulaArity {
+                    ref formula, expected: 2, got: 1
+                }) if formula == "quotient"
+            ),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn rulebook_branches_on_a_formula_and_fires() {
+        // `contributes … from bmi(body_mass, height) >= 30 to obese` — a rulebook
+        // BRANCHING ON A FORMULA. The engine computes BMI on the CPU, gates the
+        // saturating LR on it, and the verdict fires for a high-BMI case.
+        let src = r#"
+            dictionary v { define obese : hypothesis }
+            formulabook m {
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "WHO BMI definition." trust authoritative
+            }
+            rulebook classify {
+                use v
+                prior 0.1 for obese trust inferred
+                contributes 1000000 from bmi(body_mass, height) >= 30 to obese
+                    source "WHO obesity threshold." trust authoritative
+            }
+            observe body_mass(100)
+            observe height(1.7)
+            ? obese
+        "#;
+        let lowered = compile(src).unwrap();
+        // The BMI was computed into a derived slot the predicate gates on.
+        let bmi = lowered.kb.derived_for("bmi").expect("bmi computed for the branch");
+        assert!((bmi.value - 34.602).abs() < 0.01, "bmi ≈ 34.6, got {}", bmi.value);
+        // The query saturates: the branch fired.
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(posterior > 0.9999, "obese fires (saturates), got {posterior}");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rulebook_branch_on_formula_stays_at_prior_below_threshold() {
+        // The mirror: a sub-threshold BMI does NOT fire the branch; the posterior
+        // stays at the prior. Proves the branch is a real CPU comparison, not an
+        // always-on contribution.
+        let src = r#"
+            dictionary v { define obese : hypothesis }
+            formulabook m {
+                formula bmi(body_mass, height) = body_mass / (height * height)
+                    source "WHO BMI definition." trust authoritative
+            }
+            rulebook classify {
+                use v
+                prior 0.1 for obese trust inferred
+                contributes 1000000 from bmi(body_mass, height) >= 30 to obese
+                    source "WHO obesity threshold." trust authoritative
+            }
+            observe body_mass(65)
+            observe height(1.75)
+            ? obese
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(
+                    (posterior - 0.1).abs() < 1e-6,
+                    "obese stays at the 0.1 prior (branch did not fire), got {posterior}"
+                );
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
     }
 }

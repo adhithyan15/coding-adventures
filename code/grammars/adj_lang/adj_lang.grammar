@@ -65,7 +65,15 @@ contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation }
 # very large LR over a CPU-evaluated comparison, not a second engine.
 evidence  = predicate | term ;
 
-predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr ;
+# The left-hand side is ordinarily a bare slot IDENT (`gross_income >= 14600`).
+# ADJ-RULE-SUBSTRATE RS-1 also allows a FORMULA APPLICATION there
+# (`bmi(body_mass, height) >= 30`) so a rulebook can BRANCH ON A FORMULA: the
+# lowerer computes the formula into a derived value and gates the contribution on
+# it. `apply` is tried first; because it begins with the same IDENT as the bare
+# slot, the parser backtracks — `apply` consumes the IDENT, fails when no `(`
+# follows, and the alternation falls back to a bare IDENT slot (the same
+# maximal-backtracking discipline `evidence = predicate | term` already relies on).
+predicate = ( apply | IDENT ) ( GE | LE | GT | LT | EQEQ ) expr ;
 
 interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation } ;
 
@@ -152,9 +160,34 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = latex_expr | asciimath_expr | mathml_expr | unicodemath_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | asciimath_expr | mathml_expr | unicodemath_expr | agg | apply | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
+
+# ----------------------------------------------------------------
+# apply — a FORMULA APPLICATION as a sub-expression (ADJ-RULE-SUBSTRATE RS-1).
+#
+#   quotient(numerator, denominator)      % formula calling formula
+#   ratio(product(a, b), c)               % arbitrarily nested
+#
+# This is the composition core: wherever the arithmetic `expr` grammar appears —
+# a `formula` body, a `let`, a `contributes … from <expr>` predicate — a named
+# library formula may be applied to argument EXPRESSIONS (each arg is a full
+# `expr`, so applications nest). The lowerer resolves the name against the
+# imported `formulabook`s, binds params → args, and substitutes the callee's body
+# recursively (with a depth guard), then lowers the expanded, application-free
+# expression through the SAME compute path a `let` uses.
+#
+# ORDERING: `apply` is listed AFTER `agg` in `factor`, so the aggregation
+# keywords (`sum`/`count`/`min`/`max`/`avg`) with a single-slot argument still
+# parse as `agg` (their alternative wins first); a non-aggregation `IDENT(` — or
+# an aggregation keyword given the wrong arity — falls through to `apply`. And
+# `apply` is BEFORE the bare `IDENT` alternative, so `IDENT(` is an application
+# while a bare `IDENT` (no paren) remains a slot reference — the parser backtracks
+# out of `apply` when no `(` follows, exactly as `evidence = predicate | term`
+# does. An `IDENT` that names a formula but is written WITHOUT parentheses is a
+# plain slot reference, not a zero-arg application (arity is checked at lowering).
+apply     = IDENT LPAREN [ expr { COMMA expr } ] RPAREN ;
 
 # Native LaTeX math input. The model may write `latex "$5 \times 12$"` anywhere
 # an ADJ arithmetic expression is accepted; the adj-lang frontend parses the
