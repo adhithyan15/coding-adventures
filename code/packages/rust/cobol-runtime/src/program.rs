@@ -62,6 +62,12 @@ pub struct Paragraph {
 pub enum Stmt {
     Display(Vec<Operand>),
     Move { src: Operand, dsts: Vec<String> },
+    /// `ADD op… TO name [GIVING g]` — result = op1+…+name, stored in g or name.
+    Add { operands: Vec<Operand>, to: String, giving: Option<String> },
+    /// `SUBTRACT op… FROM name [GIVING g]` — result = name-(op1+…), in g or name.
+    Subtract { operands: Vec<Operand>, from: String, giving: Option<String> },
+    /// `MULTIPLY a BY b [GIVING g]` — result = a*b, stored in g or b.
+    Multiply { a: Operand, by: Operand, giving: Option<String> },
     StopRun,
 }
 
@@ -267,8 +273,57 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 Err(RuntimeError::Unsupported("STOP <literal> (only STOP RUN in v0.1)".into()))
             }
         }
+        "add_stmt" => {
+            // ADD op… TO name [GIVING g]: operands are `operand` nodes; the
+            // direct NAME tokens are [to] or [to, giving].
+            let operands = read_operands(verb)?;
+            let (to, giving) = read_target_and_giving(verb)?;
+            Ok(Stmt::Add { operands, to, giving })
+        }
+        "subtract_stmt" => {
+            let operands = read_operands(verb)?;
+            let (from, giving) = read_target_and_giving(verb)?;
+            Ok(Stmt::Subtract { operands, from, giving })
+        }
+        "multiply_stmt" => {
+            // MULTIPLY a BY b [GIVING g]: two operand nodes; a direct NAME token
+            // only when GIVING is present.
+            let ops = read_operands(verb)?;
+            if ops.len() != 2 {
+                return Err(RuntimeError::Unsupported("MULTIPLY needs exactly two operands".into()));
+            }
+            let has_giving = child_tokens(verb).iter().any(|(k, v)| k == "KEYWORD" && v == "GIVING");
+            let names: Vec<String> = child_tokens(verb)
+                .into_iter()
+                .filter(|(k, _)| k == "NAME")
+                .map(|(_, v)| v)
+                .collect();
+            let giving = if has_giving { names.into_iter().next() } else { None };
+            let mut it = ops.into_iter();
+            Ok(Stmt::Multiply { a: it.next().unwrap(), by: it.next().unwrap(), giving })
+        }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }
+}
+
+/// All `operand` child nodes of a verb, read to typed [`Operand`]s.
+fn read_operands(verb: &GrammarASTNode) -> Result<Vec<Operand>, RuntimeError> {
+    child_nodes(verb, "operand").into_iter().map(read_operand).collect()
+}
+
+/// The target NAME and optional GIVING NAME of an `ADD … TO`/`SUBTRACT … FROM`.
+/// The direct NAME tokens are `[target]` or `[target, giving]`.
+fn read_target_and_giving(verb: &GrammarASTNode) -> Result<(String, Option<String>), RuntimeError> {
+    let names: Vec<String> = child_tokens(verb)
+        .into_iter()
+        .filter(|(k, _)| k == "NAME")
+        .map(|(_, v)| v)
+        .collect();
+    let mut it = names.into_iter();
+    let target = it
+        .next()
+        .ok_or_else(|| RuntimeError::Unsupported("arithmetic statement without a target".into()))?;
+    Ok((target, it.next()))
 }
 
 /// Human-friendly verb name from a grammar rule name (`move_stmt` → `MOVE`).

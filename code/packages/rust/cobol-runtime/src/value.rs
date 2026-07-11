@@ -51,6 +51,56 @@ impl Decimal {
     pub fn digits(&self) -> String {
         format!("{}{}", self.int, self.frac)
     }
+
+    /// This value as a signed `i128` scaled by `10^scale` (i.e. with exactly
+    /// `scale` fractional digits). Returns `None` if it overflows `i128`
+    /// (~38 digits — beyond any real COBOL numeric field) or if truncating the
+    /// fraction to `scale` digits would lose precision (callers pick a `scale`
+    /// large enough that it never does). This is the integer form on which exact
+    /// fixed-point add/subtract/multiply are performed.
+    fn to_scaled(&self, scale: usize) -> Option<i128> {
+        if self.frac.len() > scale {
+            return None;
+        }
+        let int = if self.int.is_empty() { "0" } else { self.int.as_str() };
+        let frac = format!("{:0<width$}", self.frac, width = scale);
+        let combined = format!("{int}{frac}");
+        let mag: i128 = combined.parse().ok()?;
+        Some(if self.neg { -mag } else { mag })
+    }
+
+    /// Rebuild a [`Decimal`] from a signed `i128` scaled by `10^scale`.
+    fn from_scaled(v: i128, scale: usize) -> Decimal {
+        let neg = v < 0;
+        // Zero-pad so there is always at least one integer digit.
+        let s = format!("{:0>width$}", v.unsigned_abs(), width = scale + 1);
+        let split = s.len() - scale;
+        Decimal { neg, int: s[..split].to_string(), frac: s[split..].to_string() }
+    }
+}
+
+/// Exact fixed-point addition. The result keeps the larger of the two operands'
+/// fractional lengths, so no precision is lost. `None` on `i128` overflow.
+pub fn add(a: &Decimal, b: &Decimal) -> Option<Decimal> {
+    let scale = a.frac.len().max(b.frac.len());
+    let r = a.to_scaled(scale)?.checked_add(b.to_scaled(scale)?)?;
+    Some(Decimal::from_scaled(r, scale))
+}
+
+/// Exact fixed-point subtraction (`a - b`).
+pub fn sub(a: &Decimal, b: &Decimal) -> Option<Decimal> {
+    let scale = a.frac.len().max(b.frac.len());
+    let r = a.to_scaled(scale)?.checked_sub(b.to_scaled(scale)?)?;
+    Some(Decimal::from_scaled(r, scale))
+}
+
+/// Exact fixed-point multiplication. The result's fractional length is the sum
+/// of the operands' — the standard COBOL composite before truncation into a
+/// receiver.
+pub fn mul(a: &Decimal, b: &Decimal) -> Option<Decimal> {
+    let (sa, sb) = (a.frac.len(), b.frac.len());
+    let r = a.to_scaled(sa)?.checked_mul(b.to_scaled(sb)?)?;
+    Some(Decimal::from_scaled(r, sa + sb))
 }
 
 /// Move a numeric value into a numeric receiver of `int_digits` integer
@@ -133,5 +183,44 @@ mod tests {
         assert_eq!(move_into_char("HI", 5), "HI   ");
         assert_eq!(move_into_char("HELLO WORLD", 5), "HELLO");
         assert_eq!(move_into_char("EXACT", 5), "EXACT");
+    }
+
+    // ----------------------------------------------------------------------
+    // Fixed-point decimal arithmetic
+    // ----------------------------------------------------------------------
+
+    fn d(s: &str) -> Decimal {
+        Decimal::parse_literal(s).unwrap()
+    }
+
+    #[test]
+    fn decimal_add_aligns_by_the_point() {
+        // 1.5 + 2.25 = 3.75 (result keeps the wider fraction)
+        assert_eq!(add(&d("1.5"), &d("2.25")).unwrap(), d("3.75"));
+        // 7 + 8 = 15
+        assert_eq!(add(&d("7"), &d("8")).unwrap(), d("15"));
+    }
+
+    #[test]
+    fn decimal_sub_can_go_negative() {
+        // 3 - 5 = -2 (sign carried; an unsigned receiver later drops it)
+        assert_eq!(sub(&d("3"), &d("5")).unwrap(), d("-2"));
+        assert_eq!(sub(&d("10.00"), &d("0.25")).unwrap(), d("9.75"));
+    }
+
+    #[test]
+    fn decimal_mul_sums_fraction_lengths() {
+        // 1.5 * 2.5 = 3.75; fraction length = 1 + 1 = 2
+        let r = mul(&d("1.5"), &d("2.5")).unwrap();
+        assert_eq!(r, Decimal { neg: false, int: "3".into(), frac: "75".into() });
+        // 12 * 12 = 144
+        assert_eq!(mul(&d("12"), &d("12")).unwrap(), d("144"));
+    }
+
+    #[test]
+    fn arithmetic_result_moves_into_receiver_truncating() {
+        // (2.5 * 2.5 = 6.25) moved into PIC 9(3)V9 → "0062" (low-order truncated).
+        let r = mul(&d("2.5"), &d("2.5")).unwrap();
+        assert_eq!(move_into_numeric(&r, 3, 1), "0062");
     }
 }

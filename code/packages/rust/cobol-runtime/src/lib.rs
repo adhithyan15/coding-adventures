@@ -5,12 +5,13 @@
 //! PROCEDURE DIVISION, capturing everything `DISPLAY`ed. See
 //! [PL08](../../../specs/PL08-cobol-runtime.md).
 //!
-//! This is v0.1 — the execution spine. It implements a *small but fully
-//! correct* slice (`MOVE` / `DISPLAY` / `STOP RUN` over unsigned numeric-display
-//! and character pictures) and returns a descriptive error for anything not yet
-//! modelled, rather than producing wrong output. The roadmap toward full COBOL
-//! (arithmetic, editing pictures, `PERFORM`, tables, files, later standards) is
-//! in PL08.
+//! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
+//! `STOP RUN` and fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` over
+//! unsigned numeric-display and character pictures — and returns a descriptive
+//! error for anything not yet modelled, rather than producing wrong output. The
+//! roadmap toward full COBOL (signed numerics, `DIVIDE`, `ROUNDED`/`ON SIZE
+//! ERROR`, editing pictures, `PERFORM`, tables, files, later standards) is in
+//! PL08.
 //!
 //! ```
 //! use coding_adventures_cobol_runtime::run_cobol;
@@ -226,25 +227,93 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // Fixed-point decimal arithmetic
+    // ----------------------------------------------------------------------
+
+    /// Run a program whose WORKING-STORAGE is one field `R PIC <pic>`, execute
+    /// `body`, then `DISPLAY R` — returns R's displayed digits.
+    fn compute(pic: &str, body: &[&str], extra_ws: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  R  PIC {pic}."),
+        ];
+        lines.extend(extra_ws.iter().map(|s| s.to_string()));
+        lines.push("PROCEDURE DIVISION.".to_string());
+        lines.push("MAIN.".to_string());
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        lines.push("    DISPLAY R.".to_string());
+        lines.push("    STOP RUN.".to_string());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs)).unwrap()
+    }
+
+    #[test]
+    fn add_to_accumulates_into_the_receiver() {
+        // R starts 10; ADD 5 3 TO R → 18.
+        assert_eq!(compute("9(3)", &["MOVE 10 TO R.", "ADD 5 3 TO R."], &[]), "018\n");
+    }
+
+    #[test]
+    fn add_giving_leaves_the_to_field_unchanged() {
+        // ADD 2 3 TO A GIVING R → R = 2+3+A(=100) = 105; A untouched.
+        let out = compute(
+            "9(3)",
+            &["ADD 2 3 TO A GIVING R."],
+            &["01  A  PIC 9(3) VALUE 100."],
+        );
+        assert_eq!(out, "105\n");
+    }
+
+    #[test]
+    fn subtract_from_and_unsigned_receiver_keeps_magnitude() {
+        // SUBTRACT 3 FROM R(=10) → 7.
+        assert_eq!(compute("9(3)", &["MOVE 10 TO R.", "SUBTRACT 3 FROM R."], &[]), "007\n");
+        // SUBTRACT 5 FROM R(=3) → -2, but R is unsigned → stores magnitude 2.
+        assert_eq!(compute("9(3)", &["MOVE 3 TO R.", "SUBTRACT 5 FROM R."], &[]), "002\n");
+    }
+
+    #[test]
+    fn multiply_fixed_point_truncates_into_receiver() {
+        // 2.5 * 2.5 = 6.25 → into PIC 9(3)V9 truncates to "0062".
+        let out = compute("9(3)V9", &["MULTIPLY 2.5 BY 2.5 GIVING R."], &[]);
+        assert_eq!(out, "0062\n");
+    }
+
+    #[test]
+    fn multiply_by_updates_the_by_field_without_giving() {
+        // MOVE 6 TO R; MULTIPLY 7 BY R → R = 42.
+        assert_eq!(compute("9(3)", &["MOVE 6 TO R.", "MULTIPLY 7 BY R."], &[]), "042\n");
+    }
+
+    #[test]
+    fn decimal_add_aligns_the_implied_point() {
+        // R PIC 9(2)V99 (4 digits) starts 1.50; ADD 2.25 TO R → 3.75 → "0375".
+        assert_eq!(compute("9(2)V99", &["MOVE 1.5 TO R.", "ADD 2.25 TO R."], &[]), "0375\n");
+    }
+
+    // ----------------------------------------------------------------------
     // Honest failure: unmodelled features error, they do not run wrong.
     // ----------------------------------------------------------------------
 
     #[test]
     fn unsupported_verb_is_a_clear_error() {
+        // PERFORM is not yet executed (control flow is a later PR).
         let err = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
-            "DATA DIVISION.",
-            "WORKING-STORAGE SECTION.",
-            "01  N  PIC 9(3).",
             "PROCEDURE DIVISION.",
             "MAIN.",
-            "    ADD 1 TO N.",
+            "    PERFORM SUB.",
+            "    STOP RUN.",
+            "SUB.",
             "    STOP RUN.",
         ]))
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
-        assert!(err.to_string().contains("ADD"), "message should name the verb: {err}");
+        assert!(err.to_string().contains("PERFORM"), "message should name the verb: {err}");
     }
 
     #[test]

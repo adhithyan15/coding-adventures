@@ -4,7 +4,7 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{Fig, Lit, Operand, Program, Stmt};
-use crate::value::{move_into_char, move_into_numeric, Decimal};
+use crate::value::{add, move_into_char, move_into_numeric, mul, sub, Decimal};
 use std::collections::HashMap;
 
 /// One field in the data model. Elementary items carry a picture and character
@@ -21,6 +21,13 @@ enum Src {
     Num(Decimal),
     Chars(String),
     Fig(Fig),
+}
+
+/// Turn an arithmetic result into a `Result`, reporting `i128` overflow (a value
+/// beyond ~38 digits — larger than any real COBOL numeric field) as an error
+/// rather than panicking or wrapping.
+fn checked(r: Option<Decimal>) -> Result<Decimal, RuntimeError> {
+    r.ok_or_else(|| RuntimeError::Unsupported("arithmetic overflow (result exceeds ~38 digits)".into()))
 }
 
 /// The running machine: the item table, a name→index map, and captured output.
@@ -121,6 +128,11 @@ impl Machine {
                     Stmt::StopRun => return Ok(self.output),
                     Stmt::Display(ops) => self.exec_display(ops)?,
                     Stmt::Move { src, dsts } => self.exec_move(src, dsts)?,
+                    Stmt::Add { operands, to, giving } => self.exec_add(operands, to, giving)?,
+                    Stmt::Subtract { operands, from, giving } => {
+                        self.exec_subtract(operands, from, giving)?
+                    }
+                    Stmt::Multiply { a, by, giving } => self.exec_multiply(a, by, giving)?,
                 }
             }
         }
@@ -146,6 +158,87 @@ impl Machine {
             self.move_into(idx, value)?;
         }
         Ok(())
+    }
+
+    // ----------------------------------------------------------------------
+    // Arithmetic (fixed-point decimal, truncating; unsigned receivers)
+    // ----------------------------------------------------------------------
+
+    /// `ADD op… TO name [GIVING g]` → (name + op1 + … + opN) into g or name.
+    fn exec_add(
+        &mut self,
+        operands: &[Operand],
+        to: &str,
+        giving: &Option<String>,
+    ) -> Result<(), RuntimeError> {
+        let mut acc = self.named_decimal(to)?;
+        for op in operands {
+            acc = checked(add(&acc, &self.operand_decimal(op)?))?;
+        }
+        self.store_number(giving.as_deref().unwrap_or(to), acc)
+    }
+
+    /// `SUBTRACT op… FROM name [GIVING g]` → (name − op1 − … − opN) into g or name.
+    fn exec_subtract(
+        &mut self,
+        operands: &[Operand],
+        from: &str,
+        giving: &Option<String>,
+    ) -> Result<(), RuntimeError> {
+        let mut acc = self.named_decimal(from)?;
+        for op in operands {
+            acc = checked(sub(&acc, &self.operand_decimal(op)?))?;
+        }
+        self.store_number(giving.as_deref().unwrap_or(from), acc)
+    }
+
+    /// `MULTIPLY a BY b [GIVING g]` → (a × b) into g, or into b when no GIVING.
+    fn exec_multiply(
+        &mut self,
+        a: &Operand,
+        by: &Operand,
+        giving: &Option<String>,
+    ) -> Result<(), RuntimeError> {
+        let product = checked(mul(&self.operand_decimal(a)?, &self.operand_decimal(by)?))?;
+        let target = match (giving, by) {
+            (Some(g), _) => g.clone(),
+            (None, Operand::Ident(name)) => name.clone(),
+            (None, _) => {
+                return Err(RuntimeError::Unsupported(
+                    "MULTIPLY … BY <literal> without GIVING has no receiver".into(),
+                ))
+            }
+        };
+        self.store_number(&target, product)
+    }
+
+    /// The numeric value of an operand (numeric literal, `ZERO`, or numeric
+    /// item). Non-numeric operands are an error — you cannot do arithmetic on
+    /// an alphanumeric value.
+    fn operand_decimal(&self, op: &Operand) -> Result<Decimal, RuntimeError> {
+        match self.src_from_operand(op)? {
+            Src::Num(d) => Ok(d),
+            Src::Fig(Fig::Zero) => Ok(Decimal::zero()),
+            Src::Fig(Fig::Space) | Src::Chars(_) => {
+                Err(RuntimeError::Unsupported("arithmetic on a non-numeric operand".into()))
+            }
+        }
+    }
+
+    /// The numeric value of a named field (must be a numeric item).
+    fn named_decimal(&self, name: &str) -> Result<Decimal, RuntimeError> {
+        let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.into()))?;
+        match &self.items[idx].picture {
+            Some(p) if p.is_numeric() => Ok(self.item_as_decimal(idx)),
+            _ => Err(RuntimeError::Unsupported(format!("arithmetic on non-numeric field {name}"))),
+        }
+    }
+
+    /// Store a computed number into a named receiver (reshaped to its picture;
+    /// an unsigned receiver keeps the magnitude).
+    fn store_number(&mut self, name: &str, value: Decimal) -> Result<(), RuntimeError> {
+        let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.into()))?;
+        self.move_into(idx, Src::Num(value))
     }
 
     // ----------------------------------------------------------------------

@@ -103,20 +103,27 @@ rather than producing wrong output.
 - `DISPLAY` (items and literals, concatenated, newline-terminated).
 - `STOP RUN`.
 
+**Added in v0.2:** fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` (the
+current grammar's `TO`/`FROM`/`BY` + `GIVING` forms) — decimal-point aligned,
+truncating into the receiver, unsigned receivers keeping the magnitude; overflow
+beyond ~38 digits is an error, never a panic.
+
 **Deferred to later PRs (return `RuntimeError::Unsupported` for now):**
-signed `S` numerics and overpunch-sign display; `P` scaling; editing pictures
+signed `S` numerics and overpunch-sign display; `P` scaling; `DIVIDE` and
+`ROUNDED`/`ON SIZE ERROR` (the latter need frontend clauses); editing pictures
 (`Z * $ , . + - CR DB B 0 /`); `USAGE COMP`/`COMP-3` (binary / packed decimal);
 group `MOVE`; name qualification (`OF`/`IN`); `REDEFINES`/`OCCURS`; and every
-verb other than `MOVE`/`DISPLAY`/`STOP RUN`.
+verb not listed above.
 
 ## Roadmap toward full COBOL
 
 Each item is a run-verified PR; the runtime grows one quirk at a time.
 
-1. **v0.1 — execution spine** (this PR): data model + `MOVE`/`DISPLAY`/`STOP RUN`.
-2. **Signed numerics + overpunch** display; `SIGN` clause.
-3. **Arithmetic** — `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE`/`COMPUTE`, fixed-point
-   decimal, `ROUNDED`, `ON SIZE ERROR`, `GIVING`.
+1. **v0.1 — execution spine** (merged): data model + `MOVE`/`DISPLAY`/`STOP RUN`.
+2. **v0.2 — arithmetic** (this PR): fixed-point `ADD`/`SUBTRACT`/`MULTIPLY`.
+3. **Remaining arithmetic** — `DIVIDE`, `COMPUTE`, `ROUNDED`, `ON SIZE ERROR`
+   (the last two also widen the frontend grammar); then **signed numerics +
+   overpunch** display and the `SIGN` clause.
 4. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
 5. **Control flow** — `IF … ELSE … END-IF`, `EVALUATE`, `PERFORM` (`THRU`,
    `TIMES`, `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.
