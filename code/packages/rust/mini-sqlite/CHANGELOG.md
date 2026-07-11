@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.1 — Scalar functions: IFNULL / NULLIF / TYPEOF / INSTR / HEX
+
+Stream A, corpus-growth phase (the differential ledger is at zero, so the
+metric is now the *size* of the seed corpus that matches real SQLite). Five
+common scalar functions used by real-world queries now work: `IFNULL`,
+`NULLIF`, `TYPEOF`, `INSTR`, `HEX`. They already parsed as function calls but
+hit the engine's `unknown built-in function` fallthrough; implemented in
+`sql-vm` (0.3.0). Five new differential-oracle cases (`ifnull`, `nullif`,
+`typeof`, `instr`, `hex`) diff mini-sqlite's results against real bundled
+SQLite. No mini-sqlite `src/` change.
+
 ## 0.5.0 — Differential conformance ledger driven to ZERO
 
 Stream B / L3: aggregate output columns are now named the SQLite way —

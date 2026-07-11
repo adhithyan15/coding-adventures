@@ -399,6 +399,49 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a.name, b.tag FROM a FULL JOIN b ON a.id = b.aid ORDER BY a.name, b.tag",
     },
+    // --- Scalar functions: IFNULL / NULLIF / TYPEOF / INSTR / HEX. Aliased so
+    //     the case exercises the function *values* (column naming is covered
+    //     elsewhere); each is diffed against real SQLite. ---
+    Case {
+        id: "ifnull",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v INTEGER)",
+            "INSERT INTO t VALUES (1, 10), (2, NULL), (3, 30)",
+        ],
+        query: "SELECT IFNULL(v, -1) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "nullif",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1), (2), (3)",
+        ],
+        query: "SELECT NULLIF(id, 2) AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "typeof",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1, 10, 'a'), (2, NULL, NULL)",
+        ],
+        query: "SELECT TYPEOF(v) AS tv, TYPEOF(name) AS tn, TYPEOF(id) AS ti FROM t ORDER BY id",
+    },
+    Case {
+        id: "instr",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1, 'abc'), (2, 'bbc'), (3, NULL)",
+        ],
+        query: "SELECT INSTR(name, 'b') AS r FROM t ORDER BY id",
+    },
+    Case {
+        id: "hex",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (255, 'abc'), (16, 'z')",
+        ],
+        query: "SELECT HEX(id) AS hi, HEX(name) AS hn FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
