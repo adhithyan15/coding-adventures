@@ -576,6 +576,8 @@ _ARRAY_METHODS = frozenset(
         "values_at",
         "rotate",
         "zip",
+        "each_slice",
+        "each_cons",
     }
 )
 
@@ -609,6 +611,7 @@ _ARRAY_BLOCK_METHODS = frozenset(
         "drop_while",
         "count",
         "each_with_object",
+        "chunk_while",
     }
 )
 
@@ -1046,6 +1049,24 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
                 row.append(o[i] if i < len(o) else None)
             zipped.append(row)
         return zipped
+    if name == "each_slice":
+        # ``each_slice(n)`` — split into consecutive sub-arrays of at most ``n``
+        # elements (the last slice may be shorter).  ``[1,2,3,4,5].each_slice(2)``
+        # → ``[[1,2],[3,4],[5]]``.  Ruby raises ``ArgumentError`` for ``n <= 0``;
+        # the never-raise floor yields ``[]`` (no valid slice size) instead.
+        n = args[0] if args and isinstance(args[0], int) else 0
+        if n <= 0:
+            return []
+        return [recv[i : i + n] for i in range(0, len(recv), n)]
+    if name == "each_cons":
+        # ``each_cons(n)`` — every consecutive ``n``-element window (sliding by
+        # one).  ``[1,2,3,4].each_cons(2)`` → ``[[1,2],[2,3],[3,4]]``.  A window
+        # size larger than the array (or ``n <= 0``) yields ``[]``; Ruby raises
+        # for ``n <= 0`` but the never-raise floor returns empty.
+        n = args[0] if args and isinstance(args[0], int) else 0
+        if n <= 0:
+            return []
+        return [recv[i : i + n] for i in range(0, len(recv) - n + 1)]
     return _MISS
 
 
@@ -1153,6 +1174,21 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
         for item in recv:
             apply(block, [item, memo])
         return memo
+    if name == "chunk_while":
+        # ``chunk_while { |prev, cur| pred }`` — split into runs of consecutive
+        # elements: the block is called on each ADJACENT pair; while it is truthy
+        # the run continues, and a falsy result starts a new run.
+        # ``[1,2,4,5,7].chunk_while { |a,b| b - a == 1 }`` → ``[[1,2],[4,5],[7]]``.
+        # An empty array yields ``[]``; a single element yields ``[[x]]``.
+        if not recv:
+            return []
+        chunks: list[Val] = [[recv[0]]]
+        for prev, cur in zip(recv, recv[1:], strict=False):
+            if truthy(apply(block, [prev, cur])):
+                chunks[-1].append(cur)
+            else:
+                chunks.append([cur])
+        return chunks
     return _MISS
 
 

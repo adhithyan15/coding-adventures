@@ -244,6 +244,37 @@ def test_array_zip_pads_and_truncates_to_receiver_length() -> None:
     assert oop.call_method([1, 2], "zip") == [[1], [2]]
 
 
+def test_array_each_slice_each_cons_chunk_while() -> None:
+    # `each_slice(n)` splits into consecutive <=n-size chunks (last may be short).
+    assert oop.call_method([1, 2, 3, 4, 5], "each_slice", 2) == [[1, 2], [3, 4], [5]]
+    assert oop.call_method([1, 2, 3, 4], "each_slice", 2) == [[1, 2], [3, 4]]
+    assert oop.call_method([1, 2, 3], "each_slice", 5) == [[1, 2, 3]]
+    assert oop.call_method([], "each_slice", 2) == []
+    # n <= 0 → [] (Ruby raises ArgumentError; never-raise floor yields empty).
+    assert oop.call_method([1, 2], "each_slice", 0) == []
+    # `each_cons(n)` yields every consecutive n-element sliding window.
+    assert oop.call_method([1, 2, 3, 4], "each_cons", 2) == [[1, 2], [2, 3], [3, 4]]
+    assert oop.call_method([1, 2, 3], "each_cons", 3) == [[1, 2, 3]]
+    # window larger than the array (or n <= 0) → [].
+    assert oop.call_method([1, 2], "each_cons", 3) == []
+    assert oop.call_method([1, 2], "each_cons", 0) == []
+    # `chunk_while { |a, b| pred }` splits into runs while the adjacent-pair
+    # predicate holds; a falsy result starts a new run.
+    assert oop.call_method(
+        [1, 2, 4, 5, 7], "chunk_while", Closure(lambda a, b: b - a == 1)
+    ) == [[1, 2], [4, 5], [7]]
+    # all-truthy → one run; all-falsy → singletons.
+    assert oop.call_method([1, 2, 3], "chunk_while", Closure(lambda a, b: True)) == [[1, 2, 3]]
+    assert oop.call_method([1, 2, 3], "chunk_while", Closure(lambda a, b: False)) == [[1], [2], [3]]
+    # empty → []; single element → [[x]].
+    assert oop.call_method([], "chunk_while", Closure(lambda a, b: True)) == []
+    assert oop.call_method([9], "chunk_while", Closure(lambda a, b: True)) == [[9]]
+    # respond_to? advertises the new methods.
+    assert oop.call_method([1], "respond_to?", "each_slice") is True
+    assert oop.call_method([1], "respond_to?", "each_cons") is True
+    assert oop.call_method([1], "respond_to?", "chunk_while") is True
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]
@@ -319,8 +350,8 @@ def test_respond_to_reports_catalog_membership() -> None:
     assert oop.call_method([1], "respond_to?", "nil?") is True
     assert oop.call_method([1], "respond_to?", "is_a?") is True
     assert oop.call_method([1], "respond_to?", "map") is True  # block method (M1b)
-    # An out-of-catalog method:
-    assert oop.call_method([1], "respond_to?", "each_slice") is False
+    # An out-of-catalog method (`chunk` is the non-`_while` variant, uncatalogued):
+    assert oop.call_method([1], "respond_to?", "chunk") is False
 
 
 def test_known_block_method_without_block_still_returns_nil() -> None:

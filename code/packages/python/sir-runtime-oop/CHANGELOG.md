@@ -2,6 +2,29 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.22] - 2026-07-11
+
+### Added
+
+- **`Array#each_slice`, `Array#each_cons`, `Array#chunk_while`** — the
+  consecutive-grouping family.  Reference implementation for the next
+  cross-backend cascade (Go/Rust/JS/TS mirrors to follow).
+  - `each_slice(n)` (`_array_method` + `_ARRAY_METHODS`) → consecutive
+    sub-arrays of at most `n` elements, the last possibly shorter
+    (`[1,2,3,4,5].each_slice(2)` → `[[1,2],[3,4],[5]]`).
+  - `each_cons(n)` (non-block) → every consecutive `n`-element sliding window
+    (`[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`); a window larger than the
+    array yields `[]`.
+  - Both treat `n <= 0` as `[]` (Ruby raises `ArgumentError`; the never-raise
+    floor yields empty instead).
+  - `chunk_while { |prev, cur| pred }` (`_array_block_method` +
+    `_ARRAY_BLOCK_METHODS`) → runs of consecutive elements; the block is called
+    on each ADJACENT pair, a truthy result extends the current run and a falsy
+    one starts a new run (`[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` →
+    `[[1,2],[4,5],[7]]`).  Empty → `[]`; single element → `[[x]]`.
+
+
+
 ## [0.1.21] - 2026-07-11
 
 ### Added
