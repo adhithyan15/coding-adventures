@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.19 — Column alias without the `AS` keyword
+
+`SELECT a col1` now parses and names the output column `col1`, exactly like
+`SELECT a AS col1` — SQLite (and standard SQL) accept both spellings. The
+generated sql-parser grammar required `AS`; making it optional (sql-parser
+0.1.3) plus teaching the planner's alias extractor to read a bare trailing
+`NAME` token (sql-planner 0.2.2) fixes it. Two new differential-oracle cases
+(`column_alias_without_as`, `bare_alias_matches_as`) diff the resulting
+**column names** against real bundled SQLite. (Table aliases without `AS`,
+`FROM t u`, are the same idea in a different grammar slot and remain a
+follow-up.)
+
 ## 0.5.18 — Conditionless joins (Cartesian product)
 
 `SELECT … FROM a CROSS JOIN b` and `SELECT … FROM a JOIN b` (no `ON`) now parse

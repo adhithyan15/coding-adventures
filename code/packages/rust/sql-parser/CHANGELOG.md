@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - Unreleased
+
+### Fixed
+
+- **A column alias may omit the `AS` keyword.** `SELECT a col1` now parses and
+  names the output column `col1`, exactly like `SELECT a AS col1` — SQLite and
+  standard SQL accept both spellings. The generated `select_item` grammar
+  required `AS`; it now matches the `sql.grammar` source
+  (`expr [ [ "AS" ] NAME ]`) by making `AS` optional. The alias `NAME` cannot
+  swallow a following keyword (`FROM`/`WHERE`/…) — `NAME` only matches
+  `Name`-type tokens — nor a comma, so `SELECT a, b` and `SELECT a FROM t` are
+  unaffected. Paired with a sql-planner 0.2.2 change that reads a bare trailing
+  alias token (no `AS` keyword to key off).
+
 ## [0.1.2] - Unreleased
 
 ### Fixed
