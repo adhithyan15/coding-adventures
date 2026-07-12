@@ -125,16 +125,50 @@ pub const EXPAND_MAX_TERMS: usize = 10_000;
 ///   reports its true (potentially huge) size on every subsequent
 ///   check, so the guard keeps seeing accurate numbers instead of a
 ///   stale "1" and correctly keeps refusing to distribute further.
+///
+/// - **The same blindness recurs for every other head `expand_apply`
+///   leaves in place** — `Div`, `Neg`, `Pow` left un-distributed (a
+///   non-integer or out-of-range exponent), and every transcendental
+///   (`Sin`, `Log`, ...). `expand_apply`'s fallthrough recursively
+///   expands *their children* but never touches the wrapper head
+///   itself (see `expand_recurses_into_div_operands`), so
+///   `Div(huge_expanded_numerator, y)` is a completely ordinary,
+///   frequently-produced shape — not a contrived edge case. Treating it
+///   as size `1` (the pre-fix `_ => 1` catch-all) is safe *mathematically*
+///   (as a polynomial term, `x/y` genuinely is one term, hidden internal
+///   size notwithstanding) but wrong as a *cost estimate*: if this node
+///   later becomes an operand under a further `Add`-distribution (e.g.
+///   `expand_mul` folding it against another sum), [`expand_mul`] clones
+///   it once per term of the other side — real cost proportional to its
+///   *true* size, not `1`. A chain of several such wrapped huge
+///   subtrees, each hidden from the cap check the same way, reproduces
+///   exactly the "cap → go dark → distribute past the cap" cycle the
+///   `Mul` fix above already closed for refused multiplications — just
+///   via `Div`/`Neg`/transcendental wrappers instead of a refused `Mul`.
+///   Any `Apply` node whose head is not itself distributed (i.e.,
+///   anything but `Mul`, which multiplies) now falls through to summing
+///   its children's term counts — the same conservative "total
+///   underlying size" measure `Add`/`Sub` already used, generalized to
+///   every wrapper shape `expand_apply` can leave behind, not just
+///   `Add`/`Sub` specifically.
 fn term_count(node: &IRNode) -> usize {
     match node {
-        IRNode::Apply(app) if is_head(&app.head, ADD) || is_head(&app.head, SUB) => {
-            app.args.iter().map(term_count).sum::<usize>().max(1)
-        }
         IRNode::Apply(app) if is_head(&app.head, MUL) => app
             .args
             .iter()
             .map(term_count)
             .fold(1usize, |acc, c| acc.saturating_mul(c)),
+        // Every other `Apply` head (`Add`/`Sub`, `Div`, `Neg`, `Pow` left
+        // un-distributed, every transcendental, ...) is not itself
+        // distributed by `expand_apply` — only its children are
+        // recursively expanded, the wrapper head stays. Summing the
+        // children's term counts is the right measure for both cases:
+        // for `Add`/`Sub` it *is* the true would-be term count; for
+        // everything else it is a conservative (over-, never under-)
+        // estimate of how much real cloning cost this subtree carries
+        // if it is later multiplied against something else — the
+        // direction a DoS guard must err toward.
+        IRNode::Apply(app) => app.args.iter().map(term_count).sum::<usize>().max(1),
         _ => 1,
     }
 }
@@ -258,7 +292,7 @@ fn expand_apply(node: IRApply) -> IRNode {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use symbolic_ir::{apply, flt, int, sym, DIV, SIN};
+    use symbolic_ir::{apply, flt, int, sym, DIV, NEG, SIN};
 
     fn add(args: Vec<IRNode>) -> IRNode {
         apply(sym(ADD), args)
@@ -499,5 +533,68 @@ mod tests {
              the way it should",
             total_node_count(&result)
         );
+    }
+
+    #[test]
+    fn term_count_sees_through_a_div_wrapped_subtree_instead_of_going_blind() {
+        // Regression test for the Div/Neg/transcendental generalization
+        // of the fix above. expand_apply never distributes Div itself —
+        // it recurses into the numerator/denominator and leaves the Div
+        // head in place (see expand_recurses_into_div_operands) — so
+        // Div(huge_add_tree, y) is an entirely ordinary shape a real
+        // expansion can leave behind, not a contrived one. Build one
+        // directly (standing in for whatever a prior expand() call
+        // would already have produced) and multiply it by a modest
+        // second Add factor.
+        let huge_numerator = add((0..9000).map(|i| sym(format!("x{i}"))).collect());
+        let big_div = apply(sym(DIV), vec![huge_numerator, sym("y")]);
+        let second_factor = add((0..20).map(|i| sym(format!("z{i}"))).collect());
+
+        let result = expand(mul(vec![big_div, second_factor]));
+
+        // Under the pre-fix logic, term_count(big_div) == 1 (Div is
+        // neither Add/Sub nor Mul), so the cap check saw "1 * 20 = 20"
+        // and happily distributed — cloning the ~9000-node numerator
+        // once per term of the second factor (20 clones, ~180,000+
+        // nodes). With the fix, term_count sees big_div's true size
+        // (~9000), the cap check correctly refuses
+        // (9000 * 20 = 180,000 > EXPAND_MAX_TERMS), and the result
+        // stays a single unexpanded Mul — no cloning at all.
+        assert!(
+            total_node_count(&result) < 20_000,
+            "expand() of a Div-wrapped 9000-term subtree times a 20-term \
+             second factor produced {} nodes -- term_count is not seeing \
+             through the Div wrapper the way it should",
+            total_node_count(&result)
+        );
+    }
+
+    #[test]
+    fn term_count_treats_neg_and_transcendental_wrappers_the_same_way() {
+        // Not adversarial-scale (the Div test above already proves the
+        // guard holds under real pressure) -- this just confirms the
+        // generalized fix actually applies uniformly to every other
+        // non-Mul Apply head, not only Div specifically. Neg(20-term
+        // sum) and Sin(20-term sum) must each report the same term
+        // count as the bare sum (20), not 1.
+        let twenty_terms = add((0..20).map(|i| sym(format!("t{i}"))).collect());
+        let neg_wrapped = apply(sym(NEG), vec![twenty_terms.clone()]);
+        let sin_wrapped = apply(sym(SIN), vec![twenty_terms.clone()]);
+
+        // term_count is private to this module; drive it indirectly the
+        // same way every other test in this file does, by checking that
+        // multiplying each wrapped form against another sizeable sum
+        // gets correctly refused (mirroring the Div test's structure).
+        let other_factor = add((0..600).map(|i| sym(format!("o{i}"))).collect());
+        // 20 * 600 = 12,000 > EXPAND_MAX_TERMS (10,000): must refuse.
+        for wrapped in [neg_wrapped, sin_wrapped] {
+            let result = expand_mul(&wrapped, &other_factor);
+            assert_eq!(
+                result,
+                mul(vec![wrapped, other_factor.clone()]),
+                "a Neg/Sin-wrapped 20-term sum must be sized as 20 terms, \
+                 not 1, when checked against a 600-term second factor"
+            );
+        }
     }
 }
