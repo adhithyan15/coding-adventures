@@ -244,6 +244,8 @@ assert_eq!(
 
 Every inexact operation rounds correctly via **guard + sticky** information — the same decision IEEE-754 hardware makes — so alignment costs `O(prec)`, not `O(exponent gap)`: a `10^large + 10^small`-style sum does not blow up. The test suite *proves* the bit-for-bit match: at 53 bits, `+ − × ÷` and `√` reproduce `f64` across tens of thousands of random operands, then keep going where the hardware cannot. Ordering is **by value**, independent of stored precision (`3` at 64 bits equals `3` at 200 bits), and `to_decimal()` is **exact** (every binary fraction terminates in base 10).
 
+Two security budgets keep any input from becoming unbounded memory or a silent wrong answer: `MAX_PRECISION` bounds the bits kept, and `MAX_EXPONENT` (`2^62`) bounds the stored base-2 exponent — with all exponent-combining arithmetic carried in `i128`, an out-of-range result is an explicit panic, never an `i64` wrap. `to_decimal` (which must *materialize* `~|exp|` digits) has its own smaller budget and returns `None` past it, so `to_f64`/`Display` saturate rather than exhaust memory.
+
 | Area | API |
 |------|-----|
 | Construct | `zero`, `one`, `from_parts`, `from_bigint`, `from_i64`, `from_f64` (exact), `with_precision` |

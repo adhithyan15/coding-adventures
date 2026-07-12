@@ -30,8 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `to_decimal()` — an **exact** conversion to `BigDecimal` (every binary fraction
   terminates in base 10, `x·2^-k = x·5^k·10^-k`), plus a lossy `to_f64()` that narrows
   through the exact decimal and Rust's correctly-rounded float parser.
-- A security precision budget `MAX_PRECISION` (1,000,000 bits) bounding every shift and
-  multiply so a precision request cannot be turned into unbounded memory.
+- Security budgets so no untrusted input can be turned into unbounded memory or a silent
+  wrong answer: `MAX_PRECISION` (1,000,000 bits) bounds every precision-driven shift/multiply;
+  a public `MAX_EXPONENT` (`2^62`) bounds the stored base-2 exponent, and all
+  exponent-*combining* arithmetic (`exp ± prec`, `exp + exp`, `exp − exp`) is carried in
+  `i128` so it can never wrap `i64` — an out-of-range result is an explicit
+  "exponent out of range" panic, never a silent truncation. `to_decimal` (which must
+  *materialize* `~|exp|` digits) has its own smaller budget and returns `None` past it, so
+  `to_f64`/`Display` fall back to saturation instead of exhausting memory.
 - Tests: the headline **IEEE-754 differential** — at `prec = 53` with round-half-even,
   `+ − × ÷` and `√` reproduce hardware `f64` **bit for bit** across tens of thousands of
   random operands (from `from_f64` being exact); high-precision `√2`/`√3`/`√10` pinned to

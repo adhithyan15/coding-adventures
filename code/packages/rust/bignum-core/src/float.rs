@@ -65,8 +65,44 @@ use std::fmt;
 /// unbounded memory.
 pub const MAX_PRECISION: u32 = 1_000_000;
 
+/// The largest magnitude a `BigDouble`'s base-2 exponent may take.
+///
+/// A security budget on the *scale* of a value, the exponent's analogue of [`MAX_PRECISION`].
+/// `2^62` lets a value be as large as `2^(2^62)` — a number with more than a *quintillion* bits
+/// before the point, astronomically past anything physical. Bounding it lets every internal
+/// exponent computation be carried in `i128` (see [`fit_exp`]) with no risk of silently wrapping
+/// `i64`: `exp ± prec`, `exp + exp` (multiply), and `exp − exp` (divide) of two in-range operands
+/// all stay far inside `i128`. An operation whose true exponent would leave this band is reported
+/// as an explicit "exponent out of range" panic — never a silent wrong answer — because this type
+/// deliberately has no infinity.
+pub const MAX_EXPONENT: i64 = 1 << 62;
+
+/// The largest `|exponent|` for which [`BigDouble::to_decimal`] will *materialize* the exact
+/// decimal, independent of (and far below) [`MAX_EXPONENT`].
+///
+/// This is the crucial distinction: a `BigDouble` can *hold* `2^(2^62)` in a handful of bytes
+/// (`mant = 1`, huge `exp`), and arithmetic on it stays `O(prec)`. But *rendering* that as a
+/// decimal would need `~|exp|` bits (`2^exp` above the point, or `5^|exp|` below) — so `to_decimal`
+/// refuses (returns `None`) once `|exp|` passes this budget, rather than turning a cheap value into
+/// unbounded memory. `8_000_000` bits/digits is already megabytes of output; anything past it is a
+/// display request no one can consume. `to_f64`/`Display`, which route through `to_decimal`, then
+/// fall back to saturation / a raw `mantissa·2^exp` rendering.
+const MAX_DECIMAL_EXPONENT: i64 = 8_000_000;
+
 /// Extra low-order bits kept during a rounded operation so the round/sticky decision is exact.
 const GUARD: u32 = 3;
+
+/// Narrow a computed exponent (carried in `i128` so it cannot have wrapped) back into the stored
+/// `i64` field, enforcing the [`MAX_EXPONENT`] budget. Panics with a clear message — rather than
+/// truncating — if the value is out of range, so an overflow can never become a silent wrong
+/// result.
+fn fit_exp(e: i128) -> i64 {
+    assert!(
+        e.unsigned_abs() <= MAX_EXPONENT as u128,
+        "BigDouble exponent {e} is out of range (|exponent| must be ≤ MAX_EXPONENT = {MAX_EXPONENT})"
+    );
+    e as i64
+}
 
 // ===========================================================================
 //  The type
@@ -129,7 +165,7 @@ fn shr_sticky(mag: &BigInteger, k: u64) -> (BigInteger, bool) {
 fn round_magnitude(
     negative: bool,
     mag: BigInteger,
-    exp: i64,
+    exp: i128,
     sticky: bool,
     prec: u32,
     mode: RoundingMode,
@@ -150,7 +186,7 @@ fn round_magnitude(
         // directed mode, which then rounds one ULP away from zero.
         let pad = prec64 - bl;
         let mut m = shl(&mag, pad);
-        let mut e = exp - pad as i64;
+        let mut e = exp - pad as i128;
         if sticky && directed_rounds_away(mode, negative) {
             m = &m + &BigInteger::one();
             // A carry here (m became 2^prec) renormalizes on the next op; at pad≥0 it cannot
@@ -161,7 +197,7 @@ fn round_magnitude(
                 e += 1;
             }
         }
-        return (apply_sign(m, negative), e);
+        return (apply_sign(m, negative), fit_exp(e));
     }
 
     // More bits than requested: drop the low `drop` bits, rounding.
@@ -173,13 +209,13 @@ fn round_magnitude(
     let round_up = decide_round_up(&rem, drop, sticky, &q, mode, negative);
 
     let mut q = if round_up { &q + &BigInteger::one() } else { q };
-    let mut e = exp + drop as i64;
+    let mut e = exp + drop as i128;
     if q.bit_len() > prec64 {
         // Rounding carried into a new top bit (q became 2^prec); halve and bump the exponent.
         q = shr_sticky(&q, 1).0;
         e += 1;
     }
-    (apply_sign(q, negative), e)
+    (apply_sign(q, negative), fit_exp(e))
 }
 
 /// Would `mode` round a value with something below the last kept bit *away from zero*?
@@ -274,7 +310,7 @@ impl BigDouble {
     pub fn from_parts(mant: BigInteger, exp: i64, prec: u32, mode: RoundingMode) -> Self {
         let prec = check_prec(prec);
         let negative = mant.is_negative();
-        let (m, e) = round_magnitude(negative, mant.abs(), exp, false, prec, mode);
+        let (m, e) = round_magnitude(negative, mant.abs(), exp as i128, false, prec, mode);
         BigDouble {
             mant: m,
             exp: e,
@@ -382,12 +418,13 @@ impl BigDouble {
 
     /// The position of the most significant bit as a signed binary exponent: for a non-zero
     /// value, `floor(log2(|self|))`. Used to compare and align magnitudes without materializing
-    /// anything. Returns `i64::MIN` for zero.
-    fn msb_position(&self) -> i64 {
+    /// anything. Returns `i64::MIN as i128` for zero. Carried in `i128` so `exp + bit_len` cannot
+    /// overflow even for an exponent at the `MAX_EXPONENT` ceiling.
+    fn msb_position(&self) -> i128 {
         if self.mant.is_zero() {
-            i64::MIN
+            i64::MIN as i128
         } else {
-            self.exp + self.mant.bit_len() as i64 - 1
+            self.exp as i128 + self.mant.bit_len() as i128 - 1
         }
     }
 }
@@ -412,8 +449,9 @@ impl BigDouble {
             return self.with_precision(prec, mode);
         }
         // A window low enough to hold both operands' contributions to `prec + GUARD` bits.
+        // Carried in `i128` (via `msb_position`) so the exponent math cannot overflow `i64`.
         let top = self.msb_position().max(other.msb_position()) + 1;
-        let keep_exp = top - (prec as i64 + GUARD as i64 + 1);
+        let keep_exp = top - (prec as i128 + GUARD as i128 + 1);
 
         let (ca, sa) = self.contribution_at(keep_exp);
         let (cb, sb) = other.contribution_at(keep_exp);
@@ -458,13 +496,20 @@ impl BigDouble {
 
     /// This value's mantissa expressed at exponent `keep_exp` (left-shifted if `exp ≥ keep_exp`,
     /// else right-shifted with a sticky flag for the bits that fall off).
-    fn contribution_at(&self, keep_exp: i64) -> (BigInteger, bool) {
+    ///
+    /// The shift distances are computed in `i128` (`keep_exp` is `i128`). On the left-shift branch
+    /// the distance is at most `prec + GUARD` (this operand's least-significant bit never sits far
+    /// above `keep_exp`), so it fits `u64` comfortably. On the right-shift branch the distance can
+    /// be the full exponent gap — but it stays within `2·MAX_EXPONENT < u64::MAX`, and
+    /// [`shr_sticky`] short-circuits (without allocating) once it exceeds the mantissa's bit length.
+    fn contribution_at(&self, keep_exp: i128) -> (BigInteger, bool) {
         let negative = self.mant.is_negative();
         let mag = self.mant.abs();
-        if self.exp >= keep_exp {
-            (apply_sign(shl(&mag, (self.exp - keep_exp) as u64), negative), false)
+        let exp = self.exp as i128;
+        if exp >= keep_exp {
+            (apply_sign(shl(&mag, (exp - keep_exp) as u64), negative), false)
         } else {
-            let (shifted, sticky) = shr_sticky(&mag, (keep_exp - self.exp) as u64);
+            let (shifted, sticky) = shr_sticky(&mag, (keep_exp - exp) as u64);
             (apply_sign(shifted, negative), sticky)
         }
     }
@@ -478,7 +523,7 @@ impl BigDouble {
         }
         let negative = self.mant.is_negative() != other.mant.is_negative();
         let mag = &self.mant.abs() * &other.mant.abs();
-        let exp = self.exp + other.exp;
+        let exp = self.exp as i128 + other.exp as i128; // i128: two i64 exponents can't overflow it
         round_to_bigdouble(negative, mag, exp, false, prec, mode)
     }
 
@@ -511,7 +556,7 @@ impl BigDouble {
         let shift = (want - (na.bit_len() as i64 - nb.bit_len() as i64)).max(0) as u64;
         let (q, r) = shl(&na, shift).div_rem(&nb);
         let sticky = !r.is_zero();
-        let exp = self.exp - other.exp - shift as i64;
+        let exp = self.exp as i128 - other.exp as i128 - shift as i128; // i128: no i64 overflow
         Some(round_to_bigdouble(negative, q, exp, sticky, prec, mode))
     }
 
@@ -548,7 +593,7 @@ impl BigDouble {
         let root = isqrt(&radicand);
         let root_squared = &root * &root;
         let sticky = root_squared != radicand;
-        let result_exp = e / 2 - s / 2;
+        let result_exp = e as i128 / 2 - s as i128 / 2;
         round_to_bigdouble(false, root, result_exp, sticky, prec, mode)
     }
 }
@@ -558,7 +603,7 @@ impl BigDouble {
 fn round_to_bigdouble(
     negative: bool,
     mag: BigInteger,
-    exp: i64,
+    exp: i128,
     sticky: bool,
     prec: u32,
     mode: RoundingMode,
@@ -660,6 +705,13 @@ impl BigDouble {
     /// decimal would exceed `BigDecimal`'s scale budget. Exact because every binary fraction
     /// terminates in base 10: `mant · 2^-k = mant · 5^k · 10^-k`.
     pub fn to_decimal(&self) -> Option<BigDecimal> {
+        // Materializing the exact decimal costs `O(|exp|)` bits, so refuse *before* allocating if
+        // that would exceed the budget. This gates every path below (both `shl`/`pow2` for a
+        // positive exponent and `5^k` for a negative one) — nothing large is built once we return
+        // here, so a pathological exponent cannot become an out-of-memory or a panic.
+        if self.exp.unsigned_abs() > MAX_DECIMAL_EXPONENT as u64 {
+            return None;
+        }
         if self.exp >= 0 {
             let scaled = shl(&self.mant.abs(), self.exp as u64);
             Some(BigDecimal::from_integer(apply_sign(scaled, self.mant.is_negative())))
@@ -896,6 +948,61 @@ mod tests {
     #[should_panic(expected = "finite")]
     fn from_f64_rejects_infinity() {
         let _ = BigDouble::from_f64(f64::INFINITY);
+    }
+
+    // ---- exponent / decimal-expansion budgets (DoS guards) --------------
+    // (`BigInteger` and `MAX_EXPONENT` are in scope via `use super::*`.)
+
+    fn parts(mant: i64, exp: i64, prec: u32) -> BigDouble {
+        BigDouble::from_parts(BigInteger::from_i64(mant), exp, prec, HalfEven)
+    }
+
+    #[test]
+    fn to_decimal_refuses_extreme_exponents_without_oom() {
+        // A value whose exact decimal would need ~2·10⁹ bits: `to_decimal` must return `None`
+        // *before* allocating anything (both the positive `2^exp` and negative `5^k` paths).
+        assert!(parts(1, 2_000_000_000, 53).to_decimal().is_none());
+        assert!(parts(1, -2_000_000_000, 53).to_decimal().is_none());
+        // Just inside the budget still materializes (a few-thousand-digit decimal is fine).
+        assert!(parts(1, 1000, 53).to_decimal().is_some());
+        assert!(parts(1, -1000, 53).to_decimal().is_some());
+    }
+
+    #[test]
+    fn to_f64_saturates_on_extreme_exponents() {
+        // With `to_decimal` refusing, the documented saturate-to-±∞/0 path actually holds — no OOM.
+        assert_eq!(parts(1, 2_000_000_000, 53).to_f64(), f64::INFINITY);
+        assert_eq!(parts(-1, 2_000_000_000, 53).to_f64(), f64::NEG_INFINITY);
+        assert_eq!(parts(1, -2_000_000_000, 53).to_f64(), 0.0);
+    }
+
+    #[test]
+    fn arithmetic_survives_large_but_in_range_exponents() {
+        // Exponents far larger than any f64 can hold, but within MAX_EXPONENT — arithmetic is still
+        // O(prec) and does not overflow the i64 exponent field.
+        let big = parts(3, 1_000_000_000_000, 80);
+        let small = parts(5, -1_000_000_000_000, 80);
+        assert!(big.mul(&big, 80, HalfEven).is_positive());
+        assert!(big.add(&small, 80, HalfEven).is_positive());
+        assert!(big.div(&small, 80, HalfEven).is_positive());
+        // The sum of two vastly-separated magnitudes rounds back to the larger — cheaply.
+        assert_eq!(big.add(&small, 80, HalfEven).exponent(), big.exponent());
+    }
+
+    #[test]
+    #[should_panic(expected = "out of range")]
+    fn from_parts_rejects_out_of_range_exponent() {
+        // A raw exponent past MAX_EXPONENT is a clear, explicit panic — never a silent i64 wrap.
+        let _ = parts(1, i64::MAX, 53);
+    }
+
+    #[test]
+    #[should_panic(expected = "out of range")]
+    fn multiply_overflowing_the_exponent_band_panics_clearly() {
+        // Two values at the exponent ceiling multiply to 2·MAX_EXPONENT, out of the storable band:
+        // an explicit "out of range" panic, not a silently-wrong result.
+        let ceil = parts(1, MAX_EXPONENT, 53);
+        let _ = ceil.mul(&ceil, 53, HalfEven);
     }
 
     // ---- rounding modes on a known tie ----------------------------------
