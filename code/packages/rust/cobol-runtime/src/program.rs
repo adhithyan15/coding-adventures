@@ -78,9 +78,10 @@ pub enum Stmt {
         expr: Expr,
         on_size_error: Vec<Stmt>,
     },
-    /// `PERFORM para <mode>` — run a paragraph out of line, then return. The
+    /// `PERFORM para [THRU para2] <mode>` — run a paragraph (or the range
+    /// `para`…`para2` in source order) out of line, then return. The
     /// [`PerformMode`] is the repeat form.
-    Perform { target: String, mode: PerformMode },
+    Perform { target: String, thru: Option<String>, mode: PerformMode },
     /// `GO TO para` — transfer control unconditionally to a paragraph (no return).
     GoTo { target: String },
     /// `IF cond then… [ELSE else…]`.
@@ -421,17 +422,23 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::Compute { target, rounded, expr, on_size_error })
         }
         "perform_stmt" => {
-            // PERFORM target [THROUGH/THRU target2] [operand TIMES]. The target
-            // is the first direct NAME token; the optional `TIMES` count is an
-            // `operand` node. The THRU range form is deferred.
-            let target = first_token(verb, "NAME")
+            // PERFORM target [THROUGH/THRU target2] [ operand TIMES | UNTIL … |
+            // VARYING … ]. The direct NAME tokens are [target] or, with THRU,
+            // [target, target2]; the induction/TIMES/UNTIL operands live inside
+            // their own child nodes.
+            let names: Vec<String> = child_tokens(verb)
+                .into_iter()
+                .filter(|(k, _)| k == "NAME")
+                .map(|(_, v)| v)
+                .collect();
+            let target = names
+                .first()
+                .cloned()
                 .ok_or_else(|| RuntimeError::Unsupported("PERFORM without a target paragraph".into()))?;
-            if child_tokens(verb)
+            let has_thru = child_tokens(verb)
                 .iter()
-                .any(|(k, v)| k == "KEYWORD" && (v == "THRU" || v == "THROUGH"))
-            {
-                return Err(RuntimeError::Unsupported("PERFORM … THRU (range form)".into()));
-            }
+                .any(|(k, v)| k == "KEYWORD" && (v == "THRU" || v == "THROUGH"));
+            let thru = if has_thru { names.get(1).cloned() } else { None };
             // The repeat mode: VARYING (its own node), else TIMES (a direct
             // operand), else UNTIL (a direct condition), else bare/once.
             let mode = if let Some(v) = child_node(verb, "perform_varying") {
@@ -443,7 +450,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             } else {
                 PerformMode::Once
             };
-            Ok(Stmt::Perform { target, mode })
+            Ok(Stmt::Perform { target, thru, mode })
         }
         "goto_stmt" => {
             // GO [TO] target. The DEPENDING ON form is not in the grammar yet.

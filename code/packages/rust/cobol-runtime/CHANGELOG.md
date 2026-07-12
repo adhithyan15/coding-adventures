@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.0 — PERFORM … THRU (paragraph range)
+
+- **`PERFORM para-1 THRU para-2`** runs the whole range of paragraphs from
+  `para-1` through `para-2` in source order (falling through between them), then
+  returns. It composes with every repeat mode — `PERFORM A THRU B 3 TIMES`,
+  `… UNTIL …`, `… VARYING …` all repeat the whole range.
+- The grammar already parsed `THRU`/`THROUGH`; this wires up the runtime (the
+  reader previously rejected it). A backwards range (`para-2` before `para-1`) is
+  a clean error.
+- The inline form and non-consecutive/`EXIT`-terminated ranges remain deferred.
+
 ## 0.10.0 — PERFORM … VARYING (counted loop)
 
 - **`PERFORM para VARYING id FROM start BY step UNTIL cond`** sets the induction
