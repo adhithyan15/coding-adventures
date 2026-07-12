@@ -656,6 +656,26 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT GLOB('h*o', s) AS a, GLOB('hel[lp]*', s) AS b FROM t ORDER BY id",
     },
+    // PRINTF / FORMAT with integer & string conversions (width, flags,
+    // precision, hex, `%%`, and coercions). Avoids `%f` (declined) and `''`
+    // string literals (a separate lexer limitation).
+    Case {
+        id: "printf",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (5, 'ada'), (42, 'grace')",
+        ],
+        query: "SELECT PRINTF('[%05d] %-8s %x %%', id, name, id) AS r FROM t ORDER BY id",
+    },
+    // FORMAT alias + missing-argument default (0) + `%q` via a quote from CHAR.
+    Case {
+        id: "printf_edges",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1)",
+        ],
+        query: "SELECT FORMAT('%d %d', id) AS a, PRINTF('%q', CHAR(39)) AS b FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
