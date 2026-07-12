@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.11 — Fix HEX(NULL) to return an empty string
+
+Stream A correctness fix (sql-vm 0.4.7): `HEX(NULL)` returned SQL NULL but real
+SQLite returns the empty string `''` — it casts the argument to a blob first, so
+NULL → empty blob → `''` (a text value). This was the latent divergence flagged
+by the UNHEX work (0.5.10). A new differential-oracle case (`hex_of_null`) diffs
+`HEX(s)` and `TYPEOF(HEX(s))` for both a text and a NULL row against real bundled
+SQLite.
+
 ## 0.5.10 — UNHEX (decode hex to blob)
 
 Grows the SQL scalar surface (sql-vm 0.4.6): `UNHEX(x)` / `UNHEX(x, ignore)`

@@ -3,6 +3,15 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.7] - Unreleased
+
+### Fixed
+
+- **`HEX(NULL)`** now returns the empty string `''` (a text value), matching
+  SQLite, instead of NULL. SQLite casts HEX's argument to a blob first, so
+  `NULL` becomes an empty blob and hexing it yields `''` (`typeof` is `text`).
+  Surfaced while adding UNHEX (`HEX(UNHEX('abc'))` should be `''`, not NULL).
+
 ## [0.4.6] - Unreleased
 
 ### Added
