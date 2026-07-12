@@ -177,6 +177,25 @@ fn has_token(node: &GrammarASTNode, val: &str) -> bool {
     })
 }
 
+/// The leftmost terminal token value in a subtree, descending through Node
+/// children to the first `Token` leaf (depth-first, left to right). Returns
+/// `None` for a subtree with no tokens at all. Used to tell a bare block body
+/// `=> {…}` (leftmost `{`) from a parenthesised object body `=> ({…})`
+/// (leftmost `(`) — see [`convert_arrow_function`].
+fn leftmost_token(node: &GrammarASTNode) -> Option<&str> {
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Token(t) => return Some(t.value.as_str()),
+            ASTNodeOrToken::Node(n) => {
+                if let Some(v) = leftmost_token(n) {
+                    return Some(v);
+                }
+            }
+        }
+    }
+    None
+}
+
 /// If there is exactly one Node child, return it; else `None`.
 fn sole_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
     let nodes = node_children(node);
@@ -1714,14 +1733,32 @@ fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpressi
         }
     }
 
-    let body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
+    let mut body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
 
-    // Guard against the `() => {}` ambiguity described above: an
-    // object-literal concise body cannot be distinguished from an empty
-    // block body, so decline rather than risk a miscompile.
+    // The `{` after `=>` ambiguity: the grammar buckets the bare braces of a
+    // block body `=> {…}` as an `object_literal`, so a block body reaches us as
+    // an `ArrowBody::Expression(ObjectExpression)`. Per the ES spec a `{`
+    // immediately after `=>` ALWAYS opens a **block** body — an object-literal
+    // expression body must be parenthesised (`=> ({…})`). We disambiguate by the
+    // concise_body's leftmost token: a bare block body leads with `{`, a
+    // parenthesised object body leads with `(` (CLOC12.184).
     if let ArrowBody::Expression(e) = &body {
-        if matches!(**e, Expression::ObjectExpression(_)) {
-            return Err(unsupported(node));
+        if let Expression::ObjectExpression(obj) = &**e {
+            let leads_with_brace = children
+                .iter()
+                .find(|n| n.rule_name == "concise_body")
+                .and_then(|n| leftmost_token(n))
+                == Some("{");
+            if leads_with_brace && obj.properties.is_empty() {
+                // `=> {}` is an EMPTY block body — reinterpret it as one.
+                body = ArrowBody::Block(BlockStatement { cv: None, body: vec![] });
+            } else {
+                // A genuine parenthesised object body `=> ({…})` (leads with
+                // `(`), or a NON-empty `=> {…}` block the grammar mis-bucketed as
+                // an object (statements would need re-parsing) — both still
+                // DECLINE (safe WHITESPACE_ONLY), never a mis-emit.
+                return Err(unsupported(node));
+            }
         }
     }
 
@@ -3736,6 +3773,54 @@ mod tests {
     fn bridge(src: &str) -> Result<Program, BridgeError> {
         let node = parse_javascript_typed(src, DEFAULT_ES_VERSION).expect("parse failed");
         grammar_to_program(&node, DEFAULT_ES_VERSION)
+    }
+
+    /// Pull the sole `ArrowFunctionExpression` out of `x = <arrow>;`.
+    fn arrow_of(src: &str) -> ArrowFunctionExpression {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => match &*a.right {
+                Expression::ArrowFunctionExpression(f) => f.clone(),
+                other => panic!("expected ArrowFunctionExpression RHS, got {other:?}"),
+            },
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_empty_block_body_bridges() {
+        // `() => {}` — the grammar buckets the bare `{}` as an empty
+        // object_literal, but per the ES spec `=> {}` is an EMPTY BLOCK body.
+        // CLOC12.184 reinterprets it as `ArrowBody::Block` with no statements,
+        // instead of declining to WHITESPACE_ONLY.
+        let f = arrow_of("x = () => {};");
+        assert!(f.params.is_empty());
+        match &f.body {
+            ArrowBody::Block(b) => assert!(b.body.is_empty(), "expected empty block"),
+            other => panic!("expected an empty block body, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_paren_object_body_still_declines() {
+        // `() => ({})` — a genuine object-literal EXPRESSION body (leads with
+        // `(`). Distinct from the block above; still declines (the emitter does
+        // not yet parenthesise an object arrow body).
+        assert!(matches!(
+            bridge("x = () => ({});"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
+    #[test]
+    fn arrow_nonempty_brace_body_still_declines() {
+        // `() => {a:1}` — a non-empty `{…}` the grammar mis-buckets as an object
+        // literal. Its contents would need re-parsing as statements, so it stays
+        // declined (a later slice), never a mis-emit.
+        assert!(matches!(
+            bridge("x = () => {a:1};"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
     }
 
     fn bridge_ok(src: &str) -> Program {
