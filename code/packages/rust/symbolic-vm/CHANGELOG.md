@@ -1,5 +1,17 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.20.1] — 2026-07-12
+
+### Changed
+
+- `handlers::factor_handler` is now `pub` (was module-private). No
+  behavior change — this only widens visibility so other language
+  runtimes sharing this crate's `VM`/`IRApply` types can call the exact
+  same `Factor` evaluation pipeline Macsyma's own runtime already uses,
+  rather than reimplementing or duplicating it. First consumer:
+  `wolfram-runtime`'s `Factor[...]` wiring (W-22, see that crate's own
+  changelog).
+
 ## [0.20.0] — 2026-05-29
 
 **Track K2 — n-variate Hensel factor bridge (Rust port).**
