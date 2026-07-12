@@ -1752,9 +1752,9 @@ mod tests {
         let to_path = eval_s(
             "seq(as.Date(\"2000-01-01\"), as.Date(\"2001-01-01\"), by = \"9000000000000000000 months\")\n",
         );
-        match to_path {
-            Ok(v) => assert!(v.length() <= 1, "expected a bounded result, got {}", v.length()),
-            Err(_) => {} // erroring is also acceptable
+        // erroring is also acceptable; we only check the Ok path stays bounded.
+        if let Ok(v) = to_path {
+            assert!(v.length() <= 1, "expected a bounded result, got {}", v.length());
         }
         // The length.out path reaches k=1 with the huge step → out-of-range day →
         // clean error (never a panic).
@@ -2809,7 +2809,7 @@ mod r30_ordering {
         let (data, nrow, ncol) = matrix_data("tcrossprod(matrix(1:6, nrow = 2))\n");
         assert_eq!((nrow, ncol), (2, 2));
         assert_eq!(data[0], 35.0); // (1,1)
-        assert_eq!(data[1 * 2 + 1], 56.0); // (2,2): col 1, row 1
+        assert_eq!(data[2 + 1], 56.0); // (2,2): col 1, row 1
     }
 
     #[test]

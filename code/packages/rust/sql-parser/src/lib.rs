@@ -640,6 +640,21 @@ mod tests {
         );
     }
 
+    /// A bare `JOIN` (no INNER/LEFT/… keyword) must parse — `join_type` is
+    /// optional and defaults to INNER downstream. Both the bare and the explicit
+    /// `INNER JOIN` forms should parse.
+    #[test]
+    fn test_parse_bare_join() {
+        assert!(
+            parse_sql("SELECT a.id FROM a JOIN b ON a.x = b.y").is_ok(),
+            "bare JOIN should parse"
+        );
+        assert!(
+            parse_sql("SELECT a.id FROM a INNER JOIN b ON a.x = b.y").is_ok(),
+            "INNER JOIN should still parse"
+        );
+    }
+
     // -----------------------------------------------------------------------
     // Test 29: Error path — tokenization failure propagates
     // -----------------------------------------------------------------------

@@ -86,7 +86,7 @@ func TestRunPackageBuildSuccess(t *testing.T) {
 		Language:      "python",
 	}
 
-	result := runPackageBuild(pkg)
+	result := runPackageBuild(pkg, false)
 	if result.Status != "built" {
 		t.Fatalf("expected built, got %s (stderr: %s)", result.Status, result.Stderr)
 	}
@@ -107,7 +107,7 @@ func TestRunPackageBuildFailure(t *testing.T) {
 		Language:      "python",
 	}
 
-	result := runPackageBuild(pkg)
+	result := runPackageBuild(pkg, false)
 	if result.Status != "failed" {
 		t.Fatalf("expected failed, got %s", result.Status)
 	}
@@ -128,7 +128,7 @@ func TestRunPackageBuildMultipleCommands(t *testing.T) {
 		Language:      "python",
 	}
 
-	result := runPackageBuild(pkg)
+	result := runPackageBuild(pkg, false)
 	if result.Status != "built" {
 		t.Fatalf("expected built, got %s", result.Status)
 	}
@@ -146,7 +146,7 @@ func TestRunPackageBuildStopsOnFailure(t *testing.T) {
 		Language:      "python",
 	}
 
-	result := runPackageBuild(pkg)
+	result := runPackageBuild(pkg, false)
 	if result.Status != "failed" {
 		t.Fatalf("expected failed, got %s", result.Status)
 	}
@@ -189,7 +189,7 @@ func TestExecuteBuildsSkipsCached(t *testing.T) {
 	bc := cache.New()
 	bc.Record("python/pkg-a", "hash-a", "deps-a", "success")
 
-	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, false, 1, nil, nil)
+	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, false, 1, nil, nil, false)
 
 	if results["python/pkg-a"].Status != "skipped" {
 		t.Fatalf("expected skipped, got %s", results["python/pkg-a"].Status)
@@ -211,7 +211,7 @@ func TestExecuteBuildsForceOverridesCache(t *testing.T) {
 	bc := cache.New()
 	bc.Record("python/pkg-a", "hash-a", "deps-a", "success")
 
-	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, true, false, 1, nil, nil)
+	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, true, false, 1, nil, nil, false)
 
 	if results["python/pkg-a"].Status != "built" {
 		t.Fatalf("expected built (force), got %s", results["python/pkg-a"].Status)
@@ -232,7 +232,7 @@ func TestExecuteBuildsDryRun(t *testing.T) {
 
 	bc := cache.New()
 
-	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, true, 1, nil, nil)
+	results := ExecuteBuilds(packages, graph, bc, map[string]string{"python/pkg-a": "hash-a"}, map[string]string{"python/pkg-a": "deps-a"}, false, true, 1, nil, nil, false)
 
 	if results["python/pkg-a"].Status != "would-build" {
 		t.Fatalf("expected would-build, got %s", results["python/pkg-a"].Status)
@@ -260,7 +260,7 @@ func TestExecuteBuildsDepSkipped(t *testing.T) {
 	results := ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "ha", "python/pkg-b": "hb"},
 		map[string]string{"python/pkg-a": "da", "python/pkg-b": "db"},
-		true, false, 1, nil, nil)
+		true, false, 1, nil, nil, false)
 
 	if results["python/pkg-a"].Status != "failed" {
 		t.Fatalf("expected pkg-a failed, got %s", results["python/pkg-a"].Status)
@@ -291,7 +291,7 @@ func TestExecuteBuildsParallelLevel(t *testing.T) {
 	results := ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "ha", "python/pkg-b": "hb"},
 		map[string]string{"python/pkg-a": "da", "python/pkg-b": "db"},
-		true, false, 2, nil, nil)
+		true, false, 2, nil, nil, false)
 
 	if results["python/pkg-a"].Status != "built" {
 		t.Fatalf("expected pkg-a built, got %s", results["python/pkg-a"].Status)
@@ -623,6 +623,7 @@ func TestExecuteBuildsSerializesSharedBuildResources(t *testing.T) {
 		3,
 		nil,
 		nil,
+		false,
 	)
 
 	for _, name := range []string{"typescript/shared", "typescript/pkg-a", "typescript/pkg-b"} {
@@ -649,7 +650,7 @@ func TestExecuteBuildsCacheUpdatedOnSuccess(t *testing.T) {
 	ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "hash-a"},
 		map[string]string{"python/pkg-a": "deps-a"},
-		true, false, 1, nil, nil)
+		true, false, 1, nil, nil, false)
 
 	entries := bc.Entries()
 	if entries["python/pkg-a"].Status != "success" {
@@ -674,10 +675,100 @@ func TestExecuteBuildsCacheUpdatedOnFailure(t *testing.T) {
 	ExecuteBuilds(packages, graph, bc,
 		map[string]string{"python/pkg-a": "hash-a"},
 		map[string]string{"python/pkg-a": "deps-a"},
-		true, false, 1, nil, nil)
+		true, false, 1, nil, nil, false)
 
 	entries := bc.Entries()
 	if entries["python/pkg-a"].Status != "failed" {
 		t.Fatalf("expected cache status failed, got %s", entries["python/pkg-a"].Status)
+	}
+}
+
+// TestClippyGatedCommands verifies the clippy gate only injects a clippy
+// command for Rust packages when enabled, and leaves everything else untouched.
+func TestClippyGatedCommands(t *testing.T) {
+	const clippyCmd = "cargo clippy --all-targets -- -D warnings"
+
+	rustPkg := discovery.Package{
+		Name:          "rust/bitset",
+		Language:      "rust",
+		BuildCommands: []string{"cargo test -p bitset"},
+	}
+	pyPkg := discovery.Package{
+		Name:          "python/logic-gates",
+		Language:      "python",
+		BuildCommands: []string{"pytest"},
+	}
+
+	// Rust + clippy on: clippy command is prepended, BUILD command preserved.
+	got := clippyGatedCommands(rustPkg, true)
+	want := []string{clippyCmd, "cargo test -p bitset"}
+	if len(got) != len(want) || got[0] != want[0] || got[1] != want[1] {
+		t.Fatalf("rust+clippy: got %v, want %v", got, want)
+	}
+
+	// Rust + clippy off: unchanged.
+	if got := clippyGatedCommands(rustPkg, false); len(got) != 1 || got[0] != "cargo test -p bitset" {
+		t.Fatalf("rust+no-clippy: got %v, want [cargo test -p bitset]", got)
+	}
+
+	// Non-Rust + clippy on: never inject clippy.
+	if got := clippyGatedCommands(pyPkg, true); len(got) != 1 || got[0] != "pytest" {
+		t.Fatalf("python+clippy: got %v, want [pytest]", got)
+	}
+
+	// The gate must not mutate the package's own BuildCommands slice.
+	if len(rustPkg.BuildCommands) != 1 || rustPkg.BuildCommands[0] != "cargo test -p bitset" {
+		t.Fatalf("clippyGatedCommands mutated pkg.BuildCommands: %v", rustPkg.BuildCommands)
+	}
+}
+
+// TestClippyStepFor covers how the clippy step mirrors a package's BUILD guard,
+// so clippy only runs where the BUILD's own cargo invocation would run.
+func TestClippyStepFor(t *testing.T) {
+	const clippy = "cargo clippy --all-targets -- -D warnings"
+	cases := []struct {
+		name     string
+		commands []string
+		want     string
+		wantOK   bool
+	}{
+		{
+			name:     "unconditional cargo",
+			commands: []string{"cargo test -p bitset -- --nocapture"},
+			want:     clippy,
+			wantOK:   true,
+		},
+		{
+			name:     "unconditional cargo with tarpaulin follow-up",
+			commands: []string{"cargo test -p vm-core", `if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p vm-core --out Stdout; fi`},
+			want:     clippy,
+			wantOK:   true,
+		},
+		{
+			name:     "platform-guarded cargo (macOS)",
+			commands: []string{`if [ "$(uname)" = "Darwin" ]; then cargo test -p paint-metal -- --nocapture; else echo "SKIP: paint-metal requires macOS/Apple platform"; fi`},
+			want:     `if [ "$(uname)" = "Darwin" ]; then ` + clippy + `; fi`,
+			wantOK:   true,
+		},
+		{
+			name:     "pure echo skip (no cargo)",
+			commands: []string{`echo "SKIP: paint-vm-direct2d requires Windows — not supported on Linux/macOS"`},
+			want:     "",
+			wantOK:   false,
+		},
+		{
+			name:     "empty command list",
+			commands: nil,
+			want:     "",
+			wantOK:   false,
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got, ok := clippyStepFor(tc.commands)
+			if got != tc.want || ok != tc.wantOK {
+				t.Fatalf("clippyStepFor(%v) = (%q, %v), want (%q, %v)", tc.commands, got, ok, tc.want, tc.wantOK)
+			}
+		})
 	}
 }

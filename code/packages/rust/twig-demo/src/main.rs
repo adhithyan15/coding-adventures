@@ -157,8 +157,8 @@ fn print_results(results: &[BackendResult], expected: i64) {
     let w = 74;
     println!("\n{}", "─".repeat(w));
     println!(
-        "{:<32}  {:>10}  {:>10}  {:>8}  {}",
-        "Backend", "Compile", "Runtime", "Result", "Status"
+        "{:<32}  {:>10}  {:>10}  {:>8}  Status",
+        "Backend", "Compile", "Runtime", "Result"
     );
     println!("{}", "─".repeat(w));
 
@@ -1396,7 +1396,7 @@ fn aot_type_correctness_demo() {
     println!("{}", "═".repeat(62));
     println!("  Type correctness: abs(-5) — both paths use i64 (signed)");
     println!("{}", "═".repeat(62));
-    println!("  {:<26} {:>8}  {}", "Path", "Result", "Correct?");
+    println!("  {:<26} {:>8}  Correct?", "Path", "Result");
     println!("  {}", "─".repeat(45));
 
     let module = match compile_source(ABS_PROGRAM, "abs_demo") {
@@ -1696,11 +1696,11 @@ fn estimate_local_count(bytecode: &[u8]) -> usize {
             0x11 => { i += 2; }        // ldloc.s
             0x02..=0x05 => { i += 1; } // ldarg.0-3
             0x0E | 0x10 => { i += 2; } // ldarg.s / starg.s
-            0x15 | 0x16..=0x1E => { i += 1; } // ldc.i4.*
+            0x15..=0x1E => { i += 1; } // ldc.i4.*
             0x1F => { i += 2; }        // ldc.i4.s
             0x20 => { i += 5; }        // ldc.i4
             0x28 => { i += 5; }        // call <token4>
-            0x2B | 0x2C | 0x2D | 0x2E | 0x2F..=0x35 => { i += 2; } // br.s, brfalse.s, etc.
+            0x2B..=0x35 => { i += 2; } // br.s, brfalse.s, etc.
             0x38..=0x3F | 0x45 => { i += 5; } // br, brfalse, brtrue, etc. (long)
             0xFE => { i += 2; }        // two-byte opcode
             0x8D | 0x9E | 0x94 => { i += 5; } // newarr, stelem.i4, ldelem.i4

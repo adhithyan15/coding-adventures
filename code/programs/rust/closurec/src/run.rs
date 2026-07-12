@@ -537,7 +537,7 @@ pub fn transform_source_with_cv(
             let parse_result = match cv_pair.as_mut() {
                 Some((log, _id, _ids, file)) => {
                     coding_adventures_javascript_parser::parse_javascript_typed_with_cv(
-                        source, *file, es_version, *log,
+                        source, file, es_version, log,
                     )
                 }
                 None => parse_javascript_typed(source, es_version),
@@ -2202,9 +2202,9 @@ fn format_cv_log_json(
         );
     }
     if pretty {
-        serde_json::to_string_pretty(&value).unwrap_or_else(|_| compact)
+        serde_json::to_string_pretty(&value).unwrap_or(compact)
     } else {
-        serde_json::to_string(&value).unwrap_or_else(|_| compact)
+        serde_json::to_string(&value).unwrap_or(compact)
     }
 }
 

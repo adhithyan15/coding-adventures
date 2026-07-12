@@ -275,6 +275,9 @@ fn read_float(m: &HashMap<String, ExtValue>, key: &str) -> Option<f64> {
 // Text content — shape + emit PaintGlyphRun per wrapped line
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Text shaping needs the content plus independent layout-box geometry and the
+// generic shaper/measure/render hooks; each argument is semantically distinct.
+#[allow(clippy::too_many_arguments)]
 fn emit_text_content<S, M, R>(
     tc: &TextContent,
     box_x: f64,

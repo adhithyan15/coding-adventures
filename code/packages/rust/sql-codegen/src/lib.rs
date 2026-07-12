@@ -87,7 +87,7 @@ use coding_adventures_sql_planner::{
 const MAX_EXPR_DEPTH: usize = 512;
 
 std::thread_local! {
-    static EXPR_DEPTH: std::cell::Cell<usize> = std::cell::Cell::new(0);
+    static EXPR_DEPTH: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
 }
 
 // ===========================================================================
@@ -1431,7 +1431,6 @@ impl Compiler {
                     .iter()
                     .cloned()
                     .enumerate()
-                    .map(|(i, a)| (i, a))
                     .collect();
                 self.compile_expr(predicate);
                 self.agg_slots.clear();
@@ -2709,7 +2708,7 @@ mod tests {
             .find(|i| matches!(i, Instruction::SortResult(_)))
             .unwrap();
         if let Instruction::SortResult(keys) = sort_instr {
-            assert_eq!(keys[0].ascending, true);
+            assert!(keys[0].ascending);
         }
     }
 
@@ -2728,7 +2727,7 @@ mod tests {
             .find(|i| matches!(i, Instruction::SortResult(_)))
             .unwrap();
         if let Instruction::SortResult(keys) = sort_instr {
-            assert_eq!(keys[0].ascending, false);
+            assert!(!keys[0].ascending);
         }
     }
 

@@ -553,7 +553,7 @@ fn parse_one_ifd(bytes: &[u8], offset: usize, le: bool) -> Result<(Ifd, usize), 
             let data_offset = read_u32(bytes, entry_offset + 8, le)? as usize;
 
             // Security: validate that the offset + size is within the file.
-            if data_offset.checked_add(total_size).map_or(true, |end| end > bytes.len()) {
+            if data_offset.checked_add(total_size).is_none_or(|end| end > bytes.len()) {
                 return Err(format!(
                     "TIFF: tag {} data offset {} + size {} exceeds file length {}",
                     tag, data_offset, total_size, bytes.len()

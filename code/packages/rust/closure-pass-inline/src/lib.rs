@@ -527,7 +527,7 @@ fn expr_node_count(expr: &Expression) -> usize {
                         // field `x;` weighs 0) — the same size heuristic applied
                         // to any expression value.
                         ClassMember::Field(fd) => {
-                            fd.value.as_ref().map_or(0, |v| expr_node_count(v))
+                            fd.value.as_ref().map_or(0, expr_node_count)
                         }
                         // A static-init block weighs one unit per body statement,
                         // the same size heuristic a function body uses.
@@ -2789,7 +2789,7 @@ fn void_candidate_from_function(
 /// normal free-identifier walk.
 fn is_inlinable_if(is: &IfStatement) -> bool {
     is_inlinable_if_branch(&is.consequent)
-        && is.alternate.as_deref().map_or(true, is_inlinable_if_branch)
+        && is.alternate.as_deref().is_none_or(is_inlinable_if_branch)
 }
 
 /// One `if` branch: a bare `ExpressionStatement`, or a `BlockStatement`
@@ -4755,7 +4755,7 @@ mod tests {
         let _a: InlinePass = Default::default();
         let _b: InlinePass = InlinePass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================

@@ -441,13 +441,13 @@ impl<'a> Lexer<'a> {
                     self.emit(TokenKind::DashDash, String::new(), line, col);
                 }
                 // Numeral starting with `-` (must be followed by a digit or `.`)
-                b'-' if self.peek().map_or(false, |c| c.is_ascii_digit() || c == b'.') => {
+                b'-' if self.peek().is_some_and(|c| c.is_ascii_digit() || c == b'.') => {
                     let s = self.scan_numeral(ch);
                     self.emit(TokenKind::Id, s, line, col);
                 }
 
                 // Numeral starting with `.`
-                b'.' if self.peek().map_or(false, |c| c.is_ascii_digit()) => {
+                b'.' if self.peek().is_some_and(|c| c.is_ascii_digit()) => {
                     let s = self.scan_numeral(ch);
                     self.emit(TokenKind::Id, s, line, col);
                 }
@@ -527,6 +527,9 @@ mod tests {
         tokenise(src).tokens.into_iter().map(|t| t.kind).collect()
     }
 
+    // Symmetric test helper kept alongside `kinds` for completeness; not
+    // currently referenced by any test.
+    #[allow(dead_code)]
     fn values(src: &str) -> Vec<String> {
         tokenise(src).tokens.into_iter().map(|t| t.value).collect()
     }

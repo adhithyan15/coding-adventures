@@ -137,6 +137,9 @@ mod tests {
     /// - function `helper`:
     ///     instr 0 → line 3
     ///     instr 1 → line 4 (cross-function shared line)
+    // Doc uses hand-aligned instr→line mappings under each function bullet;
+    // the extra indentation is deliberate literate formatting.
+    #[allow(clippy::doc_overindented_list_items)]
     fn fixture_bytes() -> Vec<u8> {
         let mut w = DebugSidecarWriter::new();
         let fid = w.add_source_file("prog.tw", b"");

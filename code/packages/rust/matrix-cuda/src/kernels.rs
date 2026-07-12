@@ -298,6 +298,9 @@ impl Kernels {
 
     /// Dispatch the rank-2 row-major MatMul: `c = a * b` where
     /// `a` is `[m, k]`, `b` is `[k, n]`, and `c` is `[m, n]`.
+    // The three matrix buffers plus their m/k/n dimensions are all independent
+    // kernel-launch inputs; a struct would only relocate the same arguments.
+    #[allow(clippy::too_many_arguments)]
     pub fn launch_matmul(
         &self,
         device: &CudaDevice,
@@ -320,6 +323,8 @@ impl Kernels {
     }
 
     /// `launch_matmul` core that accepts device pointers directly.
+    // Three device pointers plus m/k/n dimensions are independent kernel inputs.
+    #[allow(clippy::too_many_arguments)]
     pub fn launch_matmul_by_ptr(
         &self,
         device: &CudaDevice,
@@ -377,8 +382,8 @@ mod tests {
 
         let n = input.len() as u32;
         let bytes = (n as usize) * 4;
-        let mut in_buf = device.alloc(bytes).unwrap();
-        let mut out_buf = device.alloc(bytes).unwrap();
+        let in_buf = device.alloc(bytes).unwrap();
+        let out_buf = device.alloc(bytes).unwrap();
         device
             .upload(&in_buf, bytemuck_like(input))
             .unwrap();
@@ -417,9 +422,9 @@ mod tests {
 
         let n = a.len() as u32;
         let bytes = (n as usize) * 4;
-        let mut a_buf = device.alloc(bytes).unwrap();
-        let mut b_buf = device.alloc(bytes).unwrap();
-        let mut out_buf = device.alloc(bytes).unwrap();
+        let a_buf = device.alloc(bytes).unwrap();
+        let b_buf = device.alloc(bytes).unwrap();
+        let out_buf = device.alloc(bytes).unwrap();
         device.upload(&a_buf, bytemuck_like(a)).unwrap();
         device.upload(&b_buf, bytemuck_like(b)).unwrap();
 
@@ -599,9 +604,9 @@ mod tests {
         let a: Vec<f32> = vec![1.0, 2.0, 3.0, 4.0];
         let b: Vec<f32> = vec![5.0, 6.0, 7.0, 8.0];
 
-        let mut a_buf = device.alloc(16).unwrap();
-        let mut b_buf = device.alloc(16).unwrap();
-        let mut c_buf = device.alloc(16).unwrap();
+        let a_buf = device.alloc(16).unwrap();
+        let b_buf = device.alloc(16).unwrap();
+        let c_buf = device.alloc(16).unwrap();
         device.upload(&a_buf, bytemuck_like(&a)).unwrap();
         device.upload(&b_buf, bytemuck_like(&b)).unwrap();
 
@@ -627,9 +632,9 @@ mod tests {
         let a: Vec<f32> = (1..=12).map(|x| x as f32).collect(); // 3x4
         let b: Vec<f32> = (1..=8).map(|x| x as f32 * 0.5).collect(); // 4x2
 
-        let mut a_buf = device.alloc(48).unwrap();
-        let mut b_buf = device.alloc(32).unwrap();
-        let mut c_buf = device.alloc(24).unwrap();
+        let a_buf = device.alloc(48).unwrap();
+        let b_buf = device.alloc(32).unwrap();
+        let c_buf = device.alloc(24).unwrap();
         device.upload(&a_buf, bytemuck_like(&a)).unwrap();
         device.upload(&b_buf, bytemuck_like(&b)).unwrap();
 

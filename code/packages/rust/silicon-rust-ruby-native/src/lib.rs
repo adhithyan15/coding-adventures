@@ -397,15 +397,17 @@ extern "C" fn rb_evaluate_level1(argc: c_int, argv: *const VALUE, _self: VALUE) 
     let v_bs   = req_f64!(argv, 10);
     let t      = req_f64!(argv, 11);
 
-    let mut p = mm::Level1Params::default();
-    p.vt0    = vt0;
-    p.kp     = kp;
-    p.lambda = lambda;
-    p.gamma  = gamma;
-    p.phi    = phi;
-    p.w      = w;
-    p.l      = l;
-    p.n_sub  = n_sub;
+    let p = mm::Level1Params {
+        vt0,
+        kp,
+        lambda,
+        gamma,
+        phi,
+        w,
+        l,
+        n_sub,
+        ..Default::default()
+    };
 
     mos_result_to_ruby_hash(&mm::evaluate_level1(&p, v_gs, v_ds, v_bs, t))
 }

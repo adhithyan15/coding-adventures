@@ -1478,7 +1478,7 @@ fn is_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode 
 }
 
 fn declare_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
-    if expr.args.len() % 2 != 0 {
+    if !expr.args.len().is_multiple_of(2) {
         return IRNode::Apply(Box::new(expr));
     }
     let mut state = state.lock().expect("macsyma backend state poisoned");

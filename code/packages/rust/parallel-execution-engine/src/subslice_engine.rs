@@ -438,6 +438,9 @@ impl ParallelExecutionEngine for SubsliceEngine {
     /// On each cycle, every EU independently selects one ready thread
     /// and executes its SIMD instruction. This means up to num_eus
     /// threads can execute simultaneously (one per EU).
+    // `i` is the execution-unit index used to index `active_mask` alongside other
+    // per-EU state; the explicit range mirrors the EU layout.
+    #[allow(clippy::needless_range_loop)]
     fn step(&mut self) -> EngineTrace {
         self.cycle += 1;
 

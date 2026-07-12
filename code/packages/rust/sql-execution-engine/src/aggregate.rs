@@ -24,7 +24,7 @@ use crate::data_source::{SqlPrimitive, SqlValue};
 ///
 /// * `rows`      — all rows in the current group
 /// * `agg_specs` — list of `(function_name, argument)` pairs,
-///                 e.g. `[("COUNT", "*"), ("SUM", "salary")]`
+///   e.g. `[("COUNT", "*"), ("SUM", "salary")]`
 ///
 /// # Returns
 ///

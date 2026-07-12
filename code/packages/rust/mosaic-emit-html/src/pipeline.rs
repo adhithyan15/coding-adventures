@@ -1,3 +1,6 @@
+// Builds config/option structs by mutating a `Default::default()` base for
+// readability across many optional fields; identical to a struct literal.
+#![allow(clippy::field_reassign_with_default)]
 //! # Three-file pipeline entry point for the HTML backend.
 //!
 //! This module is the static-HTML consumer of the three-language pipeline
@@ -214,6 +217,7 @@ impl std::error::Error for PipelineEmitError {}
 /// Default: emits only the component fragment; no project shell.
 /// `from_pipeline(...)` is unchanged.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub struct EmitOptions {
     /// Also emit `index.html` (complete `<!DOCTYPE html>` document
     /// inlining the component fragment), `main.js`, and `README.md`
@@ -221,13 +225,6 @@ pub struct EmitOptions {
     pub emit_project: bool,
 }
 
-impl Default for EmitOptions {
-    fn default() -> Self {
-        Self {
-            emit_project: false,
-        }
-    }
-}
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
 /// is on. Two files only — HTML has no build step, so there is no

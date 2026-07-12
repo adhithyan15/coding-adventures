@@ -414,7 +414,7 @@ impl Compiler {
                     body.pop();
                 }
             }
-            if !body.last().map_or(false, |i| i.op == "ret") {
+            if body.last().is_none_or(|i| i.op != "ret") {
                 let r = self.fresh_tmp();
                 self.emit(&mut body, "const", Some(&r),
                           vec![Operand::Int(0)], "i64");
@@ -685,6 +685,8 @@ impl Compiler {
         }
     }
 
+    // Explicit loop with an internal break reads clearer than while-let (allow 1.97 while_let_loop).
+    #[allow(clippy::while_let_loop)]
     fn compile_binary(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
         -> Result<String, OctError>
     {

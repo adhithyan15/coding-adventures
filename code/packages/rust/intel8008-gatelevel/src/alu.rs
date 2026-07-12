@@ -192,7 +192,7 @@ impl GateAlu8 {
     /// Compute flags Z, S, P from a result bit vector, plus supplied carry.
     pub fn compute_flags_from_bits(bits: &[u8], carry: bool) -> AluFlags {
         // Zero flag: all bits are 0 (implemented as NOR across all bits)
-        let any_set = bits.iter().any(|&b| b == 1);
+        let any_set = bits.contains(&1);
         let zero = !any_set;
 
         // Sign flag: bit 7 (MSB) is 1
@@ -210,9 +210,7 @@ impl GateAlu8 {
         let bit7 = bits[7];
         let mut result_bits = vec![0u8; 8];
         // Shift left: new bit[i] = old bit[i-1] for i >= 1
-        for i in 1..8 {
-            result_bits[i] = bits[i - 1];
-        }
+        result_bits[1..8].copy_from_slice(&bits[0..7]);
         // Wrap: new bit[0] = old bit[7]
         result_bits[0] = bit7;
         (bits_to_int(&result_bits), bit7 == 1)
@@ -224,9 +222,7 @@ impl GateAlu8 {
         let bit0 = bits[0];
         let mut result_bits = vec![0u8; 8];
         // Shift right: new bit[i] = old bit[i+1] for i < 7
-        for i in 0..7 {
-            result_bits[i] = bits[i + 1];
-        }
+        result_bits[0..7].copy_from_slice(&bits[1..8]);
         // Wrap: new bit[7] = old bit[0]
         result_bits[7] = bit0;
         (bits_to_int(&result_bits), bit0 == 1)
@@ -238,9 +234,7 @@ impl GateAlu8 {
         let new_carry = bits[7] == 1;
         let ci = if carry_in { 1u8 } else { 0u8 };
         let mut result_bits = vec![0u8; 8];
-        for i in 1..8 {
-            result_bits[i] = bits[i - 1];
-        }
+        result_bits[1..8].copy_from_slice(&bits[0..7]);
         result_bits[0] = ci;
         (bits_to_int(&result_bits), new_carry)
     }
@@ -251,9 +245,7 @@ impl GateAlu8 {
         let new_carry = bits[0] == 1;
         let ci = if carry_in { 1u8 } else { 0u8 };
         let mut result_bits = vec![0u8; 8];
-        for i in 0..7 {
-            result_bits[i] = bits[i + 1];
-        }
+        result_bits[0..7].copy_from_slice(&bits[1..8]);
         result_bits[7] = ci;
         (bits_to_int(&result_bits), new_carry)
     }

@@ -1822,11 +1822,10 @@ mod tests {
         for c in &node.children {
             match c {
                 ASTNodeOrToken::Token(t) if t.value == value => return true,
-                ASTNodeOrToken::Node(sub) => {
-                    if tree_has_token_value(sub, value) {
+                ASTNodeOrToken::Node(sub)
+                    if tree_has_token_value(sub, value) => {
                         return true;
                     }
-                }
                 _ => {}
             }
         }

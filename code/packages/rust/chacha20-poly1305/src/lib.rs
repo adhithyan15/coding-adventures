@@ -109,6 +109,9 @@ fn quarter_round(state: &mut [u32; 16], a: usize, b: usize, c: usize, d: usize) 
 ///
 /// After all rounds, the original state is added back (mod 2^32) to
 /// prevent an attacker from inverting the rounds.
+// Index loops here mirror RFC 8439's block function (indexing the 16-word state
+// and its serialization offsets `i*4`); keeping them indexed matches the spec.
+#[allow(clippy::needless_range_loop)]
 fn chacha20_block(key: &[u8; 32], nonce: &[u8; 12], counter: u32) -> [u8; 64] {
     // --- Initialize the 4x4 state matrix ---
     let mut state: [u32; 16] = [0; 16];
@@ -226,10 +229,10 @@ pub fn chacha20_encrypt(
 //
 // ============================================================================
 
-/// The prime modulus for Poly1305: p = 2^130 - 5.
-///
-/// Since this doesn't fit in a u128 (which holds up to 2^128 - 1), we
-/// represent it conceptually and handle the modular arithmetic carefully.
+// The prime modulus for Poly1305: p = 2^130 - 5.
+//
+// Since this doesn't fit in a u128 (which holds up to 2^128 - 1), we
+// represent it conceptually and handle the modular arithmetic carefully.
 
 /// Read a 128-bit little-endian value from a byte slice (up to 17 bytes).
 /// Returns the value as a (high, low) pair where high holds overflow bits.
@@ -671,6 +674,9 @@ pub fn xchacha20_poly1305_aead_decrypt(
 
 #[cfg(test)]
 mod tests {
+    // Test fixtures build key/plaintext/message byte arrays with index loops that
+    // mirror the RFC 8439 test-vector layout; indexed form keeps them readable.
+    #![allow(clippy::needless_range_loop)]
     use super::*;
 
     // ---- ChaCha20 Tests ----

@@ -748,7 +748,8 @@ mod tests {
 
     #[test]
     fn byte_string_algebra_still_rejected() {
-        for op in ["str_index"] {
+        {
+            let op = "str_index";
             let errs = validate_for_jvm(&single_fn_module(vec![
                 IIRInstr::new(
                     op,
@@ -774,6 +775,8 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
     }
 
+    // `3.14` is an arbitrary float operand payload, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_const_allowed() {
         // Unlike BEAM backend, float constants ARE supported on JVM.

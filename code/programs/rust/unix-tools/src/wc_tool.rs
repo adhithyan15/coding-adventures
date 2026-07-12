@@ -65,7 +65,9 @@ pub struct WcCounts {
 ///
 /// When none of these are true, wc defaults to showing lines, words,
 /// and bytes — the classic "default triple."
-#[derive(Debug, Clone)]
+// `new()` returns every flag disabled, matching the derived `Default`, so
+// deriving `Default` keeps them consistent and satisfies clippy.
+#[derive(Debug, Clone, Default)]
 pub struct WcOptions {
     pub show_lines: bool,
     pub show_words: bool,

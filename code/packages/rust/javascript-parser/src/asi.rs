@@ -94,6 +94,10 @@ use parser::grammar_parser::{
 /// Returns the parsed tree on success, or the final [`GrammarParseError`] if the
 /// program cannot be parsed even with `}`/EOF semicolons supplied (so the caller
 /// still degrades exactly as it did before ASI existed).
+// `GrammarParseError` is the parser's standard error type, returned identically
+// across the public parsing API; boxing it just to shrink this Result would
+// churn every caller's error handling for no real benefit.
+#[allow(clippy::result_large_err)]
 pub fn parse_with_asi(
     tokens: Vec<Token>,
     version: EsVersion,

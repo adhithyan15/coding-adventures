@@ -195,15 +195,14 @@ pub fn schedule(
                 }
                 start = must;
             }
-            Constraint::StartNoLaterThan(d) => {
-                if date_of_start(start) > d {
+            Constraint::StartNoLaterThan(d)
+                if date_of_start(start) > d => {
                     conflicts.push(Conflict {
                         task: id.clone(),
                         kind: ConflictKind::StartTooLate,
                         message: format!("starts after StartNoLaterThan {:?}", d.to_ymd()),
                     });
                 }
-            }
             _ => {}
         }
 
@@ -225,15 +224,14 @@ pub fn schedule(
                 finish = req;
                 start = calendar::sub_working(project, cal, finish, dur);
             }
-            Constraint::FinishNoLaterThan(d) => {
-                if finish_date(start, finish) > d {
+            Constraint::FinishNoLaterThan(d)
+                if finish_date(start, finish) > d => {
                     conflicts.push(Conflict {
                         task: id.clone(),
                         kind: ConflictKind::FinishTooLate,
                         message: format!("finishes after FinishNoLaterThan {:?}", d.to_ymd()),
                     });
                 }
-            }
             _ => {}
         }
 

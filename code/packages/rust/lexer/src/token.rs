@@ -39,19 +39,19 @@ use std::fmt;
 // Token flag constants
 // ===========================================================================
 
-/// Bitmask flags for token metadata.
-///
-/// Flags carry information that is neither type nor value but affects
-/// how downstream consumers (parsers, formatters, linters) interpret
-/// a token. For example, JavaScript's automatic semicolon insertion
-/// rule depends on whether a newline appeared before certain tokens.
-///
-/// Flags are optional -- when `flags` is `None`, all flags are off.
-/// Use bitwise AND to test:
-///
-/// ```text
-/// let preceded = token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0;
-/// ```
+// Bitmask flags for token metadata.
+//
+// Flags carry information that is neither type nor value but affects
+// how downstream consumers (parsers, formatters, linters) interpret
+// a token. For example, JavaScript's automatic semicolon insertion
+// rule depends on whether a newline appeared before certain tokens.
+//
+// Flags are optional -- when `flags` is `None`, all flags are off.
+// Use bitwise AND to test:
+//
+// ```text
+// let preceded = token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0;
+// ```
 
 /// Set when a line break appeared between this token and the previous one.
 ///

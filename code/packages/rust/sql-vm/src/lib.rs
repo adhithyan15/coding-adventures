@@ -795,7 +795,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 // Build the assignments Row: { column_name → new_value }.
                 let assignments_row: Row = col_names
                     .iter()
-                    .zip(values.into_iter())
+                    .zip(values)
                     .map(|(c, v)| (c.clone(), v))
                     .collect();
 
@@ -2627,7 +2627,7 @@ fn build_insert_row(
 /// For each key, we look up the column's position in `output_columns` by name
 /// and extract the value from the row's parallel `(name, value)` list.
 fn apply_sort(
-    rows: &mut Vec<Vec<(String, SqlValue)>>,
+    rows: &mut [Vec<(String, SqlValue)>],
     keys: &[CompiledSortKey],
     output_columns: &[String],
 ) {

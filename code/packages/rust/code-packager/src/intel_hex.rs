@@ -251,7 +251,7 @@ mod tests {
         let data = [0xAA, 0xBB, 0xCC];
         let cc = checksum(3, 0x0010, RECORD_DATA, &data);
         // Sum all record bytes including the checksum byte:
-        let sum: u32 = 3 + 0 + 0x10 + 0 + 0xAA + 0xBB + 0xCC + cc as u32;
+        let sum: u32 = (3 + 0x10) + 0xAA + 0xBB + 0xCC + cc as u32;
         assert_eq!(sum & 0xFF, 0, "checksum verification failed: sum mod 256 = {}", sum & 0xFF);
     }
 

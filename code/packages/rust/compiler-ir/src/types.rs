@@ -286,6 +286,9 @@ impl IdGenerator {
     }
 
     /// Return the next unique ID and increment the counter.
+    // Named `next` deliberately as an ID-generator API; it never terminates, so
+    // implementing `Iterator` (which clippy suggests) would be a semantic misfit.
+    #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> i64 {
         let id = self.next;
         self.next += 1;

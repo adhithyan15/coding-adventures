@@ -994,7 +994,7 @@ mod vulkan_tests {
             binding: 0,
             ..Default::default()
         }]);
-        let pl_layout = device.vk_create_pipeline_layout(&[ds_layout.clone()], 0);
+        let pl_layout = device.vk_create_pipeline_layout(std::slice::from_ref(&ds_layout), 0);
         let pipeline = device.vk_create_compute_pipeline(&shader, &pl_layout);
         let ds = device.vk_allocate_descriptor_set(&ds_layout);
         device.vk_update_descriptor_set(&ds, 0, &buf).unwrap();

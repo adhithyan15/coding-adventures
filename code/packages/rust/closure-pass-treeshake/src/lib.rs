@@ -452,7 +452,7 @@ mod tests {
         let _a: TreeshakePass = Default::default();
         let _b: TreeshakePass = TreeshakePass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // -----------------------------------------------------------------

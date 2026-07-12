@@ -312,6 +312,8 @@ fn test_scopy_empty() {
 }
 
 #[test]
+// 3.14 is arbitrary copy-test data, not an intended approximation of PI.
+#[allow(clippy::approx_constant)]
 fn test_scopy_preserves_values() {
     let x = Vector::new(vec![-1.0, 0.0, 1.0, 3.14]);
     let copy = blas().scopy(&x);

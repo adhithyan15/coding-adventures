@@ -158,7 +158,7 @@ enum GradFn {
     /// C = tanh(A). Backward: grad * (1 - output^2)
     Tanh(TensorRef, Vec<f64>),
     /// C = gelu(A). Backward: uses the GELU derivative formula
-    GELU(TensorRef),
+    Gelu(TensorRef),
     /// C = softmax(A, dim). Backward: y * (grad - sum(grad * y))
     Softmax(TensorRef, usize, Vec<f64>),
 }
@@ -389,7 +389,7 @@ impl Tensor {
         if inner.device == device {
             return self.clone();
         }
-        let mut t = Tensor::from_slice(&inner.data, &inner.shape, inner.requires_grad, device);
+        let t = Tensor::from_slice(&inner.data, &inner.shape, inner.requires_grad, device);
         t.inner.borrow_mut().requires_grad = inner.requires_grad;
         t
     }
@@ -399,7 +399,8 @@ impl Tensor {
     // =====================================================================
 
     fn with_grad_fn(data: Vec<f64>, shape: Vec<usize>, device: &str, grad_fn: GradFn, needs_grad: bool) -> Self {
-        let t = Tensor {
+        
+        Tensor {
             inner: Rc::new(RefCell::new(TensorInner {
                 data,
                 shape,
@@ -408,8 +409,7 @@ impl Tensor {
                 grad_fn: if needs_grad { Some(grad_fn) } else { None },
                 device: device.to_string(),
             })),
-        };
-        t
+        }
     }
 
     // =====================================================================
@@ -551,7 +551,7 @@ impl Tensor {
         let n = numel(&a.shape);
         let mut data = vec![0.0; n];
         let result_strides = compute_strides(&new_shape);
-        for flat_idx in 0..n {
+        for (flat_idx, slot) in data.iter_mut().enumerate() {
             let mut remaining = flat_idx;
             let mut old_flat = 0;
             for d in 0..new_shape.len() {
@@ -559,7 +559,7 @@ impl Tensor {
                 remaining %= result_strides[d];
                 old_flat += idx_d * new_strides[d];
             }
-            data[flat_idx] = a.data[old_flat];
+            *slot = a.data[old_flat];
         }
         Tensor::with_grad_fn(data, new_shape, &a.device,
             GradFn::Transpose(self.inner.clone(), dim0, dim1), a.requires_grad)
@@ -631,7 +631,7 @@ impl Tensor {
                 GradFn::Mean(self.inner.clone(), None), a.requires_grad);
         }
         let d = dim.unwrap();
-        let sum_result = drop(a);
+        drop(a);
         let sum_result = self.sum(dim, keepdim);
         let count = self.inner.borrow().shape[d] as f64;
         let data: Vec<f64> = sum_result.data().iter().map(|x| x / count).collect();
@@ -738,7 +738,7 @@ impl Tensor {
             0.5 * x * (1.0 + inner.tanh())
         }).collect();
         Tensor::with_grad_fn(data, a.shape.clone(), &a.device,
-            GradFn::GELU(self.inner.clone()), a.requires_grad)
+            GradFn::Gelu(self.inner.clone()), a.requires_grad)
     }
 
     /// Softmax: y_i = exp(x_i) / sum(exp(x_j)) along a dimension.
@@ -769,7 +769,7 @@ impl Tensor {
             // Compute indices for this slice
             let mut remaining = outer_idx;
             let mut base_indices = vec![0usize; a.shape.len()];
-            for d in 0..a.shape.len() {
+            for (d, base) in base_indices.iter_mut().enumerate() {
                 if d == actual_dim { continue; }
                 let mut stride_without_dim = 1;
                 for d2 in (d + 1)..a.shape.len() {
@@ -777,7 +777,7 @@ impl Tensor {
                         stride_without_dim *= a.shape[d2];
                     }
                 }
-                base_indices[d] = remaining / stride_without_dim;
+                *base = remaining / stride_without_dim;
                 remaining %= stride_without_dim;
             }
 
@@ -953,7 +953,7 @@ fn get_saved_tensors(grad_fn: &GradFn) -> Vec<TensorRef> {
         | GradFn::Mean(a, _) | GradFn::Reshape(a, _) | GradFn::Transpose(a, _, _)
         | GradFn::Exp(a, _) | GradFn::Log(a) | GradFn::Abs(a) | GradFn::Clamp(a, _, _)
         | GradFn::ReLU(a) | GradFn::Sigmoid(a, _) | GradFn::Tanh(a, _)
-        | GradFn::GELU(a) | GradFn::Softmax(a, _, _) => vec![a.clone()],
+        | GradFn::Gelu(a) | GradFn::Softmax(a, _, _) => vec![a.clone()],
     }
 }
 
@@ -1054,7 +1054,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
                 let d = dim.unwrap();
                 let mut grad_data = vec![0.0; ab.data.len()];
                 let strides = compute_strides(&ab.shape);
-                for flat_idx in 0..ab.data.len() {
+                for (flat_idx, grad_slot) in grad_data.iter_mut().enumerate() {
                     let mut remaining = flat_idx;
                     let mut indices = vec![0usize; ab.shape.len()];
                     for dd in 0..ab.shape.len() {
@@ -1068,7 +1068,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
                     let grad_strides = compute_strides(&grad_shape);
                     let grad_flat: usize = grad_indices.iter().zip(grad_strides.iter())
                         .map(|(&i, &s)| i * s).sum();
-                    grad_data[flat_idx] = grad_output[grad_flat];
+                    *grad_slot = grad_output[grad_flat];
                 }
                 vec![Some(grad_data)]
             }
@@ -1084,7 +1084,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
                 // First expand like sum, then divide by count
                 let strides = compute_strides(&ab.shape);
                 let mut grad_data = vec![0.0; ab.data.len()];
-                for flat_idx in 0..ab.data.len() {
+                for (flat_idx, grad_slot) in grad_data.iter_mut().enumerate() {
                     let mut remaining = flat_idx;
                     let mut indices = vec![0usize; ab.shape.len()];
                     for dd in 0..ab.shape.len() {
@@ -1098,12 +1098,12 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
                     let grad_strides = compute_strides(&grad_shape);
                     let grad_flat: usize = grad_indices.iter().zip(grad_strides.iter())
                         .map(|(&i, &s)| i * s).sum();
-                    grad_data[flat_idx] = grad_output[grad_flat] / count;
+                    *grad_slot = grad_output[grad_flat] / count;
                 }
                 vec![Some(grad_data)]
             }
         }
-        GradFn::Reshape(_, original_shape) => {
+        GradFn::Reshape(_, _original_shape) => {
             vec![Some(grad_output.to_vec())] // Data doesn't change, just reshape grad back
         }
         GradFn::Transpose(_, dim0, dim1) => {
@@ -1112,7 +1112,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
             let d1 = *dim1;
             // The grad_output is in transposed shape; we need to transpose it back
             // For 2-D case:
-            let a_inner = get_saved_tensors(&GradFn::Transpose(
+            let _a_inner = get_saved_tensors(&GradFn::Transpose(
                 // We need the original tensor to know the shape
                 // Luckily we have it from the grad_fn
                 Rc::new(RefCell::new(TensorInner {
@@ -1140,8 +1140,8 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
         GradFn::Clamp(a, min_val, max_val) => {
             let ab = a.borrow();
             vec![Some(ab.data.iter().zip(grad_output.iter()).map(|(&x, &g)| {
-                let clamped_low = min_val.map_or(false, |lo| x <= lo);
-                let clamped_high = max_val.map_or(false, |hi| x >= hi);
+                let clamped_low = min_val.is_some_and(|lo| x <= lo);
+                let clamped_high = max_val.is_some_and(|hi| x >= hi);
                 if clamped_low || clamped_high { 0.0 } else { g }
             }).collect())]
         }
@@ -1158,7 +1158,7 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
             vec![Some(grad_output.iter().zip(output.iter())
                 .map(|(g, y)| g * (1.0 - y * y)).collect())]
         }
-        GradFn::GELU(a) => {
+        GradFn::Gelu(a) => {
             let sqrt_2_pi = (2.0_f64 / std::f64::consts::PI).sqrt();
             let coeff = 0.044715;
             let ab = a.borrow();
@@ -1189,13 +1189,13 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
             for outer_idx in 0..outer_size {
                 let mut remaining = outer_idx;
                 let mut base_indices = vec![0usize; ab.shape.len()];
-                for d in 0..ab.shape.len() {
+                for (d, base) in base_indices.iter_mut().enumerate() {
                     if d == actual_dim { continue; }
                     let mut stride_without_dim = 1;
                     for d2 in (d + 1)..ab.shape.len() {
                         if d2 != actual_dim { stride_without_dim *= ab.shape[d2]; }
                     }
-                    base_indices[d] = remaining / stride_without_dim;
+                    *base = remaining / stride_without_dim;
                     remaining %= stride_without_dim;
                 }
 

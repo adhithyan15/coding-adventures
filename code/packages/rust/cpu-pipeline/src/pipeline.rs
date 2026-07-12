@@ -382,7 +382,7 @@ impl Pipeline {
 
                 // Shift non-flushed stages forward (from back to front).
                 for i in (flush_count..num_stages).rev() {
-                    if i > 0 && i - 1 >= flush_count {
+                    if i > 0 && i > flush_count {
                         next_stages[i] = self.stages[i - 1].clone();
                     } else if i > 0 {
                         let mut bubble = PipelineToken::new_bubble();
@@ -397,13 +397,13 @@ impl Pipeline {
                 }
 
                 // Replace flushed stages with bubbles.
-                for i in 0..flush_count {
+                for (i, slot) in next_stages.iter_mut().enumerate().take(flush_count) {
                     let mut bubble = PipelineToken::new_bubble();
                     bubble.stage_entered.insert(
                         self.config.stages[i].name.clone(),
                         self.cycle,
                     );
-                    next_stages[i] = Some(bubble);
+                    *slot = Some(bubble);
                 }
 
                 // Redirect PC and fetch from the correct target.
@@ -451,9 +451,7 @@ impl Pipeline {
                 next_stages[stall_point] = Some(bubble);
 
                 // Stages BEFORE the stall point are frozen.
-                for i in 0..stall_point {
-                    next_stages[i] = self.stages[i].clone();
-                }
+                next_stages[..stall_point].clone_from_slice(&self.stages[..stall_point]);
 
                 // PC does NOT advance during a stall.
             }
@@ -587,11 +585,9 @@ impl Pipeline {
         }
 
         // Count bubbles across all stages.
-        for tok in &self.stages {
-            if let Some(ref t) = tok {
-                if t.is_bubble {
-                    self.stats.bubble_cycles += 1;
-                }
+        for t in self.stages.iter().flatten() {
+            if t.is_bubble {
+                self.stats.bubble_cycles += 1;
             }
         }
 
@@ -1597,8 +1593,8 @@ mod tests {
 
         p.set_hazard_fn(Box::new(
             move |stages: &[Option<PipelineToken>]| -> HazardResponse {
-                if !*flushed_clone.borrow() {
-                    if stages.len() >= 3 {
+                if !*flushed_clone.borrow()
+                    && stages.len() >= 3 {
                         if let Some(ref tok) = stages[2] {
                             if !tok.is_bubble {
                                 *flushed_clone.borrow_mut() = true;
@@ -1611,7 +1607,6 @@ mod tests {
                             }
                         }
                     }
-                }
                 HazardResponse::default()
             },
         ));

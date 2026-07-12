@@ -38,6 +38,9 @@
 //! targets the module compiles as an empty shell so downstream wrapper
 //! crates can reference it unconditionally.
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 use text_interfaces::{
     Direction, FontMetrics, FontQuery, FontResolutionError, FontResolver, Glyph, ShapeOptions,
     ShapedRun, ShapedText, ShapingError, TextShaper,
@@ -782,8 +785,10 @@ mod tests {
     fn shape_rejects_rtl_for_v1() {
         let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
         let s = CoreTextShaper::new();
-        let mut opts = ShapeOptions::default();
-        opts.direction = Direction::Rtl;
+        let opts = ShapeOptions {
+            direction: Direction::Rtl,
+            ..Default::default()
+        };
         let err = s.shape("hello", &h, 16.0, &opts).unwrap_err();
         assert_eq!(err, ShapingError::UnsupportedDirection(Direction::Rtl));
     }

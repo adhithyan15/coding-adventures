@@ -731,7 +731,7 @@ fn error_response(error: HttpServerError) -> HttpResponse {
         | HttpServerError::UnsupportedUntilEofRequestBody => (501, "Not Implemented"),
         HttpServerError::Parse(_) => (400, "Bad Request"),
     };
-    HttpResponse::new(status, message.as_bytes().to_vec())
+    HttpResponse::new(status, message.as_bytes())
         .with_header("Content-Type", "text/plain")
         .close()
 }

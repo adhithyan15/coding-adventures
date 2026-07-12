@@ -1,5 +1,11 @@
 //! Grammar-driven parser for a focused Mermaid flowchart subset.
 
+// This file hand-parses many `starts_with(...)` / slice-index prefix strips
+// where the prefix and the stripped remainder need slightly different handling;
+// rewriting every one as `strip_prefix` hurts readability here, so we opt out
+// of the lint file-wide.
+#![allow(clippy::manual_strip)]
+
 pub const VERSION: &str = "0.2.0";
 
 use std::collections::HashMap;
@@ -308,7 +314,7 @@ fn token_name(token: &Token) -> &str {
     token
         .type_name
         .as_deref()
-        .unwrap_or_else(|| match token.type_ {
+        .unwrap_or(match token.type_ {
             TokenType::Name => "NAME",
             TokenType::Keyword => "KEYWORD",
             TokenType::Newline => "NEWLINE",
@@ -325,8 +331,7 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask,
-    PieSlice, RelKind, SankeyFlow, SankeyNode,
+    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask, RelKind,
     SeriesKind, StructuralDiagram, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram, TemporalKind,
@@ -476,6 +481,8 @@ fn strip_visibility(s: &str) -> String {
     }
 }
 
+#[allow(dead_code)] // retained as API surface / scaffolding
+#[allow(clippy::ptr_arg)] // dead code; signature kept as-is
 fn strip_visibility_owned(s: &String) -> String {
     strip_visibility(s.as_str())
 }
@@ -664,7 +671,7 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
     // Detect status keywords in the first part.
     let status_keywords = ["done", "active", "crit", "milestone"];
     let first = parts[0];
-    let (status, remaining) = if status_keywords.iter().any(|&kw| first == kw) {
+    let (status, remaining) = if status_keywords.contains(&first) {
         (parse_task_status(first), &parts[1..])
     } else {
         (TaskStatus::Normal, &parts[..])
@@ -717,7 +724,7 @@ fn parse_duration(s: &str) -> Option<f64> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
-    use diagram_ir::*;
+    
 
     const CLASS_SRC: &str = "classDiagram
   class Animal { +name: String; +speak() void }

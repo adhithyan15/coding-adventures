@@ -1,0 +1,21 @@
+[package]
+name = "flow-matic-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "FLOW-MATIC (B-0) frontend for the LANG VM AOT chain — lowers a parsed FLOW-MATIC program into interpreter_ir::IIRModule so it runs on every execution backend. v0.1.0: the control-flow + scalar-field slice (operations→labels, COMPARE/IF/OTHERWISE/GO TO/JUMP/STOP, scalar-field MOVE); file record I/O is a later rung. See PL09-codegen.md."
+
+[dependencies]
+coding-adventures-flow-matic-parser = { path = "../flow-matic-parser" }
+parser         = { path = "../parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+
+[dev-dependencies]
+# tests/backend_compat.rs proves the compiled module is accepted by
+# every IIR-to-* backend validator.
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+iir-to-beam           = { path = "../iir-to-beam" }
+# tests/jit_e2e.rs runs the compiled module through the generic VM/JIT.
+vm-core  = { path = "../vm-core" }
+jit-core = { path = "../jit-core" }

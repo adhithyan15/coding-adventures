@@ -1567,7 +1567,7 @@ mod tests {
         let _a: InlineVariablesPass = Default::default();
         let _b: InlineVariablesPass = InlineVariablesPass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================

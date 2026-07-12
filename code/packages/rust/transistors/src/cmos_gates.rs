@@ -568,8 +568,8 @@ impl CMOSXnor {
     pub fn new(circuit_params: Option<CircuitParams>) -> Self {
         let c = circuit_params.unwrap_or_default();
         Self {
-            xor_gate: CMOSXor::new(Some(c.clone())),
-            inverter: CMOSInverter::new(Some(c.clone()), None, None),
+            xor_gate: CMOSXor::new(Some(c)),
+            inverter: CMOSInverter::new(Some(c), None, None),
             circuit: c,
         }
     }

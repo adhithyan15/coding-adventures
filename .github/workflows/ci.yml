@@ -386,7 +386,20 @@ jobs:
 
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true'
+        # Uses the `stable` channel (matching the rest of this repo's Rust CI).
+        # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
+        # release, so a new Rust release can surface new lints on `main` — treat
+        # that as normal maintenance (run `cargo clippy --fix` + resolve). Pinning
+        # to a specific version was tried but broke BUILDs that invoke
+        # `rustup run stable` / `rustup target add` (wasm + embedded firmware),
+        # because a version-pinned default toolchain is not the `stable` alias
+        # those scripts expect. Reproduce CI's clippy locally with the *current*
+        # stable (`rustup update stable`), not a stale cached toolchain.
         uses: dtolnay/rust-toolchain@stable
+        with:
+          # dtolnay/rust-toolchain installs the minimal profile, which omits
+          # clippy; the -clippy gate needs it, so request it explicitly.
+          components: clippy
 
       - name: Install native Paint VM dependencies
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
@@ -726,6 +739,7 @@ jobs:
             -root . \
             $PLAN_FLAG \
             -validate-build-files \
+            -clippy \
             -language all
 
       # ── Force full build on main ──────────────────────────────
@@ -734,4 +748,4 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -language all
+          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all

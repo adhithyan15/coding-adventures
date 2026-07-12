@@ -65,6 +65,12 @@ pub struct ParseCache {
     cache: HashMap<CacheKey, ParseResult>,
 }
 
+impl Default for ParseCache {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ParseCache {
     /// Create an empty `ParseCache`.
     pub fn new() -> Self {

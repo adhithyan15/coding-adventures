@@ -56,7 +56,7 @@ fn pattern_for(ch: &str) -> Option<&'static str> {
 }
 
 fn is_guard(ch: &str) -> bool {
-    GUARDS.iter().any(|guard| *guard == ch)
+    GUARDS.contains(&ch)
 }
 
 fn assert_body_chars(body: &str) -> Result<(), String> {

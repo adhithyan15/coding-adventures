@@ -359,12 +359,11 @@ fn translate_unary(instr: &IIRInstr, env: &HashMap<String, String>) -> Vec<CIRIn
 /// 4. → `"any"`.
 pub fn spec_type(instr: &IIRInstr, env: &HashMap<String, String>) -> String {
     // 1. Explicit type hint beats everything.
-    if instr.type_hint != "any" {
-        if ALLOWED_TYPES.contains(&instr.type_hint.as_str()) {
+    if instr.type_hint != "any"
+        && ALLOWED_TYPES.contains(&instr.type_hint.as_str()) {
             return instr.type_hint.clone();
         }
         // Malformed type hint — fall through to "any".
-    }
 
     // 2. Check inferred environment for the destination register.
     if let Some(dest) = &instr.dest {

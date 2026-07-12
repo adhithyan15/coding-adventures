@@ -225,8 +225,8 @@ mod tests {
     #[test]
     fn quality_100_all_ones() {
         let scaled = scale_qtable(&LUMA_QTABLE, 100);
-        for i in 0..64 {
-            assert_eq!(scaled[i], 1, "entry {i} should be 1 at quality 100");
+        for (i, &entry) in scaled.iter().enumerate() {
+            assert_eq!(entry, 1, "entry {i} should be 1 at quality 100");
         }
     }
 
@@ -236,8 +236,8 @@ mod tests {
         let luma = scale_qtable(&LUMA_QTABLE, 1);
         // At quality=1, scale=5000. The smallest base entry is 10 (luma table).
         // 10 * 5000 / 100 = 500 → clamped to 255.
-        for i in 0..64 {
-            assert_eq!(luma[i], 255, "entry {i} should be 255 at quality 1");
+        for (i, &entry) in luma.iter().enumerate() {
+            assert_eq!(entry, 255, "entry {i} should be 255 at quality 1");
         }
     }
 

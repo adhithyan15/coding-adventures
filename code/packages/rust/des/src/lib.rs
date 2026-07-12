@@ -469,7 +469,7 @@ pub fn decrypt_block(block: &[u8; 8], key: &[u8; 8]) -> [u8; 8] {
 fn pkcs7_pad(data: &[u8], block_size: usize) -> Vec<u8> {
     let pad_len = block_size - (data.len() % block_size);
     let mut result = data.to_vec();
-    result.extend(std::iter::repeat(pad_len as u8).take(pad_len));
+    result.extend(std::iter::repeat_n(pad_len as u8, pad_len));
     result
 }
 
@@ -533,7 +533,7 @@ pub fn ecb_encrypt(plaintext: &[u8], key: &[u8; 8]) -> Vec<u8> {
 ///
 /// Plaintext with PKCS#7 padding removed, or an error string.
 pub fn ecb_decrypt(ciphertext: &[u8], key: &[u8; 8]) -> Result<Vec<u8>, String> {
-    if ciphertext.len() % 8 != 0 {
+    if !ciphertext.len().is_multiple_of(8) {
         return Err("DES ECB ciphertext length must be a multiple of 8 bytes".to_string());
     }
     if ciphertext.is_empty() {

@@ -375,6 +375,9 @@ mod tests {
 
     /// Black level should be less than white level.
     #[test]
+    // Intentionally asserts a relationship between compile-time constants with a
+    // descriptive runtime message; a `const` block assert cannot format the note.
+    #[allow(clippy::assertions_on_constants)]
     fn black_level_less_than_white_level() {
         assert!(
             CANON_BLACK_LEVEL < CANON_WHITE_LEVEL,
@@ -385,6 +388,9 @@ mod tests {
 
     /// White level should be representable in 14 bits (< 16384).
     #[test]
+    // Intentionally asserts a property of a compile-time constant with a
+    // descriptive runtime message; a `const` block assert cannot format the note.
+    #[allow(clippy::assertions_on_constants)]
     fn white_level_within_14bit_range() {
         assert!(
             CANON_WHITE_LEVEL < (1 << 14),
@@ -396,11 +402,11 @@ mod tests {
     /// Colour matrix diagonal should be positive (well-formed matrix heuristic).
     #[test]
     fn color_matrix_diagonal_positive() {
-        for i in 0..3 {
+        for (i, row) in CANON_COLOR_MATRIX.iter().enumerate() {
             assert!(
-                CANON_COLOR_MATRIX[i][i] > 0.0,
+                row[i] > 0.0,
                 "Diagonal element [{i}][{i}] = {} should be positive",
-                CANON_COLOR_MATRIX[i][i]
+                row[i]
             );
         }
     }

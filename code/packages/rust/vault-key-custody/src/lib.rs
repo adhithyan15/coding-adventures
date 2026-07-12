@@ -532,7 +532,7 @@ impl KeyCustodian for PassphraseCustodian {
 
         // 3. AEAD-encrypt the inner key under KEK with AAD = magic || label.
         let aad = Self::build_aad(label);
-        let (ct, tag) = xchacha20_poly1305_aead_encrypt(&**key, &*kek, &nonce, &aad);
+        let (ct, tag) = xchacha20_poly1305_aead_encrypt(&**key, &kek, &nonce, &aad);
         // ct.len() should equal KEY_LEN.
         if ct.len() != KEY_LEN {
             return Err(CustodyError::Aead);
@@ -574,7 +574,7 @@ impl KeyCustodian for PassphraseCustodian {
         let kek = self.derive_kek(salt)?;
         let aad = Self::build_aad(label);
 
-        let pt = xchacha20_poly1305_aead_decrypt(ct, &*kek, &nonce, &aad, &tag)
+        let pt = xchacha20_poly1305_aead_decrypt(ct, &kek, &nonce, &aad, &tag)
             .ok_or(CustodyError::InvalidPassphrase)?;
         if pt.len() != KEY_LEN {
             return Err(CustodyError::Aead);

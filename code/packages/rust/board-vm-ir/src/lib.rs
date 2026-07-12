@@ -573,9 +573,7 @@ fn push_unique_capability(
     count: usize,
     capability_id: u16,
 ) -> Result<usize, RequiredCapabilitiesError> {
-    if out[..count]
-        .iter()
-        .any(|existing| *existing == capability_id)
+    if out[..count].contains(&capability_id)
     {
         return Ok(count);
     }

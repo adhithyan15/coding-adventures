@@ -221,7 +221,7 @@ const MAX_HEX_LINE_LEN: usize = 1024;
 /// Does **not** allocate an intermediate `Vec<char>` — iterates directly over
 /// char pairs to keep memory bounded to the output slice length.
 fn parse_hex_bytes(s: &str) -> Result<Vec<u8>, ()> {
-    if s.len() % 2 != 0 {
+    if !s.len().is_multiple_of(2) {
         return Err(());
     }
     let mut bytes = Vec::with_capacity(s.len() / 2);

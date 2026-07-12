@@ -642,20 +642,20 @@ mod tests {
     // Test 21: Error path — non-existent grammar file
     // -----------------------------------------------------------------------
 
-    /// `create_sql_lexer_with_path` returns `Err` when the grammar file does
-    /// not exist. This exercises the error branch in the file-read logic.
-    ///
-    /// | Path                  | Result |
-    /// |-----------------------|--------|
-    /// | "/no/such/file.tokens"| Err(_) |
+    // `create_sql_lexer_with_path` returns `Err` when the grammar file does
+    // not exist. This exercises the error branch in the file-read logic.
+    //
+    // | Path                  | Result |
+    // |-----------------------|--------|
+    // | "/no/such/file.tokens"| Err(_) |
 
     // -----------------------------------------------------------------------
     // Test 22: Error path — tokenize_sql with bad grammar path
     // -----------------------------------------------------------------------
 
-    /// `tokenize_sql` uses the default grammar path. When the grammar path
-    /// is good, it returns `Ok`. This test ensures the `Err` variant of
-    /// the `Result` is exercised via the `create_sql_lexer_with_path` helper.
+    // `tokenize_sql` uses the default grammar path. When the grammar path
+    // is good, it returns `Ok`. This test ensures the `Err` variant of
+    // the `Result` is exercised via the `create_sql_lexer_with_path` helper.
 
     // -----------------------------------------------------------------------
     // Test 23: INSERT keywords

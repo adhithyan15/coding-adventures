@@ -7,6 +7,12 @@ pub struct paint_encoded_bytes_t {
     pub len: usize,
 }
 
+/// # Safety
+///
+/// The caller must ensure `rgba_bytes` points to at least `rgba_len` readable
+/// bytes and `out_bytes` points to a valid, writable `paint_encoded_bytes_t`.
+/// Null pointers are handled and cause a `0` return. On success, `out_bytes.data`
+/// is heap-allocated and must be released with `paint_codec_png_free_bytes`.
 #[no_mangle]
 pub unsafe extern "C" fn paint_codec_png_encode_rgba8(
     width: u32,
@@ -45,6 +51,11 @@ pub unsafe extern "C" fn paint_codec_png_encode_rgba8(
     1
 }
 
+/// # Safety
+///
+/// `data`/`len` must be exactly the pair produced by a prior successful
+/// `paint_codec_png_encode_rgba8` call (i.e. a boxed slice of `len` bytes), and
+/// must be freed at most once. Passing a null `data` or `len == 0` is a no-op.
 #[no_mangle]
 pub unsafe extern "C" fn paint_codec_png_free_bytes(data: *mut u8, len: usize) {
     if data.is_null() || len == 0 {

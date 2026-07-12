@@ -360,7 +360,7 @@ impl FeatureManifest {
 
     /// `true` iff the feature is declared.
     pub fn contains(&self, feature: Feature) -> bool {
-        self.features.iter().any(|f| *f == feature)
+        self.features.contains(&feature)
     }
 
     /// Iterate declared features in insertion order.

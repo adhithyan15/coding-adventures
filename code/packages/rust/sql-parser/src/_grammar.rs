@@ -106,7 +106,10 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"join_clause"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"join_type"#.to_string() },
+                // `join_type` is OPTIONAL: a bare `JOIN` (no INNER/LEFT/… prefix)
+                // is an INNER join, which the planner already defaults to when the
+                // `join_type` node is absent. Matches `sql.grammar` (`[ join_type ]`).
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"join_type"#.to_string() }) },
                 GrammarElement::Literal { value: r#"JOIN"#.to_string() },
                 GrammarElement::RuleReference { name: r#"table_ref"#.to_string() },
                 GrammarElement::Literal { value: r#"ON"#.to_string() },

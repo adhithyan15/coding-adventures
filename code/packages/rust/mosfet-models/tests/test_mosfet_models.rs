@@ -44,8 +44,10 @@ fn test_triode_region() {
 #[test]
 fn test_cutoff_region() {
     // V_GS = 0 V → V_OV = -0.42 V → cutoff (subthreshold disabled)
-    let mut p = Level1Params::default();
-    p.subthreshold_enable = false;
+    let p = Level1Params {
+        subthreshold_enable: false,
+        ..Level1Params::default()
+    };
     let r = evaluate_level1(&p, 0.0, 1.0, 0.0, 300.15);
     assert_eq!(r.region, Region::Cutoff);
     assert_eq!(r.id, 0.0);
@@ -83,8 +85,10 @@ fn test_gds_positive_in_saturation() {
 #[test]
 fn test_gds_without_clm() {
     // With lambda = 0, gds should be near 0 in saturation
-    let mut p = Level1Params::default();
-    p.lambda = 0.0;
+    let p = Level1Params {
+        lambda: 0.0,
+        ..Level1Params::default()
+    };
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
     assert!(r.gds.abs() < 1e-12, "gds≈0 when lambda=0");
 }
@@ -116,8 +120,10 @@ fn test_gmb_nonzero_with_body_bias() {
 #[test]
 fn test_pmos_dc_negative_id() {
     // PMOS with V_GS = -1.8 V should give negative Id
-    let mut p = Level1Params::default();
-    p.vt0 = 0.42; // PMOS threshold (magnitude)
+    let p = Level1Params {
+        vt0: 0.42, // PMOS threshold (magnitude)
+        ..Level1Params::default()
+    };
     let m = Mosfet::new(MosfetType::Pmos, p);
     let r = m.dc(-1.8, -1.8, 0.0, 300.15);
     assert!(r.id < 0.0, "PMOS Id should be negative: {}", r.id);
@@ -181,9 +187,11 @@ fn test_capacitances_nonnegative() {
 
 #[test]
 fn test_overlap_caps_scale_with_w() {
-    let mut p = Level1Params::default();
-    p.cgso = 5e-10; // 0.5 nF/m gate-source overlap cap
-    p.w = 2e-6;     // 2 µm wide
+    let p = Level1Params {
+        cgso: 5e-10, // 0.5 nF/m gate-source overlap cap
+        w: 2e-6,     // 2 µm wide
+        ..Level1Params::default()
+    };
     let r = evaluate_level1(&p, 1.8, 1.8, 0.0, 300.15);
     // Overlap alone: Cgs_overlap = cgso * W = 5e-10 * 2e-6 = 1e-15 F
     assert!(r.cgs > 5e-10 * 2e-6, "Cgs should include overlap cap");
@@ -196,8 +204,10 @@ fn test_overlap_caps_scale_with_w() {
 #[test]
 fn test_saturation_id_formula() {
     // With lambda = 0, Id = (KP/2)(W/L) V_OV²
-    let mut p = Level1Params::default();
-    p.lambda = 0.0;
+    let p = Level1Params {
+        lambda: 0.0,
+        ..Level1Params::default()
+    };
     let v_gs = 1.8_f64;
     let v_t = p.vt0; // V_BS=0 → V_t = VT0
     let v_ov = v_gs - v_t;

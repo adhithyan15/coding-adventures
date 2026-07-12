@@ -108,10 +108,6 @@ impl Rope {
         self.len == 0
     }
 
-    pub fn to_string(&self) -> String {
-        to_string(self)
-    }
-
     pub fn index(&self, i: usize) -> Option<char> {
         index(self, i)
     }
@@ -131,7 +127,10 @@ impl Rope {
 
 impl fmt::Display for Rope {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_string())
+        // Call the free `to_string(rope)` directly. Rope no longer has an
+        // inherent `to_string` method (it shadowed this `Display`-provided one);
+        // going through `self.to_string()` here would recurse into `ToString`.
+        write!(f, "{}", to_string(self))
     }
 }
 

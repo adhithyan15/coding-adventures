@@ -72,6 +72,9 @@ pub enum Language {
     McCarthyLisp,
     /// ALGOL 60 — scalar integer/boolean subset over the shared IIR.
     Algol60,
+    /// FLOW-MATIC (B-0) — the control-flow + scalar-field slice via the
+    /// `flow-matic-iir-compiler` frontend; `main` returns an i64 exit code.
+    FlowMatic,
 }
 
 impl fmt::Display for Language {
@@ -84,6 +87,7 @@ impl fmt::Display for Language {
             Language::Oct => write!(f, "oct"),
             Language::McCarthyLisp => write!(f, "mccarthy-lisp"),
             Language::Algol60 => write!(f, "algol60"),
+            Language::FlowMatic => write!(f, "flow-matic"),
         }
     }
 }
@@ -99,11 +103,12 @@ impl Language {
             "oct" => Ok(Self::Oct),
             "mccarthy-lisp" | "mccarthy" | "mcl" | "lisp" => Ok(Self::McCarthyLisp),
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
+            "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
-                 (or algol / algol-60 / a60)")),
+                 (or algol / algol-60 / a60), flow-matic (or fm / b0)")),
         }
     }
 }
@@ -121,6 +126,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "oct" => Some(Language::Oct),
         "mcl" | "lisp" => Some(Language::McCarthyLisp),
         "algol" | "alg" | "a60" => Some(Language::Algol60),
+        "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
         _ => None,
     }
 }
@@ -318,6 +324,13 @@ pub fn compile_source_to_iir(
         }
         Language::Algol60 => {
             algol_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        Language::FlowMatic => {
+            flow_matic_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: format!("{e}"),
@@ -1591,7 +1604,7 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 "store_mem" => {
                     let mut srcs = Vec::with_capacity(3);
                     srcs.push(Operand::Var(TAPE.to_string()));
-                    srcs.extend(instr.srcs.into_iter());
+                    srcs.extend(instr.srcs);
                     new_instrs.push(IIRInstr::new(
                         "store_byte",
                         None,
@@ -1782,7 +1795,7 @@ mod tests {
                 "lowered module must contain store_byte; got {ops:?}");
 
         // Step 4: ret_void must be gone, replaced by `const __bf_ret = 0; ret`.
-        assert!(!ops.iter().any(|o| *o == "ret_void"),
+        assert!(!ops.contains(&"ret_void"),
                 "ret_void must be replaced by ret i64 0");
         assert_eq!(main.return_type, "i64",
                    "main return type must be i64 after lowering");

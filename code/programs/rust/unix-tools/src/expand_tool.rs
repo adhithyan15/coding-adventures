@@ -42,7 +42,7 @@ pub fn parse_tab_stops(spec: &str) -> Result<Vec<usize>, String> {
         .collect();
 
     let stops = stops?;
-    if stops.iter().any(|&s| s == 0) {
+    if stops.contains(&0) {
         return Err("tab stop must be positive".to_string());
     }
     Ok(stops)

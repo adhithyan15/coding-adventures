@@ -85,7 +85,7 @@ impl ComplexTensor {
     /// length must be even.  Used by FFT primitives that already
     /// produce interleaved output.
     pub fn from_interleaved(data: Vec<f32>) -> Result<Self, ComplexError> {
-        if data.len() % 2 != 0 {
+        if !data.len().is_multiple_of(2) {
             return Err(ComplexError::OddInterleavedLength(data.len()));
         }
         Ok(ComplexTensor { interleaved: data })

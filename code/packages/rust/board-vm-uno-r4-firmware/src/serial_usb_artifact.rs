@@ -441,6 +441,9 @@ pub struct SerialUsbArtifactRun {
     pub print_only: bool,
 }
 
+// `Run` carries the full parsed CLI run while `Help` is a unit; boxing `Run`
+// would churn all match sites for a small stack-size win, so allow the spread.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ArtifactInvocation {
     Run(SerialUsbArtifactRun),

@@ -542,12 +542,12 @@ impl IdState {
         }
     }
     fn next_node_id(&mut self, prefix: &str) -> NodeId {
-        let id = NodeId::new(&format!("{}{}", prefix, self.next_node));
+        let id = NodeId::new(format!("{}{}", prefix, self.next_node));
         self.next_node += 1;
         id
     }
     fn next_edge_id(&mut self) -> EdgeId {
-        let id = EdgeId::new(&format!("ce{}", self.next_edge));
+        let id = EdgeId::new(format!("ce{}", self.next_edge));
         self.next_edge += 1;
         id
     }

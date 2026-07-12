@@ -114,8 +114,10 @@ impl NvidiaGPU {
             work_distribution_policy: "round_robin".to_string(),
         });
 
-        let mut sm_config = SMConfig::default();
-        sm_config.max_warps = 8;
+        let sm_config = SMConfig {
+            max_warps: 8,
+            ..SMConfig::default()
+        };
 
         let sms: Vec<Box<dyn ComputeUnitTrait>> = (0..config.num_compute_units)
             .map(|_| {

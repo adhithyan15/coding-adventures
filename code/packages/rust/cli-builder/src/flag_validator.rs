@@ -69,7 +69,7 @@ pub fn validate_flags(
     // -----------------------------------------------------------------------
     // 2. For each flag that IS present, check conflicts and requires.
     // -----------------------------------------------------------------------
-    for (flag_id, _val) in parsed_flags {
+    for flag_id in parsed_flags.keys() {
         let Some(flag_def) = flag_map.get(flag_id.as_str()) else {
             // Flag not in active set — was likely a builtin (help/version).
             continue;

@@ -244,7 +244,7 @@ impl ReactRenderer {
                 );
                 (table, true) // self-closing: no child nodes, full JSX inline
             }
-            "Divider" => (format!("<hr />"), true),
+            "Divider" => ("<hr />".to_string(), true),
             "Icon" => {
                 let class_attr = if class.is_empty() {
                     " className=\"icon\"".to_string()

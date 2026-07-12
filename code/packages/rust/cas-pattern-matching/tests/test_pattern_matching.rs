@@ -41,6 +41,8 @@ fn blank_matches_rational() {
 }
 
 #[test]
+// 3.14 is arbitrary float test data, not an approximation of PI.
+#[allow(clippy::approx_constant)]
 fn blank_matches_float() {
     assert!(match_pattern(&blank(), &flt(3.14), Bindings::empty()).is_some());
 }

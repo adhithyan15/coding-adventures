@@ -14,6 +14,12 @@ use crate::types::{HazardAction, HazardResult, PipelineSlot};
 ///   3. No match? -> No hazard.
 pub struct DataHazardDetector;
 
+impl Default for DataHazardDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DataHazardDetector {
     pub fn new() -> Self {
         Self

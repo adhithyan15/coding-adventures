@@ -13,12 +13,16 @@ impl Perceptron {
     pub fn new(lr: f64, epochs: usize) -> Self {
         Self {
             learning_rate: lr,
-            epochs: epochs,
+            epochs,
             weights: None,
             bias: 0.0,
         }
     }
 
+    // `i` is the sample index shared across `raw.data`, `loss_grad`, and the
+    // gradient accumulators; the explicit range preserves the exact iteration
+    // count (`features.rows`). Behavior-preserving allow.
+    #[allow(clippy::needless_range_loop)]
     pub fn fit(&mut self, x_data: Vec<Vec<f64>>, y_data: Vec<Vec<f64>>, log_steps: usize) {
         let features = Matrix::new_2d(x_data);
         let true_labels = Matrix::new_2d(y_data);
@@ -87,8 +91,8 @@ impl Perceptron {
             .add_scalar(self.bias);
 
         let mut predictions = vec![0.0; features.rows];
-        for i in 0..features.rows {
-            predictions[i] = sigmoid(raw.data[i][0]);
+        for (i, pred) in predictions.iter_mut().enumerate() {
+            *pred = sigmoid(raw.data[i][0]);
         }
         predictions
     }

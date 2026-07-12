@@ -32,6 +32,9 @@ pub fn create_oct_parser(source: &str) -> GrammarParser {
 }
 
 /// Parse an Oct source string into a grammar AST rooted at `program`.
+// `GrammarParseError` is a large error type owned by the shared `grammar-tools`
+// crate; boxing it here would diverge from every other grammar frontend's API.
+#[allow(clippy::result_large_err)]
 pub fn parse_oct(source: &str) -> Result<GrammarASTNode, GrammarParseError> {
     let mut parser = create_oct_parser(source);
     parser.parse()

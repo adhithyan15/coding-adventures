@@ -1,3 +1,6 @@
+// The index loop indexes a permutation array and uses the index value itself;
+// the range form mirrors the dispatch dimension math.
+#![allow(clippy::needless_range_loop)]
 //! Dispatch a `ComputeGraph` on Metal.
 //!
 //! Mirrors matrix-cpu's `dispatch::run`: walks `graph.ops` in order,
@@ -328,9 +331,9 @@ fn matmul_dispatch(
     if a_t.shape.rank() != 2 || b_t.shape.rank() != 2 {
         return Err("matmul inputs must be rank 2".to_string());
     }
-    let m = a_t.shape.dims[0] as u32;
-    let k = a_t.shape.dims[1] as u32;
-    let n = b_t.shape.dims[1] as u32;
+    let m = a_t.shape.dims[0];
+    let k = a_t.shape.dims[1];
+    let n = b_t.shape.dims[1];
     if m == 0 || k == 0 || n == 0 {
         return Ok(());
     }

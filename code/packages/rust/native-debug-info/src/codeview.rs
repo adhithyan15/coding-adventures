@@ -40,7 +40,7 @@ const DEBUG_SECTION_CHARACTERISTICS: u32 =
     IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_DISCARDABLE | IMAGE_SCN_MEM_READ;
 
 fn pad4(buf: &mut Vec<u8>) {
-    while buf.len() % 4 != 0 {
+    while !buf.len().is_multiple_of(4) {
         buf.push(0);
     }
 }
@@ -60,6 +60,9 @@ fn pad4(buf: &mut Vec<u8>) {
 /// - `code_section_index` — 1-based section index for `.text` (default 1).
 pub struct CodeViewEmitter<'a> {
     reader: &'a DebugSidecarReader,
+    // Captured from the PE header for completeness of the emitter's inputs;
+    // CodeView symbol records are RVA-relative so it is not read directly yet.
+    #[allow(dead_code)]
     image_base: u64,
     symbol_table: &'a HashMap<String, u32>,
     code_rva: u32,
@@ -259,7 +262,7 @@ impl<'a> CodeViewEmitter<'a> {
             name_table.extend_from_slice(path.as_bytes());
             name_table.push(0);
         }
-        while name_table.len() % 4 != 0 { name_table.push(0); }
+        while !name_table.len().is_multiple_of(4) { name_table.push(0); }
 
         // DEBUG_S_STRINGTABLE
         buf.extend_from_slice(&DEBUG_S_STRINGTABLE.to_le_bytes());

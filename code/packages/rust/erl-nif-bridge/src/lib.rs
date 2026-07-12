@@ -1,6 +1,12 @@
 // Erlang's NIF API uses non-snake-case names inherited from C headers:
 // ERL_NIF_TERM, ErlNifFunc, enif_make_int, etc. Allow these to match docs.
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
+// Every `unsafe fn` in this crate is a thin FFI wrapper over the erl_nif C API
+// and shares one safety contract, documented in the "Safe helper functions"
+// module header below: the `ErlNifEnv`/`ERL_NIF_TERM` handles must be the valid
+// ones supplied by the BEAM runtime for the current NIF invocation. Documenting
+// that identical contract 23 times adds noise, so we allow the lint crate-wide.
+#![allow(clippy::missing_safety_doc)]
 
 //! # erl-nif-bridge — Zero-dependency Rust wrapper for Erlang's erl_nif C API
 //!

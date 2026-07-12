@@ -249,7 +249,7 @@ mod tests {
         enc.write_bit(true, 128);
         let bytes = enc.finish();
         let mut dec = BoolDecoder::new(&bytes);
-        assert_eq!(dec.read_bit(128), true);
+        assert!(dec.read_bit(128));
     }
 
     #[test]
@@ -258,7 +258,7 @@ mod tests {
         enc.write_bit(false, 128);
         let bytes = enc.finish();
         let mut dec = BoolDecoder::new(&bytes);
-        assert_eq!(dec.read_bit(128), false);
+        assert!(!dec.read_bit(128));
     }
 
     /// Decode read_bits returns 0 when n == 0.

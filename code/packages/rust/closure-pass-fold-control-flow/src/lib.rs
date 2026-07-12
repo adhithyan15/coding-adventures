@@ -729,26 +729,26 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
     // We do NOT chain into multiple `!!...!<inner>` peels here —
     // a single peel per fixed-point iteration is enough; the
     // scheduler will re-call us until the expression stabilises.
-    let (test, consequent, alternate) = if alternate.is_some() {
-        if let Expression::UnaryExpression(u) = test {
-            if u.operator == UnaryOperator::Not {
-                let inner = *u.argument;
-                st.record_fold(
-                    &s.cv,
-                    "de-morgan-swap-not",
-                    "if (!<inner>) <c>; else <a>;",
-                    "if (<inner>) <a>; else <c>;",
-                );
-                let alt = alternate.expect("alternate.is_some() checked above");
-                (inner, alt, Some(consequent))
+    let (test, consequent, alternate) = match alternate {
+        Some(alt) => {
+            if let Expression::UnaryExpression(u) = test {
+                if u.operator == UnaryOperator::Not {
+                    let inner = *u.argument;
+                    st.record_fold(
+                        &s.cv,
+                        "de-morgan-swap-not",
+                        "if (!<inner>) <c>; else <a>;",
+                        "if (<inner>) <a>; else <c>;",
+                    );
+                    (inner, alt, Some(consequent))
+                } else {
+                    (Expression::UnaryExpression(u), consequent, Some(alt))
+                }
             } else {
-                (Expression::UnaryExpression(u), consequent, alternate)
+                (test, consequent, Some(alt))
             }
-        } else {
-            (test, consequent, alternate)
         }
-    } else {
-        (test, consequent, alternate)
+        None => (test, consequent, None),
     };
 
     match literal_truthy(&test) {
@@ -1845,7 +1845,7 @@ mod tests {
 
     fn first_stmt(prog: &Program) -> &Statement {
         let ProgramItem::Statement(s) = &prog.body[0] else {
-            panic!("expected Statement; got {:?}", &prog.body[0]);
+            panic!("expected Statement; got {:?}", prog.body[0]);
         };
         s
     }

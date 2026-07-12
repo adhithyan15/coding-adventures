@@ -369,7 +369,7 @@ fn try_cross_ref(src: &str, pos: usize) -> Option<(InlineNode, usize)> {
 fn try_url(src: &str, pos: usize) -> Option<(InlineNode, usize)> {
     let rest = &src[pos..];
     // Find end of URL: space, newline, or `[`
-    let url_end = rest.find(|c| c == ' ' || c == '\n' || c == '[').unwrap_or(rest.len());
+    let url_end = rest.find([' ', '\n', '[']).unwrap_or(rest.len());
     let url = &rest[..url_end];
     if url.is_empty() {
         return None;

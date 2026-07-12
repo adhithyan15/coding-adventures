@@ -975,7 +975,7 @@ fn sanitize_for_prompt(s: &str, max_len: usize) -> String {
             cut -= 1;
         }
         cleaned.truncate(cut);
-        cleaned.push_str("…");
+        cleaned.push('…');
     }
     cleaned
 }
@@ -2462,7 +2462,7 @@ mod tests {
         // point that lies inside a multi-byte UTF-8 sequence. Without
         // the char-boundary walk this would panic in String::truncate.
         // Use 3-byte chars (CJK) so we can land mid-codepoint.
-        let s: String = std::iter::repeat('日').take(10).collect();
+        let s: String = std::iter::repeat_n('日', 10).collect();
         assert_eq!(s.len(), 30); // 10 chars × 3 bytes
         // Cap at 16 bytes — mid-codepoint.
         let cleaned = sanitize_for_prompt(&s, 16);

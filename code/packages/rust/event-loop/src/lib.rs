@@ -158,6 +158,9 @@ impl StopHandle {
 /// whose `poll` drains it — the loop never needs to know.
 pub struct EventLoop<E> {
     sources: Vec<Box<dyn EventSource<E>>>,
+    // Boxed handler closures; the `Vec<Box<dyn FnMut...>>` shape is the natural
+    // storage here and a type alias would only add indirection.
+    #[allow(clippy::type_complexity)]
     handlers: Vec<Box<dyn FnMut(&E) -> ControlFlow>>,
     stopped: Arc<AtomicBool>,
 }

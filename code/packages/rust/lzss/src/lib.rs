@@ -386,7 +386,7 @@ mod tests {
     #[test]
     fn test_match_length_within_max() {
         let max = 5;
-        for tok in encode(&vec![b'A'; 100], DEFAULT_WINDOW_SIZE, max, DEFAULT_MIN_MATCH) {
+        for tok in encode(&[b'A'; 100], DEFAULT_WINDOW_SIZE, max, DEFAULT_MIN_MATCH) {
             if let Token::Match { length, .. } = tok {
                 assert!(length as usize <= max);
             }

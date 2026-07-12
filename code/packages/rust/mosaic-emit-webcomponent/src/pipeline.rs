@@ -218,6 +218,7 @@ impl std::error::Error for PipelineEmitError {}
 /// Default: emits only the component `.js`; no project shell.
 /// `from_pipeline(...)` is unchanged.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub struct EmitOptions {
     /// Also emit `index.html` (loads the `.js` module + instantiates
     /// the custom element) and `README.md` alongside the component
@@ -225,13 +226,6 @@ pub struct EmitOptions {
     pub emit_project: bool,
 }
 
-impl Default for EmitOptions {
-    fn default() -> Self {
-        Self {
-            emit_project: false,
-        }
-    }
-}
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
 /// is on. Two files only — WebComponent has no build step.
@@ -3198,6 +3192,9 @@ fn _slot_type_keepalive(_t: &SlotType, _l: &ListInnerType) {}
 
 #[cfg(test)]
 mod tests {
+    // Tests build a `*::default()` then set one field; the sequential form
+    // reads clearly and is behavior-identical to an initializer.
+    #![allow(clippy::field_reassign_with_default)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, SlotDecl};

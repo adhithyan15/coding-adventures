@@ -863,12 +863,12 @@ fn validate_slot_default(slot: &SlotDecl, errors: &mut Vec<CompileError>) {
         }
 
         // Verify the default value matches the declared type.
-        let compatible = match (&slot.r#type, default) {
-            (SlotType::Text, SlotDefault::Text(_)) => true,
-            (SlotType::Number, SlotDefault::Number(_)) => true,
-            (SlotType::Bool, SlotDefault::Bool(_)) => true,
-            _ => false,
-        };
+        let compatible = matches!(
+            (&slot.r#type, default),
+            (SlotType::Text, SlotDefault::Text(_))
+                | (SlotType::Number, SlotDefault::Number(_))
+                | (SlotType::Bool, SlotDefault::Bool(_))
+        );
 
         if !compatible {
             errors.push(CompileError {
@@ -934,7 +934,7 @@ pub fn emit_rust_binding(component: &MosmodelComponent) -> String {
 
     // ---- impl block with builder methods ----
     out.push_str(&format!("impl {name} {{\n"));
-    out.push_str(&format!("    pub fn new() -> Self {{ Self::default() }}\n\n"));
+    out.push_str("    pub fn new() -> Self { Self::default() }\n\n");
 
     for slot in &component.slots {
         let field = kebab_to_snake(&slot.name);

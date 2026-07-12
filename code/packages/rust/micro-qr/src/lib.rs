@@ -39,6 +39,12 @@
 //!   → ModuleGrid
 //! ```
 
+// Micro QR encoding is fundamentally 2D grid placement: functions here iterate
+// `row`/`col` (or format-table) indices to write modules at exact `(r, c)`
+// positions defined by ISO/IEC 18004 Annex E. Index loops mirror the spec's
+// coordinate tables and keep placement auditable, so we allow the lint crate-wide.
+#![allow(clippy::needless_range_loop)]
+
 pub const VERSION: &str = "0.1.0";
 
 use barcode_2d::{layout, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
@@ -626,7 +632,7 @@ fn place_finder(g: &mut WorkGrid) {
     for dr in 0..7 {
         for dc in 0..7 {
             let on_border = dr == 0 || dr == 6 || dc == 0 || dc == 6;
-            let in_core   = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+            let in_core   = (2..=4).contains(&dr) && (2..=4).contains(&dc);
             g.set(dr, dc, on_border || in_core, true);
         }
     }
@@ -745,10 +751,10 @@ fn place_bits(g: &mut WorkGrid, bits: &[bool]) {
 #[inline]
 fn mask_condition(mask_idx: usize, row: usize, col: usize) -> bool {
     match mask_idx {
-        0 => (row + col) % 2 == 0,
-        1 => row % 2 == 0,
-        2 => col % 3 == 0,
-        3 => (row + col) % 3 == 0,
+        0 => (row + col).is_multiple_of(2),
+        1 => row.is_multiple_of(2),
+        2 => col.is_multiple_of(3),
+        3 => (row + col).is_multiple_of(3),
         _ => false,
     }
 }
@@ -817,7 +823,7 @@ fn compute_penalty(modules: &[Vec<bool>], sz: usize) -> u32 {
     const P1: [u8; 11] = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0];
     const P2: [u8; 11] = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
     for a in 0..sz {
-        let limit = if sz >= 11 { sz - 11 } else { 0 };
+        let limit = sz.saturating_sub(11);
         for b in 0..=limit {
             let (mut mh1, mut mh2, mut mv1, mut mv2) = (true, true, true, true);
             for k in 0..11 {
@@ -897,7 +903,7 @@ pub fn encode(
     let mut bits: Vec<bool> = Vec::new();
     for (cw_idx, &cw) in final_cw.iter().enumerate() {
         let bits_in_cw = if cfg.m1_half_cw && cw_idx == cfg.data_cw - 1 { 4 } else { 8 };
-        for b in (0..bits_in_cw as u32).rev() {
+        for b in (0..bits_in_cw).rev() {
             bits.push(((cw >> (b + (8 - bits_in_cw))) & 1) == 1);
         }
     }

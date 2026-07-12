@@ -116,15 +116,11 @@ impl Layer {
 
 /// Vertical cross-section of the device.  `layers[0]` is the top of the stack.
 #[derive(Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub struct CrossSection {
     pub layers: Vec<Layer>,
 }
 
-impl Default for CrossSection {
-    fn default() -> Self {
-        Self { layers: Vec::new() }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Step implementations

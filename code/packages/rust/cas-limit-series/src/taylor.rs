@@ -368,6 +368,10 @@ fn coeffs_mul(a: &[Frac], b: &[Frac]) -> Vec<Frac> {
 /// ```text
 /// out[k] = (1/k!) · Σ_{i≥k}  falling_factorial(i, k) · a_i · shift^{i-k}
 /// ```
+// The inner loop's `i` is the summation index of the shift formula documented
+// above (Σ_{i≥k} falling_factorial(i, k)·a_i·shift^{i-k}); it is used arithmetically
+// (`i - k`, `falling_factorial(i, k)`), so the indexed loop mirrors the math.
+#[allow(clippy::needless_range_loop)]
 fn shift_polynomial(coeffs: &[Frac], shift: Frac) -> Vec<Frac> {
     let n = coeffs.len();
     let mut out = Vec::with_capacity(n);

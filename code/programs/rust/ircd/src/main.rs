@@ -433,8 +433,8 @@ mod signal_handling {
 
     pub unsafe fn setup(el: Arc<EventLoop>) {
         EVENT_LOOP_PTR = Some(el);
-        libc::signal(libc::SIGINT, sigint_handler as libc::sighandler_t);
-        libc::signal(libc::SIGTERM, sigint_handler as libc::sighandler_t);
+        libc::signal(libc::SIGINT, sigint_handler as *const () as libc::sighandler_t);
+        libc::signal(libc::SIGTERM, sigint_handler as *const () as libc::sighandler_t);
     }
 }
 
@@ -495,7 +495,7 @@ mod tests {
         loop {
             let mut line = String::new();
             if reader.read_line(&mut line).unwrap() == 0 { break; }
-            let trimmed = line.trim_end_matches(|c| c == '\r' || c == '\n').to_string();
+            let trimmed = line.trim_end_matches(['\r', '\n']).to_string();
             let is_end = trimmed.contains("376");
             lines.push(trimmed);
             if is_end { break; }

@@ -2,6 +2,12 @@
 // mixed-case constants (SVs_TEMP, SVf_IOK), non-snake-case functions (newSViv,
 // SvREFCNT_inc), and upper-case type names (SV, AV, HV). Allow these throughout.
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
+// Every public `unsafe fn` here is a 1:1 thin wrapper over a raw Perl C-API
+// entry point. They all share the same caller contract — the raw pointers must
+// be valid, live SV/AV/HV values owned by the running interpreter on the
+// correct thread — which is documented in the module-level "The SV model" /
+// "The XS calling convention" sections above rather than repeated per wrapper.
+#![allow(clippy::missing_safety_doc)]
 
 //! # perl-bridge — Rust wrapper for Perl's C API
 //!

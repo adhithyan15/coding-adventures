@@ -773,7 +773,7 @@ mod tests {
             UdpError::Timeout
         );
         assert_eq!(
-            map_send_error(io::Error::new(io::ErrorKind::Other, "boom")),
+            map_send_error(io::Error::other("boom")),
             UdpError::SendFailed("boom".to_string())
         );
         assert_eq!(
@@ -781,7 +781,7 @@ mod tests {
             UdpError::Timeout
         );
         assert_eq!(
-            map_receive_error(io::Error::new(io::ErrorKind::Other, "boom")),
+            map_receive_error(io::Error::other("boom")),
             UdpError::ReceiveFailed("boom".to_string())
         );
     }

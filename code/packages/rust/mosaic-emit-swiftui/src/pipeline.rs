@@ -1024,16 +1024,15 @@ fn swiftui_modifier_chain(
                 }
             }
             "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
-            "text-align" => {
+            "text-align"
                 // Base-only by design (see the `text_align` binding's
                 // doc comment).  A state layer that sets `text-align` is
                 // intentionally ignored — only `layer_idx == None` wins.
-                if layer_idx.is_none() {
+                if layer_idx.is_none() => {
                     if let Some(a) = text_align_swift(&p.value) {
                         text_align = Some(a);
                     }
                 }
-            }
             // border-style, border-collapse, outline, etc. — silently
             // skipped.  Matches the React emitter's v1 posture.
             _ => {}
@@ -2588,7 +2587,7 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     // readers while keeping the line-comment scope intact.
     fn escape_for_line_comment(s: &str) -> String {
         let escaped = escape_swift_string(s);
-        escaped.replace('\r', " ").replace('\n', " ")
+        escaped.replace(['\r', '\n'], " ")
     }
     if let Some(g) = find_string_prop(node, "group") {
         writeln!(out, "{pad}// group: {}", escape_for_line_comment(g)).unwrap();
@@ -3277,6 +3276,9 @@ fn emit_host_dialog(
 /// Non-`Row` children of a section are passed through the regular walker
 /// so the file still compiles if an author puts (say) a `Divider` between
 /// rows; an explicit comment is emitted documenting the unusual nesting.
+// Threads the full row-lowering context through the section walk; splitting
+// would obscure the flow.
+#[allow(clippy::too_many_arguments)]
 fn emit_table_section_rows(
     out: &mut String,
     section: &LayoutNode,
@@ -3864,6 +3866,9 @@ fn is_safe_swift_identifier(s: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    // Tests build `EmitOptions::default()` then set one field; the sequential
+    // form reads clearly and is behavior-identical to an initializer.
+    #![allow(clippy::field_reassign_with_default)]
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::EmitParam;

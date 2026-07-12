@@ -151,6 +151,7 @@ func run() int {
 	shardIndex := flag.Int("shard-index", -1, "Run only the selected shard from a build plan")
 	emitShardMatrix := flag.Bool("emit-shard-matrix", false, "Output build_shards JSON for GitHub Actions matrix expansion")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
+	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()
 
@@ -510,6 +511,7 @@ func run() int {
 		*jobs,
 		affectedSet,
 		tracker,
+		*clippy,
 	)
 
 	if tracker != nil {

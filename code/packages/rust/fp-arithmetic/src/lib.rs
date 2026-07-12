@@ -26,6 +26,11 @@
 //! - **`fma`** — Fused multiply-add (single rounding!) and format conversion.
 //! - **`pipeline`** — Pipelined arithmetic units that simulate GPU-style throughput.
 
+// The literals flagged by `approx_constant` (e.g. 3.14159...) are hand-written
+// constants used as test/demo data, not attempts to approximate `std::f64::consts::PI`.
+// Keeping them verbatim is intentional, so allow the lint crate-wide.
+#![allow(clippy::approx_constant)]
+
 pub mod formats;
 pub mod ieee754;
 pub mod fp_adder;

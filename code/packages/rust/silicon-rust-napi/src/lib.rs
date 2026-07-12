@@ -137,15 +137,17 @@ pub fn eval_level1_rs(
     v_bs: f64,
     t: f64,
 ) -> (f64, f64, f64, f64, f64, f64, f64, f64, f64, &'static str) {
-    let mut p = mm::Level1Params::default();
-    p.vt0    = vt0;
-    p.kp     = kp;
-    p.lambda = lambda;
-    p.gamma  = gamma;
-    p.phi    = phi;
-    p.w      = w;
-    p.l      = l;
-    p.n_sub  = n_sub;
+    let p = mm::Level1Params {
+        vt0,
+        kp,
+        lambda,
+        gamma,
+        phi,
+        w,
+        l,
+        n_sub,
+        ..Default::default()
+    };
     let r = mm::evaluate_level1(&p, v_gs, v_ds, v_bs, t);
     (r.id, r.gm, r.gds, r.gmb, r.cgs, r.cgd, r.cgb, r.cbs, r.cbd, r.region.as_str())
 }
@@ -457,15 +459,17 @@ unsafe extern "C" fn napi_evaluate_level1(
     let v_bs   = req_f64!(env, args, 10, "evaluateLevel1");
     let t      = req_f64!(env, args, 11, "evaluateLevel1");
 
-    let mut p = mm::Level1Params::default();
-    p.vt0    = vt0;
-    p.kp     = kp;
-    p.lambda = lambda;
-    p.gamma  = gamma;
-    p.phi    = phi;
-    p.w      = w;
-    p.l      = l;
-    p.n_sub  = n_sub;
+    let p = mm::Level1Params {
+        vt0,
+        kp,
+        lambda,
+        gamma,
+        phi,
+        w,
+        l,
+        n_sub,
+        ..Default::default()
+    };
     let r = mm::evaluate_level1(&p, v_gs, v_ds, v_bs, t);
     mos_result_to_js_object(env, &r)
 }
@@ -617,6 +621,12 @@ unsafe extern "C" fn napi_diffusivity_cm2_per_s(
 // returning it.
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// # Safety
+///
+/// This is the N-API module entry point invoked by Node.js itself. `env` must
+/// be the valid `napi_env` and `exports` the valid `napi_value` object that the
+/// Node runtime passes when it loads the addon; callers other than the Node
+/// loader must uphold the same contract.
 #[cfg(not(test))]
 #[no_mangle]
 pub unsafe extern "C" fn napi_register_module_v1(

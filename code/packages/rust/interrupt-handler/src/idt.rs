@@ -27,21 +27,13 @@ pub const IDT_BASE_ADDRESS: u32 = 0x00000000;
 /// - `present`: `true` if this entry is valid. `false` triggers double fault.
 /// - `privilege_level`: 0 = kernel only.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub struct IDTEntry {
     pub isr_address: u32,
     pub present: bool,
     pub privilege_level: u8,
 }
 
-impl Default for IDTEntry {
-    fn default() -> Self {
-        Self {
-            isr_address: 0,
-            present: false,
-            privilege_level: 0,
-        }
-    }
-}
 
 /// 256-entry table mapping interrupt numbers to ISR addresses.
 ///

@@ -212,6 +212,7 @@ impl<R: BufRead, W: Write> LspServer<R, W> {
     ///
     /// We call `bridge.parse()` directly to get an owned AST box, but the
     /// parse cache ensures we don't do redundant work for diagnostics.
+    #[allow(clippy::type_complexity)] // owned-AST + diagnostics tuple is intentional
     pub(crate) fn get_parse_result_cloned(
         &mut self,
         uri: &str,

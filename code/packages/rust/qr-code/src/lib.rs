@@ -586,7 +586,7 @@ fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
     for &cw in codewords {
         for b in (0u8..8).rev() { bits.push((cw >> b) & 1 == 1); }
     }
-    for _ in 0..num_remainder_bits(version) { bits.push(false); }
+    bits.resize(bits.len() + num_remainder_bits(version), false);
 
     let mut bit_idx = 0usize;
     let mut up = true;
@@ -668,6 +668,11 @@ fn apply_mask(
     result
 }
 
+// The loops below use their index symmetrically to walk both rows and columns of
+// the module grid (e.g. `modules[a][i]` and `modules[i][a]` in the same body), so
+// a plain `.iter().enumerate()` rewrite would not preserve the transposed access;
+// keep the explicit range loops.
+#[allow(clippy::needless_range_loop)]
 fn compute_penalty(modules: &[Vec<bool>], sz: usize) -> u32 {
     let mut penalty = 0u32;
 
@@ -721,8 +726,8 @@ fn compute_penalty(modules: &[Vec<bool>], sz: usize) -> u32 {
     let total = (sz * sz) as f64;
     let ratio = (dark as f64 / total) * 100.0;
     let prev5 = (ratio / 5.0).floor() as u32 * 5;
-    let a = if prev5 > 50 { prev5 - 50 } else { 50 - prev5 };
-    let b = if prev5 + 5 > 50 { prev5 + 5 - 50 } else { 50 - (prev5 + 5) };
+    let a = prev5.abs_diff(50);
+    let b = (prev5 + 5).abs_diff(50);
     penalty += (a.min(b) / 5) * 10;
 
     penalty
@@ -742,15 +747,15 @@ fn select_version(input: &str, ecc: EccLevel) -> Result<usize, QRCodeError> {
             EncodingMode::Byte => byte_len * 8,
             EncodingMode::Numeric => {
                 let n = input.chars().count() as u32;
-                (n * 10 + 2) / 3  // ceil(n * 10 / 3)
+                (n * 10).div_ceil(3)  // ceil(n * 10 / 3)
             }
             EncodingMode::Alphanumeric => {
                 let n = input.chars().count() as u32;
-                (n * 11 + 1) / 2  // ceil(n * 11 / 2)
+                (n * 11).div_ceil(2)  // ceil(n * 11 / 2)
             }
         };
         let bits_needed = 4 + char_count_bits(mode, v) + data_bits;
-        let cw_needed = (bits_needed + 7) / 8;
+        let cw_needed = bits_needed.div_ceil(8);
         if cw_needed as usize <= capacity { return Ok(v); }
     }
     Err(QRCodeError::InputTooLong(format!(

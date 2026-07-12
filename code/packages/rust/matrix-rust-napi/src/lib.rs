@@ -129,7 +129,7 @@ pub fn round_trip_json(input: &str) -> Result<String, String> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
-    if s.len() % 2 != 0 {
+    if !s.len().is_multiple_of(2) {
         return Err(format!("hex string length must be even, got {}", s.len()));
     }
     let bytes = s.as_bytes();
@@ -451,11 +451,11 @@ mod tests {
         assert!(err.contains("decode failed"), "got: {}", err);
     }
 
-    /// The output of the round-trip must itself be valid JSON that
-    /// re-round-trips identically.  Idempotence: `f(f(x)) == f(x)`.
-    /// (Useful to catch any drift introduced by the encoder — e.g.
-    /// if it ever started canonicalising fields differently between
-    /// runs.)
+    // The output of the round-trip must itself be valid JSON that
+    // re-round-trips identically.  Idempotence: `f(f(x)) == f(x)`.
+    // (Useful to catch any drift introduced by the encoder — e.g.
+    // if it ever started canonicalising fields differently between
+    // runs.)
     // ── JSON envelope (Phase 2) ──────────────────────────────────
 
     /// Build an Add graph, package it + inputs into the envelope JSON,

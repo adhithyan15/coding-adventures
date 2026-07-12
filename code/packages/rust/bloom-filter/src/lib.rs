@@ -169,7 +169,7 @@ impl BloomFilter {
     }
 
     fn from_parts(bit_count: usize, hash_count: usize, expected_items: usize) -> Self {
-        let byte_count = (bit_count + 7) / 8;
+        let byte_count = bit_count.div_ceil(8);
         Self {
             bit_count,
             hash_count,
@@ -270,7 +270,7 @@ mod tests {
         let k = BloomFilter::optimal_k(m, 1_000_000);
         assert!(m > 9_000_000);
         assert_eq!(k, 7);
-        assert_eq!(BloomFilter::capacity_for_memory(1_000_000, 0.01) > 0, true);
+        assert!(BloomFilter::capacity_for_memory(1_000_000, 0.01) > 0);
     }
 
     #[test]

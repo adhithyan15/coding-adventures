@@ -242,6 +242,9 @@ impl SystolicArray {
     /// weights[row][col] goes to PE(row, col). In real TPU hardware, weight
     /// loading happens before the matrix multiply begins. The weights stay
     /// fixed while activations flow through.
+    // `r`/`c` are the PE grid coordinates, used to index both `weights` and
+    // `self.grid` in lock-step; the range loop mirrors the hardware layout.
+    #[allow(clippy::needless_range_loop)]
     pub fn load_weights(&mut self, weights: &[&[f64]]) {
         for r in 0..weights.len().min(self.config.rows) {
             for c in 0..weights[r].len().min(self.config.cols) {
@@ -281,6 +284,9 @@ impl SystolicArray {
     ///         4. After all activations flow through, column j accumulates
     ///            sum_k(A[i][k] * W[k][j]) = C[i][j]
     ///         5. Drain results for row i
+    // Output-row index `i` and inner index `k` are matrix coordinates used to
+    // index `activations[i][k]`; the explicit ranges track the matmul dimensions.
+    #[allow(clippy::needless_range_loop)]
     pub fn run_matmul(
         &mut self,
         activations: &[&[f64]],
@@ -395,6 +401,9 @@ impl ParallelExecutionEngine for SystolicArray {
     ///
     /// We process PEs from right to left so that the "pass to right"
     /// doesn't interfere with the current cycle's computation.
+    // `r`/`c` are PE grid coordinates used to index `pe_states` and `self.grid`
+    // together; the range loops mirror the 2-D array traversal.
+    #[allow(clippy::needless_range_loop)]
     fn step(&mut self) -> EngineTrace {
         self.cycle += 1;
 
@@ -407,12 +416,10 @@ impl ParallelExecutionEngine for SystolicArray {
             for c in (0..self.config.cols).rev() {
                 let output = self.grid[r][c].compute();
 
-                if output.is_some() {
+                if let Some(output_val) = output {
                     active_count += 1;
                     // Pass input to right neighbor (if exists)
                     if c + 1 < self.config.cols {
-                        // We need to clone the output to pass it
-                        let output_val = output.unwrap();
                         self.grid[r][c + 1].input_buffer = Some(output_val);
                     }
                 }

@@ -531,7 +531,7 @@ mod tests {
             Err(ChannelError::Ratchet) => {}
             other => panic!(
                 "expected Ratchet replay rejection, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -550,7 +550,7 @@ mod tests {
             Err(ChannelError::Ratchet) => {}
             other => panic!(
                 "expected Ratchet AEAD failure, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -575,7 +575,7 @@ mod tests {
             Err(ChannelError::Ratchet) => {}
             other => panic!(
                 "expected Ratchet AEAD failure on first-message tamper, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -598,7 +598,7 @@ mod tests {
             Err(ChannelError::MalformedWire) => {}
             other => panic!(
                 "expected MalformedWire on magic tamper, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -613,7 +613,7 @@ mod tests {
             Err(ChannelError::MalformedWire) => {}
             other => panic!(
                 "expected MalformedWire on next-message magic tamper, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -628,7 +628,7 @@ mod tests {
             Err(ChannelError::MalformedWire) => {}
             other => panic!(
                 "expected MalformedWire on truncated wire, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -643,7 +643,7 @@ mod tests {
             Err(ChannelError::Ratchet) => {}
             other => panic!(
                 "expected Ratchet AEAD failure on AAD mismatch, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -670,7 +670,7 @@ mod tests {
             Err(ChannelError::Ratchet) => {}
             other => panic!(
                 "expected forward-secrecy rejection, got {}",
-                if matches!(other, Ok(_)) { "Ok" } else { "different Err" }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }

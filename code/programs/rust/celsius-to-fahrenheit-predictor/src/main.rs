@@ -6,6 +6,10 @@ use neural_network::{
 };
 use std::collections::HashMap;
 
+// The loss/derivative parameters are function pointers whose signatures mirror
+// the loss-function crate's public API; naming them via `type` aliases here would
+// only obscure that correspondence, so the "complex" fn-pointer types are intentional.
+#[allow(clippy::type_complexity)]
 fn train(
     loss_name: &str,
     loss_fn: fn(&[f64], &[f64]) -> Result<f64, &'static str>,

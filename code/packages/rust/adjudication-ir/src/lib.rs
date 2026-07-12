@@ -1253,6 +1253,9 @@ fn closed_set_names() -> impl Iterator<Item = &'static str> {
 /// Per-relation source/target kind constraints, per
 /// [`ADJ01 §"Relation-Specific Invariants"`](../../../specs/ADJ01-adjudication-ir-grammar.md).
 /// Returns a pair of predicates `(source_ok, target_ok)`.
+// The return type is a self-documenting pair of function pointers; a `type` alias
+// would obscure rather than clarify. Behavior-preserving allow.
+#[allow(clippy::type_complexity)]
 fn relation_endpoint_constraints(
     rel: &EdgeRelation,
 ) -> (fn(NodeKind) -> bool, fn(NodeKind) -> bool) {

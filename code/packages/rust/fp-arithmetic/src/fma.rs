@@ -120,16 +120,16 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
     // ===================================================================
     let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
     let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-    let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-    let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+    let mut mant_a = bits_msb_to_int(&a.mantissa);
+    let mut mant_b = bits_msb_to_int(&b.mantissa);
 
     if exp_a != 0 {
-        mant_a = (1u64 << fmt.mantissa_bits) | mant_a;
+        mant_a |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_a = 1;
     }
     if exp_b != 0 {
-        mant_b = (1u64 << fmt.mantissa_bits) | mant_b;
+        mant_b |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_b = 1;
     }
@@ -152,10 +152,10 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
     // Step 2: Align c's mantissa to the product's exponent
     // ===================================================================
     let mut exp_c = bits_msb_to_int(&c.exponent) as i32;
-    let mut mant_c = bits_msb_to_int(&c.mantissa) as u64;
+    let mut mant_c = bits_msb_to_int(&c.mantissa);
 
     if exp_c != 0 {
-        mant_c = (1u64 << fmt.mantissa_bits) | mant_c;
+        mant_c |= 1u64 << fmt.mantissa_bits;
     } else {
         exp_c = 1;
     }
@@ -170,18 +170,17 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
         c_aligned = mant_c >> ((-c_scale_shift) as u32);
     }
 
-    let result_exp: i32;
-    if exp_diff >= 0 {
+    let result_exp = if exp_diff >= 0 {
         // Clamp shift to avoid overflow — if exp_diff >= 64, the value
         // is shifted entirely to zero (it's too small to contribute).
         let shift = (exp_diff as u32).min(63);
         c_aligned >>= shift;
-        result_exp = product_exp;
+        product_exp
     } else {
         let shift = ((-exp_diff) as u32).min(63);
         product >>= shift;
-        result_exp = exp_c;
-    }
+        exp_c
+    };
     let mut result_exp = result_exp;
 
     // ===================================================================
@@ -240,7 +239,12 @@ pub fn fp_fma(a: &FloatBits, b: &FloatBits, c: &FloatBits) -> FloatBits {
 
         result_mant >>= rp;
 
-        // Round to nearest even
+        // Round to nearest even. The two `+= 1` arms are intentionally kept
+        // separate for clarity: the first rounds up because the remainder is
+        // more than half (round or sticky set); the second rounds up because
+        // the remainder is exactly half and the mantissa is odd (round-to-even).
+        // They happen to take the same action, so allow the identical-blocks lint.
+        #[allow(clippy::if_same_then_else)]
         if guard == 1 {
             if round_bit == 1 || sticky == 1 {
                 result_mant += 1;

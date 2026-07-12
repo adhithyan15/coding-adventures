@@ -141,7 +141,7 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
     if show_frame == 0 {
         return Err("VP8: show_frame must be 1".to_string());
     }
-    if &data[3..6] != &[0x9D, 0x01, 0x2A] {
+    if data[3..6] != [0x9D, 0x01, 0x2A] {
         return Err("VP8: invalid keyframe start code".to_string());
     }
 
@@ -176,8 +176,8 @@ pub fn decode(data: &[u8]) -> Result<PixelContainer, String> {
 fn encode_first_partition(
     width: u16, height: u16, qp: u8, pixels: &PixelContainer,
 ) -> (Vec<u8>, Vec<bool>) {
-    let mb_cols = ((width  as u32) + 15) / 16;
-    let mb_rows = ((height as u32) + 15) / 16;
+    let mb_cols = (width as u32).div_ceil(16);
+    let mb_rows = (height as u32).div_ceil(16);
 
     let mut enc = BoolEncoder::new();
 
@@ -279,8 +279,8 @@ fn decode_first_partition(
     let mb_no_skip = dec.read_bit(128);
     let _prob_skip_false = if mb_no_skip { dec.read_bits(8) as u8 } else { 0 };
 
-    let mb_cols = (width  + 15) / 16;
-    let mb_rows = (height + 15) / 16;
+    let mb_cols = width.div_ceil(16);
+    let mb_rows = height.div_ceil(16);
     let num_mb  = (mb_cols * mb_rows) as usize;
 
     let mut mb_skips = Vec::with_capacity(num_mb);
@@ -349,8 +349,8 @@ fn compute_mb_skips(
 fn encode_dct_partition(
     pixels: &PixelContainer, qp: u8, mb_skips: &[bool],
 ) -> Vec<u8> {
-    let mb_cols = (pixels.width  + 15) / 16;
-    let mb_rows = (pixels.height + 15) / 16;
+    let mb_cols = pixels.width.div_ceil(16);
+    let mb_rows = pixels.height.div_ceil(16);
     let y_step  = quant::dc_quant_step(qp);
     let uv_step = quant::uv_quant_step(qp);
 
@@ -404,8 +404,8 @@ fn decode_dct_partition(
     width: u32, height: u32, qp: u8,
     mb_skips: &[bool],
 ) -> Result<PixelContainer, String> {
-    let mb_cols = (width  + 15) / 16;
-    let mb_rows = (height + 15) / 16;
+    let mb_cols = width.div_ceil(16);
+    let mb_rows = height.div_ceil(16);
     let y_step  = quant::dc_quant_step(qp);
     let uv_step = quant::uv_quant_step(qp);
 
@@ -547,6 +547,9 @@ fn update_chroma_context(top_row: &mut [i32], left_col: &mut [i32], mb_col: u32,
 }
 
 /// Fill a 16×16 macroblock with the reconstructed YCbCr values, converted to RGBA.
+// Each argument is a distinct pixel-geometry / color input; grouping them into a
+// struct would not clarify this low-level fill routine, so the arg-count lint is allowed.
+#[allow(clippy::too_many_arguments)]
 fn fill_macroblock(
     rgba: &mut [u8], width: u32, height: u32,
     mb_row: u32, mb_col: u32, y: u8, cb: u8, cr: u8,
@@ -581,7 +584,7 @@ fn encode_coeff(enc: &mut BoolEncoder, coeff: i32) {
     enc.write_bit(false, 128);        // not zero
     enc.write_bit(coeff < 0, 128);    // sign
     let mag = coeff.unsigned_abs();
-    enc.write_bits((mag - 1) as u32, 16); // magnitude - 1
+    enc.write_bits(mag - 1, 16); // magnitude - 1
 }
 
 fn decode_coeff(dec: &mut BoolDecoder) -> i32 {

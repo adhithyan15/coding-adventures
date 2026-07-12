@@ -5,9 +5,9 @@
 //! memory allocation, host transfers, kernel launches, simulation, and stats.
 
 use device_simulator::{
-    AcceleratorDevice, DeviceTrace, KernelDescriptor,
+    AcceleratorDevice, KernelDescriptor,
     NvidiaGPU, AmdGPU, GoogleTPU, IntelGPU, AppleANE,
-    SimpleGlobalMemory, GlobalMemoryStats, MemoryTransaction,
+    SimpleGlobalMemory,
 };
 use gpu_core::opcodes::{halt, limm};
 

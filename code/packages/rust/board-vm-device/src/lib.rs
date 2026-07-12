@@ -1561,6 +1561,7 @@ impl<'a> DeviceDescriptor<'a> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 struct UploadState {
     program_id: u16,
     expected_len: usize,
@@ -1569,17 +1570,6 @@ struct UploadState {
     active: bool,
 }
 
-impl Default for UploadState {
-    fn default() -> Self {
-        Self {
-            program_id: 0,
-            expected_len: 0,
-            expected_crc32: 0,
-            received_len: 0,
-            active: false,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 struct BackgroundRun {
@@ -2337,9 +2327,9 @@ fn protocol_status_from_runtime(status: RuntimeRunStatus) -> ProtocolRunStatus {
 }
 
 fn limit_background_budget(instruction_budget: u32) -> u32 {
-    instruction_budget
-        .max(1)
-        .min(DEFAULT_BACKGROUND_INSTRUCTION_SLICE)
+    // Equivalent to `.max(1).min(DEFAULT_…)`; `DEFAULT_BACKGROUND_INSTRUCTION_SLICE`
+    // (13) is always ≥ 1, so `clamp`'s min ≤ max precondition holds.
+    instruction_budget.clamp(1, DEFAULT_BACKGROUND_INSTRUCTION_SLICE)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

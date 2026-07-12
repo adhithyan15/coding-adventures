@@ -17,6 +17,11 @@
 //! yet, so the tagged form is exercised no-substitution here, matching the
 //! template bridge's scope.)
 
+// Literate-programming test docs: intentional prose paragraphs following lists.
+// clippy 1.97's doc-list-continuation lints flag them as mis-indented list
+// items; the formatting is deliberate, so allow crate-wide for this test.
+#![allow(clippy::doc_lazy_continuation, clippy::doc_overindented_list_items)]
+
 use std::process::Command;
 
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");

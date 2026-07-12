@@ -451,6 +451,26 @@ describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
     expect(callMethod([1], "respond_to?", "chunk_while")).toBe(true);
   });
 
+  it("tally (occurrence counts as a first-seen-ordered Hash)", () => {
+    // `tally` → a Map counting occurrences, keyed in first-seen order.
+    const t = callMethod(["a", "b", "a", "c", "a"], "tally") as Map<Val, Val>;
+    expect(t).toBeInstanceOf(Map);
+    expect(t.get("a")).toBe(3);
+    expect(t.get("b")).toBe(1);
+    expect(t.get("c")).toBe(1);
+    expect(t.size).toBe(3);
+    // First-seen key order is preserved (a, b, c).
+    expect([...t.keys()]).toEqual(["a", "b", "c"]);
+    // Integer elements count too.
+    const ti = callMethod([1, 1, 2, 3, 3, 3], "tally") as Map<Val, Val>;
+    expect([...ti.entries()]).toEqual([[1, 2], [2, 1], [3, 3]]);
+    // Empty array → empty Hash.
+    const te = callMethod([], "tally") as Map<Val, Val>;
+    expect(te.size).toBe(0);
+    // respond_to? advertises it.
+    expect(callMethod([1], "respond_to?", "tally")).toBe(true);
+  });
+
   it("find/detect and flat_map", () => {
     expect(callMethod([1, 2, 3, 4], "find", new Closure((x: Val) => x > 2))).toBe(3);
     expect(callMethod([1, 2], "detect", new Closure((x: Val) => x > 9))).toBeNull();
