@@ -557,6 +557,7 @@ const ARRAY_METHODS = new Set<string>([
   "zip",
   "each_slice",
   "each_cons",
+  "tally",
 ]);
 
 // Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
@@ -1059,6 +1060,18 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
       const out: Val[] = [];
       for (let i = 0; i + n <= recv.length; i++) out.push(recv.slice(i, i + n));
       return out;
+    }
+    case "tally": {
+      // `tally` — a Hash counting how many times each element occurs, keyed in
+      // first-seen order.  `["a","b","a","c","a"].tally` →
+      // `{"a"=>3, "b"=>1, "c"=>1}`; an empty array yields `{}`.  A Hash is a JS
+      // `Map` (insertion-ordered), the same shape `group_by` returns, printed
+      // `{k=>v}` by `rubyInspect`.  Keys compare by JS SameValueZero, which
+      // agrees with Ruby `eql?`/hash on the scalar elements this covers;
+      // mirrors the Go/Rust/Python/JS references.
+      const counts = new Map<Val, Val>();
+      for (const x of recv) counts.set(x, ((counts.get(x) as number) ?? 0) + 1);
+      return counts;
     }
     default:
       return MISS;
