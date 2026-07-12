@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-logical-assign/input/a.js
+--compilation_level
+SIMPLE

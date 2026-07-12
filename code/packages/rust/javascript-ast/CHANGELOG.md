@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.37.0] - 2026-07-11
+
+### Added — CLOC12.183: ES2021 logical assignment operators
+
+Added three variants to `AssignmentOperator`, retiring the "Phase 5" TODO:
+`LogicalAndEq` (`&&=`), `LogicalOrEq` (`||=`), and `NullishCoalescingEq`
+(`??=`), each with its ESTree serde `rename`. These short-circuiting operators
+were the last unmodelled compound-assignment forms; the parser bridge and
+emitter now recognise them (see those crates' 0.47.0 / 0.42.0 entries).
+
 ## [0.36.0] - 2026-07-11
 
 ### Added — CLOC12.177 PR1: private class-member names (`#x` / `#m()`)

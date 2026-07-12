@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.22] - 2026-07-11
+
+### Added — CLOC12.183: ES2021 logical assignment operators end-to-end
+
+Picks up javascript-ast 0.37.0 / javascript-parser 0.47.0 / closure-emitter
+0.42.0, which add and round-trip the `&&=` / `||=` / `??=` operators. These now
+survive the full closurec pipeline instead of dropping to WHITESPACE_ONLY.
+New e2e diff fixture `tests/diff/simple-logical-assign/`:
+`x ||= 1 + 2;` → `x||=3;` at SIMPLE.
+
+The fixture proves two things at once: the `||=` operator round-trips, and the
+SIMPLE pipeline descends INTO the assignment's right-hand side (`1 + 2` folds to
+`3`). Before this change the operator declined, dropping the file to
+WHITESPACE_ONLY (`x||=1+2;`).
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.21] - 2026-07-11
 
 ### Added — CLOC12.182: private generator methods end-to-end

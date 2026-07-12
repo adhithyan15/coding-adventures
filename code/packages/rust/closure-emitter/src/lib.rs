@@ -2698,6 +2698,10 @@ fn assignment_op_str(op: AssignmentOperator) -> &'static str {
         BitOrEq => "|=",
         BitXorEq => "^=",
         BitAndEq => "&=",
+        // ES2021 logical assignment operators (CLOC12.183).
+        LogicalAndEq => "&&=",
+        LogicalOrEq => "||=",
+        NullishCoalescingEq => "??=",
     }
 }
 
@@ -3536,6 +3540,20 @@ mod tests {
         );
         let out = emit_default(program().with_body(vec![stmt(e)]));
         assert_eq!(out.code, "a?b=1:c=2;");
+    }
+
+    #[test]
+    fn logical_assignment_operators_emit() {
+        // ES2021 `&&=` / `||=` / `??=` round-trip through the emitter (CLOC12.183).
+        for (op, s) in [
+            (AssignmentOperator::LogicalAndEq, "a&&=b;"),
+            (AssignmentOperator::LogicalOrEq, "a||=b;"),
+            (AssignmentOperator::NullishCoalescingEq, "a??=b;"),
+        ] {
+            let e = assign("a", op, ident("b"));
+            let out = emit_default(program().with_body(vec![stmt(e)]));
+            assert_eq!(out.code, s, "operator {op:?}");
+        }
     }
 
     #[test]

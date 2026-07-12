@@ -361,8 +361,15 @@ pub enum AssignmentOperator {
     #[serde(rename = "|=")] BitOrEq,
     #[serde(rename = "^=")] BitXorEq,
     #[serde(rename = "&=")] BitAndEq,
-    // Phase 5: LogicalAndEq (&&=), LogicalOrEq (||=),
-    // NullishCoalescingEq (??=) once we have ES2021 in scope.
+    // ES2021 logical assignment operators (CLOC12.183). Unlike the arithmetic /
+    // bitwise compound operators above, these **short-circuit**: `a &&= b` only
+    // assigns `b` when `a` is truthy, `a ||= b` only when `a` is falsy, and
+    // `a ??= b` only when `a` is null/undefined. The minifier never rewrites
+    // across that boundary — it preserves the operator verbatim — so modelling
+    // them here is a faithful round-trip, not a semantic transform.
+    #[serde(rename = "&&=")] LogicalAndEq,
+    #[serde(rename = "||=")] LogicalOrEq,
+    #[serde(rename = "??=")] NullishCoalescingEq,
 }
 
 /// The left-hand-side of an `AssignmentExpression`. Identifier or member

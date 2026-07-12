@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.47.0] - 2026-07-11
+
+### Added — CLOC12.183: bridge ES2021 logical assignment operators
+
+`parse_assignment_op` now recognises `&&=`, `||=`, and `??=`, mapping them to
+the new `AssignmentOperator::LogicalAndEq` / `LogicalOrEq` / `NullishCoalescingEq`
+variants (javascript-ast 0.37.0). These three operators parsed fine but
+previously fell through to `None`, producing an `InternalError`
+("unknown assignment operator") that dropped the whole file to WHITESPACE_ONLY.
+New `logical_assignment_operators_bridge` test confirms all three bridge and a
+neighbouring bitwise `&=` still maps to its own distinct variant.
+
 ## [0.46.0] - 2026-07-11
 
 ### Added — CLOC12.182: bridge private generator methods (`*#m(){}`)
