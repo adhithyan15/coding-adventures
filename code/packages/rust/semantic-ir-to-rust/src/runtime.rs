@@ -1470,6 +1470,8 @@ pub const RUNTIME: &str = r##"mod __sir {
                     // more non-block Array methods
                     | "zip" | "rotate" | "to_h" | "tally"
                     | "take" | "drop" | "values_at"
+                    // consecutive-grouping family
+                    | "each_slice" | "each_cons" | "chunk_while"
             ),
             Value::Map(_) => matches!(
                 name,
@@ -2154,6 +2156,82 @@ pub const RUNTIME: &str = r##"mod __sir {
                     .collect();
                 seq_lit(out)
             }
+            // `each_slice(n)` — consecutive sub-arrays of at most `n` elements
+            // (the last may be shorter).  `[1,2,3,4,5].each_slice(2)` →
+            // `[[1,2],[3,4],[5]]`.  Ruby raises `ArgumentError` for `n <= 0`; the
+            // never-panic floor yields `[]`.  `n` is read via a checked `Int`
+            // match (never `as_i64`, which panics on a non-Int arg).
+            "each_slice" => {
+                let n = match pos.first() {
+                    // Validate in the `usize` domain: a huge positive `n` that
+                    // truncates to 0 on a 32-bit target would otherwise loop
+                    // forever, so `try_from` rejects anything past `usize::MAX`.
+                    Some(Value::Int(v)) if *v > 0 => match usize::try_from(*v) {
+                        Ok(n) if n > 0 => n,
+                        _ => return seq_lit(vec![]),
+                    },
+                    _ => return seq_lit(vec![]),
+                };
+                let snapshot = items_rc.borrow().clone();
+                let mut out = Vec::new();
+                let mut i = 0;
+                while i < snapshot.len() {
+                    let end = (i + n).min(snapshot.len());
+                    out.push(seq_lit(snapshot[i..end].to_vec()));
+                    i += n;
+                }
+                seq_lit(out)
+            }
+            // `each_cons(n)` — every consecutive `n`-element sliding window.
+            // `[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`.  A window larger
+            // than the array (or `n <= 0`) yields `[]`.
+            "each_cons" => {
+                let n = match pos.first() {
+                    // Validate in the `usize` domain: a huge positive `n` that
+                    // truncates to 0 on a 32-bit target would otherwise loop
+                    // forever, so `try_from` rejects anything past `usize::MAX`.
+                    Some(Value::Int(v)) if *v > 0 => match usize::try_from(*v) {
+                        Ok(n) if n > 0 => n,
+                        _ => return seq_lit(vec![]),
+                    },
+                    _ => return seq_lit(vec![]),
+                };
+                let snapshot = items_rc.borrow().clone();
+                let mut out = Vec::new();
+                if snapshot.len() >= n {
+                    for i in 0..=(snapshot.len() - n) {
+                        out.push(seq_lit(snapshot[i..i + n].to_vec()));
+                    }
+                }
+                seq_lit(out)
+            }
+            // `chunk_while { |prev, cur| pred }` — runs of consecutive elements:
+            // the block is called on each ADJACENT pair; while it is truthy the
+            // run continues, and a falsy result starts a new run.
+            // `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` → `[[1,2],[4,5],[7]]`.
+            // An empty array yields `[]`; a single element yields `[[x]]`.  The
+            // entries are snapshotted first so a block that reentrantly mutates
+            // the receiver cannot double-borrow-panic (the never-panic floor).
+            "chunk_while" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    if snapshot.is_empty() {
+                        return seq_lit(vec![]);
+                    }
+                    let mut chunks: Vec<Vec<Value>> = vec![vec![snapshot[0].clone()]];
+                    for i in 1..snapshot.len() {
+                        let prev = snapshot[i - 1].clone();
+                        let cur = snapshot[i].clone();
+                        if truthy(&apply_closure(b, vec![prev, cur.clone()])) {
+                            chunks.last_mut().unwrap().push(cur);
+                        } else {
+                            chunks.push(vec![cur]);
+                        }
+                    }
+                    seq_lit(chunks.into_iter().map(seq_lit).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
             _ => no_method_error(&recv, name),
         }
     }
