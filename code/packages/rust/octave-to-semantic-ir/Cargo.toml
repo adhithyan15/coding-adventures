@@ -1,0 +1,10 @@
+[package]
+name = "octave-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "GNU Octave source -> narrow-waist Semantic IR, via octave-runtime's octavify shim + matlab-to-semantic-ir"
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+matlab-to-semantic-ir = { path = "../matlab-to-semantic-ir" }
+coding-adventures-octave-runtime = { path = "../octave-runtime" }

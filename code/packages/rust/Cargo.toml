@@ -233,6 +233,7 @@ members = [
     "matlab-to-semantic-ir",
     "octave-runtime",
     "octave-repl",
+    "octave-to-semantic-ir",
     "maxima-runtime",
     "maxima-repl",
     "wolfram-lexer",
