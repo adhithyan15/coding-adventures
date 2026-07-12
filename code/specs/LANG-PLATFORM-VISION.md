@@ -17,7 +17,15 @@
 > with the JIT it flies; compiled AOT it produces a self-contained native
 > executable in the class of GraalVM Native Image / .NET NativeAOT — and this
 > holds for *both* statically-typed and dynamically-typed languages. A BASIC
-> program should be able to reach V8-class performance.**
+> program should be able to reach V8-class performance. And because the IIR
+> bridges to our Semantic IR (SIR), any language that compiles to IIR can *also*
+> be transpiled to any language with an SIR backend — write BASIC, get idiomatic
+> Ruby, Python, JavaScript, TypeScript, Go, Rust, or C.**
+
+**No backend is privileged.** Optimization lives in *our own* backend-agnostic
+middle-end, not in any single backend. **LLVM is one target among peers** (WASM,
+JVM, CLR, native, BEAM) — used where it adds value, never a dependency and never a
+constraint on our semantics. "Being fast" must not require shipping LLVM.
 
 That is the whole point of the LANG-VM. Everything below measures the distance
 between that promise and today, and sequences the work to close it.
@@ -39,20 +47,30 @@ dynamic languages). The DX target is **"a language in an afternoon."**
    <lang>-iir-compiler        (the ONLY per-language code you must write)
         │  lowers AST → interpreter_ir::IIRModule   ◄── the NARROW WAIST
         ▼
-   iir-builtin-lowering + type/refinement layer + optimizer passes  (SHARED)
+   iir-builtin-lowering + type/refinement layer                        (SHARED)
+        ▼
+   OPTIMIZING MIDDLE-END      backend-agnostic: SSA opts, inlining, const-prop,   (SHARED)
+        │                     DCE, spec­ialization. The SAME optimizer feeds JIT & AOT.
+        │                     NO backend is privileged; LLVM is not the optimizer.
         │
         ├─────────────► VM (vm-core)         baseline, debuggable, reasonable perf
         │                    │ type feedback (observed_type, deopt profiling)
         │                    ▼
         ├─────────────► JIT (jit-core)       hot functions → specialized native code
         │
-        └─────────────► AOT                  whole program → one native/managed artifact
-                             ├ native  (x86_64-backend / aarch64-backend)   self-contained
-                             ├ LLVM    (iir-to-llvm)                        peak optimization
-                             ├ WASM    (iir-to-wasm)
-                             ├ JVM     (iir-to-jvm-class-file)
-                             ├ CLR     (iir-to-cil-bytecode)
-                             └ BEAM    (iir-to-beam)
+        ├─────────────► AOT                  whole program → one native/managed artifact
+        │                    ├ native  (x86_64-backend / aarch64-backend)   self-contained
+        │                    ├ LLVM    (iir-to-llvm)      ── ONE peer backend, not the optimizer
+        │                    ├ WASM    (iir-to-wasm)
+        │                    ├ JVM     (iir-to-jvm-class-file)
+        │                    ├ CLR     (iir-to-cil-bytecode)
+        │                    └ BEAM    (iir-to-beam)
+        │
+        └─────────────► IIR → SIR bridge  (iir-to-semantic-ir, NEW)   ── TRANSPILATION ──►
+                             │  lifts IIR → semantic_ir::SIR
+                             ▼
+                        SIR backends:  Ruby · Python · JavaScript · TypeScript · Go · Rust · C
+                        (any IIR-frontend language → any SIR-target language, automatically)
 
    Tooling, all driven off the SAME grammar + IIR (mostly FREE):
         LSP (LS00–LS02) · DAP debugger (dap-adapter-core, debug-sidecar, LANG06/13/14/25)
@@ -140,19 +158,59 @@ Image / CLR NativeAOT — self-contained, fast-starting, small — for static *a
 dynamic languages.
 
 **AOT state:** the direct-native backends (`x86_64-backend`/`aarch64-backend`) emit
-*correct but unoptimized* machine code (no SSA/regalloc/inlining/scheduling); the
-`iir-to-llvm` path gets LLVM `-O`-class optimization but isn't the default framing.
-Dynamic-language AOT (the hard GraalVM-style case) has no whole-program
-specialization/closed-world pass yet.
+*correct but unoptimized* machine code (no SSA/regalloc/inlining/scheduling). Today
+the only way to get optimized native output is to route through `iir-to-llvm` and
+lean on LLVM's `-O` passes — **but that is exactly the dependency we are rejecting**
+(§0: LLVM is one peer backend, not our optimizer). The real gap is therefore a
+**shared, backend-agnostic optimizing middle-end** (SSA-form IIR/CIR, inlining,
+const-prop, DCE, register-allocation-agnostic scheduling, specialization) that
+*every* backend consumes — so a native binary is fast because *our* optimizer made
+it fast, whether or not LLVM is on the machine. Dynamic-language AOT (the hard
+GraalVM-style case) additionally needs a whole-program closed-world specialization
+pass, which does not exist yet.
+
+### Promise E — "Universal transpilation (write any language, get any language)"
+
+**Bar:** any language with an **IIR frontend** (BASIC, Nib, ALGOL, Oct, Brainfuck,
+Twig, McCarthy, …) can be **transpiled to source** in any language with an **SIR
+backend** (Ruby, Python, JavaScript, TypeScript, Go, Rust, C) — automatically,
+without writing a per-language transpiler.
+
+**State: new — the bridge does not exist yet.** The two IRs and their emitters are
+built independently today: the **IIR** side (interpreter IR → machine code, this
+platform) and the **SIR** side (semantic IR → source; frontends
+`{javascript,python,ruby,twig}-to-semantic-ir`, backends
+`semantic-ir-to-{c,go,javascript,python,rust,typescript}`). **Twig already has both
+a `twig-ir-compiler` (→ IIR) and a `twig-to-semantic-ir` (→ SIR)** — proving a
+language *can* be dual-path, but requiring a hand-written second frontend.
+
+**The unlock is one bridge: `iir-to-semantic-ir`.** Lift an `IIRModule` to a
+`semantic_ir::SIR` module once, and *every* IIR-frontend language inherits *every*
+SIR target — write BASIC, get Ruby/Python/Go/Rust/C source, for free. This unifies
+the two narrow waists into one platform: a single frontend (grammar + IIR lowering)
+yields **both** native execution (VM/JIT/AOT) **and** source-to-source
+transpilation.
+
+**Gap / hard part:** IIR is *lower* than SIR (it has lowered some source structure —
+a `for` may be conditional jumps, a high-level call may be a `call_builtin`). Lifting
+IIR → SIR is therefore correctness-first (reconstruct structured control flow, map
+ops to SIR nodes) with idiom-fidelity as a follow-on — and may motivate IIR carrying
+a little more semantic metadata (loop/collection provenance) so the lift emits
+*idiomatic* target code, not just correct code. See §3.6.
 
 ---
 
 ## 3. The hard problems (named honestly)
 
-1. **Native codegen quality.** Two honest tiers: **LLVM = peak** (let LLVM do
-   SSA/regalloc/inlining/scheduling), **direct-native = portable / zero-dependency**.
-   The direct backends will never match LLVM on raw throughput; that's fine if the
-   platform *routes* to LLVM when available and keeps direct-native for portability.
+1. **A backend-agnostic optimizing middle-end (the LLVM-independence problem).** We
+   deliberately do *not* want optimization quality to depend on LLVM. So the platform
+   needs its *own* optimizer over the shared IIR/CIR — SSA form, inlining,
+   const/copy-propagation, DCE, loop and scalar opts, and specialization — feeding
+   *all* backends (native, WASM, JVM, CLR, and yes LLVM as a peer). The direct-native
+   backends then emit already-optimized code; LLVM, when present, is a peer target
+   that may add its own final lowering, never the source of our speed. This is the
+   Cranelift/GraalVM philosophy — own your middle-end — and it is the single largest
+   build on the "fast" promise.
 2. **A native JIT backend.** The direct-native emitters already produce machine
    code — they are not yet wired into the JIT's `Backend` trait. Bridging them is
    the single highest-leverage step toward "the JIT flies."
@@ -171,6 +229,14 @@ specialization/closed-world pass yet.
    a minimal runtime. Reaching that for our dynamic languages means a
    whole-program analysis pass + profile-guided specialization at AOT time + a
    packaged GC'd runtime — a major, distinct effort from the JIT.
+6. **The IIR → SIR lift (§2 Promise E).** Bridging the two IRs is a *lift* (lower →
+   higher), the harder direction: IIR has already lowered some source structure, so
+   reconstructing SIR-level semantics is correctness-first (rebuild structured
+   control flow, map ops), with *idiomatic* output as a second stage. The cleanest
+   design likely has the **frontend annotate IIR with semantic provenance** (this
+   loop was a `for`; this call was a method; this was a collection op) so the lift
+   emits idiomatic target code, not decompiler-grade output. A design spec
+   (`iir-to-semantic-ir.md`) owns this.
 
 ---
 
@@ -196,15 +262,31 @@ make the JIT emit *native code* before making it *optimal*.**
 - *Proof gate:* a hot numeric loop (e.g. BASIC `FOR`) within a small constant factor
   of an equivalent V8 run.
 
-### Phase 2 — Optimizing AOT ("GraalVM/NativeAOT-class static executables")
-- **Formalize the two AOT tiers:** LLVM `-O2/-O3` as the default *optimized* path,
-  direct-native as the *portable* path; one flag chooses.
-- **Whole-program optimization** for the static languages (inlining, DCE, const-prop
-  at the IIR level before backend).
+### Phase 2 — The backend-agnostic optimizer ("GraalVM/NativeAOT-class, no LLVM lock-in")
+- **Build our own optimizing middle-end** over the shared IIR/CIR — SSA form,
+  inlining, const/copy-prop, DCE, loop/scalar opts, specialization — that **every**
+  backend consumes. This is the deliberate LLVM-independence: our native binaries are
+  fast because *our* optimizer made them fast. LLVM stays a peer backend that may add
+  final lowering, never a required dependency.
+- **Shared JIT/AOT optimizer** — the same middle-end serves the JIT's hot-path
+  compile and the AOT whole-program compile (the JIT's existing `CIROptimizer` is the
+  seed).
 - **End-to-end native-AOT debug info** (`LANG14/25`) so optimized native binaries are
   still debuggable.
 - *Proof gate:* a static-language program AOT'd to a self-contained native binary
-  with start-up + throughput in the NativeAOT class.
+  (via the direct-native backend, **LLVM absent**) with start-up + throughput in the
+  NativeAOT class.
+
+### Phase T — IIR↔SIR bridge (universal transpilation) — *parallel track*
+Independent of the performance phases; can proceed alongside Phase 0–2.
+- **`iir-to-semantic-ir` bridge** — lift an `IIRModule` → `semantic_ir::SIR`,
+  correctness-first, so every IIR-frontend language gains every SIR target
+  (Ruby/Python/JS/TS/Go/Rust/C).
+- **Semantic-provenance annotations on IIR** (loop/method/collection origin) so the
+  lift emits *idiomatic* target source, not decompiler-grade code.
+- *Proof gate:* a BASIC (or Nib/ALGOL) program transpiles to runnable Ruby **and**
+  Go **and** Rust that produces the same result — verified by running the emitted
+  source. (`iir-to-semantic-ir.md` design spec first.)
 
 ### Phase 3 — Dynamic speed ("V8-class dynamic & BASIC")
 - **Type-feedback inline caches** on the dynamic (`ref<any>`) dispatch path, driven
@@ -240,6 +322,11 @@ make the JIT emit *native code* before making it *optimal*.**
 - **JIT:** a hot numeric loop within ~2–3× of V8; **AOT (static):** within the
   NativeAOT class on start-up + throughput; **AOT/JIT (dynamic):** within a small
   constant factor of V8 on a specialized hot path.
+- **Transpilation:** an IIR-frontend program (e.g. BASIC) emits runnable source in
+  every SIR target (Ruby/Python/JS/TS/Go/Rust/C) that produces the same result —
+  verified by running the emitted source.
+- **LLVM-independence:** the optimized-AOT proof gate passes with LLVM *not
+  installed* — our middle-end, not LLVM, is the source of native speed.
 - **Rock-solid:** GC'd (no leaks), and the shared IIR + passes carry property-test /
   fuzz coverage (the narrow waist's blast radius demands it).
 
@@ -247,8 +334,9 @@ make the JIT emit *native code* before making it *optimal*.**
 
 ## 6. Non-goals & sequencing discipline
 
-- Not a *new* optimizing compiler backend — **reuse LLVM** for peak native; the
-  direct-native backends stay for portability, not to out-optimize LLVM.
+- **No LLVM lock-in.** Optimization lives in *our* backend-agnostic middle-end;
+  LLVM is one peer backend, never a dependency and never a constraint on our IR
+  semantics. "Fast" must hold with LLVM absent.
 - Do not chase dynamic *speed* (Phase 3) before dynamic *correctness* (Phase 0) and a
   native JIT (Phase 1) — a fast wrong answer is worthless, and ICs need a native
   tier to specialize into.
