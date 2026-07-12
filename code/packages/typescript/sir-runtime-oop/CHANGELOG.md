@@ -2,6 +2,20 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.25] - 2026-07-12
+
+### Added
+
+- **`Array#minmax`** — the FINAL backend of the `minmax` cross-backend cascade
+  (Python reference #8092, Go #8098, Rust #8103, JS #8106), completing it across
+  all five backends.
+  - `minmax` (`arrayMethod` non-block + `ARRAY_METHODS`) → the two-element array
+    `[min, max]` in one pass, via `<`/`>` (the same comparison the `min`/`max`
+    arms use). `[3,1,2].minmax` → `[1, 3]`; `["b","a","c"].minmax` →
+    `["a", "c"]`. An empty array yields `[null, null]` (Ruby `[nil, nil]` — no
+    smallest/largest element), matching the Go/Rust/Python/JS references.
+  - `respond_to?("minmax")` now reports `true`.
+
 ## [0.1.24] - 2026-07-11
 
 ### Added
