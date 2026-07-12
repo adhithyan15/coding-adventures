@@ -112,11 +112,24 @@ pub fn compile_source(source: &str, module_name: &str)
   existing `octavify` source-rewrite shim, then delegate to
   `matlab-to-semantic-ir::compile_source`. Mirrors how `octave-runtime`
   itself reuses `matlab-runtime` wholesale today (no new grammar).
-- **`wolfram-to-semantic-ir`** — walks the `wolfram-parser` CST, emits SIR23
-  (symbolic/pattern domain) nodes. Reuses the existing surface-to-head
-  desugaring table already in `wolfram-runtime/src/lower.rs` (`+`→`Add`,
-  `*`→`Mul`, `/.`→ReplaceAll, etc.) but targets `semantic_ir::Expr` instead
-  of `symbolic_ir::IRNode`.
+- **`wolfram-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the `wolfram-parser`
+  CST, emits SIR23 (symbolic/pattern domain) nodes. Reuses the existing
+  surface-to-head desugaring table already in `wolfram-runtime/src/lower.rs`
+  (`+`→`Add`, `*`→`Mul`, etc.) but targets `semantic_ir::Expr` instead of
+  `symbolic_ir::IRNode`. Adopts one design decision beyond what this section
+  originally sketched: **every** Wolfram construct — not just patterns and
+  rules — lowers to symbolic *data* (`SymApply`/`SymSymbol`), including
+  ordinary arithmetic and `=`/`:=` assignment; there is no host-language
+  variable binding at all in this frontend's output (see `src/lower.rs`'s
+  module doc comment for why this is necessary, not just convenient, to
+  compile an *uncomputed* function body like `f[x_] := x + 1`). One
+  consequence: because every Wolfram program, even bare literal arithmetic,
+  therefore emits at least one SIR23 node, no lowered module currently
+  executes end-to-end through any backend (`sir-runtime-symbolic` does not
+  exist yet) — unlike `matlab-to-semantic-ir`'s purely-literal subset, which
+  can. Covers the full grammar `wolfram-parser` accepts (the W-6/W-11/W-21
+  operator sugar included), since nothing here forces a MATLAB-style
+  narrower cut.
 - **`macsyma-to-semantic-ir`** — walks the `macsyma-parser` CST using the
   same rule-name dispatch already proven in `macsyma-compiler` (`"assign"`,
   `"additive"`, `"postfix"`, …), emits SIR23 nodes.
