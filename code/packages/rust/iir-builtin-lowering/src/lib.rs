@@ -120,6 +120,7 @@ pub mod symbol_intern;
 pub mod global_io;
 pub mod closure;
 pub mod dynamic_arith;
+pub mod list_ops;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -164,6 +165,7 @@ pub use global_io::lower_global_io;
 pub use closure::lower_closure_builtins;
 pub use dynamic_arith::lower_dynamic_arith;
 pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
+pub use list_ops::lower_list_ops;
 
 use interpreter_ir::IIRModule;
 
