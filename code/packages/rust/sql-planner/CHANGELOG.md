@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.4] - Unreleased
+
+### Added
+
+- **`LIMIT off, count` planning (MySQL shorthand).** `plan_limit` now detects
+  the comma form (sql-parser 0.1.5) and swaps the operands: in `LIMIT o, c`
+  the first number is the offset and the second is the count, the reverse of
+  `LIMIT c OFFSET o`. Both spellings now produce the identical `Limit { count,
+  offset }` plan, so `LIMIT 1, 2` and `LIMIT 2 OFFSET 1` return the same rows.
+  The rewrite collects the numeric operands positionally and maps them onto
+  `(count, offset)` per the detected form; the `LIMIT -1` "no limit" sign
+  handling for the `OFFSET` form is preserved.
+
 ## [0.2.3] - Unreleased
 
 ### Fixed

@@ -327,6 +327,8 @@ fn process_stmt(
         // here). Its method bodies are separate scopes; leaving them unrenamed
         // is safe (a missed optimisation, never unsound).
         Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration binds no leaf-function params to rename here.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
         Statement::Tagged(t) => process_tagged(t, nodes_touched, renames),
     }
 }
@@ -461,6 +463,9 @@ fn stmt_has_function(stmt: &Statement) -> bool {
         // method could capture/re-scope a name, which would make the leaf
         // rename unsound (see this function's doc comment).
         Statement::Declaration(Declaration::ClassDeclaration(_)) => true,
+        // An import declaration contains no functions and cannot re-scope a
+        // leaf binding, so it does not disable the leaf rename.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
         Statement::Tagged(t) => match t {
             TaggedStatement::BlockStatement(b) => b.body.iter().any(stmt_has_function),
             TaggedStatement::IfStatement(is) => {
@@ -685,6 +690,10 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
             out.push((fd.id.name.clone(), false));
             // Do NOT recurse into fd.body — separate scope.
         }
+        // An import declaration's bound names link to a foreign module's
+        // exports — renaming them would break the cross-module contract, so we
+        // never descend into it.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
         Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
             // A class declaration binds a name — mark it ineligible for local
             // renaming, like a nested function name (renaming a class name
@@ -821,6 +830,10 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             collect_all_idents_block(&fd.body, out);
         }
+        // An import declaration's bound names link to a foreign module's
+        // exports — renaming them would break the cross-module contract, so we
+        // never descend into it.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
         Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
             // Soundness-critical: collect EVERY identifier the class introduces
             // or references — its name, the heritage operand, and each method's
@@ -1262,6 +1275,10 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
         // A leaf function has no nested function declarations, so this arm
         // is unreachable in practice; leave nested functions untouched.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => {}
+        // An import declaration's bound names link to a foreign module's
+        // exports — renaming them would break the cross-module contract, so we
+        // never descend into it.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
         Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
             // Rewrite renamed outer locals used in the heritage operand and
             // inside each method body. The class's own name is marked

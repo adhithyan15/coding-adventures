@@ -934,42 +934,67 @@ fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
 
 /// Parse the `limit_clause` and return `(count, offset)`.
 ///
-/// Grammar: `limit_clause = LIMIT [ "-" ] NUMBER [ OFFSET NUMBER ]`
+/// Grammar: `limit_clause = LIMIT [ "-" ] NUMBER [ OFFSET NUMBER | "," NUMBER ]`
 ///
-/// SQLite semantics: `LIMIT -1` means "no limit" (return all rows).
+/// Two tail forms, with the arguments in the OPPOSITE order:
+///
+/// | Written              | count | offset |
+/// |----------------------|-------|--------|
+/// | `LIMIT c`             | `c`   | —      |
+/// | `LIMIT c OFFSET o`    | `c`   | `o`    |
+/// | `LIMIT o , c`         | `c`   | `o`    |  ← MySQL shorthand, arguments swapped
+///
+/// So `LIMIT 1, 2` returns 2 rows starting after the first — identical to
+/// `LIMIT 2 OFFSET 1`. The comma form is a MySQL-compatibility spelling that
+/// SQLite also accepts; the only wrinkle is that the FIRST number is the
+/// offset, not the count. We detect the comma token and swap accordingly.
+///
+/// SQLite semantics: `LIMIT -1` means "no limit" (return all rows). The `-`
+/// sign only applies to the LIMIT count in the `OFFSET` form (`LIMIT -1
+/// OFFSET n`); the comma form takes two plain non-negative numbers.
 fn plan_limit(limit_clause: &GrammarASTNode) -> Result<(Option<i64>, Option<i64>), PlanError> {
-    // Walk the children in order, tracking whether we just saw a MINUS token
-    // (which only applies to the LIMIT count, not the OFFSET value).
-    let children = &limit_clause.children;
-    let mut past_limit_kw = false;
-    let mut pending_minus = false; // sign for the next NUMBER (only for count)
-    let mut count: Option<i64> = None;
-    let mut offset: Option<i64> = None;
+    // A comma anywhere in the clause selects the MySQL `LIMIT off, count` form.
+    let comma_form = limit_clause
+        .children
+        .iter()
+        .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == ","));
 
-    for child in children {
-        match child {
-            ASTNodeOrToken::Token(tok) => match tok.value.as_str() {
-                "LIMIT" => { past_limit_kw = true; }
-                "OFFSET" => { /* next NUMBER is the offset */ }
-                "-" if past_limit_kw && count.is_none() => {
-                    // Unary minus before the LIMIT count (e.g. LIMIT -1).
-                    pending_minus = true;
-                }
+    // Collect the numeric operands in written order, carrying the optional
+    // leading `-` (only meaningful before the first number, i.e. the count in
+    // the OFFSET form). Keywords (LIMIT/OFFSET) and the comma are structural.
+    let mut nums: Vec<i64> = Vec::new();
+    let mut pending_minus = false;
+    for child in &limit_clause.children {
+        if let ASTNodeOrToken::Token(tok) = child {
+            match tok.value.as_str() {
+                "LIMIT" | "OFFSET" | "," => {}
+                "-" if nums.is_empty() => pending_minus = true,
                 _ => {
                     if let Ok(n) = tok.value.parse::<i64>() {
-                        if count.is_none() {
-                            let sign: i64 = if pending_minus { -1 } else { 1 };
-                            count = Some(n * sign);
-                            pending_minus = false;
-                        } else {
-                            offset = Some(n);
-                        }
+                        let sign = if pending_minus && nums.is_empty() { -1 } else { 1 };
+                        // `saturating_mul` rather than `*`: the current grammar
+                        // never feeds an `i64::MIN`-valued token together with a
+                        // leading `-`, so this can't overflow today — but this
+                        // keeps it panic-free even if a future lexer change let
+                        // NUMBER carry a sign.
+                        nums.push(n.saturating_mul(sign));
+                        pending_minus = false;
                     }
                 }
-            },
-            ASTNodeOrToken::Node(_) => {}
+            }
         }
     }
+
+    // Map the operands onto (count, offset) per the form.
+    let (count, offset) = match (comma_form, nums.as_slice()) {
+        // `LIMIT off, count` — first is offset, second is count.
+        (true, [off, cnt]) => (Some(*cnt), Some(*off)),
+        (true, [off]) => (None, Some(*off)), // degenerate `LIMIT n,` — treat n as offset
+        // `LIMIT count [OFFSET off]`.
+        (false, [cnt, off]) => (Some(*cnt), Some(*off)),
+        (false, [cnt]) => (Some(*cnt), None),
+        _ => (None, None),
+    };
 
     Ok((count, offset))
 }
@@ -2633,6 +2658,24 @@ mod tests {
             if let LogicalPlan::Limit { count, offset, .. } = input.as_ref() {
                 assert_eq!(*count, Some(10));
                 assert_eq!(*offset, Some(5));
+            } else {
+                panic!("Expected Limit below Project, got: {input:?}");
+            }
+        } else {
+            panic!("Expected Project root");
+        }
+    }
+
+    /// MySQL shorthand `LIMIT off, count` swaps the arguments: `LIMIT 5, 10`
+    /// means `LIMIT 10 OFFSET 5` (offset 5, count 10) — the reverse of the
+    /// `OFFSET` form. Both spellings must yield the SAME Limit plan.
+    #[test]
+    fn test_select_limit_comma_form() {
+        let plan = plan_ok("SELECT * FROM t ORDER BY name LIMIT 5, 10");
+        if let LogicalPlan::Project { input, .. } = &plan {
+            if let LogicalPlan::Limit { count, offset, .. } = input.as_ref() {
+                assert_eq!(*count, Some(10), "comma form: second number is the count");
+                assert_eq!(*offset, Some(5), "comma form: first number is the offset");
             } else {
                 panic!("Expected Limit below Project, got: {input:?}");
             }

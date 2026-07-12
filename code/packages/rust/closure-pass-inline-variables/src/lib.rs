@@ -385,6 +385,9 @@ fn decl_is_inert(decl: &Declaration) -> bool {
         // declaration site — unlike a function declaration, which only hoists.
         // Conservatively (and correctly) treat it as running code.
         Declaration::ClassDeclaration(_) => false,
+        // An import declaration runs the target module for its side effects, so
+        // it is NOT inert — it can observe/mutate state before a later `const`.
+        Declaration::ImportDeclaration(_) => false,
         Declaration::VariableDeclaration(vd) => vd.declarations.iter().all(|d| match &d.init {
             None => true,
             Some(init) => is_literal(init),
@@ -468,6 +471,9 @@ fn count_decl_names_decl(
         // declare their own locals — count both, mirroring the function
         // declaration arm (name + body-declared names). Counting more names is
         // conservative: it only ever prevents an unsafe inline, never causes one.
+        // An import declaration binds names but holds no expressions to
+        // count/propagate through — nothing to do.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
@@ -634,6 +640,9 @@ fn count_uses_decl(decl: &Declaration, name: &str, count: &mut usize) {
         // count every such use — missing one would let the pass inline/remove
         // `name` while the class still references it (a miscompile). Mirrors the
         // `Expression::ClassExpression` arm of `count_uses_expr`.
+        // An import declaration binds names but holds no expressions to
+        // count/propagate through — nothing to do.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &cd.super_class {
                 count_uses_expr(sup, name, count);
@@ -1022,6 +1031,9 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
         // inspects — the `extends` operand and each method body — so the count
         // and the rewrite stay in lockstep. Mirrors the
         // `Expression::ClassExpression` arm of `propagate_in_expr`.
+        // An import declaration binds names but holds no expressions to
+        // count/propagate through — nothing to do.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &mut cd.super_class {
                 changed |= propagate_in_expr(sup, cand);

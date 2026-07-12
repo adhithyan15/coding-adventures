@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.22.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+rebuild clones the import unchanged, and the "is this statement removable"
+predicate treats an import as a live, side-effecting binding (never dead).
+
 ## [0.21.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`

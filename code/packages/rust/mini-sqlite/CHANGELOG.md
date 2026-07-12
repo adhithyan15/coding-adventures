@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.21 — `LIMIT off, count` MySQL shorthand
+
+`SELECT … LIMIT 1, 2` now parses and runs, returning the same rows as
+`LIMIT 2 OFFSET 1` — SQLite accepts this MySQL-compatibility spelling. The
+catch is the flipped argument order: in the comma form the FIRST number is the
+offset and the SECOND is the count. Grammar accepts `, NUMBER` as a `LIMIT`
+tail (sql-parser 0.1.5); the planner detects the comma and swaps
+offset/count (sql-planner 0.2.4). Codegen and the VM already consume the
+`Limit { count, offset }` plan unchanged, so no lower-layer work was needed.
+Two new differential-oracle cases (`limit_comma_offset_count`,
+`limit_comma_matches_offset`) diff the row window against real bundled SQLite.
+
 ## 0.5.20 — Table alias without the `AS` keyword
 
 `FROM users u` now aliases the table exactly like `FROM users AS u` — SQLite

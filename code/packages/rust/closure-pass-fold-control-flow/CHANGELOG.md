@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.22.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+control-flow predicate reports an import has no foldable control flow, and the
+rebuild clones it unchanged.
+
 ## [0.21.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`

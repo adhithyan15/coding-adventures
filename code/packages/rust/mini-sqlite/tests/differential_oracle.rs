@@ -767,6 +767,28 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT x.v, y.w FROM a x JOIN b y ON x.id = y.id ORDER BY x.v",
     },
+    // MySQL-compatible `LIMIT off, count` shorthand: `LIMIT 1, 2` skips 1 row
+    // then returns 2, identical to `LIMIT 2 OFFSET 1`. The FIRST number is the
+    // offset and the SECOND is the count — the reverse of the OFFSET form —
+    // which the planner swaps. ORDER BY makes the row window deterministic.
+    Case {
+        id: "limit_comma_offset_count",
+        setup: &[
+            "CREATE TABLE t (n INTEGER)",
+            "INSERT INTO t VALUES (1), (2), (3), (4), (5)",
+        ],
+        query: "SELECT n FROM t ORDER BY n LIMIT 1, 2",
+    },
+    // The comma form and the equivalent `LIMIT count OFFSET off` form must
+    // return the identical window — here both mean "skip 2, take 3".
+    Case {
+        id: "limit_comma_matches_offset",
+        setup: &[
+            "CREATE TABLE t (n INTEGER)",
+            "INSERT INTO t VALUES (10), (20), (30), (40), (50), (60)",
+        ],
+        query: "SELECT n FROM t ORDER BY n LIMIT 2, 3",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

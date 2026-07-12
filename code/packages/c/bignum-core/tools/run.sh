@@ -29,3 +29,5 @@ fi
 
 . "$HARNESS/lib/iso-lib.sh"
 iso_build_and_run c bignum_core-tests tests/bignum_core_test.c src/bignum_core.c
+iso_build_and_run c bignum_decimal-tests tests/bignum_decimal_test.c src/bignum_decimal.c src/bignum_core.c
+iso_build_and_run c bignum_rational-tests tests/bignum_rational_test.c src/bignum_rational.c src/bignum_decimal.c src/bignum_core.c

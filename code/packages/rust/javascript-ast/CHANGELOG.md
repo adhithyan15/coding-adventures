@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.39.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: ES-module `import` declarations
+
+New `ImportDeclaration { cv, specifiers, source }` struct and a
+`Declaration::ImportDeclaration(ImportDeclaration)` variant (ESTree
+`ImportDeclaration`), plus the `Declaration::import_declaration` convenience
+constructor. A companion `ImportSpecifier` enum models the three binding shapes:
+`Default(Identifier)` (`import x from …`), `Namespace(Identifier)`
+(`import * as ns from …`), and `Named { imported, local }` (`import { a } from …`
+/ `import { a as c } from …`). A side-effect `import "y"` carries an empty
+`specifiers` vector. The node is **not** yet produced by the parser bridge (a
+follow-up PR wires `convert_import_declaration` together with the
+renaming-soundness gate that imports demand — an imported local name references a
+foreign module's export and must not be renamed); this PR only adds the type so
+the whole pass pipeline can traverse it exhaustively. New
+`import_declaration_all_specifier_kinds_roundtrip` and
+`side_effect_import_has_empty_specifiers` tests.
+
 ## [0.38.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: `with (obj) { … }` statement

@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.15.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arm
+
+Exhaustive-match no-op arm for the new `Declaration::ImportDeclaration` variant in
+`walk_declaration`. Full import-binding scope handling (the specifier idents are
+module-scoped bindings that must not be renamed) lands with the bridge PR.
+
 ## [0.14.0] - 2026-07-12
 
 ### Added — CLOC12.187 PR2a: `with` soundness gate

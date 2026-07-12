@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.87.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` rebuild arm
+
+Exhaustive-match arm for the new `Declaration::ImportDeclaration` variant — an
+import binds foreign-linked names and has no foldable body, so the rebuild clones
+it unchanged.
+
 ## [0.86.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: fold through `WithStatement`

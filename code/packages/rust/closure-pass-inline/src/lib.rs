@@ -681,6 +681,9 @@ fn count_decl_names_decl(
         // A class declaration binds its name, and each method's params + locals
         // are declared names — count all, mirroring the function arm. Counting
         // method params keeps inline-collision detection conservative.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
@@ -1074,6 +1077,9 @@ fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
         // and method bodies — missing one would let the pass inline a callee
         // that is still called from inside the class (a miscompile). Mirrors the
         // `Expression::ClassExpression` arm of `tally_expr`.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &cd.super_class {
                 tally_expr(sup, cand, t);
@@ -1495,6 +1501,9 @@ fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
         // Perform the inline substitution inside a class declaration's heritage
         // operand and method bodies, kept in lockstep with `tally_decl` above.
         // Mirrors the `Expression::ClassExpression` arm of `inline_in_expr`.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &mut cd.super_class {
                 changed |= inline_in_expr(sup, cand);
@@ -2308,6 +2317,9 @@ fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
         }
         // A top-level `class C {}` binds `C` in the program scope, exactly like
         // a top-level function name.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             out.insert(cd.id.name.clone());
         }
@@ -3054,6 +3066,9 @@ fn splice_void_in_decl(
         }
         // Each class method body is a `Vec<Statement>` a void call may live in
         // — splice into every method, mirroring the function-body arm.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => false,
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
@@ -3910,6 +3925,9 @@ fn splice_valued_in_decl(
         }
         // Each class method body is a `Vec<Statement>` a valued call may live
         // in — splice into every method, mirroring the function-body arm.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => false,
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
@@ -4286,6 +4304,9 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
         // Collect identifiers used in a class declaration's heritage operand and
         // method bodies, so an inline never mints a fresh name that collides
         // with one referenced inside the class.
+        // An import declaration has no inlinable body and binds foreign-linked
+        // names — leave it untouched.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &cd.super_class {
                 collect_binding_idents_expr(sup, out);
