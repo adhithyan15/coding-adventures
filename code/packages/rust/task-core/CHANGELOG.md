@@ -90,6 +90,18 @@ All notable changes to `task-core` are documented here.
   and cycle-forming dependency links rejected (cycle checks reuse `directed-graph`).
   `OpError` carries a stable `code()` for the C ABI.
 
+- **View projections** (`projections` module) — the "one model, many views" thesis as
+  pure `&self` queries, each returning plain (serde-friendly) data:
+  - `checklist()` — flattens tasks honouring decision branches (a decision reveals only
+    its answered branch; nothing until answered), with a visited-guard against shared
+    or cyclic references.
+  - `todos()` — flat leaf-task list sorted by deadline then name.
+  - `kanban(workflow)` — cards grouped into status columns (category-ordered), with a
+    leading "No status" column.
+  - `gantt(project_start)` — timeline bars from the CPM schedule, with critical flags.
+  - `flowchart()` — tasks as nodes; dependencies and generic links as labelled edges.
+  - `schedule(project_start)` — convenience wrapper over the scheduler.
+
 ### Notes
 
 - **Architecture correction:** the earlier "TaskCommand reducer" (a Flux/React command
