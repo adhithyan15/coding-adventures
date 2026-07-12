@@ -310,9 +310,11 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
     writeup.
 - **MA-4f — `apl-to-semantic-ir`**, per [`HML01`](HML01-math-to-semantic-ir.md)
   §2 — built in this same wave rather than as a later retrofit.
-- **Next**: J (shares APL's function/operator grammar shape almost
-  wholesale, ASCII-spelled instead of glyph-spelled — the R/S-style "second
-  frontend, same shared grammar shape" reuse), then K/Q per
+- **Next**: J — kickoff spec [`MA06`](MA06-j-language.md) (shares APL's
+  function/operator grammar shape almost wholesale, ASCII-spelled instead
+  of glyph-spelled, plus one genuinely new grammar production for tacit
+  hook/fork trains that this spec's own function/operator split did not
+  need), then K/Q per
   [`HML00`](HML00-historical-math-languages-roadmap.md) Wave 6.
 
 ## §7 References
