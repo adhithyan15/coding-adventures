@@ -542,6 +542,7 @@ const ARRAY_METHODS = new Set<string>([
   "sort",
   "min",
   "max",
+  "minmax",
   "sum",
   "uniq",
   "flatten",
@@ -947,6 +948,21 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
       return recv.length > 0 ? recv.reduce((a: Val, b: Val) => (b < a ? b : a)) : null;
     case "max":
       return recv.length > 0 ? recv.reduce((a: Val, b: Val) => (b > a ? b : a)) : null;
+    case "minmax": {
+      // `minmax` (no block) — the two-element array `[min, max]` in one pass,
+      // via `<`/`>` (the same comparison the `min`/`max` arms use).
+      // `[3,1,2].minmax` → `[1, 3]`.  An empty array yields `[null, null]`
+      // (Ruby `[nil, nil]` — no smallest/largest element), matching the
+      // Go/Rust/Python/JS references' 2-element nil array.
+      if (recv.length === 0) return [null, null];
+      let lo = recv[0];
+      let hi = recv[0];
+      for (let i = 1; i < recv.length; i++) {
+        if (recv[i] < lo) lo = recv[i];
+        if (recv[i] > hi) hi = recv[i];
+      }
+      return [lo, hi];
+    }
     case "sum": {
       let total: Val = args.length > 0 ? args[0] : 0;
       for (const item of recv) total = total + item;
