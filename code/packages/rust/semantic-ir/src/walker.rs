@@ -352,6 +352,41 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
             walk_index_args(v, indices);
         }
 
+        // ── SIR22 addendum: APL primitive operators ─────────────────
+        Expr::Reduce { target, .. } => {
+            v.visit_expr(target);
+        }
+        Expr::Scan { target, .. } => {
+            v.visit_expr(target);
+        }
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            v.visit_expr(lhs);
+            v.visit_expr(rhs);
+        }
+        Expr::Shape { target, .. } => {
+            v.visit_expr(target);
+        }
+        Expr::Reshape { shape, target, .. } => {
+            v.visit_expr(shape);
+            v.visit_expr(target);
+        }
+        Expr::IndexGenerator { count, .. } => {
+            v.visit_expr(count);
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            v.visit_expr(haystack);
+            v.visit_expr(needle);
+        }
+        Expr::Ravel { target, .. } => {
+            v.visit_expr(target);
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            v.visit_expr(lhs);
+            v.visit_expr(rhs);
+        }
+
         // ── SIR26 ──────────────────────────────────────────────────
         Expr::Convert { value, .. } => {
             v.visit_expr(value);
@@ -881,6 +916,180 @@ mod tests {
         };
         c.visit_module(&m);
         assert_eq!(c.ints, 3);
+    }
+
+    // ── SIR22 addendum: APL primitive operator walker tests ──────────
+
+    #[test]
+    fn visitor_walks_reduce_target() {
+        let m = module_with_body_value(Expr::Reduce {
+            op: ElementwiseOpKind::Add,
+            target: Box::new(Expr::IntLit {
+                value: 7,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_scan_target() {
+        let m = module_with_body_value(Expr::Scan {
+            op: ElementwiseOpKind::Add,
+            target: Box::new(Expr::IntLit {
+                value: 7,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_outer_product_lhs_and_rhs() {
+        let m = module_with_body_value(Expr::OuterProduct {
+            op: ElementwiseOpKind::Mul,
+            lhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_shape_target() {
+        let m = module_with_body_value(Expr::Shape {
+            target: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_reshape_shape_and_target() {
+        let m = module_with_body_value(Expr::Reshape {
+            shape: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            target: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_index_generator_count() {
+        let m = module_with_body_value(Expr::IndexGenerator {
+            count: Box::new(Expr::IntLit {
+                value: 5,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_index_of_haystack_and_needle() {
+        let m = module_with_body_value(Expr::IndexOf {
+            haystack: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            needle: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
+    }
+
+    #[test]
+    fn visitor_walks_ravel_target() {
+        let m = module_with_body_value(Expr::Ravel {
+            target: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1);
+    }
+
+    #[test]
+    fn visitor_walks_catenate_lhs_and_rhs() {
+        let m = module_with_body_value(Expr::Catenate {
+            lhs: Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::IntLit {
+                value: 2,
+                span: s(),
+            }),
+            span: s(),
+        });
+        let mut c = Counter {
+            builtins: 0,
+            ints: 0,
+        };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 2);
     }
 
     #[test]

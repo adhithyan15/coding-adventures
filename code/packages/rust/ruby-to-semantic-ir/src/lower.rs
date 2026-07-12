@@ -320,6 +320,29 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
                     .any(|idx| index_arg_references_any_name(idx, names))
         }
 
+        // SIR22 addendum compile-compat stubs: same rationale as the base
+        // SIR22 stubs above — never produced by this frontend today, but
+        // walked structurally regardless.
+        Expr::Reduce { target, .. } => expr_references_any_name(target, names),
+        Expr::Scan { target, .. } => expr_references_any_name(target, names),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+        Expr::Shape { target, .. } => expr_references_any_name(target, names),
+        Expr::Reshape { shape, target, .. } => {
+            expr_references_any_name(shape, names) || expr_references_any_name(target, names)
+        }
+        Expr::IndexGenerator { count, .. } => expr_references_any_name(count, names),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            expr_references_any_name(haystack, names) || expr_references_any_name(needle, names)
+        }
+        Expr::Ravel { target, .. } => expr_references_any_name(target, names),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_references_any_name(lhs, names) || expr_references_any_name(rhs, names)
+        }
+
         // SIR23 compile-compat stubs: same rationale as the SIR22 stubs
         // above — the Ruby frontend never produces any symbolic-expression
         // or pattern/rewrite node today, but every arm still recurses
@@ -4173,6 +4196,36 @@ impl Lowerer {
                 found
             }
 
+            // SIR22 addendum compile-compat stubs: same rationale as the
+            // base SIR22 stubs above.
+            Expr::Reduce { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::Scan { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+            Expr::Shape { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::Reshape { shape, target, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(shape, block_scope);
+                found |= Self::rewrite_yields_in_expr(target, block_scope);
+                found
+            }
+            Expr::IndexGenerator { count, .. } => Self::rewrite_yields_in_expr(count, block_scope),
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                let mut found = Self::rewrite_yields_in_expr(haystack, block_scope);
+                found |= Self::rewrite_yields_in_expr(needle, block_scope);
+                found
+            }
+            Expr::Ravel { target, .. } => Self::rewrite_yields_in_expr(target, block_scope),
+            Expr::Catenate { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
+                found
+            }
+
             // SIR23 compile-compat stubs: same rationale as the SIR22 stubs
             // above — this frontend never emits any symbolic-expression or
             // pattern/rewrite node today, but every arm still recurses into
@@ -4877,6 +4930,32 @@ impl Lowerer {
                     Self::normalize_calls_in_index_arg(idx, ctx);
                 }
             }
+            // SIR22 addendum compile-compat stubs (never emitted by this
+            // frontend): recurse into every child `Expr`, matching the base
+            // SIR22 stubs above.
+            Expr::Reduce { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::Scan { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::Shape { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::Reshape { shape, target, .. } => {
+                Self::normalize_calls_in_expr(shape, ctx);
+                Self::normalize_calls_in_expr(target, ctx);
+            }
+            Expr::IndexGenerator { count, .. } => Self::normalize_calls_in_expr(count, ctx),
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                Self::normalize_calls_in_expr(haystack, ctx);
+                Self::normalize_calls_in_expr(needle, ctx);
+            }
+            Expr::Ravel { target, .. } => Self::normalize_calls_in_expr(target, ctx),
+            Expr::Catenate { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
             // SIR23 compile-compat stubs (never emitted by this frontend):
             // recurse into every child `Expr`, matching the SIR22 stubs
             // above, so a parenless block-method call nested inside one of
@@ -5139,6 +5218,32 @@ impl Lowerer {
                 for idx in indices {
                     Self::collect_bound_names_expr_in_index_arg(idx, out);
                 }
+            }
+            // SIR22 addendum compile-compat stubs (never emitted by this
+            // frontend): recurse into every child `Expr`, matching the base
+            // SIR22 stubs above.
+            Expr::Reduce { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::Scan { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::Shape { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::Reshape { shape, target, .. } => {
+                Self::collect_bound_names_expr(shape, out);
+                Self::collect_bound_names_expr(target, out);
+            }
+            Expr::IndexGenerator { count, .. } => Self::collect_bound_names_expr(count, out),
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                Self::collect_bound_names_expr(haystack, out);
+                Self::collect_bound_names_expr(needle, out);
+            }
+            Expr::Ravel { target, .. } => Self::collect_bound_names_expr(target, out),
+            Expr::Catenate { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
             }
             // SIR23 compile-compat stubs (never emitted by this frontend):
             // recurse into every child `Expr`, matching the SIR22 stubs

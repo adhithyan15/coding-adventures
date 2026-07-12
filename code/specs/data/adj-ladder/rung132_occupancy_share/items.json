@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 132 \u2014 receptor-occupancy share from four stated quantities (a NEW panel: receptor occupancy, the TRANSPOSE of rung-131). rung-131 put a sum over a quotient (a+b)/(c/d); rung-132 flips it to a quotient over a SUM (a/b)/(c+d). From a binding ratio (ligand_amount/receptor_units) divided by a pooled capacity (primary_pool + reserve_pool), compute the occupancy share ((ligand_amount/receptor_units)/(primary_pool+reserve_pool)), the binding ratio (ligand_amount/receptor_units), or the pooled capacity (primary_pool+reserve_pool). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a QUOTIENT OVER A SUM (a/b)/(c+d) (form the ratio, pool the capacity FIRST, then divide the ratio by the whole pool, so (a/b)/(c+d) = a/(b*(c+d)) \u2014 the sum is a single divisor). The divide-by-a-sum slips ride alongside as distractors. The harness matches the scalar to the printed options. The occupancy share is a share (how much binding ratio falls on each unit of pooled capacity), framed as a SHARE so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via / and + \u2014 no constant leaks, and neither the binding ratio, the pooled capacity, nor the occupancy share ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: distributing the division over the pooled sum ((a/b)/c + (a/b)/d, the classic 1/(c+d) != 1/c + 1/d error, a wrong operation) and dropping the sum grouping so only the primary pool divides and the reserve pool is added ((a/b)/c + d, a wrong operation). The core confusion tested is that (a/b)/(c+d) is a/(b*(c+d)), not (a/b)/c + (a/b)/d and not (a/b)/c + d. This rung uses only / and + over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r132osa-01",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 6 on 2 receptor units, spread across a pooled capacity of a primary pool of 2 plus a reserve pool of 4. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(6)\nobserve receptor_units(2)\nobserve primary_pool(2)\nobserve reserve_pool(4)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r132osa-02",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 6 on 2 receptor units, spread across a pooled capacity of a primary pool of 2 plus a reserve pool of 4. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(6)\nobserve receptor_units(2)\nobserve primary_pool(2)\nobserve reserve_pool(4)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r132osa-03",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 6 on 2 receptor units, spread across a pooled capacity of a primary pool of 2 plus a reserve pool of 4. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(6)\nobserve receptor_units(2)\nobserve primary_pool(2)\nobserve reserve_pool(4)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r132osa-04",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 8 on 2 receptor units, spread across a pooled capacity of a primary pool of 3 plus a reserve pool of 7. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(8)\nobserve receptor_units(2)\nobserve primary_pool(3)\nobserve reserve_pool(7)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.9047619047619047,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r132osa-05",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 8 on 2 receptor units, spread across a pooled capacity of a primary pool of 3 plus a reserve pool of 7. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(8)\nobserve receptor_units(2)\nobserve primary_pool(3)\nobserve reserve_pool(7)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.9047619047619047,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r132osa-06",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 8 on 2 receptor units, spread across a pooled capacity of a primary pool of 3 plus a reserve pool of 7. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(8)\nobserve receptor_units(2)\nobserve primary_pool(3)\nobserve reserve_pool(7)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.9047619047619047,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r132osa-07",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 10 on 2 receptor units, spread across a pooled capacity of a primary pool of 4 plus a reserve pool of 5. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(10)\nobserve receptor_units(2)\nobserve primary_pool(4)\nobserve reserve_pool(5)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r132osa-08",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 10 on 2 receptor units, spread across a pooled capacity of a primary pool of 4 plus a reserve pool of 5. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(10)\nobserve receptor_units(2)\nobserve primary_pool(4)\nobserve reserve_pool(5)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r132osa-09",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 10 on 2 receptor units, spread across a pooled capacity of a primary pool of 4 plus a reserve pool of 5. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(10)\nobserve receptor_units(2)\nobserve primary_pool(4)\nobserve reserve_pool(5)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r132osa-10",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 12 on 2 receptor units, spread across a pooled capacity of a primary pool of 5 plus a reserve pool of 3. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(12)\nobserve receptor_units(2)\nobserve primary_pool(5)\nobserve reserve_pool(3)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r132osa-11",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 12 on 2 receptor units, spread across a pooled capacity of a primary pool of 5 plus a reserve pool of 3. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(12)\nobserve receptor_units(2)\nobserve primary_pool(5)\nobserve reserve_pool(3)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r132osa-12",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 12 on 2 receptor units, spread across a pooled capacity of a primary pool of 5 plus a reserve pool of 3. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(12)\nobserve receptor_units(2)\nobserve primary_pool(5)\nobserve reserve_pool(3)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r132osa-13",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 14 on 2 receptor units, spread across a pooled capacity of a primary pool of 4 plus a reserve pool of 7. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(14)\nobserve receptor_units(2)\nobserve primary_pool(4)\nobserve reserve_pool(7)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6363636363636364,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r132osa-14",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 14 on 2 receptor units, spread across a pooled capacity of a primary pool of 4 plus a reserve pool of 7. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(14)\nobserve receptor_units(2)\nobserve primary_pool(4)\nobserve reserve_pool(7)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6363636363636364,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r132osa-15",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 14 on 2 receptor units, spread across a pooled capacity of a primary pool of 4 plus a reserve pool of 7. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(14)\nobserve receptor_units(2)\nobserve primary_pool(4)\nobserve reserve_pool(7)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6363636363636364,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r132osa-16",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 16 on 2 receptor units, spread across a pooled capacity of a primary pool of 6 plus a reserve pool of 7. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(16)\nobserve receptor_units(2)\nobserve primary_pool(6)\nobserve reserve_pool(7)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6153846153846154,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4761904761904763,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r132osa-17",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 16 on 2 receptor units, spread across a pooled capacity of a primary pool of 6 plus a reserve pool of 7. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(16)\nobserve receptor_units(2)\nobserve primary_pool(6)\nobserve reserve_pool(7)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6153846153846154,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4761904761904763,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r132osa-18",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 16 on 2 receptor units, spread across a pooled capacity of a primary pool of 6 plus a reserve pool of 7. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(16)\nobserve receptor_units(2)\nobserve primary_pool(6)\nobserve reserve_pool(7)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6153846153846154,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4761904761904763,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r132osa-19",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 20 on 2 receptor units, spread across a pooled capacity of a primary pool of 3 plus a reserve pool of 4. What is the occupancy share (the binding ratio divided by the pooled capacity)?",
+      "program": "observe ligand_amount(20)\nobserve receptor_units(2)\nobserve primary_pool(3)\nobserve reserve_pool(4)\nlet answer = (ligand_amount / receptor_units) / (primary_pool + reserve_pool)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.833333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r132osa-20",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 20 on 2 receptor units, spread across a pooled capacity of a primary pool of 3 plus a reserve pool of 4. What is the the binding ratio (the ligand amount per receptor unit, the numerator that is divided by the pooled capacity)?",
+      "program": "observe ligand_amount(20)\nobserve receptor_units(2)\nobserve primary_pool(3)\nobserve reserve_pool(4)\nlet answer = ligand_amount / receptor_units\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.833333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r132osa-21",
+      "qtype": "occupancy_share",
+      "stem": "A receptor-occupancy study records a ligand amount of 20 on 2 receptor units, spread across a pooled capacity of a primary pool of 3 plus a reserve pool of 4. What is the the pooled capacity (the primary pool plus the reserve pool, the single divisor the binding ratio is divided by)?",
+      "program": "observe ligand_amount(20)\nobserve receptor_units(2)\nobserve primary_pool(3)\nobserve reserve_pool(4)\nlet answer = primary_pool + reserve_pool\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.4285714285714286,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.833333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

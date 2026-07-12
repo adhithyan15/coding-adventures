@@ -900,6 +900,108 @@ pub enum Expr {
         span: Span,
     },
 
+    // ── SIR22 addendum: APL primitive operators ─────────────────────
+    //
+    // The six node kinds below extend SIR22 to cover the array-family
+    // primitive *operators* that MATLAB has no first-class syntax for
+    // (it would call `sum(x)`/`reshape(x, ...)` etc. as ordinary function
+    // calls, which this repo's MATLAB frontend subset doesn't yet support
+    // at all) but that APL (`apl-runtime`/`apl-parser`, already shipped)
+    // exposes as bare glyphs: `+/A` (reduce), `+\A` (scan), `A∘.×B` (outer
+    // product), `⍴`/`⍳`/`,` (shape-reshape / index-generator-index-of /
+    // ravel-catenate). Each is mapped 1:1 onto an existing op shape —
+    // `array_runtime::ops::{reduce,scan,outer}` for the three that take an
+    // `ElementwiseOpKind`, and `apl-runtime::builtins`'s own bespoke
+    // (non-`BinOp`-shaped) logic for the rest — mirroring the discipline
+    // the base SIR22 spec states for its own MATLAB-oriented cut. All are
+    // `Pure`, same as every other SIR22 node. No frontend crate consumes
+    // these yet; `apl-to-semantic-ir` is a follow-up task.
+    /// `+/A` (APL reduce) — folds `target` with `op` along its one axis.
+    /// Maps 1:1 onto `array_runtime::ops::reduce(op, a)`. `op` reuses
+    /// `ElementwiseOpKind` even though not every variant is meaningful here
+    /// (e.g. `Pow` has no APL reduce-adverb precedent) — the IR does not
+    /// restrict which `op` a frontend may pick, mirroring how `ElementwiseOp`
+    /// itself places no restriction on which arithmetic op appears there.
+    Reduce {
+        op: ElementwiseOpKind,
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// `+\A` (APL scan) — a running fold of `target` with `op`, emitting one
+    /// result per prefix. Maps 1:1 onto `array_runtime::ops::scan(op, a)`.
+    Scan {
+        op: ElementwiseOpKind,
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// `A∘.×B` (APL outer product) — every pairwise `op` application between
+    /// `lhs`'s and `rhs`'s elements, producing a result of combined rank.
+    /// Maps 1:1 onto `array_runtime::ops::outer(op, a, b)`.
+    OuterProduct {
+        op: ElementwiseOpKind,
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
+    /// Monadic `⍴A` (APL shape) — the dimensions of `target` as a vector.
+    /// Mirrors `apl-runtime::builtins::shape`, which is not itself an
+    /// `array_runtime::ops`/`execute()` primitive (it reads `Array::shape()`
+    /// directly) — the same "bespoke, not `BinOp`-shaped" situation
+    /// `apl-runtime`'s own `NonScalarAtom::Rho` already documents.
+    Shape {
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// Dyadic `A⍴B` (APL reshape) — reinterpret `target`'s data under the new
+    /// dimensions given by `shape`. Mirrors `apl-runtime::builtins::reshape(a,
+    /// b)`, where `a` is the shape vector and `b` is the data being reshaped
+    /// — field names here spell out that role instead of reusing `lhs`/`rhs`,
+    /// since (unlike `MatMul`/`ElementwiseOp`) the two operands are not
+    /// interchangeable in kind.
+    Reshape {
+        shape: Box<Expr>,
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// Monadic `⍳N` (APL iota / index generator) — the vector `0, 1, ..., N-1`
+    /// (this repo's APL implementation; note this is 0-based at the `Array`
+    /// level even though APL's own surface syntax is 1-indexed — see
+    /// `apl-runtime::builtins::index_generator`, which this mirrors 1:1).
+    IndexGenerator {
+        count: Box<Expr>,
+        span: Span,
+    },
+
+    /// Dyadic `A⍳B` (APL index-of / search) — for each element of `needle`,
+    /// its position in `haystack` (or `haystack`'s length if not found).
+    /// Mirrors `apl-runtime::builtins::index_of(a, b)`, where `a` is the
+    /// haystack and `b` is the needle.
+    IndexOf {
+        haystack: Box<Expr>,
+        needle: Box<Expr>,
+        span: Span,
+    },
+
+    /// Monadic `,A` (APL ravel) — flatten `target` to a rank-1 vector.
+    /// Mirrors `apl-runtime::builtins::ravel`.
+    Ravel {
+        target: Box<Expr>,
+        span: Span,
+    },
+
+    /// Dyadic `A,B` (APL catenate) — concatenate `lhs` and `rhs` along their
+    /// ravel order. Mirrors `apl-runtime::builtins::catenate`.
+    Catenate {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
     // ── SIR26 (integer conversions) ──────────────────────────────────
     /// Convert an integer `value` to the target integer type `to` by
     /// two's-complement reinterpretation: reduce modulo `2^width` (mask to
@@ -1043,6 +1145,13 @@ pub enum Expr {
 /// so a backend's `match` has one arm to open and a `match op` inside
 /// it, mirroring how `Scope`/`ParamKind` are small closed enums rather
 /// than a variant explosion on their parent node.
+/// SIR22 shipped `Add, Sub, Mul, Div, Pow` (MATLAB's five dotted
+/// operators). This addendum adds `Max, Min, Eq, Ne, Lt, Le, Ge, Gt`,
+/// mirroring `array_runtime::BinOp`'s own identical extension (added
+/// alongside `apl-runtime` for APL's `⌈`/`⌊` max/min glyphs and its six
+/// comparison glyphs `= ≠ < ≤ ≥ >`, none of which MATLAB's frontend uses
+/// today but which every `ElementwiseOp`/`Reduce`/`Scan`/`OuterProduct`
+/// consumer can already carry without any shape change).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ElementwiseOpKind {
     Add,
@@ -1050,6 +1159,14 @@ pub enum ElementwiseOpKind {
     Mul,
     Div,
     Pow,
+    Max,
+    Min,
+    Eq,
+    Ne,
+    Lt,
+    Le,
+    Ge,
+    Gt,
 }
 
 impl ElementwiseOpKind {
@@ -1062,6 +1179,14 @@ impl ElementwiseOpKind {
             ElementwiseOpKind::Mul => "mul",
             ElementwiseOpKind::Div => "div",
             ElementwiseOpKind::Pow => "pow",
+            ElementwiseOpKind::Max => "max",
+            ElementwiseOpKind::Min => "min",
+            ElementwiseOpKind::Eq => "eq",
+            ElementwiseOpKind::Ne => "ne",
+            ElementwiseOpKind::Lt => "lt",
+            ElementwiseOpKind::Le => "le",
+            ElementwiseOpKind::Ge => "ge",
+            ElementwiseOpKind::Gt => "gt",
         }
     }
 
@@ -1073,6 +1198,14 @@ impl ElementwiseOpKind {
             "mul" => ElementwiseOpKind::Mul,
             "div" => ElementwiseOpKind::Div,
             "pow" => ElementwiseOpKind::Pow,
+            "max" => ElementwiseOpKind::Max,
+            "min" => ElementwiseOpKind::Min,
+            "eq" => ElementwiseOpKind::Eq,
+            "ne" => ElementwiseOpKind::Ne,
+            "lt" => ElementwiseOpKind::Lt,
+            "le" => ElementwiseOpKind::Le,
+            "ge" => ElementwiseOpKind::Ge,
+            "gt" => ElementwiseOpKind::Gt,
             _ => return None,
         })
     }
@@ -1151,6 +1284,15 @@ impl Expr {
             Expr::ElementwiseOp { span, .. } => span,
             Expr::Transpose { span, .. } => span,
             Expr::IndexGet { span, .. } => span,
+            Expr::Reduce { span, .. } => span,
+            Expr::Scan { span, .. } => span,
+            Expr::OuterProduct { span, .. } => span,
+            Expr::Shape { span, .. } => span,
+            Expr::Reshape { span, .. } => span,
+            Expr::IndexGenerator { span, .. } => span,
+            Expr::IndexOf { span, .. } => span,
+            Expr::Ravel { span, .. } => span,
+            Expr::Catenate { span, .. } => span,
             Expr::Convert { span, .. } => span,
             Expr::SymSymbol { span, .. } => span,
             Expr::SymRational { span, .. } => span,
@@ -1195,6 +1337,15 @@ impl Expr {
             Expr::ElementwiseOp { .. } => "elementwise-op",
             Expr::Transpose { .. } => "transpose",
             Expr::IndexGet { .. } => "index-get",
+            Expr::Reduce { .. } => "reduce",
+            Expr::Scan { .. } => "scan",
+            Expr::OuterProduct { .. } => "outer-product",
+            Expr::Shape { .. } => "shape",
+            Expr::Reshape { .. } => "reshape",
+            Expr::IndexGenerator { .. } => "index-generator",
+            Expr::IndexOf { .. } => "index-of",
+            Expr::Ravel { .. } => "ravel",
+            Expr::Catenate { .. } => "catenate",
             Expr::Convert { .. } => "convert",
             Expr::SymSymbol { .. } => "sym-symbol",
             Expr::SymRational { .. } => "sym-rational",
@@ -1775,6 +1926,94 @@ mod tests {
     }
 
     #[test]
+    fn sir22_addendum_apl_primitive_expr_kind_names_and_spans() {
+        // One case per new APL-primitive Expr variant, mirroring
+        // `sir22_expr_kind_names_and_spans` above: confirm `.span()` and
+        // `.kind_name()` are correct for every one of the nine additions.
+        let span = s();
+        let leaf = |v: i64| Expr::IntLit {
+            value: v,
+            span: span.clone(),
+        };
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (
+                Expr::Reduce {
+                    op: ElementwiseOpKind::Add,
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "reduce",
+            ),
+            (
+                Expr::Scan {
+                    op: ElementwiseOpKind::Add,
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "scan",
+            ),
+            (
+                Expr::OuterProduct {
+                    op: ElementwiseOpKind::Mul,
+                    lhs: Box::new(leaf(1)),
+                    rhs: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "outer-product",
+            ),
+            (
+                Expr::Shape {
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "shape",
+            ),
+            (
+                Expr::Reshape {
+                    shape: Box::new(leaf(1)),
+                    target: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "reshape",
+            ),
+            (
+                Expr::IndexGenerator {
+                    count: Box::new(leaf(5)),
+                    span: span.clone(),
+                },
+                "index-generator",
+            ),
+            (
+                Expr::IndexOf {
+                    haystack: Box::new(leaf(1)),
+                    needle: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "index-of",
+            ),
+            (
+                Expr::Ravel {
+                    target: Box::new(leaf(1)),
+                    span: span.clone(),
+                },
+                "ravel",
+            ),
+            (
+                Expr::Catenate {
+                    lhs: Box::new(leaf(1)),
+                    rhs: Box::new(leaf(2)),
+                    span: span.clone(),
+                },
+                "catenate",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
     fn range_with_explicit_step() {
         // 0:2:10 — step is `Some`, distinct from the default-step form.
         let r = Expr::Range {
@@ -1842,6 +2081,14 @@ mod tests {
             ElementwiseOpKind::Mul,
             ElementwiseOpKind::Div,
             ElementwiseOpKind::Pow,
+            ElementwiseOpKind::Max,
+            ElementwiseOpKind::Min,
+            ElementwiseOpKind::Eq,
+            ElementwiseOpKind::Ne,
+            ElementwiseOpKind::Lt,
+            ElementwiseOpKind::Le,
+            ElementwiseOpKind::Ge,
+            ElementwiseOpKind::Gt,
         ] {
             assert_eq!(ElementwiseOpKind::from_name(op.name()), Some(op));
         }

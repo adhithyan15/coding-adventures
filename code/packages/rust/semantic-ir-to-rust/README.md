@@ -140,7 +140,7 @@ rather than panicking:
   **explicitly** on `(receiver type, method name)`, ported from the
   Python/TS `sir-runtime-oop` reference for parity:
   - **Array** (`Seq`): `length`/`size`, `first`, `last`, `push`/`append`,
-    `pop`, `include?`, `reverse`, `sort`, `join`, `map`, `select`/`filter`,
+    `pop`, `include?`, `reverse`, `sort`, `min`/`max`/`minmax`/`sum`, `join`, `map`, `select`/`filter`,
     `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`,
     `each_slice`/`each_cons`, `chunk_while`/`slice_when`.
   - **Hash** (`Map`): `keys`, `values`, `size`/`length`, `empty?`, `has_key?`,

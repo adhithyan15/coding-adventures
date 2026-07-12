@@ -9,7 +9,8 @@
 //!
 //! - `source_language` — frontend identifier (`"twig"`, `"python"`, …)
 //! - `source_version`  — version string of the source language
-//! - `sir_version`     — IR spec version (`"2"` in this build)
+//! - `sir_version`     — IR spec version (see [`CURRENT_SIR_VERSION`] for
+//!   the value this build implements)
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -42,7 +43,20 @@ use std::fmt;
 ///   lowering a Wolfram/Macsyma/Maxima-family CAS language sets
 ///   `metadata.sir_version` to this value when its module uses any
 ///   SIR23 node.
-pub const CURRENT_SIR_VERSION: &str = "3";
+/// - `"4"` — SIR22 addendum: nine new APL-primitive `Expr` variants
+///   (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+///   `IndexOf`/`Ravel`/`Catenate`) plus eight new `ElementwiseOpKind`
+///   variants (`Max`/`Min`/`Eq`/`Ne`/`Lt`/`Le`/`Ge`/`Gt`), closing the
+///   gap between what the base SIR22 spec always claimed to cover
+///   ("every future array-family frontend (APL, J, K/Q, Scilab, IDL)")
+///   and what it actually modeled (MATLAB/Octave's own vocabulary
+///   only).  No new `SirType` or `Feature` flag — every new node reuses
+///   `NDArrays`/`MatrixOps`/`ArrayColumnMajor`.  Still additive, still
+///   new SIR text tokens (new printer forms, new op-kind names), so the
+///   same "adding a feature is a v.bump" policy bumps `"3"` → `"4"`.  No
+///   frontend crate consumes these yet — `apl-to-semantic-ir` is a
+///   follow-up task that will set `metadata.sir_version` to this value.
+pub const CURRENT_SIR_VERSION: &str = "4";
 
 /// Advisory metadata.  All fields are optional.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -133,7 +147,7 @@ mod tests {
             .with_sir_version(CURRENT_SIR_VERSION);
         assert_eq!(m.source_language.as_deref(), Some("twig"));
         assert_eq!(m.source_version.as_deref(), Some("0.7"));
-        assert_eq!(m.sir_version.as_deref(), Some("3"));
+        assert_eq!(m.sir_version.as_deref(), Some("4"));
         assert!(!m.is_empty());
     }
 
@@ -158,11 +172,11 @@ mod tests {
     }
 
     #[test]
-    fn current_sir_version_is_three() {
-        // Bumped 2 → 3 in SIR23 (symbolic expression + pattern/rewrite IR
-        // extension: new SirType/Expr/Feature text tokens), following the
-        // same "adding a feature is a v.bump" policy that moved 1 → 2 in
-        // SIR22.
-        assert_eq!(CURRENT_SIR_VERSION, "3");
+    fn current_sir_version_is_four() {
+        // Bumped 3 → 4 in the SIR22 addendum (nine new APL-primitive
+        // `Expr` variants + eight new `ElementwiseOpKind` variants: new
+        // SIR text tokens), following the same "adding a feature is a
+        // v.bump" policy that moved 2 → 3 in SIR23 and 1 → 2 in SIR22.
+        assert_eq!(CURRENT_SIR_VERSION, "4");
     }
 }

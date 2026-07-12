@@ -3742,6 +3742,32 @@ fn collect_callees_expr(expr: &Expr, out: &mut HashSet<String>) {
                 }
             }
         }
+        // SIR22 addendum: APL primitive operators — the Python frontend
+        // never emits these either, but recurse into every child `Expr`
+        // slot for the same reason as the base SIR22 nodes above.
+        Expr::Reduce { target, .. } => collect_callees_expr(target, out),
+        Expr::Scan { target, .. } => collect_callees_expr(target, out),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            collect_callees_expr(lhs, out);
+            collect_callees_expr(rhs, out);
+        }
+        Expr::Shape { target, .. } => collect_callees_expr(target, out),
+        Expr::Reshape { shape, target, .. } => {
+            collect_callees_expr(shape, out);
+            collect_callees_expr(target, out);
+        }
+        Expr::IndexGenerator { count, .. } => collect_callees_expr(count, out),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            collect_callees_expr(haystack, out);
+            collect_callees_expr(needle, out);
+        }
+        Expr::Ravel { target, .. } => collect_callees_expr(target, out),
+        Expr::Catenate { lhs, rhs, .. } => {
+            collect_callees_expr(lhs, out);
+            collect_callees_expr(rhs, out);
+        }
         // SIR23 symbolic-expression/pattern nodes: the Python frontend never
         // emits these either, but recurse into every child `Expr` slot for
         // the same reason as the SIR22 nodes above.

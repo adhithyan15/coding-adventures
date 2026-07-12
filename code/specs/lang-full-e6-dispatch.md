@@ -215,10 +215,20 @@ E6d-7.
    `quotient`/`remainder`/`modulo`) + comparisons `= < > <= >=` to *unbox → typed
    op → box*. Proof: `(+ (car (cons 41 0)) 1)` → 42 (forces `+` over an `any`).
    No per-backend change expected (all have unbox/op/box).
-3. **E6d-3 — list builtins.** `list` (variadic → nested `cons`), `length`,
-   `null?`/`pair?` (already), `append`, `reverse`, `list-ref`. Structural /
-   synthesized-helper lowerings over cons. Proof: `(length (list 1 2 3))` → 3,
-   `(list-ref (list 10 20 42) 2)` → 42.
+3. **E6d-3 — list builtins.**
+   - **E6d-3a — `list` constructor.** ✅ **LANDED.** A shared
+     `desugar_list_in_function` pass (head of both `lower_heap_builtins` and
+     `lower_heap_builtins_runtime`) expands `call_builtin "list" a b c` → a nil
+     `const` + right-to-left `cons` chain, so `list` rides the E6d-1 cons path on
+     all 5 code-gen backends with no new backend op and no allowlist entry (the
+     `list` builtin is gone before the backend sees it). Matrix:
+     `(car (list 42 1 2))` → 42 and `(car (cdr (list 1 42 3)))` → 42; WASM + real
+     dotnet CLR verified, native/LLVM/JVM via CI. `(list)` → nil.
+   - **E6d-3b — list *operations* (☐).** `length`, `list-ref`, `append`,
+     `reverse`, `assoc` — these walk/rebuild the cons chain, so they need a
+     synthesized cons-walk helper (managed) / runtime call (native/LLVM), not a
+     pure desugar. `null?`/`pair?` already lower. Proof: `(length (list 1 2 3))` → 3,
+     `(list-ref (list 10 20 42) 2)` → 42.
 4. **E6d-4 — symbols / quote.** `make_symbol`, `symbol->string`, `string->symbol`,
    `eq?` on symbols (bit-equality). Interned-immediate model (§2.1); reuse
    `intern_symbols_structural`. Proof: `(eq? 'a 'a)` vs `(eq? 'a 'b)`.

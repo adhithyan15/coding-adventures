@@ -72,10 +72,13 @@ rollups, formula values — is **computed, never stored as source of truth**.
   (`create_task`, `reparent`, `link_dependency`, `assign`, `add_calendar_exception`, …)
   returning `Result<(), OpError>` — no command/dispatch. Pure, and the single trust
   boundary enforcing invariants (percent clamp, interval bounds, cycle rejection).
+- **View projections** (`projections`): pure `&self` queries that render the primitives
+  from the one model — `checklist()` (decision-aware), `todos()`, `kanban(workflow)`,
+  `gantt(start)`, `flowchart()` — each returning plain serde-friendly data.
 
-Landing next (per the specs): pure view **projections** (checklist / todo / kanban /
-gantt / flowchart / table), then the `task-capi` / `task-wasm` ABIs, then the Mosaic UI
-wired natively per backend.
+With this the engine is feature-complete as **pure computation**. Landing next: the
+`task-capi` / `task-wasm` ABIs (thin, exposing the engine's functions), then the Mosaic
+UI wired **natively per backend** (React state on web first).
 
 ```rust
 use task_core::{scheduler, Date};

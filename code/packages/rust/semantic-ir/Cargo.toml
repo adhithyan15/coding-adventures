@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir"
-version = "0.22.0"
+version = "0.23.0"
 edition = "2021"
 description = "Narrow-waist Semantic IR (SIR10): a language-neutral intermediate representation between frontends and backends."
 
