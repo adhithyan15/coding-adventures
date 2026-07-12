@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.30.0 — Array `each_slice` / `each_cons` / `chunk_while`
+
+Mirrors the Python reference (PR #8031), Go (PR #8036), and Rust (PR #8042) into
+the JS backend's inline `arrayMethod` (+ the `ARRAY_METHODS` `respond_to?` set),
+adding the Array consecutive-grouping family.
+
+- `each_slice(n)` → consecutive sub-arrays of at most `n` elements, the last
+  possibly shorter (`[1,2,3,4,5].each_slice(2)` → `[[1,2],[3,4],[5]]`).
+- `each_cons(n)` → every consecutive `n`-element sliding window
+  (`[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`); a window larger than the
+  array yields `[]`.
+- Both read `n` via `Number.isInteger` and treat `n <= 0` as `[]` (Ruby raises
+  `ArgumentError`; the never-throw floor yields empty).
+- `chunk_while { |prev, cur| pred }` → runs of consecutive elements; the block is
+  called on each ADJACENT pair, a truthy result extends the run and a falsy one
+  starts a new run (`[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` →
+  `[[1,2],[4,5],[7]]`).  Empty → `[]`; single element → `[[x]]`.
+
+Exec-proof: `tests/run_with_node.rs` gains `array_each_slice_each_cons_chunk_while`,
+running each_slice/each_cons (incl. `n<=0` and oversized-window → `[]`) and
+chunk_while (adjacent `b-a==1` predicate; empty → `[]`) under real `node`, diffed
+against the Python/Go/Rust reference.
+
 ## 0.29.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
 
 Mirrors the Python reference (PR #8009), Go (PR #8015), and Rust (PR #8020)
