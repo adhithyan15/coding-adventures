@@ -414,7 +414,7 @@ mod tests {
         // construction site itself (eval_term), not left to rely on any
         // other guard in this crate.
         let n = builtins::MAX_ARRAY_LENGTH + 1;
-        let src: String = std::iter::repeat("1 ").take(n).collect::<String>() + "\n";
+        let src: String = "1 ".repeat(n) + "\n";
         assert!(eval(&src).is_err());
     }
 }
