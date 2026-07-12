@@ -48,37 +48,58 @@
 
 use crate::dimension::{DimOp, Dimension};
 use crate::{FactId, KnowledgeBase};
+use bignum_core::{BigInteger, BigRational};
 
-/// An exact rational sidecar for CPU arithmetic whose operands are exact
-/// integers/rationals. The public engine still exposes `f64` magnitudes for
-/// compatibility, but equality-sensitive consumers can use this when present.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct ExactRational {
-    pub num: i128,
-    pub den: i128,
-}
+/// An exact rational value for CPU arithmetic — a [`BigRational`] from `bignum-core`, so it is
+/// **unbounded** (no `i128` overflow) and every `+ − × ÷` of rationals stays exact forever.
+/// This is the engine's exactness carrier (NUM-5): the public magnitude is still exported as
+/// `f64` for compatibility ([`to_f64`](Self::to_f64), a *labeled lossy* narrowing), but the
+/// exact `BigRational` is the ground truth an audit reconstructs. Where the old `i128` sidecar
+/// dropped to `None` on overflow, this simply stays exact.
+///
+/// `BigRational` is canonical (reduced, positive denominator), so the derived `PartialEq`/`Eq`
+/// is value equality — `160/7 == 320/14` — exactly as the equality-sensitive LR gate relies on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExactRational(BigRational);
 
 impl ExactRational {
+    /// Build from an `i128` numerator/denominator (gcd-normalized, denominator made positive).
+    /// Returns `None` **only** on a zero denominator — never on overflow, since the parts are
+    /// arbitrary-precision.
     pub fn new(num: i128, den: i128) -> Option<Self> {
-        if den == 0 || num == i128::MIN || den == i128::MIN {
-            return None;
-        }
-        let (mut n, mut d) = (num, den);
-        if d < 0 {
-            n = n.checked_neg()?;
-            d = d.checked_neg()?;
-        }
-        let g = gcd_i128(n.unsigned_abs(), d.unsigned_abs()) as i128;
-        Some(Self {
-            num: n / g,
-            den: d / g,
-        })
+        BigRational::checked_new(BigInteger::from_i128(num), BigInteger::from_i128(den)).map(Self)
     }
 
+    /// A whole number.
     pub fn from_i128(n: i128) -> Self {
-        Self { num: n, den: 1 }
+        Self(BigRational::from(n))
     }
 
+    /// Wrap an already-canonical [`BigRational`].
+    pub fn from_ratio(r: BigRational) -> Self {
+        Self(r)
+    }
+
+    /// The underlying exact rational.
+    pub fn as_ratio(&self) -> &BigRational {
+        &self.0
+    }
+
+    /// The numerator (sign-carrying) as an arbitrary-precision integer.
+    pub fn numerator(&self) -> &BigInteger {
+        self.0.numerator()
+    }
+
+    /// The denominator (always positive) as an arbitrary-precision integer.
+    pub fn denominator(&self) -> &BigInteger {
+        self.0.denominator()
+    }
+
+    /// An exact value from an **integer-valued** `f64` (finite, no fractional part, within
+    /// `i64` range). A non-integer `f64` is deliberately *not* captured here: the intended
+    /// exact form of a decimal literal like `0.1` is `1/10`, not the binary `f64`'s
+    /// `0.1000…0555`, so decimal exactness must enter through the base-10 literal string, not
+    /// through this float bridge (a later NUM-5 rung).
     pub fn from_integer_f64(value: f64) -> Option<Self> {
         if value.is_finite()
             && value.fract() == 0.0
@@ -91,83 +112,54 @@ impl ExactRational {
         }
     }
 
-    pub fn add(self, rhs: Self) -> Option<Self> {
-        let left = self.num.checked_mul(rhs.den)?;
-        let right = rhs.num.checked_mul(self.den)?;
-        let num = left.checked_add(right)?;
-        let den = self.den.checked_mul(rhs.den)?;
-        Self::new(num, den)
+    /// Exact sum / difference / product — always defined now (unbounded), so `Some` is returned
+    /// for signature-compatibility with the previously-fallible `i128` sidecar.
+    pub fn add(&self, rhs: &Self) -> Option<Self> {
+        Some(Self(&self.0 + &rhs.0))
+    }
+    pub fn sub(&self, rhs: &Self) -> Option<Self> {
+        Some(Self(&self.0 - &rhs.0))
+    }
+    pub fn mul(&self, rhs: &Self) -> Option<Self> {
+        Some(Self(&self.0 * &rhs.0))
     }
 
-    pub fn sub(self, rhs: Self) -> Option<Self> {
-        let left = self.num.checked_mul(rhs.den)?;
-        let right = rhs.num.checked_mul(self.den)?;
-        let num = left.checked_sub(right)?;
-        let den = self.den.checked_mul(rhs.den)?;
-        Self::new(num, den)
+    /// Exact quotient, or `None` when dividing by zero (the one genuine failure).
+    pub fn div(&self, rhs: &Self) -> Option<Self> {
+        self.0.checked_div(&rhs.0).map(Self)
     }
 
-    pub fn mul(self, rhs: Self) -> Option<Self> {
-        Self::new(
-            self.num.checked_mul(rhs.num)?,
-            self.den.checked_mul(rhs.den)?,
-        )
+    /// The **labeled lossy** `f64` export (see [`BigRational::to_f64`]).
+    pub fn to_f64(&self) -> f64 {
+        self.0.to_f64()
     }
 
-    pub fn div(self, rhs: Self) -> Option<Self> {
-        if rhs.num == 0 {
-            return None;
-        }
-        Self::new(
-            self.num.checked_mul(rhs.den)?,
-            self.den.checked_mul(rhs.num)?,
-        )
-    }
-
-    pub fn to_f64(self) -> f64 {
-        self.num as f64 / self.den as f64
-    }
-
-    /// Raise to a **non-negative integer** power, exactly, by repeated
-    /// multiplication (`x^0 = 1`). This keeps the exact sidecar precise for the
-    /// common `x^n` case — a rational raised to a whole power is itself rational,
-    /// so `(3/2)^2 = 9/4` stays exact rather than collapsing to the `f64` 2.25.
+    /// Raise to a **non-negative integer** power, exactly (`x^0 = 1`). A rational to a whole
+    /// power is itself rational, so `(3/2)^2 = 9/4` stays exact rather than collapsing to the
+    /// `f64` `2.25`.
     ///
-    /// Returns `None` when the exponent is negative (a reciprocal power — the
-    /// caller keeps the `f64` result instead), when the exponent exceeds
-    /// [`MAX_EXACT_POW`] (a guard so a pathological exponent can't spin the loop
-    /// for an unbounded time — the `f64` result still stands), or on `i128`
-    /// overflow. `None` is never *wrong*: it only means "no exact sidecar here".
-    pub fn powi(self, exp: i128) -> Option<Self> {
+    /// Returns `None` for a negative or out-of-range exponent (the caller keeps the `f64`
+    /// result). The result-size guard [`MAX_EXACT_POW_BITS`] — checked in O(1) *before*
+    /// allocating, via [`BigRational::try_pow`] — refuses a pathologically large result, so a
+    /// large base with a legal exponent still cannot exhaust memory. This replaces the old
+    /// bounded `i128` multiply loop.
+    pub fn powi(&self, exp: i128) -> Option<Self> {
         if !(0..=MAX_EXACT_POW).contains(&exp) {
             return None;
         }
-        let mut acc = Self::from_i128(1);
-        for _ in 0..exp {
-            acc = acc.mul(self)?;
-        }
-        Some(acc)
+        self.0.try_pow(exp as i32, MAX_EXACT_POW_BITS).ok().map(Self)
     }
 }
 
-/// The largest exponent for which the exact-rational sidecar is computed by
-/// repeated multiplication (see [`ExactRational::powi`]). Beyond this the `f64`
-/// magnitude is authoritative; the cap bounds the loop so an adversarial program
-/// (`base^{10^18}`) cannot make the engine spin — an algorithmic-DoS guard.
+/// The largest exponent [`ExactRational::powi`] accepts; beyond it the `f64` magnitude is
+/// authoritative. With [`MAX_EXACT_POW_BITS`] it bounds the work an untrusted exponent can
+/// request — an algorithmic-DoS guard.
 const MAX_EXACT_POW: i128 = 1024;
 
-fn gcd_i128(a: u128, b: u128) -> u128 {
-    let (mut a, mut b) = (a, b);
-    if a == 0 && b == 0 {
-        return 1;
-    }
-    while b != 0 {
-        let t = b;
-        b = a % b;
-        a = t;
-    }
-    a.max(1)
-}
+/// The largest result size (bits of numerator or denominator) [`ExactRational::powi`] will
+/// materialize; [`BigRational::try_pow`] refuses in O(1) above it, so even a large base with a
+/// legal exponent cannot exhaust memory.
+const MAX_EXACT_POW_BITS: u64 = 1_000_000;
 
 /// A computation operator. Binary ops (`Add`/`Sub`/`Mul`/`Div`/`Pow`) take two
 /// operands; aggregation ops (`Sum`/`Count`/`Min`/`Max`/`Avg`) reduce a list
@@ -495,7 +487,14 @@ pub enum ComputeError {
 /// formula is only a few levels deep; this is a backstop against an
 /// adversarially deep formula (once step 3b feeds parsed input to [`eval`])
 /// blowing the call stack.
-pub const MAX_EVAL_DEPTH: usize = 256;
+///
+/// NUM-5 note: the exact value each `eval` frame carries is now a heap-backed
+/// [`ExactRational`] (a `BigRational`) rather than a pair of `i128`s, so each
+/// recursive frame is larger. The depth cap is set below the old 256 to keep the
+/// same "clean `TooDeep`, never a stack overflow" guarantee on the smaller stacks
+/// spawned test threads (and worst-case embedders) use — 128 is still far deeper
+/// than any real formula nests.
+pub const MAX_EVAL_DEPTH: usize = 128;
 
 /// Evaluate `expr` against `kb`, binding the result to `name`. Pure and
 /// deterministic: the same `(name, expr, kb)` always yields the same
@@ -642,7 +641,7 @@ fn eval(
                         value: derived.value,
                     },
                     derived.dim.clone(),
-                    derived.exact,
+                    derived.exact.clone(),
                 ))
             } else {
                 Err(ComputeError::UnknownSlot { slot: slot.clone() })
@@ -689,7 +688,12 @@ fn eval(
                 // exact base — `(3/2)^2 = 9/4` stays exact; anything else keeps
                 // just the `f64` result.
                 let exact = match (exact_l, exact_r) {
-                    (Some(a), Some(b)) if b.den == 1 => a.powi(b.num),
+                    (Some(a), Some(b)) if b.denominator() == &BigInteger::one() => b
+                        .numerator()
+                        .to_string()
+                        .parse::<i128>()
+                        .ok()
+                        .and_then(|e| a.powi(e)),
                     _ => None,
                 };
                 return Ok((
@@ -772,10 +776,10 @@ fn eval(
             }
             let exact = match (exact_l, exact_r) {
                 (Some(a), Some(b)) => match op {
-                    ComputeOp::Add => a.add(b),
-                    ComputeOp::Sub => a.sub(b),
-                    ComputeOp::Mul => a.mul(b),
-                    ComputeOp::Div => a.div(b),
+                    ComputeOp::Add => a.add(&b),
+                    ComputeOp::Sub => a.sub(&b),
+                    ComputeOp::Mul => a.mul(&b),
+                    ComputeOp::Div => a.div(&b),
                     // min/max select an operand UNCHANGED, so the winner's exact
                     // rational carries through verbatim (ties pick the left).
                     ComputeOp::Min2 => Some(if x <= y { a } else { b }),
@@ -960,54 +964,45 @@ fn eval_unary(
     if !result.is_finite() {
         return Err(ComputeError::NonFinite { op });
     }
-    // The exact sidecar stays exact. `ExactRational` keeps `den > 0`, so:
-    //   • |num/den| = |num|/den (abs of the numerator);
-    //   • ⌊num/den⌋ = num.div_euclid(den) (Euclidean division floors for den > 0);
-    //   • ⌈num/den⌉ = that quotient plus one when the division leaves a remainder;
-    //   • ⌊num/den⌉ = round to nearest with TIES AWAY FROM ZERO (matching
-    //     `f64::round`): truncate toward zero, then bump one step outward when the
-    //     fractional part reaches a half (2·|rem| ≥ den). The `den − arem` compare
-    //     avoids the overflow a bare `2·arem` could hit; `arem = |rem| < den`.
-    // Each result is an integer, carried as `q/1`.
-    let exact = exact.and_then(|r| match op {
-        ComputeOp::Abs => r
-            .num
-            .checked_abs()
-            .and_then(|n| ExactRational::new(n, r.den)),
-        ComputeOp::Floor => ExactRational::new(r.num.div_euclid(r.den), 1),
-        ComputeOp::Ceil => {
-            let q = r.num.div_euclid(r.den);
-            let q = if r.num.rem_euclid(r.den) != 0 {
-                q.checked_add(1)?
-            } else {
-                q
-            };
-            ExactRational::new(q, 1)
-        }
-        ComputeOp::Round => {
-            let q = r.num / r.den; // truncate toward zero (den > 0 ⇒ no overflow)
-            let rem = r.num % r.den; // in (−den, den), sign of the numerator
-            let arem = if rem >= 0 { rem } else { -rem }; // |rem| < den ⇒ no overflow
-            let bump = if arem >= r.den - arem {
-                // fractional part ≥ 1/2 → round away from zero (ties away from zero)
-                if r.num >= 0 {
-                    1
+    // The exact result stays exact — now over unbounded `BigInteger`s. `BigRational` keeps
+    // `den > 0`, and `BigInteger::div_rem` truncates toward zero with a remainder that takes
+    // the numerator's sign (`num = q·den + rem`, `|rem| < den`), so from that one primitive:
+    //   • |num/den|      = the rational's own `abs`;
+    //   • ⌊num/den⌋      = q, minus one when `rem < 0` (truncation rounded up for a negative);
+    //   • ⌈num/den⌉      = q, plus one when `rem > 0`  (truncation rounded down for a positive);
+    //   • ⌊num/den⌉      = round to nearest, TIES AWAY FROM ZERO (matching `f64::round`):
+    //                      bump one step outward when `2·|rem| ≥ den`;
+    //   • trunc(num/den) = q itself;
+    //   • sgn(num/den)   = the numerator's sign.
+    // Each non-abs result is an integer, carried as `q/1`.
+    let exact = exact.and_then(|r| {
+        let n = r.numerator();
+        let d = r.denominator(); // always positive
+        let int = |i: BigInteger| Some(ExactRational::from_ratio(BigRational::from_integer(i)));
+        match op {
+            ComputeOp::Abs => Some(ExactRational::from_ratio(r.as_ratio().abs())),
+            ComputeOp::Floor => {
+                let (q, rem) = n.div_rem(d);
+                int(if rem.is_negative() { &q - &BigInteger::one() } else { q })
+            }
+            ComputeOp::Ceil => {
+                let (q, rem) = n.div_rem(d);
+                int(if rem.is_positive() { &q + &BigInteger::one() } else { q })
+            }
+            ComputeOp::Round => {
+                let (q, rem) = n.div_rem(d);
+                let twice = { let a = rem.abs(); &a + &a };
+                if twice >= *d {
+                    // fractional part ≥ 1/2 → round away from zero (ties away from zero)
+                    int(if n.is_negative() { &q - &BigInteger::one() } else { &q + &BigInteger::one() })
                 } else {
-                    -1
+                    int(q)
                 }
-            } else {
-                0
-            };
-            ExactRational::new(q.checked_add(bump)?, 1)
+            }
+            ComputeOp::Trunc => int(n.div_rem(d).0),
+            ComputeOp::Sign => Some(ExactRational::from_i128(n.signum() as i128)),
+            _ => None,
         }
-        // trunc(num/den) truncates toward zero — exactly Rust's integer division for
-        // den > 0 (no `div_euclid`, which would floor toward −∞). The result is an
-        // integer, carried as q/1.
-        ComputeOp::Trunc => ExactRational::new(r.num / r.den, 1),
-        // sgn(num/den) = sign of the numerator (den > 0 doesn't affect the sign);
-        // `i64::signum` is the mathematical sign (0 → 0), carried as q/1.
-        ComputeOp::Sign => ExactRational::new(r.num.signum(), 1),
-        _ => None,
     });
     // Rounding preserves the operand's dimension; a transcendental collapses to a
     // pure number (`Scalar`); `sgn` also collapses to `Scalar` (a sign is

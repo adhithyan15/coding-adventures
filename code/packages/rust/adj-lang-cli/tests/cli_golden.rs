@@ -151,7 +151,9 @@ fn let_derived_value_reports_its_inferred_dimension() {
     assert!(s.contains("\"value\":80"), "{s}");
     assert!(s.contains("\"dim\":\"km/h\""), "expected inferred km/h: {s}");
     // Exact integer arithmetic is preserved alongside the f64.
-    assert!(s.contains("\"exact\":{\"num\":80,\"den\":1}"), "{s}");
+    // NUM-5: the exact value is an arbitrary-precision BigRational, so num/den are emitted as
+    // JSON strings (they can exceed JSON's safe integer range) rather than bare numbers.
+    assert!(s.contains("\"exact\":{\"num\":\"80\",\"den\":\"1\"}"), "{s}");
 }
 
 #[test]

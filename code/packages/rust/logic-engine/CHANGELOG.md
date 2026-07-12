@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.38.0] — exact arithmetic by default: `ExactRational` is now a `BigRational` (NUM-5)
+
+### Changed
+
+- **The compute engine's exact value is now arbitrary-precision.** `ExactRational` — the
+  exactness carrier threaded through `compute`/`Derived`/the LR gate — was a pair of `i128`s
+  that silently dropped to `None` on overflow; it is now a thin wrapper over
+  `bignum_core::BigRational`, so `+ − × ÷` of rationals stay **exact and unbounded** — `1/3`
+  is `1/3` past `i128`, `0.1 + 0.2` is exactly `3/10`, and the CSF:serum-style ratios never
+  lose a digit. Overflow → `None` is gone; the only remaining `None`s are the genuinely
+  non-rational cases (transcendentals, a fractional exponent, `gcd`/`lcm`/`mod`,
+  aggregations). The `f64` magnitude on `Derived`/`DerivationNode` is unchanged for now — it
+  is the **labeled lossy export** (`ExactRational::to_f64`), no longer the ground truth.
+- Exact integer rounding (`Abs`/`Floor`/`Ceil`/`Round` ties-away/`Trunc`/`Sign`) is
+  reconstructed from `BigInteger::div_rem`; exact ordering in the LR gate uses `BigRational`'s
+  native total order (the old `i128` cross-multiply and its `f64` overflow fallback are gone —
+  comparison is now always exact). Integer powers use `BigRational::try_pow` with a
+  result-size guard (`MAX_EXACT_POW_BITS`) replacing the old bounded multiply loop.
+- `MAX_EVAL_DEPTH` lowered `256 → 128`: each recursive `eval` frame now carries a heap-backed
+  `BigRational` rather than two `i128`s, so the "clean `TooDeep`, never a stack overflow"
+  guarantee needs a shallower cap on small (spawned-test-thread) stacks. 128 is still far
+  deeper than any real formula nests.
+- **Public JSON (adj-lang-cli):** the `exact` object's `num`/`den` are now emitted as JSON
+  **strings** (`"exact":{"num":"3","den":"10"}`) since an arbitrary-precision numerator/
+  denominator can exceed JSON's safe integer range.
+- New dependency: `bignum-core` (zero-dependency, `#![forbid(unsafe_code)]`).
+
 ## [Unreleased] — optional provenance on `Derived`
 
 ### Added
