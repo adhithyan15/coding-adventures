@@ -1048,6 +1048,8 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
 /// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
 /// | UNHEX    | 1–2  | Decode hex digit pairs into a blob (inverse of HEX)   |
+/// | LIKELY / UNLIKELY | 1 | Planner hint; returns the argument unchanged     |
+/// | LIKELIHOOD | 2  | Planner hint with a probability; returns arg 1        |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
@@ -1172,6 +1174,44 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().len() as i64)),
                 other => Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
             }
+        }
+
+        "LIKELY" | "UNLIKELY" => {
+            // Query-planner hints: `likely(x)` / `unlikely(x)` tell SQLite's
+            // optimizer that `x` is probably true / probably false, biasing its
+            // row-count estimates. They have no effect on the result — they are
+            // the *identity* function, returning the argument unchanged (any
+            // type, including NULL).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("{name} expects 1 arg, got {}", args.len())));
+            }
+            Ok(args.into_iter().next().unwrap())
+        }
+
+        "LIKELIHOOD" => {
+            // `likelihood(x, p)` is `likely`/`unlikely` with an explicit
+            // probability `p` (the fraction of rows for which `x` is expected to
+            // be true). It returns `x` unchanged; `p` only hints the planner.
+            // SQLite requires `p` to be a constant number in [0.0, 1.0] — we
+            // validate the value's range and reject anything else.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("LIKELIHOOD expects 2 args, got {}", args.len())));
+            }
+            let p = match &args[1] {
+                SqlValue::Float(f) => *f,
+                SqlValue::Int(i) => *i as f64,
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "LIKELIHOOD probability must be a number in [0,1], got {other:?}"
+                    )))
+                }
+            };
+            if !(0.0..=1.0).contains(&p) {
+                return Err(VmError::TypeMismatch(format!(
+                    "LIKELIHOOD probability {p} is out of range [0,1]"
+                )));
+            }
+            Ok(args.into_iter().next().unwrap())
         }
 
         "UPPER" => {
@@ -4075,6 +4115,37 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_likely_family_is_identity() {
+        // likely / unlikely return their single argument unchanged, any type.
+        for name in ["LIKELY", "UNLIKELY"] {
+            assert_eq!(call_builtin(name, vec![SqlValue::Int(5)]).unwrap(), SqlValue::Int(5));
+            assert_eq!(
+                call_builtin(name, vec![SqlValue::Text("abc".into())]).unwrap(),
+                SqlValue::Text("abc".into())
+            );
+            assert_eq!(call_builtin(name, vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+            assert_eq!(call_builtin(name, vec![SqlValue::Float(2.5)]).unwrap(), SqlValue::Float(2.5));
+            // Wrong arity is an error, not a panic.
+            assert!(call_builtin(name, vec![]).is_err());
+            assert!(call_builtin(name, vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+        }
+        // likelihood(x, p) returns x when p is a probability in [0, 1].
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Int(7), SqlValue::Float(0.0625)]).unwrap(),
+            SqlValue::Int(7)
+        );
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Null, SqlValue::Float(0.5)]).unwrap(),
+            SqlValue::Null
+        );
+        // A probability outside [0, 1], a non-numeric probability, or wrong arity
+        // are all errors.
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Text("x".into())]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1)]).is_err());
     }
 
     #[test]

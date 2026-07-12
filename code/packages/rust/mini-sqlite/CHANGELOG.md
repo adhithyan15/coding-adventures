@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.13 — LIKELY / UNLIKELY / LIKELIHOOD (planner hints)
+
+Grows the SQL scalar surface (sql-vm 0.4.9) with SQLite's query-planner hint
+functions: `LIKELY(x)`, `UNLIKELY(x)`, and `LIKELIHOOD(x, p)`. They're the
+identity function on their first argument (any type, including NULL) — the hint
+only nudges the optimizer. `LIKELIHOOD`'s probability `p` must be a number in
+`[0,1]`. A new differential-oracle case (`likely_family`) diffs against real
+bundled SQLite.
+
 ## 0.5.12 — OCTET_LENGTH (byte length)
 
 Grows the SQL scalar surface (sql-vm 0.4.8): `OCTET_LENGTH(x)` returns the byte
