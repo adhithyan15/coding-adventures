@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-rename-globals"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
 description = "Aggressive top-level (global) renaming pass for the Closure Compiler clone — the ADVANCED-level complement to closure-pass-rename. Shortens program-private top-level names, gated by an externs do-not-rename boundary."
 

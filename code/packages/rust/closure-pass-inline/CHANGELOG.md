@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.27.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant across
+the walk and splice paths: an import has no inlinable body, so the walk arms are
+no-ops and the void/valued-call splice predicates report nothing spliced.
+
 ## [0.26.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`

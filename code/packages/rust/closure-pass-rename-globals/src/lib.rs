@@ -376,6 +376,9 @@ fn count_decl_names_decl(
         // `rename_apply_decl`: a method param that shares a global name pushes
         // that name's count past 1, disqualifying it from renaming — so a
         // later body walk with the full map can never rewrite a shadowed use.
+        // An import declaration's bound names reference a foreign module's
+        // exports — renaming them is unsound, so we skip it entirely.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
@@ -528,6 +531,9 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                 }
             }
         }
+        // An import declaration's bound names reference a foreign module's
+        // exports — renaming them is unsound, so we skip it entirely.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             // Mirror the `Expression::ClassExpression` arm of
             // `collect_all_idents_expr`: the class name, the heritage operand's
@@ -1002,6 +1008,9 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
                 rename_apply_stmt(s, map);
             }
         }
+        // An import declaration's bound names reference a foreign module's
+        // exports — renaming them is unsound, so we skip it entirely.
+        Declaration::ImportDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             // Rename the class's own name (a top-level binding, a rename
             // target) and the `extends` operand (a use position). Then recurse

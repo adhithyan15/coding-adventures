@@ -655,6 +655,9 @@ fn block_is_scope_safe_to_hoist(b: &BlockStatement) -> bool {
         // `else` block would leak or collide its binding — unsafe, like a
         // nested function declaration.
         Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration is module-top-level only; never legally inside
+        // the block being hoisted, so treat it as unsafe to hoist.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
         // Tagged statements introduce no lexical binding of their own.
         Statement::Tagged(_) => true,
     })
@@ -1086,6 +1089,8 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
         // `fold_class` for the expression form. Unlike a function declaration
         // it hoists no `var`s of its own — a class body is not a `var` scope in
         // the hoisting sense — so no `hoist_function_body_vars` step applies.
+        // An import has no foldable control flow — preserve it verbatim.
+        Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
         Declaration::ClassDeclaration(c) => {
             let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
             Declaration::ClassDeclaration(ClassDeclaration {

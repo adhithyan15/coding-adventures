@@ -1039,6 +1039,8 @@ fn classify_decl(decl: &Declaration, cls: &mut Classify, nodes_touched: &mut u32
         // *expression* — the class name is a variable binding, not a property,
         // so only the member keys + bodies matter.
         Declaration::ClassDeclaration(cd) => classify_class_members(&cd.super_class, &cd.body, cls),
+        // An import declaration has no property accesses/keys to classify.
+        Declaration::ImportDeclaration(_) => {}
     }
 }
 
@@ -1464,6 +1466,8 @@ fn rewrite_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
         Declaration::ClassDeclaration(cd) => {
             rewrite_class_members(&mut cd.super_class, &mut cd.body, map)
         }
+        // An import declaration has no property accesses/keys to rewrite.
+        Declaration::ImportDeclaration(_) => {}
     }
 }
 

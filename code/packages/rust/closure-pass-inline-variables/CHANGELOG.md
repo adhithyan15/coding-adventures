@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+inertness predicate reports an import is not inert (it has runtime effect), and
+the count/propagate walks skip it as a no-op.
+
 ## [0.12.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`

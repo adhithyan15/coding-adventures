@@ -529,6 +529,12 @@ fn walk_declaration(
         Declaration::VariableDeclaration(vd) => walk_variable_declaration(vd, ctx, analysis, pending),
         Declaration::FunctionDeclaration(fd) => walk_function_declaration(fd, ctx, analysis, pending),
         Declaration::ClassDeclaration(cd) => walk_class_declaration(cd, ctx, analysis, pending),
+        // An import declaration binds module-local names, but those names link
+        // to a *foreign module's* exports — renaming them would break the
+        // cross-module contract. PR1 keeps the node unreachable; we register no
+        // scope binding for it, so references stay conservatively un-renameable.
+        // (The full soundness treatment lands with the bridge PR.)
+        Declaration::ImportDeclaration(_) => {}
     }
 }
 

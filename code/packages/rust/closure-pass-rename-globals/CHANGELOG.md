@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arm
+
+Exhaustive-match no-op arm for the new `Declaration::ImportDeclaration` variant —
+the global-renaming walk does not descend into imports (import bindings link to
+foreign exports and must not be renamed; the gate lands with the bridge PR).
+
 ## [0.12.0] - 2026-07-12
 
 ### Added — CLOC12.187 PR2a: decline to rename globals in the presence of `with`
