@@ -87,7 +87,9 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
-use coding_adventures_closure_scope_analyzer::program_contains_with_statement;
+use coding_adventures_closure_scope_analyzer::{
+    program_contains_import_declaration, program_contains_with_statement,
+};
 use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
@@ -164,7 +166,16 @@ impl Pass for RenamePass {
         // a `with` we decline to rename and return the input unchanged. `with`
         // is rare (a strict-mode syntax error), so this program-wide bail costs
         // little in practice. See [`program_contains_with_statement`].
-        if program_contains_with_statement(ctx.program) {
+        //
+        // The same bail covers ES-module `import` declarations (CLOC12.188 PR2):
+        // an import binds names that alias a foreign module's exports, so
+        // renaming them would break the cross-module contract, and — because the
+        // scope analyzer registers no binding for an import — the fresh-name
+        // allocator could also collide an unrelated local with an import name.
+        // See [`program_contains_import_declaration`].
+        if program_contains_with_statement(ctx.program)
+            || program_contains_import_declaration(ctx.program)
+        {
             return Ok(PassOutput {
                 program: ctx.program.clone(),
                 contributions: Vec::new(),

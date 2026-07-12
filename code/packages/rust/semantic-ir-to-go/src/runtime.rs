@@ -1695,7 +1695,7 @@ func _sir_array_responds(name string) bool {
 	// Non-block Array methods.
 	case "length", "size", "count", "first", "last", "empty?", "include?",
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
-		"min", "max", "sum", "uniq", "flatten", "compact", "zip", "rotate",
+		"min", "max", "minmax", "sum", "uniq", "flatten", "compact", "zip", "rotate",
 		"to_h", "tally", "take", "drop", "values_at",
 		"join", "fetch", "to_a", "each_slice", "each_cons":
 		return true
@@ -1878,6 +1878,25 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 			}
 		}
 		return best, true
+	case "minmax":
+		// Ruby `Array#minmax` (no block): the two-element array `[min, max]` in
+		// one pass, via `<` (modelled by `_sir_value_lt`).  An empty array ⇒
+		// `[nil, nil]` (no smallest/largest element), matching the Python
+		// reference's `[None, None]`.
+		if len(recv.Items) == 0 {
+			return &Seq{Items: []Value{nil, nil}}, true
+		}
+		lo := recv.Items[0]
+		hi := recv.Items[0]
+		for _, x := range recv.Items[1:] {
+			if _sir_value_lt(x, lo) {
+				lo = x
+			}
+			if _sir_value_lt(hi, x) {
+				hi = x
+			}
+		}
+		return &Seq{Items: []Value{lo, hi}}, true
 	case "sum":
 		// Ruby `Array#sum`: fold with polymorphic `+` over an initial value
 		// (default 0, or the supplied `sum(init)` argument), preserving

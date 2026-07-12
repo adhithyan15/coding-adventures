@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.16.0] - 2026-07-12
+
+### Added — CLOC12.188 PR2: `import` soundness gate
+
+New `has_import` field on `ScopeAnalysis` (set when the `analyze` walk reaches an
+`ImportDeclaration`) and a public `program_contains_import_declaration` helper —
+a sibling of `program_contains_with_statement`. It is the flag the renaming
+passes read to disable renaming whole-program when a module `import` is present:
+an import aliases a foreign module's exports (renaming would break the
+cross-module contract), and because no binding is registered for it the
+fresh-name allocator could also collide an unrelated local with an import name.
+Two tests pin the true/false contracts.
+
 ## [0.15.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: `ImportDeclaration` arm

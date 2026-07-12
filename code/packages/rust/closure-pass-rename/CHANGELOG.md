@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.18.0] - 2026-07-12
+
+### Changed — CLOC12.188 PR2: bail on module `import`
+
+The local-renaming soundness gate now also declines (returns the input unchanged)
+when `program_contains_import_declaration` is true, mirroring the existing `with`
+gate. Renaming an import binding — or colliding a renamed local with an import
+name — would be unsound; a module with imports keeps its other optimizations but
+skips renaming.
+
 ## [0.17.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: `ImportDeclaration` arms
