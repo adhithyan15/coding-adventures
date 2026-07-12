@@ -170,6 +170,7 @@ SELF_CONTAINED_RUNGS = (
     "rung130_relative_potency_ratio",
     "rung131_perfusate_throughput",
     "rung132_occupancy_share",
+    "rung133_elimination_span",
 )
 
 
