@@ -167,6 +167,7 @@ SELF_CONTAINED_RUNGS = (
     "rung127_densitometry_index",
     "rung128_microperfusion_mean",
     "rung129_solute_clearance_mean",
+    "rung130_relative_potency_ratio",
 )
 
 
