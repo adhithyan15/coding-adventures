@@ -1037,7 +1037,8 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 ///
 /// | Name     | Args | Semantics                                             |
 /// |----------|------|-------------------------------------------------------|
-/// | LENGTH   |  1   | Byte-length of a string (returns Integer or NULL)     |
+/// | LENGTH   |  1   | Character count of a string (returns Integer or NULL) |
+/// | OCTET_LENGTH | 1 | Byte count of text/blob/integer (Integer or NULL)    |
 /// | UPPER    |  1   | ASCII-uppercase the string                            |
 /// | LOWER    |  1   | ASCII-lowercase the string                            |
 /// | TRIM     | 1–2  | Strip whitespace, or a given character set, from both ends |
@@ -1149,6 +1150,27 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 SqlValue::Null => Ok(SqlValue::Null),
                 SqlValue::Text(s) => Ok(SqlValue::Int(s.chars().count() as i64)),
                 other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "OCTET_LENGTH" => {
+            // OCTET_LENGTH(x): the number of *bytes*, in contrast to LENGTH's
+            // count of characters. Text is measured as its UTF-8 bytes
+            // (`octet_length('héllo')` = 6, five characters but `é` is two
+            // bytes); a blob as its raw byte count; an integer/boolean as its
+            // decimal-text bytes (`octet_length(123)` = 3). NULL → NULL. Floats
+            // are declined — their byte length depends on SQLite's exact float
+            // text form, which is subtle (see HEX/QUOTE).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Int(s.len() as i64)),
+                SqlValue::Blob(b) => Ok(SqlValue::Int(b.len() as i64)),
+                SqlValue::Int(i) => Ok(SqlValue::Int(i.to_string().len() as i64)),
+                SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().len() as i64)),
+                other => Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
             }
         }
 
@@ -4053,6 +4075,26 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_octet_length_counts_bytes() {
+        let ol = |v: SqlValue| call_builtin("OCTET_LENGTH", vec![v]).unwrap();
+        // Text is measured in UTF-8 bytes, not characters (contrast LENGTH).
+        assert_eq!(ol(SqlValue::Text("héllo".into())), SqlValue::Int(6)); // 5 chars, 6 bytes
+        assert_eq!(
+            call_builtin("LENGTH", vec![SqlValue::Text("héllo".into())]).unwrap(),
+            SqlValue::Int(5)
+        );
+        assert_eq!(ol(SqlValue::Text("abc".into())), SqlValue::Int(3));
+        assert_eq!(ol(SqlValue::Text("".into())), SqlValue::Int(0));
+        assert_eq!(ol(SqlValue::Text("日本".into())), SqlValue::Int(6)); // 2 chars × 3 bytes
+        // Blobs measure raw bytes; integers their decimal digits.
+        assert_eq!(ol(SqlValue::Blob(vec![0x00, 0xff])), SqlValue::Int(2));
+        assert_eq!(ol(SqlValue::Int(123)), SqlValue::Int(3));
+        // NULL propagates; wrong arity errors, not panics.
+        assert_eq!(ol(SqlValue::Null), SqlValue::Null);
+        assert!(call_builtin("OCTET_LENGTH", vec![]).is_err());
     }
 
     #[test]

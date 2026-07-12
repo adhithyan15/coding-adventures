@@ -3,6 +3,18 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.8] - Unreleased
+
+### Added
+
+- **`OCTET_LENGTH(x)`** — the number of *bytes*, in contrast to `LENGTH`'s count
+  of characters: `OCTET_LENGTH('héllo')` = 6 where `LENGTH('héllo')` = 5. Text is
+  measured as its UTF-8 bytes, a blob as its raw byte count, and an
+  integer/boolean as its decimal-text bytes (`OCTET_LENGTH(123)` = 3); NULL →
+  NULL. Floats are declined (their byte length depends on SQLite's subtle float
+  text form — same convention as HEX/QUOTE). Arity is checked before indexing.
+  (The `LENGTH` doc is corrected: it counts characters, not bytes.)
+
 ## [0.4.7] - Unreleased
 
 ### Fixed

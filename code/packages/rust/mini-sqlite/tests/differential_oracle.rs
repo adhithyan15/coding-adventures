@@ -626,6 +626,16 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT HEX(s) AS h, TYPEOF(HEX(s)) AS t FROM t ORDER BY id",
     },
+    // OCTET_LENGTH counts BYTES (UTF-8), where LENGTH counts characters:
+    // 'héllo' is 5 characters but 6 bytes.
+    Case {
+        id: "octet_length",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'héllo'), (2, '日本'), (3, ''), (4, NULL)",
+        ],
+        query: "SELECT OCTET_LENGTH(s) AS o, LENGTH(s) AS l FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
