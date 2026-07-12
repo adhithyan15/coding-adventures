@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.32.0 — Array `minmax`
+
+Mirrors the Python reference (PR #8092) into the Go backend's inline `__sir`
+runtime (`_sir_array_method` beside the existing `min`/`max` arm + the
+`_sir_array_responds` `respond_to?` arm), continuing the `minmax` cross-backend
+cascade.
+
+- `minmax` (non-block) → the two-element array `[min, max]` in one pass, via `<`
+  (`_sir_value_lt`). `[3,1,2].minmax` → `[1, 3]`; `["b","a","c"].minmax` →
+  `["a", "c"]`. An empty array yields `[nil, nil]` (no smallest/largest element),
+  matching the Python reference's `[None, None]`.
+- The `array_methods_compile_and_run` exec-proof test gains `minmax` (non-empty
+  and empty) — the emitted Go compiles + runs with the toolchain and asserts
+  `[1, 3]` / `[nil, nil]`.
+
 ## 0.31.0 — Array `slice_when`
 
 Mirrors the Python reference (PR #8070) into the Go backend's inline `__sir`

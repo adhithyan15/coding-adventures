@@ -181,7 +181,7 @@ runtime catalog** and emits every dispatch to it:
 
 Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 `empty?`, `include?`, `index`, `push`/`append`, `<<`, `pop`, `shift`, `reverse`,
-`sort`, `join`, `to_a`, `each`, `map`/`collect`, `select`/`filter`, `reject`,
+`sort`, `min`/`max`/`minmax`/`sum`, `join`, `to_a`, `each`, `map`/`collect`, `select`/`filter`, `reject`,
 `reduce`/`inject`, `find`/`detect`, `any?`, `all?`, `none?`,
 `each_slice`/`each_cons`, `chunk_while`/`slice_when`; **Hash** `keys`,
 `values`, `has_key?`/`key?`/`include?`/`member?`, `has_value?`/`value?`, `size`/
