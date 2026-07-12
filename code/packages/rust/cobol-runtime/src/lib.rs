@@ -6,7 +6,8 @@
 //! [PL08](../../../specs/PL08-cobol-runtime.md).
 //!
 //! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
-//! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
+//! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`
+//! (with `ROUNDED` and `ON SIZE ERROR`),
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
 //! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), `IF … ELSE`
 //! (numeric and alphanumeric comparison),
@@ -330,6 +331,97 @@ mod tests {
         ]))
         .unwrap_err();
         assert!(matches!(err, RuntimeError::DivideByZero), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
+    // ROUNDED / ON SIZE ERROR on the arithmetic verbs
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn divide_giving_rounded_rounds_the_receiver() {
+        // 10 / 3 = 3.333… → into V99. Truncated: 3.33; ROUNDED: still 3.33 (3rd
+        // place < 5). Use 20 / 3 = 6.666… → truncated 6.66, ROUNDED 6.67.
+        let prog = |rounded: &str| {
+            run_cobol(&program(&[
+                "IDENTIFICATION DIVISION.",
+                "PROGRAM-ID. P.",
+                "DATA DIVISION.",
+                "WORKING-STORAGE SECTION.",
+                "01  R  PIC 9(2)V99 VALUE 0.",
+                "PROCEDURE DIVISION.",
+                "MAIN.",
+                &format!("    DIVIDE 3 INTO 20 GIVING R{rounded}."),
+                "    DISPLAY R.",
+                "    STOP RUN.",
+            ]))
+            .unwrap()
+        };
+        assert_eq!(prog(""), "0666\n"); // truncated 6.66
+        assert_eq!(prog(" ROUNDED"), "0667\n"); // rounded 6.67
+    }
+
+    #[test]
+    fn multiply_giving_rounded() {
+        // 2.5 * 2.5 = 6.25 into 9(2)V9: truncated 6.2, ROUNDED 6.3 (2nd place 5).
+        let prog = |rounded: &str| {
+            run_cobol(&program(&[
+                "IDENTIFICATION DIVISION.",
+                "PROGRAM-ID. P.",
+                "DATA DIVISION.",
+                "WORKING-STORAGE SECTION.",
+                "01  R  PIC 9(2)V9 VALUE 0.",
+                "PROCEDURE DIVISION.",
+                "MAIN.",
+                &format!("    MULTIPLY 2.5 BY 2.5 GIVING R{rounded}."),
+                "    DISPLAY R.",
+                "    STOP RUN.",
+            ]))
+            .unwrap()
+        };
+        assert_eq!(prog(""), "062\n");
+        assert_eq!(prog(" ROUNDED"), "063\n");
+    }
+
+    #[test]
+    fn add_on_size_error_fires_on_overflow() {
+        // R is 9(2) (max 99). ADD 50 TO R twice → 100 overflows on the second;
+        // the handler runs and R is left unchanged (still 50).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  R  PIC 9(2) VALUE 50.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    ADD 60 TO R",
+            "        ON SIZE ERROR DISPLAY \"OVER\".",
+            "    DISPLAY R.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        // 50 + 60 = 110 overflows 9(2) → handler runs, R unchanged at 50.
+        assert_eq!(out, "OVER\n50\n");
+    }
+
+    #[test]
+    fn divide_by_zero_with_on_size_error_runs_the_handler() {
+        // A zero divisor is a size-error condition; with a handler it is caught.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  R  PIC 9(3) VALUE 7.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DIVIDE 0 INTO 10 GIVING R",
+            "        ON SIZE ERROR DISPLAY \"DIVZERO\".",
+            "    DISPLAY R.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DIVZERO\n007\n");
     }
 
     // ----------------------------------------------------------------------
