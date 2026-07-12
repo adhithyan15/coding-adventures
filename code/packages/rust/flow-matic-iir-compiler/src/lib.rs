@@ -99,6 +99,15 @@ impl Compiler {
         for field in &fields {
             self.emit("const", Some(field), vec![Operand::Int(0)], "i64");
         }
+        // Zero the three shared comparison flags at entry too, so an
+        // `IF … GO TO` that is reachable without a dominating `COMPARE` (e.g. a
+        // lone IF, or a jump into a block whose flag was set on another path)
+        // reads a defined `0` (false → no branch) rather than an undefined
+        // register — which `module.validate()` and the backend validators do
+        // NOT catch, and which would miscompile downstream.
+        for flag in [CMP_GT, CMP_EQ, CMP_LT] {
+            self.emit("const", Some(flag), vec![Operand::Int(0)], "i64");
+        }
 
         // Each operation becomes a labelled block; clauses run in order and
         // control falls through to the next operation unless a clause jumps.
@@ -404,6 +413,24 @@ mod tests {
         let err = compile_source(src, "r").unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
         assert!(err.to_string().contains("READ-ITEM"));
+    }
+
+    #[test]
+    fn if_without_a_preceding_compare_reads_a_defined_flag() {
+        // A lone IF (no COMPARE) must not read an undefined flag register — the
+        // flags are zeroed at entry, so this IF sees false and falls through.
+        let src = "(0) IF EQUAL GO TO OPERATION 1 .\n(1) STOP .";
+        let module = compile_source(src, "lone_if").unwrap();
+        assert!(module.validate().is_empty());
+        // The three flag registers are const-initialised before any label.
+        let first_ops: Vec<&str> = module.functions[0]
+            .instructions
+            .iter()
+            .take_while(|i| i.op != "label")
+            .filter(|i| i.op == "const")
+            .filter_map(|i| i.dest.as_deref())
+            .collect();
+        assert!(first_ops.contains(&"_cmp_eq"), "flags zeroed at entry: {first_ops:?}");
     }
 
     #[test]
