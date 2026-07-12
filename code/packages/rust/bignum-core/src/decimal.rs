@@ -323,6 +323,24 @@ impl BigDecimal {
 }
 
 // ===========================================================================
+//  Lossy export
+// ===========================================================================
+
+impl BigDecimal {
+    /// A **lossy** narrowing to the nearest `f64` — the *labeled lossy boundary* for interop and
+    /// display. `BigDecimal` is exact base-10; `f64` is binary, so a value like `0.1` cannot be
+    /// represented and this deliberately rounds. A caller that needs the exact money/percent
+    /// value keeps the `BigDecimal`.
+    ///
+    /// It goes through the value's own plain-decimal string and Rust's **correctly-rounded**
+    /// float parser, so the result is the true nearest `f64` (including in the subnormal range),
+    /// and out-of-range magnitudes saturate to `±∞` / `0` exactly as the parser does.
+    pub fn to_f64(&self) -> f64 {
+        self.to_string().parse::<f64>().unwrap_or(f64::NAN)
+    }
+}
+
+// ===========================================================================
 //  Exact arithmetic (+, -, *) and rounding division
 // ===========================================================================
 
@@ -696,6 +714,25 @@ mod tests {
 
     fn d(s: &str) -> BigDecimal {
         BigDecimal::from_str(s).unwrap()
+    }
+
+    // ---- lossy f64 export -----------------------------------------------
+
+    #[test]
+    fn to_f64_is_the_correctly_rounded_nearest() {
+        // Exactly-representable decimals round-trip; others match parsing the literal.
+        assert_eq!(d("0.5").to_f64(), 0.5);
+        assert_eq!(d("100.00").to_f64(), 100.0);
+        assert_eq!(d("-2.25").to_f64(), -2.25);
+        assert_eq!(d("0").to_f64(), 0.0);
+        // 0.1 has no exact f64; the narrowing is the same nearest f64 the literal parses to.
+        assert_eq!(d("0.1").to_f64(), 0.1);
+        assert_eq!(d("0.3").to_f64(), 0.3);
+        assert_eq!(d("123.456").to_f64(), 123.456);
+        assert_eq!(d("6.02214076e23").to_f64(), 6.02214076e23);
+        // Out-of-range magnitudes saturate exactly as the parser does.
+        let huge = "1".to_string() + &"0".repeat(400); // 10^400
+        assert_eq!(d(&huge).to_f64(), f64::INFINITY);
     }
 
     // ---- canonical form & display --------------------------------------

@@ -68,8 +68,9 @@ or **APPROXIMATE to precision _p_** (`BigDouble`), and the audit records it.
 - `+ − × ÷` of exacts **stay exact** (`BigRational`), unbounded — `1/3` is `1/3`, not
   `0.333…`; `(0.1 + 0.2)` is exactly `3/10`.
 - A **root or transcendental** yields a `BigDouble` at a **requested precision** (default
-  high, e.g. 50 significant digits, configurable per call); the audit says *"accurate to N
-  significant figures, rounding mode R"*.
+  **256 bits ≈ 77 significant decimal digits** — far beyond `f64`'s ~15.9 and any real
+  measurement; a fixed default now, made per-`KnowledgeBase` configurable in NUM-6); the
+  audit says *"accurate to N significant figures, rounding mode R (round-half-even)"*.
 - **No silent lossy coercion.** Mixing an exact and an approximate widens to
   `BigDouble`(p) and the result is *labeled* approximate. `f64` never appears mid-computation;
   it is only a boundary export a consumer explicitly asks for, tagged lossy.
@@ -99,13 +100,35 @@ never a silent middle step. Provide, as engine ops and grounded stdlib formulas:
 
 ## 5. Engine integration
 
-The ADJ compute `Value` becomes a **Big numeric** — `BigRational` by default; `BigDecimal`
-for declared base-10 quantities (money/percent); `BigDouble`(p) for irrationals. The
-bounded `ExactRational` sidecar is **subsumed**. `f64` magnitudes remain available as a
-**labeled lossy export** for legacy consumers only. Golden pins keep rendering
-(`bmi(70,1.75)` still shows `22.857…`), but the underlying value is now the exact
-`3200/140` = `160/7` rational, and `22.857142857142858` is a *formatted `f64` export*, not
-the ground truth — the audit exposes the exact form.
+The ADJ compute `Value` becomes a **Big numeric tower** — a single `Number` enum with three
+variants and a promotion lattice `Decimal ⊂ Rational ⊂ Real`:
+
+```
+enum Number {
+    Rational(BigRational),   // the DEFAULT: exact fractions, integer & ratio arithmetic (1/3, 160/7)
+    Decimal(BigDecimal),     // declared base-10 quantities — money, percent, dosing (carries scale)
+    Real(BigDouble),         // genuinely-irrational results — √, ln, exp, trig — at 256-bit default
+}
+```
+
+**Promotion rules for a binary op** (so mixing is total and never silently lossy):
+
+- `Decimal ⊕ Decimal` for `+ − ×` → `Decimal` (base-10 identity/scale preserved, still exact).
+- Anything else over `{Rational, Decimal}` (including `Decimal ÷ Decimal`, which need not
+  terminate in base 10) → `Rational` — the common exact supertype, since every `BigDecimal`
+  `m·10⁻ˢ` is exactly the rational `m / 10ˢ`.
+- Any operand `Real`, **or** an irrational op (`√`, transcendental) on any operand →
+  `Real` at the max carried precision (default 256 bits). **`Real` is contagious**: once a
+  value is inexact it stays inexact, and the audit labels it approximate-to-precision-_p_.
+
+The bounded `i128 ExactRational` sidecar is **subsumed** by `Number` (unbounded, never drops
+to `None`). `f64` is no longer a stored field — it is a **labeled lossy export**
+(`Number::to_f64()`), only produced when a boundary consumer explicitly asks. Golden pins
+keep rendering (`bmi(70,1.75)` still shows `22.857…`), but the underlying value is now the
+exact `3200/140` = `160/7` rational, and `22.857142857142858` is a *formatted lossy export*,
+not the ground truth — the audit exposes the exact form. Each `Derived`/`DerivationNode`
+records its `Number` (hence its **exactness class**: EXACT for Rational/Decimal, APPROX(p)
+for Real).
 
 The rule substrate (ADJ-RULE-SUBSTRATE) computes on this: a formula/rule body evaluates in
 Big arithmetic; a constraint solves over exact rationals where the backend allows;

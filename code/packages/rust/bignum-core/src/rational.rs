@@ -228,6 +228,37 @@ impl BigRational {
 }
 
 // ===========================================================================
+//  Lossy export
+// ===========================================================================
+
+impl BigRational {
+    /// A **lossy** narrowing to the nearest `f64` (round-half-even) — the *labeled lossy
+    /// boundary* an interop/display consumer explicitly asks for. An exact `BigRational` like
+    /// `1/3` has no finite `f64`, so this deliberately rounds; a caller that needs exactness
+    /// keeps the `BigRational`. Values beyond `f64`'s range saturate to `±∞`, tiny ones to `0`.
+    ///
+    /// The exact `num / den` is divided as a [`BigDouble`](crate::BigDouble) — the numerator and
+    /// denominator enter it *exactly* (each at its own bit length, capped at `MAX_PRECISION`),
+    /// and the quotient is taken at `f64` width plus guard bits, so the result is the correctly
+    /// rounded `f64` for any rational of practical size. `BigDouble` handles the full exponent
+    /// range natively, so a `10^-300`-scale ratio narrows cleanly instead of underflowing an
+    /// intermediate.
+    pub fn to_f64(&self) -> f64 {
+        use crate::{BigDouble, MAX_PRECISION, RoundingMode::HalfEven};
+        if self.num.is_zero() {
+            return 0.0;
+        }
+        // Bring both parts in exactly (bit_len bits), capped at the precision budget; then divide
+        // at 53 significand + 11 guard bits — enough to round to the correct nearest f64.
+        let np = u32::try_from(self.num.bit_len()).unwrap_or(MAX_PRECISION).clamp(1, MAX_PRECISION);
+        let dp = u32::try_from(self.den.bit_len()).unwrap_or(MAX_PRECISION).clamp(1, MAX_PRECISION);
+        let n = BigDouble::from_bigint(self.num.clone(), np, HalfEven);
+        let d = BigDouble::from_bigint(self.den.clone(), dp, HalfEven);
+        n.div(&d, 64, HalfEven).to_f64()
+    }
+}
+
+// ===========================================================================
 //  Sign & reciprocal
 // ===========================================================================
 
@@ -532,6 +563,46 @@ mod tests {
 
     fn r(n: i64, d: i64) -> BigRational {
         BigRational::from_ints(n, d)
+    }
+
+    // ---- lossy f64 export -----------------------------------------------
+
+    #[test]
+    fn to_f64_is_exact_for_dyadic_and_integer_values() {
+        // Rationals whose f64 is exact must round-trip precisely.
+        assert_eq!(r(0, 1).to_f64(), 0.0);
+        assert_eq!(r(1, 2).to_f64(), 0.5);
+        assert_eq!(r(-3, 4).to_f64(), -0.75);
+        assert_eq!(r(10, 1).to_f64(), 10.0);
+        assert_eq!(r(160, 7).to_f64(), 160.0_f64 / 7.0); // the bmi(70,1.75) pin value
+        assert_eq!(r(1, 3).to_f64(), 1.0_f64 / 3.0);
+        assert_eq!(r(2, 3).to_f64(), 2.0_f64 / 3.0);
+    }
+
+    #[test]
+    fn to_f64_matches_hardware_division_across_random_ratios() {
+        // For ratios in f64's normal range, the narrowing must equal the correctly-rounded
+        // hardware quotient — i.e. the same f64 you'd get dividing the (small) parts directly.
+        let mut state: u64 = 0x9E3779B97F4A7C15;
+        let mut next = || {
+            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state
+        };
+        for _ in 0..5000 {
+            let n = (next() % 2_000_000) as i64 - 1_000_000;
+            let d = (next() % 999_999) as i64 + 1; // 1..=999_999, positive
+            assert_eq!(r(n, d).to_f64(), n as f64 / d as f64, "{n}/{d}");
+        }
+    }
+
+    #[test]
+    fn to_f64_handles_extreme_magnitudes_without_panicking() {
+        // A huge/tiny ratio narrows cleanly (saturates or underflows), never panics.
+        let huge = BigRational::from_integer(BigInteger::from_i64(10).pow(400));
+        assert_eq!(huge.to_f64(), f64::INFINITY);
+        let tiny = huge.recip(); // 10^-400
+        assert_eq!(tiny.to_f64(), 0.0);
+        assert!((&r(1, 1) / &huge).to_f64() >= 0.0);
     }
 
     // ---- canonical form -------------------------------------------------
