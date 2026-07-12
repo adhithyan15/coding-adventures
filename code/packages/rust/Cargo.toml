@@ -129,6 +129,7 @@ members = [
     "fenwick-tree",
     "flow-matic-lexer",
     "flow-matic-parser",
+    "flow-matic-iir-compiler",
     "font-parser",
     "font-parser-node",
     "font-parser-python",
