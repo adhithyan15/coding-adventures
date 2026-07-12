@@ -1,5 +1,20 @@
 # Changelog — iir-builtin-lowering
 
+## 0.23.0 - 2026-07-12 (E6d-3a: `list` constructor desugars to a cons chain)
+
+`list` is pure sugar over `cons` — `(list a b c)` = `(cons a (cons b (cons c
+nil)))`. Rather than a new backend op, a new `desugar_list_in_function` pass
+expands `call_builtin "list" …` into a nil `const` + a right-to-left `cons`
+chain, and it runs at the **head of both** `lower_heap_builtins` (managed:
+cons → `alloc`/`field_store`) **and** `lower_heap_builtins_runtime` (native/LLVM:
+cons → `dyn_cons`), so `list` reaches all five code-gen backends via the E6d-1
+cons path with **no lang-aot pipeline change and no `call_builtin` allowlist
+entry** (the `list` builtin is gone before any backend sees it). `(list)` with no
+args lowers directly to the nil sentinel. 5 unit tests (desugar shape, element
+order + dest preservation, empty list, end-to-end alloc/field_store, and the
+`dyn_cons` runtime path). List *operations* (`length`/`list-ref`/`append`/
+`reverse`) are E6d-3b (they need a cons-walk helper, not a desugar).
+
 ## 0.22.0 - 2026-07-11 (E6d-2b: tagged-i64 box/unbox runtime calls + producer-agnostic ref<any>)
 
 E6d-2b: new pass `lower_box_unbox_to_runtime_calls` rewrites the generic `box`/`unbox` ops (which `lower_dynamic_arith` emits) into `dyn_box_int`/`dyn_unbox_int` `call_builtin`s — the tagged-i64 (native/LLVM) representation of boxing, which the backends dispatch to `__dyn_box_int`/`__dyn_unbox_int`. The structural backends keep the generic ops. Also refines the DVAL01-3 `dyn_repr` seed: `ref<any>` (always a genuine tagged heap value) is now seeded **ungated**, so a **Twig** dynamic-arith result is exit-unboxed on the tagged-i64 backends, not just McCarthy Lisp; bare `any` stays gated on `is_lisp` (Twig placeholder). New tests: box/unbox -> runtime calls.

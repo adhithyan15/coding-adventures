@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.27] - 2026-07-12
+
+### Added — CLOC12.188 PR3: ES-module `import` end-to-end
+
+Picks up javascript-parser 0.52.0 (the `import_declaration` bridge flip) and its
+renaming-soundness gate. A file with a top-level `import` no longer declines to
+WHITESPACE_ONLY — it flows through the full optimization pipeline. New
+`tests/diff/simple-import/` fixture + `diff_simple_import.rs` with two facts:
+  - **SIMPLE**: `import {a, b as c} from "y"; a(1 + 2);` →
+    `import{a,b as c}from"y";a(3);` — the `import` round-trips (bridge modelled
+    it) and the argument folds `1+2`→`3` (the pipeline optimized the rest of the
+    module, not a WHITESPACE_ONLY fallback).
+  - **ADVANCED**: `import {a} from "y"; function longFn(longParam){…}
+    longFn(1);longFn(2);longFn(3);` keeps `longFn`/`longParam` verbatim — the
+    CLOC12.188 PR2 renaming-soundness gate fires end-to-end. (The identical
+    program without the `import` renames down to `function b(a){…}`, so the
+    surviving long names are a direct observation of the gate.)
+
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.26] - 2026-07-12
 
 ### Added — CLOC12.187 PR2b: `with (obj) { … }` end-to-end

@@ -851,6 +851,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
         | Expr::IndexGet { .. }
+        // SIR22 addendum: APL primitive operators — same deferral rationale
+        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // features, which `ACCEPTED_FEATURES` still doesn't declare).
+        | Expr::Reduce { .. }
+        | Expr::Scan { .. }
+        | Expr::OuterProduct { .. }
+        | Expr::Shape { .. }
+        | Expr::Reshape { .. }
+        | Expr::IndexGenerator { .. }
+        | Expr::IndexOf { .. }
+        | Expr::Ravel { .. }
+        | Expr::Catenate { .. }
         // SIR26 `Convert` — this backend does not accept `Conversions`, so a
         // validated module never reaches here (capability check rejects it).
         | Expr::Convert { .. } => {

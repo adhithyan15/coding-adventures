@@ -3532,6 +3532,27 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
                 })
         }
 
+        // SIR22 addendum: APL primitive operators — same "Pure" treatment
+        // as the base SIR22 nodes above (the spec's "Effects" section marks
+        // every one of these `Pure` too).
+        Expr::Reduce { target, .. } => expr_may_have_effects(target),
+        Expr::Scan { target, .. } => expr_may_have_effects(target),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+        Expr::Shape { target, .. } => expr_may_have_effects(target),
+        Expr::Reshape { shape, target, .. } => {
+            expr_may_have_effects(shape) || expr_may_have_effects(target)
+        }
+        Expr::IndexGenerator { count, .. } => expr_may_have_effects(count),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => expr_may_have_effects(haystack) || expr_may_have_effects(needle),
+        Expr::Ravel { target, .. } => expr_may_have_effects(target),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+
         // Calls, closures, and intrinsics may do anything → keep.
         Expr::DirectCall { .. }
         | Expr::IndirectCall { .. }

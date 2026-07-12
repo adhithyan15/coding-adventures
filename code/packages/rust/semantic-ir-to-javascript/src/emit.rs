@@ -838,6 +838,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::ElementwiseOp { span, .. }
         | Expr::Transpose { span, .. }
         | Expr::IndexGet { span, .. }
+        // SIR22 addendum: APL primitive operators — same deferral as the
+        // base SIR22 nodes above; `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // are still the gating features, so none of these nine reach this
+        // emitter in a validated module either.
+        | Expr::Reduce { span, .. }
+        | Expr::Scan { span, .. }
+        | Expr::OuterProduct { span, .. }
+        | Expr::Shape { span, .. }
+        | Expr::Reshape { span, .. }
+        | Expr::IndexGenerator { span, .. }
+        | Expr::IndexOf { span, .. }
+        | Expr::Ravel { span, .. }
+        | Expr::Catenate { span, .. }
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module (capability check rejects it).
         | Expr::Convert { span, .. } => {

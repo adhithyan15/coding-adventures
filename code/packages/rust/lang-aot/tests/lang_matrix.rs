@@ -206,6 +206,31 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3a: the `list` constructor on the code-gen backends.**
+    // `list` is pure sugar over `cons`: `(list a b c)` = `(cons a (cons b
+    // (cons c nil)))`. The shared `iir-builtin-lowering` `desugar_list_in_function`
+    // pass (at the head of `lower_heap_builtins` *and* `lower_heap_builtins_runtime`)
+    // expands `call_builtin "list"` into a nil `const` + a right-to-left `cons`
+    // chain, so the whole list rides the exact heap path E6d-1 proved — no new
+    // backend op, no allowlist entry (the `list` builtin is gone before the
+    // backend sees it). `(car (list 42 1 2))` reads the head element ⇒ 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (list 42 1 2))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-3a: `list` + `cdr` traversal reaches the second element.
+    // `(car (cdr (list 1 42 3)))` = car(cdr(`(1 42 3)`)) = car(`(42 3)`) = 42,
+    // proving the desugared cons chain links correctly across cells.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (list 1 42 3)))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.
