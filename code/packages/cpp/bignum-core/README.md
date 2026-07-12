@@ -63,8 +63,30 @@ Every fallible operation offers **both** a throwing form (`parse` →
 `checked_from_parts` returning `std::optional`. `parse` enforces a strict
 `MAX_SCALE` (10^6) budget on untrusted input so a tiny string cannot amplify into
 a multi-gigabyte power of ten. `to_f64` goes through `std::strtod`, so no
-`<cmath>`/libm is needed. This ports the integer core plus its decimal rung; the
-crate's float rung builds on the same base.
+`<cmath>`/libm is needed.
+
+## BigRational — exact fractions (`bignum_rational.hpp`)
+
+The `rational` rung, built on `BigInteger`. A **`ca::BigRational`** is an exact
+fraction `numerator/denominator` in canonical form (lowest terms, positive
+denominator, zero as `0/1`), so `==` and `<` compare by value. Value semantics.
+
+```cpp
+#include "bignum_rational.hpp"
+using ca::BigRational;
+
+BigRational sum = BigRational::parse("1/10") + BigRational::parse("2/10");
+sum.to_string();                                 // "3/10", exactly
+double d = BigRational::from_ints(160, 7).to_f64(); // labelled lossy exit
+```
+
+Every fallible operation offers both a throwing form (`make`/`div`/`recip` →
+`std::domain_error`, `parse` → `ca::ParseRatioError`, `try_pow` →
+`ca::PowTooLargeError`) and a non-throwing `checked_make` / `checked_div` /
+`checked_recip` / `try_parse` returning `std::optional`. `to_f64` narrows through
+the exact `BigDecimal` division (no `<cmath>`), saturating to ±inf / 0 beyond
+`double`'s range. This ports the integer core plus its decimal and rational
+rungs; the crate's float rung builds on the same base.
 
 ## Portability
 

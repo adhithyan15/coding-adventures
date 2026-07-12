@@ -72,6 +72,32 @@ this port returns a `DecStatus` instead — a library must not abort its host. T
 lossy `dec_to_f64` goes through the value's decimal string and `strtod`, so no
 `<math.h>` is needed.
 
+## BigRational — exact fractions (`bignum_rational.h`)
+
+The `rational` rung, built on `BigInteger`. A **BigRational** is an exact
+fraction `numerator/denominator` in canonical form (lowest terms, positive
+denominator, zero pinned to `0/1`), so equal values print and compare
+identically and every operation is exact.
+
+```c
+#include "bignum_rational.h"
+
+BigRational *a = NULL, *b = NULL, *sum = NULL;
+rat_parse("1/10", &a);
+rat_parse("2/10", &b);
+rat_add(a, b, &sum);             /* 0.1 + 0.2 is exactly 3/10, not 0.3000…4 */
+char *s = rat_to_string(sum);    /* "3/10" */
+
+free(s);
+rat_free(a); rat_free(b); rat_free(sum);
+```
+
+`rat_new`/`rat_div`/`rat_recip` report a zero denominator/divisor as a
+`RatStatus` (the Rust panics), and `rat_try_pow` refuses an oversized result up
+front so an untrusted exponent cannot OOM the process. The lossy `rat_to_f64`
+narrows through the exact base-10 `BigDecimal` division (no `<math.h>`);
+saturating to ±inf / 0 beyond `double`'s range.
+
 ## Portability
 
 Pure ISO C17 — compiles clean under GCC, Clang, and MSVC with `-pedantic-errors`

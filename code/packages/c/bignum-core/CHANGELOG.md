@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-07-11
+
+### Added
+
+- **BigRational** (`bignum_rational.h` / `bignum_rational.c`) — the exact
+  fraction `rational` rung of the Rust crate, built on `BigInteger`: a
+  numerator over a denominator, always in canonical form (lowest terms,
+  positive denominator, zero pinned to `0/1`).
+- Construction (`rat_zero` / `one` / `from_i64` / `from_integer` / `from_ints` /
+  `rat_new` / `clone`), accessors (`rat_numerator` / `rat_denominator`),
+  predicates & sign (`is_zero` / `is_integer` / `is_negative` / `is_positive` /
+  `signum` / `abs` / `recip`).
+- Exact `rat_add` / `rat_sub` / `rat_mul` / `rat_div`; integer `rat_pow` (negative
+  exponents take the reciprocal) and the DoS-safe `rat_try_pow`; `rat_cmp` total
+  order by cross-multiplication.
+- `rat_parse` (`"num/den"` or a bare integer, typed `RatParseStatus`),
+  `rat_to_string`, and the lossy `rat_to_f64` (computed through the exact
+  `BigDecimal` division — no `<math.h>`; saturates to ±inf / 0 out of range).
+- Rust panics (zero denominator, divide/reciprocal by zero) are returned as a
+  `RatStatus`; the i32 exponent magnitude is taken without INT32_MIN UB.
+- Tests via the shared `iso-harness` (GCC, Clang, MSVC): canonical form, sign
+  placement, exact arithmetic (including big operands pinned against Python's
+  `fractions.Fraction`), ordering, reciprocal, powers, parsing, and `to_f64`.
+
 ## [0.2.0] - 2026-07-11
 
 ### Added

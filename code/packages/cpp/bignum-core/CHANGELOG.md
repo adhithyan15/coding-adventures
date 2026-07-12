@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-07-11
+
+### Added
+
+- **`ca::BigRational`** (`bignum_rational.hpp`, header-only) — the exact fraction
+  `rational` rung of the Rust crate, built on `BigInteger`: a numerator over a
+  denominator in canonical form (lowest terms, positive denominator, `0/1`
+  zero), with value semantics.
+- Construction (`zero` / `one` / `from_i64` / `from_u64` / `from_integer` /
+  `from_ints` / `make` / `checked_make`), accessors (`numerator` /
+  `denominator`), predicates & sign (incl. `abs` / `recip` / `checked_recip`).
+- Exact `add` / `sub` / `mul` / `div` (and `+ - * /` / unary `-` operators);
+  integer `pow` (negative exponent → reciprocal) and DoS-safe `try_pow`; `cmp`
+  and the six comparison operators via cross-multiplication.
+- `parse` / `try_parse` (`"num/den"` or a bare integer; `ca::ParseRatioError`
+  with a `kind`), `to_string`, and the lossy `to_f64` (through the exact
+  `BigDecimal` division — no `<cmath>`; saturates to ±inf / 0 out of range).
+- Every fallible op has both a throwing and a non-throwing (`std::optional` /
+  exception) form; the i32 exponent magnitude is taken without INT32_MIN UB.
+- Tests via the shared `iso-harness` (GCC, Clang, MSVC): canonical form, sign
+  placement, exact arithmetic (including big operands pinned against Python's
+  `fractions.Fraction`), ordering, reciprocal, powers, parsing, and `to_f64`.
+
 ## [0.2.0] - 2026-07-11
 
 ### Added
