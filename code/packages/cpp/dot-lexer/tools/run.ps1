@@ -1,4 +1,4 @@
-# Build and run the bignum-core tests under MSVC (cl.exe) — pure ISO C/C++ — via the
+# Build and run the dot-lexer tests under MSVC (cl.exe) — pure ISO C/C++ — via the
 # shared iso-harness (code\packages\c\iso-harness).
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -15,6 +15,4 @@ $harness = Join-Path $d 'code\packages\c\iso-harness'
 
 $env:ISO_INCLUDE = "include $harness\include"
 . (Join-Path $harness 'lib\iso-lib.ps1')
-Iso-BuildAndRun -Lang c -Name bignum_core-tests -Sources @("tests\bignum_core_test.c", "src\bignum_core.c")
-Iso-BuildAndRun -Lang c -Name bignum_decimal-tests -Sources @("tests\bignum_decimal_test.c", "src\bignum_decimal.c", "src\bignum_core.c")
-Iso-BuildAndRun -Lang c -Name bignum_rational-tests -Sources @("tests\bignum_rational_test.c", "src\bignum_rational.c", "src\bignum_decimal.c", "src\bignum_core.c")
+Iso-BuildAndRun -Lang cpp -Name dot_lexer-tests -Sources @("tests\dot_lexer_test.cpp")
