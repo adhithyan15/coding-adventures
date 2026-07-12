@@ -443,6 +443,42 @@ where
             walk_intrinsics_in_expr(target, f, depth + 1);
             walk_intrinsics_in_index_args(indices, f, depth + 1);
         }
+
+        // ── SIR22 addendum: APL primitive operators ─────────────────
+        Expr::Reduce { target, .. } => {
+            walk_intrinsics_in_expr(target, f, depth + 1);
+        }
+        Expr::Scan { target, .. } => {
+            walk_intrinsics_in_expr(target, f, depth + 1);
+        }
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            walk_intrinsics_in_expr(lhs, f, depth + 1);
+            walk_intrinsics_in_expr(rhs, f, depth + 1);
+        }
+        Expr::Shape { target, .. } => {
+            walk_intrinsics_in_expr(target, f, depth + 1);
+        }
+        Expr::Reshape { shape, target, .. } => {
+            walk_intrinsics_in_expr(shape, f, depth + 1);
+            walk_intrinsics_in_expr(target, f, depth + 1);
+        }
+        Expr::IndexGenerator { count, .. } => {
+            walk_intrinsics_in_expr(count, f, depth + 1);
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            walk_intrinsics_in_expr(haystack, f, depth + 1);
+            walk_intrinsics_in_expr(needle, f, depth + 1);
+        }
+        Expr::Ravel { target, .. } => {
+            walk_intrinsics_in_expr(target, f, depth + 1);
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            walk_intrinsics_in_expr(lhs, f, depth + 1);
+            walk_intrinsics_in_expr(rhs, f, depth + 1);
+        }
+
         // ── SIR26 ──────────────────────────────────────────────────
         Expr::Convert { value, .. } => {
             walk_intrinsics_in_expr(value, f, depth + 1);

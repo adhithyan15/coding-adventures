@@ -2,6 +2,128 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.23.0 — SIR22 addendum: APL primitive Expr variants
+
+Extends [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md) with the
+array-family primitive *operators* the base spec's first cut didn't cover.
+SIR22's own Motivation section always claimed to be "the substrate for ...
+every future array-family frontend (APL, J, K/Q, Scilab, IDL)," but the
+first cut only populated the `Expr` variants MATLAB's own frontend needed
+(`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
+`IndexSet`) — MATLAB has no first-class *operator* syntax for reduce/scan/
+outer-product/reshape/iota/ravel/catenate (it would call `sum(x)`/
+`reshape(x, ...)` etc. as ordinary function calls, which this repo's MATLAB
+frontend subset doesn't yet support at all). APL (`apl-runtime`/
+`apl-parser`, already shipped) exposes all of these as first-class bare
+glyphs, so this is a genuine substrate gap — the exact same kind of
+prerequisite gap `array-runtime`'s own AR-2 task was for `apl-runtime`
+before that runtime crate could be built. This PR closes the gap at the IR
+level; it does **not** add the `apl-to-semantic-ir` frontend that will
+consume it — that is a follow-up task. Additive only, following the exact
+discipline SIR23 used for its own extension: every existing SIR10/SIR16/
+SIR17/SIR18/SIR21/SIR22/SIR23/SIR26 module remains valid; no existing
+`Expr`/`Stmt`/`SirType`/`Feature` variant, validator rule, or backend
+behaviour changed.
+
+**New `ElementwiseOpKind` variants** (`nodes.rs`): `Max, Min, Eq, Ne, Lt,
+Le, Ge, Gt` added alongside the five SIR22 shipped (`Add, Sub, Mul, Div,
+Pow`), mirroring `array_runtime::BinOp`'s own identical extension (added
+for `apl-runtime`'s `⌈`/`⌊` max/min glyphs and its six comparison glyphs
+`= ≠ < ≤ ≥ >` in PR #8072). Kebab-case `.name()`/`.from_name()` round-trip
+extended to all thirteen variants.
+
+**New `Expr` variants** (`nodes.rs`), each mapped 1:1 onto an existing
+`array_runtime::ops`/`apl-runtime::builtins` op shape (the same "map 1:1
+onto an existing op shape" discipline the SIR22 spec itself states as its
+design principle, extended here to a second source op-shape since APL's
+`⍴`/`⍳`/`,` don't fit the `BinOp` shape any more than they did for
+`apl-runtime` itself):
+- `Reduce { op: ElementwiseOpKind, target: Box<Expr>, span }` — `+/A`,
+  maps 1:1 onto `array_runtime::ops::reduce(op, a)`.
+- `Scan { op: ElementwiseOpKind, target: Box<Expr>, span }` — `+\A`, maps
+  1:1 onto `array_runtime::ops::scan(op, a)`.
+- `OuterProduct { op: ElementwiseOpKind, lhs: Box<Expr>, rhs: Box<Expr>,
+  span }` — `A∘.×B`, maps 1:1 onto `array_runtime::ops::outer(op, a, b)`.
+- `Shape { target: Box<Expr>, span }` — monadic `⍴A`, mirrors
+  `apl-runtime::builtins::shape`.
+- `Reshape { shape: Box<Expr>, target: Box<Expr>, span }` — dyadic `A⍴B`,
+  mirrors `apl-runtime::builtins::reshape(a, b)`; field names spell out
+  the shape-vector-vs-data role instead of reusing `lhs`/`rhs`, since
+  (unlike `MatMul`/`ElementwiseOp`) the two operands aren't interchangeable
+  in kind.
+- `IndexGenerator { count: Box<Expr>, span }` — monadic `⍳N` (iota), mirrors
+  `apl-runtime::builtins::index_generator`.
+- `IndexOf { haystack: Box<Expr>, needle: Box<Expr>, span }` — dyadic `A⍳B`
+  (index-of/search), mirrors `apl-runtime::builtins::index_of(a, b)`.
+- `Ravel { target: Box<Expr>, span }` — monadic `,A` (flatten), mirrors
+  `apl-runtime::builtins::ravel`.
+- `Catenate { lhs: Box<Expr>, rhs: Box<Expr>, span }` — dyadic `A,B`
+  (concatenate), mirrors `apl-runtime::builtins::catenate`.
+
+**No new `Stmt` or `SirType` variant** — every new node is `Expr`-shaped and
+`Pure`, same as the rest of SIR22.
+
+**No new `Feature` flag** — every new node reuses SIR22's existing
+`MatrixOps`/`NDArrays`/`ArrayColumnMajor` flags rather than adding new ones
+(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`Ravel`/`Catenate` observe
+both `MatrixOps` and `ArrayColumnMajor` — same class of operation as
+`MatMul`/`Transpose`; `IndexGenerator`/`IndexOf` observe only `NDArrays` —
+they construct/query arrays without inherently being a "matrix op" any more
+than `Range`/`IndexGet` are).
+
+**Validator** (`validator.rs`): one match arm per new variant following the
+exact feature-observation split above, each recursing into every child
+`Expr`. Extensive new tests (one "rejected undeclared" + one "accepted
+declared" pair per variant) mirror the existing SIR22 validator tests.
+
+**Walker** (`walker.rs`) and **printer** (`text/printer.rs`): one arm per
+new variant — the walker recurses into every child `Expr` with no `Feature`
+bookkeeping (purely structural traversal); the printer renders each as a
+parenthesized s-expression (`(reduce <op> <target>)`, `(scan <op>
+<target>)`, `(outer-product <op> <lhs> <rhs>)`, `(shape <target>)`,
+`(reshape <shape> <target>)`, `(index-generator <count>)`, `(index-of
+<haystack> <needle>)`, `(ravel <target>)`, `(catenate <lhs> <rhs>)`),
+reusing `op.name()` for the op-kind token exactly like the existing
+`ElementwiseOp` arm does. New tests mirror the existing SIR22 walker/
+printer tests one-for-one.
+
+**Compile-compat ripple**: adding `Expr` variants to a shared narrow-waist
+IR is not confined to `semantic-ir` itself — every crate with an exhaustive
+`match` over `Expr` needs a new arm to keep compiling, independent of
+whether it does anything semantically interesting with the new node. Eight
+downstream crates had such exhaustive matches (carried over from SIR23's
+own rollout): the five backends `semantic-ir-to-{javascript,typescript,
+rust,go,python}` (panic-guard "deferred, not accepted" stubs in their
+codegen `match`, gated the same way as the existing SIR22/SIR23 stubs —
+`MatrixOps`/`NDArrays`/`ArrayColumnMajor` aren't in any of their
+`ACCEPTED_FEATURES`, so a validated module can never reach these arms) and
+the three frontends `{javascript,ruby,python}-to-semantic-ir` (faithful
+structural recursion in internal analysis passes — effect inference,
+call-graph collection, yield-rewriting, swap-safety checks — since none of
+these frontends emit the new nodes today). `semantic-ir`'s own
+`backend.rs::walk_intrinsics_in_expr` needed the same treatment. No actual
+codegen was added anywhere — per this task's scope, real JS/TS backend
+support for these ops (or any SIR22 node) remains a separate, not-yet-
+started rollout item. `wolfram-to-semantic-ir`, `matlab-to-semantic-ir`,
+`octave-to-semantic-ir`, `c-to-semantic-ir`, `twig-to-semantic-ir`,
+`semantic-ir-to-c`, `semantic-ir-to-ruby`, and `sir-conformance` required no
+changes (no exhaustive `Expr` match in any of them — their internal helpers
+already use a wildcard `_ => ...` arm).
+
+**Versioning** (`metadata.rs`): `CURRENT_SIR_VERSION` bumped `"3"` → `"4"`,
+following the same "adding a feature is a v.bump" policy that moved `"2"`
+→ `"3"` in SIR23 and `"1"` → `"2"` in SIR22 — this addendum introduces new
+SIR text tokens (new printer forms, new op-kind names) even though it
+isn't a new numbered spec. The `v3`-asserting golden tests (`lib.rs`,
+`metadata.rs`, `text/printer.rs`) were updated to `v4`. No frontend crate
+sets `metadata.sir_version` to `"4"` yet — `apl-to-semantic-ir` will, once
+it exists.
+
+No frontend crate consumes any of these nine variants yet — this addendum
+is IR-substrate-only, mirroring how `array-runtime`'s AR-2 task preceded
+`apl-runtime` as its own separate step. `apl-to-semantic-ir` is the
+follow-up task that will actually emit these nodes from parsed APL source.
+
 ## 0.22.0 — SIR23: symbolic expression + pattern/rewrite IR extension
 
 Implements [SIR23](../../../specs/SIR23-symbolic-pattern-semantic-ir.md) —

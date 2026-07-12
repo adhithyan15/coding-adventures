@@ -78,7 +78,10 @@ Range {
 MatMul { lhs: Box<Expr>, rhs: Box<Expr>, span }
 
 ElementwiseOp {
-    op:   ElementwiseOpKind,   -- Add | Sub | Mul | Div | Pow
+    op:   ElementwiseOpKind,   -- Add | Sub | Mul | Div | Pow (original cut)
+                                  | Max | Min | Eq | Ne | Lt | Le | Ge | Gt
+                                  (APL addendum — see "New Expr variants
+                                  (APL primitives)" below)
     lhs:  Box<Expr>,
     rhs:  Box<Expr>,
     span,
@@ -117,6 +120,103 @@ IR concept — the frontend resolves `end` to a concrete expression (a call to
 a `size`/`length`-equivalent builtin minus an offset) before emitting
 `IndexArg::Scalar`. The IR never sees `end`; per SIR10 discipline,
 disambiguation is the frontend's job.
+
+## New `Expr` variants (APL primitives)
+
+This spec's own Motivation section always claimed to be the substrate for
+"every future array-family frontend (APL, J, K/Q, Scilab, IDL)," but the
+original cut above only populated the `Expr` variants MATLAB's own frontend
+needed. MATLAB has no first-class *operator* syntax for reduce, scan,
+outer product, reshape, iota, ravel, or catenate — it would call
+`sum(x)`/`reshape(x, ...)`/etc. as ordinary function calls, which this
+repo's MATLAB frontend subset doesn't yet support at all (only `disp` is a
+recognized builtin call today). APL (`apl-runtime`/`apl-parser`, already
+shipped) exposes all seven of these as first-class bare glyphs, so the
+original cut left a genuine gap between what this spec always claimed to
+cover and what it actually modeled. This addendum closes that gap.
+
+Every variant below carries `span` and is `Pure`, same as every other
+SIR22 node, and is mapped 1:1 onto an existing op shape — either
+`array_runtime::ops::{reduce,scan,outer}` (for the three that take an
+`ElementwiseOpKind`) or `apl-runtime::builtins`'s own bespoke,
+non-`BinOp`-shaped logic (for the rest) — the same "map 1:1 onto an
+existing op shape" discipline this spec's own Motivation states, extended
+to a second source op-shape since APL's `⍴`/`⍳`/`,` don't fit the `BinOp`
+shape any more than they did for `apl-runtime` itself.
+
+```text
+Reduce { op: ElementwiseOpKind, target: Box<Expr>, span }
+    -- `+/A` (APL reduce): folds `target` with `op` along its one axis.
+       Maps 1:1 onto `array_runtime::ops::reduce(op, a)`.
+
+Scan { op: ElementwiseOpKind, target: Box<Expr>, span }
+    -- `+\A` (APL scan): a running fold of `target` with `op`, emitting
+       one result per prefix. Maps 1:1 onto `array_runtime::ops::scan(op, a)`.
+
+OuterProduct { op: ElementwiseOpKind, lhs: Box<Expr>, rhs: Box<Expr>, span }
+    -- `A∘.×B` (APL outer product): every pairwise `op` application
+       between `lhs`'s and `rhs`'s elements. Maps 1:1 onto
+       `array_runtime::ops::outer(op, a, b)`.
+
+Shape { target: Box<Expr>, span }
+    -- monadic `⍴A` (APL shape): the dimensions of `target` as a vector.
+       Mirrors `apl-runtime::builtins::shape`.
+
+Reshape { shape: Box<Expr>, target: Box<Expr>, span }
+    -- dyadic `A⍴B` (APL reshape): reinterpret `target`'s data under the
+       new dimensions given by `shape`. Mirrors
+       `apl-runtime::builtins::reshape(a, b)`, where `a` is the shape
+       vector and `b` is the data — field names spell out that role
+       instead of reusing `lhs`/`rhs`, since (unlike `MatMul`/
+       `ElementwiseOp`) the two operands are not interchangeable in kind.
+
+IndexGenerator { count: Box<Expr>, span }
+    -- monadic `⍳N` (APL iota / index generator): the vector
+       `0, 1, ..., N-1` (0-based at the `Array` level, even though APL's
+       own surface syntax is 1-indexed). Mirrors
+       `apl-runtime::builtins::index_generator`.
+
+IndexOf { haystack: Box<Expr>, needle: Box<Expr>, span }
+    -- dyadic `A⍳B` (APL index-of / search): for each element of
+       `needle`, its position in `haystack` (or `haystack`'s length if
+       not found). Mirrors `apl-runtime::builtins::index_of(a, b)`, where
+       `a` is the haystack and `b` is the needle.
+
+Ravel { target: Box<Expr>, span }
+    -- monadic `,A` (APL ravel): flatten `target` to a rank-1 vector.
+       Mirrors `apl-runtime::builtins::ravel`.
+
+Catenate { lhs: Box<Expr>, rhs: Box<Expr>, span }
+    -- dyadic `A,B` (APL catenate): concatenate `lhs` and `rhs` along
+       their ravel order. Mirrors `apl-runtime::builtins::catenate`.
+```
+
+`ElementwiseOpKind` (used by `ElementwiseOp` above, and by `Reduce`/`Scan`/
+`OuterProduct` here) grew from five variants to thirteen in this addendum:
+`Add | Sub | Mul | Div | Pow | Max | Min | Eq | Ne | Lt | Le | Ge | Gt`. The
+eight new variants (`Max`/`Min`/the six comparisons) mirror
+`array_runtime::BinOp`'s own identical extension, added alongside
+`apl-runtime` for APL's `⌈`/`⌊` max/min glyphs and its six comparison
+glyphs `= ≠ < ≤ ≥ >` (PR #8072). `Reduce`/`Scan`/`OuterProduct` reuse the
+whole `ElementwiseOpKind` enum rather than a narrower subset — the IR does
+not restrict which `op` a frontend may pick for these adverbs (e.g. `Pow`
+has no APL reduce-adverb precedent, but nothing stops a frontend from
+constructing `Reduce { op: Pow, .. }`), mirroring how `ElementwiseOp`
+itself places no restriction on which arithmetic op appears there.
+
+No new `Feature` flag was added: `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`Ravel`/`Catenate` observe both `Feature::MatrixOps` and
+`Feature::ArrayColumnMajor` — the same class of genuine array/matrix
+operation as `MatMul`/`Transpose` above. `IndexGenerator`/`IndexOf` observe
+only `Feature::NDArrays` — they construct/query arrays without inherently
+being a "matrix op" any more than `Range`/`IndexGet` are.
+
+No frontend crate consumes any of these nine variants yet. This addendum
+is IR-substrate-only, mirroring how `array-runtime`'s AR-2 task preceded
+`apl-runtime` as its own separate step before that runtime crate could be
+built — the actual `apl-to-semantic-ir` frontend that will emit these
+nodes from parsed APL source is a follow-up task, not part of this
+addendum.
 
 ## Storage convention
 
@@ -179,6 +279,14 @@ SIR16/SIR18/KW1 before it) — no existing module or backend match arm needs
 to change; backends simply gain new arms or explicitly decline the new
 features. Modules using SIR22 nodes bump `metadata.sir_version` to record
 that fact for validators.
+
+This spec has since received one additive addendum — the "New `Expr`
+variants (APL primitives)" section above — which bumped
+`metadata::CURRENT_SIR_VERSION` again (`"3"` → `"4"`, following SIR23's
+`"2"` → `"3"` bump). Both the original MATLAB-oriented cut and the APL
+addendum share this same versioning discipline: every SIR text token
+addition is a version bump, regardless of whether it lands in the spec's
+original PR or a later addendum to it.
 
 ## References
 

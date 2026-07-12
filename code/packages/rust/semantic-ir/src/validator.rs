@@ -1025,6 +1025,65 @@ impl<'m> ValidatorState<'m> {
                 self.check_index_args(indices, env, depth + 1);
             }
 
+            // ── SIR22 addendum: APL primitive operators ─────────────
+            // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`Ravel`/
+            // `Catenate` are genuine array/matrix operations on the
+            // column-major representation, same class as `MatMul`/
+            // `Transpose` above, so they observe both `MatrixOps` and
+            // `ArrayColumnMajor`. `IndexGenerator`/`IndexOf` only
+            // construct/query arrays, without inherently being a "matrix
+            // op" any more than `Range`/`IndexGet` are, so they observe
+            // only `NDArrays`.
+            Expr::Reduce { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::Scan { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::OuterProduct { lhs, rhs, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+            Expr::Shape { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::Reshape { shape, target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(shape, env, depth + 1);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::IndexGenerator { count, .. } => {
+                self.observed.add(Feature::NDArrays);
+                self.check_expr(count, env, depth + 1);
+            }
+            Expr::IndexOf {
+                haystack, needle, ..
+            } => {
+                self.observed.add(Feature::NDArrays);
+                self.check_expr(haystack, env, depth + 1);
+                self.check_expr(needle, env, depth + 1);
+            }
+            Expr::Ravel { target, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(target, env, depth + 1);
+            }
+            Expr::Catenate { lhs, rhs, .. } => {
+                self.observed.add(Feature::MatrixOps);
+                self.observed.add(Feature::ArrayColumnMajor);
+                self.check_expr(lhs, env, depth + 1);
+                self.check_expr(rhs, env, depth + 1);
+            }
+
             // ── SIR26: integer conversion ──────────────────────────────
             Expr::Convert { value, to, .. } => {
                 // Observe the conversion feature plus the SIR21 type-implied
@@ -4168,6 +4227,354 @@ mod tests {
             default: None,
             span: s(),
         });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    // ── SIR22 addendum: APL primitive operator validator tests ───────
+
+    #[test]
+    fn reduce_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Reduce {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn reduce_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Reduce {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn scan_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Scan {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn scan_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Scan {
+                op: ElementwiseOpKind::Add,
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn outer_product_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::OuterProduct {
+                op: ElementwiseOpKind::Mul,
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn outer_product_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::OuterProduct {
+                op: ElementwiseOpKind::Mul,
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn shape_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Shape {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn shape_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Shape {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn reshape_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Reshape {
+                shape: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn reshape_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Reshape {
+                shape: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn index_generator_observes_nd_arrays_feature_only() {
+        // ⍳N — construction/query only, not a "matrix op" any more than
+        // Range/IndexGet are, so only NDArrays should be observed.
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::IndexGenerator {
+                count: Box::new(Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(!r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn index_generator_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays]),
+            Expr::IndexGenerator {
+                count: Box::new(Expr::IntLit {
+                    value: 5,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn index_of_observes_nd_arrays_feature_only() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::IndexOf {
+                haystack: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                needle: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("nd-arrays")));
+        assert!(!r.errors().any(|i| i.message.contains("matrix-ops")));
+    }
+
+    #[test]
+    fn index_of_with_declared_feature_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::NDArrays]),
+            Expr::IndexOf {
+                haystack: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                needle: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn ravel_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Ravel {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn ravel_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Ravel {
+                target: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn catenate_observes_matrix_ops_and_column_major_features() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::new(),
+            Expr::Catenate {
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("matrix-ops")));
+        assert!(r.errors().any(|i| i.message.contains("array-column-major")));
+    }
+
+    #[test]
+    fn catenate_with_declared_features_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::MatrixOps, Feature::ArrayColumnMajor]),
+            Expr::Catenate {
+                lhs: Box::new(Expr::IntLit {
+                    value: 1,
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                }),
+                span: s(),
+            },
+        );
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
