@@ -72,7 +72,7 @@ flow-control** group `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`
 (item **M6**); and (item **M1b**)
 **block-taking `Array`/`Enumerable`** methods `each`, `each_with_index`,
 `map`/`collect`, `select`/`filter`, `reject`, `reduce`/`inject`, `find`/`detect`,
-`flat_map`, `any?`/`all?`/`none?`, `chunk_while` — a trailing `Closure` block is applied via
+`flat_map`, `any?`/`all?`/`none?`, `chunk_while`/`slice_when` — a trailing `Closure` block is applied via
 `sir-runtime-core`'s `apply` (proc-lenient), predicates routed through SIR
 `truthy`; (item **M1c**) the **`Hash`** catalog
 (`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/`transform_values`/`transform_keys`/`to_h`/`each_with_index`/`each_with_object`/ Enumerable aggregates `find`/`any?`/`all?`/`none?`/`count`/`sort_by`/`min_by`/`max_by`/`group_by`/`partition`/`flat_map`/`reduce`/`sum`/…);

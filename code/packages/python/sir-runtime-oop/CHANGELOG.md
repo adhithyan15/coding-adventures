@@ -2,6 +2,19 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.24] - 2026-07-11
+
+### Added
+
+- **`Array#slice_when`** — the block-taking Array method that is the INVERSE of
+  `chunk_while`: it splits into runs of consecutive elements, starting a NEW run
+  BETWEEN an adjacent pair exactly WHERE the block is truthy (whereas
+  `chunk_while` starts a new run where the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b - a > 1 }` →
+  `[[1,2],[4],[9,10,11,12]]`; an empty array yields `[]`, a single element
+  `[[x]]`. This is the Python **reference** for the new cross-backend cascade
+  (Go/Rust/JS/TS mirrors to follow). `respond_to?("slice_when")` reports `true`.
+
 ## [0.1.23] - 2026-07-11
 
 ### Added
