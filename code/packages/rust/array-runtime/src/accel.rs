@@ -58,6 +58,28 @@ pub(crate) fn build_graph(
         Kernel::Elementwise(BinOp::Sub) => g.sub(&ta, &tb),
         Kernel::Elementwise(BinOp::Mul) => g.mul(&ta, &tb),
         Kernel::Elementwise(BinOp::Div) => g.div(&ta, &tb),
+        // `Max`/`Min`/comparisons (added for MA-4e) have no `matrix-ir` graph
+        // op yet — they stay on the CPU-reference path (`ops::elementwise`/
+        // `ops::reduce`/`ops::scan`/`ops::outer`) only, exactly like
+        // `reduce`/`scan`/`outer` themselves (see `ops.rs`'s AR-2 doc
+        // comment). A clean, explicit error here beats a silent wrong
+        // dispatch decision.
+        Kernel::Elementwise(
+            op @ (BinOp::Max
+            | BinOp::Min
+            | BinOp::Eq
+            | BinOp::Ne
+            | BinOp::Lt
+            | BinOp::Le
+            | BinOp::Ge
+            | BinOp::Gt),
+        ) => {
+            return Err(format!(
+                "{op:?}: not lowered to the GPU-dispatch graph builder yet \
+                 (only Add/Sub/Mul/Div are); use the CPU-reference `ops::` \
+                 functions for this operator"
+            ));
+        }
         Kernel::MatMul => g.matmul(&ta, &tb),
     };
     g.output(&out);

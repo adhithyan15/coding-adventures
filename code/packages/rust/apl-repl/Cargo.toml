@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-apl-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `apl` binary for the APL language"
+
+[dependencies]
+coding-adventures-apl-runtime = { path = "../apl-runtime" }
+
+[[bin]]
+name = "apl"
+path = "src/main.rs"

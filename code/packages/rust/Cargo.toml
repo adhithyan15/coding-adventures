@@ -242,6 +242,8 @@ members = [
     "wolfram-to-semantic-ir",
     "apl-lexer",
     "apl-parser",
+    "apl-runtime",
+    "apl-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",
