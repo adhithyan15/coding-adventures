@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - Unreleased
+
+### Fixed
+
+- **`''` escaped single quotes** in string literals. The generated token grammar
+  had a stale regex (`'([^'\\]|\\.)*'`, C-style backslash escapes) that didn't
+  match the `sql.tokens` source (`'(''|[^'])*'`), so `'it''s'` tokenized as two
+  adjacent strings and failed to parse. The `STRING_SQ` pattern is corrected to
+  SQL semantics: `''` is a literal quote, a backslash is an ordinary character.
+  (The `''` → `'` unescaping happens in sql-planner when the token becomes a
+  string value.)
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

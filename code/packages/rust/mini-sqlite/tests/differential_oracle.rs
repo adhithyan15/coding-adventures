@@ -676,6 +676,17 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT FORMAT('%d %d', id) AS a, PRINTF('%q', CHAR(39)) AS b FROM t",
     },
+    // A doubled single quote (`''`) inside a string literal is SQL's escape for
+    // one literal quote — `'it''s'` is the 4-character string `it's`. Exercises
+    // string literals in the SELECT list AND in an INSERT'd row value.
+    Case {
+        id: "escaped_quote_literal",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'O''Brien'), (2, 'it''s')",
+        ],
+        query: "SELECT s, LENGTH(s), 'a''b' AS lit FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
