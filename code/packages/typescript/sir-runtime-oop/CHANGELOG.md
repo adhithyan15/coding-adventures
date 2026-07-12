@@ -2,6 +2,23 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.23] - 2026-07-11
+
+### Added
+
+- **`Array#tally`** — the FINAL backend of the `tally` cross-backend catch-up
+  (Python reference #8054, JS #8058; Go and Rust already shipped it), completing
+  it across all five backends.
+  - `tally` (`arrayMethod` + `ARRAY_METHODS`) → a Hash counting how many times
+    each element occurs, keyed in first-seen order
+    (`["a","b","a","c","a"].tally` → `{"a"=>3, "b"=>1, "c"=>1}`; `[].tally` →
+    `{}`).
+  - Realised as an insertion-ordered `Map` — the same shape `group_by` returns,
+    printed `{k=>v}` by `rubyInspect` (no display change needed). Keys compare by
+    JS SameValueZero, which agrees with Ruby `eql?`/hash on the scalar elements
+    this covers, matching the Go/Rust/Python/JS references.
+  - `respond_to?("tally")` now reports `true`.
+
 ## [0.1.22] - 2026-07-11
 
 ### Added
