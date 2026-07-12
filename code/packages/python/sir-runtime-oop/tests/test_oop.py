@@ -275,6 +275,18 @@ def test_array_each_slice_each_cons_chunk_while() -> None:
     assert oop.call_method([1], "respond_to?", "chunk_while") is True
 
 
+def test_array_tally() -> None:
+    # `tally` → a Hash of element → occurrence count, in first-seen key order
+    # (a dict preserves insertion order, matching Ruby).  Brings Python level
+    # with the Go/Rust runtimes, which already ship `tally`.
+    assert oop.call_method(["a", "b", "a", "c", "a"], "tally") == {"a": 3, "b": 1, "c": 1}
+    assert oop.call_method([1, 1, 2, 3, 3, 3], "tally") == {1: 2, 2: 1, 3: 3}
+    # empty array → empty hash.
+    assert oop.call_method([], "tally") == {}
+    # respond_to? advertises it.
+    assert oop.call_method([1], "respond_to?", "tally") is True
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]
