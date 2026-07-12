@@ -168,7 +168,21 @@ fn term_count(node: &IRNode) -> usize {
         // estimate of how much real cloning cost this subtree carries
         // if it is later multiplied against something else — the
         // direction a DoS guard must err toward.
-        IRNode::Apply(app) => app.args.iter().map(term_count).sum::<usize>().max(1),
+        //
+        // `saturating_add`, not plain `Iterator::sum` — a sibling `Mul`
+        // subtree can legitimately saturate to `usize::MAX` on its own
+        // (see the `Mul` arm above), and an un-saturated sum here would
+        // overflow adding anything else to it: panicking under
+        // `overflow-checks` (debug/test builds), or silently wrapping to
+        // a small value in release builds — which would let this exact
+        // guard go blind again, just via arithmetic overflow instead of
+        // a missing match arm.
+        IRNode::Apply(app) => app
+            .args
+            .iter()
+            .map(term_count)
+            .fold(0usize, |acc, c| acc.saturating_add(c))
+            .max(1),
         _ => 1,
     }
 }
@@ -596,5 +610,38 @@ mod tests {
                  not 1, when checked against a 600-term second factor"
             );
         }
+    }
+
+    #[test]
+    fn term_count_saturates_instead_of_overflowing_when_summing() {
+        // A Mul's own term_count can legitimately saturate to usize::MAX
+        // from a modest, entirely ordinary tree -- a flat Mul of 70
+        // two-term Add factors is 2^70, which saturates any real
+        // platform's usize::MAX (2^32-1 or 2^64-1) well before 70
+        // factors. If that saturated value is then summed with a
+        // sibling (the fallback arm's job, used by Add/Sub/Div/Neg/...),
+        // a plain `Iterator::sum` would either panic (overflow-checked
+        // debug/test builds) or silently wrap around to a small value
+        // (release builds) -- either of which would defeat the very cap
+        // check this guard exists to enforce. `saturating_add` must not.
+        let two_term_factors: Vec<IRNode> = (0..70)
+            .map(|i| add(vec![sym(format!("p{i}")), sym(format!("q{i}"))]))
+            .collect();
+        let saturated_mul = mul(two_term_factors);
+        let wrapped = add(vec![saturated_mul, sym("small")]);
+
+        // Drive term_count indirectly via expand_mul, the same way every
+        // other test in this file does: `wrapped`'s true size is
+        // astronomically over EXPAND_MAX_TERMS, so multiplying it by
+        // anything must be refused outright, never distributed.
+        let other = sym("y");
+        let result = expand_mul(&wrapped, &other);
+        assert_eq!(
+            result,
+            mul(vec![wrapped, other]),
+            "a subtree containing a saturated Mul term-count must still \
+             be recognized as astronomically large when summed with a \
+             sibling, not silently wrapped around to something small"
+        );
     }
 }

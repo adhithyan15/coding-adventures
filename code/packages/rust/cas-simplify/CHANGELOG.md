@@ -28,6 +28,18 @@
   `Div`-wrapped-subtree reproduction (verified to fail without the fix,
   restored to confirm it passes with it) and a correctness check that
   `Neg`/`Sin` wrappers are sized by their contents, not treated as `1`.
+- **Follow-up finding from `/security-review`, fixed in the same PR**: the
+  new fallback's summation used plain `Iterator::sum::<usize>()`, unlike
+  the sibling `Mul` arm's `saturating_mul`. Since a `Mul` subtree can
+  legitimately saturate `term_count` to `usize::MAX` from a modest,
+  ordinary tree, summing that value with any sibling would either panic
+  (overflow-checked debug/test builds — confirmed by reverting the fix
+  and reproducing the exact panic) or silently wrap to a small value
+  (release builds) — reintroducing the guard's exact blindness this PR
+  exists to close, just via arithmetic overflow instead of a missing
+  match arm. Fixed with `saturating_add`, plus a new regression test
+  sized to actually reach the saturation boundary (70 chained two-term
+  factors, 2^70).
 
 ## [0.4.0] — 2026-07-03
 
