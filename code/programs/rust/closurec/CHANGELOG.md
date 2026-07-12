@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.25] - 2026-07-12
+
+### Fixed — CLOC12.186: `for (let/const i = 0; …)` end-to-end
+
+Picks up javascript-parser 0.50.0, whose bridge now models a `let`/`const` init
+in a C-style `for` header (previously declined — dropping the whole file to
+WHITESPACE_ONLY). This extremely common counted-loop idiom now survives the full
+closurec pipeline. New e2e diff fixture `tests/diff/simple-for-let/`:
+`for (let i = 0; i < 1 + 2; i++) x();` → `for(let i=0;i<3;i++)x();` at SIMPLE.
+
+The fixture proves two things: the `let` init round-trips, and the SIMPLE
+pipeline descends INTO the loop header (`1 + 2` → `3`). Before this fix the whole
+file fell back to WHITESPACE_ONLY, leaving `1+2` unfolded.
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.24] - 2026-07-12
 
 ### Added — CLOC12.185: parenthesised object-body arrows end-to-end
