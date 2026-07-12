@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.33.0 — Array `slice_when`
+
+Mirrors the Python reference (PR #8070) and the Go backend (PR #8073) into the
+Rust backend's inline `__sir` runtime (`array_method` gains the arm; the
+array-method `responds_to` set gains `slice_when`), continuing the `slice_when`
+cross-backend cascade.
+
+- `slice_when { |prev, cur| pred }` is the INVERSE of `chunk_while`: it splits
+  into runs of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+  exactly WHERE the block is truthy (whereas `chunk_while` starts a new run where
+  the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → `[[1,2],[4],[9,10,11,12]]`;
+  an empty array yields `[]`, a single element `[[x]]`.
+- Entries are snapshotted into an owned `Vec` before iterating so a block that
+  reentrantly mutates the receiver cannot double-borrow-panic (never-panic
+  floor), and the closure gets `cur.clone()` so the element can still be pushed.
+- `tests/compile_and_run_array_aggregates.rs::array_slice_when_compile_and_run`
+  emits a program with a `b - a > 1` predicate, compiles it with `rustc`, runs
+  it, and asserts the printed runs.
+
 ## 0.32.0 — Array `each_slice` / `each_cons` / `chunk_while`
 
 Mirrors the Python reference (PR #8031) and the Go backend (PR #8036) into the
