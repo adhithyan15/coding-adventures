@@ -39,6 +39,7 @@ pub mod calendar;
 pub mod formula;
 mod ids;
 mod model;
+pub mod ops;
 mod primitives;
 pub mod scheduler;
 
