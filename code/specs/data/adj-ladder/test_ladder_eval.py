@@ -164,6 +164,7 @@ SELF_CONTAINED_RUNGS = (
     "rung124_vestibular_response_index",
     "rung125_electromyography_recruitment",
     "rung126_capnography_ventilation",
+    "rung127_densitometry_index",
 )
 
 
