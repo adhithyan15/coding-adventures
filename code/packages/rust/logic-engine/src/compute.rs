@@ -112,21 +112,40 @@ impl ExactRational {
         }
     }
 
-    /// Exact sum / difference / product — always defined now (unbounded), so `Some` is returned
-    /// for signature-compatibility with the previously-fallible `i128` sidecar.
-    pub fn add(&self, rhs: &Self) -> Option<Self> {
-        Some(Self(&self.0 + &rhs.0))
-    }
-    pub fn sub(&self, rhs: &Self) -> Option<Self> {
-        Some(Self(&self.0 - &rhs.0))
-    }
-    pub fn mul(&self, rhs: &Self) -> Option<Self> {
-        Some(Self(&self.0 * &rhs.0))
+    /// Wrap an exact result, **but drop the exact sidecar (return `None`) if it would exceed the
+    /// size budget** [`MAX_EXACT_POW_BITS`]. `None` is never *wrong* — the `f64` magnitude still
+    /// stands; it only means "no exact sidecar this far out".
+    ///
+    /// This is a DoS guard. Without it, a *linear* formula could grow an *exponential* exact
+    /// value: a chain of `let a_{k} = a_{k-1} * a_{k-1}` doubles the denominator's bit length each
+    /// step (`a_k = 1 / 2^(2^k)`). The `f64` finiteness guard in the evaluator does not stop this,
+    /// because such a value **underflows** the `f64` to `0.0`, which is still *finite* — only the
+    /// overflow-to-`∞` direction is caught there. Bounding each result's bit length stops the
+    /// accumulation (the old `i128` sidecar bounded it implicitly via `checked_mul` overflow).
+    fn bounded(r: BigRational) -> Option<Self> {
+        if r.numerator().bit_len().max(r.denominator().bit_len()) > MAX_EXACT_POW_BITS {
+            None
+        } else {
+            Some(Self(r))
+        }
     }
 
-    /// Exact quotient, or `None` when dividing by zero (the one genuine failure).
+    /// Exact sum / difference / product — defined for all inputs (unbounded arithmetic), but the
+    /// result is size-guarded (see [`bounded`](Self::bounded)); `Some`/`None` keeps
+    /// signature-compatibility with the previously-fallible `i128` sidecar.
+    pub fn add(&self, rhs: &Self) -> Option<Self> {
+        Self::bounded(&self.0 + &rhs.0)
+    }
+    pub fn sub(&self, rhs: &Self) -> Option<Self> {
+        Self::bounded(&self.0 - &rhs.0)
+    }
+    pub fn mul(&self, rhs: &Self) -> Option<Self> {
+        Self::bounded(&self.0 * &rhs.0)
+    }
+
+    /// Exact quotient — `None` when dividing by zero, or when the result exceeds the size budget.
     pub fn div(&self, rhs: &Self) -> Option<Self> {
-        self.0.checked_div(&rhs.0).map(Self)
+        self.0.checked_div(&rhs.0).and_then(Self::bounded)
     }
 
     /// The **labeled lossy** `f64` export (see [`BigRational::to_f64`]).
@@ -1798,6 +1817,31 @@ mod tests {
             err,
             ComputeError::NonFinite { op: ComputeOp::Pow }
         ));
+    }
+
+    #[test]
+    fn exact_arithmetic_is_size_bounded_against_a_squaring_chain() {
+        // Regression guard for the NUM-5 BigRational swap: `a_k = a_{k-1} · a_{k-1}` doubles the
+        // exact value's bit length each step, so a *linear* number of multiplications would grow
+        // an *exponential* exact rational (`3^(2^k)`). The f64 finiteness guard does NOT stop a
+        // shrinking variant (it underflows to a finite 0.0), so the size guard on the exact
+        // result must drop the sidecar to `None` before it explodes. Without the guard this loop
+        // would allocate a `3^(2^40)`-bit integer and OOM; with it, it terminates quickly.
+        let mut a = ExactRational::from_i128(3);
+        let mut dropped_at = None;
+        for k in 0..40 {
+            match a.mul(&a) {
+                Some(next) => a = next,
+                None => {
+                    dropped_at = Some(k);
+                    break;
+                }
+            }
+        }
+        assert!(
+            dropped_at.is_some(),
+            "exact squaring chain must be size-bounded (dropped to None), not grow unboundedly"
+        );
     }
 
     #[test]
