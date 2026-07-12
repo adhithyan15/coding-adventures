@@ -451,6 +451,22 @@ describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
     expect(callMethod([1], "respond_to?", "chunk_while")).toBe(true);
   });
 
+  it("slice_when (inverse of chunk_while — split where the predicate holds)", () => {
+    // `slice_when { |a, b| pred }` starts a NEW run BETWEEN an adjacent pair
+    // exactly WHERE the block is truthy (chunk_while splits where FALSY).
+    expect(
+      callMethod([1, 2, 4, 9, 10, 11, 12], "slice_when", new Closure((a: Val, b: Val) => (b as number) - (a as number) > 1)),
+    ).toEqual([[1, 2], [4], [9, 10, 11, 12]]);
+    // all-truthy → every element its own singleton; all-falsy → one run.
+    expect(callMethod([1, 2, 3], "slice_when", new Closure(() => true))).toEqual([[1], [2], [3]]);
+    expect(callMethod([1, 2, 3], "slice_when", new Closure(() => false))).toEqual([[1, 2, 3]]);
+    // empty → []; single element → [[x]].
+    expect(callMethod([], "slice_when", new Closure(() => true))).toEqual([]);
+    expect(callMethod([9], "slice_when", new Closure(() => true))).toEqual([[9]]);
+    // respond_to? advertises it.
+    expect(callMethod([1], "respond_to?", "slice_when")).toBe(true);
+  });
+
   it("tally (occurrence counts as a first-seen-ordered Hash)", () => {
     // `tally` → a Map counting occurrences, keyed in first-seen order.
     const t = callMethod(["a", "b", "a", "c", "a"], "tally") as Map<Val, Val>;
