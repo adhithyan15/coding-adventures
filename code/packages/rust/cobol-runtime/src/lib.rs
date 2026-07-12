@@ -9,10 +9,11 @@
 //! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
 //! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), `IF … ELSE`
-//! (numeric and alphanumeric comparison), `PERFORM para [n TIMES | UNTIL cond]`
-//! (out-of-line paragraph invocation, fixed-count and conditional loops), and
-//! `GO TO para` (unconditional transfer, including back-edge loops) over
-//! numeric-display (`9`/`V`, and
+//! (numeric and alphanumeric comparison),
+//! `PERFORM para [n TIMES | UNTIL cond | VARYING id FROM x BY y UNTIL cond]`
+//! (out-of-line paragraph invocation — fixed-count, conditional, and counted
+//! loops), and `GO TO para` (unconditional transfer, including back-edge loops)
+//! over numeric-display (`9`/`V`, and
 //! signed `S` with trailing-overpunch display) and character pictures — and
 //! returns a descriptive error for anything not yet modelled, rather than
 //! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
@@ -868,6 +869,68 @@ mod tests {
         ]))
         .unwrap();
         assert_eq!(out, "ONCE\n");
+    }
+
+    #[test]
+    fn perform_varying_counts_with_an_induction_variable() {
+        // VARYING I FROM 1 BY 1 UNTIL I GREATER 3 runs the body for I = 1, 2, 3.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 1 BY 1 UNTIL I GREATER 3.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "1\n2\n3\nDONE\n");
+    }
+
+    #[test]
+    fn perform_varying_can_step_by_more_than_one() {
+        // FROM 0 BY 2 UNTIL I GREATER 6 → I = 0, 2, 4, 6.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 0 BY 2 UNTIL I GREATER 6.",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "0\n2\n4\n6\n");
+    }
+
+    #[test]
+    fn perform_varying_tests_before_so_can_run_zero_times() {
+        // The condition is already true at the FROM value, so the body never runs.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 9 BY 1 UNTIL I GREATER 3.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DONE\n");
     }
 
     #[test]

@@ -78,16 +78,34 @@ pub enum Stmt {
         expr: Expr,
         on_size_error: Vec<Stmt>,
     },
-    /// `PERFORM para [n TIMES | UNTIL cond]` — run a paragraph out of line, then
-    /// return. Bare: once. `n TIMES`: a fixed count. `UNTIL cond`: repeat while
-    /// the condition is false (tested before each iteration). `times` and `until`
-    /// are mutually exclusive; both `None` means once.
-    Perform { target: String, times: Option<Operand>, until: Option<Cond> },
+    /// `PERFORM para <mode>` — run a paragraph out of line, then return. The
+    /// [`PerformMode`] is the repeat form.
+    Perform { target: String, mode: PerformMode },
     /// `GO TO para` — transfer control unconditionally to a paragraph (no return).
     GoTo { target: String },
     /// `IF cond then… [ELSE else…]`.
     If { cond: Cond, then_branch: Vec<Stmt>, else_branch: Vec<Stmt> },
     StopRun,
+}
+
+/// How a [`Stmt::Perform`] repeats its paragraph.
+#[derive(Debug, Clone)]
+pub enum PerformMode {
+    /// Bare `PERFORM para` — run it once.
+    Once,
+    /// `PERFORM para n TIMES` — run it a fixed number of times.
+    Times(Operand),
+    /// `PERFORM para UNTIL cond` — run it while `cond` is false (test before).
+    Until(Cond),
+    /// `PERFORM para VARYING id FROM start BY step UNTIL cond` — set `id` to
+    /// `start`, then run while `cond` is false, stepping `id` by `step` after
+    /// each iteration (test before).
+    Varying {
+        var: String,
+        from: Operand,
+        by: Operand,
+        until: Cond,
+    },
 }
 
 /// An arithmetic expression tree (the operand of `COMPUTE`). Operator precedence
@@ -414,15 +432,18 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             {
                 return Err(RuntimeError::Unsupported("PERFORM … THRU (range form)".into()));
             }
-            let times = match child_node(verb, "operand") {
-                Some(op) => Some(read_operand(op)?),
-                None => None,
+            // The repeat mode: VARYING (its own node), else TIMES (a direct
+            // operand), else UNTIL (a direct condition), else bare/once.
+            let mode = if let Some(v) = child_node(verb, "perform_varying") {
+                read_perform_varying(v)?
+            } else if let Some(op) = child_node(verb, "operand") {
+                PerformMode::Times(read_operand(op)?)
+            } else if let Some(cond) = child_node(verb, "condition") {
+                PerformMode::Until(read_condition(cond)?)
+            } else {
+                PerformMode::Once
             };
-            let until = match child_node(verb, "condition") {
-                Some(cond) => Some(read_condition(cond)?),
-                None => None,
-            };
-            Ok(Stmt::Perform { target, times, until })
+            Ok(Stmt::Perform { target, mode })
         }
         "goto_stmt" => {
             // GO [TO] target. The DEPENDING ON form is not in the grammar yet.
@@ -623,6 +644,25 @@ fn read_binary_chain(
         }
     }
     expr.ok_or_else(|| RuntimeError::Unsupported("empty arithmetic expression".into()))
+}
+
+/// Read a `perform_varying` node
+/// (`VARYING NAME FROM operand BY operand UNTIL condition`).
+fn read_perform_varying(v: &GrammarASTNode) -> Result<PerformMode, RuntimeError> {
+    let var = first_token(v, "NAME")
+        .ok_or_else(|| RuntimeError::Unsupported("PERFORM VARYING without a variable".into()))?;
+    let operands = child_nodes(v, "operand");
+    if operands.len() != 2 {
+        return Err(RuntimeError::Unsupported(
+            "PERFORM VARYING needs FROM and BY operands".into(),
+        ));
+    }
+    let from = read_operand(operands[0])?;
+    let by = read_operand(operands[1])?;
+    let cond = child_node(v, "condition")
+        .ok_or_else(|| RuntimeError::Unsupported("PERFORM VARYING without an UNTIL".into()))?;
+    let until = read_condition(cond)?;
+    Ok(PerformMode::Varying { var, from, by, until })
 }
 
 /// All `operand` child nodes of a verb, read to typed [`Operand`]s.

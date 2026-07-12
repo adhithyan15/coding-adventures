@@ -226,6 +226,24 @@ mod tests {
     }
 
     #[test]
+    fn perform_varying() {
+        // PERFORM … VARYING id FROM start BY step UNTIL cond parses to a
+        // perform_varying node carrying the induction variable and condition.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 1 BY 1 UNTIL I GREATER 3.",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]));
+        assert!(has_rule(&ast, "perform_varying"));
+        assert!(has_rule(&ast, "condition"));
+    }
+
+    #[test]
     fn if_else_statement() {
         let ast = root(&program(&[
             "IDENTIFICATION DIVISION.",

@@ -143,7 +143,10 @@ arith_factor  = arith_unary  { POW arith_unary } ;
 arith_unary   = [ PLUS | MINUS ] arith_primary ;
 arith_primary = NUMBER | NAME | LPAREN arith_expr RPAREN ;
 perform_stmt  = "PERFORM" NAME [ "THROUGH" NAME | "THRU" NAME ]
-                        [ operand "TIMES" | "UNTIL" condition ] ;
+                        [ operand "TIMES" | "UNTIL" condition | perform_varying ] ;
+# VARYING id FROM start BY step UNTIL cond — a counted loop over an induction
+# variable (`id := start`; run while `cond` is false, stepping `id` by `step`).
+perform_varying = "VARYING" NAME "FROM" operand "BY" operand "UNTIL" condition ;
 goto_stmt     = "GO" [ "TO" ] NAME ;
 stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
 

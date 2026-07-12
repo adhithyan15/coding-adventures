@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.10.0 — PERFORM … VARYING (counted loop)
+
+- **`PERFORM para VARYING id FROM start BY step UNTIL cond`** sets the induction
+  variable `id` to `start`, then runs the paragraph while `cond` is false
+  (test-before), stepping `id` by `step` after each iteration.
+- The `PERFORM` repeat forms are now modelled as a `PerformMode` enum
+  (`Once` / `Times` / `Until` / `Varying`) instead of ad-hoc option fields — a
+  cleaner substrate as the family grows.
+- Iterative like the other loops (a never-satisfied `VARYING` hangs but never
+  overflows the stack); a step overflow is a clean error; `STOP RUN` / `GO TO`
+  in the body propagate.
+- `WITH TEST AFTER`, multiple `AFTER` phrases, and `PERFORM … THRU` remain
+  deferred.
+
 ## 0.9.0 — PERFORM … UNTIL (conditional loop)
 
 - **`PERFORM para UNTIL cond`** repeats a paragraph while the condition is false,
