@@ -2,6 +2,19 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.23] - 2026-07-11
+
+### Added
+
+- **`Array#tally`** — a Hash mapping each element to its occurrence count, in
+  first-seen key order (`["a","b","a","c","a"].tally` → `{a: 3, b: 1, c: 1}`; a
+  `dict` preserves insertion order, matching Ruby).  Brings the Python reference
+  level with the Go/Rust runtimes, which already ship `tally` (JS/TS mirrors to
+  follow).  As with the rest of the Python `Hash` surface (a `dict`), elements
+  are counted by hash/equality — hashable elements only.
+
+
+
 ## [0.1.22] - 2026-07-11
 
 ### Added

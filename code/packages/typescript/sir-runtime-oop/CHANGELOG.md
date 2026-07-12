@@ -2,6 +2,24 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.22] - 2026-07-11
+
+### Added
+
+- **`Array#each_slice`, `Array#each_cons`, `Array#chunk_while`** — the FINAL
+  backend of this cross-backend batch (Python reference #8031, then Go #8036 /
+  Rust #8042 / JS #8048), the consecutive-grouping family.
+  - `each_slice(n)` (`arrayMethod` + `ARRAY_METHODS`) → consecutive sub-arrays of
+    at most `n` elements, the last possibly shorter.
+  - `each_cons(n)` (non-block) → every consecutive `n`-element sliding window; a
+    window larger than the array → `[]`.
+  - Both read `n` via `Number.isInteger` and treat `n <= 0` as `[]` (Ruby raises
+    `ArgumentError`; the never-raise floor yields empty).
+  - `chunk_while { |prev, cur| pred }` (`arrayBlockMethod` + `ARRAY_BLOCK_METHODS`)
+    → runs of consecutive elements; the block is called on each ADJACENT pair, a
+    truthy result extends the run and a falsy one starts a new run.  Empty →
+    `[]`; single element → `[[x]]`.
+
 ## [0.1.21] - 2026-07-11
 
 ### Added

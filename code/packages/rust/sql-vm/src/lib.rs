@@ -1051,6 +1051,7 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | LIKELY / UNLIKELY | 1 | Planner hint; returns the argument unchanged     |
 /// | LIKELIHOOD | 2  | Planner hint with a probability; returns arg 1        |
 /// | GLOB     |  2   | Case-sensitive wildcard match: GLOB(pattern, subject) |
+/// | PRINTF / FORMAT | ≥1 | C-style string formatting (integer/string specifiers) |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
@@ -1229,6 +1230,28 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             let pattern = sql_to_str(&args[0]);
             let subject = sql_to_str(&args[1]);
             Ok(SqlValue::Int(glob_match(&subject, &pattern) as i64))
+        }
+
+        "PRINTF" | "FORMAT" => {
+            // PRINTF(format, ...) / FORMAT(format, ...): C-style string
+            // formatting. The first argument is the format string; the rest are
+            // consumed by its conversions. A NULL format yields NULL. See
+            // `sql_printf` for the supported conversions and the DoS caps.
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch(format!("{name} expects at least 1 arg")));
+            }
+            let format = match &args[0] {
+                SqlValue::Null => return Ok(SqlValue::Null),
+                SqlValue::Text(s) => s.clone(),
+                SqlValue::Int(i) => i.to_string(),
+                SqlValue::Bool(b) => (*b as i64).to_string(),
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "{name} format must be text, got {other:?}"
+                    )))
+                }
+            };
+            Ok(SqlValue::Text(sql_printf(name, &format, &args[1..])?))
         }
 
         "UPPER" => {
@@ -2128,6 +2151,226 @@ fn glob_single(p: &[char], pi: usize, ch: char) -> Option<usize> {
         },
         c => (c == ch).then_some(pi + 1),
     }
+}
+
+/// Coerce a value to the integer a `printf` `%d`/`%x`/… conversion expects.
+/// Matches SQLite: an integer is itself; a float truncates toward zero; text
+/// contributes its leading integer (`'12ab'` → 12, `'abc'` → 0); NULL and other
+/// types are 0.
+fn printf_int(v: &SqlValue) -> i64 {
+    match v {
+        SqlValue::Int(i) => *i,
+        SqlValue::Bool(b) => *b as i64,
+        SqlValue::Float(f) => *f as i64,
+        SqlValue::Text(s) => {
+            // Parse an optional sign followed by ASCII digits, stopping at the
+            // first non-digit — exactly what SQLite's implicit text→int cast does.
+            let t = s.trim_start();
+            let mut chars = t.chars().peekable();
+            let mut neg = false;
+            match chars.peek() {
+                Some('-') => {
+                    neg = true;
+                    chars.next();
+                }
+                Some('+') => {
+                    chars.next();
+                }
+                _ => {}
+            }
+            let mut n: i64 = 0;
+            for c in chars {
+                if let Some(d) = c.to_digit(10) {
+                    n = n.saturating_mul(10).saturating_add(d as i64);
+                } else {
+                    break;
+                }
+            }
+            if neg {
+                -n
+            } else {
+                n
+            }
+        }
+        _ => 0,
+    }
+}
+
+/// Coerce a value to the string a `printf` `%s`/`%q`/`%c` conversion expects.
+/// Text is itself; an integer/boolean becomes its decimal text; NULL becomes the
+/// empty string. Floats and blobs are declined (their exact SQLite text form is
+/// subtle — same convention as HEX/QUOTE).
+fn printf_str(name: &str, v: &SqlValue) -> Result<String, VmError> {
+    match v {
+        SqlValue::Null => Ok(String::new()),
+        SqlValue::Text(s) => Ok(s.clone()),
+        SqlValue::Int(i) => Ok(i.to_string()),
+        SqlValue::Bool(b) => Ok((*b as i64).to_string()),
+        other => Err(VmError::TypeMismatch(format!(
+            "{name}: %s/%q of {other:?} is unsupported"
+        ))),
+    }
+}
+
+/// A minimal, DoS-bounded implementation of SQLite's `printf`/`format`.
+///
+/// Supports the conversions `%d`/`%i`, `%s` (with `.precision` truncation),
+/// `%x`/`%X`, `%o`, `%c` (the first character of the argument's text), `%q`
+/// (single-quotes doubled, for SQL-literal building) and `%%`; with the flags
+/// `-` (left-justify), `0` (zero-pad numbers), `+` and space (sign on positives),
+/// and a field width. Float conversions (`%f`/`%g`/`%e`) are declined — their
+/// exact SQLite text form is the same subtlety HEX/QUOTE avoid.
+///
+/// Missing arguments default to `0` (numeric) or `""` (string), and extra
+/// arguments are ignored — matching SQLite. Width and precision are capped, and
+/// the running output is capped, so a hostile format like `printf('%9999999999d')`
+/// cannot drive an unbounded allocation.
+fn sql_printf(name: &str, format: &str, args: &[SqlValue]) -> Result<String, VmError> {
+    const MAX_FIELD: usize = 1_000_000; // per-field width/precision cap
+    const MAX_OUTPUT: usize = 10_000_000; // total output cap
+
+    let fmt: Vec<char> = format.chars().collect();
+    let mut out = String::new();
+    let mut argi = 0usize;
+    let mut i = 0usize;
+
+    let take_field = |i: &mut usize| -> Result<usize, VmError> {
+        let mut n = 0usize;
+        while *i < fmt.len() && fmt[*i].is_ascii_digit() {
+            n = n
+                .saturating_mul(10)
+                .saturating_add((fmt[*i] as u8 - b'0') as usize);
+            *i += 1;
+        }
+        if n > MAX_FIELD {
+            return Err(VmError::ResourceLimit(format!(
+                "{name}: field size {n} exceeds limit {MAX_FIELD}"
+            )));
+        }
+        Ok(n)
+    };
+
+    while i < fmt.len() {
+        if fmt[i] != '%' {
+            out.push(fmt[i]);
+            i += 1;
+            continue;
+        }
+        i += 1; // consume '%'
+        // Flags.
+        let (mut left, mut zero, mut plus, mut space) = (false, false, false, false);
+        while i < fmt.len() {
+            match fmt[i] {
+                '-' => left = true,
+                '0' => zero = true,
+                '+' => plus = true,
+                ' ' => space = true,
+                '#' => {} // alternate form — accepted and ignored
+                _ => break,
+            }
+            i += 1;
+        }
+        let width = take_field(&mut i)?;
+        let precision = if i < fmt.len() && fmt[i] == '.' {
+            i += 1;
+            Some(take_field(&mut i)?)
+        } else {
+            None
+        };
+        let Some(&spec) = fmt.get(i) else {
+            // A trailing, incomplete conversion: emit a literal '%'.
+            out.push('%');
+            break;
+        };
+        i += 1;
+
+        if spec == '%' {
+            out.push('%');
+            continue;
+        }
+
+        // Build the converted body and note whether it is a signed number (so a
+        // `0` flag pads between the sign and the digits). Arms that `continue`
+        // or `return` diverge, so the match is still a `String` expression.
+        let mut sign = String::new();
+        let body: String = match spec {
+            'd' | 'i' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                if n < 0 {
+                    sign.push('-');
+                } else if plus {
+                    sign.push('+');
+                } else if space {
+                    sign.push(' ');
+                }
+                n.unsigned_abs().to_string()
+            }
+            'x' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                format!("{:x}", n as u64)
+            }
+            'X' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                format!("{:X}", n as u64)
+            }
+            'o' => {
+                let n = printf_int(args.get(argi).unwrap_or(&SqlValue::Int(0)));
+                argi += 1;
+                format!("{:o}", n as u64)
+            }
+            's' => {
+                let mut s = printf_str(name, args.get(argi).unwrap_or(&SqlValue::Null))?;
+                argi += 1;
+                if let Some(p) = precision {
+                    s = s.chars().take(p).collect();
+                }
+                s
+            }
+            'c' => {
+                let s = printf_str(name, args.get(argi).unwrap_or(&SqlValue::Null))?;
+                argi += 1;
+                s.chars().next().map(|c| c.to_string()).unwrap_or_default()
+            }
+            'q' => {
+                let s = printf_str(name, args.get(argi).unwrap_or(&SqlValue::Null))?;
+                argi += 1;
+                s.replace('\'', "''")
+            }
+            other => {
+                return Err(VmError::TypeMismatch(format!(
+                    "{name}: unsupported conversion %{other}"
+                )));
+            }
+        };
+
+        // Assemble sign + body + width padding.
+        let content_len = sign.chars().count() + body.chars().count();
+        let pad = width.saturating_sub(content_len);
+        if left {
+            out.push_str(&sign);
+            out.push_str(&body);
+            out.extend(std::iter::repeat_n(' ', pad));
+        } else if zero && matches!(spec, 'd' | 'i' | 'x' | 'X' | 'o') {
+            out.push_str(&sign);
+            out.extend(std::iter::repeat_n('0', pad));
+            out.push_str(&body);
+        } else {
+            out.extend(std::iter::repeat_n(' ', pad));
+            out.push_str(&sign);
+            out.push_str(&body);
+        }
+
+        if out.len() > MAX_OUTPUT {
+            return Err(VmError::ResourceLimit(format!(
+                "{name}: output exceeds limit {MAX_OUTPUT}"
+            )));
+        }
+    }
+
+    Ok(out)
 }
 
 /// GLOB pattern match: case-sensitive, `*` = any run, `?` = any single char,
@@ -4222,6 +4465,45 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_printf_formats_integers_and_strings() {
+        let txt = |s: &str| SqlValue::Text(s.into());
+        let pf = |fmt: &str, extra: Vec<SqlValue>| {
+            let mut a = vec![txt(fmt)];
+            a.extend(extra);
+            call_builtin("PRINTF", a).unwrap()
+        };
+        assert_eq!(pf("%d-%s", vec![SqlValue::Int(5), txt("x")]), txt("5-x"));
+        // Width, left-justify, zero-pad, sign.
+        assert_eq!(pf("%5d", vec![SqlValue::Int(42)]), txt("   42"));
+        assert_eq!(pf("%-5d|", vec![SqlValue::Int(42)]), txt("42   |"));
+        assert_eq!(pf("%05d", vec![SqlValue::Int(42)]), txt("00042"));
+        assert_eq!(pf("%+d", vec![SqlValue::Int(5)]), txt("+5"));
+        assert_eq!(pf("%05d", vec![SqlValue::Int(-7)]), txt("-0007")); // zero-pad after sign
+        // Hex / octal / precision / literal percent.
+        assert_eq!(pf("%x", vec![SqlValue::Int(255)]), txt("ff"));
+        assert_eq!(pf("%X", vec![SqlValue::Int(255)]), txt("FF"));
+        assert_eq!(pf("%o", vec![SqlValue::Int(8)]), txt("10"));
+        assert_eq!(pf("%.3s", vec![txt("hello")]), txt("hel"));
+        assert_eq!(pf("100%%", vec![]), txt("100%"));
+        // Coercion + missing/extra args (SQLite's defaults).
+        assert_eq!(pf("%d", vec![txt("abc")]), txt("0")); // non-numeric text → 0
+        assert_eq!(pf("%d", vec![SqlValue::Null]), txt("0")); // NULL → 0
+        assert_eq!(pf("%s", vec![SqlValue::Null]), txt("")); // NULL → ""
+        assert_eq!(pf("%d %d", vec![SqlValue::Int(1)]), txt("1 0")); // missing → 0
+        assert_eq!(pf("%d", vec![SqlValue::Int(1), SqlValue::Int(2)]), txt("1")); // extra ignored
+        // %q doubles single quotes (SQL-literal building).
+        assert_eq!(pf("%q", vec![txt("a'b")]), txt("a''b"));
+        // FORMAT is an alias.
+        assert_eq!(call_builtin("FORMAT", vec![txt("%d"), SqlValue::Int(7)]).unwrap(), txt("7"));
+        // A NULL format → NULL; a float conversion is declined; no format errors.
+        assert_eq!(call_builtin("PRINTF", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert!(call_builtin("PRINTF", vec![txt("%f"), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("PRINTF", vec![]).is_err());
+        // A hostile field width is rejected, not allocated (DoS guard).
+        assert!(call_builtin("PRINTF", vec![txt("%9999999999d"), SqlValue::Int(1)]).is_err());
     }
 
     #[test]

@@ -330,7 +330,7 @@ describe("respond_to? honesty + nil floor (M1a)", () => {
     expect(callMethod([1], "respond_to?", "nil?")).toBe(true);
     expect(callMethod([1], "respond_to?", "is_a?")).toBe(true);
     expect(callMethod([1], "respond_to?", "map")).toBe(true); // block method (M1b)
-    expect(callMethod([1], "respond_to?", "each_slice")).toBe(false);
+    expect(callMethod([1], "respond_to?", "chunk")).toBe(false); // uncatalogued (non-`_while` variant)
   });
 
   it("known block method WITHOUT a block bottoms out at nil (no over-raise, T2)", () => {
@@ -419,6 +419,36 @@ describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
     expect(
       callMethod([1, 2, 3], "each_with_object", [], new Closure((x: Val, o: Val) => o.push(x * 10))),
     ).toEqual([10, 20, 30]);
+  });
+
+  it("each_slice / each_cons / chunk_while (consecutive-grouping family)", () => {
+    // `each_slice(n)` → consecutive <=n-size chunks (last may be shorter).
+    expect(callMethod([1, 2, 3, 4, 5], "each_slice", 2)).toEqual([[1, 2], [3, 4], [5]]);
+    expect(callMethod([1, 2, 3, 4], "each_slice", 2)).toEqual([[1, 2], [3, 4]]);
+    expect(callMethod([1, 2, 3], "each_slice", 5)).toEqual([[1, 2, 3]]);
+    expect(callMethod([], "each_slice", 2)).toEqual([]);
+    // n <= 0 → [] (Ruby raises ArgumentError; never-raise floor yields empty).
+    expect(callMethod([1, 2], "each_slice", 0)).toEqual([]);
+    // `each_cons(n)` → every consecutive n-element sliding window.
+    expect(callMethod([1, 2, 3, 4], "each_cons", 2)).toEqual([[1, 2], [2, 3], [3, 4]]);
+    expect(callMethod([1, 2, 3], "each_cons", 3)).toEqual([[1, 2, 3]]);
+    // window larger than the array (or n <= 0) → [].
+    expect(callMethod([1, 2], "each_cons", 3)).toEqual([]);
+    expect(callMethod([1, 2], "each_cons", 0)).toEqual([]);
+    // `chunk_while { |a, b| pred }` → runs while the adjacent-pair predicate holds.
+    expect(
+      callMethod([1, 2, 4, 5, 7], "chunk_while", new Closure((a: Val, b: Val) => (b as number) - (a as number) === 1)),
+    ).toEqual([[1, 2], [4, 5], [7]]);
+    // all-truthy → one run; all-falsy → singletons.
+    expect(callMethod([1, 2, 3], "chunk_while", new Closure(() => true))).toEqual([[1, 2, 3]]);
+    expect(callMethod([1, 2, 3], "chunk_while", new Closure(() => false))).toEqual([[1], [2], [3]]);
+    // empty → []; single element → [[x]].
+    expect(callMethod([], "chunk_while", new Closure(() => true))).toEqual([]);
+    expect(callMethod([9], "chunk_while", new Closure(() => true))).toEqual([[9]]);
+    // respond_to? advertises the new methods.
+    expect(callMethod([1], "respond_to?", "each_slice")).toBe(true);
+    expect(callMethod([1], "respond_to?", "each_cons")).toBe(true);
+    expect(callMethod([1], "respond_to?", "chunk_while")).toBe(true);
   });
 
   it("find/detect and flat_map", () => {
