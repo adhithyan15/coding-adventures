@@ -308,6 +308,25 @@ mod tests {
         assert!(find_rule(&ast, "select_item"), "Expected select_item");
     }
 
+    /// The `AS` keyword is optional in a column alias: `SELECT age years`
+    /// parses the same as `SELECT age AS years` (SQLite accepts both). This
+    /// exercises the `[ [ "AS" ] NAME ]` optional-AS branch of `select_item`.
+    #[test]
+    fn test_parse_select_alias_without_as() {
+        let ast = assert_program_root("SELECT age years FROM users");
+        assert!(find_rule(&ast, "select_item"), "Expected select_item");
+        // The bare alias must NOT swallow the FROM clause.
+        assert!(find_rule(&ast, "table_ref"), "Expected FROM table_ref to still parse");
+    }
+
+    /// A bare alias in a multi-item list must not consume the comma or the
+    /// following item: `SELECT a x, b y` yields two aliased items.
+    #[test]
+    fn test_parse_bare_alias_in_list() {
+        let ast = assert_program_root("SELECT a x, b y FROM t");
+        assert!(find_rule(&ast, "select_list"), "Expected select_list");
+    }
+
     // -----------------------------------------------------------------------
     // Test 8: INSERT statement
     // -----------------------------------------------------------------------
@@ -637,6 +656,40 @@ mod tests {
         assert!(
             result.is_err(),
             "Expected Err for invalid SQL 'SELECT FROM'"
+        );
+    }
+
+    /// A bare `JOIN` (no INNER/LEFT/… keyword) must parse — `join_type` is
+    /// optional and defaults to INNER downstream. Both the bare and the explicit
+    /// `INNER JOIN` forms should parse.
+    #[test]
+    fn test_parse_bare_join() {
+        assert!(
+            parse_sql("SELECT a.id FROM a JOIN b ON a.x = b.y").is_ok(),
+            "bare JOIN should parse"
+        );
+        assert!(
+            parse_sql("SELECT a.id FROM a INNER JOIN b ON a.x = b.y").is_ok(),
+            "INNER JOIN should still parse"
+        );
+    }
+
+    /// A join with NO `ON` condition (a Cartesian product) must parse — both the
+    /// bare `JOIN` and the explicit `CROSS JOIN` forms — while the `ON` form
+    /// still works.
+    #[test]
+    fn test_parse_join_without_on() {
+        assert!(
+            parse_sql("SELECT a.x FROM a JOIN b").is_ok(),
+            "JOIN with no ON should parse (cross product)"
+        );
+        assert!(
+            parse_sql("SELECT a.x FROM a CROSS JOIN b").is_ok(),
+            "CROSS JOIN with no ON should parse"
+        );
+        assert!(
+            parse_sql("SELECT a.x FROM a JOIN b ON a.x = b.y").is_ok(),
+            "JOIN ... ON should still parse"
         );
     }
 

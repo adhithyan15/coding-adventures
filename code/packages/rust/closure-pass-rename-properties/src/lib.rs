@@ -79,6 +79,7 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::program_contains_with_statement;
 use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
@@ -774,6 +775,25 @@ impl Pass for RenamePropertiesPass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+        // `with` soundness gate (CLOC12.187 PR2a). Inside `with (obj) …` a bare
+        // name like `foo` may be the property access `obj.foo` in disguise.
+        // Property renaming rewrites `.foo` member accesses and object-literal
+        // keys consistently, but it cannot see that a *bare* `foo` in a `with`
+        // body is really a property read — so renaming `foo` elsewhere would
+        // desynchronize from that disguised access. When the program contains a
+        // `with` we therefore decline to rename properties and return the input
+        // unchanged. `with` is rare (a strict-mode syntax error), so this costs
+        // little. See [`program_contains_with_statement`].
+        if program_contains_with_statement(ctx.program) {
+            return Ok(PassOutput {
+                program: ctx.program.clone(),
+                contributions: Vec::new(),
+                changed: false,
+                diagnostics: Vec::new(),
+                stats: PassStats { nodes_touched: 1 },
+            });
+        }
+
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1;
         let (changed, renames) =
@@ -2153,5 +2173,81 @@ mod tests {
         );
         assert!(out.contains(".innerHTML"));
         assert!(!out.contains("secretField"));
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate. Inside `with (obj) …` a bare
+    // `foo` may be `obj.foo` in disguise, so renaming the property `foo`
+    // elsewhere would desynchronize from that hidden access.
+    // RenamePropertiesPass must bail. The bridge does not yet produce `with`
+    // (PR2b), so the AST is hand-built.
+    // -------------------------------------------------------------------
+    #[test]
+    fn with_statement_disables_property_renaming() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, BlockStatement, Declaration, Expression, Identifier, NumericLiteral,
+            ObjectExpression, ObjectMember, ProgramItem, Property, PropertyKey, PropertyKind,
+            Statement, VarKind, VariableDeclaration, VariableDeclarator, WithStatement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `var rec = { longProp: 1 };` — `longProp` is an object-literal key
+        // RenamePropertiesPass would normally shorten to `a`.
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![ObjectMember::Property(Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::Identifier(id("longProp")),
+                value: Box::new(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+                computed: false,
+                shorthand: false,
+                method: false,
+            })],
+        });
+        let vd = VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("rec")),
+                init: Some(obj),
+            }],
+        };
+        // `with (o) {}`
+        let with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: Expression::Identifier(id("o")),
+            body: Box::new(Statement::block_statement(BlockStatement { cv: None, body: vec![] })),
+        });
+
+        let mut prog = program();
+        prog.body = vec![
+            ProgramItem::Statement(with),
+            ProgramItem::Declaration(Declaration::VariableDeclaration(vd)),
+        ];
+
+        let pass = RenamePropertiesPass::new(HashSet::new());
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename-properties");
+
+        assert!(!out.changed, "must not rename properties when a `with` is present");
+        assert_eq!(out.program, prog, "program must be returned unchanged");
+        assert!(out.contributions.is_empty());
     }
 }

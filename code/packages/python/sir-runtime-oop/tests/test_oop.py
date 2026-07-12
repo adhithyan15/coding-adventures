@@ -287,6 +287,28 @@ def test_array_tally() -> None:
     assert oop.call_method([1], "respond_to?", "tally") is True
 
 
+def test_array_slice_when() -> None:
+    # `slice_when { |a, b| pred }` is the INVERSE of `chunk_while`: it starts a
+    # NEW run BETWEEN an adjacent pair exactly WHERE the block is truthy.
+    # `b - a > 1` splits only on an UPWARD gap; (12, 0) has b - a == -12, so 0
+    # stays in the preceding run.
+    assert oop.call_method(
+        [1, 2, 4, 9, 10, 11, 12, 0], "slice_when", Closure(lambda a, b: b - a > 1)
+    ) == [[1, 2], [4], [9, 10, 11, 12, 0]]
+    # A non-monotonic split predicate (`b < a`) breaks each descent.
+    assert oop.call_method(
+        [1, 4, 2, 3, 1], "slice_when", Closure(lambda a, b: b < a)
+    ) == [[1, 4], [2, 3], [1]]
+    # all-truthy → every element its own singleton run; all-falsy → one run.
+    assert oop.call_method([1, 2, 3], "slice_when", Closure(lambda a, b: True)) == [[1], [2], [3]]
+    assert oop.call_method([1, 2, 3], "slice_when", Closure(lambda a, b: False)) == [[1, 2, 3]]
+    # empty → []; single element → [[x]].
+    assert oop.call_method([], "slice_when", Closure(lambda a, b: True)) == []
+    assert oop.call_method([9], "slice_when", Closure(lambda a, b: True)) == [[9]]
+    # respond_to? advertises it.
+    assert oop.call_method([1], "respond_to?", "slice_when") is True
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]

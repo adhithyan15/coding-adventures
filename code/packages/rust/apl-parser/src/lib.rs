@@ -11,63 +11,69 @@ mod _grammar;
 /// Recursion-depth cap for the APL [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] and
 /// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
-/// guard exists at all (deep `(((…)))` nesting recurses once per
-/// `parse_rule` call and can overflow the *native* thread stack — an
-/// uncatchable process abort — before this crate's own `Result`-returning
-/// entry points ever get a chance to report anything).
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before this
+/// crate's own `Result`-returning entry points ever get a chance to report
+/// anything).
 ///
-/// # Why not just copy `macsyma-parser`/`matlab-parser`/`wolfram-parser`'s
-/// `200`
+/// # Two crash shapes, not one — and they have *different* floors
 ///
-/// APL's grammar (`code/grammars/apl/apl.grammar`) is much shallower than
-/// any other frontend in this repo: there is no precedence cascade to climb
-/// at all (MA05 §3 bullet 2 — "one precedence tier"), so the parenthesised-
-/// nesting cycle is just `value_expr -> term -> ( value_expr ) -> term ->
-/// …`, about 3 named-rule calls per source-nesting level versus MACSYMA's
-/// 13, MATLAB's 15, or Wolfram's 20. Before measuring, the natural guess was
-/// that this shallower cycle would put APL's raw-frame crash floor in the
-/// same ballpark as (or even above) those three grammars' ~275-280, since
-/// `macsyma-parser`'s own doc comment found its floor "empirically
-/// indistinguishable from Wolfram's" despite very different rule-chain
-/// depth — suggesting the floor is dominated by shared engine overhead, not
-/// by which grammar's rules are matched. **That guess turned out wrong** —
-/// see below — which is exactly the DoS-guard-verification lesson in
-/// practice: reasoning about a guard's safety is not a substitute for
-/// measuring it, even when the reasoning is grounded in a real empirical
-/// finding from a sibling crate.
+/// This grammar has no precedence cascade (MA05 §3 bullet 2), so there are
+/// two independent ways to drive `value_expr` arbitrarily deep, and each was
+/// measured separately rather than assumed to share one floor:
 ///
-/// # How this number was derived
+/// 1. **Parenthesised nesting**, `((((…5…))))` — `value_expr -> term ->
+///    ( value_expr ) -> term -> …`, about 3 named-rule calls per level.
+/// 2. **A flat, unparenthesised dyadic chain**, `1+1+1+…+1` — `value_expr`'s
+///    *own* right-recursive continuation (`term [ function_expr value_expr
+///    ]`) means every additional `+1` is **also** one more `parse_rule`
+///    recursion, exactly as deep as one more pair of parens, even though
+///    there is not a single `(` anywhere in the source. This is the same
+///    failure class that bit `matlab-to-semantic-ir` and
+///    `wolfram-to-semantic-ir` (a flat repetition reaching depths its
+///    grammar-nesting guard wasn't shaped to see) — except here the *grammar
+///    itself* recurses for both shapes, so both are visible to
+///    `with_max_depth` in principle. What is **not** the same between them
+///    is the *native-stack cost per logical level*.
 ///
-/// Following the exact methodology behind `DEFAULT_MAX_RULE_DEPTH` and every
-/// sibling parser crate's own cap: a throwaway, isolated subprocess (never
-/// run in-process — a genuine overflow aborts the whole process, so this
-/// must be explored somewhere a crash is safe) built `((((…5…))))` with
-/// thousands of nesting levels through this crate's own grammar, and
-/// binary-searched — on a worker thread with the **default ~2 MiB stack**
-/// (what a production caller's thread, and `cargo test`'s own per-test
-/// thread, actually get, no `stack_size` override) — for the
-/// `with_max_depth` value at which the parse stops overflowing and starts
-/// returning a clean `Err`. Result (debug build, this toolchain, stable
-/// across repeated trials): safe at 209, overflowing at 210 — *lower* than
-/// the ~275-280 measured for MACSYMA/MATLAB/Wolfram, the opposite of the
-/// "shallower cycle → same-or-higher floor" guess above. APL's shorter
-/// per-level rule-chain evidently costs more native stack per call (larger
-/// local-variable footprint in the specific `match_element` arms this
-/// grammar's alternation/optional shapes hit) than the saving from making
-/// fewer calls — the two effects don't net out the way the naive
-/// per-level-count reasoning assumed. ~209 `parse_rule` frames is the hard
-/// ceiling this grammar can reach on a 2 MiB stack.
+/// # This crate's original `150` was validated against shape 1 only, and
+/// was silently unsafe for shape 2
 ///
-/// 150 sits ~28% below that empirically confirmed crash floor (209 safe /
-/// 210 crashing) — comparable headroom to the other three crates' own
-/// margin — while permitting 72 real nesting levels of legitimate `(...)`
-/// grouping (measured directly: 72 parses cleanly, 73 trips the cap),
-/// comfortably beyond anything a hand-written APL expression needs. This is
-/// well above MACSYMA/MATLAB/Wolfram's ~14 levels despite APL's *lower* raw
-/// crash floor, because each of those levels still only costs APL ~3 frames
-/// against their ~13-20 — the fewer-frames-per-level effect wins out even
-/// though the absolute floor is lower.
-const MAX_RULE_DEPTH: usize = 150;
+/// The first version of this constant (`150`) was derived purely from
+/// `nested_paren_source` probing: binary-searching on a default ~2 MiB
+/// stack found parens safe at 209 native `parse_rule` frames, crashing at
+/// 210, and `150` sat a comfortable ~28% below that. It was never
+/// cross-checked against shape 2 before this crate first shipped (MA-4d) —
+/// an omission caught only while building `apl-runtime` (MA-4e) on top of
+/// it. Direct measurement of shape 2 alone, same methodology (binary search
+/// on a worker thread with the **default ~2 MiB stack**, no `stack_size`
+/// override): a flat chain of 136 terms parses safely, but **137 terms
+/// crashes the process with a real SIGABRT stack overflow — while `self.depth`
+/// is still only ~137, far below the old cap of 150**. In other words, the
+/// old `150` was not "a guard that trips a little late" — inputs that were
+/// still *under* the configured cap, and therefore never meant to be
+/// rejected at all, could crash the process outright. A flat dyadic chain
+/// costs more native stack per `parse_rule` level than one `(...)` wrap
+/// does (each level's `Alternation`/`Optional`/`Sequence` traversal through
+/// `match_element` for `term [ function_expr value_expr ]` is a deeper
+/// native call chain than descending straight through `LPAREN value_expr
+/// RPAREN`), so the two shapes' floors are genuinely different — 209 for
+/// parens, ~136 for a flat chain — and a single cap must respect the
+/// *lower* of the two, not whichever was measured first.
+///
+/// # The corrected number
+///
+/// `MAX_RULE_DEPTH` is now **100** — chosen the same way as the original
+/// `150`, but against the *binding* (lower) constraint: ~26.5% below the
+/// flat-chain floor (136 safe / 137 crashing), comparable margin to the
+/// other sibling crates' own caps, and safely below the parenthesised-
+/// nesting floor (209) with room to spare. Measured real-input headroom at
+/// `100`: a flat chain parses cleanly up to 94 terms (95 trips the cap), and
+/// parenthesised nesting parses cleanly up to 47 levels (48 trips the cap)
+/// — both comfortably beyond anything a hand-written APL expression needs,
+/// and both independently confirmed not to crash a default-stack thread
+/// even thousands of levels past the cap (see this crate's tests).
+const MAX_RULE_DEPTH: usize = 100;
 
 /// Create a [`GrammarParser`] wired to the APL grammar and the tokens of
 /// `source`, with the recursion-depth guard ([`MAX_RULE_DEPTH`]) enabled so
@@ -253,11 +259,23 @@ mod tests {
         format!("{}5{}\n", "(".repeat(n), ")".repeat(n))
     }
 
-    /// Deeply-nested input must produce a recoverable error, not overflow the
-    /// native stack (an uncatchable process abort). We parse 5000 levels —
-    /// far past `MAX_RULE_DEPTH` — on a worker thread with a generous 32 MiB
-    /// stack, so the *guard* is what stops the recursion, not the stack
-    /// running out.
+    /// Build a flat, unparenthesised dyadic chain `1+1+1+…+1` with `n` `+`s —
+    /// the *other* way to drive `value_expr` deep (its own right-recursive
+    /// continuation), see `MAX_RULE_DEPTH`'s doc comment.
+    fn flat_chain_source(n: usize) -> String {
+        let mut s = String::from("1");
+        for _ in 0..n {
+            s.push_str("+1");
+        }
+        s.push('\n');
+        s
+    }
+
+    /// Deeply-nested parenthesised input must produce a recoverable error,
+    /// not overflow the native stack (an uncatchable process abort). We
+    /// parse 5000 levels — far past `MAX_RULE_DEPTH` — on a worker thread
+    /// with a generous 32 MiB stack, so the *guard* is what stops the
+    /// recursion, not the stack running out.
     #[test]
     fn test_deeply_nested_input_returns_error_not_overflow() {
         let handle = std::thread::Builder::new()
@@ -277,38 +295,96 @@ mod tests {
             .expect("depth guard must keep the worker thread from crashing");
     }
 
+    /// The flat-chain analogue of the parenthesised-nesting test above — see
+    /// `MAX_RULE_DEPTH`'s doc comment for why this shape needed its *own*
+    /// measurement rather than assuming it shares the parens floor.
+    #[test]
+    fn test_huge_flat_chain_returns_error_not_overflow() {
+        let handle = std::thread::Builder::new()
+            .name("apl-chain-depth-guard-regression".to_string())
+            .stack_size(32 * 1024 * 1024)
+            .spawn(|| {
+                let source = flat_chain_source(5000);
+                let result = try_parse_apl(&source);
+                assert!(
+                    result.is_err(),
+                    "a huge flat dyadic chain must fail with an error, not parse or crash"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("depth guard must keep the worker thread from crashing");
+    }
+
     /// Input that nests *exactly up to* `MAX_RULE_DEPTH`'s measured boundary
     /// still parses cleanly, and one layer deeper cleanly trips the guard.
-    /// These exact boundary counts (72 legitimate levels) were found
-    /// empirically by binary-searching `create_apl_parser` against
-    /// increasing nesting counts — see `MAX_RULE_DEPTH`'s doc comment.
+    /// These exact boundary counts (47 legitimate levels at the corrected
+    /// `MAX_RULE_DEPTH = 100`) were found empirically by binary-searching
+    /// `create_apl_parser` against increasing nesting counts — see
+    /// `MAX_RULE_DEPTH`'s doc comment.
     #[test]
     fn test_nesting_up_to_cap_still_parses() {
-        let ok_source = nested_paren_source(72);
-        let ast = try_parse_apl(&ok_source).expect("72 levels must stay under the cap");
+        let ok_source = nested_paren_source(47);
+        let ast = try_parse_apl(&ok_source).expect("47 levels must stay under the cap");
         assert_eq!(ast.rule_name, "program");
 
-        let tripped_source = nested_paren_source(73);
+        let tripped_source = nested_paren_source(48);
         assert!(
             try_parse_apl(&tripped_source).is_err(),
             "one nesting level past the cap's measured limit must fail"
         );
     }
 
+    /// The flat-chain analogue of the boundary test above — 94 terms is the
+    /// measured safe limit at `MAX_RULE_DEPTH = 100`, one more (95) trips it.
+    /// This is the *binding* constraint `MAX_RULE_DEPTH` was corrected
+    /// against (see the doc comment) — without this test, a future change
+    /// to the constant could silently re-introduce the crash this shape
+    /// exposed, while the parens-only boundary test above kept passing.
+    #[test]
+    fn test_flat_chain_up_to_cap_still_parses() {
+        let ok_source = flat_chain_source(94);
+        let ast = try_parse_apl(&ok_source).expect("94 chain terms must stay under the cap");
+        assert_eq!(ast.rule_name, "program");
+
+        let tripped_source = flat_chain_source(95);
+        assert!(
+            try_parse_apl(&tripped_source).is_err(),
+            "one chain term past the cap's measured limit must fail"
+        );
+    }
+
     /// A caller relying on `MAX_RULE_DEPTH` must have the guard trip *before*
     /// the native stack overflows on a default-stack thread — otherwise a
-    /// production caller (e.g. a future `apl-runtime`, or `cargo test`'s own
-    /// per-test thread) would still crash. We parse far-too-deep input on a
-    /// worker thread with **no** `stack_size` override (the same ~2 MiB a
-    /// default thread gets). A clean `Err` (not a `join()` failure from a
-    /// crashed thread) proves `MAX_RULE_DEPTH` sits safely below the native
-    /// overflow point on the default stack.
+    /// production caller (e.g. `apl-runtime`, or `cargo test`'s own per-test
+    /// thread) would still crash. We parse far-too-deep input on a worker
+    /// thread with **no** `stack_size` override (the same ~2 MiB a default
+    /// thread gets). A clean `Err` (not a `join()` failure from a crashed
+    /// thread) proves `MAX_RULE_DEPTH` sits safely below the native overflow
+    /// point on the default stack, for *both* crash shapes.
     #[test]
     fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
         let handle = std::thread::spawn(|| {
             let source = nested_paren_source(5000);
             let result = try_parse_apl(&source);
             assert!(result.is_err(), "deeply-nested input must error, not crash");
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// The flat-chain analogue of the default-stack test above — this is the
+    /// test that would have caught the original `150` cap being unsafe: a
+    /// flat chain reaching depth ~137 crashed a default-stack thread even
+    /// though 137 < 150, i.e. the old cap never even got a chance to trip.
+    #[test]
+    fn test_flat_chain_cap_trips_before_overflow_on_default_stack() {
+        let handle = std::thread::spawn(|| {
+            let source = flat_chain_source(5000);
+            let result = try_parse_apl(&source);
+            assert!(result.is_err(), "a huge flat chain must error, not crash");
         });
         handle
             .join()

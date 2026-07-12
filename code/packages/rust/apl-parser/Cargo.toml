@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-apl-parser"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "APL parser backed by statically compiled grammar data"
 license = "MIT"

@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - Unreleased
+
+### Fixed
+
+- **A column alias may omit the `AS` keyword.** `SELECT a col1` now parses and
+  names the output column `col1`, exactly like `SELECT a AS col1` — SQLite and
+  standard SQL accept both spellings. The generated `select_item` grammar
+  required `AS`; it now matches the `sql.grammar` source
+  (`expr [ [ "AS" ] NAME ]`) by making `AS` optional. The alias `NAME` cannot
+  swallow a following keyword (`FROM`/`WHERE`/…) — `NAME` only matches
+  `Name`-type tokens — nor a comma, so `SELECT a, b` and `SELECT a FROM t` are
+  unaffected. Paired with a sql-planner 0.2.2 change that reads a bare trailing
+  alias token (no `AS` keyword to key off).
+
+## [0.1.2] - Unreleased
+
+### Fixed
+
+- **A join with no `ON` condition** (a Cartesian product) now parses:
+  `FROM a JOIN b` and `FROM a CROSS JOIN b`. The generated grammar required an
+  `ON expr` after every join; the `ON expr` is now `Optional`. The planner already
+  returns `None` for a missing `ON`, and codegen already emits every pair (no
+  condition check) for a conditionless INNER join, so no downstream change was
+  needed.
+
+## [0.1.1] - Unreleased
+
+### Fixed
+
+- **Bare `JOIN`** (without an `INNER`/`LEFT`/… keyword) now parses. The generated
+  grammar's `join_clause` required a `join_type` before `JOIN`, so `FROM a JOIN b`
+  failed while `FROM a INNER JOIN b` worked. `join_type` is now `Optional`,
+  matching the `sql.grammar` source (`[ join_type ]`); the planner already
+  defaults a missing `join_type` to INNER, so no downstream change was needed.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

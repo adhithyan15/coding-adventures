@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.5.19 — Column alias without the `AS` keyword
+
+`SELECT a col1` now parses and names the output column `col1`, exactly like
+`SELECT a AS col1` — SQLite (and standard SQL) accept both spellings. The
+generated sql-parser grammar required `AS`; making it optional (sql-parser
+0.1.3) plus teaching the planner's alias extractor to read a bare trailing
+`NAME` token (sql-planner 0.2.2) fixes it. Two new differential-oracle cases
+(`column_alias_without_as`, `bare_alias_matches_as`) diff the resulting
+**column names** against real bundled SQLite. (Table aliases without `AS`,
+`FROM t u`, are the same idea in a different grammar slot and remain a
+follow-up.)
+
+## 0.5.18 — Conditionless joins (Cartesian product)
+
+`SELECT … FROM a CROSS JOIN b` and `SELECT … FROM a JOIN b` (no `ON`) now parse
+and run as a Cartesian (cross) product. The generated sql-parser grammar required
+an `ON` after every join; making `ON expr` optional (sql-parser 0.1.2) fixes it,
+and the planner/codegen already produce a cross product for a conditionless join.
+Two new differential-oracle cases (`cross_product_no_on`, `join_no_on_is_cross`)
+diff against real bundled SQLite. (Comma joins `FROM a, b`, `USING`, and `NATURAL
+JOIN` remain unsupported — those need new planner work, not just a grammar tweak.)
+
+## 0.5.17 — Bare `JOIN` (INNER by default)
+
+`SELECT … FROM a JOIN b ON …` now parses and runs — a bare `JOIN` (no
+`INNER`/`LEFT`/… keyword) is an INNER join. The generated sql-parser grammar
+required an explicit `join_type` before `JOIN`; making it optional (sql-parser
+0.1.1) fixes it, and the planner already defaulted a missing type to INNER. A new
+differential-oracle case (`bare_join`) confirms it produces the same rows as
+`INNER JOIN` against real bundled SQLite.
+
 ## 0.5.16 — Parse `''` escaped single quotes in string literals
 
 A fundamental correctness fix: a doubled single quote (`''`) inside a SQL string

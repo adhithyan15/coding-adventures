@@ -364,3 +364,76 @@ fn array_each_slice_each_cons_chunk_while_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+// ── Array slice_when ───────────────────────────────────────────────────────
+//
+// `slice_when { |a, b| pred }` is the INVERSE of chunk_while: it starts a NEW
+// run BETWEEN an adjacent pair exactly WHERE the block is truthy.  Mirrors the
+// Python reference (#8070).
+fn slice_when_module() -> Function {
+    Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                // [1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 } → [[1,2],[4],[9,10,11,12]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(4), ilit(9), ilit(10), ilit(11), ilit(12)]),
+                    "slice_when",
+                    vec![closure("__lam_gap")],
+                )),
+                // [9].slice_when { … } → [[9]]  (single element)
+                print_stmt(method(seq(vec![ilit(9)]), "slice_when", vec![closure("__lam_gap")])),
+                // [].slice_when { … } → []
+                print_stmt(method(seq(vec![]), "slice_when", vec![closure("__lam_gap")])),
+            ],
+            value: nil(),
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+#[test]
+fn array_slice_when_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    // { |a, b| b - a > 1 } — split on an upward gap greater than one.
+    let gap = lambda_fn2(
+        "__lam_gap",
+        "a",
+        "b",
+        Block {
+            stmts: vec![],
+            value: builtin(">", vec![builtin("-", vec![var_p("b"), var_p("a")]), ilit(1)]),
+            span: s(),
+        },
+    );
+    let module = program(vec![slice_when_module(), gap]);
+    let artifact = compile(&module).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "slicewhen");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [4], [9, 10, 11, 12]]", // slice_when { b-a>1 }
+            "[[9]]",                          // single element
+            "[]",                             // [].slice_when → []
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}

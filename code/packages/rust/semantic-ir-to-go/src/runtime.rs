@@ -1704,7 +1704,7 @@ func _sir_array_responds(name string) bool {
 		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?",
 		"sort_by", "min_by", "max_by", "group_by", "partition", "flat_map",
 		"collect_concat", "take_while", "drop_while", "each_with_object",
-		"chunk_while":
+		"chunk_while", "slice_when":
 		return true
 	}
 	return false
@@ -2339,6 +2339,29 @@ func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closur
 			}
 		}
 		return &Seq{Items: chunks}, true
+	case "slice_when":
+		// `slice_when { |prev, cur| pred }` -> the INVERSE of chunk_while: runs of
+		// consecutive elements, starting a NEW run BETWEEN an adjacent pair
+		// exactly WHERE the block is truthy (chunk_while starts a new run where
+		// the block is FALSY).
+		// `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` -> [[1,2],[4],[9,10,11,12]].
+		// An empty array yields []; a single element yields [[x]].
+		if len(recv.Items) == 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		cur := &Seq{Items: []Value{recv.Items[0]}}
+		slices := []Value{cur}
+		for i := 1; i < len(recv.Items); i++ {
+			prev := recv.Items[i-1]
+			item := recv.Items[i]
+			if _sir_truthy(_sir_apply(block, []Value{prev, item})) {
+				cur = &Seq{Items: []Value{item}}
+				slices = append(slices, cur)
+			} else {
+				cur.Items = append(cur.Items, item)
+			}
+		}
+		return &Seq{Items: slices}, true
 	}
 	return nil, false
 }

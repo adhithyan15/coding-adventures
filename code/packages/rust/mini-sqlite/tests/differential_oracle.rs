@@ -687,6 +687,63 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT s, LENGTH(s), 'a''b' AS lit FROM t ORDER BY id",
     },
+    // A bare `JOIN` (no INNER/LEFT/… keyword) is an INNER join, and must produce
+    // the same rows as an explicit `INNER JOIN`.
+    Case {
+        id: "bare_join",
+        setup: &[
+            "CREATE TABLE a (id INTEGER, b_id INTEGER)",
+            "CREATE TABLE b (id INTEGER, name TEXT)",
+            "INSERT INTO a VALUES (1, 10), (2, 20), (3, 99)",
+            "INSERT INTO b VALUES (10, 'x'), (20, 'y')",
+        ],
+        query: "SELECT a.id, b.name FROM a JOIN b ON a.b_id = b.id ORDER BY a.id",
+    },
+    // A join with NO `ON` condition is a Cartesian (cross) product — both the
+    // bare `JOIN` and the explicit `CROSS JOIN` forms.
+    Case {
+        id: "cross_product_no_on",
+        setup: &[
+            "CREATE TABLE a (x INTEGER)",
+            "CREATE TABLE b (y INTEGER)",
+            "INSERT INTO a VALUES (1), (2)",
+            "INSERT INTO b VALUES (10), (20)",
+        ],
+        query: "SELECT a.x, b.y FROM a CROSS JOIN b ORDER BY a.x, b.y",
+    },
+    Case {
+        id: "join_no_on_is_cross",
+        setup: &[
+            "CREATE TABLE a (x INTEGER)",
+            "CREATE TABLE b (y INTEGER)",
+            "INSERT INTO a VALUES (1), (2)",
+            "INSERT INTO b VALUES (10), (20)",
+        ],
+        query: "SELECT a.x, b.y FROM a JOIN b ORDER BY a.x, b.y",
+    },
+    // A column alias may omit the `AS` keyword: `SELECT id n` names the output
+    // column `n`, exactly like `SELECT id AS n`. SQLite (and standard SQL)
+    // accept both spellings. The output *column name* is what this case checks,
+    // so it directly exercises alias plumbing, not just row values.
+    Case {
+        id: "column_alias_without_as",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1, 'a'), (2, 'b')",
+        ],
+        query: "SELECT id n, name label FROM t ORDER BY id",
+    },
+    // A bare alias must behave identically to the explicit-AS form and must not
+    // swallow the trailing FROM/ORDER BY. Pairing an expression alias with a
+    // plain column alias covers both the computed and the passthrough path.
+    Case {
+        id: "bare_alias_matches_as",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (2, 3), (5, 7)",
+        ],
+        query: "SELECT a + b total, a first FROM t ORDER BY total",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

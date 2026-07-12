@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.31.0 — Array `slice_when`
+
+Mirrors the Python reference (PR #8070) into the Go backend's inline `__sir`
+runtime (`_sir_array_block_method` + the `_sir_array_responds` `respond_to?`
+arm), continuing the `slice_when` cross-backend cascade.
+
+- `slice_when { |prev, cur| pred }` is the INVERSE of `chunk_while`: it splits
+  into runs of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+  exactly WHERE the block is truthy (whereas `chunk_while` starts a new run where
+  the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → `[[1,2],[4],[9,10,11,12]]`;
+  an empty array yields `[]`, a single element `[[x]]`.
+- `tests/compile_and_run_array_methods.rs::array_slice_when_compile_and_run`
+  emits a program with a `b - a > 1` predicate, compiles + runs it with the Go
+  toolchain, and asserts the printed runs.
+
 ## 0.30.0 — Array `each_slice` / `each_cons` / `chunk_while`
 
 Mirrors the Python reference (PR #8031) into the Go backend's inline `__sir`

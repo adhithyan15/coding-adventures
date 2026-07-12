@@ -74,8 +74,13 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"select_item"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // `select_item = expr [ [ "AS" ] NAME ]` — the AS keyword is
+                // OPTIONAL, so `SELECT a col1` (bare alias) parses the same as
+                // `SELECT a AS col1`. The alias NAME can never eat a following
+                // keyword (FROM/WHERE/…) because NAME only matches Name-type
+                // tokens, and it can't eat a comma, so `SELECT a, b` is safe.
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"AS"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
             ] },
@@ -106,11 +111,20 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"join_clause"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"join_type"#.to_string() },
+                // `join_type` is OPTIONAL: a bare `JOIN` (no INNER/LEFT/… prefix)
+                // is an INNER join, which the planner already defaults to when the
+                // `join_type` node is absent. Matches `sql.grammar` (`[ join_type ]`).
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"join_type"#.to_string() }) },
                 GrammarElement::Literal { value: r#"JOIN"#.to_string() },
                 GrammarElement::RuleReference { name: r#"table_ref"#.to_string() },
-                GrammarElement::Literal { value: r#"ON"#.to_string() },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // `ON expr` is OPTIONAL: a join with no condition is a Cartesian
+                // (cross) product — `FROM a JOIN b` and `FROM a CROSS JOIN b`. The
+                // planner returns `None` for a missing ON, and codegen emits every
+                // pair (no condition check) for an INNER join with no condition.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"ON"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                ] }) },
             ] },
             line_number: 28,
         },
