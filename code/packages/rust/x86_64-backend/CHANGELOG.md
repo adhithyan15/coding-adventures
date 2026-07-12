@@ -1,5 +1,9 @@
 # Changelog — `x86_64-backend`
 
+## 0.28.0 - 2026-07-11 (E6d-2b: dyn_box_int runtime builtin)
+
+E6d-2b: register `dyn_box_int` in `V1_BUILTINS` (`call __dyn_box_int`), mirroring aarch64 + the existing `dyn_unbox_int`.
+
 ## 0.27.0 - 2026-07-11 (DVAL01-2: dyn_* builtin names + fix native runtime-symbol emit)
 
 DVAL01-2: mirrors the aarch64 change on x86_64. De-lisps the V1 builtin lisp entries (`lispy_*`->`dyn_*`) and fixes the same latent DVAL01-1a emit bug: `call_builtin` now emits `__<name>` for `dyn_*` helpers (= `__dyn_cons`, matching the runtime) and `__twig_<name>` otherwise, instead of unconditionally `__twig_<name>`. Fixes the 4 previously-red external-symbol unit tests.

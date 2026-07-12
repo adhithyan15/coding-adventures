@@ -1,5 +1,9 @@
 # Changelog — iir-builtin-lowering
 
+## 0.22.0 - 2026-07-11 (E6d-2b: tagged-i64 box/unbox runtime calls + producer-agnostic ref<any>)
+
+E6d-2b: new pass `lower_box_unbox_to_runtime_calls` rewrites the generic `box`/`unbox` ops (which `lower_dynamic_arith` emits) into `dyn_box_int`/`dyn_unbox_int` `call_builtin`s — the tagged-i64 (native/LLVM) representation of boxing, which the backends dispatch to `__dyn_box_int`/`__dyn_unbox_int`. The structural backends keep the generic ops. Also refines the DVAL01-3 `dyn_repr` seed: `ref<any>` (always a genuine tagged heap value) is now seeded **ungated**, so a **Twig** dynamic-arith result is exit-unboxed on the tagged-i64 backends, not just McCarthy Lisp; bare `any` stays gated on `is_lisp` (Twig placeholder). New tests: box/unbox -> runtime calls.
+
 ## 0.21.0 - 2026-07-11 (DVAL01-3: producer-agnostic DynValue classification)
 
 DVAL01-3 (spec DVAL01 §3.3): `dyn_repr` now seeds its "boxed register" set from

@@ -104,7 +104,8 @@ use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
 use iir_builtin_lowering::{
-    intern_symbols, lower_global_io, lower_heap_builtins_runtime, lower_dyn_repr,
+    intern_symbols, lower_box_unbox_to_runtime_calls, lower_dyn_repr, lower_dynamic_arith,
+    lower_global_io, lower_heap_builtins_runtime,
 };
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
@@ -2224,6 +2225,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // Twig/Nib/Brainfuck program today — is left unchanged.
     lower_heap_builtins_runtime(module);
 
+    // Phase 0a‴: dynamic integer arithmetic over `any` (LANG-FULL E6d-2).
+    // A dynamic frontend emits `call_builtin "+"/"-"/…` whose operands are boxed
+    // `DynValue`s; expand each to `unbox → typed op → box` (the same generic ops
+    // `cons`/`car` use). The typed backends have no "add two tagged words" opcode.
+    // Runs after `lower_heap_builtins_runtime` (so a `car` result is an
+    // identifiable boxed `ref<any>`) and before `lower_dyn_repr`.
+    lower_dynamic_arith(module);
+
     // Phase 0a″: compile-time symbol interning (LANG77 / L3b-2c-3).
     // Rewrite each `const Var(name):symbol` to the finished tagged immediate
     // `(id << 32) | TAG_SYMBOL`, with module-wide ids (so the same name → the
@@ -2239,6 +2248,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // boundary.  Gate-free and type-directed: a module with no `dyn_*` calls
     // (every Twig/Nib/Brainfuck program) has nothing to box and is unchanged.
     lower_dyn_repr(module);
+
+    // Phase 0a⁗: tagged-i64 representation of the generic `box`/`unbox` ops that
+    // `lower_dynamic_arith` emitted (E6d-2b). The structural backends lower those
+    // ops directly, but the native/LLVM tagged-word world has no such opcode — a
+    // tagged word is `n << 3`, produced/consumed by `__dyn_box_int` /
+    // `__dyn_unbox_int`. Rewrite the residual ops to those runtime calls, which
+    // `V1_BUILTINS` dispatches to `bl/call __dyn_box_int` / `__dyn_unbox_int`.
+    lower_box_unbox_to_runtime_calls(module);
 
     for func in &mut module.functions {
         lower_string_literals_for_aot(func);

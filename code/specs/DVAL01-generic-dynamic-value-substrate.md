@@ -184,11 +184,14 @@ programs are unaffected.
    placeholder), not from the builtin allow-list. Unit-tested: a `dyn_box_int`
    result is exit-unboxed; a Twig `any` module is a no-op. Strict superset —
    existing lisp programs unaffected.
-5. **Resume E6 on the neutral substrate** — dynamic arithmetic on native/LLVM
-   (the ex-E6d-2b, now trivially correct once #3.3 lands + `dyn_box_int`/
-   `_unbox_int` are the emitted primitives), then lists / symbols / records /
-   unions / closures / dynamic globals (`lang-full-e6-dispatch.md` §4, retargeted
-   to `dyn_*`).
+5. **Resume E6 on the neutral substrate** — ✅ **E6d-2b done**: dynamic
+   arithmetic on native/LLVM. `lower_box_unbox_to_runtime_calls` rewrites the
+   generic `box`/`unbox` ops to `dyn_box_int`/`dyn_unbox_int` runtime calls for
+   the tagged-i64 world; §3.3's classification (refined so `ref<any>` seeds
+   ungated) exit-unboxes the result even for Twig. `(+ (car (cons 41 0)) 1)` → 42
+   on all 5 code-gen backends, run-verified native + LLVM. **Next**: lists /
+   symbols / records / unions / closures / dynamic globals
+   (`lang-full-e6-dispatch.md` §4, retargeted to `dyn_*`).
 
 Rationale: renames first (mechanical, low-risk, keep every backend green), then
 the one real generalisation (§3.3), then the feature work rides a clean substrate
