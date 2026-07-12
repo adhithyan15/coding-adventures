@@ -163,6 +163,7 @@ SELF_CONTAINED_RUNGS = (
     "rung123_sports_concussion_clearance",
     "rung124_vestibular_response_index",
     "rung125_electromyography_recruitment",
+    "rung126_capnography_ventilation",
 )
 
 
