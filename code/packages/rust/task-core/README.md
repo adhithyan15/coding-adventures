@@ -59,9 +59,13 @@ rollups, formula values — is **computed, never stored as source of truth**.
   backward passes over `directed-graph`, honouring FS/SS/FF/SF links with lag,
   working-time calendars, the common date constraints, and summary rollups. Rejects
   cyclic networks; surfaces constraint conflicts.
+- **The reducer** (`reducer`): `reduce(&state, TaskCommand) -> state` — one pure,
+  total entry point for every mutation (~35 commands). It is the trust boundary that
+  clamps/validates input (percent 0..=100, calendar interval bounds, reparent-cycle
+  and self/duplicate/cycle dependency rejection). Invalid commands are no-ops.
 
-Landing next (per the specs): the `TaskCommand` reducer (with input range validation),
-formula/rollup fields (via `symbolic-vm`), and resource leveling.
+Landing next (per the specs): formula/rollup fields (via `symbolic-vm`) and resource
+leveling.
 
 ```rust
 use task_core::{scheduler, Date};

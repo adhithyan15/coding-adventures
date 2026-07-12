@@ -63,10 +63,25 @@ All notable changes to `task-core` are documented here.
     `AsSoonAsPossible`; negative lag (lead) is applied in elapsed time; resource
     leveling is not yet applied.
 
+- **The command/reducer surface** (`reducer` module) — the single entry point for
+  every mutation:
+  - `enum TaskCommand` (~35 variants: task CRUD, reparent/reorder, status/completion/
+    percent, schedule edits, dependency + generic link CRUD, resource + assignment
+    CRUD, calendar edits, field-def CRUD + set-value, decisions, baselines, views,
+    load-state) and a pure, total `reduce(&ProjectState, TaskCommand) -> ProjectState`
+    (immutable in, new state out — the `engram-core` house pattern).
+  - **The reducer is the trust boundary** that enforces the validation the scheduler's
+    security review deferred: `percent_complete` clamped to 0..=100; calendar
+    intervals validated (`start < end <= 1440`) and length-capped; reparent cycles,
+    self-dependencies, duplicate and cycle-forming dependency links rejected (cycle
+    checks reuse `directed-graph`). Invalid commands are no-ops, never errors.
+  - `TaskCommand` derives serde (behind the feature) as an internally-tagged enum, so
+    the facade can dispatch host JSON directly.
+
 ### Notes
 
-- Design principle: everything a scheduler derives is computed, never stored — this
-  release is the *input* model, the working-time engine, and the CPM scheduler; the
-  `TaskCommand` reducer and formula fields land next.
+- Design principle: everything a scheduler derives is computed, never stored — the
+  input model, the working-time engine, the CPM scheduler, and the reducer are in;
+  formula/rollup fields land next.
 - Reuses `directed-graph` (dependency graph) and `datetime-core` (date arithmetic)
   rather than reimplementing them.
