@@ -3,6 +3,20 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.10] - Unreleased
+
+### Added
+
+- **`GLOB(pattern, subject)`** — the function form of SQLite's `GLOB` operator: a
+  case-sensitive wildcard match returning `1` / `0` (`*` = any run, `?` = any
+  single character, `[...]` = character class with `[^...]` negation and `a-c`
+  ranges; a backslash is a literal, GLOB has no escape). NULL in either argument
+  → NULL; arguments are matched by Unicode character. The matcher (`glob_match`)
+  uses the same iterative two-pointer backtracking as `like_match`, so it is
+  `O(text × pattern)` — no exponential blow-up on adversarial `*`-heavy patterns.
+  (The infix `GLOB` operator remains a separate grammar-level feature; this is
+  the callable function.)
+
 ## [0.4.9] - Unreleased
 
 ### Added

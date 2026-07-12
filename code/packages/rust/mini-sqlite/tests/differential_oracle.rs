@@ -646,6 +646,16 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT LIKELY(n) AS a, UNLIKELY(s) AS b, LIKELIHOOD(id, 0.5) AS c FROM t ORDER BY id",
     },
+    // GLOB(pattern, subject) — the function form of the GLOB operator: a
+    // case-sensitive wildcard match (`*`, `?`, `[...]`).
+    Case {
+        id: "glob_function",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'hello'), (2, 'HELLO'), (3, 'help'), (4, NULL)",
+        ],
+        query: "SELECT GLOB('h*o', s) AS a, GLOB('hel[lp]*', s) AS b FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
