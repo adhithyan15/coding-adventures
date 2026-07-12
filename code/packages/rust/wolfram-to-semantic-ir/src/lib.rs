@@ -48,13 +48,24 @@ pub use lower::{compile, WolframLowerError};
 /// explicitly recommends one of two fixes for a caller in this position:
 /// reuse `wolfram-runtime`'s own pattern (parse on an enlarged-stack worker
 /// thread) or tighten the cap and accept a much lower nesting ceiling on a
-/// bare thread. This crate takes the first option, reusing
-/// `wolfram-runtime`'s own validated-safe deployment exactly (its
-/// `EVAL_STACK_SIZE`) rather than inventing an unproven new stack size, so
-/// `wolfram-parser`'s *default* `MAX_RULE_DEPTH` (2000, ~98 real nesting
-/// levels) stays in force — comfortable headroom for realistic compiled
-/// programs — while remaining provably safe.
-const PARSE_STACK_SIZE: usize = 512 * 1024 * 1024;
+/// bare thread. This crate takes the first option.
+///
+/// Unlike `wolfram-runtime` (a long-running REPL/eval process that spawns
+/// this worker thread rarely), `compile_source` may be called once per
+/// test or per request — reusing `wolfram-runtime`'s own 512 MiB
+/// `EVAL_STACK_SIZE` verbatim caused real CI resource pressure (many
+/// concurrent test threads each reserving 512 MiB of address space at
+/// once), so this crate derives its own, smaller budget instead of
+/// copying that constant unquestioned. `wolfram-parser`'s own measured
+/// bare-stack crash floor is ~276 `parse_rule` frames on a ~2 MiB stack —
+/// roughly 7.4 KiB/frame. Supporting the *default* `MAX_RULE_DEPTH` (2000
+/// frames) with a comfortable ~4x margin over that per-frame cost needs
+/// only ~64 MiB (2000 × 7.4 KiB × 4 ≈ 59 MiB, rounded up), a fraction of
+/// 512 MiB's reservation while still keeping the full 2000-frame
+/// (~98-real-nesting-level) ceiling in force — comfortable headroom for
+/// realistic compiled programs, while remaining provably safe and far
+/// less memory-hungry per call.
+const PARSE_STACK_SIZE: usize = 64 * 1024 * 1024;
 
 /// Parse `source` as Wolfram and lower it into a [`semantic_ir::Module`] in
 /// one step, mirroring every other `-to-semantic-ir` frontend's

@@ -198,6 +198,24 @@
   ever runs, and so was never masked by this bug). Fixed by converting both
   failure paths into a `WolframLowerError` instead of `.expect()`-ing.
 
+### Fixed (CI)
+
+- **`PARSE_STACK_SIZE` reduced from 512 MiB to 64 MiB.** The initial value
+  copied `wolfram-runtime`'s own `EVAL_STACK_SIZE` verbatim, but that crate
+  spawns its enlarged-stack thread rarely (a long-running REPL/eval
+  process), while `compile_source` may spawn one per call — many
+  concurrent test threads each reserving 512 MiB of address space at once
+  caused real CI resource pressure (the "Build and test affected packages"
+  job was externally terminated, exit code 143, while building this
+  crate). `wolfram-parser`'s own measured bare-stack crash floor (~276
+  frames on ~2 MiB, ~7.4 KiB/frame) means supporting its full default
+  `MAX_RULE_DEPTH` (2000 frames) with a comfortable ~4x margin needs only
+  ~64 MiB, a fraction of 512 MiB's reservation with the same safety
+  guarantee. Verified directly (not just reasoned about): a 90-level
+  legitimate `(...)` nesting — comfortably inside `wolfram-parser`'s own
+  measured ~98-level safe ceiling — still parses and lowers successfully
+  through `compile_source` at the reduced stack size.
+
 ### Known limitation (disclosed, not a bug)
 
 No module this crate produces currently executes end-to-end through any
