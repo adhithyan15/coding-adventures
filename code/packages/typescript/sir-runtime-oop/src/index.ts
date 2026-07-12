@@ -589,6 +589,7 @@ const ARRAY_BLOCK_METHODS = new Set<string>([
   "count",
   "each_with_object",
   "chunk_while",
+  "slice_when",
 ]);
 
 // Non-block `Hash` methods (M1c). Hash is a JS `Map`.
@@ -1227,6 +1228,21 @@ function arrayBlockMethod(
         else { chunks.push([recv[i]]); }
       }
       return chunks;
+    }
+    case "slice_when": {
+      // `slice_when { |prev, cur| pred }` — the INVERSE of `chunk_while`: runs
+      // of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+      // exactly WHERE the block is truthy (chunk_while starts a new run where
+      // the block is FALSY).
+      // `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → [[1,2],[4],[9,10,11,12]].
+      // An empty array yields []; a single element yields [[x]].
+      if (recv.length === 0) return [];
+      const slices: Val[][] = [[recv[0]]];
+      for (let i = 1; i < recv.length; i++) {
+        if (truthy(apply(block, [recv[i - 1], recv[i]]))) { slices.push([recv[i]]); }
+        else { slices[slices.length - 1].push(recv[i]); }
+      }
+      return slices;
     }
     default:
       return MISS;
