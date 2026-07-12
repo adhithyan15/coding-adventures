@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.16.0] - 2026-07-12
+
+### Changed — CLOC12.188 PR2: bail on module `import`
+
+The property-renaming soundness gate now also declines when
+`program_contains_import_declaration` is true, mirroring the `with` gate: an
+imported name aliases a foreign export, and property renaming cannot tell a bare
+alias apart from a normal reference, so renaming would risk desynchronizing from
+the cross-module contract.
+
 ## [0.15.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: `ImportDeclaration` arms

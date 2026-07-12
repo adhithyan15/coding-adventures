@@ -49,8 +49,8 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use coding_adventures_javascript_ast::{
     declaration::{
-        BindingTarget, ClassDeclaration, Declaration, FunctionDeclaration, FunctionParam, VarKind,
-        VariableDeclaration, VariableDeclarator,
+        BindingTarget, ClassDeclaration, Declaration, FunctionDeclaration, FunctionParam,
+        ImportDeclaration, ImportSpecifier, VarKind, VariableDeclaration, VariableDeclarator,
     },
     expression::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
@@ -278,6 +278,15 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
             let decl = convert_class_declaration(child)?;
             Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
         }
+        // An ES-module `import` declaration (CLOC12.188 PR2). Recognised shapes:
+        // side-effect (`import "y"`), default (`import x from "y"`), namespace
+        // (`import * as ns from "y"`), and named (`import {a, b as c} from "y"`),
+        // plus default-plus-named (`import x, {a} from "y"`). Anything the
+        // converter does not recognise DECLINES to WHITESPACE_ONLY.
+        "import_declaration" => {
+            let decl = convert_import_declaration(child)?;
+            Ok(ProgramItem::Declaration(Declaration::ImportDeclaration(decl)))
+        }
         "statement" => {
             let stmt = convert_statement(child)?;
             Ok(ProgramItem::Statement(stmt))
@@ -285,6 +294,110 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
         // variable_statement / lexical_declaration land inside statement
         _ => Err(unsupported(child)),
     }
+}
+
+/// Convert an `import_declaration` grammar node into an [`ImportDeclaration`]
+/// (CLOC12.188 PR2). Grammar shape (verified by a parse-tree probe):
+///
+/// ```text
+///   import_declaration = Token("import"),
+///                        ( module_specifier                    // side-effect
+///                        | import_clause , from_clause ),      // with bindings
+///                        Token(";") ;
+///   import_clause  = [ default_import ] , [ Token(",") ] ,
+///                    [ namespace_import | named_imports ] ;
+///   default_import   = Token(name) ;                            // `x`
+///   namespace_import = Token("*"), Token("as"), Token(name) ;   // `* as ns`
+///   named_imports    = Token("{"),
+///                      { import_specifier , [ Token(",") ] },
+///                      Token("}") ;
+///   import_specifier = Token(name) , [ Token("as"), Token(name) ] ; // `a`/`a as c`
+/// ```
+///
+/// The source string rides a `String` token inside `module_specifier` (the
+/// side-effect form) or `from_clause` (the with-bindings form); the lexer
+/// stores it *unquoted*, so we rebuild the raw `"…"` form for the
+/// [`StringLiteral`]. `import x, * as ns from "y"` is a grammar gap (the parser
+/// rejects a default+namespace combination) and never reaches here. Any shape
+/// the arms below do not recognise DECLINES via `unsupported` (a safe
+/// WHITESPACE_ONLY fallback), never a mis-bridge.
+fn convert_import_declaration(node: &GrammarASTNode) -> Result<ImportDeclaration, BridgeError> {
+    let kids = node_children(node);
+    let mut specifiers: Vec<ImportSpecifier> = Vec::new();
+    let source_node = match kids.as_slice() {
+        // Side-effect import `import "y";` — no clause; the source is the direct
+        // `module_specifier` child.
+        [ms] if ms.rule_name == "module_specifier" => ms,
+        // Import with bindings `import <clause> from "y";`.
+        [clause, from]
+            if clause.rule_name == "import_clause" && from.rule_name == "from_clause" =>
+        {
+            for part in node_children(clause) {
+                match part.rule_name.as_str() {
+                    // `x` — default binding.
+                    "default_import" => match token_vals(part).as_slice() {
+                        [name] => specifiers.push(ImportSpecifier::Default(Identifier {
+                            cv: None,
+                            name: (*name).to_string(),
+                        })),
+                        _ => return Err(unsupported(part)),
+                    },
+                    // `* as ns` — namespace binding; the local name is the last token.
+                    "namespace_import" => match token_vals(part).as_slice() {
+                        [star, as_kw, ns] if *star == "*" && *as_kw == "as" => {
+                            specifiers.push(ImportSpecifier::Namespace(Identifier {
+                                cv: None,
+                                name: (*ns).to_string(),
+                            }))
+                        }
+                        _ => return Err(unsupported(part)),
+                    },
+                    // `{a, b as c}` — zero or more named specifiers.
+                    "named_imports" => {
+                        for spec in node_children(part) {
+                            if spec.rule_name != "import_specifier" {
+                                return Err(unsupported(spec));
+                            }
+                            // `a` → imported == local == a ;
+                            // `a as c` → imported = a, local = c.
+                            let (imported, local) = match token_vals(spec).as_slice() {
+                                [a] => ((*a).to_string(), (*a).to_string()),
+                                [a, as_kw, c] if *as_kw == "as" => {
+                                    ((*a).to_string(), (*c).to_string())
+                                }
+                                _ => return Err(unsupported(spec)),
+                            };
+                            specifiers.push(ImportSpecifier::Named {
+                                imported: Identifier { cv: None, name: imported },
+                                local: Identifier { cv: None, name: local },
+                            });
+                        }
+                    }
+                    _ => return Err(unsupported(part)),
+                }
+            }
+            from
+        }
+        _ => return Err(unsupported(node)),
+    };
+    let source = import_source(source_node).ok_or_else(|| unsupported(source_node))?;
+    Ok(ImportDeclaration { cv: None, specifiers, source })
+}
+
+/// Pull the module-specifier string out of a `module_specifier` or `from_clause`
+/// node: the first `String`-typed token among the node's direct children. The
+/// lexer stores the value unquoted (`y`, not `"y"`), so we rebuild a double-
+/// quoted `raw` for the [`StringLiteral`]; the emitter re-derives the quotes
+/// from `value`, so `raw` is only kept for round-trip fidelity.
+fn import_source(node: &GrammarASTNode) -> Option<StringLiteral> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => Some(StringLiteral {
+            cv: t.cv.clone(),
+            value: t.value.clone(),
+            raw: format!("\"{}\"", t.value),
+        }),
+        _ => None,
+    })
 }
 
 // =========================================================================
@@ -3881,6 +3994,86 @@ mod tests {
 
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
+    }
+
+    /// Pull the sole `ImportDeclaration` out of a single-item program.
+    fn import_of(src: &str) -> ImportDeclaration {
+        let p = bridge_ok(src);
+        match p.body.first() {
+            Some(ProgramItem::Declaration(Declaration::ImportDeclaration(i))) => i.clone(),
+            other => panic!("expected an ImportDeclaration for {src}, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_side_effect_import() {
+        // `import "y";` — no specifiers, source "y".
+        let i = import_of("import \"y\";");
+        assert!(i.specifiers.is_empty());
+        assert_eq!(i.source.value, "y");
+    }
+
+    #[test]
+    fn bridge_default_import() {
+        // `import x from "y";` — one Default specifier.
+        let i = import_of("import x from \"y\";");
+        assert_eq!(i.source.value, "y");
+        assert_eq!(i.specifiers.len(), 1);
+        match &i.specifiers[0] {
+            ImportSpecifier::Default(id) => assert_eq!(id.name, "x"),
+            other => panic!("expected Default, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_namespace_import() {
+        // `import * as ns from "y";` — one Namespace specifier.
+        let i = import_of("import * as ns from \"y\";");
+        match &i.specifiers[..] {
+            [ImportSpecifier::Namespace(id)] => assert_eq!(id.name, "ns"),
+            other => panic!("expected [Namespace], got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_named_imports_plain_and_aliased() {
+        // `import {a, b as c} from "y";` — `a` binds a→a, `b as c` binds b→c.
+        let i = import_of("import {a, b as c} from \"y\";");
+        match &i.specifiers[..] {
+            [
+                ImportSpecifier::Named { imported: i0, local: l0 },
+                ImportSpecifier::Named { imported: i1, local: l1 },
+            ] => {
+                assert_eq!((i0.name.as_str(), l0.name.as_str()), ("a", "a"));
+                assert_eq!((i1.name.as_str(), l1.name.as_str()), ("b", "c"));
+            }
+            other => panic!("expected two Named specifiers, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_default_plus_named_import() {
+        // `import x, {a} from "y";` — Default then Named.
+        let i = import_of("import x, {a} from \"y\";");
+        match &i.specifiers[..] {
+            [
+                ImportSpecifier::Default(d),
+                ImportSpecifier::Named { imported, local },
+            ] => {
+                assert_eq!(d.name, "x");
+                assert_eq!((imported.name.as_str(), local.name.as_str()), ("a", "a"));
+            }
+            other => panic!("expected [Default, Named], got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_default_plus_namespace_import_declines() {
+        // `import x, * as ns from "y";` is a grammar gap — the parser rejects
+        // the default+namespace combination at the parse layer (before the
+        // bridge ever runs), so the whole file declines rather than
+        // mis-bridging.
+        assert!(parse_javascript_typed("import x, * as ns from \"y\";", DEFAULT_ES_VERSION).is_err());
     }
 
     /// Pull the `AssignmentExpression` operator out of `<lhs> <op> <rhs>;`.
