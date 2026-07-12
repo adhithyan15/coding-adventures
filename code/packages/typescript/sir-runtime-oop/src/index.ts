@@ -555,6 +555,8 @@ const ARRAY_METHODS = new Set<string>([
   "values_at",
   "rotate",
   "zip",
+  "each_slice",
+  "each_cons",
 ]);
 
 // Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
@@ -585,6 +587,7 @@ const ARRAY_BLOCK_METHODS = new Set<string>([
   "drop_while",
   "count",
   "each_with_object",
+  "chunk_while",
 ]);
 
 // Non-block `Hash` methods (M1c). Hash is a JS `Map`.
@@ -1037,6 +1040,26 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
       }
       return zipped;
     }
+    case "each_slice": {
+      // `each_slice(n)` — consecutive sub-arrays of at most `n` elements (the
+      // last may be shorter).  `[1,2,3,4,5].each_slice(2)` → [[1,2],[3,4],[5]].
+      // Ruby raises ArgumentError for n <= 0; the never-raise floor yields [].
+      const n = args.length > 0 && Number.isInteger(args[0]) ? (args[0] as number) : 0;
+      if (n <= 0) return [];
+      const out: Val[] = [];
+      for (let i = 0; i < recv.length; i += n) out.push(recv.slice(i, i + n));
+      return out;
+    }
+    case "each_cons": {
+      // `each_cons(n)` — every consecutive n-element sliding window.
+      // `[1,2,3,4].each_cons(2)` → [[1,2],[2,3],[3,4]].  A window larger than
+      // the array (or n <= 0) yields [].
+      const n = args.length > 0 && Number.isInteger(args[0]) ? (args[0] as number) : 0;
+      if (n <= 0) return [];
+      const out: Val[] = [];
+      for (let i = 0; i + n <= recv.length; i++) out.push(recv.slice(i, i + n));
+      return out;
+    }
     default:
       return MISS;
   }
@@ -1177,6 +1200,20 @@ function arrayBlockMethod(
       const memo = args[0];
       for (const item of recv) apply(block, [item, memo]);
       return memo;
+    }
+    case "chunk_while": {
+      // `chunk_while { |prev, cur| pred }` — runs of consecutive elements: the
+      // block is called on each ADJACENT pair; while it is truthy the run
+      // continues, and a falsy result starts a new run.
+      // `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` → [[1,2],[4,5],[7]].
+      // An empty array yields []; a single element yields [[x]].
+      if (recv.length === 0) return [];
+      const chunks: Val[][] = [[recv[0]]];
+      for (let i = 1; i < recv.length; i++) {
+        if (truthy(apply(block, [recv[i - 1], recv[i]]))) { chunks[chunks.length - 1].push(recv[i]); }
+        else { chunks.push([recv[i]]); }
+      }
+      return chunks;
     }
     default:
       return MISS;
