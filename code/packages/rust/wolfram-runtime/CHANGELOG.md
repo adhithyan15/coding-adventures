@@ -4,6 +4,34 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.2] — 2026-07-12
+
+### Added (W-22 — `Factor`, third `cas-*` head)
+
+- `Factor[expr]` — factors a univariate integer polynomial, or recognises
+  one of a handful of common multivariate patterns (perfect square/cube,
+  difference of squares, cubic identities, a common symbolic/integer term
+  to pull out, bivariate/n-variate Hensel lifting) — unevaluated if none
+  apply. Unlike `Simplify`/`Expand` (thin calls into the standalone
+  `cas-simplify` crate), `Factor`'s implementation lives directly in
+  `symbolic-vm` itself: this wiring calls
+  `symbolic_vm::handlers::factor_handler` directly — the exact function
+  Macsyma's own `factor` surface function already calls — made `pub`
+  specifically for this reuse (see `symbolic-vm`'s own changelog). No
+  algorithm is reimplemented or duplicated; a parity test pins both
+  languages' call sites to agree on the same input, exactly like
+  `Simplify`/`Expand`'s own parity tests.
+- Like every W-5+ built-in, `Factor` is an ordinary eager `Head[args]` form
+  requiring exactly one argument; any other arity leaves the form
+  unevaluated. That arity check lives inside `factor_handler` itself
+  (unlike `simplify_handler`/`expand_handler`, which must unwrap a single
+  expression argument themselves before calling a function that only takes
+  one bare expression), so this wiring needs no arity check of its own.
+- 5 new tests: basic univariate factoring, an unrecognised multivariate
+  form staying unevaluated, the Wolfram/Macsyma parity check, wrong-arity
+  fail-soft, and full parser→lower→backend dispatch.
+- Marks `Factor` delivered in `MA04-wolfram-language.md` §24.
+
 ## [0.19.1] — 2026-07-11
 
 ### Fixed (W-13 — quadratic set-op DoS)

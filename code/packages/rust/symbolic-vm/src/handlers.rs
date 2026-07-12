@@ -5351,7 +5351,18 @@ fn apply_node(head: &str, args: Vec<IRNode>) -> IRNode {
 // Factor
 // ---------------------------------------------------------------------------
 
-fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+/// `Factor(expr)` — factor a univariate integer polynomial (via
+/// [`cas_factor::factor_integer_polynomial`]) or recognise a handful of
+/// common multivariate patterns (perfect square/cube, difference of
+/// squares, cubic identities, a common symbolic/integer term to pull out,
+/// bivariate and n-variate Hensel lifting) — falling back to the
+/// unevaluated form when nothing applies. This is `pub` (unlike its
+/// sibling handlers in this module) so other language runtimes sharing
+/// this crate's `VM`/`IRApply` types (e.g. `wolfram-runtime`'s `Factor`
+/// wiring) can call the exact same factoring pipeline Macsyma's own
+/// `factor` surface function uses, rather than reimplementing or
+/// duplicating it.
+pub fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     let fallback = IRNode::Apply(Box::new(expr.clone()));
     if expr.args.len() != 1 {
         return fallback;

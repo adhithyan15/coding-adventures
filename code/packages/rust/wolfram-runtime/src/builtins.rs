@@ -249,13 +249,17 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Sqrt".to_string(), handler_fn(sqrt_handler));
 
     // W-22 cas-* algorithm surface under Wolfram names (MA04 §2 "Future" item,
-    // now in progress). `Simplify` was the first entry; `Expand` is the
-    // second — both ordinary eager `Head[args]` forms reusing `cas-simplify`
-    // verbatim. Further heads (`Factor`, `Solve`, `D`, `Integrate`, ...) are
-    // added one at a time, each its own PR, per HML00's one-item-per-PR
-    // discipline.
+    // now in progress). `Simplify` was the first entry, `Expand` the second —
+    // both ordinary eager `Head[args]` forms reusing `cas-simplify` verbatim.
+    // `Factor` is the third, reusing `symbolic-vm`'s own `factor_handler`
+    // (the exact function Macsyma's `factor` surface function already calls)
+    // rather than `cas-simplify`, since factoring lives directly in the
+    // shared VM crate, not a separate `cas-*` crate. Further heads (`Solve`,
+    // `D`, `Integrate`, ...) are added one at a time, each its own PR, per
+    // HML00's one-item-per-PR discipline.
     m.insert("Simplify".to_string(), handler_fn(simplify_handler));
     m.insert("Expand".to_string(), handler_fn(expand_handler));
+    m.insert("Factor".to_string(), handler_fn(factor_handler));
 
     // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
     // each handler evaluates ONLY its subject and matches against the *literal*
@@ -3353,6 +3357,26 @@ fn expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     expand(expr.args[0].clone())
 }
 
+/// `Factor[expr]` → factor a univariate integer polynomial, or recognise one
+/// of a handful of common multivariate patterns (perfect square/cube,
+/// difference of squares, cubic identities, a common symbolic/integer term to
+/// pull out, bivariate/n-variate Hensel lifting) — unevaluated if none apply.
+///
+/// Unlike `Simplify`/`Expand` (thin calls into the standalone `cas-simplify`
+/// crate), `Factor`'s implementation lives directly in `symbolic-vm` itself
+/// (`symbolic_vm::handlers::factor_handler`, made `pub` specifically so this
+/// wiring can reuse it) — so this is a direct call into the exact same
+/// function Macsyma's own `factor` surface function already calls, no
+/// algorithm reimplemented or duplicated. That function already performs its
+/// own arity check (any arity other than one leaves the form unevaluated, the
+/// same fail-soft contract every other W-22/W-15 built-in follows), so this
+/// wrapper needs no arity check of its own — unlike `simplify_handler`/
+/// `expand_handler`, which must unwrap `expr.args[0]` themselves before
+/// calling a single-expression-argument function.
+fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    symbolic_vm::handlers::factor_handler(vm, expr)
+}
+
 // ---------------------------------------------------------------------------
 // W-12 string builtins
 // ---------------------------------------------------------------------------
@@ -6221,6 +6245,96 @@ mod tests {
         assert_eq!(
             eval_full(apply(sym("Expand"), vec![product.clone()])),
             cas_simplify::expand(product)
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-22 cas-* algorithm surface — Factor
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn factor_factors_a_univariate_integer_polynomial() {
+        // Factor[x^2 - 1] -> (1 + x) * (-1 + x), the exact same difference-of-
+        // squares factorisation `factor(x^2 - 1)` produces in Macsyma (see
+        // `factors_univariate_integer_polynomials_through_runtime` in
+        // `macsyma-runtime/tests/test_runtime.rs`).
+        let x_squared_minus_one = apply(
+            sym(symbolic_ir::SUB),
+            vec![apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]), int(1)],
+        );
+        assert_eq!(
+            run("Factor", vec![x_squared_minus_one]),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(ADD), vec![int(1), sym("x")]),
+                    apply(sym(ADD), vec![int(-1), sym("x")]),
+                ],
+            )
+        );
+    }
+
+    #[test]
+    fn factor_leaves_an_unrecognised_multivariate_form_unevaluated() {
+        // Factor[x + y] has no common factor and matches none of the
+        // recognised multivariate patterns, so it echoes back unevaluated —
+        // mirrors `keeps_multivariate_factor_calls_unevaluated` in
+        // `macsyma-runtime/tests/test_runtime.rs`.
+        let x_plus_y = apply(sym(ADD), vec![sym("x"), sym("y")]);
+        assert_eq!(
+            run("Factor", vec![x_plus_y.clone()]),
+            apply(sym("Factor"), vec![x_plus_y])
+        );
+    }
+
+    #[test]
+    fn factor_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's Factor and Macsyma's factor() dispatch to the exact
+        // same symbolic_vm::handlers::factor_handler -- this pins that the
+        // Wolfram wiring doesn't diverge from the reference call. Needs a
+        // fresh VM on each side since factor_handler takes `&mut VM` (unlike
+        // Simplify/Expand's parity tests, which call a plain free function).
+        let expr = apply(
+            sym(symbolic_ir::SUB),
+            vec![apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]), int(1)],
+        );
+        let via_wolfram = run("Factor", vec![expr.clone()]);
+        let ir_apply = IRApply {
+            head: sym("Factor"),
+            args: vec![expr],
+        };
+        let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        let via_macsyma_path = symbolic_vm::handlers::factor_handler(&mut vm, ir_apply);
+        assert_eq!(via_wolfram, via_macsyma_path);
+    }
+
+    #[test]
+    fn factor_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Factor", vec![]), apply(sym("Factor"), vec![]));
+        assert_eq!(
+            run("Factor", vec![int(1), int(2)]),
+            apply(sym("Factor"), vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn factor_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x^2 - 1 fully factors through the full parser -> lower -> backend
+        // path, exactly mirroring `expand_dispatches_end_to_end_through_the_
+        // wolfram_backend` above.
+        let x_squared_minus_one = apply(
+            sym(symbolic_ir::SUB),
+            vec![apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]), int(1)],
+        );
+        assert_eq!(
+            eval_full(apply(sym("Factor"), vec![x_squared_minus_one])),
+            apply(
+                sym(MUL),
+                vec![
+                    apply(sym(ADD), vec![int(1), sym("x")]),
+                    apply(sym(ADD), vec![int(-1), sym("x")]),
+                ],
+            )
         );
     }
 
