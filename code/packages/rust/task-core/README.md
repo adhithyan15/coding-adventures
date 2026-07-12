@@ -59,9 +59,14 @@ rollups, formula values — is **computed, never stored as source of truth**.
   backward passes over `directed-graph`, honouring FS/SS/FF/SF links with lag,
   working-time calendars, the common date constraints, and summary rollups. Rejects
   cyclic networks; surfaces constraint conflicts.
+- **Computed fields** (`formula`): a `[field]` bracket-syntax parser → `symbolic-ir`,
+  panic-safe `symbolic-vm` evaluation of formula fields, direct-Rust rollups, and a
+  `directed-graph` field-dependency order that rejects cyclic formulas. The
+  named-variable win over A1-only spreadsheet formulas.
 
-Landing next (per the specs): the `TaskCommand` reducer (with input range validation),
-formula/rollup fields (via `symbolic-vm`), and resource leveling.
+Landing next (per the specs): the `TaskCommand` reducer (in review) and resource
+leveling, then Track B (the `task-core-wasm` facade → `task-capi`/`task-wasm` →
+Mosaic web app).
 
 ```rust
 use task_core::{scheduler, Date};

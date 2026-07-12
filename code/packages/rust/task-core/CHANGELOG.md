@@ -63,10 +63,26 @@ All notable changes to `task-core` are documented here.
     `AsSoonAsPossible`; negative lag (lead) is applied in elapsed time; resource
     leveling is not yet applied.
 
+- **Computed fields** (`formula` module) — formula and rollup fields, reusing the
+  repo's named-variable expression stack:
+  - A `[field]` bracket-syntax `parse` (our surface syntax, matching MS Project's
+    `[Field]` convention) → `symbolic-ir` expression tree; supports `+ - * /`, unary
+    minus, comparisons, and parentheses with correct precedence.
+  - `referenced_fields` — extracts a formula's dependencies (the field names it reads)
+    by walking the AST.
+  - `eval_number` — evaluates a formula against name→value bindings via `symbolic-vm`'s
+    `StrictBackend`. **Panic-safe on untrusted input**: unbound references and runtime
+    errors (division by zero — which `StrictBackend` panics on) yield `None`, caught
+    via `catch_unwind`, never a crash.
+  - `rollup` — folds child values (Sum/Min/Max/Average/Count) directly in Rust.
+  - `field_eval_order` — topological order of the computed-field dependency graph via
+    `directed-graph`, rejecting self-referential and transitively cyclic formulas
+    (self-loops are detected explicitly, since `directed-graph` drops them).
+
 ### Notes
 
-- Design principle: everything a scheduler derives is computed, never stored — this
-  release is the *input* model, the working-time engine, and the CPM scheduler; the
-  `TaskCommand` reducer and formula fields land next.
-- Reuses `directed-graph` (dependency graph) and `datetime-core` (date arithmetic)
-  rather than reimplementing them.
+- Design principle: everything a scheduler derives is computed, never stored — the
+  input model, the working-time engine, the CPM scheduler, and computed fields are in.
+- Reuses `directed-graph` (dependency/recalc graph), `datetime-core` (date arithmetic),
+  and `symbolic-ir`/`symbolic-vm` (named-variable formula evaluation) rather than
+  reimplementing them.
