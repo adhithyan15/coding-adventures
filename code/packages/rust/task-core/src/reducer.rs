@@ -286,12 +286,13 @@ pub fn reduce(state: &ProjectState, cmd: TaskCommand) -> ProjectState {
         TaskCommand::LoadState { state } => return *state,
 
         TaskCommand::CreateTask { id, name, parent } => {
-            // Ignore a parent that doesn't exist; ignore a duplicate id.
+            // Ignore a parent that doesn't exist; ignore a duplicate id (use the entry
+            // API so we test-and-insert in one lookup).
             let parent = parent.filter(|p| s.tasks.contains_key(p));
-            if !s.tasks.contains_key(&id) {
-                let mut t = Task::new(id.clone(), name);
+            if let std::collections::btree_map::Entry::Vacant(slot) = s.tasks.entry(id) {
+                let mut t = Task::new(slot.key().clone(), name);
                 t.parent = parent;
-                s.tasks.insert(id, t);
+                slot.insert(t);
             }
         }
         TaskCommand::RenameTask { id, name } => {
