@@ -2013,10 +2013,12 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 /// | `Number`          | Integer or float literal   | `Literal(Int)` or `Float`    |
 /// | `Name`/`Keyword`  | Column name reference      | `Column { name: value }`     |
 fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
-    // STRING literal: the lexer strips quotes and sets type_ = TokenType::String.
-    // The value is already the inner content (no surrounding quotes).
+    // STRING literal: the lexer strips the surrounding quotes and sets
+    // type_ = TokenType::String, but leaves the inner content raw. SQL escapes a
+    // literal single quote by doubling it (`'it''s'` is the four-character string
+    // `it's`), so collapse each `''` back to one `'` here.
     if tok.type_ == TokenType::String {
-        return Ok(SqlExpr::Literal(SqlValue::Text(tok.value.clone())));
+        return Ok(SqlExpr::Literal(SqlValue::Text(tok.value.replace("''", "'"))));
     }
 
     let val = &tok.value;

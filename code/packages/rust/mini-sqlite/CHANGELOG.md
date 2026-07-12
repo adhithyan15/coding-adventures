@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.16 — Parse `''` escaped single quotes in string literals
+
+A fundamental correctness fix: a doubled single quote (`''`) inside a SQL string
+literal is the escape for one literal quote, so `'it''s'` is the string `it's`
+and `'O''Brien'` is `O'Brien`. mini-sqlite failed to parse these — the generated
+sql-lexer token grammar had a stale backslash-escape regex, so `'it''s'`
+tokenized as two adjacent strings. Fixed in sql-lexer 0.1.1 (SQL `''` regex) and
+sql-planner 0.2.1 (`''` → `'` when building the string value). A new
+differential-oracle case (`escaped_quote_literal`) covers escaped quotes in both
+the SELECT list and INSERT'd row values against real bundled SQLite. This also
+unblocks testing PRINTF's `%q` via ordinary string literals.
+
 ## 0.5.15 — PRINTF / FORMAT (string formatting)
 
 Grows the SQL scalar surface (sql-vm 0.4.11): `PRINTF(format, …)` and its alias

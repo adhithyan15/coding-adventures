@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - Unreleased
+
+### Fixed
+
+- **`''` unescaping in string literals.** A `String` token's value is the raw
+  inner text (the lexer strips only the surrounding quotes), so a doubled single
+  quote must be collapsed to one when the literal is built:
+  `'it''s'` → the string `it's`. Paired with the sql-lexer 0.1.1 tokenizer fix.
+
 ## [0.2.0] - Unreleased
 
 ### Fixed

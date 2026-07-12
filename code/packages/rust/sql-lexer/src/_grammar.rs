@@ -28,10 +28,15 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: None,
             },
             TokenDefinition {
+                // SQL string literals use `''` (a doubled single quote) to
+                // represent a literal quote — NOT backslash escapes. This regex
+                // matches `''` or any non-quote character between the delimiters,
+                // matching `sql.tokens`. (The `''` is unescaped to `'` when the
+                // token is turned into a string value, in sql-planner.)
                 name: r#"STRING_SQ"#.to_string(),
-                pattern: r#"'([^'\\]|\\.)*'"#.to_string(),
+                pattern: r#"'(''|[^'])*'"#.to_string(),
                 is_regex: true,
-                line_number: 19,
+                line_number: 32,
                 alias: Some(r#"STRING"#.to_string()),
             },
             TokenDefinition {
