@@ -178,9 +178,12 @@ programs are unaffected.
    `lang-aot` wiring + tests. **Also fixed** the latent native emit bug (§3.1
    native-emit note) so `dyn_*` builtins target `__dyn_*`. Pure rename; the lisp
    cells stay green across VM/JIT/LLVM/native and cross-backend agreement holds.
-4. **DVAL01-3 — producer-agnostic classification (§3.3).** Decouple `dyn_repr`'s
-   `DynValue` seed set from the builtin allow-list; unit-test that a `box_int`
-   result is exit-unboxed. Matrix green (superset behaviour).
+4. **DVAL01-3 — producer-agnostic classification (§3.3).** ✅ **done.** `dyn_repr`
+   now seeds its `DynValue` set from **any op whose result type is `any`/
+   `ref<any>`** (gated on `is_lisp`, since Twig/Nib use `any` as a pre-resolution
+   placeholder), not from the builtin allow-list. Unit-tested: a `dyn_box_int`
+   result is exit-unboxed; a Twig `any` module is a no-op. Strict superset —
+   existing lisp programs unaffected.
 5. **Resume E6 on the neutral substrate** — dynamic arithmetic on native/LLVM
    (the ex-E6d-2b, now trivially correct once #3.3 lands + `dyn_box_int`/
    `_unbox_int` are the emitted primitives), then lists / symbols / records /
