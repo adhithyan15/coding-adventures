@@ -1298,7 +1298,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "take", "drop", "values_at",
     "flatten", "compact", "rotate", "zip",
     "include?", "index",
-    "each_slice", "each_cons", "chunk_while", "tally",
+    "each_slice", "each_cons", "chunk_while", "slice_when", "tally",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -1585,6 +1585,22 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           else { chunks.push([recv[i]]); }
         }
         return chunks;
+      }
+      case "slice_when": {
+        // `slice_when { |prev, cur| pred }` — the INVERSE of `chunk_while`: runs
+        // of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+        // exactly WHERE the block is truthy (chunk_while starts a new run where
+        // the block is FALSY).
+        // `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → [[1,2],[4],[9,10,11,12]].
+        // An empty array yields []; a single element yields [[x]].
+        if (typeof blk !== "function") { return ARR_MISS; }
+        if (recv.length === 0) { return []; }
+        const slices = [[recv[0]]];
+        for (let i = 1; i < recv.length; i++) {
+          if (truthy(blk(recv[i - 1], recv[i]))) { slices.push([recv[i]]); }
+          else { slices[slices.length - 1].push(recv[i]); }
+        }
+        return slices;
       }
       case "tally": {
         // `tally` — a Hash counting how many times each element occurs, keyed
