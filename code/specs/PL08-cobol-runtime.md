@@ -148,14 +148,17 @@ Each item is a run-verified PR; the runtime grows one quirk at a time.
    deferred.
 9. **v0.9 — `PERFORM … UNTIL`** (merged): a conditional loop, testing the
    condition **before** each iteration (`WITH TEST BEFORE`), driven iteratively.
-10. **v0.10 — `PERFORM … VARYING`** (this PR): a counted loop over an induction
+10. **v0.10 — `PERFORM … VARYING`** (merged): a counted loop over an induction
     variable (`VARYING id FROM start BY step UNTIL cond`) — `id := start`, run
     while `cond` is false, step `id` by `step` after each iteration. The repeat
-    forms are modelled as a `PerformMode` enum. `WITH TEST AFTER`, multiple
-    `AFTER` phrases, `PERFORM … THRU`, and the inline form remain deferred.
-11. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
-12. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`,
-    inline, `TEST AFTER`), `GO TO … DEPENDING ON`, `ALTER`.
+    forms are modelled as a `PerformMode` enum.
+11. **v0.11 — `PERFORM … THRU`** (this PR): run a range of paragraphs
+    (`para-1 THRU para-2`, source order, fall-through between) as the perform
+    body; composes with every repeat mode. Backwards ranges are a clean error.
+    `WITH TEST AFTER` and the inline form remain deferred.
+12. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
+13. **Rest of control flow** — `END-IF`, `EVALUATE`, inline `PERFORM`,
+    `PERFORM … WITH TEST AFTER`, `GO TO … DEPENDING ON`, `ALTER`.
 8. **Conditions** — level-88 condition-names.
 9. **Tables** — `OCCURS`, subscripts, `REDEFINES`, `USAGE`.
 8. **File I/O** — `SELECT`/`FD`, sequential then indexed/relative, `OPEN`/`READ`/

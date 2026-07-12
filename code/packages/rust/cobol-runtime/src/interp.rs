@@ -263,7 +263,9 @@ impl Machine {
             Stmt::Compute { target, rounded, expr, on_size_error } => {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
             }
-            Stmt::Perform { target, mode } => return self.exec_perform(target, mode),
+            Stmt::Perform { target, thru, mode } => {
+                return self.exec_perform(target, thru, mode)
+            }
             Stmt::GoTo { target } => {
                 let idx = *self
                     .para_index
@@ -305,11 +307,33 @@ impl Machine {
     /// so a self-performing paragraph fails cleanly instead of overflowing. A
     /// `STOP RUN` or `GO TO` inside stops the repetition and propagates as its
     /// [`Flow`].
-    fn exec_perform(&mut self, target: &str, mode: &PerformMode) -> Result<Flow, RuntimeError> {
-        let idx = *self
+    fn exec_perform(
+        &mut self,
+        target: &str,
+        thru: &Option<String>,
+        mode: &PerformMode,
+    ) -> Result<Flow, RuntimeError> {
+        let start = *self
             .para_index
             .get(target)
             .ok_or_else(|| RuntimeError::UndefinedName(target.into()))?;
+        // The range end: `target` itself without THRU, else the THRU paragraph
+        // (which must not precede `target` in source order).
+        let end = match thru {
+            None => start,
+            Some(t) => {
+                let e = *self
+                    .para_index
+                    .get(t)
+                    .ok_or_else(|| RuntimeError::UndefinedName(t.clone()))?;
+                if e < start {
+                    return Err(RuntimeError::Unsupported(
+                        "PERFORM … THRU range runs backwards".into(),
+                    ));
+                }
+                e
+            }
+        };
 
         self.perform_depth += 1;
         if self.perform_depth > MAX_PERFORM_DEPTH {
@@ -318,13 +342,20 @@ impl Machine {
                 "PERFORM nesting too deep (a paragraph performing itself?)".into(),
             ));
         }
-        let stmts = self.paragraphs[idx].stmts.clone();
-        // Capture the outcome rather than `?`-ing out of the loop, so the depth
-        // counter is restored on every path (including an error). One body
-        // iteration returns Some(flow-to-propagate) to stop, or None to continue.
-        let run_body = |m: &mut Self| match m.run_stmts(&stmts) {
-            Ok(Flow::Normal) => None,
-            other => Some(other), // Stop / GoTo / Err — stop repeating, propagate
+        // One body iteration runs the whole paragraph range `start..=end` in
+        // source order (falling through between them); it returns
+        // Some(flow-to-propagate) to stop repeating, or None to continue.
+        // Outcomes are captured (never `?`-ed out) so the depth counter is
+        // restored on every path.
+        let run_body = |m: &mut Self| {
+            for i in start..=end {
+                let stmts = m.paragraphs[i].stmts.clone();
+                match m.run_stmts(&stmts) {
+                    Ok(Flow::Normal) => {}          // fall through to the next
+                    other => return Some(other),    // Stop / GoTo / Err propagates
+                }
+            }
+            None
         };
 
         let outcome = match mode {

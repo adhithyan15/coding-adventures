@@ -10,10 +10,10 @@
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
 //! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), `IF … ELSE`
 //! (numeric and alphanumeric comparison),
-//! `PERFORM para [n TIMES | UNTIL cond | VARYING id FROM x BY y UNTIL cond]`
-//! (out-of-line paragraph invocation — fixed-count, conditional, and counted
-//! loops), and `GO TO para` (unconditional transfer, including back-edge loops)
-//! over numeric-display (`9`/`V`, and
+//! `PERFORM para [THRU para2] [n TIMES | UNTIL cond | VARYING id FROM x BY y UNTIL cond]`
+//! (out-of-line paragraph or paragraph-range invocation — fixed-count,
+//! conditional, and counted loops), and `GO TO para` (unconditional transfer,
+//! including back-edge loops) over numeric-display (`9`/`V`, and
 //! signed `S` with trailing-overpunch display) and character pictures — and
 //! returns a descriptive error for anything not yet modelled, rather than
 //! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
@@ -869,6 +869,69 @@ mod tests {
         ]))
         .unwrap();
         assert_eq!(out, "ONCE\n");
+    }
+
+    #[test]
+    fn perform_thru_runs_a_paragraph_range() {
+        // PERFORM A THRU C runs A, B, C in order, then returns; MAIN's own
+        // DISPLAY runs after. The paragraphs do NOT run again by fall-through
+        // because MAIN stops.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM A THRU C.",
+            "    DISPLAY \"BACK\".",
+            "    STOP RUN.",
+            "A.",
+            "    DISPLAY \"A\".",
+            "B.",
+            "    DISPLAY \"B\".",
+            "C.",
+            "    DISPLAY \"C\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "A\nB\nC\nBACK\n");
+    }
+
+    #[test]
+    fn perform_thru_with_times_repeats_the_whole_range() {
+        // PERFORM A THRU B 2 TIMES runs (A, B) twice → A B A B.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM A THRU B 2 TIMES.",
+            "    STOP RUN.",
+            "A.",
+            "    DISPLAY \"A\".",
+            "B.",
+            "    DISPLAY \"B\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "A\nB\nA\nB\n");
+    }
+
+    #[test]
+    fn perform_thru_backwards_range_is_an_error() {
+        // THRU target must not precede the start paragraph.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM C THRU A.",
+            "    STOP RUN.",
+            "A.",
+            "    DISPLAY \"A\".",
+            "C.",
+            "    DISPLAY \"C\".",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("backwards"), "message should explain: {err}");
     }
 
     #[test]
