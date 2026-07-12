@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 131 \u2014 perfusate-throughput span from four stated quantities (a NEW panel: perfusate throughput, COMPOSING the sum numerator of rungs 128/129 with the divide-by-a-quotient of rung-130). From a pooled charge (base_charge + boost_charge) divided by a span rate (span_units/span_windows), compute the throughput span ((base_charge+boost_charge)/(span_units/span_windows)), the pooled charge (base_charge+boost_charge), or the span rate (span_units/span_windows). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a SUM NUMERATOR OVER A RATE (a+b)/(c/d) (pool the charge, form the rate, then divide the pool by the rate, so (a+b)/(c/d) = ((a+b)*d)/c \u2014 dividing by a rate is multiplying by its reciprocal, invert the rate; keeps rung-130's divide-by-a-quotient but swaps the numerator quotient for a plain sum). The invert-and-multiply slips ride alongside as distractors. The harness matches the scalar to the printed options. The throughput span is a span (how much pooled charge fits per unit of the span rate), framed as a SPAN so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via +, / and * \u2014 no constant leaks, and neither the pooled charge, the span rate, nor the throughput span ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: multiplying the pooled charge by the rate without inverting it ((a+b)*(c/d) = ((a+b)*c)/d, a wrong operation) and splitting the rate into two divisions so the reciprocal is lost ((a+b)/c/d = (a+b)/(c*d), a wrong operation). The core confusion tested is that (a+b)/(c/d) is ((a+b)*d)/c, not ((a+b)*c)/d and not (a+b)/(c*d). This rung uses only +, / and * over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r131tsa-01",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 4 plus a boost charge of 2, pushed through at a span rate of 2 units per 4 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(4)\nobserve boost_charge(2)\nobserve span_units(2)\nobserve span_windows(4)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r131tsa-02",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 4 plus a boost charge of 2, pushed through at a span rate of 2 units per 4 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(4)\nobserve boost_charge(2)\nobserve span_units(2)\nobserve span_windows(4)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r131tsa-03",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 4 plus a boost charge of 2, pushed through at a span rate of 2 units per 4 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(4)\nobserve boost_charge(2)\nobserve span_units(2)\nobserve span_windows(4)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r131tsa-04",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 5 plus a boost charge of 3, pushed through at a span rate of 6 units per 2 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(5)\nobserve boost_charge(3)\nobserve span_units(6)\nobserve span_windows(2)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r131tsa-05",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 5 plus a boost charge of 3, pushed through at a span rate of 6 units per 2 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(5)\nobserve boost_charge(3)\nobserve span_units(6)\nobserve span_windows(2)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r131tsa-06",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 5 plus a boost charge of 3, pushed through at a span rate of 6 units per 2 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(5)\nobserve boost_charge(3)\nobserve span_units(6)\nobserve span_windows(2)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r131tsa-07",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 6 plus a boost charge of 4, pushed through at a span rate of 3 units per 4 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(6)\nobserve boost_charge(4)\nobserve span_units(3)\nobserve span_windows(4)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r131tsa-08",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 6 plus a boost charge of 4, pushed through at a span rate of 3 units per 4 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(6)\nobserve boost_charge(4)\nobserve span_units(3)\nobserve span_windows(4)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r131tsa-09",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 6 plus a boost charge of 4, pushed through at a span rate of 3 units per 4 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(6)\nobserve boost_charge(4)\nobserve span_units(3)\nobserve span_windows(4)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r131tsa-10",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 8 plus a boost charge of 4, pushed through at a span rate of 8 units per 4 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(8)\nobserve boost_charge(4)\nobserve span_units(8)\nobserve span_windows(4)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r131tsa-11",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 8 plus a boost charge of 4, pushed through at a span rate of 8 units per 4 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(8)\nobserve boost_charge(4)\nobserve span_units(8)\nobserve span_windows(4)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r131tsa-12",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 8 plus a boost charge of 4, pushed through at a span rate of 8 units per 4 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(8)\nobserve boost_charge(4)\nobserve span_units(8)\nobserve span_windows(4)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r131tsa-13",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 9 plus a boost charge of 5, pushed through at a span rate of 8 units per 2 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(9)\nobserve boost_charge(5)\nobserve span_units(8)\nobserve span_windows(2)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r131tsa-14",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 9 plus a boost charge of 5, pushed through at a span rate of 8 units per 2 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(9)\nobserve boost_charge(5)\nobserve span_units(8)\nobserve span_windows(2)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r131tsa-15",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 9 plus a boost charge of 5, pushed through at a span rate of 8 units per 2 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(9)\nobserve boost_charge(5)\nobserve span_units(8)\nobserve span_windows(2)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 56.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r131tsa-16",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 7 plus a boost charge of 2, pushed through at a span rate of 5 units per 2 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(7)\nobserve boost_charge(2)\nobserve span_units(5)\nobserve span_windows(2)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r131tsa-17",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 7 plus a boost charge of 2, pushed through at a span rate of 5 units per 2 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(7)\nobserve boost_charge(2)\nobserve span_units(5)\nobserve span_windows(2)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r131tsa-18",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 7 plus a boost charge of 2, pushed through at a span rate of 5 units per 2 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(7)\nobserve boost_charge(2)\nobserve span_units(5)\nobserve span_windows(2)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r131tsa-19",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 10 plus a boost charge of 6, pushed through at a span rate of 3 units per 2 windows. What is the throughput span (the pooled charge divided by the span rate)?",
+      "program": "observe base_charge(10)\nobserve boost_charge(6)\nobserve span_units(3)\nobserve span_windows(2)\nlet answer = (base_charge + boost_charge) / (span_units / span_windows)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r131tsa-20",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 10 plus a boost charge of 6, pushed through at a span rate of 3 units per 2 windows. What is the the pooled charge (the base charge plus the boost charge, the numerator that is divided by the span rate)?",
+      "program": "observe base_charge(10)\nobserve boost_charge(6)\nobserve span_units(3)\nobserve span_windows(2)\nlet answer = base_charge + boost_charge\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r131tsa-21",
+      "qtype": "throughput_span",
+      "stem": "A perfusate-throughput study records a base charge of 10 plus a boost charge of 6, pushed through at a span rate of 3 units per 2 windows. What is the the span rate (the span units spread over the span windows, the rate the pooled charge is divided by)?",
+      "program": "observe base_charge(10)\nobserve boost_charge(6)\nobserve span_units(3)\nobserve span_windows(2)\nlet answer = span_units / span_windows\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
