@@ -1471,7 +1471,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "zip" | "rotate" | "to_h" | "tally"
                     | "take" | "drop" | "values_at"
                     // consecutive-grouping family
-                    | "each_slice" | "each_cons" | "chunk_while"
+                    | "each_slice" | "each_cons" | "chunk_while" | "slice_when"
             ),
             Value::Map(_) => matches!(
                 name,
@@ -2229,6 +2229,34 @@ pub const RUNTIME: &str = r##"mod __sir {
                         }
                     }
                     seq_lit(chunks.into_iter().map(seq_lit).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `slice_when { |prev, cur| pred }` — the INVERSE of `chunk_while`:
+            // runs of consecutive elements, starting a NEW run BETWEEN an
+            // adjacent pair exactly WHERE the block is truthy (chunk_while starts
+            // a new run where the block is FALSY).
+            // `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` →
+            // `[[1,2],[4],[9,10,11,12]]`.  An empty array yields `[]`; a single
+            // element yields `[[x]]`.  Entries are snapshotted first so a block
+            // that reentrantly mutates the receiver cannot double-borrow-panic.
+            "slice_when" => match &block {
+                Some(b) => {
+                    let snapshot = items_rc.borrow().clone();
+                    if snapshot.is_empty() {
+                        return seq_lit(vec![]);
+                    }
+                    let mut slices: Vec<Vec<Value>> = vec![vec![snapshot[0].clone()]];
+                    for i in 1..snapshot.len() {
+                        let prev = snapshot[i - 1].clone();
+                        let cur = snapshot[i].clone();
+                        if truthy(&apply_closure(b, vec![prev, cur.clone()])) {
+                            slices.push(vec![cur]);
+                        } else {
+                            slices.last_mut().unwrap().push(cur);
+                        }
+                    }
+                    seq_lit(slices.into_iter().map(seq_lit).collect())
                 }
                 None => unknown_method(&recv, name),
             },

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.20 — Table alias without the `AS` keyword
+
+`FROM users u` now aliases the table exactly like `FROM users AS u` — SQLite
+(and standard SQL) accept both spellings. The generated sql-parser grammar
+required `AS`; making it optional (sql-parser 0.1.4) plus teaching the planner's
+`extract_table_ref` to read a bare trailing `NAME` token (sql-planner 0.2.3)
+fixes it, including qualified references through the bare alias (`u.id`) and
+bare aliases on both sides of a `JOIN`. Two new differential-oracle cases
+(`table_alias_without_as`, `join_bare_table_alias`) diff against real bundled
+SQLite. This is the sibling of 0.5.19 (column aliases) — the same idea in the
+`table_ref` grammar slot. (Comma joins `FROM a, b`, `USING`, and `NATURAL JOIN`
+still need new planner work.)
+
 ## 0.5.19 — Column alias without the `AS` keyword
 
 `SELECT a col1` now parses and names the output column `col1`, exactly like

@@ -603,3 +603,88 @@ fn array_each_slice_each_cons_chunk_while_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+// ── Array slice_when ───────────────────────────────────────────────────────
+//
+// `slice_when { |a, b| pred }` is the INVERSE of `chunk_while`: it starts a NEW
+// run BETWEEN an adjacent pair exactly WHERE the block is truthy.  Mirrors the
+// Python reference (#8070) and the Go backend (#8073).
+fn slice_when_demo() -> Module {
+    // `{ |a, b| b - a > 1 }` — split on an upward gap greater than one.
+    let gap = block_fn("__b_gap", &["a", "b"], call(">", vec![call("-", vec![param("b"), param("a")]), ilit(1)]));
+    let main_stmts = vec![
+        // [1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 } → [[1, 2], [4], [9, 10, 11, 12]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(4), ilit(9), ilit(10), ilit(11), ilit(12)]),
+            "slice_when",
+            vec![block("__b_gap")],
+        )),
+        // [9].slice_when { … } → [[9]]  (single element)
+        print_stmt(method(seq(vec![ilit(9)]), "slice_when", vec![block("__b_gap")])),
+        // [].slice_when { … } → []
+        print_stmt(method(seq(vec![]), "slice_when", vec![block("__b_gap")])),
+    ];
+    demo_module(main_stmts, vec![gap])
+}
+
+#[test]
+fn array_slice_when_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&slice_when_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_arr_slicewhen_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_arr_slicewhen_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [4], [9, 10, 11, 12]]", // slice_when { b-a>1 }
+            "[[9]]",                          // single element
+            "[]",                             // [].slice_when → []
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}

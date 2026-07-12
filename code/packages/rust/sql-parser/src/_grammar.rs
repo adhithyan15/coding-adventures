@@ -90,8 +90,13 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"table_ref"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"table_name"#.to_string() },
+                // `table_ref = table_name [ [ "AS" ] NAME ]` — the AS keyword is
+                // OPTIONAL, so `FROM users u` aliases the table the same as
+                // `FROM users AS u` (SQLite accepts both). The alias NAME cannot
+                // eat a following keyword (JOIN/WHERE/ON/…) because NAME only
+                // matches Name-type tokens, so `FROM a JOIN b` is unaffected.
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"AS"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
             ] },

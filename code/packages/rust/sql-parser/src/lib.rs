@@ -327,6 +327,25 @@ mod tests {
         assert!(find_rule(&ast, "select_list"), "Expected select_list");
     }
 
+    /// A table alias may omit `AS`: `FROM users u` parses like
+    /// `FROM users AS u` (SQLite accepts both). Exercises the
+    /// `table_ref = table_name [ [ "AS" ] NAME ]` optional-AS branch.
+    #[test]
+    fn test_parse_table_alias_without_as() {
+        let ast = assert_program_root("SELECT u.id FROM users u WHERE u.id > 1");
+        assert!(find_rule(&ast, "table_ref"), "Expected table_ref");
+        // The bare alias must NOT swallow the WHERE clause.
+        assert!(find_rule(&ast, "where_clause"), "Expected WHERE to still parse");
+    }
+
+    /// Bare table aliases must work across a JOIN and not eat the `JOIN`
+    /// keyword: `FROM a x JOIN b y ON …`.
+    #[test]
+    fn test_parse_join_bare_table_alias() {
+        let ast = assert_program_root("SELECT x.id FROM a x JOIN b y ON x.id = y.id");
+        assert!(find_rule(&ast, "join_clause"), "Expected join_clause");
+    }
+
     // -----------------------------------------------------------------------
     // Test 8: INSERT statement
     // -----------------------------------------------------------------------

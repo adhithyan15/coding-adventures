@@ -753,7 +753,9 @@ fn plan_select(
 
 /// Extract the table name and optional alias from a `table_ref` node.
 ///
-/// Grammar: `table_ref = table_name [ "AS" NAME ]`
+/// Grammar: `table_ref = table_name [ [ "AS" ] NAME ]` — the alias may be
+/// written with or without `AS` (`FROM users AS u` and `FROM users u` are
+/// equivalent in SQLite).
 /// Grammar: `table_name = NAME [ "." NAME ]`
 ///
 /// Returns `(table_name, Option<alias>)`.
@@ -762,13 +764,14 @@ fn extract_table_ref(table_ref: &GrammarASTNode) -> (String, Option<String>) {
     // If no name token is found, we return an empty string.  The caller
     // immediately validates the table against the schema, so an empty string
     // will produce `PlanError::UnknownTable("")` — a visible, safe error.
-    let table_name = if let Some(tn) = find_node(table_ref, "table_name") {
+    let table_name_node = find_node(table_ref, "table_name");
+    let table_name = if let Some(tn) = table_name_node {
         first_name_token(tn).unwrap_or_default()
     } else {
         first_name_token(table_ref).unwrap_or_default()
     };
 
-    // Look for an AS alias by scanning the token children.
+    // Explicit `AS name`: scan for the AS keyword, take the following token.
     let mut alias: Option<String> = None;
     let children = &table_ref.children;
     for (i, child) in children.iter().enumerate() {
@@ -776,6 +779,22 @@ fn extract_table_ref(table_ref: &GrammarASTNode) -> (String, Option<String>) {
             // The token after "AS" is the alias name.
             if let Some(next) = children.get(i + 1) {
                 alias = Some(token_text_of(next));
+            }
+        }
+    }
+
+    // Implicit `name` (no AS): the table name lives in its own nested
+    // `table_name` node, so any bare `Name`-type token directly under
+    // `table_ref` is the alias (`FROM users u`). Guard on the `table_name`
+    // node being present — in the degenerate fallback above the lone direct
+    // token IS the table name and must not be doubled up as its own alias.
+    if alias.is_none() && table_name_node.is_some() {
+        for child in children {
+            if let ASTNodeOrToken::Token(tok) = child {
+                if tok.type_ == lexer::token::TokenType::Name {
+                    alias = Some(tok.value.clone());
+                    break;
+                }
             }
         }
     }
