@@ -847,7 +847,7 @@ impl KnowledgeBase {
                     .and_then(|(x, exact_id)| if exact_id == id { Some(x) } else { None });
                 (v, exact)
             })
-            .or_else(|| self.derived_for(slot).map(|d| (d.value, d.exact)))
+            .or_else(|| self.derived_for(slot).map(|d| (d.value, d.exact.clone())))
     }
 
     /// Like [`observed_value`](Self::observed_value) but also returns the

@@ -206,10 +206,10 @@ impl CmpOp {
     ) -> bool {
         match (lhs_exact, rhs_exact) {
             (Some(a), Some(b)) => match self {
-                CmpOp::Ge => cmp_exact(a, b) >= 0,
-                CmpOp::Le => cmp_exact(a, b) <= 0,
-                CmpOp::Gt => cmp_exact(a, b) > 0,
-                CmpOp::Lt => cmp_exact(a, b) < 0,
+                CmpOp::Ge => cmp_exact(&a, &b) >= 0,
+                CmpOp::Le => cmp_exact(&a, &b) <= 0,
+                CmpOp::Gt => cmp_exact(&a, &b) > 0,
+                CmpOp::Lt => cmp_exact(&a, &b) < 0,
                 CmpOp::Eq => a == b,
             },
             _ => self.eval(lhs, rhs),
@@ -227,14 +227,11 @@ impl CmpOp {
     }
 }
 
-fn cmp_exact(lhs: ExactRational, rhs: ExactRational) -> i8 {
-    let Some(a) = lhs.num.checked_mul(rhs.den) else {
-        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
-    };
-    let Some(b) = rhs.num.checked_mul(lhs.den) else {
-        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
-    };
-    ordering_i8(a.cmp(&b))
+/// Exact ordering of two rationals. `BigRational` is unbounded and totally ordered, so this is
+/// an exact comparison with no cross-multiplication overflow to guard against (the old `i128`
+/// sidecar needed an `f64` fallback; this never does).
+fn cmp_exact(lhs: &ExactRational, rhs: &ExactRational) -> i8 {
+    ordering_i8(lhs.as_ratio().cmp(rhs.as_ratio()))
 }
 
 fn ordering_i8(ordering: std::cmp::Ordering) -> i8 {

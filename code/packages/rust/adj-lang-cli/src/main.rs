@@ -106,8 +106,16 @@ fn derived_json(kb: &KnowledgeBase) -> String {
         .iter()
         .filter_map(|name| kb.derived_for(name))
         .map(|d| {
-            let exact = match d.exact {
-                Some(r) => format!(",\"exact\":{{\"num\":{},\"den\":{}}}", r.num, r.den),
+            // The exact value is now an arbitrary-precision `BigRational` (NUM-5), so its
+            // numerator/denominator can exceed JSON's safe integer range — emit them as
+            // **strings** so no precision is lost at the boundary (the whole point of the exact
+            // channel). `BigInteger`'s `Display` is the plain decimal form.
+            let exact = match &d.exact {
+                Some(r) => format!(
+                    ",\"exact\":{{\"num\":\"{}\",\"den\":\"{}\"}}",
+                    r.numerator(),
+                    r.denominator()
+                ),
                 None => String::new(),
             };
             // A value produced by APPLYING a provenanced `formula`
