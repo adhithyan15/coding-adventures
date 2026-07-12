@@ -171,6 +171,7 @@ SELF_CONTAINED_RUNGS = (
     "rung131_perfusate_throughput",
     "rung132_occupancy_share",
     "rung133_elimination_span",
+    "rung134_cumulative_load_span",
 )
 
 
