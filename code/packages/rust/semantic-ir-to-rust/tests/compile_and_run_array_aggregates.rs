@@ -503,3 +503,103 @@ fn take_drop_values_at_compile_and_run() {
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
 }
+
+// ── Array each_slice / each_cons / chunk_while ─────────────────────────────
+//
+// The consecutive-grouping family, mirroring the Python reference (#8031) and
+// the Go backend (#8036).  `each_slice`/`each_cons` are non-block (take an int
+// `n`); `chunk_while` is a block method (the block is called on each ADJACENT
+// pair).
+fn slice_demo() -> Module {
+    // `{ |a, b| b - a == 1 }` — adjacent-pair predicate (SIR equality builtin is
+    // `=`, subtraction `-`).
+    let adj = block_fn("__b_adj", &["a", "b"], call("=", vec![call("-", vec![param("b"), param("a")]), ilit(1)]));
+    let main_stmts = vec![
+        // [1,2,3,4,5].each_slice(2) → [[1, 2], [3, 4], [5]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]),
+            "each_slice",
+            vec![ilit(2)],
+        )),
+        // [1,2,3].each_slice(0) → []  (never-panic floor)
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "each_slice", vec![ilit(0)])),
+        // [1,2,3,4].each_cons(2) → [[1, 2], [2, 3], [3, 4]]
+        print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]), "each_cons", vec![ilit(2)])),
+        // [1,2].each_cons(3) → []  (window larger than the array)
+        print_stmt(method(seq(vec![ilit(1), ilit(2)]), "each_cons", vec![ilit(3)])),
+        // [1,2,4,5,7].chunk_while { |a,b| b-a==1 } → [[1, 2], [4, 5], [7]]
+        print_stmt(method(
+            seq(vec![ilit(1), ilit(2), ilit(4), ilit(5), ilit(7)]),
+            "chunk_while",
+            vec![block("__b_adj")],
+        )),
+        // [].chunk_while { … } → []
+        print_stmt(method(seq(vec![]), "chunk_while", vec![block("__b_adj")])),
+    ];
+    demo_module(main_stmts, vec![adj])
+}
+
+#[test]
+fn array_each_slice_each_cons_chunk_while_compile_and_run() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+
+    let artifact = compile(&slice_demo()).expect("module should compile to Rust source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_arr_slice_{nonce}.rs"));
+    let bin_path =
+        dir.join(format!("sir_arr_slice_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let mut cmd = Command::new("rustc");
+    cmd.arg("--edition").arg("2021").arg("-O");
+    if let Ok(linker) = std::env::var("SIR_TEST_RUSTC_LINKER") {
+        if !linker.is_empty() {
+            cmd.arg("-C").arg(format!("linker={linker}"));
+        }
+    }
+    let compile_out = cmd.arg(&src_path).arg("-o").arg(&bin_path).output().expect("invoke rustc");
+    if !compile_out.status.success() {
+        let stderr = String::from_utf8_lossy(&compile_out.stderr);
+        if stderr.contains("linker")
+            && (stderr.contains("not found") || stderr.contains("No such file"))
+        {
+            eprintln!("skipping: no usable linker on host\n{stderr}");
+            let _ = std::fs::remove_file(&src_path);
+            return;
+        }
+        panic!(
+            "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
+            artifact.source,
+        );
+    }
+
+    let run_out = Command::new(&bin_path).output().expect("run compiled binary");
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero:\n{}",
+        String::from_utf8_lossy(&run_out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [3, 4], [5]]",    // each_slice(2)
+            "[]",                       // each_slice(0) → []
+            "[[1, 2], [2, 3], [3, 4]]", // each_cons(2)
+            "[]",                       // each_cons(3) on len-2 → []
+            "[[1, 2], [4, 5], [7]]",    // chunk_while { b-a==1 }
+            "[]",                       // [].chunk_while → []
+        ],
+        "unexpected program output; full stdout:\n{stdout}"
+    );
+
+    let _ = std::fs::remove_file(&src_path);
+    let _ = std::fs::remove_file(&bin_path);
+}
