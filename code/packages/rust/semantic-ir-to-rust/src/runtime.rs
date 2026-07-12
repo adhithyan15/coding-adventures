@@ -1466,7 +1466,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "drop_while" | "count" | "each_with_object" | "each_with_index"
                     // aggregate / reshape non-block methods (all dispatch in
                     // `array_method` above; previously under-reported here)
-                    | "min" | "max" | "sum" | "uniq" | "flatten" | "compact" | "to_a"
+                    | "min" | "max" | "minmax" | "sum" | "uniq" | "flatten" | "compact" | "to_a"
                     // more non-block Array methods
                     | "zip" | "rotate" | "to_h" | "tally"
                     | "take" | "drop" | "values_at"
@@ -1945,6 +1945,31 @@ pub const RUNTIME: &str = r##"mod __sir {
                         best
                     }
                     None => Value::Nil,
+                }
+            }
+            // `minmax` (no block): the two-element array `[min, max]` computed
+            // in one pass via `num_lt`.  An empty array yields `[nil, nil]` (no
+            // smallest/largest element), matching the Python reference's
+            // `[None, None]`.  Snapshot first so no borrow is held across the
+            // scan (never-panic floor).
+            "minmax" => {
+                let snapshot = items_rc.borrow().clone();
+                let mut iter = snapshot.into_iter();
+                match iter.next() {
+                    Some(first) => {
+                        let mut lo = first.clone();
+                        let mut hi = first;
+                        for item in iter {
+                            if num_lt(&item, &lo) {
+                                lo = item.clone();
+                            }
+                            if num_lt(&hi, &item) {
+                                hi = item;
+                            }
+                        }
+                        seq_lit(vec![lo, hi])
+                    }
+                    None => seq_lit(vec![Value::Nil, Value::Nil]),
                 }
             }
             // `sum`: numeric fold seeded at `0` (or the explicit seed arg,
