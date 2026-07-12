@@ -254,11 +254,17 @@ impl Machine {
             Stmt::StopRun => return Ok(Flow::Stop),
             Stmt::Display(ops) => self.exec_display(ops)?,
             Stmt::Move { src, dsts } => self.exec_move(src, dsts)?,
-            Stmt::Add { operands, to, giving } => self.exec_add(operands, to, giving)?,
-            Stmt::Subtract { operands, from, giving } => self.exec_subtract(operands, from, giving)?,
-            Stmt::Multiply { a, by, giving } => self.exec_multiply(a, by, giving)?,
-            Stmt::Divide { divisor, dividend, giving } => {
-                self.exec_divide(divisor, dividend, giving)?
+            Stmt::Add { operands, to, giving, rounded, on_size_error } => {
+                return self.exec_add(operands, to, giving, *rounded, on_size_error)
+            }
+            Stmt::Subtract { operands, from, giving, rounded, on_size_error } => {
+                return self.exec_subtract(operands, from, giving, *rounded, on_size_error)
+            }
+            Stmt::Multiply { a, by, giving, rounded, on_size_error } => {
+                return self.exec_multiply(a, by, giving, *rounded, on_size_error)
+            }
+            Stmt::Divide { divisor, dividend, giving, rounded, on_size_error } => {
+                return self.exec_divide(divisor, dividend, giving, *rounded, on_size_error)
             }
             Stmt::Compute { target, rounded, expr, on_size_error } => {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
@@ -505,41 +511,47 @@ impl Machine {
     // Arithmetic (fixed-point decimal, truncating; unsigned receivers)
     // ----------------------------------------------------------------------
 
-    /// `ADD op… TO name [GIVING g]` → (name + op1 + … + opN) into g or name.
+    /// `ADD op… TO name [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
     fn exec_add(
         &mut self,
         operands: &[Operand],
         to: &str,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let mut acc = self.named_decimal(to)?;
         for op in operands {
             acc = checked(add(&acc, &self.operand_decimal(op)?))?;
         }
-        self.store_number(giving.as_deref().unwrap_or(to), acc)
+        self.store_result(giving.as_deref().unwrap_or(to), acc, rounded, on_size_error)
     }
 
-    /// `SUBTRACT op… FROM name [GIVING g]` → (name − op1 − … − opN) into g or name.
+    /// `SUBTRACT op… FROM name [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
     fn exec_subtract(
         &mut self,
         operands: &[Operand],
         from: &str,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let mut acc = self.named_decimal(from)?;
         for op in operands {
             acc = checked(sub(&acc, &self.operand_decimal(op)?))?;
         }
-        self.store_number(giving.as_deref().unwrap_or(from), acc)
+        self.store_result(giving.as_deref().unwrap_or(from), acc, rounded, on_size_error)
     }
 
-    /// `MULTIPLY a BY b [GIVING g]` → (a × b) into g, or into b when no GIVING.
+    /// `MULTIPLY a BY b [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
     fn exec_multiply(
         &mut self,
         a: &Operand,
         by: &Operand,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let product = checked(mul(&self.operand_decimal(a)?, &self.operand_decimal(by)?))?;
         let target = match (giving, by) {
             (Some(g), _) => g.clone(),
@@ -550,20 +562,26 @@ impl Machine {
                 ))
             }
         };
-        self.store_number(&target, product)
+        self.store_result(&target, product, rounded, on_size_error)
     }
 
-    /// `DIVIDE a INTO b [GIVING g]` → (b ÷ a), truncated to the receiver's
-    /// decimal places, stored in g, or in b (the dividend) when no GIVING.
+    /// `DIVIDE a INTO b [GIVING g] [ROUNDED] [ON SIZE ERROR …]` → b ÷ a.
     fn exec_divide(
         &mut self,
         divisor: &Operand,
         dividend: &Operand,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let d = self.operand_decimal(divisor)?;
         if d.is_zero() {
-            return Err(RuntimeError::DivideByZero);
+            // Division by zero is a size-error condition (as in COMPUTE): the
+            // handler catches it; without one it is a hard error.
+            if on_size_error.is_empty() {
+                return Err(RuntimeError::DivideByZero);
+            }
+            return self.run_stmts(on_size_error);
         }
         let n = self.operand_decimal(dividend)?;
         let target = match (giving, dividend) {
@@ -575,16 +593,42 @@ impl Machine {
                 ))
             }
         };
-        // Compute to the receiver's fractional precision (COBOL truncates there
-        // absent ROUNDED); store_number then aligns the integer part.
-        let scale = self.numeric_dec_digits(&target)?;
-        let quotient = checked(div(&n, &d, scale))?;
-        self.store_number(&target, quotient)
+        // Compute at the shared intermediate precision; store_result then
+        // rounds or truncates into the receiver's decimal places.
+        let quotient = checked(div(&n, &d, COMPUTE_DIV_SCALE))?;
+        self.store_result(&target, quotient, rounded, on_size_error)
     }
 
-    /// The number of fractional digit positions of a named numeric receiver.
-    fn numeric_dec_digits(&self, name: &str) -> Result<usize, RuntimeError> {
-        Ok(self.numeric_dims(name)?.1)
+    /// Store a computed value into a numeric receiver, applying `ROUNDED`
+    /// (half away from zero, else truncate toward zero at the receiver's decimal
+    /// places) and `ON SIZE ERROR` (when the result's integer part overflows the
+    /// receiver, run the handler and leave the receiver unchanged; without a
+    /// handler, COBOL truncates the high-order digits silently, as `MOVE` does).
+    /// Shared by the arithmetic verbs and `COMPUTE`.
+    fn store_result(
+        &mut self,
+        target: &str,
+        value: Decimal,
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
+        let (int_digits, dec_digits) = self.numeric_dims(target)?;
+        let final_value = if rounded {
+            checked(round(&value, dec_digits))?
+        } else {
+            value
+        };
+        // Size error = the integer part does not fit (fractional truncation is
+        // never a size error).
+        if final_value.int.trim_start_matches('0').len() > int_digits {
+            if on_size_error.is_empty() {
+                self.store_number(target, final_value)?;
+                return Ok(Flow::Normal);
+            }
+            return self.run_stmts(on_size_error);
+        }
+        self.store_number(target, final_value)?;
+        Ok(Flow::Normal)
     }
 
     /// The `(int_digits, dec_digits)` of a named numeric receiver.
@@ -615,8 +659,6 @@ impl Machine {
         expr: &Expr,
         on_size_error: &[Stmt],
     ) -> Result<Flow, RuntimeError> {
-        let (int_digits, dec_digits) = self.numeric_dims(target)?;
-
         let value = match self.eval_expr(expr) {
             Ok(v) => v,
             // Division by zero is a size-error condition: the handler catches it;
@@ -626,29 +668,7 @@ impl Machine {
             }
             Err(e) => return Err(e),
         };
-
-        // Round (half away from zero) or leave full precision for the store to
-        // truncate at the receiver's decimal places.
-        let final_value = if rounded {
-            checked(round(&value, dec_digits))?
-        } else {
-            value
-        };
-
-        // Size error = the integer part does not fit. (Fractional truncation is
-        // never a size error.)
-        if final_value.int.trim_start_matches('0').len() > int_digits {
-            if on_size_error.is_empty() {
-                // No handler: COBOL truncates the high-order digits silently,
-                // exactly as move_into_numeric already does.
-                self.store_number(target, final_value)?;
-                return Ok(Flow::Normal);
-            }
-            return self.run_stmts(on_size_error);
-        }
-
-        self.store_number(target, final_value)?;
-        Ok(Flow::Normal)
+        self.store_result(target, value, rounded, on_size_error)
     }
 
     /// Evaluate an arithmetic expression to an exact [`Decimal`]. Division is

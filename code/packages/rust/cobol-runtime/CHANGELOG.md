@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.12.0 — ROUNDED / ON SIZE ERROR on the arithmetic verbs
+
+- **`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` now take `ROUNDED` and `ON SIZE ERROR`**,
+  matching `COMPUTE`. `ROUNDED` rounds half away from zero into the receiver
+  (else truncate); `ON SIZE ERROR` runs its statements (receiver unchanged) when
+  the result's integer part overflows — or, for `DIVIDE`, when the divisor is
+  zero. Without a handler, overflow truncates silently and a zero divisor stays a
+  hard `DivideByZero`.
+- The store path (round → size-error → store) is now a shared `store_result`
+  helper used by all five arithmetic verbs, so their rounding/overflow behaviour
+  is identical. `DIVIDE` now computes at the same intermediate precision as
+  `COMPUTE` before rounding into the receiver.
+
 ## 0.11.0 — PERFORM … THRU (paragraph range)
 
 - **`PERFORM para-1 THRU para-2`** runs the whole range of paragraphs from

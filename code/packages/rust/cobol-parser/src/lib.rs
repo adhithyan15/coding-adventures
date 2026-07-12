@@ -226,6 +226,26 @@ mod tests {
     }
 
     #[test]
+    fn arithmetic_rounded_and_on_size_error() {
+        // ADD/SUBTRACT/MULTIPLY/DIVIDE take the trailing ROUNDED and ON SIZE
+        // ERROR clauses, sharing the `size_error` rule with COMPUTE.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    ADD 1 TO R ROUNDED.",
+            "    DIVIDE 3 INTO X GIVING Y ROUNDED",
+            "        ON SIZE ERROR DISPLAY \"OVR\".",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "add_stmt"));
+        assert!(has_rule(&ast, "divide_stmt"));
+        // The DIVIDE's ON SIZE ERROR introduces a size_error node.
+        assert!(has_rule(&ast, "size_error"));
+    }
+
+    #[test]
     fn perform_varying() {
         // PERFORM … VARYING id FROM start BY step UNTIL cond parses to a
         // perform_varying node carrying the induction variable and condition.
