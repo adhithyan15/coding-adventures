@@ -64,7 +64,7 @@ native Python subscripts and still return `nil` (Ruby does not raise for `[]`).
 The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md`)
 the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
-`min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a`,
+`min`/`max`/`minmax`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a`,
 `take`/`drop`/`values_at`, `rotate`/`zip`, `each_slice`/`each_cons`, `tally` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
 `freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`, plus the **Kernel
