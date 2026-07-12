@@ -1,0 +1,29 @@
+cabal-version: 3.0
+name:          caesar-cipher
+version:       0.1.0
+synopsis:      Caesar cipher with brute-force and frequency analysis
+description:   A pure Haskell Caesar cipher implementation with classical attacks.
+category:      Cryptography
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CaesarCipher
+    build-depends:    base >=4.14 && <5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    CaesarCipherSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , caesar-cipher
+                    , hspec == 2.*
+    default-language: Haskell2010
