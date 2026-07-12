@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-arrow-object-body/input/a.js
+--compilation_level
+SIMPLE
