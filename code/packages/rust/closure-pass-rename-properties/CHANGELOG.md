@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.15.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match no-op arms for the new `Declaration::ImportDeclaration` variant
+in the class-member classify and rewrite walks — an import has no properties to
+classify or rename.
+
 ## [0.14.0] - 2026-07-12
 
 ### Added — CLOC12.187 PR2a: decline to rename properties in the presence of `with`

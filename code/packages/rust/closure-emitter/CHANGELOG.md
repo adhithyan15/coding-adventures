@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.44.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: emit `import` declarations
+
+`emit_import` renders `Declaration::ImportDeclaration` in minified form:
+side-effect `import"y";`, default `import x from"y";`, namespace
+`import*as ns from"y";` (the `*` punctuator abuts `import` with no space), named
+`import{a,b as c}from"y";`, and the default-plus-named combination
+`import x,{a}from"y";`. Five emit tests cover each shape.
+
 ## [0.43.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: emit `with (obj) stmt`

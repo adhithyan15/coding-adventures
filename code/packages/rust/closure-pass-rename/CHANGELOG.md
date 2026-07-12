@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.17.0] - 2026-07-11
+
+### Added — CLOC12.188 PR1: `ImportDeclaration` arms
+
+Exhaustive-match arms for the new `Declaration::ImportDeclaration` variant: the
+process/`has_function` predicates report no function payload, and the local-name
+walks skip the import (no descent). Renaming an import-introduced binding is
+unsound — an imported local references a foreign export — so the full soundness
+gate lands with the bridge PR; PR1 simply does not descend into imports.
+
 ## [0.16.0] - 2026-07-12
 
 ### Added — CLOC12.187 PR2a: decline to rename in the presence of `with`

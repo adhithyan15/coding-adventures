@@ -74,7 +74,8 @@ use coding_adventures_javascript_ast::{
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ClassDeclaration, FunctionDeclaration, FunctionExpression,
-    FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
+    FunctionParam, Identifier, IfStatement, ImportDeclaration, ImportSpecifier, LabeledStatement,
+    LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
     ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
@@ -799,7 +800,104 @@ impl<'a> Emitter<'a> {
             }
             Declaration::FunctionDeclaration(f) => self.emit_function_declaration(f),
             Declaration::ClassDeclaration(c) => self.emit_class_declaration(c),
+            Declaration::ImportDeclaration(i) => self.emit_import(i),
         }
+    }
+
+    /// Emit an ES-module import declaration (CLOC12.188).
+    ///
+    /// Minified forms (no optional whitespace; the only spaces are the ones
+    /// the tokenizer *requires* between two identifier-like tokens):
+    ///
+    /// | source                          | emitted                 |
+    /// |---------------------------------|-------------------------|
+    /// | `import "y";`                   | `import"y";`            |
+    /// | `import x from "y";`            | `import x from"y";`    |
+    /// | `import * as ns from "y";`      | `import*as ns from"y";`|
+    /// | `import {a, b as c} from "y";`  | `import{a,b as c}from"y";`|
+    /// | `import x, {a} from "y";`       | `import x,{a}from"y";` |
+    ///
+    /// A bare keyword abuts punctuation with no space (`import{`, `}from`,
+    /// `import"`); an identifier next to a keyword/identifier needs one
+    /// (`x from`, `as ns`).
+    fn emit_import(&mut self, imp: &ImportDeclaration) {
+        self.maybe_map(&imp.cv);
+        self.write_str("import");
+
+        // Partition specifiers by kind. ESTree order is
+        // `[ default?, (namespace | named)? ]`; we honour it and, when the AST
+        // holds an unusual mix, emit default → namespace → named so commas land
+        // in a valid place.
+        let mut default_id: Option<&Identifier> = None;
+        let mut namespace_id: Option<&Identifier> = None;
+        let mut named: Vec<(&Identifier, &Identifier)> = Vec::new();
+        for s in &imp.specifiers {
+            match s {
+                ImportSpecifier::Default(id) => default_id = Some(id),
+                ImportSpecifier::Namespace(id) => namespace_id = Some(id),
+                ImportSpecifier::Named { imported, local } => named.push((imported, local)),
+            }
+        }
+
+        // `wrote` tracks whether an earlier clause element was emitted (so the
+        // next one needs a `,` separator). `ends_with_brace` records whether the
+        // clause ended with a named group's `}` — which abuts `from` with no
+        // space, unlike a trailing identifier.
+        let has_clause = default_id.is_some() || namespace_id.is_some() || !named.is_empty();
+        let mut wrote = false;
+        let mut ends_with_brace = false;
+
+        if let Some(id) = default_id {
+            self.required_ws();
+            self.emit_identifier(id);
+            wrote = true;
+        }
+        if let Some(id) = namespace_id {
+            // `*` is a punctuator, so it abuts `import` with no space
+            // (`import*as ns`). Only a preceding default clause needs a `,`.
+            if wrote {
+                self.write_str(",");
+            }
+            self.write_str("*as");
+            self.required_ws();
+            self.emit_identifier(id);
+            wrote = true;
+        }
+        if !named.is_empty() {
+            if wrote {
+                self.write_str(",");
+            }
+            self.write_str("{");
+            for (i, (imported, local)) in named.iter().enumerate() {
+                if i > 0 {
+                    self.write_str(",");
+                }
+                self.emit_identifier(imported);
+                // `{a}` when imported == local; `{a as c}` when they differ.
+                if imported.name != local.name {
+                    self.required_ws();
+                    self.write_str("as");
+                    self.required_ws();
+                    self.emit_identifier(local);
+                }
+            }
+            self.write_str("}");
+            ends_with_brace = true;
+        }
+
+        // The `from` clause is present iff there was an import clause. A
+        // side-effect import (`import "y"`) has no clause and jumps straight to
+        // the source string.
+        if has_clause {
+            if !ends_with_brace {
+                // Previous token was an identifier (`x` / `ns`) — separate it
+                // from `from`.
+                self.required_ws();
+            }
+            self.write_str("from");
+        }
+        self.emit_string(&imp.source);
+        self.write_str(";");
     }
 
     fn emit_variable_declaration(&mut self, v: &VariableDeclaration, with_semi: bool) {
@@ -6329,5 +6427,93 @@ mod tests {
     fn import_expression_as_member_object_is_bare() {
         let e = call(member(import_expr(ident("x")), "then", false), vec![ident("f")]);
         assert_eq!(emit_expr(e), "import(x).then(f);");
+    }
+
+    // ---- ES-module import declarations (CLOC12.188) -----------
+    //
+    // Minified forms: the only spaces are the tokenizer-required ones between
+    // two identifier-like tokens (`x from`, `as ns`). Keyword↔punctuation
+    // abuts (`import{`, `}from`, `import"`).
+
+    fn id_(name: &str) -> Identifier {
+        Identifier {
+            cv: None,
+            name: name.to_string(),
+        }
+    }
+
+    fn src_(v: &str) -> StringLiteral {
+        StringLiteral {
+            cv: None,
+            value: v.to_string(),
+            raw: format!("\"{v}\""),
+        }
+    }
+
+    fn emit_import_decl(specifiers: Vec<ImportSpecifier>, source: &str) -> String {
+        let item = ProgramItem::Declaration(Declaration::import_declaration(ImportDeclaration {
+            cv: None,
+            specifiers,
+            source: src_(source),
+        }));
+        emit_default(program().with_body(vec![item])).code
+    }
+
+    #[test]
+    fn import_side_effect() {
+        assert_eq!(emit_import_decl(vec![], "y"), "import\"y\";");
+    }
+
+    #[test]
+    fn import_default() {
+        assert_eq!(
+            emit_import_decl(vec![ImportSpecifier::Default(id_("x"))], "y"),
+            "import x from\"y\";"
+        );
+    }
+
+    #[test]
+    fn import_namespace() {
+        assert_eq!(
+            emit_import_decl(vec![ImportSpecifier::Namespace(id_("ns"))], "y"),
+            "import*as ns from\"y\";"
+        );
+    }
+
+    #[test]
+    fn import_named_plain_and_aliased() {
+        assert_eq!(
+            emit_import_decl(
+                vec![
+                    ImportSpecifier::Named {
+                        imported: id_("a"),
+                        local: id_("a"),
+                    },
+                    ImportSpecifier::Named {
+                        imported: id_("b"),
+                        local: id_("c"),
+                    },
+                ],
+                "y"
+            ),
+            "import{a,b as c}from\"y\";"
+        );
+    }
+
+    #[test]
+    fn import_default_plus_named() {
+        assert_eq!(
+            emit_import_decl(
+                vec![
+                    ImportSpecifier::Default(id_("x")),
+                    ImportSpecifier::Named {
+                        imported: id_("a"),
+                        local: id_("a"),
+                    },
+                ],
+                "y"
+            ),
+            "import x,{a}from\"y\";"
+        );
     }
 }

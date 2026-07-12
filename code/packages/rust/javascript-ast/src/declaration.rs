@@ -16,7 +16,7 @@
 //! in [`crate::statement`] lets a declaration appear anywhere a
 //! statement does — matching ESTree's flatter shape on the JSON wire.
 
-use crate::expression::{ClassMember, Expression, Identifier};
+use crate::expression::{ClassMember, Expression, Identifier, StringLiteral};
 use crate::statement::BlockStatement;
 use crate::CvId;
 use serde::{Deserialize, Serialize};
@@ -29,6 +29,11 @@ pub enum Declaration {
     VariableDeclaration(VariableDeclaration),
     FunctionDeclaration(FunctionDeclaration),
     ClassDeclaration(ClassDeclaration),
+    /// `import x from "y"` — an ES-module import declaration (CLOC12.188).
+    /// A *module-level* declaration: legal only at the top of a module, but
+    /// modelled here as a `Declaration` variant (the codebase's Phase-4 plan)
+    /// so it flows through the existing `ProgramItem::Declaration` plumbing.
+    ImportDeclaration(ImportDeclaration),
 }
 
 /// `var x = 1, y = 2;`, `let i = 0;`, `const PI = 3.14;`. The `kind`
@@ -142,6 +147,72 @@ pub struct ClassDeclaration {
     /// The class body — the ordered member list between the braces. May be
     /// empty (`class C {}`). Reuses [`ClassMember`] from the expression form.
     pub body: Vec<ClassMember>,
+}
+
+/// `import x from "y"` / `import {a, b as c} from "y"` / `import * as ns from
+/// "y"` / `import "y"` — an ES-module **import declaration** (CLOC12.188).
+///
+/// # Anatomy
+///
+/// ```text
+///   import  x, { a, b as c }  from  "y" ;
+///   └────┘  └──────────────┘  └──┘  └─┘
+///   keyword     specifiers     from  source
+/// ```
+///
+/// - `specifiers` — the bound names the import introduces, in source order.
+///   A **side-effect** import (`import "y";`) has an EMPTY `specifiers` list —
+///   it runs the module for effects and binds nothing.
+/// - `source` — the module specifier string literal (`"y"`). Preserved as a
+///   [`StringLiteral`] so the emitter re-quotes it faithfully.
+///
+/// # Renaming note
+///
+/// The *local* names an import introduces are ordinary module-scoped bindings.
+/// But the `imported` half of a named specifier (and a `default`/`namespace`
+/// binding's link to the foreign module) references an **export of another
+/// module** — renaming it would break the cross-module contract. The renaming
+/// passes therefore treat import-introduced names conservatively; that gate
+/// lands with the bridge PR that makes this node reachable.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImportDeclaration {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The imported bindings, in source order. Empty for a side-effect import.
+    pub specifiers: Vec<ImportSpecifier>,
+    /// The module specifier — `"y"` in `import … from "y"`.
+    pub source: StringLiteral,
+}
+
+/// One binding introduced by an [`ImportDeclaration`]. ESTree splits these into
+/// three node types; we model them as one `#[serde(tag = "type")]` enum so the
+/// JSON wire stays ESTree-shaped (`ImportDefaultSpecifier` /
+/// `ImportNamespaceSpecifier` / `ImportSpecifier`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type")]
+pub enum ImportSpecifier {
+    /// `import x from "y"` — the default export bound to local `x`.
+    #[serde(rename = "ImportDefaultSpecifier")]
+    Default(Identifier),
+    /// `import * as ns from "y"` — the whole module namespace bound to `ns`.
+    #[serde(rename = "ImportNamespaceSpecifier")]
+    Namespace(Identifier),
+    /// `import { a } from "y"` (→ `imported = local = a`) or
+    /// `import { a as c } from "y"` (→ `imported = a`, `local = c`). `imported`
+    /// is the foreign export's name; `local` is the name bound in this module.
+    #[serde(rename = "ImportSpecifier")]
+    Named {
+        imported: Identifier,
+        local: Identifier,
+    },
+}
+
+impl Declaration {
+    /// Convenience constructor for an [`ImportDeclaration`].
+    pub fn import_declaration(d: ImportDeclaration) -> Self {
+        Declaration::ImportDeclaration(d)
+    }
 }
 
 #[cfg(test)]
@@ -399,5 +470,74 @@ mod tests {
         });
         let json = serde_json::to_string(&without).expect("serialize");
         assert!(!json.contains("superClass"), "heritage omitted; got {}", json);
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.188 — ImportDeclaration.
+    // ---------------------------------------------------------------
+
+    fn id(name: &str) -> Identifier {
+        Identifier {
+            cv: None,
+            name: name.to_string(),
+        }
+    }
+
+    fn src(v: &str) -> StringLiteral {
+        StringLiteral {
+            cv: None,
+            value: v.to_string(),
+            raw: format!("\"{v}\""),
+        }
+    }
+
+    #[test]
+    fn import_declaration_all_specifier_kinds_roundtrip() {
+        // `import def, * as ns, { a, b as c } from "y"` — one of every
+        // specifier kind in a single declaration exercises all serde arms.
+        // (Real JS can't combine namespace + named, but the AST models each
+        // independently, so a mixed list is the strongest round-trip probe.)
+        let d = Declaration::import_declaration(ImportDeclaration {
+            cv: None,
+            specifiers: vec![
+                ImportSpecifier::Default(id("def")),
+                ImportSpecifier::Namespace(id("ns")),
+                ImportSpecifier::Named {
+                    imported: id("a"),
+                    local: id("a"),
+                },
+                ImportSpecifier::Named {
+                    imported: id("b"),
+                    local: id("c"),
+                },
+            ],
+            source: src("y"),
+        });
+        assert_eq!(roundtrip(d.clone()), d);
+        assert_eq!(type_tag(&d), "ImportDeclaration");
+
+        // ESTree-shaped specifier type tags.
+        let json = serde_json::to_string(&d).expect("serialize");
+        assert!(json.contains("\"ImportDefaultSpecifier\""), "got {json}");
+        assert!(json.contains("\"ImportNamespaceSpecifier\""), "got {json}");
+        assert!(json.contains("\"ImportSpecifier\""), "got {json}");
+    }
+
+    #[test]
+    fn side_effect_import_has_empty_specifiers() {
+        // `import "y";` binds nothing — an empty specifier list round-trips.
+        let d = Declaration::import_declaration(ImportDeclaration {
+            cv: None,
+            specifiers: vec![],
+            source: src("y"),
+        });
+        assert_eq!(roundtrip(d.clone()), d);
+        match &d {
+            Declaration::ImportDeclaration(i) => {
+                assert!(i.specifiers.is_empty());
+                assert_eq!(i.source.value, "y");
+            }
+            other => panic!("expected ImportDeclaration, got {other:?}"),
+        }
     }
 }

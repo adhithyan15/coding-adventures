@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-dce"
-version = "0.21.0"
+version = "0.22.0"
 edition = "2021"
 description = "Dead-code elimination pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Drops code after definite-terminator statements and removes EmptyStatement noise."
 

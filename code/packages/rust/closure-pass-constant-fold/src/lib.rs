@@ -478,6 +478,9 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
         // type and the required `id` differ. Both route through the shared
         // `fold_class_body` helper.
         Declaration::ClassDeclaration(c) => fold_class_declaration(c, st),
+        // An import declaration has no foldable body — its only payload is the
+        // bound names and the module specifier string. Preserve it verbatim.
+        Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
     }
 }
 

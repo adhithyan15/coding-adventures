@@ -873,6 +873,9 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
         // function declaration (conservative: preserving it is never a
         // miscompile, and a genuinely-unused one is removed downstream).
         Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration is module-top-level only; it never legally
+        // appears inside a block, so flattening/truncating it away is unsafe.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
     })
 }
 
@@ -1029,6 +1032,9 @@ fn block_is_scope_safe_to_flatten(b: &BlockStatement) -> bool {
         // it out of an inner block would leak the binding, so it is never safe
         // to flatten, exactly like a nested function declaration.
         Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
+        // An import declaration is module-top-level only; it never legally
+        // appears inside a block, so flattening/truncating it away is unsafe.
+        Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
         // Tagged statements never introduce a new lexical binding
         // by themselves. `ExpressionStatement`, control flow,
         // `EmptyStatement`, etc. are all safe.
@@ -1148,6 +1154,7 @@ fn dce_declaration(decl: &Declaration, st: &mut DceState) -> Declaration {
         // A class *declaration* runs DCE inside its heritage operand and each
         // method body, exactly as `dce_class` does for a class *expression* —
         // only the outer node type and the required `id` differ.
+        Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
         Declaration::ClassDeclaration(c) => {
             Declaration::ClassDeclaration(dce_class_declaration(c, st))
         }
