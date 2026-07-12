@@ -699,6 +699,28 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a.id, b.name FROM a JOIN b ON a.b_id = b.id ORDER BY a.id",
     },
+    // A join with NO `ON` condition is a Cartesian (cross) product — both the
+    // bare `JOIN` and the explicit `CROSS JOIN` forms.
+    Case {
+        id: "cross_product_no_on",
+        setup: &[
+            "CREATE TABLE a (x INTEGER)",
+            "CREATE TABLE b (y INTEGER)",
+            "INSERT INTO a VALUES (1), (2)",
+            "INSERT INTO b VALUES (10), (20)",
+        ],
+        query: "SELECT a.x, b.y FROM a CROSS JOIN b ORDER BY a.x, b.y",
+    },
+    Case {
+        id: "join_no_on_is_cross",
+        setup: &[
+            "CREATE TABLE a (x INTEGER)",
+            "CREATE TABLE b (y INTEGER)",
+            "INSERT INTO a VALUES (1), (2)",
+            "INSERT INTO b VALUES (10), (20)",
+        ],
+        query: "SELECT a.x, b.y FROM a JOIN b ORDER BY a.x, b.y",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

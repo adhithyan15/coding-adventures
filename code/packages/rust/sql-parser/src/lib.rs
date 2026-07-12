@@ -655,6 +655,25 @@ mod tests {
         );
     }
 
+    /// A join with NO `ON` condition (a Cartesian product) must parse — both the
+    /// bare `JOIN` and the explicit `CROSS JOIN` forms — while the `ON` form
+    /// still works.
+    #[test]
+    fn test_parse_join_without_on() {
+        assert!(
+            parse_sql("SELECT a.x FROM a JOIN b").is_ok(),
+            "JOIN with no ON should parse (cross product)"
+        );
+        assert!(
+            parse_sql("SELECT a.x FROM a CROSS JOIN b").is_ok(),
+            "CROSS JOIN with no ON should parse"
+        );
+        assert!(
+            parse_sql("SELECT a.x FROM a JOIN b ON a.x = b.y").is_ok(),
+            "JOIN ... ON should still parse"
+        );
+    }
+
     // -----------------------------------------------------------------------
     // Test 29: Error path — tokenization failure propagates
     // -----------------------------------------------------------------------

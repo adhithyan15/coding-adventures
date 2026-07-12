@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.18 — Conditionless joins (Cartesian product)
+
+`SELECT … FROM a CROSS JOIN b` and `SELECT … FROM a JOIN b` (no `ON`) now parse
+and run as a Cartesian (cross) product. The generated sql-parser grammar required
+an `ON` after every join; making `ON expr` optional (sql-parser 0.1.2) fixes it,
+and the planner/codegen already produce a cross product for a conditionless join.
+Two new differential-oracle cases (`cross_product_no_on`, `join_no_on_is_cross`)
+diff against real bundled SQLite. (Comma joins `FROM a, b`, `USING`, and `NATURAL
+JOIN` remain unsupported — those need new planner work, not just a grammar tweak.)
+
 ## 0.5.17 — Bare `JOIN` (INNER by default)
 
 `SELECT … FROM a JOIN b ON …` now parses and runs — a bare `JOIN` (no
