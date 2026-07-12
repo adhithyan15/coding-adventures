@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.12 — OCTET_LENGTH (byte length)
+
+Grows the SQL scalar surface (sql-vm 0.4.8): `OCTET_LENGTH(x)` returns the byte
+count of a value, where `LENGTH` returns the character count — `OCTET_LENGTH('héllo')`
+is 6 but `LENGTH('héllo')` is 5. Text is measured as UTF-8 bytes, a blob by its
+raw bytes, an integer by its decimal digits; NULL → NULL; floats declined. A new
+differential-oracle case (`octet_length`) diffs `OCTET_LENGTH(s)` and `LENGTH(s)`
+across multibyte, empty, and NULL rows against real bundled SQLite.
+
 ## 0.5.11 — Fix HEX(NULL) to return an empty string
 
 Stream A correctness fix (sql-vm 0.4.7): `HEX(NULL)` returned SQL NULL but real

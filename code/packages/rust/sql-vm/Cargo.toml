@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-sql-vm"
-version = "0.4.7"
+version = "0.4.8"
 edition = "2021"
 description = "Stack-machine bytecode VM for the Mini-SQLite SQL processing pipeline"
 license = "MIT"
