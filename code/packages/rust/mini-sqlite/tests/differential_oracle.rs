@@ -744,6 +744,29 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a + b total, a first FROM t ORDER BY total",
     },
+    // A table alias may omit the `AS` keyword: `FROM users u` aliases the table
+    // exactly like `FROM users AS u`. A qualified reference through the bare
+    // alias (`u.id`) must resolve, proving the alias reached the planner.
+    Case {
+        id: "table_alias_without_as",
+        setup: &[
+            "CREATE TABLE users (id INTEGER, name TEXT)",
+            "INSERT INTO users VALUES (1, 'a'), (2, 'b'), (3, 'c')",
+        ],
+        query: "SELECT u.id, u.name FROM users u WHERE u.id > 1 ORDER BY u.id",
+    },
+    // Bare table aliases across a JOIN: both sides aliased without `AS`, joined
+    // on the bare-aliased columns. Must match the explicit-AS join exactly.
+    Case {
+        id: "join_bare_table_alias",
+        setup: &[
+            "CREATE TABLE a (id INTEGER, v INTEGER)",
+            "CREATE TABLE b (id INTEGER, w INTEGER)",
+            "INSERT INTO a VALUES (1, 10), (2, 20)",
+            "INSERT INTO b VALUES (1, 100), (2, 200)",
+        ],
+        query: "SELECT x.v, y.w FROM a x JOIN b y ON x.id = y.id ORDER BY x.v",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

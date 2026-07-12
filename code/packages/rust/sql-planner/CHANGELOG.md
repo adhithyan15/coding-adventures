@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.3] - Unreleased
+
+### Fixed
+
+- **Bare table aliases (no `AS`).** `extract_table_ref` keyed the table alias
+  off the `AS` keyword, so `FROM users u` (which sql-parser 0.1.4 now accepts)
+  lost its alias and qualified references like `u.id` failed to resolve. It now
+  also recognises the implicit form: with the table name nested in its own
+  `table_name` node, a bare `Name`-type token directly under `table_ref` is the
+  alias. Guarded on the `table_name` node being present, so the degenerate
+  no-node fallback (where the lone token *is* the table name) is unaffected.
+  Mirrors the 0.2.2 column-alias fix.
+
 ## [0.2.2] - Unreleased
 
 ### Fixed
