@@ -70,7 +70,7 @@ use coding_adventures_javascript_ast::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
         DoWhileStatement, EmptyStatement, ExpressionStatement, ForInStatement, ForInit,
         ForOfStatement, ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement,
-        SwitchCase, SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
+        SwitchCase, SwitchStatement, ThrowStatement, TryStatement, WhileStatement, WithStatement,
     },
     Program, ProgramItem, SourceType,
 };
@@ -327,9 +327,15 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         // debugger_statement = "debugger" SEMICOLON — no node children, so the
         // typed node is a bare marker. (CLOC21.)
         "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
+        // with_statement = "with" LPAREN expression RPAREN statement (CLOC12.187).
+        // The atomic node + emitter + pass traversal landed in PR1, and the
+        // renaming-soundness gate (rename passes decline when a `with` is
+        // present) landed in PR2a — so bridging it here is sound.
+        "with_statement" => convert_with_statement(child).map(Statement::with_statement),
         // Phase 2+ — not yet in the typed AST
-        "for_await_of_statement" | "with_statement" | "using_declaration"
-        | "await_using_declaration" => Err(unsupported(child)),
+        "for_await_of_statement" | "using_declaration" | "await_using_declaration" => {
+            Err(unsupported(child))
+        }
         other => Err(BridgeError::InternalError {
             msg: format!("unknown statement child rule '{other}'"),
             rule: node.rule_name.clone(),
@@ -408,6 +414,24 @@ fn convert_do_while_statement(node: &GrammarASTNode) -> Result<DoWhileStatement,
         cv: None,
         body: Box::new(convert_statement(nodes[0])?),
         test: convert_expression(nodes[1])?,
+    })
+}
+
+fn convert_with_statement(node: &GrammarASTNode) -> Result<WithStatement, BridgeError> {
+    // with_statement = "with" LPAREN expression RPAREN statement (CLOC12.187).
+    // Node children: [expression, statement] — the injected object first, the
+    // body second. Structurally identical to `while_statement`; the difference
+    // is purely semantic (`with` splices the object onto the scope chain), and
+    // that semantics is handled downstream by the renaming-soundness gate
+    // (`program_contains_with_statement`) rather than here.
+    let nodes = node_children(node);
+    if nodes.len() < 2 {
+        return Err(internal(node, "with_statement needs 2 node children"));
+    }
+    Ok(WithStatement {
+        cv: None,
+        object: convert_expression(nodes[0])?,
+        body: Box::new(convert_statement(nodes[1])?),
     })
 }
 
@@ -5869,6 +5893,38 @@ mod tests {
                 coding_adventures_javascript_ast::statement::TaggedStatement::WhileStatement(_)
             ))
         ));
+    }
+
+    #[test]
+    fn with_statement_bridge() {
+        // CLOC12.187 PR2b: `with (o) { … }` now bridges to a WithStatement
+        // instead of declining the whole file to WHITESPACE_ONLY. The renaming
+        // passes decline to rename in its presence (the PR2a gate), so bridging
+        // it is sound. Structurally it mirrors `while_statement`:
+        // object = the injected expression, body = the statement.
+        let p = bridge_ok("with (o) { foo(); }");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::WithStatement(w),
+            )) => {
+                assert!(
+                    matches!(&w.object, Expression::Identifier(id) if id.name == "o"),
+                    "expected the `with` object to be the identifier `o`, got {:?}",
+                    w.object
+                );
+                assert!(
+                    matches!(
+                        &*w.body,
+                        Statement::Tagged(
+                            coding_adventures_javascript_ast::statement::TaggedStatement::BlockStatement(_)
+                        )
+                    ),
+                    "expected the `with` body to be a block statement, got {:?}",
+                    w.body
+                );
+            }
+            other => panic!("expected a WithStatement, got {other:?}"),
+        }
     }
 
     #[test]

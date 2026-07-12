@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.51.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2b: bridge `with (obj) stmt` → `WithStatement`
+
+The grammar already recognised `with_statement`; the bridge routed it to the
+*unsupported* bucket, so any file containing a `with` declined to
+WHITESPACE_ONLY. This PR flips it: a new `convert_with_statement` (mirroring
+`convert_while_statement` — node children `[expression, statement]` →
+`object` / `body`) and a dispatch arm produce a `WithStatement`, and
+`with_statement` is removed from the unsupported list. This is sound because the
+renaming-soundness gate landed first (closure-scope-analyzer 0.14.0 /
+CLOC12.187 PR2a): the rename passes decline to rename whenever a `with` is
+present. New `with_statement_bridge` test.
+
 ## [0.50.0] - 2026-07-12
 
 ### Fixed — CLOC12.186: bridge `let`/`const` init in a C-style `for` header

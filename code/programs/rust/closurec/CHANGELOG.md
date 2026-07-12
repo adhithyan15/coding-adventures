@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.26] - 2026-07-12
+
+### Added — CLOC12.187 PR2b: `with (obj) { … }` end-to-end
+
+Picks up javascript-parser 0.51.0 (the `with_statement` bridge flip). A file
+containing a `with` no longer declines to WHITESPACE_ONLY — it flows through the
+full optimization pipeline. New `tests/diff/simple-with/` fixture +
+`diff_simple_with.rs` with two facts:
+  - **SIMPLE**: `with (o) { x(1 + 2); }` → `with(o){x(3)}` — the `with`
+    round-trips (bridge modelled it) and the argument folds `1+2`→`3` (the
+    pipeline descended into the body, not a WHITESPACE_ONLY fallback).
+  - **ADVANCED**: `function longName(){ with (o) { x(); } } longName();` keeps
+    `longName` verbatim — the CLOC12.187 PR2a renaming-soundness gate fires
+    end-to-end. (The identical program without the `with` optimizes down to
+    `x();`, so the surviving name is a direct observation of the gate.)
+
 ## [0.234.25] - 2026-07-12
 
 ### Fixed — CLOC12.186: `for (let/const i = 0; …)` end-to-end
