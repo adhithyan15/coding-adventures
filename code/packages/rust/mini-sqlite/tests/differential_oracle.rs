@@ -687,6 +687,18 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT s, LENGTH(s), 'a''b' AS lit FROM t ORDER BY id",
     },
+    // A bare `JOIN` (no INNER/LEFT/… keyword) is an INNER join, and must produce
+    // the same rows as an explicit `INNER JOIN`.
+    Case {
+        id: "bare_join",
+        setup: &[
+            "CREATE TABLE a (id INTEGER, b_id INTEGER)",
+            "CREATE TABLE b (id INTEGER, name TEXT)",
+            "INSERT INTO a VALUES (1, 10), (2, 20), (3, 99)",
+            "INSERT INTO b VALUES (10, 'x'), (20, 'y')",
+        ],
+        query: "SELECT a.id, b.name FROM a JOIN b ON a.b_id = b.id ORDER BY a.id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
