@@ -3083,6 +3083,68 @@ fn array_each_slice_each_cons_chunk_while() {
     }
 }
 
+// ── Ruby Array#slice_when ──────────────────────────────────────────────────
+// `slice_when { |a, b| pred }` is the INVERSE of `chunk_while`: it starts a NEW
+// run BETWEEN an adjacent pair exactly WHERE the block is truthy.  Mirrors the
+// Python reference (#8070), Go (#8073), Rust (#8077).
+#[test]
+fn array_slice_when() {
+    // `{ |a, b| b - a > 1 }` — split on an upward gap greater than one.
+    let gap = func(
+        "__t_gap",
+        vec![param("a"), param("b")],
+        vec![],
+        bc(">", vec![bc("-", vec![param_ref("b"), param_ref("a")]), int(1)]),
+    );
+    let stmts = vec![
+        // [1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 } → [[1, 2], [4], [9, 10, 11, 12]]
+        print(method(
+            seq(vec![int(1), int(2), int(4), int(9), int(10), int(11), int(12)]),
+            "slice_when",
+            vec![method_closure("__t_gap")],
+        )),
+        // [9].slice_when { … } → [[9]]  (single element)
+        print(method(seq(vec![int(9)]), "slice_when", vec![method_closure("__t_gap")])),
+        // [].slice_when { … } → []
+        print(method(seq(vec![]), "slice_when", vec![method_closure("__t_gap")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrslicewhen".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, gap],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrslicewhen") {
+        assert_eq!(
+            stdout,
+            "[[1, 2], [4], [9, 10, 11, 12]]\n\
+             [[9]]\n\
+             []"
+        );
+    }
+}
+
 // ── Ruby Array#tally ───────────────────────────────────────────────────────
 // `tally` counts occurrences into a Hash keyed in first-seen order — the JS
 // runtime realises it as an insertion-ordered `Map`, printed `{k: v}` (the same
