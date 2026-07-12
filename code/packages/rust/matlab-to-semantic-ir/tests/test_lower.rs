@@ -678,7 +678,11 @@ fn a_pathologically_long_flat_additive_chain_is_cleanly_rejected() {
         .expect_err("a 60,000-term chain must be rejected, not built into an unwalkable tree");
     let elapsed = start.elapsed();
     assert!(
-        elapsed < Duration::from_secs(10),
+        // Generous ceiling for CI: the guard rejects in ~3s locally, but loaded
+        // CI runners are several times slower (see lessons.md "CI runners are
+        // ~25x slower"). 60s still catches a real regression (a hang or an
+        // O(n^2) blowup would blow well past it) while tolerating runner load.
+        elapsed < Duration::from_secs(60),
         "rejecting a 60,000-term chain took {elapsed:?} -- expected a fast, early check"
     );
     assert!(err.message.contains("too long"));
