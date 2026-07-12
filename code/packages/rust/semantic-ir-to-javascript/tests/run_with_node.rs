@@ -3006,3 +3006,76 @@ fn hash_to_h_and_indexed_iteration() {
         );
     }
 }
+
+// ── Array each_slice / each_cons / chunk_while ─────────────────────────────
+//
+// The consecutive-grouping family, mirroring the Python (#8031), Go (#8036),
+// and Rust (#8042) references.  `each_slice`/`each_cons` are non-block (take an
+// int `n`); `chunk_while` is a block method (the block is called on each
+// ADJACENT pair).  All route through the explicit `arrayMethod` switch.
+#[test]
+fn array_each_slice_each_cons_chunk_while() {
+    // `{ |a, b| b - a == 1 }` — adjacent-pair predicate (JS equality builtin `=`).
+    let adj = func(
+        "__t_adj",
+        vec![param("a"), param("b")],
+        vec![],
+        bc("=", vec![bc("-", vec![param_ref("b"), param_ref("a")]), int(1)]),
+    );
+    let stmts = vec![
+        // [1,2,3,4,5].each_slice(2) → [[1, 2], [3, 4], [5]]
+        print(method(seq(vec![int(1), int(2), int(3), int(4), int(5)]), "each_slice", vec![int(2)])),
+        // [1,2,3].each_slice(0) → []  (never-throw floor)
+        print(method(seq(vec![int(1), int(2), int(3)]), "each_slice", vec![int(0)])),
+        // [1,2,3,4].each_cons(2) → [[1, 2], [2, 3], [3, 4]]
+        print(method(seq(vec![int(1), int(2), int(3), int(4)]), "each_cons", vec![int(2)])),
+        // [1,2].each_cons(3) → []  (window larger than the array)
+        print(method(seq(vec![int(1), int(2)]), "each_cons", vec![int(3)])),
+        // [1,2,4,5,7].chunk_while { |a,b| b-a==1 } → [[1, 2], [4, 5], [7]]
+        print(method(
+            seq(vec![int(1), int(2), int(4), int(5), int(7)]),
+            "chunk_while",
+            vec![method_closure("__t_adj")],
+        )),
+        // [].chunk_while { … } → []
+        print(method(seq(vec![]), "chunk_while", vec![method_closure("__t_adj")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrslice".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, adj],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrslice") {
+        assert_eq!(
+            stdout,
+            "[[1, 2], [3, 4], [5]]\n\
+             []\n\
+             [[1, 2], [2, 3], [3, 4]]\n\
+             []\n\
+             [[1, 2], [4, 5], [7]]\n\
+             []"
+        );
+    }
+}

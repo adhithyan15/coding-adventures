@@ -1298,6 +1298,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "take", "drop", "values_at",
     "flatten", "compact", "rotate", "zip",
     "include?", "index",
+    "each_slice", "each_cons", "chunk_while",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -1550,6 +1551,41 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         return null;
       }
       case "to_a": return recv;
+      case "each_slice": {
+        // `each_slice(n)` — consecutive sub-arrays of at most `n` elements (the
+        // last may be shorter).  `[1,2,3,4,5].each_slice(2)` → [[1,2],[3,4],[5]].
+        // Ruby raises ArgumentError for n <= 0; the never-throw floor yields [].
+        const n = args.length > 0 && Number.isInteger(args[0]) ? args[0] : 0;
+        if (n <= 0) { return []; }
+        const out = [];
+        for (let i = 0; i < recv.length; i += n) { out.push(recv.slice(i, i + n)); }
+        return out;
+      }
+      case "each_cons": {
+        // `each_cons(n)` — every consecutive n-element sliding window.
+        // `[1,2,3,4].each_cons(2)` → [[1,2],[2,3],[3,4]].  A window larger than
+        // the array (or n <= 0) yields [].
+        const n = args.length > 0 && Number.isInteger(args[0]) ? args[0] : 0;
+        if (n <= 0) { return []; }
+        const out = [];
+        for (let i = 0; i + n <= recv.length; i++) { out.push(recv.slice(i, i + n)); }
+        return out;
+      }
+      case "chunk_while": {
+        // `chunk_while { |prev, cur| pred }` — runs of consecutive elements: the
+        // block is called on each ADJACENT pair; while it is truthy the run
+        // continues, and a falsy result starts a new run.
+        // `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` → [[1,2],[4,5],[7]].
+        // An empty array yields []; a single element yields [[x]].
+        if (typeof blk !== "function") { return ARR_MISS; }
+        if (recv.length === 0) { return []; }
+        const chunks = [[recv[0]]];
+        for (let i = 1; i < recv.length; i++) {
+          if (truthy(blk(recv[i - 1], recv[i]))) { chunks[chunks.length - 1].push(recv[i]); }
+          else { chunks.push([recv[i]]); }
+        }
+        return chunks;
+      }
     }
     return ARR_MISS;
   }
