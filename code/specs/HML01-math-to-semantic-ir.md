@@ -108,10 +108,21 @@ pub fn compile_source(source: &str, module_name: &str)
   round-trips through the JS backend (SIR22 codegen for the array-domain
   nodes is separate, not-yet-shipped follow-on work — the frontend/backend
   split described in this spec).
-- **`octave-to-semantic-ir`** — a thin wrapper: run `octave-runtime`'s
-  existing `octavify` source-rewrite shim, then delegate to
-  `matlab-to-semantic-ir::compile_source`. Mirrors how `octave-runtime`
-  itself reuses `matlab-runtime` wholesale today (no new grammar).
+- **`octave-to-semantic-ir`** (✅ v0.1.0 shipped) — a thin wrapper: run
+  `octave-runtime`'s existing `octavify` source-rewrite shim, then delegate
+  to `matlab-to-semantic-ir::compile_source`. Mirrors how `octave-runtime`
+  itself reuses `matlab-runtime` wholesale today (no new grammar, no new
+  SIR node kinds). Unlike this section's own sketched `compile`/
+  `compile_source` shape above, this crate exposes **only**
+  `compile_source` — there is no Octave-specific CST to hand a `compile`
+  entry point, since the shim rewrites source *text* before anything is
+  parsed; the only tree ever built is the MATLAB one
+  `matlab-to-semantic-ir::compile_source` constructs internally. 9 tests
+  cover every normalized construct (comments, all six `endX` terminators,
+  `!=`/`!`), a string-awareness regression (the shim must not rewrite `#`/
+  `!` inside a string literal), a plain-MATLAB-passthrough sanity check,
+  and error propagation for both an out-of-scope MATLAB construct and an
+  Octave-only construct `octavify` does not normalize (`do...until`).
 - **`wolfram-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the `wolfram-parser`
   CST, emits SIR23 (symbolic/pattern domain) nodes. Reuses the existing
   surface-to-head desugaring table already in `wolfram-runtime/src/lower.rs`
