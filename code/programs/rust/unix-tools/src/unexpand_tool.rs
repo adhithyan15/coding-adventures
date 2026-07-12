@@ -15,7 +15,7 @@
 //!     Output: "\thello"        (1 tab)
 //! ```
 
-use super::expand_tool::{next_tab_stop, parse_tab_stops};
+use super::expand_tool::next_tab_stop;
 
 // ---------------------------------------------------------------------------
 // Public API

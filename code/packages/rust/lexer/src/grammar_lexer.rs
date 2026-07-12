@@ -525,6 +525,7 @@ pub struct GrammarLexer<'a> {
 
     /// Post-tokenize hooks: transform token list after lexing.
     /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    #[allow(clippy::type_complexity)] // boxed hook-list type reads clearly with the doc above
     post_tokenize_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 
     /// Whether keyword matching is case-insensitive.
@@ -1571,9 +1572,7 @@ impl<'a> GrammarLexer<'a> {
                 match matched.as_str() {
                     "(" | "[" | "{" => bracket_depth += 1,
                     ")" | "]" | "}" => {
-                        if bracket_depth > 0 {
-                            bracket_depth -= 1;
-                        }
+                        bracket_depth = bracket_depth.saturating_sub(1);
                     }
                     _ => {}
                 }
@@ -1622,7 +1621,7 @@ impl<'a> GrammarLexer<'a> {
         // At EOF: emit remaining DEDENTs.
         if bracket_depth == 0 {
             // Emit a final NEWLINE if the last token isn't one.
-            let need_newline = tokens.last().map_or(false, |t| t.type_ != TokenType::Newline);
+            let need_newline = tokens.last().is_some_and(|t| t.type_ != TokenType::Newline);
             if need_newline {
                 tokens.push(Token { cv: None,
                     type_: TokenType::Newline,
@@ -1733,9 +1732,7 @@ impl<'a> GrammarLexer<'a> {
                 match token.value.as_str() {
                     "(" | "[" | "{" => suppress_depth += 1,
                     ")" | "]" | "}" => {
-                        if suppress_depth > 0 {
-                            suppress_depth -= 1;
-                        }
+                        suppress_depth = suppress_depth.saturating_sub(1);
                     }
                     _ => {}
                 }
@@ -1880,16 +1877,14 @@ keywords:
     fn test_math_expression() {
         let tokens = tokenize("x = 1 + 2 * 3");
 
-        let expected = vec![
-            (TokenType::Name, "x"),
+        let expected = [(TokenType::Name, "x"),
             (TokenType::Equals, "="),
             (TokenType::Number, "1"),
             (TokenType::Plus, "+"),
             (TokenType::Number, "2"),
             (TokenType::Star, "*"),
             (TokenType::Number, "3"),
-            (TokenType::Eof, ""),
-        ];
+            (TokenType::Eof, "")];
 
         assert_eq!(tokens.len(), expected.len());
         for (i, (exp_type, exp_val)) in expected.iter().enumerate() {
@@ -2733,7 +2728,7 @@ PLUS = "+""#,
 
         let types: Vec<String> = tokens.iter()
             .filter(|t| token_type_name(t) != "EOF")
-            .map(|t| token_type_name(t))
+            .map(token_type_name)
             .collect();
         // OPEN_TAG was suppressed, only TEXT remains
         assert_eq!(types, vec!["TEXT"]);

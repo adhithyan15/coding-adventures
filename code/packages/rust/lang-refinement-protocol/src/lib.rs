@@ -395,6 +395,10 @@ pub trait RefinementBridge {
 ///     errors.push(TypeErrorDiagnostic { message: d.message, line: d.line, column: d.column });
 /// }
 /// ```
+// Each parameter is a distinct, independently-meaningful input to refinement
+// checking (bridge, callee identity, source position, argument exprs/kinds,
+// declared refinements, mode); bundling them into a struct would not aid clarity.
+#[allow(clippy::too_many_arguments)]
 pub fn check_call_site_refinements<B>(
     bridge: &B,
     callee_name: &str,

@@ -265,14 +265,8 @@ fn read_data_entry(e: &GrammarASTNode) -> Result<DataDef, RuntimeError> {
         .and_then(|s| s.parse::<u32>().ok())
         .ok_or_else(|| RuntimeError::Unsupported("data entry without a level number".into()))?;
 
-    // Name: the NAME token, or FILLER (a KEYWORD).
+    // Name: the NAME token, or `None` for FILLER (unnamed) entries.
     let name = first_token(e, "NAME");
-    let name = if name.is_none() {
-        // FILLER entries are unnamed.
-        None
-    } else {
-        name
-    };
 
     // Clauses: each `data_clause` wraps a `picture_clause` or `value_clause`.
     let mut picture = None;

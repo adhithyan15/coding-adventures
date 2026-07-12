@@ -506,6 +506,9 @@ fn prepare_textures(
     (white_texture, textures)
 }
 
+// GPU texture upload genuinely needs all of device/queue/layout/label/dims/
+// data/filter; bundling them into a struct would only move the argument list.
+#[allow(clippy::too_many_arguments)]
 fn prepare_texture(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
@@ -605,7 +608,7 @@ fn to_wgpu_color(color: GpuColor) -> wgpu::Color {
 }
 
 fn align_to(value: u32, alignment: u32) -> u32 {
-    ((value + alignment - 1) / alignment) * alignment
+    value.div_ceil(alignment) * alignment
 }
 
 fn intersect_rect(a: GpuRect, b: GpuRect) -> GpuRect {

@@ -565,7 +565,7 @@ fn test_attention_weights_sum_to_one() {
     assert_eq!(result.cols(), 2);
     // Output should be between min and max of V values
     for &val in result.data() {
-        assert!(val >= 10.0 && val <= 40.0);
+        assert!((10.0..=40.0).contains(&val));
     }
 }
 

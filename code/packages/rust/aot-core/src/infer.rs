@@ -1,3 +1,6 @@
+// The float literal is intentional inference test/fixture data, not an
+// approximation of a std constant to be replaced.
+#![allow(clippy::approx_constant)]
 //! Static type inference for `IIRFunction` — the first pass of AOT compilation.
 //!
 //! AOT cannot observe runtime types the way JIT can, so it runs a lightweight

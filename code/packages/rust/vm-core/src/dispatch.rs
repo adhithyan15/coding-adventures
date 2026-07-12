@@ -94,6 +94,12 @@ pub struct DispatchCtx<'a> {
     pub tracer: Option<&'a mut Vec<crate::trace::VMTrace>>,
 }
 
+/// Registry mapping a function name to its compiled JIT handler.
+///
+/// Factored into a named alias (rather than repeating the boxed-closure type at
+/// every use site) both for readability and to satisfy `clippy::type_complexity`.
+pub type JitHandlerMap = HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>;
+
 /// Signature for a language-specific opcode extension handler.
 ///
 /// `jit_handlers` is passed separately so the handler can look up compiled
@@ -101,7 +107,7 @@ pub struct DispatchCtx<'a> {
 pub type OpcodeHandler = Box<
     dyn Fn(
             &mut DispatchCtx<'_>,
-            &HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+            &JitHandlerMap,
             &IIRInstr,
         ) -> Result<Option<Value>, VMError>
         + Send
@@ -1083,7 +1089,7 @@ fn bounds_checked<'c>(arr: &'c [Value], idx: i64, op: &str) -> Result<&'c Value,
 /// we can call the handler while also mutating `ctx`.
 fn handle_call(
     ctx: &mut DispatchCtx,
-    jit_handlers: &HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+    jit_handlers: &JitHandlerMap,
     instr: &IIRInstr,
 ) -> Result<Option<Value>, VMError> {
     // Step 1: Extract everything we need from the current frame BEFORE any other
@@ -1499,17 +1505,16 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
 pub(crate) fn run_dispatch_loop(
     ctx: &mut DispatchCtx<'_>,
     extra_opcodes: &HashMap<String, OpcodeHandler>,
-    jit_handlers: &HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+    jit_handlers: &JitHandlerMap,
     profiler: &mut Option<crate::profiler::VMProfiler>,
 ) -> Result<Option<Value>, VMError> {
     let mut return_value: Option<Value> = None;
 
-    loop {
-        // Peek at the top frame without taking a long-lived borrow.
-        let (fn_name, ip) = match ctx.frames.last() {
-            Some(f) => (f.fn_name.clone(), f.ip),
-            None    => break,
-        };
+    // Peek at the top frame without taking a long-lived borrow: `map` yields an
+    // owned `(fn_name, ip)` so the `ctx.frames` borrow is released before the
+    // body mutates `ctx`. (A plain `while let Some(f) = ctx.frames.last()` would
+    // hold that borrow across the body and fail to compile.)
+    while let Some((fn_name, ip)) = ctx.frames.last().map(|f| (f.fn_name.clone(), f.ip)) {
 
         // Find the function in the module.
         let fn_idx = ctx.module_fns.iter().position(|f| f.name == fn_name)

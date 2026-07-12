@@ -351,14 +351,10 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
                             coef: c,
                             term: Box::new(pb),
                         })
-                    } else if let Some(c) = int_const(b) {
-                        Some(Predicate::Mul {
+                    } else { int_const(b).map(|c| Predicate::Mul {
                             coef: c,
                             term: Box::new(pa),
-                        })
-                    } else {
-                        None // var × var is non-linear
-                    }
+                        }) }
                 }
                 _ => None, // division / aggregation: out of LIA scope
             }
@@ -739,6 +735,9 @@ fn vars_of(planes: &[Halfplane]) -> Vec<String> {
 /// checked-rational overflow or the inequality-count cap. This is the shared
 /// engine behind both feasibility (`check`, eliminate *all* variables) and
 /// optimization (`optimize`, eliminate all *but* the objective variable).
+// The tuple return (surviving planes + per-variable elimination steps) is the
+// natural result shape here; extracting a named type would not improve clarity.
+#[allow(clippy::type_complexity)]
 fn eliminate(
     planes: Vec<Halfplane>,
     to_elim: &[String],

@@ -517,7 +517,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             let discriminant_pure = is_pure_leaf(&new_disc);
             let all_tests_pure_or_none = new_cases
                 .iter()
-                .all(|c| c.test.as_ref().map_or(true, is_pure_leaf));
+                .all(|c| c.test.as_ref().is_none_or(is_pure_leaf));
             if all_consequents_empty && discriminant_pure && all_tests_pure_or_none {
                 st.record(
                     &s.cv,
@@ -564,7 +564,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             if discriminant_pure && all_tests_pure_or_none {
                 if let Some(target) = pick_matching_case(&new_disc, &new_cases) {
                     let last = target.consequent.last();
-                    let terminates = last.map_or(false, is_case_terminator);
+                    let terminates = last.is_some_and(is_case_terminator);
                     // Empty consequent → fall-through to next case per
                     // ECMAScript §13.12. The classic "share body"
                     // pattern `case 1: case 2: body; break;` has
@@ -2496,7 +2496,7 @@ mod tests {
 
     /// Helper — extract the unique SwitchStatement from a function
     /// body so we can pattern-match on it.
-    fn extract_switch<'a>(prog: &'a Program) -> &'a SwitchStatement {
+    fn extract_switch(prog: &Program) -> &SwitchStatement {
         let block = extract_function_body(prog);
         match &block.body[0] {
             Statement::Tagged(TaggedStatement::SwitchStatement(s)) => s,

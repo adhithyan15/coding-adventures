@@ -71,6 +71,7 @@ use crate::ieee754::{bits_msb_to_int, int_to_bits_msb, is_nan, is_inf, is_zero, 
 /// normal computation stages. When `special` is `Some`, stages simply pass
 /// the data through without processing.
 #[derive(Debug, Clone)]
+#[derive(Default)]
 struct StageData {
     /// If `Some`, this is a pre-computed result (NaN, Inf, zero) that bypasses
     /// the normal pipeline stages. In hardware, this is a multiplexer that
@@ -98,28 +99,6 @@ struct StageData {
     c_aligned: u64,
 }
 
-impl Default for StageData {
-    fn default() -> Self {
-        StageData {
-            special: None,
-            sign_a: 0, sign_b: 0,
-            exp_a: 0, exp_b: 0,
-            mant_a: 0, mant_b: 0,
-            guard_bits: 0,
-            result_sign: 0,
-            result_mant: 0,
-            result_exp: 0,
-            product: 0,
-            product_sign: 0,
-            product_leading: 0,
-            c_sign: 0,
-            exp_c: 0,
-            mant_c: 0,
-            product_exp: 0,
-            c_aligned: 0,
-        }
-    }
-}
 
 // =========================================================================
 // PipelinedFPAdder — 5-stage pipelined floating-point adder
@@ -237,11 +216,11 @@ impl PipelinedFPAdder {
 
         let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
         let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-        let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-        let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+        let mut mant_a = bits_msb_to_int(&a.mantissa);
+        let mut mant_b = bits_msb_to_int(&b.mantissa);
 
-        if exp_a != 0 { mant_a = (1u64 << f.mantissa_bits) | mant_a; } else { exp_a = 1; }
-        if exp_b != 0 { mant_b = (1u64 << f.mantissa_bits) | mant_b; } else { exp_b = 1; }
+        if exp_a != 0 { mant_a |= 1u64 << f.mantissa_bits; } else { exp_a = 1; }
+        if exp_b != 0 { mant_b |= 1u64 << f.mantissa_bits; } else { exp_b = 1; }
 
         let guard_bits = 3u32;
         mant_a <<= guard_bits;
@@ -261,8 +240,7 @@ impl PipelinedFPAdder {
         let (mut mant_a, mut mant_b) = (data.mant_a, data.mant_b);
         let guard_bits = data.guard_bits;
 
-        let result_exp;
-        if data.exp_a >= data.exp_b {
+        let result_exp = if data.exp_a >= data.exp_b {
             let exp_diff = (data.exp_a - data.exp_b) as u32;
             if exp_diff > 0 {
                 if exp_diff < (f.mantissa_bits + 1 + guard_bits) {
@@ -275,7 +253,7 @@ impl PipelinedFPAdder {
                     if sticky != 0 { mant_b |= 1; }
                 }
             }
-            result_exp = data.exp_a;
+            data.exp_a
         } else {
             let exp_diff = (data.exp_b - data.exp_a) as u32;
             if exp_diff > 0 {
@@ -289,8 +267,8 @@ impl PipelinedFPAdder {
                     if sticky != 0 { mant_a |= 1; }
                 }
             }
-            result_exp = data.exp_b;
-        }
+            data.exp_b
+        };
 
         StageData {
             sign_a: data.sign_a, sign_b: data.sign_b,
@@ -373,6 +351,10 @@ impl PipelinedFPAdder {
 
         result_mant >>= guard_bits;
 
+        // Round to nearest even. The two `+= 1` arms are intentionally kept
+        // separate for clarity (remainder-over-half vs exactly-half-and-odd);
+        // they take the same action, so allow the identical-blocks lint.
+        #[allow(clippy::if_same_then_else)]
         if guard == 1 {
             if round_bit == 1 || sticky_bit == 1 {
                 result_mant += 1;
@@ -507,11 +489,11 @@ impl PipelinedFPMultiplier {
 
         let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
         let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-        let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-        let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+        let mut mant_a = bits_msb_to_int(&a.mantissa);
+        let mut mant_b = bits_msb_to_int(&b.mantissa);
 
-        if exp_a != 0 { mant_a = (1u64 << f.mantissa_bits) | mant_a; } else { exp_a = 1; }
-        if exp_b != 0 { mant_b = (1u64 << f.mantissa_bits) | mant_b; } else { exp_b = 1; }
+        if exp_a != 0 { mant_a |= 1u64 << f.mantissa_bits; } else { exp_a = 1; }
+        if exp_b != 0 { mant_b |= 1u64 << f.mantissa_bits; } else { exp_b = 1; }
 
         StageData {
             result_sign, result_exp: exp_a + exp_b - f.bias,
@@ -578,6 +560,9 @@ impl PipelinedFPMultiplier {
                 if product & ((1u64 << (rp - 2)) - 1) != 0 { sticky = 1; }
             }
             result_mant = product >> rp;
+            // Round to nearest even; the two `+= 1` arms are intentionally kept
+            // separate for clarity (remainder-over-half vs exactly-half-and-odd).
+            #[allow(clippy::if_same_then_else)]
             if guard == 1 {
                 if round_bit == 1 || sticky == 1 { result_mant += 1; }
                 else if (result_mant & 1) == 1 { result_mant += 1; }
@@ -728,14 +713,14 @@ impl PipelinedFMA {
 
         let mut exp_a = bits_msb_to_int(&a.exponent) as i32;
         let mut exp_b = bits_msb_to_int(&b.exponent) as i32;
-        let mut mant_a = bits_msb_to_int(&a.mantissa) as u64;
-        let mut mant_b = bits_msb_to_int(&b.mantissa) as u64;
+        let mut mant_a = bits_msb_to_int(&a.mantissa);
+        let mut mant_b = bits_msb_to_int(&b.mantissa);
         let mut exp_c = bits_msb_to_int(&c.exponent) as i32;
-        let mut mant_c = bits_msb_to_int(&c.mantissa) as u64;
+        let mut mant_c = bits_msb_to_int(&c.mantissa);
 
-        if exp_a != 0 { mant_a = (1u64 << f.mantissa_bits) | mant_a; } else { exp_a = 1; }
-        if exp_b != 0 { mant_b = (1u64 << f.mantissa_bits) | mant_b; } else { exp_b = 1; }
-        if exp_c != 0 { mant_c = (1u64 << f.mantissa_bits) | mant_c; } else { exp_c = 1; }
+        if exp_a != 0 { mant_a |= 1u64 << f.mantissa_bits; } else { exp_a = 1; }
+        if exp_b != 0 { mant_b |= 1u64 << f.mantissa_bits; } else { exp_b = 1; }
+        if exp_c != 0 { mant_c |= 1u64 << f.mantissa_bits; } else { exp_c = 1; }
 
         StageData {
             product_sign, c_sign: c.sign,
@@ -790,18 +775,17 @@ impl PipelinedFMA {
             c_aligned = mant_c >> ((-c_scale_shift) as u32);
         }
 
-        let result_exp;
-        if exp_diff >= 0 {
+        let result_exp = if exp_diff >= 0 {
             // Clamp shift to avoid overflow — if exp_diff >= 64, the value
             // is shifted entirely to zero (it's too small to contribute).
             let shift = (exp_diff as u32).min(63);
             c_aligned >>= shift;
-            result_exp = product_exp;
+            product_exp
         } else {
             let shift = ((-exp_diff) as u32).min(63);
             product >>= shift;
-            result_exp = data.exp_c;
-        }
+            data.exp_c
+        };
 
         StageData {
             product_sign: data.product_sign, c_sign: data.c_sign,
@@ -886,6 +870,9 @@ impl PipelinedFMA {
                 if result_mant & ((1u64 << (rp - 2)) - 1) != 0 { sticky = 1; }
             }
             result_mant >>= rp;
+            // Round to nearest even; the two `+= 1` arms are intentionally kept
+            // separate for clarity (remainder-over-half vs exactly-half-and-odd).
+            #[allow(clippy::if_same_then_else)]
             if guard == 1 {
                 if round_bit == 1 || sticky == 1 { result_mant += 1; }
                 else if (result_mant & 1) == 1 { result_mant += 1; }

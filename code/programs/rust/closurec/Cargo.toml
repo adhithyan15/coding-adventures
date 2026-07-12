@@ -45,3 +45,12 @@ coding_adventures_correlation_vector = { path = "../../../packages/rust/correlat
 coding-adventures-type-sidecar = { path = "../../../packages/rust/type-sidecar" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+# closurec's diff-test modules are literate: their `//!` docs interleave prose
+# with lines that clippy's doc parser reads as unindented list items. These are
+# intentional documentation, not Markdown lists, so allow the doc-format lints
+# crate-wide (covers every tests/*.rs target, including ones added later).
+[lints.clippy]
+doc_list_item_without_indentation = "allow"
+doc_lazy_continuation = "allow"
+doc_overindented_list_items = "allow"

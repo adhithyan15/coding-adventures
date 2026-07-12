@@ -153,8 +153,8 @@ fn init_gf_tables() {
         let log = GF_LOG.get_or_init(|| {
             let mut log = [0u16; 929];
             let mut val: u64 = 1;
-            for i in 0..ORDER as usize {
-                exp[i] = val as u16;
+            for (i, exp_i) in exp.iter_mut().enumerate().take(ORDER as usize) {
+                *exp_i = val as u16;
                 log[val as usize] = i as u16;
                 val = (val * ALPHA) % PRIME;
             }
@@ -319,16 +319,14 @@ fn auto_ecc_level(data_count: usize) -> u8 {
 /// Heuristic: `c = ceil(sqrt(total / 3))`, clamped to 1–30.
 /// Then `r = ceil(total / c)`, clamped to 3–90.
 fn choose_dimensions(total: usize) -> (u32, u32) {
-    let mut c = (((total as f64) / 3.0).sqrt().ceil() as u32)
-        .max(MIN_COLS)
-        .min(MAX_COLS);
+    let mut c = (((total as f64) / 3.0).sqrt().ceil() as u32).clamp(MIN_COLS, MAX_COLS);
 
-    let mut r = ((total as u32 + c - 1) / c).max(MIN_ROWS);
+    let mut r = (total as u32).div_ceil(c).max(MIN_ROWS);
 
     if r < MIN_ROWS {
         r = MIN_ROWS;
-        c = ((total as u32 + r - 1) / r).max(MIN_COLS).min(MAX_COLS);
-        r = ((total as u32 + c - 1) / c).max(MIN_ROWS);
+        c = (total as u32).div_ceil(r).clamp(MIN_COLS, MAX_COLS);
+        r = (total as u32).div_ceil(c).max(MIN_ROWS);
     }
 
     r = r.min(MAX_ROWS);
@@ -465,12 +463,12 @@ pub fn encode(data: &[u8], options: &PDF417Options) -> Result<ModuleGrid, PDF417
     let total_cwords = full_data.len() + ecc_cwords.len();
 
     let (cols, rows) = if let Some(c) = options.columns {
-        if c < MIN_COLS || c > MAX_COLS {
+        if !(MIN_COLS..=MAX_COLS).contains(&c) {
             return Err(PDF417Error::InvalidDimensions(format!(
                 "columns must be 1–30, got {c}"
             )));
         }
-        let r = ((total_cwords as u32 + c - 1) / c).max(MIN_ROWS);
+        let r = (total_cwords as u32).div_ceil(c).max(MIN_ROWS);
         if r > MAX_ROWS {
             return Err(PDF417Error::InputTooLong(format!(
                 "Data requires {r} rows (max 90) with {c} columns."
@@ -491,7 +489,7 @@ pub fn encode(data: &[u8], options: &PDF417Options) -> Result<ModuleGrid, PDF417
     // ── Pad to fill grid exactly ─────────────────────────────────────────
     let padding_count = (cols * rows) as usize - total_cwords;
     let mut padded_data = full_data;
-    padded_data.extend(std::iter::repeat(PADDING_CW).take(padding_count));
+    padded_data.extend(std::iter::repeat_n(PADDING_CW, padding_count));
 
     // Full codeword sequence: [data+padding, ecc]
     let mut full_sequence = padded_data;
@@ -1062,7 +1060,7 @@ mod tests {
             &PNG_MAGIC,
             "First 8 bytes {:?} do not match PNG magic {:?}",
             &png[..8],
-            &PNG_MAGIC,
+            PNG_MAGIC,
         );
     }
 }

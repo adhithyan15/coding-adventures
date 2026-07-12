@@ -779,6 +779,9 @@ mod tests {
         assert_eq!(cfg, cloned);
     }
 
+    // `3.14` below is deliberate test data (a representative fractional define
+    // value), not an approximation of std::f64::consts::PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn define_value_variants_round_trip() {
         // Each variant covers a JS literal form Closure accepts on

@@ -1958,7 +1958,7 @@ mod tests {
 
     #[test]
     fn defined_method_call_operand_emits_method_py() {
-        use semantic_ir::Scope;
+        
         // Q10h: `defined?(recv.meth)` — the operand is the `__method__` dispatch
         // envelope — reports the constant "method" (Ruby's category when the
         // method resolves), not the generic "expression".  The receiver `r` and

@@ -1,5 +1,5 @@
 use hdl_ir::{
-    validate, ContAssign, Direction, Expr, Hir, Level, Module, Net, NetKind, Port, Provenance,
+    validate, ContAssign, Direction, Expr, Hir, Module, Net, NetKind, Port, Provenance,
     SourceLang, Ty,
 };
 

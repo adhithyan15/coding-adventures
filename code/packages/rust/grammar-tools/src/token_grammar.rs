@@ -416,11 +416,10 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
 
     // Parse pattern and optional alias from the remainder after '='.
     // The remainder looks like: /regex/ -> ALIAS  or  "literal" -> ALIAS
-    let (pattern_str, alias) = if after_eq.starts_with('/') {
+    let (pattern_str, alias) = if let Some(rest) = after_eq.strip_prefix('/') {
         // Regex pattern — find the closing slash by scanning character-by-character.
         // We track bracket depth so that / inside [...] character classes is
         // not mistaken for the closing delimiter. We also skip escaped chars.
-        let rest = &after_eq[1..];
         let close_idx = {
             let mut i = 0;
             let bytes = rest.as_bytes();
@@ -475,9 +474,8 @@ fn parse_definition(line: &str, line_number: usize) -> Result<TokenDefinition, T
                 });
             }
         }
-    } else if after_eq.starts_with('"') {
+    } else if let Some(rest) = after_eq.strip_prefix('"') {
         // Literal pattern — find the closing quote.
-        let rest = &after_eq[1..];
         match rest.find('"') {
             Some(close_idx) => {
                 let literal_body = &rest[..close_idx];
@@ -523,8 +521,8 @@ fn parse_alias(after_pattern: &str, line_number: usize) -> Result<Option<String>
     if after_pattern.is_empty() {
         return Ok(None);
     }
-    if after_pattern.starts_with("->") {
-        let alias_name = after_pattern[2..].trim();
+    if let Some(alias_name) = after_pattern.strip_prefix("->") {
+        let alias_name = alias_name.trim();
         if alias_name.is_empty() {
             return Err(TokenGrammarError {
                 message: "Missing alias name after '->'".to_string(),
@@ -611,13 +609,13 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         //   2. If the next character is `@`, we have a magic comment.
         //   3. Scan forward to collect the key (non-whitespace chars).
         //   4. Skip whitespace, take the rest as the value.
-        if stripped.starts_with('#') {
+        if let Some(after_hash) = stripped.strip_prefix('#') {
             // Step 1: get everything after '#'
-            let after_hash = stripped[1..].trim_start();
+            let after_hash = after_hash.trim_start();
             // Step 2: check for '@'
-            if after_hash.starts_with('@') {
+            if let Some(rest) = after_hash.strip_prefix('@') {
                 // Step 3: key is the run of non-whitespace chars after '@'
-                let rest = &after_hash[1..]; // skip '@'
+                // skip '@'
                 let key_end = rest.find(|c: char| c.is_whitespace()).unwrap_or(rest.len());
                 let key = &rest[..key_end];
                 // Step 4: value is the trimmed remainder
@@ -1045,12 +1043,11 @@ fn split_in_guard(head: &str) -> Option<(&str, &str)> {
         match bytes[i] {
             b'(' => depth += 1,
             b')' => depth -= 1,
-            b' ' if depth == 0 => {
+            b' ' if depth == 0
                 // Check for the literal token ` in ` at a top-level boundary.
-                if head[i..].starts_with(" in ") {
+                && head[i..].starts_with(" in ") => {
                     return Some((&head[..i], &head[i + 4..]));
                 }
-            }
             _ => {}
         }
         i += 1;

@@ -318,8 +318,8 @@ fn series_cos(order: usize) -> Series {
 fn series_log_one_plus(order: usize) -> Series {
     let mut coeffs = vec![Frac::zero(); order + 1];
     let mut sign: i128 = 1;
-    for k in 1..=order {
-        coeffs[k] = Frac::new(sign, k as i128);
+    for (k, coeff) in coeffs.iter_mut().enumerate().skip(1) {
+        *coeff = Frac::new(sign, k as i128);
         sign = -sign;
     }
     Series::new(coeffs, order)

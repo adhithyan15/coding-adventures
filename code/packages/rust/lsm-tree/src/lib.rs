@@ -104,8 +104,8 @@ impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + T
         let mut seq = 0;
 
         // Crash Recovery
-        if wal_path.exists() {
-            if let Ok(mut reader) = write_ahead_log::WalReader::new(&wal_path) {
+        if wal_path.exists()
+            && let Ok(mut reader) = write_ahead_log::WalReader::new(&wal_path) {
                 while let Ok(Some(bytes)) = reader.read_next() {
                     if let Some((key_bytes, entry)) = deserialize_entry(&bytes) {
                         let key_res = K::try_from(key_bytes);
@@ -128,7 +128,6 @@ impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + T
                     }
                 }
             }
-        }
 
         let wal_writer = write_ahead_log::WalWriter::new(&wal_path)?;
 
@@ -185,26 +184,23 @@ impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + T
 
         // 1. Check memtable
         // Iterate through entries to find the one with the highest sequence number <= target_seq
-        if let Some(entry) = self.memtable.search(key) {
-            if entry.seq <= target_seq {
+        if let Some(entry) = self.memtable.search(key)
+            && entry.seq <= target_seq {
                 if entry.record_type == RecordType::Tombstone {
                     return None;
                 }
                 return entry.value;
             }
-        }
 
         // 2. Check immutable memtable
-        if let Some(immutable) = &self.immutable_memtable {
-            if let Some(entry) = immutable.search(key) {
-                if entry.seq <= target_seq {
+        if let Some(immutable) = &self.immutable_memtable
+            && let Some(entry) = immutable.search(key)
+                && entry.seq <= target_seq {
                     if entry.record_type == RecordType::Tombstone {
                         return None;
                     }
                     return entry.value;
                 }
-            }
-        }
 
         // 3. Check L0 SSTables (newest first)
         // TODO: Implement SSTable bloom filter check and disk read

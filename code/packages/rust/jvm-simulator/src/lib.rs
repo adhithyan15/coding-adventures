@@ -165,7 +165,7 @@ impl JVMSimulator {
 
     fn execute_opcode(&mut self, opcode: u8, stack_before: Vec<i32>, pc: usize) -> JVMTrace {
         // iconst_N: push small integer constants 0-5.
-        if opcode >= OP_ICONST_0 && opcode <= OP_ICONST_5 {
+        if (OP_ICONST_0..=OP_ICONST_5).contains(&opcode) {
             let val = (opcode - OP_ICONST_0) as i32;
             self.stack.push(val);
             self.pc += 1;
@@ -180,13 +180,13 @@ impl JVMSimulator {
         }
 
         // iload_N: load from local variable slots 0-3 (compact form).
-        if opcode >= OP_ILOAD_0 && opcode <= OP_ILOAD_3 {
+        if (OP_ILOAD_0..=OP_ILOAD_3).contains(&opcode) {
             let slot = (opcode - OP_ILOAD_0) as usize;
             return self.do_iload(pc, slot, &format!("iload_{}", slot), stack_before, 1);
         }
 
         // istore_N: store to local variable slots 0-3 (compact form).
-        if opcode >= OP_ISTORE_0 && opcode <= OP_ISTORE_3 {
+        if (OP_ISTORE_0..=OP_ISTORE_3).contains(&opcode) {
             let slot = (opcode - OP_ISTORE_0) as usize;
             return self.do_istore(pc, slot, &format!("istore_{}", slot), stack_before, 1);
         }
@@ -426,10 +426,10 @@ impl Default for JVMSimulator {
 
 /// Encode a small integer constant. Uses iconst_N for 0-5, bipush for -128..127.
 pub fn encode_iconst(n: i32) -> Vec<u8> {
-    if n >= 0 && n <= 5 {
+    if (0..=5).contains(&n) {
         return vec![(OP_ICONST_0 as i32 + n) as u8];
     }
-    if n >= -128 && n <= 127 {
+    if (-128..=127).contains(&n) {
         return vec![OP_BIPUSH, n as u8];
     }
     panic!("Out of range for encode_iconst");
@@ -534,7 +534,7 @@ mod tests {
         sim.run(10);
         assert_eq!(sim.return_value, Some(4));
 
-        let traces = sim.run(10);
+        let _traces = sim.run(10);
         // Re-run to check traces contain if_icmpeq
         sim.load(&prog, &[], 16);
         let traces = sim.run(10);

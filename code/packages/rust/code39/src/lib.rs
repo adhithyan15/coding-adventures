@@ -3,6 +3,9 @@
 //! Dependency-free Code 39 encoder that emits shared barcode runs and paint
 //! scenes.
 
+// Platform-conditional: the Apple/GPU backend code is inactive on non-Apple targets; allow the resulting dead_code/unused lints only where it does not build in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 pub const VERSION: &str = "0.1.0";
 
 use barcode_layout_1d::{

@@ -258,7 +258,7 @@ impl ComputeUnit for AMDComputeUnit {
 
     fn dispatch(&mut self, work: WorkItem) -> Result<(), ResourceError> {
         let num_waves =
-            (work.thread_count + self.config.wave_width - 1) / self.config.wave_width;
+            work.thread_count.div_ceil(self.config.wave_width);
 
         let current_active = self
             .wavefront_slots

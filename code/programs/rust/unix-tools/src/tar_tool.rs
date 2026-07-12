@@ -458,7 +458,7 @@ pub fn list_archive(
 
         // --- Skip data blocks ---
         if header.size > 0 {
-            let data_blocks = ((header.size as usize) + BLOCK_SIZE - 1) / BLOCK_SIZE;
+            let data_blocks = (header.size as usize).div_ceil(BLOCK_SIZE);
             offset += data_blocks * BLOCK_SIZE;
         }
     }
@@ -589,12 +589,12 @@ pub fn extract_archive(
                 }
 
                 // Skip to next block boundary
-                let data_blocks = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
+                let data_blocks = size.div_ceil(BLOCK_SIZE);
                 offset += data_blocks * BLOCK_SIZE;
             }
             _ => {
                 // Skip unknown types
-                let data_blocks = ((header.size as usize) + BLOCK_SIZE - 1) / BLOCK_SIZE;
+                let data_blocks = (header.size as usize).div_ceil(BLOCK_SIZE);
                 offset += data_blocks * BLOCK_SIZE;
             }
         }

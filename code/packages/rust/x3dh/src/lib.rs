@@ -206,7 +206,7 @@ pub fn generate_identity_keypair() -> IdentityKeyPair {
     x25519_secret[31] |= 64;  // set bit 6: keep scalar >= 2^254
 
     let x25519_public = x25519_public_key(&x25519_secret);
-    let (ed25519_public, ed25519_secret) = ed25519_generate_keypair(&*seed_e);
+    let (ed25519_public, ed25519_secret) = ed25519_generate_keypair(&seed_e);
 
     IdentityKeyPair { x25519_public, ed25519_public, x25519_secret, ed25519_secret }
 }
@@ -282,12 +282,12 @@ pub fn x3dh_send(
     ek_secret[0]  &= 248;
     ek_secret[31] &= 127;
     ek_secret[31] |= 64;
-    let ek_pub = x25519_public_key(&*ek_secret);
+    let ek_pub = x25519_public_key(&ek_secret);
 
     // Four DH operations — all outputs wiped on return.
     let dh1 = Zeroizing::new(x25519(&sender_ik.x25519_secret, &bundle.signed_prekey));
-    let dh2 = Zeroizing::new(x25519(&*ek_secret, &bundle.identity_key));
-    let dh3 = Zeroizing::new(x25519(&*ek_secret, &bundle.signed_prekey));
+    let dh2 = Zeroizing::new(x25519(&ek_secret, &bundle.identity_key));
+    let dh3 = Zeroizing::new(x25519(&ek_secret, &bundle.signed_prekey));
 
     // KM = F ‖ DH1 ‖ DH2 ‖ DH3 [‖ DH4]
     // Salt = 0x00 × 32 per Signal X3DH spec §3.3 (salt is all-zeros, length = HashLen).
@@ -300,17 +300,17 @@ pub fn x3dh_send(
     ikm.extend_from_slice(&*dh3);
 
     if let Some(opk) = bundle.one_time_prekey {
-        let dh4 = Zeroizing::new(x25519(&*ek_secret, &opk));
+        let dh4 = Zeroizing::new(x25519(&ek_secret, &opk));
         ikm.extend_from_slice(&*dh4);
     }
 
     let okm = Zeroizing::new(
-        hkdf(&salt, &*ikm, b"WhisperText", 32, HashAlgorithm::Sha256)
+        hkdf(&salt, &ikm, b"WhisperText", 32, HashAlgorithm::Sha256)
             .map_err(|_| X3DHError::KdfError)?,
     );
 
     let mut shared_key = [0u8; 32];
-    shared_key.copy_from_slice(&*okm);
+    shared_key.copy_from_slice(&okm);
 
     Ok(X3DHOutput { shared_key, ephemeral_public: ek_pub })
 }
@@ -345,12 +345,12 @@ pub fn x3dh_receive(
     }
 
     let okm = Zeroizing::new(
-        hkdf(&salt, &*ikm, b"WhisperText", 32, HashAlgorithm::Sha256)
+        hkdf(&salt, &ikm, b"WhisperText", 32, HashAlgorithm::Sha256)
             .map_err(|_| X3DHError::KdfError)?,
     );
 
     let mut shared_key = [0u8; 32];
-    shared_key.copy_from_slice(&*okm);
+    shared_key.copy_from_slice(&okm);
     Ok(shared_key)
 }
 
@@ -372,7 +372,7 @@ mod tests {
     fn prekey_public_matches_secret() {
         let pk = generate_prekey_pair();
         let s = pk.secret();
-        let derived_pub = x25519_public_key(&*s);
+        let derived_pub = x25519_public_key(&s);
         assert_eq!(pk.public, derived_pub);
     }
 
@@ -519,7 +519,7 @@ mod tests {
     fn secret_accessor_returns_correct_value() {
         let pk = generate_prekey_pair();
         let s = pk.secret();
-        let pub_from_accessor = x25519_public_key(&*s);
+        let pub_from_accessor = x25519_public_key(&s);
         assert_eq!(pk.public, pub_from_accessor);
     }
 
@@ -527,7 +527,7 @@ mod tests {
     fn x25519_secret_accessor_roundtrips() {
         let ik = generate_identity_keypair();
         let secret = ik.x25519_secret();
-        let derived_pub = x25519_public_key(&*secret);
+        let derived_pub = x25519_public_key(&secret);
         assert_eq!(ik.x25519_public, derived_pub);
     }
 }

@@ -1,3 +1,6 @@
+// The float literal is intentional end-to-end test input, not an approximation
+// of a std constant to be replaced.
+#![allow(clippy::approx_constant)]
 //! End-to-end integration test: Twig source → SIR → JavaScript → `node`.
 //!
 //! The whole point of this backend is *self-contained* JavaScript that

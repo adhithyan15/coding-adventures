@@ -48,7 +48,7 @@
 use crate::errors::ResponseError;
 use crate::message::{parse_message, Message};
 use serde_json::Value;
-use std::io::{BufRead, Read};
+use std::io::BufRead;
 
 /// Reads Content-Length-framed JSON-RPC messages from a `BufRead` source.
 ///

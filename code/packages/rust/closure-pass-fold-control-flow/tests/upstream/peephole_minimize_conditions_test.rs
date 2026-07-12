@@ -32,7 +32,7 @@ use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
 use coding_adventures_closure_pass_pipeline::{Pass, PassContext};
 use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, BooleanLiteral, EmptyStatement, Expression, ExpressionStatement,
+    BooleanLiteral, EmptyStatement, Expression, ExpressionStatement,
     Identifier, IfStatement, NullLiteral, NumericLiteral, Program, ProgramItem, SourceType,
     Statement, StringLiteral, UnaryExpression, UnaryOperator,
 };

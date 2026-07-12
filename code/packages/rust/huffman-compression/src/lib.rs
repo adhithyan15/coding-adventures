@@ -543,6 +543,10 @@ mod tests {
     ///   [66,2]         B, len=2
     ///   [67,2]         C, len=2
     ///   [0xA8, 0x01]   bit stream
+    // The doc comment above is intentional literate ASCII-art (indented tree/bit
+    // diagrams) whose alignment is the point; leave it as-is rather than let the
+    // markdown list-continuation lint reflow it.
+    #[allow(clippy::doc_lazy_continuation)]
     #[test]
     fn test_rt_aaabbc() {
         assert_eq!(rt(b"AAABBC"), b"AAABBC");

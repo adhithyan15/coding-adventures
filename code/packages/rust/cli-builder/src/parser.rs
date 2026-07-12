@@ -133,7 +133,7 @@ impl Parser {
         // Build the token classifier from the active flag set.
         let flag_infos: Vec<FlagInfo> = active_flags
             .iter()
-            .map(|f| FlagInfo::from_flag_def(f))
+            .map(FlagInfo::from_flag_def)
             .collect();
         let classifier = TokenClassifier::new(flag_infos);
 
@@ -405,7 +405,9 @@ impl Parser {
                         break;
                     }
 
-                    MODE_SCANNING | _ => {
+                    // MODE_SCANNING is the expected mode here; any other mode
+                    // falls through to the same scanning behaviour.
+                    _ => {
                         match event {
                             TokenEvent::EndOfFlags => {
                                 let _ = mode_machine.switch_mode("end_of_flags");
@@ -428,11 +430,11 @@ impl Parser {
                                     } else if flag.flag_type == "count" {
                                         // Count flags increment a counter each time they appear.
                                         increment_count_flag(&mut parsed_flags, flag);
-                                    } else if flag.default_when_present.is_some() {
+                                    } else if let Some(dwp_ref) = flag.default_when_present.as_ref() {
                                         // Enum flag with default_when_present: the token classifier
                                         // treated it as boolean-like (no value token consumed).
                                         // We use default_when_present as the value.
-                                        let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                        let dwp = dwp_ref.clone();
                                         store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                     } else {
                                         pending_flag = Some(flag);
@@ -471,8 +473,8 @@ impl Parser {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
                                     } else if flag.flag_type == "count" {
                                         increment_count_flag(&mut parsed_flags, flag);
-                                    } else if flag.default_when_present.is_some() {
-                                        let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                    } else if let Some(dwp_ref) = flag.default_when_present.as_ref() {
+                                        let dwp = dwp_ref.clone();
                                         store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                     } else {
                                         pending_flag = Some(flag);
@@ -497,8 +499,8 @@ impl Parser {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
                                     } else if flag.flag_type == "count" {
                                         increment_count_flag(&mut parsed_flags, flag);
-                                    } else if flag.default_when_present.is_some() {
-                                        let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                    } else if let Some(dwp_ref) = flag.default_when_present.as_ref() {
+                                        let dwp = dwp_ref.clone();
                                         store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                     } else {
                                         pending_flag = Some(flag);
@@ -541,10 +543,10 @@ impl Parser {
                                         } else if flag.flag_type == "count" {
                                             // Count flag in a stack: increment counter.
                                             increment_count_flag(&mut parsed_flags, flag);
-                                        } else if flag.default_when_present.is_some() {
+                                        } else if let Some(dwp_ref) = flag.default_when_present.as_ref() {
                                             // Enum with default_when_present in a stack:
                                             // use default_when_present value.
-                                            let dwp = flag.default_when_present.as_ref().unwrap().clone();
+                                            let dwp = dwp_ref.clone();
                                             store_flag_value(&mut parsed_flags, flag, json!(dwp), &mut errors, command_path);
                                         } else if is_last {
                                             // Non-boolean last flag — value from next token.
@@ -725,7 +727,7 @@ impl Parser {
             if let Some(exp) = expected {
                 // Check if this token matches the expected command name or alias.
                 if let Some(cmd) = current_commands.iter().find(|c| c.name == *token || c.aliases.iter().any(|a| a == token)) {
-                    if cmd.name == *exp || cmd.aliases.iter().any(|a| *a == *exp) {
+                    if cmd.name == *exp || cmd.aliases.contains(exp) {
                         indices.insert(i);
                         current_commands = &cmd.commands;
                         expected = remaining_commands.next();

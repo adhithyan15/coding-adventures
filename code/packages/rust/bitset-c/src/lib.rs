@@ -25,6 +25,15 @@
 //! This avoids cross-FFI heap ownership while still giving managed callers a
 //! useful error message to surface as an exception.
 
+// Every exported `unsafe extern "C"` fn shares the same caller contract,
+// already spelled out in the module docs above: pointer arguments must be
+// either null (rejected with an error code) or a live handle previously
+// returned by a `bitset_c_*` constructor and not yet freed; string pointers
+// must point to a NUL-terminated C string. Repeating a per-fn `# Safety`
+// section on each of the ~20 thin wrappers would be noise, so the contract is
+// documented once at the module level.
+#![allow(clippy::missing_safety_doc)]
+
 use bitset::{Bitset, BitsetError};
 use std::cell::{Cell, RefCell};
 use std::ffi::{c_char, CStr, CString};
@@ -33,7 +42,7 @@ use std::ptr;
 
 thread_local! {
     static LAST_ERROR_CODE: Cell<u32> = const { Cell::new(0) };
-    static LAST_ERROR_MESSAGE: RefCell<Option<CString>> = RefCell::new(None);
+    static LAST_ERROR_MESSAGE: RefCell<Option<CString>> = const { RefCell::new(None) };
 }
 
 #[repr(u32)]

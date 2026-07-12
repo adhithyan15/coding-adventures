@@ -532,9 +532,12 @@ mod tests {
                 response_json: serde_json::json!({ "ok": true }),
             }
         }
+        // Test-double accessors retained for assertions; not every test reads them.
+        #[allow(dead_code)]
         fn calls(&self) -> usize {
             self.calls.load(Ordering::SeqCst)
         }
+        #[allow(dead_code)]
         fn json_calls(&self) -> usize {
             self.json_calls.load(Ordering::SeqCst)
         }

@@ -253,7 +253,7 @@ mod tests {
     #[test]
     fn shape_overflow_protection() {
         // Two huge dims that overflow u64 when multiplied.
-        let s = Shape::from(&[u32::MAX, u32::MAX]);
+        let _s = Shape::from(&[u32::MAX, u32::MAX]);
         // u32::MAX * u32::MAX = ~1.8e19, just under u64::MAX (~1.8e19).
         // The third dim would push it over.
         let s = Shape {

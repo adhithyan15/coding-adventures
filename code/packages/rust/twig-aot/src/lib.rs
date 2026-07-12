@@ -693,6 +693,10 @@ use x86_64_backend::{compile_function_with_globals as x86_64_compile_with_global
 /// the reloc, and equals the byte distance from the disp32 slot to the
 /// end of the instruction — `E8` opcode is 1 byte + 4-byte disp32, so
 /// the instruction ends 4 bytes after the disp32 slot start).
+// Return tuple bundles the emitted text bytes, the symbol→offset map, the text
+// size, and the relocation list — a cohesive "compiled module" result; a named
+// struct would add indirection without clarifying this internal helper.
+#[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
     abi: X86_64Abi,
@@ -2285,6 +2289,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
 ///
 /// This is the "untyped u64" path: all params and arithmetic are treated as
 /// `u64`.  For signed `i64` semantics use [`compile_typed_module_to_arm64_bytes`].
+#[allow(clippy::type_complexity)] // cohesive compiled-module tuple; see compile_module_x86_64_to_text
 fn compile_module_to_text(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
@@ -2362,6 +2367,7 @@ fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
 /// packager ([`pack_object_with_globals_and_externals`]) converts them into
 /// `N_UNDF | N_EXT` symbol-table entries and `ARM64_RELOC_BRANCH26` records
 /// so the system linker can patch them from the Twig AOT runtime archive.
+#[allow(clippy::type_complexity)] // cohesive compiled-module tuple; see compile_module_x86_64_to_text
 fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
@@ -2371,6 +2377,7 @@ fn compile_module_to_text_raw(
 
     // ── Pass 1: compile all functions, collecting cross-function + global relocs ─
     // Each entry: (fn_name, per-function bytes, ExternalRelocs, GlobalWordRelocs)
+    #[allow(clippy::type_complexity)]
     let mut fn_results: Vec<(String, Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)> =
         Vec::with_capacity(module.functions.len());
 
@@ -2475,7 +2482,7 @@ fn compile_module_to_text_raw(
             // jumps to an arbitrary address).
             const BL_MAX: i64 =  (1i64 << 25) - 1; //  33_554_431 words ≈ +128 MiB
             const BL_MIN: i64 = -(1i64 << 25);      // -33_554_432 words ≈ -128 MiB
-            if delta_words < BL_MIN || delta_words > BL_MAX {
+            if !(BL_MIN..=BL_MAX).contains(&delta_words) {
                 // The call target is >128 MiB away — this should never happen
                 // for programs that fit in a single flat binary, but if it does
                 // we surface it as a linker error rather than patching garbage.

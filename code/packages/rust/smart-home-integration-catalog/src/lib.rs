@@ -4247,7 +4247,7 @@ impl IntegrationMeshReadinessHandoffPackage {
     }
 
     fn release_ready(summary: &IntegrationMeshActionReadinessSummary) -> Option<Self> {
-        summary.release_ready.then(|| Self {
+        summary.release_ready.then_some(Self {
             sequence: 0,
             package_kind: IntegrationMeshReadinessHandoffKind::ReleaseReady,
             handoff_status: IntegrationMeshReadinessHandoffStatus::Ready,
@@ -35227,7 +35227,6 @@ impl IntegrationActivationBriefingSummary {
         let mut ready_items = 0;
         let mut review_status_items = 0;
         let mut blocked_status_items = 0;
-        let mut empty_items = 0;
         let mut summary = Self {
             total_items: 0,
             unique_integrations: 0,
@@ -35277,7 +35276,9 @@ impl IntegrationActivationBriefingSummary {
                 IntegrationActivationHealthStatus::Ready => ready_items += 1,
                 IntegrationActivationHealthStatus::NeedsReview => review_status_items += 1,
                 IntegrationActivationHealthStatus::Blocked => blocked_status_items += 1,
-                IntegrationActivationHealthStatus::Empty => empty_items += 1,
+                // `Empty` items need no separate tally: the overall status falls
+                // through to `Empty` whenever no other category is present.
+                IntegrationActivationHealthStatus::Empty => {}
             }
 
             match item.kind {
@@ -35348,9 +35349,9 @@ impl IntegrationActivationBriefingSummary {
             IntegrationActivationHealthStatus::NeedsReview
         } else if ready_items > 0 {
             IntegrationActivationHealthStatus::Ready
-        } else if empty_items > 0 {
-            IntegrationActivationHealthStatus::Empty
         } else {
+            // Both the `empty_items > 0` case and the fall-through default map to
+            // `Empty`, so they are collapsed into a single arm (behavior-identical).
             IntegrationActivationHealthStatus::Empty
         };
         summary
@@ -38712,6 +38713,9 @@ impl IntegrationActivationWatchtowerSummary {
 }
 
 impl IntegrationActivationSentinelAlert {
+    // Constructor gathers many independent rollup fields into the alert record;
+    // bundling them into a params struct would add churn without clarity.
+    #[allow(clippy::too_many_arguments)]
     fn from_rollups(
         sequence: usize,
         alert_kind: IntegrationActivationSentinelAlertKind,
@@ -38966,6 +38970,9 @@ impl IntegrationActivationSentinelSummary {
 }
 
 impl IntegrationActivationAuditRecord {
+    // Record constructor takes each audit field explicitly; a params struct would
+    // add churn without improving clarity.
+    #[allow(clippy::too_many_arguments)]
     fn new(
         record_kind: IntegrationActivationAuditRecordKind,
         record_id: String,
@@ -39329,6 +39336,9 @@ impl IntegrationActivationAuditSummary {
 }
 
 impl IntegrationActivationEscalationCase {
+    // Case constructor takes each escalation field explicitly; a params struct
+    // would add churn without improving clarity.
+    #[allow(clippy::too_many_arguments)]
     fn new(
         case_kind: IntegrationActivationEscalationCaseKind,
         source_id: String,
@@ -55935,6 +55945,9 @@ fn guardrail_verdict_rank(verdict: IntegrationActivationGuardrailVerdict) -> u8 
     }
 }
 
+// Helper forwards each alert field straight into `from_rollups`; a params struct
+// here would just duplicate that constructor's signature.
+#[allow(clippy::too_many_arguments)]
 fn push_activation_sentinel_alert(
     alerts: &mut Vec<IntegrationActivationSentinelAlert>,
     alert_kind: IntegrationActivationSentinelAlertKind,
@@ -58898,8 +58911,7 @@ mod tests {
 
     #[test]
     fn activation_sentinel_alerts_roll_up_activation_attention() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -58939,8 +58951,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+            }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
@@ -59018,8 +59029,7 @@ mod tests {
 
     #[test]
     fn activation_audit_records_join_sentinel_attention_to_evidence() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59059,8 +59069,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+            }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections =
@@ -59138,8 +59147,7 @@ mod tests {
 
     #[test]
     fn activation_runbook_entries_join_playbook_steps_to_audit_context() {
-        let reports = vec![
-            IntegrationReadinessReport {
+        let reports = [IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59179,8 +59187,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            },
-        ];
+            }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let steps = activation_playbook_steps_from_candidates(&[], candidates.clone(), &[]);
         let risks = activation_risk_from_candidates(&[], candidates.iter());
@@ -73423,10 +73430,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -73498,9 +73503,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -73636,10 +73639,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -73727,9 +73728,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -73889,10 +73888,8 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::CompleteEvidenceReview,
             false,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &repair_row, false),
+            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(2, &review_row, false)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 2,
@@ -74014,9 +74011,7 @@ mod tests {
             IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotClearanceActionEvidenceReviewClearanceActionReadinessEvidenceReviewDispositionActionKind::ReleaseHandoff,
             true,
         );
-        let slots = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true),
-        ];
+        let slots = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlot::from_readiness_row(1, &row, true)];
         let slot_summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionEvidenceReviewDispositionActionReadinessExecutionSlotSummary::from_slots(
                 1,
@@ -76611,13 +76606,11 @@ mod tests {
         );
         let evidence_rows = vec![evidence_row];
         let evidence_summary = protocol_action_evidence_summary_for_review_test(&evidence_rows);
-        let review_rows = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
+        let review_rows = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
                 1,
                 &evidence_rows[0],
                 false,
-            ),
-        ];
+            )];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewSummary::from_summaries(
                 evidence_summary,
@@ -76740,13 +76733,11 @@ mod tests {
         );
         let evidence_rows = vec![evidence_row];
         let evidence_summary = protocol_action_evidence_summary_for_review_test(&evidence_rows);
-        let review_rows = vec![
-            IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
+        let review_rows = [IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewRow::from_action_evidence_row(
                 1,
                 &evidence_rows[0],
                 true,
-            ),
-        ];
+            )];
         let summary =
             IntegrationMeshReleaseTicketHandoffReadinessEvidenceReviewDispositionActionReadinessExecutionHandoffActionProtocolEvidencePackageHandoffExecutionActionEvidenceReviewSummary::from_summaries(
                 evidence_summary,

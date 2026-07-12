@@ -220,6 +220,9 @@ fn sqrt_nine() {
     assert!(approx_equal(sqrt(9.0), 3.0));
 }
 
+// The literal 1.41421356237 is the expected reference value for sqrt(2) in this
+// test; it is intentional test data, not an approximation of SQRT_2 to replace.
+#[allow(clippy::approx_constant)]
 #[test]
 fn sqrt_two() {
     // sqrt(2) ≈ 1.41421356237

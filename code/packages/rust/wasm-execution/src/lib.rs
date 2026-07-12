@@ -608,6 +608,9 @@ pub struct Table {
     /// Elements: `Some(func_index)` or `None` (uninitialized).
     elements: Vec<Option<u32>>,
     /// Maximum table size.
+    // Captured from the module's table limits for spec completeness; table growth
+    // is not yet enforced against it, so the field is currently write-only.
+    #[allow(dead_code)]
     max_size: Option<u32>,
 }
 
@@ -1125,7 +1128,7 @@ pub fn build_control_flow_map(
 
     for (i, instr) in instructions.iter().enumerate() {
         match instr.opcode {
-            0x02 | 0x03 | 0x04 => {
+            0x02..=0x04 => {
                 // block, loop, if
                 stack.push((i, instr.opcode, None));
             }
@@ -1363,7 +1366,7 @@ fn get_table<'a>(ctx: &mut WasmExecutionContext, idx: usize) -> Result<&'a mut T
 fn block_arity(block_type: i64, func_types: &[FuncType]) -> usize {
     match block_type {
         0x40 => 0,                      // empty
-        0x7F | 0x7E | 0x7D | 0x7C => 1, // single value type
+        0x7C..=0x7F => 1, // single value type
         n if n >= 0 && (n as usize) < func_types.len() => func_types[n as usize].results.len(),
         _ => 0,
     }
@@ -2072,7 +2075,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 2147483648.0 || a < -2147483648.0 {
+        if !(-2147483648.0..2147483648.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as i32));
@@ -2088,7 +2091,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 4294967296.0 || a < 0.0 {
+        if !(0.0..4294967296.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
@@ -2104,7 +2107,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 2147483648.0 || a < -2147483649.0 {
+        if !(-2147483649.0..2147483648.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as i32));
@@ -2120,7 +2123,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if a >= 4294967296.0 || a < 0.0 {
+        if !(0.0..4294967296.0).contains(&a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
@@ -3037,6 +3040,11 @@ pub struct WasmEngineState {
 pub struct WasmExecutionEngine {
     vm: GenericVM,
     memory: Option<Box<LinearMemory>>,
+    // Boxing is intentional, NOT redundant: `call_indirect` stores `*mut Table`
+    // raw pointers into the execution context (see `table_ptrs` below). Boxing
+    // gives each `Table` a stable heap address so those pointers stay valid even
+    // if this Vec reallocates; a plain `Vec<Table>` would invalidate them.
+    #[allow(clippy::vec_box)]
     tables: Vec<Box<Table>>,
     globals: Vec<WasmValue>,
     global_types: Vec<GlobalType>,
@@ -3220,6 +3228,9 @@ impl WasmExecutionEngine {
 
 #[cfg(test)]
 mod tests {
+    // Tests use 3.14 / 2.718 as arbitrary float sample values (checking f32/f64
+    // store/load/const/convert behaviour), not as approximations of PI or E.
+    #![allow(clippy::approx_constant)]
     use super::*;
     use wasm_types::{FuncType, FunctionBody, ValueType};
 

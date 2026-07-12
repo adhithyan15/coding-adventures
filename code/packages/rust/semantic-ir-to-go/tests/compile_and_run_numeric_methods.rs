@@ -1,3 +1,6 @@
+// The float literals are intentional numeric-method test inputs/expected values,
+// not approximations of std constants to be replaced.
+#![allow(clippy::approx_constant)]
 //! Execution proof for the Ruby `Integer`/`Float` (Numeric) method catalog on
 //! the Go backend — parity-fill with the Python/TS `sir-runtime-oop` runtimes.
 //!

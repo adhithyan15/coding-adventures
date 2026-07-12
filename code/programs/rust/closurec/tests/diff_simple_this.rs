@@ -16,6 +16,11 @@
 //! *whole file* — would instead re-emit the source verbatim, leaving `1 + 2`
 //! unfolded (`this.f(1 + 2)`).
 
+// Literate-programming test docs: intentional prose paragraphs following lists.
+// clippy 1.97's doc-list-continuation lints flag them as mis-indented list
+// items; the formatting is deliberate, so allow crate-wide for this test.
+#![allow(clippy::doc_lazy_continuation, clippy::doc_overindented_list_items)]
+
 use std::process::Command;
 
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");

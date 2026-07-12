@@ -100,6 +100,7 @@ pub fn calibrate() -> BackendProfile {
 /// non-zero, and reusing the cached profile keeps the planner's cost
 /// model stable across the program's lifetime.
 #[cfg(test)]
+#[allow(dead_code)] // test-support helper; not referenced by every test build
 fn reset_for_test() {
     // OnceLock doesn't expose reset; use the `take` trick via a
     // pointer cast.  Sound because the static is `'static` and we

@@ -125,6 +125,9 @@ pub fn get_system_info() -> Result<UnameInfo, String> {
 /// - `show_processor`: show processor type (-p)
 /// - `show_hardware`: show hardware platform (-i)
 /// - `show_os`: show operating system (-o)
+// One bool per uname flag (-s/-n/-r/-v/-m/-p/-i/-o plus -a) mirrors the CLI
+// surface one-to-one; bundling them into a struct would only add indirection.
+#[allow(clippy::too_many_arguments)]
 pub fn format_uname(
     info: &UnameInfo,
     show_all: bool,

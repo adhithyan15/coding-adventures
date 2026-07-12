@@ -1,48 +1,48 @@
-/// Message Queue -- structured, typed message passing between processes.
-///
-/// While pipes transmit raw bytes (the reader must know how to parse them),
-/// message queues transmit discrete, typed **messages**. Each message carries:
-///
-/// ```text
-///   +----------+-----------------------------+
-///   | msg_type | body (up to 4096 bytes)     |
-///   +----------+-----------------------------+
-/// ```
-///
-/// The type tag allows selective receiving: "give me only messages of type 3"
-/// while leaving other message types in the queue for someone else.
-///
-/// ## Analogy
-///
-/// Think of a shared mailbox in an apartment building's lobby. Anyone can drop
-/// off an envelope (send), and anyone can pick one up (receive). Each envelope
-/// has a label ("type") -- you might only care about envelopes labeled "rent"
-/// and ignore the ones labeled "newsletter."
-///
-/// ## FIFO Ordering
-///
-/// Messages follow FIFO (First-In, First-Out) order. When receiving with a
-/// type filter, the queue returns the OLDEST message matching that type:
-///
-/// ```text
-///   Queue contents (front -> back):
-///     [type=1, "apple"] -> [type=2, "banana"] -> [type=1, "cherry"]
-///
-///   receive(0)   -> [type=1, "apple"]   (any type, oldest overall)
-///   receive(2)   -> [type=2, "banana"]  (oldest type-2 message)
-///   receive(1)   -> [type=1, "apple"]   (oldest type-1, skips type-2)
-/// ```
-///
-/// ## Capacity Limits
-///
-/// ```text
-///   +-------------------+-------+------------------------------------------+
-///   | Limit             | Value | What happens when exceeded               |
-///   +-------------------+-------+------------------------------------------+
-///   | max_messages      |  256  | send() returns Err(QueueFull)            |
-///   | max_message_size  | 4096  | send() returns Err(MessageTooLarge)      |
-///   +-------------------+-------+------------------------------------------+
-/// ```
+//! Message Queue -- structured, typed message passing between processes.
+//!
+//! While pipes transmit raw bytes (the reader must know how to parse them),
+//! message queues transmit discrete, typed **messages**. Each message carries:
+//!
+//! ```text
+//!   +----------+-----------------------------+
+//!   | msg_type | body (up to 4096 bytes)     |
+//!   +----------+-----------------------------+
+//! ```
+//!
+//! The type tag allows selective receiving: "give me only messages of type 3"
+//! while leaving other message types in the queue for someone else.
+//!
+//! ## Analogy
+//!
+//! Think of a shared mailbox in an apartment building's lobby. Anyone can drop
+//! off an envelope (send), and anyone can pick one up (receive). Each envelope
+//! has a label ("type") -- you might only care about envelopes labeled "rent"
+//! and ignore the ones labeled "newsletter."
+//!
+//! ## FIFO Ordering
+//!
+//! Messages follow FIFO (First-In, First-Out) order. When receiving with a
+//! type filter, the queue returns the OLDEST message matching that type:
+//!
+//! ```text
+//!   Queue contents (front -> back):
+//!     [type=1, "apple"] -> [type=2, "banana"] -> [type=1, "cherry"]
+//!
+//!   receive(0)   -> [type=1, "apple"]   (any type, oldest overall)
+//!   receive(2)   -> [type=2, "banana"]  (oldest type-2 message)
+//!   receive(1)   -> [type=1, "apple"]   (oldest type-1, skips type-2)
+//! ```
+//!
+//! ## Capacity Limits
+//!
+//! ```text
+//!   +-------------------+-------+------------------------------------------+
+//!   | Limit             | Value | What happens when exceeded               |
+//!   +-------------------+-------+------------------------------------------+
+//!   | max_messages      |  256  | send() returns Err(QueueFull)            |
+//!   | max_message_size  | 4096  | send() returns Err(MessageTooLarge)      |
+//!   +-------------------+-------+------------------------------------------+
+//! ```
 
 use std::collections::VecDeque;
 use crate::IpcError;

@@ -166,7 +166,7 @@ fn blake2b_long(t: usize, x: &[u8]) -> Result<Vec<u8>, Argon2Error> {
             .map_err(|e| Argon2Error::Blake2b(format!("{:?}", e)));
     }
 
-    let r = (t + 31) / 32 - 2;
+    let r = t.div_ceil(32) - 2;
     let mut v = blake2b(&input, &Blake2bOptions::new().digest_size(64))
         .map_err(|e| Argon2Error::Blake2b(format!("{:?}", e)))?;
     let mut out = Vec::with_capacity(t);
@@ -259,6 +259,9 @@ impl AddressStream {
     }
 }
 
+// The parameter list mirrors RFC 9106's FillSegment(r, lane, sl, ...) inputs;
+// keeping them positional matches the spec for auditability.
+#[allow(clippy::too_many_arguments)]
 fn fill_segment(
     memory: &mut [Vec<Vec<u64>>],
     r: usize,
@@ -309,6 +312,9 @@ fn fill_segment(
     }
 }
 
+// Parameters are the full Argon2 input set (RFC 9106 §3.1); validating them
+// together keeps one place that mirrors the spec's argument list.
+#[allow(clippy::too_many_arguments)]
 fn validate(
     password: &[u8],
     salt: &[u8],
@@ -338,7 +344,7 @@ fn validate(
     if tag_length < 4 {
         return Err(Argon2Error::TagLengthTooSmall(tag_length as usize));
     }
-    if parallelism < 1 || parallelism > 0xFF_FFFF {
+    if !(1..=0xFF_FFFF).contains(&parallelism) {
         return Err(Argon2Error::InvalidParallelism(parallelism));
     }
     if memory_cost < 8 * parallelism {
@@ -353,6 +359,9 @@ fn validate(
     Ok(())
 }
 
+// The lane/block fill loops below are indexed by `i`/`lane` to mirror RFC 9106's
+// block-addressing pseudocode; index loops keep the code auditable against the spec.
+#[allow(clippy::needless_range_loop)]
 pub fn argon2i(
     password: &[u8],
     salt: &[u8],

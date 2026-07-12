@@ -116,6 +116,10 @@ mod tests {
         assert_close(0.41997434161402614, tanh_derivative(1.0));
     }
 
+    // The literals here are hand-computed reference values for softplus (e.g.
+    // softplus(0) = ln 2); they are test expectations, not an approximation of
+    // std::f64::consts::LN_2 to be replaced.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn softplus_matches_reference_values() {
         assert_close(0.6931471805599453, softplus(0.0));

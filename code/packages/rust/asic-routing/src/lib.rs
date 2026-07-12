@@ -176,7 +176,7 @@ pub fn route(
 // Helpers
 // ---------------------------------------------------------------------------
 
-fn mark_components_blocked(def: &Def, pitch: f64, blocked: &mut Vec<Vec<bool>>) {
+fn mark_components_blocked(def: &Def, pitch: f64, blocked: &mut [Vec<bool>]) {
     let width = blocked.len();
     let height = if width > 0 { blocked[0].len() } else { 0 };
     for c in &def.components {
@@ -191,7 +191,7 @@ fn mark_components_blocked(def: &Def, pitch: f64, blocked: &mut Vec<Vec<bool>>) 
 }
 
 fn lee_maze_route(
-    blocked: &Vec<Vec<bool>>,
+    blocked: &[Vec<bool>],
     source: &PinAccess,
     sink: &PinAccess,
     max_iters: usize,

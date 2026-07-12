@@ -196,7 +196,7 @@ pub fn format_si_size(bytes: u64) -> String {
 ///     bytes_to_1k_blocks(500)   → 1 (rounds up)
 /// ```
 pub fn bytes_to_1k_blocks(bytes: u64) -> u64 {
-    (bytes + 1023) / 1024
+    bytes.div_ceil(1024)
 }
 
 // ---------------------------------------------------------------------------

@@ -16,6 +16,9 @@
 //!   -> paint-codec-png
 //! ```
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(clippy::let_unit_value))]
+
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
@@ -180,6 +183,7 @@ impl Default for Barcode1DRenderConfig {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+#[derive(Default)]
 pub struct PaintBarcode1DOptions {
     pub render_config: Barcode1DRenderConfig,
     pub human_readable_text: Option<String>,
@@ -188,17 +192,6 @@ pub struct PaintBarcode1DOptions {
     pub symbols: Option<Vec<Barcode1DSymbolDescriptor>>,
 }
 
-impl Default for PaintBarcode1DOptions {
-    fn default() -> Self {
-        Self {
-            render_config: Barcode1DRenderConfig::default(),
-            human_readable_text: None,
-            metadata: HashMap::new(),
-            label: None,
-            symbols: None,
-        }
-    }
-}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunsFromBinaryPatternOptions {
@@ -801,8 +794,10 @@ mod tests {
         )
         .unwrap();
 
-        let mut options = PaintBarcode1DOptions::default();
-        options.label = Some("Demo barcode".to_string());
+        let options = PaintBarcode1DOptions {
+            label: Some("Demo barcode".to_string()),
+            ..PaintBarcode1DOptions::default()
+        };
         let scene = layout_barcode_1d(&runs, &options).unwrap();
 
         assert_eq!(scene.background, "#ffffff");

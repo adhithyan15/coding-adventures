@@ -12,6 +12,12 @@
 //! Both produce tree structures that downstream tools (compilers, interpreters,
 //! formatters) can walk to analyze or transform source code.
 
+// The parser's `ParseError`/grammar error types carry rich diagnostic context
+// (spans, expected-token sets) by value. Boxing them to satisfy `result_large_err`
+// would churn every `Result<_, _>` return across the recursive-descent API for no
+// behavioral gain, so the lint is allowed crate-wide.
+#![allow(clippy::result_large_err)]
+
 pub mod ast;
 pub mod parser;
 pub mod grammar_parser;

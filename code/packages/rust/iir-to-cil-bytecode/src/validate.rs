@@ -50,6 +50,11 @@
 //! Previously unsupported but now accepted: `alloc` (LispyPair only),
 //! `field_load`, `field_store`, `is_null`.
 
+// The float literals in this module (e.g. 3.14...) are hand-written test/demo
+// values, not attempts to approximate `std::f64::consts::PI`. This is a `mod`
+// file, so the inner attribute applies to this module only.
+#![allow(clippy::approx_constant)]
+
 use std::collections::HashMap;
 
 use interpreter_ir::{IIRModule, Operand};
@@ -827,7 +832,8 @@ mod tests {
 
     #[test]
     fn byte_string_algebra_still_rejected() {
-        for op in ["str_index"] {
+        {
+            let op = "str_index";
             let errs = validate_iir_for_clr(&single_fn_module(vec![
                 IIRInstr::new(
                     op,

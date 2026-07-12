@@ -154,13 +154,12 @@ pub fn list_directory(path: &str, opts: &LsOptions) -> Result<Vec<FileEntry>, St
         // --- Filter hidden files ---
         // Files starting with '.' are "hidden" on Unix.
         // -a shows everything, -A shows everything except . and ..
-        if name.starts_with('.') {
-            if !opts.show_all && !opts.almost_all {
+        if name.starts_with('.')
+            && !opts.show_all && !opts.almost_all {
                 continue; // Skip hidden files
             }
             // With -A, we still skip . and .. (but those don't appear
             // in read_dir results anyway, so this is mostly documentation)
-        }
 
         let entry = file_entry_from_dir_entry(&dir_entry, &name)?;
         entries.push(entry);
@@ -242,10 +241,10 @@ fn modified_secs(metadata: &fs::Metadata) -> Option<u64> {
 fn sort_entries(entries: &mut [FileEntry], opts: &LsOptions) {
     if opts.sort_by_size {
         // Sort by size, largest first (descending)
-        entries.sort_by(|a, b| b.size.cmp(&a.size));
+        entries.sort_by_key(|b| std::cmp::Reverse(b.size));
     } else if opts.sort_by_time {
         // Sort by modification time, newest first (descending)
-        entries.sort_by(|a, b| b.modified.cmp(&a.modified));
+        entries.sort_by_key(|b| std::cmp::Reverse(b.modified));
     } else if opts.sort_by_ext {
         // Sort by extension, then by name within same extension
         entries.sort_by(|a, b| {

@@ -630,16 +630,13 @@ impl LispVm {
                 let value = self.pop()?;
                 let result = match &value {
                     Value::Nil => 1,
-                    Value::ConsAddr(addr) => {
-                        if self.is_valid_address(*addr) {
+                    Value::ConsAddr(addr)
+                        if self.is_valid_address(*addr) => {
                             match self.deref(*addr)? {
                                 HeapObject::Cons(_) => 0, // Cons cell is NOT an atom
                                 _ => 1, // Symbol on heap is an atom
                             }
-                        } else {
-                            1
                         }
-                    }
                     _ => 1, // Numbers, strings, booleans are atoms
                 };
                 self.push(Value::Integer(result));

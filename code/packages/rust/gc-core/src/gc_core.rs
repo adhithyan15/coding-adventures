@@ -262,7 +262,7 @@ impl GcCore {
     /// Called internally after every `policy_check_interval` GC cycles.
     fn maybe_check_policy(&mut self) {
         let cycles = self.adapter.profile().total_collections;
-        if cycles % self.policy_check_interval != 0 {
+        if !cycles.is_multiple_of(self.policy_check_interval) {
             return;
         }
         let decision = self.policy.evaluate(self.adapter.profile());

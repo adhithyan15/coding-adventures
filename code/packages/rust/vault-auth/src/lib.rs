@@ -632,7 +632,7 @@ mod tests {
             Err(AuthError::InvalidCredential) => {}
             other => panic!(
                 "expected InvalidCredential, got {}",
-                if matches!(other, Ok(_)) {
+                if other.is_ok() {
                     "Ok"
                 } else {
                     "different Err"
@@ -648,7 +648,7 @@ mod tests {
             Err(AuthError::MalformedCredential) => {}
             other => panic!(
                 "expected MalformedCredential, got {}",
-                if matches!(other, Ok(_)) {
+                if other.is_ok() {
                     "Ok"
                 } else {
                     "different Err"
@@ -663,7 +663,7 @@ mod tests {
             Err(AuthError::InvalidParameter { .. }) => {}
             other => panic!(
                 "expected InvalidParameter, got {}",
-                if matches!(other, Ok(_)) {
+                if other.is_ok() {
                     "Ok"
                 } else {
                     "different Err"
@@ -735,7 +735,7 @@ mod tests {
             Err(AuthError::InvalidCredential) => {}
             other => panic!(
                 "expected InvalidCredential outside window, got {}",
-                if matches!(other, Ok(_)) {
+                if other.is_ok() {
                     "Ok"
                 } else {
                     "different Err"

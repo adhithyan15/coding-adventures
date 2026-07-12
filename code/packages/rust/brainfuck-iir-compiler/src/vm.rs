@@ -1,3 +1,6 @@
+// The complex tuple types are internal VM callback/handler signatures; a type
+// alias would not make them clearer.
+#![allow(clippy::type_complexity)]
 //! [`BrainfuckVM`] — a thin [`vm_core`] wrapper configured for Brainfuck.
 //!
 //! ## What this wrapper actually does
@@ -406,7 +409,7 @@ impl BrainfuckVM {
                       instr: &interpreter_ir::instr::IIRInstr|
                       -> Result<Option<Value>, VMError> {
                     // Operand bounds checks before indexing.
-                    let addr_src = instr.srcs.get(0).ok_or_else(|| {
+                    let addr_src = instr.srcs.first().ok_or_else(|| {
                         VMError::Custom("store_mem: missing address operand".into())
                     })?;
                     let val_src = instr.srcs.get(1).ok_or_else(|| {

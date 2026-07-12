@@ -47,6 +47,9 @@ fn module_one(
 }
 
 /// Build a multi-function module.
+// The tuple shape is a compact test-fixture descriptor (name, params, ret, body);
+// factoring it into named types would only add boilerplate to the tests.
+#[allow(clippy::type_complexity)]
 fn module_multi(fns: Vec<(&str, Vec<(&str, &str)>, &str, Vec<IIRInstr>)>) -> IIRModule {
     let functions = fns
         .into_iter()
@@ -146,6 +149,8 @@ fn validate_ref_type_rejected() {
 }
 
 // Test 1.7 — float types ARE valid (key difference from BEAM backend)
+// 3.14 is arbitrary float test input; not an approximation of PI.
+#[allow(clippy::approx_constant)]
 #[test]
 fn validate_float_type_accepted() {
     let m = module_one("f", vec![], "f64", vec![
@@ -192,7 +197,8 @@ fn validate_safepoint_rejected() {
 fn validate_io_ops_rejected() {
     // io_in is still unsupported (raw byte-level input is not wired to WASM).
     // io_out is now SUPPORTED (LANG32) — it maps to call $__print_i64.
-    for op in &["io_in"] {
+    {
+        let op = &"io_in";
         let m = module_one("f", vec![], "void", vec![
             IIRInstr::new(*op, None, vec![], "void"),
         ]);
@@ -491,6 +497,8 @@ fn emit_i64_const_opcode() {
 }
 
 // Test 4.3 — f64.const emitted for float constant
+// 2.718 is arbitrary float test input; not an approximation of E.
+#[allow(clippy::approx_constant)]
 #[test]
 fn emit_f64_const_opcode() {
     let m = module_one("f", vec![], "f64", vec![

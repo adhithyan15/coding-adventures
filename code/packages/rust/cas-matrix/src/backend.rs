@@ -176,7 +176,7 @@ fn encode_rows(rows: &[Vec<IRNode>], dtype: BackendDType) -> Option<Vec<u8>> {
 }
 
 fn encode_scalar_matrix(scalar: &IRNode, len: usize, dtype: BackendDType) -> Option<Vec<u8>> {
-    encode_nodes(std::iter::repeat(scalar).take(len), dtype)
+    encode_nodes(std::iter::repeat_n(scalar, len), dtype)
 }
 
 fn encode_nodes<'a>(

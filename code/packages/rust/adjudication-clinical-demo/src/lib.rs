@@ -159,6 +159,10 @@ pub struct RawArmReport {
     pub finish_reason: FinishReason,
 }
 
+// `LlmError` is a rich error enum shared across the whole demo API; boxing it
+// solely to shrink these Results would churn every call site and error match for
+// no real benefit on a non-hot demo path.
+#[allow(clippy::result_large_err)]
 pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     match cfg.arm_a_mode {
         ArmAMode::SingleTurn => run_raw_arm_single_turn(cfg),
@@ -166,6 +170,7 @@ pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     }
 }
 
+#[allow(clippy::result_large_err)] // see run_raw_arm: shared LlmError, not worth boxing
 fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let client = OllamaClient::new(cfg.model.clone())
         .with_endpoint(cfg.endpoint.clone())
@@ -205,6 +210,7 @@ fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
 /// asks for a verdict-first answer. Falls back to single-turn when
 /// no rulebook is configured (priming with no rulebook to digest
 /// would be a wasted round-trip).
+#[allow(clippy::result_large_err)] // see run_raw_arm: shared LlmError, not worth boxing
 fn run_raw_arm_priming(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
     let rulebook = match cfg.rulebook_text.as_deref() {
         Some(t) if !t.is_empty() => t,
@@ -710,9 +716,7 @@ mod tests {
         let mut covered = vec![false; total_bytes];
         for n in &ir.nodes {
             for span in &n.source_spans {
-                for i in span.start..span.end {
-                    covered[i] = true;
-                }
+                covered[span.start..span.end].fill(true);
             }
         }
         for (i, hit) in covered.iter().enumerate() {
@@ -822,9 +826,11 @@ mod tests {
 
     #[test]
     fn config_with_priming_mode_is_addressable_via_struct_field() {
-        let mut cfg = DemoConfig::default();
-        cfg.arm_a_mode = ArmAMode::Priming;
-        cfg.rulebook_text = Some(fixture_clinical_rulebook());
+        let cfg = DemoConfig {
+            arm_a_mode: ArmAMode::Priming,
+            rulebook_text: Some(fixture_clinical_rulebook()),
+            ..Default::default()
+        };
         assert_eq!(cfg.arm_a_mode, ArmAMode::Priming);
         assert!(cfg.rulebook_text.is_some());
     }

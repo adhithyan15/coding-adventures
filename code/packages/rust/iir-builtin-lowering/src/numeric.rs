@@ -139,9 +139,9 @@ fn lookup(name: &str) -> Option<&'static NumericEntry> {
 /// Returns:
 /// - `Ok(true)`  — the instruction was rewritten (numeric builtin recognised).
 /// - `Ok(false)` — the instruction was left unchanged (unknown builtin or
-///                 not a `call_builtin` at all).
+///   not a `call_builtin` at all).
 /// - `Err(_)`    — the instruction was a recognised numeric builtin but
-///                 had invalid arity.
+///   had invalid arity.
 ///
 /// The `fn_name` parameter is used only for error messages.
 pub fn try_lower_instr(
@@ -284,7 +284,7 @@ mod tests {
     #[test]
     fn rewrite_add() {
         let mut instr = binary_call("+", "a", "b", "i64");
-        assert_eq!(try_lower_instr(&mut instr, "f").unwrap(), true);
+        assert!(try_lower_instr(&mut instr, "f").unwrap());
         assert_eq!(instr.op, "add");
         assert_eq!(instr.srcs.len(), 2);
         assert_eq!(instr.srcs[0], Operand::Var("a".into()));
@@ -295,7 +295,7 @@ mod tests {
     #[test]
     fn rewrite_neg() {
         let mut instr = unary_call("neg", "x", "i64");
-        assert_eq!(try_lower_instr(&mut instr, "f").unwrap(), true);
+        assert!(try_lower_instr(&mut instr, "f").unwrap());
         assert_eq!(instr.op, "neg");
         assert_eq!(instr.srcs.len(), 1);
     }
@@ -304,7 +304,7 @@ mod tests {
     fn non_call_builtin_unchanged() {
         let mut instr = IIRInstr::new("add", Some("%r0".into()),
             vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64");
-        assert_eq!(try_lower_instr(&mut instr, "f").unwrap(), false);
+        assert!(!try_lower_instr(&mut instr, "f").unwrap());
         assert_eq!(instr.op, "add"); // unchanged
     }
 
@@ -315,7 +315,7 @@ mod tests {
                  Operand::Var("h".into()),
                  Operand::Var("t".into())],
             "any");
-        assert_eq!(try_lower_instr(&mut instr, "f").unwrap(), false);
+        assert!(!try_lower_instr(&mut instr, "f").unwrap());
         assert_eq!(instr.op, "call_builtin"); // still call_builtin
     }
 

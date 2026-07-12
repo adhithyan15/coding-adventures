@@ -118,7 +118,7 @@ impl<'a> DwarfEmitter<'a> {
     ///
     /// Returns `Err` if the input is not a valid ELF64 little-endian binary.
     pub fn embed_in_elf(&self, elf_bytes: &[u8]) -> Result<Vec<u8>, String> {
-        let mut data = elf_bytes.to_vec();
+        let data = elf_bytes.to_vec();
 
         if data.len() < 4 || &data[..4] != b"\x7fELF" {
             return Err("not a valid ELF file".into());
@@ -160,7 +160,7 @@ impl<'a> DwarfEmitter<'a> {
         }
 
         // Read existing section headers.
-        let mut shdrs: Vec<Vec<u8>> = (0..e_shnum)
+        let shdrs: Vec<Vec<u8>> = (0..e_shnum)
             .map(|i| {
                 let off = shdr_table_start + i * SHDR_SIZE;
                 data[off..off + SHDR_SIZE].to_vec()
@@ -454,6 +454,10 @@ impl<'a> DwarfEmitter<'a> {
         buf
     }
 
+    // Each push in `build_line` documents a distinct DWARF line-program header
+    // field, so the step-by-step construction is intentional (clearer than a bare
+    // `vec![…]`); allow the vec-init-then-push lint for this function.
+    #[allow(clippy::vec_init_then_push)]
     fn build_line(&self) -> Vec<u8> {
         let source_files = self.reader.source_files();
         let std_opcode_lengths: &[u8] = &[0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1];

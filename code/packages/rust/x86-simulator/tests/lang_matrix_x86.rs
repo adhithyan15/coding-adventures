@@ -296,7 +296,8 @@ fn algol_for_loop_array_runs_on_x86_sim() {
 #[test]
 fn basic_print_runs_on_x86_sim() {
     let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, "10 PRINT 42\n20 END\n");
-    assert_eq!(out, "42");
+    // BASIC `PRINT` terminates the line, so the shim emits a trailing newline.
+    assert_eq!(out, "42\n");
 }
 
 /// Dartmouth BASIC — `FOR`/`NEXT` accumulator summing 1..5 ⇒ stdout `15`.
@@ -304,7 +305,7 @@ fn basic_print_runs_on_x86_sim() {
 fn basic_for_loop_runs_on_x86_sim() {
     let src = "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n";
     let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, src);
-    assert_eq!(out, "15");
+    assert_eq!(out, "15\n");
 }
 
 /// Dartmouth BASIC — a **`DIM` array** (LANG-FULL BA3) on the x86_64 backend.
@@ -320,7 +321,7 @@ fn basic_array_runs_on_x86_sim() {
     let src = "10 DIM A(3)\n20 LET A(1) = 10\n30 LET A(2) = 20\n\
                40 LET A(3) = 12\n50 PRINT A(1) + A(2) + A(3)\n60 END\n";
     let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, src);
-    assert_eq!(out, "42");
+    assert_eq!(out, "42\n");
 }
 
 /// Oct — bitwise complement (the `not` op → x86 `0xF7 /2`) printed via `out`

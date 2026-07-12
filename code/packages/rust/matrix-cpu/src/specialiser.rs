@@ -173,6 +173,9 @@ pub fn build_specialised_kernel(
     // `folded_slot`.
     //   Some(0) → constant is LHS → `out[i] = K OP a[i]`
     //   Some(1) → constant is RHS → `out[i] = a[i] OP K`
+    // The pair-of-fn-pointers type documents the (lhs-folded, rhs-folded) variants
+    // inline; a type alias would hide that. Behavior-preserving allow.
+    #[allow(clippy::type_complexity)]
     let non_commutative_op: Option<(fn(f32, f32) -> f32, fn(f32, f32) -> f32)> = match key.op_kind {
         0x08 => Some((|a, k| k - a, |a, k| a - k)), // Sub: (lhs-folded, rhs-folded)
         0x0A => Some((|a, k| k / a, |a, k| a / k)), // Div
@@ -277,7 +280,7 @@ fn build_matmul_with_folded_matrix(
     if key.folded_slot != Some(1) {
         return None;
     }
-    if bytes.len() % 4 != 0 {
+    if !bytes.len().is_multiple_of(4) {
         return None;
     }
     let n_floats = bytes.len() / 4;
@@ -448,8 +451,7 @@ mod tests {
     use super::*;
     use matrix_ir::{DType, Shape};
     use matrix_profile::{
-        DefaultPolicy, ProfileObservation, RangeClass, ShapeClass, SpecCache, SpecRouter,
-        SpecialisationPolicy, TensorObservation,
+        DefaultPolicy, ProfileObservation, RangeClass, ShapeClass, SpecCache, SpecRouter, TensorObservation,
     };
 
     fn key(op_kind: u8) -> SpecKey {

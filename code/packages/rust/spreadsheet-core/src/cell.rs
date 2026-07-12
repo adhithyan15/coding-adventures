@@ -189,6 +189,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 here is arbitrary numeric test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn number_text_round_trip() {
         let n = CellValue::Number(42.0);
         assert_eq!(n.coerce_text().unwrap(), "42");
@@ -197,6 +199,8 @@ mod tests {
     }
 
     #[test]
+    // 3.14 here is arbitrary numeric test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     fn text_numeric_parse() {
         let t = CellValue::Text("3.14".into());
         assert!((t.coerce_number().unwrap() - 3.14).abs() < 1e-9);

@@ -285,7 +285,7 @@ pub fn exec_one(
             let f = read_xmm(st, *xmm).trunc();
             // `i64::MAX` rounds up to 2⁶³ as an f64, so the in-range upper bound
             // is the strict `< 2⁶³`; the lower bound `-2⁶³` is representable.
-            let out = if f.is_nan() || f < -(9223372036854775808.0_f64) || f >= 9223372036854775808.0_f64 {
+            let out = if f.is_nan() || !(-(9223372036854775808.0_f64)..9223372036854775808.0_f64).contains(&f) {
                 0x8000_0000_0000_0000_u64
             } else {
                 f as i64 as u64

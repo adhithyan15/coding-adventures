@@ -34,7 +34,6 @@ use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
-use mosaic_emit_paint;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
@@ -603,6 +602,10 @@ fn resolve_layout_path(layout_arg: &str, component_name: &str, variant: Option<&
     process::exit(1);
 }
 
+// The pipeline entry point threads all CLI-derived inputs (backend selector, the
+// three source paths, output path, and emit flags) into one call; a struct would
+// only relocate the same set of independent CLI arguments.
+#[allow(clippy::too_many_arguments)]
 fn run_pipeline(
     backend: &str,
     interface_path: &str,
@@ -799,8 +802,10 @@ fn run_pipeline(
             // emission. Bare invocation (emit_project: false) is
             // behaviourally identical to the pre-UI32 single-file
             // path — same TSX bytes, same exit code.
-            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
-            react_opts.emit_project = emit_project;
+            let react_opts = mosaic_emit_react::pipeline::EmitOptions {
+                emit_project,
+                ..Default::default()
+            };
             let result = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -856,8 +861,10 @@ fn run_pipeline(
             }
         }
         "xaml" => {
-            let mut opts = mosaic_emit_xaml::EmitOptions::default();
-            opts.emit_project = emit_project;
+            let opts = mosaic_emit_xaml::EmitOptions {
+                emit_project,
+                ..Default::default()
+            };
             // Build the component registry: auto-register every name
             // in the active package's [components].exports so the .mll
             // can reference its siblings (UI29 §4.4 ish — but for the
@@ -906,7 +913,7 @@ fn run_pipeline(
             // Helper: place a side-file next to the .xaml file (same
             // directory as `base`).
             let side_file_path = |filename: &str| -> String {
-                match base.rfind(|c| c == '/' || c == '\\') {
+                match base.rfind(['/', '\\']) {
                     Some(idx) => format!("{}/{}", &base[..idx], filename),
                     None => filename.to_string(),
                 }
@@ -956,8 +963,7 @@ fn run_pipeline(
             // HTML shell emission. Bare invocation (emit_project:
             // false) is byte-identical to pre-UI32 behaviour — same
             // .html fragment, same exit code.
-            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
-            html_opts.emit_project = emit_project;
+            let html_opts = mosaic_emit_html::pipeline::EmitOptions { emit_project };
             let result = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1002,8 +1008,7 @@ fn run_pipeline(
             // HTML shell. Bare invocation (emit_project: false) is
             // byte-identical to pre-UI32 behaviour — same .js, no
             // new files.
-            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
-            wc_opts.emit_project = emit_project;
+            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions { emit_project };
             let result = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1046,8 +1051,10 @@ fn run_pipeline(
             // UI32-K-swiftui: route through from_pipeline_with_options
             // so --emit-project activates the SwiftPM macOS shell.
             // Bare invocation is byte-identical to pre-UI32.
-            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
-            sw_opts.emit_project = emit_project;
+            let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
+                emit_project,
+                ..Default::default()
+            };
             let result = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1100,8 +1107,10 @@ fn run_pipeline(
             // UI32-K-qt: route through `from_pipeline_with_options`
             // so --emit-project activates the Qt6 + CMake shell.
             // Bare invocation is byte-identical to pre-UI32.
-            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
-            qt_opts.emit_project = emit_project;
+            let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
+                emit_project,
+                ..Default::default()
+            };
             let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1145,8 +1154,10 @@ fn run_pipeline(
             // UI32-K-flutter: route through `from_pipeline_with_options`
             // so --emit-project activates the Flutter app shell.
             // Bare invocation is byte-identical to pre-UI32.
-            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
-            fl_opts.emit_project = emit_project;
+            let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
+                emit_project,
+                ..Default::default()
+            };
             let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1231,6 +1242,9 @@ fn run_pipeline(
 /// — pre-UI30 the React arm was the only single-file path, but with
 /// HTML/WebComponent/SwiftUI/Qt/Flutter all wired the same way, a
 /// shared helper avoids five copies of the same write+log boilerplate.
+// Currently unused: the per-backend match arms still inline their write+log.
+// Kept as the intended shared single-file emit helper for those arms to adopt.
+#[allow(dead_code)]
 fn emit_single_file<E: std::fmt::Display>(
     backend: &str,
     output_path: Option<&str>,

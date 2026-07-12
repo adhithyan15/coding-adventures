@@ -150,6 +150,9 @@ impl FPGA {
     /// # Panics
     ///
     /// Panics if `clb_name` is not found.
+    // Each argument maps to a distinct physical CLB input port; grouping them into
+    // a struct would obscure the hardware correspondence. Behavior-preserving allow.
+    #[allow(clippy::too_many_arguments)]
     pub fn evaluate_clb(
         &mut self,
         clb_name: &str,

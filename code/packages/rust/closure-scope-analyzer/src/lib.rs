@@ -995,10 +995,8 @@ fn walk_expression(
             walk_expression(&c.expression, ctx, analysis, pending);
         }
         Expression::ArrayExpression(ae) => {
-            for el in &ae.elements {
-                if let Some(e) = el {
-                    walk_expression(e, ctx, analysis, pending);
-                }
+            for e in ae.elements.iter().flatten() {
+                walk_expression(e, ctx, analysis, pending);
             }
         }
         Expression::ObjectExpression(oe) => {

@@ -847,13 +847,12 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
-            "text-align" => {
-                if layer_idx.is_none() {
+            "text-align"
+                if layer_idx.is_none() => {
                     if let Some(a) = content_alignment(&p.value) {
                         text_align = Some(a);
                     }
                 }
-            }
             // border-style, border-collapse, outline, width:100% — skipped.
             _ => {}
         }
@@ -1068,6 +1067,9 @@ fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>) -> String {
     }
 }
 
+// Threads the full lowering context (styles, table/for scopes, inherited text
+// styling) through the recursive tree walk; splitting would obscure the flow.
+#[allow(clippy::too_many_arguments)]
 fn emit_compose_tree(
     node: &LayoutNode,
     depth: usize,
@@ -3624,6 +3626,8 @@ mod tests {
     /// re-bound from `Int` to `Double` so verbatim Expr text like
     /// `( r == editRow )` compiles against `number`-typed slots.
     #[test]
+    // Name mirrors the Kotlin `forEachIndexed` API it exercises.
+    #[allow(non_snake_case)]
     fn for_with_index_emits_forEachIndexed_with_double_cast() {
         let for_node = node(
             "For",
@@ -3666,6 +3670,8 @@ mod tests {
     /// `For` without `index:` falls back to `.forEach { item -> ... }`
     /// — no rename needed because there's no shadowed parameter.
     #[test]
+    // Name mirrors the Kotlin `forEach` API it exercises.
+    #[allow(non_snake_case)]
     fn for_without_index_uses_simple_forEach() {
         let for_node = node(
             "For",

@@ -6376,9 +6376,9 @@ impl ThreadDiagnosticSnapshot {
     pub fn supervision_plan(&self) -> ThreadSupervisionPlan {
         let action = if self.local_role == DeviceRole::Disabled {
             ThreadSupervisionAction::EnableInterface
-        } else if !self.local_role.is_attached() {
-            ThreadSupervisionAction::StartAttach
-        } else if self.local_role == DeviceRole::Child && self.parent.is_none() {
+        } else if !self.local_role.is_attached()
+            || (self.local_role == DeviceRole::Child && self.parent.is_none())
+        {
             ThreadSupervisionAction::StartAttach
         } else if self
             .parent

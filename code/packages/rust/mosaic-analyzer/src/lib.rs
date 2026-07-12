@@ -677,7 +677,7 @@ fn parse_dimension(raw: &str) -> Result<MosaicValue, AnalyzeError> {
 ///   - `#rrggbb`  → alpha = 255.
 ///   - `#rrggbbaa`→ all four channels explicit.
 fn parse_color(hex: &str) -> Result<MosaicValue, AnalyzeError> {
-    let h = if hex.starts_with('#') { &hex[1..] } else { hex };
+    let h = hex.strip_prefix('#').unwrap_or(hex);
     match h.len() {
         3 => {
             let r = u8::from_str_radix(&h[0..1].repeat(2), 16)
@@ -1043,7 +1043,7 @@ mod tests {
         assert!(
             matches!(&root.children[0], MosaicChild::SlotRef(n) if n == "header"),
             "Expected SlotRef(header), got {:?}",
-            &root.children[0]
+            root.children[0]
         );
     }
 }

@@ -1084,7 +1084,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, cond, indent);
             out.push_str(")) {\n");
             emit_block_as_stmts(out, body, indent + 2);
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", pad);
         }
         // `for (var = start; …; var += step) { body }` — half-open
         // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
@@ -1104,7 +1104,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
             // Open a block so the temporaries don't leak.
-            let _ = write!(out, "{}{{\n", pad);
+            let _ = writeln!(out, "{}{{", pad);
             let _ = write!(out, "{}let {}: __Sir.Val = ", inner_pad, v);
             emit_expr(out, start, inner);
             out.push_str(";\n");
@@ -1114,22 +1114,22 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let _ = write!(out, "{}const __sir_step_{}: number = (", inner_pad, id);
             emit_expr(out, step, inner);
             out.push_str(") as number;\n");
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{\n",
+                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{",
                 inner_pad, id = id, v = v
             );
             emit_block_as_stmts(out, body, inner + 2);
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}{} = ({} as number) + __sir_step_{};\n",
+                "{}{} = ({} as number) + __sir_step_{};",
                 " ".repeat(inner + 2),
                 v,
                 v,
                 id
             );
-            let _ = write!(out, "{}}}\n", inner_pad);
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", inner_pad);
+            let _ = writeln!(out, "{}}}", pad);
         }
         // `for (const var of iter) { body }` — iterate a Seq.  The
         // binding uses `let` if the body reassigns the loop variable.
@@ -1145,7 +1145,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, iter, indent);
             out.push_str(") as __Sir.Val[])) {\n");
             emit_block_as_stmts(out, body, indent + 2);
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", pad);
         }
         // ── SIR17 scopes (assignment) ───────────────────────────────
         // `@x = v` → current-self instance-variable write via the OOP
@@ -1228,9 +1228,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // A module is a namespace with no superclass; register it so it
         // can participate in `is_a?`/ancestry, then emit its body.
         Stmt::ModuleDef { name, body, .. } => {
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "{}__SirOop.defineClass({}, null);\n",
+                "{}__SirOop.defineClass({}, null);",
                 pad,
                 quote_ts_string(name)
             );
@@ -1259,7 +1259,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let pad = " ".repeat(indent);
-            let _ = write!(out, "{}try {{\n", pad);
+            let _ = writeln!(out, "{}try {{", pad);
             emit_stmt_block(out, body, indent + 2);
             let _ = write!(out, "{}}}", pad);
             if !rescues.is_empty() {
@@ -1276,16 +1276,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     }
                     types.push(']');
                     let kw = if i == 0 { "if" } else { "} else if" };
-                    let _ = write!(
+                    let _ = writeln!(
                         out,
-                        "{}{} (__SirExc.rescueMatches(__exc, {})) {{\n",
+                        "{}{} (__SirExc.rescueMatches(__exc, {})) {{",
                         ipad, kw, types
                     );
                     // `rescue Foo => e` binds the caught value as a local.
                     if let Some(bind) = &r.binding {
-                        let _ = write!(
+                        let _ = writeln!(
                             out,
-                            "{}  const {}: __Sir.Val = __exc;\n",
+                            "{}  const {}: __Sir.Val = __exc;",
                             ipad,
                             sanitize_ident(bind)
                         );
@@ -1293,9 +1293,9 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     emit_stmt_block(out, &r.body, inner + 2);
                 }
                 // No clause matched → propagate the original exception.
-                let _ = write!(out, "{}}} else {{\n", ipad);
-                let _ = write!(out, "{}  throw __exc;\n", ipad);
-                let _ = write!(out, "{}}}\n", ipad);
+                let _ = writeln!(out, "{}}} else {{", ipad);
+                let _ = writeln!(out, "{}  throw __exc;", ipad);
+                let _ = writeln!(out, "{}}}", ipad);
                 let _ = write!(out, "{}}}", pad);
             }
             if let Some(ens) = ensure_body {
@@ -2254,7 +2254,7 @@ mod tests {
         let safe = sanitize_comment(injected);
         assert!(!safe.contains('\n'));
         assert!(!safe.contains('\r'));
-        let with_sep = format!("a\u{2028}b\u{2029}c\u{0085}d");
+        let with_sep = "a\u{2028}b\u{2029}c\u{0085}d".to_string();
         let safe2 = sanitize_comment(&with_sep);
         assert!(!safe2.contains('\u{2028}'));
         assert!(!safe2.contains('\u{2029}'));
@@ -2268,7 +2268,7 @@ mod tests {
 
     #[test]
     fn quote_ts_string_escapes_unicode_line_separators() {
-        let s = format!("a\u{2028}b\u{2029}c");
+        let s = "a\u{2028}b\u{2029}c".to_string();
         let q = quote_ts_string(&s);
         assert!(q.contains(r"\u2028"), "got {}", q);
         assert!(q.contains(r"\u2029"), "got {}", q);

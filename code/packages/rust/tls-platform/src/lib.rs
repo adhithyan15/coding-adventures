@@ -55,7 +55,7 @@ pub trait TlsStream: Read + Write + Send {
 /// (Schannel, Network.framework, OpenSSL). Until those land, the facade uses
 /// the native Rustls backend.
 pub fn default_connector() -> Box<dyn TlsConnector> {
-    Box::new(RustlsConnector::default())
+    Box::new(RustlsConnector)
 }
 
 /// TLS configuration shared by client transports.

@@ -1194,7 +1194,7 @@ mod tests {
         assert!(
             matches!(&args[2], Expr::MakeClosure { .. }),
             "callback should lower to MakeClosure, got {:?}",
-            &args[2]
+            args[2]
         );
         assert!(m.manifest.contains(Feature::Closures));
         assert!(m.manifest.contains(Feature::Strings));

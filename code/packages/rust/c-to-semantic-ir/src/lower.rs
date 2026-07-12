@@ -303,6 +303,9 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
 
 impl Lowerer {
     /// Extract `(name, [(param_name, type)], return_type)` from a function_def.
+    // Returns (function name, parameter (name, type) pairs, optional return type)
+    // — a one-off internal tuple; a named type alias would not aid readability.
+    #[allow(clippy::type_complexity)]
     fn function_header(
         &self,
         f: &GrammarASTNode,

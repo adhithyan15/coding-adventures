@@ -292,6 +292,9 @@ mod tests {
         assert_eq!(coerce("0"), Some(SqlPrimitive::Int(0)));
     }
 
+    // Literal 3.14 is test data (an input string and its expected parsed value),
+    // not an approximation of PI to be replaced.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_coerce_float() {
         assert_eq!(coerce("3.14"), Some(SqlPrimitive::Float(3.14)));

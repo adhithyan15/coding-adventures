@@ -301,6 +301,10 @@ pub struct AcquireRulebookAdversarialRequest {
 
 /// One model's contribution to an adversarial multi-model
 /// elicitation.
+// The `Acquired` variant carries a full `Rulebook`, which is naturally larger
+// than the failure variants. Boxing it would churn every match site and pattern
+// for no real benefit, since these outcomes are not stored in bulk.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug)]
 pub enum PerModelOutcome {
     /// The model produced a `Tentative` rulebook. The audit trail

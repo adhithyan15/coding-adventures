@@ -203,6 +203,12 @@ pub struct VMObject {
     pub properties: HashMap<String, VMValue>,
 }
 
+impl Default for VMObject {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl VMObject {
     /// Creates a new, empty object and allocates it a fresh hidden-class id.
     pub fn new() -> Self {

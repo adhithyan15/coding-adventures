@@ -354,7 +354,7 @@ pub fn encode_ldc_i4(value: i32) -> Vec<u8> {
         6        => vec![CILOpcode::LdcI46  as u8],
         7        => vec![CILOpcode::LdcI47  as u8],
         8        => vec![CILOpcode::LdcI48  as u8],
-        v if v >= INT8_MIN && v <= INT8_MAX => {
+        v if (INT8_MIN..=INT8_MAX).contains(&v) => {
             vec![CILOpcode::LdcI4S as u8, v as u8]
         }
         v => {

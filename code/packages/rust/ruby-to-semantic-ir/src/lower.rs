@@ -700,13 +700,12 @@ fn collect_max_numbered_block_param(node: &GrammarASTNode, max: &mut u8) {
                     }
                 }
             }
-            ASTNodeOrToken::Node(n) => {
+            ASTNodeOrToken::Node(n)
                 // Don't cross into a nested block — its `_N` refs are
                 // scoped to that block's own implicit parameters.
-                if n.rule_name != "block" {
+                if n.rule_name != "block" => {
                     collect_max_numbered_block_param(n, max);
                 }
-            }
             _ => {}
         }
     }
@@ -736,6 +735,7 @@ fn flatten_block_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) 
 ///   - NOT immediately preceded by `.` (else it's a method name:
 ///     `obj.it`), and
 ///   - NOT immediately followed by `(` (else it's a call: `it(x)`).
+///
 /// `it.foo`, `it + 1`, `puts(it)` all qualify (the `.`/`(` there are
 /// not adjacent in the disqualifying position).  This is a heuristic;
 /// an `it` used as a local (`it = …`) or parenless callee is a rare
@@ -1176,10 +1176,10 @@ impl Lowerer {
             "method_with_block" => {
                 // Phase 6g
                 let expr = self.lower_method_with_block(node)?;
-                return Ok(Stmt::ExprStmt {
+                Ok(Stmt::ExprStmt {
                     expr,
                     span: self.span_of(node),
-                });
+                })
             }
             "modifier_statement" => {
                 // Phase 6q: trailing-modifier conditionals/loops.
@@ -5779,9 +5779,8 @@ impl Lowerer {
         // span covers the whole statement.  Keeping the binding so
         // the lookup helper stays useful for callers that need it
         // (e.g. error messages).
-        .map(|s| {
+        .inspect(|_s| {
             let _ = name_span;
-            s
         })
     }
 
@@ -6164,7 +6163,7 @@ impl Lowerer {
             }
 
             // Pass 2: assign each LHS from its temp.
-            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs.into_iter()) {
+            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -6189,7 +6188,7 @@ impl Lowerer {
             // Fast path: no LHS appears in any RHS, so the sequential
             // lowering Phase 6r used is observably equivalent to the
             // truly-parallel form.  Emit one Stmt per pair.
-            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs.into_iter()) {
+            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs) {
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -8921,7 +8920,7 @@ impl Lowerer {
             _ => false,
         };
         if is_bare_name {
-            let scope = if self.current_params.contains(&trimmed.to_string()) {
+            let scope = if self.current_params.contains(trimmed) {
                 Scope::Param
             } else {
                 Scope::Local
@@ -9244,7 +9243,7 @@ impl Lowerer {
                             // the explicit-call form `__dir__()` is a
                             // deliberate follow-up slice.
                             if tok.value == "__dir__" && !self.declared_locals.contains("__dir__") {
-                                let dir = match self.file_name.rfind(|c| c == '/' || c == '\\') {
+                                let dir = match self.file_name.rfind(['/', '\\']) {
                                     Some(i) => self.file_name[..i].to_string(),
                                     None => ".".to_string(),
                                 };

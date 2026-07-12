@@ -391,6 +391,9 @@ pub struct AnalysisPlanStep {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+// Boxing the large `Op(DcResult)` variant would ripple through every consumer's
+// pattern matches; the size difference is not worth that churn here.
+#[allow(clippy::large_enum_variant)]
 pub enum AnalysisResult {
     Op(DcResult),
     Tran(Vec<TransientPoint>),
@@ -1119,7 +1122,7 @@ fn selected_output_probes(parsed: &ParsedNetlist, kind: AnalysisKind) -> Vec<Out
                 if card
                     .analysis
                     .as_deref()
-                    .map_or(true, |name| analysis_name_matches(name, kind)) =>
+                    .is_none_or(|name| analysis_name_matches(name, kind)) =>
             {
                 Some(card.probes.as_slice())
             }

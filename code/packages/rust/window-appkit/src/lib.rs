@@ -13,6 +13,9 @@
 //! It is intentionally still small. The point is to prove the boundary between
 //! `window-core` and a native backend before adding richer event translation.
 
+// Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
+#![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
+
 use std::ffi::{c_int, c_ulong};
 
 #[cfg(target_vendor = "apple")]

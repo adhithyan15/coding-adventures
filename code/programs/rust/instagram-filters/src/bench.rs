@@ -197,7 +197,7 @@ pub fn run_bench(opts: &BenchOpts) -> Result<BenchSummary, BenchError> {
 
     // Capture a final snapshot if the loop didn't end on a batch
     // boundary, so the user always sees the terminal counter values.
-    if opts.iterations % opts.batch != 0 {
+    if !opts.iterations.is_multiple_of(opts.batch) {
         snapshots.push(Snapshot {
             iteration: opts.iterations,
             spec_cache_len: spec_cache_len(),

@@ -1591,7 +1591,7 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 "store_mem" => {
                     let mut srcs = Vec::with_capacity(3);
                     srcs.push(Operand::Var(TAPE.to_string()));
-                    srcs.extend(instr.srcs.into_iter());
+                    srcs.extend(instr.srcs);
                     new_instrs.push(IIRInstr::new(
                         "store_byte",
                         None,
@@ -1782,7 +1782,7 @@ mod tests {
                 "lowered module must contain store_byte; got {ops:?}");
 
         // Step 4: ret_void must be gone, replaced by `const __bf_ret = 0; ret`.
-        assert!(!ops.iter().any(|o| *o == "ret_void"),
+        assert!(!ops.contains(&"ret_void"),
                 "ret_void must be replaced by ret i64 0");
         assert_eq!(main.return_type, "i64",
                    "main return type must be i64 after lowering");

@@ -1684,7 +1684,7 @@ mod tests {
         assert!(
             matches!(&main.stmts[0], Stmt::ClassDef { .. }),
             "ordinary class must lower to ClassDef, got {:?}",
-            &main.stmts[0]
+            main.stmts[0]
         );
     }
 
@@ -3201,7 +3201,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag to false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3220,7 +3220,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: true, .. }),
                     "exclusive `...` should set the flag to true; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3294,7 +3294,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3313,12 +3313,12 @@ mod tests {
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value == "a"),
                     "expected start StrLit \"a\"; got {:?}",
-                    &args[0]
+                    args[0]
                 );
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value == "z"),
                     "expected end StrLit \"z\"; got {:?}",
-                    &args[1]
+                    args[1]
                 );
                 assert!(matches!(&args[2], Expr::BoolLit { value: false, .. }));
             }
@@ -3374,12 +3374,12 @@ mod tests {
                 assert!(
                     matches!(&args[1], Expr::NilLit { .. }),
                     "endless range end should be NilLit; got {:?}",
-                    &args[1]
+                    args[1]
                 );
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3398,7 +3398,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: true, .. }),
                     "exclusive `...` should set the flag true; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3447,13 +3447,13 @@ mod tests {
                 assert!(
                     matches!(&args[0], Expr::NilLit { .. }),
                     "beginless range start should be NilLit; got {:?}",
-                    &args[0]
+                    args[0]
                 );
                 assert!(matches!(&args[1], Expr::IntLit { value: 5, .. }));
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: false, .. }),
                     "inclusive `..` should set the exclusive flag false; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3473,7 +3473,7 @@ mod tests {
                 assert!(
                     matches!(&args[2], Expr::BoolLit { value: true, .. }),
                     "exclusive `...` should set the flag true; got {:?}",
-                    &args[2]
+                    args[2]
                 );
             }
             other => panic!("expected BuiltinCall(range, …), got {:?}", other),
@@ -3523,11 +3523,11 @@ mod tests {
                 assert_eq!(args.len(), 2, "expected [pattern, flags]");
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"),
-                    "expected pattern StrLit \"foo\"; got {:?}", &args[0]
+                    "expected pattern StrLit \"foo\"; got {:?}", args[0]
                 );
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()),
-                    "expected empty flags StrLit; got {:?}", &args[1]
+                    "expected empty flags StrLit; got {:?}", args[1]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3547,7 +3547,7 @@ mod tests {
                 assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"));
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value == "i"),
-                    "expected flags StrLit \"i\"; got {:?}", &args[1]
+                    "expected flags StrLit \"i\"; got {:?}", args[1]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3592,7 +3592,7 @@ mod tests {
                 assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "foo"));
                 assert!(
                     matches!(&args[1], Expr::StrLit { value, .. } if value == "im"),
-                    "expected flags StrLit \"im\" (order preserved); got {:?}", &args[1]
+                    "expected flags StrLit \"im\" (order preserved); got {:?}", args[1]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3679,7 +3679,7 @@ mod tests {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
                     matches!(&args[0], Expr::VarRef { name, .. } if name == "b"),
-                    "expected bare VarRef pattern; got {:?}", &args[0]
+                    "expected bare VarRef pattern; got {:?}", args[0]
                 );
             }
             other => panic!("expected BuiltinCall(regex, …), got {:?}", other),
@@ -3696,7 +3696,7 @@ mod tests {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
                     matches!(&args[0], Expr::StrConcat { .. }),
-                    "expected StrConcat pattern; got {:?}", &args[0]
+                    "expected StrConcat pattern; got {:?}", args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "i"));
             }
@@ -3729,7 +3729,7 @@ mod tests {
                 assert_eq!(args.len(), 2);
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value == "hello"),
-                    "expected pattern StrLit \"hello\"; got {:?}", &args[0]
+                    "expected pattern StrLit \"hello\"; got {:?}", args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
             }
@@ -3752,7 +3752,7 @@ mod tests {
             Expr::BuiltinCall { name, args, .. } if name == "regex" => {
                 assert!(
                     matches!(&args[0], Expr::StrLit { value, .. } if value.is_empty()),
-                    "expected empty pattern StrLit; got {:?}", &args[0]
+                    "expected empty pattern StrLit; got {:?}", args[0]
                 );
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
             }
@@ -6057,7 +6057,7 @@ mod tests {
                 Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
                 _ => None,
             })
-            .or_else(|| match &t.body.value {
+            .or(match &t.body.value {
                 e @ Expr::If { .. } => Some(e),
                 _ => None,
             })
@@ -7235,7 +7235,7 @@ b = "y"
                 assert!(matches!(&parts[0], Expr::StrLit { value, .. } if value == "sum "));
                 assert!(
                     matches!(&parts[1], Expr::BuiltinCall { name, .. } if name == "+"),
-                    "expected real `+` call, got {:?}", &parts[1]
+                    "expected real `+` call, got {:?}", parts[1]
                 );
                 assert!(matches!(&parts[2], Expr::StrLit { value, .. } if value == "\n"));
             }
@@ -7315,13 +7315,13 @@ b = "y"
                     matches!(&args[0], Expr::VarRef { name, scope, .. }
                         if name == "x" && *scope == Scope::Param),
                     "expected VarRef(x, Param), got {:?}",
-                    &args[0]
+                    args[0]
                 );
                 assert!(
                     matches!(&args[1], Expr::VarRef { name, scope, .. }
                         if name == "y" && *scope == Scope::Param),
                     "expected VarRef(y, Param), got {:?}",
-                    &args[1]
+                    args[1]
                 );
             }
             other => panic!("expected +-BuiltinCall, got {:?}", other),
@@ -7390,7 +7390,7 @@ b = "y"
 
     /// Helper: extract the `Expr::If` from a top-level `case` statement
     /// — Phase 6u/7d lowers case to `Stmt::ExprStmt(Expr::If(...))`.
-    fn extract_case_if<'a>(b: &'a semantic_ir::Block) -> &'a Expr {
+    fn extract_case_if(b: &semantic_ir::Block) -> &Expr {
         // The case is typically the second statement (first is the
         // `x = ...` LetBinding from the test prelude).
         match &b.stmts[1] {
@@ -7702,11 +7702,11 @@ b = "y"
             .stmts
             .iter()
             .filter_map(|s| match s {
-                Stmt::LetBinding { name, value, .. }
-                    if matches!(value, Expr::SeqIndex { .. }) =>
-                {
-                    Some(name.as_str())
-                }
+                Stmt::LetBinding {
+                    name,
+                    value: Expr::SeqIndex { .. },
+                    ..
+                } => Some(name.as_str()),
                 _ => None,
             })
             .collect();

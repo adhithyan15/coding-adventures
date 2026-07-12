@@ -111,6 +111,8 @@ pub fn xtrans_channel(row: usize, col: usize, pattern: &[u8; 36]) -> u8 {
 /// The 5×5 window gives a radius of 2.  Choosing radius 2 rather than 1
 /// ensures we always capture at least one sample of each colour, even at
 /// positions where the nearest same-channel pixel is 2 hops away.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 fn average_xtrans(
     raw: &[u16],
     width: usize,

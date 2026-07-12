@@ -112,8 +112,8 @@ mod tests {
     #[test]
     fn read_single_bit_msb() {
         let mut br = BitReader::new(&[0x80]); // 1000_0000
-        assert_eq!(br.read_bit().unwrap(), true);
-        assert_eq!(br.read_bit().unwrap(), false);
+        assert!(br.read_bit().unwrap());
+        assert!(!br.read_bit().unwrap());
     }
 
     #[test]

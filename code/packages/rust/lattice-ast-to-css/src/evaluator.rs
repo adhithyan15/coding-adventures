@@ -420,7 +420,7 @@ impl<'a> ExpressionEvaluator<'a> {
                     Ok(LatticeValue::Dimension { value: lv + rv, unit: lu.clone() })
                 } else {
                     Err(LatticeError::type_error("add",
-                        &left.to_css_string(), &right.to_css_string(), 0, 0))
+                        left.to_css_string(), right.to_css_string(), 0, 0))
                 }
             }
             (LatticeValue::Percentage(l), LatticeValue::Percentage(r)) => {
@@ -430,7 +430,7 @@ impl<'a> ExpressionEvaluator<'a> {
                 Ok(LatticeValue::String(format!("{}{}", l, r)))
             }
             _ => Err(LatticeError::type_error("add",
-                &left.to_css_string(), &right.to_css_string(), 0, 0)),
+                left.to_css_string(), right.to_css_string(), 0, 0)),
         }
     }
 
@@ -446,14 +446,14 @@ impl<'a> ExpressionEvaluator<'a> {
                     Ok(LatticeValue::Dimension { value: lv - rv, unit: lu.clone() })
                 } else {
                     Err(LatticeError::type_error("subtract",
-                        &left.to_css_string(), &right.to_css_string(), 0, 0))
+                        left.to_css_string(), right.to_css_string(), 0, 0))
                 }
             }
             (LatticeValue::Percentage(l), LatticeValue::Percentage(r)) => {
                 Ok(LatticeValue::Percentage(l - r))
             }
             _ => Err(LatticeError::type_error("subtract",
-                &left.to_css_string(), &right.to_css_string(), 0, 0)),
+                left.to_css_string(), right.to_css_string(), 0, 0)),
         }
     }
 
@@ -512,7 +512,7 @@ impl<'a> ExpressionEvaluator<'a> {
                 Ok(LatticeValue::Percentage(l * r))
             }
             _ => Err(LatticeError::type_error("multiply",
-                &left.to_css_string(), &right.to_css_string(), 0, 0)),
+                left.to_css_string(), right.to_css_string(), 0, 0)),
         }
     }
 
@@ -543,7 +543,7 @@ impl<'a> ExpressionEvaluator<'a> {
                 Ok(LatticeValue::Percentage(l / r))
             }
             _ => Err(LatticeError::type_error("divide",
-                &left.to_css_string(), &right.to_css_string(), 0, 0)),
+                left.to_css_string(), right.to_css_string(), 0, 0)),
         }
     }
 
@@ -584,7 +584,7 @@ impl<'a> ExpressionEvaluator<'a> {
             }
             LatticeValue::Percentage(p) => Ok(LatticeValue::Percentage(-p)),
             _ => Err(LatticeError::type_error("negate",
-                &value.to_css_string(), "", 0, 0)),
+                value.to_css_string(), "", 0, 0)),
         }
     }
 
@@ -917,7 +917,7 @@ pub fn evaluate_builtin(name: &str, args: &[LatticeValue]) -> Result<LatticeValu
                 (LatticeValue::Percentage(l), LatticeValue::Number(r)) => {
                     Ok(LatticeValue::Percentage(l / r))
                 }
-                _ => Err(LatticeError::type_error("divide", &args[0].to_css_string(), &args[1].to_css_string(), 0, 0)),
+                _ => Err(LatticeError::type_error("divide", args[0].to_css_string(), args[1].to_css_string(), 0, 0)),
             }
         }
         "math.floor" => {

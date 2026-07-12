@@ -3410,13 +3410,12 @@ C1 out 0 1p
         shell_dashboard_package.package_capability_id,
         "app-shell-dashboard-package-json"
     );
-    assert_eq!(
+    assert!(
         shell_dashboard_package
             .package_manifest
             .artifact_capabilities
             .iter()
-            .any(|capability| capability == &shell_dashboard_package.package_capability_id),
-        true
+            .any(|capability| capability == &shell_dashboard_package.package_capability_id)
     );
     assert_eq!(
         shell_dashboard_package.artifact_capability_count,

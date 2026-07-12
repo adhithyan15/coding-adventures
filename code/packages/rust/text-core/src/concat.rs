@@ -42,10 +42,8 @@ pub fn concat(parts: &[&str]) -> String {
 /// `CONCAT` over `Option<&str>` parts. `None` -> empty.
 pub fn concat_options(parts: &[Option<&str>]) -> String {
     let mut out = String::new();
-    for p in parts {
-        if let Some(s) = p {
-            out.push_str(s);
-        }
+    for s in parts.iter().flatten() {
+        out.push_str(s);
     }
     out
 }

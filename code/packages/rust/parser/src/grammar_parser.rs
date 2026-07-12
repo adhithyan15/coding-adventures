@@ -184,6 +184,8 @@ pub struct GrammarParser {
 
     /// Pre-parse hooks: transform token list before parsing.
     /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
+    // Boxed-closure hook list; the type documents the hook signature inline.
+    #[allow(clippy::type_complexity)]
     pre_parse_hooks: Vec<Box<dyn Fn(Vec<Token>) -> Vec<Token>>>,
 
     /// Post-parse hooks: transform AST after parsing.
@@ -412,11 +414,10 @@ impl GrammarParser {
         if self.pos > self.furthest_pos {
             self.furthest_pos = self.pos;
             self.furthest_expected = vec![expected.to_string()];
-        } else if self.pos == self.furthest_pos {
-            if !self.furthest_expected.contains(&expected.to_string()) {
+        } else if self.pos == self.furthest_pos
+            && !self.furthest_expected.contains(&expected.to_string()) {
                 self.furthest_expected.push(expected.to_string());
             }
-        }
     }
 
     /// Parse the token stream according to the grammar.
@@ -567,9 +568,9 @@ impl GrammarParser {
     /// Try to match a named grammar rule with memoization. The depth guard
     /// lives in the [`Self::parse_rule`] wrapper; do not call this directly.
     fn parse_rule_inner(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
-        let rule = match self.rules.get(rule_name) {
-            Some(r) => r.clone(),
-            None => return None,
+        let rule = {
+            let r = self.rules.get(rule_name)?;
+            r.clone()
         };
 
         // Check memo cache.
@@ -1137,10 +1138,10 @@ fn element_references_newline(element: &GrammarElement) -> bool {
         GrammarElement::TokenReference { name } => name == "NEWLINE",
         GrammarElement::RuleReference { name } => name == "NEWLINE",
         GrammarElement::Sequence { elements } => {
-            elements.iter().any(|e| element_references_newline(e))
+            elements.iter().any(element_references_newline)
         }
         GrammarElement::Alternation { choices } => {
-            choices.iter().any(|c| element_references_newline(c))
+            choices.iter().any(element_references_newline)
         }
         GrammarElement::Repetition { element: inner }
         | GrammarElement::Optional { element: inner }

@@ -224,11 +224,10 @@ fn rename_globals(
             // is still top-level scope-wise; cover it too.
             ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(
                 fd,
-            ))) => {
-                if seen_top.insert(fd.id.name.clone()) {
+            )))
+                if seen_top.insert(fd.id.name.clone()) => {
                     top_level.push(fd.id.name.clone());
                 }
-            }
             _ => {}
         }
     }
@@ -273,7 +272,7 @@ fn rename_globals(
     // The rename table drives CV provenance (#89). Sort by original name
     // so the emitted contributions are deterministic run to run.
     let mut renames: Vec<(String, String)> =
-        map.into_iter().map(|(from, to)| (from, to)).collect();
+        map.into_iter().collect();
     renames.sort();
     (true, renames)
 }

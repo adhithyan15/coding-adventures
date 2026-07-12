@@ -36,7 +36,7 @@ pub fn normalize_itf(data: &str) -> Result<String, String> {
         return Err("ITF input must contain digits only".to_string());
     }
 
-    if data.len() % 2 != 0 {
+    if !data.len().is_multiple_of(2) {
         return Err("ITF input must contain an even number of digits".to_string());
     }
 

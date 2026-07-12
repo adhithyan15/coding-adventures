@@ -7359,8 +7359,10 @@ mod tests {
         let m = component("Hello", vec![], vec![]);
         let l = ui32_simple_layout("Hello");
         let s = empty_style("Hello");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         assert!(
             r.project.is_some(),
@@ -7373,8 +7375,10 @@ mod tests {
         let m = component("Hello", vec![], vec![]);
         let l = ui32_simple_layout("Hello");
         let s = empty_style("Hello");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -7407,8 +7411,10 @@ mod tests {
         let m = component("Deterministic", vec![], vec![]);
         let l = ui32_simple_layout("Deterministic");
         let s = empty_style("Deterministic");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
 
         let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
         let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
@@ -7424,8 +7430,10 @@ mod tests {
         let m = component("ProfileCard", vec![], vec![]);
         let l = ui32_simple_layout("ProfileCard");
         let s = empty_style("ProfileCard");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -7460,8 +7468,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = ui32_simple_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -7487,8 +7497,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = ui32_simple_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -7510,8 +7522,10 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = ui32_simple_layout("X");
         let s = empty_style("X");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -7536,8 +7550,10 @@ mod tests {
         let m = component("MyWidget", vec![], vec![]);
         let l = ui32_simple_layout("MyWidget");
         let s = empty_style("MyWidget");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project
@@ -7628,8 +7644,10 @@ mod tests {
         let m = component("Review", vec![], vec![]);
         let l = ui32_simple_layout("Review");
         let s = empty_style("Review");
-        let mut opts = EmitOptions::default();
-        opts.emit_project = true;
+        let opts = EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        };
         let proj = from_pipeline_with_options(&m, &l, &s, &opts)
             .unwrap()
             .project

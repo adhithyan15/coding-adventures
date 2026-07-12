@@ -36,6 +36,7 @@
 
 /// The dynamic value stored in a VM register.
 #[derive(Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub enum Value {
     /// A signed integer covering all of u8 / u16 / u32 / u64 / i8..i64.
     ///
@@ -49,6 +50,7 @@ pub enum Value {
     /// A heap-allocated string.
     Str(String),
     /// The absence of a value — default register contents and `ret_void` result.
+    #[default]
     Null,
 }
 
@@ -152,11 +154,6 @@ impl Value {
     }
 }
 
-impl Default for Value {
-    fn default() -> Self {
-        Value::Null
-    }
-}
 
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -227,7 +227,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         if op == "jmp_if_true" || op == "jmp_if_false" {
             let cond_name = parse_var_src(instr, 0, op)?;
             let target = parse_var_src(instr, 1, op)?;
-            stage_var_into_acc(&cond_name, &mut env, &mut acc_owner, &mut bytes)?;
+            stage_var_into_acc(&cond_name, &env, &mut acc_owner, &mut bytes)?;
             let encode_fn = if op == "jmp_if_true" {
                 encode_bnz
             } else {

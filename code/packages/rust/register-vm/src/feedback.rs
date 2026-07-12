@@ -121,7 +121,7 @@ pub fn value_type(v: &crate::types::VMValue) -> String {
 /// * `left` — left-hand operand value (used to derive its type name).
 /// * `right` — right-hand operand value.
 pub fn record_binary_op(
-    vector: &mut Vec<FeedbackSlot>,
+    vector: &mut [FeedbackSlot],
     slot: usize,
     left: &crate::types::VMValue,
     right: &crate::types::VMValue,
@@ -145,7 +145,7 @@ pub fn record_binary_op(
 /// * `slot` — index of this property-load site.
 /// * `hidden_class_id` — the object's current hidden class.
 pub fn record_property_load(
-    vector: &mut Vec<FeedbackSlot>,
+    vector: &mut [FeedbackSlot],
     slot: usize,
     hidden_class_id: usize,
 ) {
@@ -165,7 +165,7 @@ pub fn record_property_load(
 /// * `slot` — index of the call site.
 /// * `callee_type` — e.g. `"function"`, `"builtin"`.
 pub fn record_call_site(
-    vector: &mut Vec<FeedbackSlot>,
+    vector: &mut [FeedbackSlot],
     slot: usize,
     callee_type: &str,
 ) {

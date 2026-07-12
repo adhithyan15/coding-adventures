@@ -176,6 +176,19 @@ impl paint_instructions::ImageCodec for TiffCodec {
     }
 }
 
+// Helper trait for tests. Gated to `#[cfg(test)]` because it is only exercised by
+// the test module below; without the gate it registers as dead code in the lib build.
+#[cfg(test)]
+trait SliceExt {
+    fn empty_check(&self) -> bool;
+}
+#[cfg(test)]
+impl<T> SliceExt for Vec<T> {
+    fn empty_check(&self) -> bool {
+        self.is_empty()
+    }
+}
+
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -384,7 +397,7 @@ mod tests {
         assert_eq!(g, b, "Grayscale: G should equal B");
         assert_eq!(a, 255);
         // The value should be approximately 128 (mid-gray).
-        assert!(r >= 125 && r <= 131, "Expected ~128, got {}", r);
+        assert!((125..=131).contains(&r), "Expected ~128, got {}", r);
     }
 
     // ── CFA/Bayer test ────────────────────────────────────────────────────
@@ -619,15 +632,5 @@ mod tests {
         );
         buf.extend_from_slice(pixel_data);
         buf
-    }
-}
-
-// Helper trait for tests.
-trait SliceExt {
-    fn empty_check(&self) -> bool;
-}
-impl<T> SliceExt for Vec<T> {
-    fn empty_check(&self) -> bool {
-        self.is_empty()
     }
 }

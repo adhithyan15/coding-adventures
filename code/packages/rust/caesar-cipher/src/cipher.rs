@@ -85,7 +85,7 @@ pub fn encrypt(text: &str, shift: i32) -> String {
     //   shift =  3  =>  ( 3 % 26) + 26 = 3  + 26 = 29  =>  29 % 26 =  3
     //   shift = 29  =>  (29 % 26) + 26 = 3  + 26 = 29  =>  29 % 26 =  3
     // ---------------------------------------------------------------
-    let normalised_shift = ((shift % 26) + 26) % 26;
+    let normalised_shift = shift.rem_euclid(26);
 
     // ---------------------------------------------------------------
     // Step 2: Transform each character.

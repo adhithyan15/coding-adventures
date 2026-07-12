@@ -584,6 +584,8 @@ impl UmbrellaSandboxPlanSummary {
 }
 
 pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<UmbrellaAgentRun> {
+    // Arc used for shared ownership across actors; pipeline is single-threaded here.
+    #[allow(clippy::arc_with_non_send_sync)]
     let pipeline = Arc::new(UmbrellaPipeline::new(config.clone())?);
     pipeline.bootstrap_substrate()?;
 
@@ -1563,6 +1565,7 @@ fn register_file_writer_tool(
     )
 }
 
+#[allow(clippy::too_many_arguments)] // builder-style constructor; signature kept as-is
 fn tool_definition(
     tool_id: &str,
     display_name: &str,

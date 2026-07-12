@@ -64,7 +64,7 @@ impl Picture {
         // position; strip it and remember. `S` anywhere but the front is invalid.
         let signed = up.first() == Some(&'S');
         let body = if signed { &up[1..] } else { &up[..] };
-        if body.iter().any(|&c| c == 'S') || (signed && body.is_empty()) {
+        if body.contains(&'S') || (signed && body.is_empty()) {
             return Err(RuntimeError::UnsupportedPicture(pic.to_string()));
         }
 

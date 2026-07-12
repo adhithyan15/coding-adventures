@@ -74,7 +74,7 @@
 use std::collections::HashMap;
 use interpreter_ir::module::IIRModule;
 use crate::builtins::BuiltinRegistry;
-use crate::dispatch::{run_dispatch_loop, DispatchCtx, OpcodeHandler};
+use crate::dispatch::{run_dispatch_loop, DispatchCtx, JitHandlerMap, OpcodeHandler};
 use crate::errors::VMError;
 use crate::frame::VMFrame;
 use crate::profiler::VMProfiler;
@@ -151,7 +151,7 @@ pub struct VMCore {
 
     /// JIT handler registry.  When a `call` instruction names a function
     /// listed here, the handler is called instead of the interpreter.
-    jit_handlers: HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+    jit_handlers: JitHandlerMap,
 
     /// Language-specific opcode extensions.  Entries here shadow the
     /// standard opcode table, enabling languages to add or override any
@@ -456,6 +456,8 @@ impl VMCore {
     ///
     /// Useful for identifying hot functions that the JIT should prioritise.
     /// The list is sorted by call count descending.
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn hot_functions(&self, threshold: u32) -> Vec<String> {
         let mut pairs: Vec<(&String, u32)> = self.fn_call_counts
             .iter()

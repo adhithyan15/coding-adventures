@@ -365,6 +365,9 @@ mod tests {
         assert!(!out.contains("42.0"), "should not have trailing .0: {out:?}");
     }
 
+    // `3.14` here is deliberate test *data* (a fractional define value that happens
+    // to resemble PI); it is not an attempt to approximate std::f64::consts::PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn substitutes_number_fractional() {
         let out = run("var n = PI;", &[("PI", DefineValue::Number(3.14))]);

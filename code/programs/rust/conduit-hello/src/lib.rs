@@ -42,7 +42,7 @@ pub fn build_app() -> Application {
         if body.trim().is_empty() {
             json("{}")
         } else {
-            json(body.as_bytes().to_vec())
+            json(body.as_bytes())
         }
     });
 

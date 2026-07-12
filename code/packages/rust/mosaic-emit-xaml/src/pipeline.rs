@@ -2058,7 +2058,7 @@ fn emit_icon(
     if let Some(LayoutPropValue::String(s)) =
         find_prop_value(node, "glyph").or_else(|| find_prop_value(node, "name"))
     {
-        if let Some(replacement) = semantic_glyph_xaml_element(&s) {
+        if let Some(replacement) = semantic_glyph_xaml_element(s) {
             return Ok(format!("{pad}<{replacement}{style}/>\n"));
         }
     }
@@ -9325,7 +9325,7 @@ mod tests {
     /// `IsChecked="{x:Bind C, Mode=OneWay}"` (PascalCased slot, OneWay
     /// binding mirroring HostInput/HostButton's slot-binding form).
     #[test]
-    fn host_checkbox_checked_slot_emits_xbind_isChecked() {
+    fn host_checkbox_checked_slot_emits_xbind_is_checked() {
         let c = component("X", vec![slot("is-checked", SlotType::Bool, true)], vec![]);
         let l = checkbox_in_box(vec![LayoutProp {
             name: "checked".to_string(),
@@ -9926,7 +9926,7 @@ mod tests {
 
     /// X2: when the pascal-cased part name collides with the
     /// enclosing component class name (e.g. component `Button`
-    /// + part `button`), the x:Name gets an `Element` suffix to
+    /// and part `button`), the x:Name gets an `Element` suffix to
     /// avoid C# CS0542 ("member names cannot be the same as
     /// their enclosing type").
     #[test]

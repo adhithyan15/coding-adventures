@@ -285,7 +285,7 @@ pub fn inverse_color(pixels: &mut PixelContainer, block_bits: u32, sub_image_dat
     let width  = pixels.width;
     let height = pixels.height;
     let block_size = 1u32 << block_bits;
-    let sub_w = (width + block_size - 1) / block_size;
+    let sub_w = width.div_ceil(block_size);
     let n = (width * height) as usize;
 
     for i in 0..n {
@@ -331,8 +331,8 @@ pub fn apply_predictor(pixels: &PixelContainer) -> (Vec<u8>, Vec<u8>) {
     let width  = pixels.width;
     let height = pixels.height;
     let block_size = 1u32 << PREDICTOR_BLOCK_BITS;
-    let sub_w = (width  + block_size - 1) / block_size;
-    let sub_h = (height + block_size - 1) / block_size;
+    let sub_w = width.div_ceil(block_size);
+    let sub_h = height.div_ceil(block_size);
     let n_blocks = (sub_w * sub_h) as usize;
 
     // Sub-image: G channel = predictor mode = 1 (left prediction).
@@ -378,7 +378,7 @@ pub fn inverse_predictor(
     let width  = pixels.width;
     let height = pixels.height;
     let block_size = 1u32 << block_bits;
-    let sub_w = (width + block_size - 1) / block_size;
+    let sub_w = width.div_ceil(block_size);
     let n = (width * height) as usize;
 
     for i in 0..n {
