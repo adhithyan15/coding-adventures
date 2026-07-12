@@ -1298,7 +1298,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "take", "drop", "values_at",
     "flatten", "compact", "rotate", "zip",
     "include?", "index",
-    "each_slice", "each_cons", "chunk_while",
+    "each_slice", "each_cons", "chunk_while", "tally",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -1585,6 +1585,18 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
           else { chunks.push([recv[i]]); }
         }
         return chunks;
+      }
+      case "tally": {
+        // `tally` — a Hash counting how many times each element occurs, keyed
+        // in first-seen order.  `["a","b","a","c","a"].tally` →
+        // `{"a"=>3, "b"=>1, "c"=>1}`; an empty array yields `{}`.  Realised as a
+        // `Map` (insertion-ordered), the same shape `group_by` returns and the
+        // display path (`formatSeen`) prints as `{k=>v}`.  Keys compare by JS
+        // SameValueZero, which agrees with Ruby `eql?`/hash on the scalar
+        // elements this covers; matches the Go/Rust/Python references.
+        const counts = new Map();
+        for (const x of recv) { counts.set(x, (counts.get(x) || 0) + 1); }
+        return counts;
       }
     }
     return ARR_MISS;

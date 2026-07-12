@@ -3079,3 +3079,61 @@ fn array_each_slice_each_cons_chunk_while() {
         );
     }
 }
+
+// ── Ruby Array#tally ───────────────────────────────────────────────────────
+// `tally` counts occurrences into a Hash keyed in first-seen order — the JS
+// runtime realises it as an insertion-ordered `Map`, printed `{k: v}` (the same
+// shape `group_by` returns).  Mirrors the Go/Rust/Python references.
+#[test]
+fn array_tally() {
+    let stmts = vec![
+        // ["a","b","a","c","a"].tally → {a: 3, b: 1, c: 1}  (first-seen order)
+        print(method(
+            seq(vec![str_("a"), str_("b"), str_("a"), str_("c"), str_("a")]),
+            "tally",
+            vec![],
+        )),
+        // [1,1,2,3,3,3].tally → {1: 2, 2: 1, 3: 3}
+        print(method(
+            seq(vec![int(1), int(1), int(2), int(3), int(3), int(3)]),
+            "tally",
+            vec![],
+        )),
+        // [].tally → {}  (empty)
+        print(method(seq(vec![]), "tally", vec![])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrtally".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrtally") {
+        assert_eq!(
+            stdout,
+            "{a: 3, b: 1, c: 1}\n\
+             {1: 2, 2: 1, 3: 3}\n\
+             {}"
+        );
+    }
+}
