@@ -405,4 +405,16 @@ mod tests {
         // but the product of their lengths does.
         assert!(eval("(2000⍴1)⍳(2000⍴1)\n").is_err());
     }
+
+    #[test]
+    fn stranded_literal_rejects_an_oversized_count_instead_of_allocating() {
+        // Unlike every builtin, stranding (`1 1 1 ...`) has no grammar-level
+        // depth bound on the count of numbers -- `term`'s repetition is
+        // flat, not recursive -- so this must be capped at the literal-
+        // construction site itself (eval_term), not left to rely on any
+        // other guard in this crate.
+        let n = builtins::MAX_ARRAY_LENGTH + 1;
+        let src: String = std::iter::repeat("1 ").take(n).collect::<String>() + "\n";
+        assert!(eval(&src).is_err());
+    }
 }

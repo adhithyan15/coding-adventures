@@ -278,17 +278,22 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
     unparenthesised dyadic chain) surfaced a real, separate DoS gap in that
     already-merged crate's own recursion-depth cap — shipped independently
     as its own fix (`apl-parser` 0.1.1), not part of this PR.
-  - **`/security-review` found 3 real DoS gaps before this crate's first
-    push**: dyadic `,` (catenate) and `∘.` (outer product) can each produce
-    a result *larger* than either input, so capping only the operands (as
-    `⍳`/dyadic `⍴` already did) wasn't enough — `A←A,A` could double a
-    variable's size every line with no ceiling, and `∘.` inherited
+  - **Two rounds of `/security-review` found 4 real DoS gaps before this
+    crate's first push**: dyadic `,` (catenate) and `∘.` (outer product) can
+    each produce a result *larger* than either input, so capping only the
+    operands (as `⍳`/dyadic `⍴` already did) wasn't enough — `A←A,A` could
+    double a variable's size every line with no ceiling, and `∘.` inherited
     `array_runtime::ops::outer`'s own `checked_mul` (which only guards
     `usize` overflow, not an excessive-but-representable product) with no
     cap of its own. Dyadic `⍳` (index-of) is O(len(a)×len(b)) with no
-    complexity bound. All three fixed by extending `builtins::MAX_ARRAY_LENGTH`
-    to cover the actual output size / work product, not just each operand's
-    own length, verified adversarially (guard disabled → regression test
+    complexity bound. A follow-up re-review round then found a fourth,
+    more fundamental gap: stranded numeric literals (`1 1 1 …`) never go
+    through `builtins.rs` at all — `term`'s repetition is flat, not
+    recursive, so `apl-parser`'s own depth cap never bounds the *count* of
+    stranded numbers either — bypassing every one of the first three fixes
+    via plain literal syntax. All four fixed by capping the actual output
+    size / work product at its construction site (not just each operand's
+    own length), verified adversarially (guard disabled → regression test
     fails → restored → passes) per this repo's standing DoS-guard-
     verification discipline. See `apl-runtime/CHANGELOG.md` for the full
     writeup.

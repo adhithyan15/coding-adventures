@@ -57,6 +57,14 @@ All notable changes to this project will be documented in this file.
   scalar comparisons — a CPU-time hang, not a memory crash, but the same
   class of availability DoS. Fixed by checking the same product against
   `MAX_ARRAY_LENGTH` before scanning.
-- All three fixes verified adversarially (guard disabled → confirmed the
+- **MEDIUM — stranded numeric literals (`1 1 1 …`) bypassed every one of the
+  above caps entirely.** Found by a follow-up re-review pass: unlike every
+  builtin, literal construction never goes through `builtins.rs` at all —
+  `term`'s repetition is flat, not recursive, so `apl-parser`'s
+  `MAX_RULE_DEPTH` never bounds the *count* of stranded numbers either.
+  `eval("1 1 1 … 1\n")` (1,500,000 times) built a 1.5M-element array with
+  zero rejection before this fix. Fixed by capping the stranded-token count
+  in `eval_term` itself, before doing any per-token parsing work.
+- All four fixes verified adversarially (guard disabled → confirmed the
   corresponding regression test fails without it → restored → confirmed it
   passes), per this repo's standing DoS-guard-verification discipline.

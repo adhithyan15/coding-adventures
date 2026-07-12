@@ -217,7 +217,21 @@ impl Interpreter {
             Some(ASTNodeOrToken::Token(t)) if t.effective_type_name() == "NUMBER" => {
                 // "Stranding": one or more juxtaposed NUMBER tokens form a
                 // single term — `1 2 3` is one 3-element vector, a lone
-                // `5` is a rank-0 scalar (MA05 §4).
+                // `5` is a rank-0 scalar (MA05 §4). Unlike every builtin in
+                // `builtins.rs`, this literal-construction path has no
+                // grammar-level depth bound on the *count* of stranded
+                // numbers (`term`'s repetition is flat, not recursive, so
+                // `apl-parser`'s `MAX_RULE_DEPTH` never sees it) — cap it
+                // the same way, before doing any parsing work, so
+                // `1 1 1 ... 1` (1.5M times) can't bypass every other
+                // allocation cap in this crate just by using literal syntax.
+                if node.children.len() > builtins::MAX_ARRAY_LENGTH {
+                    return Err(format!(
+                        "apl-runtime: stranded literal of {} numbers exceeds the cap of {} elements",
+                        node.children.len(),
+                        builtins::MAX_ARRAY_LENGTH
+                    ));
+                }
                 let mut nums = Vec::new();
                 for c in &node.children {
                     if let ASTNodeOrToken::Token(tok) = c {
