@@ -36,8 +36,10 @@
 //! types here define the *shape* of the world they operate on.
 
 pub mod calendar;
+pub mod formula;
 mod ids;
 mod model;
+pub mod ops;
 mod primitives;
 pub mod scheduler;
 

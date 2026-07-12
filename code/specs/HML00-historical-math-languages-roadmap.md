@@ -175,7 +175,12 @@ sequence of one-PR items run through the autonomous loop (§8).
 - **Wave 5 — Reduce, Derive, Maple (subset).** More symbolic CAS on the shared
   engine (Derive is small and historically charming).
 - **Wave 6 — J, K/Q, Scilab, IDL.** More array languages, each a frontend on
-  `array-runtime`.
+  `array-runtime`. *(Kickoff: see [`MA06`](MA06-j-language.md) for J — the
+  design item fixing language scope, the verb/adverb/conjunction grammar
+  (reusing APL's verb/noun split almost wholesale, plus one genuinely new
+  production for tacit hook/fork trains) before any lexer/parser/runtime
+  code lands. No substrate gap this time — array-runtime + AR-2, already
+  built for APL, cover J's in-scope value model unchanged.)*
 - **Wave 7 — Axiom, Julia (subset).** The research-grade lifts (typed CAS;
   multiple dispatch) — last, and only if warranted.
 

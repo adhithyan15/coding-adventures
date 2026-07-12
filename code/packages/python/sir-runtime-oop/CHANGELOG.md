@@ -2,6 +2,18 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.25] - 2026-07-11
+
+### Added
+
+- **`Array#minmax`** — the non-block Array method returning the two-element
+  array `[min, max]` in one call (`[3,1,2].minmax` → `[1, 3]`;
+  `["b","a","c"].minmax` → `["a", "c"]`). Ruby returns `[nil, nil]` for an empty
+  array (there is no smallest/largest element), which the runtime mirrors with
+  `[None, None]`. This is the Python **reference** for the new cross-backend
+  cascade (Go/Rust/JS/TS mirrors to follow). `respond_to?("minmax")` reports
+  `true`.
+
 ## [0.1.24] - 2026-07-11
 
 ### Added
