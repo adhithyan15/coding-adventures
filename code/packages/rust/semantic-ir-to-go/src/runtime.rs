@@ -1697,13 +1697,14 @@ func _sir_array_responds(name string) bool {
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
 		"min", "max", "sum", "uniq", "flatten", "compact", "zip", "rotate",
 		"to_h", "tally", "take", "drop", "values_at",
-		"join", "fetch", "to_a":
+		"join", "fetch", "to_a", "each_slice", "each_cons":
 		return true
 	// Block-taking Array/Enumerable methods.
 	case "each", "each_with_index", "map", "collect", "select", "filter",
 		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?",
 		"sort_by", "min_by", "max_by", "group_by", "partition", "flat_map",
-		"collect_concat", "take_while", "drop_while", "each_with_object":
+		"collect_concat", "take_while", "drop_while", "each_with_object",
+		"chunk_while":
 		return true
 	}
 	return false
@@ -2050,6 +2051,46 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 		return &Seq{Items: out}, true
 	case "to_a":
 		return recv, true
+	case "each_slice":
+		// `each_slice(n)` -> consecutive sub-arrays of at most n elements (the
+		// last may be shorter).  `[1,2,3,4,5].each_slice(2)` -> [[1,2],[3,4],[5]].
+		// Ruby raises ArgumentError for n <= 0; the never-panic floor yields [].
+		n := int64(0)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		if n <= 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		out := []Value{}
+		for i := int64(0); i < int64(len(recv.Items)); i += n {
+			end := i + n
+			if end > int64(len(recv.Items)) {
+				end = int64(len(recv.Items))
+			}
+			slice := make([]Value, end-i)
+			copy(slice, recv.Items[i:end])
+			out = append(out, &Seq{Items: slice})
+		}
+		return &Seq{Items: out}, true
+	case "each_cons":
+		// `each_cons(n)` -> every consecutive n-element sliding window.
+		// `[1,2,3,4].each_cons(2)` -> [[1,2],[2,3],[3,4]].  A window larger than
+		// the array (or n <= 0) yields [].
+		n := int64(0)
+		if len(args) > 0 {
+			n = _sir_as_int_trunc(args[0])
+		}
+		out := []Value{}
+		if n <= 0 {
+			return &Seq{Items: out}, true
+		}
+		for i := int64(0); i+n <= int64(len(recv.Items)); i++ {
+			win := make([]Value, n)
+			copy(win, recv.Items[i:i+n])
+			out = append(out, &Seq{Items: win})
+		}
+		return &Seq{Items: out}, true
 	}
 	return nil, false
 }
@@ -2276,6 +2317,28 @@ func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closur
 			_sir_apply(block, []Value{x, obj})
 		}
 		return obj, true
+	case "chunk_while":
+		// `chunk_while { |prev, cur| pred }` -> runs of consecutive elements: the
+		// block is called on each ADJACENT pair; while it is truthy the run
+		// continues, and a falsy result starts a new run.
+		// `[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` -> [[1,2],[4,5],[7]].
+		// An empty array yields []; a single element yields [[x]].
+		if len(recv.Items) == 0 {
+			return &Seq{Items: []Value{}}, true
+		}
+		cur := &Seq{Items: []Value{recv.Items[0]}}
+		chunks := []Value{cur}
+		for i := 1; i < len(recv.Items); i++ {
+			prev := recv.Items[i-1]
+			item := recv.Items[i]
+			if _sir_truthy(_sir_apply(block, []Value{prev, item})) {
+				cur.Items = append(cur.Items, item)
+			} else {
+				cur = &Seq{Items: []Value{item}}
+				chunks = append(chunks, cur)
+			}
+		}
+		return &Seq{Items: chunks}, true
 	}
 	return nil, false
 }
