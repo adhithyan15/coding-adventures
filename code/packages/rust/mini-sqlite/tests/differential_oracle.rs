@@ -616,6 +616,16 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT UNHEX(s, ig) AS r FROM t ORDER BY id",
     },
+    // HEX(NULL) is the EMPTY STRING, not NULL — SQLite casts the argument to a
+    // blob first, and NULL → empty blob → ''. The non-NULL cases are unchanged.
+    Case {
+        id: "hex_of_null",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'abc'), (2, NULL)",
+        ],
+        query: "SELECT HEX(s) AS h, TYPEOF(HEX(s)) AS t FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

@@ -1416,13 +1416,15 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             // HEX(x): uppercase hexadecimal of the argument's bytes. SQLite reads
             // the argument as a blob — text uses its UTF-8 bytes, a blob its raw
             // bytes, and an integer its decimal-text bytes (`hex(255)` → "323535").
-            // NULL maps to NULL. Floats are declined: their SQLite text form
-            // (`2.0`, not Rust's `2`) is subtle enough that we don't guess here.
+            // NULL casts to an *empty blob*, so `hex(NULL)` is the empty string
+            // `''` (a text value), NOT NULL. Floats are declined: their SQLite
+            // text form (`2.0`, not Rust's `2`) is subtle enough that we don't
+            // guess here.
             if args.len() != 1 {
                 return Err(VmError::TypeMismatch(format!("HEX expects 1 arg, got {}", args.len())));
             }
             let bytes: Vec<u8> = match &args[0] {
-                SqlValue::Null => return Ok(SqlValue::Null),
+                SqlValue::Null => return Ok(SqlValue::Text(String::new())),
                 SqlValue::Text(s) => s.as_bytes().to_vec(),
                 SqlValue::Blob(b) => b.clone(),
                 SqlValue::Int(i) => i.to_string().into_bytes(),
@@ -3824,7 +3826,8 @@ mod tests {
         assert_eq!(h(SqlValue::Text("abc".into())), "616263");
         assert_eq!(h(SqlValue::Blob(vec![0xde, 0xad, 0xbe, 0xef])), "DEADBEEF");
         assert_eq!(h(SqlValue::Int(255)), "323535"); // hex of the text "255"
-        assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        // NULL casts to an empty blob, so HEX(NULL) is the empty string, NOT NULL.
+        assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Text(String::new()));
     }
 
     #[test]
