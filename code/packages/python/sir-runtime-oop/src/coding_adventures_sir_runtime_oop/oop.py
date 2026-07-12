@@ -578,6 +578,7 @@ _ARRAY_METHODS = frozenset(
         "zip",
         "each_slice",
         "each_cons",
+        "tally",
     }
 )
 
@@ -1067,6 +1068,17 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
         if n <= 0:
             return []
         return [recv[i : i + n] for i in range(0, len(recv) - n + 1)]
+    if name == "tally":
+        # ``tally`` — a Hash mapping each element to its occurrence count, in
+        # first-seen key order.  ``[a, b, a, c, a].tally`` → ``{a: 3, b: 1, c: 1}``
+        # (a ``dict`` preserves insertion order, matching Ruby).  Brings the
+        # Python reference level with the Go/Rust runtimes, which already ship
+        # ``tally``.  As with the rest of the Python ``Hash`` surface (a ``dict``),
+        # elements are counted by hash/equality, so hashable elements only.
+        counts: dict[Val, Val] = {}
+        for item in recv:
+            counts[item] = counts.get(item, 0) + 1
+        return counts
     return _MISS
 
 
