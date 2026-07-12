@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - Unreleased
+
+### Fixed
+
+- **A table alias may omit the `AS` keyword.** `FROM users u` now aliases the
+  table exactly like `FROM users AS u` — SQLite and standard SQL accept both.
+  The generated `table_ref` grammar required `AS`; it now matches the
+  `sql.grammar` source (`table_name [ [ "AS" ] NAME ]`) by making `AS`
+  optional. The alias `NAME` cannot swallow a following keyword
+  (`JOIN`/`WHERE`/`ON`/…) — `NAME` only matches `Name`-type tokens — so bare
+  aliases work across joins (`FROM a x JOIN b y ON …`). Mirrors the 0.1.3
+  column-alias fix; paired with a sql-planner 0.2.3 change that reads the
+  implicit table alias.
+
 ## [0.1.3] - Unreleased
 
 ### Fixed
