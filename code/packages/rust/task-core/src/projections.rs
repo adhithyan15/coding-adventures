@@ -10,7 +10,7 @@ use crate::ids::*;
 use crate::model::*;
 use crate::primitives::Date;
 use crate::scheduler::{self, ScheduleResult, SchedulingError};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 impl ProjectState {
     /// Run the CPM scheduler (convenience wrapper over [`scheduler::schedule`]).
@@ -24,46 +24,59 @@ impl ProjectState {
     /// task reveals only its answered branch (nothing until answered), exactly like a
     /// pilot's checklist hides the irrelevant path.
     pub fn checklist(&self) -> Vec<ChecklistRow> {
+        // Precompute outline children per parent once (O(n)) so the whole walk is
+        // O(n log n) rather than O(n²) from a per-node scan.
+        let mut children_index: HashMap<TaskId, Vec<TaskId>> = HashMap::new();
+        for t in self.tasks.values() {
+            if let Some(p) = &t.parent {
+                children_index
+                    .entry(p.clone())
+                    .or_default()
+                    .push(t.id.clone());
+            }
+        }
+        for kids in children_index.values_mut() {
+            kids.sort_by_key(|id| self.order_key(id));
+        }
+
         let mut rows = Vec::new();
         let mut visited = HashSet::new();
-        for id in self.roots() {
-            self.walk_checklist(&id, 0, &mut rows, &mut visited);
+        // Iterative DFS so traversal depth is heap-bounded, not stack-bounded — a
+        // recursive walk would overflow the stack on a deep hierarchy (an uncatchable
+        // abort, as `formula.rs` notes for its parser). Roots are pushed reversed so
+        // the pop order matches outline order.
+        let mut stack: Vec<(TaskId, u32)> =
+            self.roots().into_iter().rev().map(|id| (id, 0)).collect();
+        while let Some((id, depth)) = stack.pop() {
+            if !visited.insert(id.clone()) {
+                continue; // guard against shared/cyclic references
+            }
+            let Some(t) = self.tasks.get(&id) else {
+                continue;
+            };
+            rows.push(ChecklistRow {
+                task: id.clone(),
+                name: t.name.clone(),
+                depth,
+                completed: t.completed,
+                is_decision: t.decision.is_some(),
+                answered: t.decision.as_ref().and_then(|d| d.answer),
+            });
+            // Visible children: a decision shows only its answered branch; a plain task
+            // shows its outline children.
+            let children: Vec<TaskId> = match &t.decision {
+                Some(d) => match d.answer {
+                    Some(true) => d.yes_children.clone(),
+                    Some(false) => d.no_children.clone(),
+                    None => Vec::new(),
+                },
+                None => children_index.get(&id).cloned().unwrap_or_default(),
+            };
+            for c in children.into_iter().rev() {
+                stack.push((c, depth + 1));
+            }
         }
         rows
-    }
-
-    fn walk_checklist(
-        &self,
-        id: &TaskId,
-        depth: u32,
-        rows: &mut Vec<ChecklistRow>,
-        visited: &mut HashSet<TaskId>,
-    ) {
-        if !visited.insert(id.clone()) {
-            return; // guard against shared/cyclic references
-        }
-        let Some(t) = self.tasks.get(id) else { return };
-        rows.push(ChecklistRow {
-            task: id.clone(),
-            name: t.name.clone(),
-            depth,
-            completed: t.completed,
-            is_decision: t.decision.is_some(),
-            answered: t.decision.as_ref().and_then(|d| d.answer),
-        });
-        // Visible children: a decision shows only its answered branch; a plain task
-        // shows its outline children.
-        let children: Vec<TaskId> = match &t.decision {
-            Some(d) => match d.answer {
-                Some(true) => d.yes_children.clone(),
-                Some(false) => d.no_children.clone(),
-                None => Vec::new(),
-            },
-            None => self.ordered_children(id),
-        };
-        for c in children {
-            self.walk_checklist(&c, depth + 1, rows, visited);
-        }
     }
 
     // ── todos ────────────────────────────────────────────────────────────────────
@@ -226,15 +239,12 @@ impl ProjectState {
         roots.into_iter().map(|t| t.id.clone()).collect()
     }
 
-    /// A task's direct children, in outline order.
-    fn ordered_children(&self, id: &TaskId) -> Vec<TaskId> {
-        let mut kids: Vec<&Task> = self
-            .tasks
-            .values()
-            .filter(|t| t.parent.as_ref() == Some(id))
-            .collect();
-        kids.sort_by(|a, b| a.order.cmp(&b.order).then_with(|| a.id.0.cmp(&b.id.0)));
-        kids.into_iter().map(|t| t.id.clone()).collect()
+    /// The outline sort key for a task id: `(order, id)`.
+    fn order_key(&self, id: &TaskId) -> (i64, String) {
+        self.tasks
+            .get(id)
+            .map(|t| (t.order, t.id.0.clone()))
+            .unwrap_or((0, id.0.clone()))
     }
 
     /// Outline depth (number of ancestors), bounded against a malformed parent chain.
@@ -455,6 +465,25 @@ mod tests {
         let names: Vec<_> = s.checklist().into_iter().map(|r| r.name).collect();
         assert!(names.contains(&"Deploy".to_string()));
         assert!(!names.contains(&"Fix first".to_string()));
+    }
+
+    #[test]
+    fn deep_hierarchy_does_not_overflow_the_stack() {
+        // A deep linear chain would blow a recursive walk's stack; the iterative
+        // checklist must handle it. 20_000 levels is well past the recursion limit.
+        let mut s = ProjectState::empty(ProjectId::from_raw("p1"));
+        s.create_task(tid("t0"), "t0", None).unwrap();
+        for i in 1..20_000u32 {
+            s.create_task(
+                tid(&format!("t{i}")),
+                "t",
+                Some(tid(&format!("t{}", i - 1))),
+            )
+            .unwrap();
+        }
+        let rows = s.checklist();
+        assert_eq!(rows.len(), 20_000);
+        assert_eq!(rows.last().unwrap().depth, 19_999);
     }
 
     #[test]
