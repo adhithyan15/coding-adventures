@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.14.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: `with` soundness gate
+
+New `has_with: bool` field on `ScopeAnalysis` (set by the existing `analyze`
+walk whenever a `with` statement is encountered anywhere) and a public
+`program_contains_with_statement(&Program) -> bool` helper built on it. A `with`
+splices its object onto the scope chain, so a bare name in the body can resolve
+to an object property rather than a lexical binding — which makes renaming
+unsound. The rename / rename-globals / rename-properties passes read this gate
+and decline to rename when it is set. Because it rides the full `analyze` walk,
+it detects a `with` however deeply nested (e.g. inside a function expression).
+Three unit tests pin detection (absent / top-level / nested-in-function).
+
 ## [0.13.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: walk `WithStatement`

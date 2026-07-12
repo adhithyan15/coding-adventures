@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.14.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: decline to rename properties in the presence of `with`
+
+`run` now bails at the top when `program_contains_with_statement`
+(closure-scope-analyzer 0.14.0, added as a new dependency) is `true`, returning
+the program unchanged. Inside `with (obj) …` a bare `foo` may be the property
+access `obj.foo` in disguise; the pass cannot see that, so renaming the property
+`foo` elsewhere would desynchronize from the hidden access. `with` is rare (a
+strict-mode syntax error), so the program-wide bail costs little. New
+`with_statement_disables_property_renaming` test.
+
 ## [0.13.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`
