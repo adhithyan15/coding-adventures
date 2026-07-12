@@ -275,3 +275,92 @@ fn array_methods_compile_and_run() {
         "unexpected stdout:\n{stdout}"
     );
 }
+
+// ── Array each_slice / each_cons / chunk_while ─────────────────────────────
+//
+// The consecutive-grouping family, mirroring the Python reference (#8031).
+// `each_slice`/`each_cons` are non-block (take an int `n`); `chunk_while` is a
+// block method (the block is called on each ADJACENT pair).
+fn slice_module() -> Function {
+    Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                // [1,2,3,4,5].each_slice(2) → [[1, 2], [3, 4], [5]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5)]),
+                    "each_slice",
+                    vec![ilit(2)],
+                )),
+                // [1,2,3].each_slice(0) → []  (never-panic floor)
+                print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "each_slice", vec![ilit(0)])),
+                // [1,2,3,4].each_cons(2) → [[1, 2], [2, 3], [3, 4]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3), ilit(4)]),
+                    "each_cons",
+                    vec![ilit(2)],
+                )),
+                // [1,2].each_cons(3) → []  (window larger than the array)
+                print_stmt(method(seq(vec![ilit(1), ilit(2)]), "each_cons", vec![ilit(3)])),
+                // [1,2,4,5,7].chunk_while { |a,b| b-a==1 } → [[1, 2], [4, 5], [7]]
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(4), ilit(5), ilit(7)]),
+                    "chunk_while",
+                    vec![closure("__lam_adj")],
+                )),
+                // [].chunk_while { … } → []
+                print_stmt(method(seq(vec![]), "chunk_while", vec![closure("__lam_adj")])),
+            ],
+            value: nil(),
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+#[test]
+fn array_each_slice_each_cons_chunk_while_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let adj = lambda_fn2(
+        "__lam_adj",
+        "a",
+        "b",
+        Block {
+            stmts: vec![],
+            value: builtin("=", vec![builtin("-", vec![var_p("b"), var_p("a")]), ilit(1)]),
+            span: s(),
+        },
+    );
+    let module = program(vec![slice_module(), adj]);
+    let artifact = compile(&module).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "slice");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "[[1, 2], [3, 4], [5]]",    // each_slice(2)
+            "[]",                       // each_slice(0) → []
+            "[[1, 2], [2, 3], [3, 4]]", // each_cons(2)
+            "[]",                       // each_cons(3) on len-2 → []
+            "[[1, 2], [4, 5], [7]]",    // chunk_while { b-a==1 }
+            "[]",                       // [].chunk_while → []
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
