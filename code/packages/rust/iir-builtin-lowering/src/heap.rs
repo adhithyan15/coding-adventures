@@ -116,8 +116,14 @@ pub fn desugar_list_in_function(fn_: &mut IIRFunction) {
         }
 
         // The shared nil tail (const 0 : ref<LispyPair>, the nil sentinel).
+        // Temporaries are DERIVED from the list's own (unique) `dest` name plus a
+        // pass-local monotonic counter — `{dest}.list_nil{n}` / `{dest}.list_cell{n}`
+        // — mirroring how `dynamic_arith` mints `{dest}.raw{n}`. Deriving from the
+        // already-unique `dest` (rather than a bare `__list_*` prefix) makes these
+        // names provably disjoint from any pre-existing source-derived variable, so
+        // a Twig identifier of the form `__list_cellN` can never be clobbered.
         counter += 1;
-        let nil_name = format!("__list_nil{counter}");
+        let nil_name = format!("{dest}.list_nil{counter}");
         out.push(IIRInstr::new(
             "const", Some(nil_name.clone()), vec![Operand::Int(0)], "ref<LispyPair>",
         ));
@@ -130,7 +136,7 @@ pub fn desugar_list_in_function(fn_: &mut IIRFunction) {
                 dest.clone()
             } else {
                 counter += 1;
-                format!("__list_cell{counter}")
+                format!("{dest}.list_cell{counter}")
             };
             out.push(IIRInstr::new(
                 "call_builtin",
