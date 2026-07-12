@@ -203,6 +203,51 @@ pub fn lower_dynamic_arith(module: &mut IIRModule) {
     }
 }
 
+/// The runtime-call names the tagged-i64 world uses for box / unbox.
+const BOX_INT_BUILTIN: &str = "dyn_box_int";
+const UNBOX_INT_BUILTIN: &str = "dyn_unbox_int";
+
+/// **E6d-2b — the tagged-i64 (native / LLVM) representation of `box` / `unbox`.**
+///
+/// `lower_dynamic_arith` emits the *generic* `box` / `unbox` IIR ops — the same
+/// ops `cons`/`car` use — because the **structural** backends (WASM `i31ref`,
+/// JVM `Integer`, CLR boxed-int32) lower them directly. The **tagged-i64** world
+/// (native aarch64/x86_64 + LLVM) has no such opcode: a tagged word is
+/// `n << 3`, produced/consumed by the runtime helpers `__dyn_box_int` /
+/// `__dyn_unbox_int`. This pass rewrites each residual
+///
+/// ```text
+///   unbox v   → u : i64        ⇒   call_builtin "dyn_unbox_int", v  → u : i64
+///   box   s   → d : ref<any>   ⇒   call_builtin "dyn_box_int",   s  → d : ref<any>
+/// ```
+///
+/// so `iir-to-llvm` (via its `DYN_BUILTINS` table) and the native backends (via
+/// `V1_BUILTINS`) emit a `call/bl __dyn_box_int` / `__dyn_unbox_int`.
+///
+/// It runs **only on the native / LLVM pipeline** — never before the structural
+/// pass, which keeps the generic ops. A `box` of a compile-time integer constant
+/// is already boxed inline (`n << 3`) by `lower_dyn_repr` and never reaches here;
+/// this handles the *dynamic* case (a machine-typed arithmetic result).
+pub fn lower_box_unbox_to_runtime_calls(module: &mut IIRModule) {
+    for fn_ in &mut module.functions {
+        for instr in &mut fn_.instructions {
+            let builtin = match instr.op.as_str() {
+                "box" => BOX_INT_BUILTIN,
+                "unbox" => UNBOX_INT_BUILTIN,
+                _ => continue,
+            };
+            // `box`/`unbox` are unary: srcs == [value]. Rewrite to
+            // `call_builtin "<builtin>", value`, preserving dest + type_hint.
+            let value = match instr.srcs.first() {
+                Some(v) => v.clone(),
+                None => continue,
+            };
+            instr.op = "call_builtin".to_string();
+            instr.srcs = vec![Operand::Var(builtin.to_string()), value];
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -287,5 +332,39 @@ mod tests {
         lower_dynamic_arith_function(&mut f);
         assert!(f.instructions.iter().any(|i| i.op == "call_builtin"));
         assert!(!f.instructions.iter().any(|i| i.op == "box"));
+    }
+
+    /// E6d-2b: `lower_box_unbox_to_runtime_calls` turns the generic `box`/`unbox`
+    /// ops (which `lower_dynamic_arith` emits) into `dyn_box_int`/`dyn_unbox_int`
+    /// runtime `call_builtin`s for the tagged-i64 backends, preserving dest,
+    /// operand, and type hint.
+    #[test]
+    fn box_unbox_ops_become_runtime_calls() {
+        // (+ boxed raw): field_load ; const ; unbox ; add ; box ; ret
+        let mut f = arith_fn("+", ("x", "ref<any>"), ("y", "i64"));
+        lower_dynamic_arith_function(&mut f);
+        let mut module = IIRModule::new("m", "mccarthy-lisp");
+        module.functions.push(f);
+        lower_box_unbox_to_runtime_calls(&mut module);
+        let f = &module.functions[0];
+        // No generic box/unbox ops remain.
+        assert!(!f.instructions.iter().any(|i| i.op == "box" || i.op == "unbox"));
+        // The unbox became `call_builtin "dyn_unbox_int", <boxed operand>` : i64.
+        let unbox = f
+            .instructions
+            .iter()
+            .find(|i| i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("dyn_unbox_int".into())))
+            .expect("unbox → dyn_unbox_int call");
+        assert_eq!(unbox.type_hint, "i64");
+        assert_eq!(unbox.srcs.len(), 2, "dyn_unbox_int is unary (builtin name + 1 operand)");
+        // The box became `call_builtin "dyn_box_int", <raw result>` : ref<any>,
+        // keeping the original destination register.
+        let boxed = f
+            .instructions
+            .iter()
+            .find(|i| i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("dyn_box_int".into())))
+            .expect("box → dyn_box_int call");
+        assert_eq!(boxed.type_hint, "ref<any>");
+        assert_eq!(boxed.dest.as_deref(), Some("r"));
     }
 }

@@ -443,6 +443,12 @@ pub fn compile_source_to_llvm_with_target(
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
     iir_builtin_lowering::lower_dyn_repr(&mut module);
+    // E6d-2b: rewrite the generic `box`/`unbox` ops that `lower_dynamic_arith`
+    // emitted into `dyn_box_int`/`dyn_unbox_int` runtime calls — the tagged-i64
+    // (LLVM) representation, which `iir-to-llvm`'s `DYN_BUILTINS` table lowers to
+    // `call @__dyn_box_int` / `__dyn_unbox_int`. (The structural backends keep
+    // the generic ops; this runs only on the native/LLVM pipeline.)
+    iir_builtin_lowering::lower_box_unbox_to_runtime_calls(&mut module);
     // Concretise any residual scalar `any` (a pure-integer program never enters
     // the lisp passes above) to `i64`.
     concretize_scalar_any_for_llvm(&mut module);

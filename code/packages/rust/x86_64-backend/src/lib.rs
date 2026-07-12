@@ -310,6 +310,11 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
     // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
     BuiltinSig { name: "dyn_unbox_int", n_args: 1, returns: true },
+    // E6d-2b — box a raw machine word back into a tagged `DynValue` at runtime
+    // (`n << 3`), for a *dynamic* value that is not a compile-time constant —
+    // e.g. the result of dynamic arithmetic re-entering the lisp value world.
+    // `uint64_t __dyn_box_int(int64_t)`.
+    BuiltinSig { name: "dyn_box_int", n_args: 1, returns: true },
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
     BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },

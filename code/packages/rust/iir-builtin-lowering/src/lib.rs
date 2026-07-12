@@ -163,6 +163,7 @@ pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).
 pub use closure::lower_closure_builtins;
 pub use dynamic_arith::lower_dynamic_arith;
+pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
 
 use interpreter_ir::IIRModule;
 

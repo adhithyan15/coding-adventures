@@ -1,5 +1,9 @@
 # Changelog — `aarch64-backend`
 
+## 0.27.0 - 2026-07-11 (E6d-2b: dyn_box_int runtime builtin)
+
+E6d-2b: register `dyn_box_int` in `V1_BUILTINS` (`uint64_t __dyn_box_int(int64_t)`), so dynamic arithmetic that re-boxes a machine result at runtime lowers to `bl __dyn_box_int`. Mirrors the existing `dyn_unbox_int`.
+
 ## 0.26.0 - 2026-07-11 (DVAL01-2: dyn_* builtin names + fix native runtime-symbol emit)
 
 DVAL01-2: the V1 builtin table's lisp entries are de-lisped (`lispy_cons`->`dyn_cons`, ... `lispy_to_exit_code`->`dyn_to_exit_code`). **Also fixes a latent bug left by DVAL01-1a**: the `call_builtin` emit hard-coded `__twig_<name>` for *all* helpers, so the tagged-value builtins emitted `__twig_lispy_cons` -- a symbol the runtime (which exports `__dyn_cons`) does not provide. The emit now routes `dyn_*` names to `__<name>` (= `__dyn_cons`) and everything else to `__twig_<name>`, matching `dynval_runtime.c` + the LLVM backend. Fixes the 4 previously-red `call_builtin`->external-symbol unit tests (real programs were unaffected: they lower cons/car via the structural alloc path).

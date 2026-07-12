@@ -1,5 +1,9 @@
 # Changelog — iir-to-llvm
 
+## 0.40.0 - 2026-07-11 (E6d-2b: ref<any> is a tagged i64)
+
+E6d-2b: `llvm_type_for` now maps `ref<any>` -> `i64` (a tagged word, exactly like `ref<LispyPair>`), so a `dyn_box_int` result (a re-boxed dynamic-arithmetic value) validates and lowers on the LLVM backend. The `DYN_BUILTINS` table already routes `dyn_box_int`/`dyn_unbox_int` to `@__dyn_box_int`/`@__dyn_unbox_int`.
+
 ## 0.39.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_*)
 
 DVAL01-2: the LLVM name->runtime-symbol table `LISPY_BUILTINS` is renamed `DYN_BUILTINS` and its first column de-lisped (`lispy_cons`->`dyn_cons`, ... -> the unchanged `__dyn_*` C symbols). `lispy_builtin()` lookup -> `dyn_builtin()`. Pure rename; LLVM lowering unchanged.
