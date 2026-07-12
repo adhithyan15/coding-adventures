@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.29.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
+
+Mirrors the Python reference (PR #8009), Go (PR #8015), and Rust (PR #8020)
+into the JS backend's inline `hashMethod` (+ the `HASH_METHODS` `respond_to?`
+set), rounding out Hash's Enumerable iteration surface.
+
+- `to_h` **without** a block → a shallow copy of the hash (`new Map(recv)`, so
+  mutating it does not alias the receiver).
+- `to_h { |k, v| [new_k, new_v] }` → a NEW `Map` from the block-returned
+  `[k, v]` pairs; the block is yielded the two args `(k, v)`; a non-pair result
+  (checked `Array.isArray` + length 2) is skipped, and a later pair with a
+  duplicate key wins (Ruby's rule / `Map.set`).
+- `each_with_index { |(k, v), i| … }` → yields each `[k, v]` pair with its
+  0-based index, returns the receiver.
+- `each_with_object(memo) { |(k, v), memo| … }` → yields each `[k, v]` pair with
+  the memo, returns the memo; no-memo arg returns the receiver.
+
+Unlike `each`'s two-arg `(k, v)` yield, `each_with_index`/`each_with_object` pass
+the element as a single `[k, v]` JS Array (the second block param is the
+index/memo), matching Ruby's Enumerable convention.  (A printed hash already
+renders `{k: v}` after the display fix in 0.28.0.)
+
+Exec-proof: `tests/run_with_node.rs` gains `hash_to_h_and_indexed_iteration`,
+running to_h (copy + re-map), each_with_index (observed pair+index yield, returns
+self), and each_with_object (observed pair+memo yield, returns memo, and no-memo
+passthrough) under real `node`, diffed against the Python/Go/Rust reference.
+
 ## 0.28.0 — Hash Enumerable breadth: `group_by` / `partition` / `flat_map` / `collect_concat` / `reduce` / `inject` / `sum` (+ Hash display)
 
 Mirrors the Python reference (PR #7978), the Go backend (PR #7983), and the Rust

@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.5.13 — LIKELY / UNLIKELY / LIKELIHOOD (planner hints)
+
+Grows the SQL scalar surface (sql-vm 0.4.9) with SQLite's query-planner hint
+functions: `LIKELY(x)`, `UNLIKELY(x)`, and `LIKELIHOOD(x, p)`. They're the
+identity function on their first argument (any type, including NULL) — the hint
+only nudges the optimizer. `LIKELIHOOD`'s probability `p` must be a number in
+`[0,1]`. A new differential-oracle case (`likely_family`) diffs against real
+bundled SQLite.
+
+## 0.5.12 — OCTET_LENGTH (byte length)
+
+Grows the SQL scalar surface (sql-vm 0.4.8): `OCTET_LENGTH(x)` returns the byte
+count of a value, where `LENGTH` returns the character count — `OCTET_LENGTH('héllo')`
+is 6 but `LENGTH('héllo')` is 5. Text is measured as UTF-8 bytes, a blob by its
+raw bytes, an integer by its decimal digits; NULL → NULL; floats declined. A new
+differential-oracle case (`octet_length`) diffs `OCTET_LENGTH(s)` and `LENGTH(s)`
+across multibyte, empty, and NULL rows against real bundled SQLite.
+
+## 0.5.11 — Fix HEX(NULL) to return an empty string
+
+Stream A correctness fix (sql-vm 0.4.7): `HEX(NULL)` returned SQL NULL but real
+SQLite returns the empty string `''` — it casts the argument to a blob first, so
+NULL → empty blob → `''` (a text value). This was the latent divergence flagged
+by the UNHEX work (0.5.10). A new differential-oracle case (`hex_of_null`) diffs
+`HEX(s)` and `TYPEOF(HEX(s))` for both a text and a NULL row against real bundled
+SQLite.
+
+## 0.5.10 — UNHEX (decode hex to blob)
+
+Grows the SQL scalar surface (sql-vm 0.4.6): `UNHEX(x)` / `UNHEX(x, ignore)`
+decodes hexadecimal digit pairs into a blob — the inverse of `HEX`. Odd length
+or non-hex characters → NULL; the optional ignore-set is honoured only at byte
+boundaries (`unhex('41.42','.')` → `x'4142'`, `unhex('4-1-4-2','-')` → NULL).
+Two new differential-oracle cases (`unhex`, `unhex_ignore_set`) diff against real
+bundled SQLite.
+
+Note: adding UNHEX surfaced a separate, pre-existing divergence — `HEX(NULL)`
+returns NULL here but real SQLite returns an empty string. That is left for its
+own fix; the UNHEX oracle cases compare blobs directly to avoid it.
+
+## 0.5.9 — Fix ROUND with a negative digit count
+
+Stream A correctness fix (sql-vm 0.4.5): `ROUND(x, n)` with a negative `n` now
+matches SQLite, which treats it as zero digits rather than rounding to
+tens/hundreds — `ROUND(2.567, -1)` returned `0.0` but SQLite gives `3.0`
+(= `ROUND(2.567, 0)`), and `ROUND(12.5, -1)` = `13.0`. A new differential-oracle
+case (`round_negative_digits`) diffs against real bundled SQLite.
+
 ## 0.5.8 — CONCAT / CONCAT_WS / SUBSTRING string functions
 
 Grows the SQL scalar surface (sql-vm 0.4.4): `CONCAT(x, …)` joins all arguments

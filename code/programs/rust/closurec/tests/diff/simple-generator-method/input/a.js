@@ -1,0 +1,1 @@
+class C { *gen(){ return 1 + 2 } }

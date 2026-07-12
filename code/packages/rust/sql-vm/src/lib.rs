@@ -1037,7 +1037,8 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 ///
 /// | Name     | Args | Semantics                                             |
 /// |----------|------|-------------------------------------------------------|
-/// | LENGTH   |  1   | Byte-length of a string (returns Integer or NULL)     |
+/// | LENGTH   |  1   | Character count of a string (returns Integer or NULL) |
+/// | OCTET_LENGTH | 1 | Byte count of text/blob/integer (Integer or NULL)    |
 /// | UPPER    |  1   | ASCII-uppercase the string                            |
 /// | LOWER    |  1   | ASCII-lowercase the string                            |
 /// | TRIM     | 1–2  | Strip whitespace, or a given character set, from both ends |
@@ -1046,6 +1047,9 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | SUBSTR   | 2–3  | 1-indexed substring extraction (alias: SUBSTRING)     |
 /// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
 /// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
+/// | UNHEX    | 1–2  | Decode hex digit pairs into a blob (inverse of HEX)   |
+/// | LIKELY / UNLIKELY | 1 | Planner hint; returns the argument unchanged     |
+/// | LIKELIHOOD | 2  | Planner hint with a probability; returns arg 1        |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
@@ -1149,6 +1153,65 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 SqlValue::Text(s) => Ok(SqlValue::Int(s.chars().count() as i64)),
                 other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT, got {:?}", other))),
             }
+        }
+
+        "OCTET_LENGTH" => {
+            // OCTET_LENGTH(x): the number of *bytes*, in contrast to LENGTH's
+            // count of characters. Text is measured as its UTF-8 bytes
+            // (`octet_length('héllo')` = 6, five characters but `é` is two
+            // bytes); a blob as its raw byte count; an integer/boolean as its
+            // decimal-text bytes (`octet_length(123)` = 3). NULL → NULL. Floats
+            // are declined — their byte length depends on SQLite's exact float
+            // text form, which is subtle (see HEX/QUOTE).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Int(s.len() as i64)),
+                SqlValue::Blob(b) => Ok(SqlValue::Int(b.len() as i64)),
+                SqlValue::Int(i) => Ok(SqlValue::Int(i.to_string().len() as i64)),
+                SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().len() as i64)),
+                other => Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
+            }
+        }
+
+        "LIKELY" | "UNLIKELY" => {
+            // Query-planner hints: `likely(x)` / `unlikely(x)` tell SQLite's
+            // optimizer that `x` is probably true / probably false, biasing its
+            // row-count estimates. They have no effect on the result — they are
+            // the *identity* function, returning the argument unchanged (any
+            // type, including NULL).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("{name} expects 1 arg, got {}", args.len())));
+            }
+            Ok(args.into_iter().next().unwrap())
+        }
+
+        "LIKELIHOOD" => {
+            // `likelihood(x, p)` is `likely`/`unlikely` with an explicit
+            // probability `p` (the fraction of rows for which `x` is expected to
+            // be true). It returns `x` unchanged; `p` only hints the planner.
+            // SQLite requires `p` to be a constant number in [0.0, 1.0] — we
+            // validate the value's range and reject anything else.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("LIKELIHOOD expects 2 args, got {}", args.len())));
+            }
+            let p = match &args[1] {
+                SqlValue::Float(f) => *f,
+                SqlValue::Int(i) => *i as f64,
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "LIKELIHOOD probability must be a number in [0,1], got {other:?}"
+                    )))
+                }
+            };
+            if !(0.0..=1.0).contains(&p) {
+                return Err(VmError::TypeMismatch(format!(
+                    "LIKELIHOOD probability {p} is out of range [0,1]"
+                )));
+            }
+            Ok(args.into_iter().next().unwrap())
         }
 
         "UPPER" => {
@@ -1326,6 +1389,11 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             } else {
                 0
             };
+            // SQLite treats a NEGATIVE digit count as zero — it never rounds to
+            // tens/hundreds. `round(2.567, -1)` is `round(2.567, 0)` = `3.0`, not
+            // `0.0`. Clamp the low end here (leaving large positive counts alone,
+            // where the value is already unchanged within f64 precision).
+            let digits = digits.max(0);
             // Round half away from zero (SQLite semantics), to `digits` decimal places.
             let factor = 10_f64.powi(digits);
             let rounded = (x * factor).round() / factor;
@@ -1410,13 +1478,15 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             // HEX(x): uppercase hexadecimal of the argument's bytes. SQLite reads
             // the argument as a blob — text uses its UTF-8 bytes, a blob its raw
             // bytes, and an integer its decimal-text bytes (`hex(255)` → "323535").
-            // NULL maps to NULL. Floats are declined: their SQLite text form
-            // (`2.0`, not Rust's `2`) is subtle enough that we don't guess here.
+            // NULL casts to an *empty blob*, so `hex(NULL)` is the empty string
+            // `''` (a text value), NOT NULL. Floats are declined: their SQLite
+            // text form (`2.0`, not Rust's `2`) is subtle enough that we don't
+            // guess here.
             if args.len() != 1 {
                 return Err(VmError::TypeMismatch(format!("HEX expects 1 arg, got {}", args.len())));
             }
             let bytes: Vec<u8> = match &args[0] {
-                SqlValue::Null => return Ok(SqlValue::Null),
+                SqlValue::Null => return Ok(SqlValue::Text(String::new())),
                 SqlValue::Text(s) => s.as_bytes().to_vec(),
                 SqlValue::Blob(b) => b.clone(),
                 SqlValue::Int(i) => i.to_string().into_bytes(),
@@ -1428,6 +1498,70 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 out.push_str(&format!("{byte:02X}"));
             }
             Ok(SqlValue::Text(out))
+        }
+
+        "UNHEX" => {
+            // UNHEX(x) / UNHEX(x, ignore): the inverse of HEX — decode a string of
+            // hexadecimal digit pairs into a blob. Case-insensitive.
+            //
+            //   unhex('414243')  -> x'414243'  ("ABC")
+            //   unhex('')        -> x''          (empty blob)
+            //   unhex('abc')     -> NULL         (odd number of digits)
+            //   unhex('4g')      -> NULL         (non-hex character)
+            //   unhex(12)        -> x'12'        (integer coerces to its digits)
+            //
+            // The optional second argument is a *set of ignorable characters*.
+            // An ignorable character may appear only at a byte boundary — never
+            // splitting a hex pair — matching SQLite exactly:
+            //
+            //   unhex('41.42', '.')   -> x'4142'   ('.' sits between pairs)
+            //   unhex('4-1-4-2', '-') -> NULL      ('-' splits the pair '4'…'1')
+            //
+            // NULL in either argument yields NULL. Integer/boolean `x` coerces to
+            // its decimal text (via `trim_coerce`); Float/Blob are declined, as
+            // with HEX/QUOTE.
+            if args.is_empty() || args.len() > 2 {
+                return Err(VmError::TypeMismatch(format!("UNHEX expects 1 or 2 args, got {}", args.len())));
+            }
+            let x = match trim_coerce("UNHEX", &args[0])? {
+                None => return Ok(SqlValue::Null),
+                Some(s) => s,
+            };
+            let ignore: std::collections::HashSet<char> = if args.len() == 2 {
+                match trim_coerce("UNHEX", &args[1])? {
+                    None => return Ok(SqlValue::Null),
+                    Some(s) => s.chars().collect(),
+                }
+            } else {
+                std::collections::HashSet::new()
+            };
+            // Output is at most half the input length — bounded by the argument,
+            // so no unbounded allocation.
+            let mut out: Vec<u8> = Vec::with_capacity(x.len() / 2);
+            let mut high: Option<u8> = None;
+            for c in x.chars() {
+                if let Some(v) = c.to_digit(16) {
+                    match high {
+                        None => high = Some(v as u8),
+                        Some(h) => {
+                            out.push(h * 16 + v as u8);
+                            high = None;
+                        }
+                    }
+                } else if ignore.contains(&c) {
+                    // Only allowed at a byte boundary, never mid-pair.
+                    if high.is_some() {
+                        return Ok(SqlValue::Null);
+                    }
+                } else {
+                    // Any other character invalidates the whole string.
+                    return Ok(SqlValue::Null);
+                }
+            }
+            if high.is_some() {
+                return Ok(SqlValue::Null); // a trailing, unpaired hex digit
+            }
+            Ok(SqlValue::Blob(out))
         }
 
         "SIGN" => {
@@ -3754,7 +3888,8 @@ mod tests {
         assert_eq!(h(SqlValue::Text("abc".into())), "616263");
         assert_eq!(h(SqlValue::Blob(vec![0xde, 0xad, 0xbe, 0xef])), "DEADBEEF");
         assert_eq!(h(SqlValue::Int(255)), "323535"); // hex of the text "255"
-        assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        // NULL casts to an empty blob, so HEX(NULL) is the empty string, NOT NULL.
+        assert_eq!(call_builtin("HEX", vec![SqlValue::Null]).unwrap(), SqlValue::Text(String::new()));
     }
 
     #[test]
@@ -3980,5 +4115,125 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_likely_family_is_identity() {
+        // likely / unlikely return their single argument unchanged, any type.
+        for name in ["LIKELY", "UNLIKELY"] {
+            assert_eq!(call_builtin(name, vec![SqlValue::Int(5)]).unwrap(), SqlValue::Int(5));
+            assert_eq!(
+                call_builtin(name, vec![SqlValue::Text("abc".into())]).unwrap(),
+                SqlValue::Text("abc".into())
+            );
+            assert_eq!(call_builtin(name, vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+            assert_eq!(call_builtin(name, vec![SqlValue::Float(2.5)]).unwrap(), SqlValue::Float(2.5));
+            // Wrong arity is an error, not a panic.
+            assert!(call_builtin(name, vec![]).is_err());
+            assert!(call_builtin(name, vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+        }
+        // likelihood(x, p) returns x when p is a probability in [0, 1].
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Int(7), SqlValue::Float(0.0625)]).unwrap(),
+            SqlValue::Int(7)
+        );
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Null, SqlValue::Float(0.5)]).unwrap(),
+            SqlValue::Null
+        );
+        // A probability outside [0, 1], a non-numeric probability, or wrong arity
+        // are all errors.
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Text("x".into())]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1)]).is_err());
+    }
+
+    #[test]
+    fn builtin_octet_length_counts_bytes() {
+        let ol = |v: SqlValue| call_builtin("OCTET_LENGTH", vec![v]).unwrap();
+        // Text is measured in UTF-8 bytes, not characters (contrast LENGTH).
+        assert_eq!(ol(SqlValue::Text("héllo".into())), SqlValue::Int(6)); // 5 chars, 6 bytes
+        assert_eq!(
+            call_builtin("LENGTH", vec![SqlValue::Text("héllo".into())]).unwrap(),
+            SqlValue::Int(5)
+        );
+        assert_eq!(ol(SqlValue::Text("abc".into())), SqlValue::Int(3));
+        assert_eq!(ol(SqlValue::Text("".into())), SqlValue::Int(0));
+        assert_eq!(ol(SqlValue::Text("日本".into())), SqlValue::Int(6)); // 2 chars × 3 bytes
+        // Blobs measure raw bytes; integers their decimal digits.
+        assert_eq!(ol(SqlValue::Blob(vec![0x00, 0xff])), SqlValue::Int(2));
+        assert_eq!(ol(SqlValue::Int(123)), SqlValue::Int(3));
+        // NULL propagates; wrong arity errors, not panics.
+        assert_eq!(ol(SqlValue::Null), SqlValue::Null);
+        assert!(call_builtin("OCTET_LENGTH", vec![]).is_err());
+    }
+
+    #[test]
+    fn builtin_unhex_decodes_hex_pairs() {
+        let u1 = |s: &str| call_builtin("UNHEX", vec![SqlValue::Text(s.into())]).unwrap();
+        // Even-length hex → blob; case-insensitive.
+        assert_eq!(u1("414243"), SqlValue::Blob(vec![0x41, 0x42, 0x43]));
+        assert_eq!(u1("abcdef"), SqlValue::Blob(vec![0xab, 0xcd, 0xef]));
+        assert_eq!(u1("ABCDEF"), SqlValue::Blob(vec![0xab, 0xcd, 0xef]));
+        assert_eq!(u1(""), SqlValue::Blob(vec![])); // empty → empty blob
+        // Odd length or a non-hex character → NULL.
+        assert_eq!(u1("abc"), SqlValue::Null);
+        assert_eq!(u1("4g"), SqlValue::Null);
+        assert_eq!(u1("41 42"), SqlValue::Null);
+        // NULL propagates; an integer coerces to its decimal digits.
+        assert_eq!(call_builtin("UNHEX", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert_eq!(
+            call_builtin("UNHEX", vec![SqlValue::Int(12)]).unwrap(),
+            SqlValue::Blob(vec![0x12])
+        );
+        // Result is a blob.
+        assert!(matches!(u1("41"), SqlValue::Blob(_)));
+    }
+
+    #[test]
+    fn builtin_unhex_ignore_set_only_at_byte_boundaries() {
+        let u2 = |s: &str, ig: &str| {
+            call_builtin("UNHEX", vec![SqlValue::Text(s.into()), SqlValue::Text(ig.into())]).unwrap()
+        };
+        // An ignorable char between pairs is fine.
+        assert_eq!(u2("41.42", "."), SqlValue::Blob(vec![0x41, 0x42]));
+        assert_eq!(u2("41", "x"), SqlValue::Blob(vec![0x41])); // ignore char absent
+        // An ignorable char that splits a pair invalidates the string.
+        assert_eq!(u2("4-1-4-2", "-"), SqlValue::Null);
+        // A NULL ignore set yields NULL.
+        assert_eq!(
+            call_builtin("UNHEX", vec![SqlValue::Text("41".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        // Zero args is an arity error, not a panic.
+        assert!(call_builtin("UNHEX", vec![]).is_err());
+    }
+
+    #[test]
+    fn builtin_round_clamps_negative_digits_to_zero() {
+        let round = |x: f64, d: Option<i64>| {
+            let mut args = vec![SqlValue::Float(x)];
+            if let Some(d) = d {
+                args.push(SqlValue::Int(d));
+            }
+            call_builtin("ROUND", args).unwrap()
+        };
+        // Positive / zero digit counts are unchanged.
+        assert_eq!(round(2.567, None), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(0)), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(2)), SqlValue::Float(2.57));
+        // Round half away from zero.
+        assert_eq!(round(2.5, None), SqlValue::Float(3.0));
+        assert_eq!(round(-2.5, None), SqlValue::Float(-3.0));
+        // A NEGATIVE digit count behaves as 0 — NOT tens/hundreds rounding.
+        assert_eq!(round(2.567, Some(-1)), SqlValue::Float(3.0));
+        assert_eq!(round(2.567, Some(-5)), SqlValue::Float(3.0));
+        assert_eq!(round(12.5, Some(-1)), SqlValue::Float(13.0));
+        // NULL propagation on either argument.
+        assert_eq!(call_builtin("ROUND", vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+        assert_eq!(
+            call_builtin("ROUND", vec![SqlValue::Float(2.5), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
     }
 }

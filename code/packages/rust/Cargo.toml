@@ -238,6 +238,7 @@ members = [
     "wolfram-parser",
     "wolfram-runtime",
     "wolfram-repl",
+    "wolfram-to-semantic-ir",
     "apl-lexer",
     "apl-parser",
     "logic-gates",

@@ -2,6 +2,108 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.49.0] - 2026-07-12
+
+### Added — CLOC12.185: bridge parenthesised object-body arrows `() => ({…})`
+
+Follow-on to CLOC12.184. `convert_arrow_function` still declined a
+**parenthesised object expression body** `() => ({…})` — even though the emitter
+already re-wraps an `ObjectExpression` arrow body in parens so it is never
+misread as a block. The guard now, when the body parses as an `ObjectExpression`,
+branches on the concise_body's leftmost token:
+
+- leads with `{` (a bare block body per the ES spec): empty → `ArrowBody::Block`
+  (CLOC12.184), non-empty → DECLINE (contents would need re-parsing as
+  statements);
+- leads with `(` (a genuine parenthesised object expression body): **keep** it as
+  `ArrowBody::Expression(ObjectExpression)` (CLOC12.185).
+
+Pure bridge change — the emitter was already correct. Covers `() => ({})` and
+`() => ({a:1})`. Flipped the former `arrow_paren_object_body_still_declines` /
+`arrow_object_concise_body_is_declined` tests to `arrow_paren_object_body_bridges`
+/ `arrow_paren_object_concise_body_bridges`.
+
+## [0.48.0] - 2026-07-12
+
+### Fixed — CLOC12.184: bridge the empty-block arrow `() => {}`
+
+`convert_arrow_function` declined every arrow whose concise body parsed as an
+`ObjectExpression`, dropping the whole file to WHITESPACE_ONLY. That over-broadly
+caught the extremely common `() => {}` idiom: the grammar buckets the bare `{}`
+after `=>` as an *empty object literal*, but per the ES spec a `{` immediately
+after `=>` ALWAYS opens a **block** body (an object body must be parenthesised,
+`=> ({})`).
+
+The bridge now disambiguates by the concise_body's leftmost token (new
+`leftmost_token` helper): a bare block body leads with `{`, a parenthesised
+object body leads with `(`. A bare **empty** object-literal body (`=> {}`) is
+reinterpreted as an `ArrowBody::Block` with no statements. `() => ({})` (leads
+with `(`) and a non-empty `=> {…}` the grammar mis-bucketed (its contents would
+need re-parsing as statements) both still DECLINE — never a mis-emit.
+
+New tests `arrow_empty_block_body_bridges`, `arrow_paren_object_body_still_declines`,
+`arrow_nonempty_brace_body_still_declines`.
+
+## [0.47.0] - 2026-07-11
+
+### Added — CLOC12.183: bridge ES2021 logical assignment operators
+
+`parse_assignment_op` now recognises `&&=`, `||=`, and `??=`, mapping them to
+the new `AssignmentOperator::LogicalAndEq` / `LogicalOrEq` / `NullishCoalescingEq`
+variants (javascript-ast 0.37.0). These three operators parsed fine but
+previously fell through to `None`, producing an `InternalError`
+("unknown assignment operator") that dropped the whole file to WHITESPACE_ONLY.
+New `logical_assignment_operators_bridge` test confirms all three bridge and a
+neighbouring bitwise `&=` still maps to its own distinct variant.
+
+## [0.46.0] - 2026-07-11
+
+### Added — CLOC12.182: bridge private generator methods (`*#m(){}`)
+
+`convert_private_method_definition` detected the leading `*` token but bundled it
+into a blanket `"*" | "async" => decline` arm, dropping the file to
+WHITESPACE_ONLY. The `*` is now split out into its own `saw_star` flag and set on
+the method value's `FunctionExpression.generator`, exactly like a public
+generator method (CLOC12.181) — `yield` is a modelled `YieldExpression`, and the
+emitter's `emit_class_member` already reprints the `*` before the private-name
+key. Covers `*#g(){}` and `static *#g(){}`.
+
+Only the private **async** form (`async #m(){}`) still DECLINES — `await` is not
+yet modelled (grammar-blocked, gap-165). A private name can never be the
+`constructor`, so the generator's kind stays [`MethodKind::Method`]; private
+get/set accessors (CLOC12.179) are unaffected.
+
+The former `class_private_generator_still_declines` test flipped to
+`class_private_generator` (asserting the generator flag); added
+`class_static_private_generator` and `class_private_async_method_declines` to
+lock in the static form and the remaining async decline.
+
+## [0.45.0] - 2026-07-11
+
+### Added — CLOC12.181: bridge generator methods (`*m(){}`)
+
+`convert_method_definition` already detected the leading `*` token (`saw_star`)
+but then DECLINED the method (dropping the file to WHITESPACE_ONLY) as a
+conservative measure. That decline is now stale: `yield` is a modelled
+`YieldExpression` (CLOC12.163), a top-level generator *function* already bridges,
+and the emitter's `emit_class_member` already reprints the `*` from the value's
+`generator` flag. So a generator method now bridges by setting
+`generator: saw_star` on the method's `FunctionExpression` value — a
+generator's `FunctionExpression` flows through every optimization pass exactly
+like a `function*`.
+
+Covers both `class C { *gen(){} }` (declaration) and `x = class { *gen(){} }`
+(expression), plus `static *gen(){}`. The `constructor` classification is guarded
+against a stray `*` (`*constructor(){}` is a SyntaxError — a generator is never a
+constructor). Accessor generators (`get`/`set` + `*`) are grammatically
+impossible; private generator methods (`*#m(){}`) remain declined in
+`convert_private_method_definition` (a later slice).
+
+2 former decline tests flipped to success
+(`class_generator_method_bridges`, `class_decl_generator_method_bridges`); a new
+`class_static_generator_method_bridges` test covers the static form. Async
+methods (`async_method`) still DECLINE one level up (grammar-blocked).
+
 ## [0.44.0] - 2026-07-11
 
 ### Added — CLOC12.180: bridge computed member keys (`[expr]`)

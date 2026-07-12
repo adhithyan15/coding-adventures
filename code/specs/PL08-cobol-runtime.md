@@ -138,9 +138,31 @@ Each item is a run-verified PR; the runtime grows one quirk at a time.
    sign through `MOVE`/arithmetic/`COMPUTE`; `DISPLAY` renders it as the default
    trailing "zoned" overpunch on the units digit (`−123` → `12L`). The explicit
    `SIGN` clause and its `SEPARATE`/`LEADING` variants are deferred.
-7. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
-7. **Rest of control flow** — `END-IF`, `EVALUATE`, `PERFORM` (`THRU`, `TIMES`,
-   `UNTIL`, `VARYING`, inline), `GO TO … DEPENDING ON`, `ALTER`.
+7. **v0.7 — `PERFORM para [n TIMES]`** (merged): out-of-line paragraph
+   invocation with return, an integer repeat count (`≤ 0` runs zero times), and a
+   recursion-depth guard against a self-performing paragraph.
+8. **v0.8 — `GO TO para`** (merged): unconditional transfer, with the procedure
+   division executed as a **program counter** over paragraphs (so back-edge
+   `GO TO` loops run iteratively, no stack growth). A `GO TO` out of a performed
+   paragraph transfers at the top level. `GO TO … DEPENDING ON` and `ALTER` are
+   deferred.
+9. **v0.9 — `PERFORM … UNTIL`** (merged): a conditional loop, testing the
+   condition **before** each iteration (`WITH TEST BEFORE`), driven iteratively.
+10. **v0.10 — `PERFORM … VARYING`** (merged): a counted loop over an induction
+    variable (`VARYING id FROM start BY step UNTIL cond`) — `id := start`, run
+    while `cond` is false, step `id` by `step` after each iteration. The repeat
+    forms are modelled as a `PerformMode` enum.
+11. **v0.11 — `PERFORM … THRU`** (merged): run a range of paragraphs
+    (`para-1 THRU para-2`, source order, fall-through between) as the perform
+    body; composes with every repeat mode. Backwards ranges are a clean error.
+    `WITH TEST AFTER` and the inline form remain deferred.
+12. **v0.12 — `ROUNDED`/`ON SIZE ERROR` on the arithmetic verbs** (this PR):
+    `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` now accept both clauses, matching
+    `COMPUTE`, via a shared `store_result` path (round → size-error → store). A
+    zero `DIVIDE` divisor is a size-error condition when a handler is present.
+12. **Editing pictures** on `MOVE`/`DISPLAY` (`Z`/`*`/`$`/`,`/`.`/`+`/`-`/`CR`/`DB`).
+13. **Rest of control flow** — `END-IF`, `EVALUATE`, inline `PERFORM`,
+    `PERFORM … WITH TEST AFTER`, `GO TO … DEPENDING ON`, `ALTER`.
 8. **Conditions** — level-88 condition-names.
 9. **Tables** — `OCCURS`, subscripts, `REDEFINES`, `USAGE`.
 8. **File I/O** — `SELECT`/`FD`, sequential then indexed/relative, `OPEN`/`READ`/

@@ -206,6 +206,64 @@ mod tests {
     }
 
     #[test]
+    fn perform_until_and_times() {
+        // PERFORM … UNTIL <condition> carries a condition node; PERFORM … TIMES
+        // carries an operand. Both are the optional trailing clause.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM STEP UNTIL I GREATER 9.",
+            "    PERFORM STEP 3 TIMES.",
+            "    STOP RUN.",
+            "STEP.",
+            "    DISPLAY I.",
+        ]));
+        assert_eq!(count_rule(&ast, "perform_stmt"), 2);
+        // The UNTIL clause introduces a condition inside a perform_stmt.
+        assert!(has_rule(&ast, "condition"));
+    }
+
+    #[test]
+    fn arithmetic_rounded_and_on_size_error() {
+        // ADD/SUBTRACT/MULTIPLY/DIVIDE take the trailing ROUNDED and ON SIZE
+        // ERROR clauses, sharing the `size_error` rule with COMPUTE.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    ADD 1 TO R ROUNDED.",
+            "    DIVIDE 3 INTO X GIVING Y ROUNDED",
+            "        ON SIZE ERROR DISPLAY \"OVR\".",
+            "    STOP RUN.",
+        ]));
+        assert!(has_rule(&ast, "add_stmt"));
+        assert!(has_rule(&ast, "divide_stmt"));
+        // The DIVIDE's ON SIZE ERROR introduces a size_error node.
+        assert!(has_rule(&ast, "size_error"));
+    }
+
+    #[test]
+    fn perform_varying() {
+        // PERFORM … VARYING id FROM start BY step UNTIL cond parses to a
+        // perform_varying node carrying the induction variable and condition.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 1 BY 1 UNTIL I GREATER 3.",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]));
+        assert!(has_rule(&ast, "perform_varying"));
+        assert!(has_rule(&ast, "condition"));
+    }
+
+    #[test]
     fn if_else_statement() {
         let ast = root(&program(&[
             "IDENTIFICATION DIVISION.",

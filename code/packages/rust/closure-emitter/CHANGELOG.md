@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.42.0] - 2026-07-11
+
+### Added — CLOC12.183: emit ES2021 logical assignment operators
+
+`assignment_op_str` now maps the three new `AssignmentOperator` variants
+(`LogicalAndEq`/`LogicalOrEq`/`NullishCoalescingEq`) to `&&=` / `||=` / `??=`.
+Picks up javascript-ast 0.37.0. New `logical_assignment_operators_emit` test.
+
 ## [0.41.1] - 2026-07-11
 
 ### Added — CLOC12.177 PR3: CodePrinter private-name conformance port

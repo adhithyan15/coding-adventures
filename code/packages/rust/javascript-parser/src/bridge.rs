@@ -177,6 +177,25 @@ fn has_token(node: &GrammarASTNode, val: &str) -> bool {
     })
 }
 
+/// The leftmost terminal token value in a subtree, descending through Node
+/// children to the first `Token` leaf (depth-first, left to right). Returns
+/// `None` for a subtree with no tokens at all. Used to tell a bare block body
+/// `=> {…}` (leftmost `{`) from a parenthesised object body `=> ({…})`
+/// (leftmost `(`) — see [`convert_arrow_function`].
+fn leftmost_token(node: &GrammarASTNode) -> Option<&str> {
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Token(t) => return Some(t.value.as_str()),
+            ASTNodeOrToken::Node(n) => {
+                if let Some(v) = leftmost_token(n) {
+                    return Some(v);
+                }
+            }
+        }
+    }
+    None
+}
+
 /// If there is exactly one Node child, return it; else `None`.
 fn sole_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
     let nodes = node_children(node);
@@ -1411,13 +1430,14 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
 /// ```
 ///
 /// **Modifier tokens precede the `property_name` node.** `get` / `set` mark an
-/// accessor; a `*` (generator) marks a form this slice does not model yet — it
-/// DECLINES via `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback) rather than
-/// emit a plain method and silently drop the `*` (a semantics-changing
-/// miscompile). A key literally named `get` (`get(){}`) parses with the
-/// `property_name` node *first* — no leading accessor token — so it is correctly
-/// an ordinary [`MethodKind::Method`]. (An `async` method is a *separate*
-/// grammar node, `async_method`, declined one level up in
+/// accessor; a `*` marks a **generator method** (`*gen(){}`), bridged since
+/// CLOC12.181 by setting the `value`'s `generator` flag so the emitter re-prints
+/// the `*` (`yield` inside the body is already a modelled `YieldExpression`, and
+/// a generator's `FunctionExpression` value flows through every pass exactly like
+/// a top-level `function*` — CLOC12.163). A key literally named `get`
+/// (`get(){}`) parses with the `property_name` node *first* — no leading accessor
+/// token — so it is correctly an ordinary [`MethodKind::Method`]. (An `async`
+/// method is a *separate* grammar node, `async_method`, declined one level up in
 /// [`convert_class_element`], so `async` never reaches here.)
 ///
 /// **`constructor`.** A non-static, non-accessor method whose key is the plain
@@ -1449,11 +1469,11 @@ fn convert_method_definition(
         }
     }
 
-    // Generator methods carry evaluation semantics this slice does not model —
-    // DECLINE so the whole file falls back rather than mis-emit.
-    if saw_star {
-        return Err(unsupported(node));
-    }
+    // A generator method (`*gen(){}`) is bridged (CLOC12.181): `saw_star` sets
+    // the value's `generator` flag below and the emitter re-prints the `*`. No
+    // decline is needed — `yield` inside the body is a modelled `YieldExpression`
+    // and a generator `FunctionExpression` flows through every pass exactly like
+    // a top-level `function*`.
 
     let key_node = node_children(node)
         .into_iter()
@@ -1468,8 +1488,11 @@ fn convert_method_definition(
     } else if saw_set {
         MethodKind::Set
     } else if !is_static
+        && !saw_star
         && matches!(&key, PropertyKey::Identifier(id) if id.name == "constructor")
     {
+        // `*constructor(){}` is a SyntaxError in real JS — a generator is never a
+        // constructor, so a stray `*` guards the `constructor` classification.
         MethodKind::Constructor
     } else {
         MethodKind::Method
@@ -1504,7 +1527,8 @@ fn convert_method_definition(
             id: None,
             params,
             body,
-            generator: false,
+            // `*gen(){}` → a generator method; the emitter re-prints the `*`.
+            generator: saw_star,
             is_async: false,
         },
         computed,
@@ -1525,11 +1549,13 @@ fn convert_method_definition(
 /// | [ "static" ] STAR   PRIVATE_NAME ...          // private generator
 /// ```
 ///
-/// This slice models the **plain** method and the **get / set accessor** forms
-/// (each optionally `static`) — `#m(){}`, `get #x(){}`, `set #x(v){}`. The
-/// private *generator* (`*#m(){}`) and *async* forms carry evaluation semantics
-/// not yet represented, so — like a public generator method — they DECLINE via
-/// `UnsupportedSyntax` (safe WHITESPACE_ONLY fallback), never a mis-emit.
+/// This slice models the **plain** method, the **get / set accessor**, and the
+/// **generator** (`*#m(){}`) forms (each optionally `static`) — `#m(){}`,
+/// `get #x(){}`, `set #x(v){}`, `*#g(){}`. The private *generator* bridges
+/// exactly like a public one (CLOC12.182): `saw_star` sets the value's
+/// `generator` flag and the emitter reprints the `*`. Only the private *async*
+/// form (`async #m(){}`) still DECLINES via `UnsupportedSyntax` (safe
+/// WHITESPACE_ONLY fallback), never a mis-emit — `await` is not yet modelled.
 ///
 /// Two shape differences from a public `method_definition`:
 /// - the key is a bare `PRIVATE_NAME` token (`#m`), lowered by
@@ -1544,14 +1570,16 @@ fn convert_method_definition(
 /// shared [`convert_formal_parameters`] / [`convert_formal_parameter`] /
 /// [`convert_function_body`], mirroring [`convert_method_definition`].
 fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
-    // Read `static` and the `get` / `set` accessor keyword (inside this node);
-    // decline the generator / async forms this slice does not model. All of
-    // `static` / `get` / `set` / `*` / `async` precede the PRIVATE_NAME as direct
-    // token children (params live under `formal_parameter(s)` *nodes*, so a
-    // parameter literally named `get` cannot be confused for the modifier).
+    // Read `static`, the `get` / `set` accessor keyword, and the `*` generator
+    // marker (inside this node); decline only the `async` form this slice does
+    // not model. All of `static` / `get` / `set` / `*` / `async` precede the
+    // PRIVATE_NAME as direct token children (params live under
+    // `formal_parameter(s)` *nodes*, so a parameter literally named `get` cannot
+    // be confused for the modifier).
     let mut is_static = false;
     let mut saw_get = false;
     let mut saw_set = false;
+    let mut saw_star = false;
     let mut decline = false;
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
@@ -1559,7 +1587,8 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
                 "static" => is_static = true,
                 "get" => saw_get = true,
                 "set" => saw_set = true,
-                "*" | "async" => decline = true,
+                "*" => saw_star = true,
+                "async" => decline = true,
                 _ => {}
             }
         }
@@ -1607,7 +1636,8 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
             id: None,
             params,
             body,
-            generator: false,
+            // `*#g(){}` → a private generator method; the emitter reprints the `*`.
+            generator: saw_star,
             is_async: false,
         },
         computed: false,
@@ -1703,14 +1733,39 @@ fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpressi
         }
     }
 
-    let body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
+    let mut body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
 
-    // Guard against the `() => {}` ambiguity described above: an
-    // object-literal concise body cannot be distinguished from an empty
-    // block body, so decline rather than risk a miscompile.
+    // The `{` after `=>` ambiguity: the grammar buckets the braces of BOTH a
+    // block body `=> {…}` and a parenthesised object body `=> ({…})` as an
+    // `object_literal`, so either reaches us as an
+    // `ArrowBody::Expression(ObjectExpression)`. Per the ES spec a `{`
+    // immediately after `=>` ALWAYS opens a **block** body — an object-literal
+    // expression body MUST be parenthesised. We disambiguate by the
+    // concise_body's leftmost token: a bare block body leads with `{`, a
+    // parenthesised object body leads with `(`.
     if let ArrowBody::Expression(e) = &body {
-        if matches!(**e, Expression::ObjectExpression(_)) {
-            return Err(unsupported(node));
+        if let Expression::ObjectExpression(obj) = &**e {
+            let leads_with_brace = children
+                .iter()
+                .find(|n| n.rule_name == "concise_body")
+                .and_then(|n| leftmost_token(n))
+                == Some("{");
+            if leads_with_brace {
+                // Bare `=> {…}` — a BLOCK body per the ES spec.
+                if obj.properties.is_empty() {
+                    // `=> {}` is an EMPTY block body (CLOC12.184).
+                    body = ArrowBody::Block(BlockStatement { cv: None, body: vec![] });
+                } else {
+                    // `=> {a:1}` — a non-empty block the grammar mis-bucketed as
+                    // an object; its contents would need re-parsing as statements,
+                    // so DECLINE (safe WHITESPACE_ONLY), never a mis-emit.
+                    return Err(unsupported(node));
+                }
+            }
+            // Otherwise the body leads with `(` — a genuine **parenthesised
+            // object expression body** `=> ({…})` (CLOC12.185). Keep `body` as an
+            // `ArrowBody::Expression(ObjectExpression)`: the emitter re-wraps the
+            // object literal in parens so it is never misread as a block.
         }
     }
 
@@ -2129,6 +2184,12 @@ fn parse_assignment_op(s: &str) -> Option<AssignmentOperator> {
         "|=" => Some(AssignmentOperator::BitOrEq),
         "^=" => Some(AssignmentOperator::BitXorEq),
         "&=" => Some(AssignmentOperator::BitAndEq),
+        // ES2021 logical assignment operators (CLOC12.183). These parse fine but
+        // previously fell through to `None`, mapping to an `InternalError` that
+        // dropped the whole file to WHITESPACE_ONLY.
+        "&&=" => Some(AssignmentOperator::LogicalAndEq),
+        "||=" => Some(AssignmentOperator::LogicalOrEq),
+        "??=" => Some(AssignmentOperator::NullishCoalescingEq),
         _ => None,
     }
 }
@@ -3710,15 +3771,92 @@ fn unquote_string(raw: &str) -> String {
 mod tests {
     use super::*;
     use crate::{parse_javascript_typed, DEFAULT_ES_VERSION};
-    
 
     fn bridge(src: &str) -> Result<Program, BridgeError> {
         let node = parse_javascript_typed(src, DEFAULT_ES_VERSION).expect("parse failed");
         grammar_to_program(&node, DEFAULT_ES_VERSION)
     }
 
+    /// Pull the sole `ArrowFunctionExpression` out of `x = <arrow>;`.
+    fn arrow_of(src: &str) -> ArrowFunctionExpression {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => match &*a.right {
+                Expression::ArrowFunctionExpression(f) => f.clone(),
+                other => panic!("expected ArrowFunctionExpression RHS, got {other:?}"),
+            },
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_empty_block_body_bridges() {
+        // `() => {}` — the grammar buckets the bare `{}` as an empty
+        // object_literal, but per the ES spec `=> {}` is an EMPTY BLOCK body.
+        // CLOC12.184 reinterprets it as `ArrowBody::Block` with no statements,
+        // instead of declining to WHITESPACE_ONLY.
+        let f = arrow_of("x = () => {};");
+        assert!(f.params.is_empty());
+        match &f.body {
+            ArrowBody::Block(b) => assert!(b.body.is_empty(), "expected empty block"),
+            other => panic!("expected an empty block body, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_paren_object_body_bridges() {
+        // `() => ({})` / `() => ({a:1})` — a parenthesised object-literal
+        // EXPRESSION body (leads with `(`). Distinct from the bare block `=> {}`;
+        // bridges to `ArrowBody::Expression(ObjectExpression)` (CLOC12.185). The
+        // emitter re-wraps the object in parens so it is never misread as a block.
+        for src in ["x = () => ({});", "x = () => ({a:1});"] {
+            let f = arrow_of(src);
+            assert!(f.params.is_empty());
+            match &f.body {
+                ArrowBody::Expression(e) => assert!(
+                    matches!(&**e, Expression::ObjectExpression(_)),
+                    "expected an object-expression body for {src}"
+                ),
+                other => panic!("expected an object-expression body for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn arrow_nonempty_brace_body_still_declines() {
+        // `() => {a:1}` — a non-empty `{…}` the grammar mis-buckets as an object
+        // literal. Its contents would need re-parsing as statements, so it stays
+        // declined (a later slice), never a mis-emit.
+        assert!(matches!(
+            bridge("x = () => {a:1};"),
+            Err(BridgeError::UnsupportedSyntax { .. })
+        ));
+    }
+
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
+    }
+
+    /// Pull the `AssignmentExpression` operator out of `<lhs> <op> <rhs>;`.
+    fn assign_op_of(src: &str) -> AssignmentOperator {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => a.operator,
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn logical_assignment_operators_bridge() {
+        // ES2021 `&&=` / `||=` / `??=` parse fine but previously mapped to an
+        // InternalError ("unknown assignment operator"), dropping the file to
+        // WHITESPACE_ONLY. They now bridge to their own operator variants
+        // (CLOC12.183).
+        assert_eq!(assign_op_of("a &&= b;"), AssignmentOperator::LogicalAndEq);
+        assert_eq!(assign_op_of("a ||= b;"), AssignmentOperator::LogicalOrEq);
+        assert_eq!(assign_op_of("a ??= b;"), AssignmentOperator::NullishCoalescingEq);
+        // A neighbouring bitwise `&=` must still map to its own (distinct) variant.
+        assert_eq!(assign_op_of("a &= b;"), AssignmentOperator::BitAndEq);
     }
 
     /// Pull the `RegExpLiteral` out of `x = <regex>;` so the regex tests can
@@ -3873,12 +4011,27 @@ mod tests {
     }
 
     #[test]
-    fn class_generator_method_declines() {
-        // `*gen(){}` carries generator semantics not modelled here — DECLINE.
-        assert!(matches!(
-            bridge("x = class { *gen(){} };"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_generator_method_bridges() {
+        // `*gen(){}` — a generator method bridges (CLOC12.181): plain method
+        // `kind`, and the value's `generator` flag is set so the emitter reprints
+        // the `*`. `yield` in the body is a modelled `YieldExpression`.
+        let c = class_of("x = class { *gen(){ yield 1 } };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert_eq!(m.kind, MethodKind::Method);
+        assert!(m.value.generator);
+        assert!(!m.value.is_async);
+        assert!(matches!(&m.key, PropertyKey::Identifier(id) if id.name == "gen"));
+    }
+
+    #[test]
+    fn class_static_generator_method_bridges() {
+        // `static *gen(){}` — the `static` modifier lives on the enclosing
+        // `class_element`; the `*` still sets the generator flag.
+        let c = class_of("x = class { static *gen(){} };");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.is_static);
+        assert!(m.value.generator);
+        assert_eq!(m.kind, MethodKind::Method);
     }
 
     #[test]
@@ -4127,12 +4280,35 @@ mod tests {
     }
 
     #[test]
-    fn class_private_generator_still_declines() {
-        // `*#m(){}` — a private *generator* carries evaluation semantics this
-        // slice does not model; it still DECLINES (safe WHITESPACE_ONLY), never a
-        // mis-emit. (A later slice.)
+    fn class_private_generator() {
+        // `*#m(){}` — a private *generator* bridges (CLOC12.182): a plain
+        // `MethodKind::Method` with a private-name key whose value's `generator`
+        // flag is set so the emitter reprints the `*`. `yield` in the body is a
+        // modelled `YieldExpression`.
+        let m = method_of("w = class { *#m(){ yield 1 } };");
+        assert!(matches!(m.kind, MethodKind::Method));
+        assert!(m.value.generator);
+        assert!(!m.value.is_async);
+        assert!(matches!(&m.key, PropertyKey::PrivateName(p) if p.name == "m"));
+    }
+
+    #[test]
+    fn class_static_private_generator() {
+        // `static *#m(){}` — the `static` and `*` markers both precede the
+        // private key inside the node; the generator flag is still set.
+        let m = method_of("w = class { static *#m(){} };");
+        assert!(m.is_static);
+        assert!(m.value.generator);
+        assert!(matches!(m.kind, MethodKind::Method));
+    }
+
+    #[test]
+    fn class_private_async_method_declines() {
+        // `async #m(){}` — a private *async* method carries `await` semantics not
+        // yet modelled (grammar-blocked); it still DECLINES (safe WHITESPACE_ONLY),
+        // never a mis-emit.
         assert!(matches!(
-            bridge("w = class { *#m(){} };"),
+            bridge("w = class { async #m(){} };"),
             Err(BridgeError::UnsupportedSyntax { .. })
         ));
     }
@@ -4308,13 +4484,13 @@ mod tests {
     }
 
     #[test]
-    fn class_decl_generator_method_declines() {
-        // `*m(){}` is a generator method — a form this slice does not model, so
-        // the whole file DECLINES to WHITESPACE_ONLY (never a miscompile).
-        assert!(matches!(
-            bridge("class C { *m(){} }"),
-            Err(BridgeError::UnsupportedSyntax { .. })
-        ));
+    fn class_decl_generator_method_bridges() {
+        // `*m(){}` in a class *declaration* bridges (CLOC12.181): the value's
+        // `generator` flag is set so the emitter reprints the `*`.
+        let c = class_decl_of("class C { *m(){} }");
+        let ClassMember::Method(m) = &c.body[0] else { panic!("expected a method member") };
+        assert!(m.value.generator);
+        assert_eq!(m.kind, MethodKind::Method);
     }
 
     #[test]
@@ -5375,19 +5551,18 @@ mod tests {
     }
 
     #[test]
-    fn arrow_object_concise_body_is_declined() {
-        // `() => ({})` / `() => {}` are indistinguishable in the current
-        // grammar (both parse as an object-literal concise body), so the
-        // bridge DECLINES them (UnsupportedSyntax) rather than risk the
-        // empty-block-vs-object miscompile. A declined program surfaces as a
-        // bridge error → the CLI's whitespace-only passthrough.
+    fn arrow_paren_object_concise_body_bridges() {
+        // `() => ({a:1})` — a PARENTHESISED object-literal expression body. It is
+        // now distinguishable from the bare block `() => {}` by the concise_body's
+        // leftmost token (`(` vs `{`), so it bridges (CLOC12.185) instead of
+        // declining. (The empty-block `() => {}` became a block at CLOC12.184.)
         assert!(
             grammar_to_program(
                 &crate::parse_javascript("var f=()=>({a:1});", "es2025").expect("parse"),
                 DEFAULT_ES_VERSION,
             )
-            .is_err(),
-            "object-body arrow must decline to avoid the () => {{}} ambiguity"
+            .is_ok(),
+            "parenthesised object-body arrow should bridge"
         );
     }
 

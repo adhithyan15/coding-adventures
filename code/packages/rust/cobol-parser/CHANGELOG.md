@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0 — ROUNDED / ON SIZE ERROR on the arithmetic verbs
+
+- `add_stmt` / `subtract_stmt` / `multiply_stmt` / `divide_stmt` gain the trailing
+  `[ ROUNDED ] [ size_error ]` clauses, sharing the `size_error` rule already used
+  by `COMPUTE`. `ROUNDED`/`ON`/`SIZE`/`ERROR` were already reserved words, so the
+  lexer is unchanged.
+
+## 0.4.0 — PERFORM … VARYING
+
+- `perform_stmt` gains a third repeat clause, `perform_varying`
+  (`VARYING NAME FROM operand BY operand UNTIL condition`), alongside
+  `operand TIMES` and `UNTIL condition`. `VARYING`/`FROM`/`BY` were already
+  reserved words, so the lexer is unchanged.
+
+## 0.3.0 — PERFORM … UNTIL
+
+- `perform_stmt` gains the `UNTIL condition` clause as an alternative to
+  `operand TIMES`: `PERFORM para [THRU …] [ operand TIMES | UNTIL condition ]`.
+  Reuses the existing `condition` rule. `UNTIL` was already a reserved word, so
+  the lexer is unchanged.
+
 ## 0.2.0 — COMPUTE and arithmetic expressions
 
 - `compute_stmt = "COMPUTE" NAME [ "ROUNDED" ] EQ arith_expr [ size_error ]` —

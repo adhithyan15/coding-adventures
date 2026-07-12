@@ -23,12 +23,18 @@ A small but **fully correct** slice, growing one quirk at a time: numeric-displa
 (`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules; `DISPLAY`; `STOP RUN`; fixed-point
-decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned, truncating
-toward zero into the receiver; divide-by-zero is a clean error); `COMPUTE` with
+decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`
+and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
+`COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
-parentheses), `ROUNDED`, and `ON SIZE ERROR`; and `IF … ELSE` with numeric and
-alphanumeric comparison. Anything not yet modelled (the explicit `SIGN` clause
-with `SEPARATE`/`LEADING`, editing pictures, `COMP`, `PERFORM`, `GO TO`,
-`EVALUATE`, tables, files, and every other verb) returns a descriptive
-`RuntimeError` — never wrong output. See PL08 for the
+parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric and
+alphanumeric comparison; `PERFORM para [THRU para2] [n TIMES | UNTIL cond |
+VARYING id FROM x BY y UNTIL cond]` (out-of-line paragraph or paragraph-range
+invocation — fixed-count, conditional, and counted loops, with a recursion
+guard); and `GO TO para` (unconditional transfer, run as a program counter over
+paragraphs, so back-edge loops work). Anything not yet modelled (the explicit
+`SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
+`PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `EVALUATE`, tables,
+files, and every other verb) returns a descriptive `RuntimeError` — never wrong
+output. See PL08 for the
 roadmap toward full COBOL and later standards.

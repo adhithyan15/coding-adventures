@@ -110,10 +110,16 @@ statement = move_stmt | display_stmt | accept_stmt
 move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
 display_stmt  = "DISPLAY" operand { operand } ;
 accept_stmt   = "ACCEPT" NAME ;
-add_stmt      = "ADD" operand { operand } "TO" NAME [ "GIVING" NAME ] ;
-subtract_stmt = "SUBTRACT" operand { operand } "FROM" NAME [ "GIVING" NAME ] ;
-multiply_stmt = "MULTIPLY" operand "BY" operand [ "GIVING" NAME ] ;
-divide_stmt   = "DIVIDE" operand "INTO" operand [ "GIVING" NAME ] ;
+# The four arithmetic verbs share two optional trailing clauses with COMPUTE:
+# ROUNDED (round instead of truncate into the receiver) and ON SIZE ERROR.
+add_stmt      = "ADD" operand { operand } "TO" NAME [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+subtract_stmt = "SUBTRACT" operand { operand } "FROM" NAME [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+multiply_stmt = "MULTIPLY" operand "BY" operand [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
+divide_stmt   = "DIVIDE" operand "INTO" operand [ "GIVING" NAME ]
+                        [ "ROUNDED" ] [ size_error ] ;
 
 # COMPUTE evaluates a full arithmetic EXPRESSION and MOVEs the result into the
 # receiver — the one COBOL verb that takes operator symbols instead of
@@ -143,7 +149,10 @@ arith_factor  = arith_unary  { POW arith_unary } ;
 arith_unary   = [ PLUS | MINUS ] arith_primary ;
 arith_primary = NUMBER | NAME | LPAREN arith_expr RPAREN ;
 perform_stmt  = "PERFORM" NAME [ "THROUGH" NAME | "THRU" NAME ]
-                        [ operand "TIMES" ] ;
+                        [ operand "TIMES" | "UNTIL" condition | perform_varying ] ;
+# VARYING id FROM start BY step UNTIL cond — a counted loop over an induction
+# variable (`id := start`; run while `cond` is false, stepping `id` by `step`).
+perform_varying = "VARYING" NAME "FROM" operand "BY" operand "UNTIL" condition ;
 goto_stmt     = "GO" [ "TO" ] NAME ;
 stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
 

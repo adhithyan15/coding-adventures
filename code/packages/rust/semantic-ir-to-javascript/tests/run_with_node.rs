@@ -2911,3 +2911,101 @@ fn hash_enumerable_breadth() {
         );
     }
 }
+
+// ── Ruby Hash to_h / each_with_index / each_with_object ────────────────────
+//
+// Rounds out Hash's Enumerable iteration surface, mirroring the Python (#8009),
+// Go (#8015), and Rust (#8020) references.  `to_h` has a no-block (shallow copy)
+// and a block (re-map) form; `each_with_index`/`each_with_object` yield the
+// [k, v] PAIR as a single argument alongside the index/memo (Ruby's Enumerable
+// convention — contrast `each`'s two-arg (k, v) yield).
+#[test]
+fn hash_to_h_and_indexed_iteration() {
+    let mk = |pairs: Vec<(&str, Expr)>| Expr::MapLit {
+        entries: pairs.into_iter().map(|(k, v)| MapEntry { key: str_(k), value: v }).collect(),
+        span: sp(),
+    };
+    let ab = || mk(vec![("a", int(1)), ("b", int(2))]);
+    let block_fns = vec![
+        // { |k, v| [k, v * 2] } — re-map each pair, doubling the value.
+        func(
+            "__t_dbl",
+            vec![param("k"), param("v")],
+            vec![],
+            seq(vec![param_ref("k"), bc("*", vec![param_ref("v"), int(2)])]),
+        ),
+        // { |pair, i| print [pair, i] } — observe the (pair, index) yield.
+        func(
+            "__t_pi",
+            vec![param("pair"), param("i")],
+            vec![print(seq(vec![param_ref("pair"), param_ref("i")]))],
+            Expr::NilLit { span: sp() },
+        ),
+        // { |pair, memo| print [pair, memo] } — observe the (pair, memo) yield.
+        func(
+            "__t_pm",
+            vec![param("pair"), param("memo")],
+            vec![print(seq(vec![param_ref("pair"), param_ref("memo")]))],
+            Expr::NilLit { span: sp() },
+        ),
+    ];
+    let stmts = vec![
+        // {a:1,b:2}.to_h (no block) → a shallow copy: {a: 1, b: 2}
+        print(method(ab(), "to_h", vec![])),
+        // {a:1,b:2}.to_h { |k, v| [k, v * 2] } → {a: 2, b: 4}
+        print(method(ab(), "to_h", vec![method_closure("__t_dbl")])),
+        // {a:1,b:2}.each_with_index { |pair, i| print [pair, i] }
+        //   → "[[a, 1], 0]", "[[b, 2], 1]", then the returned self "{a: 1, b: 2}"
+        print(method(ab(), "each_with_index", vec![method_closure("__t_pi")])),
+        // {a:1,b:2}.each_with_object(0) { |pair, memo| print [pair, memo] }
+        //   → "[[a, 1], 0]", "[[b, 2], 0]", then the returned memo "0"
+        print(method(ab(), "each_with_object", vec![int(0), method_closure("__t_pm")])),
+        // {a:1}.each_with_object { |pair, memo| … } with NO memo arg → returns
+        // the receiver unchanged (the block is never called): "{a: 1}"
+        print(method(mk(vec![("a", int(1))]), "each_with_object", vec![method_closure("__t_pm")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let mut functions = vec![main];
+    functions.extend(block_fns);
+    let module = Module {
+        name: "hashtoh".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Maps,
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "hashtoh") {
+        assert_eq!(
+            stdout,
+            "{a: 1, b: 2}\n\
+             {a: 2, b: 4}\n\
+             [[a, 1], 0]\n\
+             [[b, 2], 1]\n\
+             {a: 1, b: 2}\n\
+             [[a, 1], 0]\n\
+             [[b, 2], 0]\n\
+             0\n\
+             {a: 1}"
+        );
+    }
+}

@@ -3,9 +3,20 @@
 
 use crate::error::RuntimeError;
 use crate::picture::Picture;
-use crate::program::{ArithOp, Cond, Expr, Fig, Lit, Operand, Program, RelOp, Stmt};
+use crate::program::{
+    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt,
+};
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
+
+/// Deepest chain of nested/recursive `PERFORM`s before we bail out with a clean
+/// error. A paragraph that performs itself (directly or in a cycle) would
+/// otherwise recurse until the native stack overflows — an uncatchable abort.
+/// Each level spends several (debug-sized) frames — `exec_perform` →
+/// `run_stmts` → `exec_stmt` → `exec_perform` — so the cap sits well under the
+/// ~200-level overflow point of a default 2 MiB worker/test stack. Real programs
+/// never nest `PERFORM` anywhere near this deep.
+const MAX_PERFORM_DEPTH: usize = 100;
 
 /// Fractional precision COMPUTE carries through an intermediate **division**
 /// before the final round/truncate into the receiver. COBOL's standard defines
@@ -33,6 +44,25 @@ enum Src {
     Num(Decimal),
     Chars(String),
     Fig(Fig),
+}
+
+/// The control-flow signal an executed statement (or block of statements)
+/// produces. Most statements are [`Flow::Normal`]; the two transfers unwind out
+/// of any enclosing `IF`/`PERFORM`/handler up to the top-level program-counter
+/// loop in [`Machine::run`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Flow {
+    /// Continue with the next statement (and, at a paragraph's end, fall through
+    /// to the following paragraph).
+    Normal,
+    /// `STOP RUN` — end the whole program.
+    Stop,
+    /// `GO TO` — transfer control to the paragraph at this index. Because it
+    /// unwinds to the top-level loop, a `GO TO` inside a performed paragraph
+    /// transfers control there (abandoning the `PERFORM`'s return) — the honest
+    /// reading of "GO TO out of a range", and enough for structured top-level
+    /// flow. (`GO TO … DEPENDING`/`ALTER` and range-return niceties are later.)
+    GoTo(usize),
 }
 
 /// Turn an arithmetic result into a `Result`, reporting `i128` overflow (a value
@@ -85,17 +115,36 @@ fn overpunch_trailing(magnitude: &str, neg: bool) -> String {
     chars.into_iter().collect()
 }
 
-/// The running machine: the item table, a name→index map, and captured output.
+/// The running machine: the item table, a name→index map, the procedure's
+/// paragraphs (with a name→index map for `PERFORM` targets), and captured output.
 pub struct Machine {
     items: Vec<Item>,
     by_name: HashMap<String, usize>,
+    paragraphs: Vec<Paragraph>,
+    para_index: HashMap<String, usize>,
+    /// Current `PERFORM` nesting depth, bounded by [`MAX_PERFORM_DEPTH`].
+    perform_depth: usize,
     output: String,
 }
 
 impl Machine {
     /// Build the data model from a program's WORKING-STORAGE and initialise it.
     pub fn new(program: &Program) -> Result<Machine, RuntimeError> {
-        let mut m = Machine { items: Vec::new(), by_name: HashMap::new(), output: String::new() };
+        // Index paragraphs by name for PERFORM lookup. A duplicated name keeps
+        // its first occurrence (a PERFORM of an ambiguous name is unusual; the
+        // first definition wins rather than erroring at build time).
+        let mut para_index = HashMap::new();
+        for (i, p) in program.paragraphs.iter().enumerate() {
+            para_index.entry(p.name.clone()).or_insert(i);
+        }
+        let mut m = Machine {
+            items: Vec::new(),
+            by_name: HashMap::new(),
+            paragraphs: program.paragraphs.clone(),
+            para_index,
+            perform_depth: 0,
+            output: String::new(),
+        };
         m.build_items(program)?;
         Ok(m)
     }
@@ -177,52 +226,226 @@ impl Machine {
     // ----------------------------------------------------------------------
 
     /// Run the procedure division and return the captured console output.
-    pub fn run(mut self, program: &Program) -> Result<String, RuntimeError> {
-        'outer: for para in &program.paragraphs {
-            for stmt in &para.stmts {
-                if self.exec_stmt(stmt)? {
-                    break 'outer; // STOP RUN
-                }
+    ///
+    /// Execution is a **program counter** over paragraphs: after a paragraph's
+    /// statements run, control falls through to the next paragraph, unless a
+    /// `GO TO` jumped the counter or a `STOP RUN` ended the program. The loop is
+    /// iterative, so a `GO TO` back-edge (a COBOL loop) never grows the stack.
+    /// Each paragraph's statements are cloned to run them, since executing
+    /// borrows `self` mutably while the paragraphs live in `self`.
+    pub fn run(mut self, _program: &Program) -> Result<String, RuntimeError> {
+        let count = self.paragraphs.len();
+        let mut pc = 0;
+        while pc < count {
+            let stmts = self.paragraphs[pc].stmts.clone();
+            match self.run_stmts(&stmts)? {
+                Flow::Normal => pc += 1,        // fall through
+                Flow::Stop => break,            // STOP RUN
+                Flow::GoTo(target) => pc = target, // jump
             }
         }
         // Falling off the end of the procedure division ends the run too.
         Ok(self.output)
     }
 
-    /// Execute one statement. Returns `true` if it requested `STOP RUN` (which
-    /// unwinds nested `IF` branches and ends the program).
-    fn exec_stmt(&mut self, stmt: &Stmt) -> Result<bool, RuntimeError> {
+    /// Execute one statement, returning its control-flow [`Flow`] signal.
+    fn exec_stmt(&mut self, stmt: &Stmt) -> Result<Flow, RuntimeError> {
         match stmt {
-            Stmt::StopRun => return Ok(true),
+            Stmt::StopRun => return Ok(Flow::Stop),
             Stmt::Display(ops) => self.exec_display(ops)?,
             Stmt::Move { src, dsts } => self.exec_move(src, dsts)?,
-            Stmt::Add { operands, to, giving } => self.exec_add(operands, to, giving)?,
-            Stmt::Subtract { operands, from, giving } => self.exec_subtract(operands, from, giving)?,
-            Stmt::Multiply { a, by, giving } => self.exec_multiply(a, by, giving)?,
-            Stmt::Divide { divisor, dividend, giving } => {
-                self.exec_divide(divisor, dividend, giving)?
+            Stmt::Add { operands, to, giving, rounded, on_size_error } => {
+                return self.exec_add(operands, to, giving, *rounded, on_size_error)
+            }
+            Stmt::Subtract { operands, from, giving, rounded, on_size_error } => {
+                return self.exec_subtract(operands, from, giving, *rounded, on_size_error)
+            }
+            Stmt::Multiply { a, by, giving, rounded, on_size_error } => {
+                return self.exec_multiply(a, by, giving, *rounded, on_size_error)
+            }
+            Stmt::Divide { divisor, dividend, giving, rounded, on_size_error } => {
+                return self.exec_divide(divisor, dividend, giving, *rounded, on_size_error)
             }
             Stmt::Compute { target, rounded, expr, on_size_error } => {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
+            }
+            Stmt::Perform { target, thru, mode } => {
+                return self.exec_perform(target, thru, mode)
+            }
+            Stmt::GoTo { target } => {
+                let idx = *self
+                    .para_index
+                    .get(target)
+                    .ok_or_else(|| RuntimeError::UndefinedName(target.clone()))?;
+                return Ok(Flow::GoTo(idx));
             }
             Stmt::If { cond, then_branch, else_branch } => {
                 let branch = if self.eval_cond(cond)? { then_branch } else { else_branch };
                 return self.run_stmts(branch);
             }
         }
-        Ok(false)
+        Ok(Flow::Normal)
     }
 
-    /// Execute a sequence of statements, short-circuiting on `STOP RUN` (the
-    /// returned `true` propagates up to unwind any enclosing branches). Shared by
-    /// `IF` branches and `COMPUTE … ON SIZE ERROR` handlers.
-    fn run_stmts(&mut self, stmts: &[Stmt]) -> Result<bool, RuntimeError> {
+    /// Execute a sequence of statements, short-circuiting on the first non-normal
+    /// [`Flow`] (a `STOP RUN` or `GO TO`), which propagates up to unwind any
+    /// enclosing `IF`/`PERFORM`/handler. Shared by `IF` branches,
+    /// `COMPUTE … ON SIZE ERROR` handlers, and performed paragraphs.
+    fn run_stmts(&mut self, stmts: &[Stmt]) -> Result<Flow, RuntimeError> {
         for s in stmts {
-            if self.exec_stmt(s)? {
-                return Ok(true);
+            match self.exec_stmt(s)? {
+                Flow::Normal => {}
+                other => return Ok(other),
             }
         }
-        Ok(false)
+        Ok(Flow::Normal)
+    }
+
+    /// `PERFORM target [n TIMES | UNTIL cond]` — run one paragraph out of line,
+    /// then return. Bare form: once. `n TIMES`: a fixed count (`≤ 0` runs zero
+    /// times, a fractional count truncates). `UNTIL cond`: repeat while the
+    /// condition is false, testing it **before** each iteration (so a
+    /// initially-true condition runs zero times).
+    ///
+    /// The repeat loop is iterative, so even a never-satisfied `UNTIL` (an
+    /// infinite loop — the programmer's bug, valid COBOL) does not grow the
+    /// stack. Nesting of *distinct* performs is bounded by [`MAX_PERFORM_DEPTH`]
+    /// so a self-performing paragraph fails cleanly instead of overflowing. A
+    /// `STOP RUN` or `GO TO` inside stops the repetition and propagates as its
+    /// [`Flow`].
+    fn exec_perform(
+        &mut self,
+        target: &str,
+        thru: &Option<String>,
+        mode: &PerformMode,
+    ) -> Result<Flow, RuntimeError> {
+        let start = *self
+            .para_index
+            .get(target)
+            .ok_or_else(|| RuntimeError::UndefinedName(target.into()))?;
+        // The range end: `target` itself without THRU, else the THRU paragraph
+        // (which must not precede `target` in source order).
+        let end = match thru {
+            None => start,
+            Some(t) => {
+                let e = *self
+                    .para_index
+                    .get(t)
+                    .ok_or_else(|| RuntimeError::UndefinedName(t.clone()))?;
+                if e < start {
+                    return Err(RuntimeError::Unsupported(
+                        "PERFORM … THRU range runs backwards".into(),
+                    ));
+                }
+                e
+            }
+        };
+
+        self.perform_depth += 1;
+        if self.perform_depth > MAX_PERFORM_DEPTH {
+            self.perform_depth -= 1;
+            return Err(RuntimeError::Unsupported(
+                "PERFORM nesting too deep (a paragraph performing itself?)".into(),
+            ));
+        }
+        // One body iteration runs the whole paragraph range `start..=end` in
+        // source order (falling through between them); it returns
+        // Some(flow-to-propagate) to stop repeating, or None to continue.
+        // Outcomes are captured (never `?`-ed out) so the depth counter is
+        // restored on every path.
+        let run_body = |m: &mut Self| {
+            for i in start..=end {
+                let stmts = m.paragraphs[i].stmts.clone();
+                match m.run_stmts(&stmts) {
+                    Ok(Flow::Normal) => {}          // fall through to the next
+                    other => return Some(other),    // Stop / GoTo / Err propagates
+                }
+            }
+            None
+        };
+
+        let outcome = match mode {
+            PerformMode::Once => run_body(self).unwrap_or(Ok(Flow::Normal)),
+            PerformMode::Times(op) => match self.perform_count(op) {
+                Ok(n) => {
+                    let mut o = Ok(Flow::Normal);
+                    for _ in 0..n {
+                        if let Some(flow) = run_body(self) {
+                            o = flow;
+                            break;
+                        }
+                    }
+                    o
+                }
+                Err(e) => Err(e),
+            },
+            PerformMode::Until(cond) => self.perform_until(cond, &run_body),
+            PerformMode::Varying { var, from, by, until } => {
+                // id := from, then the same TEST-BEFORE loop, stepping id by `by`
+                // after each body run.
+                match self
+                    .operand_decimal(from)
+                    .and_then(|start| self.store_number(var, start))
+                {
+                    Err(e) => Err(e),
+                    Ok(()) => self.perform_until(until, &|m: &mut Self| {
+                        // A body Stop/GoTo/Err wins; otherwise step id (a step
+                        // error — e.g. overflow — stops the loop and propagates).
+                        if let Some(f) = run_body(m) {
+                            return Some(f);
+                        }
+                        match m.step_var(var, by) {
+                            Ok(()) => None,
+                            Err(e) => Some(Err(e)),
+                        }
+                    }),
+                }
+            }
+        };
+        self.perform_depth -= 1;
+        outcome
+    }
+
+    /// Resolve a `PERFORM … TIMES` count: a non-negative integer; `≤ 0` → 0.
+    fn perform_count(&self, op: &Operand) -> Result<usize, RuntimeError> {
+        let d = self.operand_decimal(op)?;
+        if d.neg {
+            return Ok(0);
+        }
+        let int = d.int.trim_start_matches('0');
+        if int.is_empty() {
+            return Ok(0);
+        }
+        int.parse::<usize>()
+            .map_err(|_| RuntimeError::Unsupported("PERFORM … TIMES count is too large".into()))
+    }
+
+    /// The shared TEST-BEFORE loop: while `cond` is false, run `body` (which
+    /// returns `Some(flow)` to stop and propagate, `None` to continue). Iterative,
+    /// so a never-satisfied condition hangs but never grows the stack.
+    fn perform_until(
+        &mut self,
+        cond: &Cond,
+        body: &dyn Fn(&mut Self) -> Option<Result<Flow, RuntimeError>>,
+    ) -> Result<Flow, RuntimeError> {
+        loop {
+            match self.eval_cond(cond) {
+                Ok(true) => return Ok(Flow::Normal),
+                Ok(false) => {}
+                Err(e) => return Err(e),
+            }
+            if let Some(flow) = body(self) {
+                return flow;
+            }
+        }
+    }
+
+    /// Step a `PERFORM VARYING` induction variable: `var := var + by`.
+    fn step_var(&mut self, var: &str, by: &Operand) -> Result<(), RuntimeError> {
+        let cur = self.named_decimal(var)?;
+        let step = self.operand_decimal(by)?;
+        let next = checked(add(&cur, &step))?;
+        self.store_number(var, next)
     }
 
     /// Evaluate a relational condition. Numeric when both sides are numeric;
@@ -288,41 +511,47 @@ impl Machine {
     // Arithmetic (fixed-point decimal, truncating; unsigned receivers)
     // ----------------------------------------------------------------------
 
-    /// `ADD op… TO name [GIVING g]` → (name + op1 + … + opN) into g or name.
+    /// `ADD op… TO name [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
     fn exec_add(
         &mut self,
         operands: &[Operand],
         to: &str,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let mut acc = self.named_decimal(to)?;
         for op in operands {
             acc = checked(add(&acc, &self.operand_decimal(op)?))?;
         }
-        self.store_number(giving.as_deref().unwrap_or(to), acc)
+        self.store_result(giving.as_deref().unwrap_or(to), acc, rounded, on_size_error)
     }
 
-    /// `SUBTRACT op… FROM name [GIVING g]` → (name − op1 − … − opN) into g or name.
+    /// `SUBTRACT op… FROM name [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
     fn exec_subtract(
         &mut self,
         operands: &[Operand],
         from: &str,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let mut acc = self.named_decimal(from)?;
         for op in operands {
             acc = checked(sub(&acc, &self.operand_decimal(op)?))?;
         }
-        self.store_number(giving.as_deref().unwrap_or(from), acc)
+        self.store_result(giving.as_deref().unwrap_or(from), acc, rounded, on_size_error)
     }
 
-    /// `MULTIPLY a BY b [GIVING g]` → (a × b) into g, or into b when no GIVING.
+    /// `MULTIPLY a BY b [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
     fn exec_multiply(
         &mut self,
         a: &Operand,
         by: &Operand,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let product = checked(mul(&self.operand_decimal(a)?, &self.operand_decimal(by)?))?;
         let target = match (giving, by) {
             (Some(g), _) => g.clone(),
@@ -333,20 +562,26 @@ impl Machine {
                 ))
             }
         };
-        self.store_number(&target, product)
+        self.store_result(&target, product, rounded, on_size_error)
     }
 
-    /// `DIVIDE a INTO b [GIVING g]` → (b ÷ a), truncated to the receiver's
-    /// decimal places, stored in g, or in b (the dividend) when no GIVING.
+    /// `DIVIDE a INTO b [GIVING g] [ROUNDED] [ON SIZE ERROR …]` → b ÷ a.
     fn exec_divide(
         &mut self,
         divisor: &Operand,
         dividend: &Operand,
         giving: &Option<String>,
-    ) -> Result<(), RuntimeError> {
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
         let d = self.operand_decimal(divisor)?;
         if d.is_zero() {
-            return Err(RuntimeError::DivideByZero);
+            // Division by zero is a size-error condition (as in COMPUTE): the
+            // handler catches it; without one it is a hard error.
+            if on_size_error.is_empty() {
+                return Err(RuntimeError::DivideByZero);
+            }
+            return self.run_stmts(on_size_error);
         }
         let n = self.operand_decimal(dividend)?;
         let target = match (giving, dividend) {
@@ -358,16 +593,42 @@ impl Machine {
                 ))
             }
         };
-        // Compute to the receiver's fractional precision (COBOL truncates there
-        // absent ROUNDED); store_number then aligns the integer part.
-        let scale = self.numeric_dec_digits(&target)?;
-        let quotient = checked(div(&n, &d, scale))?;
-        self.store_number(&target, quotient)
+        // Compute at the shared intermediate precision; store_result then
+        // rounds or truncates into the receiver's decimal places.
+        let quotient = checked(div(&n, &d, COMPUTE_DIV_SCALE))?;
+        self.store_result(&target, quotient, rounded, on_size_error)
     }
 
-    /// The number of fractional digit positions of a named numeric receiver.
-    fn numeric_dec_digits(&self, name: &str) -> Result<usize, RuntimeError> {
-        Ok(self.numeric_dims(name)?.1)
+    /// Store a computed value into a numeric receiver, applying `ROUNDED`
+    /// (half away from zero, else truncate toward zero at the receiver's decimal
+    /// places) and `ON SIZE ERROR` (when the result's integer part overflows the
+    /// receiver, run the handler and leave the receiver unchanged; without a
+    /// handler, COBOL truncates the high-order digits silently, as `MOVE` does).
+    /// Shared by the arithmetic verbs and `COMPUTE`.
+    fn store_result(
+        &mut self,
+        target: &str,
+        value: Decimal,
+        rounded: bool,
+        on_size_error: &[Stmt],
+    ) -> Result<Flow, RuntimeError> {
+        let (int_digits, dec_digits) = self.numeric_dims(target)?;
+        let final_value = if rounded {
+            checked(round(&value, dec_digits))?
+        } else {
+            value
+        };
+        // Size error = the integer part does not fit (fractional truncation is
+        // never a size error).
+        if final_value.int.trim_start_matches('0').len() > int_digits {
+            if on_size_error.is_empty() {
+                self.store_number(target, final_value)?;
+                return Ok(Flow::Normal);
+            }
+            return self.run_stmts(on_size_error);
+        }
+        self.store_number(target, final_value)?;
+        Ok(Flow::Normal)
     }
 
     /// The `(int_digits, dec_digits)` of a named numeric receiver.
@@ -397,9 +658,7 @@ impl Machine {
         rounded: bool,
         expr: &Expr,
         on_size_error: &[Stmt],
-    ) -> Result<bool, RuntimeError> {
-        let (int_digits, dec_digits) = self.numeric_dims(target)?;
-
+    ) -> Result<Flow, RuntimeError> {
         let value = match self.eval_expr(expr) {
             Ok(v) => v,
             // Division by zero is a size-error condition: the handler catches it;
@@ -409,29 +668,7 @@ impl Machine {
             }
             Err(e) => return Err(e),
         };
-
-        // Round (half away from zero) or leave full precision for the store to
-        // truncate at the receiver's decimal places.
-        let final_value = if rounded {
-            checked(round(&value, dec_digits))?
-        } else {
-            value
-        };
-
-        // Size error = the integer part does not fit. (Fractional truncation is
-        // never a size error.)
-        if final_value.int.trim_start_matches('0').len() > int_digits {
-            if on_size_error.is_empty() {
-                // No handler: COBOL truncates the high-order digits silently,
-                // exactly as move_into_numeric already does.
-                self.store_number(target, final_value)?;
-                return Ok(false);
-            }
-            return self.run_stmts(on_size_error);
-        }
-
-        self.store_number(target, final_value)?;
-        Ok(false)
+        self.store_result(target, value, rounded, on_size_error)
     }
 
     /// Evaluate an arithmetic expression to an exact [`Decimal`]. Division is

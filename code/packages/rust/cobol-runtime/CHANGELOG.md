@@ -1,5 +1,86 @@
 # Changelog
 
+## 0.12.0 — ROUNDED / ON SIZE ERROR on the arithmetic verbs
+
+- **`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` now take `ROUNDED` and `ON SIZE ERROR`**,
+  matching `COMPUTE`. `ROUNDED` rounds half away from zero into the receiver
+  (else truncate); `ON SIZE ERROR` runs its statements (receiver unchanged) when
+  the result's integer part overflows — or, for `DIVIDE`, when the divisor is
+  zero. Without a handler, overflow truncates silently and a zero divisor stays a
+  hard `DivideByZero`.
+- The store path (round → size-error → store) is now a shared `store_result`
+  helper used by all five arithmetic verbs, so their rounding/overflow behaviour
+  is identical. `DIVIDE` now computes at the same intermediate precision as
+  `COMPUTE` before rounding into the receiver.
+
+## 0.11.0 — PERFORM … THRU (paragraph range)
+
+- **`PERFORM para-1 THRU para-2`** runs the whole range of paragraphs from
+  `para-1` through `para-2` in source order (falling through between them), then
+  returns. It composes with every repeat mode — `PERFORM A THRU B 3 TIMES`,
+  `… UNTIL …`, `… VARYING …` all repeat the whole range.
+- The grammar already parsed `THRU`/`THROUGH`; this wires up the runtime (the
+  reader previously rejected it). A backwards range (`para-2` before `para-1`) is
+  a clean error.
+- The inline form and non-consecutive/`EXIT`-terminated ranges remain deferred.
+
+## 0.10.0 — PERFORM … VARYING (counted loop)
+
+- **`PERFORM para VARYING id FROM start BY step UNTIL cond`** sets the induction
+  variable `id` to `start`, then runs the paragraph while `cond` is false
+  (test-before), stepping `id` by `step` after each iteration.
+- The `PERFORM` repeat forms are now modelled as a `PerformMode` enum
+  (`Once` / `Times` / `Until` / `Varying`) instead of ad-hoc option fields — a
+  cleaner substrate as the family grows.
+- Iterative like the other loops (a never-satisfied `VARYING` hangs but never
+  overflows the stack); a step overflow is a clean error; `STOP RUN` / `GO TO`
+  in the body propagate.
+- `WITH TEST AFTER`, multiple `AFTER` phrases, and `PERFORM … THRU` remain
+  deferred.
+
+## 0.9.0 — PERFORM … UNTIL (conditional loop)
+
+- **`PERFORM para UNTIL cond`** repeats a paragraph while the condition is false,
+  testing it **before** each iteration (so an initially-true condition runs the
+  paragraph zero times) — COBOL's default `WITH TEST BEFORE`.
+- The repeat loop is iterative, so even a never-satisfied `UNTIL` (an infinite
+  loop — the programmer's bug, valid COBOL) does not grow the native stack. A
+  `STOP RUN` / `GO TO` inside the body propagates out as its `Flow`.
+- `PERFORM … VARYING` / `… THRU` / `WITH TEST AFTER` and the inline form remain
+  deferred.
+
+## 0.8.0 — GO TO (unconditional transfer) + program-counter execution
+
+- **`GO TO para`** transfers control unconditionally to a paragraph. The
+  procedure division now runs as a **program counter** over paragraphs: after a
+  paragraph, control falls through to the next unless a `GO TO` jumped the counter
+  or `STOP RUN` ended the program.
+- The statement control signal changed from a stop-`bool` to a `Flow`
+  (`Normal` / `Stop` / `GoTo(idx)`) that unwinds out of enclosing
+  `IF`/`PERFORM`/`ON SIZE ERROR` up to the top-level loop.
+- **`GO TO` back-edges form loops** (`IF … GO TO LOOP`) — driven iteratively by
+  the program counter, so a loop never grows the native stack.
+- A `GO TO` inside a performed paragraph transfers control at the top level
+  (abandoning the `PERFORM`'s return) — the honest reading of "GO TO out of a
+  range". `GO TO … DEPENDING ON`, `ALTER`, and range-return niceties are deferred.
+
+## 0.7.0 — PERFORM (out-of-line paragraph invocation)
+
+- **`PERFORM para [n TIMES]`** runs a named paragraph out of line and returns to
+  the statement after the `PERFORM`. The `Machine` now indexes paragraphs by name
+  and executes them by cloning their statement list (so a performed paragraph and
+  the top-level fall-through share one execution path).
+- The `TIMES` count is a value: `≤ 0` runs the paragraph zero times (COBOL's
+  rule), a fractional count truncates, and an absurd (non-`usize`) count is a
+  clean error.
+- **`STOP RUN`** inside a performed paragraph ends the whole program (the
+  stop-flag propagates out of the `PERFORM`).
+- **Recursion guard:** a paragraph that performs itself (directly or in a cycle)
+  is bounded by `MAX_PERFORM_DEPTH` (100) and fails with a clean error instead of
+  overflowing the native stack.
+- Deferred to later PRs: `PERFORM … THRU`, `… UNTIL`, `… VARYING`, the inline
+  form, and `GO TO`.
+
 ## 0.6.0 — signed numerics (PIC S9…)
 
 - **`PIC S9…` signed numeric fields.** The leading `S` marks the field signed and

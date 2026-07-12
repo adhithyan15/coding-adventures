@@ -5,6 +5,52 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-07-11
+
+### Added
+
+- **`BigDouble`** (NUM-4): an arbitrary-precision **binary floating-point** number — a
+  `BigInteger` mantissa and an `i64` base-2 exponent (`value = mantissa × 2^exponent`),
+  carrying a working precision `prec` (the mantissa is normalized to exactly `prec`
+  significant bits). This is the rung for numbers that are *not* any exact fraction —
+  `√2`, and later `ln`, `exp`, `π` — where the honest thing is to compute to a **stated
+  precision** under a **stated rounding mode** and carry how many bits are trustworthy,
+  rather than pretend to exactness.
+- Correctly-rounded `add`/`sub`/`mul`/`div` (+ `checked_div`) and `sqrt`, each to a
+  requested precision and `RoundingMode` (all seven modes, reusing NUM-3's enum). Rounding
+  uses **guard + sticky** information, so alignment costs `O(prec)`, not `O(exponent gap)`
+  — a `10^large + 10^small`-style sum does not blow up. Addition handles the
+  effective-subtraction (opposite-sign) case with a sign-aware sticky/borrow, so
+  cancellation rounds the correct direction.
+- `with_precision(prec, mode)` (re-round to a new precision), `from_f64` (**exact** —
+  every `f64` is a dyadic rational), `from_bigint`/`from_i64`/`zero`/`one`/`from_parts`,
+  and accessors `mantissa`/`exponent`/`precision`.
+- `is_zero`/`is_negative`/`is_positive`/`signum`/`abs`/`neg`, total ordering **by value**
+  (independent of stored precision, so `3` at 64 bits equals `3` at 200 bits), and
+  `to_decimal()` — an **exact** conversion to `BigDecimal` (every binary fraction
+  terminates in base 10, `x·2^-k = x·5^k·10^-k`), plus a lossy `to_f64()` that narrows
+  through the exact decimal and Rust's correctly-rounded float parser.
+- Security budgets so no untrusted input can be turned into unbounded memory or a silent
+  wrong answer: `MAX_PRECISION` (1,000,000 bits) bounds every precision-driven shift/multiply;
+  a public `MAX_EXPONENT` (`2^62`) bounds the stored base-2 exponent, and all
+  exponent-*combining* arithmetic (`exp ± prec`, `exp + exp`, `exp − exp`) is carried in
+  `i128` so it can never wrap `i64` — an out-of-range result is an explicit
+  "exponent out of range" panic, never a silent truncation. `to_decimal` (which must
+  *materialize* `~|exp|` digits) has its own smaller budget and returns `None` past it, so
+  `to_f64`/`Display` fall back to saturation instead of exhausting memory.
+- Tests: the headline **IEEE-754 differential** — at `prec = 53` with round-half-even,
+  `+ − × ÷` and `√` reproduce hardware `f64` **bit for bit** across tens of thousands of
+  random operands (from `from_f64` being exact); high-precision `√2`/`√3`/`√10` pinned to
+  Python's `decimal` at 200 bits; the full rounding truth table on a binary tie across all
+  seven modes; exact `to_decimal` (incl. the long tail of `f64` `0.1`); ordering/sign
+  edges; and precision-budget/negative-`sqrt`/div-by-zero panics.
+- Literate programming throughout; zero third-party dependencies; `#![forbid(unsafe_code)]`.
+- The `BigDouble` module is declared at the end of `lib.rs` so it never textually collides
+  with the other numeric-rung module declarations.
+- **Deliberately deferred:** transcendental functions (`ln`, `exp`, `sin`, …) build on this
+  core and are a separate later effort (NUM-4b); the engine adopting Big numbers by default
+  is NUM-5.
+
 ## [0.3.0] - 2026-07-11
 
 ### Added

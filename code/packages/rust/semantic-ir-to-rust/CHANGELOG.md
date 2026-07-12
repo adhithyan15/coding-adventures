@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.32.0 — Array `each_slice` / `each_cons` / `chunk_while`
+
+Mirrors the Python reference (PR #8031) and the Go backend (PR #8036) into the
+Rust backend's inline `__sir` runtime (`array_method` gains the arms; the
+`Value::Seq` `respond_to?` arm gains the names), adding the Array
+consecutive-grouping family.
+
+- `each_slice(n)` → consecutive sub-arrays of at most `n` elements, the last
+  possibly shorter (`[1,2,3,4,5].each_slice(2)` → `[[1,2],[3,4],[5]]`).
+- `each_cons(n)` → every consecutive `n`-element sliding window
+  (`[1,2,3,4].each_cons(2)` → `[[1,2],[2,3],[3,4]]`); a window larger than the
+  array yields `[]`.
+- Both read `n` via a checked `Value::Int` match (never `as_i64`, which panics on
+  a non-Int arg) and treat `n <= 0` as `[]` (Ruby raises `ArgumentError`; the
+  never-panic floor yields empty).
+- `chunk_while { |prev, cur| pred }` → runs of consecutive elements; the block is
+  called on each ADJACENT pair, a truthy result extends the run and a falsy one
+  starts a new run (`[1,2,4,5,7].chunk_while { |a,b| b-a==1 }` →
+  `[[1,2],[4,5],[7]]`).  Empty → `[]`; single element → `[[x]]`.  The entries are
+  snapshotted before iterating so a reentrant block mutation cannot
+  double-borrow-panic.
+
+Exec-proof: `tests/compile_and_run_array_aggregates.rs` gains
+`array_each_slice_each_cons_chunk_while_compile_and_run`, running each_slice/
+each_cons (incl. `n<=0` and oversized-window → `[]`) and chunk_while (adjacent
+`b-a==1` predicate; empty → `[]`) under real `rustc`, diffed against the
+Python/Go reference semantics.
+
+
 ## 0.31.0 — Hash `to_h` (block + no-block) / `each_with_index` / `each_with_object`
 
 Mirrors the Python reference (PR #8009) and the Go backend (PR #8015) into the

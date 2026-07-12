@@ -3,6 +3,62 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.9] - Unreleased
+
+### Added
+
+- **`LIKELY(x)` / `UNLIKELY(x)` / `LIKELIHOOD(x, p)`** — SQLite's query-planner
+  hint functions. They bias the optimizer's row-count estimates but have no
+  effect on the result: each returns its first argument unchanged (any type,
+  including NULL). `LIKELIHOOD`'s second argument `p` is a probability the planner
+  uses as a hint and must be a number in `[0.0, 1.0]` (validated; out-of-range or
+  non-numeric is an error). Arity is checked before indexing.
+
+## [0.4.8] - Unreleased
+
+### Added
+
+- **`OCTET_LENGTH(x)`** — the number of *bytes*, in contrast to `LENGTH`'s count
+  of characters: `OCTET_LENGTH('héllo')` = 6 where `LENGTH('héllo')` = 5. Text is
+  measured as its UTF-8 bytes, a blob as its raw byte count, and an
+  integer/boolean as its decimal-text bytes (`OCTET_LENGTH(123)` = 3); NULL →
+  NULL. Floats are declined (their byte length depends on SQLite's subtle float
+  text form — same convention as HEX/QUOTE). Arity is checked before indexing.
+  (The `LENGTH` doc is corrected: it counts characters, not bytes.)
+
+## [0.4.7] - Unreleased
+
+### Fixed
+
+- **`HEX(NULL)`** now returns the empty string `''` (a text value), matching
+  SQLite, instead of NULL. SQLite casts HEX's argument to a blob first, so
+  `NULL` becomes an empty blob and hexing it yields `''` (`typeof` is `text`).
+  Surfaced while adding UNHEX (`HEX(UNHEX('abc'))` should be `''`, not NULL).
+
+## [0.4.6] - Unreleased
+
+### Added
+
+- **`UNHEX(x)` / `UNHEX(x, ignore)`** — the inverse of `HEX`: decode a string of
+  hexadecimal digit pairs into a blob (case-insensitive). `unhex('414243')` →
+  `x'414243'`, `unhex('')` → empty blob; an odd number of digits or a non-hex
+  character yields NULL. The optional second argument is a set of ignorable
+  characters, which SQLite permits only at a byte boundary — never splitting a
+  pair: `unhex('41.42', '.')` → `x'4142'` but `unhex('4-1-4-2', '-')` → NULL.
+  Integer/boolean arguments coerce to their decimal text; NULL in either argument
+  → NULL. Output is bounded by the input length (no unbounded allocation), and
+  arity is checked before indexing.
+
+## [0.4.5] - Unreleased
+
+### Fixed
+
+- **`ROUND(x, n)` with a negative digit count** now matches SQLite, which treats
+  a negative `n` as zero rather than rounding to tens/hundreds:
+  `ROUND(2.567, -1)` = `ROUND(2.567, 0)` = `3.0` (was `0.0`), and
+  `ROUND(12.5, -1)` = `13.0`. Positive/zero digit counts, round-half-away-from-
+  zero, and NULL propagation are unchanged.
+
 ## [0.4.4] - Unreleased
 
 ### Added

@@ -6,15 +6,20 @@
 //! [PL08](../../../specs/PL08-cobol-runtime.md).
 //!
 //! It implements a *small but fully correct* slice — `MOVE` / `DISPLAY` /
-//! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`,
+//! `STOP RUN`, fixed-point decimal `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE`
+//! (with `ROUNDED` and `ON SIZE ERROR`),
 //! `COMPUTE` (precedence-correct arithmetic expressions with `+ - * / **`, unary
-//! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), and `IF … ELSE`
-//! (numeric and alphanumeric comparison) over numeric-display (`9`/`V`, and
+//! sign and parentheses, `ROUNDED`, and `ON SIZE ERROR`), `IF … ELSE`
+//! (numeric and alphanumeric comparison),
+//! `PERFORM para [THRU para2] [n TIMES | UNTIL cond | VARYING id FROM x BY y UNTIL cond]`
+//! (out-of-line paragraph or paragraph-range invocation — fixed-count,
+//! conditional, and counted loops), and `GO TO para` (unconditional transfer,
+//! including back-edge loops) over numeric-display (`9`/`V`, and
 //! signed `S` with trailing-overpunch display) and character pictures — and
 //! returns a descriptive error for anything not yet modelled, rather than
 //! producing wrong output. The roadmap toward full COBOL (the `SIGN` clause and
-//! `SEPARATE`/`LEADING` variants, editing pictures, `PERFORM`, tables, files, later
-//! standards) is in PL08.
+//! `SEPARATE`/`LEADING` variants, editing pictures, `PERFORM … THRU`/`UNTIL`/
+//! `VARYING`, `GO TO … DEPENDING`, tables, files, later standards) is in PL08.
 //!
 //! ```
 //! use coding_adventures_cobol_runtime::run_cobol;
@@ -329,6 +334,97 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // ROUNDED / ON SIZE ERROR on the arithmetic verbs
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn divide_giving_rounded_rounds_the_receiver() {
+        // 10 / 3 = 3.333… → into V99. Truncated: 3.33; ROUNDED: still 3.33 (3rd
+        // place < 5). Use 20 / 3 = 6.666… → truncated 6.66, ROUNDED 6.67.
+        let prog = |rounded: &str| {
+            run_cobol(&program(&[
+                "IDENTIFICATION DIVISION.",
+                "PROGRAM-ID. P.",
+                "DATA DIVISION.",
+                "WORKING-STORAGE SECTION.",
+                "01  R  PIC 9(2)V99 VALUE 0.",
+                "PROCEDURE DIVISION.",
+                "MAIN.",
+                &format!("    DIVIDE 3 INTO 20 GIVING R{rounded}."),
+                "    DISPLAY R.",
+                "    STOP RUN.",
+            ]))
+            .unwrap()
+        };
+        assert_eq!(prog(""), "0666\n"); // truncated 6.66
+        assert_eq!(prog(" ROUNDED"), "0667\n"); // rounded 6.67
+    }
+
+    #[test]
+    fn multiply_giving_rounded() {
+        // 2.5 * 2.5 = 6.25 into 9(2)V9: truncated 6.2, ROUNDED 6.3 (2nd place 5).
+        let prog = |rounded: &str| {
+            run_cobol(&program(&[
+                "IDENTIFICATION DIVISION.",
+                "PROGRAM-ID. P.",
+                "DATA DIVISION.",
+                "WORKING-STORAGE SECTION.",
+                "01  R  PIC 9(2)V9 VALUE 0.",
+                "PROCEDURE DIVISION.",
+                "MAIN.",
+                &format!("    MULTIPLY 2.5 BY 2.5 GIVING R{rounded}."),
+                "    DISPLAY R.",
+                "    STOP RUN.",
+            ]))
+            .unwrap()
+        };
+        assert_eq!(prog(""), "062\n");
+        assert_eq!(prog(" ROUNDED"), "063\n");
+    }
+
+    #[test]
+    fn add_on_size_error_fires_on_overflow() {
+        // R is 9(2) (max 99). ADD 50 TO R twice → 100 overflows on the second;
+        // the handler runs and R is left unchanged (still 50).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  R  PIC 9(2) VALUE 50.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    ADD 60 TO R",
+            "        ON SIZE ERROR DISPLAY \"OVER\".",
+            "    DISPLAY R.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        // 50 + 60 = 110 overflows 9(2) → handler runs, R unchanged at 50.
+        assert_eq!(out, "OVER\n50\n");
+    }
+
+    #[test]
+    fn divide_by_zero_with_on_size_error_runs_the_handler() {
+        // A zero divisor is a size-error condition; with a handler it is caught.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  R  PIC 9(3) VALUE 7.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DIVIDE 0 INTO 10 GIVING R",
+            "        ON SIZE ERROR DISPLAY \"DIVZERO\".",
+            "    DISPLAY R.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DIVZERO\n007\n");
+    }
+
+    // ----------------------------------------------------------------------
     // IF — conditions and branching
     // ----------------------------------------------------------------------
 
@@ -581,20 +677,415 @@ mod tests {
 
     #[test]
     fn unsupported_verb_is_a_clear_error() {
-        // PERFORM is not yet executed (control flow is a later PR).
+        // ACCEPT is parsed but not yet executed (console input is a later PR).
         let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 9(3).",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    ACCEPT N.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("ACCEPT"), "message should name the verb: {err}");
+    }
+
+    // ----------------------------------------------------------------------
+    // GO TO — unconditional paragraph transfer, and GO TO loops
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn go_to_transfers_control_and_skips_fallthrough() {
+        // GO TO SKIP jumps past MIDDLE; "MIDDLE" is never displayed.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY \"START\".",
+            "    GO TO SKIP.",
+            "MIDDLE.",
+            "    DISPLAY \"MIDDLE\".",
+            "SKIP.",
+            "    DISPLAY \"END\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "START\nEND\n");
+    }
+
+    #[test]
+    fn go_to_forms_a_loop_that_terminates() {
+        // A back-edge GO TO drives a counting loop (iterative — no stack growth).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    MOVE 0 TO I.",
+            "LOOP.",
+            "    ADD 1 TO I.",
+            "    DISPLAY I.",
+            "    IF I LESS 3 GO TO LOOP.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "1\n2\n3\n");
+    }
+
+    #[test]
+    fn go_to_out_of_a_performed_paragraph_transfers_at_top_level() {
+        // A GO TO inside a performed paragraph transfers control at the top
+        // level, abandoning the PERFORM's return: MAIN's DISPLAY after the
+        // PERFORM never runs.
+        let out = run_cobol(&program(&[
             "IDENTIFICATION DIVISION.",
             "PROGRAM-ID. P.",
             "PROCEDURE DIVISION.",
             "MAIN.",
             "    PERFORM SUB.",
+            "    DISPLAY \"AFTER MAIN\".",
             "    STOP RUN.",
             "SUB.",
+            "    GO TO ELSEWHERE.",
+            "ELSEWHERE.",
+            "    DISPLAY \"ELSEWHERE\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "ELSEWHERE\n");
+    }
+
+    #[test]
+    fn go_to_unknown_paragraph_is_an_error() {
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    GO TO NOWHERE.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::UndefinedName(_)), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
+    // PERFORM — out-of-line paragraph invocation
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn perform_runs_a_paragraph_then_returns() {
+        // MAIN performs GREET, then continues to its own DISPLAY.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM GREET.",
+            "    DISPLAY \"BACK\".",
+            "    STOP RUN.",
+            "GREET.",
+            "    DISPLAY \"HI\".",
+        ]))
+        .unwrap();
+        // HI (from the perform), BACK (after it returns), then STOP RUN — the
+        // GREET paragraph does NOT run a second time by fall-through.
+        assert_eq!(out, "HI\nBACK\n");
+    }
+
+    #[test]
+    fn perform_n_times_repeats() {
+        // PERFORM TICK 3 TIMES accumulates COUNT 1,2,3.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  COUNT  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM TICK 3 TIMES.",
+            "    STOP RUN.",
+            "TICK.",
+            "    ADD 1 TO COUNT.",
+            "    DISPLAY COUNT.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "1\n2\n3\n");
+    }
+
+    #[test]
+    fn perform_zero_or_negative_times_runs_never() {
+        // A zero count performs the paragraph zero times.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM NOISE N TIMES.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "NOISE.",
+            "    DISPLAY \"X\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DONE\n");
+    }
+
+    #[test]
+    fn perform_of_unknown_paragraph_is_an_error() {
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM NOWHERE.",
             "    STOP RUN.",
         ]))
         .unwrap_err();
+        assert!(matches!(err, RuntimeError::UndefinedName(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn self_performing_paragraph_errors_not_overflows() {
+        // LOOP performs itself: without the depth cap this recurses until the
+        // native stack overflows. The cap turns it into a clean error.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM LOOP.",
+            "    STOP RUN.",
+            "LOOP.",
+            "    PERFORM LOOP.",
+        ]))
+        .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
-        assert!(err.to_string().contains("PERFORM"), "message should name the verb: {err}");
+        assert!(err.to_string().to_lowercase().contains("deep"), "message should explain: {err}");
+    }
+
+    #[test]
+    fn stop_run_inside_a_performed_paragraph_ends_the_program() {
+        // The STOP RUN inside DONE ends everything; MAIN's trailing DISPLAY
+        // never runs.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM DONE.",
+            "    DISPLAY \"AFTER\".",
+            "    STOP RUN.",
+            "DONE.",
+            "    DISPLAY \"IN\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "IN\n");
+    }
+
+    #[test]
+    fn perform_until_loops_while_condition_is_false() {
+        // Count I from 1 to 3: PERFORM STEP UNTIL I GREATER 2 runs STEP while
+        // I is not > 2. STEP adds 1 and displays, so I goes 1, 2, 3 and stops
+        // once I = 3 (which is > 2, tested before the would-be 4th run).
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM STEP UNTIL I GREATER 2.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "STEP.",
+            "    ADD 1 TO I.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        // STEP runs at I=0→1, I=1→2, I=2→3; next test I=3>2 true → stop.
+        assert_eq!(out, "1\n2\n3\nDONE\n");
+    }
+
+    #[test]
+    fn perform_until_tests_before_so_can_run_zero_times() {
+        // The condition is already true, so the paragraph never runs.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 5.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM NOISE UNTIL I GREATER 2.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "NOISE.",
+            "    DISPLAY \"X\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DONE\n");
+    }
+
+    #[test]
+    fn perform_until_propagates_stop_run() {
+        // A STOP RUN inside the UNTIL body ends the program immediately.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM STEP UNTIL I GREATER 9.",
+            "    DISPLAY \"NEVER\".",
+            "    STOP RUN.",
+            "STEP.",
+            "    DISPLAY \"ONCE\".",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "ONCE\n");
+    }
+
+    #[test]
+    fn perform_thru_runs_a_paragraph_range() {
+        // PERFORM A THRU C runs A, B, C in order, then returns; MAIN's own
+        // DISPLAY runs after. The paragraphs do NOT run again by fall-through
+        // because MAIN stops.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM A THRU C.",
+            "    DISPLAY \"BACK\".",
+            "    STOP RUN.",
+            "A.",
+            "    DISPLAY \"A\".",
+            "B.",
+            "    DISPLAY \"B\".",
+            "C.",
+            "    DISPLAY \"C\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "A\nB\nC\nBACK\n");
+    }
+
+    #[test]
+    fn perform_thru_with_times_repeats_the_whole_range() {
+        // PERFORM A THRU B 2 TIMES runs (A, B) twice → A B A B.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM A THRU B 2 TIMES.",
+            "    STOP RUN.",
+            "A.",
+            "    DISPLAY \"A\".",
+            "B.",
+            "    DISPLAY \"B\".",
+        ]))
+        .unwrap();
+        assert_eq!(out, "A\nB\nA\nB\n");
+    }
+
+    #[test]
+    fn perform_thru_backwards_range_is_an_error() {
+        // THRU target must not precede the start paragraph.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM C THRU A.",
+            "    STOP RUN.",
+            "A.",
+            "    DISPLAY \"A\".",
+            "C.",
+            "    DISPLAY \"C\".",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        assert!(err.to_string().contains("backwards"), "message should explain: {err}");
+    }
+
+    #[test]
+    fn perform_varying_counts_with_an_induction_variable() {
+        // VARYING I FROM 1 BY 1 UNTIL I GREATER 3 runs the body for I = 1, 2, 3.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 1 BY 1 UNTIL I GREATER 3.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "1\n2\n3\nDONE\n");
+    }
+
+    #[test]
+    fn perform_varying_can_step_by_more_than_one() {
+        // FROM 0 BY 2 UNTIL I GREATER 6 → I = 0, 2, 4, 6.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 0 BY 2 UNTIL I GREATER 6.",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "0\n2\n4\n6\n");
+    }
+
+    #[test]
+    fn perform_varying_tests_before_so_can_run_zero_times() {
+        // The condition is already true at the FROM value, so the body never runs.
+        let out = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  I  PIC 9 VALUE 0.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    PERFORM SHOW VARYING I FROM 9 BY 1 UNTIL I GREATER 3.",
+            "    DISPLAY \"DONE\".",
+            "    STOP RUN.",
+            "SHOW.",
+            "    DISPLAY I.",
+        ]))
+        .unwrap();
+        assert_eq!(out, "DONE\n");
     }
 
     #[test]

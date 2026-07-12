@@ -585,6 +585,67 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT SUBSTRING(s, 2) AS a, SUBSTRING(s, 2, 3) AS b FROM t ORDER BY id",
     },
+    // ROUND with a NEGATIVE digit count is treated as zero digits (SQLite never
+    // rounds to tens/hundreds): round(2.567,-1) = round(2.567,0) = 3.0, not 0.0.
+    Case {
+        id: "round_negative_digits",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, x REAL)",
+            "INSERT INTO t VALUES (1, 2.567), (2, 12.5)",
+        ],
+        query: "SELECT ROUND(x, -1) AS a, ROUND(x, -5) AS b, ROUND(x, 1) AS c FROM t ORDER BY id",
+    },
+    // UNHEX decodes hex digit pairs into a blob (inverse of HEX). Even-length hex
+    // → blob; odd length or a non-hex char → NULL. Compared as blobs directly
+    // (wrapping in HEX would trip a separate, pre-existing HEX(NULL) divergence).
+    Case {
+        id: "unhex",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, '414243'), (2, 'abc'), (3, 'DEADbeef')",
+        ],
+        query: "SELECT UNHEX(s) AS r FROM t ORDER BY id",
+    },
+    // The 2-argument form ignores a set of characters, but only at byte
+    // boundaries: '41.42' with '.' → x'4142', '4-1-4-2' with '-' → NULL.
+    Case {
+        id: "unhex_ignore_set",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT, ig TEXT)",
+            "INSERT INTO t VALUES (1, '41.42', '.'), (2, '4-1-4-2', '-')",
+        ],
+        query: "SELECT UNHEX(s, ig) AS r FROM t ORDER BY id",
+    },
+    // HEX(NULL) is the EMPTY STRING, not NULL — SQLite casts the argument to a
+    // blob first, and NULL → empty blob → ''. The non-NULL cases are unchanged.
+    Case {
+        id: "hex_of_null",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'abc'), (2, NULL)",
+        ],
+        query: "SELECT HEX(s) AS h, TYPEOF(HEX(s)) AS t FROM t ORDER BY id",
+    },
+    // OCTET_LENGTH counts BYTES (UTF-8), where LENGTH counts characters:
+    // 'héllo' is 5 characters but 6 bytes.
+    Case {
+        id: "octet_length",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 'héllo'), (2, '日本'), (3, ''), (4, NULL)",
+        ],
+        query: "SELECT OCTET_LENGTH(s) AS o, LENGTH(s) AS l FROM t ORDER BY id",
+    },
+    // LIKELY / UNLIKELY / LIKELIHOOD are planner hints — semantically the
+    // identity function on their first argument.
+    Case {
+        id: "likely_family",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 5, 'a'), (2, NULL, 'b')",
+        ],
+        query: "SELECT LIKELY(n) AS a, UNLIKELY(s) AS b, LIKELIHOOD(id, 0.5) AS c FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

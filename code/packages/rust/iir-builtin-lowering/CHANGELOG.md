@@ -1,5 +1,21 @@
 # Changelog — iir-builtin-lowering
 
+## 0.21.0 - 2026-07-11 (DVAL01-3: producer-agnostic DynValue classification)
+
+DVAL01-3 (spec DVAL01 §3.3): `dyn_repr` now seeds its "boxed register" set from
+**any op whose result type is a `DynValue`** (`any` / `ref<any>`) — not from a
+hard-coded lisp-builtin allow-list. A register holds a tagged word because of
+*what it is*, so a boxed **arithmetic** result (`dyn_box_int`, typed `ref<any>`)
+is exit-unboxed exactly like a `dyn_car` result — the concrete generalisation
+that unblocks dynamic arithmetic on native/LLVM (E6d-2b). The seed is gated on
+`is_lisp` (Twig/Nib use `any` as a pre-resolution placeholder on ordinary
+machine values, so seeding on the hint outside a dynamic module would mis-box
+them). Strict superset of the old seeds, so existing lisp programs are
+unaffected. New tests: a boxed non-cons DynValue is exit-unboxed; a Twig `any`
+module is a no-op.
+
+
+
 ## 0.20.0 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_* + passes)
 
 DVAL01-2 (spec DVAL01 sections 3.1-3.3): the IIR builtin *names* are de-lisped. The RUNTIME_RENAMES second column (`cons`->`dyn_cons`, `car`->`dyn_car`, `cdr`->`dyn_cdr`, `pair?`->`dyn_pair_p`, `equal?`->`dyn_equal`) and every `lispy_*` IIR name (`box_int`/`unbox_int`/`truthy`/`to_exit_code`/`nil`/`make_symbol`) become `dyn_*`. The boxing passes `lisp_repr`/`lisp_repr_structural` (files + `lower_lisp_repr`/`lower_lisp_repr_structural` fns) are renamed `dyn_repr`/`dyn_repr_structural`/`lower_dyn_repr`. Prefix-preserving (`dyn_pair_p`, not `dyn_is_pair`) so the IIR name maps cleanly to the already-shipped `__dyn_*` runtime symbol. Pure rename -- no lowering behaviour change; all backends stay in agreement.

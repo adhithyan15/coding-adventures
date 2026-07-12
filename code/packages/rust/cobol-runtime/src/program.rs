@@ -50,9 +50,7 @@ pub enum Fig {
 /// A named paragraph of statements.
 #[derive(Debug, Clone)]
 pub struct Paragraph {
-    /// The paragraph name — a `PERFORM` / `GO TO` target. Captured now; branched
-    /// on once those verbs land (the next control-flow PR).
-    #[allow(dead_code)]
+    /// The paragraph name — a `PERFORM` (and, later, `GO TO`) target.
     pub name: String,
     pub stmts: Vec<Stmt>,
 }
@@ -62,14 +60,38 @@ pub struct Paragraph {
 pub enum Stmt {
     Display(Vec<Operand>),
     Move { src: Operand, dsts: Vec<String> },
-    /// `ADD op… TO name [GIVING g]` — result = op1+…+name, stored in g or name.
-    Add { operands: Vec<Operand>, to: String, giving: Option<String> },
-    /// `SUBTRACT op… FROM name [GIVING g]` — result = name-(op1+…), in g or name.
-    Subtract { operands: Vec<Operand>, from: String, giving: Option<String> },
-    /// `MULTIPLY a BY b [GIVING g]` — result = a*b, stored in g or b.
-    Multiply { a: Operand, by: Operand, giving: Option<String> },
-    /// `DIVIDE a INTO b [GIVING g]` — result = b/a, stored in g or b.
-    Divide { divisor: Operand, dividend: Operand, giving: Option<String> },
+    /// `ADD op… TO name [GIVING g] [ROUNDED] [ON SIZE ERROR …]` — op1+…+name.
+    Add {
+        operands: Vec<Operand>,
+        to: String,
+        giving: Option<String>,
+        rounded: bool,
+        on_size_error: Vec<Stmt>,
+    },
+    /// `SUBTRACT op… FROM name [GIVING g] [ROUNDED] [ON SIZE ERROR …]`.
+    Subtract {
+        operands: Vec<Operand>,
+        from: String,
+        giving: Option<String>,
+        rounded: bool,
+        on_size_error: Vec<Stmt>,
+    },
+    /// `MULTIPLY a BY b [GIVING g] [ROUNDED] [ON SIZE ERROR …]` — a*b.
+    Multiply {
+        a: Operand,
+        by: Operand,
+        giving: Option<String>,
+        rounded: bool,
+        on_size_error: Vec<Stmt>,
+    },
+    /// `DIVIDE a INTO b [GIVING g] [ROUNDED] [ON SIZE ERROR …]` — b/a.
+    Divide {
+        divisor: Operand,
+        dividend: Operand,
+        giving: Option<String>,
+        rounded: bool,
+        on_size_error: Vec<Stmt>,
+    },
     /// `COMPUTE target [ROUNDED] = expr [ON SIZE ERROR stmts…]` — evaluate an
     /// arithmetic expression and store it in `target`, rounding instead of
     /// truncating when `rounded`, running `on_size_error` when the result
@@ -80,9 +102,35 @@ pub enum Stmt {
         expr: Expr,
         on_size_error: Vec<Stmt>,
     },
+    /// `PERFORM para [THRU para2] <mode>` — run a paragraph (or the range
+    /// `para`…`para2` in source order) out of line, then return. The
+    /// [`PerformMode`] is the repeat form.
+    Perform { target: String, thru: Option<String>, mode: PerformMode },
+    /// `GO TO para` — transfer control unconditionally to a paragraph (no return).
+    GoTo { target: String },
     /// `IF cond then… [ELSE else…]`.
     If { cond: Cond, then_branch: Vec<Stmt>, else_branch: Vec<Stmt> },
     StopRun,
+}
+
+/// How a [`Stmt::Perform`] repeats its paragraph.
+#[derive(Debug, Clone)]
+pub enum PerformMode {
+    /// Bare `PERFORM para` — run it once.
+    Once,
+    /// `PERFORM para n TIMES` — run it a fixed number of times.
+    Times(Operand),
+    /// `PERFORM para UNTIL cond` — run it while `cond` is false (test before).
+    Until(Cond),
+    /// `PERFORM para VARYING id FROM start BY step UNTIL cond` — set `id` to
+    /// `start`, then run while `cond` is false, stepping `id` by `step` after
+    /// each iteration (test before).
+    Varying {
+        var: String,
+        from: Operand,
+        by: Operand,
+        until: Cond,
+    },
 }
 
 /// An arithmetic expression tree (the operand of `COMPUTE`). Operator precedence
@@ -329,12 +377,14 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // direct NAME tokens are [to] or [to, giving].
             let operands = read_operands(verb)?;
             let (to, giving) = read_target_and_giving(verb)?;
-            Ok(Stmt::Add { operands, to, giving })
+            let (rounded, on_size_error) = read_rounded_and_size_error(verb)?;
+            Ok(Stmt::Add { operands, to, giving, rounded, on_size_error })
         }
         "subtract_stmt" => {
             let operands = read_operands(verb)?;
             let (from, giving) = read_target_and_giving(verb)?;
-            Ok(Stmt::Subtract { operands, from, giving })
+            let (rounded, on_size_error) = read_rounded_and_size_error(verb)?;
+            Ok(Stmt::Subtract { operands, from, giving, rounded, on_size_error })
         }
         "multiply_stmt" => {
             // MULTIPLY a BY b [GIVING g]: two operand nodes; a direct NAME token
@@ -350,8 +400,15 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 .map(|(_, v)| v)
                 .collect();
             let giving = if has_giving { names.into_iter().next() } else { None };
+            let (rounded, on_size_error) = read_rounded_and_size_error(verb)?;
             let mut it = ops.into_iter();
-            Ok(Stmt::Multiply { a: it.next().unwrap(), by: it.next().unwrap(), giving })
+            Ok(Stmt::Multiply {
+                a: it.next().unwrap(),
+                by: it.next().unwrap(),
+                giving,
+                rounded,
+                on_size_error,
+            })
         }
         "divide_stmt" => {
             // DIVIDE a INTO b [GIVING g]: first operand is the divisor, second
@@ -367,8 +424,15 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 .map(|(_, v)| v)
                 .collect();
             let giving = if has_giving { names.into_iter().next() } else { None };
+            let (rounded, on_size_error) = read_rounded_and_size_error(verb)?;
             let mut it = ops.into_iter();
-            Ok(Stmt::Divide { divisor: it.next().unwrap(), dividend: it.next().unwrap(), giving })
+            Ok(Stmt::Divide {
+                divisor: it.next().unwrap(),
+                dividend: it.next().unwrap(),
+                giving,
+                rounded,
+                on_size_error,
+            })
         }
         "compute_stmt" => {
             // COMPUTE target [ROUNDED] = <expr> [ON SIZE ERROR stmts…].
@@ -376,20 +440,48 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // deeper, inside the arith_* nodes.
             let target = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("COMPUTE without a receiver".into()))?;
-            let rounded = child_tokens(verb)
-                .iter()
-                .any(|(k, v)| k == "KEYWORD" && v == "ROUNDED");
             let expr_node = child_node(verb, "arith_expr")
                 .ok_or_else(|| RuntimeError::Unsupported("COMPUTE without an expression".into()))?;
             let expr = read_arith_expr_bounded(expr_node)?;
-            let on_size_error = match child_node(verb, "size_error") {
-                Some(se) => child_nodes(se, "statement")
-                    .into_iter()
-                    .map(read_statement)
-                    .collect::<Result<Vec<_>, _>>()?,
-                None => Vec::new(),
-            };
+            let (rounded, on_size_error) = read_rounded_and_size_error(verb)?;
             Ok(Stmt::Compute { target, rounded, expr, on_size_error })
+        }
+        "perform_stmt" => {
+            // PERFORM target [THROUGH/THRU target2] [ operand TIMES | UNTIL … |
+            // VARYING … ]. The direct NAME tokens are [target] or, with THRU,
+            // [target, target2]; the induction/TIMES/UNTIL operands live inside
+            // their own child nodes.
+            let names: Vec<String> = child_tokens(verb)
+                .into_iter()
+                .filter(|(k, _)| k == "NAME")
+                .map(|(_, v)| v)
+                .collect();
+            let target = names
+                .first()
+                .cloned()
+                .ok_or_else(|| RuntimeError::Unsupported("PERFORM without a target paragraph".into()))?;
+            let has_thru = child_tokens(verb)
+                .iter()
+                .any(|(k, v)| k == "KEYWORD" && (v == "THRU" || v == "THROUGH"));
+            let thru = if has_thru { names.get(1).cloned() } else { None };
+            // The repeat mode: VARYING (its own node), else TIMES (a direct
+            // operand), else UNTIL (a direct condition), else bare/once.
+            let mode = if let Some(v) = child_node(verb, "perform_varying") {
+                read_perform_varying(v)?
+            } else if let Some(op) = child_node(verb, "operand") {
+                PerformMode::Times(read_operand(op)?)
+            } else if let Some(cond) = child_node(verb, "condition") {
+                PerformMode::Until(read_condition(cond)?)
+            } else {
+                PerformMode::Once
+            };
+            Ok(Stmt::Perform { target, thru, mode })
+        }
+        "goto_stmt" => {
+            // GO [TO] target. The DEPENDING ON form is not in the grammar yet.
+            let target = first_token(verb, "NAME")
+                .ok_or_else(|| RuntimeError::Unsupported("GO TO without a target paragraph".into()))?;
+            Ok(Stmt::GoTo { target })
         }
         "if_stmt" => {
             // Children in order: IF, condition, then-statements…, [ELSE,
@@ -584,6 +676,43 @@ fn read_binary_chain(
         }
     }
     expr.ok_or_else(|| RuntimeError::Unsupported("empty arithmetic expression".into()))
+}
+
+/// Read a `perform_varying` node
+/// (`VARYING NAME FROM operand BY operand UNTIL condition`).
+fn read_perform_varying(v: &GrammarASTNode) -> Result<PerformMode, RuntimeError> {
+    let var = first_token(v, "NAME")
+        .ok_or_else(|| RuntimeError::Unsupported("PERFORM VARYING without a variable".into()))?;
+    let operands = child_nodes(v, "operand");
+    if operands.len() != 2 {
+        return Err(RuntimeError::Unsupported(
+            "PERFORM VARYING needs FROM and BY operands".into(),
+        ));
+    }
+    let from = read_operand(operands[0])?;
+    let by = read_operand(operands[1])?;
+    let cond = child_node(v, "condition")
+        .ok_or_else(|| RuntimeError::Unsupported("PERFORM VARYING without an UNTIL".into()))?;
+    let until = read_condition(cond)?;
+    Ok(PerformMode::Varying { var, from, by, until })
+}
+
+/// Read the trailing `[ROUNDED] [ON SIZE ERROR statements…]` clauses shared by
+/// the arithmetic verbs (`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE`) and `COMPUTE`.
+fn read_rounded_and_size_error(
+    verb: &GrammarASTNode,
+) -> Result<(bool, Vec<Stmt>), RuntimeError> {
+    let rounded = child_tokens(verb)
+        .iter()
+        .any(|(k, v)| k == "KEYWORD" && v == "ROUNDED");
+    let on_size_error = match child_node(verb, "size_error") {
+        Some(se) => child_nodes(se, "statement")
+            .into_iter()
+            .map(read_statement)
+            .collect::<Result<Vec<_>, _>>()?,
+        None => Vec::new(),
+    };
+    Ok((rounded, on_size_error))
 }
 
 /// All `operand` child nodes of a verb, read to typed [`Operand`]s.
