@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - Unreleased
+
+### Fixed
+
+- **Bare `JOIN`** (without an `INNER`/`LEFT`/… keyword) now parses. The generated
+  grammar's `join_clause` required a `join_type` before `JOIN`, so `FROM a JOIN b`
+  failed while `FROM a INNER JOIN b` worked. `join_type` is now `Optional`,
+  matching the `sql.grammar` source (`[ join_type ]`); the planner already
+  defaults a missing `join_type` to INNER, so no downstream change was needed.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
