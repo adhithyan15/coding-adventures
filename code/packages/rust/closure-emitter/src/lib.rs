@@ -74,6 +74,8 @@ use coding_adventures_javascript_ast::{
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ClassDeclaration, FunctionDeclaration, FunctionExpression,
+    ExportAllDeclaration, ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration,
+    ExportSpecifier,
     FunctionParam, Identifier, IfStatement, ImportDeclaration, ImportSpecifier, LabeledStatement,
     LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
@@ -801,6 +803,9 @@ impl<'a> Emitter<'a> {
             Declaration::FunctionDeclaration(f) => self.emit_function_declaration(f),
             Declaration::ClassDeclaration(c) => self.emit_class_declaration(c),
             Declaration::ImportDeclaration(i) => self.emit_import(i),
+            Declaration::ExportNamedDeclaration(e) => self.emit_export_named(e),
+            Declaration::ExportDefaultDeclaration(e) => self.emit_export_default(e),
+            Declaration::ExportAllDeclaration(e) => self.emit_export_all(e),
         }
     }
 
@@ -897,6 +902,119 @@ impl<'a> Emitter<'a> {
             self.write_str("from");
         }
         self.emit_string(&imp.source);
+        self.write_str(";");
+    }
+
+    /// Emit an ES-module named / declaration export (CLOC12.189).
+    ///
+    /// | source                          | emitted                     |
+    /// |---------------------------------|-----------------------------|
+    /// | `export { a, b as c };`         | `export{a,b as c};`         |
+    /// | `export { a } from "y";`        | `export{a}from"y";`         |
+    /// | `export const x = 1;`           | `export const x=1;`         |
+    /// | `export function f(){}`         | `export function f(){}`     |
+    /// | `export class C {}`             | `export class C{}`          |
+    ///
+    /// A declaration export prefixes `export ` (keyword→keyword needs the space)
+    /// and defers to [`Self::emit_declaration`], which owns the inner
+    /// declaration's terminator (a `VariableDeclaration` writes its own `;`; a
+    /// function/class does not). A specifier export writes the `{…}` list and,
+    /// for a re-export, the `from"y"` clause, then its own `;`.
+    fn emit_export_named(&mut self, exp: &ExportNamedDeclaration) {
+        self.maybe_map(&exp.cv);
+        self.write_str("export");
+        if let Some(inner) = &exp.declaration {
+            // `export const x=1` / `export function f(){}` / `export class C{}`.
+            // `export` is a keyword; the inner declaration also leads with a
+            // keyword (`const`/`function`/`class`), so a separating space is
+            // required. The inner declaration supplies its own terminator.
+            self.required_ws();
+            self.emit_declaration(inner);
+            return;
+        }
+        // `export { a, b as c }` — the specifier list abuts `export` (a `{`
+        // punctuator needs no space).
+        self.emit_named_export_specifiers(&exp.specifiers);
+        if let Some(source) = &exp.source {
+            // `from"y"` — `}` abuts `from`, `from` abuts the string.
+            self.write_str("from");
+            self.emit_string(source);
+        }
+        self.write_str(";");
+    }
+
+    /// Emit the `{ a, b as c }` specifier group shared by named exports.
+    /// `export { a }` → `{a}`; `export { a as c }` → `{a as c}` (the `as`
+    /// aliasing needs surrounding spaces, both sides being identifiers).
+    fn emit_named_export_specifiers(&mut self, specs: &[ExportSpecifier]) {
+        self.write_str("{");
+        for (i, s) in specs.iter().enumerate() {
+            if i > 0 {
+                self.write_str(",");
+            }
+            self.emit_identifier(&s.local);
+            // `{a}` when local == exported; `{a as c}` when the export is aliased.
+            if s.local.name != s.exported.name {
+                self.required_ws();
+                self.write_str("as");
+                self.required_ws();
+                self.emit_identifier(&s.exported);
+            }
+        }
+        self.write_str("}");
+    }
+
+    /// Emit an ES-module default export (CLOC12.189).
+    ///
+    /// | source                          | emitted                     |
+    /// |---------------------------------|-----------------------------|
+    /// | `export default 1;`             | `export default 1;`         |
+    /// | `export default function f(){}` | `export default function f(){}` |
+    /// | `export default class C {}`     | `export default class C{}`  |
+    ///
+    /// `export default` is always followed by a required space (both are
+    /// keywords, and a value like `1`/`x` would otherwise fuse onto `default`).
+    /// An expression operand takes a trailing `;`; a function/class declaration
+    /// operand does not (it is self-terminating).
+    fn emit_export_default(&mut self, exp: &ExportDefaultDeclaration) {
+        self.maybe_map(&exp.cv);
+        self.write_str("export");
+        self.required_ws();
+        self.write_str("default");
+        self.required_ws();
+        match &exp.declaration {
+            ExportDefaultKind::Expression(e) => {
+                self.emit_expression(e);
+                self.write_str(";");
+            }
+            ExportDefaultKind::FunctionDeclaration(f) => self.emit_function_declaration(f),
+            ExportDefaultKind::ClassDeclaration(c) => self.emit_class_declaration(c),
+        }
+    }
+
+    /// Emit an ES-module re-export-all (CLOC12.189).
+    ///
+    /// | source                          | emitted                     |
+    /// |---------------------------------|-----------------------------|
+    /// | `export * from "y";`            | `export*from"y";`           |
+    /// | `export * as ns from "y";`      | `export*as ns from"y";`     |
+    ///
+    /// `*` is a punctuator that abuts `export`; `*from`/`*as` also need no
+    /// space. The `as ns` namespace alias (grammar-gated today) needs spaces on
+    /// both sides. `from` abuts the source string.
+    fn emit_export_all(&mut self, exp: &ExportAllDeclaration) {
+        self.maybe_map(&exp.cv);
+        self.write_str("export");
+        self.write_str("*");
+        if let Some(ns) = &exp.exported {
+            // `*as ns` — `*` abuts `as`; `as ns` needs a separating space.
+            self.write_str("as");
+            self.required_ws();
+            self.emit_identifier(ns);
+            self.required_ws();
+        }
+        self.write_str("from");
+        self.emit_string(&exp.source);
         self.write_str(";");
     }
 
@@ -6515,5 +6633,105 @@ mod tests {
             ),
             "import x,{a}from\"y\";"
         );
+    }
+
+    // ---- ES-module export declarations (CLOC12.189) -----------
+
+    fn emit_one_decl(d: Declaration) -> String {
+        emit_default(program().with_body(vec![ProgramItem::Declaration(d)])).code
+    }
+
+    fn export_spec(local: &str, exported: &str) -> ExportSpecifier {
+        ExportSpecifier {
+            local: id_(local),
+            exported: id_(exported),
+        }
+    }
+
+    #[test]
+    fn export_named_plain_and_aliased() {
+        // `export { a, b as c };` — no source, so no `from` clause.
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![export_spec("a", "a"), export_spec("b", "c")],
+            source: None,
+        });
+        assert_eq!(emit_one_decl(d), "export{a,b as c};");
+    }
+
+    #[test]
+    fn export_named_reexport() {
+        // `export { a } from "y";` — a re-export carries the `from` clause.
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![export_spec("a", "a")],
+            source: Some(src_("y")),
+        });
+        assert_eq!(emit_one_decl(d), "export{a}from\"y\";");
+    }
+
+    #[test]
+    fn export_declaration_const() {
+        // `export const x = 1;` — the inner declaration supplies its own `;`.
+        let inner = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(id_("x")),
+                init: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+            }],
+        });
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: Some(Box::new(inner)),
+            specifiers: vec![],
+            source: None,
+        });
+        assert_eq!(emit_one_decl(d), "export const x=1;");
+    }
+
+    #[test]
+    fn export_default_expression() {
+        // `export default 1;` — expression operand takes a trailing `;`.
+        let d = Declaration::export_default_declaration(ExportDefaultDeclaration {
+            cv: None,
+            declaration: ExportDefaultKind::Expression(Box::new(Expression::NumericLiteral(
+                NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                },
+            ))),
+        });
+        assert_eq!(emit_one_decl(d), "export default 1;");
+    }
+
+    #[test]
+    fn export_all_bare() {
+        // `export * from "y";` — `*` and `from` abut, no namespace binding.
+        let d = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source: src_("y"),
+        });
+        assert_eq!(emit_one_decl(d), "export*from\"y\";");
+    }
+
+    #[test]
+    fn export_all_namespace() {
+        // `export * as ns from "y";` — grammar-gated, but the emitter models it.
+        let d = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: Some(id_("ns")),
+            source: src_("y"),
+        });
+        assert_eq!(emit_one_decl(d), "export*as ns from\"y\";");
     }
 }

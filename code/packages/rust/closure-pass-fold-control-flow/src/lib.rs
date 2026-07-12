@@ -658,6 +658,9 @@ fn block_is_scope_safe_to_hoist(b: &BlockStatement) -> bool {
         // An import declaration is module-top-level only; never legally inside
         // the block being hoisted, so treat it as unsafe to hoist.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         // Tagged statements introduce no lexical binding of their own.
         Statement::Tagged(_) => true,
     })
@@ -1091,6 +1094,9 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
         // the hoisting sense — so no `hoist_function_body_vars` step applies.
         // An import has no foldable control flow — preserve it verbatim.
         Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
+        Declaration::ExportNamedDeclaration(i) => Declaration::ExportNamedDeclaration(i.clone()),
+        Declaration::ExportDefaultDeclaration(i) => Declaration::ExportDefaultDeclaration(i.clone()),
+        Declaration::ExportAllDeclaration(i) => Declaration::ExportAllDeclaration(i.clone()),
         Declaration::ClassDeclaration(c) => {
             let (super_class, body) = fold_class_body(&c.super_class, &c.body, st);
             Declaration::ClassDeclaration(ClassDeclaration {

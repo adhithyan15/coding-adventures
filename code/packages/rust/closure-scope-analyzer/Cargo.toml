@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-scope-analyzer"
-version = "0.16.0"
+version = "0.17.0"
 edition = "2021"
 description = "Lexical scope + symbol-table analyzer for the Closure Compiler clone. Per CLOC13 — produces a `ScopeAnalysis` consumed by the rename, inline, treeshake, collapse-properties, and remove-unused-vars passes."
 

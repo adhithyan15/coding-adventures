@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.15.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration the global-renaming walk does not descend into exports
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+the global-renaming walk does not descend into exports. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
 ## [0.14.0] - 2026-07-12
 
 ### Changed — CLOC12.188 PR2: bail on module `import`

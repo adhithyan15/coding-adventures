@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.40.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: ES-module export declarations
+
+Three new `Declaration` variants (ESTree-shaped), completing the Phase-4
+module-level set alongside `ImportDeclaration`:
+  - `ExportNamedDeclaration { cv, declaration: Option<Box<Declaration>>,
+    specifiers: Vec<ExportSpecifier>, source: Option<StringLiteral> }` — models
+    `export { a, b as c }`, `export { a } from "y"` (re-export), and
+    `export const x = 1` / `export function f(){}` / `export class C {}`
+    (declaration export, via the boxed self-referential `declaration`).
+  - `ExportSpecifier { local, exported }` (`export { a as c }` → local `a`,
+    exported `c` — the mirror of `ImportSpecifier::Named`).
+  - `ExportDefaultDeclaration { cv, declaration: ExportDefaultKind }` where
+    `ExportDefaultKind` = `Expression | FunctionDeclaration | ClassDeclaration`
+    (`export default <expr | function | class>`).
+  - `ExportAllDeclaration { cv, exported: Option<Identifier>, source }` —
+    `export * from "y"` (`export * as ns` is grammar-gated; the `exported`
+    field models the full ESTree shape).
+
+Four convenience constructors + four roundtrip tests. Not yet produced by the
+parser bridge (a follow-up PR wires `convert_export_declaration` with the
+renaming-soundness gate exports demand — an exported name is the module's public
+surface); this PR only adds the types so the pass pipeline traverses them
+exhaustively.
+
 ## [0.39.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: ES-module `import` declarations

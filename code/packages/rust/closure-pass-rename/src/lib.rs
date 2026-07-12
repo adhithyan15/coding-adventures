@@ -340,6 +340,9 @@ fn process_stmt(
         Statement::Declaration(Declaration::ClassDeclaration(_)) => false,
         // An import declaration binds no leaf-function params to rename here.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         Statement::Tagged(t) => process_tagged(t, nodes_touched, renames),
     }
 }
@@ -477,6 +480,9 @@ fn stmt_has_function(stmt: &Statement) -> bool {
         // An import declaration contains no functions and cannot re-scope a
         // leaf binding, so it does not disable the leaf rename.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         Statement::Tagged(t) => match t {
             TaggedStatement::BlockStatement(b) => b.body.iter().any(stmt_has_function),
             TaggedStatement::IfStatement(is) => {
@@ -705,6 +711,9 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
         // exports — renaming them would break the cross-module contract, so we
         // never descend into it.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => {}
         Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
             // A class declaration binds a name — mark it ineligible for local
             // renaming, like a nested function name (renaming a class name
@@ -845,6 +854,9 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
         // exports — renaming them would break the cross-module contract, so we
         // never descend into it.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => {}
         Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
             // Soundness-critical: collect EVERY identifier the class introduces
             // or references — its name, the heritage operand, and each method's
@@ -1290,6 +1302,9 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
         // exports — renaming them would break the cross-module contract, so we
         // never descend into it.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => {}
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => {}
         Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
             // Rewrite renamed outer locals used in the heritage operand and
             // inside each method body. The class's own name is marked

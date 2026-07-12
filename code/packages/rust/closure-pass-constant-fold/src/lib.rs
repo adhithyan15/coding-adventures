@@ -481,6 +481,15 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
         // An import declaration has no foldable body — its only payload is the
         // bound names and the module specifier string. Preserve it verbatim.
         Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
+        // Export declarations (CLOC12.189). PR1 keeps the node unreachable (no
+        // bridge yet); preserve each verbatim. The inner declaration of an
+        // `export const x = 1` is NOT folded here — descent lands with the
+        // bridge PR that makes the node reachable.
+        Declaration::ExportNamedDeclaration(e) => Declaration::ExportNamedDeclaration(e.clone()),
+        Declaration::ExportDefaultDeclaration(e) => {
+            Declaration::ExportDefaultDeclaration(e.clone())
+        }
+        Declaration::ExportAllDeclaration(e) => Declaration::ExportAllDeclaration(e.clone()),
     }
 }
 

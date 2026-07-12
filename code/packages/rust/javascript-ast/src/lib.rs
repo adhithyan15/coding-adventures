@@ -128,7 +128,8 @@ mod es_version_serde {
 // `use coding_adventures_javascript_ast::{Program, IfStatement,
 // BinaryOperator}` without learning the module layout.
 pub use declaration::{
-    BindingTarget, ClassDeclaration, Declaration, FunctionDeclaration, FunctionParam,
+    BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration, ExportDefaultDeclaration,
+    ExportDefaultKind, ExportNamedDeclaration, ExportSpecifier, FunctionDeclaration, FunctionParam,
     ImportDeclaration, ImportSpecifier, VarKind, VariableDeclaration, VariableDeclarator,
 };
 pub use expression::{

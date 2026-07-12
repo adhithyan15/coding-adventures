@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.28.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration walk arms are no-ops and the splice predicates report nothing spliced
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+walk arms are no-ops and the splice predicates report nothing spliced. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
 ## [0.27.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: `ImportDeclaration` arms
