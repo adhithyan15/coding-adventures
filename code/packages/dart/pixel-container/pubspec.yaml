@@ -1,0 +1,11 @@
+name: coding_adventures_pixel_container
+version: 0.1.0
+description: IC00 universal RGBA8 pixel buffer and image codec interface in pure Dart.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
