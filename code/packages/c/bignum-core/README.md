@@ -38,8 +38,39 @@ bigint_free(a); bigint_free(b); bigint_free(q); bigint_free(r); bigint_free(prod
 
 `bigint_try_pow` refuses an oversized result up front (returns
 `BIGINT_POW_TOO_LARGE` without allocating) so a hostile exponent can't OOM the
-process. This ports the integer core; the crate's decimal / float rungs build
-on it.
+process.
+
+## BigDecimal — exact base-10 (`bignum_decimal.h`)
+
+The `decimal` rung, built on `BigInteger`. A **BigDecimal** is
+`mantissa × 10^(-scale)` in canonical form (the mantissa never ends in a `0`
+digit; zero is `(0, 0)`), so equal values print and compare identically. `+ − ×`
+and `^` are **exact**; division rounds to a stated number of places under one of
+seven `DecRoundingMode`s (`HALF_EVEN`, `HALF_UP`, `FLOOR`, …).
+
+```c
+#include "bignum_decimal.h"
+
+BigDecimal *a = NULL, *b = NULL, *sum = NULL;
+dec_parse("0.1", &a);
+dec_parse("0.2", &b);
+dec_add(a, b, &sum);              /* exact: no 0.30000000000000004 */
+char *s = dec_to_string(sum);    /* "0.3" */
+
+BigDecimal *third = NULL;
+dec_div_round(dec_one(), b, 4, DEC_ROUND_HALF_EVEN, &third); /* 1/0.2 → "5" */
+
+free(s);
+dec_free(a); dec_free(b); dec_free(sum); dec_free(third);
+```
+
+`dec_parse` enforces a strict `DEC_MAX_SCALE` (10^6) budget on untrusted input,
+so a few-byte string like `"1e-2000000000"` cannot force a multi-gigabyte
+power-of-ten materialization in a later `+`/`cmp`/`to_string`. Where the Rust
+`from_parts`/`div_round` panic (scale past the internal ceiling; divide by zero),
+this port returns a `DecStatus` instead — a library must not abort its host. The
+lossy `dec_to_f64` goes through the value's decimal string and `strtod`, so no
+`<math.h>` is needed.
 
 ## Portability
 

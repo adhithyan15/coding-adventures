@@ -16,3 +16,4 @@ $harness = Join-Path $d 'code\packages\c\iso-harness'
 $env:ISO_INCLUDE = "include $harness\include"
 . (Join-Path $harness 'lib\iso-lib.ps1')
 Iso-BuildAndRun -Lang cpp -Name bignum_core-tests -Sources @("tests\bignum_core_test.cpp")
+Iso-BuildAndRun -Lang cpp -Name bignum_decimal-tests -Sources @("tests\bignum_decimal_test.cpp")

@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-07-11
+
+### Added
+
+- **BigDecimal** (`bignum_decimal.h` / `bignum_decimal.c`) — the exact base-10
+  `decimal` rung of the Rust crate, built on `BigInteger`: `mantissa × 10^(-scale)`
+  in canonical form (mantissa carries no trailing zero; zero is `(0, 0)`).
+- Construction (`dec_zero` / `one` / `from_i64` / `from_integer` / `from_parts` /
+  `clone`), accessors (`dec_mantissa` / `dec_scale`), predicates & sign
+  (`is_zero` / `is_negative` / `is_positive` / `signum` / `abs` / `neg`).
+- Exact `dec_add` / `dec_sub` / `dec_mul` / `dec_pow`; rounding `dec_div_round`
+  and `dec_round_to_scale` over seven `DecRoundingMode`s; `dec_cmp` total order.
+- `dec_parse` (plain and scientific notation, typed `DecParseStatus`),
+  `dec_to_string` (plain notation, never scientific), and the lossy `dec_to_f64`
+  (through `strtod` — no `<math.h>`).
+- Security: `dec_parse` enforces the strict `DEC_MAX_SCALE` (10^6) budget on the
+  canonical scale, bounding any later power-of-ten materialization; scale
+  bookkeeping uses hand-written checked i64 arithmetic (no `__int128`); Rust
+  panics (scale past the ceiling, divide by zero) are returned as `DecStatus`.
+- Tests via the shared `iso-harness` (GCC, Clang, MSVC): canonical form, display,
+  parsing, exact arithmetic, `pow`, the full rounding truth table, rounding
+  division, ordering, `to_f64`, and the MAX_SCALE amplification-payload rejection.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

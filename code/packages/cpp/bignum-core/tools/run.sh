@@ -29,3 +29,4 @@ fi
 
 . "$HARNESS/lib/iso-lib.sh"
 iso_build_and_run cpp bignum_core-tests tests/bignum_core_test.cpp
+iso_build_and_run cpp bignum_decimal-tests tests/bignum_decimal_test.cpp
