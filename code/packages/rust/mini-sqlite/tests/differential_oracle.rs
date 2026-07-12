@@ -636,6 +636,16 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT OCTET_LENGTH(s) AS o, LENGTH(s) AS l FROM t ORDER BY id",
     },
+    // LIKELY / UNLIKELY / LIKELIHOOD are planner hints — semantically the
+    // identity function on their first argument.
+    Case {
+        id: "likely_family",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1, 5, 'a'), (2, NULL, 'b')",
+        ],
+        query: "SELECT LIKELY(n) AS a, UNLIKELY(s) AS b, LIKELIHOOD(id, 0.5) AS c FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.9] - Unreleased
+
+### Added
+
+- **`LIKELY(x)` / `UNLIKELY(x)` / `LIKELIHOOD(x, p)`** — SQLite's query-planner
+  hint functions. They bias the optimizer's row-count estimates but have no
+  effect on the result: each returns its first argument unchanged (any type,
+  including NULL). `LIKELIHOOD`'s second argument `p` is a probability the planner
+  uses as a hint and must be a number in `[0.0, 1.0]` (validated; out-of-range or
+  non-numeric is an error). Arity is checked before indexing.
+
 ## [0.4.8] - Unreleased
 
 ### Added
