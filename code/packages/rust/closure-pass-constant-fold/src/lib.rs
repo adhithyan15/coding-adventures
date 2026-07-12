@@ -100,7 +100,7 @@ use coding_adventures_javascript_ast::{
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
-    DoWhileStatement, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 
@@ -320,6 +320,14 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
         TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
             cv: s.cv.clone(),
             test: fold_expression(&s.test, st),
+            body: Box::new(fold_statement(&s.body, st)),
+        }),
+        // `with (object) body` (CLOC12.187) — fold the object expression and the
+        // body, exactly like a `while` head. (Not yet reachable; the bridge
+        // still declines `with`.)
+        TaggedStatement::WithStatement(s) => TaggedStatement::WithStatement(WithStatement {
+            cv: s.cv.clone(),
+            object: fold_expression(&s.object, st),
             body: Box::new(fold_statement(&s.body, st)),
         }),
         TaggedStatement::DoWhileStatement(s) => {
@@ -3329,6 +3337,7 @@ fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
 ///   pieces all come from the source, so this is a defensive cap (and
 ///   `checked_add` stops the running length from overflowing) rather than a
 ///   true blowup vector, but it mirrors the `repeat`/`pad` guards.
+///
 /// Coerce a single `String.prototype.concat` argument to the string JS would
 /// pass to the concatenation, or `None` if it is not a compile-time constant we
 /// can coerce faithfully.
@@ -3710,6 +3719,7 @@ fn fold_string_replace(method: &str, haystack: &str, from: &str, to: &str) -> Op
 /// - Anything else (identifier objects like `s.length`, other properties like
 ///   `"x".charCodeAt`) falls through unchanged; we still recurse into the
 ///   object and property so nested constants inside them fold.
+///
 /// Fold `a?.b` / `a?.[k]`. Recurse into object and property so nested
 /// constants fold, but keep the optional-member node itself — we deliberately
 /// do NOT apply the `.length` / string-method folds to the `?.` variant, so the
@@ -5283,6 +5293,10 @@ enum FoldedLiteral {
     Number(f64),
     String(String),
     Boolean(bool),
+    // Models the JS `null` value for completeness of the folded-literal domain.
+    // No current fold produces it (null-valued expressions are left for the
+    // runtime), but keeping the variant makes the value enum total.
+    #[allow(dead_code)]
     Null,
     /// `undefined`. Produced by:
     /// - `void <any-expression-without-side-effects>` fold (CLOC12.20 / gap-002).
@@ -5487,6 +5501,10 @@ fn unary_op_label(op: UnaryOperator) -> &'static str {
 
 #[cfg(test)]
 mod tests {
+    // These tests exercise constant-folding of `parseFloat`/number literals, so
+    // literals like `3.14` are deliberate test inputs/expected values, not
+    // approximations of std::f64::consts::PI to be replaced.
+    #![allow(clippy::approx_constant)]
     use super::*;
     use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};
     use coding_adventures_javascript_ast::{statement::TaggedStatement, Identifier, SourceType};
@@ -10860,7 +10878,7 @@ mod tests {
     fn repeat_fractional_count_does_not_fold() {
         // We don't model ToInteger coercion (`"ab".repeat(2.5)` → 2 in JS).
         let c = repeat_call("ab", 2.5);
-        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        let (_out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "fractional repeat count must not fold");
     }
 

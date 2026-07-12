@@ -1,3 +1,7 @@
+// These index loops walk transform basis functions by index, several of them
+// indexing parallel arrays (`out`/`coeffs`/`x`) or using the index in the cosine
+// arithmetic; the explicit range mirrors the DCT/IDCT math, so keep it.
+#![allow(clippy::needless_range_loop)]
 //! # `dsp-dct` — Discrete Cosine Transform
 //!
 //! **DSP02 Phase 1 + 2 (this release).**  Pure-Rust scalar
@@ -163,7 +167,7 @@ fn dct_ii_via_fft(
     //   - Even loop: y[m] = x[2m] for m = 0..ceil(N/2)
     //   - Odd loop:  y[N-1-m] = x[2m+1] for m = 0..floor(N/2)
     let mut y = vec![0.0f32; n];
-    let half_even = (n + 1) / 2; // ceil(N / 2)
+    let half_even = n.div_ceil(2); // ceil(N / 2)
     let half_odd = n / 2; // floor(N / 2)
     for m in 0..half_even {
         y[m] = signal[2 * m];

@@ -49,6 +49,11 @@
 //! (`objc_msgSend_stret`) and float returns (`objc_msgSend_fpret`).
 //! We support both architectures.
 
+// These wrappers are thin `unsafe` shims over the Objective-C runtime's raw
+// C API; the caller's contract (valid class names / live object pointers) is
+// the runtime's own, described in the module header above.
+#![allow(clippy::missing_safety_doc)]
+
 pub const VERSION: &str = "0.1.0";
 
 // Everything below requires an Apple platform (macOS, iOS, tvOS).

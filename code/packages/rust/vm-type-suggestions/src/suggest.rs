@@ -84,7 +84,7 @@ pub fn suggest(fn_list: &[IIRFunction], program_name: &str) -> SuggestionReport 
 
             let instr = arg_loaders.get(&param_index).copied();
 
-            let suggestion = if instr.map_or(true, |i| i.observation_count == 0) {
+            let suggestion = if instr.is_none_or(|i| i.observation_count == 0) {
                 ParamSuggestion {
                     function: fn_.name.clone(),
                     param_name: param_name.clone(),

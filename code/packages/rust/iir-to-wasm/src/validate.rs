@@ -80,6 +80,10 @@ pub fn is_supported_ref_type(type_hint: &str) -> bool {
 // These opcodes are accepted when paired with an appropriate type hint.
 // They lower to WasmGC instructions (`struct.new`, `struct.get`, etc.).
 
+// Scaffolding: documents the WasmGC opcode set this validator is being built out
+// to accept. Not yet referenced by the validation tables, kept for the upcoming
+// WasmGC path.
+#[allow(dead_code)]
 const GC_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
 
 // ---------------------------------------------------------------------------
@@ -878,6 +882,8 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
     }
 
+    // 3.14 is arbitrary float test input; not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn float_type_accepted() {
         // Float types are valid WASM — unlike the BEAM backend, we do NOT

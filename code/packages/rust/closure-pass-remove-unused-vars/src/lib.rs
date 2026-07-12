@@ -722,7 +722,7 @@ mod tests {
         let _a: RemoveUnusedVarsPass = Default::default();
         let _b: RemoveUnusedVarsPass = RemoveUnusedVarsPass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // -----------------------------------------------------------------

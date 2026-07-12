@@ -80,11 +80,11 @@ impl ProgramCounter {
         let current = self.read();
         let mut carry = 1u8; // Adding 1 means initial carry_in = 1
         let mut new_bits14: Vec<u8> = vec![0u8; 14];
-        for i in 0..14 {
+        for (i, new_bit) in new_bits14.iter_mut().enumerate() {
             let old_bit = ((current >> i) & 1) as u8;
             let sum = xor_gate(old_bit, carry);
             carry = and_gate(old_bit, carry);
-            new_bits14[i] = sum;
+            *new_bit = sum;
         }
         // Clock the new bits into the flip-flops
         register(&new_bits14, 0, &mut self.state);

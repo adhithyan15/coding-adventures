@@ -1,3 +1,12 @@
+// Many circuit-analysis routines take a large, fixed set of physical parameters
+// (node indices, model coefficients, temperature, etc.). Splitting these into
+// parameter structs would obscure the direct correspondence with the SPICE
+// device equations, so we accept wide signatures here.
+#![allow(clippy::too_many_arguments)]
+// FRAC_PI_2 and similar values appear as hand-written physical/test constants,
+// not as approximations we intend clippy to replace with std constants.
+#![allow(clippy::approx_constant)]
+
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
 use std::thread;
@@ -4005,7 +4014,7 @@ pub fn device_model_behavior_audit_fixtures() -> Result<Vec<DeviceModelBehaviorF
         "drain",
         "gate",
         "source",
-        &jfet_model,
+        jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -4473,7 +4482,7 @@ pub fn device_model_noise_audit_fixtures(
         "drain",
         "gate",
         "source",
-        &jfet_model,
+        jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -6722,7 +6731,7 @@ pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<St
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().map_or(true, |requested| {
+        if !selection.analysis.as_deref().is_none_or(|requested| {
             deck_output_analysis_matches(requested, analysis)
         }) {
             continue;
@@ -6751,7 +6760,7 @@ pub fn select_deck_output_probe_lines(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().map_or(true, |requested| {
+        if !selection.analysis.as_deref().is_none_or(|requested| {
             deck_output_analysis_matches(requested, analysis)
         }) {
             continue;
@@ -6780,7 +6789,7 @@ pub fn select_deck_output_directives(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().map_or(true, |requested| {
+        if !selection.analysis.as_deref().is_none_or(|requested| {
             deck_output_analysis_matches(requested, analysis)
         }) {
             continue;
@@ -6806,7 +6815,7 @@ pub fn select_deck_output_directive_analysis_kinds(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().map_or(true, |requested| {
+        if !selection.analysis.as_deref().is_none_or(|requested| {
             deck_output_analysis_matches(requested, analysis)
         }) {
             continue;
@@ -6833,7 +6842,7 @@ pub fn select_deck_output_directive_lines(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().map_or(true, |requested| {
+        if !selection.analysis.as_deref().is_none_or(|requested| {
             deck_output_analysis_matches(requested, analysis)
         }) {
             continue;
@@ -8534,7 +8543,7 @@ fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
     let (Some(step_time), Some(stop_time)) = (step_time, stop_time) else {
         return;
     };
-    if (numeric_tokens.len() >= 1 && start_time.is_none())
+    if (!numeric_tokens.is_empty() && start_time.is_none())
         || (numeric_tokens.len() >= 2 && max_step.is_none())
     {
         return;
@@ -13147,7 +13156,6 @@ fn deck_output_plan_artifacts(
 
 fn deck_output_directive_kind(directive: &str) -> String {
     let token = directive
-        .trim()
         .split_whitespace()
         .next()
         .unwrap_or("")
@@ -16507,8 +16515,8 @@ pub fn measure_transient_probe(
 
     let mut values = Vec::new();
     for point in points {
-        if from_time.map_or(false, |from| point.time < from)
-            || to_time.map_or(false, |to| point.time > to)
+        if from_time.is_some_and(|from| point.time < from)
+            || to_time.is_some_and(|to| point.time > to)
         {
             continue;
         }
@@ -16831,8 +16839,8 @@ fn transient_probe_crossing_time(
     let mut selected_count = 0usize;
     let mut matched_count = 0usize;
     for point in points {
-        if from_time.map_or(false, |from| point.time < from)
-            || to_time.map_or(false, |to| point.time > to)
+        if from_time.is_some_and(|from| point.time < from)
+            || to_time.is_some_and(|to| point.time > to)
         {
             continue;
         }
@@ -17028,8 +17036,8 @@ pub fn measure_dc_sweep_probe(
 
     let mut values = Vec::new();
     for point in points {
-        if from_value.map_or(false, |from| point.value < from)
-            || to_value.map_or(false, |to| point.value > to)
+        if from_value.is_some_and(|from| point.value < from)
+            || to_value.is_some_and(|to| point.value > to)
         {
             continue;
         }
@@ -17132,8 +17140,8 @@ pub fn measure_ac_sweep_probe(
 
     let mut values = Vec::new();
     for point in points {
-        if from_frequency.map_or(false, |from| point.frequency_hz < from)
-            || to_frequency.map_or(false, |to| point.frequency_hz > to)
+        if from_frequency.is_some_and(|from| point.frequency_hz < from)
+            || to_frequency.is_some_and(|to| point.frequency_hz > to)
         {
             continue;
         }
@@ -17501,13 +17509,12 @@ pub fn dc_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 scope.spawn(move || -> Result<CornerPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: dc_op_with_options(&corner_circuit, options)?,
                     })
                 })
@@ -18051,14 +18058,13 @@ pub fn dc_sweep_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let source_name = source_name.to_string();
                 scope.spawn(move || -> Result<CornerDcSweepPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerDcSweepPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         points: dc_sweep(&corner_circuit, &source_name, start, stop, step)?,
                     })
                 })
@@ -18180,14 +18186,13 @@ pub fn mc_dc_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 scope.spawn(move || -> Result<CornerMcPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerMcPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: mc_dc(&corner_circuit, &output_node, n_trials, options)?,
                     })
                 })
@@ -18323,15 +18328,14 @@ pub fn tf_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 let input_source = input_source.to_string();
                 scope.spawn(move || -> Result<CornerTfPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerTfPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: tf(&corner_circuit, &output_node, &input_source)?,
                     })
                 })
@@ -18437,14 +18441,13 @@ pub fn sens_dc_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 scope.spawn(move || -> Result<CornerSensPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerSensPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: sens_dc(&corner_circuit, &output_node)?,
                     })
                 })
@@ -18549,13 +18552,12 @@ pub fn ac_sweep_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 scope.spawn(move || -> Result<CornerAcSweepPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerAcSweepPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         points: ac_sweep(&corner_circuit, start_hz, stop_hz, points_per_decade)?,
                     })
                 })
@@ -18681,16 +18683,15 @@ pub fn s_parameters_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let port1_source = port1_source.to_string();
                 let port2_source = port2_source.to_string();
                 let frequencies_hz = frequencies_hz.to_vec();
                 scope.spawn(move || -> Result<CornerSParameterPoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerSParameterPoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: s_parameters(
                             &corner_circuit,
                             &port1_source,
@@ -18990,16 +18991,15 @@ pub fn noise_ac_corners_parallel(
     let points = thread::scope(|scope| {
         let handles = corners
             .iter()
-            .cloned()
             .map(|corner| {
                 let circuit = circuit.clone();
                 let output_node = output_node.to_string();
                 let input_source = input_source.to_string();
                 let frequencies_hz = frequencies_hz.to_vec();
                 scope.spawn(move || -> Result<CornerNoisePoint, SpiceError> {
-                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    let corner_circuit = circuit_with_corner(&circuit, corner)?;
                     Ok(CornerNoisePoint {
-                        corner_name: corner.name,
+                        corner_name: corner.name.clone(),
                         result: noise_ac(
                             &corner_circuit,
                             &output_node,
@@ -20623,7 +20623,7 @@ fn solve_linear_circuit_at_operating_point(
                         inductor,
                         inductor_states,
                         node_indices,
-                        &voltage_sources,
+                        voltage_sources,
                         node_count,
                         &mut matrix,
                         &mut rhs,
@@ -20646,7 +20646,7 @@ fn solve_linear_circuit_at_operating_point(
             Element::VoltageSource(source) => stamp_voltage_source(
                 source,
                 node_indices,
-                &voltage_sources,
+                voltage_sources,
                 node_count,
                 source_time,
                 &mut matrix,
@@ -20703,7 +20703,7 @@ fn solve_linear_circuit_at_operating_point(
             Element::Vcvs(source) => stamp_vcvs(
                 source,
                 node_indices,
-                &voltage_sources,
+                voltage_sources,
                 node_count,
                 &mut matrix,
             )?,
@@ -24374,8 +24374,7 @@ fn stamp_ac_bsource(
             }
         })?;
     for (node, derivative) in derivatives {
-        matrix[branch][node_indices[&node]] =
-            matrix[branch][node_indices[&node]] - Complex::new(derivative, 0.0);
+        matrix[branch][node_indices[&node]] -= Complex::new(derivative, 0.0);
     }
     Ok(())
 }
@@ -25185,6 +25184,9 @@ fn solve_dense_linear_system(
                 continue;
             }
             matrix[row][pivot_col] = 0.0;
+            // `col` indexes two distinct rows of `matrix` (row and pivot_col); an
+            // iterator rewrite would require split_at_mut and obscure the algebra.
+            #[allow(clippy::needless_range_loop)]
             for col in (pivot_col + 1)..n {
                 matrix[row][col] -= factor * matrix[pivot_col][col];
             }
@@ -25332,6 +25334,9 @@ fn solve_dense_complex_linear_system(
                 continue;
             }
             matrix[row][pivot_col] = Complex::zero();
+            // `col` indexes two distinct rows of `matrix` (row and pivot_col); an
+            // iterator rewrite would require split_at_mut and obscure the algebra.
+            #[allow(clippy::needless_range_loop)]
             for col in (pivot_col + 1)..n {
                 matrix[row][col] = matrix[row][col] - factor * matrix[pivot_col][col];
             }
@@ -25437,7 +25442,7 @@ fn solve_sparse_complex_linear_system(
         let mut value = rhs[row];
         for (&col, &entry) in &rows[row] {
             if col > row {
-                value = value - entry * solution[col];
+                value -= entry * solution[col];
             }
         }
         solution[row] = value / diagonal;

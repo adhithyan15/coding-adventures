@@ -157,13 +157,13 @@ pub fn join_lines(
                         break;
                     }
 
-                    for jj in j..j2 {
+                    for line2 in &lines2[j..j2] {
                         if opts.only_unpaired.is_none() {
                             let joined = format_joined(
                                 &key1,
                                 &lines1[i2],
                                 opts.field1,
-                                &lines2[jj],
+                                line2,
                                 opts.field2,
                                 opts.separator,
                                 sep,

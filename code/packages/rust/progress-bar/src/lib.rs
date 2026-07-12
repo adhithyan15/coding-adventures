@@ -76,7 +76,7 @@ pub enum EventType {
 /// - `event_type` -- what happened (Started, Finished, Skipped)
 /// - `name` -- human-readable identifier (e.g., "python/logic-gates")
 /// - `status` -- outcome label, only meaningful for Finished events
-///               (e.g., "built", "failed", "cached")
+///   (e.g., "built", "failed", "cached")
 #[derive(Debug, Clone)]
 pub struct Event {
     pub event_type: EventType,
@@ -511,6 +511,8 @@ fn render(receiver: Receiver<RendererMsg>, mut state: RenderState) {
 ///
 /// We use `\r` (carriage return) to overwrite the current line. This works
 /// on all platforms. No ANSI escape codes needed.
+// Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+#[allow(clippy::manual_checked_ops)]
 fn draw(state: &mut RenderState) {
     let elapsed = state.start_time.elapsed().as_secs_f64();
 

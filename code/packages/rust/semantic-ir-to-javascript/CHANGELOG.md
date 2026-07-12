@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.31.0 — Array `tally`
+
+Mirrors the Python reference (PR #8054) into the JS backend's inline
+`arrayMethod` (+ the `ARRAY_METHODS` `respond_to?` set), completing the JS side
+of the `tally` cross-backend catch-up (Go and Rust already shipped it).
+
+- `tally` → a Hash counting how many times each element occurs, keyed in
+  first-seen order (`["a","b","a","c","a"].tally` → `{"a"=>3, "b"=>1, "c"=>1}`;
+  `[].tally` → `{}`).
+- Realised as an insertion-ordered `Map` — the same shape `group_by` returns,
+  printed `{k: v}` by the shared display path (`formatSeen`).  Keys compare by JS
+  SameValueZero, which agrees with Ruby `eql?`/hash on the scalar elements this
+  covers, matching the Go/Rust/Python references.
+- `tests/run_with_node.rs::array_tally` emits three programs (string counts with
+  first-seen ordering, integer counts, empty → `{}`), runs them through `node`,
+  and asserts the printed Hash.
+
 ## 0.30.0 — Array `each_slice` / `each_cons` / `chunk_while`
 
 Mirrors the Python reference (PR #8031), Go (PR #8036), and Rust (PR #8042) into

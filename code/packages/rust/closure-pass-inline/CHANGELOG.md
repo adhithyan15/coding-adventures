@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.26.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in every statement walk (decl-name
+count, use tally, expression inlining, void/valued splice, and used-ident
+collection) descend into the `with` object and body. Picks up javascript-ast
+0.38.0.
+
 ## [0.25.16] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm

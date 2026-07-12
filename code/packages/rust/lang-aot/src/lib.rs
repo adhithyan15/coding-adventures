@@ -443,6 +443,12 @@ pub fn compile_source_to_llvm_with_target(
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
     iir_builtin_lowering::lower_dyn_repr(&mut module);
+    // E6d-2b: rewrite the generic `box`/`unbox` ops that `lower_dynamic_arith`
+    // emitted into `dyn_box_int`/`dyn_unbox_int` runtime calls — the tagged-i64
+    // (LLVM) representation, which `iir-to-llvm`'s `DYN_BUILTINS` table lowers to
+    // `call @__dyn_box_int` / `__dyn_unbox_int`. (The structural backends keep
+    // the generic ops; this runs only on the native/LLVM pipeline.)
+    iir_builtin_lowering::lower_box_unbox_to_runtime_calls(&mut module);
     // Concretise any residual scalar `any` (a pure-integer program never enters
     // the lisp passes above) to `i64`.
     concretize_scalar_any_for_llvm(&mut module);
@@ -1585,7 +1591,7 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 "store_mem" => {
                     let mut srcs = Vec::with_capacity(3);
                     srcs.push(Operand::Var(TAPE.to_string()));
-                    srcs.extend(instr.srcs.into_iter());
+                    srcs.extend(instr.srcs);
                     new_instrs.push(IIRInstr::new(
                         "store_byte",
                         None,
@@ -1776,7 +1782,7 @@ mod tests {
                 "lowered module must contain store_byte; got {ops:?}");
 
         // Step 4: ret_void must be gone, replaced by `const __bf_ret = 0; ret`.
-        assert!(!ops.iter().any(|o| *o == "ret_void"),
+        assert!(!ops.contains(&"ret_void"),
                 "ret_void must be replaced by ret i64 0");
         assert_eq!(main.return_type, "i64",
                    "main return type must be i64 after lowering");

@@ -21,7 +21,7 @@ use crate::result::QueryResult;
 /// - [`ExecutionError::ColumnNotFound`] if a column reference is invalid.
 pub fn execute(sql: &str, source: &dyn DataSource) -> Result<QueryResult, ExecutionError> {
     let ast = parse_sql(sql)
-        .map_err(|e| ExecutionError::ParseError(e))?;
+        .map_err(ExecutionError::ParseError)?;
     match find_first_select(&ast) {
         Some(stmt) => execute_select(stmt, source),
         None => Ok(QueryResult::empty()),
@@ -37,7 +37,7 @@ pub fn execute(sql: &str, source: &dyn DataSource) -> Result<QueryResult, Execut
 /// Returns the first error encountered during execution.
 pub fn execute_all(sql: &str, source: &dyn DataSource) -> Result<Vec<QueryResult>, ExecutionError> {
     let ast = parse_sql(sql)
-        .map_err(|e| ExecutionError::ParseError(e))?;
+        .map_err(ExecutionError::ParseError)?;
     let mut results = Vec::new();
     for stmt in find_all_selects(&ast) {
         results.push(execute_select(stmt, source)?);

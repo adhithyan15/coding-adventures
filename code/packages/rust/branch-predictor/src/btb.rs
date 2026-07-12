@@ -1,35 +1,35 @@
-/// Branch Target Buffer (BTB) -- caching where branches go.
-///
-/// The branch predictor answers "WILL this branch be taken?"
-/// The BTB answers "WHERE does it go?"
-///
-/// Both are needed for high-performance fetch. Without a BTB, even a perfect
-/// direction predictor would cause a 1-cycle bubble: the predictor says "taken"
-/// in the fetch stage, but the target address isn't known until decode (when
-/// the instruction's immediate field is extracted). With a BTB, the target
-/// is available in the SAME cycle as the prediction, enabling zero-bubble
-/// fetch redirection.
-///
-/// How the BTB fits into the pipeline:
-///
-/// ```text
-///     Cycle 1 (Fetch):
-///         1. Read PC
-///         2. Direction predictor: "taken" or "not taken"?
-///         3. BTB lookup: if "taken", where does it go?
-///         4. Redirect fetch to target (BTB hit) or PC+4 (not taken / BTB miss)
-/// ```
-///
-/// BTB organization (this implementation):
-///     - Direct-mapped cache indexed by (pc % size)
-///     - Each entry stores: valid bit, tag (full PC), target, branch type
-///     - On lookup: check valid bit and tag match
-///     - On miss: return None (fall through to PC+4)
-///
-/// Real-world BTB sizes:
-///     - Intel Skylake: 4096 entries (L1 BTB) + 4096 entries (L2 BTB)
-///     - ARM Cortex-A72: 64 entries (micro BTB) + 4096 entries (main BTB)
-///     - AMD Zen 2: 512 entries (L1 BTB) + 7168 entries (L2 BTB)
+//! Branch Target Buffer (BTB) -- caching where branches go.
+//!
+//! The branch predictor answers "WILL this branch be taken?"
+//! The BTB answers "WHERE does it go?"
+//!
+//! Both are needed for high-performance fetch. Without a BTB, even a perfect
+//! direction predictor would cause a 1-cycle bubble: the predictor says "taken"
+//! in the fetch stage, but the target address isn't known until decode (when
+//! the instruction's immediate field is extracted). With a BTB, the target
+//! is available in the SAME cycle as the prediction, enabling zero-bubble
+//! fetch redirection.
+//!
+//! How the BTB fits into the pipeline:
+//!
+//! ```text
+//!     Cycle 1 (Fetch):
+//!         1. Read PC
+//!         2. Direction predictor: "taken" or "not taken"?
+//!         3. BTB lookup: if "taken", where does it go?
+//!         4. Redirect fetch to target (BTB hit) or PC+4 (not taken / BTB miss)
+//! ```
+//!
+//! BTB organization (this implementation):
+//!     - Direct-mapped cache indexed by (pc % size)
+//!     - Each entry stores: valid bit, tag (full PC), target, branch type
+//!     - On lookup: check valid bit and tag match
+//!     - On miss: return None (fall through to PC+4)
+//!
+//! Real-world BTB sizes:
+//!     - Intel Skylake: 4096 entries (L1 BTB) + 4096 entries (L2 BTB)
+//!     - ARM Cortex-A72: 64 entries (micro BTB) + 4096 entries (main BTB)
+//!     - AMD Zen 2: 512 entries (L1 BTB) + 7168 entries (L2 BTB)
 
 /// A single entry in the Branch Target Buffer.
 ///

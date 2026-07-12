@@ -1203,7 +1203,7 @@ mod tests {
 
     #[test]
     fn defined_method_call_operand_emits_method_ts() {
-        use semantic_ir::Scope;
+        
         // Q10h: `defined?(recv.meth)` — the `__method__` dispatch envelope —
         // reports the constant "method", not the generic "expression". The
         // receiver and method name are never rendered (non-evaluation contract).

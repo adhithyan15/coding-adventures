@@ -224,11 +224,10 @@ fn rename_globals(
             // is still top-level scope-wise; cover it too.
             ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(
                 fd,
-            ))) => {
-                if seen_top.insert(fd.id.name.clone()) {
+            )))
+                if seen_top.insert(fd.id.name.clone()) => {
                     top_level.push(fd.id.name.clone());
                 }
-            }
             _ => {}
         }
     }
@@ -273,7 +272,7 @@ fn rename_globals(
     // The rename table drives CV provenance (#89). Sort by original name
     // so the emitted contributions are deterministic run to run.
     let mut renames: Vec<(String, String)> =
-        map.into_iter().map(|(from, to)| (from, to)).collect();
+        map.into_iter().collect();
     renames.sort();
     (true, renames)
 }
@@ -416,6 +415,10 @@ fn count_decl_names_stmt(
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
+            // `with (o) body` (CLOC12.187) — recurse into the body like `while`.
+            TaggedStatement::WithStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -590,6 +593,11 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 collect_all_idents_expr(&ws.test, out);
+                collect_all_idents_stmt(&ws.body, out);
+            }
+            // `with (o) body` (CLOC12.187) — collect from the object and body.
+            TaggedStatement::WithStatement(ws) => {
+                collect_all_idents_expr(&ws.object, out);
                 collect_all_idents_stmt(&ws.body, out);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1044,6 +1052,10 @@ fn rename_apply_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         }
         TaggedStatement::WhileStatement(ws) => {
             rename_apply_expr(&mut ws.test, map);
+            rename_apply_stmt(&mut ws.body, map);
+        }
+        TaggedStatement::WithStatement(ws) => {
+            rename_apply_expr(&mut ws.object, map);
             rename_apply_stmt(&mut ws.body, map);
         }
         TaggedStatement::DoWhileStatement(ds) => {

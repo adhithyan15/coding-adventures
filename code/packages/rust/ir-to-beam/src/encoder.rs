@@ -245,7 +245,7 @@ fn wrap_chunk(tag: &[u8; 4], payload: &[u8]) -> Vec<u8> {
     out.extend_from_slice(payload);
     // Pad to 4-byte alignment
     let pad = (4 - (payload.len() % 4)) % 4;
-    out.extend(std::iter::repeat(0u8).take(pad));
+    out.extend(std::iter::repeat_n(0u8, pad));
     out
 }
 

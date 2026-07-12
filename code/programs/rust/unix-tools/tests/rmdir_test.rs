@@ -1,7 +1,7 @@
 //! # Integration Tests for rmdir
 
 use cli_builder::{load_spec_from_file, Parser, ParserOutput};
-use unix_tools::rmdir_tool::{remove_directory, remove_with_parents};
+use unix_tools::rmdir_tool::remove_directory;
 use std::path::PathBuf;
 
 fn spec_path() -> String {

@@ -430,6 +430,9 @@ fn simplify_numeric_fold_mul_all_literals() {
     assert_eq!(simplify(expr, 50), int(6));
 }
 
+// Literal 3.14 is test data (a float atom that must pass through unchanged),
+// not an approximation of PI to be replaced.
+#[allow(clippy::approx_constant)]
 #[test]
 fn simplify_atom_unchanged() {
     // Symbols and literals pass through as-is.

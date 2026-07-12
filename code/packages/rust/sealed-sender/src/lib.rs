@@ -431,14 +431,14 @@ pub fn sealed_send(
     eph_secret[31] |= 64;
 
     use coding_adventures_curve25519::x25519_public_key;
-    let eph_pub = x25519_public_key(&*eph_secret);
+    let eph_pub = x25519_public_key(&eph_secret);
 
     // Step 4: ECDH with the recipient's identity key.
     use coding_adventures_curve25519::x25519;
-    let dh_out = Zeroizing::new(x25519(&*eph_secret, recipient_ik_x25519_pub));
+    let dh_out = Zeroizing::new(x25519(&eph_secret, recipient_ik_x25519_pub));
 
     // Step 5: Derive the encryption key and nonce.
-    let (enc_key, nonce) = derive_enc_key(&*dh_out)?;
+    let (enc_key, nonce) = derive_enc_key(&dh_out)?;
 
     // Step 6: AEAD-encrypt the payload.
     // AAD = eph_pub ‖ recipient_ik_x25519_pub — this binds the ciphertext to:
@@ -505,10 +505,10 @@ pub fn sealed_receive(
     // Step 2: ECDH with our identity key.
     use coding_adventures_curve25519::x25519;
     let secret = recipient_ik.x25519_secret(); // Zeroizing<[u8;32]>
-    let dh_out = Zeroizing::new(x25519(&*secret, eph_pub));
+    let dh_out = Zeroizing::new(x25519(&secret, eph_pub));
 
     // Step 3: Derive the encryption key and nonce.
-    let (enc_key, nonce) = derive_enc_key(&*dh_out)?;
+    let (enc_key, nonce) = derive_enc_key(&dh_out)?;
 
     // Step 4: AEAD-decrypt the payload.
     // AAD = eph_pub ‖ recipient_ik.x25519_public — must match sealed_send exactly.

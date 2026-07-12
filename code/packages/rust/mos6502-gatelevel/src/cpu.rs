@@ -182,7 +182,7 @@ impl GateLevelCpu {
 
     fn read_mem(&self, addr: u16) -> u8 {
         let a = addr as usize;
-        if a >= IO_BASE && a <= IO_END {
+        if (IO_BASE..=IO_END).contains(&a) {
             return self.input_ports[a - IO_BASE];
         }
         self.memory[a]
@@ -190,7 +190,7 @@ impl GateLevelCpu {
 
     fn write_mem(&mut self, addr: u16, value: u8) {
         let a = addr as usize;
-        if a >= IO_BASE && a <= IO_END {
+        if (IO_BASE..=IO_END).contains(&a) {
             self.output_ports[a - IO_BASE] = value;
         } else {
             self.memory[a] = value;
@@ -271,15 +271,15 @@ impl GateLevelCpu {
                 let zp = self.fetch_byte();
                 let x = self.rf.x.read();
                 let (ptr, _c) = add_8bit(zp, x, 0);
-                let lo = self.memory[(ptr & 0xFF) as usize] as u16;
-                let hi = self.memory[((ptr.wrapping_add(1)) & 0xFF) as usize] as u16;
+                let lo = self.memory[ptr as usize] as u16;
+                let hi = self.memory[(ptr.wrapping_add(1)) as usize] as u16;
                 Some((hi << 8) | lo)
             }
 
             m if m == INY => {
                 let zp = self.fetch_byte();
                 let lo = self.memory[zp as usize] as u16;
-                let hi = self.memory[(zp.wrapping_add(1) & 0xFF) as usize] as u16;
+                let hi = self.memory[zp.wrapping_add(1) as usize] as u16;
                 let base = (hi << 8) | lo;
                 let y = self.rf.y.read() as u16;
                 let (result, _c) = add_16bit(base, y, 0);

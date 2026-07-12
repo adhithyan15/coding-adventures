@@ -401,19 +401,15 @@ mod tests {
         // The builder runs validate() on .build(); reaching Ok means
         // every op + tensor passes structural and semantic checks.
         for n in [2u32, 4, 8, 16, 32] {
-            let g_fwd = build_fft_graph(n, Direction::Forward).expect(&format!(
-                "build_fft_graph N={} Forward should validate",
-                n
-            ));
+            let g_fwd = build_fft_graph(n, Direction::Forward).unwrap_or_else(|_| panic!("build_fft_graph N={} Forward should validate",
+                n));
             assert_eq!(g_fwd.inputs.len(), 1);
             assert_eq!(g_fwd.outputs.len(), 1);
             let out_t = &g_fwd.tensors[g_fwd.outputs[0].0 as usize];
             assert_eq!(out_t.shape.dims, vec![n, 2]);
 
-            let g_inv = build_fft_graph(n, Direction::Inverse).expect(&format!(
-                "build_fft_graph N={} Inverse should validate",
-                n
-            ));
+            let g_inv = build_fft_graph(n, Direction::Inverse).unwrap_or_else(|_| panic!("build_fft_graph N={} Inverse should validate",
+                n));
             assert_eq!(g_inv.outputs.len(), 1);
         }
     }

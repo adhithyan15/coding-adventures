@@ -787,7 +787,7 @@ mod tests {
     fn expand_no_matches_errors() {
         let dir = temp_dir("empty");
         let pattern = format!("{}/*.js", dir.display());
-        let err = expand_js_patterns(&[pattern.clone()])
+        let err = expand_js_patterns(std::slice::from_ref(&pattern))
             .expect_err("no matches must error");
         match err {
             GlobError::NoMatches(p) => assert_eq!(p, pattern),

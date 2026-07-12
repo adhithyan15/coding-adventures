@@ -643,9 +643,9 @@ impl OrSet {
     /// tag `(device, 1)`; merging will collapse them, and a
     /// subsequent remove on either side will retroactively
     /// tombstone both. If your application creates `OrSet`s
-    /// from independent sources (e.g. restoring from snapshot
-    /// + a parallel live edit), use [`OrSet::add_with_tag`] and
-    /// supply a globally-unique tag value (e.g. derived from
+    /// from independent sources (e.g. restoring from a snapshot
+    /// alongside a parallel live edit), use [`OrSet::add_with_tag`]
+    /// and supply a globally-unique tag value (e.g. derived from
     /// the field's `VersionVector[device]` counter).
     pub fn add(&mut self, value: impl Into<String>, device: &DeviceId, now_ms: u64) {
         let v = value.into();
@@ -957,10 +957,10 @@ impl SyncServer for InMemorySyncServer {
                 // "Already seen" = the record's version vector
                 // is `<=` `since`, i.e. `since.dominates(rec) ||
                 // since == rec`.
-                match since.compare(&rec.version_vector) {
-                    VectorOrdering::Equal | VectorOrdering::Dominates => false,
-                    _ => true,
-                }
+                !matches!(
+                    since.compare(&rec.version_vector),
+                    VectorOrdering::Equal | VectorOrdering::Dominates
+                )
             })
             .map(|(_, rec)| rec.clone())
             .collect();

@@ -56,6 +56,7 @@ use std::process::Command;
 
 /// Options controlling how `xargs` reads input and invokes commands.
 #[derive(Debug, Clone)]
+#[derive(Default)]
 pub struct XargsOptions {
     /// Use NUL byte as the input delimiter (-0).
     pub null_delim: bool,
@@ -71,18 +72,6 @@ pub struct XargsOptions {
     pub no_run_if_empty: bool,
 }
 
-impl Default for XargsOptions {
-    fn default() -> Self {
-        XargsOptions {
-            null_delim: false,
-            delimiter: None,
-            max_args: None,
-            replace_str: None,
-            verbose: false,
-            no_run_if_empty: false,
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Input Parsing

@@ -13,6 +13,11 @@
 //! `BodyLiteral::Neg(G)`. Every other body goal becomes
 //! `BodyLiteral::Pos(_)`.
 
+// `LoaderError` embeds the parser's error type, which is itself large. Boxing the
+// `Err` variant purely to satisfy the size heuristic would churn this crate's public
+// loader signatures for no real benefit, so the lint is allowed crate-wide.
+#![allow(clippy::result_large_err)]
+
 use logic_core::Term;
 use logic_engine::{search, BodyLiteral, Fact, KnowledgeBase, Rule, SearchMode, SearchResult};
 use parser::grammar_parser::GrammarParseError;

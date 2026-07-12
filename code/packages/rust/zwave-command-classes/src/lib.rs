@@ -1245,7 +1245,7 @@ pub fn meter_capability_id(meter_type: u8, scale: u8) -> CapabilityId {
         (0x01, 0x05) => CapabilityId::trusted("sensor.current"),
         (0x01, 0x06) => CapabilityId::trusted("sensor.power_factor"),
         (0x02, 0x00 | 0x01) => CapabilityId::trusted("sensor.gas"),
-        (0x03, 0x00 | 0x01 | 0x02) => CapabilityId::trusted("sensor.water"),
+        (0x03, 0x00..=0x02) => CapabilityId::trusted("sensor.water"),
         _ => CapabilityId::trusted("sensor.meter"),
     }
 }
@@ -1253,7 +1253,7 @@ pub fn meter_capability_id(meter_type: u8, scale: u8) -> CapabilityId {
 pub fn notification_state(report: &NotificationReport) -> NotificationState {
     match (report.notification_type, report.event) {
         (_, 0x00) => NotificationState::Idle,
-        (NotificationType::HomeSecurity, 0x07 | 0x08 | 0x09) => NotificationState::MotionDetected,
+        (NotificationType::HomeSecurity, 0x07..=0x09) => NotificationState::MotionDetected,
         (NotificationType::AccessControl, 0x16) => NotificationState::DoorOpen,
         (NotificationType::AccessControl, 0x17) => NotificationState::DoorClosed,
         (NotificationType::AccessControl, 0x01 | 0x03 | 0x05) => NotificationState::Locked,

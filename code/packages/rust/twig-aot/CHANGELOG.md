@@ -1,5 +1,9 @@
 # Changelog — `twig-aot`
 
+## 0.35.0 - 2026-07-11 (E6d-2b: native dynamic arithmetic)
+
+E6d-2b: `prepare_module_for_aot` now runs `lower_dynamic_arith` (it did not before — native AOT had no dynamic-arithmetic lowering at all) followed, after `lower_dyn_repr`, by `lower_box_unbox_to_runtime_calls`. A native McCarthy/Twig program can now do `(+ (car …) 1)`: the boxed operand is unboxed, added, re-boxed via `__dyn_box_int`, and exit-unboxed. Verified: exit 42.
+
 ## 0.34.0 - 2026-07-11 (DVAL01-2: dyn_* builtin names in the golden extern block)
 
 DVAL01-2: the `dynval_runtime_golden.rs` `extern` block and `src/lib.rs`

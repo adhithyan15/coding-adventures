@@ -524,6 +524,9 @@ fn count_decl_names_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 count_decl_names_stmt(&ds.body, out, nodes_touched)
             }
@@ -685,6 +688,10 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 count_uses_expr(&ws.test, name, count);
+                count_uses_stmt(&ws.body, name, count);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                count_uses_expr(&ws.object, name, count);
                 count_uses_stmt(&ws.body, name, count);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1069,6 +1076,10 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
             }
             TaggedStatement::WhileStatement(ws) => {
                 changed |= propagate_in_expr(&mut ws.test, cand);
+                changed |= propagate_in_stmt(&mut ws.body, cand);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                changed |= propagate_in_expr(&mut ws.object, cand);
                 changed |= propagate_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1556,7 +1567,7 @@ mod tests {
         let _a: InlineVariablesPass = Default::default();
         let _b: InlineVariablesPass = InlineVariablesPass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================

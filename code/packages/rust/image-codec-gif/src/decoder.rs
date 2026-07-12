@@ -203,8 +203,8 @@ impl<'a> Parser<'a> {
                         return Err("GIF: animated GIF not supported (multiple frames detected)".into());
                     }
 
-                    let left = self.read_u16_le()? as usize;
-                    let top = self.read_u16_le()? as usize;
+                    let _left = self.read_u16_le()? as usize;
+                    let _top = self.read_u16_le()? as usize;
                     let width = self.read_u16_le()? as usize;
                     let height = self.read_u16_le()? as usize;
 

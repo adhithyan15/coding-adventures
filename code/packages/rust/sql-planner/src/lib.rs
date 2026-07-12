@@ -453,7 +453,7 @@ impl std::error::Error for PlanError {}
 /// // ... implement SchemaProvider ...
 /// ```
 pub fn plan_sql(sql: &str, schema: &dyn SchemaProvider) -> Result<LogicalPlan, PlanError> {
-    let ast = parse_sql(sql).map_err(|e| PlanError::ParseError(e))?;
+    let ast = parse_sql(sql).map_err(PlanError::ParseError)?;
     plan(&ast, schema)
 }
 
@@ -861,10 +861,8 @@ fn extract_join_condition(join_clause: &GrammarASTNode) -> Result<Option<SqlExpr
     let children = &join_clause.children;
     for (i, child) in children.iter().enumerate() {
         if is_keyword_token(child, "ON") {
-            if let Some(next) = children.get(i + 1) {
-                if let ASTNodeOrToken::Node(expr_node) = next {
-                    return Ok(Some(plan_expression(expr_node)?));
-                }
+            if let Some(ASTNodeOrToken::Node(expr_node)) = children.get(i + 1) {
+                return Ok(Some(plan_expression(expr_node)?));
             }
         }
     }
@@ -1034,7 +1032,7 @@ fn extract_clause_expr(clause: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 None
             }
         })
-        .map(|n| plan_expression(n))
+        .map(plan_expression)
         .ok_or_else(|| {
             PlanError::UnsupportedStatement(format!(
                 "clause without expression: {:?}",
@@ -1193,7 +1191,6 @@ fn plan_insert(stmt: &GrammarASTNode, schema: &dyn SchemaProvider) -> Result<Log
         schema
             .column_names(&table)
             .ok()
-            .map(|cols| cols)
     };
 
     // The VALUES rows.
@@ -1475,11 +1472,9 @@ fn apply_col_constraint(col: &mut ColumnDef, constraint: &GrammarASTNode) {
     // DEFAULT handling: if there's a "DEFAULT" keyword, look for the value.
     if has_token(constraint, "DEFAULT") {
         if let Some(primary) = find_node(constraint, "primary") {
-            if let Ok(val) = plan_primary(primary) {
-                if let SqlExpr::Literal(sql_val) = val {
-                    col.default_value = sql_val;
-                    col.has_default = true;
-                }
+            if let Ok(SqlExpr::Literal(sql_val)) = plan_primary(primary) {
+                col.default_value = sql_val;
+                col.has_default = true;
             }
         }
     }
@@ -2013,10 +2008,12 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 /// | `Number`          | Integer or float literal   | `Literal(Int)` or `Float`    |
 /// | `Name`/`Keyword`  | Column name reference      | `Column { name: value }`     |
 fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
-    // STRING literal: the lexer strips quotes and sets type_ = TokenType::String.
-    // The value is already the inner content (no surrounding quotes).
+    // STRING literal: the lexer strips the surrounding quotes and sets
+    // type_ = TokenType::String, but leaves the inner content raw. SQL escapes a
+    // literal single quote by doubling it (`'it''s'` is the four-character string
+    // `it's`), so collapse each `''` back to one `'` here.
     if tok.type_ == TokenType::String {
-        return Ok(SqlExpr::Literal(SqlValue::Text(tok.value.clone())));
+        return Ok(SqlExpr::Literal(SqlValue::Text(tok.value.replace("''", "'"))));
     }
 
     let val = &tok.value;

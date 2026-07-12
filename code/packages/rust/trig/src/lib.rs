@@ -41,6 +41,10 @@
 ///
 /// We hard-code this to the same precision as `std::f64::consts::PI` so that
 /// our library is fully self-contained — no dependency on `std` constants.
+// This is an intentional, self-contained hand-written constant (the whole point
+// of the crate is not to depend on `std::f64::consts::PI`); not an approximation
+// to be replaced by the std constant.
+#[allow(clippy::approx_constant)]
 pub const PI: f64 = 3.141592653589793;
 
 /// Two times pi — a full revolution in radians.

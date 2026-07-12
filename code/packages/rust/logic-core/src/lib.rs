@@ -345,9 +345,9 @@ pub fn unify(a: &Term, b: &Term, subst: &Substitution) -> Option<Substitution> {
         ) if fx == fy && ax.len() == ay.len() => {
             let mut s = subst.clone();
             for (xi, yi) in ax.iter().zip(ay.iter()) {
-                match unify(xi, yi, &s) {
-                    Some(next) => s = next,
-                    None => return None,
+                {
+                    let next = unify(xi, yi, &s)?;
+                    s = next
                 }
             }
             Some(s)

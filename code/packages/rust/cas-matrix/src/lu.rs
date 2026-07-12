@@ -12,6 +12,11 @@ use crate::rowreduce::{fracs_to_matrix, matrix_to_fracs, Frac};
 ///
 /// The implementation uses exact rational arithmetic and partial pivoting.
 /// Singular matrices return `MatrixError`.
+// The pivoting/elimination loops index two distinct rows at once (e.g. `l[k]` and
+// `l[best_row]`, `u[row]` and `u[k]`); rewriting them as iterators would require
+// `split_at_mut` gymnastics and obscure the standard textbook algorithm, so the
+// explicit index loops are intentional here.
+#[allow(clippy::needless_range_loop)]
 pub fn lu_decompose(m: &IRNode) -> MatrixResult<IRNode> {
     let n = num_rows(m)?;
     let ncols = num_cols(m)?;

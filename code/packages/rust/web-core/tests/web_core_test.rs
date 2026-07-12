@@ -73,9 +73,7 @@ fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String
             break;
         }
         if trimmed.to_ascii_lowercase().starts_with("content-length:") {
-            content_length = trimmed
-                .splitn(2, ':')
-                .nth(1)
+            content_length = trimmed.split_once(':').map(|x| x.1)
                 .unwrap_or("")
                 .trim()
                 .parse()
@@ -459,7 +457,7 @@ fn e2e_after_handler_adds_header() {
         if first { first = false; continue; } // skip status line
         if trimmed.is_empty() { break; }
         if trimmed.to_ascii_lowercase().starts_with("content-length:") {
-            content_length = trimmed.splitn(2, ':').nth(1).unwrap_or("").trim().parse().unwrap_or(0);
+            content_length = trimmed.split_once(':').map(|x| x.1).unwrap_or("").trim().parse().unwrap_or(0);
         }
         all_headers.push(trimmed);
     }

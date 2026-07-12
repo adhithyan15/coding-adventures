@@ -158,7 +158,7 @@ mod tests {
         assert!(result > 1e-13 && result < 1e-11, "erfc(5)={result}");
         // erfc(10) ≈ 2e-45 — should be a tiny positive number, not zero.
         let result = erfc(10.0);
-        assert!(result >= 0.0 && result < 1e-30, "erfc(10)={result}");
+        assert!((0.0..1e-30).contains(&result), "erfc(10)={result}");
     }
 
     #[test]

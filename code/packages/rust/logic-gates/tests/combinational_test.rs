@@ -152,7 +152,7 @@ fn test_decoder_3bit_boundary() {
 fn test_decoder_always_one_hot() {
     // For any 3-bit input, exactly one output should be 1
     for i in 0..8u8 {
-        let input = vec![(i >> 0) & 1, (i >> 1) & 1, (i >> 2) & 1];
+        let input = vec![i & 1, (i >> 1) & 1, (i >> 2) & 1];
         let output = decoder(&input);
         assert_eq!(output.iter().sum::<u8>(), 1, "decoder output must be one-hot");
         assert_eq!(output.len(), 8);
@@ -181,7 +181,7 @@ fn test_encoder_8_input() {
 fn test_encoder_decoder_roundtrip() {
     // Encoding the output of a decoder should give back the original input
     for i in 0..4usize {
-        let input = vec![((i >> 0) & 1) as u8, ((i >> 1) & 1) as u8];
+        let input = vec![(i & 1) as u8, ((i >> 1) & 1) as u8];
         let decoded = decoder(&input);
         let encoded = encoder(&decoded);
         assert_eq!(encoded, input, "roundtrip failed for index {i}");

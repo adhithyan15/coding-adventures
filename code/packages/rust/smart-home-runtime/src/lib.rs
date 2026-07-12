@@ -671,6 +671,8 @@ impl RuntimeEventBusSnapshot {
         }
     }
 
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn average_pending_deliveries_per_subscription(&self) -> usize {
         if self.subscription_count == 0 {
             0
@@ -804,16 +806,13 @@ impl RuntimeEventDeliverySummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeEventSort {
+    #[default]
     SequenceAsc,
     SequenceDesc,
 }
 
-impl Default for RuntimeEventSort {
-    fn default() -> Self {
-        Self::SequenceAsc
-    }
-}
 
 /// Borrowed view of one runtime event and its replay cursor position.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -911,17 +910,14 @@ impl RuntimeEventLogSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeCommandResultSort {
+    #[default]
     SequenceAsc,
     SequenceDesc,
     StatusThenSequenceDesc,
 }
 
-impl Default for RuntimeCommandResultSort {
-    fn default() -> Self {
-        Self::SequenceAsc
-    }
-}
 
 /// Read-side query for command results already captured in the runtime event log.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1251,6 +1247,8 @@ impl RuntimeSubscriptionInventorySummary {
         self.supervision_subscriptions > 0
     }
 
+    // Explicit `if divisor == 0` guard is intentional (and clearer than checked_div here); allow the 1.97 manual_checked_ops lint.
+    #[allow(clippy::manual_checked_ops)]
     pub fn average_queued_events_per_subscription(&self) -> usize {
         if self.total_subscriptions == 0 {
             0
@@ -1311,16 +1309,13 @@ impl RuntimeEventBusHealthSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeSubscriptionSort {
+    #[default]
     SubscriptionId,
     QueuedEventsDesc,
 }
 
-impl Default for RuntimeSubscriptionSort {
-    fn default() -> Self {
-        Self::SubscriptionId
-    }
-}
 
 /// Read-side query for active event-bus subscriptions.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -1501,18 +1496,15 @@ impl WorkerRestartPlan {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum SupervisedWorkerSort {
+    #[default]
     BridgeId,
     HeartbeatDueAt,
     RestartCountDesc,
     StatusThenBridgeId,
 }
 
-impl Default for SupervisedWorkerSort {
-    fn default() -> Self {
-        Self::BridgeId
-    }
-}
 
 /// Read-side query for supervised integration workers.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2384,18 +2376,15 @@ impl DiscoverySupervisorRunReport {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum DiscoveryWorkerSort {
+    #[default]
     WorkerId,
     NextDueAt,
     StatusThenWorkerId,
     ConsecutiveFailuresDesc,
 }
 
-impl Default for DiscoveryWorkerSort {
-    fn default() -> Self {
-        Self::WorkerId
-    }
-}
 
 /// Read-side query for scheduled discovery workers.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2660,17 +2649,14 @@ impl DesiredEntityState {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum DesiredStateSort {
+    #[default]
     EntityId,
     RequestedByThenEntityId,
     CommandTimeoutDesc,
 }
 
-impl Default for DesiredStateSort {
-    fn default() -> Self {
-        Self::EntityId
-    }
-}
 
 /// Read-side query for desired-state supervision targets.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2863,18 +2849,15 @@ impl RuntimePairingSession {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimePairingSessionSort {
+    #[default]
     SessionId,
     ExpiresAt,
     StartedAtDesc,
     StatusThenExpiresAt,
 }
 
-impl Default for RuntimePairingSessionSort {
-    fn default() -> Self {
-        Self::SessionId
-    }
-}
 
 /// Read-side query for bridge pairing ceremonies.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -3466,16 +3449,13 @@ impl RuntimeDiscoverToolOutput {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeAuthorizationDecisionSort {
     DecidedAtAsc,
+    #[default]
     DecidedAtDesc,
 }
 
-impl Default for RuntimeAuthorizationDecisionSort {
-    fn default() -> Self {
-        Self::DecidedAtDesc
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeAuthorizationDecisionQuery {
@@ -3531,7 +3511,9 @@ pub enum RuntimeCapabilityGrantScopeKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeCapabilityGrantSort {
+    #[default]
     GrantId,
     PrincipalId,
     GrantedAtAsc,
@@ -3540,11 +3522,6 @@ pub enum RuntimeCapabilityGrantSort {
     ExpiresAtDesc,
 }
 
-impl Default for RuntimeCapabilityGrantSort {
-    fn default() -> Self {
-        Self::GrantId
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeCapabilityGrantQuery {
@@ -3599,18 +3576,15 @@ impl RuntimeCapabilityGrantQuery {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum RuntimeRoomSort {
+    #[default]
     RoomId,
     AttentionDesc,
     EntityCountDesc,
     SceneCountDesc,
 }
 
-impl Default for RuntimeRoomSort {
-    fn default() -> Self {
-        Self::RoomId
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct RuntimeRoomQuery {
@@ -4529,6 +4503,8 @@ impl SmartHomeRuntime {
         self.event_bus.health_summary()
     }
 
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn query_command_results(
         &self,
         query: &RuntimeCommandResultQuery,
@@ -4552,7 +4528,7 @@ impl SmartHomeRuntime {
             .collect::<Vec<_>>();
         match query.sort {
             RuntimeCommandResultSort::SequenceAsc => {
-                results.sort_by(|left, right| left.sequence.cmp(&right.sequence));
+                results.sort_by_key(|left| left.sequence);
             }
             RuntimeCommandResultSort::SequenceDesc => {
                 results.sort_by(|left, right| right.sequence.cmp(&left.sequence));
@@ -4633,6 +4609,8 @@ impl SmartHomeRuntime {
         )
     }
 
+    // Explicit descending comparator is clearer than sort_by_key+Reverse here (allow 1.97 unnecessary_sort_by).
+    #[allow(clippy::unnecessary_sort_by)]
     pub fn query_authorization_decisions(
         &self,
         query: &RuntimeAuthorizationDecisionQuery,
@@ -4645,7 +4623,7 @@ impl SmartHomeRuntime {
         let mut decisions = self.registry.query_authorization_decisions(&selector);
         match query.sort {
             RuntimeAuthorizationDecisionSort::DecidedAtAsc => {
-                decisions.sort_by(|left, right| left.decided_at_ms.cmp(&right.decided_at_ms));
+                decisions.sort_by_key(|left| left.decided_at_ms);
             }
             RuntimeAuthorizationDecisionSort::DecidedAtDesc => {
                 decisions.sort_by(|left, right| right.decided_at_ms.cmp(&left.decided_at_ms));

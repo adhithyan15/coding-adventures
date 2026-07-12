@@ -361,8 +361,8 @@ fn write_complex_code(bw: &mut BitWriter, code_lengths: &[u32]) {
     let meta_lengths: [u32; 19] = {
         let mut ml = [0u32; 19];
         // Symbols 0-15 in our meta-tree get length 4.
-        for i in 0usize..16 {
-            ml[i] = 4;
+        for slot in ml.iter_mut().take(16) {
+            *slot = 4;
         }
         // Symbols 16, 17, 18 get 0 (absent — we don't use RLE).
         // ml[16] = ml[17] = ml[18] = 0;  (already 0 from initialisation)
@@ -378,8 +378,8 @@ fn write_complex_code(bw: &mut BitWriter, code_lengths: &[u32]) {
     // Sorted by (len=4, sym): 0,1,2,...,15.
     // Canonical: sym i → code i  (in 4 bits, MSB-first).
     // Reversed for LSB-first writing: reverse_bits_n(i, 4).
-    for i in 0..code_lengths.len() {
-        let cl = code_lengths[i].min(15) as u32;
+    for &length in code_lengths.iter() {
+        let cl = length.min(15);
         // Encode meta-symbol `cl` using 4-bit reversed canonical code.
         let reversed = reverse_bits_n(cl, 4) as u64;
         bw.write_bits(reversed, 4);
@@ -467,8 +467,7 @@ fn read_complex_code(
 
     // Read raw meta-code lengths (3 bits each) in CODE_LENGTH_ORDER.
     let mut meta_lengths = [0u32; 19];
-    for i in 0..num_stored {
-        let order_idx = CODE_LENGTH_ORDER[i];
+    for &order_idx in CODE_LENGTH_ORDER.iter().take(num_stored) {
         meta_lengths[order_idx] = br.read_bits(3);
     }
 
@@ -566,7 +565,7 @@ pub fn lengths_from_frequencies(freqs: &[u32]) -> Vec<u32> {
         }
         Err(_) => {
             // Fallback: uniform lengths.
-            let bits = ((weights.len() as f64).log2().ceil() as u32).max(1).min(15);
+            let bits = ((weights.len() as f64).log2().ceil() as u32).clamp(1, 15);
             for &(sym, _) in &weights {
                 lengths[sym as usize] = bits;
             }

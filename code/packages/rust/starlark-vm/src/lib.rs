@@ -359,7 +359,7 @@ fn builtin_sorted(args: Vec<StarlarkValue>) -> Result<StarlarkValue, StarlarkErr
         StarlarkValue::Tuple(t) => t.clone(),
         _ => return Err(StarlarkError::TypeError("sorted() argument must be iterable".to_string())),
     };
-    let reverse = args.get(1).map_or(false, |v| v.is_truthy());
+    let reverse = args.get(1).is_some_and(|v| v.is_truthy());
     let mut sorted_items = items;
     sorted_items.sort_by(|a, b| {
         match (a, b) {
@@ -435,7 +435,7 @@ fn builtin_min(args: Vec<StarlarkValue>) -> Result<StarlarkValue, StarlarkError>
     for item in &items[1..] {
         match (&min_val, item) {
             (StarlarkValue::Int(a), StarlarkValue::Int(b)) => { if b < a { min_val = item.clone(); } }
-            (StarlarkValue::Float(a), StarlarkValue::Float(b)) => { if b < a { min_val = item.clone(); } }
+            (StarlarkValue::Float(a), StarlarkValue::Float(b)) if b < a => { min_val = item.clone(); }
             _ => {}
         }
     }
@@ -455,7 +455,7 @@ fn builtin_max(args: Vec<StarlarkValue>) -> Result<StarlarkValue, StarlarkError>
     for item in &items[1..] {
         match (&max_val, item) {
             (StarlarkValue::Int(a), StarlarkValue::Int(b)) => { if b > a { max_val = item.clone(); } }
-            (StarlarkValue::Float(a), StarlarkValue::Float(b)) => { if b > a { max_val = item.clone(); } }
+            (StarlarkValue::Float(a), StarlarkValue::Float(b)) if b > a => { max_val = item.clone(); }
             _ => {}
         }
     }
@@ -525,6 +525,8 @@ mod tests {
 
     // ----- StarlarkValue tests -----
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_truthiness() {
         assert!(!StarlarkValue::None.is_truthy());
@@ -542,6 +544,8 @@ mod tests {
         assert!(!StarlarkValue::Tuple(vec![]).is_truthy());
     }
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_type_name() {
         assert_eq!(StarlarkValue::Int(42).type_name(), "int");
@@ -592,6 +596,8 @@ mod tests {
         assert_eq!(call_builtin("int", vec![StarlarkValue::Bool(true)]).unwrap(), StarlarkValue::Int(1));
     }
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_builtin_float() {
         assert_eq!(call_builtin("float", vec![StarlarkValue::Int(42)]).unwrap(), StarlarkValue::Float(42.0));
@@ -679,6 +685,8 @@ mod tests {
         assert_eq!(call_builtin("max", vec![StarlarkValue::Int(3), StarlarkValue::Int(1), StarlarkValue::Int(2)]).unwrap(), StarlarkValue::Int(3));
     }
 
+    // `3.14` is arbitrary float test data, not an approximation of PI.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn test_builtin_abs() {
         assert_eq!(call_builtin("abs", vec![StarlarkValue::Int(-5)]).unwrap(), StarlarkValue::Int(5));

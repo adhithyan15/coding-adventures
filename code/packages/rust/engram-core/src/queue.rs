@@ -208,6 +208,10 @@ pub fn build_session_queue_with_daily_limits(
     )
 }
 
+// Session-queue construction genuinely depends on many independent inputs
+// (cards, progress, deck filter, limits, positions, schedules); bundling them
+// into a params struct would add churn without improving clarity.
+#[allow(clippy::too_many_arguments)]
 fn build_session_queue_with_limits(
     all_cards: &[Card],
     all_progress: &[CardProgress],
@@ -309,7 +313,7 @@ fn effective_is_new(
         return false;
     }
 
-    imported.map_or(true, ImportedAnkiSchedule::is_new)
+    imported.is_none_or(ImportedAnkiSchedule::is_new)
 }
 
 fn imported_new_card_positions(state: &AppState) -> HashMap<&str, i64> {
@@ -406,7 +410,7 @@ impl ImportedAnkiSchedule {
 
     fn is_currently_buried(&self, now: u64) -> bool {
         matches!(self.queue, ANKI_QUEUE_USER_BURIED | ANKI_QUEUE_SCHED_BURIED)
-            && !self.due_at.is_some_and(|due_at| due_at <= now)
+            && self.due_at.is_none_or(|due_at| due_at > now)
     }
 
     fn is_reviewable(&self, now: u64) -> bool {
@@ -505,9 +509,8 @@ fn is_currently_buried(progress: &CardProgress, now: u64) -> bool {
     }
 
     progress.state == CardState::Buried
-        && !progress
-            .buried_until
-            .is_some_and(|buried_until| buried_until <= now)
+        && progress
+            .buried_until.is_none_or(|buried_until| buried_until > now)
 }
 
 pub fn is_deck_caught_up(

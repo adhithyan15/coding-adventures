@@ -140,7 +140,7 @@ fn compile_to_words(cir: &[CIRInstr]) -> Result<Vec<u32>, BackendError> {
 
     // Defensive — if no terminator was emitted, append BX LR so
     // the program returns instead of running off the end.
-    if !words.last().map_or(false, |&w| w == BX_LR) {
+    if words.last().is_none_or(|&w| w != BX_LR) {
         words.push(BX_LR);
     }
     Ok(words)

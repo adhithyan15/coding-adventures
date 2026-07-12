@@ -80,7 +80,7 @@ use coding_adventures_javascript_ast::{
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
-    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 use std::collections::HashMap;
@@ -342,6 +342,13 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             test: dce_expression(&s.test, st),
             body: Box::new(dce_statement(&s.body, st)),
         }),
+        // `with (object) body` (CLOC12.187) — DCE the object and body like
+        // `while`. Not yet reachable (the bridge still declines `with`).
+        TaggedStatement::WithStatement(s) => TaggedStatement::WithStatement(WithStatement {
+            cv: s.cv.clone(),
+            object: dce_expression(&s.object, st),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
         // Recurse DCE into the do-while body and test. Like `while`, a
         // `do`-`while` is NOT a terminator (control can exit the loop), so
         // code after it stays reachable — we do not add it to the
@@ -510,7 +517,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             let discriminant_pure = is_pure_leaf(&new_disc);
             let all_tests_pure_or_none = new_cases
                 .iter()
-                .all(|c| c.test.as_ref().map_or(true, is_pure_leaf));
+                .all(|c| c.test.as_ref().is_none_or(is_pure_leaf));
             if all_consequents_empty && discriminant_pure && all_tests_pure_or_none {
                 st.record(
                     &s.cv,
@@ -557,7 +564,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             if discriminant_pure && all_tests_pure_or_none {
                 if let Some(target) = pick_matching_case(&new_disc, &new_cases) {
                     let last = target.consequent.last();
-                    let terminates = last.map_or(false, is_case_terminator);
+                    let terminates = last.is_some_and(is_case_terminator);
                     // Empty consequent → fall-through to next case per
                     // ECMAScript §13.12. The classic "share body"
                     // pattern `case 1: case 2: body; break;` has
@@ -1091,6 +1098,7 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
         BlockStatement(s) => s.cv.clone(),
         IfStatement(s) => s.cv.clone(),
         WhileStatement(s) => s.cv.clone(),
+        WithStatement(s) => s.cv.clone(),
         DoWhileStatement(s) => s.cv.clone(),
         ForStatement(s) => s.cv.clone(),
         ForInStatement(s) => s.cv.clone(),
@@ -2488,7 +2496,7 @@ mod tests {
 
     /// Helper — extract the unique SwitchStatement from a function
     /// body so we can pattern-match on it.
-    fn extract_switch<'a>(prog: &'a Program) -> &'a SwitchStatement {
+    fn extract_switch(prog: &Program) -> &SwitchStatement {
         let block = extract_function_body(prog);
         match &block.body[0] {
             Statement::Tagged(TaggedStatement::SwitchStatement(s)) => s,

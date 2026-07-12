@@ -1470,12 +1470,12 @@ CREATE TABLE graves (
             let exported = take(eg_export_anki_package(session));
             let exported: Value = serde_json::from_str(&exported).unwrap();
             assert_eq!(exported["ok"], true);
-            assert!(exported["apkg"].as_array().unwrap().len() > 0);
+            assert!(!exported["apkg"].as_array().unwrap().is_empty());
 
             let modern_exported = take(eg_export_anki_package_modern(session));
             let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
             assert_eq!(modern_exported["ok"], true);
-            assert!(modern_exported["apkg"].as_array().unwrap().len() > 0);
+            assert!(!modern_exported["apkg"].as_array().unwrap().is_empty());
 
             let media_apkg = media_apkg_fixture();
             let archive_name = cstr("0");

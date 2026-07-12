@@ -172,8 +172,8 @@ fn decode_grayscale(
                     raw.len(), num_pixels
                 ));
             }
-            for i in 0..num_pixels {
-                let mut v = raw[i];
+            for &pixel in raw.iter().take(num_pixels) {
+                let mut v = pixel;
                 if photometric == 0 {
                     v = 255 - v; // WhiteIsZero: invert
                 }
@@ -298,7 +298,7 @@ fn decode_cfa(
     let sensor_values: Vec<u16> = match bits {
         8 => {
             if raw.len() < num_pixels {
-                return Err(format!("TIFF: CFA 8-bit buffer too short"));
+                return Err("TIFF: CFA 8-bit buffer too short".to_string());
             }
             raw[..num_pixels].iter().map(|&b| b as u16 * 257).collect()
         }

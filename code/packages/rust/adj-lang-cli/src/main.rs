@@ -98,7 +98,7 @@ fn derived_json(kb: &KnowledgeBase) -> String {
     // First-seen order, but the value/dim are the LATEST binding for that name.
     let mut order: Vec<&str> = Vec::new();
     for d in all {
-        if !order.iter().any(|n| *n == d.name.as_str()) {
+        if !order.contains(&d.name.as_str()) {
             order.push(d.name.as_str());
         }
     }

@@ -283,6 +283,23 @@ mod tests {
         assert_eq!(pairs[0].1, "hello world");
     }
 
+    /// A doubled single quote (`''`) is SQL's escape for a literal quote — it
+    /// does NOT terminate the string. `'it''s'` is a single STRING token; the
+    /// raw value keeps the `''` (the parser collapses it to one `'` when it
+    /// builds the string value).
+    #[test]
+    fn test_string_with_escaped_quote() {
+        let pairs = lex("'it''s'");
+        assert_eq!(pairs.len(), 1);
+        assert_eq!(pairs[0].0, TokenType::String);
+        assert_eq!(pairs[0].1, "it''s");
+        // Four quotes = a string containing one escaped quote.
+        let quad = lex("''''");
+        assert_eq!(quad.len(), 1);
+        assert_eq!(quad[0].0, TokenType::String);
+        assert_eq!(quad[0].1, "''");
+    }
+
     // -----------------------------------------------------------------------
     // Test 7: Operator = (EQUALS)
     // -----------------------------------------------------------------------
@@ -625,20 +642,20 @@ mod tests {
     // Test 21: Error path — non-existent grammar file
     // -----------------------------------------------------------------------
 
-    /// `create_sql_lexer_with_path` returns `Err` when the grammar file does
-    /// not exist. This exercises the error branch in the file-read logic.
-    ///
-    /// | Path                  | Result |
-    /// |-----------------------|--------|
-    /// | "/no/such/file.tokens"| Err(_) |
+    // `create_sql_lexer_with_path` returns `Err` when the grammar file does
+    // not exist. This exercises the error branch in the file-read logic.
+    //
+    // | Path                  | Result |
+    // |-----------------------|--------|
+    // | "/no/such/file.tokens"| Err(_) |
 
     // -----------------------------------------------------------------------
     // Test 22: Error path — tokenize_sql with bad grammar path
     // -----------------------------------------------------------------------
 
-    /// `tokenize_sql` uses the default grammar path. When the grammar path
-    /// is good, it returns `Ok`. This test ensures the `Err` variant of
-    /// the `Result` is exercised via the `create_sql_lexer_with_path` helper.
+    // `tokenize_sql` uses the default grammar path. When the grammar path
+    // is good, it returns `Ok`. This test ensures the `Err` variant of
+    // the `Result` is exercised via the `create_sql_lexer_with_path` helper.
 
     // -----------------------------------------------------------------------
     // Test 23: INSERT keywords

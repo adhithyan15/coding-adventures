@@ -510,7 +510,7 @@ mod tests {
     fn test_sign_extend_negative_immediate() {
         let dec = MockDecoder::new();
         // Encode ADDI with negative immediate (-1 = 0xFFF in 12-bit)
-        let raw = (0x06i64 << 24) | (1 << 20) | (0 << 16) | 0xFFF;
+        let raw = ((0x06i64 << 24) | (1 << 20)) | 0xFFF;
         let tok = dec.decode(raw, PipelineToken::new());
         assert_eq!(tok.immediate, -1);
     }
@@ -523,7 +523,7 @@ mod tests {
 
     #[test]
     fn test_mock_decoder_default() {
-        let _dec = MockDecoder::default();
+        let _dec = MockDecoder;
         // Should not panic.
     }
 

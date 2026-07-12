@@ -11418,6 +11418,9 @@ pub fn discovered_bridge_to_core(discovered: DiscoveredHueBridge) -> Bridge {
     bridge
 }
 
+// Discovery records carry many independent fields; passing them explicitly is
+// clearer here than introducing a params struct, and avoids churn.
+#[allow(clippy::too_many_arguments)]
 fn hue_discovery_record(
     bridge_id: impl Into<String>,
     source: DiscoverySource,

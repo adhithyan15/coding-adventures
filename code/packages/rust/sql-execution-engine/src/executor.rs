@@ -210,6 +210,8 @@ fn apply_group_by_and_aggregate(
         .unwrap_or_default();
 
     // Partition into groups using a Vec of (key, rows) to preserve order.
+    // The (group-key, rows) tuple is self-descriptive; a type alias would hide it.
+    #[allow(clippy::type_complexity)]
     let mut groups: Vec<(Vec<SqlValue>, Vec<HashMap<String, SqlValue>>)> = Vec::new();
 
     for row in rows {
@@ -285,6 +287,9 @@ fn collect_agg_specs_node(node: &GrammarASTNode, specs: &mut Vec<(String, String
 // Phase 6: SELECT projection
 // ---------------------------------------------------------------------------
 
+// Returns the projected (column-names, rows) pair; the tuple is self-descriptive
+// and a type alias would obscure it. Behavior-preserving allow.
+#[allow(clippy::type_complexity)]
 fn apply_select(
     select_list: Option<&GrammarASTNode>,
     rows: Vec<HashMap<String, SqlValue>>,

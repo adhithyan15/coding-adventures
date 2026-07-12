@@ -26,7 +26,8 @@
 //!       `Login`, `SecureNote`, `Card`, `TotpSeed`.
 //!     - **Machine-secret store** (HashiCorp Vault class):
 //!       `ApiKey`, `DatabaseCredential`.
-//!   Apps register custom types as they need.
+//!
+//! Apps register custom types as they need.
 //!
 //! ## Wire format
 //!

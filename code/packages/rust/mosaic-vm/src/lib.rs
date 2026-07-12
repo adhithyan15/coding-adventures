@@ -605,7 +605,7 @@ mod tests {
         let file = analyze(src).unwrap();
         let vm = MosaicVM::new(file);
 
-        let mut renderer = PropCapture::default();
+        let renderer = PropCapture::default();
         // run consumes renderer, so we use a wrapper approach.
         let file2 = analyze(src).unwrap();
         let vm2 = MosaicVM::new(file2);

@@ -134,9 +134,8 @@ pub fn generate_sequence(
         formatted
             .iter()
             .map(|s| {
-                if s.starts_with('-') {
+                if let Some(rest) = s.strip_prefix('-') {
                     // Negative numbers: pad zeros after the minus sign
-                    let rest = &s[1..];
                     let pad = max_len - s.len();
                     format!("-{}{}", "0".repeat(pad), rest)
                 } else {

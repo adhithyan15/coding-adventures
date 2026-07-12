@@ -1,3 +1,6 @@
+// The large `Err` variant is the crate's public parse-error enum; boxing it
+// would churn the public API and all call sites for no behavior change.
+#![allow(clippy::result_large_err)]
 use coding_adventures_nib_lexer::tokenize_nib;
 use parser::grammar_parser::{GrammarASTNode, GrammarParseError, GrammarParser};
 

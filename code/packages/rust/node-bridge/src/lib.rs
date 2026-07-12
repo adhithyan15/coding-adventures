@@ -1,5 +1,13 @@
 // We use snake_case names to match the N-API C convention exactly.
 #![allow(non_camel_case_types)]
+// This crate is, by design, an FFI boundary: the public wrapper functions
+// accept raw N-API handle pointers (`napi_env`, `napi_value`) and dereference
+// them via the `extern "C"` N-API calls. Clippy's `not_unsafe_ptr_arg_deref`
+// would have us mark every wrapper `unsafe`, but the whole crate exists to
+// present a *safe* Rust surface over N-API — the safety contract is documented
+// per function and upheld by N-API itself. Allow the lint crate-wide rather
+// than annotate ~80 individual FFI shims.
+#![allow(clippy::not_unsafe_ptr_arg_deref)]
 
 //! # node-bridge — Zero-dependency Rust wrapper for Node.js N-API
 //!
@@ -464,10 +472,10 @@ extern "C" {
     ///
     /// - `async_resource`      — pass `napi_get_undefined(env)` (unused here)
     /// - `async_resource_name` — a JS string for profiling/tracing; usually
-    ///                           the handler name
+    ///   the handler name
     /// - `max_queue_size`      — 0 means unlimited queue
     /// - `initial_thread_count`— number of threads that will call this TSFN
-    ///                           (including the creating thread); typically 1
+    ///   (including the creating thread); typically 1
     /// - `thread_finalize_data`— opaque pointer passed to `thread_finalize_cb`
     /// - `thread_finalize_cb`  — called when all threads have released the TSFN
     /// - `context`             — arbitrary data passed to every `call_js_cb`
@@ -771,6 +779,12 @@ pub fn wrap_data<T>(env: napi_env, this: napi_value, data: T) {
     );
 }
 
+/// # Safety
+///
+/// `env` must be a valid N-API environment and `this` a JS object previously
+/// wrapped (via `napi_wrap`) with a boxed `T`. The returned pointer aliases
+/// that boxed data and is only valid while the wrapped object lives; the caller
+/// must not outlive it or use a mismatched `T`.
 pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> *const T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
@@ -778,6 +792,12 @@ pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> *const T {
     ptr as *const T
 }
 
+/// # Safety
+///
+/// `env` must be a valid N-API environment and `this` a JS object previously
+/// wrapped (via `napi_wrap`) with a boxed `T`. The returned pointer aliases
+/// that boxed data mutably; the caller must ensure no other references exist,
+/// must not outlive the wrapped object, and must use the correct `T`.
 pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> *mut T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
@@ -1302,9 +1322,9 @@ pub fn vec_buf_from_js(env: napi_env, value: napi_value) -> Option<Vec<Vec<u8>>>
     let mut out = Vec::with_capacity(len as usize);
     for i in 0..len {
         let item = array_get(env, value, i);
-        match buffer_from_js(env, item) {
-            Some(bytes) => out.push(bytes),
-            None => return None, // not a Buffer at index i
+        {
+            let bytes = buffer_from_js(env, item)?;
+            out.push(bytes)
         }
     }
     Some(out)

@@ -192,6 +192,9 @@ pub struct StorageRecord {
 impl StorageRecord {
     /// Construct and validate a concrete record. The body hash is always derived
     /// from the body bytes, never trusted as caller input.
+    // One argument per stored field; a builder would obscure this straightforward
+    // record constructor.
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         namespace: impl Into<String>,
         key: impl Into<String>,

@@ -1,3 +1,6 @@
+// The index loops index parallel frequency/shift arrays and use the index in the
+// modular-shift arithmetic; the range form mirrors the cryptanalysis algorithm.
+#![allow(clippy::needless_range_loop)]
 //! Cryptanalysis tools for breaking the Vigenere cipher.
 //!
 //! # Breaking the Vigenere Cipher

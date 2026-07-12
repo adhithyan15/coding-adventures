@@ -21,6 +21,13 @@
 //! - **No version conflicts** — works with any Python 3.x
 //! - **Fully auditable** — every C function call is visible and grep-able
 
+// Every `unsafe fn` here is a thin FFI wrapper over the CPython C API and shares
+// one safety contract: the `PyObjectPtr`/`*mut PyObject` handles passed in must
+// be valid, non-dangling references owned per CPython's reference-counting rules,
+// and the GIL must be held. Repeating that identical `# Safety` note on every
+// wrapper adds noise, so we allow the lint crate-wide.
+#![allow(clippy::missing_safety_doc)]
+
 use std::collections::{BTreeMap, HashSet};
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 use std::ptr;
@@ -422,7 +429,7 @@ pub unsafe fn f64_from_py(obj: PyObjectPtr) -> Option<f64> {
 /// Python `None` (new reference via Py_BuildValue with empty format).
 pub unsafe fn py_none() -> PyObjectPtr {
     // Py_BuildValue("") returns a new reference to Py_None
-    let fmt = b"\0".as_ptr() as *const c_char;
+    let fmt = c"".as_ptr();
     Py_BuildValue(fmt)
 }
 

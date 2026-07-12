@@ -5,7 +5,7 @@
 //! `validate()` before executing anything.
 
 use crate::graph::ComputeGraph;
-use crate::placement::{ExecutorId, PlacedOp, PlacedTensor, Residency};
+use crate::placement::{ExecutorId, PlacedOp, Residency};
 use crate::WIRE_FORMAT_VERSION;
 use matrix_ir::TensorId;
 use std::collections::{HashMap, HashSet};

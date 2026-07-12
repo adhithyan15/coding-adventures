@@ -39,7 +39,9 @@ use std::fs;
 /// `cat.json`. The `show_all` flag is expanded into its component
 /// parts (`show_ends`, `show_tabs`, `show_nonprinting`) before being
 /// stored here.
-#[derive(Debug, Clone)]
+// `new()` returns every flag disabled, which is exactly the derived `Default`,
+// so deriving `Default` keeps the two in lock-step and satisfies clippy.
+#[derive(Debug, Clone, Default)]
 pub struct CatOptions {
     /// Number all output lines (`-n`)
     pub number: bool,
@@ -246,10 +248,10 @@ fn format_nonprinting(ch: char) -> String {
     } else if byte == 127 {
         // DEL character: ^?
         "^?".to_string()
-    } else if byte >= 128 && byte < 160 {
+    } else if (128..160).contains(&byte) {
         // High-bit control characters: M-^X notation
         format!("M-^{}", (byte - 128 + 64) as char)
-    } else if byte >= 160 && byte < 255 {
+    } else if (160..255).contains(&byte) {
         // High-bit printable characters: M-X notation
         format!("M-{}", (byte - 128) as char)
     } else if byte == 255 {

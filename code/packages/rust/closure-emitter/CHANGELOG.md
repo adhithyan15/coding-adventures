@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.43.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: emit `with (obj) stmt`
+
+New `emit_with` prints `with(` + the object expression + `)` + the body statement
+(mirroring `emit_while`), dispatched from a new `TaggedStatement::WithStatement`
+arm. Picks up javascript-ast 0.38.0.
+
 ## [0.42.0] - 2026-07-11
 
 ### Added — CLOC12.183: emit ES2021 logical assignment operators

@@ -76,10 +76,6 @@ const REF_PAIR: &str = "ref<LispyPair>";
 /// primitive produced it — the producer-agnostic classification of DVAL01 §3.3.
 const REF_ANY: &str = "ref<any>";
 const ANY_HINT: &str = "any";
-/// Whether a type hint denotes a boxed `DynValue` (see [`REF_ANY`]).
-fn is_dynvalue_hint(hint: &str) -> bool {
-    hint == REF_ANY || hint == ANY_HINT
-}
 
 /// The type hint for a symbol literal. After `intern_symbols` runs, such a
 /// const already holds the finished tagged immediate `(id<<32)|TAG_SYMBOL` —
@@ -297,7 +293,19 @@ fn lower_dyn_repr_function(
         if let Some(dest) = &instr.dest {
             // Producer-agnostic: a register produced with a `DynValue` hint is a
             // tagged value, whatever primitive produced it.
-            if is_lisp && is_dynvalue_hint(&instr.type_hint) {
+            //
+            //   • `ref<any>` is **always** a genuine tagged heap value — a
+            //     `dyn_car`/`dyn_cdr` result, a re-boxed `dyn_box_int` arithmetic
+            //     result (E6d-2b). It is *never* a placeholder, so seed it
+            //     unconditionally — this is what lets a **Twig** dynamic-arith
+            //     result (`(+ (car …) 1)`) be exit-unboxed on the tagged-i64
+            //     backends, not just McCarthy Lisp.
+            //   • bare `any` is a genuine DynValue *inside a lisp module* but a
+            //     pre-resolution placeholder on ordinary machine values in
+            //     Twig/Nib (see the language gate in `lower_dyn_repr`), so its
+            //     seed stays gated on `is_lisp`.
+            let hint = instr.type_hint.as_str();
+            if hint == REF_ANY || (is_lisp && hint == ANY_HINT) {
                 boxed_regs.insert(dest.clone());
                 continue;
             }

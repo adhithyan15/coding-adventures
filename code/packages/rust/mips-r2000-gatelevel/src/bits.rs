@@ -49,8 +49,8 @@ use logic_gates::gates::{not_gate, or_gate, xor_gate};
 /// ```
 pub fn int_to_bits32(value: u32) -> [u8; 32] {
     let mut bits = [0u8; 32];
-    for i in 0..32 {
-        bits[i] = ((value >> i) & 1) as u8;
+    for (i, bit) in bits.iter_mut().enumerate() {
+        *bit = ((value >> i) & 1) as u8;
     }
     bits
 }
@@ -65,8 +65,8 @@ pub fn int_to_bits32(value: u32) -> [u8; 32] {
 /// ```
 pub fn bits_to_u32(bits: [u8; 32]) -> u32 {
     let mut v = 0u32;
-    for i in 0..32 {
-        v |= (bits[i] as u32) << i;
+    for (i, &bit) in bits.iter().enumerate() {
+        v |= (bit as u32) << i;
     }
     v
 }
@@ -74,8 +74,8 @@ pub fn bits_to_u32(bits: [u8; 32]) -> u32 {
 /// Convert a 64-bit unsigned integer to an LSB-first 64-bit array.
 pub fn int_to_bits64(value: u64) -> [u8; 64] {
     let mut bits = [0u8; 64];
-    for i in 0..64 {
-        bits[i] = ((value >> i) & 1) as u8;
+    for (i, bit) in bits.iter_mut().enumerate() {
+        *bit = ((value >> i) & 1) as u8;
     }
     bits
 }
@@ -83,8 +83,8 @@ pub fn int_to_bits64(value: u64) -> [u8; 64] {
 /// Convert an LSB-first 64-bit array to a `u64`.
 pub fn bits_to_u64(bits: [u8; 64]) -> u64 {
     let mut v = 0u64;
-    for i in 0..64 {
-        v |= (bits[i] as u64) << i;
+    for (i, &bit) in bits.iter().enumerate() {
+        v |= (bit as u64) << i;
     }
     v
 }
@@ -301,8 +301,6 @@ pub fn shr_32_arith(value: u32, shamt: u32) -> u32 {
     let s = shamt as usize;
     let mut shifted = [0u8; 32];
     shifted[..32 - s].copy_from_slice(&bits[s..]);
-    for i in (32 - s)..32 {
-        shifted[i] = sign_bit;
-    }
+    shifted[(32 - s)..].fill(sign_bit);
     bits_to_u32(shifted)
 }

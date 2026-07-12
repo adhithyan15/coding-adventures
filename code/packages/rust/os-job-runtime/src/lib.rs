@@ -176,8 +176,10 @@ pub fn validate_portability(spec: &JobSpec, target: PortabilityTarget) -> Portab
 
 /// Stable sort modes for portability issue read APIs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum PortabilityIssueSort {
     /// Preserve validator emission order.
+    #[default]
     OriginalOrder,
     /// Sort by issue field and then message.
     Field,
@@ -185,11 +187,6 @@ pub enum PortabilityIssueSort {
     BackendThenField,
 }
 
-impl Default for PortabilityIssueSort {
-    fn default() -> Self {
-        Self::OriginalOrder
-    }
-}
 
 /// Bounded selector for portability issue read tools.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]

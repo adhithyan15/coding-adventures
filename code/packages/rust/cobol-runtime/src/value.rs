@@ -279,7 +279,7 @@ pub fn move_into_char(src: &str, size: usize) -> String {
         chars[..size].iter().collect()
     } else {
         let mut s: String = chars.iter().collect();
-        s.extend(std::iter::repeat(' ').take(size - chars.len()));
+        s.extend(std::iter::repeat_n(' ', size - chars.len()));
         s
     }
 }

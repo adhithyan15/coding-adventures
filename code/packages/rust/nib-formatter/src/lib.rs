@@ -145,7 +145,7 @@ pub fn format_tokens_with_config(tokens: &[Token], config: &Config) -> String {
             depth += 1;
             // Look ahead: if the next token is `}`, keep it on the
             // same line (`{}` empty block stays compact).
-            let next_is_close = printable.get(i + 1).map_or(false, |t| is_rbrace(t));
+            let next_is_close = printable.get(i + 1).is_some_and(|t| is_rbrace(t));
             if !next_is_close {
                 out.push('\n');
                 at_line_start = true;

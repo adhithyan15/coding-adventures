@@ -600,7 +600,7 @@ pub fn ratchet_decrypt(
     }
 
     // Slow path: check if we need a DH ratchet step.
-    let need_dh_ratchet = state.dhr.map_or(true, |dhr| dhr != header.dh);
+    let need_dh_ratchet = state.dhr != Some(header.dh);
     if need_dh_ratchet {
         // Save any skipped keys from the current receiving chain before switching.
         skip_message_keys(state, header.pn)?;

@@ -69,6 +69,9 @@ fn print_stmt(expr: Expr) -> Stmt {
     }
 }
 
+// The 3.14 / 3.14159 float literals are test inputs exercising `to_i`/`round`
+// numeric methods, not approximations of PI to be swapped for a constant.
+#[allow(clippy::approx_constant)]
 fn numeric_demo() -> Module {
     let main_stmts = vec![
         // predicates ---------------------------------------------------

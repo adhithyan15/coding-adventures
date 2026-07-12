@@ -626,14 +626,18 @@ the existing shared `cas-*` crate, not a reimplementation:
 | `Simplify` | `Simplify[x + 0]` | `x` |
 | `Simplify` | `Simplify[2 + 3]` | `5` |
 | `Expand` | `Expand[(x + 1)^2]` | `1 + x + x + x*x` |
+| `Factor` | `Factor[x^2 - 1]` | `(1 + x) * (-1 + x)` |
 
 `Simplify` calls `cas-simplify`'s existing `simplify()`; `Expand` calls its
 existing `expand()` (distributes `Mul` over `Add`/`Sub`, expands bounded
 non-negative integer `Pow`, does **not** collect like terms — see
-`cas-simplify`'s own docs). Both are the exact functions Macsyma's own
-`simplify()`/`expand()` surface functions call — so Wolfram and Macsyma
-agree on every result this crate can produce. Further heads (`Factor`,
-`Solve`, `D`, `Integrate`, …) land one at a time, each its own item.
+`cas-simplify`'s own docs). `Factor` calls `symbolic-vm`'s own
+`handlers::factor_handler` directly (made `pub` for this reuse) rather than
+a separate `cas-*` crate, since factoring lives in the shared VM crate
+itself. All three are the exact functions Macsyma's own
+`simplify()`/`expand()`/`factor()` surface functions call — so Wolfram and
+Macsyma agree on every result this crate can produce. Further heads
+(`Solve`, `D`, `Integrate`, …) land one at a time, each its own item.
 
 ## Robustness
 
@@ -711,7 +715,7 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   conditions / `PatternTest` / sequences / `Repeated` / `Replace` level specs /
   `ReplaceRepeated` (`//.`) deferred to W-20. No grammar change.
 - **Future** — the rest of the `cas-*` function surface under Wolfram names
-  (`Factor`, `Solve`, `D`, `Integrate`, …) — `Simplify` and `Expand` are
+  (`Solve`, `D`, `Integrate`, …) — `Simplify`, `Expand`, and `Factor` are
   delivered, see the W-22 section above.
 
 ## Testing

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-wolfram-runtime"
-version = "0.19.1"
+version = "0.19.2"
 edition = "2021"
 description = "Wolfram Language runtime — lowers M-expressions to symbolic-ir and evaluates via symbolic-vm"
 license = "MIT"

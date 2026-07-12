@@ -527,7 +527,7 @@ fn expr_node_count(expr: &Expression) -> usize {
                         // field `x;` weighs 0) — the same size heuristic applied
                         // to any expression value.
                         ClassMember::Field(fd) => {
-                            fd.value.as_ref().map_or(0, |v| expr_node_count(v))
+                            fd.value.as_ref().map_or(0, expr_node_count)
                         }
                         // A static-init block weighs one unit per body statement,
                         // the same size heuristic a function body uses.
@@ -741,6 +741,9 @@ fn count_decl_names_stmt(
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
+            TaggedStatement::WithStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1125,6 +1128,10 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 tally_expr(&ws.test, cand, t);
+                tally_stmt(&ws.body, cand, t);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                tally_expr(&ws.object, cand, t);
                 tally_stmt(&ws.body, cand, t);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1546,6 +1553,10 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
             }
             TaggedStatement::WhileStatement(ws) => {
                 changed |= inline_in_expr(&mut ws.test, cand);
+                changed |= inline_in_stmt(&mut ws.body, cand);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                changed |= inline_in_expr(&mut ws.object, cand);
                 changed |= inline_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -2778,7 +2789,7 @@ fn void_candidate_from_function(
 /// normal free-identifier walk.
 fn is_inlinable_if(is: &IfStatement) -> bool {
     is_inlinable_if_branch(&is.consequent)
-        && is.alternate.as_deref().map_or(true, is_inlinable_if_branch)
+        && is.alternate.as_deref().is_none_or(is_inlinable_if_branch)
 }
 
 /// One `if` branch: a bare `ExpressionStatement`, or a `BlockStatement`
@@ -2927,6 +2938,9 @@ fn splice_void_in_stmt(
                 changed
             }
             TaggedStatement::WhileStatement(ws) => {
+                splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::WithStatement(ws) => {
                 splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -3808,6 +3822,9 @@ fn splice_valued_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 splice_valued_in_stmt(&mut ds.body, cand, avoid, nodes_touched)
             }
@@ -4328,6 +4345,10 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                 collect_binding_idents_expr(&ws.test, out);
                 collect_used_idents_stmt(&ws.body, out);
             }
+            TaggedStatement::WithStatement(ws) => {
+                collect_binding_idents_expr(&ws.object, out);
+                collect_used_idents_stmt(&ws.body, out);
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 collect_binding_idents_expr(&ds.test, out);
                 collect_used_idents_stmt(&ds.body, out);
@@ -4734,7 +4755,7 @@ mod tests {
         let _a: InlinePass = Default::default();
         let _b: InlinePass = InlinePass::new();
         let _c = _b;
-        let _d = _c.clone();
+        let _d = _c;
     }
 
     // =====================================================================

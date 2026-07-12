@@ -151,9 +151,9 @@ impl fmt::Display for ExecutionModel {
 /// - `active_mask_before`: Which units were active BEFORE the branch.
 /// - `active_mask_after`: Which units are active AFTER the branch.
 /// - `reconvergence_pc`: The instruction address where all units rejoin.
-///    -1 if not applicable (e.g., SIMD explicit mask).
+///   -1 if not applicable (e.g., SIMD explicit mask).
 /// - `divergence_depth`: How many nested divergent branches we're inside.
-///    0 means no divergence. Higher = more serialization.
+///   0 means no divergence. Higher = more serialization.
 #[derive(Debug, Clone)]
 pub struct DivergenceInfo {
     pub active_mask_before: Vec<bool>,

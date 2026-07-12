@@ -45,6 +45,11 @@
 //! the native function returns.  The native function itself returns null
 //! (for object types) or 0.0 (for primitives).
 
+// Every exported fn is a `Java_*` JNI entry point invoked only by the JVM,
+// which guarantees the env pointer / handle contract; the safety obligations
+// are uniform and documented in the module header above.
+#![allow(clippy::missing_safety_doc)]
+
 use std::ptr::null_mut;
 
 use device_physics as dp;
@@ -348,6 +353,9 @@ pub unsafe extern "C" fn Java_com_codingadventures_silicon_SiliconSim_mosfetThre
 
 #[unsafe(no_mangle)]
 #[allow(clippy::too_many_arguments)]
+// Params filled field-by-field from the many JNI scalar args for readability;
+// behavior is identical to an initializer.
+#[allow(clippy::field_reassign_with_default)]
 pub unsafe extern "C" fn Java_com_codingadventures_silicon_SiliconSim_evaluateLevel1(
     env: *mut JNIEnv, _class: jclass,
     vt0: jdouble, kp: jdouble, lambda: jdouble, gamma: jdouble, phi: jdouble,

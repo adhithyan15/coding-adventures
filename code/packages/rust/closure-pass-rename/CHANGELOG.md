@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.15.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in every local-rename walk (apply,
+has-function probe, decl-occurrence collection, all-ident collection, and
+use-rewrite) descend into the `with` object and body. Because the node is not
+yet bridge-reachable, this simply keeps the exhaustive matches total; the
+renaming-soundness handling that a live `with` demands lands with the bridge PR.
+Picks up javascript-ast 0.38.0.
+
 ## [0.14.16] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm

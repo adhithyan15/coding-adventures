@@ -579,73 +579,6 @@ unsafe extern "C" fn runtime_create_static(
     instance
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Public registration — call once from napi_register_module_v1.
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Pure-Rust tests
-//
-// The N-API surface itself isn't exercisable without a Node runtime
-// (Phase 4 lands `node --test` smoke); here we verify the two
-// invariants the type-tag defence relies on:
-//
-//   1. `GRAPH_TAG` and `RUNTIME_TAG` are distinct.  If a future
-//      change ever made them equal, the cross-class confusion check
-//      would silently fail.
-//   2. `WrappedGraph` and `WrappedRuntime` start with `tag: [u64; 2]`
-//      at offset 0 with the right size.  If a future change broke
-//      the field order or alignment, `unwrap_*`'s 16-byte read
-//      would either read padding (false-negative tag check) or
-//      stray into the next field (UB).
-//
-// These are compile-time invariants but the unit tests make them
-// explicit so the next reader knows they're load-bearing.
-// ─────────────────────────────────────────────────────────────────────────────
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn graph_and_runtime_tags_are_distinct() {
-        assert_ne!(
-            GRAPH_TAG, RUNTIME_TAG,
-            "type-tag defence relies on distinct class tags"
-        );
-    }
-
-    #[test]
-    fn wrapped_graph_starts_with_tag_at_offset_zero() {
-        use std::mem::offset_of;
-        assert_eq!(
-            offset_of!(WrappedGraph, tag),
-            0,
-            "unwrap_graph reads 16 bytes from offset 0 — tag must live there"
-        );
-    }
-
-    #[test]
-    fn wrapped_runtime_starts_with_tag_at_offset_zero() {
-        use std::mem::offset_of;
-        assert_eq!(
-            offset_of!(WrappedRuntime, tag),
-            0,
-            "unwrap_runtime reads 16 bytes from offset 0 — tag must live there"
-        );
-    }
-
-    #[test]
-    fn tag_size_matches_unwrap_read_size() {
-        use std::mem::size_of;
-        assert_eq!(
-            size_of::<[u64; 2]>(),
-            16,
-            "unwrap_* helpers read exactly 16 bytes via (p as *const [u64; 2]).read()"
-        );
-    }
-}
-
 /// Define both classes, attach their static-method sugar, and bind
 /// them onto the addon's `exports` object as `Graph` and `Runtime`.
 ///
@@ -722,4 +655,71 @@ pub unsafe fn register(env: napi_env, exports: napi_value) {
     napi_set_named_property(env, runtime_class, key.as_ptr(), create);
 
     set_named_property(env, exports, "Runtime", runtime_class);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Public registration — call once from napi_register_module_v1.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pure-Rust tests
+//
+// The N-API surface itself isn't exercisable without a Node runtime
+// (Phase 4 lands `node --test` smoke); here we verify the two
+// invariants the type-tag defence relies on:
+//
+//   1. `GRAPH_TAG` and `RUNTIME_TAG` are distinct.  If a future
+//      change ever made them equal, the cross-class confusion check
+//      would silently fail.
+//   2. `WrappedGraph` and `WrappedRuntime` start with `tag: [u64; 2]`
+//      at offset 0 with the right size.  If a future change broke
+//      the field order or alignment, `unwrap_*`'s 16-byte read
+//      would either read padding (false-negative tag check) or
+//      stray into the next field (UB).
+//
+// These are compile-time invariants but the unit tests make them
+// explicit so the next reader knows they're load-bearing.
+// ─────────────────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn graph_and_runtime_tags_are_distinct() {
+        assert_ne!(
+            GRAPH_TAG, RUNTIME_TAG,
+            "type-tag defence relies on distinct class tags"
+        );
+    }
+
+    #[test]
+    fn wrapped_graph_starts_with_tag_at_offset_zero() {
+        use std::mem::offset_of;
+        assert_eq!(
+            offset_of!(WrappedGraph, tag),
+            0,
+            "unwrap_graph reads 16 bytes from offset 0 — tag must live there"
+        );
+    }
+
+    #[test]
+    fn wrapped_runtime_starts_with_tag_at_offset_zero() {
+        use std::mem::offset_of;
+        assert_eq!(
+            offset_of!(WrappedRuntime, tag),
+            0,
+            "unwrap_runtime reads 16 bytes from offset 0 — tag must live there"
+        );
+    }
+
+    #[test]
+    fn tag_size_matches_unwrap_read_size() {
+        use std::mem::size_of;
+        assert_eq!(
+            size_of::<[u64; 2]>(),
+            16,
+            "unwrap_* helpers read exactly 16 bytes via (p as *const [u64; 2]).read()"
+        );
+    }
 }

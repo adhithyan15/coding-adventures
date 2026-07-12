@@ -96,7 +96,7 @@ mod tests {
         tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
-            .map(|t| effective_type_name(t))
+            .map(effective_type_name)
             .collect()
     }
 

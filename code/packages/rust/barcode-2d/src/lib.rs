@@ -60,18 +60,15 @@ use std::f64::consts::PI;
 /// [`Square`]: ModuleShape::Square
 /// [`Hex`]: ModuleShape::Hex
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ModuleShape {
     /// Standard square modules — QR Code, Data Matrix, Aztec, PDF417.
+    #[default]
     Square,
     /// Flat-top hexagonal modules — MaxiCode.
     Hex,
 }
 
-impl Default for ModuleShape {
-    fn default() -> Self {
-        Self::Square
-    }
-}
 
 // ============================================================================
 // ModuleGrid — the universal output of every 2D barcode encoder

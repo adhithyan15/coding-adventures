@@ -759,7 +759,7 @@ impl Assembler {
     /// `LDR Xt, [Xn, #imm]` — load 64-bit; `imm` must be a multiple of 8 in
     /// `[0, 32760]` (12-bit scaled by 8).
     pub fn ldr(&mut self, rt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
-        if imm % 8 != 0 || imm > 0x7FF8 {
+        if !imm.is_multiple_of(8) || imm > 0x7FF8 {
             return Err(EncodeError::ImmediateOutOfRange { op: "ldr",  bits: 12, value: imm as i64 });
         }
         let imm12 = imm / 8;
@@ -776,7 +776,7 @@ impl Assembler {
     ///
     /// Named `str_` because `str` is a Rust prelude type alias.
     pub fn str_(&mut self, rt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
-        if imm % 8 != 0 || imm > 0x7FF8 {
+        if !imm.is_multiple_of(8) || imm > 0x7FF8 {
             return Err(EncodeError::ImmediateOutOfRange { op: "str", bits: 12, value: imm as i64 });
         }
         let imm12 = imm / 8;
@@ -802,7 +802,7 @@ impl Assembler {
     /// (`imm % 8`, `imm ≤ 32760`) offset as [`ldr`](Self::ldr); only the size/V
     /// bits differ. Encoding `01 111 1 01 01 imm12 Rn Rt` (`0xFD400000`).
     pub fn ldr_d(&mut self, dt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
-        if imm % 8 != 0 || imm > 0x7FF8 {
+        if !imm.is_multiple_of(8) || imm > 0x7FF8 {
             return Err(EncodeError::ImmediateOutOfRange { op: "ldr_d", bits: 12, value: imm as i64 });
         }
         let imm12 = imm / 8;
@@ -812,7 +812,7 @@ impl Assembler {
 
     /// `STR Dt, [Xn, #imm]` — store a 64-bit double. Encoding `0xFD000000`.
     pub fn str_d(&mut self, dt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
-        if imm % 8 != 0 || imm > 0x7FF8 {
+        if !imm.is_multiple_of(8) || imm > 0x7FF8 {
             return Err(EncodeError::ImmediateOutOfRange { op: "str_d", bits: 12, value: imm as i64 });
         }
         let imm12 = imm / 8;
@@ -1000,7 +1000,7 @@ impl Assembler {
     /// `STP Xt1, Xt2, [Xn, #imm]!` — pre-indexed store-pair (writeback).
     /// `imm` is a signed multiple of 8 in `[-512, 504]` (7-bit signed).
     pub fn stp_pre(&mut self, rt1: Reg, rt2: Reg, rn: Reg, imm: i32) -> Result<(), EncodeError> {
-        if imm % 8 != 0 || imm < -512 || imm > 504 {
+        if imm % 8 != 0 || !(-512..=504).contains(&imm) {
             return Err(EncodeError::ImmediateOutOfRange { op: "stp_pre", bits: 7, value: imm as i64 });
         }
         let imm7 = ((imm / 8) as u32) & 0x7F;
@@ -1017,7 +1017,7 @@ impl Assembler {
     /// `LDP Xt1, Xt2, [Xn], #imm` — post-indexed load-pair (writeback).
     /// `imm` is a signed multiple of 8 in `[-512, 504]`.
     pub fn ldp_post(&mut self, rt1: Reg, rt2: Reg, rn: Reg, imm: i32) -> Result<(), EncodeError> {
-        if imm % 8 != 0 || imm < -512 || imm > 504 {
+        if imm % 8 != 0 || !(-512..=504).contains(&imm) {
             return Err(EncodeError::ImmediateOutOfRange { op: "ldp_post", bits: 7, value: imm as i64 });
         }
         let imm7 = ((imm / 8) as u32) & 0x7F;
@@ -1167,14 +1167,14 @@ impl Assembler {
             let word = &mut self.code[f.word_idx];
             match f.kind {
                 BranchKind::Imm26 => {
-                    if delta_words < -(1 << 25) || delta_words >= (1 << 25) {
+                    if !(-(1 << 25)..(1 << 25)).contains(&delta_words) {
                         return Err(EncodeError::BranchOutOfRange { bits: 26, delta_words });
                     }
                     let imm26 = (delta_words as u32) & 0x03FFFFFF;
                     *word = (*word & !0x03FFFFFF) | imm26;
                 }
                 BranchKind::Imm19 => {
-                    if delta_words < -(1 << 18) || delta_words >= (1 << 18) {
+                    if !(-(1 << 18)..(1 << 18)).contains(&delta_words) {
                         return Err(EncodeError::BranchOutOfRange { bits: 19, delta_words });
                     }
                     let imm19 = (delta_words as u32) & 0x0007FFFF;

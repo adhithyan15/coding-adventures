@@ -49,7 +49,7 @@ fn cv_kv_summary_emits_quoted_path_and_bare_numerics() {
     let input_path = "tests/diff/cv-kv-summary/input/a.js";
 
     let res = Command::new(BINARY)
-        .args(&[
+        .args([
             "--correlation_vector",
             "--correlation_vector_summary",
             "--correlation_vector_summary_format",

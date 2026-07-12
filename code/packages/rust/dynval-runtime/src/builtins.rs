@@ -1118,7 +1118,7 @@ pub fn symbol_to_string(args: &[LispyValue]) -> Result<LispyValue, RuntimeError>
 /// Extract a code-point integer from a `LispyValue` for char predicates.
 fn as_codepoint(name: &str, v: LispyValue) -> Result<u32, RuntimeError> {
     let n = as_int(name, v)?;
-    if n < 0 || n > 0x10FFFF {
+    if !(0..=0x10FFFF).contains(&n) {
         return Err(RuntimeError::TypeError(format!(
             "{name}: {n} is not a valid Unicode code point"
         )));

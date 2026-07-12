@@ -118,8 +118,8 @@ fn attack_1() {
 /// MD5 T-table constants derived from sine.
 fn t_table() -> [u32; 64] {
     let mut t = [0u32; 64];
-    for i in 0..64 {
-        t[i] = ((i as f64 + 1.0).sin().abs() * (1u64 << 32) as f64).floor() as u32;
+    for (i, ti) in t.iter_mut().enumerate() {
+        *ti = ((i as f64 + 1.0).sin().abs() * (1u64 << 32) as f64).floor() as u32;
     }
     t
 }

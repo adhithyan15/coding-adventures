@@ -70,7 +70,6 @@
 //! types that work across all Python 3.x ABI versions without
 //! rebuilding.
 
-use std::ffi::c_char;
 use std::ffi::c_int;
 use std::ffi::c_void;
 use std::mem::size_of;
@@ -139,6 +138,9 @@ extern "C" {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PY_TP_DEALLOC: c_int = 52;
+// CPython `Py_tp_doc` slot id, kept for completeness alongside the other slot
+// constants even though this type currently sets no docstring slot.
+#[allow(dead_code)]
 const PY_TP_DOC: c_int = 56;
 const PY_TP_INIT: c_int = 60;
 const PY_TP_METHODS: c_int = 64;
@@ -373,20 +375,20 @@ unsafe extern "C" fn graph_describe(self_: PyObjectPtr, _unused: PyObjectPtr) ->
 
 static mut GRAPH_METHODS: [PyMethodDef; 3] = [
     PyMethodDef {
-        ml_name: b"to_json\0".as_ptr() as *const c_char,
+        ml_name: c"to_json".as_ptr(),
         ml_meth: Some(graph_to_json),
         ml_flags: METH_NOARGS,
-        ml_doc: b"to_json() -> str\n\n\
-                  Re-serialise the wrapped Graph as matrix-ir-json wire format.\n\0"
-            .as_ptr() as *const c_char,
+        ml_doc: c"to_json() -> str\n\n\
+                  Re-serialise the wrapped Graph as matrix-ir-json wire format.\n"
+            .as_ptr(),
     },
     PyMethodDef {
-        ml_name: b"describe\0".as_ptr() as *const c_char,
+        ml_name: c"describe".as_ptr(),
         ml_meth: Some(graph_describe),
         ml_flags: METH_NOARGS,
-        ml_doc: b"describe() -> str\n\n\
-                  Return a short human-readable summary of the Graph.\n\0"
-            .as_ptr() as *const c_char,
+        ml_doc: c"describe() -> str\n\n\
+                  Return a short human-readable summary of the Graph.\n"
+            .as_ptr(),
     },
     PyMethodDef {
         ml_name: ptr::null(),
@@ -416,7 +418,7 @@ static mut GRAPH_SLOTS: [PyType_Slot; 4] = [
 ];
 
 static mut GRAPH_SPEC: PyType_Spec = PyType_Spec {
-    name: b"matrix_rust_python.Graph\0".as_ptr() as *const c_char,
+    name: c"matrix_rust_python.Graph".as_ptr(),
     basicsize: size_of::<GraphInstance>() as c_int,
     itemsize: 0,
     flags: PY_TPFLAGS_DEFAULT,
@@ -565,16 +567,16 @@ unsafe extern "C" fn runtime_run(self_: PyObjectPtr, args: PyObjectPtr) -> PyObj
 
 static mut RUNTIME_METHODS: [PyMethodDef; 2] = [
     PyMethodDef {
-        ml_name: b"run\0".as_ptr() as *const c_char,
+        ml_name: c"run".as_ptr(),
         ml_meth: Some(runtime_run),
         ml_flags: METH_VARARGS,
-        ml_doc: b"run(graph: Graph, inputs: list[bytes]) -> list[bytes]\n\n\
+        ml_doc: c"run(graph: Graph, inputs: list[bytes]) -> list[bytes]\n\n\
                   Plan and execute `graph` on the CPU executor with `inputs` as the \
                   per-input little-endian byte payloads.  Returns one bytes object per \
                   graph.outputs().  Raises ValueError on planner/executor errors, \
                   TypeError on wrong argument types, ValueError on graphs exceeding the \
-                  4 GiB total-buffer cap.\n\0"
-            .as_ptr() as *const c_char,
+                  4 GiB total-buffer cap.\n"
+            .as_ptr(),
     },
     PyMethodDef {
         ml_name: ptr::null(),
@@ -604,7 +606,7 @@ static mut RUNTIME_SLOTS: [PyType_Slot; 4] = [
 ];
 
 static mut RUNTIME_SPEC: PyType_Spec = PyType_Spec {
-    name: b"matrix_rust_python.Runtime\0".as_ptr() as *const c_char,
+    name: c"matrix_rust_python.Runtime".as_ptr(),
     basicsize: size_of::<RuntimeInstance>() as c_int,
     itemsize: 0,
     flags: PY_TPFLAGS_DEFAULT,

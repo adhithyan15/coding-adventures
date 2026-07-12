@@ -155,11 +155,11 @@ fn lay_out_any<M: TextMeasurer>(
 #[allow(clippy::too_many_arguments)]
 fn lay_out_container<M: TextMeasurer>(
     node: &LayoutNode,
-    constraints: Constraints,
+    _constraints: Constraints,
     measurer: &M,
     x: f64,
     y: f64,
-    margin: Edges,
+    _margin: Edges,
     padding: Edges,
     outer_max_width: f64,
     padding_horizontal: f64,
@@ -272,7 +272,7 @@ fn collapse_margin(a: f64, b: f64) -> f64 {
 fn lay_out_text_leaf<M: TextMeasurer>(
     node: &LayoutNode,
     tc: &TextContent,
-    constraints: Constraints,
+    _constraints: Constraints,
     measurer: &M,
     x: f64,
     y: f64,

@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.13.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: walk `WithStatement`
+
+`walk_tagged_statement` now descends into a `with` statement's object expression
+and body. The renaming-unsoundness bailout that `with` demands (a binding
+resolved through the injected object cannot be safely renamed) lands with the
+bridge PR that makes the node reachable; picks up javascript-ast 0.38.0.
+
 ## [0.12.17] - 2026-07-11
 
 ### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm

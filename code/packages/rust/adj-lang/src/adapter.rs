@@ -430,7 +430,7 @@ fn adapt_context_order(node: &GrammarASTNode) -> Result<Statement, AdapterError>
             _ => None,
         })
         .collect();
-    if idents.is_empty() || idents.len() % 2 != 0 {
+    if idents.is_empty() || !idents.len().is_multiple_of(2) {
         return Err(AdapterError::MissingChild {
             rule: "context_order_decl".into(),
             position: "higher > lower context pairs",
@@ -1137,6 +1137,10 @@ fn parse_unicodemath_math(source: &str) -> Result<MathExpr, AdapterError> {
         })
 }
 
+// The `\(…\)`, `\[…\]` and `$$…$$` branches intentionally share the same body
+// (`&s[2..len-2]`): they are distinct delimiter pairs of equal width, kept
+// separate for readability rather than merged into one `||` condition.
+#[allow(clippy::if_same_then_else)]
 fn strip_math_delimiters(source: &str) -> &str {
     let mut s = source.trim();
     loop {
@@ -1647,6 +1651,9 @@ fn inverse_hyperbolic_kind(expr: &MathExpr) -> Option<InverseHyperbolic> {
 }
 
 /// The three inverse hyperbolic functions the adapter lowers via logarithm identities.
+// The shared `Ar` prefix is the standard mathematical spelling
+// (arsinh/arcosh/artanh), not an accidental naming collision.
+#[allow(clippy::enum_variant_names)]
 #[derive(Clone, Copy)]
 enum InverseHyperbolic {
     /// `arsinh(x) = ln(x + (x^2 + 1)^0.5)`.
@@ -2557,6 +2564,89 @@ fn expect_term_child(
     adapt_term(term_node)
 }
 
+/// Strip surrounding double quotes and process backslash escapes.
+///
+/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
+/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
+/// translate the recognized escape sequences:
+///
+/// | in source | becomes  | why it matters                                   |
+/// |-----------|----------|--------------------------------------------------|
+/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
+/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
+/// | `\\`      | `\`      | a literal backslash                              |
+/// | `\n`      | newline  | multi-line provenance text                       |
+/// | `\t`      | tab      | tabular provenance text                          |
+///
+/// This is load-bearing for byte-provenance: a `source "..."` annotation must
+/// reproduce the cited page's text *character-for-character* after unescaping,
+/// so a span that contains a `"` is carried as `\"` and restored here. An
+/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
+/// dropping the backslash — we never want to mutate a citation we don't
+/// understand. See the `unquote_string_*` unit tests, which pin every row.
+fn unquote_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            if let Some(esc) = chars.next() {
+                match esc {
+                    '"' => out.push('"'),
+                    '\\' => out.push('\\'),
+                    'n' => out.push('\n'),
+                    't' => out.push('\t'),
+                    other => {
+                        // Unknown escape — keep verbatim.
+                        out.push('\\');
+                        out.push(other);
+                    }
+                }
+            } else {
+                // Dangling backslash at end of string — keep it verbatim.
+                out.push('\\');
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
+/// Strip surrounding double quotes for `latex "..."` strings.
+///
+/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
+/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
+/// backslash escaping are interpreted here; every other backslash sequence is
+/// passed through to the LaTeX parser verbatim.
+fn unquote_latex_string(raw: &str) -> String {
+    let inner = raw
+        .strip_prefix('"')
+        .and_then(|s| s.strip_suffix('"'))
+        .unwrap_or(raw);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            match chars.next() {
+                Some('"') => out.push('"'),
+                Some('\\') => out.push('\\'),
+                Some(other) => {
+                    out.push('\\');
+                    out.push(other);
+                }
+                None => out.push('\\'),
+            }
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -2855,87 +2945,4 @@ mod tests {
             other => panic!("expected Contributes, got {other:?}"),
         }
     }
-}
-
-/// Strip surrounding double quotes and process backslash escapes.
-///
-/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
-/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
-/// translate the recognized escape sequences:
-///
-/// | in source | becomes  | why it matters                                   |
-/// |-----------|----------|--------------------------------------------------|
-/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
-/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
-/// | `\\`      | `\`      | a literal backslash                              |
-/// | `\n`      | newline  | multi-line provenance text                       |
-/// | `\t`      | tab      | tabular provenance text                          |
-///
-/// This is load-bearing for byte-provenance: a `source "..."` annotation must
-/// reproduce the cited page's text *character-for-character* after unescaping,
-/// so a span that contains a `"` is carried as `\"` and restored here. An
-/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
-/// dropping the backslash — we never want to mutate a citation we don't
-/// understand. See the `unquote_string_*` unit tests, which pin every row.
-fn unquote_string(raw: &str) -> String {
-    let inner = raw
-        .strip_prefix('"')
-        .and_then(|s| s.strip_suffix('"'))
-        .unwrap_or(raw);
-    let mut out = String::with_capacity(inner.len());
-    let mut chars = inner.chars();
-    while let Some(c) = chars.next() {
-        if c == '\\' {
-            if let Some(esc) = chars.next() {
-                match esc {
-                    '"' => out.push('"'),
-                    '\\' => out.push('\\'),
-                    'n' => out.push('\n'),
-                    't' => out.push('\t'),
-                    other => {
-                        // Unknown escape — keep verbatim.
-                        out.push('\\');
-                        out.push(other);
-                    }
-                }
-            } else {
-                // Dangling backslash at end of string — keep it verbatim.
-                out.push('\\');
-            }
-        } else {
-            out.push(c);
-        }
-    }
-    out
-}
-
-/// Strip surrounding double quotes for `latex "..."` strings.
-///
-/// Unlike provenance strings, LaTeX strings must preserve command backslashes:
-/// `\times` and `\frac` are math syntax, not `\t`/`\f` escapes. Only quote and
-/// backslash escaping are interpreted here; every other backslash sequence is
-/// passed through to the LaTeX parser verbatim.
-fn unquote_latex_string(raw: &str) -> String {
-    let inner = raw
-        .strip_prefix('"')
-        .and_then(|s| s.strip_suffix('"'))
-        .unwrap_or(raw);
-    let mut out = String::with_capacity(inner.len());
-    let mut chars = inner.chars();
-    while let Some(c) = chars.next() {
-        if c == '\\' {
-            match chars.next() {
-                Some('"') => out.push('"'),
-                Some('\\') => out.push('\\'),
-                Some(other) => {
-                    out.push('\\');
-                    out.push(other);
-                }
-                None => out.push('\\'),
-            }
-        } else {
-            out.push(c);
-        }
-    }
-    out
 }

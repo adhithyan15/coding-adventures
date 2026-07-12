@@ -107,9 +107,9 @@ pub fn hbox(boxes: &[Box], sep: &str) -> Box {
             let below = total_height - b.height() - above;
             let empty = " ".repeat(b.width());
             let mut rows = Vec::with_capacity(total_height);
-            rows.extend(std::iter::repeat(empty.clone()).take(above));
+            rows.extend(std::iter::repeat_n(empty.clone(), above));
             rows.extend(b.lines.iter().cloned());
-            rows.extend(std::iter::repeat(empty).take(below));
+            rows.extend(std::iter::repeat_n(empty, below));
             rows
         })
         .collect();

@@ -229,7 +229,7 @@ pub fn parse_inline(raw: &str, link_refs: &LinkRefMap) -> Vec<InlineNode> {
 
             flush_text(&mut tokens, &mut text_buf);
 
-            let inner_tokens_after_opener: Vec<Token> = tokens[opener_tok_idx + 1..].to_vec();
+            let _inner_tokens_after_opener: Vec<Token> = tokens[opener_tok_idx + 1..].to_vec();
             let closer_pos = scanner.pos - 1;
             let inner_text_for_label = scanner.source[opener.source_pos..closer_pos].to_string();
 
@@ -304,14 +304,14 @@ pub fn parse_inline(raw: &str, link_refs: &LinkRefMap) -> Vec<InlineNode> {
         // 6 & 7. Line breaks
         if ch == '\n' {
             scanner.skip(1);
-            if text_buf.ends_with("  ") || text_buf.trim_end_matches(|c| c == ' ' || c == '\t').len() + 2 <= text_buf.len() {
+            if text_buf.ends_with("  ") || text_buf.trim_end_matches([' ', '\t']).len() + 2 <= text_buf.len() {
                 // Two or more trailing spaces → hard break
-                let trimmed = text_buf.trim_end_matches(|c: char| c == ' ' || c == '\t').to_string();
+                let trimmed = text_buf.trim_end_matches([' ', '\t']).to_string();
                 text_buf = trimmed;
                 flush_text(&mut tokens, &mut text_buf);
                 tokens.push(Token::Node(NodeToken { node: InlineNode::HardBreak(HardBreakNode) }));
             } else {
-                let trimmed = text_buf.trim_end_matches(|c: char| c == ' ' || c == '\t').to_string();
+                let trimmed = text_buf.trim_end_matches([' ', '\t']).to_string();
                 text_buf = trimmed;
                 flush_text(&mut tokens, &mut text_buf);
                 tokens.push(Token::Node(NodeToken { node: InlineNode::SoftBreak(SoftBreakNode) }));
@@ -427,11 +427,10 @@ fn resolve_emphasis(mut tokens: Vec<Token>) -> Vec<InlineNode> {
             };
 
             // Mod-3 rule
-            if (t.can_open && t.can_close) || (closer.can_open && closer.can_close) {
-                if (t.count + closer.count) % 3 == 0 && t.count % 3 != 0 {
+            if ((t.can_open && t.can_close) || (closer.can_open && closer.can_close))
+                && (t.count + closer.count) % 3 == 0 && t.count % 3 != 0 {
                     continue;
                 }
-            }
             opener_idx = Some(j);
             break;
         }
@@ -469,14 +468,8 @@ fn resolve_emphasis(mut tokens: Vec<Token>) -> Vec<InlineNode> {
         i = opener_idx + 2;
 
         // Reduce counts
-        match &mut tokens[opener_idx] {
-            Token::Delim(d) => d.count -= use_len,
-            _ => {}
-        }
-        match &mut tokens[i] {
-            Token::Delim(d) => d.count -= use_len,
-            _ => {}
-        }
+        if let Token::Delim(d) = &mut tokens[opener_idx] { d.count -= use_len }
+        if let Token::Delim(d) = &mut tokens[i] { d.count -= use_len }
 
         // If opener count is 0, remove it
         let opener_empty = match &tokens[opener_idx] {
@@ -521,11 +514,11 @@ fn try_code_span(scanner: &mut Scanner) -> Option<CodeSpanNode> {
     let mut content = String::new();
     while !scanner.done() {
         if scanner.peek_char(0) == '`' {
-            let close_pos = scanner.pos;
+            let _close_pos = scanner.pos;
             let close_ticks = scanner.consume_while(|c| c == '`').to_string();
             if close_ticks.len() == tick_len {
                 // Normalize: CR/LF → space
-                content = content.replace('\r', " ").replace('\n', " ");
+                content = content.replace(['\r', '\n'], " ");
                 // Strip one leading+trailing space if content not all-space
                 if content.len() >= 2
                     && content.starts_with(' ')
@@ -820,13 +813,11 @@ fn try_link_after_close(
     None
 }
 
-fn try_inline_link(scanner: &mut Scanner, outer_saved: usize) -> Option<LinkResult> {
+fn try_inline_link(scanner: &mut Scanner, _outer_saved: usize) -> Option<LinkResult> {
     scanner.skip(1); // consume `(`
     skip_optional_spaces_and_newline(scanner);
 
-    let mut destination = String::new();
-
-    if scanner.peek_char(0) == '<' {
+    let destination = if scanner.peek_char(0) == '<' {
         scanner.skip(1);
         let mut dest_buf = String::new();
         loop {
@@ -845,7 +836,7 @@ fn try_inline_link(scanner: &mut Scanner, outer_saved: usize) -> Option<LinkResu
                 dest_buf.push(c); scanner.skip(c.len_utf8());
             }
         }
-        destination = normalize_url(&decode_entities(&dest_buf));
+        normalize_url(&decode_entities(&dest_buf))
     } else {
         let mut depth = 0i32;
         let dest_start = scanner.pos;
@@ -861,8 +852,8 @@ fn try_inline_link(scanner: &mut Scanner, outer_saved: usize) -> Option<LinkResu
             }
         }
         let dest_raw = scanner.source[dest_start..scanner.pos].to_string();
-        destination = normalize_url(&decode_entities(&apply_backslash_escapes_inline(&dest_raw)));
-    }
+        normalize_url(&decode_entities(&apply_backslash_escapes_inline(&dest_raw)))
+    };
 
     skip_optional_spaces_and_newline(scanner);
 

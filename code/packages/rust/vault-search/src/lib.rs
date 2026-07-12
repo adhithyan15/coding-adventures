@@ -367,7 +367,7 @@ impl SearchIndexSummary {
 fn lowercase_ascii(s: &str) -> Vec<u8> {
     let mut out: Vec<u8> = Vec::with_capacity(s.len());
     for b in s.bytes() {
-        if (b'A'..=b'Z').contains(&b) {
+        if b.is_ascii_uppercase() {
             out.push(b + 32);
         } else {
             out.push(b);
@@ -534,7 +534,7 @@ impl SearchIndex {
             }
         }
         // Insert the new postings.
-        for (tg, _) in tf.iter() {
+        for tg in tf.keys() {
             g.postings.entry(*tg).or_default().insert(id.clone(), ());
         }
         let doc = Doc {
@@ -679,7 +679,7 @@ impl SearchIndex {
     pub fn clear(&self) {
         let mut g = lock_recover(&self.inner);
         // Walk docs and zeroise each before dropping.
-        for (_, doc) in g.docs.iter_mut() {
+        for doc in g.docs.values_mut() {
             doc.zeroize();
         }
         g.docs.clear();
@@ -699,7 +699,7 @@ impl SearchIndex {
         out.push(1u8); // version
                        // u32 doc count
         out.extend_from_slice(&(g.docs.len() as u32).to_be_bytes());
-        for (_, doc) in g.docs.iter() {
+        for doc in g.docs.values() {
             // doc id (length-prefixed string)
             let id = doc.id.as_str();
             out.extend_from_slice(&(id.len() as u32).to_be_bytes());
@@ -844,7 +844,7 @@ impl Drop for SearchIndex {
         // self.inner.lock()` form silently dropped the scrub on
         // exactly the most-important path.)
         if let Ok(g) = self.inner.get_mut() {
-            for (_, doc) in g.docs.iter_mut() {
+            for doc in g.docs.values_mut() {
                 doc.zeroize();
             }
             g.docs.clear();

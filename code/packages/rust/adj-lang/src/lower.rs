@@ -680,7 +680,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     let defs = resolve(d)?;
                     let mut clauses: Vec<&Statement> = Vec::new();
                     flatten_clauses(statements, &mut clauses)?;
-                    enforce_vocabulary(clauses.into_iter(), defs, &formulas)?;
+                    enforce_vocabulary(clauses, defs, &formulas)?;
                 }
             }
         }
@@ -2511,7 +2511,7 @@ contributes 1000000 from answer == 3 / 10 to opt_a
         assert_eq!(cs.symbols[0].0, "premium");
         assert!(matches!(
             &cs.symbols[0].1,
-            core_compound_money @ _ if format!("{core_compound_money:?}").contains("money")
+            core_compound_money if format!("{core_compound_money:?}").contains("money")
         ));
         assert_eq!(cs.symbols[1].0, "months");
         assert_eq!(cs.constraints.len(), 3);

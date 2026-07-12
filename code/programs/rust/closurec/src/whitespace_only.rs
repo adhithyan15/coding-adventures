@@ -569,8 +569,8 @@ pub fn whitespace_only_minify(
             let outer_op_new = kept[i].value == "new"
                 && !is_string_literal(kept[i])
                 && (i == 0
-                    || (!is_structural_punct(&kept[i - 1], ".")
-                        && !is_structural_punct(&kept[i - 1], "?.")));
+                    || (!is_structural_punct(kept[i - 1], ".")
+                        && !is_structural_punct(kept[i - 1], "?.")));
             if outer_op_new {
                 // Is kept[i+1] also an operator `new`?
                 // (The predecessor of kept[i+1] is kept[i] which is
@@ -585,7 +585,7 @@ pub fn whitespace_only_minify(
                     if p < kept.len() && is_simple_identifier_token(Some(kept[p])) {
                         p += 1;
                         while p + 1 < kept.len()
-                            && is_structural_punct(&kept[p], ".")
+                            && is_structural_punct(kept[p], ".")
                             && is_simple_identifier_token(Some(kept[p + 1]))
                         {
                             p += 2;
@@ -1433,8 +1433,8 @@ pub fn whitespace_only_minify(
                 || prev.value == "throw")
                 && !is_string_literal(prev)
                 && (i < 2
-                    || (!is_structural_punct(&kept[i - 2], ".")
-                        && !is_structural_punct(&kept[i - 2], "?.")));
+                    || (!is_structural_punct(kept[i - 2], ".")
+                        && !is_structural_punct(kept[i - 2], "?.")));
             // gap-102: `yield` operand. `yield` takes an
             // AssignmentExpression (binding looser than every binary
             // operator), so a grouping paren around the operand is
@@ -1448,13 +1448,13 @@ pub fn whitespace_only_minify(
             let is_yield_prefix = prev.value == "yield"
                 && !is_string_literal(prev)
                 && (i < 2
-                    || (!is_structural_punct(&kept[i - 2], ".")
-                        && !is_structural_punct(&kept[i - 2], "?.")));
+                    || (!is_structural_punct(kept[i - 2], ".")
+                        && !is_structural_punct(kept[i - 2], "?.")));
             let prefix_matches = is_arm_prefix
                 || is_arrow_prefix
                 || is_ret_throw_prefix
                 || is_yield_prefix;
-            if prefix_matches && is_structural_punct(&kept[i], "(") {
+            if prefix_matches && is_structural_punct(kept[i], "(") {
                 let open_idx = i;
                 let mut depth: i32 = 1;
                 let mut has_top_level_comma = false;
@@ -1561,7 +1561,7 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 3 < kept.len() {
-            if is_structural_punct(&kept[i], "(") {
+            if is_structural_punct(kept[i], "(") {
                 let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
                     None => true,
                     Some(p) => {
@@ -1571,9 +1571,9 @@ pub fn whitespace_only_minify(
                             && !is_structural_punct(p, "?.")
                     }
                 };
-                let inner_ok = is_plain_identifier(&kept[i + 1]);
-                let close_ok = is_structural_punct(&kept[i + 2], ")");
-                let member_follows = is_structural_punct(&kept[i + 3], ".");
+                let inner_ok = is_plain_identifier(kept[i + 1]);
+                let close_ok = is_structural_punct(kept[i + 2], ")");
+                let member_follows = is_structural_punct(kept[i + 3], ".");
                 if grouping && inner_ok && close_ok && member_follows {
                     drops.push(i); // open `(`
                     drops.push(i + 2); // close `)`
@@ -1624,8 +1624,8 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 2 < kept.len() {
-            if is_structural_punct(&kept[i], "(")
-                && is_plain_identifier(&kept[i + 1])
+            if is_structural_punct(kept[i], "(")
+                && is_plain_identifier(kept[i + 1])
             {
                 let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
                     None => true,
@@ -1640,8 +1640,8 @@ pub fn whitespace_only_minify(
                     // Consume the `.IDENT` member chain.
                     let mut p = i + 1;
                     while p + 2 < kept.len()
-                        && is_structural_punct(&kept[p + 1], ".")
-                        && is_plain_identifier(&kept[p + 2])
+                        && is_structural_punct(kept[p + 1], ".")
+                        && is_plain_identifier(kept[p + 2])
                     {
                         p += 2;
                     }
@@ -1708,8 +1708,8 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 2 < kept.len() {
-            if is_structural_punct(&kept[i], "(")
-                && is_plain_identifier(&kept[i + 1])
+            if is_structural_punct(kept[i], "(")
+                && is_plain_identifier(kept[i + 1])
             {
                 let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
                     None => true,
@@ -1724,8 +1724,8 @@ pub fn whitespace_only_minify(
                     // Consume the `.IDENT` member chain.
                     let mut p = i + 1;
                     while p + 2 < kept.len()
-                        && is_structural_punct(&kept[p + 1], ".")
-                        && is_plain_identifier(&kept[p + 2])
+                        && is_structural_punct(kept[p + 1], ".")
+                        && is_plain_identifier(kept[p + 2])
                     {
                         p += 2;
                     }
@@ -1786,7 +1786,7 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 1 < kept.len() {
-            if is_structural_punct(&kept[i], "(") {
+            if is_structural_punct(kept[i], "(") {
                 // Expression-context predecessor: `=` or `,`.
                 let expr_ctx = match i.checked_sub(1).and_then(|k| kept.get(k)) {
                     Some(p) if is_structural_punct(p, "=") => {
@@ -1799,7 +1799,7 @@ pub fn whitespace_only_minify(
                         // function-decl trailing-`;` pass and corrupts the
                         // output (`g(a=function(){};())`).
                         i >= 2
-                            && is_plain_identifier(&kept[i - 2])
+                            && is_plain_identifier(kept[i - 2])
                             && match i.checked_sub(3).and_then(|k| kept.get(k)) {
                                 None => true,
                                 Some(b) => {
@@ -1892,14 +1892,14 @@ pub fn whitespace_only_minify(
                     }
                 };
             if after_extends
-                && is_structural_punct(&kept[i], "(")
-                && is_plain_identifier(&kept[i + 1])
+                && is_structural_punct(kept[i], "(")
+                && is_plain_identifier(kept[i + 1])
             {
                 // Consume the `.IDENT` member chain.
                 let mut p = i + 1;
                 while p + 2 < kept.len()
-                    && is_structural_punct(&kept[p + 1], ".")
-                    && is_plain_identifier(&kept[p + 2])
+                    && is_structural_punct(kept[p + 1], ".")
+                    && is_plain_identifier(kept[p + 2])
                 {
                     p += 2;
                 }
@@ -1962,14 +1962,14 @@ pub fn whitespace_only_minify(
                     }
                 };
             if after_new
-                && is_structural_punct(&kept[i], "(")
-                && is_plain_identifier(&kept[i + 1])
+                && is_structural_punct(kept[i], "(")
+                && is_plain_identifier(kept[i + 1])
             {
                 // Consume the `.IDENT` member chain.
                 let mut p = i + 1;
                 while p + 2 < kept.len()
-                    && is_structural_punct(&kept[p + 1], ".")
-                    && is_plain_identifier(&kept[p + 2])
+                    && is_structural_punct(kept[p + 1], ".")
+                    && is_plain_identifier(kept[p + 2])
                 {
                     p += 2;
                 }
@@ -2034,8 +2034,8 @@ pub fn whitespace_only_minify(
             let is_operator_new = kept[i].value == "new"
                 && !is_string_literal(kept[i])
                 && (i == 0
-                    || (!is_structural_punct(&kept[i - 1], ".")
-                        && !is_structural_punct(&kept[i - 1], "?.")));
+                    || (!is_structural_punct(kept[i - 1], ".")
+                        && !is_structural_punct(kept[i - 1], "?.")));
             if is_operator_new
                 && is_simple_identifier_token(kept.get(i + 1).copied())
             {
@@ -2043,7 +2043,7 @@ pub fn whitespace_only_minify(
                 // (at i+1) plus zero or more `.IDENT` accessors.
                 let mut p = i + 2;
                 while p + 1 < kept.len()
-                    && is_structural_punct(&kept[p], ".")
+                    && is_structural_punct(kept[p], ".")
                     && is_simple_identifier_token(Some(kept[p + 1]))
                 {
                     p += 2;
@@ -2051,11 +2051,11 @@ pub fn whitespace_only_minify(
                 // Expect EMPTY args `( )` at p, p+1 then a
                 // member/call follower at p+2.
                 if p + 2 < kept.len()
-                    && is_structural_punct(&kept[p], "(")
-                    && is_structural_punct(&kept[p + 1], ")")
-                    && (is_structural_punct(&kept[p + 2], ".")
-                        || is_structural_punct(&kept[p + 2], "[")
-                        || is_structural_punct(&kept[p + 2], "("))
+                    && is_structural_punct(kept[p], "(")
+                    && is_structural_punct(kept[p + 1], ")")
+                    && (is_structural_punct(kept[p + 2], ".")
+                        || is_structural_punct(kept[p + 2], "[")
+                        || is_structural_punct(kept[p + 2], "("))
                 {
                     // Reorder: pull the `(` (empty arg-list open)
                     // out from p and re-insert it before `new`.
@@ -2101,8 +2101,8 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 1 < kept.len() {
-            if is_structural_punct(&kept[i], "(")
-                && is_structural_punct(&kept[i + 1], "(")
+            if is_structural_punct(kept[i], "(")
+                && is_structural_punct(kept[i + 1], "(")
             {
                 let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
                     None => true,
@@ -2191,15 +2191,15 @@ pub fn whitespace_only_minify(
             let is_operator_new = kept[i].value == "new"
                 && !is_string_literal(kept[i])
                 && (i == 0
-                    || (!is_structural_punct(&kept[i - 1], ".")
-                        && !is_structural_punct(&kept[i - 1], "?.")));
+                    || (!is_structural_punct(kept[i - 1], ".")
+                        && !is_structural_punct(kept[i - 1], "?.")));
             if is_operator_new
                 && is_simple_identifier_token(kept.get(i + 1).copied())
             {
                 // Scan the callee extent (identifier + `.IDENT`).
                 let mut p = i + 2;
                 while p + 1 < kept.len()
-                    && is_structural_punct(&kept[p], ".")
+                    && is_structural_punct(kept[p], ".")
                     && is_simple_identifier_token(Some(kept[p + 1]))
                 {
                     p += 2;
@@ -2207,8 +2207,8 @@ pub fn whitespace_only_minify(
                 // `kept[p]` must be the arg-list `(` and the
                 // first arg token must NOT be `)` (non-empty).
                 if p + 1 < kept.len()
-                    && is_structural_punct(&kept[p], "(")
-                    && !is_structural_punct(&kept[p + 1], ")")
+                    && is_structural_punct(kept[p], "(")
+                    && !is_structural_punct(kept[p + 1], ")")
                 {
                     // Depth-balanced scan for the matching `)`.
                     let mut depth: i32 = 1;
@@ -2435,10 +2435,10 @@ pub fn whitespace_only_minify(
                 }
             };
             if at_stmt_boundary
-                && is_plain_identifier(&kept[i])
-                && is_structural_punct(&kept[i + 1], ":")
-                && is_structural_punct(&kept[i + 2], "{")
-                && !is_string_literal(&kept[i + 3])
+                && is_plain_identifier(kept[i])
+                && is_structural_punct(kept[i + 1], ":")
+                && is_structural_punct(kept[i + 2], "{")
+                && !is_string_literal(kept[i + 3])
                 && matches!(
                     kept[i + 3].value.as_str(),
                     "break" | "continue" | "return" | "throw"
@@ -2578,14 +2578,14 @@ pub fn whitespace_only_minify(
             // is unambiguously the with-body — so the identical
             // single-statement flatten applies (`with(o){a()}` →
             // `with(o)a();`).
-            let is_loop_kw = is_word_like(&kept[i])
+            let is_loop_kw = is_word_like(kept[i])
                 && matches!(kept[i].value.as_str(), "for" | "while" | "with" | "if");
             let is_property = i >= 1
-                && (is_structural_punct(&kept[i - 1], ".")
-                    || is_structural_punct(&kept[i - 1], "?."));
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
             if !(is_loop_kw
                 && !is_property
-                && is_structural_punct(&kept[i + 1], "("))
+                && is_structural_punct(kept[i + 1], "("))
             {
                 i += 1;
                 continue;
@@ -2621,7 +2621,7 @@ pub fn whitespace_only_minify(
             // The body must be a `{` immediately after the header.
             let body_open = hc + 1;
             if body_open >= kept.len()
-                || !is_structural_punct(&kept[body_open], "{")
+                || !is_structural_punct(kept[body_open], "{")
             {
                 i += 1;
                 continue;
@@ -2727,16 +2727,16 @@ pub fn whitespace_only_minify(
         let mut i = 0;
         while i + 1 < kept.len() {
             let is_else =
-                is_word_like(&kept[i]) && kept[i].value.as_str() == "else";
+                is_word_like(kept[i]) && kept[i].value.as_str() == "else";
             // `else` is reserved, so a `.else`/`?.else` member access
             // can never legally be followed by a `{` block — but keep
             // the look-behind for symmetry with gap-074's guard.
             let is_property = i >= 1
-                && (is_structural_punct(&kept[i - 1], ".")
-                    || is_structural_punct(&kept[i - 1], "?."));
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
             if !(is_else
                 && !is_property
-                && is_structural_punct(&kept[i + 1], "{"))
+                && is_structural_punct(kept[i + 1], "{"))
             {
                 i += 1;
                 continue;
@@ -2845,16 +2845,16 @@ pub fn whitespace_only_minify(
         let mut i = 0;
         while i + 1 < kept.len() {
             let is_do =
-                is_word_like(&kept[i]) && kept[i].value.as_str() == "do";
+                is_word_like(kept[i]) && kept[i].value.as_str() == "do";
             // `do` is reserved, so a `.do`/`?.do` member access can
             // never legally be followed by a `{` block — but keep the
             // look-behind for symmetry with gap-074/080's guard.
             let is_property = i >= 1
-                && (is_structural_punct(&kept[i - 1], ".")
-                    || is_structural_punct(&kept[i - 1], "?."));
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
             if !(is_do
                 && !is_property
-                && is_structural_punct(&kept[i + 1], "{"))
+                && is_structural_punct(kept[i + 1], "{"))
             {
                 i += 1;
                 continue;
@@ -3483,8 +3483,7 @@ pub fn whitespace_only_minify(
                     };
                     // CLOC12.133 — tombstone the opening `{`.
                     tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-032");
-                    for content_idx in (idx + 1)..emit_end {
-                        let t = kept[content_idx];
+                    for &t in &kept[(idx + 1)..emit_end] {
                         if let Some(prev) = prev_emitted_tok {
                             if needs_separator(prev, t) {
                                 out.push(' ');
@@ -4418,7 +4417,7 @@ fn scientific_form_of(n: u128) -> Option<String> {
     }
     let mut m = n;
     let mut e: u32 = 0;
-    while m % 10 == 0 {
+    while m.is_multiple_of(10) {
         m /= 10;
         e += 1;
     }
@@ -4623,7 +4622,7 @@ fn decimal_float_as_u128(s: &str) -> Option<u128> {
         // then makes `checked_pow` return None, so the literal is
         // left verbatim rather than crashing the compiler.
         let pow = 10u128.checked_pow(eff_exp.unsigned_abs())?;
-        if digits % pow == 0 {
+        if digits.is_multiple_of(pow) {
             Some(digits / pow)
         } else {
             None

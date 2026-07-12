@@ -465,7 +465,7 @@ fn crt_solution_unique_mod_lcm() {
     let result = crt(&[2, 3, 2], &[3, 5, 7]).unwrap();
     // lcm(3,5,7) = 105
     assert!(
-        result >= 0 && result < 105,
+        (0..105).contains(&result),
         "result {} not in [0, 105)",
         result
     );

@@ -357,14 +357,14 @@ fn group_locals(locals: &[ValueType]) -> Vec<(u32, ValueType)> {
     }
 
     let mut groups = Vec::new();
-    let mut current = locals[0].clone();
+    let mut current = locals[0];
     let mut count = 1u32;
     for value_type in &locals[1..] {
         if *value_type == current {
             count += 1;
         } else {
             groups.push((count, current));
-            current = value_type.clone();
+            current = *value_type;
             count = 1;
         }
     }

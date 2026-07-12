@@ -146,7 +146,7 @@ impl Ipv4Header {
             sum = (sum & 0xFFFF) + (sum >> 16);
         }
 
-        (!sum as u16) & 0xFFFF
+        !sum as u16
     }
 
     /// Verify the checksum of a received header.

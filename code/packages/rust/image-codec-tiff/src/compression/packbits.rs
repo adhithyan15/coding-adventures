@@ -69,9 +69,7 @@ pub fn decompress(compressed: &[u8], expected_bytes: usize) -> Result<Vec<u8>, S
     let cap = expected_bytes
         .min(
             compressed
-                .len()
-                .checked_mul(MAX_EXPANSION)
-                .unwrap_or(usize::MAX),
+                .len().saturating_mul(MAX_EXPANSION),
         )
         .min(expected_bytes.saturating_add(1)); // allow exactly expected_bytes
 

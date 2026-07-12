@@ -65,7 +65,7 @@ use coding_adventures_javascript_ast::{
     LogicalOperator,
     ChainExpression, MemberExpression, ObjectExpression, ObjectMember, OptionalCallExpression, OptionalMemberExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, UnaryExpression, UnaryOperator, UpdateExpression, VarKind, VariableDeclaration,
-    DoWhileStatement, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 use std::collections::HashMap;
@@ -233,6 +233,7 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
         BlockStatement(s) => s.cv.clone(),
         IfStatement(s) => s.cv.clone(),
         WhileStatement(s) => s.cv.clone(),
+        WithStatement(s) => s.cv.clone(),
         DoWhileStatement(s) => s.cv.clone(),
         ForStatement(s) => s.cv.clone(),
         ForInStatement(s) => s.cv.clone(),
@@ -354,6 +355,15 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         }
         TaggedStatement::IfStatement(s) => fold_if_statement(s, st),
         TaggedStatement::WhileStatement(s) => fold_while_statement(s, st),
+        // `with (object) body` (CLOC12.187) — fold the object and body
+        // structurally (a `with` is never eliminated). Not yet reachable.
+        TaggedStatement::WithStatement(s) => Statement::Tagged(TaggedStatement::WithStatement(
+            WithStatement {
+                cv: s.cv.clone(),
+                object: fold_expression(&s.object, st),
+                body: Box::new(fold_statement(&s.body, st)),
+            },
+        )),
         // A `do … while(test)` runs its body at least once, so — unlike
         // `while` — it can NEVER be eliminated as a dead loop even when
         // `test` is statically falsy (the single body run is observable).
@@ -719,26 +729,26 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
     // We do NOT chain into multiple `!!...!<inner>` peels here —
     // a single peel per fixed-point iteration is enough; the
     // scheduler will re-call us until the expression stabilises.
-    let (test, consequent, alternate) = if alternate.is_some() {
-        if let Expression::UnaryExpression(u) = test {
-            if u.operator == UnaryOperator::Not {
-                let inner = *u.argument;
-                st.record_fold(
-                    &s.cv,
-                    "de-morgan-swap-not",
-                    "if (!<inner>) <c>; else <a>;",
-                    "if (<inner>) <a>; else <c>;",
-                );
-                let alt = alternate.expect("alternate.is_some() checked above");
-                (inner, alt, Some(consequent))
+    let (test, consequent, alternate) = match alternate {
+        Some(alt) => {
+            if let Expression::UnaryExpression(u) = test {
+                if u.operator == UnaryOperator::Not {
+                    let inner = *u.argument;
+                    st.record_fold(
+                        &s.cv,
+                        "de-morgan-swap-not",
+                        "if (!<inner>) <c>; else <a>;",
+                        "if (<inner>) <a>; else <c>;",
+                    );
+                    (inner, alt, Some(consequent))
+                } else {
+                    (Expression::UnaryExpression(u), consequent, Some(alt))
+                }
             } else {
-                (Expression::UnaryExpression(u), consequent, alternate)
+                (test, consequent, Some(alt))
             }
-        } else {
-            (test, consequent, alternate)
         }
-    } else {
-        (test, consequent, alternate)
+        None => (test, consequent, None),
     };
 
     match literal_truthy(&test) {
@@ -1835,7 +1845,7 @@ mod tests {
 
     fn first_stmt(prog: &Program) -> &Statement {
         let ProgramItem::Statement(s) = &prog.body[0] else {
-            panic!("expected Statement; got {:?}", &prog.body[0]);
+            panic!("expected Statement; got {:?}", prog.body[0]);
         };
         s
     }

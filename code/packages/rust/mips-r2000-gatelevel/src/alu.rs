@@ -46,6 +46,7 @@
 //!   1. `shifted_b = b << i` (may overflow 32 bits; skip if so)
 //!   2. If `remainder >= shifted_b` (sub32 carry=1 → no borrow): subtract,
 //!      set quotient bit.
+//!
 //! Exactly 32 outer iterations.
 
 use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};

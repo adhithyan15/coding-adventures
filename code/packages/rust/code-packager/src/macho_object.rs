@@ -544,8 +544,7 @@ pub fn pack_object_with_globals(
     // PAGEOFF12: symbolnum=1, pcrel=0, length=2, extern=1, type=4
     //   packed = 1 | (0<<24) | (2<<25) | (1<<27) | (4<<28) = 0x4C000001
     let pageoff12_info: u32 =
-        SYMBOL_IDX
-        | (0u32 << 24)                      // r_pcrel = 0
+        SYMBOL_IDX                      // r_pcrel = 0
         | (2u32 << 25)                      // r_length = 2
         | (1u32 << 27)                      // r_extern
         | (ARM64_RELOC_PAGEOFF12 << 28);    // r_type
@@ -895,8 +894,7 @@ pub fn pack_object_with_globals_and_externals(
         | (ARM64_RELOC_PAGE21 << 28);              // r_type = 3
 
     // PAGEOFF12 (ADD): r_pcrel=0, r_length=2, r_extern=1, r_type=4.
-    let pageoff12_info: u32 = GLOBALS_SYM_IDX
-        | (0u32 << 24)                             // r_pcrel = 0
+    let pageoff12_info: u32 = GLOBALS_SYM_IDX                             // r_pcrel = 0
         | (2u32 << 25)                             // r_length = 2
         | (1u32 << 27)                             // r_extern = 1
         | (ARM64_RELOC_PAGEOFF12 << 28);           // r_type = 4
@@ -1202,7 +1200,7 @@ mod tests {
         //   index 2: __twig_print_i64  ← we check this one
         //
         // symtab_off = 312 + code(4) + data(0) + relocs(1×8) = 324.
-        let symtab_off = 312usize + 4 + 0 + 8;
+        let symtab_off = (312usize + 4) + 8;
         let ext_sym_off = symtab_off + 2 * 16; // skip _main and _twig_globals
 
         // nlist_64: n_strx(4) n_type(1) n_sect(1) n_desc(2) n_value(8)
@@ -1232,7 +1230,7 @@ mod tests {
         //                   total = 39 bytes
         let n = 8usize;
         let strtab_len = 1 + 6 + 14 + 18; // 39
-        let expected = 312 + n + 0 + 1 * 8 + 3 * 16 + strtab_len;
+        let expected = (312 + n) + 8 + 3 * 16 + strtab_len;
         let ext = vec![ExternBranchReloc {
             byte_offset: 0,
             symbol: "__twig_print_i64".to_string(),

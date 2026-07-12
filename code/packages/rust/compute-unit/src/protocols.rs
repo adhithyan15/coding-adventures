@@ -1,3 +1,6 @@
+// The float literals are intentional simulator constants, not approximations of
+// std math constants to be replaced.
+#![allow(clippy::approx_constant)]
 //! Protocols -- shared types for all compute unit simulators.
 //!
 //! # What is a Compute Unit?

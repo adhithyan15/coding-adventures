@@ -120,9 +120,9 @@ const MAX_IMM: i64 = 255;
 /// A single hardware-constraint violation detected by [`IrValidator`].
 ///
 /// Each diagnostic carries:
-/// - `rule`    — the short identifier for which check fired
-///              (`"no_word_ops"`, `"static_ram"`, `"call_depth"`,
-///               `"register_count"`, `"imm_range"`, `"syscall_whitelist"`)
+/// - `rule` — the short identifier for which check fired
+///   (`"no_word_ops"`, `"static_ram"`, `"call_depth"`,
+///   `"register_count"`, `"imm_range"`, `"syscall_whitelist"`)
 /// - `message` — a human-readable description and suggested fix
 ///
 /// # Display

@@ -116,6 +116,8 @@ fn test_cross_isamax() {
 }
 
 #[test]
+// 3.14 is arbitrary copy-test data, not an intended approximation of PI.
+#[allow(clippy::approx_constant)]
 fn test_cross_scopy() {
     let x = Vector::new(vec![3.14, 2.71, 1.41]);
 

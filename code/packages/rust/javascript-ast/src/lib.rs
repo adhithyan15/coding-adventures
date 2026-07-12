@@ -151,7 +151,7 @@ pub use statement::{
     BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
     DoWhileStatement, EmptyStatement, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement, SwitchCase,
-    SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
+    SwitchStatement, ThrowStatement, TryStatement, WhileStatement, WithStatement,
 };
 
 /// A correlation-vector identifier. Aliased to `String` for v1 to match
@@ -205,6 +205,10 @@ pub struct Program {
 /// (`closure-pass-rename`, `closure-pass-treeshake`,
 /// `closure-pass-remove-unused-vars`) traverse `Vec<Declaration>`
 /// directly. Phase 4 adds the `ModuleDeclaration` variant.
+// The `Statement` variant is intentionally large (it embeds the full statement
+// enum); boxing it would ripple through the public AST API and every consumer
+// that pattern-matches these variants, so we accept the size difference here.
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ProgramItem {

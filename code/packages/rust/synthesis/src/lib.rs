@@ -27,7 +27,7 @@
 
 use gate_netlist_format::{Direction, Instance, Level, Module, Net, Netlist, NetSlice, Port};
 use hdl_ir::{
-    ContAssign, Direction as HirDir, Expr, Hir, Module as HirModule, Ty,
+    ContAssign, Direction as HirDir, Expr, Hir, Module as HirModule,
 };
 
 // ---------------------------------------------------------------------------
@@ -160,6 +160,8 @@ fn expr_to_net_name(expr: &Expr) -> String {
 
 /// Synthesize `expr` into a fresh intermediate net of `width` bits.
 /// Returns the name of the net holding the result.
+// Nested match kept for clarity/exhaustiveness (allow 1.97 collapsible_match).
+#[allow(clippy::collapsible_match)]
 fn synth_expr(ctx: &mut Ctx, expr: &Expr, width: u32) -> String {
     match expr {
         Expr::PortRef { name, .. } | Expr::NetRef { name, .. } => name.clone(),

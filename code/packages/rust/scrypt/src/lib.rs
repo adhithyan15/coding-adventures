@@ -254,7 +254,7 @@ fn salsa20_8(input: &[u8; 64]) -> [u8; 64] {
 // the ROMix memory access pattern sequential, improving CPU cache behaviour.
 
 /// BlockMix for general r: operates on a slice of 2*r × 64-byte blocks.
-fn block_mix_general(blocks: &Vec<[u8; 64]>, r: usize) -> Vec<[u8; 64]> {
+fn block_mix_general(blocks: &[[u8; 64]], r: usize) -> Vec<[u8; 64]> {
     let two_r = 2 * r;
 
     // X starts as the last block.
@@ -361,7 +361,7 @@ fn ro_mix(b_bytes: &[u8], n: usize, r: usize) -> Vec<u8> {
 ///  integer."
 /// The RFC says to use the *entire* last block, but only the first 8 bytes
 /// are needed to get a u64 index. We read exactly 8 bytes.
-fn integerify(x: &Vec<[u8; 64]>) -> u64 {
+fn integerify(x: &[[u8; 64]]) -> u64 {
     // The last block is x[2r-1] — x.len() - 1 when x has 2*r entries.
     let last = &x[x.len() - 1];
     u64::from_le_bytes(last[..8].try_into().unwrap())

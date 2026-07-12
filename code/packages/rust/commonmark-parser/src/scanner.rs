@@ -68,26 +68,20 @@ impl Scanner {
         if offset >= chars.len() {
             return "";
         }
-        // Return a slice of the char at offset
-        let mut byte_pos = self.pos;
-        for (i, ch) in self.source[self.pos..].char_indices() {
-            if offset == 0 {
+        // Fast path for offset 0: return the first character directly.
+        if offset == 0 {
+            if let Some(ch) = self.source[self.pos..].chars().next() {
                 let end = self.pos + ch.len_utf8();
                 return &self.source[self.pos..end];
             }
-            let _ = (i, ch);
-            break;
         }
         // Count character offsets
-        let mut count = 0;
-        let mut start_byte = self.pos;
-        for (i, ch) in self.source[self.pos..].char_indices() {
+        for (count, (i, ch)) in self.source[self.pos..].char_indices().enumerate() {
             if count == offset {
-                start_byte = self.pos + i;
+                let start_byte = self.pos + i;
                 let end_byte = start_byte + ch.len_utf8();
                 return &self.source[start_byte..end_byte];
             }
-            count += 1;
         }
         ""
     }
@@ -252,20 +246,20 @@ pub fn is_unicode_punctuation(ch: char) -> bool {
         return true;
     }
     // Check Unicode general categories
-    match get_general_category(ch) {
-        GeneralCategory::ConnectorPunctuation |
-        GeneralCategory::DashPunctuation |
-        GeneralCategory::ClosePunctuation |
-        GeneralCategory::FinalPunctuation |
-        GeneralCategory::InitialPunctuation |
-        GeneralCategory::OtherPunctuation |
-        GeneralCategory::OpenPunctuation |
-        GeneralCategory::MathSymbol |
-        GeneralCategory::CurrencySymbol |
-        GeneralCategory::ModifierSymbol |
-        GeneralCategory::OtherSymbol => true,
-        _ => false,
-    }
+    matches!(
+        get_general_category(ch),
+        GeneralCategory::ConnectorPunctuation
+            | GeneralCategory::DashPunctuation
+            | GeneralCategory::ClosePunctuation
+            | GeneralCategory::FinalPunctuation
+            | GeneralCategory::InitialPunctuation
+            | GeneralCategory::OtherPunctuation
+            | GeneralCategory::OpenPunctuation
+            | GeneralCategory::MathSymbol
+            | GeneralCategory::CurrencySymbol
+            | GeneralCategory::ModifierSymbol
+            | GeneralCategory::OtherSymbol
+    )
 }
 
 /// True if `ch` is ASCII whitespace: space (U+0020), tab (U+0009),

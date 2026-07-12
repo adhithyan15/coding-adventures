@@ -752,7 +752,7 @@ fn convert_case_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError>
 fn convert_default_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
     // default_clause = "default" COLON { statement }
     let consequent: Result<Vec<Statement>, _> =
-        node_children(node).into_iter().map(|n| convert_statement(n)).collect();
+        node_children(node).into_iter().map(convert_statement).collect();
     Ok(SwitchCase { cv: None, test: None, consequent: consequent? })
 }
 
@@ -882,7 +882,7 @@ fn convert_var_decl_list(
     // All Node children are variable_declaration.
     let declarators: Result<Vec<VariableDeclarator>, _> = node_children(node)
         .into_iter()
-        .map(|n| convert_variable_declarator(n))
+        .map(convert_variable_declarator)
         .collect();
     Ok(VariableDeclaration { cv: None, kind, declarations: declarators? })
 }
@@ -956,7 +956,7 @@ fn convert_lexical_declaration(node: &GrammarASTNode) -> Result<VariableDeclarat
     // binding_list node children are lexical_binding nodes.
     let declarators: Result<Vec<VariableDeclarator>, _> = node_children(list_n)
         .into_iter()
-        .map(|n| convert_variable_declarator(n))
+        .map(convert_variable_declarator)
         .collect();
     Ok(VariableDeclaration { cv: None, kind, declarations: declarators? })
 }
@@ -1833,7 +1833,7 @@ fn convert_arrow_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>,
 /// kept so the bridge is already correct once the grammar parses block
 /// bodies.
 fn convert_concise_body(node: &GrammarASTNode) -> Result<ArrowBody, BridgeError> {
-    for n in node_children(node) {
+    if let Some(n) = node_children(node).into_iter().next() {
         if n.rule_name == "function_body" {
             return Ok(ArrowBody::Block(convert_function_body(n)?));
         }
@@ -1916,7 +1916,7 @@ fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>
     //                  | ELLIPSIS ( NAME | binding_pattern )
     let params: Result<Vec<FunctionParam>, _> = node_children(node)
         .into_iter()
-        .map(|n| convert_formal_parameter(n))
+        .map(convert_formal_parameter)
         .collect();
     params
 }
@@ -3523,38 +3523,35 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
     let nodes = node_children(node);
     let mut properties = Vec::new();
     for n in nodes {
-        match n.rule_name.as_str() {
-            "property_definition" => {
-                // A `property_definition` is either a normal member (`k: v`,
-                // shorthand `{x}`, getter/setter) or an **object spread** `...expr`
-                // (ES2018). Dumping the parse tree shows the spread form nests one
-                // level deeper than the call/array spread: the `property_definition`
-                // holds a single `object_spread_property` Node child whose own
-                // children are `[ Token("..."), Node(assignment_expression) ]`.
-                // (The call/array spread's ELLIPSIS sits directly under
-                // `spread_element` — a different rule.) So we detect the spread by
-                // that inner rule name, not `has_token` on `property_definition`.
-                // CLOC12.170 PR2, closes gap-SpreadProperty.
-                let spread = node_children(n)
-                    .into_iter()
-                    .find(|c| c.rule_name == "object_spread_property");
-                if let Some(spread_node) = spread {
-                    // `node_children` strips the ELLIPSIS token, leaving the single
-                    // `assignment_expression`. Reuse `SpreadElement` (the same node
-                    // the call/array spread uses) so it prints via `emit_object_spread`.
-                    let arg_n = node_children(spread_node).into_iter().next().ok_or_else(
-                        || internal(spread_node, "object spread: no argument expression"),
-                    )?;
-                    let argument = convert_expression(arg_n)?;
-                    properties.push(ObjectMember::Spread(SpreadElement {
-                        cv: None,
-                        argument: Box::new(argument),
-                    }));
-                } else {
-                    properties.push(ObjectMember::Property(convert_property_definition(n)?));
-                }
+        if n.rule_name.as_str() == "property_definition" {
+            // A `property_definition` is either a normal member (`k: v`,
+            // shorthand `{x}`, getter/setter) or an **object spread** `...expr`
+            // (ES2018). Dumping the parse tree shows the spread form nests one
+            // level deeper than the call/array spread: the `property_definition`
+            // holds a single `object_spread_property` Node child whose own
+            // children are `[ Token("..."), Node(assignment_expression) ]`.
+            // (The call/array spread's ELLIPSIS sits directly under
+            // `spread_element` — a different rule.) So we detect the spread by
+            // that inner rule name, not `has_token` on `property_definition`.
+            // CLOC12.170 PR2, closes gap-SpreadProperty.
+            let spread = node_children(n)
+                .into_iter()
+                .find(|c| c.rule_name == "object_spread_property");
+            if let Some(spread_node) = spread {
+                // `node_children` strips the ELLIPSIS token, leaving the single
+                // `assignment_expression`. Reuse `SpreadElement` (the same node
+                // the call/array spread uses) so it prints via `emit_object_spread`.
+                let arg_n = node_children(spread_node).into_iter().next().ok_or_else(
+                    || internal(spread_node, "object spread: no argument expression"),
+                )?;
+                let argument = convert_expression(arg_n)?;
+                properties.push(ObjectMember::Spread(SpreadElement {
+                    cv: None,
+                    argument: Box::new(argument),
+                }));
+            } else {
+                properties.push(ObjectMember::Property(convert_property_definition(n)?));
             }
-            _ => {}
         }
     }
     Ok(Expression::ObjectExpression(ObjectExpression { cv: None, properties }))
@@ -3796,8 +3793,6 @@ fn unquote_string(raw: &str) -> String {
 mod tests {
     use super::*;
     use crate::{parse_javascript_typed, DEFAULT_ES_VERSION};
-
-    use coding_adventures_javascript_tokens::EsVersion;
 
     fn bridge(src: &str) -> Result<Program, BridgeError> {
         let node = parse_javascript_typed(src, DEFAULT_ES_VERSION).expect("parse failed");

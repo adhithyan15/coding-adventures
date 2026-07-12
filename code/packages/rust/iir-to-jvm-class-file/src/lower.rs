@@ -232,7 +232,7 @@ const BASTORE: u8 = 0x54;
 ///   * `public static byte[] __tape` — the BF tape (typically 30,000 bytes)
 ///   * `public static void putchar(int)` — write one byte to stdout
 ///   * `public static int  getchar()`    — read one byte from stdin, or `-1` / `0`
-///                                          on EOF (BF's interpreter convention is `0`)
+///     on EOF (BF's interpreter convention is `0`)
 ///
 /// Picking a fixed host class keeps the BF-compiled class self-contained:
 /// no `<clinit>` required on the BF side, and no per-program tape size baked
@@ -843,7 +843,7 @@ fn emit_iload(code: &mut Vec<u8>, idx: u16) {
             // `wide iload` uses a 2-byte index
             code.push(WIDE);
             code.push(ILOAD);
-            code.extend_from_slice(&(n as u16).to_be_bytes());
+            code.extend_from_slice(&n.to_be_bytes());
         }
     }
 }
@@ -856,7 +856,7 @@ fn emit_lload(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(LLOAD);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -868,7 +868,7 @@ fn emit_fload(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(FLOAD);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -880,7 +880,7 @@ fn emit_dload(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(DLOAD);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -929,7 +929,7 @@ fn emit_istore(code: &mut Vec<u8>, idx: u16) {
         n => {
             code.push(WIDE);
             code.push(ISTORE);
-            code.extend_from_slice(&(n as u16).to_be_bytes());
+            code.extend_from_slice(&n.to_be_bytes());
         }
     }
 }
@@ -942,7 +942,7 @@ fn emit_lstore(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(LSTORE);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -954,7 +954,7 @@ fn emit_fstore(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(FSTORE);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -966,7 +966,7 @@ fn emit_dstore(code: &mut Vec<u8>, idx: u16) {
     } else {
         code.push(WIDE);
         code.push(DSTORE);
-        code.extend_from_slice(&(idx as u16).to_be_bytes());
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -1021,11 +1021,11 @@ fn emit_iconst(code: &mut Vec<u8>, value: i32) {
         3 => code.push(ICONST_3),
         4 => code.push(ICONST_4),
         5 => code.push(ICONST_5),
-        v if v >= -128 && v <= 127 => {
+        v if (-128..=127).contains(&v) => {
             code.push(BIPUSH);
             code.push(v as u8);
         }
-        v if v >= -32768 && v <= 32767 => {
+        v if (-32768..=32767).contains(&v) => {
             code.push(SIPUSH);
             code.extend_from_slice(&(v as i16).to_be_bytes());
         }
@@ -1160,7 +1160,7 @@ fn emit_lconst(code: &mut Vec<u8>, value: i64) {
         // iconst_m1 + i2l for -1
         -1 => { code.push(ICONST_M1); code.push(I2L); }
         // bipush (byte-range) + i2l
-        v if v >= -128 && v <= 127 => {
+        v if (-128..=127).contains(&v) => {
             code.push(BIPUSH);
             code.push(v as i8 as u8);
             code.push(I2L);
@@ -1208,7 +1208,7 @@ fn emit_lconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i64) 
         4 => { code.push(ICONST_4); code.push(I2L); }
         5 => { code.push(ICONST_5); code.push(I2L); }
         -1 => { code.push(ICONST_M1); code.push(I2L); }
-        v if v >= -128 && v <= 127 => {
+        v if (-128..=127).contains(&v) => {
             code.push(BIPUSH);
             code.push(v as i8 as u8);
             code.push(I2L);
@@ -3292,8 +3292,8 @@ fn lower_function(
                         detail: "array_get must have a dest".to_string(),
                     }
                 })?;
-                let handle_name = array_var_operand(instr, 0, "array_get", "handle", &fname)?;
-                let idx_name = array_var_operand(instr, 1, "array_get", "idx", &fname)?;
+                let handle_name = array_var_operand(instr, 0, "array_get", "handle", fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_get", "idx", fname)?;
                 // E4d-BA-arr: a `str` element loads with `aaload` (reference element);
                 // primitive elements use the typed `*aload` from `array_element_opcodes`.
                 let aload_op = if jvm_ref_array_element_class(&instr.type_hint).is_some() {
@@ -3333,9 +3333,9 @@ fn lower_function(
                         detail: "array_set must not have a dest".to_string(),
                     });
                 }
-                let handle_name = array_var_operand(instr, 0, "array_set", "handle", &fname)?;
-                let idx_name = array_var_operand(instr, 1, "array_set", "idx", &fname)?;
-                let val_name = array_var_operand(instr, 2, "array_set", "val", &fname)?;
+                let handle_name = array_var_operand(instr, 0, "array_set", "handle", fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_set", "idx", fname)?;
+                let val_name = array_var_operand(instr, 2, "array_set", "val", fname)?;
                 // E4d-BA-arr: a `str` element stores with `aastore` (reference element);
                 // primitive elements use the typed `*astore` from `array_element_opcodes`.
                 let astore_op = if jvm_ref_array_element_class(&instr.type_hint).is_some() {
@@ -3374,7 +3374,7 @@ fn lower_function(
                         detail: "array_len must have a dest".to_string(),
                     }
                 })?;
-                let handle_name = array_var_operand(instr, 0, "array_len", "handle", &fname)?;
+                let handle_name = array_var_operand(instr, 0, "array_len", "handle", fname)?;
                 let (h_slot, _) = lookup_var(&handle_name)?;
                 let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                 emit_aload(&mut code, h_slot);
@@ -3933,8 +3933,8 @@ fn lower_function(
                     (Some(fs1), Some(fs2))
                         if fs1.op == "field_store"
                             && fs2.op == "field_store"
-                            && fs1.srcs.get(0) == Some(&Operand::Var(dest_name.to_string()))
-                            && fs2.srcs.get(0) == Some(&Operand::Var(dest_name.to_string()))
+                            && fs1.srcs.first() == Some(&Operand::Var(dest_name.to_string()))
+                            && fs2.srcs.first() == Some(&Operand::Var(dest_name.to_string()))
                             && fs1.srcs.get(1) == Some(&Operand::Int(0))
                             && fs2.srcs.get(1) == Some(&Operand::Int(1)) =>
                     {
@@ -4033,7 +4033,7 @@ fn lower_function(
             //   aload  value
             //   aastore
             "field_store" => {
-                let arr_name = match instr.srcs.get(0) {
+                let arr_name = match instr.srcs.first() {
                     Some(Operand::Var(n)) => n.clone(),
                     _ => return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
@@ -4083,7 +4083,7 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "field_load has no dest".to_string(),
                 })?;
-                let arr_name = match instr.srcs.get(0) {
+                let arr_name = match instr.srcs.first() {
                     Some(Operand::Var(n)) => n.clone(),
                     _ => return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
@@ -4269,7 +4269,7 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "is_null has no dest".to_string(),
                 })?;
-                let ref_name = match instr.srcs.get(0) {
+                let ref_name = match instr.srcs.first() {
                     Some(Operand::Var(n)) => n.clone(),
                     _ => return Err(IIRJvmError::InvalidOperand {
                         function: fname.clone(),
@@ -4532,12 +4532,15 @@ fn one_src(
 }
 
 /// Extract (slot, type) for both sources of a binary instruction (must both be Vars).
+// The nested `(slot, type)` pairs are the natural shape here; a named struct
+// would only obscure the two-operand extraction at the single call cluster.
+#[allow(clippy::type_complexity)]
 fn two_srcs(
     func: &IIRFunction,
     instr: &interpreter_ir::IIRInstr,
     slots: &HashMap<String, (u16, JvmType)>,
 ) -> Result<((u16, JvmType), (u16, JvmType)), IIRJvmError> {
-    let s0 = instr.srcs.get(0).ok_or_else(|| IIRJvmError::InvalidOperand {
+    let s0 = instr.srcs.first().ok_or_else(|| IIRJvmError::InvalidOperand {
         function: func.name.clone(),
         detail: format!("{} needs 2 source operands, got 0", instr.op),
     })?;
@@ -5390,8 +5393,8 @@ mod tests {
         assert!(code.contains(&ARRAYLENGTH), "arraylength (array_len) expected");
     }
 
-    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String`
-    /// + `aastore`/`aaload` — reference-element ops, since a str value is a native
+    /// E4d-BA-arr: `String[]` (BASIC `DIM A$(n)`) uses `anewarray java/lang/String` +
+    /// `aastore`/`aaload` — reference-element ops, since a str value is a native
     /// `java.lang.String` (not a primitive). The JVM bounds-checks each access.
     #[test]
     fn string_array_emits_reference_array_opcodes() {

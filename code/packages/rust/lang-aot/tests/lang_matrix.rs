@@ -183,24 +183,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
-    // Twig — **E6d-2a: dynamic integer arithmetic over `any` (structural
-    // backends).** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
+    // Twig — **E6d-2: dynamic integer arithmetic over `any`, all 5 code-gen
+    // backends.** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
     // `car`'s result is a `ref<any>` lisp value, not a machine int — which the
     // typed backends have no opcode for. The shared `lower_dynamic_arith` pass
-    // expands it structurally to `unbox (car …) → 41 ; add 41 1 → 42 ; box 42`,
-    // using only the `unbox`/`add`/`box` ops the *structural* code-gen backends
-    // (WASM `i31ref` / JVM `Integer` / CLR boxed-int32) already run for `cons`.
-    // Exit 42. NativeAot + LLVM use the NaN-box tagged-i64 value model
-    // (`lower_dyn_repr`, `n<<3`), whose box/unbox is shift/runtime-call based
-    // rather than `box`/`unbox` ops — added in the E6d-2b follow-up. As with
-    // E6d-1, the generic `Vm`/`Jit` run typed `vm-core` IIR (`twig-vm` is the
-    // off-matrix dynamic reference).
+    // expands it to `unbox (car …) → 41 ; add 41 1 → 42 ; box 42`.
+    //   • **Structural** (E6d-2a): WASM `i31ref` / JVM `Integer` / CLR
+    //     boxed-int32 lower the generic `unbox`/`add`/`box` ops directly, the
+    //     same way they lower `cons`.
+    //   • **Tagged-i64** (E6d-2b): NativeAot + LLVM have no `box`/`unbox` opcode —
+    //     a tagged word is `n<<3`. `lower_box_unbox_to_runtime_calls` rewrites the
+    //     generic ops to `dyn_box_int`/`dyn_unbox_int` runtime calls, which the
+    //     backends dispatch to `__dyn_box_int`/`__dyn_unbox_int` in
+    //     `dynval_runtime.c`. (The native AOT path also gains `lower_dynamic_arith`
+    //     here — `prepare_module_for_aot` did not run it before.)
+    // Exit 42 on every backend. `Vm`/`Jit` run typed `vm-core` IIR (`twig-vm` is
+    // the off-matrix dynamic reference).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(+ (car (cons 41 0)) 1)",
         expect: Expect::Exit(42),
-        backends: &[Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
@@ -2764,6 +2768,20 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
+    }
+    // Link the tagged-value lisp runtime iff the program calls a `__dyn_*`
+    // primitive (cons/car/box_int/… — McCarthy Lisp + Twig dynamic values,
+    // E6d-2b). `dynval_runtime.c` implements the tagged-word model and calls the
+    // conservative GC in `twig_gc.c`; both — plus `twig_runtime.c` for any I/O
+    // the runtime itself needs — are linked from the crate's runtime dir.
+    if ll.contains("@__dyn_") {
+        let rt = |name: &str| {
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
+        };
+        cmd.arg("-x").arg("none")
+            .arg(rt("dynval_runtime.c"))
+            .arg(rt("twig_gc.c"))
+            .arg(rt("twig_runtime.c"));
     }
     let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;
     if !built.status.success() {

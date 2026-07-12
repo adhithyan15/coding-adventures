@@ -62,7 +62,7 @@ pub fn istft(
     let bins = nf / 2 + 1;
     let frame_floats = bins * 2;
 
-    if spectrogram.len() % frame_floats != 0 {
+    if !spectrogram.len().is_multiple_of(frame_floats) {
         return Err(StftError::InvalidSpectrogram(format!(
             "spectrogram length {} is not a multiple of bins×2 = {}",
             spectrogram.len(),
@@ -257,12 +257,12 @@ mod tests {
         let recovered =
             istft(&spec, n_fft, hop, WindowType::Hann, 1024).unwrap();
         let pad = (n_fft / 2) as usize;
-        for n in pad..(1024 - pad) {
+        for (n, &val) in recovered.iter().enumerate().take(1024 - pad).skip(pad) {
             assert!(
-                approx_eq(recovered[n], 1.5, 1e-3),
+                approx_eq(val, 1.5, 1e-3),
                 "n={}: got {}, expected 1.5",
                 n,
-                recovered[n]
+                val
             );
         }
     }

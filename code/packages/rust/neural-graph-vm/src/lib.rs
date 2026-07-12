@@ -128,6 +128,9 @@ pub fn apply_neural_activation(value: f64, activation: &str) -> f64 {
     }
 }
 
+// One positional argument per `Instruction` field; this internal constructor
+// deliberately mirrors the struct's full shape.
+#[allow(clippy::too_many_arguments)]
 fn inst(op: Opcode, dst: Option<String>, input_name: Option<String>, output_name: Option<String>, edge_id: Option<String>, value: Option<f64>, left: Option<String>, right: Option<String>, inputs: Vec<String>, input: Option<String>, activation: Option<String>, source_node: Option<String>, source_edge: Option<String>) -> Instruction {
     Instruction { op, dst, input_name, output_name, edge_id, value, left, right, inputs, input, activation, source_node, source_edge }
 }

@@ -160,7 +160,7 @@ pub fn float_to_bits(value: f64, fmt: FloatFormat) -> FloatBits {
     // This handles all the tricky cases (denormals, rounding) correctly.
     let fp32_bits = float_to_bits(value, FP32);
     let fp32_exp = bits_msb_to_int(&fp32_bits.exponent) as i32;
-    let fp32_mant = bits_msb_to_int(&fp32_bits.mantissa) as u64;
+    let fp32_mant = bits_msb_to_int(&fp32_bits.mantissa);
     let sign = fp32_bits.sign;
 
     // --- Handle zero ---

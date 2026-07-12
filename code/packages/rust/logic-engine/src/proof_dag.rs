@@ -192,7 +192,7 @@ impl ProofDAG {
 pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
     let mut facts: Vec<FactId> = Vec::new();
     let mut rules: Vec<RuleId> = Vec::new();
-    for s in &steps[..] {
+    for s in steps {
         match &s.origin {
             DerivationOrigin::FromFact(f) => facts.push(*f),
             DerivationOrigin::FromRule(r) => rules.push(*r),

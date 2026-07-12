@@ -439,7 +439,6 @@ fn test_conv2d_no_bias() {
 }
 
 #[test]
-#[test]
 fn test_sgemm_negative_alpha_negative_beta() {
     let a = Matrix::new(vec![1.0, 2.0, 3.0, 4.0], 2, 2);
     let b = Matrix::new(vec![5.0, 6.0, 7.0, 8.0], 2, 2);

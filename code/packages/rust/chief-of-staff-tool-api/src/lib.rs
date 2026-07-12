@@ -2424,18 +2424,15 @@ impl ToolResult {
 
 /// Sort order for tool invocation request queries.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ToolInvocationSort {
+    #[default]
     RequestedAtAsc,
     RequestedAtDesc,
     ToolIdThenRequestedAt,
     CallId,
 }
 
-impl Default for ToolInvocationSort {
-    fn default() -> Self {
-        Self::RequestedAtAsc
-    }
-}
 
 /// Query options for selecting pending or persisted invocation requests.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2537,7 +2534,9 @@ where
 
 /// Sort order for durable tool call record queries.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ToolCallRecordSort {
+    #[default]
     StartedAtAsc,
     StartedAtDesc,
     CompletedAtDesc,
@@ -2545,11 +2544,6 @@ pub enum ToolCallRecordSort {
     CallId,
 }
 
-impl Default for ToolCallRecordSort {
-    fn default() -> Self {
-        Self::StartedAtAsc
-    }
-}
 
 /// Query options for selecting durable tool call lifecycle records.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2651,18 +2645,15 @@ where
 
 /// Sort order for tool event stream queries.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ToolEventSort {
+    #[default]
     TimeAsc,
     TimeDesc,
     SequenceAsc,
     SequenceDesc,
 }
 
-impl Default for ToolEventSort {
-    fn default() -> Self {
-        Self::TimeAsc
-    }
-}
 
 /// Query options for selecting events from a tool execution stream.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2749,17 +2740,14 @@ where
 
 /// Sort order for terminal tool result queries.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ToolResultSort {
+    #[default]
     CallId,
     RunMsAsc,
     RunMsDesc,
 }
 
-impl Default for ToolResultSort {
-    fn default() -> Self {
-        Self::CallId
-    }
-}
 
 /// Query options for selecting terminal tool results.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -3509,7 +3497,9 @@ impl ToolAuditSink for InMemoryToolAuditSink {
 
 /// Sort order for audit read-side queries.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Default)]
 pub enum ToolAuditRecordSort {
+    #[default]
     OriginalOrder,
     ToolId,
     StartedAtAsc,
@@ -3518,11 +3508,6 @@ pub enum ToolAuditRecordSort {
     CompletedAtDesc,
 }
 
-impl Default for ToolAuditRecordSort {
-    fn default() -> Self {
-        Self::OriginalOrder
-    }
-}
 
 /// Storage-neutral query for payload-free audit records.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -5490,7 +5475,7 @@ mod tests {
 
     #[test]
     fn catalog_validation_rejects_duplicate_tool_ids() {
-        let definitions = vec![artifact_create_definition(), artifact_create_definition()];
+        let definitions = [artifact_create_definition(), artifact_create_definition()];
 
         let report = validate_tool_catalog(definitions.iter());
 
@@ -5822,7 +5807,7 @@ mod tests {
         assert!(ToolCallStatus::Running.is_active());
         assert!(!ToolCallStatus::Completed.is_active());
 
-        let records = vec![queued, awaiting_approval, completed];
+        let records = [queued, awaiting_approval, completed];
         let matches = query_tool_call_records(
             records.iter(),
             &ToolCallRecordQuery::new()
@@ -5844,8 +5829,7 @@ mod tests {
 
     #[test]
     fn event_queries_filter_terminal_events_and_sequences() {
-        let events = vec![
-            ToolEvent {
+        let events = [ToolEvent {
                 call_id: "call_1".to_string(),
                 sequence: 0,
                 at: 100,
@@ -5872,8 +5856,7 @@ mod tests {
                 at: 115,
                 kind: ToolEventKind::Completed,
                 payload: JsonValue::Null,
-            },
-        ];
+            }];
 
         let terminal = query_tool_events(
             events.iter(),
@@ -5917,7 +5900,7 @@ mod tests {
         );
         failed.metrics.run_ms = 20;
 
-        let results = vec![completed, denied, failed];
+        let results = [completed, denied, failed];
         let permission_failures = query_tool_results(
             results.iter(),
             &ToolResultQuery::new()

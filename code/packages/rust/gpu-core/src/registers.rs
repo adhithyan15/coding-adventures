@@ -62,7 +62,7 @@
 use std::collections::HashMap;
 use std::fmt;
 
-use fp_arithmetic::{FloatBits, FloatFormat, FP32, float_to_bits, bits_to_float};
+use fp_arithmetic::{FloatBits, FloatFormat, float_to_bits, bits_to_float};
 
 /// A configurable floating-point register file.
 ///
@@ -102,7 +102,7 @@ impl FPRegisterFile {
     /// Panics if `num_registers` is 0 or greater than 256.
     pub fn new(num_registers: usize, fmt: FloatFormat) -> Self {
         assert!(
-            num_registers >= 1 && num_registers <= 256,
+            (1..=256).contains(&num_registers),
             "num_registers must be 1-256, got {}",
             num_registers
         );
@@ -209,7 +209,12 @@ impl fmt::Debug for FPRegisterFile {
 
 #[cfg(test)]
 mod tests {
+    // 3.14 / -2.5 etc. are arbitrary float test values, not approximations of PI.
+    #![allow(clippy::approx_constant)]
     use super::*;
+    // `FP32` is a `fp_arithmetic` constant used by the tests but not imported at
+    // module scope, so `use super::*` does not provide it; import it directly.
+    use fp_arithmetic::FP32;
 
     #[test]
     fn test_new_register_file() {

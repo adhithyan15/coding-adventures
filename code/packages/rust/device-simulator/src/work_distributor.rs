@@ -303,8 +303,8 @@ impl TPUSequencer {
         let cols = if weight_data.is_empty() { 1 } else { weight_data[0].len() };
         let mxu = self.mxu_size;
 
-        let num_row_tiles = ((rows + mxu - 1) / mxu).max(1);
-        let num_col_tiles = ((cols + mxu - 1) / mxu).max(1);
+        let num_row_tiles = rows.div_ceil(mxu).max(1);
+        let num_col_tiles = cols.div_ceil(mxu).max(1);
 
         let mut tile_id = 0;
         for _rt in 0..num_row_tiles {
@@ -345,22 +345,21 @@ impl TPUSequencer {
         // MXU stage: process matrix multiply
         if let Some(ref mut tile) = self.mxu_tile {
             tile.cycles_remaining -= 1;
-            if tile.cycles_remaining <= 0 {
-                if self.vector_tile.is_none() {
+            if tile.cycles_remaining <= 0
+                && self.vector_tile.is_none() {
                     let mut moved_tile = self.mxu_tile.take().unwrap();
                     moved_tile.status = "vector".to_string();
                     moved_tile.cycles_remaining = self.vector_latency;
                     actions.push(format!("MXU -> Vector: tile {}", moved_tile.tile_id));
                     self.vector_tile = Some(moved_tile);
                 }
-            }
         }
 
         // Scalar stage: prepare next tile
         if let Some(ref mut tile) = self.scalar_tile {
             tile.cycles_remaining -= 1;
-            if tile.cycles_remaining <= 0 {
-                if self.mxu_tile.is_none() {
+            if tile.cycles_remaining <= 0
+                && self.mxu_tile.is_none() {
                     let mut moved_tile = self.scalar_tile.take().unwrap();
                     moved_tile.status = "mxu".to_string();
                     moved_tile.cycles_remaining = self.mxu_latency;
@@ -368,7 +367,6 @@ impl TPUSequencer {
                     actions.push(format!("Scalar -> MXU: tile {}", moved_tile.tile_id));
                     self.mxu_tile = Some(moved_tile);
                 }
-            }
         }
 
         // Feed from pending queue to scalar stage

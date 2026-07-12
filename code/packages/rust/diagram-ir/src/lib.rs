@@ -3,12 +3,14 @@
 pub const VERSION: &str = "0.2.0";
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum DiagramDirection { Tb, Lr, Rl, Bt }
-impl Default for DiagramDirection { fn default() -> Self { DiagramDirection::Tb } }
+#[derive(Default)]
+pub enum DiagramDirection { #[default]
+Tb, Lr, Rl, Bt }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum DiagramShape { Rect, RoundedRect, Ellipse, Diamond }
-impl Default for DiagramShape { fn default() -> Self { DiagramShape::RoundedRect } }
+#[derive(Default)]
+pub enum DiagramShape { Rect, #[default]
+RoundedRect, Ellipse, Diamond }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct DiagramLabel { pub text: String }
@@ -78,8 +80,9 @@ pub struct LayoutedGraphDiagram { pub direction: DiagramDirection, pub title: Op
 pub enum ChartKind { Xy, Pie, Sankey }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum ChartOrientation { Vertical, Horizontal }
-impl Default for ChartOrientation { fn default() -> Self { ChartOrientation::Vertical } }
+#[derive(Default)]
+pub enum ChartOrientation { #[default]
+Vertical, Horizontal }
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum AxisKind { Categorical, Numeric }
@@ -141,8 +144,9 @@ pub struct LayoutedChartDiagram { pub width: f64, pub height: f64, pub title_box
 pub enum StructuralKind { Class, Er, C4 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum StructuralNodeKind { Class, Interface, Abstract, Enum, Entity }
-impl Default for StructuralNodeKind { fn default() -> Self { StructuralNodeKind::Class } }
+#[derive(Default)]
+pub enum StructuralNodeKind { #[default]
+Class, Interface, Abstract, Enum, Entity }
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum CompartmentKind { Header, Fields, Methods, Values }
@@ -182,8 +186,9 @@ pub enum TemporalKind { Gantt, Git }
 pub enum TaskStart { Date(String), After(String) }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum TaskStatus { Normal, Done, Active, Crit, Milestone }
-impl Default for TaskStatus { fn default() -> Self { TaskStatus::Normal } }
+#[derive(Default)]
+pub enum TaskStatus { #[default]
+Normal, Done, Active, Crit, Milestone }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GanttTask { pub id: String, pub label: String, pub start: TaskStart, pub duration_days: f64, pub status: TaskStatus, pub dependencies: Vec<String> }
@@ -231,8 +236,9 @@ pub struct LayoutedTemporalDiagram { pub width: f64, pub height: f64, pub items:
 
 // GEOMETRIC FAMILY
 #[derive(Clone, Debug, PartialEq)]
-pub enum TextAlign { Left, Center, Right }
-impl Default for TextAlign { fn default() -> Self { TextAlign::Center } }
+#[derive(Default)]
+pub enum TextAlign { Left, #[default]
+Center, Right }
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum GeoElement {
