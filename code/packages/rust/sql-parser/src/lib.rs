@@ -308,6 +308,25 @@ mod tests {
         assert!(find_rule(&ast, "select_item"), "Expected select_item");
     }
 
+    /// The `AS` keyword is optional in a column alias: `SELECT age years`
+    /// parses the same as `SELECT age AS years` (SQLite accepts both). This
+    /// exercises the `[ [ "AS" ] NAME ]` optional-AS branch of `select_item`.
+    #[test]
+    fn test_parse_select_alias_without_as() {
+        let ast = assert_program_root("SELECT age years FROM users");
+        assert!(find_rule(&ast, "select_item"), "Expected select_item");
+        // The bare alias must NOT swallow the FROM clause.
+        assert!(find_rule(&ast, "table_ref"), "Expected FROM table_ref to still parse");
+    }
+
+    /// A bare alias in a multi-item list must not consume the comma or the
+    /// following item: `SELECT a x, b y` yields two aliased items.
+    #[test]
+    fn test_parse_bare_alias_in_list() {
+        let ast = assert_program_root("SELECT a x, b y FROM t");
+        assert!(find_rule(&ast, "select_list"), "Expected select_list");
+    }
+
     // -----------------------------------------------------------------------
     // Test 8: INSERT statement
     // -----------------------------------------------------------------------

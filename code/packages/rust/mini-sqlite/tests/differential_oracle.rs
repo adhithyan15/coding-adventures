@@ -721,6 +721,29 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a.x, b.y FROM a JOIN b ORDER BY a.x, b.y",
     },
+    // A column alias may omit the `AS` keyword: `SELECT id n` names the output
+    // column `n`, exactly like `SELECT id AS n`. SQLite (and standard SQL)
+    // accept both spellings. The output *column name* is what this case checks,
+    // so it directly exercises alias plumbing, not just row values.
+    Case {
+        id: "column_alias_without_as",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1, 'a'), (2, 'b')",
+        ],
+        query: "SELECT id n, name label FROM t ORDER BY id",
+    },
+    // A bare alias must behave identically to the explicit-AS form and must not
+    // swallow the trailing FROM/ORDER BY. Pairing an expression alias with a
+    // plain column alias covers both the computed and the passthrough path.
+    Case {
+        id: "bare_alias_matches_as",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (2, 3), (5, 7)",
+        ],
+        query: "SELECT a + b total, a first FROM t ORDER BY total",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

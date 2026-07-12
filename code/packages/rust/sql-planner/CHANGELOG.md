@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - Unreleased
+
+### Fixed
+
+- **Bare column aliases (no `AS`).** `extract_as_alias` keyed the output-column
+  alias off the `AS` keyword, so `SELECT a col1` (which sql-parser 0.1.3 now
+  accepts) lost its alias. It now also recognises the implicit form: when there
+  is no `AS`, the lone `Name`-type token directly under `select_item` is the
+  alias. The expression is always a nested node, so a bare identifier token can
+  only be the alias — no ambiguity. `SELECT a` (no alias) still yields `None`.
+
 ## [0.2.1] - Unreleased
 
 ### Fixed

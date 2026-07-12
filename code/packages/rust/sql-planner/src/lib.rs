@@ -1003,14 +1003,38 @@ fn plan_select_item(item: &GrammarASTNode) -> Result<OutputColumn, PlanError> {
     Ok(OutputColumn { expr, alias })
 }
 
-/// Extract an AS alias from a node: scan for "AS" keyword then take the
-/// following token's text.
+/// Extract a `select_item` alias.
+///
+/// Grammar: `select_item = expr [ [ "AS" ] NAME ]` — the alias may be written
+/// with or without the `AS` keyword (`SELECT a AS x` and `SELECT a x` are
+/// equivalent in SQLite). Two AST shapes result:
+///
+/// * **Explicit** `expr AS name` → children `[Node(expr), Token("AS"),
+///   Token(name)]`. We scan for the `AS` keyword and take the token after it.
+/// * **Implicit** `expr name` → children `[Node(expr), Token(name)]` — no `AS`.
+///   The expression is *always* a nested Node (never a bare token) and the only
+///   bare tokens the grammar can place directly under `select_item` are the
+///   optional `AS` and the alias, so a lone `Name`-type token that isn't a
+///   keyword is unambiguously the implicit alias.
+///
+/// A bare `expr` with no alias (`SELECT a`) has no token children → `None`.
 fn extract_as_alias(node: &GrammarASTNode) -> Option<String> {
     let children = &node.children;
+    // Explicit `AS name`.
     for (i, child) in children.iter().enumerate() {
         if is_keyword_token(child, "AS") {
             if let Some(next) = children.get(i + 1) {
                 return Some(token_text_of(next));
+            }
+        }
+    }
+    // Implicit `name` (no AS): the first bare identifier token directly under
+    // the item. Restricting to Name-type tokens keeps us from mistaking any
+    // stray keyword/punctuation for an alias.
+    for child in children {
+        if let ASTNodeOrToken::Token(tok) = child {
+            if tok.type_ == lexer::token::TokenType::Name {
+                return Some(tok.value.clone());
             }
         }
     }

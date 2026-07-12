@@ -74,8 +74,13 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"select_item"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // `select_item = expr [ [ "AS" ] NAME ]` — the AS keyword is
+                // OPTIONAL, so `SELECT a col1` (bare alias) parses the same as
+                // `SELECT a AS col1`. The alias NAME can never eat a following
+                // keyword (FROM/WHERE/…) because NAME only matches Name-type
+                // tokens, and it can't eat a comma, so `SELECT a, b` is safe.
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"AS"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     ] }) },
             ] },
