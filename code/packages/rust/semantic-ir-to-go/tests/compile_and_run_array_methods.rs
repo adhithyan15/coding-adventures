@@ -171,6 +171,10 @@ fn catalog_module() -> Module {
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "max", vec![])),
         // [].max → nil
         print_stmt(method(seq(vec![]), "max", vec![])),
+        // [3,1,2].minmax → [1, 3]
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "minmax", vec![])),
+        // [].minmax → [nil, nil]
+        print_stmt(method(seq(vec![]), "minmax", vec![])),
         // [1,2,3].sum → 6
         print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "sum", vec![])),
         // [].sum → 0
@@ -262,6 +266,8 @@ fn array_methods_compile_and_run() {
             "1",         // [3,1,2].min
             "3",         // [3,1,2].max
             "nil",       // [].max  (print of nil is "nil")
+            "[1, 3]",    // [3,1,2].minmax
+            "[nil, nil]", // [].minmax → [nil, nil]
             "6",         // [1,2,3].sum
             "0",         // [].sum
             "[1, 2, 3]", // [1,2,2,3,1].uniq
