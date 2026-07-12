@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.50.0] - 2026-07-12
+
+### Fixed — CLOC12.186: bridge `let`/`const` init in a C-style `for` header
+
+`convert_for_statement` only modelled a `var` init (`variable_declaration_list`)
+in the classic `for (init; test; update)` header; a `let`/`const` init
+(`for (let i = 0; …)`) parsed to a bare `binding_list` node that fell through to
+`convert_expression`, raising an `InternalError`
+("unknown expression rule 'binding_list'") that declined the WHOLE file to
+WHITESPACE_ONLY — a wide-probe find, and the extremely common counted-loop idiom.
+
+The grammar inlines the lexical declaration into the header: the `let`/`const`
+keyword is a direct token child of the `for_statement`, and the bindings are a
+bare `binding_list` node whose children are `lexical_binding` nodes. The init
+phase now recognises `binding_list`, reads the kind via `has_token`, and reuses
+`convert_variable_declarator` (the same shape `convert_lexical_declaration` reads)
+to build a `ForInit::VariableDeclaration`. The AST already carried the var/let/
+const kind, so this is a pure bridge fix.
+
+New tests `for_lexical_init_bridges`, `for_lexical_init_multi_binding_bridges`,
+`for_var_init_still_bridges`.
+
 ## [0.49.0] - 2026-07-12
 
 ### Added — CLOC12.185: bridge parenthesised object-body arrows `() => ({…})`

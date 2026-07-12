@@ -453,12 +453,34 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
         }
     }
 
-    // Phase 0: init (variable_declaration_list or expression)
+    // Phase 0: init — a `var` declaration list, a `let`/`const` binding list, or
+    // a bare expression.
     if let Some(&n) = phase_nodes[0].first() {
         match n.rule_name.as_str() {
             "variable_declaration_list" => {
                 let decl = convert_var_decl_list(n, VarKind::Var)?;
                 init = Some(ForInit::VariableDeclaration(decl));
+            }
+            // `for (let/const i = 0; …)` (CLOC12.186). The grammar inlines the
+            // lexical declaration into the for-header: the `let`/`const` keyword
+            // is a direct Token child of the `for_statement` (so `has_token`
+            // finds it), and the bindings are a bare `binding_list` node whose
+            // children are `lexical_binding` nodes — the same shape
+            // `convert_lexical_declaration` reads, so we reuse
+            // `convert_variable_declarator` on them.
+            "binding_list" => {
+                let kind = if has_token(node, "const") {
+                    VarKind::Const
+                } else {
+                    VarKind::Let
+                };
+                let declarations: Result<Vec<VariableDeclarator>, _> =
+                    node_children(n).into_iter().map(convert_variable_declarator).collect();
+                init = Some(ForInit::VariableDeclaration(VariableDeclaration {
+                    cv: None,
+                    kind,
+                    declarations: declarations?,
+                }));
             }
             _ => {
                 init = Some(ForInit::Expression(convert_expression(n)?));
@@ -5323,6 +5345,63 @@ mod tests {
                 coding_adventures_javascript_ast::statement::TaggedStatement::ForInStatement(f),
             )) => f.clone(),
             other => panic!("expected a ForInStatement, got {other:?}"),
+        }
+    }
+
+    /// Pull the C-style `ForStatement` out of a program whose first statement is
+    /// `for (…;…;…) …`.
+    fn bridge_for(src: &str) -> ForStatement {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ForStatement(f),
+            )) => f.clone(),
+            other => panic!("expected a ForStatement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_lexical_init_bridges() {
+        // CLOC12.186: a `let` / `const` init in a C-style `for` header. Before
+        // this the init's `binding_list` node fell through to `convert_expression`
+        // and raised an InternalError ("unknown expression rule 'binding_list'"),
+        // declining the whole file to WHITESPACE_ONLY.
+        for (src, want) in [
+            ("for (let i = 0; i < 3; i++) f();", VarKind::Let),
+            ("for (const j = 1; ; ) f();", VarKind::Const),
+        ] {
+            let f = bridge_for(src);
+            match &f.init {
+                Some(ForInit::VariableDeclaration(v)) => {
+                    assert_eq!(v.kind, want, "for {src}");
+                    assert_eq!(v.declarations.len(), 1, "for {src}");
+                    assert!(v.declarations[0].init.is_some(), "init has a value for {src}");
+                }
+                other => panic!("expected a {want:?} declaration init for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn for_lexical_init_multi_binding_bridges() {
+        // `for (let a = 1, b = 2; …)` — two declarators in the lexical init.
+        let f = bridge_for("for (let a = 1, b = 2; a < b; a++) f();");
+        match &f.init {
+            Some(ForInit::VariableDeclaration(v)) => {
+                assert_eq!(v.kind, VarKind::Let);
+                assert_eq!(v.declarations.len(), 2);
+            }
+            other => panic!("expected a let declaration init, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_var_init_still_bridges() {
+        // A `var` init (the pre-existing path) still works.
+        let f = bridge_for("for (var v = 0; v < 3; v++) f();");
+        match &f.init {
+            Some(ForInit::VariableDeclaration(v)) => assert_eq!(v.kind, VarKind::Var),
+            other => panic!("expected a var declaration init, got {other:?}"),
         }
     }
 
