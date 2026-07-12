@@ -34,8 +34,59 @@ std::string hex = a.to_str_radix(16);
 Operators `+ - * / % - == != < > <= >=` are provided. Division by zero throws
 `std::domain_error`; `parse_radix` throws `ca::ParseBigIntError` (with a `kind`
 and offending char); `try_pow` throws `ca::PowTooLargeError` when the projected
-result exceeds the ceiling. This ports the integer core; the crate's decimal /
-float rungs build on it.
+result exceeds the ceiling.
+
+## BigDecimal — exact base-10 (`bignum_decimal.hpp`)
+
+The `decimal` rung, built on `BigInteger`. A **`ca::BigDecimal`** is
+`mantissa × 10^(-scale)` in canonical form, so `==` and `<` compare by value.
+`+ - *` and `pow` are **exact**; division rounds to a stated number of places
+under a `ca::RoundingMode` (`HalfEven`, `HalfUp`, `Floor`, …). Value semantics
+throughout.
+
+```cpp
+#include "bignum_decimal.hpp"
+using ca::BigDecimal;
+using ca::RoundingMode;
+
+BigDecimal sum = BigDecimal::parse("0.1") + BigDecimal::parse("0.2");
+sum.to_string();                                 // "0.3", exactly
+
+BigDecimal third = BigDecimal::parse("10")
+    .div_round(BigDecimal::parse("3"), 4, RoundingMode::HalfEven); // "3.3333"
+double d = third.to_f64();                       // labelled lossy exit
+```
+
+Every fallible operation offers **both** a throwing form (`parse` →
+`ca::ParseDecimalError`, `div_round`/`from_parts` → `std::domain_error` /
+`std::out_of_range`) and a non-throwing `try_parse` / `checked_div_round` /
+`checked_from_parts` returning `std::optional`. `parse` enforces a strict
+`MAX_SCALE` (10^6) budget on untrusted input so a tiny string cannot amplify into
+a multi-gigabyte power of ten. `to_f64` goes through `std::strtod`, so no
+`<cmath>`/libm is needed.
+
+## BigRational — exact fractions (`bignum_rational.hpp`)
+
+The `rational` rung, built on `BigInteger`. A **`ca::BigRational`** is an exact
+fraction `numerator/denominator` in canonical form (lowest terms, positive
+denominator, zero as `0/1`), so `==` and `<` compare by value. Value semantics.
+
+```cpp
+#include "bignum_rational.hpp"
+using ca::BigRational;
+
+BigRational sum = BigRational::parse("1/10") + BigRational::parse("2/10");
+sum.to_string();                                 // "3/10", exactly
+double d = BigRational::from_ints(160, 7).to_f64(); // labelled lossy exit
+```
+
+Every fallible operation offers both a throwing form (`make`/`div`/`recip` →
+`std::domain_error`, `parse` → `ca::ParseRatioError`, `try_pow` →
+`ca::PowTooLargeError`) and a non-throwing `checked_make` / `checked_div` /
+`checked_recip` / `try_parse` returning `std::optional`. `to_f64` narrows through
+the exact `BigDecimal` division (no `<cmath>`), saturating to ±inf / 0 beyond
+`double`'s range. This ports the integer core plus its decimal and rational
+rungs; the crate's float rung builds on the same base.
 
 ## Portability
 

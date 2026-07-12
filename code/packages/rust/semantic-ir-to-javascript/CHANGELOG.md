@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.32.0 — Array `slice_when`
+
+Mirrors the Python reference (PR #8070), Go (PR #8073), and Rust (PR #8077) into
+the JS backend's inline `arrayMethod` (+ the `ARRAY_METHODS` `respond_to?` set),
+continuing the `slice_when` cross-backend cascade.
+
+- `slice_when { |prev, cur| pred }` is the INVERSE of `chunk_while`: it splits
+  into runs of consecutive elements, starting a NEW run BETWEEN an adjacent pair
+  exactly WHERE the block is truthy (whereas `chunk_while` starts a new run where
+  the block is FALSY).
+  `[1,2,4,9,10,11,12].slice_when { |a,b| b-a>1 }` → `[[1,2],[4],[9,10,11,12]]`;
+  an empty array yields `[]`, a single element `[[x]]`.
+- `tests/run_with_node.rs::array_slice_when` emits a program with a `b - a > 1`
+  predicate, runs it through `node`, and asserts the printed runs.
+
 ## 0.31.0 — Array `tally`
 
 Mirrors the Python reference (PR #8054) into the JS backend's inline

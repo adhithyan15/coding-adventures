@@ -165,6 +165,8 @@ SELF_CONTAINED_RUNGS = (
     "rung125_electromyography_recruitment",
     "rung126_capnography_ventilation",
     "rung127_densitometry_index",
+    "rung128_microperfusion_mean",
+    "rung129_solute_clearance_mean",
 )
 
 

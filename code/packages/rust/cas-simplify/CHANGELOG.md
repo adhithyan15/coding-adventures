@@ -1,5 +1,46 @@
 # Changelog — cas-simplify (Rust)
 
+## [0.4.1] — 2026-07-12
+
+### Fixed
+
+- **`term_count` was blind to large subtrees hidden under `Div`/`Neg`/every
+  transcendental wrapper** (`Sin`, `Log`, `Exp`, ...) and un-distributed
+  `Pow`. `expand_apply` recursively expands the *children* of these heads
+  but never distributes the wrapper itself, so `Div(huge_expanded_tree, y)`
+  is an entirely ordinary shape a real expansion produces — but
+  `term_count` previously treated any such node as size `1` (the same
+  `_ => 1` catch-all a prior fix already closed for refused `Mul` nodes).
+  If a `Div`/`Neg`/transcendental-wrapped subtree later became an operand
+  under a further `Add`-distribution, `expand_mul` would clone the whole
+  hidden subtree once per term of the other side — real cost proportional
+  to its true size, invisible to the cap check that saw only "1". A
+  9,000-term `Div`-wrapped subtree multiplied by an ordinary 20-term sum
+  reproducibly reached 180,000+ nodes under the old logic (empirically
+  confirmed via the same disable-and-reproduce methodology used for the
+  original `Mul`-blindness fix) despite `EXPAND_MAX_TERMS` (10,000) being
+  configured — the cap check saw `1 * 20 = 20`, nowhere near the limit.
+- Fixed by generalizing `term_count`'s fallback: any `Apply` node whose
+  head is not `Mul` (which multiplies its children's counts) now sums its
+  children's term counts — the same measure `Add`/`Sub` already used,
+  extended to every wrapper shape `expand_apply` can leave in place, not
+  just `Add`/`Sub` specifically. 2 new regression tests: an adversarial
+  `Div`-wrapped-subtree reproduction (verified to fail without the fix,
+  restored to confirm it passes with it) and a correctness check that
+  `Neg`/`Sin` wrappers are sized by their contents, not treated as `1`.
+- **Follow-up finding from `/security-review`, fixed in the same PR**: the
+  new fallback's summation used plain `Iterator::sum::<usize>()`, unlike
+  the sibling `Mul` arm's `saturating_mul`. Since a `Mul` subtree can
+  legitimately saturate `term_count` to `usize::MAX` from a modest,
+  ordinary tree, summing that value with any sibling would either panic
+  (overflow-checked debug/test builds — confirmed by reverting the fix
+  and reproducing the exact panic) or silently wrap to a small value
+  (release builds) — reintroducing the guard's exact blindness this PR
+  exists to close, just via arithmetic overflow instead of a missing
+  match arm. Fixed with `saturating_add`, plus a new regression test
+  sized to actually reach the saturation boundary (70 chained two-term
+  factors, 2^70).
+
 ## [0.4.0] — 2026-07-03
 
 ### Added
