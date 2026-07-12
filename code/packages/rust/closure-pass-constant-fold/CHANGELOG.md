@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.86.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: fold through `WithStatement`
+
+New `TaggedStatement::WithStatement` arm folds the object expression and recurses
+into the body (mirroring the `while` arm). Picks up javascript-ast 0.38.0.
+
 ## [0.85.17] - 2026-07-11
 
 ### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arms

@@ -79,7 +79,7 @@ use coding_adventures_javascript_ast::{
     ObjectMember, PrivateName, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     RegExpLiteral,
-    UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
+    UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
     TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
     Super, NewTarget, ImportMeta, ImportExpression,
     ChainExpression, OptionalCallExpression, OptionalMemberExpression,
@@ -354,6 +354,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::TryStatement(t) => self.emit_try(t),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
             TaggedStatement::DebuggerStatement(d) => self.emit_debugger(d),
+            TaggedStatement::WithStatement(w) => self.emit_with(w),
         }
     }
 
@@ -513,6 +514,20 @@ impl<'a> Emitter<'a> {
         self.pretty_ws();
         self.write_str("(");
         self.emit_expression(&w.test);
+        self.write_str(")");
+        self.pretty_ws();
+        self.emit_statement(&w.body);
+    }
+
+    /// `with (object) body` (CLOC12.187). Byte-identical in shape to a `while`
+    /// head — `with(` self-delimits from the object expression — so the body
+    /// emits like any single-statement body.
+    fn emit_with(&mut self, w: &WithStatement) {
+        self.maybe_map(&w.cv);
+        self.write_str("with");
+        self.pretty_ws();
+        self.write_str("(");
+        self.emit_expression(&w.object);
         self.write_str(")");
         self.pretty_ws();
         self.emit_statement(&w.body);

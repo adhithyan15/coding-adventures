@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.21.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+`dce_statement` now rebuilds a `with` statement with a DCE'd object expression
+and body, and the cv-extraction match handles the new variant. Picks up
+javascript-ast 0.38.0.
+
 ## [0.20.17] - 2026-07-11
 
 ### Added — CLOC12.177 PR1: `PropertyKey::PrivateName` arm

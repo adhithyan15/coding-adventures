@@ -90,6 +90,7 @@ pub enum TaggedStatement {
     TryStatement(TryStatement),
     EmptyStatement(EmptyStatement),
     DebuggerStatement(DebuggerStatement),
+    WithStatement(WithStatement),
 }
 
 // Convenience constructors so call sites don't have to write
@@ -146,6 +147,9 @@ impl Statement {
     pub fn debugger_statement(s: DebuggerStatement) -> Self {
         Self::Tagged(TaggedStatement::DebuggerStatement(s))
     }
+    pub fn with_statement(s: WithStatement) -> Self {
+        Self::Tagged(TaggedStatement::WithStatement(s))
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -191,6 +195,29 @@ pub struct WhileStatement {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub test: Expression,
+    pub body: Box<Statement>,
+}
+
+/// `with (object) body` — the legacy scope-injection statement (CLOC12.187).
+/// It evaluates `object` and runs `body` with that object pushed onto the scope
+/// chain, so a bare name inside `body` may resolve to one of the object's
+/// properties rather than a lexical binding.
+///
+/// **Minifier implication.** That ambiguity is exactly why `with` is forbidden
+/// in strict mode and ES modules — and why renaming a local inside a `with`
+/// body is unsound (a name you think is a local might be a property of the
+/// `with` object at runtime). The optimization passes therefore treat a `with`
+/// body **conservatively**: they descend into `object` (an ordinary expression)
+/// but leave `body` untouched, which is always correct (it only forgoes
+/// optimisations, never changes behaviour). Structurally the node mirrors
+/// [`WhileStatement`] — an expression plus a single-statement body — and matches
+/// ESTree's `WithStatement` (`object` + `body`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WithStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub object: Expression,
     pub body: Box<Statement>,
 }
 
@@ -581,6 +608,19 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "WhileStatement");
+    }
+
+    #[test]
+    fn with_statement_roundtrips() {
+        // with (o) ; — an object expression plus a single-statement body
+        // (CLOC12.187). Serialises as ESTree `WithStatement` (`object` + `body`).
+        let s = Statement::with_statement(WithStatement {
+            cv: None,
+            object: Expression::Identifier(Identifier { cv: None, name: "o".to_string() }),
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "WithStatement");
     }
 
     #[test]

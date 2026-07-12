@@ -80,7 +80,7 @@ use coding_adventures_javascript_ast::{
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
-    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 use std::collections::HashMap;
@@ -340,6 +340,13 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
             cv: s.cv.clone(),
             test: dce_expression(&s.test, st),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
+        // `with (object) body` (CLOC12.187) — DCE the object and body like
+        // `while`. Not yet reachable (the bridge still declines `with`).
+        TaggedStatement::WithStatement(s) => TaggedStatement::WithStatement(WithStatement {
+            cv: s.cv.clone(),
+            object: dce_expression(&s.object, st),
             body: Box::new(dce_statement(&s.body, st)),
         }),
         // Recurse DCE into the do-while body and test. Like `while`, a
@@ -1091,6 +1098,7 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
         BlockStatement(s) => s.cv.clone(),
         IfStatement(s) => s.cv.clone(),
         WhileStatement(s) => s.cv.clone(),
+        WithStatement(s) => s.cv.clone(),
         DoWhileStatement(s) => s.cv.clone(),
         ForStatement(s) => s.cv.clone(),
         ForInStatement(s) => s.cv.clone(),

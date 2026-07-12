@@ -334,6 +334,9 @@ fn process_tagged(
         TaggedStatement::WhileStatement(ws) => {
             changed |= process_stmt(&mut ws.body, nodes_touched, renames);
         }
+        TaggedStatement::WithStatement(ws) => {
+            changed |= process_stmt(&mut ws.body, nodes_touched, renames);
+        }
         TaggedStatement::DoWhileStatement(ds) => {
             changed |= process_stmt(&mut ds.body, nodes_touched, renames);
         }
@@ -444,6 +447,7 @@ fn stmt_has_function(stmt: &Statement) -> bool {
                     || is.alternate.as_deref().is_some_and(stmt_has_function)
             }
             TaggedStatement::WhileStatement(ws) => stmt_has_function(&ws.body),
+            TaggedStatement::WithStatement(ws) => stmt_has_function(&ws.body),
             TaggedStatement::DoWhileStatement(ds) => stmt_has_function(&ds.body),
             TaggedStatement::ForStatement(fs) => stmt_has_function(&fs.body),
             TaggedStatement::ForInStatement(fs) => stmt_has_function(&fs.body),
@@ -679,6 +683,9 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
             TaggedStatement::WhileStatement(ws) => {
                 collect_decl_occurrences_stmt(&ws.body, out, true)
             }
+            TaggedStatement::WithStatement(ws) => {
+                collect_decl_occurrences_stmt(&ws.body, out, true)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 collect_decl_occurrences_stmt(&ds.body, out, true)
             }
@@ -858,6 +865,10 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 collect_all_idents_expr(&ws.test, out);
+                collect_all_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                collect_all_idents_expr(&ws.object, out);
                 collect_all_idents_stmt(&ws.body, out);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1297,6 +1308,10 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         }
         TaggedStatement::WhileStatement(ws) => {
             rewrite_uses_expr(&mut ws.test, map);
+            rewrite_uses_stmt(&mut ws.body, map);
+        }
+        TaggedStatement::WithStatement(ws) => {
+            rewrite_uses_expr(&mut ws.object, map);
             rewrite_uses_stmt(&mut ws.body, map);
         }
         TaggedStatement::DoWhileStatement(ds) => {

@@ -1120,6 +1120,11 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
                 classify_expr(&ws.test, cls);
                 classify_stmt(&ws.body, cls, nodes_touched);
             }
+            // `with (o) body` (CLOC12.187) — classify the object and body.
+            TaggedStatement::WithStatement(ws) => {
+                classify_expr(&ws.object, cls);
+                classify_stmt(&ws.body, cls, nodes_touched);
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 classify_expr(&ds.test, cls);
                 classify_stmt(&ds.body, cls, nodes_touched);
@@ -1527,6 +1532,11 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 rewrite_expr(&mut ws.test, map);
+                rewrite_stmt(&mut ws.body, map);
+            }
+            // `with (o) body` (CLOC12.187) — rewrite property refs in object + body.
+            TaggedStatement::WithStatement(ws) => {
+                rewrite_expr(&mut ws.object, map);
                 rewrite_stmt(&mut ws.body, map);
             }
             TaggedStatement::DoWhileStatement(ds) => {

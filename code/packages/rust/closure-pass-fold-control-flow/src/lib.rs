@@ -65,7 +65,7 @@ use coding_adventures_javascript_ast::{
     LogicalOperator,
     ChainExpression, MemberExpression, ObjectExpression, ObjectMember, OptionalCallExpression, OptionalMemberExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, UnaryExpression, UnaryOperator, UpdateExpression, VarKind, VariableDeclaration,
-    DoWhileStatement, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 use std::collections::HashMap;
@@ -233,6 +233,7 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
         BlockStatement(s) => s.cv.clone(),
         IfStatement(s) => s.cv.clone(),
         WhileStatement(s) => s.cv.clone(),
+        WithStatement(s) => s.cv.clone(),
         DoWhileStatement(s) => s.cv.clone(),
         ForStatement(s) => s.cv.clone(),
         ForInStatement(s) => s.cv.clone(),
@@ -354,6 +355,15 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         }
         TaggedStatement::IfStatement(s) => fold_if_statement(s, st),
         TaggedStatement::WhileStatement(s) => fold_while_statement(s, st),
+        // `with (object) body` (CLOC12.187) — fold the object and body
+        // structurally (a `with` is never eliminated). Not yet reachable.
+        TaggedStatement::WithStatement(s) => Statement::Tagged(TaggedStatement::WithStatement(
+            WithStatement {
+                cv: s.cv.clone(),
+                object: fold_expression(&s.object, st),
+                body: Box::new(fold_statement(&s.body, st)),
+            },
+        )),
         // A `do … while(test)` runs its body at least once, so — unlike
         // `while` — it can NEVER be eliminated as a dead loop even when
         // `test` is statically falsy (the single body run is observable).

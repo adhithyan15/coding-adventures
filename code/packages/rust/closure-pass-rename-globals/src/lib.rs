@@ -418,6 +418,10 @@ fn count_decl_names_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
+            // `with (o) body` (CLOC12.187) — recurse into the body like `while`.
+            TaggedStatement::WithStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 count_decl_names_stmt(&ds.body, out, nodes_touched)
             }
@@ -590,6 +594,11 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 collect_all_idents_expr(&ws.test, out);
+                collect_all_idents_stmt(&ws.body, out);
+            }
+            // `with (o) body` (CLOC12.187) — collect from the object and body.
+            TaggedStatement::WithStatement(ws) => {
+                collect_all_idents_expr(&ws.object, out);
                 collect_all_idents_stmt(&ws.body, out);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1044,6 +1053,10 @@ fn rename_apply_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         }
         TaggedStatement::WhileStatement(ws) => {
             rename_apply_expr(&mut ws.test, map);
+            rename_apply_stmt(&mut ws.body, map);
+        }
+        TaggedStatement::WithStatement(ws) => {
+            rename_apply_expr(&mut ws.object, map);
             rename_apply_stmt(&mut ws.body, map);
         }
         TaggedStatement::DoWhileStatement(ds) => {

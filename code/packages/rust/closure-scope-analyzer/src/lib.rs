@@ -876,6 +876,18 @@ fn walk_tagged_statement(
         TaggedStatement::EmptyStatement(_) => {}
         // `debugger;` has no children and binds nothing — nothing to analyze.
         TaggedStatement::DebuggerStatement(_) => {}
+        // `with (object) body` (CLOC12.187). The `object` is an ordinary
+        // expression evaluated in the current scope; the `body` is a statement.
+        // NOTE: `with` injects `object` onto the scope chain, so a bare name in
+        // the body may resolve to a property of `object` rather than a lexical
+        // binding — which makes renaming inside a `with` body unsound. This node
+        // is not yet reachable (the bridge still declines `with`); the renaming
+        // bailout lands with the bridge that produces it, mirroring the way
+        // `eval` would be handled.
+        TaggedStatement::WithStatement(ws) => {
+            walk_expression(&ws.object, ctx, analysis, pending);
+            walk_statement(&ws.body, ctx, analysis, pending);
+        }
     }
 }
 

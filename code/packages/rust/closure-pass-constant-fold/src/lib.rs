@@ -100,7 +100,7 @@ use coding_adventures_javascript_ast::{
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
-    DoWhileStatement, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
 
@@ -320,6 +320,14 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
         TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
             cv: s.cv.clone(),
             test: fold_expression(&s.test, st),
+            body: Box::new(fold_statement(&s.body, st)),
+        }),
+        // `with (object) body` (CLOC12.187) — fold the object expression and the
+        // body, exactly like a `while` head. (Not yet reachable; the bridge
+        // still declines `with`.)
+        TaggedStatement::WithStatement(s) => TaggedStatement::WithStatement(WithStatement {
+            cv: s.cv.clone(),
+            object: fold_expression(&s.object, st),
             body: Box::new(fold_statement(&s.body, st)),
         }),
         TaggedStatement::DoWhileStatement(s) => {
