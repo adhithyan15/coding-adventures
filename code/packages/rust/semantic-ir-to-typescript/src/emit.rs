@@ -421,6 +421,27 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
             expr_uses_builtin(target, name)
                 || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
         }
+        // SIR22 addendum compile-compat stubs: same rationale as the base
+        // SIR22 stubs above — this backend doesn't accept `MatrixOps`/
+        // `NDArrays`/`ArrayColumnMajor` either, so these never reach
+        // emission, but the scan still recurses faithfully.
+        Expr::Reduce { target, .. } => expr_uses_builtin(target, name),
+        Expr::Scan { target, .. } => expr_uses_builtin(target, name),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::Shape { target, .. } => expr_uses_builtin(target, name),
+        Expr::Reshape { shape, target, .. } => {
+            expr_uses_builtin(shape, name) || expr_uses_builtin(target, name)
+        }
+        Expr::IndexGenerator { count, .. } => expr_uses_builtin(count, name),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => expr_uses_builtin(haystack, name) || expr_uses_builtin(needle, name),
+        Expr::Ravel { target, .. } => expr_uses_builtin(target, name),
+        Expr::Catenate { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
         Expr::Convert { value, .. } => expr_uses_builtin(value, name),
         // SIR23 compile-compat stubs: this backend does not accept
         // `Feature::SymbolicExpr`/`Feature::PatternMatching` (see
@@ -940,6 +961,27 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
             for idx in indices {
                 collect_index_arg_assigned(idx, out);
             }
+        }
+        // SIR22 addendum compile-compat stubs: same rationale as the base
+        // SIR22 stubs above.
+        Expr::Reduce { target, .. }
+        | Expr::Scan { target, .. }
+        | Expr::Shape { target, .. }
+        | Expr::Ravel { target, .. } => collect_expr_assigned(target, out),
+        Expr::OuterProduct { lhs, rhs, .. } | Expr::Catenate { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::Reshape { shape, target, .. } => {
+            collect_expr_assigned(shape, out);
+            collect_expr_assigned(target, out);
+        }
+        Expr::IndexGenerator { count, .. } => collect_expr_assigned(count, out),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            collect_expr_assigned(haystack, out);
+            collect_expr_assigned(needle, out);
         }
         Expr::Convert { value, .. } => collect_expr_assigned(value, out),
         // SIR23 compile-compat stubs: rejected by `check_module` before this
@@ -1510,6 +1552,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::ElementwiseOp { .. }
         | Expr::Transpose { .. }
         | Expr::IndexGet { .. }
+        // SIR22 addendum: APL primitive operators — same deferral rationale
+        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
+        // features, which this backend still doesn't declare).
+        | Expr::Reduce { .. }
+        | Expr::Scan { .. }
+        | Expr::OuterProduct { .. }
+        | Expr::Shape { .. }
+        | Expr::Reshape { .. }
+        | Expr::IndexGenerator { .. }
+        | Expr::IndexOf { .. }
+        | Expr::Ravel { .. }
+        | Expr::Catenate { .. }
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module.
         | Expr::Convert { .. } => {

@@ -644,6 +644,64 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             print_index_args(out, indices, depth);
             out.push(')');
         }
+
+        // ── SIR22 addendum: APL primitive operators ────────────────────
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(out, "(reduce {} ", op.name());
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(out, "(scan {} ", op.name());
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(out, "(outer-product {} ", op.name());
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            let _ = write!(out, "(shape ");
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::Reshape { shape, target, .. } => {
+            let _ = write!(out, "(reshape ");
+            print_expr_inline_depth(out, shape, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            let _ = write!(out, "(index-generator ");
+            print_expr_inline_depth(out, count, depth + 1);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            let _ = write!(out, "(index-of ");
+            print_expr_inline_depth(out, haystack, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, needle, depth + 1);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            let _ = write!(out, "(ravel ");
+            print_expr_inline_depth(out, target, depth + 1);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            let _ = write!(out, "(catenate ");
+            print_expr_inline_depth(out, lhs, depth + 1);
+            out.push(' ');
+            print_expr_inline_depth(out, rhs, depth + 1);
+            out.push(')');
+        }
+
         // ── SIR26: integer conversion ──────────────────────────────────
         Expr::Convert { value, to, .. } => {
             // `(convert <to> <value>)`, where <to> is the IntSpec text form
@@ -830,7 +888,7 @@ mod tests {
     fn print_empty_module() {
         let m = module_with(vec![], FeatureManifest::new());
         let t = print_module(&m);
-        assert!(t.starts_with("(sir-module demo v3"));
+        assert!(t.starts_with("(sir-module demo v4"));
         assert!(t.contains("(metadata"));
         assert!(t.ends_with(")\n"));
     }
@@ -1770,6 +1828,168 @@ mod tests {
             span: s(),
         };
         assert_eq!(print_expr(&e), "(index-get (var-ref a local))");
+    }
+
+    // ── SIR22 addendum: APL primitive operator printer tests ─────────
+
+    #[test]
+    fn print_reduce() {
+        // +/A
+        let e = Expr::Reduce {
+            op: ElementwiseOpKind::Add,
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(reduce add (var-ref a local))");
+    }
+
+    #[test]
+    fn print_scan() {
+        // +\A
+        let e = Expr::Scan {
+            op: ElementwiseOpKind::Add,
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(scan add (var-ref a local))");
+    }
+
+    #[test]
+    fn print_outer_product() {
+        // A∘.×B
+        let e = Expr::OuterProduct {
+            op: ElementwiseOpKind::Mul,
+            lhs: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(outer-product mul (var-ref a local) (var-ref b local))"
+        );
+    }
+
+    #[test]
+    fn print_shape() {
+        // ⍴A
+        let e = Expr::Shape {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(shape (var-ref a local))");
+    }
+
+    #[test]
+    fn print_reshape() {
+        // A⍴B — `shape` first, `target` second, matching field order.
+        let e = Expr::Reshape {
+            shape: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            target: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(reshape (var-ref a local) (var-ref b local))"
+        );
+    }
+
+    #[test]
+    fn print_index_generator() {
+        // ⍳N
+        let e = Expr::IndexGenerator {
+            count: Box::new(Expr::IntLit {
+                value: 5,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(index-generator (int 5))");
+    }
+
+    #[test]
+    fn print_index_of() {
+        // A⍳B
+        let e = Expr::IndexOf {
+            haystack: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            needle: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(index-of (var-ref a local) (var-ref b local))"
+        );
+    }
+
+    #[test]
+    fn print_ravel() {
+        // ,A
+        let e = Expr::Ravel {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(ravel (var-ref a local))");
+    }
+
+    #[test]
+    fn print_catenate() {
+        // A,B
+        let e = Expr::Catenate {
+            lhs: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            rhs: Box::new(Expr::VarRef {
+                name: "b".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(catenate (var-ref a local) (var-ref b local))"
+        );
     }
 
     #[test]
