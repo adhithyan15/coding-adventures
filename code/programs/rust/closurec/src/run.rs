@@ -6693,13 +6693,15 @@ mod tests {
         let in_path = dir.join("in.js");
         let out_path = dir.join("out.js");
         let sidecar_path = dir.join("out.js.cv.json");
-        // with-statement: the grammar parses it, but bridge::grammar_to_program
-        // returns UnsupportedSyntax (with_statement is still Phase 2+ — and
-        // renaming-unsafe, so it is a deliberate non-target). do-while (CLOC20),
-        // for-in (CLOC22), and for-of (CLOC23) are all supported now and no
-        // longer degrade; class declarations fail at the grammar parser level,
-        // not the bridge.
-        fs::write(&in_path, "with (obj) { x(); }").expect("setup");
+        // destructuring: `var {a} = o;` — the grammar parses it (the bindings
+        // become a `binding_pattern` node), but the bridge's `BindingTarget` is
+        // a single-variant `Identifier`, so `convert_variable_declarator` returns
+        // UnsupportedSyntax (destructuring is a deliberate deferral — wiring
+        // patterns explodes ~40 irrefutable-let sites across the workspace).
+        // `with` used to sit here, but as of CLOC12.187 it bridges; do-while
+        // (CLOC20), for-in (CLOC22), and for-of (CLOC23) are supported too;
+        // class declarations fail at the grammar parser level, not the bridge.
+        fs::write(&in_path, "var {a} = o;").expect("setup");
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],
