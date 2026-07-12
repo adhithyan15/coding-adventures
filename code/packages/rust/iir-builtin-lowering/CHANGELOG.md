@@ -1,5 +1,29 @@
 # Changelog — iir-builtin-lowering
 
+## 0.24.0 - 2026-07-12 (E6d-3b: `length` via a synthesized cons-walk helper)
+
+New `list_ops` module (`lower_list_ops`): a list *operation* like `length` walks
+the cons chain, so it can't be a straight-line desugar (unlike E6d-3a's `list`
+constructor). `lower_list_ops` rewrites `call_builtin "length" lst -> dest` into a
+`call __dyn_list_length, lst -> dest : ref<any>` and injects (once per module) the
+recursive helper
+
+    __dyn_list_length(lst : ref<any>) -> ref<any>:
+        if null?(lst) then (box 0) else (+ 1 (__dyn_list_length (cdr lst)))
+
+The helper is a **proper lisp function** — both branches return a boxed
+`ref<any>`, and the `+ 1 …` is the E6d-2 **dynamic** add (raw `i64` `1` + boxed
+recursive result). This matters: a mixed i64/ref helper confused `dyn_repr`'s
+lisp/machine partition (it classifies a function calling lisp builtins as lisp and
+coerced the i64 return, giving `type mismatch: expected i64, got I32(0)`). As a
+proper lisp function it rides `null?`/`cdr` (E6d-1) + dynamic arithmetic (E6d-2) —
+nothing new lowers, so it reaches all five code-gen backends. Runs at the head of
+both `lower_heap_builtins` and `lower_heap_builtins_runtime` (like the E6d-3a
+desugar), so the helper's `null?`/`cdr` lower on both the managed and native
+paths with no lang-aot pipeline change. 4 unit tests. (Depends on the WASM nil
+`ref.null` fix, iir-to-wasm 0.38.0.) `list-ref`/`append`/`reverse` follow the same
+helper pattern.
+
 ## 0.23.0 - 2026-07-12 (E6d-3a: `list` constructor desugars to a cons chain)
 
 `list` is pure sugar over `cons` — `(list a b c)` = `(cons a (cons b (cons c

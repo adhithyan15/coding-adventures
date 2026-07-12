@@ -403,6 +403,10 @@ pub fn lower_heap_function(fn_: &mut IIRFunction) {
 /// Called from `lib.rs::lower_builtins()` after numeric lowering.
 /// Returns no errors — malformed instructions are left for the backend.
 pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
+    // E6d-3b: rewrite list *operations* (`length`, …) to calls to a synthesized
+    // cons-walk helper injected into the module — BEFORE the per-function heap
+    // lowering, so the helper's `null?`/`cdr` are lowered by the same pass.
+    crate::list_ops::lower_list_ops(module);
     for fn_ in &mut module.functions {
         // E6d-3a: expand `list` → `cons` chain first, so the structural cons
         // lowering below turns the whole thing into alloc/field_store cells.
@@ -510,6 +514,9 @@ pub fn lower_heap_function_runtime(fn_: &mut IIRFunction) {
 /// the linked C lisp runtime rather than inline `alloc`/`field_*`.  The
 /// managed `iir-to-*` backends keep calling [`lower_heap_builtins`].
 pub fn lower_heap_builtins_runtime(module: &mut interpreter_ir::IIRModule) {
+    // E6d-3b: inject + rewrite the cons-walk helper (`length`, …) before the
+    // per-function runtime rename, so its `cdr`/`null?` route to the runtime too.
+    crate::list_ops::lower_list_ops(module);
     for fn_ in &mut module.functions {
         // E6d-3a: expand `list` → `cons` chain first, so the runtime rename
         // below turns each `cons` into a `dyn_cons` runtime call.

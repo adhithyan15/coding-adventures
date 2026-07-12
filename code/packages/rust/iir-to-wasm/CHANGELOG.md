@@ -1,5 +1,20 @@
 # Changelog — iir-to-wasm
 
+## [0.38.0] — 2026-07-12 (LANG-FULL E6d-3b: nil `const 0 : ref<…>` → `ref.null`)
+
+The `const` lowering's nil special-case previously required an **empty** source
+operand (`const : ref<LispyPair>` → `ref.null`). But `make_nil` and the E6d-3a
+`list` desugar emit nil as `const 0 : ref<LispyPair>` — **with** an `Int(0)`
+sentinel source — which fell through to `i32.const 0`. So nil became an `i32(0)`,
+and `is_null` (`ref.is_null`) never recognised it: `null?` on the empty list, and
+any cons-walk (`length`, …) that must stop at the terminator, failed — the walk
+ran past the end into `struct.get` on an `i32` (trap: "expected a struct
+reference, got I32(0)"). Fix: a `ref<…>`-typed const is nil when its source is
+empty **or** `Int(0)`, so both forms emit `ref.null`. This aligns WASM with the
+CLR backend, which already lowers `const 0 : ref<…>` to `ldnull`. (Car/cdr on a
+list never dereference the nil tail, so E6d-1/E6d-3a were unaffected and stay
+green.)
+
 ## [0.37.0] — 2026-07-11 (LANG-FULL E6d-2a: i64-width `box`/`unbox`)
 
 `box`/`unbox` become i64-slot aware for E6d-2 dynamic arithmetic (which works uniformly in i64). `unbox` sign-extends `i31.get_s` (i32) with the new `i64.extend_i32_s` (0xAC) when the destination rides an i64 register; `box` narrows an i64 source with `i32.wrap_i64` before `ref.i31`. Existing i32-atom lisp box/unbox are unchanged (the guard is `slot_is_i64`).

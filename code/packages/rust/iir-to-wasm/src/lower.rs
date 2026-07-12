@@ -1554,8 +1554,16 @@ fn emit_instr(
             })?;
             let rd = get_reg(dest)?;
 
-            // Special case: `const ref<LispyPair>` with no source = nil.
-            if ty.starts_with("ref<") && instr.srcs.is_empty() {
+            // Special case: a `ref<…>`-typed const is the Lisp `nil` — either with
+            // NO source, or with the `Int(0)` sentinel source that `make_nil` and
+            // the `list` desugar emit (`const 0 : ref<LispyPair>`). Both must become
+            // `ref.null`, not `i32.const 0`: otherwise `is_null`/`null?` (ref.is_null)
+            // never detects the list terminator and a cons-walk (`length`, …) runs
+            // past the end into `struct.get` on an i32 (E6d-3b).
+            let is_nil_const = ty.starts_with("ref<")
+                && (instr.srcs.is_empty()
+                    || matches!(instr.srcs.first(), Some(Operand::Int(0))));
+            if is_nil_const {
                 // ref.null none: typed null compatible with all nullable refs.
                 encode_gc_instruction(code, &GcInstruction::RefNull);
                 code.extend(encode_local_set(rd));

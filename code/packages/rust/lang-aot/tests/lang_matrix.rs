@@ -231,6 +231,35 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3b: the `length` list operation on the code-gen backends.**
+    // Unlike the `list` *constructor* (E6d-3a, a straight-line cons desugar),
+    // `length` *walks* the cons chain, so `iir-builtin-lowering::lower_list_ops`
+    // rewrites `call_builtin "length" lst` to a call to a synthesized recursive
+    // helper `__dyn_list_length(lst) = if null?(lst) then 0 else 1 + length(cdr(lst))`
+    // injected into the module. The helper is a *proper lisp function* (returns a
+    // boxed `ref<any>`; its `+` is the E6d-2 dynamic add), so it rides `null?`/`cdr`
+    // (E6d-1) + dynamic arithmetic (E6d-2) — nothing new lowers. This also required
+    // fixing the WASM nil const: `const 0 : ref<LispyPair>` now emits `ref.null`
+    // (it was `i32.const 0`, so `is_null` never detected the list terminator and the
+    // walk overran) — aligning WASM with CLR's existing `ldnull` for nil.
+    // `(+ (length (list 1 2 3)) 39)` = 3 + 39 = 42, proving `length` composes with
+    // dynamic arithmetic and returns a genuine lisp value.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(+ (length (list 1 2 3)) 39)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
+    // the direct regression guard for the WASM nil-const `ref.null` fix.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(null? (list))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.
