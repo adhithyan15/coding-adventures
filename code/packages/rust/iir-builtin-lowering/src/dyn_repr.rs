@@ -68,6 +68,18 @@ use std::collections::HashSet;
 /// The frontend type hint for a reference to a lisp pair (and the nil
 /// sentinel). Mirrors `mccarthy-lisp-iir-compiler`'s `REF_PAIR`.
 const REF_PAIR: &str = "ref<LispyPair>";
+/// The two type hints that denote a **boxed `DynValue`** — the language-neutral
+/// tagged word.  `ref<any>` is a heap-typed dynamic value (a `dyn_car`/`dyn_cdr`
+/// result, a re-boxed arithmetic result); `any` is the still-abstract dynamic
+/// value (a user-lambda result, a dynamic parameter).  A register produced with
+/// either hint holds a `DynValue` *by what it is*, independent of which
+/// primitive produced it — the producer-agnostic classification of DVAL01 §3.3.
+const REF_ANY: &str = "ref<any>";
+const ANY_HINT: &str = "any";
+/// Whether a type hint denotes a boxed `DynValue` (see [`REF_ANY`]).
+fn is_dynvalue_hint(hint: &str) -> bool {
+    hint == REF_ANY || hint == ANY_HINT
+}
 
 /// The type hint for a symbol literal. After `intern_symbols` runs, such a
 /// const already holds the finished tagged immediate `(id<<32)|TAG_SYMBOL` —
@@ -200,18 +212,24 @@ pub fn lower_dyn_repr(module: &mut IIRModule) {
     // `any`-param heuristic alone would mis-flag a Twig `(define (fib n) …)` as
     // lisp and corrupt it. The empty set for a non-lisp module makes every new
     // `call`-handling branch inert — the pass stays a faithful no-op for Twig.
-    let lisp_funcs = if is_lisp_language(&module.language) {
+    let is_lisp = is_lisp_language(&module.language);
+    let lisp_funcs = if is_lisp {
         crate::dyn_repr_structural::lisp_functions(module)
     } else {
         HashSet::new()
     };
     for func in &mut module.functions {
         let is_entry = entry.as_deref() == Some(func.name.as_str());
-        lower_dyn_repr_function(func, is_entry, &lisp_funcs);
+        lower_dyn_repr_function(func, is_entry, &lisp_funcs, is_lisp);
     }
 }
 
-fn lower_dyn_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: &HashSet<String>) {
+fn lower_dyn_repr_function(
+    func: &mut IIRFunction,
+    is_entry: bool,
+    lisp_funcs: &HashSet<String>,
+    is_lisp: bool,
+) {
     // ── 0. Type-directed `not` → `dyn_not`. ──
     //
     // `not` is ambiguous: a *numeric* builtin (Twig's machine boolean-not) and
@@ -246,12 +264,26 @@ fn lower_dyn_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: &
         }
     }
 
-    // ── 2. Classify which registers hold a tagged `LispyValue` (no mutation). ──
+    // ── 2. Classify which registers hold a tagged `DynValue` (no mutation). ──
     //
-    // Seeds:
-    //   • a lisp-builtin result (`dyn_cons`/`car`/`cdr`/`pair_p`/`not`/`equal`),
+    // Seeds (DVAL01 §3.3 — **producer-agnostic**):
+    //   • **any op whose result type is a `DynValue`** (`any` / `ref<any>`) — a
+    //     `dyn_car`/`dyn_cdr` result, a re-boxed `dyn_box_int` arithmetic result,
+    //     a user lambda `call` returning the polymorphic `any`, … The register
+    //     holds a tagged word because of *what it is*, not because its producer's
+    //     name is on a hard-coded lisp allow-list. This is the generalisation
+    //     that lets a boxed *arithmetic* result be exit-unboxed like any other
+    //     `DynValue` (the concrete failure the dynamic-arithmetic slice hit).
+    //   • a lisp-builtin result whose hint is *not* itself `ref<any>` — namely
+    //     `dyn_cons` / nil, typed `ref<LispyPair>` — still seeded by name.
     //   • the nil sentinel const (`Int(0) : ref<LispyPair>`),
     //   • an integer const that feeds a lisp builtin (a lisp atom).
+    //
+    // The `DynValue`-hint seed is gated on `is_lisp`: Twig/Nib use `any` as a
+    // *pre-resolution placeholder* on ordinary machine values (see the language
+    // gate in `lower_dyn_repr`), so seeding on the hint outside a genuinely
+    // dynamic module would mis-box them. Within a lisp module `any`/`ref<any>`
+    // means exactly "tagged dynamic value".
     //
     // Then a **bidirectional** fixpoint over `mov` edges. `COND` funnels every
     // clause's value into one register with `mov result, <value>`, mixing e.g.
@@ -262,6 +294,14 @@ fn lower_dyn_repr_function(func: &mut IIRFunction, is_entry: bool, lisp_funcs: &
     // is seeded, so nothing spreads — Twig/Nib are untouched.)
     let mut boxed_regs: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
+        if let Some(dest) = &instr.dest {
+            // Producer-agnostic: a register produced with a `DynValue` hint is a
+            // tagged value, whatever primitive produced it.
+            if is_lisp && is_dynvalue_hint(&instr.type_hint) {
+                boxed_regs.insert(dest.clone());
+                continue;
+            }
+        }
         if lisp_builtin_name(instr).is_some() {
             if let Some(dest) = &instr.dest {
                 boxed_regs.insert(dest.clone());
@@ -601,6 +641,52 @@ mod tests {
         assert_eq!(unbox.srcs[1], Operand::Var("r".into()));
         // ret now refers to the unbox result, not the boxed car.
         assert_ne!(last.srcs[0], Operand::Var("r".into()));
+    }
+
+    /// DVAL01-3 (§3.3): a boxed **arithmetic** result — a `dyn_box_int` result
+    /// typed `ref<any>`, which is deliberately **not** on the `LISP_BUILTINS`
+    /// allow-list — is recognised as a `DynValue` by its *result type* and
+    /// exit-unboxed, exactly like a `dyn_car` result. Before the producer-
+    /// agnostic seed this register was invisible to the classifier, so the
+    /// program returned a tagged word (`n << 3`) instead of the machine exit
+    /// code — the exact failure the dynamic-arithmetic slice (E6d-2b) hit.
+    #[test]
+    fn boxed_non_cons_dynvalue_is_exit_unboxed() {
+        let mut m = module(vec![
+            // A raw machine int, boxed by a primitive that is *not* cons/car/…
+            konst("x", 5, "i64"),
+            call_builtin(Some("r"), "dyn_box_int", &["x"], "ref<any>"),
+            ret("r"),
+        ]);
+        lower_dyn_repr(&mut m);
+        // `x` feeds box_int as a raw machine word — it must NOT be re-boxed.
+        assert_eq!(find_const(&m, "x"), 5, "box_int's operand stays a raw i64");
+        // The exit boundary unboxes the tagged result to a machine word.
+        assert_eq!(
+            count_builtin(&m, "dyn_unbox_int"),
+            1,
+            "the box_int result must be exit-unboxed (producer-agnostic classification)",
+        );
+        let last = m.functions[0].instructions.last().unwrap();
+        assert_eq!(last.op, "ret");
+        assert_ne!(
+            last.srcs[0],
+            Operand::Var("r".into()),
+            "ret must consume the unboxed value, not the tagged r",
+        );
+    }
+
+    /// The producer-agnostic seed stays gated on the source language: a **Twig**
+    /// module (which uses `any` as a pre-resolution placeholder on ordinary
+    /// machine values) is a no-op — no boxing, no unbox inserted.
+    #[test]
+    fn twig_any_hint_is_not_boxed() {
+        let mut m = module(vec![konst("v", 42, "any"), ret("v")]);
+        m.language = "twig".into();
+        lower_dyn_repr(&mut m);
+        assert_eq!(find_const(&m, "v"), 42, "Twig `any` value must not be boxed");
+        assert_eq!(count_builtin(&m, "dyn_unbox_int"), 0, "no unbox in a Twig module");
+        assert_eq!(m.functions[0].instructions.len(), 2, "Twig module left unchanged");
     }
 
     /// A bare integer `42`: the constant never reaches a `dyn_*` call, so it
