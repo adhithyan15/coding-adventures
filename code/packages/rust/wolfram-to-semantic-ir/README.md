@@ -82,12 +82,24 @@ not stack; only *walking* it recursively is dangerous. It runs before this
 crate's own unguarded recursive helpers (`collect_pattern_names`/
 `bind_pattern_refs`) touch a tree, and once per top-level statement before
 anything reaches the returned `Module`, closing the gap regardless of how
-the tree was composed. See `CHANGELOG.md`'s "Fixed" entries for the full
-three-round history — every class of guard here (per-construct caps and
-the final authoritative check) was verified adversarially by temporarily
-disabling it and confirming a real `SIGABRT` native stack overflow (or, for
-the composition gap, a silent wrongful *acceptance* of oversized input)
-reproduces, then restoring it and confirming the regression test passes.
+the tree was composed.
+
+Detecting an oversized tree isn't the same as safely disposing of it,
+either — a fourth review round found that simply letting a rejected tree
+fall out of scope invoked `Expr`'s ordinary *recursive* `Drop` glue on the
+very tree just found to be too deep, relocating the same crash from
+"walking forward" to "walking backward" through it. [`drop_iterative`](src/lower.rs)
+tears a rejected tree down the same way `measure_depth_iterative` measures
+it — an explicit work stack, no native recursion — before either rejection
+site returns its error.
+
+See `CHANGELOG.md`'s "Fixed" entries for the full four-round history —
+every guard here (per-construct caps, the authoritative depth check, and
+the teardown fix) was verified adversarially: temporarily disabling it and
+confirming a real `SIGABRT` native stack overflow (or, for the composition
+gap, a silent wrongful *acceptance* of oversized input) reproduces, then
+restoring it and confirming the regression test — or, for the `Drop` fix,
+an isolated-subprocess repro — passes cleanly.
 
 `compile_source` additionally parses on an enlarged-stack worker thread
 (see "Usage" above), reusing `wolfram-runtime`'s own validated-safe

@@ -156,6 +156,37 @@
   because `wolfram-parser`'s own O(n) packrat-memo lookup — tracked
   separately as a performance follow-up, not a correctness issue — makes
   parsing it alone take minutes.)
+- **HIGH — the round-3 fix's own rejection path recursively dropped the
+  tree it had just detected as too deep, found in round 4 (final) of
+  security review.** `measure_depth_iterative` correctly *detects* a
+  pathologically deep tree and returns `None`, but detecting the problem
+  doesn't dispose of it: the code then did `return Err(...)`, letting
+  `lhs`/`rhs`/`expr` fall out of scope normally — since `semantic_ir::Expr`
+  has no custom `Drop` impl, that invokes the compiler-derived *recursive*
+  drop glue on the very tree just found to be too deep, exactly the same
+  native-stack-overflow risk this whole fix history exists to eliminate,
+  just relocated from "walking the tree forward" (validator/backend/the
+  caller's own eventual `Drop` of an accepted `Module`) to "walking it
+  backward" (this crate's own `Drop` of the value it's about to reject).
+  This directly falsified `compile()`'s own documented safety claim ("safe
+  to call directly on an ordinary thread"). Confirmed empirically via an
+  isolated subprocess (not just reasoned about): calling `compile()`
+  directly on a bare default-stack thread with a rejected, composed
+  ~23,040-level-deep tree (90 levels of `(...)` wrapping around a 256-group
+  bracket chain — well within `wolfram-parser`'s own real-nesting ceiling)
+  produced a genuine `SIGABRT` stack overflow; the same construction at
+  9,000 and 4,500 levels survived, bracketing the actual crash floor for
+  ordinary recursive `Drop` somewhere in between. Fixed by adding
+  `drop_iterative`, which takes ownership of a rejected tree and tears it
+  down using an explicit heap-allocated work stack — moving each nested
+  `Expr` field out via the match instead of leaving it to be dropped
+  recursively as part of the outer value, the same technique a
+  hand-written `impl Drop for List` uses to avoid overflowing on a long
+  linked list, generalised from a list to a tree — called at both
+  rejection sites (`lower_rule`, `lower_file`) before returning the error.
+  Verified adversarially: re-ran the exact isolated-subprocess repro that
+  crashed at ~23,040 levels with the fix in place and confirmed it now
+  survives cleanly.
 - **MEDIUM — `compile_source`'s panic handling defeated its own "fails
   cleanly" hardening guarantee.** `compile_source` is documented as the
   hardened entry point specifically so pathological input fails with a

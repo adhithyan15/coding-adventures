@@ -288,10 +288,12 @@ impl Lowerer {
             };
             let expr = self.lower_node(stmt, 0)?;
             if measure_depth_iterative(&expr).is_none() {
-                return Err(self.err_at(
+                let err = self.err_at(
                     stmt,
                     format!("expression tree too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
-                ));
+                );
+                drop_iterative(expr);
+                return Err(err);
             }
             let span = expr.span().clone();
             stmts.push(Stmt::ExprStmt { expr, span });
@@ -523,10 +525,18 @@ impl Lowerer {
         // not stack, so it's always safe to measure after the fact) before
         // handing `lhs`/`rhs` to either unguarded recursive helper.
         if measure_depth_iterative(&lhs).is_none() || measure_depth_iterative(&rhs).is_none() {
-            return Err(self.err_at(
+            let err = self.err_at(
                 node,
                 format!("expression tree too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
-            ));
+            );
+            // Tear both down iteratively before returning -- letting either
+            // fall out of scope normally here would recurse through the
+            // ordinary derived `Drop` glue on exactly the pathologically
+            // deep tree we just detected (see `drop_iterative`'s doc
+            // comment).
+            drop_iterative(lhs);
+            drop_iterative(rhs);
+            return Err(err);
         }
 
         // Wolfram binds a pattern name on the LHS (`t_`) and refers to it as
@@ -1466,6 +1476,55 @@ fn measure_depth_iterative(expr: &Expr) -> Option<usize> {
         }
     }
     Some(max_depth)
+}
+
+/// Tear down a rejected, pathologically-deep `Expr` tree **iteratively**,
+/// so freeing it can never itself overflow the stack -- unlike simply
+/// letting `expr` fall out of scope, which invokes `Expr`/`Box<Expr>`'s
+/// ordinary *recursive* compiler-derived `Drop` glue (`semantic_ir::Expr`
+/// has no custom `Drop` impl of its own). A security review confirmed
+/// (empirically, via an isolated subprocess: `compile()` called directly
+/// on a bare default-stack thread with a rejected ~23,000-level-deep tree)
+/// that this ordinary drop is a real, exploitable crash -- moving a
+/// pathologically deep tree past [`measure_depth_iterative`]'s detection
+/// only to then let it drop normally just relocates the same native stack
+/// overflow from "walking the tree forward" to "walking it backward",
+/// which none of the prior fixes in this file's history examined.
+///
+/// The technique: take ownership of `expr`, and for every node with a
+/// nested `Expr` field, *move* that field out via the match (not borrow
+/// it), pushing it onto our own explicit heap-allocated work stack instead
+/// of leaving it in place to be dropped as part of the outer match's
+/// scrutinee. Each loop iteration therefore drops only one node's own
+/// non-recursive fields (strings, spans, flags) -- moving a child out via
+/// `*head` / `Vec` iteration prevents the *outer* value's default drop
+/// glue from ever recursing into it. This mirrors the standard
+/// iterative-drop pattern for a boxed recursive structure (the same
+/// technique a hand-written `impl Drop for List` uses to avoid overflowing
+/// on a long linked list), generalised from a list to a tree.
+fn drop_iterative(expr: Expr) {
+    let mut stack: Vec<Expr> = vec![expr];
+    while let Some(node) = stack.pop() {
+        match node {
+            Expr::SymApply { head, args, .. } => {
+                stack.push(*head);
+                stack.extend(args);
+            }
+            Expr::SymPatternBlank { head: Some(h), .. } => stack.push(*h),
+            Expr::SymPatternNamed { pattern, .. } => stack.push(*pattern),
+            Expr::SymRule { lhs, rhs, .. } => {
+                stack.push(*lhs);
+                stack.push(*rhs);
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                stack.push(*expr);
+                stack.extend(rules);
+            }
+            _ => {}
+        }
+        // `node`'s own shell drops here -- shallowly, since every nested
+        // `Expr` field it had was already moved out onto `stack` above.
+    }
 }
 
 /// Gather the names captured by every [`Expr::SymPatternNamed`] anywhere in
