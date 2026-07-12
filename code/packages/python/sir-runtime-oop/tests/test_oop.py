@@ -329,6 +329,11 @@ def test_array_reverse_sort_minmax_sum() -> None:
     assert oop.call_method([1, 2, 3], "sum") == 6
     assert oop.call_method([1, 2, 3], "sum", 10) == 16
     assert oop.call_method([], "min") is None
+    # `minmax` → [min, max] in one call; empty → [nil, nil].
+    assert oop.call_method([3, 1, 2], "minmax") == [1, 3]
+    assert oop.call_method(["b", "a", "c"], "minmax") == ["a", "c"]
+    assert oop.call_method([], "minmax") == [None, None]
+    assert oop.call_method([1], "respond_to?", "minmax") is True
 
 
 def test_array_reverse_is_nonmutating() -> None:

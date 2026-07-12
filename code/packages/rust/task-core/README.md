@@ -17,19 +17,24 @@ series overview in [`task-app-overview.md`](../../../specs/task-app-overview.md)
 
 ## Where this sits in the stack
 
-`task-core` is the bottom of the task-app layer cake, mirroring Engram:
+`task-core` is the **pure engine** at the bottom of the task-app stack:
 
 ```
-task-core            ← you are here: pure model + (soon) CPM scheduler
-  └ task-core-wasm   facade: JSON in / JSON out, props + events
-        ├ task-capi  C ABI for native shells
-        └ task-wasm  WASM ABI for web / Electron
+task-core            ← you are here: the PURE ENGINE — model + operations API + queries
+                       + scheduler + calendar + formula. No I/O, no clock, no state runtime.
+  ├ task-capi        C ABI exposing the engine's functions to native shells
+  └ task-wasm        WASM ABI exposing the same to web / Electron
+
+  …consumed by per-backend NATIVE host bindings: React state on web, @Observable on
+  SwiftUI, Compose State, Qt models — each idiomatic. There is deliberately NO universal
+  "facade" / dispatch / props-events contract (that would import React-isms into
+  platforms that don't have them). See `code/specs/task-app-architecture.md`.
 ```
 
 It is **pure and headless**: no I/O, no system clock (the current time is passed in
-as `now: u64`), and no id generation (ids are minted by the facade and passed in).
-`serde` is behind a feature flag, so the model has zero external dependencies by
-default. This matches the house style of `engram-core` and `spreadsheet-core`.
+as `now: u64`), no id generation (ids are minted by the host and passed in), and **no
+state-management runtime** — it is a library of pure functions over a value. `serde` is
+behind a feature flag, so the model has zero external dependencies by default.
 
 Everything a scheduler *derives* — early/late dates, slack, the critical flag,
 rollups, formula values — is **computed, never stored as source of truth**.
@@ -59,9 +64,18 @@ rollups, formula values — is **computed, never stored as source of truth**.
   backward passes over `directed-graph`, honouring FS/SS/FF/SF links with lag,
   working-time calendars, the common date constraints, and summary rollups. Rejects
   cyclic networks; surfaces constraint conflicts.
+- **Computed fields** (`formula`): a `[field]` bracket-syntax parser → `symbolic-ir`,
+  panic-safe `symbolic-vm` evaluation of formula fields, direct-Rust rollups, and a
+  `directed-graph` field-dependency order that rejects cyclic formulas. The
+  named-variable win over A1-only spreadsheet formulas.
+- **The operations API** (`ops`): every mutation as a validated `ProjectState` method
+  (`create_task`, `reparent`, `link_dependency`, `assign`, `add_calendar_exception`, …)
+  returning `Result<(), OpError>` — no command/dispatch. Pure, and the single trust
+  boundary enforcing invariants (percent clamp, interval bounds, cycle rejection).
 
-Landing next (per the specs): the `TaskCommand` reducer (with input range validation),
-formula/rollup fields (via `symbolic-vm`), and resource leveling.
+Landing next (per the specs): pure view **projections** (checklist / todo / kanban /
+gantt / flowchart / table), then the `task-capi` / `task-wasm` ABIs, then the Mosaic UI
+wired natively per backend.
 
 ```rust
 use task_core::{scheduler, Date};

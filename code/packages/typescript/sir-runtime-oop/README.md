@@ -70,7 +70,7 @@ deep value equality), plus the **Kernel flow-control** group
 `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self` (item **M6**); and
 (item **M1b**) **block-taking `Array`/`Enumerable`**
 methods `each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
-`reduce`/`inject`, `find`/`detect`, `flat_map`, `any?`/`all?`/`none?`, `chunk_while` — a trailing
+`reduce`/`inject`, `find`/`detect`, `flat_map`, `any?`/`all?`/`none?`, `chunk_while`/`slice_when` — a trailing
 `Closure` block is applied via `@coding-adventures/sir-runtime-core`'s `apply`
 (proc-lenient), predicates routed through SIR `truthy`; (item **M1c**) the
 **`Hash`** catalog (`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/

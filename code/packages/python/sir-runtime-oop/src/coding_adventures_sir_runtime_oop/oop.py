@@ -563,6 +563,7 @@ _ARRAY_METHODS = frozenset(
         "sort",
         "min",
         "max",
+        "minmax",
         "sum",
         "uniq",
         "flatten",
@@ -965,6 +966,11 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
         return min(recv) if recv else None
     if name == "max":
         return max(recv) if recv else None
+    if name == "minmax":
+        # ``minmax`` — the two-element array ``[min, max]`` in one pass.
+        # ``[3,1,2].minmax`` → ``[1, 3]``.  Ruby returns ``[nil, nil]`` for an
+        # empty array (there is no smallest/largest element).
+        return [min(recv), max(recv)] if recv else [None, None]
     if name == "sum":
         total: Val = args[0] if args else 0
         for item in recv:

@@ -16,6 +16,11 @@ serde = ["dep:serde"]
 # provides civil-date arithmetic (weekday/add-days) for the working-time model.
 directed-graph = { path = "../directed-graph" }
 datetime-core = { path = "../datetime-core" }
+# Named-variable formula evaluation for computed/rollup fields — a field reference
+# `[rate]` is an `IRNode::Symbol("rate")`, evaluated by symbolic-vm's StrictBackend.
+# This is the win over spreadsheet-core (A1-only). See task-app-formula-fields.md.
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
 serde = { version = "1", features = ["derive"], optional = true }
 
 # `serde_json` is a dev-only oracle: the JSON round-trip tests (gated on the
