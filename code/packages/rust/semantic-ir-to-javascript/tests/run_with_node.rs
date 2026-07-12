@@ -2694,6 +2694,8 @@ fn array_catalog_module() -> Module {
         print(method(a1234(), "count", vec![method_closure("__ba_even")])),      // 2
         print(method(a312(), "min", vec![])),                                    // 1
         print(method(a312(), "max", vec![])),                                    // 3
+        print(method(a312(), "minmax", vec![])),                                 // [1, 3]
+        print(method(arr(vec![]), "minmax", vec![])),                            // [nil, nil]
         print(method(arr(vec![int(1), int(2), int(3)]), "sum", vec![])),         // 6
         print(method(arr(vec![int(1), int(1), int(2), int(3)]), "uniq", vec![])), // [1, 2, 3]
     ];
@@ -2735,7 +2737,7 @@ fn array_catalog_methods() {
         assert_eq!(
             stdout,
             "[1, 2, 3]\n[2, 4]\n[1, 3]\n10\n[1, 2, 3]\n[[2, 4], [1, 3]]\n\
-             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n6\n[1, 2, 3]"
+             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n[1, 3]\n[nil, nil]\n6\n[1, 2, 3]"
         );
     }
 }

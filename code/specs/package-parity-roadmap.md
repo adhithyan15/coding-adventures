@@ -127,10 +127,10 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Twenty-one package/language slots turn 21 nearly complete packages into fully
-covered packages.
+Twenty package/language slots remain to turn 20 nearly complete packages into
+fully covered packages.
 
-### Dart: 11 remaining ports
+### Dart: 10 remaining ports
 
 - `algol-lexer`
 - `algol-parser`
@@ -141,10 +141,9 @@ covered packages.
 - `logic-gates`
 - `mosaic-lexer`
 - `mosaic-parser`
-- `pixel-container`
 - `toml-lexer`
 
-Completed in the Dart lane: `heap`, `bitset`.
+Completed in the Dart lane: `heap`, `bitset`, `pixel-container`.
 
 ### Haskell: 7 ports
 

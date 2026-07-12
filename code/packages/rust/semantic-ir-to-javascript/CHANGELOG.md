@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.33.0 — Array `minmax`
+
+Mirrors the Python reference (PR #8092), Go (PR #8098), and Rust (PR #8103) into
+the JS backend's inline `arrayMethod` (beside the existing `min`/`max` arms + the
+`ARRAY_METHODS` `respond_to?` set), continuing the `minmax` cross-backend
+cascade.
+
+- `minmax` (non-block) → the two-element array `[min, max]` in one pass, via
+  `<`/`>` (the same comparison the `min`/`max` arms use). `[3,1,2].minmax` →
+  `[1, 3]`. An empty array yields `[null, null]` (Ruby `[nil, nil]` — no
+  smallest/largest element), matching the Go/Rust/Python references' 2-element
+  nil array.
+- The `array_catalog_methods` exec-proof test gains `minmax` (non-empty and
+  empty), run through `node`, asserting `[1, 3]` / `[nil, nil]`.
+
 ## 0.32.0 — Array `slice_when`
 
 Mirrors the Python reference (PR #8070), Go (PR #8073), and Rust (PR #8077) into

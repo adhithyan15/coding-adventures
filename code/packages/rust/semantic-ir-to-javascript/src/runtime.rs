@@ -1292,7 +1292,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   const ARRAY_METHODS = new Set([
     "each", "each_with_index", "map", "collect", "select", "filter", "reject",
     "find", "detect", "reduce", "inject", "any?", "all?", "none?", "count",
-    "sort", "sort_by", "min", "max", "min_by", "max_by", "group_by",
+    "sort", "sort_by", "min", "max", "minmax", "min_by", "max_by", "group_by",
     "partition", "flat_map", "collect_concat", "take_while", "drop_while",
     "each_with_object", "sum", "uniq", "first", "last", "empty?", "to_a",
     "take", "drop", "values_at",
@@ -1393,6 +1393,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       }
       case "min": return recv.length ? recv.reduce((a, b) => (b < a ? b : a)) : null;
       case "max": return recv.length ? recv.reduce((a, b) => (b > a ? b : a)) : null;
+      case "minmax": {
+        // `minmax` (no block) — the two-element array `[min, max]` in one pass,
+        // via `<`/`>` (the same comparison the `min`/`max` arms use).
+        // `[3,1,2].minmax` → `[1, 3]`.  An empty array yields `[null, null]`
+        // (Ruby `[nil, nil]` — no smallest/largest element), matching the
+        // Go/Rust/Python references' 2-element nil array.
+        if (recv.length === 0) { return [null, null]; }
+        let lo = recv[0];
+        let hi = recv[0];
+        for (let i = 1; i < recv.length; i++) {
+          if (recv[i] < lo) { lo = recv[i]; }
+          if (recv[i] > hi) { hi = recv[i]; }
+        }
+        return [lo, hi];
+      }
       case "min_by": case "max_by": {
         if (!blk) { return ARR_MISS; }
         if (recv.length === 0) { return null; }
