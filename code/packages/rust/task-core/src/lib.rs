@@ -41,6 +41,7 @@ mod ids;
 mod model;
 pub mod ops;
 mod primitives;
+pub mod projections;
 pub mod scheduler;
 
 pub use ids::*;
