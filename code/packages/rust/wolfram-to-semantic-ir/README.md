@@ -111,12 +111,17 @@ nesting for this particular grammar.
 ### Testing
 
 - `tests/test_lower.rs` — unit tests asserting exact `Expr` shapes for
-  every grammar production, plus DoS-guard regression tests at the same
-  60,000-term scale `matlab-to-semantic-ir`'s own security review
-  established (covering both the flat operator chains and the
-  postfix/amp chained-application gap the review found here), and
+  every grammar production, plus DoS-guard regression tests proving each
+  guard rejects a chain comfortably past `MAX_EXPR_DEPTH` (covering the
+  flat operator chains, the postfix/amp chained-application gap, and the
+  cross-`(...)`-boundary composition gap the review found), and
   exact-boundary tests (`MAX_EXPR_DEPTH` operands/groups parse, one more is
-  rejected).
+  rejected). These run at a scale well past the cap but much smaller than
+  the incidents that originally motivated them, since `wolfram-parser`
+  must parse the input before this crate's guards ever run, and parsing
+  a very large flat chain is itself slow — see `CHANGELOG.md`'s "Fixed
+  (CI)" entries for the full story (this was the real cause of an early
+  CI failure, not a stack-size issue).
 - `tests/test_validator.rs` — every lowered module passes
   `semantic_ir::validate` (manifest declares exactly the SIR23 features
   used) and is correctly *rejected* by `semantic-ir-to-javascript`'s

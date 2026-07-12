@@ -45,12 +45,12 @@
   the same test passes cleanly. Mirrors `matlab-to-semantic-ir`'s own
   post-hoc discovery of this exact bug class, applied here proactively.
 - 62 tests: 52 unit tests over exact `Expr` shapes for every grammar
-  production plus DoS-guard regressions (a 60,000-term flat chain, a
-  60,000-deep chained bracket/part/pure-function-apply/`&`-run, a
-  256×256-multiplicative bracket/index combination, a chain composed
-  across nested `(...)` boundaries, deeply nested parens, and
-  exact-boundary pairs), 9 validator/capability-rejection tests, 1
-  doctest.
+  production plus DoS-guard regressions (flat-chain, chained
+  bracket/part/pure-function-apply/`&`-run, multiplicative bracket/index
+  combination, cross-`(...)`-boundary composition, deeply nested parens,
+  and exact-boundary cases — see the "Fixed (CI)" entry below for why
+  these run at a smaller scale than the incidents that originally
+  motivated them), 9 validator/capability-rejection tests, 1 doctest.
 - Marks `wolfram-to-semantic-ir` done in `HML01-math-to-semantic-ir.md`'s
   Stream B rollout.
 
@@ -215,6 +215,31 @@
   legitimate `(...)` nesting — comfortably inside `wolfram-parser`'s own
   measured ~98-level safe ceiling — still parses and lowers successfully
   through `compile_source` at the reduced stack size.
+
+- **Real root cause of the CI exit-143 failures: several DoS-regression
+  tests were slow to *parse*, not just slow to lower.** The stack-size
+  reduction above was a reasonable, low-risk change but did not fix the
+  failure — a fresh CI run at that commit failed identically (same exit
+  code, same package, near-identical elapsed time on it). Confirmed by
+  simulating a resource-constrained runner locally (`cargo test --
+  --test-threads=2`): the whole suite took 47.85s (vs ~25s at full local
+  parallelism), and four individual tests each took 15-16 seconds alone —
+  the ones building a 60,000-element chained bracket/part/pure-function-
+  apply construct, and the multiplicative 256×256 combination test.
+  `wolfram-parser` must fully tokenize and parse a flat chain of that size
+  *before* this crate's own lowering guards ever get a chance to reject
+  it, and that parser's own packrat-memo lookup is a known, separately
+  tracked O(n) performance concern (not a correctness issue) that scales
+  badly at this size. Fixed by reducing these tests' scale (60,000 → 3,000
+  for flat/chained constructs; 256×256 → 30×30 for the multiplicative
+  combination) — comfortably past `MAX_EXPR_DEPTH` (256) still proves the
+  guard rejects the input equally well, at a fraction of the parse cost;
+  confirmed the reduced suite now completes in ~4s under the same
+  `--test-threads=2` simulation. The original larger scales remain
+  confirmed (via throwaway, not-checked-in adversarial repros during
+  security review, per the entries above) to reproduce real crashes with
+  each guard disabled — only the *permanent, always-run* regression tests
+  were rescaled, not the adversarial-verification methodology itself.
 
 ### Known limitation (disclosed, not a bug)
 

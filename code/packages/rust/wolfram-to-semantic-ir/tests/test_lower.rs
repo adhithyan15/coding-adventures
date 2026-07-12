@@ -496,9 +496,24 @@ fn multiple_top_level_statements_each_become_an_expr_stmt() {
 
 // --- recursion-depth / chain-length guards (DoS hardening) -----------------
 //
-// These mirror the exact regression scale `matlab-to-semantic-ir`'s own
-// security review established (60,000 flat operands) rather than a smaller,
-// less convincing number.
+// These prove `compile_source` cleanly rejects (not crashes on) a chain far
+// past `MAX_EXPR_DEPTH` (256). An earlier version of this suite matched
+// `matlab-to-semantic-ir`'s own historical crash scale (60,000 flat
+// operands) for narrative consistency with that incident, but that scale
+// makes `wolfram-parser` itself (whose packrat-memo lookup is a known,
+// separately-tracked O(n) performance concern) slow enough to parse that,
+// under a resource-constrained CI runner running many tests concurrently,
+// the combined wall-clock pushed this package's CI step past an external
+// time budget and got it killed mid-run (confirmed: these tests took
+// 15-16s *each* individually; `--test-threads=2`, simulating a 2-core
+// runner, nearly doubled the whole suite's wall-clock). What actually
+// matters for a regression test is just "comfortably past the cap", not
+// matching a specific historical incident's scale -- the guard rejecting
+// 3,000 operands proves it rejects 60,000 equally well, at a small
+// fraction of the parse cost. The much larger scales were still confirmed
+// (via throwaway, not-checked-in adversarial repros during security
+// review) to reproduce real crashes with each guard disabled; see
+// CHANGELOG.md's "Fixed" entries for that history.
 
 #[test]
 fn a_deeply_parenthesised_expression_is_rejected_cleanly() {
@@ -513,14 +528,14 @@ fn a_deeply_parenthesised_expression_is_rejected_cleanly() {
 
 #[test]
 fn a_huge_flat_additive_chain_is_rejected_cleanly_not_crashed() {
-    let terms = 60_000;
+    let terms = 3_000;
     let src = format!("{}\n", (0..terms).map(|_| "1").collect::<Vec<_>>().join(" + "));
     assert!(compile_source(&src, "test").is_err());
 }
 
 #[test]
 fn a_huge_flat_alternatives_chain_is_rejected_cleanly() {
-    let terms = 60_000;
+    let terms = 3_000;
     let src = format!("{}\n", (0..terms).map(|_| "a").collect::<Vec<_>>().join(" | "));
     assert!(compile_source(&src, "test").is_err());
 }
@@ -549,28 +564,28 @@ fn a_chain_at_exactly_the_cap_still_compiles() {
 
 #[test]
 fn a_huge_chained_bracket_application_is_rejected_cleanly_not_crashed() {
-    let chains = 60_000;
+    let chains = 3_000;
     let src = format!("x{}\n", "[0]".repeat(chains));
     assert!(compile_source(&src, "test").is_err());
 }
 
 #[test]
 fn a_huge_chained_double_bracket_part_is_rejected_cleanly_not_crashed() {
-    let chains = 60_000;
+    let chains = 3_000;
     let src = format!("x{}\n", "[[0]]".repeat(chains));
     assert!(compile_source(&src, "test").is_err());
 }
 
 #[test]
 fn a_huge_chained_pure_function_amp_apply_is_rejected_cleanly_not_crashed() {
-    let chains = 60_000;
+    let chains = 3_000;
     let src = format!("(#&){}\n", "[0]".repeat(chains));
     assert!(compile_source(&src, "test").is_err());
 }
 
 #[test]
 fn a_huge_chained_ampersand_run_is_rejected_cleanly_not_crashed() {
-    let count = 60_000;
+    let count = 3_000;
     let src = format!("x{}\n", " &".repeat(count));
     assert!(compile_source(&src, "test").is_err());
 }
@@ -596,12 +611,20 @@ fn a_bracket_chain_at_exactly_the_cap_still_compiles() {
 
 #[test]
 fn a_multiplicative_bracket_times_index_combination_is_rejected_cleanly() {
-    // 256 chained [[..]] groups, each with 256 indices: the old per-axis
-    // caps (group_count <= 256 AND indices_per_group <= 256) both
-    // individually passed, but the real nesting depth was 256*256 = 65536.
-    let indices = (0..256).map(|_| "1").collect::<Vec<_>>().join(",");
+    // 30 chained [[..]] groups, each with 30 indices: both counts
+    // individually stay well under MAX_EXPR_DEPTH (256) -- so an old-style
+    // per-axis cap on "how many groups" and "how many indices per group"
+    // would pass this input -- but the real nesting depth is their
+    // *product*, 30*30 = 900, already past the cap. (The original finding
+    // used 256*256 = 65,536 to mirror the confirmed crash scale, but
+    // proving the guard catches a smaller over-cap product demonstrates
+    // the same multiplicative-bypass fix at a fraction of the parse cost;
+    // the 256*256 scale was independently confirmed, via a throwaway
+    // adversarial repro during security review, to reproduce a real
+    // SIGABRT with the guard disabled.)
+    let indices = (0..30).map(|_| "1").collect::<Vec<_>>().join(",");
     let group = format!("[[{indices}]]");
-    let src = format!("x{}\n", group.repeat(256));
+    let src = format!("x{}\n", group.repeat(30));
     assert!(compile_source(&src, "test").is_err());
 }
 
