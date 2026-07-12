@@ -237,6 +237,17 @@ pub struct ScopeAnalysis {
     pub scopes: Vec<Scope>,
     pub bindings: Vec<Binding>,
     pub references: Vec<Reference>,
+    /// `true` if the program contains at least one `with (obj) …`
+    /// statement anywhere (including nested inside a function/arrow body).
+    ///
+    /// `with` injects `obj` onto the scope chain, so a bare name in the
+    /// `with` body may resolve at runtime to a property of `obj` rather
+    /// than to the lexical binding the analyzer sees. That makes *any*
+    /// renaming of bindings in the program unsound — the renamed reference
+    /// could silently start (or stop) resolving to an `obj` property. The
+    /// rename passes read this flag and decline to rename when it is set.
+    /// See [`program_contains_with_statement`].
+    pub has_with: bool,
 }
 
 impl ScopeAnalysis {
@@ -415,6 +426,7 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         }],
         bindings: Vec::new(),
         references: Vec::new(),
+        has_with: false,
     };
 
     let mut pending: Vec<PendingReference> = Vec::new();
@@ -441,6 +453,27 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
     }
 
     analysis
+}
+
+/// Does `program` contain a `with (obj) …` statement anywhere?
+///
+/// This is the soundness gate for every renaming pass. A `with` splices its
+/// object onto the scope chain, so a bare identifier inside the `with` body
+/// can resolve at runtime to a *property* of that object rather than to the
+/// lexical binding the compiler sees. Renaming that binding (or the reference)
+/// would then silently change which value the name reads. Because a `with`
+/// nested anywhere — even deep inside a function expression — can shadow a
+/// binding declared anywhere else, the only sound response is to disable
+/// renaming for the whole program. The rename / rename-globals /
+/// rename-properties passes call this and return their input unchanged when it
+/// is `true`.
+///
+/// It rides the full [`analyze`] walk, so it is guaranteed to see a `with`
+/// however deeply it is nested (no separate, drift-prone traversal to keep in
+/// sync with the AST shape). A program with no `with` returns `false`; one with
+/// a `with` anywhere returns `true`. See the crate tests for worked examples.
+pub fn program_contains_with_statement(program: &Program) -> bool {
+    analyze(program).has_with
 }
 
 /// Emit a binding into the given scope and update both the
@@ -878,13 +911,14 @@ fn walk_tagged_statement(
         TaggedStatement::DebuggerStatement(_) => {}
         // `with (object) body` (CLOC12.187). The `object` is an ordinary
         // expression evaluated in the current scope; the `body` is a statement.
-        // NOTE: `with` injects `object` onto the scope chain, so a bare name in
-        // the body may resolve to a property of `object` rather than a lexical
-        // binding — which makes renaming inside a `with` body unsound. This node
-        // is not yet reachable (the bridge still declines `with`); the renaming
-        // bailout lands with the bridge that produces it, mirroring the way
-        // `eval` would be handled.
+        // `with` injects `object` onto the scope chain, so a bare name in the
+        // body may resolve to a property of `object` rather than a lexical
+        // binding — which makes renaming *any* binding in the program unsound.
+        // We record that on the analysis (`has_with`) so the rename passes can
+        // decline; see [`program_contains_with_statement`]. We still walk the
+        // object and body so references outside/inside are resolved as usual.
         TaggedStatement::WithStatement(ws) => {
+            analysis.has_with = true;
             walk_expression(&ws.object, ctx, analysis, pending);
             walk_statement(&ws.body, ctx, analysis, pending);
         }
@@ -1178,6 +1212,7 @@ mod tests {
                 declared_at: None,
             }],
             references: Vec::new(),
+            has_with: false,
         };
         let inner = ScopeId(1);
         let resolved = analysis.resolve("x", inner);
@@ -1216,6 +1251,7 @@ mod tests {
                 },
             ],
             references: Vec::new(),
+            has_with: false,
         };
         let inner = ScopeId(1);
         assert_eq!(analysis.resolve("x", inner), Some(BindingId(1)));
@@ -1645,6 +1681,7 @@ mod tests {
                 binding: Some(BindingId(0)),
                 cv: Some("cv.2".to_string()),
             }],
+            has_with: false,
         };
         let json = serde_json::to_string(&analysis).expect("serialize");
         let back: ScopeAnalysis = serde_json::from_str(&json).expect("deserialize");
@@ -1883,5 +1920,53 @@ mod tests {
         assert_eq!(analysis.scopes.len(), 1);
         assert!(analysis.bindings.is_empty());
         assert!(analysis.references.is_empty());
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate.
+    //
+    // `program_contains_with_statement` is the flag the rename passes
+    // read to disable renaming. These tests pin its two contracts: it
+    // is `false` for `with`-free programs (renaming stays on) and
+    // `true` whenever a `with` appears anywhere, including buried in a
+    // function body (which is why one program-wide flag is sound).
+    // ---------------------------------------------------------------
+
+    /// `with (<obj>) ;` as a single top-level program item.
+    fn with_stmt(obj: &str) -> Statement {
+        Statement::with_statement(coding_adventures_javascript_ast::WithStatement {
+            cv: None,
+            object: id_expr(obj),
+            body: Box::new(Statement::empty_statement(
+                coding_adventures_javascript_ast::EmptyStatement { cv: None },
+            )),
+        })
+    }
+
+    #[test]
+    fn program_contains_with_is_false_for_with_free_program() {
+        // `function f(a) {}` — no `with`, so the gate stays open and
+        // renaming remains enabled.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], vec![])]);
+        assert!(!program_contains_with_statement(&prog));
+        assert!(!analyze(&prog).has_with);
+    }
+
+    #[test]
+    fn program_contains_with_detects_top_level_with() {
+        // `with (o) ;` — a top-level `with`. The gate must fire.
+        let prog = program_with(vec![ProgramItem::Statement(with_stmt("o"))]);
+        assert!(program_contains_with_statement(&prog));
+        assert!(analyze(&prog).has_with);
+    }
+
+    #[test]
+    fn program_contains_with_detects_with_nested_in_function() {
+        // `function f() { with (o) ; }` — the `with` is buried inside a
+        // function body. Because the gate rides the full `analyze` walk,
+        // it still fires; this is the case that makes a single
+        // program-wide flag (rather than a per-scope one) sound.
+        let prog = program_with(vec![fn_decl_with_body("f", &[], vec![with_stmt("o")])]);
+        assert!(program_contains_with_statement(&prog));
     }
 }

@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.16.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: decline to rename in the presence of `with`
+
+`run` now bails at the top when `program_contains_with_statement` (new in
+closure-scope-analyzer 0.14.0) is `true`, returning the input program unchanged
+with no rename contributions. A `with (obj) …` splices `obj` onto the scope
+chain, so a bare name in its body may resolve to an `obj` property rather than
+the lexical binding the pass sees — renaming would then be unsound (the
+"single declaration ⇒ single binding" safety argument does not hold). `with` is
+a strict-mode syntax error and rare, so this program-wide bail costs little.
+New `with_statement_disables_local_renaming` test. Sets up the `with` bridge
+(PR2b): once the bridge produces the node, this gate keeps renaming sound.
+
 ## [0.15.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`

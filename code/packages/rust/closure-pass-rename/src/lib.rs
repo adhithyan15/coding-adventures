@@ -87,6 +87,7 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::program_contains_with_statement;
 use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
@@ -153,6 +154,26 @@ impl Pass for RenamePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+        // `with` soundness gate (CLOC12.187 PR2a). A `with (obj) …` anywhere
+        // splices `obj` onto the scope chain, so a bare name in its body may
+        // resolve at runtime to a property of `obj` rather than to the lexical
+        // binding we see. Renaming that binding (and its references) could then
+        // silently change which value the name reads — the "single declaration
+        // ⇒ single binding ⇒ every use resolves to it" safety argument below
+        // does not hold in the presence of `with`. So when the program contains
+        // a `with` we decline to rename and return the input unchanged. `with`
+        // is rare (a strict-mode syntax error), so this program-wide bail costs
+        // little in practice. See [`program_contains_with_statement`].
+        if program_contains_with_statement(ctx.program) {
+            return Ok(PassOutput {
+                program: ctx.program.clone(),
+                contributions: Vec::new(),
+                changed: false,
+                diagnostics: Vec::new(),
+                stats: PassStats { nodes_touched: 1 },
+            });
+        }
+
         // Scope: rename the uniquely-bound names of *leaf functions*
         // (function declarations whose body contains no nested function
         // declaration) — their parameters and their body's
@@ -2167,5 +2188,78 @@ mod tests {
         };
         let out = emit(&prog, &Sidecar::new(), &mut cv, &opts).expect("emit").code;
         assert_eq!(out, "function f(){var counter=0;return counter+1};");
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate.
+    //
+    // A `with (obj) …` splices `obj` onto the scope chain, so a bare name
+    // in its body can resolve to a property of `obj` at runtime rather than
+    // to the lexical binding the pass sees. Renaming would then be unsound,
+    // so `RenamePass` must bail and return the program unchanged. The bridge
+    // does not yet produce `with` (that is PR2b), so this test hand-builds
+    // the AST to exercise the gate directly.
+    // -------------------------------------------------------------------
+    #[test]
+    fn with_statement_disables_local_renaming() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            BlockStatement, Declaration, Expression, FunctionDeclaration, FunctionParam,
+            Identifier, ProgramItem, Statement, WithStatement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `function f(longParam) { return longParam; }` — a leaf function
+        // whose param `longParam` RenamePass would normally shorten to `a`.
+        let f = FunctionDeclaration {
+            cv: None,
+            id: id("f"),
+            params: vec![FunctionParam::Identifier(id("longParam"))],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("longParam"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        // `with (o) { <f> }`
+        let with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: Expression::Identifier(id("o")),
+            body: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![Statement::Declaration(Declaration::FunctionDeclaration(f))],
+            })),
+        });
+
+        let mut prog = program();
+        prog.body = vec![ProgramItem::Statement(with)];
+
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename");
+
+        // The gate must fire: nothing renamed, program byte-for-byte identical.
+        assert!(!out.changed, "rename must not change a program containing `with`");
+        assert_eq!(out.program, prog, "program must be returned unchanged");
+        assert!(
+            out.contributions.is_empty(),
+            "no rename contributions when bailing on `with`"
+        );
     }
 }
