@@ -3,7 +3,9 @@
 
 use crate::error::RuntimeError;
 use crate::picture::Picture;
-use crate::program::{ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, Program, RelOp, Stmt};
+use crate::program::{
+    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt,
+};
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
 
@@ -261,9 +263,7 @@ impl Machine {
             Stmt::Compute { target, rounded, expr, on_size_error } => {
                 return self.exec_compute(target, *rounded, expr, on_size_error);
             }
-            Stmt::Perform { target, times, until } => {
-                return self.exec_perform(target, times, until)
-            }
+            Stmt::Perform { target, mode } => return self.exec_perform(target, mode),
             Stmt::GoTo { target } => {
                 let idx = *self
                     .para_index
@@ -305,37 +305,11 @@ impl Machine {
     /// so a self-performing paragraph fails cleanly instead of overflowing. A
     /// `STOP RUN` or `GO TO` inside stops the repetition and propagates as its
     /// [`Flow`].
-    fn exec_perform(
-        &mut self,
-        target: &str,
-        times: &Option<Operand>,
-        until: &Option<Cond>,
-    ) -> Result<Flow, RuntimeError> {
+    fn exec_perform(&mut self, target: &str, mode: &PerformMode) -> Result<Flow, RuntimeError> {
         let idx = *self
             .para_index
             .get(target)
             .ok_or_else(|| RuntimeError::UndefinedName(target.into()))?;
-
-        // Resolve the fixed repeat count (only used when there is no UNTIL):
-        // a non-negative integer; ≤ 0 → zero times.
-        let n: usize = match times {
-            None => 1,
-            Some(op) => {
-                let d = self.operand_decimal(op)?;
-                if d.neg {
-                    0
-                } else {
-                    let int = d.int.trim_start_matches('0');
-                    if int.is_empty() {
-                        0
-                    } else {
-                        int.parse::<usize>().map_err(|_| {
-                            RuntimeError::Unsupported("PERFORM … TIMES count is too large".into())
-                        })?
-                    }
-                }
-            }
-        };
 
         self.perform_depth += 1;
         if self.perform_depth > MAX_PERFORM_DEPTH {
@@ -348,38 +322,93 @@ impl Machine {
         // Capture the outcome rather than `?`-ing out of the loop, so the depth
         // counter is restored on every path (including an error). One body
         // iteration returns Some(flow-to-propagate) to stop, or None to continue.
-        let mut outcome = Ok(Flow::Normal);
         let run_body = |m: &mut Self| match m.run_stmts(&stmts) {
             Ok(Flow::Normal) => None,
             other => Some(other), // Stop / GoTo / Err — stop repeating, propagate
         };
-        match until {
-            Some(cond) => loop {
-                // TEST BEFORE: stop as soon as the condition holds.
-                match self.eval_cond(cond) {
-                    Ok(true) => break,
-                    Ok(false) => {}
-                    Err(e) => {
-                        outcome = Err(e);
-                        break;
+
+        let outcome = match mode {
+            PerformMode::Once => run_body(self).unwrap_or(Ok(Flow::Normal)),
+            PerformMode::Times(op) => match self.perform_count(op) {
+                Ok(n) => {
+                    let mut o = Ok(Flow::Normal);
+                    for _ in 0..n {
+                        if let Some(flow) = run_body(self) {
+                            o = flow;
+                            break;
+                        }
                     }
+                    o
                 }
-                if let Some(flow) = run_body(self) {
-                    outcome = flow;
-                    break;
-                }
+                Err(e) => Err(e),
             },
-            None => {
-                for _ in 0..n {
-                    if let Some(flow) = run_body(self) {
-                        outcome = flow;
-                        break;
-                    }
+            PerformMode::Until(cond) => self.perform_until(cond, &run_body),
+            PerformMode::Varying { var, from, by, until } => {
+                // id := from, then the same TEST-BEFORE loop, stepping id by `by`
+                // after each body run.
+                match self
+                    .operand_decimal(from)
+                    .and_then(|start| self.store_number(var, start))
+                {
+                    Err(e) => Err(e),
+                    Ok(()) => self.perform_until(until, &|m: &mut Self| {
+                        // A body Stop/GoTo/Err wins; otherwise step id (a step
+                        // error — e.g. overflow — stops the loop and propagates).
+                        if let Some(f) = run_body(m) {
+                            return Some(f);
+                        }
+                        match m.step_var(var, by) {
+                            Ok(()) => None,
+                            Err(e) => Some(Err(e)),
+                        }
+                    }),
                 }
             }
-        }
+        };
         self.perform_depth -= 1;
         outcome
+    }
+
+    /// Resolve a `PERFORM … TIMES` count: a non-negative integer; `≤ 0` → 0.
+    fn perform_count(&self, op: &Operand) -> Result<usize, RuntimeError> {
+        let d = self.operand_decimal(op)?;
+        if d.neg {
+            return Ok(0);
+        }
+        let int = d.int.trim_start_matches('0');
+        if int.is_empty() {
+            return Ok(0);
+        }
+        int.parse::<usize>()
+            .map_err(|_| RuntimeError::Unsupported("PERFORM … TIMES count is too large".into()))
+    }
+
+    /// The shared TEST-BEFORE loop: while `cond` is false, run `body` (which
+    /// returns `Some(flow)` to stop and propagate, `None` to continue). Iterative,
+    /// so a never-satisfied condition hangs but never grows the stack.
+    fn perform_until(
+        &mut self,
+        cond: &Cond,
+        body: &dyn Fn(&mut Self) -> Option<Result<Flow, RuntimeError>>,
+    ) -> Result<Flow, RuntimeError> {
+        loop {
+            match self.eval_cond(cond) {
+                Ok(true) => return Ok(Flow::Normal),
+                Ok(false) => {}
+                Err(e) => return Err(e),
+            }
+            if let Some(flow) = body(self) {
+                return flow;
+            }
+        }
+    }
+
+    /// Step a `PERFORM VARYING` induction variable: `var := var + by`.
+    fn step_var(&mut self, var: &str, by: &Operand) -> Result<(), RuntimeError> {
+        let cur = self.named_decimal(var)?;
+        let step = self.operand_decimal(by)?;
+        let next = checked(add(&cur, &step))?;
+        self.store_number(var, next)
     }
 
     /// Evaluate a relational condition. Numeric when both sides are numeric;

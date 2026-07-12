@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 — PERFORM … VARYING
+
+- `perform_stmt` gains a third repeat clause, `perform_varying`
+  (`VARYING NAME FROM operand BY operand UNTIL condition`), alongside
+  `operand TIMES` and `UNTIL condition`. `VARYING`/`FROM`/`BY` were already
+  reserved words, so the lexer is unchanged.
+
 ## 0.3.0 — PERFORM … UNTIL
 
 - `perform_stmt` gains the `UNTIL condition` clause as an alternative to
