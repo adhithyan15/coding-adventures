@@ -14,6 +14,10 @@ Relevant packages include:
 - `assembler`
 - `jit-compiler`
 
+## Topics
+
+- [Intermediate representations](./intermediate-representations.md)
+
 ## Why This Track Matters
 
 A lot of programming education jumps straight from:

@@ -15,9 +15,19 @@ There are three kinds of material in this directory:
 ## Current Tracks
 
 - [Algorithms](./algorithms/README.md)
+- [Compression and Encoding](./compression/README.md)
 - [Computer Architecture](./computer-architecture/README.md)
+- [Cryptography](./cryptography/README.md)
 - [Language Tooling](./language-tooling/README.md)
-- [Python Ecosystem](./python/ecosystem.md)
+- [Python Ecosystem](./programming-languages/python-ecosystem.md)
+
+The generated [Learning Coverage Inventory](./COVERAGE.md) is the complete
+package-to-learning backlog. Regenerate it after adding or renaming packages or
+learning material:
+
+```powershell
+python scripts/learning_coverage_report.py --output code/learning/COVERAGE.md
+```
 
 ## Coverage Map
 
@@ -27,11 +37,15 @@ This table is the current answer to "what learning entry explains this package f
 |-----------------|---------------------|----------------|
 | Graph algorithms and build planning | `directed-graph`, build-tool dependency planning | [Kahn's algorithm](./algorithms/kahns-algorithm.md) |
 | Graph modeling | nodes, edges, topological ordering, affected dependents | [Algorithms index](./algorithms/README.md) |
+| Trees and approximate indexes | balanced trees, tries, range structures, Bloom filters, HyperLogLog | [Trees, indexes, and probabilistic structures](./algorithms/trees-indexes-and-probabilistic-structures.md) |
+| Compression and error correction | LZ families, Huffman coding, Deflate, Brotli, Zstandard, Reed-Solomon | [Dictionary and entropy coding](./compression/dictionary-and-entropy-coding.md) |
+| Cryptographic building blocks | hashes, authentication, encryption, password hashing, signatures, key agreement | [Cryptographic primitives and composition](./cryptography/primitives-and-composition.md) |
 | Digital logic to execution | `logic-gates`, `arithmetic`, `fp-arithmetic`, `cpu-simulator`, ISA simulators | [Computing stack](./computer-architecture/computing-stack.md) |
 | Execution models | register machines, stack machines, accumulator machines, bytecode vs machine code | [Instruction-set models](./computer-architecture/instruction-set-models.md) |
 | Deep micro-architecture | `cache`, `branch-predictor`, `hazard-detection`, `pipeline`, `core` | [Pipelines, caches, and speculation](./computer-architecture/pipelines-caches-and-speculation.md) |
 | Frontend and compiler pipeline | `grammar-tools`, `lexer`, `parser`, `bytecode-compiler`, `virtual-machine`, `assembler`, `jit-compiler` | [Language tooling index](./language-tooling/README.md) |
-| Python project conventions | packaging, linting, types, `uv`, `ruff`, `pyproject.toml` | [Modern Python ecosystem](./python/ecosystem.md) |
+| Intermediate representations | semantic IR, compiler IR, interpreter IR, lowering, source identity | [Intermediate representations](./language-tooling/intermediate-representations.md) |
+| Python project conventions | packaging, linting, types, `uv`, `ruff`, `pyproject.toml` | [Modern Python ecosystem](./programming-languages/python-ecosystem.md) |
 
 ## Relationship To Specs
 
