@@ -613,6 +613,7 @@ _ARRAY_BLOCK_METHODS = frozenset(
         "count",
         "each_with_object",
         "chunk_while",
+        "slice_when",
     }
 )
 
@@ -1201,6 +1202,23 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
             else:
                 chunks.append([cur])
         return chunks
+    if name == "slice_when":
+        # ``slice_when { |prev, cur| pred }`` — the INVERSE of ``chunk_while``:
+        # split into runs of consecutive elements, starting a NEW run BETWEEN an
+        # adjacent pair exactly WHERE the block is truthy (chunk_while starts a
+        # new run where the block is FALSY).
+        # ``[1,2,4,9,10,11,12].slice_when { |a,b| b - a > 1 }``
+        #   → ``[[1,2],[4],[9,10,11,12]]`` (splits on each upward gap > 1).
+        # An empty array yields ``[]``; a single element yields ``[[x]]``.
+        if not recv:
+            return []
+        slices: list[Val] = [[recv[0]]]
+        for prev, cur in zip(recv, recv[1:], strict=False):
+            if truthy(apply(block, [prev, cur])):
+                slices.append([cur])
+            else:
+                slices[-1].append(cur)
+        return slices
     return _MISS
 
 

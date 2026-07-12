@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.12.0] - 2026-07-12
+
+### Added — CLOC12.187 PR2a: decline to rename globals in the presence of `with`
+
+`run` now bails at the top when `program_contains_with_statement`
+(closure-scope-analyzer 0.14.0, added as a new dependency) is `true`, returning
+the program unchanged. Renaming a global is unsound when a `with` is present:
+a bare name in the `with` body may resolve to a property of the injected object
+rather than to the global. `with` is rare (a strict-mode syntax error), so the
+program-wide bail costs little. New `with_statement_disables_global_renaming`
+test.
+
 ## [0.11.0] - 2026-07-11
 
 ### Added — CLOC12.187 PR1: traverse `WithStatement`

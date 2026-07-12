@@ -68,6 +68,7 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_closure_scope_analyzer::program_contains_with_statement;
 use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
@@ -136,6 +137,24 @@ impl Pass for RenameGlobalsPass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+        // `with` soundness gate (CLOC12.187 PR2a). A `with (obj) …` splices
+        // `obj` onto the scope chain, so a bare name in its body may resolve to
+        // a property of `obj` rather than to the global binding we would rename.
+        // Renaming that global (and its references) could then silently change
+        // which value the name reads, so when the program contains a `with` we
+        // decline to rename and return the input unchanged. `with` is rare (a
+        // strict-mode syntax error), so this program-wide bail costs little.
+        // See [`program_contains_with_statement`].
+        if program_contains_with_statement(ctx.program) {
+            return Ok(PassOutput {
+                program: ctx.program.clone(),
+                contributions: Vec::new(),
+                changed: false,
+                diagnostics: Vec::new(),
+                stats: PassStats { nodes_touched: 1 },
+            });
+        }
+
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
         let (changed, renames) =
@@ -1691,5 +1710,63 @@ mod tests {
             rename_source("var SHARED = 5; function read() { return SHARED; } read();"),
             "var a=5;function b(){return a};b();"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.187 PR2a — `with` soundness gate. A `with (obj) …` splices
+    // `obj` onto the scope chain, so a bare name may be an `obj` property at
+    // runtime; renaming a global could then change which value the name
+    // reads. RenameGlobalsPass must bail. The bridge does not yet produce
+    // `with` (PR2b), so the AST is hand-built.
+    // -------------------------------------------------------------------
+    #[test]
+    fn with_statement_disables_global_renaming() {
+        use coding_adventures_javascript_ast::{
+            BlockStatement, Declaration, Expression, FunctionDeclaration, Identifier, ProgramItem,
+            Statement, WithStatement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `function longFn() {}` at top level — a global RenameGlobalsPass
+        // would normally shorten to `a`.
+        let f = FunctionDeclaration {
+            cv: None,
+            id: id("longFn"),
+            params: vec![],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        // `with (o) {}`
+        let with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: Expression::Identifier(id("o")),
+            body: Box::new(Statement::block_statement(BlockStatement { cv: None, body: vec![] })),
+        });
+
+        let mut prog = program();
+        prog.body = vec![
+            ProgramItem::Statement(with),
+            ProgramItem::Declaration(Declaration::FunctionDeclaration(f)),
+        ];
+
+        let pass = RenameGlobalsPass::with_no_externs();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename-globals");
+
+        assert!(!out.changed, "must not rename globals when a `with` is present");
+        assert_eq!(out.program, prog, "program must be returned unchanged");
+        assert!(out.contributions.is_empty());
     }
 }

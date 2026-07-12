@@ -112,8 +112,14 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"join_type"#.to_string() }) },
                 GrammarElement::Literal { value: r#"JOIN"#.to_string() },
                 GrammarElement::RuleReference { name: r#"table_ref"#.to_string() },
-                GrammarElement::Literal { value: r#"ON"#.to_string() },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // `ON expr` is OPTIONAL: a join with no condition is a Cartesian
+                // (cross) product — `FROM a JOIN b` and `FROM a CROSS JOIN b`. The
+                // planner returns `None` for a missing ON, and codegen emits every
+                // pair (no condition check) for an INNER join with no condition.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"ON"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                ] }) },
             ] },
             line_number: 28,
         },

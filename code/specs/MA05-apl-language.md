@@ -206,15 +206,26 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
   opt-in, not a single global fix — a lone constant can't be safe for every
   grammar at once, since rule-chain depth per source-nesting level varies
   wildly; see `macsyma-parser`/`matlab-parser`/`wolfram-parser`'s own
-  retrofitted caps, task #12/PR #7928). `apl-parser`'s own empirically-
-  derived `MAX_RULE_DEPTH = 150` (72 real nesting levels) produced a
-  genuinely counter-intuitive finding: despite APL's much shallower one-
-  precedence-tier grammar (no cascade to climb, ~3 rule calls per nesting
-  level versus MACSYMA/MATLAB/Wolfram's 13-20), its raw native-stack crash
-  floor (209 frames) measured *lower* than theirs (~275-280) — the opposite
-  of the natural "fewer calls per level → higher floor" prediction. See
-  `apl-parser/src/lib.rs`'s `MAX_RULE_DEPTH` doc comment for the full
-  derivation.
+  retrofitted caps, task #12/PR #7928). `apl-parser`'s original (`0.1.0`)
+  empirically-derived `MAX_RULE_DEPTH = 150` (72 real `(...)` nesting levels)
+  produced a genuinely counter-intuitive finding: despite APL's much
+  shallower one-precedence-tier grammar (no cascade to climb, ~3 rule calls
+  per nesting level versus MACSYMA/MATLAB/Wolfram's 13-20), its raw
+  native-stack crash floor for *parenthesised* nesting (209 frames) measured
+  *lower* than theirs (~275-280) — the opposite of the natural "fewer
+  frames per level → higher floor" prediction.
+  **Corrected in `0.1.1`** (found while building MA-4e on top of this
+  crate): parenthesised nesting is not the only way to drive `value_expr`
+  deep — a flat, *unparenthesised* dyadic chain (`1+1+1+…+1`) also recurses
+  through `value_expr`'s own right-recursive continuation, and that shape's
+  native-stack crash floor (~136) is considerably *lower* than the
+  parenthesised-nesting floor (209) — meaning the original `150` was
+  actually unsafe (inputs at depth ~137, still nominally under the
+  configured cap, could crash the process). `MAX_RULE_DEPTH` is now `100`
+  (safe against the lower, binding flat-chain floor), with 4 new regression
+  tests covering the flat-chain shape specifically. See
+  `apl-parser/src/lib.rs`'s `MAX_RULE_DEPTH` doc comment and the crate's
+  `CHANGELOG.md` for the full derivation and incident writeup.
 - **MA-4e — `apl-runtime` + `apl-repl` + the `apl` binary** (✅ done): a
   working REPL — right-to-left evaluation (falls straight out of walking the
   grammar's right-recursive `value_expr`, no precedence climbing anywhere in
