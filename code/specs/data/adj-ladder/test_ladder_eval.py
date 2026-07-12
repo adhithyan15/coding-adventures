@@ -168,6 +168,7 @@ SELF_CONTAINED_RUNGS = (
     "rung128_microperfusion_mean",
     "rung129_solute_clearance_mean",
     "rung130_relative_potency_ratio",
+    "rung131_perfusate_throughput",
 )
 
 
