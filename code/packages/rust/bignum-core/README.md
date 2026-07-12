@@ -1,6 +1,6 @@
 # bignum-core
 
-A zero-dependency, `unsafe`-free **arbitrary-precision numeric core**: an unbounded signed integer (`BigInteger`, **NUM-1**) and, built on it, an exact never-rounding rational (`BigRational`, **NUM-2**) and an exact base-10 decimal (`BigDecimal`, **NUM-3**).
+A zero-dependency, `unsafe`-free **arbitrary-precision numeric core**: an unbounded signed integer (`BigInteger`, **NUM-1**) and, built on it, an exact never-rounding rational (`BigRational`, **NUM-2**), an exact base-10 decimal (`BigDecimal`, **NUM-3**), and a correctly-rounded binary float of arbitrary precision (`BigDouble`, **NUM-4**) for the numbers that are no exact fraction (`√2`, and later `ln`, `exp`, `π`).
 
 Where a machine `i64` overflows past `9_223_372_036_854_775_807`, a `BigInteger` just keeps going. `100!` (a 158-digit number) is stored exactly, every digit correct. A `BigRational` then makes the four everyday operations — `+ − × ÷` — **exact forever**: `1/3` is `1/3`, and `0.1 + 0.2` is exactly `3/10`, not `0.30000000000000004`.
 
@@ -31,12 +31,12 @@ Because the form is canonical, `PartialEq`/`Eq`/`Hash` are derived and correct.
 ## Layer position
 
 ```
-                                   BigDouble          (later NUM rung)
-                                       ▲
-                     ┌──────────────┐  │  ┌──────────────┐
-                     │ BigRational  │  │  │  BigDecimal  │  ← this crate (NUM-2, NUM-3)
-                     └──────┬───────┘  │  └──────┬───────┘
-                            └──────────┴─────────┘
+              ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+              │ BigRational  │ │  BigDecimal  │ │   BigDouble  │  ← this crate
+              └──────┬───────┘ └──────┬───────┘ └──────┬───────┘   (NUM-2, NUM-3, NUM-4)
+                     │                │                │
+                     └────────────────┼────────────────┘
+                          (BigDouble → BigDecimal for exact decimal output)
                                        ▼
                               ┌────────────────┐
                               │   BigInteger   │   ← this crate (NUM-1)
@@ -216,6 +216,44 @@ Every value is canonical — trailing zeros stripped, zero pinned to `(0, 0)` �
 | Rounding | `RoundingMode` (`Down`/`Up`/`Floor`/`Ceiling`/`HalfUp`/`HalfDown`/`HalfEven`), `div_round`/`checked_div_round`, `round_to_scale` |
 | Query | `is_zero`, `is_negative`, `is_positive`, `signum`, `mantissa`, `scale`, `Ord`/`Eq`/`Hash` |
 | I/O | `FromStr` (plain + scientific) with typed `ParseDecimalError`; plain-decimal `Display`/`Debug` |
+
+## BigDouble — correctly-rounded binary float, any precision (NUM-4)
+
+`BigRational` and `BigDecimal` are **exact**. But some numbers are no exact fraction at all — `√2`, and later `ln 2`, `e`, `π`. For those, exactness is impossible, so the honest thing is not to *pretend*: compute to a **stated precision** under a **stated rounding mode**, and *carry* how many bits are trustworthy. That is `BigDouble`: a float like an `f64` (value `mantissa × 2^exponent`), but with a `BigInteger` mantissa of *unbounded* size — 53 bits, or hundreds, or thousands, as many as you ask for.
+
+```rust
+use bignum_core::{BigDouble, RoundingMode};
+use RoundingMode::HalfEven;
+
+// √2 to 200 significant bits — far past what an f64 can hold — read back as exact decimal.
+let root2 = BigDouble::from_i64(2).sqrt(200, HalfEven);
+assert!(root2.to_decimal().unwrap().to_string()
+    .starts_with("1.41421356237309504880168872420969807856"));
+
+// At 53 bits with round-half-even, every operation matches hardware f64 *bit for bit*.
+let a = BigDouble::from_f64(0.1);
+let b = BigDouble::from_f64(0.2);
+assert_eq!(a.add(&b, 53, HalfEven).to_f64(), 0.1_f64 + 0.2_f64);
+
+// from_f64 is exact — an f64 is a dyadic rational — so to_decimal shows the true value.
+assert_eq!(
+    BigDouble::from_f64(0.1).to_decimal().unwrap().to_string(),
+    "0.1000000000000000055511151231257827021181583404541015625"
+);
+```
+
+Every inexact operation rounds correctly via **guard + sticky** information — the same decision IEEE-754 hardware makes — so alignment costs `O(prec)`, not `O(exponent gap)`: a `10^large + 10^small`-style sum does not blow up. The test suite *proves* the bit-for-bit match: at 53 bits, `+ − × ÷` and `√` reproduce `f64` across tens of thousands of random operands, then keep going where the hardware cannot. Ordering is **by value**, independent of stored precision (`3` at 64 bits equals `3` at 200 bits), and `to_decimal()` is **exact** (every binary fraction terminates in base 10).
+
+Two security budgets keep any input from becoming unbounded memory or a silent wrong answer: `MAX_PRECISION` bounds the bits kept, and `MAX_EXPONENT` (`2^62`) bounds the stored base-2 exponent — with all exponent-combining arithmetic carried in `i128`, an out-of-range result is an explicit panic, never an `i64` wrap. `to_decimal` (which must *materialize* `~|exp|` digits) has its own smaller budget and returns `None` past it, so `to_f64`/`Display` saturate rather than exhaust memory.
+
+| Area | API |
+|------|-----|
+| Construct | `zero`, `one`, `from_parts`, `from_bigint`, `from_i64`, `from_f64` (exact), `with_precision` |
+| Rounded arithmetic | `add`, `sub`, `mul`, `div`/`checked_div`, `sqrt` — each `(…, prec, RoundingMode)` |
+| Query | `is_zero`, `is_negative`, `is_positive`, `signum`, `abs`, `neg`, `mantissa`, `exponent`, `precision`, `Ord`/`Eq` (by value) |
+| Convert | `to_decimal` (exact `BigDecimal`), `to_f64` (lossy, correctly rounded), `Display`/`Debug` |
+
+Transcendental functions (`ln`, `exp`, `sin`, …) build on this core and are a separate later effort (NUM-4b).
 
 ## Zero dependencies
 

@@ -1791,3 +1791,11 @@ mod tests {
 // ===========================================================================
 pub mod decimal;
 pub use decimal::{BigDecimal, ParseDecimalError, RoundingMode};
+
+// ===========================================================================
+//  NUM-4 — arbitrary-precision binary float, built on the BigInteger above
+//  (and reusing BigDecimal for exact decimal output). Declared at the end of
+//  the file to avoid colliding with the other numeric-rung module declarations.
+// ===========================================================================
+pub mod float;
+pub use float::{BigDouble, MAX_PRECISION};
