@@ -2140,6 +2140,12 @@ fn parse_assignment_op(s: &str) -> Option<AssignmentOperator> {
         "|=" => Some(AssignmentOperator::BitOrEq),
         "^=" => Some(AssignmentOperator::BitXorEq),
         "&=" => Some(AssignmentOperator::BitAndEq),
+        // ES2021 logical assignment operators (CLOC12.183). These parse fine but
+        // previously fell through to `None`, mapping to an `InternalError` that
+        // dropped the whole file to WHITESPACE_ONLY.
+        "&&=" => Some(AssignmentOperator::LogicalAndEq),
+        "||=" => Some(AssignmentOperator::LogicalOrEq),
+        "??=" => Some(AssignmentOperator::NullishCoalescingEq),
         _ => None,
     }
 }
@@ -3724,6 +3730,7 @@ fn unquote_string(raw: &str) -> String {
 mod tests {
     use super::*;
     use crate::{parse_javascript_typed, DEFAULT_ES_VERSION};
+
     use coding_adventures_javascript_tokens::EsVersion;
 
     fn bridge(src: &str) -> Result<Program, BridgeError> {
@@ -3733,6 +3740,28 @@ mod tests {
 
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
+    }
+
+    /// Pull the `AssignmentExpression` operator out of `<lhs> <op> <rhs>;`.
+    fn assign_op_of(src: &str) -> AssignmentOperator {
+        let p = bridge_ok(src);
+        match first_expr(&p) {
+            Expression::AssignmentExpression(a) => a.operator,
+            other => panic!("expected AssignmentExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn logical_assignment_operators_bridge() {
+        // ES2021 `&&=` / `||=` / `??=` parse fine but previously mapped to an
+        // InternalError ("unknown assignment operator"), dropping the file to
+        // WHITESPACE_ONLY. They now bridge to their own operator variants
+        // (CLOC12.183).
+        assert_eq!(assign_op_of("a &&= b;"), AssignmentOperator::LogicalAndEq);
+        assert_eq!(assign_op_of("a ||= b;"), AssignmentOperator::LogicalOrEq);
+        assert_eq!(assign_op_of("a ??= b;"), AssignmentOperator::NullishCoalescingEq);
+        // A neighbouring bitwise `&=` must still map to its own (distinct) variant.
+        assert_eq!(assign_op_of("a &= b;"), AssignmentOperator::BitAndEq);
     }
 
     /// Pull the `RegExpLiteral` out of `x = <regex>;` so the regex tests can
