@@ -130,14 +130,12 @@ new canonical identity collisions with `--fail-on-collisions`.
 Twenty-one package/language slots turn 21 nearly complete packages into fully
 covered packages.
 
-### Dart: 13 ports
+### Dart: 11 remaining ports
 
 - `algol-lexer`
 - `algol-parser`
-- `bitset`
 - `b-plus-tree`
 - `b-tree`
-- `heap`
 - `image-geometric-transforms`
 - `image-point-ops`
 - `logic-gates`
@@ -146,8 +144,12 @@ covered packages.
 - `pixel-container`
 - `toml-lexer`
 
-### Haskell: 5 ports
+Completed in the Dart lane: `heap`, `bitset`.
 
+### Haskell: 7 ports
+
+- `activation-functions`
+- `caesar-cipher`
 - `huffman-compression`
 - `huffman-tree`
 - `lz77`
