@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.24] - 2026-07-12
+
+### Added — CLOC12.185: parenthesised object-body arrows end-to-end
+
+Picks up javascript-parser 0.49.0, whose bridge now models the parenthesised
+object-body arrow `() => ({…})` (previously declined). This very common idiom
+(map/React callbacks) now survives the full closurec pipeline instead of dropping
+to WHITESPACE_ONLY. New e2e diff fixture `tests/diff/simple-arrow-object-body/`:
+`x = () => ({a: 1 + 2});` → `x=()=>({a:3});` at SIMPLE.
+
+The fixture proves two things: the object body round-trips **parenthesised**
+(`()=>({a:…})` — the parens are load-bearing; without them it would be read as a
+block), and the SIMPLE pipeline descends INTO the object value (`1 + 2` → `3`).
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.23] - 2026-07-12
 
 ### Fixed — CLOC12.184: empty-block arrow `() => {}` end-to-end
