@@ -248,6 +248,25 @@ pub struct ScopeAnalysis {
     /// rename passes read this flag and decline to rename when it is set.
     /// See [`program_contains_with_statement`].
     pub has_with: bool,
+    /// `true` if the program contains at least one ES-module `import`
+    /// declaration anywhere.
+    ///
+    /// An `import` binds module-local names (`import x from "y"`,
+    /// `import {a as c} from "y"`, `import * as ns from "y"`) that are aliases
+    /// for a *foreign module's* exports. Two soundness hazards follow, and both
+    /// make whole-program renaming unsafe:
+    ///
+    /// 1. Renaming an import binding (or a reference to it) would rewrite the
+    ///    name on one side of a cross-module contract the analyzer cannot see.
+    /// 2. The analyzer registers no binding for an import (its names live in a
+    ///    foreign scope), so the fresh-short-name allocator does not know those
+    ///    names are taken — it could rename an unrelated local *into* an import
+    ///    name and collide with it.
+    ///
+    /// Mirroring [`has_with`], the rename passes read this flag and decline to
+    /// rename the whole program when it is set. See
+    /// [`program_contains_import_declaration`].
+    pub has_import: bool,
 }
 
 impl ScopeAnalysis {
@@ -427,6 +446,7 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         bindings: Vec::new(),
         references: Vec::new(),
         has_with: false,
+        has_import: false,
     };
 
     let mut pending: Vec<PendingReference> = Vec::new();
@@ -474,6 +494,25 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
 /// a `with` anywhere returns `true`. See the crate tests for worked examples.
 pub fn program_contains_with_statement(program: &Program) -> bool {
     analyze(program).has_with
+}
+
+/// Does `program` contain an ES-module `import` declaration anywhere?
+///
+/// This is a soundness gate for the renaming passes, a sibling of
+/// [`program_contains_with_statement`]. An `import` introduces module-local
+/// names that alias a foreign module's exports; renaming them would break the
+/// cross-module contract, and because the analyzer registers no binding for
+/// them the fresh-short-name allocator could also collide an unrelated local
+/// with an import name. The only sound response with the current
+/// module-unaware analysis is to disable renaming for the whole program. The
+/// rename / rename-globals / rename-properties passes call this and return
+/// their input unchanged when it is `true`.
+///
+/// Like the `with` flag it rides the full [`analyze`] walk, so it sees an
+/// `import` however it is nested (imports are only legal at the top level
+/// today, but riding the walk keeps the check drift-proof if that changes).
+pub fn program_contains_import_declaration(program: &Program) -> bool {
+    analyze(program).has_import
 }
 
 /// Emit a binding into the given scope and update both the
@@ -531,10 +570,14 @@ fn walk_declaration(
         Declaration::ClassDeclaration(cd) => walk_class_declaration(cd, ctx, analysis, pending),
         // An import declaration binds module-local names, but those names link
         // to a *foreign module's* exports — renaming them would break the
-        // cross-module contract. PR1 keeps the node unreachable; we register no
-        // scope binding for it, so references stay conservatively un-renameable.
-        // (The full soundness treatment lands with the bridge PR.)
-        Declaration::ImportDeclaration(_) => {}
+        // cross-module contract, and the fresh-name allocator does not know the
+        // import names are taken (no binding is registered for them). We record
+        // that on the analysis (`has_import`) so the rename passes can bail for
+        // the whole program — mirroring the `with` gate (CLOC12.188 PR2). We
+        // register no scope binding, so import references stay un-renameable.
+        Declaration::ImportDeclaration(_) => {
+            analysis.has_import = true;
+        }
     }
 }
 
@@ -1217,6 +1260,7 @@ mod tests {
             }],
             references: Vec::new(),
             has_with: false,
+            has_import: false,
         };
         let inner = ScopeId(1);
         let resolved = analysis.resolve("x", inner);
@@ -1256,6 +1300,7 @@ mod tests {
             ],
             references: Vec::new(),
             has_with: false,
+            has_import: false,
         };
         let inner = ScopeId(1);
         assert_eq!(analysis.resolve("x", inner), Some(BindingId(1)));
@@ -1686,6 +1731,7 @@ mod tests {
                 cv: Some("cv.2".to_string()),
             }],
             has_with: false,
+            has_import: false,
         };
         let json = serde_json::to_string(&analysis).expect("serialize");
         let back: ScopeAnalysis = serde_json::from_str(&json).expect("deserialize");
@@ -1972,5 +2018,48 @@ mod tests {
         // program-wide flag (rather than a per-scope one) sound.
         let prog = program_with(vec![fn_decl_with_body("f", &[], vec![with_stmt("o")])]);
         assert!(program_contains_with_statement(&prog));
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.188 PR2 — `import` soundness gate (sibling of the `with`
+    // gate). `program_contains_import_declaration` is the flag the
+    // rename passes read to disable renaming when a module `import` is
+    // present.
+    // ---------------------------------------------------------------
+
+    /// `import x from "y";` as a top-level declaration item.
+    fn import_item() -> ProgramItem {
+        use coding_adventures_javascript_ast::{
+            ImportDeclaration, ImportSpecifier, StringLiteral,
+        };
+        ProgramItem::Declaration(Declaration::import_declaration(ImportDeclaration {
+            cv: None,
+            specifiers: vec![ImportSpecifier::Default(Identifier {
+                cv: None,
+                name: "x".into(),
+            })],
+            source: StringLiteral {
+                cv: None,
+                value: "y".into(),
+                raw: "\"y\"".into(),
+            },
+        }))
+    }
+
+    #[test]
+    fn program_contains_import_is_false_for_import_free_program() {
+        // `function f(a) {}` — no import, so the gate stays open and
+        // renaming remains enabled.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], vec![])]);
+        assert!(!program_contains_import_declaration(&prog));
+        assert!(!analyze(&prog).has_import);
+    }
+
+    #[test]
+    fn program_contains_import_detects_top_level_import() {
+        // `import x from "y";` — the gate must fire, disabling renaming.
+        let prog = program_with(vec![import_item()]);
+        assert!(program_contains_import_declaration(&prog));
+        assert!(analyze(&prog).has_import);
     }
 }

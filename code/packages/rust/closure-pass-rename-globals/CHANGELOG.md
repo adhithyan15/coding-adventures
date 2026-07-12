@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.14.0] - 2026-07-12
+
+### Changed — CLOC12.188 PR2: bail on module `import`
+
+The global-renaming soundness gate now also declines when
+`program_contains_import_declaration` is true, mirroring the `with` gate — an
+import name aliases a foreign export and must not be renamed into or out of.
+
 ## [0.13.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: `ImportDeclaration` arm

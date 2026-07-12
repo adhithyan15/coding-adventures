@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.52.0] - 2026-07-12
+
+### Added — CLOC12.188 PR2: bridge `import` declarations
+
+`convert_import_declaration` bridges the grammar's `import_declaration` node into
+`Declaration::ImportDeclaration` (added by PR1), so ES-module `import` files now
+optimize instead of degrading to WHITESPACE_ONLY. Recognised shapes (verified by
+a parse-tree probe): side-effect `import "y"`, default `import x from "y"`,
+namespace `import * as ns from "y"`, named `import {a, b as c} from "y"`, and
+default-plus-named `import x, {a} from "y"`. The source string rides an
+(unquoted) `String` token inside `module_specifier` / `from_clause`; the raw
+`"…"` form is rebuilt for the `StringLiteral`. `import x, * as ns from "y"` is a
+grammar gap (rejected at the parse layer) and any unrecognised shape DECLINES via
+`unsupported` (safe fallback). Six bridge tests cover each form plus the
+declined default+namespace case.
+
 ## [0.51.0] - 2026-07-12
 
 ### Added — CLOC12.187 PR2b: bridge `with (obj) stmt` → `WithStatement`
