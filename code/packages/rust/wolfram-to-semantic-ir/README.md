@@ -63,19 +63,31 @@ token).
 ### Recursion-depth hardening
 
 Every flat, same-precedence operator chain (`+`, `*`, `&&`, `||`, `|`,
-`/@`/`@@`, `/.`/`//.`, `?`) — and, after a security-review finding fixed
-before first push, every chained postfix application/part group
-(`f[…][…]…`) and `&`-run/pure-function-apply suffix run — is capped at
-`MAX_EXPR_DEPTH` operands *before* any tree is built, because the Wolfram
-grammar — like MATLAB's — collapses a long unparenthesized chain into one
-CST node with many children rather than nesting through parens, so it
-never trips the ordinary grammar-nesting depth guard. The first eight
-productions were covered from day one; the postfix/amp chains were an
-initial gap the security review caught (see `CHANGELOG.md`'s "Fixed"
-entry) — both classes are now verified adversarially: temporarily removing
-each guard and re-running its 60,000-term regression test reproduces a
-real `SIGABRT` native stack overflow, confirming the guards are
-load-bearing, not decorative.
+`/@`/`@@`, `/.`/`//.`, `?`, and — after a security-review finding — chained
+postfix application/part groups and `&`-run/pure-function-apply suffixes)
+is capped at `MAX_EXPR_DEPTH` operands before any tree is built, because
+the Wolfram grammar — like MATLAB's — collapses a long unparenthesized
+chain into one CST node with many children rather than nesting through
+parens, so it never trips the ordinary grammar-nesting depth guard.
+
+That per-construct capping is necessary but, on its own, not sufficient: a
+second security-review finding showed that per-node-scoped guards don't
+compose across nested `(...)` boundaries — chaining several
+independently-in-bounds constructs through parentheses can still build a
+tree far deeper than any single guard's own limit. The authoritative fix
+is [`measure_depth_iterative`](src/lower.rs) — an iterative (never
+recursive) post-construction depth check, safe to call on a tree of any
+size because building a deeply-nested `Box`-based tree only costs heap,
+not stack; only *walking* it recursively is dangerous. It runs before this
+crate's own unguarded recursive helpers (`collect_pattern_names`/
+`bind_pattern_refs`) touch a tree, and once per top-level statement before
+anything reaches the returned `Module`, closing the gap regardless of how
+the tree was composed. See `CHANGELOG.md`'s "Fixed" entries for the full
+three-round history — every class of guard here (per-construct caps and
+the final authoritative check) was verified adversarially by temporarily
+disabling it and confirming a real `SIGABRT` native stack overflow (or, for
+the composition gap, a silent wrongful *acceptance* of oversized input)
+reproduces, then restoring it and confirming the regression test passes.
 
 `compile_source` additionally parses on an enlarged-stack worker thread
 (see "Usage" above), reusing `wolfram-runtime`'s own validated-safe

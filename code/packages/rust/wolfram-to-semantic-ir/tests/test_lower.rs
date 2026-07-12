@@ -616,3 +616,35 @@ fn a_cumulative_chain_depth_at_exactly_the_cap_still_compiles() {
     let bad_src = format!("x[[{indices}]][0]\n");
     assert!(compile_source(&bad_src, "test").is_err());
 }
+
+// Per-construct chain budgets (`add_chain_depth`, `check_chain_length`) are
+// each scoped to ONE grammar node and don't compose across a nested
+// boundary -- chaining several independently-capped bracket chains through
+// `(...)` grouping (each individually at or under MAX_EXPR_DEPTH) can still
+// build a tree far deeper than any single guard's own limit, since each
+// guard only sees its own local slice of the construction. Found during
+// round 3 of security review -- see `measure_depth_iterative`'s doc
+// comment in src/lower.rs, the authoritative post-construction check that
+// closes this regardless of how the tree was composed.
+
+#[test]
+fn chained_bracket_groups_composed_across_paren_boundaries_are_rejected_cleanly() {
+    // 20 levels of "(...) [20 groups]" wrapping -- each level's own 20
+    // bracket groups is comfortably UNDER MAX_EXPR_DEPTH (256) on its own
+    // (so a per-node-local check alone would pass every single level), but
+    // the levels compose to 20*20 = 400 real nesting levels, already past
+    // the cap. (A much larger, ~97-level/256-groups-per-level version of
+    // this same construction was independently confirmed, during security
+    // review, to take `wolfram-parser` itself minutes to even parse --
+    // `wolfram-parser`'s own O(n) packrat-memo lookup, tracked separately
+    // as a performance follow-up, not a correctness issue -- so this test
+    // uses the smallest scale that still demonstrably exceeds the cap via
+    // composition, to stay fast.)
+    let group = "[0]".repeat(20);
+    let mut src = format!("x{group}");
+    for _ in 0..20 {
+        src = format!("({src}){group}");
+    }
+    src.push('\n');
+    assert!(compile_source(&src, "test").is_err());
+}

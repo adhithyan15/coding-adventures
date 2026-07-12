@@ -121,10 +121,18 @@
 //!
 //! # Recursion-depth hardening
 //!
-//! Applied from day one (not retrofitted after a security-review finding,
-//! unlike `matlab-to-semantic-ir`'s own history — see
-//! [`MAX_EXPR_DEPTH`] and [`Lowerer::check_chain_length`]'s doc comments
-//! for the two distinct guards this needs and why both are necessary).
+//! Per-construct chain-length checks (see [`MAX_EXPR_DEPTH`] and
+//! [`Lowerer::check_chain_length`]/[`Lowerer::add_chain_depth`]) were
+//! applied from day one rather than retrofitted, but two rounds of
+//! security review still found real gaps in them: `postfix`/`amp` share
+//! the same flat-repetition grammar shape without being on the "obviously
+//! chain-shaped" list, and — even once every construct had its own
+//! guard — those guards are each scoped to one grammar node, so chaining
+//! several independently-in-bounds constructs across `(...)` boundaries
+//! still composes past the cap (see [`measure_depth_iterative`], the
+//! authoritative, construction-composition-independent check this crate
+//! ultimately relies on; `CHANGELOG.md` has the full history of what each
+//! round found).
 
 use std::collections::HashSet;
 
@@ -279,6 +287,12 @@ impl Lowerer {
                 continue;
             };
             let expr = self.lower_node(stmt, 0)?;
+            if measure_depth_iterative(&expr).is_none() {
+                return Err(self.err_at(
+                    stmt,
+                    format!("expression tree too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+                ));
+            }
             let span = expr.span().clone();
             stmts.push(Stmt::ExprStmt { expr, span });
         }
@@ -491,6 +505,29 @@ impl Lowerer {
         let rhs = self.lower_child(&node.children[op_index + 1], depth + 1)?;
         let delayed = token_type(as_token(&node.children[op_index]).unwrap()) == "RULEDELAYED";
         let span = self.span_of(node);
+
+        // `collect_pattern_names`/`bind_pattern_refs` below recurse over
+        // `lhs`/`rhs` with no depth cap of their own (see their doc
+        // comments -- they assume whatever tree they're handed is already
+        // bounded). That assumption does not hold in general: `depth`
+        // alone only bounds *this crate's own* CST-walking recursion, not
+        // the true depth of a tree a flat-chain fold (postfix/amp/etc, see
+        // `add_chain_depth`) may have built -- and per-construct chain
+        // budgets don't compose across nested grammar boundaries (a
+        // security review found chaining several independently-capped
+        // constructs, e.g. through `(...)` boundaries, can still build a
+        // tree far deeper than any single guard's own limit). Measure the
+        // TRUE depth authoritatively and iteratively (never recursively,
+        // so this check itself can never crash regardless of how deep the
+        // tree already is -- building a deep `Box`-based tree costs heap,
+        // not stack, so it's always safe to measure after the fact) before
+        // handing `lhs`/`rhs` to either unguarded recursive helper.
+        if measure_depth_iterative(&lhs).is_none() || measure_depth_iterative(&rhs).is_none() {
+            return Err(self.err_at(
+                node,
+                format!("expression tree too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
 
         // Wolfram binds a pattern name on the LHS (`t_`) and refers to it as
         // a *bare* symbol on the RHS (`-> t`); a later matcher only fills in
@@ -1366,16 +1403,79 @@ fn is_list_apply(expr: &Expr) -> bool {
     matches!(expr, Expr::SymApply { head, .. } if matches!(head.as_ref(), Expr::SymSymbol { name, .. } if name == LIST))
 }
 
+/// Measure `expr`'s true tree depth **iteratively**, using an explicit
+/// heap-allocated work stack rather than native recursion, so calling this
+/// can never itself overflow the stack no matter how deep `expr` already
+/// is -- unlike a naive recursive depth check, which would have exactly
+/// the same crash risk as the thing it's trying to detect. Building a
+/// deeply-nested `Box`-based tree only costs heap space (each construction
+/// step is O(1) stack), so it is always safe to measure a tree's depth
+/// *after* it has been fully built; the risk this guards against is only
+/// in *walking* it recursively afterward.
+///
+/// Returns `None` (bailing out early, without doing more than
+/// `O(MAX_EXPR_DEPTH * branching factor)` work) as soon as the depth is
+/// certain to exceed `MAX_EXPR_DEPTH`, `Some(depth)` otherwise.
+///
+/// This is the authoritative depth check every other guard in this file
+/// (`MAX_EXPR_DEPTH`'s recursion-depth parameter, [`Lowerer::add_chain_depth`])
+/// is only an early, cheap approximation of. A security review found that
+/// per-construct chain budgets do not compose across nested grammar
+/// boundaries -- chaining several independently-capped constructs (e.g.
+/// through `(...)` boundaries) can still build a tree far deeper than any
+/// single guard's own limit, since each guard only sees its own local
+/// slice of the construction. This function is called on the fully-built
+/// result before anything recurses over it without its own cap (see
+/// [`Lowerer::lower_rule`]'s use before `collect_pattern_names`/
+/// `bind_pattern_refs`) and once per top-level statement in
+/// [`Lowerer::lower_file`], so no tree this crate hands to a caller (or
+/// recurses over internally) can ever actually exceed `MAX_EXPR_DEPTH`,
+/// regardless of how its construction was composed.
+fn measure_depth_iterative(expr: &Expr) -> Option<usize> {
+    // The root itself starts at 0 wraps deep (matching the counting
+    // convention `Lowerer::add_chain_depth`/`check_apply_arg_count` already
+    // use elsewhere -- a chain of exactly `MAX_EXPR_DEPTH` nested wraps
+    // atop a leaf is "at the cap", not one past it).
+    let mut stack: Vec<(&Expr, usize)> = vec![(expr, 0)];
+    let mut max_depth = 0;
+    while let Some((node, d)) = stack.pop() {
+        if d > MAX_EXPR_DEPTH {
+            return None;
+        }
+        max_depth = max_depth.max(d);
+        match node {
+            Expr::SymApply { head, args, .. } => {
+                stack.push((head, d + 1));
+                for a in args {
+                    stack.push((a, d + 1));
+                }
+            }
+            Expr::SymPatternBlank { head: Some(h), .. } => stack.push((h, d + 1)),
+            Expr::SymPatternNamed { pattern, .. } => stack.push((pattern, d + 1)),
+            Expr::SymRule { lhs, rhs, .. } => {
+                stack.push((lhs, d + 1));
+                stack.push((rhs, d + 1));
+            }
+            Expr::SymReplaceAll { expr, rules, .. } => {
+                stack.push((expr, d + 1));
+                for r in rules {
+                    stack.push((r, d + 1));
+                }
+            }
+            _ => {}
+        }
+    }
+    Some(max_depth)
+}
+
 /// Gather the names captured by every [`Expr::SymPatternNamed`] anywhere in
 /// `expr` -- used by `lower_rule` to know which RHS bare-symbol references
-/// need rewriting into pattern-reference form. Safe to recurse unguarded:
-/// `expr` was built by [`Lowerer::lower_node`], whose own `MAX_EXPR_DEPTH`
-/// cap already bounds its depth, so walking it again can never exceed that
-/// same bound (this is the "structure is already bounded, so a second walk
-/// of it is safe" half of the lesson `matlab-to-semantic-ir`'s
-/// `expr_is_known_scalar_d` doc comment discusses -- unlike that function,
-/// this one is never called on anything *other* than an already-built,
-/// already-capped tree, so it needs no depth parameter of its own).
+/// need rewriting into pattern-reference form. Recurses without its own
+/// depth cap: safe because its only caller ([`Lowerer::lower_rule`])
+/// verifies `expr`'s true depth via [`measure_depth_iterative`] first,
+/// which is the authoritative bound -- see that function's doc comment for
+/// why a purely construction-time cap (`MAX_EXPR_DEPTH`/`add_chain_depth`)
+/// is not sufficient on its own.
 fn collect_pattern_names(expr: &Expr, names: &mut HashSet<String>) {
     match expr {
         Expr::SymPatternNamed { name, pattern, .. } => {
@@ -1408,6 +1508,8 @@ fn collect_pattern_names(expr: &Expr, names: &mut HashSet<String>) {
 /// reference nodes -- the same shape a fresh `x_` occurrence lowers to (see
 /// the SIR23 spec) -- so a later matcher's substitution step fills them in.
 /// Symbols not in `bound`, and all literals, pass through unchanged.
+/// Recurses without its own depth cap for the same reason
+/// [`collect_pattern_names`] does -- see that function's doc comment.
 fn bind_pattern_refs(expr: Expr, bound: &HashSet<String>) -> Expr {
     match expr {
         Expr::SymSymbol { name, span } if bound.contains(&name) => Expr::SymPatternNamed {

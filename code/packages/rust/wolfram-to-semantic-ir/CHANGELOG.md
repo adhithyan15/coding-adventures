@@ -44,11 +44,12 @@
   native stack overflow without the guard, then restored it and confirmed
   the same test passes cleanly. Mirrors `matlab-to-semantic-ir`'s own
   post-hoc discovery of this exact bug class, applied here proactively.
-- 61 tests: 51 unit tests over exact `Expr` shapes for every grammar
+- 62 tests: 52 unit tests over exact `Expr` shapes for every grammar
   production plus DoS-guard regressions (a 60,000-term flat chain, a
   60,000-deep chained bracket/part/pure-function-apply/`&`-run, a
-  256×256-multiplicative bracket/index combination, deeply nested parens,
-  and exact-boundary pairs), 9 validator/capability-rejection tests, 1
+  256×256-multiplicative bracket/index combination, a chain composed
+  across nested `(...)` boundaries, deeply nested parens, and
+  exact-boundary pairs), 9 validator/capability-rejection tests, 1
   doctest.
 - Marks `wolfram-to-semantic-ir` done in `HML01-math-to-semantic-ir.md`'s
   Stream B rollout.
@@ -101,6 +102,60 @@
   adversarially: reproduced the 256×256 crash with the new guard disabled,
   then confirmed the fix rejects it cleanly and the dedicated regression
   test passes.
+- **HIGH — the round-2 fix's cumulative budget was scoped per grammar
+  node, not globally, found in round 3 (final) of security review.**
+  `add_chain_depth`'s running total correctly bounds nesting *within one*
+  `postfix`/`amp` node, but resets fresh (`= 0`) on every call — it has no
+  awareness that the node's own *base* (the "atom" the chain applies to)
+  might already be an arbitrarily deep tree, built either by ordinary
+  legitimate `(...)` nesting or by a *different* instance of the same
+  chain-fold pattern one level up. Wrapping an already-at-cap chain in
+  parentheses and appending another full chain — repeated across as many
+  `(...)` boundaries as `wolfram-parser`'s own real-nesting limit allows
+  (see that crate's `MAX_RULE_DEPTH` doc comment — around 98 levels on
+  `compile_source`'s enlarged-stack thread) — composes each individually
+  in-bounds chain multiplicatively, reaching tens of thousands of true
+  nesting levels overall; confirmed via security review that this
+  structurally bypasses every existing per-node guard (`add_chain_depth`,
+  `check_chain_length`, and the ordinary CST-recursion `depth` parameter,
+  which only costs ~2 units per `(...)` wrap — nowhere near enough to
+  itself trip `MAX_EXPR_DEPTH`). The same composition gap applies in
+  principle to every other flat-chain production (`additive`/
+  `multiplicative`/`logical_or`/`logical_and`/`alternatives`/`mapapply`/
+  `patterntest`/`replaceall`), not just `postfix`/`amp` — none of them
+  account for their base operand's pre-existing depth either. Fixed with a
+  different, more fundamental mechanism rather than another per-construct
+  patch: constructing a deeply-nested `Box`-based tree costs only heap,
+  not stack (each construction step is O(1) regardless of how the tree
+  eventually gets used), so the risk is entirely in *walking* it
+  recursively afterward — not in building it. Added
+  `measure_depth_iterative`, an authoritative depth check that walks an
+  already-built `Expr` using an explicit heap-allocated work stack (never
+  native recursion, so it can never itself crash regardless of how deep
+  the input already is, and bails out the moment depth is certain to
+  exceed the cap rather than doing unbounded work). Called on `lhs`/`rhs`
+  in `lower_rule` before either is handed to `collect_pattern_names`/
+  `bind_pattern_refs` (the two functions in this crate that already
+  recursed without their own cap, on the — now corrected — assumption that
+  `MAX_EXPR_DEPTH` alone already bounded their input), and once per
+  top-level statement in `lower_file` before it can reach the returned
+  `Module` (protecting `semantic_ir::validate`, any backend, and — since
+  `semantic_ir::Expr` has no custom `Drop` impl — the unconditional,
+  unguarded recursive `Drop` glue that runs whenever a caller lets a
+  `Module` go out of scope). This closes the gap regardless of how the
+  oversized tree was composed, rather than requiring a bespoke guard for
+  every new way constructs might chain together. Verified adversarially:
+  temporarily disabled both new call sites, confirmed a composed chain
+  that individually stays under every per-node cap (20 levels of
+  `(...)`-wrapping around a 20-group bracket chain, 400 true nesting
+  levels) is wrongly *accepted* — proving the structural bypass — then
+  restored the fix and confirmed it is correctly rejected. (A larger,
+  ~97-level/256-groups-per-level construction, matching the crate's other
+  60,000-scale regressions, was also confirmed to be correctly rejected
+  with the fix in place; it was not kept as a checked-in regression test
+  because `wolfram-parser`'s own O(n) packrat-memo lookup — tracked
+  separately as a performance follow-up, not a correctness issue — makes
+  parsing it alone take minutes.)
 - **MEDIUM — `compile_source`'s panic handling defeated its own "fails
   cleanly" hardening guarantee.** `compile_source` is documented as the
   hardened entry point specifically so pathological input fails with a
