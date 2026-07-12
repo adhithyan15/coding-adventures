@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.24] - 2026-07-12
+
+### Added — CLOC12.185: parenthesised object-body arrows end-to-end
+
+Picks up javascript-parser 0.49.0, whose bridge now models the parenthesised
+object-body arrow `() => ({…})` (previously declined). This very common idiom
+(map/React callbacks) now survives the full closurec pipeline instead of dropping
+to WHITESPACE_ONLY. New e2e diff fixture `tests/diff/simple-arrow-object-body/`:
+`x = () => ({a: 1 + 2});` → `x=()=>({a:3});` at SIMPLE.
+
+The fixture proves two things: the object body round-trips **parenthesised**
+(`()=>({a:…})` — the parens are load-bearing; without them it would be read as a
+block), and the SIMPLE pipeline descends INTO the object value (`1 + 2` → `3`).
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
+## [0.234.23] - 2026-07-12
+
+### Fixed — CLOC12.184: empty-block arrow `() => {}` end-to-end
+
+Picks up javascript-parser 0.48.0, whose bridge now models the empty-block arrow
+`() => {}` (previously declined, dropping the whole file to WHITESPACE_ONLY). The
+common `() => {}` idiom now survives the full closurec pipeline.
+New e2e diff fixture `tests/diff/simple-arrow-empty-block/`:
+`x = () => {}; y = 1 + 2;` → `x=()=>{};y=3;` at SIMPLE.
+
+The fixture proves the whole program ran: the `()=>{}` arrow round-trips AND the
+sibling folds (`1 + 2` → `3`). Before this fix the arrow declined, forcing the
+ENTIRE file to WHITESPACE_ONLY, so `y=1+2` would not have folded.
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.22] - 2026-07-11
 
 ### Added — CLOC12.183: ES2021 logical assignment operators end-to-end

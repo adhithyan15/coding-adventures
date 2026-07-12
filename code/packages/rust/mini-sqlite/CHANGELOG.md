@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.5.14 — GLOB() function
+
+Grows the SQL scalar surface (sql-vm 0.4.10): `GLOB(pattern, subject)` — the
+function form of the `GLOB` operator — does a case-sensitive wildcard match
+(`*`, `?`, `[...]` classes) returning 1/0, NULL if either argument is NULL. The
+matcher is `O(text × pattern)` (no ReDoS-style blow-up). A new differential-oracle
+case (`glob_function`) diffs against real bundled SQLite. (The infix `x GLOB y`
+operator is grammar-blocked and remains unsupported — see
+project_minisqlite_conformance_probe_map.)
+
+## 0.5.13 — LIKELY / UNLIKELY / LIKELIHOOD (planner hints)
+
+Grows the SQL scalar surface (sql-vm 0.4.9) with SQLite's query-planner hint
+functions: `LIKELY(x)`, `UNLIKELY(x)`, and `LIKELIHOOD(x, p)`. They're the
+identity function on their first argument (any type, including NULL) — the hint
+only nudges the optimizer. `LIKELIHOOD`'s probability `p` must be a number in
+`[0,1]`. A new differential-oracle case (`likely_family`) diffs against real
+bundled SQLite.
+
 ## 0.5.12 — OCTET_LENGTH (byte length)
 
 Grows the SQL scalar surface (sql-vm 0.4.8): `OCTET_LENGTH(x)` returns the byte

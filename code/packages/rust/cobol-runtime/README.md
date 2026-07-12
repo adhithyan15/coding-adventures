@@ -23,8 +23,9 @@ A small but **fully correct** slice, growing one quirk at a time: numeric-displa
 (`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules; `DISPLAY`; `STOP RUN`; fixed-point
-decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned, truncating
-toward zero into the receiver; divide-by-zero is a clean error); `COMPUTE` with
+decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`
+and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
+`COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
 parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric and
 alphanumeric comparison; `PERFORM para [THRU para2] [n TIMES | UNTIL cond |

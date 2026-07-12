@@ -1048,6 +1048,9 @@ fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | CONCAT   | ≥1   | Concatenate all arguments (NULL → empty string)       |
 /// | CONCAT_WS| ≥2   | Join value arguments with a separator (NULLs skipped) |
 /// | UNHEX    | 1–2  | Decode hex digit pairs into a blob (inverse of HEX)   |
+/// | LIKELY / UNLIKELY | 1 | Planner hint; returns the argument unchanged     |
+/// | LIKELIHOOD | 2  | Planner hint with a probability; returns arg 1        |
+/// | GLOB     |  2   | Case-sensitive wildcard match: GLOB(pattern, subject) |
 /// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
 /// | ABS      |  1   | Absolute value (Integer or Float)                     |
 /// | COALESCE | ≥1   | Return the first non-NULL argument                    |
@@ -1172,6 +1175,60 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().len() as i64)),
                 other => Err(VmError::TypeMismatch(format!("OCTET_LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
             }
+        }
+
+        "LIKELY" | "UNLIKELY" => {
+            // Query-planner hints: `likely(x)` / `unlikely(x)` tell SQLite's
+            // optimizer that `x` is probably true / probably false, biasing its
+            // row-count estimates. They have no effect on the result — they are
+            // the *identity* function, returning the argument unchanged (any
+            // type, including NULL).
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("{name} expects 1 arg, got {}", args.len())));
+            }
+            Ok(args.into_iter().next().unwrap())
+        }
+
+        "LIKELIHOOD" => {
+            // `likelihood(x, p)` is `likely`/`unlikely` with an explicit
+            // probability `p` (the fraction of rows for which `x` is expected to
+            // be true). It returns `x` unchanged; `p` only hints the planner.
+            // SQLite requires `p` to be a constant number in [0.0, 1.0] — we
+            // validate the value's range and reject anything else.
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("LIKELIHOOD expects 2 args, got {}", args.len())));
+            }
+            let p = match &args[1] {
+                SqlValue::Float(f) => *f,
+                SqlValue::Int(i) => *i as f64,
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "LIKELIHOOD probability must be a number in [0,1], got {other:?}"
+                    )))
+                }
+            };
+            if !(0.0..=1.0).contains(&p) {
+                return Err(VmError::TypeMismatch(format!(
+                    "LIKELIHOOD probability {p} is out of range [0,1]"
+                )));
+            }
+            Ok(args.into_iter().next().unwrap())
+        }
+
+        "GLOB" => {
+            // GLOB(pattern, subject) is the function form of `subject GLOB
+            // pattern`: a case-sensitive wildcard match returning 1 or 0. NULL in
+            // either argument yields NULL. (The infix `GLOB` operator is a
+            // separate, grammar-level feature; this is the callable function.)
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!("GLOB expects 2 args, got {}", args.len())));
+            }
+            if matches!(args[0], SqlValue::Null) || matches!(args[1], SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
+            let pattern = sql_to_str(&args[0]);
+            let subject = sql_to_str(&args[1]);
+            Ok(SqlValue::Int(glob_match(&subject, &pattern) as i64))
         }
 
         "UPPER" => {
@@ -2019,6 +2076,96 @@ fn like_match(text: &str, pattern: &str) -> bool {
         pi += 1;
     }
 
+    pi == p.len()
+}
+
+/// Try to match a GLOB character class `[...]` in `p` starting at `p[start]`
+/// (which must be `'['`) against `ch`. Returns `Some((matched, after))` where
+/// `after` is the pattern index just past the closing `']'`; or `None` if there
+/// is no closing `']'`, in which case the caller treats `'['` as a literal.
+///
+/// A leading `^` negates the class. A `]` immediately after `[` (or `[^`) is a
+/// literal member, not the closer. `a-c` is an inclusive range.
+fn glob_class_match(p: &[char], start: usize, ch: char) -> Option<(bool, usize)> {
+    let mut i = start + 1;
+    let negate = i < p.len() && p[i] == '^';
+    if negate {
+        i += 1;
+    }
+    let first = i; // a `]` here is a literal member, not the class close
+    let mut matched = false;
+    while i < p.len() {
+        if p[i] == ']' && i != first {
+            let result = if negate { !matched } else { matched };
+            return Some((result, i + 1));
+        }
+        // `x-y` range (but not when `-` is the class's closing-adjacent char).
+        if i + 2 < p.len() && p[i + 1] == '-' && p[i + 2] != ']' {
+            if p[i] <= ch && ch <= p[i + 2] {
+                matched = true;
+            }
+            i += 3;
+        } else {
+            if p[i] == ch {
+                matched = true;
+            }
+            i += 1;
+        }
+    }
+    None // unterminated class
+}
+
+/// Whether the single GLOB pattern element at `p[pi]` (a literal, `?`, or a
+/// `[...]` class) matches `ch`. Returns the pattern index after the element on a
+/// match, or `None` on no match. Does not handle `*` (the caller does).
+fn glob_single(p: &[char], pi: usize, ch: char) -> Option<usize> {
+    match p[pi] {
+        '?' => Some(pi + 1),
+        '[' => match glob_class_match(p, pi, ch) {
+            Some((true, after)) => Some(after),
+            Some((false, _)) => None,
+            None => (ch == '[').then_some(pi + 1), // literal '['
+        },
+        c => (c == ch).then_some(pi + 1),
+    }
+}
+
+/// GLOB pattern match: case-sensitive, `*` = any run, `?` = any single char,
+/// `[...]` = character class (`[^...]` negated, `a-c` ranges). Unlike LIKE, a
+/// backslash is a literal character (GLOB has no escape). Uses the same
+/// iterative two-pointer backtracking as [`like_match`], so it is `O(text ×
+/// pattern)` — no exponential blow-up on adversarial `*`-heavy patterns.
+fn glob_match(text: &str, pattern: &str) -> bool {
+    let t: Vec<char> = text.chars().collect();
+    let p: Vec<char> = pattern.chars().collect();
+
+    let (mut ti, mut pi) = (0usize, 0usize);
+    // Backtrack point: pattern index just after the last `*`, and the text index
+    // it started matching from.
+    let (mut star_pi, mut star_ti): (Option<usize>, usize) = (None, 0);
+
+    while ti < t.len() {
+        if pi < p.len() && p[pi] == '*' {
+            star_pi = Some(pi);
+            star_ti = ti;
+            pi += 1;
+        } else if let Some(next_pi) = p.get(pi).and_then(|_| glob_single(&p, pi, t[ti])) {
+            pi = next_pi;
+            ti += 1;
+        } else if let Some(sp) = star_pi {
+            // The last `*` consumes one more text character.
+            star_ti += 1;
+            ti = star_ti;
+            pi = sp + 1;
+        } else {
+            return false;
+        }
+    }
+
+    // Any trailing `*` wildcards match the empty suffix.
+    while pi < p.len() && p[pi] == '*' {
+        pi += 1;
+    }
     pi == p.len()
 }
 
@@ -4075,6 +4222,71 @@ mod tests {
                 call_builtin("SUBSTR", args).unwrap(),
             );
         }
+    }
+
+    #[test]
+    fn builtin_glob_matches_case_sensitively() {
+        let g = |pat: &str, subj: &str| {
+            call_builtin("GLOB", vec![SqlValue::Text(pat.into()), SqlValue::Text(subj.into())]).unwrap()
+        };
+        let t = SqlValue::Int(1);
+        let f = SqlValue::Int(0);
+        // `*` and `?` wildcards; GLOB is case-sensitive.
+        assert_eq!(g("a*", "abc"), t);
+        assert_eq!(g("A*", "abc"), f); // case-sensitive
+        assert_eq!(g("*c", "abc"), t);
+        assert_eq!(g("a?c", "abc"), t);
+        assert_eq!(g("a?c", "ac"), f);
+        assert_eq!(g("h*o", "hello"), t);
+        // Character classes, ranges, and negation.
+        assert_eq!(g("[a-c]x", "bx"), t);
+        assert_eq!(g("[a-c]x", "dx"), f);
+        assert_eq!(g("[^a]", "b"), t);
+        assert_eq!(g("[0-9]*", "7up"), t);
+        // Empty pattern / subject; `*` matches empty.
+        assert_eq!(g("", ""), t);
+        assert_eq!(g("*", ""), t);
+        // Backslash is a LITERAL in GLOB (no escape).
+        assert_eq!(g("a\\*b", "a*b"), f);
+        // Unicode is matched by character.
+        assert_eq!(g("日*", "日本"), t);
+        // NULL in either argument → NULL; wrong arity errors, not panics.
+        assert_eq!(
+            call_builtin("GLOB", vec![SqlValue::Text("a*".into()), SqlValue::Null]).unwrap(),
+            SqlValue::Null
+        );
+        assert!(call_builtin("GLOB", vec![SqlValue::Text("a".into())]).is_err());
+    }
+
+    #[test]
+    fn builtin_likely_family_is_identity() {
+        // likely / unlikely return their single argument unchanged, any type.
+        for name in ["LIKELY", "UNLIKELY"] {
+            assert_eq!(call_builtin(name, vec![SqlValue::Int(5)]).unwrap(), SqlValue::Int(5));
+            assert_eq!(
+                call_builtin(name, vec![SqlValue::Text("abc".into())]).unwrap(),
+                SqlValue::Text("abc".into())
+            );
+            assert_eq!(call_builtin(name, vec![SqlValue::Null]).unwrap(), SqlValue::Null);
+            assert_eq!(call_builtin(name, vec![SqlValue::Float(2.5)]).unwrap(), SqlValue::Float(2.5));
+            // Wrong arity is an error, not a panic.
+            assert!(call_builtin(name, vec![]).is_err());
+            assert!(call_builtin(name, vec![SqlValue::Int(1), SqlValue::Int(2)]).is_err());
+        }
+        // likelihood(x, p) returns x when p is a probability in [0, 1].
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Int(7), SqlValue::Float(0.0625)]).unwrap(),
+            SqlValue::Int(7)
+        );
+        assert_eq!(
+            call_builtin("LIKELIHOOD", vec![SqlValue::Null, SqlValue::Float(0.5)]).unwrap(),
+            SqlValue::Null
+        );
+        // A probability outside [0, 1], a non-numeric probability, or wrong arity
+        // are all errors.
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Float(1.5)]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Text("x".into())]).is_err());
+        assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1)]).is_err());
     }
 
     #[test]

@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.49.0] - 2026-07-12
+
+### Added — CLOC12.185: bridge parenthesised object-body arrows `() => ({…})`
+
+Follow-on to CLOC12.184. `convert_arrow_function` still declined a
+**parenthesised object expression body** `() => ({…})` — even though the emitter
+already re-wraps an `ObjectExpression` arrow body in parens so it is never
+misread as a block. The guard now, when the body parses as an `ObjectExpression`,
+branches on the concise_body's leftmost token:
+
+- leads with `{` (a bare block body per the ES spec): empty → `ArrowBody::Block`
+  (CLOC12.184), non-empty → DECLINE (contents would need re-parsing as
+  statements);
+- leads with `(` (a genuine parenthesised object expression body): **keep** it as
+  `ArrowBody::Expression(ObjectExpression)` (CLOC12.185).
+
+Pure bridge change — the emitter was already correct. Covers `() => ({})` and
+`() => ({a:1})`. Flipped the former `arrow_paren_object_body_still_declines` /
+`arrow_object_concise_body_is_declined` tests to `arrow_paren_object_body_bridges`
+/ `arrow_paren_object_concise_body_bridges`.
+
+## [0.48.0] - 2026-07-12
+
+### Fixed — CLOC12.184: bridge the empty-block arrow `() => {}`
+
+`convert_arrow_function` declined every arrow whose concise body parsed as an
+`ObjectExpression`, dropping the whole file to WHITESPACE_ONLY. That over-broadly
+caught the extremely common `() => {}` idiom: the grammar buckets the bare `{}`
+after `=>` as an *empty object literal*, but per the ES spec a `{` immediately
+after `=>` ALWAYS opens a **block** body (an object body must be parenthesised,
+`=> ({})`).
+
+The bridge now disambiguates by the concise_body's leftmost token (new
+`leftmost_token` helper): a bare block body leads with `{`, a parenthesised
+object body leads with `(`. A bare **empty** object-literal body (`=> {}`) is
+reinterpreted as an `ArrowBody::Block` with no statements. `() => ({})` (leads
+with `(`) and a non-empty `=> {…}` the grammar mis-bucketed (its contents would
+need re-parsing as statements) both still DECLINE — never a mis-emit.
+
+New tests `arrow_empty_block_body_bridges`, `arrow_paren_object_body_still_declines`,
+`arrow_nonempty_brace_body_still_declines`.
+
 ## [0.47.0] - 2026-07-11
 
 ### Added — CLOC12.183: bridge ES2021 logical assignment operators
