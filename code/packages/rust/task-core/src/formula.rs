@@ -44,9 +44,15 @@ pub enum FormulaError {
 /// (`[field]`, a number literal, or a parenthesised expression). Operators lower to
 /// the canonical `symbolic-ir` heads (`Add`/`Sub`/`Mul`/`Div`/`Neg`, comparisons).
 pub fn parse(src: &str) -> Result<IRNode, FormulaError> {
+    // Bound the input and the parser's recursion depth. Without this, a crafted
+    // formula (a long run of `-` or `(` from untrusted project JSON) would overflow
+    // the stack — an *uncatchable* abort, not a recoverable panic.
+    if src.len() > MAX_FORMULA_LEN {
+        return Err(FormulaError::Parse("formula too long".into()));
+    }
     let toks = tokenize(src)?;
     let mut p = Parser { toks, pos: 0 };
-    let node = p.expr()?;
+    let node = p.expr(0)?;
     if p.pos != p.toks.len() {
         return Err(FormulaError::Parse(format!(
             "unexpected trailing input at token {}",
@@ -55,6 +61,11 @@ pub fn parse(src: &str) -> Result<IRNode, FormulaError> {
     }
     Ok(node)
 }
+
+/// Maximum formula source length.
+const MAX_FORMULA_LEN: usize = 4096;
+/// Maximum parser nesting depth (parentheses / unary chains).
+const MAX_DEPTH: usize = 128;
 
 /// The set of field names a parsed formula reads — its dependencies. Fields appear
 /// only as leaf `Symbol`s in argument position (operator heads sit in `Apply.head`),
@@ -85,10 +96,16 @@ pub fn referenced_fields(node: &IRNode) -> Vec<String> {
 
 /// Evaluate a parsed numeric formula given `bindings` (field name → value).
 ///
-/// Returns `None` — never panics — when a referenced field is unbound (which would
-/// otherwise trip `StrictBackend`'s strictness) or when the result is not a finite
-/// number (e.g. division by zero, or a boolean comparison result). This is the
-/// panic-safe boundary for untrusted formula strings.
+/// Returns `None` when a referenced field is unbound (which would otherwise trip
+/// `StrictBackend`'s strictness) or when the result is not a finite number (a boolean
+/// comparison result, or division by zero — which `StrictBackend` *panics* on, caught
+/// here via `catch_unwind`).
+///
+/// **Caveat:** the div-by-zero guard relies on unwinding. Under a `panic = "abort"`
+/// profile (as some wasm builds use) `catch_unwind` cannot intercept it — so a crate
+/// that evaluates untrusted formulas must be built with `panic = "unwind"` (or the
+/// facade must pre-validate divisors). Parse-time limits (length + depth) are
+/// unconditional and do not depend on unwinding.
 pub fn eval_number(node: &IRNode, bindings: &HashMap<String, f64>) -> Option<f64> {
     // Gate: every referenced field must be bound, or StrictBackend would panic.
     for name in referenced_fields(node) {
@@ -344,8 +361,11 @@ impl Parser {
         t
     }
 
-    fn expr(&mut self) -> Result<IRNode, FormulaError> {
-        let left = self.additive()?;
+    fn expr(&mut self, depth: usize) -> Result<IRNode, FormulaError> {
+        if depth > MAX_DEPTH {
+            return Err(FormulaError::Parse("expression too deeply nested".into()));
+        }
+        let left = self.additive(depth)?;
         let head = match self.peek() {
             Some(Tok::Eq) => symbolic_ir::EQUAL,
             Some(Tok::Ne) => symbolic_ir::NOT_EQUAL,
@@ -356,12 +376,12 @@ impl Parser {
             _ => return Ok(left),
         };
         self.bump();
-        let right = self.additive()?;
+        let right = self.additive(depth)?;
         Ok(apply(sym(head), vec![left, right]))
     }
 
-    fn additive(&mut self) -> Result<IRNode, FormulaError> {
-        let mut node = self.multiplicative()?;
+    fn additive(&mut self, depth: usize) -> Result<IRNode, FormulaError> {
+        let mut node = self.multiplicative(depth)?;
         loop {
             let head = match self.peek() {
                 Some(Tok::Plus) => symbolic_ir::ADD,
@@ -369,14 +389,14 @@ impl Parser {
                 _ => break,
             };
             self.bump();
-            let rhs = self.multiplicative()?;
+            let rhs = self.multiplicative(depth)?;
             node = apply(sym(head), vec![node, rhs]);
         }
         Ok(node)
     }
 
-    fn multiplicative(&mut self) -> Result<IRNode, FormulaError> {
-        let mut node = self.unary()?;
+    fn multiplicative(&mut self, depth: usize) -> Result<IRNode, FormulaError> {
+        let mut node = self.unary(depth)?;
         loop {
             let head = match self.peek() {
                 Some(Tok::Star) => symbolic_ir::MUL,
@@ -384,27 +404,30 @@ impl Parser {
                 _ => break,
             };
             self.bump();
-            let rhs = self.unary()?;
+            let rhs = self.unary(depth)?;
             node = apply(sym(head), vec![node, rhs]);
         }
         Ok(node)
     }
 
-    fn unary(&mut self) -> Result<IRNode, FormulaError> {
+    fn unary(&mut self, depth: usize) -> Result<IRNode, FormulaError> {
+        if depth > MAX_DEPTH {
+            return Err(FormulaError::Parse("expression too deeply nested".into()));
+        }
         if matches!(self.peek(), Some(Tok::Minus)) {
             self.bump();
-            let inner = self.unary()?;
+            let inner = self.unary(depth + 1)?;
             return Ok(apply(sym(symbolic_ir::NEG), vec![inner]));
         }
-        self.primary()
+        self.primary(depth)
     }
 
-    fn primary(&mut self) -> Result<IRNode, FormulaError> {
+    fn primary(&mut self, depth: usize) -> Result<IRNode, FormulaError> {
         match self.bump() {
             Some(Tok::Num(v, is_int)) => Ok(if is_int { int(v as i64) } else { flt(v) }),
             Some(Tok::Field(name)) => Ok(sym(name)),
             Some(Tok::LParen) => {
-                let inner = self.expr()?;
+                let inner = self.expr(depth + 1)?;
                 match self.bump() {
                     Some(Tok::RParen) => Ok(inner),
                     _ => Err(FormulaError::Parse("expected ')'".into())),
@@ -490,6 +513,24 @@ mod tests {
         assert!(matches!(parse("[a] +"), Err(FormulaError::Parse(_))));
         assert!(matches!(parse("[a"), Err(FormulaError::Parse(_))));
         assert!(matches!(parse("2 @ 3"), Err(FormulaError::Parse(_))));
+    }
+
+    #[test]
+    fn pathological_input_is_rejected_not_a_stack_overflow() {
+        // A crafted formula from untrusted JSON must be bounded at parse time — a deep
+        // paren/unary nest or an over-long source is an error, never a stack overflow.
+        assert!(matches!(
+            parse(&"(".repeat(1000)),
+            Err(FormulaError::Parse(_))
+        ));
+        assert!(matches!(
+            parse(&"-".repeat(1000)),
+            Err(FormulaError::Parse(_))
+        ));
+        assert!(matches!(
+            parse(&"1".repeat(5000)),
+            Err(FormulaError::Parse(_))
+        ));
     }
 
     fn formula_field(id: &str, name: &str, source: &str) -> FieldDef {
