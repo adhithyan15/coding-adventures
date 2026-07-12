@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - Unreleased
+
+### Added
+
+- **`LIMIT off, count` MySQL shorthand.** The `limit_clause` tail now accepts
+  `, NUMBER` as an alternative to `OFFSET NUMBER`, so `LIMIT 1, 2` parses.
+  SQLite accepts this MySQL-compatibility spelling. Note the argument order
+  flips: in the comma form the FIRST number is the offset and the SECOND is
+  the count (`LIMIT 1, 2` == `LIMIT 2 OFFSET 1`) — the sql-planner 0.2.4 change
+  does the swap.
+
 ## [0.1.4] - Unreleased
 
 ### Fixed

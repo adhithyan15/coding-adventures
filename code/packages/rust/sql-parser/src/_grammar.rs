@@ -213,9 +213,21 @@ pub fn parser_grammar() -> ParserGrammar {
                 // Allow optional "-" before NUMBER to support LIMIT -1 (all rows).
                 GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"-"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"OFFSET"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                // The tail is either the standard `OFFSET n` or MySQL's
+                // `, n` shorthand. NOTE the argument order flips between them:
+                // `LIMIT count OFFSET off` vs `LIMIT off , count` — in the comma
+                // form the FIRST number is the OFFSET and the SECOND is the
+                // count (plan_limit does the swap). This matches SQLite, which
+                // accepts the comma form purely for MySQL compatibility.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"OFFSET"#.to_string() },
+                            GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#","#.to_string() },
+                            GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
+                        ] },
                     ] }) },
             ] },
             line_number: 37,

@@ -279,6 +279,14 @@ mod tests {
         assert!(find_rule(&ast, "limit_clause"), "Expected limit_clause");
     }
 
+    /// MySQL comma shorthand `LIMIT off, count` parses (SQLite accepts it too).
+    /// The planner does the offset/count swap; here we only assert it parses.
+    #[test]
+    fn test_parse_limit_comma() {
+        let ast = assert_program_root("SELECT id FROM users LIMIT 5, 10");
+        assert!(find_rule(&ast, "limit_clause"), "Expected limit_clause");
+    }
+
     // -----------------------------------------------------------------------
     // Test 6: SELECT with GROUP BY and HAVING
     // -----------------------------------------------------------------------
