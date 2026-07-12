@@ -578,6 +578,13 @@ fn walk_declaration(
         Declaration::ImportDeclaration(_) => {
             analysis.has_import = true;
         }
+        // Export declarations (CLOC12.189). PR1 keeps the node unreachable (no
+        // bridge yet), so we register nothing and set no flag. The export
+        // soundness gate (exports are the module's public surface — their names
+        // must not be renamed) lands with the bridge PR, mirroring `has_import`.
+        Declaration::ExportNamedDeclaration(_)
+        | Declaration::ExportDefaultDeclaration(_)
+        | Declaration::ExportAllDeclaration(_) => {}
     }
 }
 

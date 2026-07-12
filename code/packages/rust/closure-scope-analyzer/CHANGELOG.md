@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.17.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration no scope binding is registered and no flag is set (the export soundness gate lands with the bridge PR)
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+no scope binding is registered and no flag is set (the export soundness gate lands with the bridge PR). Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
 ## [0.16.0] - 2026-07-12
 
 ### Added — CLOC12.188 PR2: `import` soundness gate

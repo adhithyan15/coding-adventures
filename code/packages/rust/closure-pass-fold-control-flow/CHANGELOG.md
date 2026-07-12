@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.23.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: export declaration the control-flow predicate reports no foldable flow; the rebuild clones each export
+
+Exhaustive-match arms for the three new `Declaration::Export*` variants
+(`ExportNamedDeclaration` / `ExportDefaultDeclaration` / `ExportAllDeclaration`).
+PR1 keeps the nodes unreachable (no bridge yet), so the arms are conservative —
+the control-flow predicate reports no foldable flow; the rebuild clones each export. Proper descent into an `export const x = 1`'s inner declaration and the
+renaming-soundness gate land with the bridge PR.
+
 ## [0.22.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: `ImportDeclaration` arms

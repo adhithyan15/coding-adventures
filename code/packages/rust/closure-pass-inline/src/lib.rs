@@ -684,6 +684,9 @@ fn count_decl_names_decl(
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
@@ -1080,6 +1083,9 @@ fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &cd.super_class {
                 tally_expr(sup, cand, t);
@@ -1504,6 +1510,9 @@ fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &mut cd.super_class {
                 changed |= inline_in_expr(sup, cand);
@@ -2320,6 +2329,9 @@ fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             out.insert(cd.id.name.clone());
         }
@@ -3069,6 +3081,9 @@ fn splice_void_in_decl(
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => false,
+        Declaration::ExportNamedDeclaration(_) => false,
+        Declaration::ExportDefaultDeclaration(_) => false,
+        Declaration::ExportAllDeclaration(_) => false,
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
@@ -3928,6 +3943,9 @@ fn splice_valued_in_decl(
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => false,
+        Declaration::ExportNamedDeclaration(_) => false,
+        Declaration::ExportDefaultDeclaration(_) => false,
+        Declaration::ExportAllDeclaration(_) => false,
         Declaration::ClassDeclaration(cd) => {
             let mut changed = false;
             for member in &mut cd.body {
@@ -4307,6 +4325,9 @@ fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
         // An import declaration has no inlinable body and binds foreign-linked
         // names — leave it untouched.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &cd.super_class {
                 collect_binding_idents_expr(sup, out);

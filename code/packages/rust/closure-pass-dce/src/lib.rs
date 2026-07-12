@@ -876,6 +876,9 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
         // An import declaration is module-top-level only; it never legally
         // appears inside a block, so flattening/truncating it away is unsafe.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
     })
 }
 
@@ -1035,6 +1038,9 @@ fn block_is_scope_safe_to_flatten(b: &BlockStatement) -> bool {
         // An import declaration is module-top-level only; it never legally
         // appears inside a block, so flattening/truncating it away is unsafe.
         Statement::Declaration(Declaration::ImportDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportNamedDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportDefaultDeclaration(_)) => false,
+        Statement::Declaration(Declaration::ExportAllDeclaration(_)) => false,
         // Tagged statements never introduce a new lexical binding
         // by themselves. `ExpressionStatement`, control flow,
         // `EmptyStatement`, etc. are all safe.
@@ -1155,6 +1161,9 @@ fn dce_declaration(decl: &Declaration, st: &mut DceState) -> Declaration {
         // method body, exactly as `dce_class` does for a class *expression* —
         // only the outer node type and the required `id` differ.
         Declaration::ImportDeclaration(i) => Declaration::ImportDeclaration(i.clone()),
+        Declaration::ExportNamedDeclaration(i) => Declaration::ExportNamedDeclaration(i.clone()),
+        Declaration::ExportDefaultDeclaration(i) => Declaration::ExportDefaultDeclaration(i.clone()),
+        Declaration::ExportAllDeclaration(i) => Declaration::ExportAllDeclaration(i.clone()),
         Declaration::ClassDeclaration(c) => {
             Declaration::ClassDeclaration(dce_class_declaration(c, st))
         }

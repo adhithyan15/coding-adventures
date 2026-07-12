@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.45.0] - 2026-07-12
+
+### Added — CLOC12.189 PR1: emit export declarations
+
+`emit_export_named` / `emit_export_default` / `emit_export_all` render the new
+`Declaration::Export*` variants in minified form: `export{a,b as c};`,
+`export{a}from"y";`, `export const x=1;` (defers to the inner declaration's own
+terminator), `export default 1;` (expression) / `export default function f(){}`
+(self-terminating), `export*from"y";`, and `export*as ns from"y";`. Six emit
+tests.
+
 ## [0.44.0] - 2026-07-11
 
 ### Added — CLOC12.188 PR1: emit `import` declarations

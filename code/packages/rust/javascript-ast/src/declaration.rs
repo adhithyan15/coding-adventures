@@ -34,6 +34,17 @@ pub enum Declaration {
     /// modelled here as a `Declaration` variant (the codebase's Phase-4 plan)
     /// so it flows through the existing `ProgramItem::Declaration` plumbing.
     ImportDeclaration(ImportDeclaration),
+    /// `export { a, b as c }` / `export { a } from "y"` / `export const x = 1`
+    /// / `export function f(){}` / `export class C {}` — a named or
+    /// declaration export (CLOC12.189). See [`ExportNamedDeclaration`].
+    ExportNamedDeclaration(ExportNamedDeclaration),
+    /// `export default <expr | function | class>` (CLOC12.189). See
+    /// [`ExportDefaultDeclaration`].
+    ExportDefaultDeclaration(ExportDefaultDeclaration),
+    /// `export * from "y"` (and, once the grammar allows it, `export * as ns
+    /// from "y"`) — a re-export of an entire module (CLOC12.189). See
+    /// [`ExportAllDeclaration`].
+    ExportAllDeclaration(ExportAllDeclaration),
 }
 
 /// `var x = 1, y = 2;`, `let i = 0;`, `const PI = 3.14;`. The `kind`
@@ -208,10 +219,137 @@ pub enum ImportSpecifier {
     },
 }
 
+/// `export { a, b as c }` / `export { a } from "y"` / `export const x = 1` /
+/// `export function f(){}` / `export class C {}` / `export var v = 1` — an
+/// ES-module **named or declaration export** (CLOC12.189, ESTree
+/// `ExportNamedDeclaration`).
+///
+/// # Three shapes, one node
+///
+/// ```text
+///   export const x = 1;              declaration = Some(…),  specifiers = [],       source = None
+///   export { a, b as c };            declaration = None,     specifiers = [a, b→c], source = None
+///   export { a } from "y";           declaration = None,     specifiers = [a],      source = Some("y")
+/// ```
+///
+/// ESTree collapses all three into one node with three optional parts:
+/// - `declaration` — an inner [`Declaration`] the `export` prefixes
+///   (`export const x = 1`, `export function f(){}`, `export class C {}`). Boxed
+///   because a `Declaration` may contain an `ExportNamedDeclaration` in turn
+///   (the enum is self-referential). `None` for the `export { … }` forms.
+/// - `specifiers` — the `{ a, b as c }` list (empty for a declaration export).
+/// - `source` — the `from "y"` re-export module, if present. Only a
+///   `{ … } from "y"` re-export carries one; a plain `export { … }` does not.
+///
+/// # Renaming note
+///
+/// A name in `specifiers` (or a binding introduced by an inner `declaration`)
+/// is part of this module's *public surface*: another module may import it by
+/// exactly that name. Renaming it would break the cross-module contract, just
+/// as with [`ImportDeclaration`]. The renaming passes gate on the presence of
+/// an export; that gate lands with the bridge PR that makes this node reachable.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExportNamedDeclaration {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The inner declaration (`export const x = 1`), or `None` for a
+    /// `export { … }` specifier list.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub declaration: Option<Box<Declaration>>,
+    /// The `{ a, b as c }` export specifiers, in source order. Empty for a
+    /// declaration export.
+    pub specifiers: Vec<ExportSpecifier>,
+    /// The `from "y"` re-export source, if present.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub source: Option<StringLiteral>,
+}
+
+/// One `{ … }` entry of an [`ExportNamedDeclaration`] (ESTree
+/// `ExportSpecifier`). `export { a }` → `local == exported == a`;
+/// `export { a as c }` → `local = a` (the in-module binding), `exported = c`
+/// (the name other modules see). Note the local/exported order is the mirror
+/// image of [`ImportSpecifier::Named`]'s imported/local.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type", rename = "ExportSpecifier")]
+pub struct ExportSpecifier {
+    /// The name bound inside this module.
+    pub local: Identifier,
+    /// The name exposed to importers (`as c`), equal to `local` when no `as`.
+    pub exported: Identifier,
+}
+
+/// `export default <expr | function | class>` — an ES-module **default export**
+/// (CLOC12.189, ESTree `ExportDefaultDeclaration`).
+///
+/// A module has at most one default export. The operand is either an
+/// *expression* (`export default 1`, `export default foo()`) or a
+/// *function/class declaration* (`export default function f(){}`,
+/// `export default class C {}`). ESTree keeps these under one `declaration`
+/// field of union type; we model that union as [`ExportDefaultKind`].
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExportDefaultDeclaration {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The exported value or declaration.
+    pub declaration: ExportDefaultKind,
+}
+
+/// The operand of an [`ExportDefaultDeclaration`]: an expression, or a
+/// function / class declaration. `#[serde(untagged)]` so the JSON wire is the
+/// inner node's own `{"type": …}` object, matching ESTree's union-typed
+/// `declaration` field.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ExportDefaultKind {
+    /// `export default <expr>;` — e.g. `export default 1`, `export default a+b`.
+    Expression(Box<Expression>),
+    /// `export default function f(){}` — a named or anonymous function.
+    FunctionDeclaration(FunctionDeclaration),
+    /// `export default class C {}` — a named or anonymous class.
+    ClassDeclaration(ClassDeclaration),
+}
+
+/// `export * from "y"` (and, once the grammar allows it, `export * as ns from
+/// "y"`) — an ES-module **re-export of an entire module** (CLOC12.189, ESTree
+/// `ExportAllDeclaration`).
+///
+/// `exported` names the namespace binding for the `export * as ns` form and is
+/// `None` for the bare `export *`. The current grammar rejects `export * as ns`
+/// at the parse layer, so the bridgeable subset always has `exported = None`;
+/// the field is kept so the node models the full ESTree shape.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExportAllDeclaration {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The `as ns` namespace name, or `None` for a bare `export *`.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub exported: Option<Identifier>,
+    /// The module being re-exported — `"y"` in `export * from "y"`.
+    pub source: StringLiteral,
+}
+
 impl Declaration {
     /// Convenience constructor for an [`ImportDeclaration`].
     pub fn import_declaration(d: ImportDeclaration) -> Self {
         Declaration::ImportDeclaration(d)
+    }
+
+    /// Convenience constructor for an [`ExportNamedDeclaration`].
+    pub fn export_named_declaration(d: ExportNamedDeclaration) -> Self {
+        Declaration::ExportNamedDeclaration(d)
+    }
+
+    /// Convenience constructor for an [`ExportDefaultDeclaration`].
+    pub fn export_default_declaration(d: ExportDefaultDeclaration) -> Self {
+        Declaration::ExportDefaultDeclaration(d)
+    }
+
+    /// Convenience constructor for an [`ExportAllDeclaration`].
+    pub fn export_all_declaration(d: ExportAllDeclaration) -> Self {
+        Declaration::ExportAllDeclaration(d)
     }
 }
 
@@ -538,6 +676,98 @@ mod tests {
                 assert_eq!(i.source.value, "y");
             }
             other => panic!("expected ImportDeclaration, got {other:?}"),
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.189 — Export declarations.
+    // ---------------------------------------------------------------
+
+    fn spec(local: &str, exported: &str) -> ExportSpecifier {
+        ExportSpecifier {
+            local: id(local),
+            exported: id(exported),
+        }
+    }
+
+    #[test]
+    fn export_named_specifiers_reexport_roundtrip() {
+        // `export { a, b as c } from "y"` — specifiers + a re-export source, no
+        // inner declaration. Exercises the plain/aliased specifier arms and the
+        // `source` field together.
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![spec("a", "a"), spec("b", "c")],
+            source: Some(src("y")),
+        });
+        assert_eq!(roundtrip(d.clone()), d);
+        assert_eq!(type_tag(&d), "ExportNamedDeclaration");
+        let json = serde_json::to_string(&d).expect("serialize");
+        assert!(json.contains("\"ExportSpecifier\""), "got {json}");
+    }
+
+    #[test]
+    fn export_declaration_wraps_inner_declaration_roundtrip() {
+        // `export const x = 1;` — the inner declaration is present, specifiers
+        // empty, no source. Proves the boxed self-referential `declaration`
+        // field round-trips.
+        let inner = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("x")),
+                init: Some(Expression::Identifier(id("y"))),
+            }],
+        });
+        let d = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: Some(Box::new(inner)),
+            specifiers: vec![],
+            source: None,
+        });
+        assert_eq!(roundtrip(d.clone()), d);
+        match &d {
+            Declaration::ExportNamedDeclaration(e) => {
+                assert!(e.specifiers.is_empty());
+                assert!(e.source.is_none());
+                assert!(matches!(
+                    e.declaration.as_deref(),
+                    Some(Declaration::VariableDeclaration(_))
+                ));
+            }
+            other => panic!("expected ExportNamedDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn export_default_expression_roundtrip() {
+        // `export default x;` — a default export whose operand is an expression.
+        let d = Declaration::export_default_declaration(ExportDefaultDeclaration {
+            cv: None,
+            declaration: ExportDefaultKind::Expression(Box::new(Expression::Identifier(id("x")))),
+        });
+        assert_eq!(roundtrip(d.clone()), d);
+        assert_eq!(type_tag(&d), "ExportDefaultDeclaration");
+    }
+
+    #[test]
+    fn export_all_declaration_roundtrip() {
+        // `export * from "y";` — bare re-export-all, no namespace binding.
+        let d = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source: src("y"),
+        });
+        assert_eq!(roundtrip(d.clone()), d);
+        assert_eq!(type_tag(&d), "ExportAllDeclaration");
+        match &d {
+            Declaration::ExportAllDeclaration(e) => {
+                assert!(e.exported.is_none());
+                assert_eq!(e.source.value, "y");
+            }
+            other => panic!("expected ExportAllDeclaration, got {other:?}"),
         }
     }
 }

@@ -1051,6 +1051,9 @@ fn classify_decl(decl: &Declaration, cls: &mut Classify, nodes_touched: &mut u32
         Declaration::ClassDeclaration(cd) => classify_class_members(&cd.super_class, &cd.body, cls),
         // An import declaration has no property accesses/keys to classify.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
     }
 }
 
@@ -1478,6 +1481,9 @@ fn rewrite_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
         }
         // An import declaration has no property accesses/keys to rewrite.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
     }
 }
 

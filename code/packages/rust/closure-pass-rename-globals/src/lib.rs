@@ -389,6 +389,9 @@ fn count_decl_names_decl(
         // An import declaration's bound names reference a foreign module's
         // exports — renaming them is unsound, so we skip it entirely.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             *out.entry(cd.id.name.clone()).or_insert(0) += 1;
             for member in &cd.body {
@@ -544,6 +547,9 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
         // An import declaration's bound names reference a foreign module's
         // exports — renaming them is unsound, so we skip it entirely.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             // Mirror the `Expression::ClassExpression` arm of
             // `collect_all_idents_expr`: the class name, the heritage operand's
@@ -1021,6 +1027,9 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
         // An import declaration's bound names reference a foreign module's
         // exports — renaming them is unsound, so we skip it entirely.
         Declaration::ImportDeclaration(_) => {}
+        Declaration::ExportNamedDeclaration(_) => {}
+        Declaration::ExportDefaultDeclaration(_) => {}
+        Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             // Rename the class's own name (a top-level binding, a rename
             // target) and the `extends` operand (a use position). Then recurse
