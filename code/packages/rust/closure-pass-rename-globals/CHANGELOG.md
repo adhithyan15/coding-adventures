@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.11.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: traverse `WithStatement`
+
+New `TaggedStatement::WithStatement` arms in the decl-name counter, ident
+collector, and rename-apply walk descend into the `with` object and body. Picks
+up javascript-ast 0.38.0.
+
 ## [0.10.16] - 2026-07-11
 
 ### Added — CLOC12.176 PR1: `ClassMember::StaticBlock` arm

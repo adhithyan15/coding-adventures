@@ -743,6 +743,9 @@ fn count_decl_names_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                count_decl_names_stmt(&ws.body, out, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 count_decl_names_stmt(&ds.body, out, nodes_touched)
             }
@@ -1125,6 +1128,10 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 tally_expr(&ws.test, cand, t);
+                tally_stmt(&ws.body, cand, t);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                tally_expr(&ws.object, cand, t);
                 tally_stmt(&ws.body, cand, t);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -1546,6 +1553,10 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
             }
             TaggedStatement::WhileStatement(ws) => {
                 changed |= inline_in_expr(&mut ws.test, cand);
+                changed |= inline_in_stmt(&mut ws.body, cand);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                changed |= inline_in_expr(&mut ws.object, cand);
                 changed |= inline_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::DoWhileStatement(ds) => {
@@ -2929,6 +2940,9 @@ fn splice_void_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 splice_void_in_slot(&mut ds.body, cand, avoid, nodes_touched)
             }
@@ -3808,6 +3822,9 @@ fn splice_valued_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::WithStatement(ws) => {
+                splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::DoWhileStatement(ds) => {
                 splice_valued_in_stmt(&mut ds.body, cand, avoid, nodes_touched)
             }
@@ -4326,6 +4343,10 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::WhileStatement(ws) => {
                 collect_binding_idents_expr(&ws.test, out);
+                collect_used_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                collect_binding_idents_expr(&ws.object, out);
                 collect_used_idents_stmt(&ws.body, out);
             }
             TaggedStatement::DoWhileStatement(ds) => {

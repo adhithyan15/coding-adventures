@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.38.0] - 2026-07-11
+
+### Added — CLOC12.187 PR1: `with (obj) { … }` statement
+
+New `WithStatement { cv, object, body }` struct and a
+`TaggedStatement::WithStatement(WithStatement)` variant (ESTree `WithStatement`),
+plus the `Statement::with_statement` convenience constructor. Models the legacy
+`with` scope-injection statement — the last unmodelled self-contained statement
+node. The node is **not** yet produced by the parser bridge (a follow-up PR
+wires it, together with the scope-analyzer renaming-soundness bailout that `with`
+demands — renaming a binding inside a `with` body is unsound); this PR only adds
+the type so the whole pass pipeline can traverse it exhaustively. New
+`with_statement_roundtrips` test.
+
 ## [0.37.0] - 2026-07-11
 
 ### Added — CLOC12.183: ES2021 logical assignment operators
