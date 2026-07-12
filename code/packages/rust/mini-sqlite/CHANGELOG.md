@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.15 — PRINTF / FORMAT (string formatting)
+
+Grows the SQL scalar surface (sql-vm 0.4.11): `PRINTF(format, …)` and its alias
+`FORMAT(…)` do C-style string formatting — `%d`/`%i`, `%s` (with precision),
+`%x`/`%X`, `%o`, `%c`, `%q`, `%%`, with `-`/`0`/`+`/space flags and a field
+width. Missing args default to 0/"", extra args are ignored, NULL format → NULL,
+and the width/output are capped against DoS. Float conversions are declined. Two
+new differential-oracle cases (`printf`, `printf_edges`) diff against real
+bundled SQLite. (Testing `%q` via a `''` string literal surfaced a separate,
+pre-existing lexer gap — mini can't parse doubled-quote escapes — so the oracle
+gets its quote from `CHAR(39)` instead; the lexer fix is tracked separately.)
+
 ## 0.5.14 — GLOB() function
 
 Grows the SQL scalar surface (sql-vm 0.4.10): `GLOB(pattern, subject)` — the

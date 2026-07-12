@@ -3,6 +3,21 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.11] - Unreleased
+
+### Added
+
+- **`PRINTF(format, …)` / `FORMAT(format, …)`** — C-style string formatting. A
+  self-contained format engine (`sql_printf`) supports the conversions `%d`/`%i`,
+  `%s` (with `.precision` truncation), `%x`/`%X`, `%o`, `%c` (first character of
+  the argument), `%q` (single-quotes doubled), and `%%`; the flags `-` / `0` /
+  `+` / space; and a field width. Missing arguments default to `0` / `""` and
+  extra arguments are ignored, matching SQLite; a NULL format yields NULL.
+  Float conversions (`%f`/`%g`/`%e`) are declined (their exact SQLite text form
+  is the subtlety HEX/QUOTE avoid). **DoS-bounded:** field width/precision are
+  capped at 1e6 and total output at 1e7, so a hostile `printf('%9999999999d')`
+  is rejected rather than allocated. Arity is checked before indexing.
+
 ## [0.4.10] - Unreleased
 
 ### Added
