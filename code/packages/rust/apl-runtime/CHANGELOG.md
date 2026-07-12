@@ -33,5 +33,30 @@ All notable changes to this project will be documented in this file.
   space-separated vectors, right-aligned matrix rows.
 - DoS guards: an independent recursion-depth guard in the evaluator (defense
   in depth on top of `apl-parser`'s own already-bounded CST), and a
-  `MAX_ARRAY_LENGTH` (1,000,000) cap on `⍳n` and dyadic `⍴`'s target element
-  count, checked *before* allocating.
+  `MAX_ARRAY_LENGTH` (1,000,000) cap on every primitive whose output size or
+  work is driven by runtime-computed values — monadic `⍳n`, dyadic `⍴`'s
+  target element count, dyadic `,`'s combined output length, `∘.`'s
+  `len(a)×len(b)` output size, and dyadic `⍳`'s `len(a)×len(b)` work — every
+  one checked *before* allocating or scanning, not after.
+
+### Fixed (found by `/security-review`, before this crate's first push)
+
+- **HIGH — dyadic `,` (catenate) had no output-size cap at all.** Unlike
+  every other primitive, catenate's output can be *larger* than either
+  input, so `A←A,A` doubled `A`'s size every line with no ceiling — a ~30-line
+  script could reach a multi-terabyte allocation attempt. Fixed by checking
+  `a.len() + b.len()` against `MAX_ARRAY_LENGTH` before allocating.
+- **HIGH — `∘.` (outer product) had no output-size cap.** `ops::outer`'s own
+  `checked_mul` only guards `usize` overflow, not an excessive-but-
+  representable product — two individually-legal 1,000,000-element vectors
+  fed to `∘.×` would request a 10^12-element (~8 TB) allocation. Fixed by
+  checking `len(a) × len(b)` against `MAX_ARRAY_LENGTH` in `apply_dyadic`
+  before calling into `array_runtime::ops::outer`.
+- **MEDIUM — dyadic `⍳` (index-of) was O(len(a) × len(b)) with no complexity
+  cap.** Two individually-legal 1,000,000-element operands could drive ~10^12
+  scalar comparisons — a CPU-time hang, not a memory crash, but the same
+  class of availability DoS. Fixed by checking the same product against
+  `MAX_ARRAY_LENGTH` before scanning.
+- All three fixes verified adversarially (guard disabled → confirmed the
+  corresponding regression test fails without it → restored → confirmed it
+  passes), per this repo's standing DoS-guard-verification discipline.

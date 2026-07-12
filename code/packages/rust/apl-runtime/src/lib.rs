@@ -383,4 +383,26 @@ mod tests {
     fn dyadic_reshape_rejects_an_oversized_target_instead_of_allocating() {
         assert!(eval("2000000⍴1\n").is_err());
     }
+
+    #[test]
+    fn outer_product_rejects_an_oversized_result_instead_of_allocating() {
+        // Neither operand alone (2000 elements) exceeds the cap, but their
+        // product (4,000,000) does -- ops::outer's own checked_mul only
+        // guards usize overflow, not an excessive-but-representable result,
+        // so this cap lives in apl-runtime itself (see eval.rs).
+        assert!(eval("(⍳2000)∘.×(⍳2000)\n").is_err());
+    }
+
+    #[test]
+    fn dyadic_catenate_rejects_an_oversized_combined_result_instead_of_allocating() {
+        // Neither operand alone exceeds the cap, but their sum does.
+        assert!(eval("(600000⍴1),(600000⍴1)\n").is_err());
+    }
+
+    #[test]
+    fn dyadic_index_of_rejects_an_oversized_work_product_instead_of_scanning() {
+        // O(len(a) * len(b)) work -- neither operand alone exceeds the cap,
+        // but the product of their lengths does.
+        assert!(eval("(2000⍴1)⍳(2000⍴1)\n").is_err());
+    }
 }

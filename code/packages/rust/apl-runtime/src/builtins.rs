@@ -150,6 +150,23 @@ pub fn index_of(a: &Array, b: &Array) -> Result<Array, String> {
             a.ndims()
         ));
     }
+    // Each of `a`/`b` can independently reach MAX_ARRAY_LENGTH, but the work
+    // done here is O(len(a) * len(b)) (a full linear scan of `a` per element
+    // of `b`) -- capping each operand's *length* alone still permits up to
+    // 10^12 comparisons. Cap the *product* before doing any scanning, the
+    // same "check before the expensive work, not after" discipline as the
+    // allocation caps elsewhere in this crate.
+    match a.len().checked_mul(b.len()) {
+        Some(work) if work <= MAX_ARRAY_LENGTH => {}
+        _ => {
+            return Err(format!(
+                "⍳: index-of over {} × {} elements exceeds the cap of {} comparisons",
+                a.len(),
+                b.len(),
+                MAX_ARRAY_LENGTH
+            ));
+        }
+    }
     let haystack = a.data();
     let out: Vec<f64> = b
         .data()
@@ -207,6 +224,22 @@ pub fn ravel(a: &Array) -> Array {
 /// convention every other deferred construct in this language uses (MA05
 /// §4's own "Deferred" list).
 pub fn catenate(a: &Array, b: &Array) -> Result<Array, String> {
+    // Neither operand alone need be oversized for the *result* to be: both
+    // can independently sit right at MAX_ARRAY_LENGTH, and a script that
+    // repeatedly catenates a value with itself (`A←A,A`) doubles the size
+    // every line with no ceiling otherwise. Same cap and "check before
+    // allocating" discipline as `⍳`/dyadic `⍴` elsewhere in this crate.
+    match a.len().checked_add(b.len()) {
+        Some(total) if total <= MAX_ARRAY_LENGTH => {}
+        _ => {
+            return Err(format!(
+                ",: catenate of {} and {} elements exceeds the cap of {} elements",
+                a.len(),
+                b.len(),
+                MAX_ARRAY_LENGTH
+            ));
+        }
+    }
     match (a.ndims(), b.ndims()) {
         (0, 0) => Ok(Array::from_vec(vec![a.data()[0], b.data()[0]])),
         (0, 1) => {
@@ -355,6 +388,17 @@ mod tests {
         assert_eq!(r.data(), &[2.0, 4.0, 1.0]);
     }
 
+    #[test]
+    fn index_of_caps_the_work_product_before_scanning() {
+        // Neither operand alone exceeds MAX_ARRAY_LENGTH, but their product
+        // (the O(len(a)*len(b)) work this does) does -- this is the shape a
+        // security review flagged as unbounded before this cap existed.
+        let n = 2000; // 2000 * 2000 = 4,000,000 > MAX_ARRAY_LENGTH
+        let a = Array::from_vec(vec![0.0; n]);
+        let b = Array::from_vec(vec![0.0; n]);
+        assert!(index_of(&a, &b).is_err());
+    }
+
     // --- , -----------------------------------------------------------------
 
     #[test]
@@ -423,5 +467,17 @@ mod tests {
         let v = Array::from_vec(vec![1.0, 2.0]);
         assert!(catenate(&a, &v).is_err());
         assert!(catenate(&v, &a).is_err());
+    }
+
+    #[test]
+    fn catenate_caps_combined_length_before_allocating() {
+        // Neither operand alone exceeds MAX_ARRAY_LENGTH, but their sum does
+        // -- a security review flagged this as unbounded (a script that
+        // repeatedly does `A←A,A` would otherwise double the size every line
+        // with no ceiling at all).
+        let half = MAX_ARRAY_LENGTH / 2 + 1;
+        let a = Array::from_vec(vec![0.0; half]);
+        let b = Array::from_vec(vec![0.0; half]);
+        assert!(catenate(&a, &b).is_err());
     }
 }

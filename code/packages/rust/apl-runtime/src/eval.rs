@@ -28,7 +28,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 /// Maximum recursion depth for this evaluator's own tree-walk. `apl-parser`'s
-/// `MAX_RULE_DEPTH` (currently 100, see that crate's `lib.rs`) already bounds
+/// own `MAX_RULE_DEPTH` (see that crate's `lib.rs`) already bounds
 /// how deep a CST built from untrusted input can possibly be, so this bound
 /// can never actually trip on a tree that came from `try_parse_apl` — it
 /// exists purely as **defense in depth**, exactly like every other runtime
@@ -266,7 +266,24 @@ impl Interpreter {
             AplFn::NonScalar(NonScalarAtom::Rho) => builtins::reshape(a, b),
             AplFn::NonScalar(NonScalarAtom::Iota) => builtins::index_of(a, b),
             AplFn::NonScalar(NonScalarAtom::Ravel) => builtins::catenate(a, b),
-            AplFn::Outer(op) => ops::outer(*op, a, b),
+            AplFn::Outer(op) => {
+                // `ops::outer`'s own `checked_mul` only guards against usize
+                // *overflow*, not an excessive-but-representable product —
+                // (⍳1000000)∘.×(⍳1000000) would ask for 10^12 elements
+                // without this check. Same cap and rationale as `⍳`/dyadic
+                // `⍴` (builtins::MAX_ARRAY_LENGTH), checked before the
+                // allocation, not after.
+                let out_len = a.len().checked_mul(b.len()).filter(|&n| n <= builtins::MAX_ARRAY_LENGTH);
+                if out_len.is_none() {
+                    return Err(format!(
+                        "∘.: outer product of {} and {} elements exceeds the cap of {} elements",
+                        a.len(),
+                        b.len(),
+                        builtins::MAX_ARRAY_LENGTH
+                    ));
+                }
+                ops::outer(*op, a, b)
+            }
             AplFn::Reduce(_) => Err(
                 "apl-runtime: / (reduce) takes exactly one operand, but was applied dyadically"
                     .to_string(),

@@ -48,6 +48,16 @@ pub enum ReplResponse {
     Quit,
 }
 
+/// Upper bound on the pending-continuation buffer (while a `(` is still
+/// unbalanced). Without this, a source that never closes its parens grows
+/// `buffer` without bound before anything is ever parsed — low severity for
+/// a human typing at a terminal, but a real memory-exhaustion vector if this
+/// REPL is ever driven by a network-facing or otherwise less-trusted line
+/// source. 64 KiB is far more than any legitimate hand-written APL statement
+/// needs, mirroring `wolfram-runtime::MAX_INPUT_LEN`'s "generous but bounded"
+/// convention for a single logical unit of input.
+const MAX_CONTINUATION_BUFFER: usize = 64 * 1024;
+
 /// A persistent interactive APL session.
 pub struct AplRepl {
     interp: Interpreter,
@@ -91,6 +101,13 @@ impl AplRepl {
             // real '\n') keeps a still-open `(...)` on one logical line.
             self.buffer.push(' ');
             self.buffer.push_str(line);
+        }
+
+        if self.buffer.len() > MAX_CONTINUATION_BUFFER {
+            self.buffer.clear();
+            return ReplResponse::Output(format!(
+                "Error: statement exceeds the {MAX_CONTINUATION_BUFFER}-byte continuation limit; discarded\n"
+            ));
         }
 
         if paren_depth(&self.buffer) > 0 {
@@ -178,6 +195,21 @@ mod tests {
         assert!(r.is_continuing());
         assert!(matches!(r.feed("+3)"), ReplResponse::Output(t) if t.contains('6')));
         assert!(!r.is_continuing());
+    }
+
+    #[test]
+    fn an_unbounded_continuation_is_discarded_not_grown_forever() {
+        let mut r = AplRepl::new();
+        assert_eq!(r.feed("(1"), ReplResponse::NeedMore);
+        // Keep feeding lines that never close the paren, well past the cap.
+        let filler = "+1".repeat(MAX_CONTINUATION_BUFFER / 2 + 10);
+        match r.feed(&filler) {
+            ReplResponse::Output(t) => assert!(t.contains("Error")),
+            other => panic!("expected an Error output once the cap is exceeded, got {other:?}"),
+        }
+        // The buffer was discarded, not left growing -- a fresh statement works.
+        assert!(!r.is_continuing());
+        assert!(matches!(r.feed("1+1"), ReplResponse::Output(t) if t.contains('2')));
     }
 
     #[test]

@@ -16,3 +16,8 @@ All notable changes to this project will be documented in this file.
   are joined with a space rather than a real newline, since `apl.tokens`
   does not drop newlines inside `(...)` in this first cut.
 - Errors are surfaced (`Error: …`) without ending the session.
+- `MAX_CONTINUATION_BUFFER` (64 KiB) caps the pending-continuation buffer
+  while a `(` is still unbalanced, discarding it with a clean error rather
+  than growing without bound — found by `/security-review` (LOW severity
+  under this crate's stdio-only threat model, fixed anyway for defense in
+  depth) before this crate's first push.

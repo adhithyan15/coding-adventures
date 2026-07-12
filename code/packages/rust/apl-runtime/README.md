@@ -61,9 +61,14 @@ functions/dfns (`∇`, `{…}`), axis-specific reduce/scan (`⌿`/`⍀`), the `�
   — defense in depth on top of `apl-parser`'s own `MAX_RULE_DEPTH`, which
   already bounds how deep an untrusted-input CST can be before it ever
   reaches this crate.
-- `⍳n`'s `n` and dyadic `⍴`'s target element count are capped at
-  `builtins::MAX_ARRAY_LENGTH` (1,000,000) *before* allocating, so a crafted
-  `⍳2000000` is a clean error, never a multi-million-element allocation.
+- `builtins::MAX_ARRAY_LENGTH` (1,000,000) bounds every primitive whose
+  output size or work scales with runtime-computed values — monadic `⍳n`,
+  dyadic `⍴`'s target element count, dyadic `,`'s combined output length,
+  `∘.`'s `len(a)×len(b)` output size, and dyadic `⍳`'s `len(a)×len(b)` work
+  — each checked *before* allocating or scanning. `,` and `∘.` in particular
+  can each grow a result *larger* than either input, so a naive per-operand
+  cap alone isn't enough — see `CHANGELOG.md` for the security-review
+  findings that added the `,`/`∘.`/dyadic-`⍳` checks.
 
 ## Testing
 

@@ -273,9 +273,25 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
     joins continuation lines with a space instead of a literal `\n` so the
     accumulated source stays syntactically one logical line.
   - No discrepancies found against this spec's grammar/CST description —
-    `apl-parser`'s tree shapes matched the design exactly (the 0.1.1
-    depth-guard fix noted under MA-4d above was unrelated to this crate and
-    left untouched).
+    `apl-parser`'s tree shapes matched the design exactly. While starting
+    this crate, an adversarial probe of `apl-parser` itself (a flat,
+    unparenthesised dyadic chain) surfaced a real, separate DoS gap in that
+    already-merged crate's own recursion-depth cap — shipped independently
+    as its own fix (`apl-parser` 0.1.1), not part of this PR.
+  - **`/security-review` found 3 real DoS gaps before this crate's first
+    push**: dyadic `,` (catenate) and `∘.` (outer product) can each produce
+    a result *larger* than either input, so capping only the operands (as
+    `⍳`/dyadic `⍴` already did) wasn't enough — `A←A,A` could double a
+    variable's size every line with no ceiling, and `∘.` inherited
+    `array_runtime::ops::outer`'s own `checked_mul` (which only guards
+    `usize` overflow, not an excessive-but-representable product) with no
+    cap of its own. Dyadic `⍳` (index-of) is O(len(a)×len(b)) with no
+    complexity bound. All three fixed by extending `builtins::MAX_ARRAY_LENGTH`
+    to cover the actual output size / work product, not just each operand's
+    own length, verified adversarially (guard disabled → regression test
+    fails → restored → passes) per this repo's standing DoS-guard-
+    verification discipline. See `apl-runtime/CHANGELOG.md` for the full
+    writeup.
 - **MA-4f — `apl-to-semantic-ir`**, per [`HML01`](HML01-math-to-semantic-ir.md)
   §2 — built in this same wave rather than as a later retrofit.
 - **Next**: J (shares APL's function/operator grammar shape almost
