@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.34.0 — Array `minmax`
+
+Mirrors the Python reference (PR #8092) and the Go backend (PR #8098) into the
+Rust backend's inline `__sir` runtime (`array_method` beside the existing
+`min`/`max` arms; the array-method `responds_to` set gains `minmax`), continuing
+the `minmax` cross-backend cascade.
+
+- `minmax` (non-block) → the two-element array `[min, max]` computed in one pass
+  via `num_lt`. `[3,1,2].minmax` → `[1, 3]`; `["b","a","c"].minmax` →
+  `["a", "c"]`. An empty array yields `[nil, nil]` (no smallest/largest element),
+  matching the Python reference's `[None, None]`.
+- The entries are snapshotted into an owned `Vec` before the scan so a block-free
+  reentrant call cannot double-borrow-panic (never-panic floor), consistent with
+  the `min`/`max` arms.
+- The `array_aggregates_compile_and_run` exec-proof test gains `minmax` (non-empty
+  and empty) — the emitted Rust compiles with `rustc`, runs, and asserts
+  `[1, 3]` / `[nil, nil]`.
+
 ## 0.33.0 — Array `slice_when`
 
 Mirrors the Python reference (PR #8070) and the Go backend (PR #8073) into the

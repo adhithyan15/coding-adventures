@@ -155,6 +155,10 @@ fn full_demo() -> Module {
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "max", vec![])),
         // 2. [3, 1, 2].min  → 1
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "min", vec![])),
+        // 2b. [3, 1, 2].minmax  → [1, 3]
+        print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "minmax", vec![])),
+        // 2c. [].minmax  → [nil, nil]
+        print_stmt(method(seq(vec![]), "minmax", vec![])),
         // 3. [1, 2, 3].sum  → 6
         print_stmt(method(seq(vec![ilit(1), ilit(2), ilit(3)]), "sum", vec![])),
         // 4. [1, 2, 2, 3].uniq  → [1, 2, 3]
@@ -250,6 +254,8 @@ fn array_aggregates_compile_and_run() {
         vec![
             "3",         // [3,1,2].max
             "1",         // [3,1,2].min
+            "[1, 3]",    // [3,1,2].minmax
+            "[nil, nil]", // [].minmax → [nil, nil]
             "6",         // [1,2,3].sum
             "[1, 2, 3]", // [1,2,2,3].uniq
             "[1, 2, 3]", // [[1,[2]],3].flatten
