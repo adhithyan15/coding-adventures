@@ -660,5 +660,5 @@ int main(void) {
     test_btree_overflow();
     test_amplification();
     test_btree_index();
-    ISO_TEST_RESULT();
+    return ISO_TEST_RESULT();
 }
