@@ -4,6 +4,13 @@ All notable changes to the C `format-doc` package are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- `fd_clone` (public deep-copy of a document tree) and `fd_is_nil` (is-empty
+  predicate), exposed for the `format-doc-std` templates layer.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

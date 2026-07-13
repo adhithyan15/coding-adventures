@@ -128,6 +128,12 @@ inline std::size_t visible_width(const std::string& s) {
 
 inline Doc nil() { return detail::make(detail::Node{detail::Nil{}}); }
 
+// True iff `d` is the empty document (`nil`, or empty text collapsed to nil).
+inline bool is_nil(const Doc& d) {
+    const detail::Node* n = d.raw();
+    return n != nullptr && std::holds_alternative<detail::Nil>(n->v);
+}
+
 inline Doc hardline() {
     return detail::make(detail::Node{detail::LineNode{LineMode::Hard}});
 }

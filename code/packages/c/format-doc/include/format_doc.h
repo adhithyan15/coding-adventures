@@ -82,6 +82,13 @@ FdDoc *fd_hardline(void);
 FdDoc *fd_if_break(FdDoc *broken, FdDoc *flat);
 FdDoc *fd_annotate(FdAnnotation annotation, FdDoc *content); /* takes `annotation` */
 
+/* Deep-copy a document tree (a structural clone; the original is untouched).
+ * Returns NULL on allocation failure. */
+FdDoc *fd_clone(const FdDoc *doc);
+/* True iff `doc` is the empty document (`fd_nil`, or empty text that collapsed
+ * to nil). Useful for callers that special-case an empty body. */
+int fd_is_nil(const FdDoc *doc);
+
 void fd_free(FdDoc *doc);
 
 /* ── Layout ───────────────────────────────────────────────────────────────*/
