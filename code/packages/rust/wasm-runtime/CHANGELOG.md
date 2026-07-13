@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] — 2026-07-13
+
+### Fixed — struct field counts indexed by deduplicated function-type count (LANG-FULL E6d-5)
+
+`WasmRuntime::call` registered WasmGC struct field counts by padding the front of
+the `struct_field_counts` vec with one filler slot per **function** (`instance.
+func_types.len()`) before appending the struct counts. But function and struct
+types share one wasm type-index space and the encoder **deduplicates** function
+types, so the per-function count over-counts whenever two functions share a
+signature — and the struct's field-count entry then landed at a type index higher
+than the one the emitted `struct.new`/`struct.set` actually reference, leaving the
+real struct index registered as a zero-field filler.
+
+The symptom: any module whose functions include duplicate signatures trapped
+`struct.set: field 0 out of range`. This is exactly the shape a Twig `record`
+produces — a constructor plus N same-shape accessors plus a predicate collapse to
+a few distinct function types — so records never ran on the WASM column despite
+compiling and validating. Single-function cons programs and the list-op helpers
+were unaffected because their function types happened to all be distinct, so the
+per-function and deduplicated counts coincided.
+
+Fix: pad by `instance.module.types.len()` (the type section's deduplicated
+function-type count, i.e. the exact count the encoder used to place the struct
+types) instead of `instance.func_types.len()`. One-line change; no API change; 47
+existing wasm-runtime tests still pass.
+
 ## [0.3.0] — 2026-06-08
 
 ### Added — run WasmGC struct (cons) modules end-to-end (LANG77 / McCarthy L3b-3a-3c-2)

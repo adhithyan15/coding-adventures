@@ -283,9 +283,19 @@ E6d-7.
    dotnet CLR verified, native/LLVM/JVM via CI. **Deferred:** runtime symbol
    *creation* (`string->symbol` over a runtime string) and `symbol->string` name
    recovery on the code-gen backends still need the `make_symbol` data-section path.
-5. **E6d-5 — records (TW6, part 1).** Type-parameterized `alloc` + a struct-type
-   registry (§3.3); Twig record constructor/accessor lowering. Proof: a Twig
-   record round-trip returning a field → 42.
+5. **E6d-5 — records (TW6, part 1) (✅ shipped).** A Twig `(record Name (f : T) …)`
+   already erases (in the frontend) to a constructor that builds a cons chain via
+   typed `alloc [ref<LispyPair>]` + `field_store`, and accessors `name-f(r)` =
+   `car(cdr^i(r))` via `field_load` — so records reuse the E6d-1 heap substrate
+   with **no new value type, no struct-type registry, and no frontend change**;
+   they are a catalog-extension over cons. Shipping the proof fixed a latent
+   **wasm-runtime** bug (0.4.0): struct field counts were indexed by per-function
+   count, over-counting when functions share a signature (a record's constructor +
+   N same-shape accessors + predicate), so every record `struct.set` trapped
+   `field 0 out of range` on WASM; now indexed by the deduplicated function-type
+   count. Proof (shipped): `(record Point (x : int) (y : int)) (point-x (Point 42
+   7))` → 42 and `(point-y (Point 7 42))` → 42 on [NativeAot, Llvm, Wasm, Jvm,
+   Clr]; WASM + real dotnet CLR verified, native/LLVM/JVM via CI.
 6. **E6d-6 — unions / match (TW6, part 2).** Integer-tagged constructors +
    discriminant test + `match` arm dispatch, over the E6d-5 structs. Proof: a
    `match` over a 2-variant union → 42.
