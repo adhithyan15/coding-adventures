@@ -346,9 +346,24 @@ formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE ;
 
 formulabook_item = use_decl | formula_decl ;
 
-formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN EQUALS expr { annotation } ;
+formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN formula_body { annotation } ;
 
 formula_params   = IDENT { COMMA IDENT } ;
+
+# The formula body is EITHER the single-expression sugar (`= <expr>`, the
+# rung-0 form every shipped library uses) OR a MULTI-STEP block
+# (ADJ-RULE-SUBSTRATE RS-2): `{ let s1 = e1  let s2 = e2  … <final-expr> }`.
+# Each `let`-step names an intermediate value (a conjunction of sub-goals); a
+# later step and the final expression may reference an earlier step's name in
+# addition to the formula parameters. The `let`-literal that opens a step and
+# the `factor` that opens the final expression have DISJOINT first-sets (no
+# expression begins with the `let` literal), so `{ formula_step } expr` is
+# unambiguous. The lowerer desugars the steps into the final expression by
+# in-order substitution, so a multi-step body reuses the RS-1 apply/expand
+# pipeline verbatim (worked example: `cockcroft_gault` with named steps).
+formula_body     = EQUALS expr | LBRACE { formula_step } expr RBRACE ;
+
+formula_step     = "let" IDENT EQUALS expr ;
 
 # ----------------------------------------------------------------
 # Import (MYCIN-2026 M3 — composition across files). `import "<path>"`

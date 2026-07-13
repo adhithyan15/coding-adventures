@@ -1,0 +1,86 @@
+% ============================================================================
+% cockcroft_gault.adj — creatinine-clearance estimate (ADJ-RULE-SUBSTRATE RS-2).
+% ============================================================================
+% The first MULTI-STEP formula in the compute standard library: a formula whose
+% body is a sequence of named `let`-steps, not a single expression. Where the
+% rung-0 form writes one nested expression (`formula f(...) = <expr>`), RS-2 lets
+% a formula read like the worked calculation it models —
+%
+%     formula cockcroft_gault(age, weight, creatinine, sex_factor) {
+%         let age_factor = difference(140, age)          % 140 − age
+%         let lean_term  = product(age_factor, weight)    % (140 − age) · weight
+%         let numerator  = product(lean_term, sex_factor) % · sex factor
+%         let denominator = product(72, creatinine)       % 72 · Scr
+%         quotient(numerator, denominator)                % CrCl
+%     }
+%
+% Each `let`-step names an intermediate value and may reference the parameters
+% AND any earlier step; the final expression combines them. The engine folds the
+% steps into the effective body and computes on the CPU, exactly composing the
+% cited `arithmetic.adj` primitives (difference / product / quotient) — the model
+% performs zero arithmetic, and every primitive it builds on rides in the
+% provenance chain.
+%
+% Cockcroft-Gault estimates creatinine clearance (mL/min) from age (years),
+% lean/total body weight (kg), serum creatinine (mg/dL), and a sex factor
+% (1 for men; the female estimate multiplies by 0.85, supplied as sex_factor):
+%
+%     CrCl = ((140 − age) × weight × sex_factor) / (72 × serum_creatinine)
+%
+%     % run from the stdlib root so the cross-directory import resolves:
+%     import "clinical/cockcroft_gault.adj" % transitively imports arithmetic.adj
+%     observe age(60)                       % "…60-year-old…"   (span cited by the model)
+%     observe weight(72)                    % "…72 kg…"         (span cited by the model)
+%     observe creatinine(1)                 % "…Cr 1.0…"        (span cited by the model)
+%     observe sex_factor(1)                 % male              (span cited by the model)
+%     ? cockcroft_gault(age, weight, creatinine, sex_factor)   % engine → 80 mL/min
+%
+% (The import root is the entry program's directory; because this clinical
+% formula composes the elementary `arithmetic/` primitives, the entry program is
+% placed at the stdlib root and imports `clinical/cockcroft_gault.adj`, so the
+% relative `../arithmetic/arithmetic.adj` stays inside the root.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitives — `difference`, `product`, `quotient`.
+% The import is RELATIVE to this file, so a consumer that imports
+% `cockcroft_gault.adj` gets those primitives transitively and the step bodies
+% below resolve.
+% ----------------------------------------------------------------------------
+import "../arithmetic/arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The four inputs and the estimated clearance. Rung-0 types an
+% observable slot as `finding`; the `surface` synonyms let a decomposer map
+% everyday phrasing ("years old", "body weight", "serum creatinine") onto the
+% canonical terms.
+% ----------------------------------------------------------------------------
+dictionary cockcroft_gault_vocab {
+    define age             : finding  surface "age", "years old", "age in years"
+    define weight          : finding  surface "weight", "body weight", "lean body weight", "mass"
+    define creatinine      : finding  surface "creatinine", "serum creatinine", "Scr", "Cr"
+    define sex_factor      : finding  surface "sex factor", "sex coefficient", "gender factor"
+    define cockcroft_gault : finding  surface "creatinine clearance", "CrCl", "Cockcroft-Gault", "estimated clearance"
+}
+
+% ----------------------------------------------------------------------------
+% The multi-step formula. Its body is four named `let`-steps followed by the
+% final quotient; each step APPLIES a cited primitive from arithmetic.adj (no
+% bare − × /), so the estimate is provenance-complete and reads as the worked
+% calculation. The constants 140 and 72 are the formula's own defining
+% constants, carried by its authoritative source.
+% ----------------------------------------------------------------------------
+formulabook renal_clearance {
+    use cockcroft_gault_vocab
+
+    formula cockcroft_gault(age, weight, creatinine, sex_factor) {
+        let age_factor = difference(140, age)
+        let lean_term = product(age_factor, weight)
+        let numerator = product(lean_term, sex_factor)
+        let denominator = product(72, creatinine)
+        quotient(numerator, denominator)
+    }
+        source "Cockcroft-Gault estimates creatinine clearance as ((140 − age) × weight × [0.85 if female]) / (72 × serum creatinine), with weight in kg and creatinine in mg/dL."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555956/"
+        trust authoritative
+}

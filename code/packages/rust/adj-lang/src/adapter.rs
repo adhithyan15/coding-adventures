@@ -864,8 +864,43 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    // The body reuses the EXISTING `let` expression grammar/adapter verbatim.
-    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+    // formula_body = EQUALS expr | LBRACE { formula_step } expr RBRACE
+    // Both forms wrap the body in a `formula_body` node. The single-expression
+    // sugar leaves `steps` empty and `body` = the sole expr; the block form
+    // collects each `let`-step (in source order) and takes the FINAL expr (the
+    // direct `expr` child of `formula_body` — a step's own expr is nested one
+    // level deeper, inside its `formula_step` node, so it is not mistaken for
+    // the body). RS-2.
+    let body_node = first_named_child(node, "formula_body").ok_or(AdapterError::MissingChild {
+        rule: "formula_decl".into(),
+        position: "formula_body",
+    })?;
+    let mut steps = Vec::new();
+    for child in &body_node.children {
+        if let ASTNodeOrToken::Node(step_node) = child {
+            if step_node.rule_name == "formula_step" {
+                // formula_step = "let" IDENT EQUALS expr
+                let step_name = first_name_not(step_node, "let")
+                    .ok_or(AdapterError::MissingChild {
+                        rule: "formula_step".into(),
+                        position: "step name",
+                    })?
+                    .to_string();
+                let step_expr_node =
+                    first_named_child(step_node, "expr").ok_or(AdapterError::MissingChild {
+                        rule: "formula_step".into(),
+                        position: "step expr",
+                    })?;
+                steps.push(crate::ast::FormulaStep {
+                    name: step_name,
+                    expr: adapt_expr(step_expr_node)?,
+                });
+            }
+        }
+    }
+    // The FINAL body expr reuses the EXISTING `let` expression grammar/adapter
+    // verbatim; it is the direct `expr` child of `formula_body`.
+    let expr_node = first_named_child(body_node, "expr").ok_or(AdapterError::MissingChild {
         rule: "formula_decl".into(),
         position: "body expr",
     })?;
@@ -875,6 +910,7 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
     Ok(FormulaDef {
         name,
         params,
+        steps,
         body,
         annotations,
     })
