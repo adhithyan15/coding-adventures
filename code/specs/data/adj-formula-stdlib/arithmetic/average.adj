@@ -1,0 +1,69 @@
+% ============================================================================
+% average.adj — the arithmetic-mean formula library (ADJ-FORMULA-LIBRARIES FL-4).
+% ============================================================================
+% The elementary "share it out evenly" track of the compute standard library,
+% built ENTIRELY by composing the cited primitives of `arithmetic.adj`. The
+% arithmetic mean of n quantities is their sum divided by n, so every formula
+% here pools its inputs with the cited `sum` and then divides the pool by the
+% count with the cited `quotient` — it re-derives no arithmetic. Write-once-
+% use-many: a consumer imports this file, binds the numbers from its own
+% byte-provenance decomposition, and asks the engine to apply the cited formula
+% on the CPU; the model performs zero arithmetic.
+%
+%     import "average.adj"                    % transitively imports arithmetic.adj
+%     observe value_one(4)                    % "…4…"   (span cited by the model)
+%     observe value_two(6)                    % "…6…"   (span cited by the model)
+%     ? mean_two(value_one, value_two)        % engine → 5, carrying every citation
+%
+% The engine expands `mean_two` → `sum` then `quotient` (both from
+% arithmetic.adj) on the CPU and composes the provenance chain, so the answer
+% cites MathWorld's *arithmetic mean* definition (primary) alongside the `sum`
+% and `quotient` primitives it builds on. The audit trail names every formula
+% that participated.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on the elementary primitives — `sum` and `quotient`. The
+% import is RELATIVE to this file, so a consumer that imports `average.adj` gets
+% those primitives transitively and the bodies below resolve.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The values being averaged and their mean. Rung-0 types an
+% observable slot as `finding`; the `surface` synonyms let a decomposer map
+% everyday phrasing ("average", "on average", "mean of") onto the canonical
+% terms.
+% ----------------------------------------------------------------------------
+dictionary average_vocab {
+    define value_one   : finding  surface "first value", "first number", "one value"
+    define value_two   : finding  surface "second value", "second number", "other value"
+    define value_three : finding  surface "third value", "third number", "last value"
+    define mean_two    : finding  surface "average", "mean", "average of two", "mean of two"
+    define mean_three  : finding  surface "average", "mean", "average of three", "mean of three"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. Each pools its inputs with the cited `sum` and divides
+% the pool by the count with the cited `quotient` — the arithmetic mean is the
+% sum over the count, cited as such.
+%
+%   mean_two(a, b)      = (a + b) / 2
+%   mean_three(a, b, c) = (a + b + c) / 3
+% ----------------------------------------------------------------------------
+formulabook averages {
+    use average_vocab
+
+    % The arithmetic mean of two quantities — their sum shared evenly in two.
+    formula mean_two(value_one, value_two) = quotient(sum(value_one, value_two), 2)
+        source "The arithmetic mean of a set of numbers is the sum of the numbers divided by how many numbers there are in the set."
+        locator "https://mathworld.wolfram.com/ArithmeticMean.html"
+        trust authoritative
+
+    % The arithmetic mean of three quantities — their pooled sum shared evenly in
+    % three. Composes `sum` twice (associatively) then `quotient`.
+    formula mean_three(value_one, value_two, value_three) = quotient(sum(sum(value_one, value_two), value_three), 3)
+        source "The arithmetic mean of a set of numbers is the sum of the numbers divided by how many numbers there are in the set."
+        locator "https://mathworld.wolfram.com/ArithmeticMean.html"
+        trust authoritative
+}

@@ -1,0 +1,72 @@
+% ============================================================================
+% percent.adj — the percentage formula library (ADJ-FORMULA-LIBRARIES FL-4).
+% ============================================================================
+% The elementary "out of a hundred" track of the compute standard library, built
+% ENTIRELY by composing the cited primitives of `arithmetic.adj` — it re-derives
+% nothing. A percentage is a ratio expressed per hundred, so every formula here
+% is a quotient (share) scaled by a hundred, and a percentage change is the same
+% over the amount of change. Write-once-use-many: a consumer imports this file,
+% binds the numbers from its own byte-provenance decomposition, and asks the
+% engine to apply the cited formula on the CPU — the model performs zero
+% arithmetic.
+%
+%     import "percent.adj"                    % transitively imports arithmetic.adj
+%     observe part(30)                        % "…30 correct…"  (span cited by the model)
+%     observe whole(40)                       % "…out of 40…"   (span cited by the model)
+%     ? percent(part, whole)                  % engine → 75, carrying every citation
+%
+% The engine expands `percent` → `quotient` (from arithmetic.adj) on the CPU, then
+% scales by a hundred, and composes the provenance chain so the answer cites BOTH
+% MathWorld's *percent* definition (primary) and the *quotient* primitive it
+% builds on (corroboration). The audit trail names every formula that participated.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% This library depends on the elementary primitives — `quotient` and
+% `difference` in particular. The import is RELATIVE to this file, so a consumer
+% that imports `percent.adj` gets those primitives transitively and the bodies
+% below resolve.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. `percent` compares a part to a whole; `percent_change` compares a
+% new amount to an old one. Rung-0 types an observable slot as `finding`; the
+% `surface` synonyms let a decomposer map everyday phrasing ("out of", "what
+% percent", "grew by") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary percent_vocab {
+    define part          : finding  surface "part", "amount", "portion", "number that is"
+    define whole         : finding  surface "whole", "total", "out of", "base"
+    define percent       : finding  surface "percent", "percentage", "per cent", "percent of the whole"
+
+    define old_amount    : finding  surface "old amount", "original amount", "starting value", "amount before"
+    define new_amount    : finding  surface "new amount", "final amount", "ending value", "amount after"
+    define percent_change : finding  surface "percent change", "percentage change", "percent increase", "percent decrease"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formulas. Neither writes a bare `/` or `-`: each APPLIES the cited
+% primitive from `arithmetic.adj` and scales the share by a hundred, so the
+% percentage is a percentage BECAUSE it is a quotient per hundred, cited as such.
+%
+%   percent(part, whole)        = (part / whole) * 100
+%   percent_change(old, new)    = ((new - old) / old) * 100
+% ----------------------------------------------------------------------------
+formulabook percentages {
+    use percent_vocab
+
+    % A percentage — the part as a share of the whole, expressed per hundred.
+    formula percent(part, whole) = quotient(part, whole) * 100
+        source "A percentage is a number or ratio expressed as a fraction of 100; it is often denoted by the percent sign, %."
+        locator "https://mathworld.wolfram.com/Percent.html"
+        trust authoritative
+
+    % A percentage change — the change from the old amount to the new one, as a
+    % share of the old amount, expressed per hundred. Composes `difference` and
+    % `quotient` from arithmetic.adj.
+    formula percent_change(old_amount, new_amount) = quotient(difference(new_amount, old_amount), old_amount) * 100
+        source "Percentage change is the difference between the final and initial value of a quantity, divided by the initial value, expressed as a percentage."
+        locator "https://mathworld.wolfram.com/PercentageChange.html"
+        trust authoritative
+}
