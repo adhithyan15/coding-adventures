@@ -47,10 +47,18 @@
 //! method dispatch, `super`, `self`, and `@ivar`/`@@cvar` access lower
 //! to the inlined `__Sir` OOP runtime.
 //!
+//! It also accepts the SIR23 symbolic-expression + pattern/rewrite domain
+//! (`SymbolicExpr`, `PatternMatching`, `Rationals`): a `SymApply`/
+//! `SymPatternBlank`/`SymRule`/`SymReplaceAll` node lowers to a call into
+//! the inlined `__Sir.Symbolic.*` runtime — a plain-JS port of the
+//! published `sir-runtime-symbolic`/`symbolic-ir`/`cas-pattern-matching`
+//! TypeScript packages, so the artifact stays self-contained.
+//!
 //! It **rejects** everything else at the capability check — the
-//! remaining SIR18 features (e.g. string interpolation), `TailCalls` (V8
-//! does not reliably tail-call optimise), and `Intrinsics` (empty
-//! whitelist).  The accept-set is deliberately matched to exactly what
+//! remaining SIR18 features (e.g. string interpolation), the SIR22
+//! array/matrix domain (`NDArrays`, `MatrixOps`), `TailCalls` (V8 does not
+//! reliably tail-call optimise), and `Intrinsics` (empty whitelist).  The
+//! accept-set is deliberately matched to exactly what
 //! [`emit`](crate::emit) lowers, so a module that uses a deferred node is
 //! turned away *before* lowering rather than producing wrong code.
 //!
@@ -174,6 +182,18 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // or on the class itself (`extend`).  See `emit`'s `__include__` /
     // `__extend__` / `__class_method__` arms and `runtime::resolveMethod`.
     Feature::Modules,
+    // SIR23: the symbolic-expression + pattern/rewrite domain.  A
+    // `SymApply`/`SymPatternBlank`/`SymRule`/`SymReplaceAll` node lowers to
+    // a call into the inlined `__Sir.Symbolic.*` runtime (a plain-JS port
+    // of the published `sir-runtime-symbolic`/`symbolic-ir`/
+    // `cas-pattern-matching` TypeScript packages).  See `emit`'s SIR23
+    // section and `runtime.rs`'s "Symbolic expressions" section.
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    // A `SymRational` node sets this (shared with the still-deferred SIR22
+    // array/matrix domain rather than a flag of its own — mirroring the
+    // TypeScript backend's identical choice).
+    Feature::Rationals,
 ];
 
 impl Backend for JavaScriptBackend {
@@ -437,6 +457,255 @@ mod tests {
         };
         let err = compile(&m).expect_err("array/matmul body rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+    }
+
+    // ── SIR23: symbolic-expression/pattern codegen ─────────────────────
+
+    #[test]
+    fn accepts_sir23_symbolic_features() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::SymbolicExpr,
+            Feature::PatternMatching,
+            Feature::Rationals,
+        ]);
+        compile(&m).expect("SIR23 features accepted");
+    }
+
+    #[test]
+    fn sym_symbol_and_sym_rational_emit_leaf_constructors() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::SymbolicExpr, Feature::Rationals]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::SymApply {
+            head: Box::new(Expr::SymSymbol {
+                name: "f".into(),
+                span: s(),
+            }),
+            args: vec![Expr::SymRational {
+                numer: 1,
+                denom: 3,
+                span: s(),
+            }],
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(
+                r#"__Sir.Symbolic.apply(__Sir.Symbolic.sym("f"), [__Sir.Symbolic.rational(1, 3)])"#
+            ),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn literal_children_of_sym_apply_are_wrapped_as_terms() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::SymbolicExpr,
+            Feature::Floats,
+            Feature::Strings,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::SymApply {
+            head: Box::new(Expr::SymSymbol {
+                name: "g".into(),
+                span: s(),
+            }),
+            args: vec![
+                Expr::IntLit {
+                    value: 2,
+                    span: s(),
+                },
+                Expr::FloatLit {
+                    value: 1.5,
+                    span: s(),
+                },
+                Expr::StrLit {
+                    value: "hi".into(),
+                    span: s(),
+                },
+            ],
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains("__Sir.Symbolic.int(2)"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("__Sir.Symbolic.numberNode(1.5)"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains(r#"__Sir.Symbolic.stringNode("hi")"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn untyped_and_typed_pattern_blanks_emit_blank_and_blank_typed() {
+        let mut m = minimal_module();
+        m.manifest =
+            FeatureManifest::from_features(&[Feature::PatternMatching, Feature::SymbolicExpr]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::SymPatternNamed {
+            name: "x".into(),
+            pattern: Box::new(Expr::SymPatternBlank {
+                head: Some(Box::new(Expr::SymSymbol {
+                    name: "Integer".into(),
+                    span: s(),
+                })),
+                span: s(),
+            }),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source
+                .contains(r#"__Sir.Symbolic.named("x", __Sir.Symbolic.blankTyped("Integer"))"#),
+            "got:\n{}",
+            a.source
+        );
+
+        let mut bare = minimal_module();
+        bare.manifest = FeatureManifest::from_features(&[Feature::PatternMatching]);
+        let main = bare
+            .functions
+            .iter_mut()
+            .find(|f| f.name == "main")
+            .unwrap();
+        main.body.value = Expr::SymPatternBlank {
+            head: None,
+            span: s(),
+        };
+        let a2 = compile(&bare).expect("compile");
+        assert!(
+            a2.source.contains("__Sir.Symbolic.blank()"),
+            "got:\n{}",
+            a2.source
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "SymPatternBlank's head-constraint must be a SymSymbol")]
+    fn pattern_blank_with_non_symbol_head_panics_rather_than_miscompiling() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::PatternMatching]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::SymPatternBlank {
+            head: Some(Box::new(Expr::IntLit {
+                value: 1,
+                span: s(),
+            })),
+            span: s(),
+        };
+        let _ = compile(&m);
+    }
+
+    #[test]
+    fn rule_vs_rule_delayed_emit_distinct_constructors() {
+        let mut m = minimal_module();
+        m.manifest =
+            FeatureManifest::from_features(&[Feature::SymbolicExpr, Feature::PatternMatching]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "a".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::SymSymbol {
+                name: "b".into(),
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains(
+                r#"__Sir.Symbolic.rule(__Sir.Symbolic.sym("a"), __Sir.Symbolic.sym("b"))"#
+            ),
+            "got:\n{}",
+            a.source
+        );
+
+        let mut d = m.clone();
+        let main = d.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        if let Expr::SymRule { delayed, .. } = &mut main.body.value {
+            *delayed = true;
+        }
+        let ad = compile(&d).expect("compile");
+        assert!(
+            ad.source.contains("__Sir.Symbolic.ruleDelayed("),
+            "got:\n{}",
+            ad.source
+        );
+    }
+
+    #[test]
+    fn replace_all_and_replace_repeated_both_route_through_unwrap() {
+        let rule = || Expr::SymRule {
+            lhs: Box::new(Expr::SymSymbol {
+                name: "a".into(),
+                span: s(),
+            }),
+            rhs: Box::new(Expr::SymSymbol {
+                name: "b".into(),
+                span: s(),
+            }),
+            delayed: false,
+            span: s(),
+        };
+        let mut m = minimal_module();
+        m.manifest =
+            FeatureManifest::from_features(&[Feature::SymbolicExpr, Feature::PatternMatching]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::SymReplaceAll {
+            expr: Box::new(Expr::SymSymbol {
+                name: "a".into(),
+                span: s(),
+            }),
+            rules: vec![rule()],
+            repeated: false,
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source
+                .contains("__Sir.Symbolic.unwrap(__Sir.Symbolic.replaceAll("),
+            "got:\n{}",
+            a.source
+        );
+
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        if let Expr::SymReplaceAll { repeated, .. } = &mut main.body.value {
+            *repeated = true;
+        }
+        let ar = compile(&m).expect("compile");
+        assert!(
+            ar.source
+                .contains("__Sir.Symbolic.unwrap(__Sir.Symbolic.replaceRepeated("),
+            "got:\n{}",
+            ar.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_wolfram_replace_all_compiles() {
+        let module =
+            wolfram_to_semantic_ir::compile_source("x /. a -> b\n", "demo").expect("lower wolfram");
+        let a = compile(&module).expect("compile");
+        assert!(
+            a.source
+                .contains("__Sir.Symbolic.unwrap(__Sir.Symbolic.replaceAll("),
+            "got:\n{}",
+            a.source
+        );
     }
 
     #[test]

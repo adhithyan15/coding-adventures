@@ -56,16 +56,28 @@
 //! StandardError` catches a `raise MyErr` when `class MyErr < StandardError`
 //! (E2's JS half); the class body's non-`def` statements are emitted inline.
 //!
+//! ## Symbolic expressions + pattern/rewrite (SIR23)
+//!
+//! A `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+//! `SymPatternNamed`/`SymRule`/`SymReplaceAll` node lowers to a call into
+//! `__Sir.Symbolic.*` — a plain-JS port of the published
+//! `sir-runtime-symbolic`/`symbolic-ir`/`cas-pattern-matching` TypeScript
+//! packages (see `runtime.rs`), so the artifact stays self-contained.
+//! `emit_sym_operand` wraps a bare `IntLit`/`FloatLit`/`StrLit` child
+//! through the matching leaf-term constructor before it can sit inside a
+//! term tree. Mirrors the TypeScript backend's SIR23 arms exactly, minus
+//! the `import`.
+//!
 //! ## Deferred nodes (still rejected at the capability check)
 //!
 //! String interpolation (`StrConcat`), the remaining SIR17 OOP scopes
 //! (`ModuleDef`, `SingletonClassDef` dispatch, the `Instance`/`ClassVar`
-//! scopes), and `Intrinsic` are **not emitted**.  Their `Feature`s are
-//! absent from the backend's `accepts_features()` list, so a module that
-//! uses them is rejected at the capability check *before* lowering — the
-//! `panic!` arms below are defence-in-depth that fire only on a backend bug
-//! (the accept-set drifting out of sync with what `emit` handles), never on
-//! user input.
+//! scopes), the SIR22 array/matrix domain, and `Intrinsic` are **not
+//! emitted**.  Their `Feature`s are absent from the backend's
+//! `accepts_features()` list, so a module that uses them is rejected at
+//! the capability check *before* lowering — the `panic!` arms below are
+//! defence-in-depth that fire only on a backend bug (the accept-set
+//! drifting out of sync with what `emit` handles), never on user input.
 
 use std::cell::Cell;
 use std::fmt::Write;
@@ -859,28 +871,117 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 e.kind_name()
             );
         }
-        // ── SIR23: symbolic expression + pattern/rewrite nodes (deferred) ──
-        // Neither `Feature::SymbolicExpr` nor `Feature::PatternMatching` is
-        // in `ACCEPTED_FEATURES` (see lib.rs), so `check_module` rejects any
-        // module using these nodes before lowering reaches this emitter —
-        // per the SIR23 spec's "Backend impact": real codegen (a tagged
-        // term-tree value built/consumed via `sir-runtime-symbolic`'s
-        // `__SirSym.apply`/`replaceAll`/`replaceRepeated`) is a follow-up PR
-        // once that runtime package exists, not required for this spec to
-        // land safely. These panics only guard against the capability check
-        // ever drifting, exactly like the SIR22/SIR26 arm above.
-        Expr::SymSymbol { span, .. }
-        | Expr::SymRational { span, .. }
-        | Expr::SymApply { span, .. }
-        | Expr::SymPatternBlank { span, .. }
-        | Expr::SymPatternNamed { span, .. }
-        | Expr::SymRule { span, .. }
-        | Expr::SymReplaceAll { span, .. } => {
-            panic!(
-                "javascript backend reached a deferred SIR23 expression ({}) at {span} — not accepted yet",
-                e.kind_name()
-            );
+        // ── SIR23: symbolic expression + pattern/rewrite nodes ────────
+        // Mirrors the TypeScript backend's SIR23 arms exactly, but calls
+        // into the INLINED `__Sir.Symbolic.*` runtime (runtime.rs) rather
+        // than an imported `@coding-adventures/sir-runtime-symbolic`.
+        Expr::SymSymbol { name, .. } => {
+            out.push_str("__Sir.Symbolic.sym(");
+            out.push_str(&quote_js_string(name));
+            out.push(')');
         }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "__Sir.Symbolic.rational({numer}, {denom})");
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("__Sir.Symbolic.apply(");
+            emit_sym_operand(out, head, indent);
+            out.push_str(", [");
+            for (i, a) in args.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, a, indent);
+            }
+            out.push_str("])");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("__Sir.Symbolic.blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                out.push_str("__Sir.Symbolic.blankTyped(");
+                out.push_str(&quote_js_string(name));
+                out.push(')');
+            }
+            _ => panic!(
+                "javascript backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            out.push_str("__Sir.Symbolic.named(");
+            out.push_str(&quote_js_string(name));
+            out.push_str(", ");
+            emit_sym_operand(out, pattern, indent);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "__Sir.Symbolic.ruleDelayed("
+            } else {
+                "__Sir.Symbolic.rule("
+            });
+            emit_sym_operand(out, lhs, indent);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str("__Sir.Symbolic.unwrap(");
+            out.push_str(if *repeated {
+                "__Sir.Symbolic.replaceRepeated("
+            } else {
+                "__Sir.Symbolic.replaceAll("
+            });
+            emit_sym_operand(out, expr, indent);
+            out.push_str(", [");
+            for (i, r) in rules.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, r, indent);
+            }
+            out.push_str("]))");
+        }
+    }
+}
+
+/// Wrap a `SymApply`/`SymRule`/`SymReplaceAll` operand that is a bare
+/// literal (`IntLit`/`FloatLit`/`StrLit`) through the matching
+/// `__Sir.Symbolic.*` leaf-term constructor — a raw JS number/string is
+/// never a valid Symbolic term, so it must become one before it can sit
+/// inside a term tree. Any other operand (already a Symbolic-producing
+/// expression, e.g. a nested `SymApply` or a `VarRef`) emits unchanged.
+/// Mirrors the TypeScript backend's identically-named helper exactly.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("__Sir.Symbolic.int(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::FloatLit { .. } => {
+            out.push_str("__Sir.Symbolic.numberNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("__Sir.Symbolic.stringNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent),
     }
 }
 

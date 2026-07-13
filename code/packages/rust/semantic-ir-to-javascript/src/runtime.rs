@@ -35,6 +35,17 @@
 //!
 //! The constant is fixed text — byte-identical in every artifact — so
 //! two compilations of the same module produce the same output.
+//!
+//! ## Symbolic expressions + pattern/rewrite (SIR23)
+//!
+//! `__Sir.Symbolic` is a plain-JS port of the published
+//! `@coding-adventures/symbolic-ir` / `@coding-adventures/
+//! cas-pattern-matching` / `@coding-adventures/sir-runtime-symbolic`
+//! TypeScript packages — the same "port it inline" treatment the
+//! exception runtime gives `@coding-adventures/sir-runtime-exceptions`
+//! (see that section's own comment). A `SymApply`/`SymPatternBlank`/
+//! `SymRule`/`SymReplaceAll` node lowers to a call into
+//! `__Sir.Symbolic.*`; see that section for the full algorithm.
 
 /// The full inlined runtime.  Always emitted verbatim, exactly once,
 /// near the top of every artifact (after the banner, before the user's
@@ -142,6 +153,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         .join(", ");
       seen.delete(v);
       return "{" + body + "}";
+    }
+    // A SIR23 symbolic-expression term (see the "symbolic expressions"
+    // section far below) — a plain frozen `{ kind: "symbol"|"integer"|…
+    // }` object, never a class instance. Unlike Array/Map, a term is
+    // built exclusively through `Symbolic.*`'s constructors, which only
+    // ever wrap ALREADY-frozen children, so a term can never reference
+    // itself; no cycle guard is needed here the way Array/Map need `seen`.
+    if (v !== null && typeof v === "object" && typeof v.kind === "string") {
+      const s = Symbolic.toDisplayString(v);
+      if (s !== undefined) { return s; }
     }
     return String(v);
   }
@@ -2264,6 +2285,386 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return val;
   }
 
+  // ── symbolic expressions + pattern/rewrite (SIR23) ─────────────
+  //
+  // A `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+  // `SymPatternNamed`/`SymRule`/`SymReplaceAll` node lowers to a call
+  // into `Symbolic.*` below — the same treatment the exceptions
+  // section above gave `@coding-adventures/sir-runtime-exceptions`: a
+  // plain-JS port of the published TypeScript packages
+  // (`@coding-adventures/symbolic-ir`, `@coding-adventures/
+  // cas-pattern-matching`, `@coding-adventures/sir-runtime-symbolic`)
+  // this backend's TypeScript sibling *imports*, so the JavaScript
+  // artifact stays self-contained (no `require`/`import`).
+  //
+  // ## Value model
+  //
+  // A term is a plain, `Object.freeze`d object — never a class
+  // instance, so it never collides with `Sym`/`Pair`/`Closure`/
+  // `SirInstance` above:
+  //
+  //   { kind: "symbol",   name }
+  //   { kind: "integer",  value }          -- a JS `number`, NOT bigint.
+  //   { kind: "rational", numer, denom }   -- reduced; denom > 0.
+  //   { kind: "float",    value }
+  //   { kind: "string",   value }
+  //   { kind: "apply",    head, args }
+  //
+  // The TypeScript sibling package uses `bigint` for `integer`/
+  // `rational` (arbitrary precision); this port deliberately uses
+  // `number` instead, matching how every OTHER numeric value in this
+  // backend already works (`IntLit` emits a bare JS number literal —
+  // see `emit.rs`'s `Expr::IntLit` arm — there is no bigint anywhere
+  // else in this runtime). A `Symbolic.int`/`Symbolic.rational` value
+  // therefore shares the same `Number.isSafeInteger` ceiling ordinary
+  // SIR integers already have on this backend; this is a pre-existing
+  // backend-wide limitation, not a new one this port introduces.
+  const Symbolic = (() => {
+    function frozen(obj) { return Object.freeze(obj); }
+
+    function symTerm(name) { return frozen({ kind: "symbol", name }); }
+    function intTerm(value) {
+      if (!Number.isSafeInteger(value)) {
+        throw new RangeError("Symbolic.int: value must be a safe integer");
+      }
+      return frozen({ kind: "integer", value });
+    }
+    function gcdAbs(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b !== 0) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a === 0 ? 1 : a;
+    }
+    function rationalTerm(numer, denom) {
+      if (denom === 0) {
+        throw new RangeError("Symbolic.rational: denominator cannot be zero");
+      }
+      if (denom < 0) {
+        numer = -numer;
+        denom = -denom;
+      }
+      const g = gcdAbs(numer, denom);
+      return frozen({ kind: "rational", numer: numer / g, denom: denom / g });
+    }
+    function floatTerm(value) {
+      if (!Number.isFinite(value)) {
+        throw new RangeError("Symbolic.numberNode: value must be finite");
+      }
+      return frozen({ kind: "float", value });
+    }
+    function stringTerm(value) { return frozen({ kind: "string", value }); }
+    function applyTerm(head, args) {
+      return frozen({ kind: "apply", head, args: Object.freeze([...args]) });
+    }
+
+    // Structural equality — used by the matcher (a repeated pattern
+    // variable must bind to the SAME term every occurrence) and by
+    // `replaceRepeated`'s "did this firing actually change anything"
+    // fixed-point check.
+    function termEquals(a, b) {
+      if (a.kind !== b.kind) { return false; }
+      switch (a.kind) {
+        case "symbol": return a.name === b.name;
+        case "integer": return a.value === b.value;
+        case "rational": return a.numer === b.numer && a.denom === b.denom;
+        case "float": return Object.is(a.value, b.value);
+        case "string": return a.value === b.value;
+        case "apply":
+          return termEquals(a.head, b.head)
+            && a.args.length === b.args.length
+            && a.args.every((arg, i) => termEquals(arg, b.args[i]));
+        default: return false;
+      }
+    }
+
+    function headName(node) { return node.kind === "symbol" ? node.name : ""; }
+
+    // A display helper `print`/`puts`/`formatSeen` (above) reach for,
+    // mirroring `symbolic-ir`'s own `toDisplayString`. Not part of the
+    // SIR23 spec's own contract.
+    //
+    // SECURITY (CWE-674): a term built via `Symbolic.apply`/`applyTerm`
+    // is NOT depth-capped at construction time (only `replaceAll`/
+    // `replaceRepeated`'s tree WALK enforces `MAX_TERM_DEPTH` above) — a
+    // compiled program can build one arbitrarily deep directly, e.g. a
+    // loop lowered to repeated `SymApply` nesting with an
+    // attacker-influenced iteration count. Without its own cap, this
+    // recursive walk would `RangeError: Maximum call stack size
+    // exceeded` well before 512 levels (this walk's per-frame cost is
+    // heavier than `walkOnce`'s). `depth` mirrors the SAME
+    // `MAX_TERM_DEPTH` cap and truncates rather than crashing, matching
+    // how `formatSeen` already renders `"[...]"`/`"{...}"` for an
+    // Array/Map cycle instead of recursing forever.
+    function toDisplayString(node, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return "..."; }
+      switch (node.kind) {
+        case "symbol": return node.name;
+        case "integer": return String(node.value);
+        case "rational": return node.numer + "/" + node.denom;
+        case "float": return String(node.value);
+        case "string": return JSON.stringify(node.value);
+        case "apply":
+          return toDisplayString(node.head, depth + 1) + "("
+            + node.args.map((a) => toDisplayString(a, depth + 1)).join(", ") + ")";
+        default: return undefined;
+      }
+    }
+
+    // ── pattern/rule vocabulary (cas-pattern-matching) ─────────────
+    const BLANK = "Blank";
+    const PATTERN = "Pattern";
+    const RULE = "Rule";
+    const RULE_DELAYED = "RuleDelayed";
+
+    function isHead(node, name) {
+      return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === name;
+    }
+    function isBlank(node) { return isHead(node, BLANK); }
+    function isPattern(node) { return isHead(node, PATTERN); }
+    function isRule(node) {
+      return node.kind === "apply" && node.head.kind === "symbol"
+        && (node.head.name === RULE || node.head.name === RULE_DELAYED)
+        && node.args.length === 2;
+    }
+
+    function blankTerm() { return applyTerm(symTerm(BLANK), []); }
+    function blankTypedTerm(head) { return applyTerm(symTerm(BLANK), [symTerm(head)]); }
+    function namedTerm(name, inner) { return applyTerm(symTerm(PATTERN), [symTerm(name), inner]); }
+    function ruleTerm(lhs, rhs) { return applyTerm(symTerm(RULE), [lhs, rhs]); }
+    function ruleDelayedTerm(lhs, rhs) { return applyTerm(symTerm(RULE_DELAYED), [lhs, rhs]); }
+
+    // Bindings: a name -> term map. Persistent / copy-on-write (mirrors
+    // `cas-pattern-matching`'s `Bindings` class) so a failed match
+    // attempt never mutates a binding set an earlier attempt still
+    // holds a reference to.
+    function bindingsEmpty() { return new Map(); }
+    function bindingsBind(bindings, name, value) {
+      const existing = bindings.get(name);
+      if (existing !== undefined && termEquals(existing, value)) { return bindings; }
+      const next = new Map(bindings);
+      next.set(name, value);
+      return next;
+    }
+
+    function blankHeadConstraint(node) {
+      if (node.args.length === 0) { return null; }
+      const first = node.args[0];
+      return first.kind === "symbol" ? first.name : null;
+    }
+    function patternName(node) {
+      const first = node.args[0];
+      if (first === undefined || first.kind !== "symbol") {
+        throw new TypeError("Symbolic: Pattern name must be a Symbol");
+      }
+      return first.name;
+    }
+    function patternInner(node) {
+      if (node.args.length < 2) {
+        throw new TypeError("Symbolic: Pattern requires an inner expression");
+      }
+      return node.args[1];
+    }
+    function effectiveHeadName(node) {
+      if (node.kind === "apply") { return headName(node.head) || "Apply"; }
+      if (node.kind === "integer") { return "Integer"; }
+      if (node.kind === "rational") { return "Rational"; }
+      if (node.kind === "float") { return "Float"; }
+      if (node.kind === "string") { return "String"; }
+      return "Symbol";
+    }
+
+    // Five-case structural matcher: `Blank()`, `Blank(T)`,
+    // `Pattern(name, inner)`, compound-vs-compound (recurse head +
+    // every arg, same arity required), and plain structural equality —
+    // a direct port of `cas-pattern-matching::matchPattern`.
+    function matchPattern(pattern, target, bindings) {
+      if (bindings === undefined) { bindings = bindingsEmpty(); }
+      if (isBlank(pattern)) {
+        const constraint = blankHeadConstraint(pattern);
+        if (constraint === null) { return bindings; }
+        return effectiveHeadName(target) === constraint ? bindings : null;
+      }
+      if (isPattern(pattern)) {
+        const name = patternName(pattern);
+        const inner = patternInner(pattern);
+        const matched = matchPattern(inner, target, bindings);
+        if (matched === null) { return null; }
+        const existing = matched.get(name);
+        if (existing !== undefined) { return termEquals(existing, target) ? matched : null; }
+        return bindingsBind(matched, name, target);
+      }
+      if (pattern.kind === "apply") {
+        if (target.kind !== "apply") { return null; }
+        let current = matchPattern(pattern.head, target.head, bindings);
+        if (current === null) { return null; }
+        if (pattern.args.length !== target.args.length) { return null; }
+        for (let i = 0; i < pattern.args.length; i++) {
+          current = matchPattern(pattern.args[i], target.args[i], current);
+          if (current === null) { return null; }
+        }
+        return current;
+      }
+      return termEquals(pattern, target) ? bindings : null;
+    }
+
+    function substituteTerm(template, bindings) {
+      if (isPattern(template)) {
+        const captured = bindings.get(patternName(template));
+        return captured !== undefined ? captured : template;
+      }
+      if (template.kind === "apply") {
+        return applyTerm(
+          substituteTerm(template.head, bindings),
+          template.args.map((a) => substituteTerm(a, bindings)),
+        );
+      }
+      return template;
+    }
+
+    function applyRuleTerm(rewriteRule, expr) {
+      if (!isRule(rewriteRule)) {
+        throw new TypeError("Symbolic.applyRule: expected Rule/RuleDelayed");
+      }
+      const lhs = rewriteRule.args[0];
+      const rhs = rewriteRule.args[1];
+      const bindings = matchPattern(lhs, expr, bindingsEmpty());
+      return bindings === null ? null : substituteTerm(rhs, bindings);
+    }
+
+    // ── replaceAll / replaceRepeated (`/.` / `//.`) + depth guard ──
+    //
+    // `matchPattern`/`substituteTerm`/`applyRuleTerm` recurse, but only
+    // as deep as a single RULE's own (author-written, not runtime-
+    // controlled) pattern/RHS shape — always shallow regardless of how
+    // deep the *target* expression is. `replaceAllTerm`/
+    // `replaceRepeatedTerm`, by contrast, walk the ENTIRE target
+    // expression tree, which ordinary compiled-program data can build
+    // up to unbounded depth — so these two need an explicit cap
+    // (CWE-674 stack-overflow DoS guard), mirroring
+    // `semantic_ir::limits::MAX_IR_DEPTH`'s rationale.
+    const MAX_TERM_DEPTH = 512;
+
+    function isDepthLimitError(v) {
+      return v !== null && typeof v === "object" && v.kind === "depth-limit";
+    }
+    function isRewriteCycleErrorTerm(v) {
+      return v !== null && typeof v === "object" && v.kind === "rewrite-cycle";
+    }
+
+    // `expr /. rules` — one pass, bottom-up: a node's head/args are
+    // walked (and possibly replaced) before the node itself is tried
+    // against `rules`; the first matching rule wins and the freshly
+    // substituted replacement is NOT re-walked or retried at that same
+    // position (Wolfram's single-pass `/.` contract, distinct from
+    // {@link replaceRepeatedTerm}'s fixed point below).
+    function walkOnce(node, rules, depth) {
+      if (depth > MAX_TERM_DEPTH) {
+        return { kind: "depth-limit", maxDepth: MAX_TERM_DEPTH };
+      }
+      let current = node;
+      if (node.kind === "apply") {
+        const newHead = walkOnce(node.head, rules, depth + 1);
+        if (isDepthLimitError(newHead)) { return newHead; }
+        const newArgs = [];
+        for (const arg of node.args) {
+          const nextArg = walkOnce(arg, rules, depth + 1);
+          if (isDepthLimitError(nextArg)) { return nextArg; }
+          newArgs.push(nextArg);
+        }
+        current = applyTerm(newHead, newArgs);
+      }
+      for (const candidateRule of rules) {
+        const replacement = applyRuleTerm(candidateRule, current);
+        if (replacement !== null) { return replacement; }
+      }
+      return current;
+    }
+
+    function replaceAllTerm(expr, rules) {
+      return walkOnce(expr, rules, 0);
+    }
+
+    // `expr //. rules` — a fixed point: at each subtree, keep retrying
+    // `rules` until none fire (re-walking any fresh replacement so its
+    // own sub-parts also converge) before moving up to the parent.
+    // `maxIterations` (default 100) is a GLOBAL cap shared across the
+    // whole walk, guarding against a non-terminating rule set (SIR23
+    // spec "Matcher semantics" point 6). A firing loops LOCALLY at the
+    // current call frame (never a recursive call on the replacement),
+    // so however many times a rule fires at one tree position costs
+    // O(1) native stack frames, not O(firings) — `depth` only
+    // increases on a genuine descent into `head`/`args`, so
+    // `maxIterations` bounds iteration COUNT (CPU time) only, never
+    // native recursion depth.
+    function replaceRepeatedTerm(expr, rules, maxIterations) {
+      if (maxIterations === undefined) { maxIterations = 100; }
+      let counter = 0;
+      function walk(node, depth) {
+        if (depth > MAX_TERM_DEPTH) {
+          return { kind: "depth-limit", maxDepth: MAX_TERM_DEPTH };
+        }
+        let current = node;
+        while (true) {
+          if (current.kind === "apply") {
+            const newHead = walk(current.head, depth + 1);
+            if (isDepthLimitError(newHead) || isRewriteCycleErrorTerm(newHead)) { return newHead; }
+            const newArgs = [];
+            for (const arg of current.args) {
+              const nextArg = walk(arg, depth + 1);
+              if (isDepthLimitError(nextArg) || isRewriteCycleErrorTerm(nextArg)) { return nextArg; }
+              newArgs.push(nextArg);
+            }
+            current = applyTerm(newHead, newArgs);
+          }
+          let fired = false;
+          for (const candidateRule of rules) {
+            const replacement = applyRuleTerm(candidateRule, current);
+            if (replacement !== null && !termEquals(replacement, current)) {
+              counter += 1;
+              if (counter > maxIterations) {
+                return { kind: "rewrite-cycle", maxIterations };
+              }
+              current = replacement;
+              fired = true;
+              break;
+            }
+          }
+          if (!fired) { return current; }
+        }
+      }
+      return walk(expr, 0);
+    }
+
+    // Unwrap a `replaceAll`/`replaceRepeated` result, throwing a plain
+    // `Error` if the walk hit its depth cap or (for `replaceRepeated`)
+    // its iteration cap instead of returning a real term. Every
+    // compiled `SymReplaceAll` call site routes through this — a
+    // `SymReplaceAll` is an ordinary expression that must evaluate to a
+    // term or fail loudly, never silently hand a sentinel to code
+    // expecting a term.
+    function unwrapTerm(result) {
+      if (isDepthLimitError(result) || isRewriteCycleErrorTerm(result)) {
+        throw new Error("sir-runtime-symbolic: " + result.kind);
+      }
+      return result;
+    }
+
+    return {
+      sym: symTerm, int: intTerm, rational: rationalTerm,
+      numberNode: floatTerm, stringNode: stringTerm, apply: applyTerm,
+      blank: blankTerm, blankTyped: blankTypedTerm, named: namedTerm,
+      rule: ruleTerm, ruleDelayed: ruleDelayedTerm,
+      matchPattern, applyRule: applyRuleTerm, substitute: substituteTerm,
+      replaceAll: replaceAllTerm, replaceRepeated: replaceRepeatedTerm,
+      unwrap: unwrapTerm, toDisplayString, equals: termEquals,
+    };
+  })();
+
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print, puts,
@@ -2277,6 +2678,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     ivarGet, ivarSet, cvarGet, cvarSet,
     // Mixins (MX4): include/extend registration + class-method dispatch.
     includeModule, extendModule, callClassMethod,
+    // SIR23: symbolic expression + pattern/rewrite domain, ported from
+    // the published sir-runtime-symbolic/symbolic-ir/cas-pattern-matching
+    // TypeScript packages so this backend stays self-contained.
+    Symbolic,
   };
 })();
 "##;
@@ -2303,19 +2708,39 @@ mod tests {
     #[test]
     fn runtime_exports_the_helpers_the_emitter_calls() {
         for needed in [
-            "intern", "applyClosure", "truthy", "format",
-            "builtins", "builtinClosure", "callBuiltin", "callMethod",
-            "class Sym", "class Pair", "class Closure",
+            "intern",
+            "applyClosure",
+            "truthy",
+            "format",
+            "builtins",
+            "builtinClosure",
+            "callBuiltin",
+            "callMethod",
+            "class Sym",
+            "class Pair",
+            "class Closure",
             // Exception runtime (SIR17): the four helpers the emitter
             // references from its TryCatch / raise / ClassDef arms.
-            "class SirError", "raiseError", "rescueMatches", "registerAncestry",
+            "class SirError",
+            "raiseError",
+            "rescueMatches",
+            "registerAncestry",
             // OOP runtime (O3): the helpers the emitter references from
             // its __new__ / __super__ / __def_method__ / @ivar arms.
-            "class SirInstance", "callNew", "callSuper",
-            "defMethod", "defClassMethod", "currentSelf",
-            "ivarGet", "ivarSet", "cvarGet", "cvarSet",
+            "class SirInstance",
+            "callNew",
+            "callSuper",
+            "defMethod",
+            "defClassMethod",
+            "currentSelf",
+            "ivarGet",
+            "ivarSet",
+            "cvarGet",
+            "cvarSet",
             // Mixins (MX4): include/extend + class-method dispatch.
-            "includeModule", "extendModule", "callClassMethod",
+            "includeModule",
+            "extendModule",
+            "callClassMethod",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }
@@ -2422,7 +2847,10 @@ mod tests {
         // adds the check native JS `/` lacks (it yields Infinity).
         assert!(RUNTIME.contains("function divide(a, b)"));
         assert!(RUNTIME.contains(r#"raiseError("ZeroDivisionError", "divided by 0")"#));
-        assert!(RUNTIME.contains("plus, times, divide,"), "divide must be exported");
+        assert!(
+            RUNTIME.contains("plus, times, divide,"),
+            "divide must be exported"
+        );
 
         // `.fetch` raises typed errors: IndexError for a sequence OOB,
         // KeyError for a missing hash key (no default).
@@ -2432,7 +2860,9 @@ mod tests {
 
         // An unknown method raises NoMethodError (not a JS-native TypeError).
         assert!(RUNTIME.contains(r#"raiseError("NoMethodError","#));
-        assert!(RUNTIME.contains(r#""undefined method `" + name + "` for " + classDescription(recv)"#));
+        assert!(
+            RUNTIME.contains(r#""undefined method `" + name + "` for " + classDescription(recv)"#)
+        );
         assert!(RUNTIME.contains("function classDescription(recv)"));
         // The old JS-native TypeError floor for the allowlist miss is gone.
         assert!(!RUNTIME.contains("is not an allowed collection method"));
@@ -2442,25 +2872,32 @@ mod tests {
     fn runtime_defines_m6_universal_metaprogramming_surface() {
         // M6: send/tap/then/yield_self/respond_to? + boolean &/|/^ are mixed
         // into EVERY receiver, ported to match the Python/TS references.
-        assert!(RUNTIME.contains(r#"const SEND_METHODS = new Set(["send", "__send__", "public_send"]);"#));
-        assert!(RUNTIME.contains(r#"const OBJECT_BLOCK_METHODS = new Set(["tap", "then", "yield_self"]);"#));
+        assert!(RUNTIME
+            .contains(r#"const SEND_METHODS = new Set(["send", "__send__", "public_send"]);"#));
+        assert!(RUNTIME
+            .contains(r#"const OBJECT_BLOCK_METHODS = new Set(["tap", "then", "yield_self"]);"#));
         assert!(RUNTIME.contains(r#"const BOOL_METHODS = new Set(["&", "|", "^"]);"#));
         assert!(RUNTIME.contains("function objectMetaMethod("));
         assert!(RUNTIME.contains("function respondsTo("));
         assert!(RUNTIME.contains("function boolMethod("));
         // `tap` returns the receiver; `then`/`yield_self` return the block result.
-        assert!(RUNTIME.contains(r#"if (name === "tap") { applyClosure(last, [recv]); return recv; }"#));
+        assert!(
+            RUNTIME.contains(r#"if (name === "tap") { applyClosure(last, [recv]); return recv; }"#)
+        );
         assert!(RUNTIME.contains("return applyClosure(last, [recv]); // then / yield_self"));
 
         // SECURITY (the C3 RCE lesson): `send` routes the DYNAMIC name back
         // through `callMethod` — the SAME allowlist / method-table gate a direct
         // call uses — NEVER `recv[name]` / `eval` / `new Function` on the name.
-        assert!(RUNTIME.contains("return callMethod(recv, methodNameArg(rawArgs[0]), ...rawArgs.slice(1));"));
+        assert!(RUNTIME
+            .contains("return callMethod(recv, methodNameArg(rawArgs[0]), ...rawArgs.slice(1));"));
         assert!(!RUNTIME.contains("new Function("));
         assert!(!RUNTIME.contains("eval("));
         // `respond_to?` checks the same tables dispatch uses (method table for a
         // SirInstance, the allowlist for a primitive) — not a probe of recv[name].
-        assert!(RUNTIME.contains("resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"));
+        assert!(RUNTIME.contains(
+            "resolveMethod(methodTable, recv.sirClass, name, includedModules) !== undefined"
+        ));
         assert!(RUNTIME.contains("METHOD_ALLOWLIST.has(native)"));
     }
 
@@ -2472,5 +2909,75 @@ mod tests {
         assert!(RUNTIME.contains("ancestry[cur]"));
         assert!(RUNTIME.contains("Object.create(null)"));
         assert!(!RUNTIME.contains("eval("));
+    }
+
+    #[test]
+    fn runtime_defines_symbolic_expression_domain() {
+        // SIR23: the emitter's Sym* arms all call into `Symbolic.*` — this
+        // must stay inlined (no import/require), matching every other
+        // domain in this file.
+        assert!(RUNTIME.contains("const Symbolic = (() => {"));
+        assert!(RUNTIME.contains("Symbolic,"), "Symbolic must be exported");
+        for needed in [
+            "function symTerm(",
+            "function intTerm(",
+            "function rationalTerm(",
+            "function floatTerm(",
+            "function stringTerm(",
+            "function applyTerm(",
+            "function blankTerm(",
+            "function blankTypedTerm(",
+            "function namedTerm(",
+            "function ruleTerm(",
+            "function ruleDelayedTerm(",
+            "function matchPattern(",
+            "function applyRuleTerm(",
+            "function substituteTerm(",
+            "function replaceAllTerm(",
+            "function replaceRepeatedTerm(",
+            "function unwrapTerm(",
+            "function toDisplayString(",
+        ] {
+            assert!(
+                RUNTIME.contains(needed),
+                "Symbolic runtime missing `{needed}`"
+            );
+        }
+        assert!(!RUNTIME.contains("import "));
+        assert!(!RUNTIME.contains("require("));
+    }
+
+    #[test]
+    fn symbolic_uses_plain_numbers_not_bigint() {
+        // Deliberate divergence from the TypeScript sibling package (which
+        // uses `bigint` for arbitrary precision): this backend's numeric
+        // model is `number` everywhere (see `Expr::IntLit`'s emit arm), so
+        // the symbolic-term port follows suit rather than introducing the
+        // only `bigint` anywhere in this runtime.
+        assert!(!RUNTIME.contains("BigInt"));
+        assert!(!RUNTIME.contains("0n"));
+    }
+
+    #[test]
+    fn symbolic_replace_repeated_loops_locally_not_recursively() {
+        // SECURITY: a rule firing must loop at the SAME call frame (the
+        // `while (true)` body), never recurse on the fresh replacement —
+        // otherwise a caller-supplied `maxIterations` bounds only CPU time
+        // in theory while still exhausting the native stack in practice
+        // (the exact gap `sir-runtime-symbolic`'s own /security-review
+        // found and fixed in the TypeScript sibling; this port carries the
+        // fix forward rather than reintroducing the gap).
+        assert!(RUNTIME.contains("while (true) {"));
+        assert!(RUNTIME.contains("const MAX_TERM_DEPTH = 512;"));
+    }
+
+    #[test]
+    fn symbolic_terms_render_through_format() {
+        // `print`/`puts` on a Symbolic term must not fall through to the
+        // useless `[object Object]` default — formatSeen dispatches to
+        // `Symbolic.toDisplayString` for any plain object carrying a
+        // `.kind` tag.
+        assert!(RUNTIME.contains("typeof v.kind === \"string\""));
+        assert!(RUNTIME.contains("Symbolic.toDisplayString(v)"));
     }
 }
