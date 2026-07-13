@@ -308,8 +308,81 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
     fails → restored → passes) per this repo's standing DoS-guard-
     verification discipline. See `apl-runtime/CHANGELOG.md` for the full
     writeup.
-- **MA-4f — `apl-to-semantic-ir`**, per [`HML01`](HML01-math-to-semantic-ir.md)
-  §2 — built in this same wave rather than as a later retrofit.
+- **MA-4f — `apl-to-semantic-ir`** (✅ done), per
+  [`HML01`](HML01-math-to-semantic-ir.md) §2 — built in this same wave rather
+  than as a later retrofit, and the first frontend to actually *consume* the
+  SIR22 addendum (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+  `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) `semantic-ir` shipped
+  specifically for APL ahead of this crate landing. `compile`/
+  `compile_source` lower `apl-parser`'s CST into a `semantic_ir::Module`; 44
+  tests (40 unit + 3 capability-rejection + 1 doctest). Design notes:
+  - **No scalar/array disambiguation needed, unlike MATLAB.**
+    `matlab-to-semantic-ir` has to guess, per operator use, whether `*`/`/`/
+    `\` mean scalar arithmetic or a matrix operation, because MATLAB's `*`
+    genuinely has two different meanings depending on operand shape — that
+    guess (`expr_is_known_scalar`) is real machinery this frontend simply
+    does not need. None of APL's 12 scalar dyadic atoms (`+ - × ÷ ⌈ ⌊ = ≠ <
+    ≤ ≥ >`) have a non-elementwise reading: every one is always elementwise/
+    broadcast, full stop, mirroring `array_runtime::BinOp`'s own one-meaning-
+    per-variant design. So `3+4` and `A+B` lower to the *exact same* node
+    shape (`Expr::ElementwiseOp`) — there is deliberately no "fold two
+    known-scalar literals into a bare `BuiltinCall`" fast path the way
+    MATLAB's frontend has, since writing one would only reintroduce, for
+    zero semantic benefit, the exact heuristic APL's own semantics make
+    unnecessary.
+  - **Chained assignment (`A←B←3`) unrolls via a recursive
+    `(Vec<Stmt>, Expr)` return.** The grammar's right-recursive `assignment =
+    NAME ARROW assignment | value_expr` parses `A←B←3` as `A ← (B ← 3)`, one
+    CST node nested inside another. The lowerer mirrors that shape exactly:
+    it lowers the *inner* assignment first, then appends **one more**
+    statement binding the outer name to the value just bound — returning an
+    `Expr::VarRef` to that name (not a re-lowered copy of the RHS) so the
+    caller above can reuse it without duplicating a potentially large
+    sub-tree. Because the recursion descends into the inner assignment
+    *before* the outer one appends its own statement, the emitted sequence
+    comes out in correct dependency order despite the "outer calls inner
+    first" recursion shape: `[LetStarBinding(B, 3), LetStarBinding(A,
+    VarRef(B))]` — `B` is always bound before anything references it.
+  - **Auto-print reuses the existing `"print"` builtin, and is a real
+    language semantic here, not a REPL nicety.** A bare top-level
+    `value_expr` (an `assignment` node that never reaches the `NAME ARROW …`
+    production) is wrapped in `Expr::BuiltinCall { name: "print", .. }` —
+    the exact builtin name `matlab-to-semantic-ir` already maps its own
+    `disp(x)` call onto, so no backend needs an APL-specific change to
+    support it. This is a deliberately different design choice from
+    MATLAB's own frontend, which does not attempt to model `;`-suppression
+    as a language semantic at all (MATLAB scripts have no auto-print
+    concept to preserve). APL's auto-print, by contrast, genuinely is part
+    of the language (MA05 §4: "assignment is silent, a bare `value_expr`
+    result auto-prints" — the same rule `apl-runtime::eval::run`'s own doc
+    comment already states), so this frontend models it explicitly.
+  - **Five new well-known `BuiltinCall` names, plus two reused from
+    existing frontends.** Of the six atoms with a monadic meaning, `+`
+    (conjugate) needs no wrapper at all — a genuine identity in a cut with
+    no complex numbers, so the operand passes through unchanged rather than
+    being wrapped in a synthetic no-op node. `-` (negate) reuses the *exact*
+    `"neg"` name `matlab-to-semantic-ir`'s own unary negate already
+    established, confirming that a `BuiltinCall` name is a generic
+    operation any backend must implement polymorphically over whatever
+    value flows through it (SIR10's "types carry, don't verify") — it is
+    fine and expected that `"neg"` may receive an array-typed value here
+    even though MATLAB only ever proves it a scalar. `×` (sign), `÷`
+    (reciprocal), `⌈` (ceiling), and `⌊` (floor) introduce four genuinely
+    new well-known names: `"sign"`/`"recip"`/`"ceil"`/`"floor"`. The
+    top-level auto-print wrapper reuses the existing `"print"` name (see
+    above) rather than introducing a sixth.
+  - No discrepancies found against `semantic-ir`'s own `nodes.rs`/
+    `validator.rs` for the SIR22 addendum's field names or `Feature` splits
+    — every design point (`Reshape.shape`/`.target`, `IndexOf.haystack`/
+    `.needle`, the `MatrixOps`+`ArrayColumnMajor` pairing for
+    `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`Ravel`/`Catenate`, and
+    `NDArrays`-alone for `IndexGenerator`/`IndexOf`) matched the validator's
+    ground truth exactly on the first read. One genuine surprise: `ArrayLit`
+    itself requires **both** `NDArrays` *and* `ArrayColumnMajor` (not
+    `NDArrays` alone, as an early design note for this crate assumed) —
+    confirmed against `validator.rs`'s own `ArrayLit` arm and
+    `matlab-to-semantic-ir`'s identical existing comment on that exact
+    point; this crate's stranded-literal lowering declares both.
 - **Next**: J — kickoff spec [`MA06`](MA06-j-language.md) (shares APL's
   function/operator grammar shape almost wholesale, ASCII-spelled instead
   of glyph-spelled, plus one genuinely new grammar production for tacit
