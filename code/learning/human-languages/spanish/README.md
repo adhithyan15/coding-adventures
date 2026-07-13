@@ -10,26 +10,29 @@ methodology) are in
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) — this
 README is "how to actually use this."
 
-## Five things this track does deliberately
+## What this track does deliberately
 
-1. **Etymology-driven.** Every new word traces to its root — mostly Latin,
-   sometimes Arabic — and forward to an English cognate.
-2. **A real book.** `book/` is a LaTeX volume, licensed CC BY-SA 4.0, that
-   grows one chapter at a time as weeks get authored — see "The book" below.
-3. **Word-formation as its own thread.** `morphology`-type units teach one
-   Latin root at a time (e.g. *clamare* → *llamar/claim/exclaim*) — lexical
-   Latin, riding alongside the Spanish content.
-4. **A slow alphabet/sound-system introduction.** Part 0 (`units/ES-P0-U00*`)
-   covers Spanish's sounds and stress rules before any vocabulary — short
-   here since Spanish reuses the Latin alphabet, but the same pattern will
-   be much larger for Arabic/Hindi/Tamil/Kannada/Telugu/Malayalam later.
-5. **Grammar explained from zero, contrasted with English.** Every
-   grammar-introducing unit has a Grammar Lens section: what the concept
-   *is*, how English handles the same function (if it does), what's
-   different — no assumed grammar vocabulary, matching how the curriculum's
-   author actually learned English (immersion, not formal instruction).
-   Grammatical gender gets this treatment as a standing thread, tagged on
-   every noun from the first one onward.
+1. **One word per lesson, gone deep.** Not "the ten greetings" — *hola* is a
+   lesson, *buenos días* is a lesson. A few minutes each. See `lessons/`.
+2. **The widest honest web of English cousins.** Every word reaches for all
+   the English relatives it can *truthfully* claim (e.g. *quiero* ← *quaerere*
+   → query, inquire, require, acquire, conquer, exquisite) — because the more
+   live connections a word has, the more places it sticks. False cousins are
+   flagged, not smuggled in.
+3. **The reason, not the rule.** Why *buenos días*, plural? Because it's the
+   fossil of a blessing ("may God give you good days"). Each lesson digs out
+   the cultural/idiomatic *why*, the part Spanish 101 skips.
+4. **Prefixes and suffixes taught in context.** When a root builds its family
+   by prefix (*in-* + *-quiry* → *inquiry*), the construction is shown and
+   named — a skill that pays off across the learner's whole English
+   vocabulary.
+5. **Pronunciation inline, never a gate.** No alphabet chapter to sit through.
+   Each lesson names the sounds *its* word needs; the full system lives in
+   [`pronunciation-reference.md`](./pronunciation-reference.md) to look up on
+   demand.
+6. **Grammar from zero, contrasted with English.** Grammar concepts are
+   introduced in context on the first word that needs them, explained with no
+   assumed terminology.
 
 ## How to use this in the car
 
@@ -70,21 +73,30 @@ material sliced into car-sized practice pieces.
 
 ## Progress
 
-- **Part 0 — Sounds & Letters**: Chapter 0 fully authored (`units/ES-P0-U00*`).
-- **Part I — Foundations**: complete. Chapters 1-4 fully authored
-  (`units/`, sessions 1-28), plus one morphology unit (`ES-P0-M01`).
-- **Parts II-V**: skeleton only, in [`roadmap.md`](./roadmap.md).
-- **Book**: Part 0 + all of Part I (Chapters 1-4) written in `book/`; grows
-  chapter by chapter alongside `units/`.
+The track was **redesigned** after early feedback: from coarse units (ten
+greetings crammed together, a front-loaded pronunciation chapter) to deep
+one-word lessons with inline sounds and a full cousin web. Current state:
 
-See [`CHANGELOG.md`](./CHANGELOG.md) for what's been added, chapter by
-chapter.
+- **Chapter 1 — First Words**: 10 deep lessons in [`lessons/`](./lessons/)
+  (`ES-C01-L01`–`L10`): hola, buenos días, buenas tardes, buenas noches,
+  gracias, por favor, adiós, ¿cómo estás?, me llamo, quiero. Fully authored
+  and in the book.
+- **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
+  (look-up reference, not a chapter).
+- **Later chapters**: skeleton in [`roadmap.md`](./roadmap.md).
+- **`units/` (legacy)**: the pre-redesign coarse-grained content (old Part 0
+  + Part I). Kept as source material to be re-excavated into deep lessons;
+  **superseded**, not the current model. Being migrated `units/` → `lessons/`.
+
+See [`CHANGELOG.md`](./CHANGELOG.md) for the full history including the
+redesign.
 
 ## Files
 
-- [`roadmap.md`](./roadmap.md) — the full year, part by part, chapter by
-  chapter.
-- [`session-map.md`](./session-map.md) — which units make up which session,
-  and the worked spaced-repetition schedule so far.
-- [`units/`](./units/) — the practice lesson files.
+- [`lessons/`](./lessons/) — the deep one-word practice lessons (current model).
+- [`pronunciation-reference.md`](./pronunciation-reference.md) — sounds, to
+  look up on demand.
+- [`roadmap.md`](./roadmap.md) — the chapter skeleton.
+- [`session-map.md`](./session-map.md) — which lessons make up which session.
 - [`book/`](./book/) — the LaTeX book.
+- [`units/`](./units/) — **legacy**, pre-redesign; being migrated to `lessons/`.

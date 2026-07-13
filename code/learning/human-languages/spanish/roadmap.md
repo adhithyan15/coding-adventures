@@ -1,42 +1,34 @@
-# Spanish Roadmap — Absolute Beginner to B1 in a Year
+# Spanish Roadmap — Absolute Beginner to B1
 
-This is the "uber curriculum": the full year, broken into chapter-sized
-topic clusters, organized like a book — **Part → Chapter**. It is a
-**skeleton** — each chapter gets a topic, not yet a fully scripted set of
-units. Chapters are authored into `units/` (practice) and `book/` (the
-publishable LaTeX edition) incrementally, starting from Part 0 (see
-[`CHANGELOG.md`](./CHANGELOG.md) for what's actually written so far).
+> **Redesigned.** The curriculum now uses **deep one-word lessons**, not
+> coarse multi-topic units, and has **no front-loaded "Sounds & Letters"
+> chapter** (pronunciation lives inline + in
+> [`pronunciation-reference.md`](./pronunciation-reference.md)). A *chapter*
+> is a themed cluster of many single-word lessons. The Part/Chapter tables
+> below are retained as **topic planning** — the sequence of themes to build
+> toward B1 — but each "chapter" now unfolds as a dozen-plus deep lessons in
+> [`lessons/`](./lessons/), not one dense unit. See
+> [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md).
 
-A note on numbering: internally, every unit's frontmatter still uses
-`phase`/`week` — that's mechanical bookkeeping, unrelated to how this page
-presents the material. Part 0 and Part I both happen to share `phase: 0` in
-the frontmatter (Part 0 is `week: 0`, Part I is `weeks: 1-4`) — that's fine,
-it's invisible outside the raw files. See
-[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) for the
-full explanation.
+Chapter 1 (First Words) is authored in the new model:
+[`lessons/ES-C01-L01`–`L10`](./lessons/). The theme skeleton below plans the
+road ahead; chapters are excavated into deep lessons incrementally.
 
-Pacing assumption: ~1 new unit/session, ~1-2 sessions/day (there-and-back
-commute), so roughly 5-9 new units/chapter — comfortably achievable inside a
-15-25 minute core block per session (see [`session-map.md`](./session-map.md)
-for the session/review mechanics). Review units aren't separately budgeted
-here — they're generated from the schedule, not hand-authored per chapter.
-Roughly one `morphology` unit rides alongside each chapter too, anchored to
-whatever Latin root that chapter's vocabulary already surfaced.
+## Theme Skeleton (planning only)
 
-## Part Overview
+| Grouping | Themes | Target level |
+|---|---|---|
+| Foundations | greetings & courtesies (**Ch.1, done**), the "to be" verbs, numbers, days & time, gender & articles, family | A0 → A1 |
+| Core Grammar & Daily Life | present-tense verbs, near future, *gustar*, places, routine, describing people | A1 → A2 |
+| Past Tense & Scenarios | preterite, imperfect, shopping/directions/restaurant/travel/health | A2 → early B1 |
+| Future, Opinion & Nuance | future, conditional, subjunctive, opinions, register, Arabic-loanword deep-dive | B1 |
+| Consolidation | idioms, native-speed listening, free-conversation simulation | B1 (solid) |
 
-| Part | Chapters | Target level | ~New units |
-|---|---|---|---|
-| 0 — Sounds & Letters | 0 | pre-A0 (no vocabulary yet) | 3 |
-| I — Foundations | 1-4 | A0 → early A1 | ~35 |
-| II — Core Grammar & Daily Life | 5-14 | A1 → A2 | ~80 |
-| III — Past Tense & Everyday Scenarios | 15-26 | A2 → early B1 | ~95 |
-| IV — Future, Opinion & Nuance | 27-38 | B1 | ~90 |
-| V — Consolidation | 39-48 | B1 (solid) | ~70 |
-| Buffer / assessment | 49-52 | — | — |
+_(The detailed chapter-by-chapter breakdown that was here is preserved below
+as legacy planning notes; it predates the redesign and describes the older
+coarse-unit structure. It's still a useful topic sequence.)_
 
-Total ≈ 370 new-concept units across the year, plus the review/practice-mix/
-morphology units the schedule generates around them.
+## Legacy chapter breakdown (pre-redesign topic notes)
 
 ## Part 0 — Sounds & Letters (Chapter 0)
 

@@ -17,19 +17,22 @@ Tamil, Kannada, Telugu, Malayalam) after the Spanish pilot proves the format.
 
 ```
                     ┌───────────────────────────┐      Markdown lesson files
-  Roadmap (year) ───►                           ├──►   (audio-script formatted,
-                    │  Part → Chapter → Unit     │       car-commute practice)
+  Roadmap ─────────►                           ├──►   (audio-script formatted,
+                    │   Chapter → Lesson         │       car-commute practice)
   Etymology data ───►   (this spec's schema)     │
-                    │                           ├──►   LaTeX book, one volume
-                    └───────────────────────────┘       per language (publish)
+                    │  (one word/phrase = 1      ├──►   LaTeX book, one volume
+                    │   lesson, gone deep)       │       per language (publish)
+                    └───────────────────────────┘
 ```
 
-A note on terminology: internally (frontmatter, file paths, `session-map.md`
-mechanics) units are organized by `phase`/`week` — mechanical, zero-indexed.
-In anything user-facing (the roadmap, the book, READMEs) the same structure
-is called **Part**/**Chapter** — this is a presentation-layer rename only,
-done because the whole point of the book requirement below is that this reads
-like an actual book, not a topic-label spreadsheet.
+The unit of the curriculum is the **lesson**: one word or one fixed phrase,
+excavated fully in a few minutes. Lessons are grouped into **chapters**
+(themed clusters). That's the whole hierarchy — chapters of single-word
+lessons. (Earlier drafts used a coarser "Part → Chapter → Unit" scheme with
+`phase`/`week` frontmatter and a front-loaded "Part 0" of pronunciation;
+both were removed on learner feedback in favor of this finer, gate-free
+model. Some legacy `ES-P0-U##` files from that scheme may still exist mid-
+migration.)
 
 ## Motivation
 
@@ -76,95 +79,116 @@ of `code/packages/`. The quality bar is:
 This is a deliberate, documented divergence, consistent with this repo's own
 allowance for diverging from standard process when justified.
 
-## Unit Anatomy
+## Lesson Anatomy
 
-A **unit** is one ~5-minute lesson — the atomic thing that has to finish
-inside a single commute leg. Every unit file follows the same four-part
-structure, written in an audio-script style with bracketed delivery cues
-(`[PAUSE Ns]`, `[REPEAT x2]`, `[YOU SAY: ...]`) so it can be read aloud by the
-learner, a recorded voice, or eventually a TTS pipeline — that pipeline is
-explicitly future work; this spec only guarantees the scripts are *shaped*
-for it.
+A **lesson** is the atom of the curriculum: **one word or one fixed phrase**,
+excavated fully, in a few minutes. Not "the ten greetings" — *hola* is a
+lesson; *buenos días* is a lesson; *gracias* is a lesson. The learner
+explicitly rejected the Spanish-101 model of drilling a list of ten
+greetings at once. One thing, gone deep, is the unit of work — because that
+is what fits a commute leg *and* what the brain can actually bind into its
+existing web of knowledge in one sitting.
 
-1. **Warm-up** (0:00–0:30) — a quick recall hook tied to the previous unit
-   or a prior review.
-2. **New material** (0:30–3:00) — 3-5 new vocabulary/grammar items. Every new
-   item carries a compact etymology note: root language → root word →
-   meaning shift → English cognate(s) where one exists. Every noun carries a
-   grammatical-gender tag (see Grammatical Gender Methodology below).
-3. **Grammar Lens** (3:00–3:30, *optional* — grammar-bearing units only) —
-   three things, in order: (a) what this grammatical concept *is*, in plain
-   terms, assuming no prior grammar vocabulary; (b) how English expresses
-   the same function, with a concrete example; (c) what's actually different
-   about how the target language does it. Skipped entirely for pure-vocabulary
-   units (numbers, days of the week, etc.) where there's no grammatical
-   structure to contrast.
-4. **Guided practice** (3:30–4:30) — produce-on-your-own prompts (`[YOU SAY]`)
-   that make the learner retrieve, not just recognize, the new material.
-5. **Wrap-up recall** (4:30–5:00) — one retrieval question that seeds the
-   next review of this unit.
+Lessons are written in audio-script style with bracketed delivery cues
+(`[PAUSE Ns]`, `[REPEAT x2]`, `[YOU SAY: ...]`) so they can be read aloud by
+the learner, a recorded voice, or eventually a TTS pipeline (future work;
+this spec only guarantees the scripts are *shaped* for it). Every lesson
+file follows this structure — sections are present when they apply, skipped
+silently when they don't:
 
-## Unit Types
+1. **Warm-up** — a one-line recall hook, usually tied to a prior lesson.
+2. **You'll want to know first** *(optional)* — a short list of links to
+   prior lessons whose concepts this one leans on. This is what turns the
+   corpus into **reference material**: any lesson can be opened cold, and
+   its prerequisites are one click away. (In the book these become
+   `\hyperref` cross-references; in the Markdown units they're relative
+   links.)
+2. **Sounds you'll need** *(inline, only the sounds this word uses)* — the
+   pronunciation facts required to say *this* word, and nothing more (e.g.
+   for *hola*: "the *h* is silent"). There is **no gated pronunciation
+   chapter** — see "Pronunciation: Inline, Never a Gate" below. Each note
+   links to the track's `pronunciation-reference.md` for the learner who
+   wants the fuller picture, but the lesson never *requires* leaving it.
+3. **The word, taken apart** — the heart of the lesson. Each component of
+   the word/phrase traced to its root, and then — critically — **the widest
+   honest web of English cousins from that same root**, because the whole
+   pedagogical bet is that the brain learns by attaching the new to the
+   already-known (see Etymology & the Cousin Web below). Where the root
+   builds words by prefix/suffix, that construction is shown explicitly and
+   named (see Morphology In Context below). Nouns carry a grammatical-gender
+   tag; etymology confidence is flagged where a root is disputed.
+4. **Why it's said this way** *(the cultural/idiomatic core)* — the part
+   Spanish 101 skips: *why* is it *buenos días* (plural)? *why* is the
+   formal form the polite default? Where a phrase is idiomatic — a frozen
+   cultural formula rather than something derivable from grammar — that is
+   stated plainly, with its history. The learner wants the reason, not just
+   the rule.
+5. **Grammar Lens** *(optional — only when the lesson introduces a
+   grammatical structure)* — the concept in plain terms with no assumed
+   terminology, how English handles the same function, and what differs.
+6. **Guided practice** — `[YOU SAY]` prompts that force retrieval, not
+   recognition.
+7. **Wrap-up recall** — one retrieval question seeding the next review.
 
-- `new` — introduces exactly **one** new concept (one grammar point, or a
-  small cluster of 3-5 related vocabulary items). Never more than one new
-  concept per unit — this is a hard constraint, not a guideline, because the
-  learner explicitly wants each commute leg to add exactly one incremental
-  thing on top of what's already solid.
-- `review` — resurfaces prior vocabulary/grammar in a **new combination**,
-  never a verbatim repeat of a prior unit's sentences.
-- `practice-mix` — recombines several recently-seen concepts into short
-  dialogue or connected sentences, closing out a session.
-- `morphology` — teaches **one** Latin (occasionally Arabic) root, prefix, or
-  suffix: its literal meaning, 2-4 derivative words in the target language,
-  and 2-4 English cognates built from the same root. Roughly one per week,
-  anchored to a root that's already surfaced incidentally in that week's
-  vocabulary rather than an arbitrary pick. Scoped to **lexical** Latin
-  (roots and word formation) — not formal Latin grammar (noun cases, verb
-  paradigms); that would be a different, much larger undertaking and isn't
-  what the learner asked for.
+## Lesson Types
 
-## Unit File Schema
+- `word` — the default: one new word or fixed phrase, fully excavated per
+  the anatomy above. The overwhelming majority of lessons.
+- `review` — resurfaces earlier words in a **new combination**, never a
+  verbatim repeat.
+- `practice-mix` — recombines several recent lessons into short connected
+  speech, closing out a session.
 
-One file per unit, YAML frontmatter + Markdown body:
+Grammar is not a separate lesson type: it is introduced **in context**, on
+the first word that needs it (the Grammar Lens section), exactly like
+sounds and morphology — never front-loaded. Lexical morphology (roots,
+prefixes, suffixes) is likewise woven into `word` lessons rather than
+split out, since the whole point is to meet a root *attached to a real word
+you're learning*, not as an abstract table.
+
+## Lesson File Schema
+
+One file per lesson, YAML frontmatter + Markdown body. IDs are
+`<lang>-C<chapter>-L<lesson>` (chapter/lesson, both zero-padded):
 
 ```yaml
 ---
-id: ES-P0-U03                # <lang-code>-P<phase>-U<sequence>
-phase: 0
-week: 1
-type: new                    # new | review | practice-mix | morphology
-concept_tag: GREETINGS-01    # shared across future language tracks (see Interleaving)
-est_minutes: 5
-prerequisites: [ES-P0-U01, ES-P0-U02]
-new_vocab: [hola, buenos días, ¿cómo estás?]
-reviews_of: []                # unit ids this unit resurfaces (review/practice-mix only)
-root: null                    # {form, meaning, origin_language} — morphology units only
+id: ES-C01-L02               # <lang-code>-C<chapter>-L<lesson>
+chapter: 1
+lesson: 2
+type: word                   # word | review | practice-mix
+headword: buenos días        # the one word/phrase this lesson excavates
+gloss: good morning          # plain English gloss
+concept_tag: GREETING-MORNING
+prerequisites: [ES-C01-L01]  # lessons this leans on (become cross-links)
+sounds: [silent-h, diphthong-ue, accent-i]   # ids into pronunciation-reference.md
+roots: [bonus, dies]         # Latin/other roots excavated, for indexing
+est_minutes: 4
+reviews_of: []               # lesson ids resurfaced (review/practice-mix only)
 ---
 ```
 
-Body sections: `## Warm-up`, `## New Material`, `## Grammar Lens` (optional),
-`## Guided Practice`, `## Wrap-up Recall`, matching the anatomy above.
-`## New Material` entries use:
+Body sections match the Lesson Anatomy above: `## Warm-up`,
+`## You'll want to know first` (optional), `## Sounds you'll need`,
+`## The word, taken apart`, `## Why it's said this way` (when idiomatic/
+cultural), `## Grammar Lens` (optional), `## Guided Practice`,
+`## Wrap-up Recall`.
+
+The cousin web in "The word, taken apart" is the signature of this
+curriculum. Format each component like:
 
 ```
-**hola** — hello
-> Etymology: Spanish *hola* is generally traced to Old Spanish *¡ola!*, a
-> greeting/hailing call, possibly influenced by nautical Arabic usage. Weaker
-> etymology confidence than the Latin-derived items — flagged accordingly.
+**bueno** — good.
+Root: Latin *bonus* ("good"). Its adverb-sibling *bene* ("well") — same
+ancient root — is the piece hiding in English **bene**volent, **bene**fit,
+**bene**diction, **bene**factor, and (worn down) *bonus*, *bonanza*,
+*bounty*. So *bueno* is the Spanish half of a word whose English half you
+already own in every "well-wishing" word you have.
 ```
 
-Nouns additionally carry an inline gender tag right after the word:
-
-```
-**la casa** (fem.) — house
-> Etymology: ...
-```
-
-`morphology` units replace `new_vocab` with a `root` block and structure
-`## New Material` as: literal meaning of the root, then two labeled lists —
-derivative words in the target language, and English cognates from the same
-root.
+Nouns carry an inline gender tag (`**la casa** (fem.)`). Etymology
+confidence is flagged inline where a root is disputed (see the `hola`
+lesson).
 
 ## Spaced Repetition: Session-Count Intervals
 
@@ -186,47 +210,72 @@ A **session** = one commute leg, of variable length (the learner won't always
 get the same drive time). Every session has a fixed **core block** designed
 to finish in ~15-25 minutes so it never depends on the drive being long:
 
-1. 2-4 `review` units currently due per the schedule above.
-2. Exactly one `new` unit.
-3. One `practice-mix` unit recombining the new material with recent reviews.
+1. 2-4 `review` lessons currently due per the schedule above.
+2. One or a few new `word` lessons — because each is now a single word/
+   phrase, a session may introduce two or three of them (still one *thing*
+   each), where the old coarse-grained units introduced one big cluster.
+3. One `practice-mix` lesson recombining the new words with recent reviews.
 
-A **bonus queue** of additional `review`/`practice-mix` units is always
+A **bonus queue** of additional `review`/`practice-mix` lessons is always
 appended after the core block, so a 1-2 hour drive never runs dry — the
 learner can stop after the core block on a short leg, or keep going.
 
-`session-map.md` (per language track) lays out which units compose which
+`session-map.md` (per language track) lays out which lessons compose which
 session and verifies the interval schedule is actually satisfied.
 
-## Interleaving Across Languages (Framework, Not Yet Populated)
+## Etymology & the Cousin Web
 
-Every unit's `concept_tag` (e.g. `GREETINGS-01`, `NUMBERS-01`) is a shared key
-across language tracks — Spanish, French, German, Arabic, Hindi, Tamil,
-Kannada, Malayalam, and Telugu all tag their Chapter 1 greetings/pronoun/
-numbers units the same way. A session can walk the *same* concept in two
-languages back-to-back — contrastive reinforcement, and a natural place to
-surface cross-language etymology (e.g. Spanish *gracias* vs. French *merci*
-diverge in root, while Spanish/French/Italian generally converge on Latin
-*gratia* for the "grace" family). The actual session-by-session
-interleaving schedule across tracks is not yet built — each track's
-`session-map.md` is still per-language — but the shared tags mean it can be
-added without a schema rewrite.
+This is the engine of the whole curriculum, and the reason it exists at all.
+The learning bet is neuroscientific and plain: **the brain acquires by
+attaching the new to the already-known.** The learner already carries an
+enormous English vocabulary, much of it Latin-derived. So every Spanish word
+is taught not as a fresh item to memorize but as a **cousin of words the
+learner already owns** — and the lesson's job is to make that family
+resemblance impossible to miss.
 
-## Etymology Methodology (Spanish Track)
+Concretely, every `word` lesson digs out **the widest honest web of English
+cousins** from the headword's root — not one token cognate, but the whole
+family:
 
-Two root chains get deliberate emphasis:
+- *gracias* ← Latin *gratia* → *grace, gratitude, gratuity, gratis,
+  gratify, ingrate, congratulate,* and (through French *à gré*) *agree*.
+- *quiero* ← Latin *quaerere* ("to seek") → *query, inquire, inquiry,
+  quest, question, request, require, acquire, conquer, exquisite,
+  perquisite* (→ *perk*).
 
-1. **Latin → Romance cognates → English cognates** — the primary chain for
-   most core vocabulary (*gracias* ← *gratia* → English *grace, gratitude,
-   gratis, gratuity*). This is the strongest hook since the learner already
-   has fluent English root-vocabulary to anchor to.
-2. **Arabic → Spanish (Al-Andalus loanwords)** — Spanish carries roughly
-   4,000 Arabic-derived words from ~800 years of Islamic rule in Iberia
-   (*ojalá*, *azúcar*, *aceite*, *almohada*). This is both a genuinely
-   interesting hook and a deliberate bridge to the learner's future Arabic
-   track — words they'll meet again from the other direction.
+The more live connections a lesson can honestly light up, the more places
+the new word has to anchor. "Honestly" is load-bearing: a false cognate is
+worse than none, so disputed or folk etymologies are flagged as such
+(the `hola` lesson models this), and roots that merely *look* related but
+aren't (e.g. *querer*'s *quaerere* vs. *quarrel*'s *queri*) are kept
+separate.
 
-Etymology confidence is marked inline where a root is disputed or uncertain
-(see the `hola` example above) rather than stated as settled fact.
+Spanish's second root stream, alongside Latin, is **Arabic** — roughly
+4,000 words from ~800 years of Al-Andalus (*azul, ojalá, azúcar, aceite,
+almohada*), often sharing an English cousin borrowed from the same Arabic
+source (*azul* / *azure*). These surface as their own cousin-webs whenever a
+lesson's headword happens to be Arabic-derived.
+
+### Morphology In Context
+
+When a root builds its family by **prefix and suffix**, the lesson shows
+the construction explicitly and names the pieces — because seeing *how*
+Latin assembles words is itself a skill that pays off across the learner's
+whole English vocabulary. The *quaerere* family is the model:
+
+- *in-* ("into") + *-quire* → **inquire** ("to seek into")
+- *re-* ("again/repeatedly") + *-quire* → **require**
+- *ac-* (*ad-*, "toward") + *-quire* → **acquire**
+- *con-* ("fully") + *-quer* → **conquer** ("to seek fully → overcome")
+- *ex-* ("out") + *-quisite* → **exquisite** ("sought out")
+
+The learner asked for exactly this: not just "these words are related," but
+"watch — put *in-* in front of *-quiry* and you get *inquiry*." Prefixes
+and suffixes are taught the first time a word makes them visible, then
+reused as recurring vocabulary in their own right.
+
+Etymology confidence is marked inline where a root is disputed rather than
+stated as settled fact.
 
 ## Grammatical Gender Methodology
 
@@ -255,53 +304,43 @@ for. This gets treated as a **standing methodology**, not a single chapter:
   early, formalize later, contrast explicitly with what English does (which
   is usually "nothing").
 
-## Part 0 — Sounds & Letters (familiar scripts only)
+## Pronunciation & Script: Inline, Never a Gate
 
-A language track gets a standalone **Part 0** only when the learner already
-*reads* its alphabet and just needs its **pronunciation** conventions —
-Spanish, French, German (Latin alphabet). This is short — a handful of
-units covering vowel purity, consonants that differ from English, and
-stress/accent rules. It gets **no dedicated spaced-repetition cycle** of
-its own: pronunciation and orthography are reinforced implicitly by every
-single subsequent unit's target-language text, so a separate review
-schedule would be redundant.
+There is **no standalone "Sounds & Letters" chapter** in any track. This is
+a deliberate reversal of the earlier design (a short Part 0), made on direct
+learner feedback: *"Do not make the readers sit through a chapter worth of
+sounds. Many will not even make it to the actual first lesson."* Front-loading
+pronunciation (or, for new scripts, the alphabet) is exactly the wall that
+makes people quit before Lesson 1.
 
-For any track where the *script itself* needs teaching or refreshing — a
-genuinely new alphabet, or one the learner can read but is rusty on — there
-is **no separate Part 0 at all**. See "Just-In-Time Script & Grammar
-Introduction" below: letters are taught inline, inside real vocabulary
-units, the same session structure as everything else, starting straight at
-Chapter 1.
+Instead:
 
-## Just-In-Time Script & Grammar Introduction
+- Each lesson carries a **"Sounds you'll need"** note covering *only* the
+  sounds its own headword uses — for *hola*, "the *h* is silent, the vowels
+  are pure"; for *quiero*, "*qu* is a hard *k*, the *u* is silent." Just
+  enough to say *this* word, delivered at the moment it's needed.
+- A per-track **`pronunciation-reference.md`** collects the full sound and
+  spelling system as **reference material** — the place to look things up,
+  not a gate to pass through. Every inline "Sounds you'll need" note links
+  into it (via `sounds:` ids in the frontmatter), so the curious learner
+  can go deep on demand and everyone else keeps moving.
+- The same applies to **new or rusty scripts** (Arabic, Hindi, and the
+  Dravidian scripts when those tracks are built): letters are introduced
+  inside the lesson whose headword first uses them, and collected in the
+  track's pronunciation/script reference — never as a wall of alphabet
+  before any real words.
 
-Per direct learner feedback, the "exactly one new concept per unit" rule
-(Unit Types, above) generalizes to two more things beyond vocabulary/grammar
-points, and both replace what would otherwise be a front-loaded review
-phase:
+The payoff is cumulative: by the time a learner has done the first several
+lessons, they've absorbed the sounds (or letters) they've actually needed,
+each one welded to a real word, rather than having memorized an abstract
+chart they can't yet attach to anything.
 
-- **Scripts.** No dedicated "learn/review the alphabet" chapter for any
-  track that needs one. A brand-new script (Kannada, Malayalam, Telugu) or
-  a rusty-but-known one (Arabic, Hindi) gets its letters introduced *inside*
-  Chapter 1's vocabulary units, right where a word first uses them — each
-  unit's New Material gets a short "new letters in this word" note
-  alongside the vocabulary itself. This is a deliberate pedagogical choice,
-  not just economy: learning a glyph attached to a real, meaningful word
-  sticks better than memorizing an abstract alphabet chart before ever
-  using it. A track's early chapters are chosen specifically to introduce a
-  manageable, high-frequency set of letters this way (see Frequency-Driven
-  Content Selection below) — by the time a script's first several chapters
-  are done, a meaningful share of its alphabet has been covered through
-  actual words, not a standalone drill.
-- **Grammar.** Same principle, made explicit for tracks where the learner
-  speaks the language but doesn't know its grammar formally (Tamil is the
-  motivating case): grammar constructs are introduced one at a time, inline
-  within vocabulary units, starting from the simplest construct that
-  unlocks real sentences and building complexity from there — not a
-  front-loaded grammar-reference dump. This was already true of every other
-  track (Unit Anatomy's Grammar Lens section, "exactly one new concept");
-  this note exists mainly to confirm it applies to a fluency-first,
-  literacy-first track like Tamil just as much as to a from-scratch one.
+Grammar follows the identical principle — introduced in context, on the
+first word that needs it (the Grammar Lens section), never front-loaded.
+This matters most for a track like Tamil, where the learner is fluent and
+literate but never studied the grammar formally: constructs come one at a
+time, simplest-first, each on a real word, building up — not as a reference
+grammar dumped up front.
 
 ## Frequency-Driven Content Selection
 
@@ -317,30 +356,30 @@ that are both common *and* efficiently cover new glyphs) and which single
 grammar construct a track like Tamil starts with (whichever one unlocks the
 most new sentence patterns for the least overhead).
 
-## Cross-Language Comparison Web
+## Grounding: English First, Then the Deep Root
 
-Etymology Methodology (below) was written Spanish-specific — English
-grounding, Latin root chain, Arabic loanword thread. As more tracks come
-online, comparisons generalize into an **accumulating hierarchy**: each new
-language, in the order it's added to the curriculum, compares its
-vocabulary against *every language already established before it*
-(English is the permanent base across all tracks), and contributes its own
-"deep root" system, which becomes available to whatever comes after it too.
+Each track grounds every word against **the languages the learner already
+knows** — nothing more. It does **not** forward-reference other curriculum
+tracks that haven't been learned yet: on direct learner feedback, *"You
+don't have to reference other languages that are coming in sequence. They
+will arrive as they are."* A Spanish lesson connects to English (the
+cousin web) and to Latin (the deep root), plus Arabic where a word is
+Arabic-derived — and stops there. It does not say "and in French this
+is…", because the learner isn't learning French yet.
 
-| Order | Track | Compares against | Contributes |
-|---|---|---|---|
-| 1 | Spanish | English | Latin |
-| 2 | French | English, Spanish | Latin (via Old French — occasionally contrasted with Spanish's own routing of the same root, e.g. *gratia*→*gracias* vs. *merci*, which is actually a different root, *merces*) |
-| 3 | German | English, Spanish, French | Latin (German's own loanword layer, e.g. *Fenster*←*fenestra*) — Germanic-**inherited** words are already covered by the English comparison, since English is itself Germanic |
-| 4 | Arabic | English, Spanish, French, German | Arabic itself, from here on — Al-Andalus loans into Spanish traced *outward* this time, complementing Spanish's own backward trace |
-| 5 | Hindi | English, Spanish, French, German, Arabic | Sanskrit + Persian/Arabic loanwords (using the Arabic thread just established) |
-| 6 | Tamil | English, Spanish, French, German, Arabic, Hindi, Sanskrit | Tamil/native-Dravidian, from here on |
-| 7 | Kannada, Malayalam, Telugu | all of the above | — |
+Each track therefore has its own grounding set, always anchored on English
+plus whatever deep-root system that language actually draws on:
 
-A given word only shows the comparisons that are **genuinely real** for
-it — not every accumulated language forced into every entry. By the time a
-track has 7-8 possible comparison languages available, most words connect
-meaningfully to 2-3 of them, and that's what gets shown.
+- **Spanish** → English cousins + Latin roots (+ Arabic for Al-Andalus
+  loanwords).
+- **French, German** (when built) → English + Latin/Germanic roots.
+- **Hindi** → English + Sanskrit roots (+ Persian/Arabic loanwords).
+- **Tamil, Kannada, Malayalam, Telugu** → English + native Dravidian roots
+  + Sanskrit for loanwords.
+
+If a genuinely illuminating connection to another language the learner
+already knows exists, it can be used — but as an aid to *this* word, never
+as a teaser for a track not yet begun.
 
 ## Book Format
 
@@ -349,25 +388,32 @@ language, meant to eventually be released for free (CC BY-SA 4.0) — living
 at `<track>/book/`. `\documentclass{book}`, compiled with **XeLaTeX**
 (`fontspec` + `polyglossia`, not pdflatex) specifically because later tracks
 need proper Unicode and right-to-left/complex-script typesetting that
-pdflatex can't do. The book is `\input{}`-assembled from one chapter file per
-authored Part/Chapter, and grows incrementally — a new chapter file plus one
-`\input` line each time a week of units gets authored, never all at once.
+pdflatex can't do. The book opens with a **pronunciation reference
+appendix** (the typeset form of `pronunciation-reference.md`) and is then
+`\input{}`-assembled from one file per chapter, growing incrementally — a
+new chapter file plus one `\input` line as each chapter's lessons are
+authored, never all at once. Prerequisite links between lessons become
+`\hyperref` cross-references so the PDF reads as navigable reference
+material.
 
-The book and the practice units (`<track>/units/*.md`) are **two views of
-the same content**, not independently maintained documents: the book is the
-polished, continuous-reading edition; the units are the same material sliced
-into 5-minute, spaced-repetition-scheduled, car-consumable pieces. Grammar
-Lens sections, gender tags, and morphology spotlights all appear in both.
+The book and the practice lessons (`<track>/lessons/*.md`) are **two views
+of the same content**, not independently maintained: the book is the
+polished, continuous-reading edition; the lessons are the same material
+sliced into few-minute, spaced-repetition-scheduled, car-consumable pieces.
+Cousin webs, cultural notes, Grammar Lens sections, and gender tags all
+appear in both.
 
 ## Roadmap Shape
 
-Each language track has a `roadmap.md`: a year-long, CEFR-informed
-Part/Chapter skeleton (topic list per chapter — not fully scripted)
-targeting B1 ("normal day-to-day conversation") by year-end. Parts/Chapters
-are authored and scripted incrementally, starting from Part 0, in the order:
-units (`units/*.md`) first, then that chapter's LaTeX file folded into the
-book. The roadmap file is the standing plan, updated as later chapters get
-fully authored.
+Each language track has a `roadmap.md`: a chapter skeleton (the word/phrase
+list per chapter — not fully scripted) building toward B1 ("normal
+day-to-day conversation"). Because lessons are now one-word-each, a chapter
+is a themed cluster of many small lessons rather than a single dense unit.
+Chapters are authored incrementally, in the order: lessons (`lessons/*.md`)
+first, then that chapter's LaTeX file folded into the book. The roadmap is
+the standing plan, updated as chapters get authored. There is no "Part 0"
+in the roadmap — pronunciation lives in the reference, not a chapter (see
+"Pronunciation & Script: Inline, Never a Gate").
 
 ## Explicitly Out of Scope (This Pass)
 
@@ -382,8 +428,8 @@ fully authored.
   morphology thread is lexical only (roots/prefixes/suffixes and how words
   are built). If real Latin grammar instruction is ever wanted, that's a
   candidate to become its own track, not a widening of this one.
-- **Depth beyond Chapter 1** for French, German, Arabic, Hindi, Tamil,
-  Kannada, Malayalam, Telugu — all eight now have a real Chapter 1 (or, for
-  Tamil, an equivalent first grammar+vocabulary chapter), but only Spanish
-  has been carried further (through Part I). Each track deepens the same
-  way Spanish does, chapter by chapter.
+- **All non-Spanish tracks.** French, German, Arabic, Hindi, Tamil,
+  Kannada, Malayalam, Telugu are planned but not yet built in this
+  deep-lesson model. Spanish is the pilot proving the format; the others
+  follow once it's solid, each grounded per "Grounding: English First, Then
+  the Deep Root."
