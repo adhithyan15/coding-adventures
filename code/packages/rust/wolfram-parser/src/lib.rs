@@ -106,14 +106,21 @@ mod _grammar;
 /// frames). It does *not* try to reach `wolfram-runtime`'s own theoretical
 /// worst case (`MAX_STATEMENT_TOKENS = 2000` tokens could encode up to ~999
 /// nesting levels) — measured directly, parsing real nesting anywhere near
-/// that scale takes **tens of seconds** even on a big stack (this
-/// implementation's packrat memo keys are `format!`-allocated strings, and
-/// the furthest-failure tracking is an O(n) `Vec::contains` scan per
-/// attempt — a real, separate performance concern, flagged as follow-up work
-/// rather than fixed here), so a cap that size would trade one DoS vector
-/// (stack overflow) for another (a multi-second-to-multi-minute CPU burn per
-/// request). `2000` stays inside the fast, practical range while fully
-/// covering every currently-legitimate case.
+/// that scale took **tens of seconds** even on a big stack. Part of that cost
+/// was `parser::GrammarParser`'s packrat memo/left-recursion-guard keys being
+/// `format!`-allocated strings and `record_failure`'s furthest-expected
+/// tracking allocating on every call just to check membership — both fixed
+/// in `parser` v0.4.2 (tuple-keyed memo/`in_progress`, allocate-only-on-push
+/// dedup check). That removes a real, measured allocation cost from every
+/// rule attempt, but has **not** been re-benchmarked against this crate's own
+/// near-999-nesting-level worst case, and does nothing about the underlying
+/// combinatorial cost of Wolfram's 20-rule-per-level cascade re-trying
+/// alternatives — so this cap is still deliberately far below that worst
+/// case rather than assumed safe now. Would need fresh measurement before
+/// treating "tens of seconds" as resolved, not just reduced. So a cap that
+/// size would still risk trading one DoS vector (stack overflow) for another
+/// (a slow CPU burn per request). `2000` stays inside the fast, practical
+/// range while fully covering every currently-legitimate case.
 ///
 /// **The upshot for future callers**: unlike `macsyma-parser` /
 /// `matlab-parser` (whose `200` genuinely protects a bare default-stack
