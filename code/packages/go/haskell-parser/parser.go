@@ -73,7 +73,12 @@ func CreateHaskellParser(source string, version string) (*parser.GrammarParser, 
 	if err != nil {
 		return nil, err
 	}
-	grammar := VersionedParserGrammars[effectiveVersion]
+	// Fail closed if the validator's version set ever drifts from the embedded
+	// grammar map, rather than deferring a nil grammar to the parser engine.
+	grammar, ok := VersionedParserGrammars[effectiveVersion]
+	if !ok {
+		return nil, fmt.Errorf("no embedded Haskell parser grammar for version %q", effectiveVersion)
+	}
 	return parser.NewGrammarParser(tokens, grammar), nil
 }
 

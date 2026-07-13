@@ -68,7 +68,13 @@ func CreateHaskellLexer(source string, version string) (*lexer.GrammarLexer, err
 	if err != nil {
 		return nil, err
 	}
-	grammar := VersionedTokenGrammars[effectiveVersion]
+	// The `ok` check fails closed with a clear error if the validator's version
+	// set ever drifts from the embedded grammar map, rather than deferring a nil
+	// grammar to the lexer engine.
+	grammar, ok := VersionedTokenGrammars[effectiveVersion]
+	if !ok {
+		return nil, fmt.Errorf("no embedded Haskell token grammar for version %q", effectiveVersion)
+	}
 	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
