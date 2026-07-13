@@ -293,6 +293,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3b: the `reverse` list operation on the code-gen backends.**
+    // `reverse` is lowered by `lower_list_ops` to a nil-seeded call to a synthesized
+    // *tail-recursive accumulator* helper:
+    //   reverse(a) = __dyn_list_reverse(a, nil)
+    //   __dyn_list_reverse(a, acc) = if null?(a) then acc
+    //                                else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+    // Consing each element onto the accumulator's front reverses the order. The
+    // call site seeds `acc` with a `const 0 : ref<LispyPair>` nil (the `list`-desugar
+    // sentinel); the recursion reuses null?/car/cdr/cons — nothing new lowers.
+    // `(reverse (list 1 2 42))` = `(42 2 1)`; `car` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (reverse (list 1 2 42)))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

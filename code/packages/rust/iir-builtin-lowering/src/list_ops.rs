@@ -51,6 +51,20 @@
 //! `cons` in the recursive arm — the same heap builtin (E6d-1) the head-of-heap
 //! pass lowers for the injected helper too.
 //!
+//! `reverse` → a **tail-recursive accumulator** helper `__dyn_list_reverse`,
+//! seeded at the call site with an empty (`nil`) accumulator:
+//!
+//! ```text
+//!   reverse(a)          = reverse_acc(a, nil)          ;; nil seed at call site
+//!   reverse_acc(a, acc) = if null?(a) then acc
+//!                         else reverse_acc(cdr(a), cons(car(a), acc))
+//! ```
+//!
+//! Consing each element of `a` onto the *front* of `acc` reverses the order. Like
+//! `append` it needs no index (all references), and its only new op versus the
+//! others is the call-site `nil` seed (`const 0 : ref<LispyPair>`, the sentinel
+//! the `list` desugar emits) — the recursion reuses `null?`/`car`/`cdr`/`cons`.
+//!
 //! ### The lisp boundary is uniform-anyref — the index is boxed too
 //!
 //! `length` *returns* a number, so both arms return a boxed `ref<any>` — a
@@ -90,6 +104,12 @@ const LENGTH_HELPER: &str = "__dyn_list_length";
 const LISTREF_HELPER: &str = "__dyn_list_ref";
 /// The synthesized recursive append helper's function name.
 const APPEND_HELPER: &str = "__dyn_list_append";
+/// The synthesized tail-recursive reverse (accumulator) helper's function name.
+const REVERSE_HELPER: &str = "__dyn_list_reverse";
+/// The nil-sentinel `const` type hint (`const 0 : ref<LispyPair>`) — the exact
+/// form `desugar_list_in_function`/`make_nil` emit for the empty list. `reverse`
+/// seeds its accumulator with one.
+const REF_PAIR: &str = "ref<LispyPair>";
 
 /// Module-level entry: rewrite every list-*operation* `call_builtin` to a call to
 /// its synthesized recursive helper, and inject each helper once if any call to
@@ -99,6 +119,7 @@ pub fn lower_list_ops(module: &mut IIRModule) {
     lower_length(module);
     lower_list_ref(module);
     lower_append(module);
+    lower_reverse(module);
 }
 
 /// Rewrite `length` calls + inject `__dyn_list_length` once.
@@ -148,6 +169,22 @@ fn lower_append(module: &mut IIRModule) {
     }
     if !module.functions.iter().any(|f| f.name == APPEND_HELPER) {
         module.functions.push(build_append_helper());
+    }
+}
+
+/// Rewrite `reverse` calls + inject `__dyn_list_reverse` once.
+fn lower_reverse(module: &mut IIRModule) {
+    let uses_reverse = module.functions.iter().any(|f| {
+        f.instructions.iter().any(is_reverse_call)
+    });
+    if !uses_reverse {
+        return;
+    }
+    for f in &mut module.functions {
+        rewrite_reverse_calls(f);
+    }
+    if !module.functions.iter().any(|f| f.name == REVERSE_HELPER) {
+        module.functions.push(build_reverse_helper());
     }
 }
 
@@ -494,6 +531,134 @@ fn build_append_helper() -> IIRFunction {
     )
 }
 
+// ---------------------------------------------------------------------------
+// reverse
+// ---------------------------------------------------------------------------
+
+/// Is `instr` a `call_builtin "reverse" …`?
+fn is_reverse_call(instr: &IIRInstr) -> bool {
+    instr.op == "call_builtin"
+        && matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "reverse")
+}
+
+/// Replace each `call_builtin "reverse" a -> dest` with a **nil seed** + a call
+/// to the tail-recursive accumulator helper:
+///
+/// ```text
+///   {dest}.rev_nil = const 0 : ref<LispyPair>          ;; the empty accumulator
+///   dest           = call __dyn_list_reverse, a, {dest}.rev_nil : ref<any>
+/// ```
+///
+/// `reverse(a)` is `reverse_acc(a, nil)` — the accumulator starts empty and each
+/// element is consed on front, so the list comes out reversed (see
+/// [`build_reverse_helper`]). The nil `const` is the exact sentinel the `list`
+/// desugar / `make_nil` emit; its name is derived from `dest` (unique per SSA
+/// destination) so two `reverse` sites never collide.
+fn rewrite_reverse_calls(f: &mut IIRFunction) {
+    let old = std::mem::take(&mut f.instructions);
+    let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
+    for instr in old {
+        if !is_reverse_call(&instr) {
+            out.push(instr);
+            continue;
+        }
+        // No dest ⇒ result unused; drop the (pure) call.
+        let dest = match &instr.dest {
+            Some(d) => d.clone(),
+            None => continue,
+        };
+        // srcs = [Var("reverse"), a]; a malformed arity is left for the validator.
+        let a = match instr.srcs.get(1) {
+            Some(a) => a.clone(),
+            None => { out.push(instr); continue; }
+        };
+        // Seed the accumulator with a fresh nil, then call the acc helper.
+        let nil_name = format!("{dest}.rev_nil");
+        out.push(IIRInstr::new(
+            "const", Some(nil_name.clone()), vec![Operand::Int(0)], REF_PAIR,
+        ));
+        out.push(IIRInstr::new(
+            "call",
+            Some(dest),
+            vec![Operand::Var(REVERSE_HELPER.to_string()), a, Operand::Var(nil_name)],
+            "ref<any>",
+        ));
+    }
+    f.instructions = out;
+}
+
+/// Build the tail-recursive accumulator helper
+/// `__dyn_list_reverse(a: ref<any>, acc: ref<any>) -> ref<any>`.
+///
+/// ```text
+///   reverse_acc(a, acc) = if null?(a) then acc
+///                         else reverse_acc(cdr(a), cons(car(a), acc))
+/// ```
+///
+/// The accumulator `acc` starts as `nil` (seeded at the call site) and grows by
+/// consing each element of `a` onto its **front** — which reverses the order.
+/// Like `append` there is no index, so no unbox/box: `a`, `acc`, `car(a)`, and
+/// the fresh `cons` are all lisp `ref<any>` references. The recursion is in tail
+/// position (`ret` of the recursive call); the IIR backends do not yet do TCO, so
+/// depth is bounded by the list length (the same structural-recursion budget the
+/// other helpers use). Both arms return `ref<any>`.
+fn build_reverse_helper() -> IIRFunction {
+    let recurse = "__dlv_recurse".to_string();
+    let instrs = vec![
+        // is_nil = null?(a)
+        IIRInstr::new(
+            "call_builtin", Some("__dlv_is_nil".into()),
+            vec![Operand::Var("null?".into()), Operand::Var("a".into())], "bool",
+        ),
+        // if a is NON-nil → recurse; else fall through: a empty ⇒ result is acc.
+        IIRInstr::new(
+            "jmp_if_false", None,
+            vec![Operand::Var("__dlv_is_nil".into()), Operand::Var(recurse.clone())], "void",
+        ),
+        // base: null?(a) ⇒ the accumulator holds the fully-reversed list.
+        IIRInstr::new("ret", None, vec![Operand::Var("acc".into())], "ref<any>"),
+        // recurse: reverse_acc(cdr(a), cons(car(a), acc))
+        IIRInstr::new("label", None, vec![Operand::Var(recurse)], "void"),
+        IIRInstr::new(
+            "call_builtin", Some("__dlv_head".into()),
+            vec![Operand::Var("car".into()), Operand::Var("a".into())], "ref<any>",
+        ),
+        IIRInstr::new(
+            "call_builtin", Some("__dlv_rest".into()),
+            vec![Operand::Var("cdr".into()), Operand::Var("a".into())], "ref<any>",
+        ),
+        // newacc = cons(car(a), acc) — cons the head onto the accumulator's front.
+        IIRInstr::new(
+            "call_builtin", Some("__dlv_newacc".into()),
+            vec![
+                Operand::Var("cons".into()),
+                Operand::Var("__dlv_head".into()),
+                Operand::Var("acc".into()),
+            ],
+            "ref<any>",
+        ),
+        IIRInstr::new(
+            "call", Some("__dlv_res".into()),
+            vec![
+                Operand::Var(REVERSE_HELPER.into()),
+                Operand::Var("__dlv_rest".into()),
+                Operand::Var("__dlv_newacc".into()),
+            ],
+            "ref<any>",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("__dlv_res".into())], "ref<any>"),
+    ];
+    IIRFunction::new(
+        REVERSE_HELPER,
+        vec![
+            ("a".to_string(), "ref<any>".to_string()),
+            ("acc".to_string(), "ref<any>".to_string()),
+        ],
+        "ref<any>",
+        instrs,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -784,5 +949,106 @@ mod tests {
         assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
+    }
+
+    // ── reverse ─────────────────────────────────────────────────────────────
+
+    fn reverse_call(dest: &str, a: &str) -> IIRInstr {
+        IIRInstr::new(
+            "call_builtin", Some(dest.into()),
+            vec![Operand::Var("reverse".into()), Operand::Var(a.into())],
+            "any",
+        )
+    }
+
+    #[test]
+    fn no_reverse_is_noop() {
+        let mut m = module_with(vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
+        ]);
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.len(), 1, "no helper injected when reverse is unused");
+    }
+
+    #[test]
+    fn reverse_call_seeds_nil_and_calls_acc_helper() {
+        let mut m = module_with(vec![reverse_call("r", "xs")]);
+        lower_list_ops(&mut m);
+        let body = &m.functions[0].instructions;
+        // const r.rev_nil = 0 : ref<LispyPair>   (the empty accumulator seed)
+        let nil = &body[0];
+        assert_eq!(nil.op, "const");
+        assert_eq!(nil.type_hint, REF_PAIR);
+        assert_eq!(nil.srcs.first(), Some(&Operand::Int(0)));
+        let nil_name = nil.dest.clone().unwrap();
+        // call __dyn_list_reverse, xs, r.rev_nil -> r : ref<any>
+        let call = &body[1];
+        assert_eq!(call.op, "call");
+        assert_eq!(call.srcs[0], Operand::Var(REVERSE_HELPER.into()));
+        assert_eq!(call.srcs[1], Operand::Var("xs".into()));
+        assert_eq!(call.srcs[2], Operand::Var(nil_name));
+        assert_eq!(call.dest.as_deref(), Some("r"));
+        assert_eq!(call.type_hint, "ref<any>");
+        assert!(body.iter().all(|i| !is_reverse_call(i)), "no reverse call_builtin survives");
+    }
+
+    #[test]
+    fn reverse_helper_is_injected_once() {
+        let mut m = module_with(vec![reverse_call("a", "l1"), reverse_call("b", "l2")]);
+        lower_list_ops(&mut m);
+        assert_eq!(
+            m.functions.iter().filter(|f| f.name == REVERSE_HELPER).count(), 1,
+            "exactly one reverse helper",
+        );
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.iter().filter(|f| f.name == REVERSE_HELPER).count(), 1);
+    }
+
+    #[test]
+    fn reverse_helper_shape_is_tail_recursive_accumulator() {
+        let mut m = module_with(vec![reverse_call("r", "xs")]);
+        lower_list_ops(&mut m);
+        let helper = m.functions.iter().find(|f| f.name == REVERSE_HELPER).unwrap();
+        assert_eq!(helper.return_type, "ref<any>");
+        assert_eq!(
+            helper.params,
+            vec![
+                ("a".to_string(), "ref<any>".to_string()),
+                ("acc".to_string(), "ref<any>".to_string()),
+            ],
+            "the helper carries an accumulator param",
+        );
+        // Terminates on null?(a), returning the accumulator; rebuilds via cons.
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("null?".into()))));
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("cons".into()))),
+            "each step conses the head onto the accumulator");
+        // The base case returns `acc` (not `a`); the accumulator holds the result.
+        let base_ret = helper.instructions.iter().find(|i|
+            i.op == "ret" && i.srcs.first() == Some(&Operand::Var("acc".into())));
+        assert!(base_ret.is_some(), "base case returns the accumulator");
+        // No index arithmetic.
+        let ops: Vec<&str> = helper.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(!ops.contains(&"unbox") && !ops.contains(&"cmp_eq") && !ops.contains(&"sub"));
+        // The recursive call targets the helper itself, in tail position.
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call" && i.srcs.first() == Some(&Operand::Var(REVERSE_HELPER.into()))));
+    }
+
+    #[test]
+    fn all_four_ops_coexist() {
+        // A module using length + list-ref + append + reverse injects all four.
+        let mut m = module_with(vec![
+            length_call("a", "l1"),
+            listref_call("b", "l2", "i2"),
+            append_call("c", "l3", "l4"),
+            reverse_call("d", "l5"),
+        ]);
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
+        assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
+        assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
+        assert_eq!(m.functions.iter().filter(|f| f.name == REVERSE_HELPER).count(), 1);
     }
 }
