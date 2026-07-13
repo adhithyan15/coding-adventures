@@ -1,0 +1,112 @@
+# Derive Token Grammar
+# ============================================================================
+#
+# Tokenizes the D-1-scoped subset of Derive (Soft Warehouse, 1988; successor
+# to muMATH, later Texas Instruments, discontinued 2007 at v6.1). Derive is
+# expression-oriented — a worksheet is a flat sequence of expressions and
+# `:=` definitions, much closer in spirit to Macsyma/Wolfram than to the
+# array languages (APL/J) — but its surface syntax is genuinely its own:
+# ordinary parentheses for function application (`DIF(u, x)`, not `f[x]`),
+# `:=` for both variable and function definition, and `[...]`/`[...;...]`
+# for vector/matrix literals. See code/specs/MA07-derive-language.md.
+#
+# Derive is treated as CASE-SENSITIVE here (case_sensitive left at its
+# default), mirroring Wolfram: built-ins are conventionally, but not
+# enforced, uppercase (SIN, DIF) — an ordinary lowercase `sin` lexes as a
+# distinct NAME, exactly like Wolfram's `Sin` vs `sin`. The boolean-algebra
+# keywords `AND`/`OR`/`NOT` (spec's own wording: "Derive's boolean-algebra
+# keywords, not symbols") ARE genuine reserved words, matched by exact case
+# via the `keywords:` block below — `and`/`or`/`not` in lowercase lex as
+# ordinary NAMEs, not keywords.
+#
+# @version 1
+
+# Strings are out of this subset's scope entirely (no STRING token) — the
+# D-1 surface grammar (MA07 spec §3) never uses a string literal.
+escapes: none
+
+# ============================================================================
+# SECTION 1: Multi-character operators
+#
+# Longest-match-first: every multi-character operator is listed before the
+# shorter operator(s) it begins with, so `:=` wins over there being no bare
+# `:` at all in this subset, and `<=`/`>=` win over `<`/`>`.
+# ============================================================================
+
+# `:=` is Derive's ONE assignment/definition operator — used for BOTH
+# `x := 5` (variable assignment) and `F(x) := x^2 + 1` (function
+# definition); the parser (D-3), not the lexer, disambiguates the two by
+# what shape precedes it (a bare NAME vs a `NAME(...)` call). There is no
+# bare `:` anywhere else in this subset, so declaring `:=` first is a
+# defensive longest-match convention (matching wolfram.tokens's own
+# `SETDELAYED = ":="` precedent) rather than resolving a real ambiguity.
+ASSIGN    = ":="
+
+LE        = "<="
+GE        = ">="
+
+# ============================================================================
+# SECTION 2: Single-character operators and delimiters
+# ============================================================================
+
+PLUS      = "+"
+MINUS     = "-"
+TIMES     = "*"
+SLASH     = "/"
+POWER     = "^"
+
+# `=` is Derive's equation operator (a Boolean-valued expression, e.g.
+# `SOLVE`'s first argument) — NOT assignment; `:=` (above) owns that role.
+# Mirrors Macsyma's identical `=`-is-equation / `:`-or-`:=`-is-assignment
+# split (macsyma.tokens), just without Macsyma's separate `:` variable-set
+# form (Derive only ever uses `:=`, for both variables and functions).
+EQ        = "="
+LESS      = "<"
+GREATER   = ">"
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+
+COMMA     = ","
+
+# The ONLY use of `;` in this subset is as the matrix row separator inside
+# `[...]` (`[a, b, c; d, e, f]`, MA07 spec §3/D-5) — Derive has no general
+# statement terminator (a NEWLINE ends a top-level expression; see SECTION 4).
+SEMI      = ";"
+
+# ============================================================================
+# SECTION 3: Literal value tokens
+#
+# NUMBER requires a leading digit, so a bare `.5` is not a number (matches
+# every sibling symbolic-family lexer's convention — wolfram.tokens,
+# macsyma.tokens). NAME is a case-sensitive identifier; builtin heads (SIN,
+# DIF, IF) are ordinary NAMEs resolved by the runtime (D-4), so — aside
+# from the `keywords:` block below for AND/OR/NOT — there is no reserved-word
+# list here.
+# ============================================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+
+# ============================================================================
+# SECTION 4: Significant newlines + skip patterns
+#
+# A worksheet is a flat sequence of expressions/definitions, each its own
+# line at Derive's own numbered `#n:` prompt (MA07 spec §5) — so NEWLINE is
+# a real, significant token at bracket-depth 0, exactly like Wolfram. Inside
+# an open `(` or `[`, a newline is insignificant (the D-2 lexer drops it,
+# mirroring wolfram-lexer's `drop_bracketed_newlines` hook), so a call or a
+# vector/matrix literal may span several physical lines.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+skip:
+  WHITESPACE = /[ \t]+/
+
+keywords:
+  AND
+  OR
+  NOT

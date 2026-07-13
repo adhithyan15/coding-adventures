@@ -243,6 +243,7 @@ members = [
     "wolfram-runtime",
     "wolfram-repl",
     "wolfram-to-semantic-ir",
+    "derive-lexer",
     "apl-lexer",
     "apl-parser",
     "apl-runtime",
