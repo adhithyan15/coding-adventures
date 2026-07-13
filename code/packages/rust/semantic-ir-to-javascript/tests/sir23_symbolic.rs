@@ -264,15 +264,20 @@ fn print_on_deeply_nested_term_truncates_instead_of_crashing_node() {
     // — reached from `print`/`puts` via `formatSeen` — recursed over the
     // FULL term tree with no depth cap of its own (only `replaceAll`/
     // `replaceRepeated`'s walk enforced `MAX_TERM_DEPTH`). A term built via
-    // 2000 real *runtime* firings of `Symbolic.apply` (an ordinary
-    // compiled `for`-loop, NOT a hand-built 2000-node static AST — the
+    // 20,000 real *runtime* firings of `Symbolic.apply` (an ordinary
+    // compiled `for`-loop, NOT a hand-built 20,000-node static AST — the
     // whole point being that a tiny, shallow compiled program can build an
     // arbitrarily deep runtime VALUE) bypassed that cap entirely, so
-    // `toDisplayString` needed its own guard. `node` must exit cleanly
-    // with a truncated `...` rather than crashing with "Maximum call
-    // stack size exceeded".
+    // `toDisplayString` needed its own guard. Comfortably above the
+    // empirically-measured ~5000-level pre-fix crash threshold for this
+    // walk (a smaller count wouldn't actually exercise the crash this
+    // test guards against), so reverting the fix makes this test fail via
+    // a genuine `node` crash (`run_module`'s `output.status.success()`),
+    // not just the truncation-string assertion below. `node` must exit
+    // cleanly with a truncated `...` rather than crashing with "Maximum
+    // call stack size exceeded".
     //
-    // for i in range(0, 2000, 1) { acc = Symbolic-apply(f, [acc]) }
+    // for i in range(0, 20000, 1) { acc = Symbolic-apply(f, [acc]) }
     // print(acc)
     let stmts = vec![
         Stmt::LetBinding {
@@ -288,7 +293,7 @@ fn print_on_deeply_nested_term_truncates_instead_of_crashing_node() {
                 span: sp(),
             },
             stop: Expr::IntLit {
-                value: 2000,
+                value: 20000,
                 span: sp(),
             },
             step: Expr::IntLit {
