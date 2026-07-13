@@ -33,6 +33,8 @@ use std::collections::BTreeMap;
 
 /// The result of scheduling a project.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct ScheduleResult {
     /// Computed dates per scheduled task (leaves, milestones, and summaries).
     pub dates: BTreeMap<TaskId, ScheduledDates>,
@@ -46,6 +48,8 @@ pub struct ScheduleResult {
 
 /// A scheduling constraint the engine could not honour.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct Conflict {
     /// The task the conflict is about.
     pub task: TaskId,
@@ -57,6 +61,8 @@ pub struct Conflict {
 
 /// The category of a scheduling conflict.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub enum ConflictKind {
     /// An inflexible constraint contradicts a dependency.
     ConstraintVsDependency,
