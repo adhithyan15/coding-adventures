@@ -508,5 +508,5 @@ int main(void) {
     test_error_paths();
     test_fuzz_decoders();
     test_fuzz_byte_flip_wire();
-    ISO_TEST_RESULT();
+    return ISO_TEST_RESULT();
 }
