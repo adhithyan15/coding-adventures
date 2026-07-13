@@ -1,0 +1,90 @@
+# Build the Human Languages curriculum's LaTeX books to PDF and upload
+# them as build artifacts.
+#
+# Each language track under code/learning/human-languages/<lang>/book/
+# contains a self-contained XeLaTeX book (see HL00 spec). This workflow
+# discovers every such book/ directory dynamically, so adding a new
+# language track needs zero changes here.
+
+name: Human Languages Books
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "code/learning/human-languages/**/book/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "code/learning/human-languages/**/book/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: human-languages-books-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.find-books.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find book directories
+        id: find-books
+        run: |
+          dirs=$(find code/learning/human-languages -mindepth 2 -maxdepth 2 -type d -name book | sort)
+          json=$(printf '%s\n' "$dirs" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: discover
+    if: needs.discover.outputs.matrix != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        book_dir: ${{ fromJson(needs.discover.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine language name
+        id: lang
+        run: |
+          name=$(basename "$(dirname "${{ matrix.book_dir }}")")
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      # Install the COMPLETE TeX Live distribution rather than a hand-picked
+      # list of texlive-* sub-packages. The earlier granular approach broke
+      # CI (`Unable to locate package texlive-lang-indic`) and risked silently
+      # missing font/language packages a book needs. `texlive-full` is a single
+      # guaranteed-to-exist meta-package that bundles every engine (XeLaTeX),
+      # every language collection (Arabic, Indic, etc.), and every font that
+      # ships with TeX Live — including Latin Modern and the Noto families.
+      # This is the "machine that has all the fonts": ubuntu-latest already has
+      # git/node for checkout, and texlive-full supplies the full typesetting
+      # stack, so no Windows/macOS runner is needed for font coverage.
+      # fonts-noto-* additionally register the Noto families with fontconfig
+      # by family name, which the non-Latin-script tracks will want later.
+      - name: Install TeX Live (full)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-full latexmk fonts-noto-core fonts-noto-extra
+
+      - name: Build ${{ steps.lang.outputs.name }} book
+        working-directory: ${{ matrix.book_dir }}
+        run: latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.lang.outputs.name }}-book
+          path: ${{ matrix.book_dir }}/book.pdf
+          if-no-files-found: error
