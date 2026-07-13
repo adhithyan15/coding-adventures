@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.8] - Unreleased
+
+### Added
+
+- **`NULLS FIRST` / `NULLS LAST` in `ORDER BY`.** `order_item` now accepts an
+  optional `NULLS <name>` clause after the ASC/DESC direction. `FIRST`/`LAST`
+  are NOT reserved keywords (they are common column names), so a generic NAME is
+  accepted and the planner (sql-planner 0.2.7) validates it. Omitting the clause
+  keeps SQLite's default (NULLs first for ASC, last for DESC).
+
 ## [0.1.7] - Unreleased
 
 ### Added

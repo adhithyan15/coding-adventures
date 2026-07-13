@@ -203,6 +203,15 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Literal { value: r#"ASC"#.to_string() },
                         GrammarElement::Literal { value: r#"DESC"#.to_string() },
                     ] }) },
+                // Optional `NULLS FIRST` / `NULLS LAST`. FIRST/LAST are NOT
+                // reserved keywords (they are extremely common column names), so
+                // we accept a generic NAME here; the planner validates it is
+                // literally FIRST or LAST. Omitting the clause falls back to
+                // SQLite's defaults (NULLs first for ASC, last for DESC).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"NULLS"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
             ] },
             line_number: 36,
         },

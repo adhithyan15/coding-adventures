@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.7] - Unreleased
+
+### Added
+
+- **`SortKey.nulls_first: Option<bool>`** — explicit NULL placement from a
+  `NULLS FIRST`/`NULLS LAST` clause (`None` = SQLite default = NULLs first for
+  ASC, last for DESC). `plan_order_item` parses the clause and rejects anything
+  other than FIRST/LAST after `NULLS`. Threaded to codegen + the VM comparator.
+
 ## [0.2.6] - Unreleased
 
 ### Added

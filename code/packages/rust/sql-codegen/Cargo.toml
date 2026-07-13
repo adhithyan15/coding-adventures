@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-sql-codegen"
-version = "0.6.1"
+version = "0.6.2"
 edition = "2021"
 description = "Bytecode code generator for the Mini-SQLite SQL processing pipeline"
 license = "MIT"

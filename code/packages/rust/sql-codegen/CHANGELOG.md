@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2] - Unreleased
+
+### Added
+
+- **`CompiledSortKey.nulls_first: Option<bool>`**, copied from the planner's
+  `SortKey`, so the VM sort comparator can honour `NULLS FIRST`/`NULLS LAST`.
+
 ## [0.6.1] - Unreleased
 
 ### Added

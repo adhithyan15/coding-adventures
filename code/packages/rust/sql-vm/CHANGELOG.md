@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.13] - Unreleased
+
+### Added
+
+- **`NULLS FIRST`/`NULLS LAST` in the sort comparator.** `apply_sort` now places
+  NULLs explicitly per the sort key's `nulls_first` (defaulting to `ascending`,
+  which reproduces SQLite's default of NULLs-first-for-ASC / last-for-DESC).
+  NULL placement is absolute and is not flipped by the ASC/DESC reversal, so an
+  override like `ASC NULLS LAST` works.
+
 ## [0.4.12] - Unreleased
 
 ### Added

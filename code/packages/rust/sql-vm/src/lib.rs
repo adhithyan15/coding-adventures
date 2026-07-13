@@ -2775,6 +2775,28 @@ fn apply_sort(
             let idx = output_columns.iter().position(|c| c == &key.column);
             let va = idx.and_then(|i| a.get(i)).map(|(_, v)| v).unwrap_or(&SqlValue::Null);
             let vb = idx.and_then(|i| b.get(i)).map(|(_, v)| v).unwrap_or(&SqlValue::Null);
+
+            // NULL placement is handled explicitly so it can be controlled by a
+            // `NULLS FIRST`/`NULLS LAST` clause independently of ASC/DESC. The
+            // default (no clause) is SQLite's: NULLs first for ASC, last for
+            // DESC — i.e. `nulls_first` defaults to `ascending`. Null placement
+            // is absolute and is NOT flipped by the ascending/descending
+            // reversal below (which only applies to non-NULL comparisons).
+            let a_null = matches!(va, SqlValue::Null);
+            let b_null = matches!(vb, SqlValue::Null);
+            if a_null || b_null {
+                if a_null && b_null {
+                    continue; // equal on this key; fall through to the next
+                }
+                let nulls_first = key.nulls_first.unwrap_or(key.ascending);
+                // The NULL operand sorts first iff `nulls_first`.
+                return if a_null == nulls_first {
+                    std::cmp::Ordering::Less
+                } else {
+                    std::cmp::Ordering::Greater
+                };
+            }
+
             let cmp = sql_cmp(va, vb);
             if cmp != std::cmp::Ordering::Equal {
                 return if key.ascending { cmp } else { cmp.reverse() };
@@ -3722,7 +3744,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
     }
@@ -3745,7 +3767,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false, nulls_first: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(3)], vec![int(2)], vec![int(1)]]);
     }
@@ -3776,8 +3798,8 @@ mod tests {
             Instruction::CloseScan(None),
             Instruction::Halt,
             Instruction::SortResult(vec![
-                CompiledSortKey { column: "a".to_string(), ascending: true },
-                CompiledSortKey { column: "b".to_string(), ascending: true },
+                CompiledSortKey { column: "a".to_string(), ascending: true, nulls_first: None },
+                CompiledSortKey { column: "b".to_string(), ascending: true, nulls_first: None },
             ]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows[0], vec![int(1), int(1)]);
@@ -4282,7 +4304,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None }]),
             Instruction::LimitResult(Some(3), None),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
@@ -4309,7 +4331,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None }]),
             Instruction::DistinctResult,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);

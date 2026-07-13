@@ -2,6 +2,13 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.2] - Unreleased
+
+### Changed
+
+- Carry the new `SortKey.nulls_first` field through constant-folding of `Sort`
+  plan nodes.
+
 ## [0.1.1] - Unreleased
 
 ### Added

@@ -398,6 +398,10 @@ pub struct SortKey {
     pub expr: SqlExpr,
     /// `ascending = true` for ASC (default), `false` for DESC.
     pub ascending: bool,
+    /// Explicit NULL placement from a `NULLS FIRST` / `NULLS LAST` clause.
+    /// `None` = SQLite's default (NULLs sort first for ASC, last for DESC);
+    /// `Some(true)` = NULLs first; `Some(false)` = NULLs last.
+    pub nulls_first: Option<bool>,
 }
 
 /// An aggregate item inside an `Aggregate` plan node.
@@ -954,7 +958,42 @@ fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
     // ASC is the default; DESC reverses.
     let ascending = !has_token(item, "DESC");
 
-    Ok(SortKey { expr, ascending })
+    // Optional `NULLS FIRST` / `NULLS LAST`. FIRST/LAST are NOT reserved
+    // keywords (they are common column names), so the grammar accepts a generic
+    // NAME after `NULLS` and we validate it here. Anything other than
+    // FIRST/LAST is a syntax error, matching SQLite.
+    let nulls_first = {
+        let children = &item.children;
+        let mut placement = None;
+        for (i, c) in children.iter().enumerate() {
+            if is_keyword_token(c, "NULLS") {
+                match children.get(i + 1) {
+                    Some(tok) => {
+                        let w = token_text_of(tok).to_uppercase();
+                        placement = Some(match w.as_str() {
+                            "FIRST" => Ok(true),
+                            "LAST" => Ok(false),
+                            other => Err(PlanError::UnsupportedStatement(format!(
+                                "expected FIRST or LAST after NULLS, got {other:?}"
+                            ))),
+                        });
+                    }
+                    None => {
+                        placement = Some(Err(PlanError::UnsupportedStatement(
+                            "NULLS clause missing FIRST/LAST".to_string(),
+                        )))
+                    }
+                }
+            }
+        }
+        placement.transpose()?
+    };
+
+    Ok(SortKey {
+        expr,
+        ascending,
+        nulls_first,
+    })
 }
 
 /// Parse the `limit_clause` and return `(count, offset)`.
