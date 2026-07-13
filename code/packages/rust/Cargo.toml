@@ -246,6 +246,7 @@ members = [
     "apl-runtime",
     "apl-repl",
     "apl-to-semantic-ir",
+    "j-lexer",
     "logic-gates",
     "logic-core",
     "lookup-core",
