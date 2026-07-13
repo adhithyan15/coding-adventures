@@ -3147,6 +3147,70 @@ fn array_slice_when() {
     }
 }
 
+// ── Ruby Array#cycle(n) ────────────────────────────────────────────────────
+// `cycle(n) { |x| … }` iterates the array n full passes in order, yielding each
+// element on every pass, and always returns nil.  n <= 0, a negative count, or
+// an empty receiver yields nothing.  Mirrors the Python reference (#8117), Go
+// (#8123), Rust (#8131): the block `print`s each yielded element, so the two
+// passes are observable, and the nil return is printed after each call.
+#[test]
+fn array_cycle() {
+    // `{ |x| print x }` — emit one line per yielded element.
+    let puts = func("__t_puts", vec![param("x")], vec![print(param_ref("x"))], Expr::NilLit { span: sp() });
+    let stmts = vec![
+        // [1,2,3].cycle(2) { |x| print x }  → 1 2 3 1 2 3, then nil
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "cycle",
+            vec![int(2), method_closure("__t_puts")],
+        )),
+        // [1,2,3].cycle(0) { … }  → no yields, nil
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "cycle",
+            vec![int(0), method_closure("__t_puts")],
+        )),
+        // [].cycle(5) { … }  → no yields, nil
+        print(method(seq(vec![]), "cycle", vec![int(5), method_closure("__t_puts")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrcycle".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, puts],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrcycle") {
+        assert_eq!(
+            stdout,
+            "1\n2\n3\n1\n2\n3\n\
+             nil\n\
+             nil\n\
+             nil"
+        );
+    }
+}
+
 // ── Ruby Array#tally ───────────────────────────────────────────────────────
 // `tally` counts occurrences into a Hash keyed in first-seen order — the JS
 // runtime realises it as an insertion-ordered `Map`, printed `{k: v}` (the same

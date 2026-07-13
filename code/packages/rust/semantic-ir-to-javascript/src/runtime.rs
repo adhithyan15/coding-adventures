@@ -1298,7 +1298,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "take", "drop", "values_at",
     "flatten", "compact", "rotate", "zip",
     "include?", "index",
-    "each_slice", "each_cons", "chunk_while", "slice_when", "tally",
+    "each_slice", "each_cons", "chunk_while", "slice_when", "tally", "cycle",
   ]);
   // Numeric-aware comparator (`<`/`>` keeps numbers numeric, never throws) —
   // the same ordering the Ruby `sort` reference uses.
@@ -1628,6 +1628,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const counts = new Map();
         for (const x of recv) { counts.set(x, (counts.get(x) || 0) + 1); }
         return counts;
+      }
+      case "cycle": {
+        // `cycle(n) { |x| … }` — iterate the array n full passes in order,
+        // yielding each element on every pass; always returns null (Ruby nil).
+        // `[1,2,3].cycle(2)` yields 1,2,3,1,2,3.  n <= 0, a negative count, an
+        // empty receiver, or a nil / non-integer count (Ruby's block-less
+        // Enumerator and infinite no-`n` forms) yields nothing rather than
+        // hanging, so emitted programs can never spin forever.
+        if (typeof blk !== "function") { return ARR_MISS; }
+        const n = args.length > 0 && Number.isInteger(args[0]) ? args[0] : 0;
+        if (n <= 0) { return null; }
+        for (let p = 0; p < n; p++) { for (const x of recv) { blk(x); } }
+        return null;
       }
     }
     return ARR_MISS;
