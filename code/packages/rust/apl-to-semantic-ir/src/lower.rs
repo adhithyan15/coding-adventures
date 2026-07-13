@@ -503,7 +503,7 @@ impl Lowerer {
                     })
                     .collect();
                 if numbers.len() == 1 {
-                    Ok(self.number_literal(numbers[0]))
+                    self.number_literal(numbers[0])
                 } else {
                     // Per the SIR22 spec's own doc comment on `ArrayLit`,
                     // `rows.len() == 1` is precisely how a row/rank-1 vector
@@ -511,7 +511,10 @@ impl Lowerer {
                     self.observed.add(Feature::NDArrays);
                     self.observed.add(Feature::ArrayColumnMajor);
                     let span = self.span_of(node);
-                    let row: Vec<Expr> = numbers.iter().map(|tok| self.number_literal(tok)).collect();
+                    let row: Vec<Expr> = numbers
+                        .iter()
+                        .map(|tok| self.number_literal(tok))
+                        .collect::<Result<Vec<_>, _>>()?;
                     Ok(Expr::ArrayLit { rows: vec![row], span })
                 }
             }
@@ -542,13 +545,27 @@ impl Lowerer {
     /// observing `Feature::Floats` when it is the latter (the validator's
     /// own ground truth: `Expr::FloatLit` requires `Feature::Floats`
     /// declared -- see `semantic-ir/src/validator.rs`'s `FloatLit` arm).
-    fn number_literal(&mut self, tok: &Token) -> Expr {
+    ///
+    /// Returns a clean [`AplLowerError`] rather than silently substituting
+    /// `0.0` if the token's lexeme somehow fails to parse as a number. Under
+    /// the normal `compile_source` path this can never actually trigger --
+    /// `apl-parser`'s own `NUMBER` lexer rule guarantees a parseable lexeme
+    /// -- but `compile` is also a public entry point over a hand-built
+    /// `GrammarASTNode`, and every other malformed-input case in this file
+    /// is rejected explicitly rather than silently coerced to a default
+    /// value, so this one should be no different (caught by security
+    /// review).
+    fn number_literal(&mut self, tok: &Token) -> Result<Expr, AplLowerError> {
         let span = Span::point(FILE, tok.line, tok.column);
-        let expr = number_literal_expr(&tok.value, &span);
+        let expr = number_literal_expr(&tok.value, &span).map_err(|message| AplLowerError {
+            message,
+            line: tok.line,
+            column: tok.column,
+        })?;
         if matches!(expr, Expr::FloatLit { .. }) {
             self.observed.add(Feature::Floats);
         }
-        expr
+        Ok(expr)
     }
 
     // -------------------------------------------------------------------
@@ -898,20 +915,27 @@ fn glyph_for_comparison(op: ElementwiseOpKind) -> &'static str {
 /// literal sign needs its own glyph). The `¯` is translated to `-` first,
 /// exactly as `apl-runtime::eval::parse_apl_number` already does
 /// (`s.replace('¯', "-")`), before either numeric parser ever sees the text.
-fn number_literal_expr(raw_text: &str, span: &Span) -> Expr {
+///
+/// Returns `Err` (rather than silently substituting `0.0`) if `raw_text`
+/// fails to parse as a number at all -- unreachable via `compile_source`
+/// (the lexer's own `NUMBER` rule guarantees a parseable lexeme), but
+/// `compile` is also a public entry point over a hand-built
+/// `GrammarASTNode`, and every other malformed-input case in this file is
+/// rejected explicitly rather than silently coerced, so this one matches
+/// that same discipline (caught by security review).
+fn number_literal_expr(raw_text: &str, span: &Span) -> Result<Expr, String> {
     let text = raw_text.replace('¯', "-");
+    let invalid = || format!("invalid number literal `{raw_text}`");
     if text.contains('.') || text.contains('e') || text.contains('E') {
-        Expr::FloatLit {
-            value: text.parse::<f64>().unwrap_or(0.0),
-            span: span.clone(),
-        }
+        let value = text.parse::<f64>().map_err(|_| invalid())?;
+        Ok(Expr::FloatLit { value, span: span.clone() })
     } else {
         match text.parse::<i64>() {
-            Ok(v) => Expr::IntLit { value: v, span: span.clone() },
-            Err(_) => Expr::FloatLit {
-                value: text.parse::<f64>().unwrap_or(0.0),
-                span: span.clone(),
-            },
+            Ok(v) => Ok(Expr::IntLit { value: v, span: span.clone() }),
+            Err(_) => {
+                let value = text.parse::<f64>().map_err(|_| invalid())?;
+                Ok(Expr::FloatLit { value, span: span.clone() })
+            }
         }
     }
 }
