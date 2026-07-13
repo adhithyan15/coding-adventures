@@ -6,7 +6,7 @@ type: new
 concept_tag: DAYS-01
 est_minutes: 5
 prerequisites: [ES-P0-U04]
-new_vocab: [lunes, martes, miércoles, jueves, viernes, sábado, domingo]
+new_vocab: ["lunes (masc.)", "martes (masc.)", "miércoles (masc.)", "jueves (masc.)", "viernes (masc.)", "sábado (masc.)", "domingo (masc.)"]
 reviews_of: []
 ---
 
@@ -52,6 +52,22 @@ almost all Roman god names hiding in plain sight.
 > Also breaks the pattern: ← Latin *dies Dominica* ("the Lord's day," a
 > Christian reframing of *dies Solis*, "day of the Sun"). Cognate with
 > English *dominion*, *dominant*, and the Spanish honorific *don*.
+
+## Grammar Lens
+
+Every one of today's seven words is masculine — *el lunes*, not *la
+lunes*. This is your first real brush with **grammatical gender**: Spanish
+sorts every noun into masculine or feminine, and that choice isn't about
+biology (a "day" has no sex) — it's a pure grammatical classification that
+then forces the article (*el/la*) and any adjective describing it to match.
+English dropped this almost entirely centuries ago; the only place it
+survives is pronouns (*he/she/it*), and even those track real-world
+sex/animacy, not an arbitrary category. From here on, every new noun in
+this curriculum will carry a gender tag like the one in this unit's
+frontmatter — the *why* and the patterns (most *-o* words are masculine,
+most *-a* words are feminine, with real exceptions) get their own full
+chapter soon. For now: just notice that "masculine" and "feminine" here are
+grammar labels, not meaning anything about the word itself.
 
 ## Guided Practice
 

@@ -1,44 +1,66 @@
 # Spanish Roadmap — Absolute Beginner to B1 in a Year
 
-This is the "uber curriculum": the full year, broken into weekly topic
-clusters. It is a **skeleton** — each week gets a topic, not yet a fully
-scripted set of units. Weeks are authored into `units/` incrementally,
-starting from Week 1 (see [`CHANGELOG.md`](./CHANGELOG.md) for what's
-actually written so far).
+This is the "uber curriculum": the full year, broken into chapter-sized
+topic clusters, organized like a book — **Part → Chapter**. It is a
+**skeleton** — each chapter gets a topic, not yet a fully scripted set of
+units. Chapters are authored into `units/` (practice) and `book/` (the
+publishable LaTeX edition) incrementally, starting from Part 0 (see
+[`CHANGELOG.md`](./CHANGELOG.md) for what's actually written so far).
+
+A note on numbering: internally, every unit's frontmatter still uses
+`phase`/`week` — that's mechanical bookkeeping, unrelated to how this page
+presents the material. Part 0 and Part I both happen to share `phase: 0` in
+the frontmatter (Part 0 is `week: 0`, Part I is `weeks: 1-4`) — that's fine,
+it's invisible outside the raw files. See
+[`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) for the
+full explanation.
 
 Pacing assumption: ~1 new unit/session, ~1-2 sessions/day (there-and-back
-commute), so roughly 5-9 new units/week — comfortably achievable inside a
+commute), so roughly 5-9 new units/chapter — comfortably achievable inside a
 15-25 minute core block per session (see [`session-map.md`](./session-map.md)
-and [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md) for
-the session/review mechanics). Review units aren't separately budgeted here —
-they're generated from the schedule, not hand-authored per week.
+for the session/review mechanics). Review units aren't separately budgeted
+here — they're generated from the schedule, not hand-authored per chapter.
+Roughly one `morphology` unit rides alongside each chapter too, anchored to
+whatever Latin root that chapter's vocabulary already surfaced.
 
-## Phase Overview
+## Part Overview
 
-| Phase | Weeks | Target level | ~New units |
+| Part | Chapters | Target level | ~New units |
 |---|---|---|---|
-| 0 — Foundations | 1-4 | A0 → early A1 | ~35 |
-| 1 — Core grammar & daily life | 5-14 | A1 → A2 | ~80 |
-| 2 — Past tense & scenarios | 15-26 | A2 → early B1 | ~95 |
-| 3 — Future, opinion & nuance | 27-38 | B1 | ~90 |
-| 4 — Consolidation | 39-48 | B1 (solid) | ~70 |
+| 0 — Sounds & Letters | 0 | pre-A0 (no vocabulary yet) | 3 |
+| I — Foundations | 1-4 | A0 → early A1 | ~35 |
+| II — Core Grammar & Daily Life | 5-14 | A1 → A2 | ~80 |
+| III — Past Tense & Everyday Scenarios | 15-26 | A2 → early B1 | ~95 |
+| IV — Future, Opinion & Nuance | 27-38 | B1 | ~90 |
+| V — Consolidation | 39-48 | B1 (solid) | ~70 |
 | Buffer / assessment | 49-52 | — | — |
 
-Total ≈ 370 new-concept units across the year, plus the review/practice-mix
-units the schedule generates around them.
+Total ≈ 370 new-concept units across the year, plus the review/practice-mix/
+morphology units the schedule generates around them.
 
-## Phase 0 — Foundations (Weeks 1-4)
+## Part 0 — Sounds & Letters (Chapter 0)
 
-| Week | Topic |
+| Chapter | Topic |
+|---|---|
+| 0 | The five vowel sounds, consonants that differ from English (ñ/ll/rr/j/silent h), stress & written-accent rules |
+
+For Spanish this is three units, done in one chapter — it reuses the Latin
+alphabet, so there's no new *script* to learn, only new *sounds*. Later
+tracks (Arabic, Hindi, Tamil, Kannada, Telugu, Malayalam) get a much larger
+Part 0 covering an actual new alphabet, letter by letter.
+
+## Part I — Foundations (Chapters 1-4)
+
+| Chapter | Topic |
 |---|---|
 | 1 | Greetings & introductions, subject pronouns, *ser* (identity/origin), numbers 0-10, *estar* (state/location), *ser* vs *estar* contrast, days of the week |
 | 2 | Numbers 11-100, telling time, months & seasons, question words (*qué/dónde/cómo/cuándo/por qué*), survival phrases |
-| 3 | Noun gender & plural, definite/indefinite articles, basic adjectives + agreement, colors, family vocabulary |
-| 4 | *hay* ("there is/are"), *tener* present tense, possessive adjectives, basic negation, **review week** |
+| 3 | **Grammatical gender, to mastery**: the *-o*/*-a* pattern and its exceptions (*el día, la mano, el problema*), definite/indefinite articles, adjective agreement, colors, family vocabulary — the first chapter where gender (already tagged on every noun since Chapter 1) gets its full explicit rule set |
+| 4 | *hay* ("there is/are"), *tener* present tense, possessive adjectives, basic negation, **review chapter** |
 
-## Phase 1 — Core Grammar & Daily Life (Weeks 5-14)
+## Part II — Core Grammar & Daily Life (Chapters 5-14)
 
-| Week | Topic |
+| Chapter | Topic |
 |---|---|
 | 5 | Regular *-ar* verbs, present tense, everyday actions (*hablar, trabajar, estudiar*) |
 | 6 | Regular *-er/-ir* verbs, present tense; irregulars intro (*hacer, salir*) |
@@ -47,13 +69,13 @@ units the schedule generates around them.
 | 9 | *gustar*-type verbs (*me gusta/te gusta*), food & drink vocabulary |
 | 10 | Prepositions of place (*en, sobre, debajo de, cerca de*), household & rooms |
 | 11 | Adjective position, comparatives (*más...que, tan...como*), describing people |
-| 12 | Reflexive verbs intro, daily routine (*despertarse, levantarse, vestirse*) |
+| 12 | Reflexive verbs, daily routine (*despertarse, levantarse, vestirse*) — the full mechanics previewed back in Chapter 1's *me llamo* |
 | 13 | Weather expressions, seasons revisited, clothing vocabulary |
-| 14 | **Review week**: cumulative Phase 1 vocabulary + grammar recombination |
+| 14 | **Review chapter**: cumulative Part II vocabulary + grammar recombination |
 
-## Phase 2 — Past Tense & Everyday Scenarios (Weeks 15-26)
+## Part III — Past Tense & Everyday Scenarios (Chapters 15-26)
 
-| Week | Topic |
+| Chapter | Topic |
 |---|---|
 | 15 | Preterite: regular *-ar* verbs |
 | 16 | Preterite: regular *-er/-ir* verbs |
@@ -66,11 +88,11 @@ units the schedule generates around them.
 | 23 | Travel scenario: airport/hotel vocabulary |
 | 24 | Health & body vocabulary, *"me duele..."* constructions |
 | 25 | Comparatives/superlatives deepened, opinions on past experiences |
-| 26 | **Review week**: Phase 2 cumulative + first "tell a story about your day" practice-mix |
+| 26 | **Review chapter**: Part III cumulative + first "tell a story about your day" practice-mix |
 
-## Phase 3 — Future, Opinion & Nuance (Weeks 27-38)
+## Part IV — Future, Opinion & Nuance (Chapters 27-38)
 
-| Week | Topic |
+| Chapter | Topic |
 |---|---|
 | 27 | Future tense (regular) |
 | 28 | Future tense (irregular stems: *tendré, haré, podré, diré*) |
@@ -80,14 +102,14 @@ units the schedule generates around them.
 | 32 | Subjunctive after emotion (*me alegra que...*) |
 | 33 | Expressing opinions, agreement/disagreement (*creo que, (no) estoy de acuerdo*) |
 | 34 | Register: *tú* vs *usted*, formal requests |
-| 35 | **Etymology deep-dive week**: Arabic-derived vocabulary cluster (*azúcar, aceite, almohada, alcalde*) — bridges toward the future Arabic track |
+| 35 | **Etymology deep-dive chapter**: Arabic-derived vocabulary cluster (*azúcar, aceite, almohada, alcalde*) — bridges toward the future Arabic track |
 | 36 | Idiomatic expressions, cluster 1 |
 | 37 | Connector words for storytelling (*mientras, después de que, aunque*) |
-| 38 | **Review week**: Phase 3 cumulative + first extended-dialogue practice-mix |
+| 38 | **Review chapter**: Part IV cumulative + first extended-dialogue practice-mix |
 
-## Phase 4 — Consolidation (Weeks 39-48)
+## Part V — Consolidation (Chapters 39-48)
 
-| Week | Topic |
+| Chapter | Topic |
 |---|---|
 | 39 | Native-speed listening passage 1 + comprehension recall |
 | 40 | Idiomatic expressions, cluster 2 |
@@ -96,14 +118,14 @@ units the schedule generates around them.
 | 43 | Free-conversation simulation: making plans with a friend |
 | 44 | Free-conversation simulation: at work/school |
 | 45 | Native-speed listening passage 2 + comprehension recall |
-| 46 | Cumulative vocabulary sweep 1 (high-frequency words, all phases) |
+| 46 | Cumulative vocabulary sweep 1 (high-frequency words, all parts) |
 | 47 | Cumulative vocabulary sweep 2 |
 | 48 | Final consolidation: mixed free-conversation practice-mix across all learned scenarios |
 
-## Buffer / Assessment (Weeks 49-52)
+## Buffer / Assessment (Chapters 49-52)
 
-| Week | Topic |
+| Chapter | Topic |
 |---|---|
-| 49-50 | Weak-spot review — learner-directed, revisit whichever phase felt shakiest |
+| 49-50 | Weak-spot review — learner-directed, revisit whichever part felt shakiest |
 | 51 | "Can I hold a conversation" checkpoint — extended unscripted-style dialogue |
 | 52 | Reflection + plan for Year 2 (B1→B2, or start of the second language track) |

@@ -43,6 +43,18 @@ side by side.
 > ← Latin *stant* — cognate with English *stanchion*, *instant* ("standing
 > in/near").
 
+## Grammar Lens
+
+Linguists describe this split as **stative vs. dynamic** — or, in plainer
+terms: *ser* answers "what is this, fundamentally?" and *estar* answers
+"what condition is this in, right now?" English's single "to be" doesn't
+distinguish these at all: "he is tall" and "he is tired" use the identical
+verb, even though one is a lasting trait and the other is a passing state.
+Spanish forces you to pick a lane every single time you use "to be" — there
+is no neutral option. That's the whole reason this gets a dedicated unit:
+it's not a vocabulary problem, it's a grammatical category English simply
+doesn't have.
+
 ## Guided Practice
 
 [PAUSE 1s]

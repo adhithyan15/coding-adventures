@@ -43,6 +43,19 @@ directly).
 **son** — they are, you all are
 > ← Latin *sunt* ("they are").
 
+## Grammar Lens
+
+*Ser* is what's called a **linking verb** (or "copula") — a verb that
+doesn't describe an action, it just connects a subject to a description of
+it: "Ana **is** tall," not "Ana **runs**." English has exactly one linking
+verb doing this job: "to be" (*am, is, are, was, were*). Spanish also uses
+"to be" for this — except Spanish actually has **two** separate verbs
+where English has one: *ser* (this unit) and *estar* (next unit). English
+speakers have to consciously learn to ask "which kind of 'is' is this?" —
+a question that doesn't exist in English at all, because English never
+had to split the two meanings apart. Unit 6 lays out exactly how to tell
+them apart.
+
 ## Guided Practice
 
 [PAUSE 1s] Build these with yesterday's pronouns:

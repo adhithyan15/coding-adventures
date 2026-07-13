@@ -40,6 +40,20 @@ Three minimal pairs, same sentence shape, different verb, different meaning:
 - "**Somos amigos.**" — We are friends (a lasting relationship, *ser*).
 - "**Estamos bien.**" — We are well (a current state, *estar*).
 
+## Grammar Lens
+
+Here's the full payoff of Units 3 and 5: English speakers don't struggle
+with *ser* or *estar* individually — the struggle is that English collapsed
+a real grammatical distinction into one word, so there's no English
+instinct to fall back on. When you're unsure which to use, ask: "am I
+describing what this fundamentally *is* (identity, origin, lasting trait —
+*ser*), or what condition it's *in right now* (location, mood, a state that
+could change — *estar*)?" That question has no equivalent in English
+because English never needed one. This is exactly the kind of thing that
+looks like a vocabulary problem but is actually a grammar problem — no
+amount of memorizing more words fixes it, only internalizing the category
+does.
+
 ## Guided Practice
 
 [PAUSE 1s]

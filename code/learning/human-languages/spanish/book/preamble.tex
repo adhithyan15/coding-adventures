@@ -1,0 +1,69 @@
+% Preamble for "Spanish, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only -- pdflatex will not work, this needs real Unicode/font
+% support that later tracks (Arabic, Devanagari, Dravidian scripts) require.
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{spanish}
+
+% Latin Modern ships with every standard TeX distribution (MiKTeX, TeX
+% Live) as OpenType fonts, so this compiles the same way on any machine --
+% no dependency on whatever system fonts happen to be installed locally.
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\hypersetup{
+  pdftitle={Spanish, Step by Step, Root by Root},
+  pdfauthor={Personal curriculum, coding-adventures/HL00},
+  pdfsubject={Etymology-driven Spanish curriculum},
+  pdfkeywords={Spanish, etymology, Latin, language learning}
+}
+
+% Etymology callout: root chain (Latin -> Spanish -> English cognates).
+\newtcolorbox{etymology}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title=Etymology
+}
+
+% Grammar Lens callout: plain-language grammar concept + English contrast.
+\newtcolorbox{grammarlens}{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title=Grammar Lens
+}
+
+% Morphology spotlight callout: one Latin root, its derivatives.
+\newtcolorbox{morphologybox}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title=Morphology Spotlight
+}
+
+% New-vocabulary table: word, gender (if a noun), translation.
+\newenvironment{vocabtable}{%
+  \begin{longtable}{@{}p{0.28\textwidth}p{0.10\textwidth}p{0.46\textwidth}@{}}
+  \toprule
+  \textbf{Spanish} & \textbf{Gender} & \textbf{English} \\
+  \midrule
+  \endhead
+}{%
+  \bottomrule
+  \end{longtable}
+}
+
+\titleformat{\part}[display]
+  {\normalfont\huge\bfseries}{Part \thepart}{20pt}{\Huge}
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

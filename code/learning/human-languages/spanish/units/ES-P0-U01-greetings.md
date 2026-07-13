@@ -51,6 +51,18 @@ Today you learn how to say hello and introduce yourself in Spanish.
 > English *claim*, *exclaim*, *acclaim*, *clamor*). Spanish uses the
 > reflexive: you're literally saying "I call myself ___."
 
+## Grammar Lens
+
+A quick preview, not a full lesson yet: *me llamo* is built from a
+**reflexive verb** — one where the action bounces back onto the person
+doing it. Literally, *me llamo* is "I call myself," not just "I am named."
+English *can* do this ("I call myself Sam"), but usually doesn't bother —
+we just say "I'm Sam." Spanish, here, grammatically requires the
+bounce-back. You'll get the full mechanics of reflexive verbs in a later
+chapter (daily-routine verbs like "I get myself dressed" work the same
+way) — for now, just notice that *me* is doing real grammatical work, not
+decoration.
+
 ## Guided Practice
 
 [PAUSE 1s] Say each of these out loud before continuing.

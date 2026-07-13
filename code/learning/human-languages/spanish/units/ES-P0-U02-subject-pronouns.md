@@ -49,6 +49,24 @@ can start building full sentences instead of memorized phrases.
 **ellos / ellas** — they (masc./fem.)
 > Etymology: plural of *él/ella* — same *ille/illa* root as above.
 
+## Grammar Lens
+
+A **pronoun** is a word that stands in for a noun so you don't have to keep
+repeating it — "Ana is here, she is happy" instead of "Ana is here, Ana is
+happy." A **subject pronoun** specifically marks *who's doing the action* —
+the "doer" slot of a sentence. English has the same set of words (*I, you,
+he/she, we, they*) doing the same job.
+
+The real difference shows up once you start conjugating verbs (next unit):
+Spanish verb endings already encode *who's* doing the action, so subject
+pronouns are frequently **dropped entirely** — *"Soy Ana"* ("[I] am Ana"),
+no *yo* needed, because *soy* can only mean "I am." English can't do this —
+*"Am Ana"* isn't a sentence — because English verb endings barely change
+by person (*I speak, you speak, she speak-s* — almost no information in
+the ending), so English leans on the pronoun to carry that information
+instead. Linguists call languages that can drop subject pronouns
+**pro-drop** languages; Spanish is one, English isn't.
+
 ## Guided Practice
 
 [PAUSE 1s]
