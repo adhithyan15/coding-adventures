@@ -193,7 +193,7 @@ public struct DartmouthBasicLexer: Sendable {
     ///     dartmouth-basic-lexer/           (2)
     ///     swift/                           (3)
     ///     packages/                        (4)
-    ///     code/                            (5)  → grammars/dartmouth_basic.tokens
+    ///     code/                            (5)  → grammars/dartmouth_basic/dartmouth_basic.tokens
     ///
     /// The `#filePath` directive resolves to the compile-time path of this
     /// source file inside the monorepo. Walking up 5 levels plus the filename
@@ -217,6 +217,7 @@ public struct DartmouthBasicLexer: Sendable {
         }
         let tokensURL = url
             .appendingPathComponent("grammars")
+            .appendingPathComponent("dartmouth_basic")
             .appendingPathComponent("dartmouth_basic.tokens")
 
         let content = try String(contentsOf: tokensURL, encoding: .utf8)

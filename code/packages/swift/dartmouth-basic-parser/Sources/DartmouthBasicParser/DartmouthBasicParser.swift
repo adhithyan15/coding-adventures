@@ -242,7 +242,7 @@ public struct DartmouthBasicParser: Sendable {
     ///     dartmouth-basic-parser/          (2)
     ///     swift/                           (3)
     ///     packages/                        (4)
-    ///     code/                            (5)  → grammars/dartmouth_basic.grammar
+    ///     code/                            (5)  → grammars/dartmouth_basic/dartmouth_basic.grammar
     ///
     /// The `#filePath` directive resolves to the compile-time path of this
     /// source file inside the monorepo. Walking up 6 levels reaches `code/`,
@@ -266,6 +266,7 @@ public struct DartmouthBasicParser: Sendable {
         }
         let grammarURL = url
             .appendingPathComponent("grammars")
+            .appendingPathComponent("dartmouth_basic")
             .appendingPathComponent("dartmouth_basic.grammar")
 
         let content = try String(contentsOf: grammarURL, encoding: .utf8)
