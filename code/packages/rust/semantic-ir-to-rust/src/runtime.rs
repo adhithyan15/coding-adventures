@@ -1472,6 +1472,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     | "take" | "drop" | "values_at"
                     // consecutive-grouping family
                     | "each_slice" | "each_cons" | "chunk_while" | "slice_when"
+                    | "cycle"
             ),
             Value::Map(_) => matches!(
                 name,
@@ -2282,6 +2283,35 @@ pub const RUNTIME: &str = r##"mod __sir {
                         }
                     }
                     seq_lit(slices.into_iter().map(seq_lit).collect())
+                }
+                None => unknown_method(&recv, name),
+            },
+            // `cycle(n) { |x| … }` — iterate the array `n` full passes in order,
+            // yielding each element on every pass; always returns nil.
+            // `[1,2,3].cycle(2)` yields `1,2,3,1,2,3`.  `n <= 0`, a negative
+            // count, an empty receiver, or a nil / non-integer count (Ruby's
+            // block-less Enumerator and infinite no-`n` forms) yields nothing
+            // rather than hanging.  As with `each_slice`, the count is validated
+            // in the `usize` domain so a huge positive `n` that would truncate
+            // to 0 on a 32-bit target is rejected rather than mis-looped.  The
+            // items are snapshotted before iterating so a block that mutates the
+            // receiver sees a stable sequence.
+            "cycle" => match &block {
+                Some(b) => {
+                    let n = match pos.first() {
+                        Some(Value::Int(v)) if *v > 0 => match usize::try_from(*v) {
+                            Ok(n) if n > 0 => n,
+                            _ => return Value::Nil,
+                        },
+                        _ => return Value::Nil,
+                    };
+                    let snapshot = items_rc.borrow().clone();
+                    for _ in 0..n {
+                        for item in &snapshot {
+                            apply_closure(b, vec![item.clone()]);
+                        }
+                    }
+                    Value::Nil
                 }
                 None => unknown_method(&recv, name),
             },
