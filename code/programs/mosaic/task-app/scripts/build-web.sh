@@ -1,31 +1,36 @@
 #!/usr/bin/env bash
 #
-# Assemble the runnable task-app web project into dist/react:
+# Build the task-app web host:
 #   1. build the task-core engine to wasm,
-#   2. emit the React project from the Mosaic package,
-#   3. overlay the web host wiring (our main.tsx) + the wasm runtime.
+#   2. emit the TaskApp React component into the committed host package (host/web/src),
+#   3. copy the wasm runtime (loader + .wasm) into the package.
+#
+# The host itself (package.json, main.tsx, persistence.ts, index.html, …) is a real,
+# committed npm package — this script only refreshes the generated + copied artifacts.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" # the task-app package dir
+WEB="$HERE/host/web"
 RUST="$(cd "$HERE/../../../packages/rust" && pwd)"
 WASM="$RUST/task-wasm"
-OUT="$HERE/dist"
 
 echo "[1/3] Building the engine to wasm..."
 bash "$WASM/build-wasm.sh"
 
-echo "[2/3] Emitting the React project..."
+echo "[2/3] Emitting the TaskApp component into the web host..."
+# `mosaic-compile pkg` emits into <output>/react/, so emit to a scratch dir and
+# copy just the component file into the host's src (main.tsx imports ./TaskApp).
+mkdir -p "$WEB/src" "$WEB/public"
+EMIT="$WEB/.emit"
+rm -rf "$EMIT"
 ( cd "$RUST" && cargo run -q -p mosaic-compile -- pkg "$HERE" \
-    --backend react --output "$OUT" --emit-project )
+    --backend react --output "$EMIT" )
+cp "$EMIT/react/TaskApp.tsx" "$WEB/src/TaskApp.tsx"
+rm -rf "$EMIT"
 
-echo "[3/3] Overlaying host wiring + wasm runtime..."
-RS="$OUT/react/src"
-RP="$OUT/react/public"
-mkdir -p "$RP"
-cp "$HERE/host/web/main.tsx"          "$RS/main.tsx"          # replaces the generated shell
-cp "$HERE/host/web/task-engine.d.ts"  "$RS/task-engine.d.ts"
-cp "$WASM/js/task-engine.mjs"         "$RS/task-engine.mjs"
-cp "$WASM/pkg/task_engine.wasm"       "$RP/task_engine.wasm"
+echo "[3/3] Copying the wasm runtime..."
+cp "$WASM/js/task-engine.mjs"   "$WEB/src/task-engine.mjs"
+cp "$WASM/pkg/task_engine.wasm" "$WEB/public/task_engine.wasm"
 
 echo ""
-echo "Ready. Run:  cd '$OUT/react' && npm install && npm run dev   (http://localhost:5173)"
+echo "Ready. Run:  cd '$WEB' && npm install && npm run dev   (http://localhost:5173)"
