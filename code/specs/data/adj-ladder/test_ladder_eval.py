@@ -187,6 +187,7 @@ SELF_CONTAINED_RUNGS = (
     "rung147_loaded_rate",
     "rung148_net_yield_rate",
     "rung149_combined_density",
+    "rung150_net_density",
 )
 
 
