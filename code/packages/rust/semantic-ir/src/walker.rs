@@ -15,10 +15,24 @@
 //!   outside; useful when you want to compose two visitors over the
 //!   same tree.
 
+use crate::limits::MAX_IR_DEPTH;
 use crate::nodes::*;
 
 /// A read-only visitor.  Implement only the methods you care about;
 /// the defaults walk children automatically.
+///
+/// `visit_block`/`visit_stmt`/`visit_expr` carry an explicit `depth`
+/// counter: `Block`/`Stmt`/`Expr` are mutually self-nesting (an `Expr`
+/// can contain a `Block`, which contains `Stmt`s and an `Expr`, and so
+/// on), so without a depth cap a pathologically deep tree could
+/// recurse until it overflows the host stack — an uncatchable process
+/// abort, not a normal Rust panic. The `walk_*_default` free functions
+/// bound that recursion at [`crate::limits::MAX_IR_DEPTH`] by silently
+/// truncating (matching `validator.rs`/`backend.rs`/`text::printer`'s
+/// own depth guards): `Visitor` has no error-reporting channel of its
+/// own, so — like `backend.rs`'s `walk_intrinsics_in_expr` — its job
+/// is just "don't panic"; a validator pass is the right place to flag
+/// pathologic nesting as a diagnostic.
 ///
 /// Example — count `BuiltinCall` nodes:
 /// ```
@@ -26,11 +40,11 @@ use crate::nodes::*;
 ///
 /// struct CountBuiltins(usize);
 /// impl Visitor for CountBuiltins {
-///     fn visit_expr(&mut self, e: &Expr) {
+///     fn visit_expr(&mut self, e: &Expr, depth: usize) {
 ///         if let Expr::BuiltinCall { .. } = e {
 ///             self.0 += 1;
 ///         }
-///         semantic_ir::walker::walk_expr_default(self, e);
+///         semantic_ir::walker::walk_expr_default(self, e, depth);
 ///     }
 /// }
 ///
@@ -54,16 +68,16 @@ pub trait Visitor: Sized {
 
     fn visit_global(&mut self, _g: &Global) {}
 
-    fn visit_block(&mut self, b: &Block) {
-        walk_block_default(self, b);
+    fn visit_block(&mut self, b: &Block, depth: usize) {
+        walk_block_default(self, b, depth);
     }
 
-    fn visit_stmt(&mut self, s: &Stmt) {
-        walk_stmt_default(self, s);
+    fn visit_stmt(&mut self, s: &Stmt, depth: usize) {
+        walk_stmt_default(self, s, depth);
     }
 
-    fn visit_expr(&mut self, e: &Expr) {
-        walk_expr_default(self, e);
+    fn visit_expr(&mut self, e: &Expr, depth: usize) {
+        walk_expr_default(self, e, depth);
     }
 }
 
@@ -81,33 +95,51 @@ pub fn walk_module_default<V: Visitor>(v: &mut V, m: &Module) {
 /// expression (if any) and then the body block.  Visiting defaults
 /// before the body keeps source-ish order (`def f(a = <expr>) …`) and
 /// ensures passes that walk the IR observe the default expressions.
+///
+/// This is the entry point into the depth-counted `Block`/`Stmt`/`Expr`
+/// walk, so it starts the count at `0`.
 pub fn walk_function_default<V: Visitor>(v: &mut V, f: &Function) {
     for p in &f.params {
         if let Some(default) = &p.default {
-            v.visit_expr(default);
+            v.visit_expr(default, 0);
         }
     }
-    v.visit_block(&f.body);
+    v.visit_block(&f.body, 0);
 }
 
-/// Default walk for a block: visits each statement then the value expression.
-pub fn walk_block_default<V: Visitor>(v: &mut V, b: &Block) {
-    for s in &b.stmts {
-        v.visit_stmt(s);
+/// Default walk for a block: visits each statement then the value
+/// expression.
+///
+/// Depth-bounded by [`crate::limits::MAX_IR_DEPTH`]: once `depth`
+/// reaches the cap this returns immediately without visiting the
+/// block's contents, so a pathologically deep `Block`/`Stmt`/`Expr`
+/// tree can't recurse the host stack into overflow. Silent
+/// truncation, no error reported — see the [`Visitor`] docs.
+pub fn walk_block_default<V: Visitor>(v: &mut V, b: &Block, depth: usize) {
+    if depth >= MAX_IR_DEPTH {
+        return;
     }
-    v.visit_expr(&b.value);
+    for s in &b.stmts {
+        v.visit_stmt(s, depth + 1);
+    }
+    v.visit_expr(&b.value, depth + 1);
 }
 
 /// Default walk for a statement.
-pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
+///
+/// Depth-bounded the same way as [`walk_block_default`]; see its docs.
+pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt, depth: usize) {
+    if depth >= MAX_IR_DEPTH {
+        return;
+    }
     match s {
-        Stmt::LetBinding { value, .. } => v.visit_expr(value),
-        Stmt::LetStarBinding { value, .. } => v.visit_expr(value),
-        Stmt::ExprStmt { expr, .. } => v.visit_expr(expr),
-        Stmt::Assign { value, .. } => v.visit_expr(value),
+        Stmt::LetBinding { value, .. } => v.visit_expr(value, depth + 1),
+        Stmt::LetStarBinding { value, .. } => v.visit_expr(value, depth + 1),
+        Stmt::ExprStmt { expr, .. } => v.visit_expr(expr, depth + 1),
+        Stmt::Assign { value, .. } => v.visit_expr(value, depth + 1),
         Stmt::While { cond, body, .. } => {
-            v.visit_expr(cond);
-            v.visit_block(body);
+            v.visit_expr(cond, depth + 1);
+            v.visit_block(body, depth + 1);
         }
         Stmt::ForRange {
             start,
@@ -116,28 +148,28 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             body,
             ..
         } => {
-            v.visit_expr(start);
-            v.visit_expr(stop);
-            v.visit_expr(step);
-            v.visit_block(body);
+            v.visit_expr(start, depth + 1);
+            v.visit_expr(stop, depth + 1);
+            v.visit_expr(step, depth + 1);
+            v.visit_block(body, depth + 1);
         }
         Stmt::ForEach { iter, body, .. } => {
-            v.visit_expr(iter);
-            v.visit_block(body);
+            v.visit_expr(iter, depth + 1);
+            v.visit_block(body, depth + 1);
         }
         Stmt::SeqSet {
             seq, index, value, ..
         } => {
-            v.visit_expr(seq);
-            v.visit_expr(index);
-            v.visit_expr(value);
+            v.visit_expr(seq, depth + 1);
+            v.visit_expr(index, depth + 1);
+            v.visit_expr(value, depth + 1);
         }
         Stmt::MapSet {
             map, key, value, ..
         } => {
-            v.visit_expr(map);
-            v.visit_expr(key);
-            v.visit_expr(value);
+            v.visit_expr(map, depth + 1);
+            v.visit_expr(key, depth + 1);
+            v.visit_expr(value, depth + 1);
         }
         Stmt::ClassDef { body, .. } => {
             // Class body is a list of statements; recurse so visitors
@@ -145,20 +177,20 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             // empty body for `class Foo; end`, but later phases will
             // populate it; the walker is forward-compatible.
             for stmt in body {
-                v.visit_stmt(stmt);
+                v.visit_stmt(stmt, depth + 1);
             }
         }
         Stmt::ModuleDef { body, .. } => {
             // Module body is a list of statements — same recursion as
             // ClassDef (Ruby Phase 14d).
             for stmt in body {
-                v.visit_stmt(stmt);
+                v.visit_stmt(stmt, depth + 1);
             }
         }
         Stmt::SingletonClassDef { body, .. } => {
             // Singleton-class body — same recursion (Ruby Phase 14e).
             for stmt in body {
-                v.visit_stmt(stmt);
+                v.visit_stmt(stmt, depth + 1);
             }
         }
         Stmt::TryCatch {
@@ -171,16 +203,16 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             // body, each rescue clause's body, and the optional ensure
             // body, so visitors see every nested statement.
             for stmt in body {
-                v.visit_stmt(stmt);
+                v.visit_stmt(stmt, depth + 1);
             }
             for r in rescues {
                 for stmt in &r.body {
-                    v.visit_stmt(stmt);
+                    v.visit_stmt(stmt, depth + 1);
                 }
             }
             if let Some(ens) = ensure_body {
                 for stmt in ens {
-                    v.visit_stmt(stmt);
+                    v.visit_stmt(stmt, depth + 1);
                 }
             }
         }
@@ -193,9 +225,9 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             // SIR22: `target[indices...] = value`. Recurse into the
             // target, every index-arg subexpression, and the value —
             // same shape as SeqSet/MapSet above.
-            v.visit_expr(target);
-            walk_index_args(v, indices);
-            v.visit_expr(value);
+            v.visit_expr(target, depth + 1);
+            walk_index_args(v, indices, depth + 1);
+            v.visit_expr(value, depth + 1);
         }
     }
 }
@@ -206,18 +238,33 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
 /// [`walk_stmt_default`] (for `Stmt::IndexSet`) and
 /// [`walk_expr_default`] (for `Expr::IndexGet`) so the two index-arg
 /// walks can't drift apart.
-fn walk_index_args<V: Visitor>(v: &mut V, indices: &[IndexArg]) {
+///
+/// `depth` is passed through **unchanged** to the nested
+/// `visit_expr` calls, not incremented again: index args are siblings
+/// of the target/value at the same nesting level, not one level
+/// deeper — the caller (`walk_stmt_default`/`walk_expr_default`) has
+/// already applied `depth + 1` before calling in here, mirroring
+/// `backend.rs`'s `walk_intrinsics_in_index_args`. No guard check of
+/// its own: this helper never recurses back into `Block`/`Stmt`, so it
+/// can't itself grow the call stack — the depth check on the
+/// `visit_expr` calls it makes is enough.
+fn walk_index_args<V: Visitor>(v: &mut V, indices: &[IndexArg], depth: usize) {
     for arg in indices {
         match arg {
-            IndexArg::Scalar(e) => v.visit_expr(e),
+            IndexArg::Scalar(e) => v.visit_expr(e, depth),
             IndexArg::Whole => {}
-            IndexArg::Range(e) => v.visit_expr(e),
+            IndexArg::Range(e) => v.visit_expr(e, depth),
         }
     }
 }
 
 /// Default walk for an expression — recurses into every sub-expression.
-pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
+///
+/// Depth-bounded the same way as [`walk_block_default`]; see its docs.
+pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr, depth: usize) {
+    if depth >= MAX_IR_DEPTH {
+        return;
+    }
     match e {
         // Atoms and references have no children.
         Expr::IntLit { .. }
@@ -233,43 +280,43 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
             else_branch,
             ..
         } => {
-            v.visit_expr(cond);
-            v.visit_block(then_branch);
-            v.visit_block(else_branch);
+            v.visit_expr(cond, depth + 1);
+            v.visit_block(then_branch, depth + 1);
+            v.visit_block(else_branch, depth + 1);
         }
 
         Expr::Block(b) => {
-            v.visit_block(b);
+            v.visit_block(b, depth + 1);
         }
 
         Expr::DirectCall { args, .. } => {
             for a in args {
-                v.visit_expr(a);
+                v.visit_expr(a, depth + 1);
             }
         }
 
         Expr::IndirectCall { target, args, .. } => {
-            v.visit_expr(target);
+            v.visit_expr(target, depth + 1);
             for a in args {
-                v.visit_expr(a);
+                v.visit_expr(a, depth + 1);
             }
         }
 
         Expr::BuiltinCall { args, .. } => {
             for a in args {
-                v.visit_expr(a);
+                v.visit_expr(a, depth + 1);
             }
         }
 
         Expr::MakeClosure { captures, .. } => {
             for c in captures {
-                v.visit_expr(&c.value);
+                v.visit_expr(&c.value, depth + 1);
             }
         }
 
         Expr::Intrinsic { args, .. } => {
             for a in args {
-                v.visit_expr(a);
+                v.visit_expr(a, depth + 1);
             }
         }
 
@@ -277,34 +324,34 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
         Expr::FloatLit { .. } => {}
         Expr::SeqLit { items, .. } => {
             for i in items {
-                v.visit_expr(i);
+                v.visit_expr(i, depth + 1);
             }
         }
         Expr::SeqIndex { seq, index, .. } => {
-            v.visit_expr(seq);
-            v.visit_expr(index);
+            v.visit_expr(seq, depth + 1);
+            v.visit_expr(index, depth + 1);
         }
         Expr::SeqLen { seq, .. } => {
-            v.visit_expr(seq);
+            v.visit_expr(seq, depth + 1);
         }
         Expr::MapLit { entries, .. } => {
             for entry in entries {
-                v.visit_expr(&entry.key);
-                v.visit_expr(&entry.value);
+                v.visit_expr(&entry.key, depth + 1);
+                v.visit_expr(&entry.value, depth + 1);
             }
         }
         Expr::MapGet { map, key, .. } => {
-            v.visit_expr(map);
-            v.visit_expr(key);
+            v.visit_expr(map, depth + 1);
+            v.visit_expr(key, depth + 1);
         }
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
-            v.visit_expr(lhs);
-            v.visit_expr(rhs);
+            v.visit_expr(lhs, depth + 1);
+            v.visit_expr(rhs, depth + 1);
         }
         // ── SIR18: string interpolation ────────────────────────────
         Expr::StrConcat { parts, .. } => {
             for p in parts {
-                v.visit_expr(p);
+                v.visit_expr(p, depth + 1);
             }
         }
         // ── KW1: keyword argument ──────────────────────────────────
@@ -314,109 +361,109 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
         // rest of the walk: the same `visit_expr` dispatch that guards
         // every other child applies here — we add no bypass.
         Expr::KeywordArg { value, .. } => {
-            v.visit_expr(value);
+            v.visit_expr(value, depth + 1);
         }
 
         // ── SIR22: array/matrix nodes ───────────────────────────────
         Expr::ArrayLit { rows, .. } => {
             for row in rows {
                 for item in row {
-                    v.visit_expr(item);
+                    v.visit_expr(item, depth + 1);
                 }
             }
         }
         Expr::Range {
             start, step, stop, ..
         } => {
-            v.visit_expr(start);
+            v.visit_expr(start, depth + 1);
             if let Some(step) = step {
-                v.visit_expr(step);
+                v.visit_expr(step, depth + 1);
             }
-            v.visit_expr(stop);
+            v.visit_expr(stop, depth + 1);
         }
         Expr::MatMul { lhs, rhs, .. } => {
-            v.visit_expr(lhs);
-            v.visit_expr(rhs);
+            v.visit_expr(lhs, depth + 1);
+            v.visit_expr(rhs, depth + 1);
         }
         Expr::ElementwiseOp { lhs, rhs, .. } => {
-            v.visit_expr(lhs);
-            v.visit_expr(rhs);
+            v.visit_expr(lhs, depth + 1);
+            v.visit_expr(rhs, depth + 1);
         }
         Expr::Transpose { target, .. } => {
-            v.visit_expr(target);
+            v.visit_expr(target, depth + 1);
         }
         Expr::IndexGet {
             target, indices, ..
         } => {
-            v.visit_expr(target);
-            walk_index_args(v, indices);
+            v.visit_expr(target, depth + 1);
+            walk_index_args(v, indices, depth + 1);
         }
 
         // ── SIR22 addendum: APL primitive operators ─────────────────
         Expr::Reduce { target, .. } => {
-            v.visit_expr(target);
+            v.visit_expr(target, depth + 1);
         }
         Expr::Scan { target, .. } => {
-            v.visit_expr(target);
+            v.visit_expr(target, depth + 1);
         }
         Expr::OuterProduct { lhs, rhs, .. } => {
-            v.visit_expr(lhs);
-            v.visit_expr(rhs);
+            v.visit_expr(lhs, depth + 1);
+            v.visit_expr(rhs, depth + 1);
         }
         Expr::Shape { target, .. } => {
-            v.visit_expr(target);
+            v.visit_expr(target, depth + 1);
         }
         Expr::Reshape { shape, target, .. } => {
-            v.visit_expr(shape);
-            v.visit_expr(target);
+            v.visit_expr(shape, depth + 1);
+            v.visit_expr(target, depth + 1);
         }
         Expr::IndexGenerator { count, .. } => {
-            v.visit_expr(count);
+            v.visit_expr(count, depth + 1);
         }
         Expr::IndexOf {
             haystack, needle, ..
         } => {
-            v.visit_expr(haystack);
-            v.visit_expr(needle);
+            v.visit_expr(haystack, depth + 1);
+            v.visit_expr(needle, depth + 1);
         }
         Expr::Ravel { target, .. } => {
-            v.visit_expr(target);
+            v.visit_expr(target, depth + 1);
         }
         Expr::Catenate { lhs, rhs, .. } => {
-            v.visit_expr(lhs);
-            v.visit_expr(rhs);
+            v.visit_expr(lhs, depth + 1);
+            v.visit_expr(rhs, depth + 1);
         }
 
         // ── SIR26 ──────────────────────────────────────────────────
         Expr::Convert { value, .. } => {
-            v.visit_expr(value);
+            v.visit_expr(value, depth + 1);
         }
 
         // ── SIR23: symbolic expression + pattern/rewrite nodes ──────
         Expr::SymSymbol { .. } => {}
         Expr::SymRational { .. } => {}
         Expr::SymApply { head, args, .. } => {
-            v.visit_expr(head);
+            v.visit_expr(head, depth + 1);
             for a in args {
-                v.visit_expr(a);
+                v.visit_expr(a, depth + 1);
             }
         }
         Expr::SymPatternBlank { head, .. } => {
             if let Some(h) = head {
-                v.visit_expr(h);
+                v.visit_expr(h, depth + 1);
             }
         }
         Expr::SymPatternNamed { pattern, .. } => {
-            v.visit_expr(pattern);
+            v.visit_expr(pattern, depth + 1);
         }
         Expr::SymRule { lhs, rhs, .. } => {
-            v.visit_expr(lhs);
-            v.visit_expr(rhs);
+            v.visit_expr(lhs, depth + 1);
+            v.visit_expr(rhs, depth + 1);
         }
         Expr::SymReplaceAll { expr, rules, .. } => {
-            v.visit_expr(expr);
+            v.visit_expr(expr, depth + 1);
             for r in rules {
-                v.visit_expr(r);
+                v.visit_expr(r, depth + 1);
             }
         }
     }
@@ -440,13 +487,13 @@ mod tests {
     }
 
     impl Visitor for Counter {
-        fn visit_expr(&mut self, e: &Expr) {
+        fn visit_expr(&mut self, e: &Expr, depth: usize) {
             match e {
                 Expr::BuiltinCall { .. } => self.builtins += 1,
                 Expr::IntLit { .. } => self.ints += 1,
                 _ => {}
             }
-            walk_expr_default(self, e);
+            walk_expr_default(self, e, depth);
         }
     }
 
@@ -1350,5 +1397,143 @@ mod tests {
         };
         c2.visit_module(&m2);
         assert_eq!(c2.ints, 0);
+    }
+
+    // ── MAX_IR_DEPTH guard tests ─────────────────────────────────────
+    //
+    // `walk_block_default`/`walk_stmt_default`/`walk_expr_default` are
+    // mutually recursive across `Block`/`Stmt`/`Expr`, so a
+    // pathologically deep tree (attacker-controlled or accidental) has
+    // to be capped or it can overflow the host stack — an uncatchable
+    // process abort, not a `Result::Err`. These tests build such a
+    // tree directly (bypassing any frontend) to exercise the walker's
+    // own guard in isolation.
+
+    /// Build a chain of `depth` nested `Expr::Block`s wrapping a single
+    /// `IntLit` at the bottom.
+    ///
+    /// `Expr::Block(Box<Block>)` is the mechanically simplest
+    /// self-nesting shape this IR offers: each level is exactly one
+    /// `Expr` wrapping one `Block` wrapping one child `Expr`, so a
+    /// plain loop can build it without any recursion of its own
+    /// (unlike e.g. nested `Expr::If`, which would need two child
+    /// `Block`s constructed per level for no added value here — one
+    /// self-nesting child per level is enough to drive the depth
+    /// counter through both `walk_block_default` and
+    /// `walk_expr_default`).
+    ///
+    /// Built iteratively (not recursively) so constructing the fixture
+    /// itself never risks overflowing the *test* thread's stack — only
+    /// the walk under test is meant to be at risk of that, which is
+    /// exactly what these tests check.
+    fn build_deep_block_chain(depth: usize) -> Expr {
+        let mut e = Expr::IntLit {
+            value: 0,
+            span: s(),
+        };
+        for _ in 0..depth {
+            e = Expr::Block(Box::new(Block {
+                stmts: vec![],
+                value: e,
+                span: s(),
+            }));
+        }
+        e
+    }
+
+    /// A `Visitor` that does nothing but use the trait's own defaults —
+    /// i.e. it exercises `walk_expr_default`/`walk_block_default`
+    /// end-to-end with no overrides at all.
+    struct NoOp;
+    impl Visitor for NoOp {}
+
+    #[test]
+    fn deep_expr_tree_does_not_crash_default_visitor() {
+        // Depth guard aside, a several-thousand-level `Box<Expr>` chain
+        // also has a compiler-generated *recursive* `Drop` impl (each
+        // `Box<Expr>` drop calls into the `Box<Block>` it owns, which
+        // calls into the next `Box<Expr>`, ...) that this file's own
+        // guard has no say over. We run on a dedicated thread with a
+        // generous stack — the same pattern `validator.rs`'s
+        // `depth_overflow_is_reported_not_panicked` test uses — and
+        // leak the tree afterwards to skip that recursive teardown
+        // entirely, so this test is purely about the walk itself.
+        let handle = std::thread::Builder::new()
+            .stack_size(64 * 1024 * 1024)
+            .name("deep-walker-no-crash".into())
+            .spawn(|| {
+                let deep = build_deep_block_chain(5_000);
+                let mut v = NoOp;
+                v.visit_expr(&deep, 0);
+                Box::leak(Box::new(deep));
+            })
+            .expect("spawn test thread");
+        handle
+            .join()
+            .expect("walking a 5,000-deep Expr tree must not panic/abort");
+    }
+
+    #[test]
+    fn deep_expr_tree_walk_is_truncated_at_max_ir_depth() {
+        // Prove the guard is load-bearing: a `Visitor` that counts
+        // every `Expr` node it visits, walked over a tree far deeper
+        // than `MAX_IR_DEPTH`, must see a bounded number of nodes —
+        // not the full input depth.
+        struct DepthCounter(usize);
+        impl Visitor for DepthCounter {
+            fn visit_expr(&mut self, e: &Expr, depth: usize) {
+                self.0 += 1;
+                walk_expr_default(self, e, depth);
+            }
+        }
+
+        let handle = std::thread::Builder::new()
+            .stack_size(64 * 1024 * 1024)
+            .name("deep-walker-truncation".into())
+            .spawn(|| {
+                let deep = build_deep_block_chain(MAX_IR_DEPTH + 500);
+                let mut v = DepthCounter(0);
+                v.visit_expr(&deep, 0);
+                let visited = v.0;
+                Box::leak(Box::new(deep));
+                visited
+            })
+            .expect("spawn test thread");
+        let visited = handle.join().expect("walk must not panic/abort");
+
+        // Work out the exact expected count. Each level of this
+        // `Expr::Block` chain costs *two* units of depth budget, not
+        // one: `walk_expr_default` sees `Expr::Block(b)` and calls
+        // `v.visit_block(b, depth + 1)`, and `walk_block_default` then
+        // calls `v.visit_expr(&b.value, depth + 1)` again — so the
+        // `Expr` at chain level `k` is visited with
+        // `depth == 2 * k`. `DepthCounter::visit_expr` increments the
+        // counter unconditionally before delegating to
+        // `walk_expr_default`, so level `k` is always counted once it
+        // is reached; `walk_expr_default`'s own guard
+        // (`depth >= MAX_IR_DEPTH`) is what stops the chain from being
+        // *expanded* any further, i.e. it prevents level `k + 1` from
+        // ever being reached (and hence counted) once
+        // `2 * k >= MAX_IR_DEPTH`.
+        //
+        // Levels 0..=(MAX_IR_DEPTH / 2) all get reached and counted
+        // (integer division floors, which matches this recursion
+        // exactly regardless of whether MAX_IR_DEPTH is even or odd —
+        // verified by hand for MAX_IR_DEPTH in {1, 2, 3, 4, 5}), so the
+        // total is `MAX_IR_DEPTH / 2 + 1` — well under the
+        // `MAX_IR_DEPTH + 500` levels actually present in the input
+        // tree, proving the walk was truncated rather than exhausting
+        // the tree.
+        let expected = MAX_IR_DEPTH / 2 + 1;
+        assert_eq!(
+            visited, expected,
+            "expected the walk to be truncated at {expected} visited nodes \
+             (MAX_IR_DEPTH / 2 + 1), got {visited}"
+        );
+        assert!(
+            visited < MAX_IR_DEPTH + 500,
+            "walk should not have reached the full {}-level input tree",
+            MAX_IR_DEPTH + 500
+        );
     }
 }
