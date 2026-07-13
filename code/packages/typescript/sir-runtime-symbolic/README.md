@@ -40,6 +40,14 @@ things neither sibling provides:
    that gap forward — see the module doc comment in `src/index.ts` for why
    the re-exported matcher primitives *don't* need the same treatment.
 
+Also re-exported unchanged from `symbolic-ir`: the leaf-term constructors
+`sym`, `int`, `rational`, `numberNode`, `stringNode`. A compiled
+`SymSymbol`/`SymRational` node — or a bare `IntLit`/`FloatLit`/`StrLit`
+appearing as a child of a `SymApply`/`SymRule`/`SymReplaceAll` (SIR23
+"reuses [those] directly" rather than defining new leaf node kinds) — has
+nowhere else to become a real `IRNode` at the single `__SirSym` import
+site emitted code uses; a bare host number/string is never a valid term.
+
 ## How emitted code uses it
 
 ```ts
@@ -48,14 +56,14 @@ import * as __SirSym from "@coding-adventures/sir-runtime-symbolic";
 // x_ + 0 -> x_   (a rule compiled from Wolfram `x_ + 0 -> x_`)
 const xPat = __SirSym.named("x", __SirSym.blank());
 const dropAddZero = __SirSym.rule(
-  __SirSym.apply(ADD, [xPat, int(0)]),
+  __SirSym.apply(__SirSym.sym("Add"), [xPat, __SirSym.int(0)]),
   xPat,
 );
 
-const result = __SirSym.replaceAll(expr, [dropAddZero]);
-if (__SirSym.isDepthLimitError(result)) {
-  throw new Error(`expression too deep: exceeds ${result.maxDepth} levels`);
-}
+// replaceAll/replaceRepeated can return a DepthLimitError/RewriteCycleError
+// sentinel instead of a real term; `unwrap` throws on either rather than
+// letting the sentinel silently masquerade as an IRNode.
+const result = __SirSym.unwrap(__SirSym.replaceAll(expr, [dropAddZero]));
 ```
 
 ## Current scope: matching and substitution only, no evaluator

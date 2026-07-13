@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { ADD, app, int, sym } from "@coding-adventures/symbolic-ir";
+import {
+  ADD,
+  app,
+  int as sourceInt,
+  numberNode as sourceNumberNode,
+  rational as sourceRational,
+  stringNode as sourceStringNode,
+  sym as sourceSym,
+} from "@coding-adventures/symbolic-ir";
 import {
   Bindings,
   DepthLimitError,
@@ -8,15 +16,21 @@ import {
   apply,
   applyRule,
   blank,
+  int,
   isDepthLimitError,
   isRewriteCycleError,
   matchPattern,
   named,
+  numberNode,
+  rational,
   replaceAll,
   replaceRepeated,
   rule,
   ruleDelayed,
+  stringNode,
   substitute,
+  sym,
+  unwrap,
 } from "../src/index";
 
 // Reusable "x_ + 0 -> x_" identity-elimination rule, the running example in
@@ -184,5 +198,65 @@ describe("rule vs ruleDelayed", () => {
     expect(applyRule(eager, target)).toEqual(applyRule(delayed, target));
     expect(replaceAll(target, [eager])).toEqual(replaceAll(target, [delayed]));
     expect(replaceRepeated(target, [eager], 10)).toEqual(replaceRepeated(target, [delayed], 10));
+  });
+});
+
+describe("re-exported leaf-term constructors", () => {
+  // These exist so a compiled `SymSymbol`/`SymRational` node — or a bare
+  // `IntLit`/`FloatLit`/`StrLit` appearing as a child of a `SymApply`/
+  // `SymRule`/`SymReplaceAll` — has somewhere to get wrapped into a real
+  // `IRNode` at the single `__SirSym` import site a generated module uses;
+  // see the SIR23 codegen in `semantic-ir-to-typescript`.
+  it("sym/int/rational/numberNode/stringNode produce the same nodes as symbolic-ir's own constructors", () => {
+    expect(sym("z")).toEqual(sourceSym("z"));
+    expect(int(5)).toEqual(sourceInt(5));
+    expect(rational(1, 3)).toEqual(sourceRational(1, 3));
+    expect(numberNode(1.5)).toEqual(sourceNumberNode(1.5));
+    expect(stringNode("hi")).toEqual(sourceStringNode("hi"));
+  });
+
+  it("rational reduces exactly as symbolic-ir's own rational() does", () => {
+    // 2/4 should reduce to 1/2, proving this is genuinely symbolic-ir's
+    // rational() and not a naive pass-through.
+    expect(rational(2, 4)).toEqual(rational(1, 2));
+  });
+
+  it("a leaf constructor round-trips through apply() as a SymApply arg", () => {
+    const expr = apply(sym("f"), [int(2), rational(1, 3), stringNode("x")]);
+    expect(expr).toEqual(app(sourceSym("f"), [sourceInt(2), sourceRational(1, 3), sourceStringNode("x")]));
+  });
+});
+
+describe("unwrap", () => {
+  it("returns the IRNode unchanged on a successful replaceAll/replaceRepeated", () => {
+    const expr = app(ADD, [sym("z"), int(0)]);
+    expect(unwrap(replaceAll(expr, [dropAddZero]))).toEqual(sym("z"));
+    expect(unwrap(replaceRepeated(expr, [dropAddZero], 10))).toEqual(sym("z"));
+  });
+
+  it("throws on a DepthLimitError instead of handing back the sentinel", () => {
+    const f = sym("f");
+    let node: ReturnType<typeof app> | ReturnType<typeof sym> = sym("leaf");
+    for (let i = 0; i < MAX_TERM_DEPTH * 4; i += 1) {
+      node = app(f, [node]);
+    }
+    const result = replaceAll(node, []);
+    expect(isDepthLimitError(result)).toBe(true);
+    expect(() => unwrap(result)).toThrow(/depth-limit/);
+  });
+
+  it("throws on a RewriteCycleError instead of handing back the sentinel", () => {
+    const f = sym("f");
+    const neverConverges = rule(app(f, [xPat]), app(f, [app(f, [xPat])]));
+    const result = replaceRepeated(app(f, [sym("a")]), [neverConverges], 50);
+    expect(isRewriteCycleError(result)).toBe(true);
+    expect(() => unwrap(result)).toThrow(/rewrite-cycle/);
+  });
+
+  it("never mistakes an ordinary IRNode for an error sentinel", () => {
+    // int(5) is a plain data object; unwrap must not misfire on it just
+    // because it happens to be an object.
+    expect(unwrap(int(5))).toEqual(int(5));
+    expect(unwrap(sym("z"))).toEqual(sym("z"));
   });
 });
