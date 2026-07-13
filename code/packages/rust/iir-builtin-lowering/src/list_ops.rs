@@ -65,6 +65,20 @@
 //! others is the call-site `nil` seed (`const 0 : ref<LispyPair>`, the sentinel
 //! the `list` desugar emits) — the recursion reuses `null?`/`car`/`cdr`/`cons`.
 //!
+//! `assoc` → a recursive `__dyn_list_assoc` searching an **association list**
+//! (a list of `(k . v)` cons pairs) for a key:
+//!
+//! ```text
+//!   assoc(key, alist) = if null?(alist) then nil
+//!                       else if key == car(car(alist)) then car(alist)
+//!                       else assoc(key, cdr(alist))
+//! ```
+//!
+//! The key comparison must yield a raw machine bool for `jmp_if_false`; since
+//! `equal?` lowers unevenly across the managed/runtime paths, V1 `assoc` **unboxes
+//! both keys to `i64` and compares with typed `cmp_eq`** (the `list-ref` index
+//! technique), so V1 keys are **integers** — symbol keys arrive with E6d-4.
+//!
 //! ### The lisp boundary is uniform-anyref — the index is boxed too
 //!
 //! `length` *returns* a number, so both arms return a boxed `ref<any>` — a
@@ -106,6 +120,8 @@ const LISTREF_HELPER: &str = "__dyn_list_ref";
 const APPEND_HELPER: &str = "__dyn_list_append";
 /// The synthesized tail-recursive reverse (accumulator) helper's function name.
 const REVERSE_HELPER: &str = "__dyn_list_reverse";
+/// The synthesized recursive assoc (association-list search) helper's name.
+const ASSOC_HELPER: &str = "__dyn_list_assoc";
 /// The nil-sentinel `const` type hint (`const 0 : ref<LispyPair>`) — the exact
 /// form `desugar_list_in_function`/`make_nil` emit for the empty list. `reverse`
 /// seeds its accumulator with one.
@@ -120,6 +136,7 @@ pub fn lower_list_ops(module: &mut IIRModule) {
     lower_list_ref(module);
     lower_append(module);
     lower_reverse(module);
+    lower_assoc(module);
 }
 
 /// Rewrite `length` calls + inject `__dyn_list_length` once.
@@ -185,6 +202,22 @@ fn lower_reverse(module: &mut IIRModule) {
     }
     if !module.functions.iter().any(|f| f.name == REVERSE_HELPER) {
         module.functions.push(build_reverse_helper());
+    }
+}
+
+/// Rewrite `assoc` calls + inject `__dyn_list_assoc` once.
+fn lower_assoc(module: &mut IIRModule) {
+    let uses_assoc = module.functions.iter().any(|f| {
+        f.instructions.iter().any(is_assoc_call)
+    });
+    if !uses_assoc {
+        return;
+    }
+    for f in &mut module.functions {
+        rewrite_assoc_calls(f);
+    }
+    if !module.functions.iter().any(|f| f.name == ASSOC_HELPER) {
+        module.functions.push(build_assoc_helper());
     }
 }
 
@@ -659,6 +692,142 @@ fn build_reverse_helper() -> IIRFunction {
     )
 }
 
+// ---------------------------------------------------------------------------
+// assoc
+// ---------------------------------------------------------------------------
+
+/// Is `instr` a `call_builtin "assoc" …`?
+fn is_assoc_call(instr: &IIRInstr) -> bool {
+    instr.op == "call_builtin"
+        && matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "assoc")
+}
+
+/// Replace each `call_builtin "assoc" key alist -> dest` with
+/// `call __dyn_list_assoc, key, alist -> dest : ref<any>`.
+///
+/// `key` (srcs[1]) and `alist` (srcs[2] — an association list, a list of
+/// `(k . v)` cons pairs) are both lisp `ref<any>`, passed to the helper's two
+/// `ref<any>` params. The helper returns the matching `(k . v)` pair or `nil`.
+fn rewrite_assoc_calls(f: &mut IIRFunction) {
+    let old = std::mem::take(&mut f.instructions);
+    let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
+    for instr in old {
+        if !is_assoc_call(&instr) {
+            out.push(instr);
+            continue;
+        }
+        // No dest ⇒ result unused; drop the (pure) call.
+        let dest = match &instr.dest {
+            Some(d) => d.clone(),
+            None => continue,
+        };
+        // srcs = [Var("assoc"), key, alist]; a malformed arity is left for the
+        // validator to reject with full context.
+        let (key, alist) = match (instr.srcs.get(1), instr.srcs.get(2)) {
+            (Some(key), Some(alist)) => (key.clone(), alist.clone()),
+            _ => { out.push(instr); continue; }
+        };
+        out.push(IIRInstr::new(
+            "call",
+            Some(dest),
+            vec![Operand::Var(ASSOC_HELPER.to_string()), key, alist],
+            "ref<any>",
+        ));
+    }
+    f.instructions = out;
+}
+
+/// Build the recursive
+/// `__dyn_list_assoc(key: ref<any>, alist: ref<any>) -> ref<any>` helper.
+///
+/// `assoc` searches an **association list** — a list of `(k . v)` cons pairs — and
+/// returns the first pair whose key equals `key`, or `nil` if none match:
+///
+/// ```text
+///   assoc(key, alist) = if null?(alist) then nil
+///                       else let pair = car(alist) in
+///                            if key == car(pair) then pair
+///                            else assoc(key, cdr(alist))
+/// ```
+///
+/// ### V1 scope: integer keys via `unbox` + typed `cmp_eq`
+///
+/// The key comparison must produce a **raw machine bool** to feed `jmp_if_false`.
+/// The `equal?` builtin lowers differently across the managed / runtime paths
+/// (`dyn_equal` on native) and its result is not a plain branch bool, so — exactly
+/// as `list-ref` does for its index — this V1 helper **unboxes both keys to `i64`**
+/// and compares with a typed `cmp_eq`. That restricts V1 `assoc` to **integer
+/// keys** (every E6d-3b proof so far uses integer atoms); symbol keys arrive with
+/// E6d-4 (interned symbols → `eq?` bit-equality). The alist cells, the returned
+/// pair, and `nil` are all references, so no boxing is needed on the value path.
+fn build_assoc_helper() -> IIRFunction {
+    let search = "__das_search".to_string();
+    let next = "__das_next".to_string();
+    let instrs = vec![
+        // is_nil = null?(alist)
+        IIRInstr::new(
+            "call_builtin", Some("__das_is_nil".into()),
+            vec![Operand::Var("null?".into()), Operand::Var("alist".into())], "bool",
+        ),
+        // if alist is NON-nil → search; else fall through: exhausted ⇒ nil.
+        IIRInstr::new(
+            "jmp_if_false", None,
+            vec![Operand::Var("__das_is_nil".into()), Operand::Var(search.clone())], "void",
+        ),
+        // base: alist empty ⇒ key not found ⇒ nil.
+        IIRInstr::new("const", Some("__das_nil".into()), vec![Operand::Int(0)], REF_PAIR),
+        IIRInstr::new("ret", None, vec![Operand::Var("__das_nil".into())], "ref<any>"),
+        // search: compare `key` with the current pair's key.
+        IIRInstr::new("label", None, vec![Operand::Var(search)], "void"),
+        IIRInstr::new(
+            "call_builtin", Some("__das_pair".into()),
+            vec![Operand::Var("car".into()), Operand::Var("alist".into())], "ref<any>",
+        ),
+        IIRInstr::new(
+            "call_builtin", Some("__das_pkey".into()),
+            vec![Operand::Var("car".into()), Operand::Var("__das_pair".into())], "ref<any>",
+        ),
+        // Unbox both keys to machine i64 and compare (typed → raw bool).
+        IIRInstr::new("unbox", Some("__das_ki".into()), vec![Operand::Var("key".into())], "i64"),
+        IIRInstr::new("unbox", Some("__das_pki".into()), vec![Operand::Var("__das_pkey".into())], "i64"),
+        IIRInstr::new(
+            "cmp_eq", Some("__das_eq".into()),
+            vec![Operand::Var("__das_ki".into()), Operand::Var("__das_pki".into())], "bool",
+        ),
+        // if keys DIFFER → next; else fall through: match ⇒ return this pair.
+        IIRInstr::new(
+            "jmp_if_false", None,
+            vec![Operand::Var("__das_eq".into()), Operand::Var(next.clone())], "void",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("__das_pair".into())], "ref<any>"),
+        // next: recurse on the rest of the alist.
+        IIRInstr::new("label", None, vec![Operand::Var(next)], "void"),
+        IIRInstr::new(
+            "call_builtin", Some("__das_rest".into()),
+            vec![Operand::Var("cdr".into()), Operand::Var("alist".into())], "ref<any>",
+        ),
+        IIRInstr::new(
+            "call", Some("__das_res".into()),
+            vec![
+                Operand::Var(ASSOC_HELPER.into()),
+                Operand::Var("key".into()),
+                Operand::Var("__das_rest".into()),
+            ],
+            "ref<any>",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("__das_res".into())], "ref<any>"),
+    ];
+    IIRFunction::new(
+        ASSOC_HELPER,
+        vec![
+            ("key".to_string(), "ref<any>".to_string()),
+            ("alist".to_string(), "ref<any>".to_string()),
+        ],
+        "ref<any>",
+        instrs,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1050,5 +1219,109 @@ mod tests {
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == REVERSE_HELPER).count(), 1);
+    }
+
+    // ── assoc ───────────────────────────────────────────────────────────────
+
+    fn assoc_call(dest: &str, key: &str, alist: &str) -> IIRInstr {
+        IIRInstr::new(
+            "call_builtin", Some(dest.into()),
+            vec![
+                Operand::Var("assoc".into()),
+                Operand::Var(key.into()),
+                Operand::Var(alist.into()),
+            ],
+            "any",
+        )
+    }
+
+    #[test]
+    fn no_assoc_is_noop() {
+        let mut m = module_with(vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
+        ]);
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.len(), 1, "no helper injected when assoc is unused");
+    }
+
+    #[test]
+    fn assoc_call_becomes_helper_call() {
+        let mut m = module_with(vec![assoc_call("r", "k", "al")]);
+        lower_list_ops(&mut m);
+        let body = &m.functions[0].instructions;
+        let call = &body[0];
+        assert_eq!(call.op, "call");
+        assert_eq!(call.srcs[0], Operand::Var(ASSOC_HELPER.into()));
+        assert_eq!(call.srcs[1], Operand::Var("k".into()));
+        assert_eq!(call.srcs[2], Operand::Var("al".into()));
+        assert_eq!(call.dest.as_deref(), Some("r"));
+        assert_eq!(call.type_hint, "ref<any>");
+        assert!(body.iter().all(|i| !is_assoc_call(i)), "no assoc call_builtin survives");
+    }
+
+    #[test]
+    fn assoc_helper_is_injected_once() {
+        let mut m = module_with(vec![assoc_call("a", "k1", "al1"), assoc_call("b", "k2", "al2")]);
+        lower_list_ops(&mut m);
+        assert_eq!(
+            m.functions.iter().filter(|f| f.name == ASSOC_HELPER).count(), 1,
+            "exactly one assoc helper",
+        );
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.iter().filter(|f| f.name == ASSOC_HELPER).count(), 1);
+    }
+
+    #[test]
+    fn assoc_helper_shape_searches_pairs_by_key() {
+        let mut m = module_with(vec![assoc_call("r", "k", "al")]);
+        lower_list_ops(&mut m);
+        let helper = m.functions.iter().find(|f| f.name == ASSOC_HELPER).unwrap();
+        assert_eq!(helper.return_type, "ref<any>");
+        assert_eq!(
+            helper.params,
+            vec![
+                ("key".to_string(), "ref<any>".to_string()),
+                ("alist".to_string(), "ref<any>".to_string()),
+            ],
+        );
+        let ops: Vec<&str> = helper.instructions.iter().map(|i| i.op.as_str()).collect();
+        // Terminates on null?(alist); the key test is a TYPED cmp_eq over unboxed
+        // keys (two unboxes), gating two jmp_if_false branches (nil-check + key-check).
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("null?".into()))));
+        assert_eq!(ops.iter().filter(|o| **o == "unbox").count(), 2, "both keys unboxed");
+        assert!(ops.contains(&"cmp_eq"), "typed key equality");
+        assert_eq!(ops.iter().filter(|o| **o == "jmp_if_false").count(), 2, "nil-check + key-check");
+        // Two `car`s per step: car(alist) = the pair, car(pair) = its key.
+        assert_eq!(
+            helper.instructions.iter().filter(|i|
+                i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("car".into()))).count(),
+            2, "car(alist) then car(pair)",
+        );
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("cdr".into()))));
+        // Three rets: not-found (nil), match (pair), recurse.
+        assert_eq!(ops.iter().filter(|o| **o == "ret").count(), 3);
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call" && i.srcs.first() == Some(&Operand::Var(ASSOC_HELPER.into()))));
+    }
+
+    #[test]
+    fn all_five_ops_coexist() {
+        // length + list-ref + append + reverse + assoc → all five helpers, once each.
+        let mut m = module_with(vec![
+            length_call("a", "l1"),
+            listref_call("b", "l2", "i2"),
+            append_call("c", "l3", "l4"),
+            reverse_call("d", "l5"),
+            assoc_call("e", "k", "al"),
+        ]);
+        lower_list_ops(&mut m);
+        for helper in [LENGTH_HELPER, LISTREF_HELPER, APPEND_HELPER, REVERSE_HELPER, ASSOC_HELPER] {
+            assert_eq!(
+                m.functions.iter().filter(|f| f.name == helper).count(), 1,
+                "exactly one {helper}",
+            );
+        }
     }
 }

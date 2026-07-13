@@ -310,6 +310,32 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3b: the `assoc` list operation on the code-gen backends** (the
+    // last E6d-3b op). `assoc` searches an association list (a list of `(k . v)`
+    // cons pairs) for a key: `lower_list_ops` rewrites `call_builtin "assoc" key
+    // alist` to a synthesized recursive helper
+    //   __dyn_list_assoc(key, alist) = if null?(alist) then nil
+    //     else if key == car(car(alist)) then car(alist) else assoc(key, cdr(alist))
+    // V1 keys are integers: the key test unboxes both keys to i64 and compares with
+    // a typed `cmp_eq` (feeding jmp_if_false), since `equal?` lowers unevenly across
+    // the managed/runtime paths (symbol keys arrive with E6d-4). `(assoc 2 alist)`
+    // over `((1 . 10) (2 . 42) (3 . 30))` finds `(2 . 42)`; `cdr` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
+    // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

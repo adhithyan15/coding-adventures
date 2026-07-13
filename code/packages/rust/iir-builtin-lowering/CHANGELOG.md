@@ -1,5 +1,30 @@
 # Changelog — iir-builtin-lowering
 
+## 0.28.0 - 2026-07-13 (E6d-3b COMPLETE: `assoc` via a synthesized alist-search helper)
+
+`lower_list_ops` gains its fifth and final list operation, `assoc` — completing
+the E6d-3b list-operation set (`length`, `list-ref`, `append`, `reverse`,
+`assoc`). It rewrites `call_builtin "assoc" key alist` to a call to a synthesized
+recursive helper `__dyn_list_assoc` (injected once) that searches an association
+list (a list of `(k . v)` cons pairs):
+
+```
+__dyn_list_assoc(key, alist) = if null?(alist) then nil
+    else if key == car(car(alist)) then car(alist)
+    else __dyn_list_assoc(key, cdr(alist))
+```
+
+The key comparison must yield a raw machine bool for `jmp_if_false`. Since the
+`equal?` builtin lowers unevenly across the managed (`equal?`) and native
+(`dyn_equal`) paths and its result is not a plain branch bool, V1 `assoc`
+**unboxes both keys to `i64` and compares with a typed `cmp_eq`** — the exact
+technique `list-ref` uses for its index. That scopes V1 `assoc` to **integer
+keys** (every E6d-3b proof uses integer atoms); symbol keys arrive with E6d-4
+(interned symbols → `eq?` bit-equality). The alist cells, the returned pair, and
+`nil` are all references, so no boxing on the value path. Five new unit tests
+(rewrite, single injection, pair-search shape with 2 unboxes / 2 branches / 2
+cars / 3 rets, all-five-ops coexistence).
+
 ## 0.27.0 - 2026-07-13 (E6d-3b: `reverse` via a tail-recursive accumulator helper)
 
 `lower_list_ops` gains a fourth list operation, `reverse`. It rewrites
