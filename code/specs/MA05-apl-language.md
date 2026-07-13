@@ -315,7 +315,7 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
   `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) `semantic-ir` shipped
   specifically for APL ahead of this crate landing. `compile`/
   `compile_source` lower `apl-parser`'s CST into a `semantic_ir::Module`; 44
-  tests (41 unit + 3 capability-rejection). Design notes:
+  tests (40 unit + 3 capability-rejection + 1 doctest). Design notes:
   - **No scalar/array disambiguation needed, unlike MATLAB.**
     `matlab-to-semantic-ir` has to guess, per operator use, whether `*`/`/`/
     `\` mean scalar arithmetic or a matrix operation, because MATLAB's `*`

@@ -36,7 +36,7 @@
   (not scalar dyadic functions). Constructs the grammar itself cannot
   produce (boxing, the rank conjunction, user-defined functions, control
   flow) need no explicit rejection code.
-- 44 tests: 41 unit tests in `tests/test_lower.rs` covering every dyadic
+- 44 tests: 40 unit tests in `tests/test_lower.rs` covering every dyadic
   atom individually, every monadic atom (valid and rejected), reduce/scan
   (valid + rejected arity), outer product (valid + rejected arity),
   `⍴`/`⍳`/`,` (monadic and dyadic, plus operator-decoration rejection),
