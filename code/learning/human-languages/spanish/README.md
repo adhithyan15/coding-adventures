@@ -77,10 +77,12 @@ The track was **redesigned** after early feedback: from coarse units (ten
 greetings crammed together, a front-loaded pronunciation chapter) to deep
 one-word lessons with inline sounds and a full cousin web. Current state:
 
-- **Chapter 1 — First Words**: 10 deep lessons in [`lessons/`](./lessons/)
-  (`ES-C01-L01`–`L10`): hola, buenos días, buenas tardes, buenas noches,
-  gracias, por favor, adiós, ¿cómo estás?, me llamo, quiero. Fully authored
-  and in the book.
+- **Chapter 1 — Hola and Buenos Días**: 5 lessons in [`lessons/`](./lessons/)
+  (`ES-C01-L01`–`L05`), built **atom-first**: hola → bien (+ bueno/buena) →
+  día (+ plurals) → buenos días (assembled, + agreement) → practice. Grammar
+  arrives exactly where a word needs it. Fully authored and in the book.
+  (Earlier drafts of tardes/noches/gracias/etc. are in git history; they'll
+  be rebuilt atom-first in their own later chapters.)
 - **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
   (look-up reference, not a chapter).
 - **Later chapters**: skeleton in [`roadmap.md`](./roadmap.md).

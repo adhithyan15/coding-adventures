@@ -10,9 +10,22 @@
 > [`lessons/`](./lessons/), not one dense unit. See
 > [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md).
 
-Chapter 1 (First Words) is authored in the new model:
-[`lessons/ES-C01-L01`–`L10`](./lessons/). The theme skeleton below plans the
-road ahead; chapters are excavated into deep lessons incrementally.
+Chapter 1 (Hola and Buenos Días) is authored **atom-first**: teach the
+pieces, then assemble them — [`lessons/ES-C01-L01`–`L05`](./lessons/):
+
+1. `L01` **hola** — the casual greeting.
+2. `L02` **bien** — "well," a one-word answer; plus its adjective sibling
+   *bueno/buena*.
+3. `L03` **día** — "day," and the plural rule (vowel + *-s* → *días*).
+4. `L04` **buenos días** — *assembled* from *bueno* + *días*, introducing
+   adjective **agreement** (*bueno* → *buenos*).
+5. `L05` **practice** — hola & buenos días together.
+
+Chapter 2 then asks **"how do you respond to *buenos días*?"** and starts a
+recursive responding cycle; afterward the same atom-first pattern repeats for
+*tarde* → *buenas tardes* and *noche* → *buenas noches*. Sentences grow as
+grammar accumulates piece by piece. The theme skeleton below plans the wider
+road ahead.
 
 ## Theme Skeleton (planning only)
 
