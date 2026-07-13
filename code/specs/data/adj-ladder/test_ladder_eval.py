@@ -193,6 +193,7 @@ SELF_CONTAINED_RUNGS = (
     "rung153_grid_coverage",
     "rung154_net_coverage",
     "rung155_loaded_coverage",
+    "rung156_net_loaded_coverage",
 )
 
 
