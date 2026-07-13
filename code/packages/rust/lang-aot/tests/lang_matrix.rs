@@ -359,6 +359,35 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(0),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-5: records (TW6 part 1) on the code-gen backends.** A `(record
+    // Name (f : T) …)` erases to a constructor `Name(…)` that builds a cons chain
+    // (typed `alloc [ref<LispyPair>]` + `field_store`) and accessors `name-f(r)` =
+    // `car(cdr^i(r))` (typed `field_load`) — the E6d-1 heap substrate, so records
+    // ride the same proven cons/car/cdr path with no new value type. `(Point 42 7)`
+    // builds `(42 . (7 . nil))`; `(point-x …)` = `car` = 42, proving construction
+    // + field access round-trip end-to-end.
+    //
+    // Shipping this also fixed a latent WASM-runtime bug: struct field counts were
+    // registered by per-function count, over-counting when functions share a
+    // signature (a record emits a constructor + N same-shape accessors + a
+    // predicate), so the `$LispyPair` field-count landed at the wrong type index
+    // and every `struct.set` trapped "field 0 out of range" (wasm-runtime 0.4.0).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (point-x (Point 42 7))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-5: the SECOND field of a record (accessor walks one `cdr` then
+    // `car`), proving the cons-chain offset is right. `(point-y (Point 7 42))` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (point-y (Point 7 42))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.
