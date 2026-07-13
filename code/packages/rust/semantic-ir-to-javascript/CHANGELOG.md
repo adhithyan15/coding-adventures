@@ -1,5 +1,52 @@
 # Changelog
 
+## 0.35.0 — SIR23 symbolic-expression + pattern/rewrite codegen (HML01 Stream B, item 7 JS half)
+
+Real codegen for the SIR23 symbolic/pattern domain, replacing the deferred
+`panic!` placeholder these seven `Expr` nodes had (`SymSymbol`, `SymRational`,
+`SymApply`, `SymPatternBlank`, `SymPatternNamed`, `SymRule`,
+`SymReplaceAll`). Mirrors the TypeScript backend's SIR23 codegen (already
+shipped) exactly at the `emit.rs` call-site shape, but targets an *inlined*
+runtime rather than an imported npm package — the same "port it inline so the
+JavaScript artifact stays self-contained" treatment the exception runtime
+(`sir-runtime-exceptions`) already got.
+
+- `runtime.rs` gains `__Sir.Symbolic`, a plain-JS port of the published
+  `@coding-adventures/symbolic-ir` (term-tree type + constructors),
+  `@coding-adventures/cas-pattern-matching` (the five-case structural
+  matcher/substitution algorithm), and `@coding-adventures/sir-runtime-symbolic`
+  (`replaceAll`/`replaceRepeated`/`unwrap`) TypeScript packages. Deliberate
+  divergence from the TS packages: terms use plain JS `number` for
+  `integer`/`rational` values rather than `bigint`, matching how every other
+  numeric value in this backend already works (`IntLit` emits a bare JS number
+  literal) — there is no `bigint` anywhere else in this runtime.
+  `replaceRepeated` carries forward the TS package's own
+  `/security-review`-found fix: a rule firing loops at the *same* call frame
+  (not a recursive call), so a caller-supplied `maxIterations` bounds CPU time
+  only, never native stack depth. `MAX_TERM_DEPTH = 512` caps the tree walk
+  itself against unbounded runtime data (CWE-674).
+- `emit.rs`: all seven `Expr::Sym*` arms now emit real `__Sir.Symbolic.*` calls
+  instead of panicking; `emit_sym_operand` wraps a bare `IntLit`/`FloatLit`/
+  `StrLit` operand through the matching leaf-term constructor before it can
+  sit inside a term tree.
+- `lib.rs`: `Feature::SymbolicExpr`, `Feature::PatternMatching`, and
+  `Feature::Rationals` (shared with the still-deferred SIR22 array/matrix
+  domain) join `ACCEPTED_FEATURES`.
+- `formatSeen` (the `print`/`puts` display path) now recognizes a Symbolic
+  term (a plain object carrying a `.kind` tag) and renders it via a new
+  `Symbolic.toDisplayString` — so `print`ing a `SymReplaceAll` result reads as
+  `f(x, 1/3)` rather than `[object Object]`.
+- New `tests/sir23_symbolic.rs`: three real `node`-execution tests (not just
+  string-shape assertions) proving the ported algorithm is actually correct —
+  `replaceRepeated` reduces `Add(Add(z, 0), 0)` to the bare symbol `z` via
+  `x_ + 0 -> x_`, `replaceAll`'s single-pass contract, and a head-typed blank
+  (`x_Integer`) matching selectively. `lib.rs` gains the TypeScript backend's
+  own shape-assertion test suite (leaf constructors, literal wrapping,
+  blank/blankTyped, the non-`SymSymbol`-head panic guard, `rule` vs.
+  `ruleDelayed`, and `replaceAll`/`replaceRepeated` both routing through
+  `unwrap`), plus an end-to-end `wolfram-to-semantic-ir` compile test (new dev
+  dependency).
+
 ## 0.34.0 — Array `cycle(n)`
 
 Mirrors the Python reference (PR #8117), Go (PR #8123), and Rust (PR #8131) into

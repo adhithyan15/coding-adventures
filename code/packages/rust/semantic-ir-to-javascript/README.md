@@ -89,6 +89,9 @@ lowering is direct.
 | `ClassVars` (O3)                |                                          |
 | `Modules` (MX4 mixins)          |                                          |
 | `Constants`                     |                                          |
+| `SymbolicExpr` (SIR23)          | `NDArrays` / `MatrixOps` (SIR22)         |
+| `PatternMatching` (SIR23)       |                                          |
+| `Rationals` (shared w/ SIR22)   |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
@@ -337,6 +340,55 @@ are treated strictly as data. The mutable map is `Object.create(null)`
 (prototype-less), so a user class named `constructor`/`__proto__` cannot
 poison the lookup, and a cyclic user map terminates via a `seen` guard.
 
+### Symbolic expressions + pattern/rewrite (SIR23)
+
+The inlined `__Sir` also carries `Symbolic` — a plain-JS port of the
+published `@coding-adventures/symbolic-ir` (term-tree type + constructors),
+`@coding-adventures/cas-pattern-matching` (the structural matcher/
+substitution algorithm), and `@coding-adventures/sir-runtime-symbolic`
+(`replaceAll`/`replaceRepeated`/`unwrap`) TypeScript packages, so the
+artifact stays self-contained:
+
+| SIR                               | JavaScript emitted                              |
+|------------------------------------|-------------------------------------------------|
+| `SymSymbol("f")`                   | `__Sir.Symbolic.sym("f")`                       |
+| `SymRational(1, 3)`                 | `__Sir.Symbolic.rational(1, 3)`                 |
+| `SymApply(f, [x])`                  | `__Sir.Symbolic.apply(sym(f), [x])`             |
+| `SymPatternBlank(None)`             | `__Sir.Symbolic.blank()`                        |
+| `SymPatternBlank(Some(Integer))`    | `__Sir.Symbolic.blankTyped("Integer")`          |
+| `SymPatternNamed("x", pat)`         | `__Sir.Symbolic.named("x", pat)`                |
+| `SymRule(lhs, rhs, delayed: false)` | `__Sir.Symbolic.rule(lhs, rhs)`                 |
+| `SymRule(lhs, rhs, delayed: true)`  | `__Sir.Symbolic.ruleDelayed(lhs, rhs)`          |
+| `SymReplaceAll(e, r, repeated: false)` | `unwrap(replaceAll(e, r))`                   |
+| `SymReplaceAll(e, r, repeated: true)`  | `unwrap(replaceRepeated(e, r))`              |
+
+A term is a plain, frozen `{ kind, … }` object (`"symbol"` / `"integer"` /
+`"rational"` / `"float"` / `"string"` / `"apply"`) — never a class instance,
+so it never collides with `Sym`/`Pair`/`Closure`/`SirInstance` above. A bare
+`IntLit`/`FloatLit`/`StrLit` operand is wrapped through `int`/`numberNode`/
+`stringNode` (`emit_sym_operand`) before it can sit inside a term tree, since
+a raw JS number/string is never a valid term.
+
+**Deliberate divergence from the TypeScript sibling:** terms use plain JS
+`number` for `integer`/`rational` values rather than `bigint` — matching how
+every other numeric value in this backend already works (`IntLit` emits a
+bare JS number literal; there is no `bigint` anywhere else in this runtime).
+
+**Security.** `matchPattern`/`substitute`/`applyRule` recurse only as deep as
+a single rule's own (author-written) pattern/RHS shape, never the target
+expression's depth, so they need no cap. `replaceAll`/`replaceRepeated` walk
+the *entire* target expression, which ordinary program data can build
+unboundedly deep — `MAX_TERM_DEPTH = 512` caps that walk (CWE-674). A rule
+firing inside `replaceRepeated` loops at the *same* call frame rather than
+recursing on the fresh replacement, so a caller-supplied `maxIterations`
+(default 100) bounds only CPU time, never native stack depth — carrying
+forward the fix the TypeScript sibling package's own `/security-review`
+found.
+
+`print`/`puts` render a Symbolic term via `Symbolic.toDisplayString`
+(`f(x, 1/3)`-style), reached from `formatSeen` by checking for a plain
+object carrying a `.kind` tag.
+
 ## Output format
 
 - 2-space indentation, semicolons always (no ASI reliance).
@@ -386,3 +438,7 @@ cargo test -p semantic-ir-to-javascript
   counter, a for-range accumulator (and a descending step), for-each, and
   mutable reassignment (`42`). When `node` is not on PATH the execution is
   skipped and the syntactic checks still run.
+- `tests/sir23_symbolic.rs`: real `node`-execution tests for the SIR23
+  symbolic domain — `replaceRepeated` reduces `Add(Add(z, 0), 0)` to the bare
+  symbol `z` via `x_ + 0 -> x_`, `replaceAll`'s single-pass (no-retry)
+  contract, and a head-typed blank (`x_Integer`) matching selectively.
