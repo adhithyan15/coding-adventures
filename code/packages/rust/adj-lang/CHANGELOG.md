@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.50.0] — multi-step formula bodies (ADJ-RULE-SUBSTRATE RS-2)
+
+### Added
+
+- **Multi-step `formula` bodies** — a formula may now be written as a block of named `let`-steps
+  followed by a final expression: `formula f(p…) { let s1 = e1  let s2 = e2  <body> }`. Each step
+  names an intermediate value; a later step and the final body may reference the parameters plus any
+  **earlier** step. Grammar: new `formula_body` (either the existing `= <expr>` sugar or the block form)
+  and `formula_step` rules; AST: `FormulaStep` + `FormulaDef.steps`. The lowerer folds the steps into a
+  single **effective body** by in-order substitution, so the RS-1 param-substitution and
+  formula-calls-formula expansion consume it unchanged (a multi-step body is surface sugar for the
+  equivalent nested single expression). Scope is validated strictly left-to-right — an undeclared or
+  forward step reference is a clean `LowerError::FormulaFreeVariable`. The size budget bounds an
+  adversarial step chain to `FormulaExpansionTooLarge`. The single-expression form is unchanged (purely
+  additive). Worked example: the shipped `clinical/cockcroft_gault.adj` (four named steps composing
+  `difference`/`product`/`quotient`). *(Per-step `DerivedRef` trace nodes — each step as its own audit
+  entry — are deferred to the RS-4 execution-trace renderer; RS-2 delivers the expressible, correct,
+  composing construct.)*
+
 ## [Unreleased] — `formulabook` / `formula` — importable, provenanced, parameterized formulas (ADJ-FORMULA-LIBRARIES rung-0)
 
 ### Added

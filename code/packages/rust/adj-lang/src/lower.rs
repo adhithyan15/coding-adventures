@@ -1099,18 +1099,32 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
 /// time; and (2) the **provenance-required lint** — a shipped formula must carry
 /// a non-empty `source`, mirroring the recall-library adversarial write gate.
 fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
-    let params: std::collections::HashSet<&str> =
-        fd.params.iter().map(String::as_str).collect();
-    let mut refs = Vec::new();
-    collect_refs(&fd.body, &mut refs);
-    for r in refs {
-        if !params.contains(r.as_str()) {
-            return Err(LowerError::FormulaFreeVariable {
-                formula: fd.name.clone(),
-                variable: r,
-            });
+    // Scope grows LEFT-TO-RIGHT (RS-2): the parameters are in scope everywhere;
+    // each `let`-step may reference the parameters plus any EARLIER step's name,
+    // and after a step it binds its own name; the final body may reference the
+    // parameters plus ALL step names. An identifier that resolves to none of
+    // these is a clean free-variable error.
+    let mut in_scope: std::collections::HashSet<String> = fd.params.iter().cloned().collect();
+    let check = |expr: &ExprAst,
+                 scope: &std::collections::HashSet<String>|
+     -> Result<(), LowerError> {
+        let mut refs = Vec::new();
+        collect_refs(expr, &mut refs);
+        for r in refs {
+            if !scope.contains(&r) {
+                return Err(LowerError::FormulaFreeVariable {
+                    formula: fd.name.clone(),
+                    variable: r,
+                });
+            }
         }
+        Ok(())
+    };
+    for step in &fd.steps {
+        check(&step.expr, &in_scope)?;
+        in_scope.insert(step.name.clone());
     }
+    check(&fd.body, &in_scope)?;
     // Reuse the shared provenance path (the same relate/rule/prior use), then
     // enforce that the primary `source` span is non-empty.
     let prov = annotations_to_provenance(&fd.annotations)?;
@@ -1421,7 +1435,11 @@ fn expand_rec(
             // (formula-calls-formula) at depth + 1. The callee is pushed onto the
             // active path for the duration of its body expansion and popped after, so
             // a later SIBLING application of the same formula is not seen as a cycle.
-            let substituted = substitute_expr(&fd.body, &subst, budget, d)?;
+            // Fold the callee's `let`-steps (RS-2) into its effective body FIRST
+            // so a multi-step callee composes correctly when called from another
+            // formula, then substitute the caller's args into it.
+            let callee_body = effective_body(fd, budget, d)?;
+            let substituted = substitute_expr(&callee_body, &subst, budget, d)?;
             active.push(name.clone());
             let expanded = expand_rec(&substituted, formulas, depth + 1, chain, active, budget, d);
             active.pop();
@@ -1530,9 +1548,40 @@ fn apply_formula(fd: &FormulaDef, goal: &AstTerm) -> Result<ExprAst, LowerError>
     // A shallow, one-level substitution of leaf bindings (a query's args are atoms
     // or numbers) — its own local budget guards a body that reuses a parameter; the
     // deeper formula-calls-formula expansion of the resulting body runs later, in
-    // `expand_applies`, under that call's own shared budget.
+    // `expand_applies`, under that call's own shared budget. The `let`-steps
+    // (RS-2) are folded into a single effective body FIRST (so the param
+    // substitution below reaches into the inlined steps), then param-substituted.
     let mut budget: usize = 0;
-    substitute_expr(&fd.body, &subst, &mut budget, 0)
+    let effective = effective_body(fd, &mut budget, 0)?;
+    substitute_expr(&effective, &subst, &mut budget, 0)
+}
+
+/// Fold a formula's multi-step `let`-bindings (RS-2) into a SINGLE effective
+/// body by in-order substitution: each step's expression is expanded against
+/// the already-expanded earlier steps, then the final body is expanded against
+/// all of them. The result names only the formula's parameters (plus numbers
+/// and nested formula applications), so the RS-1 param-substitution and
+/// formula-calls-formula expansion consume it unchanged — a multi-step body is
+/// surface sugar for the equivalent nested single expression. A formula with no
+/// steps returns its body verbatim. Every emitted node is charged against the
+/// shared `budget`, so an adversarial step chain (each step doubling the last)
+/// trips [`LowerError::FormulaExpansionTooLarge`] instead of exploding.
+fn effective_body(
+    fd: &FormulaDef,
+    budget: &mut usize,
+    node_depth: usize,
+) -> Result<ExprAst, LowerError> {
+    if fd.steps.is_empty() {
+        return Ok(fd.body.clone());
+    }
+    let mut step_subst: HashMap<String, ExprAst> = HashMap::new();
+    for step in &fd.steps {
+        // Expand this step against the already-inlined earlier steps, then bind
+        // its (now step-free) value under its name for the steps/body that follow.
+        let expanded = substitute_expr(&step.expr, &step_subst, budget, node_depth)?;
+        step_subst.insert(step.name.clone(), expanded);
+    }
+    substitute_expr(&fd.body, &step_subst, budget, node_depth)
 }
 
 /// Substitute parameter references in a formula body with their bound argument

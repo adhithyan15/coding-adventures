@@ -441,13 +441,35 @@ pub struct FormulaDef {
     /// (or [`ExprAst::Agg`] slot) naming one of these is a parameter reference;
     /// any other free identifier is a compile error (parameter-scoping).
     pub params: Vec<String>,
+    /// The multi-step `let`-bindings that precede the final body, in source
+    /// order (ADJ-RULE-SUBSTRATE RS-2). Empty for the single-expression sugar
+    /// (`formula f(...) = <expr>`, the rung-0 form). For the block form
+    /// (`formula f(...) { let s1 = e1  let s2 = e2  <body> }`) each entry names
+    /// an intermediate value; a later step and the [`body`](Self::body) may
+    /// reference an earlier step's name in addition to the [`params`](Self::params).
+    /// The lowerer desugars these into `body` by in-order substitution, so the
+    /// RS-1 apply/expand pipeline consumes a single effective expression.
+    pub steps: Vec<FormulaStep>,
     /// The formula body — the EXISTING `let` expression AST, reused verbatim.
+    /// In the block form this is the final expression after the `let`-steps.
     pub body: ExprAst,
     /// The provenance envelope (`source` / `locator` / `trust`, plus any
     /// corroborating `cites`), reusing the shared [`Annotation`] set every
     /// grounded clause carries. Lowered via `annotations_to_provenance`; a
     /// shipped formula must carry a non-empty `source`.
     pub annotations: Vec<Annotation>,
+}
+
+/// A single `let`-step inside a multi-step formula body (ADJ-RULE-SUBSTRATE
+/// RS-2). `let <name> = <expr>` names an intermediate value; the `expr` may
+/// reference the formula's parameters and any earlier step's name. The lowerer
+/// folds the steps into the final body by in-order substitution.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaStep {
+    /// The step's binding name (the intermediate value's identifier).
+    pub name: String,
+    /// The step's defining expression (over params + earlier step names).
+    pub expr: ExprAst,
 }
 
 /// A single dictionary entry (MYCIN-2026).
