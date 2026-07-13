@@ -28,6 +28,16 @@ All notable changes to this project will be documented in this file.
   `read_line` report a spurious (and fatal — it aborted the whole session)
   `InvalidData` error instead of the intended clean "line too long"
   message.
+- The "oversized?" check itself now requires **both** no trailing `\n`
+  *and* the byte count actually reaching `MAX_LINE_LEN` — found by a
+  second `/security-review` round on the fix above: `read_until` also
+  stops with no trailing `\n` at genuine EOF (e.g. the very last line of
+  input has no closing newline), and checking `\n`-absence alone
+  misclassified that ordinary, short, valid line as "oversized" and
+  silently discarded it. A real I/O error while draining an oversized
+  line's remainder is now propagated rather than swallowed, for the same
+  reason (a broken pipe there isn't the same thing as "no more bytes to
+  discard").
 
 ## [0.1.0] - 2026-07-11
 

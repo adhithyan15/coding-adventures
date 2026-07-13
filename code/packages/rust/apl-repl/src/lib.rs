@@ -72,9 +72,11 @@ const MAX_LINE_LEN: u64 = 64 * 1024;
 /// Read one physical line, bounded to [`MAX_LINE_LEN`] bytes.
 ///
 /// - `Ok(None)` — genuine end of input.
-/// - `Ok(Some(Ok(line)))` — an ordinary line (including its trailing `\n`,
-///   same as [`BufRead::read_line`]'s own contract).
-/// - `Ok(Some(Err(())))` — a single physical line exceeded the cap before
+/// - `Ok(Some(Ok(line)))` — an ordinary line. Includes a final,
+///   newline-less line at genuine EOF (same as [`BufRead::read_line`]'s own
+///   contract — an unterminated last line is not "oversized", it's just
+///   short of a full cap's worth of bytes).
+/// - `Ok(Some(Err(())))` — a single physical line reached the cap before
 ///   any `\n` appeared. The oversized remainder of that same line is
 ///   drained and discarded (up to one more [`MAX_LINE_LEN`]-byte chunk,
 ///   itself bounded for the same reason) so a well-behaved caller's next
@@ -82,17 +84,24 @@ const MAX_LINE_LEN: u64 = 64 * 1024;
 ///   picking up mid-line.
 ///
 /// Reads raw **bytes** (`read_until(b'\n', ..)`), not [`BufRead::read_line`]
-/// directly, and only attempts UTF-8 decoding *after* confirming the byte
-/// run actually ended at a real `\n` within the cap. `read_line` validates
-/// UTF-8 over whatever byte run it stops at — and `Take` stops at an
-/// arbitrary **byte** offset with no notion of a character boundary, so an
-/// ordinary, fully valid UTF-8 line whose true length only slightly exceeds
-/// [`MAX_LINE_LEN`] can have a multi-byte character straddle that exact
-/// offset, making `read_line` alone report a spurious `InvalidData` I/O
-/// error (fatal — it aborts the whole session, see `main.rs`) for input that
-/// isn't actually malformed, just long. Deciding "oversized?" on bytes first
-/// means a cap that happens to split a character is correctly treated as
-/// just another oversized line, not a decoding failure.
+/// directly, and only attempts UTF-8 decoding *after* confirming whether the
+/// byte run stopped because of a real `\n` or because it genuinely
+/// exhausted the cap. `read_line` validates UTF-8 over whatever byte run it
+/// stops at — and `Take` stops at an arbitrary **byte** offset with no
+/// notion of a character boundary, so an ordinary, fully valid UTF-8 line
+/// whose true length only slightly exceeds [`MAX_LINE_LEN`] can have a
+/// multi-byte character straddle that exact offset, making `read_line` alone
+/// report a spurious `InvalidData` I/O error (fatal — it aborts the whole
+/// session, see `main.rs`) for input that isn't actually malformed, just
+/// long. Deciding "oversized?" on bytes first means a cap that happens to
+/// split a character is correctly treated as just another oversized line,
+/// not a decoding failure.
+///
+/// Oversized is judged by **both** "no trailing `\n`" *and* "the byte count
+/// actually hit the cap" — not `\n`-absence alone. `read_until` also stops
+/// (with no trailing `\n`) at genuine EOF, e.g. a final line with no closing
+/// newline; checking length too keeps that ordinary, short, valid case from
+/// being misclassified as oversized and silently dropped.
 fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Result<String, ()>>> {
     let mut buf: Vec<u8> = Vec::new();
     // Explicit UFCS + an explicit reborrow (`&mut *reader`), not plain
@@ -109,19 +118,24 @@ fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Resul
     if read == 0 {
         return Ok(None);
     }
-    if buf.last() != Some(&b'\n') {
-        // Hit the cap without ever seeing a newline -- discard the rest of
-        // this same oversized line (one more bounded chunk; if the line
-        // somehow exceeds even that, the next call will simply report
-        // another oversized chunk rather than hang or grow memory further,
-        // which is a safe, if repetitive, degradation for a threat model
-        // this crate does not otherwise need to defend against today). This
-        // path is taken purely on byte length -- never on whether `buf`
+    let hit_cap = buf.len() as u64 == MAX_LINE_LEN && buf.last() != Some(&b'\n');
+    if hit_cap {
+        // The cap was genuinely exhausted with no newline in sight -- discard
+        // the rest of this same oversized line (one more bounded chunk; if
+        // the line somehow exceeds even that, the next call will simply
+        // report another oversized chunk rather than hang or grow memory
+        // further, which is a safe, if repetitive, degradation for a threat
+        // model this crate does not otherwise need to defend against today).
+        // This path is taken purely on byte length -- never on whether `buf`
         // happens to be valid UTF-8 -- so a cap that splits a multi-byte
         // character lands here too, not in the `from_utf8` error arm below.
         let mut discard: Vec<u8> = Vec::new();
         let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
-        let _ = limited.read_until(b'\n', &mut discard);
+        // Propagated with `?`, not swallowed: a genuine I/O error draining
+        // the remainder (e.g. a broken pipe) is a real failure, not just
+        // "no more oversized bytes to discard" -- it shouldn't be misreported
+        // as an ordinary oversized-line event.
+        limited.read_until(b'\n', &mut discard)?;
         return Ok(Some(Err(())));
     }
     // The byte run genuinely ended at a real `\n` within the cap, so any
@@ -326,6 +340,32 @@ mod tests {
         run(input, &mut output).unwrap();
         let text = String::from_utf8(output).unwrap();
         assert!(text.contains('6'));
+    }
+
+    #[test]
+    fn read_bounded_line_returns_a_final_line_without_a_trailing_newline() {
+        // A genuine EOF before the cap with no trailing '\n' at all (e.g.
+        // `printf '%s' quit` piped in, or a file with no final newline) is
+        // an ordinary short line, not an oversized one -- the byte run
+        // stopped at EOF, not because the cap was exhausted.
+        let mut input = "quit".as_bytes();
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("quit".to_string()))
+        );
+        assert_eq!(read_bounded_line(&mut input).unwrap(), None);
+    }
+
+    #[test]
+    fn run_quits_cleanly_on_a_final_line_without_a_trailing_newline() {
+        let input = "quit".as_bytes(); // no trailing '\n' anywhere in the input
+        let mut output = Vec::new();
+        run(input, &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(
+            !text.contains("exceeds"),
+            "a short, unterminated final line must not be treated as oversized, got: {text}"
+        );
     }
 
     #[test]
