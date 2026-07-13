@@ -1,0 +1,162 @@
+# J Token Grammar
+# ============================================================================
+#
+# Tokenizes the historical-core subset of J fixed by MA-6a
+# (code/specs/MA06-j-language.md §4): dense numeric arrays, the primitive
+# verbs `+ - * % ^ <. >. $ i. , # = ~: < > <: >:`, the two adverbs `/`
+# (reduce) `\` (scan), the one conjunction `@` (compose/atop), assignment
+# `=.`/`=:`, parenthesised grouping, and `NB.` line comments.
+#
+# ============================================================================
+# THE ONE MISTAKE TO NOT MAKE (MA06 §1 bullet 1)
+#
+# `/` is J's reduce ADVERB, not division. APL spells divide with its own
+# unambiguous glyph (`÷`); J, needing `/` for reduce (mirroring APL's own
+# `/`), moves division to `%`. A frontend built by transliterating APL's
+# glyphs one-for-one would get this specific primitive backwards — it is
+# the single most common APL-to-J transliteration mistake (MA06 §1), so it
+# gets its own callout here, at the one file where the mistake would
+# actually manifest as a wrong token.
+# ============================================================================
+#
+# Every other primitive pair shares ONE ASCII glyph or digraph — which
+# meaning applies (e.g. `+` conjugate vs. add) is a PARSER-production
+# concern (which application rule matched), not a lexer concern, exactly as
+# MA05 §3 bullet 3 already established for APL. The token name below is
+# neutral between the two readings, e.g. DOLLAR is "shape" monadically and
+# "reshape" dyadically.
+#
+# Unlike APL (MA05 §3 bullet 4: "every primitive is a single dedicated
+# Unicode code point"), J is ASCII-only, so an overloaded base character
+# needs an explicit `.`- or `:`-suffixed DIGRAPH to spell a related but
+# distinct primitive (MA06 §1 bullet 1, §3 last bullet) — e.g. `<` (less
+# than) vs. `<.` (floor/min) vs. `<:` (less-or-equal). This repo's lexer
+# matches the FIRST pattern (in declaration order) that matches at the
+# current position — not the longest — so every digraph below is declared
+# BEFORE the bare single-character token it could otherwise be swallowed
+# by. This is the same longest-match-first discipline `apl.tokens` already
+# uses for `∘.` (SECTION 1 there), applied far more pervasively here since
+# J has roughly a dozen base characters with a `.`- and/or `:`-suffixed
+# sibling, not just one.
+#
+# Negative number literals: MA06 §4 does not spell out a literal syntax, so
+# this file makes the same historically-faithful call J's own lexer makes —
+# a leading underscore (`_5`, not APL's high-minus `¯`) marks a negative
+# literal. J's real language overloads a bare `_` (and `__`) for
+# (positive/negative) infinity; NUMBER's regex below requires at least one
+# digit after the underscore, so a bare `_` is structurally excluded from
+# this cut rather than merely documented as out of scope — infinity is not
+# in MA06 §4's primitive list, so there is nothing for it to mean yet.
+#
+# @version 1
+
+# ============================================================================
+# SECTION 1: Two-character digraphs, declared before any single-character
+# token they could be confused with (this repo's longest-match-first lexer
+# convention — see e.g. code/grammars/wolfram/wolfram.tokens, and apl.tokens
+# SECTION 1 for the one-glyph precedent this file generalizes).
+#
+# floor / min, ceiling / max: MA06 §4 notes the mapping is the *opposite*
+# character from what APL's ⌊/⌈ might suggest — J's `<.` is floor because
+# `<` already means "less than", and floor rounds *down* toward the lesser
+# neighbor (`>.` / ceiling follows the same logic in the other direction).
+# ============================================================================
+
+FLOOR   = "<."
+CEILING = ">."
+
+# dyadic comparison digraphs (boolean 0/1 result, MA06 §4) — declared here,
+# ahead of the bare LT/GT/EQ tokens in SECTION 2.
+LE = "<:"
+GE = ">:"
+NE = "~:"
+
+# index-generator (monadic, 0-based per MA06 §1 bullet 3) / index-of
+# (dyadic) — declared ahead of NAME (SECTION 4), so `i.5` lexes as one
+# IDOT token followed by NUMBER, never as NAME "i" plus a stray ".".
+IDOT = "i."
+
+# local / global assignment (MA06 §4) — declared ahead of the bare EQ
+# token in SECTION 2, so `=.`/`=:` never lex as EQ followed by a stray
+# `.`/`:`.
+ASSIGN_LOCAL  = "=."
+ASSIGN_GLOBAL = "=:"
+
+# ============================================================================
+# SECTION 2: Single-character primitive verb and comparison glyphs (MA06
+# §4), each declared after any digraph sibling from SECTION 1 that shares
+# its first character.
+#
+# conjugate / add, negate / subtract, sign / multiply, reciprocal / divide
+# (NOT reduce — see the callout above), exponential / power, shape /
+# reshape, ravel / catenate, tally / copy-replicate — one glyph per row, in
+# MA06 §4's listed order.
+# ============================================================================
+
+PLUS    = "+"
+MINUS   = "-"
+STAR    = "*"
+PERCENT = "%"
+CARET   = "^"
+DOLLAR  = "$"
+RAVEL   = ","
+HASH    = "#"
+
+EQ = "="
+LT = "<"
+GT = ">"
+
+# ============================================================================
+# SECTION 3: Adverbs, the one in-scope conjunction, and grouping (MA06 §4).
+#
+# REDUCE and SCAN are postfix on the verb they modify (`+/`, `+\`), exactly
+# as APL's own `/` and `\` already are (MA06 §3: "adverbs, unlike verbs,
+# mostly didn't need re-spelling"). AT is J's `@` ("atop") compose
+# conjunction — a distinct primitive from a train (MA06 §4), applied
+# prefix between two verbs (`f@g`).
+# ============================================================================
+
+REDUCE = "/"
+SCAN   = "\"
+AT     = "@"
+
+LPAREN = "("
+RPAREN = ")"
+
+# ============================================================================
+# SECTION 4: Literal value tokens
+#
+# NUMBER uses a leading underscore for a negative literal (see the header
+# note above), in the mantissa and/or the exponent (e.g. `_3`, `1.5E_3`) —
+# never the ASCII `-`, which is always the MINUS verb token above, exactly
+# mirroring why apl.tokens keeps its own high-minus `¯` distinct from `-`.
+#
+# NAME is a plain ASCII identifier (previously-assigned variables). J's
+# real `u.`/`v.` locale-scoping vocabulary is out of scope for this first
+# cut (MA06 §4).
+# ============================================================================
+
+NUMBER = /_?[0-9]+(\.[0-9]+)?([Ee]_?[0-9]+)?/
+NAME   = /[A-Za-z][A-Za-z0-9]*/
+
+# ============================================================================
+# SECTION 5: Significant newlines + skip patterns
+#
+# A newline separates statements, exactly like APL (apl.tokens SECTION 5) —
+# the same "no dropped newlines inside `( … )`" simplification applies here
+# too: every parenthesised expression must stay on one line for now.
+#
+# `NB.` starts a line comment, consumed to (but not including) the end of
+# the line, so the following NEWLINE is still matched as its own token —
+# mirroring how apl.tokens' `⍝` skip pattern works, just ASCII-spelled and
+# three characters instead of one. Because skip patterns are always tried
+# before the token patterns above (this repo's lexer convention), `NB.`
+# never risks being swallowed by NAME matching a bare `NB` first, even
+# though no ordering precaution was needed in SECTION 1 for it specifically.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /NB\.[^\r\n]*/

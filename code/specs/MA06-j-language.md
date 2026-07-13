@@ -199,6 +199,15 @@ language here ([`MA01`](MA01-matlab-language.md),
   assignment statement (`name =. expr` / `name =: expr`); right-to-left
   evaluation, parenthesised grouping `( )`.
 - **Comments** `NB.` to end of line.
+- **Negative number literals** (addendum, fixed at MA-6b since this spec
+  did not originally settle it): a leading underscore (`_5`, `1.5E_3`) per
+  J's own real historical convention — not APL's high-minus `¯` (MA05 §4),
+  which has no ASCII spelling. J's real language also overloads a bare `_`/
+  `__` for (positive/negative) infinity; that reading is out of scope for
+  this cut (never listed among this section's primitives) and is excluded
+  structurally, not just by omission — `j.tokens`' `NUMBER` pattern requires
+  at least one digit after the underscore, so a lone `_` matches no token
+  in this grammar.
 
 **Deferred (post-MA-6):** boxing and nested/ragged arrays (§1), the
 `"` rank conjunction and axis-specific reduce/scan (§1 — the direct J
