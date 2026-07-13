@@ -109,20 +109,25 @@ describe("replaceRepeated (//. — fixed point)", () => {
     expect(replaceRepeated(expr, [dropAddZero], 100)).toEqual(expr);
   });
 
-  it("survives a moderately large maxIterations on a non-converging rule set without crashing", () => {
-    // Documents the caveat in this function's own doc comment: each firing
-    // recurses one more native JS stack frame (mirroring cas-pattern-
-    // matching's own `rewrite()` shape), so maxIterations bounds a SEPARATE
-    // recursion from MAX_TERM_DEPTH. For THIS particular rule shape
-    // (f(x_) -> f(f(x_)), which nests one level deeper each time it fires),
-    // depth and firing count grow together 1:1, so a maxIterations well
-    // under MAX_TERM_DEPTH (512) is needed for RewriteCycleError -- not
-    // DepthLimitError -- to be the one that fires first; 300 demonstrates
-    // an ordinary, non-extreme value resolving cleanly either way.
-    const f = sym("f");
-    const neverConverges = rule(app(f, [xPat]), app(f, [app(f, [xPat])]));
-    const result = replaceRepeated(app(f, [sym("a")]), [neverConverges], 300);
+  it("survives a huge maxIterations on a non-converging, non-deepening rule set without a stack overflow", () => {
+    // Isolates the exact bug this function's retry loop was rewritten to
+    // fix: a -> b, b -> a cycles forever WITHOUT ever building deeper tree
+    // structure (both sides are bare symbols, never an Apply), so
+    // MAX_TERM_DEPTH's tree-descent check never even triggers here -- if
+    // the retry step still recursed once per firing (the earlier,
+    // /security-review-flagged design), 50,000 firings would mean 50,000
+    // nested native stack frames and a real stack overflow. The current
+    // (loop-based-retry) implementation costs O(1) stack per firing
+    // regardless, so this resolves cleanly to RewriteCycleError instead.
+    const a = sym("a");
+    const b = sym("b");
+    const aToB = rule(a, b);
+    const bToA = rule(b, a);
+    const result = replaceRepeated(a, [aToB, bToA], 50_000);
     expect(isRewriteCycleError(result)).toBe(true);
+    if (isRewriteCycleError(result)) {
+      expect(result.maxIterations).toBe(50_000);
+    }
   });
 });
 

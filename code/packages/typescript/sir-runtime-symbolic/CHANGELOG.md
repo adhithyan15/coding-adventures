@@ -37,6 +37,29 @@ All notable changes to this project will be documented in this file.
   rule's static pattern/RHS structure, not by the runtime expression being
   matched against; see `src/index.ts`'s module doc comment for the full
   reasoning.
+### Fixed
+
+- **`replaceRepeated`'s retry-on-fire step no longer recurses natively** —
+  found by this package's own `/security-review` before its first push.
+  The initial implementation mirrored `cas-pattern-matching`'s `rewrite()`
+  exactly, including a recursive `walk(replacement, depth)` call each time a
+  rule fired at a tree position — one more native stack frame per firing,
+  bounded only by the caller-supplied `maxIterations`, not by
+  `MAX_TERM_DEPTH`. A caller passing a large `maxIterations` on a slowly- or
+  never-converging rule set could exhaust the stack through that path
+  alone, regardless of how shallow the input expression was — the exact
+  class of bug `MAX_TERM_DEPTH` exists to close, reopened via a second,
+  unguarded path. Fixed by making the retry a local loop instead of a
+  recursive call: firing a rule now just updates `current` and loops back
+  (same call frame), so repeated firings at one position cost O(1) native
+  stack frames however many times they occur; `depth` (and thus
+  `MAX_TERM_DEPTH`) now only increases on a genuine descent into `head`/
+  `args`, and `maxIterations` bounds iteration count (CPU time) only, never
+  native recursion depth. Verified with a regression test cycling two
+  non-deepening rules (`a -> b`, `b -> a`) 50,000 times without a crash —
+  the earlier, recursive design would have overflowed the stack at that
+  volume.
+
 - `rule`/`ruleDelayed` currently match and substitute identically (no
   general expression evaluator exists yet in this runtime to make the
   eager-vs-delayed RHS-evaluation distinction observable) — documented and

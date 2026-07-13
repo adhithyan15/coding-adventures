@@ -308,18 +308,20 @@ function walkOnce(
  * *additional* recursion-depth cap this package adds beyond what
  * `rewrite()` itself enforces (see "Depth safety").
  *
- * **A caller-facing nuance worth calling out explicitly** (an existing
- * property of the ported algorithm, not something new this package
- * introduces): each time a rule fires, the local retry loop below recurses
- * into `walk(replacement, depth)` — one native JS stack frame per firing,
- * same as `rewrite()`'s own `cur = walk(replacement, ...)` — so `maxIterations`
- * itself bounds a SEPARATE recursion (retry count), distinct from
- * {@link MAX_TERM_DEPTH}'s tree-structural one. A caller that passes a very
- * large `maxIterations` (well beyond the "well-behaved rules converge in
- * 2-5 passes" norm this default assumes) could still exhaust the stack via
- * that path before `MAX_TERM_DEPTH` or `maxIterations` itself is reached.
- * Callers should keep `maxIterations` modest — SIR23's own point 6 already
- * places this choice on the backend/caller, not this package.
+ * **A gap this implementation deliberately does NOT port from `rewrite()`,
+ * found by this package's own `/security-review`:** `rewrite()`'s
+ * retry-on-fire step is a *recursive* call (`cur = walk(replacement, ...)`)
+ * — one more native stack frame per firing, chained for as long as retries
+ * keep happening at one tree position — so its native recursion depth is
+ * bounded only by `maxIterations`, not by any tree-depth cap; a caller
+ * passing a large `maxIterations` (well beyond the "well-behaved rules
+ * converge in 2-5 passes" norm the default assumes) could exhaust the stack
+ * through that path alone, independent of `MAX_TERM_DEPTH` and independent
+ * of how deep or shallow `expr` itself is. The version below
+ * instead loops locally when a rule fires at the current position — `depth`
+ * only ever increases on a genuine descent into `head`/`args`, so
+ * `maxIterations` now bounds only iteration *count* (CPU time), never
+ * native recursion depth, however large a value a caller passes.
  *
  * @example
  * ```ts
@@ -346,19 +348,27 @@ export function replaceRepeated(
     }
 
     let current = node;
-    if (node.kind === "apply") {
-      const newHead = walk(node.head, depth + 1);
-      if (isErrorResult(newHead)) return newHead;
-      const newArgs: IRNode[] = [];
-      for (const arg of node.args) {
-        const nextArg = walk(arg, depth + 1);
-        if (isErrorResult(nextArg)) return nextArg;
-        newArgs.push(nextArg);
-      }
-      current = apply(newHead, newArgs);
-    }
-
+    // Outer loop: each pass (re)processes `current`'s children bottom-up,
+    // then tries firing a rule at this position. A fired rule's
+    // replacement becomes the new `current` and the loop repeats --
+    // iteratively, at this SAME call frame, not via a recursive call --
+    // so however many times a rule fires at one tree position, that costs
+    // O(1) native stack frames, not O(firings). `depth` is unchanged across
+    // iterations of this loop (nothing here descends to a child); it only
+    // increases via the genuine `head`/`args` recursion below.
     while (true) {
+      if (current.kind === "apply") {
+        const newHead = walk(current.head, depth + 1);
+        if (isErrorResult(newHead)) return newHead;
+        const newArgs: IRNode[] = [];
+        for (const arg of current.args) {
+          const nextArg = walk(arg, depth + 1);
+          if (isErrorResult(nextArg)) return nextArg;
+          newArgs.push(nextArg);
+        }
+        current = apply(newHead, newArgs);
+      }
+
       let fired = false;
       for (const candidateRule of rules) {
         const replacement = applyRule(candidateRule, current);
@@ -367,17 +377,17 @@ export function replaceRepeated(
           if (counter > maxIterations) {
             return { kind: "rewrite-cycle", maxIterations };
           }
-          // Re-walk the replacement at the SAME depth: this substitutes a
-          // new value at the current position, it does not descend to a
-          // child, so the depth budget for this position is unchanged.
-          const walked = walk(replacement, depth);
-          if (isErrorResult(walked)) return walked;
-          current = walked;
+          current = replacement;
           fired = true;
           break;
         }
       }
       if (!fired) return current;
+      // Loop again: `current` (the fresh replacement) may itself contain
+      // sub-structure that hasn't been processed yet, so it goes through
+      // the same "process children, then try rules" pass before this
+      // position is considered stable -- matching `rewrite()`'s own
+      // "re-walk the replacement" behavior, just without recursing to do it.
     }
   };
 
