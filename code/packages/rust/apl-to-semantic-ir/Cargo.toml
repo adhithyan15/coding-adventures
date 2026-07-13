@@ -1,0 +1,28 @@
+[package]
+name = "apl-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "APL CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-4f, the last APL rollout item per HML01."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-apl-parser = { path = "../apl-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly. Note this
+# crate deliberately does NOT depend on `coding-adventures-apl-runtime` --
+# lowering only needs the parse tree shape (`apl-parser`), not the tree-
+# walking evaluator.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# Every lowered module uses at least one SIR22/SIR22-addendum node (there is
+# no purely-scalar-literal escape hatch the way matlab-to-semantic-ir has,
+# since even `3+4` is an `ElementwiseOp` here -- see `src/lower.rs`'s module
+# doc comment, point 1). No backend implements codegen for these nodes yet
+# (`sir-runtime-array`'s SIR22 codegen is separate, not-yet-shipped
+# follow-on work per HML01 §4), so this dev-dependency exists solely to
+# verify the *capability-rejection* path: a real `Module`, checked through
+# the actual `Backend::check_module`, mirroring the same verification
+# pattern `matlab-to-semantic-ir`'s own `tests/test_validator.rs` uses.
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }

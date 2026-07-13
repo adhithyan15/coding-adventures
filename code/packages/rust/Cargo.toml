@@ -245,6 +245,7 @@ members = [
     "apl-parser",
     "apl-runtime",
     "apl-repl",
+    "apl-to-semantic-ir",
     "logic-gates",
     "logic-core",
     "lookup-core",
