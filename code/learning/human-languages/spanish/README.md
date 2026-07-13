@@ -71,12 +71,11 @@ material sliced into car-sized practice pieces.
 ## Progress
 
 - **Part 0 — Sounds & Letters**: Chapter 0 fully authored (`units/ES-P0-U00*`).
-- **Part I — Foundations**: Chapter 1 fully authored (`units/`, sessions
-  1-10) plus one morphology unit (`ES-P0-M01`). Chapters 2-4 not yet
-  written.
+- **Part I — Foundations**: complete. Chapters 1-4 fully authored
+  (`units/`, sessions 1-28), plus one morphology unit (`ES-P0-M01`).
 - **Parts II-V**: skeleton only, in [`roadmap.md`](./roadmap.md).
-- **Book**: Part 0 + Chapter 1 written in `book/`; grows chapter by chapter
-  alongside `units/`.
+- **Book**: Part 0 + all of Part I (Chapters 1-4) written in `book/`; grows
+  chapter by chapter alongside `units/`.
 
 See [`CHANGELOG.md`](./CHANGELOG.md) for what's been added, chapter by
 chapter.
