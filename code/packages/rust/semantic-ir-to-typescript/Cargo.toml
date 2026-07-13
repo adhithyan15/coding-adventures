@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir-to-typescript"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 description = "Semantic IR → self-contained TypeScript source code (SIR12). First backend for the SIR10 narrow-waist IR."
 
@@ -10,3 +10,4 @@ semantic-ir = { path = "../semantic-ir" }
 [dev-dependencies]
 twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }
 ruby-to-semantic-ir = { path = "../ruby-to-semantic-ir" }
+wolfram-to-semantic-ir = { path = "../wolfram-to-semantic-ir" }

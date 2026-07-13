@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.9.0 — SIR23 symbolic/pattern codegen (HML01 Stream B, item 7)
+
+Real codegen for the SIR23 symbolic-expression + pattern/rewrite domain —
+previously deferred (panicking on `Expr::SymSymbol`/`SymRational`/`SymApply`/
+`SymPatternBlank`/`SymPatternNamed`/`SymRule`/`SymReplaceAll`, gated out at
+the capability check). A compiled Wolfram/Macsyma/Maxima program using
+pattern-matching or rewrite rules (`x /. a -> b`, `x //. rules`) now compiles
+to TypeScript that constructs/consumes a real term-tree value at runtime via
+the imported `@coding-adventures/sir-runtime-symbolic` package, bound as
+`__SirSym`:
+
+- `SymSymbol`/`SymRational` → `__SirSym.sym(...)`/`__SirSym.rational(...)`.
+- `SymApply { head, args }` → `__SirSym.apply(head, [args...])`, recursing
+  through `emit_sym_operand` — a child that is an `IntLit`/`FloatLit`/
+  `StrLit` (the three literal kinds SIR23 "reuses directly" rather than
+  defining new leaf nodes for) gets wrapped into the matching
+  `__SirSym.int`/`numberNode`/`stringNode` constructor, since a bare host
+  number/string is never a valid `IRNode` term; every other child (a nested
+  symbolic node, or a `VarRef`/call whose value is already a term by the
+  frontend's own convention) emits unchanged.
+- `SymPatternBlank`/`SymPatternNamed` → `__SirSym.blank()`/`blankTyped(...)`/
+  `named(...)`.
+- `SymRule { delayed }` → `__SirSym.rule(...)` (`->`) or `ruleDelayed(...)`
+  (`:>`).
+- `SymReplaceAll { repeated }` → `__SirSym.unwrap(__SirSym.replaceAll(...))`
+  (`/.`) or `unwrap(replaceRepeated(...))` (`//.`) — wrapped in `unwrap`
+  because both rewrite functions can return a `DepthLimitError`/
+  `RewriteCycleError` sentinel instead of a real term; a compiled
+  `SymReplaceAll` must evaluate to a term value or fail loudly, never
+  silently hand that sentinel to code expecting an `IRNode`.
+
+Accepts `Feature::SymbolicExpr`, `Feature::PatternMatching`, and
+`Feature::Rationals` (the last shared with SIR22, scoped exactly to
+`SymRational` — no other construct in this backend triggers it yet). The
+`@coding-adventures/sir-runtime-symbolic` import is gated by `uses_symbolic`
+(either feature), so a purely-numeric module never gains the dependency.
+
+Required a small, additive extension to `@coding-adventures/sir-runtime-symbolic`
+itself (0.1.0 → 0.2.0): re-exports of `symbolic-ir`'s leaf-term constructors
+(`sym`/`int`/`rational`/`numberNode`/`stringNode`, previously missing) and a
+new `unwrap(result)` helper for the depth/cycle-error-sentinel handling
+above.
+
+Tested with unit shape assertions for every new node kind (leaf constructors,
+literal wrapping, both pattern-blank forms, `rule` vs `ruleDelayed`,
+`replaceAll` vs `replaceRepeated`, the import gate) plus a real end-to-end
+test compiling actual Wolfram source (`x /. a -> b`) through
+`wolfram-to-semantic-ir` and this backend, not just hand-built `Module`s.
+
+The JavaScript backend (`semantic-ir-to-javascript`) still defers these nodes
+— it inlines its own runtime rather than importing packages, so SIR23 there
+needs a from-scratch inlined term-rewriting engine, not a straightforward
+import; tracked as follow-up work.
+
 ## 0.8.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 Emits the display-convention selection (SIR display-convention spec) for the

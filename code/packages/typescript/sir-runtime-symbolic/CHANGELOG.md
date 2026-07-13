@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-07-13
+
+### Added
+
+- Re-exports `@coding-adventures/symbolic-ir`'s leaf-term constructors —
+  `sym`, `int`, `rational`, `numberNode`, `stringNode` — unchanged. These
+  were missing from 0.1.0: a compiled `SymSymbol`/`SymRational` node, or a
+  bare `IntLit`/`FloatLit`/`StrLit` appearing as a child of a `SymApply`/
+  `SymRule`/`SymReplaceAll` (which SIR23 "reuses directly" rather than
+  defining new leaf node kinds for), has nowhere else to become a real
+  `IRNode` at the single `__SirSym` import site a generated module uses —
+  a bare host number/string is never a valid term. Needed by the
+  `semantic-ir-to-typescript` SIR23 codegen this version unblocks.
+- **`unwrap(result)`** — throws a plain `Error` if a `replaceAll`/
+  `replaceRepeated` result is a `DepthLimitError`/`RewriteCycleError`
+  sentinel, otherwise returns the `IRNode` unchanged. Both rewrite
+  functions return an error *value* rather than throwing (so a caller that
+  wants to inspect the failure kind can), but a compiled `SymReplaceAll` is
+  an ordinary expression that must evaluate to a term value or fail
+  loudly — it must never silently hand a `{ kind: "depth-limit" }`
+  sentinel to code expecting an `IRNode`. Every codegen call site routes
+  through this helper rather than using the raw result directly.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

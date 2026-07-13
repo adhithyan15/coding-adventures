@@ -68,6 +68,11 @@
 import {
   app,
   equals,
+  int,
+  numberNode,
+  rational,
+  stringNode,
+  sym,
   type IRApply,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
@@ -105,6 +110,43 @@ export type { IRNode, IRApply };
  */
 export function apply(head: IRNode, args: readonly IRNode[]): IRNode {
   return app(head, args);
+}
+
+/**
+ * Re-exported leaf-term constructors, unchanged, under the names a
+ * `SymSymbol`/`SymRational` node — or a literal (`IntLit`/`FloatLit`/
+ * `StrLit`, which SIR23 "reuses directly" rather than defining new node
+ * kinds for) appearing as a child of a `SymApply`/`SymRule`/
+ * `SymReplaceAll` — lowers to. A bare host number/string is never a valid
+ * `IRNode`, so a backend must wrap any such literal through `int`/
+ * `numberNode`/`stringNode` before it can appear inside a term tree; `sym`
+ * and `rational` build the two SIR23-native leaf shapes directly.
+ */
+export { int, numberNode, rational, stringNode, sym };
+
+/**
+ * Unwrap a {@link replaceAll}/{@link replaceRepeated} result, throwing a
+ * plain `Error` if the tree walk hit its depth cap or (for
+ * `replaceRepeated`) its iteration cap instead of returning a real
+ * `IRNode`. Both functions return an error *value* rather than throwing
+ * directly (see their own doc comments), because returning a value lets a
+ * caller that wants to inspect the failure kind do so without a
+ * try/catch. Semantic-IR-emitted code has no such caller today — a
+ * `SymReplaceAll` is an ordinary expression that must evaluate to a term
+ * value or fail loudly, never silently hand a `{ kind: "depth-limit" }`
+ * sentinel to code expecting an `IRNode` — so every compiled call site
+ * routes through this helper instead of using the raw result directly.
+ */
+export function unwrap(result: IRNode | DepthLimitError | RewriteCycleError): IRNode {
+  if (
+    result !== null &&
+    typeof result === "object" &&
+    "kind" in result &&
+    (result.kind === "depth-limit" || result.kind === "rewrite-cycle")
+  ) {
+    throw new Error(`sir-runtime-symbolic: ${result.kind}`);
+  }
+  return result as IRNode;
 }
 
 // ---------------------------------------------------------------------------

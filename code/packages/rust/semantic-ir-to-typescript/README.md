@@ -63,6 +63,17 @@ The TypeScript backend accepts these SIR features:
   `const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };`. On the
   call side every `KeywordArg` collapses into one trailing object literal:
   `f(1, y: 2)` emits `f(1, { y: 2 })`. Direct lowering, no runtime helper.
+- `SymbolicExpr` / `PatternMatching` (SIR23) — a compiled Wolfram/Macsyma/
+  Maxima program's symbolic-expression and pattern/rewrite nodes
+  (`SymSymbol`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+  `SymReplaceAll`) construct/consume a real term-tree value at runtime via
+  the imported `@coding-adventures/sir-runtime-symbolic` package, bound as
+  `__SirSym` (gated by either feature, so a purely-numeric module never
+  gains the dependency). `x /. a -> b` emits
+  `__SirSym.unwrap(__SirSym.replaceAll(__SirSym.sym("x"), [__SirSym.rule(__SirSym.sym("a"), __SirSym.sym("b"))]))`.
+- `Rationals` (shared with SIR22) — accepted only for `SymRational`
+  (`__SirSym.rational(numer, denom)`); no other construct in this backend
+  triggers it yet.
 
 It **rejects**:
 
