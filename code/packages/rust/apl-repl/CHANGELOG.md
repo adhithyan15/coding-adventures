@@ -18,6 +18,16 @@ All notable changes to this project will be documented in this file.
   line is now rejected cleanly (`Error: line exceeds the 65536-byte limit;
   discarded`) with its remainder drained (one more bounded chunk) rather
   than left to be picked up mid-line by the next read.
+- `read_bounded_line` reads raw bytes (`read_until(b'\n', ..)`) and only
+  decodes UTF-8 after confirming the byte run ended at a genuine `\n`
+  within the cap, rather than calling `BufRead::read_line` directly on the
+  `Take`-wrapped reader — found by `/security-review` on this same change:
+  `Take` truncates at an arbitrary byte offset with no notion of a
+  character boundary, so a valid UTF-8 line only slightly over the cap
+  could have a multi-byte character straddle that offset and make
+  `read_line` report a spurious (and fatal — it aborted the whole session)
+  `InvalidData` error instead of the intended clean "line too long"
+  message.
 
 ## [0.1.0] - 2026-07-11
 

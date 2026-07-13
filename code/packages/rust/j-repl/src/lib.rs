@@ -88,8 +88,22 @@ const MAX_LINE_LEN: u64 = 64 * 1024;
 ///   itself bounded for the same reason) so a well-behaved caller's next
 ///   read starts at (or very near) a genuine line boundary instead of
 ///   picking up mid-line.
+///
+/// Reads raw **bytes** (`read_until(b'\n', ..)`), not [`BufRead::read_line`]
+/// directly, and only attempts UTF-8 decoding *after* confirming the byte
+/// run actually ended at a real `\n` within the cap. `read_line` validates
+/// UTF-8 over whatever byte run it stops at — and `Take` stops at an
+/// arbitrary **byte** offset with no notion of a character boundary, so an
+/// ordinary, fully valid UTF-8 line whose true length only slightly exceeds
+/// [`MAX_LINE_LEN`] can have a multi-byte character straddle that exact
+/// offset, making `read_line` alone report a spurious `InvalidData` I/O
+/// error (fatal — it aborts the whole session, see `main.rs`) for input that
+/// isn't actually malformed, just long. Deciding "oversized?" on bytes first
+/// means a cap that happens to split a character is correctly treated as
+/// just another oversized line, not a decoding failure (mirrors
+/// `apl-repl::read_bounded_line`'s identical fix exactly).
 fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Result<String, ()>>> {
-    let mut line = String::new();
+    let mut buf: Vec<u8> = Vec::new();
     // Explicit UFCS + an explicit reborrow (`&mut *reader`), not plain
     // `reader.take(...)` method-call syntax: `Read`/`BufRead` are
     // implemented both for `R` itself and for `&mut R`, and ordinary
@@ -100,23 +114,33 @@ fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Resul
     // trait and the exact `&mut R` receiver explicitly removes that
     // ambiguity.
     let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
-    let read = limited.read_line(&mut line)?;
+    let read = limited.read_until(b'\n', &mut buf)?;
     if read == 0 {
         return Ok(None);
     }
-    if line.ends_with('\n') {
-        return Ok(Some(Ok(line)));
+    if buf.last() != Some(&b'\n') {
+        // Hit the cap without ever seeing a newline -- discard the rest of
+        // this same oversized line (one more bounded chunk; if the line
+        // somehow exceeds even that, the next call will simply report
+        // another oversized chunk rather than hang or grow memory further,
+        // which is a safe, if repetitive, degradation for a threat model
+        // this crate does not otherwise need to defend against today). This
+        // path is taken purely on byte length -- never on whether `buf`
+        // happens to be valid UTF-8 -- so a cap that splits a multi-byte
+        // character lands here too, not in the `from_utf8` error arm below.
+        let mut discard: Vec<u8> = Vec::new();
+        let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
+        let _ = limited.read_until(b'\n', &mut discard);
+        return Ok(Some(Err(())));
     }
-    // Hit the cap without ever seeing a newline -- discard the rest of this
-    // same oversized line (one more bounded chunk; if the line somehow
-    // exceeds even that, the next call will simply report another oversized
-    // chunk rather than hang or grow memory further, which is a safe, if
-    // repetitive, degradation for a threat model this crate does not
-    // otherwise need to defend against today).
-    let mut discard = String::new();
-    let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
-    let _ = limited.read_line(&mut discard);
-    Ok(Some(Err(())))
+    // The byte run genuinely ended at a real `\n` within the cap, so any
+    // UTF-8 error here is real malformed input, not a truncation artifact --
+    // propagated as an I/O error, same as `BufRead::read_line` would have
+    // done for this same (uncapped) byte run.
+    match String::from_utf8(buf) {
+        Ok(line) => Ok(Some(Ok(line))),
+        Err(e) => Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e)),
+    }
 }
 
 /// A persistent interactive J session.
@@ -368,6 +392,40 @@ mod tests {
         assert!(
             text.contains('2'),
             "session must keep working after an oversized line, got: {text}"
+        );
+    }
+
+    #[test]
+    fn read_bounded_line_handles_a_multibyte_char_straddling_the_cap_boundary() {
+        // A line whose true length only slightly exceeds MAX_LINE_LEN, with
+        // a 2-byte UTF-8 character ('é') positioned so the cap lands right
+        // in the middle of it. Before the byte-oriented rewrite, this made
+        // `read_line` (validating whatever partial byte run `Take` handed
+        // it) return a spurious `InvalidData` I/O error -- fatal, per
+        // `run`'s `?` propagation -- for a line that is not malformed, just
+        // long. It must now be treated exactly like any other oversized
+        // line: `Some(Err(()))`, not a hard I/O error. Mirrors
+        // `apl-repl`'s identical regression test.
+        let mut oversized: Vec<u8> = vec![b'a'; MAX_LINE_LEN as usize - 1];
+        oversized.extend_from_slice("é".as_bytes()); // 2-byte char, straddles the cap
+        oversized.push(b'\n');
+        let mut input = oversized.as_slice();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Err(())));
+    }
+
+    #[test]
+    fn run_survives_a_multibyte_char_straddling_the_cap_boundary() {
+        let mut oversized: Vec<u8> = vec![b'a'; MAX_LINE_LEN as usize - 1];
+        oversized.extend_from_slice("é".as_bytes());
+        let mut input = oversized;
+        input.extend_from_slice(b"\n1+1\nquit\n");
+        let mut output = Vec::new();
+        run(input.as_slice(), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("exceeds"), "expected an oversized-line error, got: {text}");
+        assert!(
+            text.contains('2'),
+            "session must keep working after a boundary-splitting oversized line, got: {text}"
         );
     }
 }
