@@ -1878,6 +1878,32 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         });
     }
 
+    // GLOB / NOT GLOB
+    // Grammar: `[NOT] GLOB additive`
+    //
+    // SQLite defines the operator `X GLOB Y` as the function `glob(Y, X)` —
+    // note the argument order: the PATTERN is the first argument. Rather than
+    // add a dedicated `Glob` expr node + codegen + VM opcode, we lower the
+    // operator onto the `glob` builtin the VM already implements, exactly as
+    // SQLite does. `NOT GLOB` wraps the call in a logical NOT.
+    if direct_tok_uppers.contains(&"GLOB".to_string()) {
+        let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        let pattern_node = child_nodes_ordered
+            .get(1)
+            .ok_or_else(|| PlanError::UnsupportedStatement("GLOB missing pattern".to_string()))?;
+        let pattern = plan_expression(pattern_node)?;
+        let call = SqlExpr::FunctionCall {
+            name: "glob".to_string(),
+            args: vec![pattern, left], // glob(pattern, value)
+            star: false,
+        };
+        return Ok(if negated {
+            SqlExpr::UnaryOp { op: UnaryOp::Not, expr: Box::new(call) }
+        } else {
+            call
+        });
+    }
+
     // IN / NOT IN
     // Grammar: `[NOT] IN ( value_list )`
     // The value_list is a child node.

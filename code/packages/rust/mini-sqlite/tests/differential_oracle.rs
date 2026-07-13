@@ -789,6 +789,27 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT n FROM t ORDER BY n LIMIT 2, 3",
     },
+    // The `GLOB` infix operator: case-sensitive Unix-glob matching (`*` = any
+    // run, `?` = one char). `X GLOB Y` is SQLite's `glob(Y, X)`. Case matters —
+    // `x*` matches `xyz` but not `Xyz` (unlike LIKE, which is case-insensitive
+    // for ASCII). Exercises the operator lowering to the glob builtin.
+    Case {
+        id: "glob_operator",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'xyz'),(2,'abc'),(3,'xen'),(4,'Xyz')",
+        ],
+        query: "SELECT id FROM t WHERE s GLOB 'x*' ORDER BY id",
+    },
+    // `NOT GLOB` is the logical negation, and `?` matches exactly one char.
+    Case {
+        id: "not_glob_and_question",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'cat'),(2,'cot'),(3,'coat'),(4,'cut')",
+        ],
+        query: "SELECT id FROM t WHERE s NOT GLOB 'c?t' ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

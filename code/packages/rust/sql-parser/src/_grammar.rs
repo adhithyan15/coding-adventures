@@ -452,6 +452,19 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"additive"#.to_string() },
                         ] },
+                        // `x GLOB pattern` — case-sensitive Unix-glob matching.
+                        // SQLite defines `X GLOB Y` as `glob(Y, X)`, so the
+                        // planner lowers this to the existing `glob` builtin
+                        // (args swapped); `NOT GLOB` wraps it in a logical NOT.
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"GLOB"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::Literal { value: r#"GLOB"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                        ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"IS"#.to_string() },
                             GrammarElement::Literal { value: r#"NULL"#.to_string() },
