@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.6] - Unreleased
+
+### Added
+
+- **`CAST(expr AS type)` planning.** New `SqlExpr::Cast { expr, ty }` variant
+  and `CastType { Integer, Real, Text }` enum. `plan_cast` extracts the inner
+  expression and resolves the declared type name to a `CastType` using SQLite's
+  substring **affinity** rule (so `INT`/`VARCHAR`/`FLOAT` synonyms resolve
+  correctly). `BLOB` and `NUMERIC` are not yet supported and return an
+  `UnsupportedStatement` error (a later increment). Codegen/VM apply the
+  conversion (sql-codegen 0.6.1, sql-vm 0.4.12).
+
 ## [0.2.5] - Unreleased
 
 ### Added

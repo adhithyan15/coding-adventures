@@ -551,6 +551,18 @@ mod tests {
         assert!(find_rule(&ast2, "comparison"), "Expected comparison for NOT GLOB");
     }
 
+    /// `CAST(expr AS type)` parses as a primary. The `CAST` alternative sits
+    /// before `function_call`, so `CAST(a AS INTEGER)` is not mistaken for a
+    /// function call named CAST.
+    #[test]
+    fn test_parse_cast() {
+        let ast = assert_program_root("SELECT CAST(a AS INTEGER) FROM t");
+        assert!(find_rule(&ast, "primary"), "Expected primary");
+        // A CAST expression can also appear in a WHERE predicate.
+        let ast2 = assert_program_root("SELECT x FROM t WHERE CAST(s AS REAL) > 1.5");
+        assert!(find_rule(&ast2, "comparison"), "Expected comparison");
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------

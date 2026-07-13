@@ -604,6 +604,13 @@ fn fold_expr(expr: SqlExpr) -> SqlExpr {
             fold_unary(op, inner)
         }
 
+        // CAST: fold the operand, but keep the conversion (a cast of a constant
+        // is still evaluated by the VM — we don't constant-fold the coercion).
+        Cast { expr: inner, ty } => Cast {
+            expr: Box::new(fold_expr(*inner)),
+            ty,
+        },
+
         IsNull(inner) => {
             let inner = fold_expr(*inner);
             match &inner {
@@ -1280,6 +1287,7 @@ fn collect_columns_in_expr(expr: &SqlExpr, out: &mut HashSet<String>) {
             collect_columns_in_expr(right, out);
         }
         SqlExpr::UnaryOp { expr, .. } => collect_columns_in_expr(expr, out),
+        SqlExpr::Cast { expr, .. } => collect_columns_in_expr(expr, out),
         SqlExpr::IsNull(inner) | SqlExpr::IsNotNull(inner) => {
             collect_columns_in_expr(inner, out)
         }

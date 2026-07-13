@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.6.1] - Unreleased
+
+### Added
+
+- **`Instruction::Cast(CastType)`** and a `compile_expr` arm for
+  `SqlExpr::Cast`: compile the operand, then emit a single `Cast` opcode that
+  the VM applies. `CastType` is re-exported from the planner so the codegen
+  and VM name the same enum.
+
 ## [0.6.0] - Unreleased
 
 ### Added

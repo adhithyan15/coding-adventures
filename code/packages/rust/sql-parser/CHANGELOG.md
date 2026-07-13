@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.7] - Unreleased
+
+### Added
+
+- **`CAST(expr AS type)` expressions.** A `CAST` alternative was added to the
+  `primary` rule, before `function_call` so the ordered-choice parser matches
+  the AS-typed form first. The type is a `NAME` token (INTEGER/REAL/TEXT and
+  their affinity synonyms). The planner (sql-planner 0.2.6) turns it into a
+  `SqlExpr::Cast`.
+
 ## [0.1.6] - Unreleased
 
 ### Added
