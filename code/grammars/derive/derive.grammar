@@ -1,0 +1,120 @@
+# @version 1
+
+# =============================================================================
+# derive.grammar — Parser grammar for Derive (a subset)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from derive-lexer (D-2). Every Derive expression parses down
+# to ordinary infix/postfix operators over `head[args]`-shaped calls; the
+# D-4 runtime lowers each rule into the canonical symbolic-ir head (Plus,
+# Times, Power, Assign, Define, List, …). See
+# code/specs/MA07-derive-language.md §3 for the full surface table this
+# grammar implements.
+#
+# Token names (UPPERCASE) come from the Derive lexer (code/grammars/derive/derive.tokens):
+#   NUMBER NAME                literals and symbols
+#   ASSIGN (:=)                 the ONE assignment/definition operator
+#   EQ (=)  LE (<=)  LESS (<)  GREATER (>)  GE (>=)     comparison (`=` is
+#                                                          equation, NOT assignment)
+#   PLUS MINUS TIMES SLASH POWER      arithmetic
+#   LPAREN RPAREN               grouping AND function application F(...)
+#   LBRACKET RBRACKET           vector/matrix literal [...] / [...;...]
+#   COMMA SEMI NEWLINE          argument/list separator, matrix row separator,
+#                                statement separator
+#   KEYWORD ("AND"/"OR"/"NOT")  boolean-algebra keywords (case-sensitive; see
+#                                derive.tokens's `keywords:` block) — matched
+#                                here by their literal spelling, same
+#                                convention as macsyma.grammar's "and"/"or"/"not"
+#
+# Precedence cascade (loosest binds first -> tightest binds last), per the
+# MA07 spec §3 table:
+# ---------------------------------------------------------------
+#   assignment      :=                 (right-associative)
+#   logical_or      OR
+#   logical_and     AND
+#   logical_not     NOT                (prefix)
+#   comparison      = <= < > >=
+#   additive        + -
+#   multiplicative  * /
+#   unary           -                  (prefix)
+#   power           ^                  (right-associative)
+#   postfix         F(...)             (function/named-builtin application)
+#   atom            literals, symbols, vectors, ( ... )
+# =============================================================================
+
+program = { statement_line } ;
+
+# A line is one statement followed by a NEWLINE, or a blank/terminator-only
+# line — mirrors wolfram.grammar's statement_line exactly (Derive has no
+# other statement terminator; see derive.tokens's own header).
+statement_line = statement NEWLINE
+               | statement
+               | NEWLINE ;
+
+statement = expr ;
+
+expr = assignment ;
+
+# `:=` is Derive's ONE assignment/definition operator, used identically for
+# `x := 5` (variable assignment, LHS is a bare NAME reducing straight through
+# every tighter level down to `atom`) and `F(x) := x^2 + 1` (function
+# definition, LHS is a `postfix` application `F(x)` reducing through the same
+# path) — the D-4 lowering, not this grammar, disambiguates the two by
+# inspecting the parsed LHS shape. Right-associative, mirroring
+# wolfram.grammar's identical `assignment = replaceall [ (SET|SETDELAYED)
+# assignment ]` shape (a chained `a := b := c` is not a meaningful Derive
+# program, but the grammar shape costs nothing extra and keeps this crate's
+# parser consistent with its CAS-family siblings).
+assignment = logical_or [ ASSIGN assignment ] ;
+
+logical_or  = logical_and { "OR" logical_and } ;
+logical_and = logical_not { "AND" logical_not } ;
+logical_not = "NOT" logical_not | comparison ;
+
+# A single (non-chained) comparison, mirroring wolfram.grammar's `comparison`
+# — `=` here is Derive's equation operator (an Equal-headed Boolean-valued
+# expression), never assignment (`:=` owns that role, at the `assignment`
+# level above).
+comparison = additive [ ( EQ | LE | LESS | GREATER | GE ) additive ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = unary { ( TIMES | SLASH ) unary } ;
+
+# Prefix minus. Binds looser than Power, so `-x^2` is Times[-1, Power[x, 2]]
+# (mirrors wolfram.grammar's identical `unary`/`power` split). Derive's
+# surface table (MA07 §3) lists only unary `-` (no unary `+`), unlike
+# Wolfram's subset.
+unary = MINUS unary | power ;
+
+# Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. The
+# recursive-descent shape (RHS references `unary`, which falls through to
+# `power` again absent a leading `-`) gives right-associativity for free,
+# exactly as wolfram.grammar's `power` does.
+power = postfix [ POWER unary ] ;
+
+# Postfix function/named-builtin application — Derive's defining syntactic
+# difference from Wolfram: ORDINARY parentheses, not square brackets
+# (`DIF(u, x)`, not `f[x]`). Chains left-associatively, mirroring
+# wolfram.grammar's `postfix` (`f(x)(y)` is `(f(x))(y)`), though Derive has
+# no analogue of Wolfram's `[[ ]]` Part sugar to chain alongside it.
+postfix = atom { LPAREN [ arglist ] RPAREN } ;
+
+arglist = expr { COMMA expr } ;
+
+atom = NUMBER
+     | NAME
+     | vector
+     | group ;
+
+# Vector/matrix literal (D-5): `[a, b, c]` is a vector (one row); `[a, b, c;
+# d, e, f]` is a matrix, rows separated by `;` (the ONLY use of `;` in this
+# subset — see derive.tokens's own header). A single-row `vector` (no `;`)
+# and a multi-row `vector` share this one rule; the D-4/D-5 lowering
+# distinguishes "one row" (a flat `List[...]`) from "more than one row" (a
+# `List` of row-`List`s) by counting how many `row`s were parsed, not by a
+# grammar-level distinction.
+vector = LBRACKET row { SEMI row } RBRACKET ;
+row    = expr { COMMA expr } ;
+
+group = LPAREN expr RPAREN ;
